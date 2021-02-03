@@ -121,7 +121,9 @@
 					required>
 
 				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
+				<label for="man-smtp-host">{{ t('mail', 'SMTP Host') }}</label>
 				<input
+					id="man-smtp-host"
 					ref="smtpHost"
 					v-model="manualConfig.smtpHost"
 					type="text"
