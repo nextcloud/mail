@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# 1.8.1 – 2021-02-03
+## Changed
+- Updated translations
+## Fixed
+- Filter out invalid UTF-8 in subjects
+- Regression that picks wrong attachment
+- Rendering accounts in the navigation even when authentication fails
+
 ## 1.8.0 – 2021-01-20
 ## Added
 - Drag and drop
