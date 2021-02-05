@@ -4,8 +4,8 @@
 			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
 				<div class="button primary" @click.prevent="markSelectedSeenOrUnseen">
 					<span id="action-label">{{
-						areAllSelectedRead (
-							n(
+						areAllSelectedRead
+							? n(
 								'mail',
 								'Mark {number} unread',
 								'Mark {number} unread',
@@ -13,8 +13,7 @@
 								{
 									number: selection.length,
 								}
-							),
-							n(
+							) : n(
 								'mail',
 								'Mark {number} read',
 								'Mark {number} read',
@@ -23,7 +22,6 @@
 									number: selection.length,
 								}
 							)
-						)
 					}}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
@@ -32,24 +30,22 @@
 						@click.prevent="favoriteOrUnfavoriteAll">
 						{{
 							areAllSelectedFavorite
-								( n(
-										'mail',
-										'Unfavorite {number}',
-										'Unfavorite {number}',
-										selection.length,
-										{
-											number: selection.length,
-										}
-									),
-									n(
-										'mail',
-										'Favorite {number}',
-										'Favorite {number}',
-										selection.length,
-										{
-											number: selection.length,
-										}
-									)
+								? n(
+									'mail',
+									'Unfavorite {number}',
+									'Unfavorite {number}',
+									selection.length,
+									{
+										number: selection.length,
+									}
+								) : n(
+									'mail',
+									'Favorite {number}',
+									'Favorite {number}',
+									selection.length,
+									{
+										number: selection.length,
+									}
 								)
 						}}
 					</ActionButton>
