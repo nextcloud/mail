@@ -148,9 +148,9 @@ export default {
 
 				return uploadLocalAttachment(file, progress(file.name)).then(({ file, id }) => {
 					logger.info('uploaded')
-					return this.emitNewAttachments([{
+					this.emitNewAttachments([{
 						fileName: file.name,
-						displayName: trimStart('/')(name),
+						displayName: trimStart('/', file.name),
 						id,
 						size: file.size,
 						type: 'local',
@@ -184,7 +184,7 @@ export default {
 				this.emitNewAttachments(paths.map(function(name) {
 					return {
 						fileName: name,
-						displayName: trimStart('/')(name),
+						displayName: trimStart('/', name),
 						type: 'cloud',
 					}
 				}))
