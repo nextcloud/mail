@@ -136,3 +136,8 @@ export default {
 	margin-bottom: 23px;
 }
 </style>
+<style>
+.ck-balloon-panel {
+	z-index: 10000 !important;
+}
+</style>
