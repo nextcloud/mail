@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'master']
+        nextcloud-versions: ['stable20', 'stable21']
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
@@ -16,7 +16,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         tools: composer:v1
-        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
         coverage: xdebug
     - name: Checkout Nextcloud
       run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
@@ -51,7 +51,7 @@ jobs:
       strategy:
           matrix:
               php-versions: [7.4]
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable21']
               db: ['sqlite', 'mysql', 'pgsql']
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
@@ -98,7 +98,7 @@ jobs:
             with:
                 php-version: ${{ matrix.php-versions }}
                 tools: composer:v1
-                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
                 coverage: xdebug
           - name: Checkout Nextcloud
             run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
