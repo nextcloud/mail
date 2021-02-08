@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   release-tarball:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     name: Build release tarball
     steps:
       - name: Checkout

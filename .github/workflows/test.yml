@@ -19,7 +19,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         tools: composer:v1
-        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
         coverage: xdebug
     - name: Checkout Nextcloud
       run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
@@ -101,7 +101,7 @@ jobs:
             with:
                 php-version: ${{ matrix.php-versions }}
                 tools: composer:v1
-                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
                 coverage: xdebug
           - name: Checkout Nextcloud
             run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
