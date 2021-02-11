@@ -21,21 +21,28 @@
 
 <template>
 	<div>
-		<div v-for="recipient in list"
-			:key="recipient.email">
-			{{ recipient.email }}
+		<div v-for="sender in sortedSenders"
+			:key="sender.email">
+			{{ sender.email }}
 
 			<button class="button"
-				@click="hideSender">
+				@click="removeSender(sender)">
 				{{ t('mail','Remove') }}
 			</button>
 		</div>
+		<span v-if="!sortedSenders.length"> {{ t('mail', 'No senders are trusted at the moment.') }}</span>
 	</div>
 </template>
 
 <script>
 
-import { fetchTrustedSenders } from '../service/TrustedSenderService'
+import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService'
+import prop from 'lodash/fp/prop'
+import sortBy from 'lodash/fp/sortBy'
+import logger from '../logger'
+import { showError } from '@nextcloud/dialogs'
+
+const sortByEmail = sortBy(prop('email'))
 
 export default {
 	name: 'TrustedSenders',
@@ -45,12 +52,33 @@ export default {
 			list: [],
 		}
 	},
+	computed: {
+		sortedSenders() {
+			return sortByEmail(this.list)
+		},
+	},
 	async mounted() {
-		 this.list = await fetchTrustedSenders()
+		this.list = await fetchTrustedSenders()
 	},
 	methods: {
-		hideSender() {
-
+		async removeSender(sender) {
+			// Remove the item immediately
+			this.list = this.list.filter(s => s.id !== sender.id)
+			try {
+				await trustSender(
+					sender.email,
+					false
+				)
+			} catch (error) {
+				logger.error(`Could not remove trusted sender ${sender.email}`, {
+					error,
+				})
+				showError(t('mail', 'Could not remove trusted sender {sender}', {
+					sender: sender.email,
+				}))
+				// Put the sender back
+				this.list.push(sender)
+			}
 		},
 	},
 }
