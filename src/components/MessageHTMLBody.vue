@@ -3,9 +3,16 @@
 		<MdnRequest :message="message" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<button @click="onShowBlockedContent">
-				{{ t('mail', 'Show images from this sender') }}
-			</button>
+			<Actions default-icon="icon-toggle">
+				<ActionButton icon="icon-toggle"
+					@click="onShowBlockedContent">
+					{{ t('mail', 'Always show images from {sender}', {sender: message.from[0].email}) }}
+				</ActionButton>
+				<ActionButton icon="icon-toggle"
+					@click="onShowBlockedContentForDomain">
+					{{ t('mail', 'Always show images from {domain}', {domain: getDomain()}) }}
+				</ActionButton>
+			</Actions>
 		</div>
 		<div v-if="loading" class="icon-loading" />
 		<div id="message-container" :class="{hidden: loading, scroll: !fullHeight}">
@@ -23,6 +30,8 @@
 import { iframeResizer } from 'iframe-resizer'
 import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
 
 import logger from '../logger'
 import MdnRequest from './MdnRequest'
@@ -30,7 +39,11 @@ const scout = new PrintScout()
 
 export default {
 	name: 'MessageHTMLBody',
-	components: { MdnRequest },
+	components: {
+		MdnRequest,
+		Actions,
+		ActionButton,
+	},
 	props: {
 		url: {
 			type: String,
@@ -78,7 +91,7 @@ export default {
 
 			this.loading = false
 			if (this.isSenderTrusted) {
-				this.onShowBlockedContent()
+				this.displayIframe()
 			}
 		},
 		onAfterPrint() {
@@ -87,7 +100,7 @@ export default {
 		onBeforePrint() {
 			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
 		},
-		async onShowBlockedContent() {
+		displayIframe() {
 			const iframeDoc = this.getIframeDoc()
 			logger.debug('showing external images')
 			iframeDoc.querySelectorAll('[data-original-src]').forEach((node) => {
@@ -97,10 +110,19 @@ export default {
 			iframeDoc
 				.querySelectorAll('[data-original-style]')
 				.forEach((node) => node.setAttribute('style', node.getAttribute('data-original-style')))
-
 			this.hasBlockedContent = false
-			await trustSender(this.message.from[0].email, true)
-
+		},
+		async onShowBlockedContent() {
+			this.displayIframe()
+			await trustSender(this.message.from[0].email, 'individual', true)
+		},
+		getDomain() {
+			return this.message.from[0].email.split('@').pop()
+		},
+		async onShowBlockedContentForDomain() {
+			this.displayIframe()
+			// TODO: there might be more than one @ in an email address
+			await trustSender(this.getDomain(), 'domain', true)
 		},
 	},
 }
