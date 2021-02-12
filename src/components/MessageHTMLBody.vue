@@ -1,7 +1,7 @@
 <template>
 	<div id="mail-content">
 		<MdnRequest :message="message" />
-		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content">
+		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 			<button @click="onShowBlockedContent">
 				{{ t('mail', 'Show images from this sender') }}
@@ -58,20 +58,7 @@ export default {
 		scout.on('afterprint', this.onAfterPrint)
 	},
 	mounted() {
-		iframeResizer({
-			onInit: () => {
-				const getCssVar = (key) => ({
-					[key]: getComputedStyle(document.documentElement).getPropertyValue(key),
-				})
-
-				// send css vars to client page
-				this.$refs.iframe.iFrameResizer.sendMessage({
-					cssVars: {
-						...getCssVar('--color-main-text'),
-					},
-				})
-			},
-		}, this.$refs.iframe)
+		iframeResizer({}, this.$refs.iframe)
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
@@ -127,6 +114,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	background-color: #FFFFFF;
 }
 #mail-message-has-blocked-content {
 	margin-left: 8px;
