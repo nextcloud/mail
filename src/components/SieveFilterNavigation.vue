@@ -21,7 +21,7 @@
 					icon="icon-filter">
 					<template slot="info">
 						<label class="comment"> {{ rule.comment }} </label>
-						<label class="description" />
+						<label class="description"> {{ rule.rule }} </label>
 					</template>
 					<template slot="actions">
 						<ActionButton icon="icon-settings" :title="t('mail', 'edit')">
