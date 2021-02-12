@@ -58,20 +58,7 @@ export default {
 		scout.on('afterprint', this.onAfterPrint)
 	},
 	mounted() {
-		iframeResizer({
-			onInit: () => {
-				const getCssVar = (key) => ({
-					[key]: getComputedStyle(document.documentElement).getPropertyValue(key),
-				})
-
-				// send css vars to client page
-				this.$refs.iframe.iFrameResizer.sendMessage({
-					cssVars: {
-						...getCssVar('--color-main-background'),
-					},
-				})
-			},
-		}, this.$refs.iframe)
+		iframeResizer({}, this.$refs.iframe)
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
