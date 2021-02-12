@@ -24,15 +24,3 @@ import '../css/html-response.css'
 
 // iframe-resizer client script
 import 'iframe-resizer/js/iframeResizer.contentWindow.js'
-window.iFrameResizer = {
-	onMessage: (message) => {
-		if (!message.cssVars) {
-			return
-		}
-
-		// inject received css vars
-		Object.entries(message.cssVars).forEach(([key, val]) => {
-			document.documentElement.style.setProperty(key, val)
-		})
-	},
-}
