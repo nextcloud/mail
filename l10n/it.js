@@ -203,6 +203,8 @@ OC.L10N.register(
     "Could not load your message thread" : "Impossibile caricare la tua discussione",
     "Reply" : "Rispondi",
     "Remove" : "Rimuovi",
+    "No senders are trusted at the moment." : "Nessun mittente è fidato al momento.",
+    "Could not remove trusted sender {sender}" : "Impossibile rimuovere il mittente fidato {sender}",
     "Import into {calendar}" : "Importa in {calendar}",
     "Event imported into {calendar}" : "Evento importato in {calendar}",
     "Could not create event" : "Impossibile creare l'evento",

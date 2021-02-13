@@ -201,6 +201,8 @@
     "Could not load your message thread" : "无法加载您的消息线线程",
     "Reply" : "回复",
     "Remove" : "删除",
+    "No senders are trusted at the moment." : "当前没有发件人是受信任的",
+    "Could not remove trusted sender {sender}" : "无法删除受信任的发件人 {sender} ",
     "Import into {calendar}" : "导入到 {calendar}",
     "Event imported into {calendar}" : "事件导入到 {calendar}",
     "Could not create event" : "无法建立事件",

@@ -203,6 +203,8 @@ OC.L10N.register(
     "Could not load your message thread" : "Nie można załadować wątku wiadomości",
     "Reply" : "Odpowiedz",
     "Remove" : "Usuń",
+    "No senders are trusted at the moment." : "W tej chwili żaden nadawca nie jest zaufany.",
+    "Could not remove trusted sender {sender}" : "Nie udało się usunąć zaufanego nadawcy {sender}",
     "Import into {calendar}" : "Importuj do {calendar}",
     "Event imported into {calendar}" : "Wydarzenie zaimportowane do {calendar}",
     "Could not create event" : "Nie można utworzyć wydarzenia",

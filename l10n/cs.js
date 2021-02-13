@@ -203,6 +203,8 @@ OC.L10N.register(
     "Could not load your message thread" : "Nepodařilo se načíst vlákno se zprávou",
     "Reply" : "Odpovědět",
     "Remove" : "Odebrat",
+    "No senders are trusted at the moment." : "V tuto chvíli nejsou mezi důvěryhodnými žádní odesílatelé.",
+    "Could not remove trusted sender {sender}" : "Nepodařilo se odebrat důvěryhodného odesílatele {sender}",
     "Import into {calendar}" : "Importovat do {calendar}",
     "Event imported into {calendar}" : "Událost importována do {calendar}",
     "Could not create event" : "Událost se nedaří vytvořit",

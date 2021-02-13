@@ -203,6 +203,8 @@ OC.L10N.register(
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "Reply" : "Antworten",
     "Remove" : "Entfernen",
+    "No senders are trusted at the moment." : "Derzeit sind keine Absender vertrauenswürdig.",
+    "Could not remove trusted sender {sender}" : "Vertrauenswürdiger Absender konnte nicht entfernt werden {sender}",
     "Import into {calendar}" : "In {calendar} importieren",
     "Event imported into {calendar}" : "Termin importiert in {calendar}",
     "Could not create event" : "Termin konnte nicht erstellt werden",
