@@ -203,6 +203,8 @@ OC.L10N.register(
     "Could not load your message thread" : "İleti grubunuz yüklenemedi",
     "Reply" : "Yanıtla",
     "Remove" : "Sil",
+    "No senders are trusted at the moment." : "Henüz güvenilen bir gönderici yok.",
+    "Could not remove trusted sender {sender}" : "{sender} güvenilen göndericisi silinemedi",
     "Import into {calendar}" : "{calendar} içine aktar",
     "Event imported into {calendar}" : "Etkinlik {calendar} içine aktarıldı",
     "Could not create event" : "Etkinlik oluşturulamadı",
