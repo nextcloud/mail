@@ -90,6 +90,26 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'contactIntegration#autoComplete',
+			'url' => '/api/contactIntegration/autoComplete/{term}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'contactIntegration#addMail',
+			'url' => '/api/contactIntegration/add',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'contactIntegration#newContact',
+			'url' => '/api/contactIntegration/new',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'contactIntegration#match',
+			'url' => '/api/contactIntegration/match/{mail}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'mailboxes#patch',
 			'url' => '/api/mailboxes/{id}',
 			'verb' => 'PATCH'
