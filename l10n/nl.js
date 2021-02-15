@@ -203,6 +203,8 @@ OC.L10N.register(
     "Could not load your message thread" : "Kon je berichtendraad niet laden",
     "Reply" : "Antwoord",
     "Remove" : "Verwijderen",
+    "No senders are trusted at the moment." : "Er zijn nu geen vertrouwder afzenders.",
+    "Could not remove trusted sender {sender}" : "Kon vertrouwde afzender niet verwijderen {afzender}",
     "Import into {calendar}" : "Importeer in {calendar}",
     "Event imported into {calendar}" : "Afspraak geïmporteerd in {calendar}",
     "Could not create event" : "Kon afspraak niet creëren",

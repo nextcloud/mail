@@ -203,6 +203,8 @@ OC.L10N.register(
     "Could not load your message thread" : "無法載入您的郵件串",
     "Reply" : "回覆",
     "Remove" : "移除",
+    "No senders are trusted at the moment." : "當前沒有發件人是受信任的",
+    "Could not remove trusted sender {sender}" : "無法刪除受信任的發件人 {sender}",
     "Import into {calendar}" : "已匯入至 {calendar}",
     "Event imported into {calendar}" : "活動已匯入至 {calendar}",
     "Could not create event" : "無法建立活動",
