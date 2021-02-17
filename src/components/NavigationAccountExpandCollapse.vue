@@ -44,7 +44,7 @@ export default {
 		},
 		title() {
 			if (this.account.collapsed && this.account.showSubscribedOnly) {
-				return t('mail', 'Show all subscribed mailbox')
+				return t('mail', 'Show all subscribed mailboxes')
 			} else if (this.account.collapsed && !this.account.showSubscribedOnly) {
 				return t('mail', 'Show all mailboxes')
 			}
