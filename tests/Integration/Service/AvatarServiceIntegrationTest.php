@@ -39,7 +39,7 @@ class AvatarServiceIntegrationTest extends TestCase {
 		/* @var $cacheFactory ICacheFactory */
 		$cacheFactory = OC::$server->query(ICacheFactory::class);
 		/* @var $cache ICache */
-		$cache = $cacheFactory->create('mail.avatars');
+		$cache = $cacheFactory->createDistributed('mail.avatars');
 		$cache->clear();
 	}
 
