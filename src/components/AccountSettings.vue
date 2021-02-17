@@ -140,7 +140,7 @@ export default {
 			return this.$store
 				.dispatch('updateAccount', {
 					...data,
-					accountId: this.$route.params.accountId,
+					accountId: this.account.id,
 				})
 				.then((account) => account)
 				.catch((error) => {
