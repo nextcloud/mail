@@ -405,7 +405,13 @@ class ImapToDbSynchronizer {
 			}
 			$perf->step('persist new messages');
 
-			$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
+			// If a list of UIDs was *provided* (as opposed to loaded from the DB,
+			// we can not assume that all changes were detected, hence this is kinda
+			// a silent sync and we don't update the vanish token until the next full
+			// mailbox sync
+			if ($knownUids === null) {
+				$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
+			}
 		}
 		$this->mailboxMapper->update($mailbox);
 		$perf->end();
