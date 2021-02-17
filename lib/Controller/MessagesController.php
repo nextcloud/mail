@@ -51,6 +51,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\ZipResponse;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
@@ -523,6 +524,43 @@ class MessagesController extends Controller {
 			$attachment->getName(),
 			$attachment->getType()
 		);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @TrapError
+	 *
+	 * @param int $id the message id
+	 * @param string $attachmentId
+	 *
+	 * @return ZipResponse|JSONResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @throws DoesNotExistException
+	 */
+	public function downloadAttachments(int $id): Response {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$attachments = $this->mailManager->getMailAttachments($account, $mailbox, $message);
+		$zip = new ZipResponse($this->request, 'attachments');
+
+		foreach ($attachments as $attachment) {
+			$fileName = $attachment['name'];
+			$fh = fopen("php://temp", 'r+');
+			fputs($fh, $attachment['content']);
+			$size = (int)$attachment['size'];
+			rewind($fh);
+			$zip->addResource($fh, $fileName, $size);
+		}
+		return $zip;
 	}
 
 	/**
