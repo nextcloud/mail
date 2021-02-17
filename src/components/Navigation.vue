@@ -137,7 +137,7 @@ export default {
 			const mailboxId = this.$route.params.mailboxId || this.$store.getters.getMailboxes(accountId)[0]?.databaseId
 			if (
 				this.$router.currentRoute.name === 'message'
-				&& this.$router.currentRoute.params.getMailboxes === 'new'
+				&& this.$router.currentRoute.params.threadId === 'new'
 			) {
 				// If we already show the composer, navigating to it would be pointless (and doesn't work)
 				// instead trigger an event to reset the composer
