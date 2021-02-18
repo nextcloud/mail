@@ -106,6 +106,21 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function testFindById() {
+		$accountId = 123;
+
+		$this->mapper->expects($this->once())
+			->method('findById')
+			->with($accountId)
+			->will($this->returnValue($this->account1));
+
+		$expected = new Account($this->account1);
+		$actual = $this->accountService->findById($accountId);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+
 	public function testDelete() {
 		$accountId = 33;
 
@@ -118,6 +133,20 @@ class AccountServiceTest extends TestCase {
 			->with($this->account1);
 
 		$this->accountService->delete($this->user, $accountId);
+	}
+
+	public function testDeleteByAccountId() {
+		$accountId = 33;
+
+		$this->mapper->expects($this->once())
+			->method('findById')
+			->with($accountId)
+			->will($this->returnValue($this->account1));
+		$this->mapper->expects($this->once())
+			->method('delete')
+			->with($this->account1);
+
+		$this->accountService->deleteByAccountId($accountId);
 	}
 
 	public function testSave() {

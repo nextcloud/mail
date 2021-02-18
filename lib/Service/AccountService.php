@@ -126,6 +126,21 @@ class AccountService {
 	}
 
 	/**
+	 * @param int $accountId
+	 *
+	 * @throws ClientException
+	 */
+	public function deleteByAccountId(int $accountId): void {
+		try {
+			$mailAccount = $this->mapper->findById($accountId);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Account $accountId does not exist", 0, $e);
+		}
+		$this->aliasesService->deleteAll($accountId);
+		$this->mapper->delete($mailAccount);
+	}
+
+	/**
 	 * @param MailAccount $newAccount
 	 * @return MailAccount
 	 */
