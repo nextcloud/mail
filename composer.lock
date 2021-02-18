@@ -1555,19 +1555,20 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Filter",
-            "version": "2.3.6",
+            "version": "2.3.7",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.6.tgz"
+                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.7.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
                 "pear-pear.horde.org/horde_idna": "<2.0.0.0",
+                "pear-pear.horde.org/horde_secret": "<3.0.0.0",
                 "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_text_filter": "== 2.3.6.0"
+                "pear-horde/horde_text_filter": "== 2.3.7.0"
             },
             "type": "pear-library",
             "autoload": {
