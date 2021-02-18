@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "796eeaabd84d1ef5261b1668295dd3dc",
+    "content-hash": "6d07fa56e3ed16b437201c33025a7385",
     "packages": [
         {
             "name": "amphp/amp",
@@ -440,26 +440,26 @@
         },
         {
             "name": "arthurhoaro/favicon",
-            "version": "v1.3.1",
+            "version": "v1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArthurHoaro/favicon.git",
-                "reference": "e18ff160cb55d0a57fd28fbd3d89783981e66859"
+                "reference": "ed3c3f6fd9ab39b28eb86567c4b0a0583ca264a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/e18ff160cb55d0a57fd28fbd3d89783981e66859",
-                "reference": "e18ff160cb55d0a57fd28fbd3d89783981e66859",
+                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/ed3c3f6fd9ab39b28eb86567c4b0a0583ca264a6",
+                "reference": "ed3c3f6fd9ab39b28eb86567c4b0a0583ca264a6",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-fileinfo": "*",
-                "php": ">=5.6",
-                "squizlabs/php_codesniffer": "^3.5"
+                "php": ">=5.6"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.8",
+                "squizlabs/php_codesniffer": "^3.5",
                 "weew/helpers-filesystem": "~1.0"
             },
             "type": "library",
@@ -489,7 +489,7 @@
                 "finder",
                 "icon"
             ],
-            "time": "2020-10-14T09:32:44+00:00"
+            "time": "2021-02-03T12:26:59+00:00"
         },
         {
             "name": "cerdic/css-tidy",
@@ -1555,19 +1555,20 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Filter",
-            "version": "2.3.6",
+            "version": "2.3.7",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.6.tgz"
+                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.7.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
                 "pear-pear.horde.org/horde_idna": "<2.0.0.0",
+                "pear-pear.horde.org/horde_secret": "<3.0.0.0",
                 "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_text_filter": "== 2.3.6.0"
+                "pear-horde/horde_text_filter": "== 2.3.7.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -1581,7 +1582,7 @@
             "license": [
                 "LGPL-2.1"
             ],
-            "description": "Common methods for fitering and converting text."
+            "description": "A library for fitering and converting text."
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Flowed",
@@ -1920,16 +1921,16 @@
         },
         {
             "name": "rubix/tensor",
-            "version": "2.1.1",
+            "version": "2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/Tensor.git",
-                "reference": "f6770791bb95afb6c3b83b5976714abe19892508"
+                "reference": "76212d79e36f6ba1266747d7065676122d51cf10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/f6770791bb95afb6c3b83b5976714abe19892508",
-                "reference": "f6770791bb95afb6c3b83b5976714abe19892508",
+                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/76212d79e36f6ba1266747d7065676122d51cf10",
+                "reference": "76212d79e36f6ba1266747d7065676122d51cf10",
                 "shasum": ""
             },
             "require": {
@@ -1985,6 +1986,7 @@
                 "matrix",
                 "norms",
                 "php",
+                "php extension",
                 "random number generation",
                 "reduction",
                 "scientific computing",
@@ -2003,71 +2005,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-01T05:32:19+00:00"
-        },
-        {
-            "name": "squizlabs/php_codesniffer",
-            "version": "3.5.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "9d583721a7157ee997f235f327de038e7ea6dac4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/9d583721a7157ee997f235f327de038e7ea6dac4",
-                "reference": "9d583721a7157ee997f235f327de038e7ea6dac4",
-                "shasum": ""
-            },
-            "require": {
-                "ext-simplexml": "*",
-                "ext-tokenizer": "*",
-                "ext-xmlwriter": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
-            },
-            "bin": [
-                "bin/phpcs",
-                "bin/phpcbf"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Greg Sherwood",
-                    "role": "lead"
-                }
-            ],
-            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
-            "keywords": [
-                "phpcs",
-                "standards"
-            ],
-            "time": "2020-10-23T02:01:07+00:00"
+            "time": "2021-02-14T06:10:44+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "d62ec79478b55036f65e2602e282822b8eaaff0a"
+                "reference": "89d4b176d12a2946a1ae4e34906a025b7b6b135a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/d62ec79478b55036f65e2602e282822b8eaaff0a",
-                "reference": "d62ec79478b55036f65e2602e282822b8eaaff0a",
+                "url": "https://api.github.com/repos/symfony/console/zipball/89d4b176d12a2946a1ae4e34906a025b7b6b135a",
+                "reference": "89d4b176d12a2946a1ae4e34906a025b7b6b135a",
                 "shasum": ""
             },
             "require": {
@@ -2148,7 +2099,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T10:15:41+00:00"
+            "time": "2021-01-28T22:06:19+00:00"
         },
         {
             "name": "symfony/finder",
@@ -2210,7 +2161,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -2286,16 +2237,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "267a9adeb8ecb8071040a740930e077cdfb987af"
+                "reference": "5601e09b69f26c1828b13b6bb87cb07cddba3170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/267a9adeb8ecb8071040a740930e077cdfb987af",
-                "reference": "267a9adeb8ecb8071040a740930e077cdfb987af",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5601e09b69f26c1828b13b6bb87cb07cddba3170",
+                "reference": "5601e09b69f26c1828b13b6bb87cb07cddba3170",
                 "shasum": ""
             },
             "require": {
@@ -2360,20 +2311,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
-                "reference": "6e971c891537eb617a00bb07a43d182a6915faba"
+                "reference": "43a0283138253ed1d48d352ab6d0bdb3f809f248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/6e971c891537eb617a00bb07a43d182a6915faba",
-                "reference": "6e971c891537eb617a00bb07a43d182a6915faba",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/43a0283138253ed1d48d352ab6d0bdb3f809f248",
+                "reference": "43a0283138253ed1d48d352ab6d0bdb3f809f248",
                 "shasum": ""
             },
             "require": {
@@ -2441,20 +2392,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T17:09:11+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13"
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/5232de97ee3b75b0360528dae24e73db49566ab1",
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1",
                 "shasum": ""
             },
             "require": {
@@ -2518,11 +2469,11 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php73.git",
@@ -2598,7 +2549,7 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -2754,7 +2705,7 @@
         },
         {
             "name": "symfony/string",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
@@ -2836,16 +2787,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v20.0.5",
+            "version": "v20.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "26bfecf56f81adb9271d3d55c180bfb0e3e37e3d"
+                "reference": "114c6598743dc4caa21c84eafadedf3f6730cdab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/26bfecf56f81adb9271d3d55c180bfb0e3e37e3d",
-                "reference": "26bfecf56f81adb9271d3d55c180bfb0e3e37e3d",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/114c6598743dc4caa21c84eafadedf3f6730cdab",
+                "reference": "114c6598743dc4caa21c84eafadedf3f6730cdab",
                 "shasum": ""
             },
             "require": {
@@ -2868,7 +2819,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2021-01-20T09:13:27+00:00"
+            "time": "2021-02-03T07:58:35+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -4782,12 +4733,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f7d723a10c7cb36e11430182f5813ecb1b887da0"
+                "reference": "1e48e1beacb6122df93aa61a6cc291254984be2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f7d723a10c7cb36e11430182f5813ecb1b887da0",
-                "reference": "f7d723a10c7cb36e11430182f5813ecb1b887da0",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1e48e1beacb6122df93aa61a6cc291254984be2a",
+                "reference": "1e48e1beacb6122df93aa61a6cc291254984be2a",
                 "shasum": ""
             },
             "conflict": {
@@ -4904,7 +4855,7 @@
                 "october/backend": ">=1.0.319,<1.0.470",
                 "october/cms": "= 1.0.469|>=1.0.319,<1.0.469",
                 "october/october": ">=1.0.319,<1.0.466",
-                "october/rain": ">=1.0.319,<1.0.468",
+                "october/rain": "<1.0.472|>=1.1,<1.1.2",
                 "onelogin/php-saml": "<2.10.4",
                 "oneup/uploader-bundle": "<1.9.3|>=2,<2.1.5",
                 "openid/php-openid": "<2.3",
@@ -4948,7 +4899,7 @@
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
                 "shopware/core": "<=6.3.4",
-                "shopware/platform": "<=6.3.4",
+                "shopware/platform": "<=6.3.5",
                 "shopware/shopware": "<5.6.9",
                 "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
                 "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -5029,6 +4980,7 @@
                 "ua-parser/uap-php": "<3.8",
                 "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
                 "verot/class.upload.php": "<=1.0.3|>=2,<=2.0.4",
+                "vrana/adminer": "<4.7.9",
                 "wallabag/tcpdf": "<6.2.22",
                 "willdurand/js-translation-bundle": "<2.1.1",
                 "yii2mod/yii2-cms": "<1.9.2",
@@ -5095,7 +5047,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-02T10:05:32+00:00"
+            "time": "2021-02-16T17:17:25+00:00"
         },
         {
             "name": "sabre/event",
@@ -6545,7 +6497,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
