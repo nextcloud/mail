@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d07fa56e3ed16b437201c33025a7385",
+    "content-hash": "cc28b5306e0d004371b1e45d030863db",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2823,16 +2823,16 @@
         },
         {
             "name": "christophwurst/nextcloud_testing",
-            "version": "v0.12.3",
+            "version": "v0.12.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_testing.git",
-                "reference": "f16ffe407e734ab6a8cd16e7ba7d1e2bad8cfefc"
+                "reference": "9c189b01dbcc3508108f08c417de6aaea7005fb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/f16ffe407e734ab6a8cd16e7ba7d1e2bad8cfefc",
-                "reference": "f16ffe407e734ab6a8cd16e7ba7d1e2bad8cfefc",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/9c189b01dbcc3508108f08c417de6aaea7005fb0",
+                "reference": "9c189b01dbcc3508108f08c417de6aaea7005fb0",
                 "shasum": ""
             },
             "require": {
@@ -2860,7 +2860,7 @@
                 }
             ],
             "description": "Simple and fast unit and integration testing framework for Nextcloud, based on PHPUnit",
-            "time": "2021-01-28T10:28:10+00:00"
+            "time": "2021-02-18T08:41:09+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
