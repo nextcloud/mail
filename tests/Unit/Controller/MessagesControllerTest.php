@@ -34,6 +34,7 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Controller\MessagesController;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -47,6 +48,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\ZipResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
@@ -55,6 +57,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use ReflectionObject;
 
 class MessagesControllerTest extends TestCase {
 
@@ -443,6 +446,168 @@ class MessagesControllerTest extends TestCase {
 
 		$this->assertEquals($expected, $response);
 	}
+
+	public function testDownloadAttachments() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$uid = 321;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid($uid);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$attachments = [
+			[
+				'content' => 'abcdefg',
+				'name' => 'cat.png',
+				'size' => ''
+			]
+		];
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+
+		//
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachments')
+			->with($this->account, $mailbox, $message)
+			->willReturn($attachments);
+		// build our zip
+		$response = $this->controller->downloadAttachments(
+			$id
+		);
+
+		$this->assertInstanceOf(ZipResponse::class, $response);
+
+		$zip = new ZipResponse($this->request, 'attachments');
+		foreach ($attachments as $attachment) {
+			$fileName = $attachment['name'];
+			$fh = fopen("php://temp", 'r+');
+			fputs($fh, $attachment['content']);
+			$size = (int)$attachment['size'];
+			rewind($fh);
+			$zip->addResource($fh, $fileName, $size);
+		}
+
+		// Reflection is needed to get private properties
+		$refZip = new ReflectionObject($zip);
+		$prop = $refZip->getProperty('resources');
+		$prop->setAccessible(true);
+		$zipValues = $prop->getValue($zip);
+		$refResponse = new ReflectionObject($response);
+		$prop = $refResponse->getProperty('resources');
+		$prop->setAccessible(true);
+		$responseValues = $prop->getValue($zip);
+
+		$this->assertTrue(is_resource($zipValues[0]['resource']));
+		$this->assertTrue(is_resource($responseValues[0]['resource']));
+
+		// ZipResponse will write fopen id into the array
+		// so assert equals needs to have these values unset before comparison
+		unset($zipValues[0]['resource']);
+		unset($responseValues[0]['resource']);
+
+		$this->assertEquals($zipValues, $responseValues);
+	}
+
+	public function testDownloadAttachmentsNoAccountError() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$uid = 321;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid($uid);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->willThrowException(new ClientException());
+
+
+		// test our json error response
+		$this->expectException(ClientException::class);
+		$response = $this->controller->downloadAttachments(
+			$id
+		);
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
+	}
+
+	public function testDownloadAttachmentsNoMailboxError() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$uid = 321;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid($uid);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+
+		$this->mailManager->expects($this->once())
+		->method('getMessage')
+		->with($this->userId, $id)
+		->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->willThrowException(new ClientException());
+
+		// test our json error response
+		$this->expectException(ClientException::class);
+		$response = $this->controller->downloadAttachments(
+			$id
+		);
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
+	}
+
+	public function testDownloadAttachmentsNoMessageError() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$uid = 321;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid($uid);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->willThrowException(new ServiceException());
+		// test our json error response
+		$this->expectException(ServiceException::class);
+		$response = $this->controller->downloadAttachments(
+			$id
+		);
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
+	}
+
 
 	public function testSetFlagsUnseen() {
 		$accountId = 17;

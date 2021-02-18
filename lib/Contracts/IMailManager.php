@@ -221,4 +221,12 @@ interface IMailManager {
 	 */
 	public function enableMailboxBackgroundSync(Mailbox $mailbox,
 												bool $syncInBackground): Mailbox;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
+	 * @return array
+	 */
+	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message) : array;
 }

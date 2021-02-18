@@ -44,7 +44,7 @@
 					{{ t('mail', 'Attachments') }}
 				</ActionButton>
 			</Actions>
-			<MessageAttachments v-close-popover="true" :attachments="message.attachments" />
+			<MessageAttachments v-close-popover="true" :attachments="message.attachments" :envelope="envelope" />
 		</Popover>
 		<div id="reply-composer" />
 	</div>

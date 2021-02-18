@@ -502,4 +502,14 @@ class MailManager implements IMailManager {
 		$this->folderMapper->delete($client, $mailbox->getName());
 		$this->mailboxMapper->delete($mailbox);
 	}
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
+	 * @return array[]
+	 */
+	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message) : array {
+		return $this->imapMessageMapper->getAttachments($this->imapClientFactory->getClient($account), $mailbox->getName(), $message->getUid());
+	}
 }

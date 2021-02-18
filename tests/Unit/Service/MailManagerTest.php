@@ -29,6 +29,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ServiceException;
@@ -339,5 +340,34 @@ class MailManagerTest extends TestCase {
 			->with($account, $messageId);
 
 		$this->manager->getThread($account, $messageId);
+	}
+
+	public function testGetMailAttachments(): void {
+		$account = $this->createMock(Account::class);
+		$attachments = [
+			[
+				'content' => 'abcdefg',
+				'name' => 'cat.png',
+				'size' => ''
+			]
+		];
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('Inbox');
+		$message = new Message();
+		$message->setUid(123);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$this->imapMessageMapper->expects($this->once())
+			->method('getAttachments')
+			->with(
+				$client,
+				$mailbox->getName(),
+				$message->getUid()
+			)->willReturn($attachments);
+		$result = $this->manager->getMailAttachments($account, $mailbox, $message);
+		$this->assertEquals($attachments, $result);
 	}
 }
