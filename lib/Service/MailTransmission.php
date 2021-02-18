@@ -422,9 +422,7 @@ class MailTransmission implements IMailTransmission {
 			return null;
 		}
 
-		if (!is_null($file)) {
-			$message->addAttachmentFromFiles($file);
-		}
+		$message->addAttachmentFromFiles($file);
 	}
 
 	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
