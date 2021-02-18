@@ -154,6 +154,13 @@ class AccountsController extends Controller {
 						   string $smtpSslMode = null,
 						   string $smtpUser = null,
 						   string $smtpPassword = null): JSONResponse {
+		try {
+			// Make sure the account actually exists
+			$this->accountService->find($this->currentUserId, $id);
+		} catch (ClientException $e) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+
 		$account = null;
 		$errorMessage = null;
 		try {
