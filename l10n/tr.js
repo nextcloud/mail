@@ -176,7 +176,6 @@ OC.L10N.register(
     "Remove account {email}" : "{email} hesabını kaldır",
     "Remove {email}" : "{email} sil",
     "Cancel" : "İptal",
-    "Show all subscribed mailbox" : "Tüm abone olunmuş e-posta kutuları görüntülensin",
     "Show all mailboxes" : "Tüm e-posta kutularını görüntüle",
     "Collapse mailboxes" : "E-posta kutularını daralt",
     "Mark all as read" : "Tümünü okunmuş olarak işaretle",

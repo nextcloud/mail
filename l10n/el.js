@@ -176,7 +176,6 @@ OC.L10N.register(
     "Remove account {email}" : "Αφαίρεση λογαριασμού {email}",
     "Remove {email}" : "Αφαίρεση {email}",
     "Cancel" : "Ακύρωση",
-    "Show all subscribed mailbox" : "Εμφάνιση όλων των εγγεγραμμένων γραμματοκιβωτίων",
     "Show all mailboxes" : "Εμφάνιση όλων των γραμματοκιβωτίων",
     "Collapse mailboxes" : "Σύμπτυξη γραμματοκιβωτίων",
     "Mark all as read" : "Σημείωση όλων ως ανεγνωσμένων",

@@ -173,7 +173,6 @@ OC.L10N.register(
     "Remove account {email}" : "Удалить учётную запись {email}",
     "Remove {email}" : "Удалить {email}",
     "Cancel" : "Отмена",
-    "Show all subscribed mailbox" : "Показать все ящики из подписки",
     "Show all mailboxes" : "Показать все почтовые ящики",
     "Collapse mailboxes" : "Свернуть почтовые ящики",
     "Mark all as read" : "Пометить всё как прочитанное",

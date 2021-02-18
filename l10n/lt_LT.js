@@ -136,7 +136,6 @@ OC.L10N.register(
     "Remove account {email}" : "Šalinti paskyrą {email}",
     "Remove {email}" : "Šalinti {email}",
     "Cancel" : "Atsisakyti",
-    "Show all subscribed mailbox" : "Rodyti visas prenumeruotas pašto dėžutes",
     "Show all mailboxes" : "Rodyti visas pašto dėžutes",
     "Collapse mailboxes" : "Suskleisti pašto dėžutes",
     "Mark all as read" : "Žymėti visus kaip skaitytus",

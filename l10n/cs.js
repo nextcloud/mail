@@ -176,7 +176,6 @@ OC.L10N.register(
     "Remove account {email}" : "Odebrat účet {email}",
     "Remove {email}" : "Odebrat {email}",
     "Cancel" : "Storno",
-    "Show all subscribed mailbox" : "Zobrazit všechny přihlášené poštovní schránky",
     "Show all mailboxes" : "Zobrazit všechny schránky",
     "Collapse mailboxes" : "Sbalit schránky",
     "Mark all as read" : "Označit vše jako přečtené",
