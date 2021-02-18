@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# 1.8.2 – 2021-02-18
+## Fixed
+- Missing label for SMTP host setting
+- Priority inbox filter expression
+- Missing name of local attachments
+- HTML signature editor hidden controls
+- Navigation toggle issues
+- Font issues with HTML emails and dark theme
+- New message button not working under some conditions
+- Updating accounts
+
 # 1.8.1 – 2021-02-03
 ## Changed
 - Updated translations
