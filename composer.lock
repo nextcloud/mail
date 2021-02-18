@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "796eeaabd84d1ef5261b1668295dd3dc",
+    "content-hash": "6d07fa56e3ed16b437201c33025a7385",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2785,16 +2785,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v20.0.5",
+            "version": "v20.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "26bfecf56f81adb9271d3d55c180bfb0e3e37e3d"
+                "reference": "114c6598743dc4caa21c84eafadedf3f6730cdab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/26bfecf56f81adb9271d3d55c180bfb0e3e37e3d",
-                "reference": "26bfecf56f81adb9271d3d55c180bfb0e3e37e3d",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/114c6598743dc4caa21c84eafadedf3f6730cdab",
+                "reference": "114c6598743dc4caa21c84eafadedf3f6730cdab",
                 "shasum": ""
             },
             "require": {
@@ -2817,7 +2817,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2021-01-20T09:13:27+00:00"
+            "time": "2021-02-03T07:58:35+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
