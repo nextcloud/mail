@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.4.3 - 2021-02-19
+### Fixed
+- Update account only if it exists
+
 ## 1.4.2 – 2020-12-07
 ### Fixed
 - CKEditor crashes on Firefox
