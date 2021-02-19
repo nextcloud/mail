@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run check
-        uses: xt0rted/block-autosquash-commits-action@master
+        uses: xt0rted/block-autosquash-commits-action@main
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
