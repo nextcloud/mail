@@ -201,11 +201,7 @@ class MessageMapper {
 		$query->flags();
 		$query->uid();
 		$query->imapDate();
-		$query->headers(
-			'references',
-			[
-				'references',
-			],
+		$query->headerText(
 			[
 				'cache' => true,
 				'peek' => true,
