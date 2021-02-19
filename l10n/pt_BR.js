@@ -176,6 +176,7 @@ OC.L10N.register(
     "Remove account {email}" : "Excluir conta {email}",
     "Remove {email}" : "Excluir {email}",
     "Cancel" : "Cancelar",
+    "Show all subscribed mailboxes" : "Mostrar todas as caixas de correio subscritas",
     "Show all mailboxes" : "Mostrar todas as caixas de correio",
     "Collapse mailboxes" : "Recolher caixas de correio",
     "Mark all as read" : "Marcar todas como lidas",

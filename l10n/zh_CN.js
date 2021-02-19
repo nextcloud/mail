@@ -176,6 +176,7 @@ OC.L10N.register(
     "Remove account {email}" : "移除账号 {email}",
     "Remove {email}" : "移除 {email}",
     "Cancel" : "取消",
+    "Show all subscribed mailboxes" : "显示所有订阅的邮箱",
     "Show all mailboxes" : "显示所有邮箱",
     "Collapse mailboxes" : "折叠邮箱",
     "Mark all as read" : "标记所有为已读",
