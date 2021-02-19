@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.8.3 - 2021-02-19
+### Fixed
+- Compatibility issues with PHP8
+- Update account only if it exists
+
+## 1.4.3 - 2021-02-19
+### Fixed
+- Update account only if it exists
+
 # 1.8.2 – 2021-02-18
 ## Fixed
 - Missing label for SMTP host setting
