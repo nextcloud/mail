@@ -45,7 +45,7 @@
 			<button
 				class="attachments-save-to-cloud icon-folder"
 				@click="downloadZip">
-				{{ t('mail', 'Download ZIP') }}
+				{{ t('mail', 'Download Zip') }}
 			</button>
 		</p>
 	</div>
