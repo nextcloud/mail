@@ -193,6 +193,15 @@ export default {
 		onSelectMultiple() {
 			this.$emit('select-multiple')
 		},
+		onToggleImportant() {
+			this.$store.dispatch('toggleEnvelopeImportant', this.data)
+		},
+		onToggleFlagged() {
+			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+		},
+		onToggleJunk() {
+			this.$store.dispatch('toggleEnvelopeJunk', this.data)
+		},
 	},
 }
 </script>
