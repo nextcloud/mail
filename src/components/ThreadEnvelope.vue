@@ -71,10 +71,27 @@
 			</div>
 		</div>
 		<Loading v-if="loading" />
-		<Message v-else-if="message"
-			:envelope="envelope"
-			:message="message"
-			:full-height="fullHeight" />
+		<template v-else-if="message">
+			<RecipientList
+				v-if="envelope.to.length > 0 || needsHeaderToggle"
+				class="recipients"
+				:label="`${t('mail', 'To')}:`"
+				:participants="envelope.to"
+				:show-caret="needsHeaderToggle"
+				:expand-caret="expandHeader"
+				@click-caret="onToggleHeader" />
+			<template v-if="expandHeader">
+				<RecipientList
+					v-if="envelope.cc.length > 0"
+					class="recipients"
+					:label="`${t('mail', 'Cc')}:`"
+					:participants="envelope.cc" />
+			</template>
+			<Message
+				:envelope="envelope"
+				:message="message"
+				:full-height="fullHeight" />
+		</template>
 		<Error v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
@@ -91,6 +108,7 @@ import MenuEnvelope from './MenuEnvelope'
 import Moment from './Moment'
 import Avatar from './Avatar'
 import importantSvg from '../../img/important.svg'
+import RecipientList from './RecipientList'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 
 export default {
@@ -102,6 +120,7 @@ export default {
 		Moment,
 		Message,
 		Avatar,
+		RecipientList,
 	},
 	props: {
 		envelope: {
@@ -134,6 +153,7 @@ export default {
 			message: undefined,
 			importantSvg,
 			seenTimer: undefined,
+			expandHeader: false,
 		}
 	},
 	computed: {
@@ -186,6 +206,9 @@ export default {
 					threadId: this.envelope.databaseId,
 				},
 			}
+		},
+		needsHeaderToggle() {
+			return this.envelope.cc.length > 0
 		},
 	},
 	watch: {
@@ -247,6 +270,9 @@ export default {
 		},
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
+		},
+		onToggleHeader() {
+			this.expandHeader = !this.expandHeader
 		},
 	},
 }
@@ -348,6 +374,10 @@ export default {
 	}
 	.left:not(.seen) {
 		font-weight: bold;
+	}
+	.recipients {
+		margin-left: 60px;
+		margin-right: 38px;
 	}
 
 </style>
