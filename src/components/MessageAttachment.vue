@@ -163,8 +163,7 @@ export default {
 				.then(() => (this.savingToCloud = false))
 		},
 		download() {
-			window.open(this.url)
-			window.focus()
+			window.location = this.url
 		},
 		loadCalendars() {
 			this.loadingCalendars = true
