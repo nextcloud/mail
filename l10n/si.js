@@ -5,7 +5,9 @@ OC.L10N.register(
     "Mail Address" : "තැපැල් ලිපිනය",
     "Password" : "මුර පදය",
     "Save" : "සුරකින්න",
+    "Connect" : "සම්බන්ධ කරන්න",
     "Signature" : "අත්සන",
+    "Go back" : "ආපසු යන්න",
     "Retry" : "නැවත උත්සාහ කරන්න",
     "Send" : "යවන්න",
     "Choose" : "තෝරන්න",
@@ -23,6 +25,7 @@ OC.L10N.register(
     "Remove" : "ඉවත් කරන්න",
     "General" : "සමාන්‍යය",
     "User" : "පරිශීලක",
+    "Host" : " ධාරකය",
     "Search" : "සොයන්න",
     "All" : "සියල්ල",
     "Archive" : "සංරක්ෂණය"
