@@ -24,7 +24,8 @@
 
 <template>
 	<AppSettingsDialog
-		:open.sync="showSettings">
+		:open.sync="showSettings"
+		:show-navigation="true">
 		<AppSettingsSection
 			:title="t('mail', 'Account settings')">
 			<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
