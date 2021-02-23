@@ -433,37 +433,26 @@ class MessageMapper extends QBMapper {
 	public function findThread(Account $account, int $messageId): array {
 		$qb = $this->db->getQueryBuilder();
 		$subQb1 = $this->db->getQueryBuilder();
-		$subQb2 = $this->db->getQueryBuilder();
 
 		$mailboxIdsQuery = $subQb1
 			->select('id')
 			->from('mail_mailboxes')
 			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT)));
-		$threadRootIdsQuery = $subQb2
-			->select('thread_root_id')
-			->from($this->getTableName())
-			->where(
-				$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
-			);
 
 		/**
 		 * Select the message with the given ID or any that has the same thread ID
 		 */
 		$selectMessages = $qb
-			->select('*')
-			->from($this->getTableName())
+			->select('m2.*')
+			->from($this->getTableName(), 'm1')
+			->leftJoin('m1', $this->getTableName(), 'm2',  $qb->expr()->eq('m1.thread_root_id', 'm2.thread_root_id'))
 			->where(
-				$qb->expr()->in('mailbox_id', $qb->createFunction($mailboxIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
-				$qb->expr()->orX(
-					$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
-					$qb->expr()->andX(
-						$qb->expr()->isNotNull('thread_root_id'),
-						$qb->expr()->in('thread_root_id', $qb->createFunction($threadRootIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
-					)
-				)
+				$qb->expr()->in('m1.mailbox_id', $qb->createFunction($mailboxIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb->expr()->in('m2.mailbox_id', $qb->createFunction($mailboxIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb->expr()->eq('m1.id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->isNotNull('m1.thread_root_id')
 			)
 			->orderBy('sent_at', 'desc');
-
 		return $this->findRecipients($this->findEntities($selectMessages));
 	}
 
