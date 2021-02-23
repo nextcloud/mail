@@ -206,7 +206,7 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep a {
-	color: var(--ck-color-link-default);
+	color: #07d;
 }
 ::v-deep p {
 	cursor: text;
