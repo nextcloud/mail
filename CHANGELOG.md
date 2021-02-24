@@ -10,8 +10,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Update account only if it exists
 
-# 1.8.2 – 2021-02-18
-## Fixed
+## 1.8.2 – 2021-02-18
+### Fixed
 - Missing label for SMTP host setting
 - Priority inbox filter expression
 - Missing name of local attachments
@@ -21,16 +21,16 @@ All notable changes to this project will be documented in this file.
 - New message button not working under some conditions
 - Updating accounts
 
-# 1.8.1 – 2021-02-03
-## Changed
+## 1.8.1 – 2021-02-03
+### Changed
 - Updated translations
-## Fixed
+### Fixed
 - Filter out invalid UTF-8 in subjects
 - Regression that picks wrong attachment
 - Rendering accounts in the navigation even when authentication fails
 
 ## 1.8.0 – 2021-01-20
-## Added
+### Added
 - Drag and drop
 - Remember trusted senders
 - Message delivery notification
