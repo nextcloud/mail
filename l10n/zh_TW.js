@@ -153,6 +153,7 @@ OC.L10N.register(
     "Embedded message" : "內嵌郵件",
     "Choose a folder to store the attachment in" : "選擇一個資料夾來存放附件",
     "Save all to Files" : "全部儲存至檔案",
+    "Download Zip" : "下載 Zip 壓縮檔",
     "Choose a folder to store the attachments in" : "選擇一個資料夾來存放附件",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "此郵件使用 PGP 加密。安裝 Mailvelope 來解密。",
     "The images have been blocked to protect your privacy." : "為維護您的隱私，圖片將不會被載入。",

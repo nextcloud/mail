@@ -153,6 +153,7 @@ OC.L10N.register(
     "Embedded message" : "Eingebettete Nachricht",
     "Choose a folder to store the attachment in" : "Ordner zum Speichern des Anhangs auswählen",
     "Save all to Files" : "Alles unter Dateien sichern",
+    "Download Zip" : "ZIP herunterladen",
     "Choose a folder to store the attachments in" : "Ordner zum Speichern des Anhangs auswählen",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Diese Nachricht wurde mit PGP verschlüsselt. Installiere Mailvelope um sie zu entschlüsseln.",
     "The images have been blocked to protect your privacy." : "Die Bilder wurden blockiert um Deine Privatsphäre zu schützen.",
