@@ -56,17 +56,15 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Mail server')">
-			<div v-if="!account.provisioned">
-				<div id="mail-settings">
-					<AccountForm
-						:key="account.accountId"
-						ref="accountForm"
-						:display-name="displayName"
-						:email="email"
-						:save="onSave"
-						:account="account" />
-				</div>
+		<AppSettingsSection v-if="account && !account.provisioned" :title="t('mail', 'Mail server')">
+			<div id="mail-settings">
+				<AccountForm
+					:key="account.accountId"
+					ref="accountForm"
+					:display-name="displayName"
+					:email="email"
+					:save="onSave"
+					:account="account" />
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection :title="t('mail', 'Trusted senders')">
