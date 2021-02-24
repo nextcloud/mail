@@ -119,10 +119,7 @@ class Manager {
 
 	private function updateAccount(IUser $user, MailAccount $account, Config $config): MailAccount {
 		$account->setEmail($config->buildEmail($user));
-		if ($user->getDisplayName() !== $user->getUID()) {
-			// Only set if it's something meaningful
-			$account->setName($user->getDisplayName());
-		}
+		$account->setName($user->getDisplayName());
 		$account->setInboundUser($config->buildImapUser($user));
 		$account->setInboundHost($config->getImapHost());
 		$account->setInboundPort($config->getImapPort());
