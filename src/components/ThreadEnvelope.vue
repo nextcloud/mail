@@ -197,9 +197,13 @@ export default {
 			}
 		},
 	},
-	mounted() {
+	async mounted() {
 		if (this.expanded) {
-			this.fetchMessage()
+			await this.fetchMessage()
+
+			// Only one envelope is expanded at the time of mounting so we can
+			// assume that this is the relevant envelope to be scrolled to.
+			this.$nextTick(() => this.scrollToCurrentEnvelope())
 		}
 	},
 	beforeDestroy() {
@@ -230,6 +234,13 @@ export default {
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
 			}
+		},
+		scrollToCurrentEnvelope() {
+			// Account for global navigation bar and thread header
+			const globalHeader = document.querySelector('#header').clientHeight
+			const threadHeader = document.querySelector('#mail-thread-header').clientHeight
+			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
+			window.scrollTo({ top })
 		},
 	},
 }
