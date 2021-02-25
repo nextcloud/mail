@@ -41,6 +41,14 @@ Turn off TLS verfication for IMAP/SMTP. This happens globally for all accounts a
 
 ## Troubleshooting
 
+### Logging
+
+The Nextcloud mail app offers an extensive logging system to make it easier identifying and tracking down bugs.
+
+Please enable [debug mode](https://docs.nextcloud.com/server/stable/developer_manual/getting_started/devenv.html#enabling-debug-mode) and set the log [level to debug](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/logging_configuration.html) in your admin settings. Then try to reproduce your issue and take another look at `data/nextcloud.log`, `data/horde_imap.log` and `data/horde_smtp.log`.
+
+Make sure to remove any sensitive data before posting it publicly. Reset log levels and debug mode to the previous values when you are done debugging.
+
 ### Database insert problems on MySQL
 
 If Mail fails to insert new rows for messages (`oc_mail_messages`), recipients (`oc_mail_recipients`) or similar tables, you are possibly not using the 4 byte support. See [the Nextcloud Admin Manual](https://docs.nextcloud.com/server/stable/admin_manual/configuration_database/mysql_4byte_support.html) on how to update your database configuration.
