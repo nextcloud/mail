@@ -129,6 +129,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
+	 * @deprecated  Seems unused
 	 * @return array
 	 */
 	public function getFlags(): array {
@@ -142,10 +143,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
 			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure()),
 			'mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true),
+			'important' => in_array('$important', $flags, true)
 		];
 	}
 
 	/**
+	 * @deprecated  Seems unused
 	 * @param string[] $flags
 	 *
 	 * @throws Exception
@@ -691,7 +694,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			in_array('junk', $flags, true)
 		);
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true));
-		$msg->setFlagImportant(false);
+		$msg->setFlagImportant(in_array('$important', $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
 

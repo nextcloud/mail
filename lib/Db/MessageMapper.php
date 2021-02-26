@@ -333,6 +333,7 @@ class MessageMapper extends QBMapper {
 			->set('flag_junk', $query->createParameter('flag_junk'))
 			->set('flag_notjunk', $query->createParameter('flag_notjunk'))
 			->set('flag_mdnsent', $query->createParameter('flag_mdnsent'))
+			->set('flag_important', $query->createParameter('flag_important'))
 			->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime()))
 			->where($query->expr()->andX(
 				$query->expr()->eq('uid', $query->createParameter('uid')),
@@ -356,6 +357,7 @@ class MessageMapper extends QBMapper {
 			$query->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
 			$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
 			$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
+			$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
 
 			$query->execute();
 		}
