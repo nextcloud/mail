@@ -153,6 +153,7 @@ OC.L10N.register(
     "Embedded message" : "Внедрённое сообщение",
     "Choose a folder to store the attachment in" : "Выберите каталог для хранения вложений",
     "Save all to Files" : "Сохранить все в файлы",
+    "Download Zip" : "Скачать в архиве ZIP",
     "Choose a folder to store the attachments in" : "Выбрать папку для сохранения вложений",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Это сообщение зашифровано с помощью PGP. Установите приложение Mailvelope для расшифровывания. ",
     "The images have been blocked to protect your privacy." : "Изображения были заблокированы для защиты вашей частной жизни.",
