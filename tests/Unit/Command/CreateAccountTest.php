@@ -23,10 +23,14 @@ namespace OCA\Mail\Tests\Unit\Command;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Command\CreateAccount;
+use OCP\IUserManager;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateAccountTest extends TestCase {
 	private $service;
 	private $crypto;
+	private $userManager;
 	private $command;
 	private $args = [
 		'user-id',
@@ -51,8 +55,9 @@ class CreateAccountTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$this->crypto = $this->getMockBuilder('\OCP\Security\ICrypto')->getMock();
+		$this->userManager = $this->createMock(IUserManager::class);
 
-		$this->command = new CreateAccount($this->service, $this->crypto);
+		$this->command = new CreateAccount($this->service, $this->crypto, $this->userManager);
 	}
 
 	public function testName() {
@@ -70,5 +75,41 @@ class CreateAccountTest extends TestCase {
 			$this->assertTrue($actArg->isRequired());
 			$this->assertTrue(in_array($actArg->getName(), $this->args));
 		}
+	}
+
+	public function testInvalidUserId() {
+		$userId = 'invalidUser';
+		$data = [
+			'user-id' => $userId,
+			'name' => '',
+			'email' => '',
+			'imap-host' => '',
+			'imap-port' => 0,
+			'imap-ssl-mode' => '',
+			'imap-user' => '',
+			'imap-password' => '',
+			'smtp-host' => '',
+			'smtp-port' => 0,
+			'smtp-ssl-mode' => '',
+			'smtp-user' => '',
+			'smtp-password' => '',
+		];
+
+		$input = $this->createMock(InputInterface::class);
+		$input->method('getArgument')
+			->willReturnCallback(function ($arg) use ($data) {
+				return $data[$arg];
+			});
+		$output = $this->createMock(OutputInterface::class);
+		$output->expects($this->once())
+			->method('writeln')
+			->with("<error>User $userId does not exist</error>");
+
+		$this->userManager->expects($this->once())
+			->method('userExists')
+			->with($userId)
+			->willReturn(false);
+
+		$this->assertEquals(1, $this->command->run($input, $output));
 	}
 }
