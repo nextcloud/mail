@@ -43,6 +43,16 @@
 				ssl: smtpSslMode,
 			})
 		}}<br>
+		<span v-if="sieveEnabled">
+			{{
+				t('mail', 'Sieve: {user} on {host}:{port} ({ssl} encryption)', {
+					user: sieveUser,
+					host: sieveHost,
+					port: sievePort,
+					ssl: sieveSslMode,
+				})
+			}}<br>
+		</span>
 	</div>
 </template>
 
@@ -86,6 +96,21 @@ export default {
 		},
 		smtpUser() {
 			return this.templates.smtpUser.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
+		},
+		sieveEnabled() {
+			return this.templates.sieveEnabled
+		},
+		sieveHost() {
+			return this.templates.sieveHost
+		},
+		sievePort() {
+			return this.templates.sievePort
+		},
+		sieveSslMode() {
+			return this.templates.sieveSslMode
+		},
+		sieveUser() {
+			return this.templates.sieveUser.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
 		},
 	},
 }

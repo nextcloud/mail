@@ -58,7 +58,12 @@ class SettingsControllerTest extends TestCase {
 				'%USERID%@domain.com',
 				'mx.domain.com',
 				567,
-				'tls'
+				'tls',
+				false,
+				'',
+				'',
+				0,
+				''
 			);
 
 		$response = $this->controller->provisioning(
@@ -70,7 +75,12 @@ class SettingsControllerTest extends TestCase {
 			'%USERID%@domain.com',
 			'mx.domain.com',
 			567,
-			'tls'
+			'tls',
+			false,
+			'',
+			'',
+			0,
+			''
 		);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
