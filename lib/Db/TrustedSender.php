@@ -33,6 +33,8 @@ use OCP\AppFramework\Db\Entity;
  * @method getEmail(): string
  * @method setUserId(string $userId): void
  * @method getUserId(): string
+ * @method setType(string $type): void
+ * @method getType(): string
  */
 class TrustedSender extends Entity implements JsonSerializable {
 
@@ -42,11 +44,15 @@ class TrustedSender extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $userId;
 
+	/** @var string */
+	protected $type;
+
 	public function jsonSerialize() {
 		return [
 			'id' => $this->id,
 			'email' => $this->email,
 			'uid' => $this->userId,
+			'type' => $this->type,
 		];
 	}
 }

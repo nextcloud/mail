@@ -92,7 +92,8 @@ class TrustedSenderServiceTest extends TestCase {
 
 		$this->service->trust(
 			$uid,
-			$email
+			$email,
+			'individual'
 		);
 	}
 
@@ -109,7 +110,8 @@ class TrustedSenderServiceTest extends TestCase {
 
 		$this->service->trust(
 			$uid,
-			$email
+			$email,
+			'individual'
 		);
 	}
 
@@ -127,6 +129,7 @@ class TrustedSenderServiceTest extends TestCase {
 		$this->service->trust(
 			$uid,
 			$email,
+			'individual',
 			false
 		);
 	}

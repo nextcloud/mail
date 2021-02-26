@@ -1,9 +1,10 @@
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
-export async function trustSender(email, trustFlag) {
-	const url = generateUrl('/apps/mail/api/trustedsenders/{email}', {
+export async function trustSender(email, type, trustFlag) {
+	const url = generateUrl('/apps/mail/api/trustedsenders/{email}?type={type}', {
 		email,
+		type,
 	})
 
 	if (trustFlag) {
