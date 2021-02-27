@@ -157,7 +157,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "选择附件保存的目录",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "此消息已使用 PGP 加密。 安装 Mailvelope 对其进行解密。",
     "The images have been blocked to protect your privacy." : "图片已被禁用，以保护您的隐私。",
-    "Show images from this sender" : "显示此发件人的图片",
     "Message frame" : "消息框",
     "Quoted text" : "引用文字",
     "Moving" : "移动",

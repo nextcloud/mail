@@ -157,7 +157,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Выбрать папку для сохранения вложений",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Это сообщение зашифровано с помощью PGP. Установите приложение Mailvelope для расшифровывания. ",
     "The images have been blocked to protect your privacy." : "Изображения были заблокированы для защиты вашей частной жизни.",
-    "Show images from this sender" : "Показать изображения от этого отправителя",
     "Message frame" : "Рамка сообщения",
     "Quoted text" : "Цитируемый текст",
     "Moving" : "Выполняется перемещение",

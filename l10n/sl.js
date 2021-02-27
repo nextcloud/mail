@@ -156,7 +156,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Izbor mape za shranjevanje priloge",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Sporočilo je šifrirano s programom PGP. Za odšifriranje mora biti nameščen program Mailvelope.",
     "The images have been blocked to protect your privacy." : "Za zaščito zasebnosti je prikaz slik onemogočen.",
-    "Show images from this sender" : "Pokaži slike tega pošiljatelja",
     "Message frame" : "Okvir sporočila",
     "Quoted text" : "Navedek besedila",
     "Moving" : "Premikanje",

@@ -156,7 +156,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Ek dosyalarının kaydedileceği bir klasör seçin",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Bu ileti PGP ile şifrelenmiş. Şifreyi çözmek için Mailvelope uygulamasını kurun.",
     "The images have been blocked to protect your privacy." : "Gizliliğinizi korumak için görsellerin görüntülenmesi engellendi.",
-    "Show images from this sender" : "Bu gönderenden gelen görseller görüntülensin",
     "Message frame" : "İleti çerçevesi",
     "Quoted text" : "Alıntılanmış metin",
     "Moving" : "Taşınıyor",

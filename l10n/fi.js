@@ -119,7 +119,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Valitse kansio johon liitteet tallennetaan",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Tämä viesti on salattu PGP:llä. Asenna Mailvelope purkaaksesi viestin salauksen.",
     "The images have been blocked to protect your privacy." : "Kuvat estettiin yksityisyytesi suojelemiseksi.",
-    "Show images from this sender" : "Näytä kuvat tältä lähettäjältä",
     "Message frame" : "Viestiruutu",
     "Quoted text" : "Lainattu teksti",
     "Moving" : "Siirretään",

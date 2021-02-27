@@ -109,7 +109,6 @@ OC.L10N.register(
     "Save all to Files" : "Зберегти все до Файлів",
     "Choose a folder to store the attachments in" : "Виберіть теку для збереження вкладень",
     "The images have been blocked to protect your privacy." : "Зображення не показуються з міркувань безпеки.",
-    "Show images from this sender" : "Показувати зображення відправника",
     "New message" : "Нове повідомлення",
     "Settings" : "Налаштування",
     "Quota" : "Обмеження",

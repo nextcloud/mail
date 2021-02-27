@@ -123,7 +123,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Vyberte priečinok na ukladanie príloh",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Táto správa je šifrovaná pomocou PGP. Pre jej dešifrovanie nainštalujte Mailvelope.",
     "The images have been blocked to protect your privacy." : "Obrázky boli zablokované pre ochranu Vášho súkromia.",
-    "Show images from this sender" : "Zobraziť obrázky od tohoto odosielateľa",
     "New message" : "Nová správa",
     "Settings" : "Nastavenia",
     "Quota" : "Kvóta",

@@ -131,7 +131,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "נא לבחור תיקייה לאחסן בה את הקבצים המצורפים",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "הודעה זו מוצפנת עם PGP. יש להתקין את Mailvelope כדי לפענח אותה.",
     "The images have been blocked to protect your privacy." : "התמונות נחסמו כדי להגן על הפרטיות שלך",
-    "Show images from this sender" : "הצגת תמונות מנמען זה",
     "New message" : "הודעה חדשה",
     "Settings" : "הגדרות",
     "Quota" : "מכיסה",
