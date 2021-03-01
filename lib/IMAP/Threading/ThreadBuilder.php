@@ -101,6 +101,7 @@ class ThreadBuilder {
 			// Step 1.B
 			$parent = null;
 			foreach ($message->getReferences() as $reference) {
+				$logger->debug('Processing reference ' . $reference . ' of message ' . $message->getId());
 				$refContainer = $idTable[$reference] ?? null;
 				if ($refContainer === null) {
 					$logger->debug('Inserting an empty container for a reference');
@@ -109,7 +110,7 @@ class ThreadBuilder {
 				if (!$refContainer->hasParent()
 					&& !($parent !== null && !$parent->hasAncestor($refContainer))
 					&& !($parent !== null && !$refContainer->hasAncestor($parent))) {
-					$logger->debug('Adding the parent to the current refrence container');
+					$logger->debug('Adding the parent to the current reference container');
 					// TODO: Do not add a link if adding that link would introduce a loop: that is, before asserting A->B, search down the children of B to see if A is reachable, and also search down the children of A to see if B is reachable. If either is already reachable as a child of the other, don't add the link.
 					$refContainer->setParent($parent);
 				}
