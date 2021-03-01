@@ -89,7 +89,7 @@
 				<label
 					:class="{primary: useImapCredentials}"
 					for="sieve-credentials-imap">
-					{{ t('mail', 'IMAP credentials') }}
+					{{ t('mail', 'IMAP Credentials') }}
 				</label>
 				<input
 					id="sieve-credentials-custom"
