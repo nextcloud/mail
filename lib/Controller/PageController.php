@@ -138,6 +138,7 @@ class PageController extends Controller {
 				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 				'accounts' => base64_encode(json_encode($accountsJson)),
 				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
+				'reply-mode' => $this->preferences->getPreference('reply-mode', 'top'),
 				'collect-data' => $this->preferences->getPreference('collect-data', 'true'),
 				'account-settings' => base64_encode($accountSettings),
 			]);

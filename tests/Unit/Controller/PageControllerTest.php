@@ -120,10 +120,11 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(3))
+		$this->preferences->expects($this->exactly(4))
 			->method('getPreference')
 			->willReturnMap([
 				['external-avatars', 'true', 'true'],
+				['reply-mode', 'top', 'bottom'],
 				['collect-data', 'true', 'true'],
 				['account-settings', json_encode([]), json_encode([])],
 			]);
@@ -229,6 +230,7 @@ class PageControllerTest extends TestCase {
 				'debug' => true,
 				'attachment-size-limit' => 123,
 				'external-avatars' => 'true',
+				'reply-mode' => 'bottom',
 				'app-version' => '1.2.3',
 				'accounts' => base64_encode(json_encode($accountsJson)),
 				'collect-data' => 'true',

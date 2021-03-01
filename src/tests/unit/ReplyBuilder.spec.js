@@ -20,24 +20,28 @@
  *
  */
 
-import { buildReplyBody, buildRecipients, buildReplySubject } from '../../ReplyBuilder'
-import { html, plain } from '../../util/text'
+import {
+	buildRecipients,
+	buildReplyBody,
+	buildReplySubject
+} from '../../ReplyBuilder'
+import {html, plain} from '../../util/text'
 
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {
 		const body = plain('Newsletter\nhello\ncheers')
-		const expectedReply = html('<p></p><p></p><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers')
 
-		const replyBody = buildReplyBody(body)
+		const replyBodyTop = buildReplyBody(body)
+		const replyBodyBottom = buildReplyBody(body, undefined, undefined, false)
 
-		expect(replyBody).to.deep.equal(expectedReply)
+		expect(replyBodyTop).to.deep.equal(html('<p></p><p></p><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers'))
+		expect(replyBodyBottom).to.deep.equal(html('<br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers<p></p><p></p>'))
 	})
 
 	it('creates a reply body', () => {
 		const body = plain('Newsletter\nhello')
-		const expectedReply = html('<p></p><p></p>"Test User" test@user.ru – November 5, 2018 ')
 
-		const replyBody = buildReplyBody(
+		const replyBodyTop = buildReplyBody(
 			body,
 			{
 				label: 'Test User',
@@ -45,8 +49,18 @@ describe('ReplyBuilder', () => {
 			},
 			1541426237
 		)
+		const replyBodyBottom = buildReplyBody(
+			body,
+			{
+				label: 'Test User',
+				email: 'test@user.ru',
+			},
+			1541426237,
+			false
+		)
 
-		expect(replyBody.value.startsWith(expectedReply.value)).to.be.true
+		expect(replyBodyTop.value.startsWith(html('<p></p><p></p>"Test User" test@user.ru – November 5, 2018 ').value)).to.be.true
+		expect(replyBodyBottom.value.endsWith(html('<p></p><p></p>').value)).to.be.true
 	})
 
 	let envelope
