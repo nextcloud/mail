@@ -50,7 +50,12 @@ class SettingsController extends Controller {
 								 string $smtpUser,
 								 string $smtpHost,
 								 int $smtpPort,
-								 string $smtpSslMode): JSONResponse {
+								 string $smtpSslMode,
+								 bool $sieveEnabled,
+								 string $sieveUser,
+								 string $sieveHost,
+								 int $sievePort,
+								 string $sieveSslMode): JSONResponse {
 		$this->provisioningManager->newProvisioning(
 			$emailTemplate,
 			$imapUser,
@@ -60,7 +65,12 @@ class SettingsController extends Controller {
 			$smtpUser,
 			$smtpHost,
 			$smtpPort,
-			$smtpSslMode
+			$smtpSslMode,
+			$sieveEnabled,
+			$sieveUser,
+			$sieveHost,
+			$sievePort,
+			$sieveSslMode
 		);
 
 		return new JSONResponse([]);

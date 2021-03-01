@@ -24,7 +24,8 @@
 
 <template>
 	<AppSettingsDialog
-		:open.sync="showSettings">
+		:open.sync="showSettings"
+		:show-navigation="true">
 		<AppSettingsSection
 			:title="t('mail', 'Account settings')">
 			<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
@@ -55,17 +56,31 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Mail server')">
-			<div v-if="!account.provisioned">
-				<div id="mail-settings">
-					<AccountForm
-						:key="account.accountId"
-						ref="accountForm"
-						:display-name="displayName"
-						:email="email"
-						:save="onSave"
-						:account="account" />
-				</div>
+		<AppSettingsSection v-if="account && !account.provisioned" :title="t('mail', 'Mail server')">
+			<div id="mail-settings">
+				<AccountForm
+					:key="account.accountId"
+					ref="accountForm"
+					:display-name="displayName"
+					:email="email"
+					:save="onSave"
+					:account="account" />
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && !account.provisioned" :title="t('mail', 'Sieve filter server')">
+			<div id="sieve-settings">
+				<SieveAccountForm
+					:key="account.accountId"
+					ref="sieveAccountForm"
+					:account="account" />
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && account.sieveEnabled" :title="t('mail', 'Sieve filter rules')">
+			<div id="sieve-filter">
+				<SieveFilterForm
+					:key="account.accountId"
+					ref="sieveFilterForm"
+					:account="account" />
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection :title="t('mail', 'Trusted senders')">
@@ -84,9 +99,13 @@ import AliasSettings from '../components/AliasSettings'
 import AppSettingsDialog from '@nextcloud/vue/dist/Components/AppSettingsDialog'
 import AppSettingsSection from '@nextcloud/vue/dist/Components/AppSettingsSection'
 import TrustedSenders from './TrustedSenders'
+import SieveAccountForm from './SieveAccountForm'
+import SieveFilterForm from './SieveFilterForm'
 export default {
 	name: 'AccountSettings',
 	components: {
+		SieveAccountForm,
+		SieveFilterForm,
 		TrustedSenders,
 		AccountForm,
 		AliasSettings,

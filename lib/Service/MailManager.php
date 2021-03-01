@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
@@ -386,10 +387,13 @@ class MailManager implements IMailManager {
 		}
 
 		// Only send system flags to the IMAP server as other flags might not be supported
-		$imapFlags = self::ALLOWED_FLAGS[$flag] ?? [];
+		$imapFlags = $this->filterFlags($account, $flag, $mailbox);
 		try {
 			foreach ($imapFlags as $imapFlag) {
-				if ($value) {
+				if (empty($imapFlag) === true) {
+					continue;
+				}
+				if ($value === true) {
 					$this->imapMessageMapper->addFlag($client, $mb, $uid, $imapFlag);
 				} else {
 					$this->imapMessageMapper->removeFlag($client, $mb, $uid, $imapFlag);
@@ -501,5 +505,58 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 		$this->folderMapper->delete($client, $mailbox->getName());
 		$this->mailboxMapper->delete($mailbox);
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
+	 * @return array[]
+	 */
+	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message): array {
+		return $this->imapMessageMapper->getAttachments($this->imapClientFactory->getClient($account), $mailbox->getName(), $message->getUid());
+	}
+
+	/**
+	 * Filter out IMAP flags that aren't supported by the client server
+	 *
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $flag
+	 * @param string $mailbox
+	 * @return array
+	 */
+	public function filterFlags(Account $account, string $flag, string $mailbox): array {
+		// check for RFC server flags
+		if (array_key_exists($flag, self::ALLOWED_FLAGS) === true) {
+			return self::ALLOWED_FLAGS[$flag];
+		}
+
+		// Only allow flag setting if IMAP supports Permaflags
+		// @TODO check if there are length & char limits on permflags
+		if ($this->isPermflagsEnabled($account, $mailbox) === true) {
+			return ["$" . $flag];
+		}
+		return [];
+	}
+
+	/**
+	 * Check IMAP server for support for PERMANENTFLAGS
+	 *
+	 * @param Account $account
+	 * @param string $mailbox
+	 * @return boolean
+	 */
+	public function isPermflagsEnabled(Account $account, string $mailbox): bool {
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$capabilities = $client->status($mailbox, Horde_Imap_Client::STATUS_PERMFLAGS);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				"Could not get message flag options from IMAP: " . $e->getMessage(),
+				(int) $e->getCode(),
+				$e
+			);
+		}
+		return (is_array($capabilities) === true && array_key_exists('permflags', $capabilities) === true && in_array("\*", $capabilities['permflags'], true) === true);
 	}
 }

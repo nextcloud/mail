@@ -62,10 +62,22 @@ class FolderMapper {
 			'special_use' => true,
 		]);
 
-		return array_filter(array_map(function (array $mailbox) use ($account) {
+		return array_filter(array_map(function (array $mailbox) use ($account, $client) {
 			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
 				// This is a special folder that must not be shown
 				return null;
+			}
+
+			try {
+				$client->status($mailbox["mailbox"]);
+			} catch (Horde_Imap_Client_Exception $e) {
+				// ignore folders which cause errors on access
+				// (i.e. server-side system I/O errors)
+				if (in_array($e->getCode(), [
+					Horde_Imap_Client_Exception::UNSPECIFIED,
+				], true)) {
+					return null;
+				}
 			}
 
 			return new Folder(

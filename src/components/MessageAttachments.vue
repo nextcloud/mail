@@ -42,11 +42,17 @@
 				@click="saveAll">
 				{{ t('mail', 'Save all to Files') }}
 			</button>
+			<button
+				class="attachments-save-to-cloud icon-folder"
+				@click="downloadZip">
+				{{ t('mail', 'Download Zip') }}
+			</button>
 		</p>
 	</div>
 </template>
 
 <script>
+import { generateUrl } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { saveAttachmentsToFiles } from '../service/AttachmentService'
 
@@ -59,6 +65,10 @@ export default {
 		MessageAttachment,
 	},
 	props: {
+		envelope: {
+			required: true,
+			type: Object,
+		},
 		attachments: {
 			type: Array,
 			required: true,
@@ -72,6 +82,11 @@ export default {
 	computed: {
 		moreThanOne() {
 			return this.attachments.length > 1
+		},
+		zipUrl() {
+			return generateUrl('/apps/mail/api/messages/{id}/attachments', {
+				id: this.envelope.databaseId,
+			})
 		},
 	},
 	methods: {
@@ -99,6 +114,10 @@ export default {
 				.then(() => Logger.info('saved'))
 				.catch((error) => Logger.error('not saved', { error }))
 				.then(() => (this.savingToCloud = false))
+		},
+		downloadZip() {
+			window.open(this.zipUrl)
+			window.focus()
 		},
 	},
 }

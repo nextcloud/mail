@@ -67,11 +67,16 @@ class NewMessageClassificationListener implements IEventListener {
 			}
 		}
 
+		// if the message is already flagged as important, we won't classify it again.
+		$messages = array_filter($event->getMessages(), function ($message) {
+			return ($message->getFlagImportant() === false);
+		});
+
 		try {
 			$predictions = $this->classifier->classifyImportance(
 				$event->getAccount(),
 				$event->getMailbox(),
-				$event->getMessages()
+				$messages
 			);
 
 			foreach ($event->getMessages() as $message) {

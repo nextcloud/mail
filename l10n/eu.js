@@ -127,7 +127,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Aukeratu karpeta bat erantsitako fitxategiak gordetzeko",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : " \nMezu hau PGP bidez enkriptatu da. Instalatu Mailvelope desenkriptatzeko.",
     "The images have been blocked to protect your privacy." : "Irudiak blokeatu dira zure pribatutasuna babesteko.",
-    "Show images from this sender" : "Bidaltzaile honen irudiak ikusi",
     "Message frame" : "Mezuaren enkoadraketa",
     "Moving" : "Mugitzen",
     "New message" : "Mezu berria",

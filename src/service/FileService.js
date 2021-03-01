@@ -23,7 +23,7 @@ import axios from '@nextcloud/axios'
 import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
 import memoize from 'lodash/fp/memoize'
-import webdav from 'webdav'
+import * as webdav from 'webdav'
 
 const getWebDavClient = memoize(() => {
 	// Add this so the server knows it is an request from the browser

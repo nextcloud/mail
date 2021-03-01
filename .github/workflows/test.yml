@@ -68,6 +68,7 @@ jobs:
                   - 25:25
                   - 143:143
                   - 993:993
+                  - 4190:4190
           mysql-service:
               image: mariadb:10
               env:
@@ -144,7 +145,7 @@ jobs:
       steps:
           - uses: actions/checkout@master
           - name: Set up Node
-            uses: actions/setup-node@v2.1.4
+            uses: actions/setup-node@v2.1.5
             with:
                 node-version: 12.x
           - name: npm install

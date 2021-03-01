@@ -26,9 +26,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use Horde_Imap_Client_Exception;
+use Horde_Mail_Exception;
+use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
@@ -48,6 +53,9 @@ class SetupService {
 	/** @var SmtpClientFactory */
 	private $smtpClientFactory;
 
+	/** @var IMAPClientFactory */
+	private $imapClientFactory;
+
 	/** var LoggerInterface */
 	private $logger;
 
@@ -55,11 +63,13 @@ class SetupService {
 								AccountService $accountService,
 								ICrypto $crypto,
 								SmtpClientFactory $smtpClientFactory,
+								IMAPClientFactory $imapClientFactory,
 								LoggerInterface $logger) {
 		$this->autoConfig = $autoConfig;
 		$this->accountService = $accountService;
 		$this->crypto = $crypto;
 		$this->smtpClientFactory = $smtpClientFactory;
+		$this->imapClientFactory = $imapClientFactory;
 		$this->logger = $logger;
 	}
 
@@ -124,12 +134,35 @@ class SetupService {
 
 		$account = new Account($newAccount);
 		$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
-		$transport = $this->smtpClientFactory->create($account);
-		$account->testConnectivity($transport);
+		$this->testConnectivity($account);
 
 		$this->accountService->save($newAccount);
 		$this->logger->debug("account created " . $newAccount->getId());
 
 		return $account;
+	}
+
+	/**
+	 * @param Account $account
+	 * @throws CouldNotConnectException
+	 */
+	protected function testConnectivity(Account $account): void {
+		$mailAccount = $account->getMailAccount();
+
+		$imapClient = $this->imapClientFactory->getClient($account);
+		try {
+			$imapClient->login();
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw CouldNotConnectException::create($e, 'IMAP', $mailAccount->getInboundHost(), $mailAccount->getInboundPort());
+		}
+
+		$transport = $this->smtpClientFactory->create($account);
+		if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
+			try {
+				$transport->getSMTPObject();
+			} catch (Horde_Mail_Exception $e) {
+				throw CouldNotConnectException::create($e, 'SMTP', $mailAccount->getOutboundHost(), $mailAccount->getOutboundPort());
+			}
+		}
 	}
 }

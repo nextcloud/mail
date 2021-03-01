@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 use Horde_Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_DateTime;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Mail_Transport_Null;
@@ -432,12 +433,12 @@ class MailTransmission implements IMailTransmission {
 		$query->flags();
 		$query->uid();
 		$query->imapDate();
-		$query->headers(
-			'mdn',
-			['disposition-notification-to', 'original-recipient'],
-			['cache' => true, 'peek' => true]
-		);
+		$query->headerText([
+			'cache' => true,
+			'peek' => true,
+		]);
 
+		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
 		$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
 			'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
 		]), false);
@@ -446,10 +447,10 @@ class MailTransmission implements IMailTransmission {
 			throw new ServiceException('Message "' .$message->getId() . '" not found.');
 		}
 
-		/** @var \Horde_Imap_Client_DateTime $imapDate */
+		/** @var Horde_Imap_Client_DateTime $imapDate */
 		$imapDate = $fetchResults[0]->getImapDate();
 		/** @var Horde_Mime_Headers $headers */
-		$mdnHeaders = $fetchResults[0]->getHeaders('mdn', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		$mdnHeaders = $fetchResults[0]->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 		/** @var Horde_Mime_Headers_Addresses|null $dispositionNotificationTo */
 		$dispositionNotificationTo = $mdnHeaders->getHeader('disposition-notification-to');
 		/** @var Horde_Mime_Headers_Addresses|null $originalRecipient */
@@ -482,7 +483,10 @@ class MailTransmission implements IMailTransmission {
 				'displayed',
 				$account->getMailAccount()->getOutboundHost(),
 				$smtpClient,
-				['from_addr' => $account->getEMailAddress()]
+				[
+					'from_addr' => $account->getEMailAddress(),
+					'charset' => 'UTF-8',
+				]
 			);
 		} catch (Horde_Mime_Exception $e) {
 			throw new ServiceException('Unable to send mdn for message "' . $message->getId() . '" caused by: ' . $e->getMessage(), 0, $e);

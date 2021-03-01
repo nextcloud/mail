@@ -135,7 +135,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Избери папка за зачувување на прилозите",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Оваа порака е шифрирана со PGP. Инсталирај Mailvelope за да ја дешифрираш.",
     "The images have been blocked to protect your privacy." : "Сликите се блокирани за да ја заштитите вашата приватност.",
-    "Show images from this sender" : "Прикажи ги сликите од овој испраќач",
     "Message frame" : "Порака рамка",
     "Quoted text" : "Цитиран текст",
     "Moving" : "Преместува",

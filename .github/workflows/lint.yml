@@ -81,7 +81,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Set up Node
-      uses: actions/setup-node@v2.1.4
+      uses: actions/setup-node@v2.1.5
       with:
         node-version: 12.x
     - name: npm install

@@ -111,6 +111,45 @@ class Config implements JsonSerializable {
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function getSieveEnabled(): bool {
+		return (bool)$this->data['sieveEnabled'];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSieveHost() {
+		return $this->data['sieveHost'];
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getSievePort(): int {
+		return (int)$this->data['sievePort'];
+	}
+
+	/**
+	 * @param IUser $user
+	 * @return string
+	 */
+	public function buildSieveUser(IUser $user) {
+		if (isset($this->data['sieveUser'])) {
+			return $this->buildUserEmail($this->data['sieveUser'], $user);
+		}
+		return $this->buildEmail($user);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSieveSslMode() {
+		return $this->data['sieveSslMode'];
+	}
+
+	/**
 	 * Replace %USERID% and %EMAIL% to allow special configurations
 	 *
 	 * @param string $original

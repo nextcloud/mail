@@ -62,7 +62,7 @@ class TrustedSenderMapperTest extends TestCase {
 		$this->assertFalse($exists);
 	}
 
-	public function testExists(): void {
+	public function testIndividualExists(): void {
 		$uid = $this->user->getUID();
 		$qb = $this->db->getQueryBuilder();
 		$qb->insert('mail_trusted_senders')
@@ -77,11 +77,29 @@ class TrustedSenderMapperTest extends TestCase {
 		$this->assertTrue($exists);
 	}
 
-	public function testCreate(): void {
+	public function testDomainExists(): void {
+		$uid = $this->user->getUID();
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert('mail_trusted_senders')
+			->values([
+				'user_id' => $qb->createNamedParameter($uid),
+				'email' => $qb->createNamedParameter('next.cloud'),
+				'type' => $qb->createNamedParameter('domain'),
+
+			])
+			->execute();
+
+		$exists = $this->mapper->exists($uid, "christoph@next.cloud");
+
+		$this->assertTrue($exists);
+	}
+
+	public function testCreateIndividual(): void {
 		$uid = $this->user->getUID();
 		$this->mapper->create(
 			$uid,
-			"christoph@next.cloud"
+			"christoph@next.cloud",
+			'individual'
 		);
 
 		$qb = $this->db->getQueryBuilder();
@@ -97,19 +115,28 @@ class TrustedSenderMapperTest extends TestCase {
 		$this->assertCount(1, $rows);
 	}
 
-	public function testRemove(): void {
+	public function testRemoveIndividual(): void {
 		$uid = $this->user->getUID();
 		$qb = $this->db->getQueryBuilder();
 		$qb->insert('mail_trusted_senders')
 			->values([
 				'user_id' => $qb->createNamedParameter($uid),
 				'email' => $qb->createNamedParameter('christoph@next.cloud'),
+				'type' => $qb->createNamedParameter('individual'),
+			])
+			->execute();
+		$qb->insert('mail_trusted_senders')
+			->values([
+				'user_id' => $qb->createNamedParameter($uid),
+				'email' => $qb->createNamedParameter('next.cloud'),
+				'type' => $qb->createNamedParameter('domain'),
 			])
 			->execute();
 
 		$this->mapper->remove(
 			$uid,
-			"christoph@next.cloud"
+			"christoph@next.cloud",
+			'individual'
 		);
 
 		$qb = $this->db->getQueryBuilder();
@@ -117,7 +144,46 @@ class TrustedSenderMapperTest extends TestCase {
 			->from('mail_trusted_senders')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('email', $qb->createNamedParameter("christoph@next.cloud"))
+				$qb->expr()->eq('email', $qb->createNamedParameter("christoph@next.cloud")),
+				$qb->expr()->eq('type', $qb->createNamedParameter("individual"))
+			);
+		$result = $qb->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		$this->assertEmpty($rows);
+	}
+
+	public function testRemoveDomain(): void {
+		$uid = $this->user->getUID();
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert('mail_trusted_senders')
+			->values([
+				'user_id' => $qb->createNamedParameter($uid),
+				'email' => $qb->createNamedParameter('christoph@next.cloud'),
+				'type' => $qb->createNamedParameter('individual'),
+			])
+			->execute();
+		$qb->insert('mail_trusted_senders')
+			->values([
+				'user_id' => $qb->createNamedParameter($uid),
+				'email' => $qb->createNamedParameter('next.cloud'),
+				'type' => $qb->createNamedParameter('domain'),
+			])
+			->execute();
+
+		$this->mapper->remove(
+			$uid,
+			"next.cloud",
+			'domain'
+		);
+
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from('mail_trusted_senders')
+			->where(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
+				$qb->expr()->eq('email', $qb->createNamedParameter("next.cloud")),
+				$qb->expr()->eq('type', $qb->createNamedParameter("domain"))
 			);
 		$result = $qb->execute();
 		$rows = $result->fetchAll();

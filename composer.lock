@@ -1256,6 +1256,36 @@
             "description": "Provides interfaces for sending e-mail messages and parsing e-mail addresses."
         },
         {
+            "name": "pear-pear.horde.org/Horde_ManageSieve",
+            "version": "1.0.3",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.horde.org/get/Horde_ManageSieve-1.0.3.tgz"
+            },
+            "require": {
+                "pear-pear.horde.org/horde_exception": "<3.0.0.0",
+                "pear-pear.horde.org/horde_socket_client": "<3.0.0.0",
+                "pear-pear.horde.org/horde_util": "<3.0.0.0",
+                "php": ">=5.4.0.0"
+            },
+            "replace": {
+                "pear-horde/horde_managesieve": "== 1.0.3.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "A library that implements the ManageSieve protocol (RFC 5804)."
+        },
+        {
             "name": "pear-pear.horde.org/Horde_Mime",
             "version": "2.11.1",
             "dist": {
@@ -1555,19 +1585,20 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Filter",
-            "version": "2.3.6",
+            "version": "2.3.7",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.6.tgz"
+                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.7.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
                 "pear-pear.horde.org/horde_idna": "<2.0.0.0",
+                "pear-pear.horde.org/horde_secret": "<3.0.0.0",
                 "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_text_filter": "== 2.3.6.0"
+                "pear-horde/horde_text_filter": "== 2.3.7.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -1920,16 +1951,16 @@
         },
         {
             "name": "rubix/tensor",
-            "version": "2.1.3",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/Tensor.git",
-                "reference": "76212d79e36f6ba1266747d7065676122d51cf10"
+                "reference": "f51797af5631d117263cb394d94c81a8e5e35604"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/76212d79e36f6ba1266747d7065676122d51cf10",
-                "reference": "76212d79e36f6ba1266747d7065676122d51cf10",
+                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/f51797af5631d117263cb394d94c81a8e5e35604",
+                "reference": "f51797af5631d117263cb394d94c81a8e5e35604",
                 "shasum": ""
             },
             "require": {
@@ -2004,7 +2035,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-14T06:10:44+00:00"
+            "time": "2021-02-20T08:19:57+00:00"
         },
         {
             "name": "symfony/console",
@@ -2102,16 +2133,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "196f45723b5e618bf0e23b97e96d11652696ea9e"
+                "reference": "4adc8d172d602008c204c2e16956f99257248e03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/196f45723b5e618bf0e23b97e96d11652696ea9e",
-                "reference": "196f45723b5e618bf0e23b97e96d11652696ea9e",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/4adc8d172d602008c204c2e16956f99257248e03",
+                "reference": "4adc8d172d602008c204c2e16956f99257248e03",
                 "shasum": ""
             },
             "require": {
@@ -2156,7 +2187,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T10:01:46+00:00"
+            "time": "2021-01-28T22:06:19+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2822,16 +2853,16 @@
         },
         {
             "name": "christophwurst/nextcloud_testing",
-            "version": "v0.12.3",
+            "version": "v0.12.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_testing.git",
-                "reference": "f16ffe407e734ab6a8cd16e7ba7d1e2bad8cfefc"
+                "reference": "9c189b01dbcc3508108f08c417de6aaea7005fb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/f16ffe407e734ab6a8cd16e7ba7d1e2bad8cfefc",
-                "reference": "f16ffe407e734ab6a8cd16e7ba7d1e2bad8cfefc",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/9c189b01dbcc3508108f08c417de6aaea7005fb0",
+                "reference": "9c189b01dbcc3508108f08c417de6aaea7005fb0",
                 "shasum": ""
             },
             "require": {
@@ -2859,7 +2890,7 @@
                 }
             ],
             "description": "Simple and fast unit and integration testing framework for Nextcloud, based on PHPUnit",
-            "time": "2021-01-28T10:28:10+00:00"
+            "time": "2021-02-18T08:41:09+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -3352,16 +3383,16 @@
         },
         {
             "name": "felixfbecker/language-server-protocol",
-            "version": "v1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/felixfbecker/php-language-server-protocol.git",
-                "reference": "85e83cacd2ed573238678c6875f8f0d7ec699541"
+                "reference": "9d846d1f5cf101deee7a61c8ba7caa0a975cd730"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/felixfbecker/php-language-server-protocol/zipball/85e83cacd2ed573238678c6875f8f0d7ec699541",
-                "reference": "85e83cacd2ed573238678c6875f8f0d7ec699541",
+                "url": "https://api.github.com/repos/felixfbecker/php-language-server-protocol/zipball/9d846d1f5cf101deee7a61c8ba7caa0a975cd730",
+                "reference": "9d846d1f5cf101deee7a61c8ba7caa0a975cd730",
                 "shasum": ""
             },
             "require": {
@@ -3400,7 +3431,7 @@
                 "php",
                 "server"
             ],
-            "time": "2020-10-23T13:55:30+00:00"
+            "time": "2021-02-22T14:02:09+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -4583,16 +4614,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.1",
+            "version": "9.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e7bdf4085de85a825f4424eae52c99a1cec2f360"
+                "reference": "f661659747f2f87f9e72095bb207bceb0f151cb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e7bdf4085de85a825f4424eae52c99a1cec2f360",
-                "reference": "e7bdf4085de85a825f4424eae52c99a1cec2f360",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f661659747f2f87f9e72095bb207bceb0f151cb4",
+                "reference": "f661659747f2f87f9e72095bb207bceb0f151cb4",
                 "shasum": ""
             },
             "require": {
@@ -4678,7 +4709,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-17T07:42:25+00:00"
+            "time": "2021-02-02T14:45:58+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -4732,12 +4763,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "1e48e1beacb6122df93aa61a6cc291254984be2a"
+                "reference": "a6bfc5a1416f0dde1f53b7737b2cf983352737b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1e48e1beacb6122df93aa61a6cc291254984be2a",
-                "reference": "1e48e1beacb6122df93aa61a6cc291254984be2a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a6bfc5a1416f0dde1f53b7737b2cf983352737b8",
+                "reference": "a6bfc5a1416f0dde1f53b7737b2cf983352737b8",
                 "shasum": ""
             },
             "conflict": {
@@ -4755,6 +4786,7 @@
                 "barrelstrength/sprout-forms": "<3.9",
                 "baserproject/basercms": ">=4,<=4.3.6|>=4.4,<4.4.1",
                 "bolt/bolt": "<3.7.1",
+                "bolt/core": "<4.1.13",
                 "brightlocal/phpwhois": "<=4.2.5",
                 "buddypress/buddypress": "<5.1.2",
                 "bugsnag/bugsnag-laravel": ">=2,<2.0.2",
@@ -4878,7 +4910,7 @@
                 "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
-                "pimcore/pimcore": "<6.3",
+                "pimcore/pimcore": "<6.8.8",
                 "pocketmine/pocketmine-mp": "<3.15.4",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/contactform": ">1.0.1,<4.3",
@@ -4918,7 +4950,7 @@
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
                 "simplito/elliptic-php": "<1.0.6",
                 "slim/slim": "<2.6",
-                "smarty/smarty": "<3.1.33",
+                "smarty/smarty": "<3.1.39",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
                 "spoonity/tcpdf": "<6.2.22",
@@ -5046,7 +5078,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-16T17:17:25+00:00"
+            "time": "2021-02-26T20:02:39+00:00"
         },
         {
             "name": "sabre/event",
@@ -6075,7 +6107,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -6233,7 +6265,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -6292,7 +6324,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
@@ -6423,7 +6455,7 @@
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php72.git",
@@ -6555,7 +6587,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",

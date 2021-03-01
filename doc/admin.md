@@ -28,6 +28,11 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 ```php
 'app.mail.smtp.timeout' => 2
 ```
+#### Sieve timeout
+```php
+'app.mail.sieve.timeout' => 2
+```
+
 ### Use php-mail for sending mail
 You can use the php-mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
@@ -40,6 +45,14 @@ Turn off TLS verfication for IMAP/SMTP. This happens globally for all accounts a
 ```
 
 ## Troubleshooting
+
+### Logging
+
+The Nextcloud mail app offers an extensive logging system to make it easier identifying and tracking down bugs.
+
+Please enable [debug mode](https://docs.nextcloud.com/server/stable/developer_manual/getting_started/devenv.html#enabling-debug-mode) and set the log [level to debug](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/logging_configuration.html) in your admin settings. Then try to reproduce your issue and take another look at `data/nextcloud.log`, `data/horde_imap.log` and `data/horde_smtp.log`.
+
+Make sure to remove any sensitive data before posting it publicly. Reset log levels and debug mode to the previous values when you are done debugging.
 
 ### Database insert problems on MySQL
 

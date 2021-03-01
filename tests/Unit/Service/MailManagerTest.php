@@ -29,6 +29,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ServiceException;
@@ -297,10 +298,11 @@ class MailManagerTest extends TestCase {
 		);
 	}
 
-	public function testSetCustomFlag(): void {
+	public function testSetCustomFlagNoIMAPCapabilities(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createMock(Account::class);
-		$this->imapClientFactory->expects($this->once())
+
+		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
 			->willReturn($client);
 		$this->imapMessageMapper->expects($this->never())
@@ -309,6 +311,116 @@ class MailManagerTest extends TestCase {
 			->method('removeFlag');
 
 		$this->manager->flagMessage($account, 'INBOX', 123, 'important', true);
+		$this->manager->flagMessage($account, 'INBOX', 123, 'important', false);
+	}
+
+	public function testSetCustomFlagWithIMAPCapabilities(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+
+		$this->imapClientFactory->expects($this->any())
+			->method('getClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn([ 'permflags' => [ "11" => "\*" ] ]);
+		$this->imapMessageMapper->expects($this->once())
+			->method('addFlag');
+
+		$this->manager->flagMessage($account, 'INBOX', 123, 'important', true);
+	}
+
+	public function testUnsetCustomFlagWithIMAPCapabilities(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+
+		$this->imapClientFactory->expects($this->any())
+			->method('getClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn([ 'permflags' => [ "11" => "\*" ] ]);
+		$this->imapMessageMapper->expects($this->once())
+			->method('removeFlag');
+
+		$this->manager->flagMessage($account, 'INBOX', 123, 'important', false);
+	}
+
+	public function testFilterFlagStandard(): void {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$flags = [
+			'seen' => [\Horde_Imap_Client::FLAG_SEEN],
+			'answered' => [\Horde_Imap_Client::FLAG_ANSWERED],
+			'flagged' => [\Horde_Imap_Client::FLAG_FLAGGED],
+			'deleted' => [\Horde_Imap_Client::FLAG_DELETED],
+			'draft' => [\Horde_Imap_Client::FLAG_DRAFT],
+			'recent' => [\Horde_Imap_Client::FLAG_RECENT],
+			'junk' => [\Horde_Imap_Client::FLAG_JUNK, 'junk'],
+			'mdnsent' => [\Horde_Imap_Client::FLAG_MDNSENT],
+		];
+
+		$this->imapClientFactory->expects($this->any())
+			->method('getClient')
+			->willReturn($client);
+
+		//standard flags
+		foreach ($flags as $k => $flag) {
+			$this->assertEquals($this->manager->filterFlags($account, $k , 'INBOX'), $flags[$k]);
+		}
+	}
+
+	public function testSetFilterFlagsNoCapabilities() {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$this->imapClientFactory->expects($this->any())
+		->method('getClient')
+		->willReturn($client);
+
+		$this->assertEquals([],  $this->manager->filterFlags($account, '$important' , 'INBOX'));
+	}
+
+	public function testSetFilterFlagsImportant() {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn(['permflags' => [ "11" => "\*" ]]);
+
+		$this->assertEquals(['$important'],  $this->manager->filterFlags($account, 'important' , 'INBOX'));
+	}
+
+	public function testIsPermflagsEnabledTrue(): void {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn(['permflags' => [ "11" => "\*"] ]);
+
+		$this->assertTrue($this->manager->isPermflagsEnabled($account, 'INBOX'));
+	}
+
+	public function testIsPermflagsEnabledFalse(): void {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn([]);
+
+		$this->assertFalse($this->manager->isPermflagsEnabled($account, 'INBOX'));
 	}
 
 	public function testRemoveFlag(): void {
@@ -339,5 +451,34 @@ class MailManagerTest extends TestCase {
 			->with($account, $messageId);
 
 		$this->manager->getThread($account, $messageId);
+	}
+
+	public function testGetMailAttachments(): void {
+		$account = $this->createMock(Account::class);
+		$attachments = [
+			[
+				'content' => 'abcdefg',
+				'name' => 'cat.png',
+				'size' => ''
+			]
+		];
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('Inbox');
+		$message = new Message();
+		$message->setUid(123);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$this->imapMessageMapper->expects($this->once())
+			->method('getAttachments')
+			->with(
+				$client,
+				$mailbox->getName(),
+				$message->getUid()
+			)->willReturn($attachments);
+		$result = $this->manager->getMailAttachments($account, $mailbox, $message);
+		$this->assertEquals($attachments, $result);
 	}
 }

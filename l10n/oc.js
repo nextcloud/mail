@@ -41,6 +41,7 @@ OC.L10N.register(
     "Junk" : "Indesirables",
     "Sent" : "Mandats",
     "Trash" : "Escobilhièr",
+    "Error while sharing file" : "Error pendent lo partiment del fichièr",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Error loading message" : "Error al moment del cargament del messatge",
     "Continue to %s" : "Contunhar cap a %s"

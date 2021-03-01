@@ -54,13 +54,14 @@ class TrustedSendersController extends Controller {
 	 * @TrapError
 	 *
 	 * @param string $email
-	 *
+	 * @param string $type
 	 * @return JsonResponse
 	 */
-	public function setTrusted(string $email): JsonResponse {
+	public function setTrusted(string $email, string $type): JsonResponse {
 		$this->trustedSenderService->trust(
 			$this->uid,
-			$email
+			$email,
+			$type
 		);
 
 		return JsonResponse::success(null, Http::STATUS_CREATED);
@@ -71,13 +72,14 @@ class TrustedSendersController extends Controller {
 	 * @TrapError
 	 *
 	 * @param string $email
-	 *
+	 * @param string $type
 	 * @return JsonResponse
 	 */
-	public function removeTrust(string $email): JsonResponse {
+	public function removeTrust(string $email, string $type): JsonResponse {
 		$this->trustedSenderService->trust(
 			$this->uid,
 			$email,
+			$type,
 			false
 		);
 

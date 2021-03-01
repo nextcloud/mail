@@ -24,7 +24,7 @@
 		<div v-for="sender in sortedSenders"
 			:key="sender.email">
 			{{ sender.email }}
-
+			{{ senderType(sender.type) }}
 			<button class="button"
 				@click="removeSender(sender)">
 				{{ t('mail','Remove') }}
@@ -67,6 +67,7 @@ export default {
 			try {
 				await trustSender(
 					sender.email,
+					sender.type,
 					false
 				)
 			} catch (error) {
@@ -79,6 +80,15 @@ export default {
 				// Put the sender back
 				this.list.push(sender)
 			}
+		},
+		senderType(type) {
+			switch (type) {
+			case 'individual':
+				return t('mail', 'individual')
+			case 'domain':
+				return t('mail', 'domain')
+			}
+			return type
 		},
 	},
 }
