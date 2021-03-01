@@ -274,7 +274,7 @@ OC.L10N.register(
     "All inboxes" : "所有收件匣",
     "Inbox" : "收件匣",
     "Junk" : "垃圾郵件",
-    "Sent" : "寄件備份",
+    "Sent" : "發送",
     "Trash" : "回收筒",
     "Error while sharing file" : "分享檔案時發生錯誤",
     "{from}\n{subject}" : "{from}\n{subject}",
