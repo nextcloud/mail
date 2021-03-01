@@ -118,6 +118,7 @@ export default {
 		downloadZip() {
 			window.open(this.zipUrl)
 			window.focus()
+			window.location = this.zipUrl
 		},
 	},
 }
