@@ -1951,16 +1951,16 @@
         },
         {
             "name": "rubix/tensor",
-            "version": "2.1.4",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/Tensor.git",
-                "reference": "f51797af5631d117263cb394d94c81a8e5e35604"
+                "reference": "31f603c5e419654f76c894a7b7e8cea990187ff8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/f51797af5631d117263cb394d94c81a8e5e35604",
-                "reference": "f51797af5631d117263cb394d94c81a8e5e35604",
+                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/31f603c5e419654f76c894a7b7e8cea990187ff8",
+                "reference": "31f603c5e419654f76c894a7b7e8cea990187ff8",
                 "shasum": ""
             },
             "require": {
@@ -2009,6 +2009,8 @@
                 "computation",
                 "computing",
                 "decomposition",
+                "eigenvalue",
+                "eigenvector",
                 "engineering",
                 "extension",
                 "linear algebra",
@@ -2020,6 +2022,7 @@
                 "random number generation",
                 "reduction",
                 "scientific computing",
+                "singular value decomposition",
                 "statistics",
                 "tensor",
                 "trigonometry",
@@ -2035,7 +2038,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-20T08:19:57+00:00"
+            "time": "2021-02-28T08:21:08+00:00"
         },
         {
             "name": "symfony/console",
