@@ -51,7 +51,7 @@ class ThreadBuilder {
 		);
 
 		// Step 1
-		$idTable = $this->buildIdTable($messages);
+		$idTable = $this->buildIdTable($messages, $logger);
 		$log->step('build ID table');
 
 		// Step 2
@@ -80,41 +80,49 @@ class ThreadBuilder {
 	 *
 	 * @return Container[]
 	 */
-	private function buildIdTable(array $messages): array {
+	private function buildIdTable(array $messages, LoggerInterface $logger): array {
 		/** @var Container[] $idTable */
 		$idTable = [];
 
 		foreach ($messages as $message) {
 			/** @var Message $message */
+			$logger->debug('Processing message ' . $message->getId());
 			// Step 1.A
 			$container = $idTable[$message->getId()] ?? null;
 			if ($container !== null && !$container->hasMessage()) {
+				$logger->debug('Filling a previously empty container');
 				$container->fill($message);
 			} else {
+				$logger->debug('Adding a new container from a message');
 				$container = $idTable[$message->getId()] = Container::with($message);
 			}
+			$logger->debug('Step 1.A done');
 
 			// Step 1.B
 			$parent = null;
 			foreach ($message->getReferences() as $reference) {
 				$refContainer = $idTable[$reference] ?? null;
 				if ($refContainer === null) {
+					$logger->debug('Inserting an empty container for a reference');
 					$refContainer = $idTable[$reference] = Container::empty();
 				}
 				if (!$refContainer->hasParent()
 					&& !($parent !== null && !$parent->hasAncestor($refContainer))
 					&& !($parent !== null && !$refContainer->hasAncestor($parent))) {
+					$logger->debug('Adding the parent to the current refrence container');
 					// TODO: Do not add a link if adding that link would introduce a loop: that is, before asserting A->B, search down the children of B to see if A is reachable, and also search down the children of A to see if B is reachable. If either is already reachable as a child of the other, don't add the link.
 					$refContainer->setParent($parent);
 				}
 
 				$parent = $refContainer;
 			}
+			$logger->debug('Step 1.B done');
 
 			// Step 1.C
 			//$parentId = $message->getReferences()[count($message->getReferences()) - 1] ?? null;
 			//$container->setParent($idTable[$parentId] ?? null);
 			if ($parent === null || !$parent->hasAncestor($container)) {
+				$logger->debug('Performing step 1.C');
 				$container->setParent($parent);
 			}
 		}
