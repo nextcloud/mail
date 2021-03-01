@@ -25,6 +25,7 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\IMAP\Threading\ThreadBuilder;
+use OCA\Mail\Support\ConsoleLoggerDecorator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -62,6 +63,11 @@ class Thread extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
+		$consoleLogger = new ConsoleLoggerDecorator(
+			$this->logger,
+			$output
+		);
+
 		$inputFile = $input->getArgument(self::ARGUMENT_INPUT_FILE);
 
 		if (!file_exists($inputFile)) {
@@ -74,7 +80,9 @@ class Thread extends Command {
 			$output->writeln("<error>Could not read thread data</error>");
 			return 2;
 		}
-		$parsed = json_decode($json, true);
+		$consoleLogger->debug(strlen($json) . 'B read');
+		$parsed = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+		$consoleLogger->debug(count($parsed) . ' data sets loaded');
 		$threadData = array_map(function ($serialized) {
 			return new DatabaseMessage(
 				$serialized['databaseId'],
@@ -85,7 +93,7 @@ class Thread extends Command {
 			);
 		}, $parsed);
 
-		$threads = $this->builder->build($threadData, $this->logger);
+		$threads = $this->builder->build($threadData, $consoleLogger);
 		$output->writeln(count($threads) . " threads built from " . count($threadData) . " messages");
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
