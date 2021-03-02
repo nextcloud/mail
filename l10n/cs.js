@@ -202,7 +202,6 @@ OC.L10N.register(
     "No message selected" : "Nevybrána žádná zpráva",
     "Disabled" : "Vypnuto",
     "Enabled" : "Zapnuto",
-    "IMAP credentials" : "Údaje IMAP",
     "Custom" : "Vlastní",
     "Signature …" : "Podpis…",
     "Save signature" : "Uložit podpis",

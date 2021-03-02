@@ -208,7 +208,6 @@ OC.L10N.register(
     "Sieve Security" : "Bezpieczeństwo Sieve",
     "Sieve Port" : "Port Sieve",
     "Sieve Credentials" : "Poświadczenia Sieve",
-    "IMAP credentials" : "Poświadczenia IMAP",
     "Custom" : "Dowolnie",
     "Sieve User" : "Użytkownik Sieve",
     "Sieve Password" : "Hasło Sieve",

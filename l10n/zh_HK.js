@@ -208,7 +208,6 @@ OC.L10N.register(
     "Sieve Security" : "Sieve 安全性",
     "Sieve Port" : "Sieve 連接埠",
     "Sieve Credentials" : "Sieve 身份驗證",
-    "IMAP credentials" : "IMAP 身份驗證",
     "Custom" : "自訂",
     "Sieve User" : "Sieve 賬戶",
     "Sieve Password" : "Sieve 密碼",

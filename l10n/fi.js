@@ -164,7 +164,6 @@ OC.L10N.register(
     "No message selected" : "Viestiä ei ole valittu",
     "Disabled" : "Pois käytöstä",
     "Enabled" : "Käytössä",
-    "IMAP credentials" : "IMAP-tunnukset",
     "Custom" : "Omavalintainen",
     "Oh Snap!" : "Oho!",
     "Signature …" : "Allekirjoitus…",

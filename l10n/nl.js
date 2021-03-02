@@ -208,7 +208,6 @@ OC.L10N.register(
     "Sieve Security" : "Sieve Security",
     "Sieve Port" : "Sieve poort",
     "Sieve Credentials" : "Sieve inloggegevens",
-    "IMAP credentials" : "IMAP inloggegevens",
     "Custom" : "Maatwerk",
     "Sieve User" : "Sieve gebruiker",
     "Sieve Password" : "Sieve Wachtwoord",

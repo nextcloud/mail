@@ -5,6 +5,7 @@ OC.L10N.register(
     "Creating account failed: " : "La creacion del compte a fracassat :",
     "Mail" : "Mail",
     "Name" : "Nom",
+    "Mail Address" : "Adreça mail",
     "Password" : "Senhal",
     "None" : "Pas cap",
     "Save" : "Salvar",
