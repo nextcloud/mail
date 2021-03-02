@@ -18,12 +18,12 @@
 	"require": {
 		"php": ">=7.3",
 		"arthurhoaro/favicon": "^1.2",
+		"bamarni/composer-bin-plugin": "^1.4",
 		"cerdic/css-tidy": "v1.7.3",
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
 		"christophwurst/kitinerary-sys": "^0.1.0",
-		"coenjacobs/mozart": "0.6.0-beta-2",
 		"ezyang/htmlpurifier": "4.13.0",
 		"gravatarphp/gravatar": "^2.0",
 		"kwi/urllinker": "dev-bleeding",
@@ -48,6 +48,7 @@
 		"christophwurst/nextcloud_testing": "0.12.1",
 		"nextcloud/coding-standard": "^0.5.0",
 		"phan/phan": "^4.0",
+		"roave/security-advisories": "dev-master",
 		"vimeo/psalm": "^4.1"
 	},
 	"scripts": {
@@ -58,10 +59,12 @@
 		"psalm": "psalm",
 		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
 		"post-install-cmd": [
+			"@composer bin all install --ansi",
 			"\"vendor/bin/mozart\" compose",
 			"composer dump-autoload"
 		],
 		"post-update-cmd": [
+			"@composer bin all update --ansi",
 			"\"vendor/bin/mozart\" compose",
 			"composer dump-autoload"
 		],
