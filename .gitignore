@@ -2,6 +2,7 @@
 composer.phar
 /lib/Vendor
 /vendor/
+/vendor-bin/mozart/vendor
 
 # Mac OS
 .DS_Store

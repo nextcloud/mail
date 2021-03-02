@@ -1,0 +1,5 @@
+{
+    "require": {
+        "coenjacobs/mozart": "^0.7.1"
+    }
+}
