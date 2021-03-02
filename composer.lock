@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d07fa56e3ed16b437201c33025a7385",
+    "content-hash": "329f7fc9ba8e269056475f944d543f89",
     "packages": [
         {
             "name": "amphp/amp",
@@ -689,27 +689,29 @@
         },
         {
             "name": "coenjacobs/mozart",
-            "version": "0.6.0-beta-2",
+            "version": "0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/coenjacobs/mozart.git",
-                "reference": "a0207484516bd79564f4223a0f3056a7e1e0b34a"
+                "reference": "dbcdeb992d20d9c8914eef090f9a0d684bb1102c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coenjacobs/mozart/zipball/a0207484516bd79564f4223a0f3056a7e1e0b34a",
-                "reference": "a0207484516bd79564f4223a0f3056a7e1e0b34a",
+                "url": "https://api.github.com/repos/coenjacobs/mozart/zipball/dbcdeb992d20d9c8914eef090f9a0d684bb1102c",
+                "reference": "dbcdeb992d20d9c8914eef090f9a0d684bb1102c",
                 "shasum": ""
             },
             "require": {
                 "league/flysystem": "^1.0",
-                "php": "^7.2",
+                "php": "^7.3|^8.0",
                 "symfony/console": "^4|^5",
                 "symfony/finder": "^4|^5"
             },
             "require-dev": {
+                "mheap/phpunit-github-actions-printer": "^1.4",
                 "phpunit/phpunit": "^8.5",
-                "squizlabs/php_codesniffer": "^3.5"
+                "squizlabs/php_codesniffer": "^3.5",
+                "vimeo/psalm": "^4.4"
             },
             "bin": [
                 "bin/mozart"
@@ -737,7 +739,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-05-23T13:12:01+00:00"
+            "time": "2021-02-02T21:37:03+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -6890,7 +6892,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "coenjacobs/mozart": 10,
         "kwi/urllinker": 20,
         "pear-pear.horde.org/horde_date": 0,
         "pear-pear.horde.org/horde_exception": 0,
