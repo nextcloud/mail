@@ -114,7 +114,7 @@ class ThreadBuilder {
 			// Step 1.C
 			//$parentId = $message->getReferences()[count($message->getReferences()) - 1] ?? null;
 			//$container->setParent($idTable[$parentId] ?? null);
-			if ($parent === null || !$parent->hasAncestor($container)) {
+			if (($parent === null || !$parent->hasAncestor($container)) && $container !== $parent) {
 				$container->setParent($parent);
 			}
 		}
