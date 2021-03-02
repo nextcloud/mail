@@ -256,6 +256,33 @@ class ThreadBuilderTest extends TestCase {
 		);
 	}
 
+	public function testBuildTwoWithLoop(): void {
+		// 1 (but also points to itself)
+		// |
+		// 2
+		$messages = [
+			new Message('s1', 'id1', ['id1']),
+			new Message('s2', 'id2', ['id1']),
+		];
+
+		$result = $this->builder->build($messages, $this->logger);
+
+		$this->assertEquals(
+			[
+				[
+					'id' => 'id1',
+					'children' => [
+						[
+							'id' => 'id2',
+							'children' => [],
+						],
+					],
+				],
+			],
+			$this->abstract($result)
+		);
+	}
+
 	public function testBuildTree(): void {
 		//        1
 		//      /   \
