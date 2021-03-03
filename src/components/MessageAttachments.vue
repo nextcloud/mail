@@ -116,8 +116,6 @@ export default {
 				.then(() => (this.savingToCloud = false))
 		},
 		downloadZip() {
-			window.open(this.zipUrl)
-			window.focus()
 			window.location = this.zipUrl
 		},
 	},
