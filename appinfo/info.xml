@@ -14,12 +14,14 @@
 	]]></description>
 	<version>1.9.1</version>
 	<licence>agpl</licence>
+	<author>Anna Larch</author>
 	<author>Christoph Wurst</author>
-	<author>Greta Doçi</author>
-	<author>Julius Härtl</author>
 	<author>Cyrille Bollu</author>
+	<author>Greta Doçi</author>
 	<author>Holger Dehnhardt</author>
+	<author>Julius Härtl</author>
 	<author>Jan-Christoph Borchardt</author>
+	<author>Richard Steinmetz</author>
 	<namespace>Mail</namespace>
 	<documentation>
 		<user>https://github.com/nextcloud/mail/blob/master/doc/user.md</user>
