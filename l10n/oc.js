@@ -8,6 +8,8 @@ OC.L10N.register(
     "Mail Address" : "Adreça mail",
     "Password" : "Senhal",
     "None" : "Pas cap",
+    "IMAP Password" : "Senhal IMAP",
+    "SMTP Password" : "Senhal SMTP",
     "Save" : "Salvar",
     "Connect" : "Connectar",
     "Write message …" : "Escriure un messatge…",
