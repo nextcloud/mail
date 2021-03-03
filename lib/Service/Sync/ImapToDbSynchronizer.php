@@ -114,10 +114,10 @@ class ImapToDbSynchronizer {
 								int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): void {
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			if (!$mailbox->isInbox() && !$mailbox->getSyncInBackground()) {
-				$logger->debug("Skipping mailbox sync for " . $mailbox->getName());
+				$logger->debug("Skipping mailbox sync for " . $mailbox->getId());
 				continue;
 			}
-
+			$logger->debug("Syncing " . $mailbox->getId());
 			$this->sync(
 				$account,
 				$mailbox,
@@ -215,19 +215,23 @@ class ImapToDbSynchronizer {
 				|| $mailbox->getSyncNewToken() === null
 				|| $mailbox->getSyncChangedToken() === null
 				|| $mailbox->getSyncVanishedToken() === null) {
+				$logger->debug("Running initial sync for " . $mailbox->getId());
 				$this->runInitialSync($account, $mailbox, $logger);
 			} else {
 				try {
+					$logger->debug("Running partial sync for " . $mailbox->getId());
 					$this->runPartialSync($account, $mailbox, $logger, $criteria, $knownUids);
 				} catch (UidValidityChangedException $e) {
-					$logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync.');
+					$logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync for ' . $mailbox->getId());
 					$this->resetCache($account, $mailbox);
+					$logger->debug("Running initial sync for " . $mailbox->getId() . " after cache reset");
 					$this->runInitialSync($account, $mailbox, $logger);
 				} catch (MailboxDoesNotSupportModSequencesException $e) {
-					$logger->warning('Mailbox does not support mod-sequences error occured. Wiping cache and performing full sync.', [
+					$logger->warning('Mailbox does not support mod-sequences error occured. Wiping cache and performing full sync for ' . $mailbox->getId(), [
 						'exception' => $e,
 					]);
 					$this->resetCache($account, $mailbox);
+					$logger->debug("Running initial sync for " . $mailbox->getId() . " after cache reset - no mod-sequences error");
 					$this->runInitialSync($account, $mailbox, $logger);
 				}
 			}
