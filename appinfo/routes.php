@@ -120,6 +120,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#downloadAttachments',
+			'url' => '/api/messages/{id}/attachments',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#saveAttachment',
 			'url' => '/api/messages/{id}/attachment/{attachmentId}',
 			'verb' => 'POST'
