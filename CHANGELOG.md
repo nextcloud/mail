@@ -1,6 +1,42 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.9.0 - 2021-03-03
+### Added
+- Sieve filter editor
+- Download all attachments as zip archive
+- Trust all senders of a domain
+- Option to remove trust of a trusted sender or domain via account settings
+- Bottom reply mode
+- SCRAM-SHA-1 authentication support
+- occ command to delete a Mail account as admin
+- Stores the important flag as $important on IMAP for interoperability and being able to reset an account without data loss
+- Nextcloud 22 development support
+- PHP8 support
+### Changed
+- Envelope/message action icons are now streamlined
+- Avoid the iconv //IGNORE option if possible for better compatibility with Alpine Linux
+- SMTP host setting now has a label
+- Attachment download and attachment zip now works without a new tab that opens briefly
+- Loading message threads is roughly 2x faster thanks to an optimized query
+- Updated and new translations
+- Dependency updates
+### Fixed
+- Threading algorithm running into endless recursion and therefore causing a memory exhaustion
+- Dependency conflicts with server and other apps
+- App navigation toggle issues
+- Move modal not showing
+- Messages occasionally not vanishing from the database cache
+- Ignore mailboxes that are not accessible (e.g. shared ones without sufficient permissions)
+- Plural string of envelope actions
+- Signature settings editor not showing editing controls
+- Rendering the account in the sidebar despite authentication problems
+- Handles some cases of invalid encoding better
+- Wrong label for SMTP user in account settings
+- Regression with missing name of local attachments
+- Ensure an account exists before it's updated
+- Empty mail server settings shown for provisioned accounts
+
 ## 1.8.3 - 2021-02-19
 ### Fixed
 - Compatibility issues with PHP8
