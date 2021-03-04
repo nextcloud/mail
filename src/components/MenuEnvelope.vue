@@ -308,3 +308,16 @@ export default {
 	},
 }
 </script>
+<style lang="scss" scoped>
+	.source-modal {
+		::v-deep .modal-container {
+			height: 800px;
+		}
+
+		.source-modal-content {
+			width: 100%;
+			height: 100%;
+			overflow-y: scroll !important;
+		}
+	}
+</style>

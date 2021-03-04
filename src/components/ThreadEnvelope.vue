@@ -311,17 +311,6 @@ export default {
 	.left {
 		flex-grow: 1;
 	}
-	.source-modal {
-		::v-deep .modal-container {
-			height: 800px;
-		}
-
-		.source-modal-content {
-			width: 100%;
-			height: 100%;
-			overflow-y: scroll;
-		}
-	}
 	.icon-important {
 		::v-deep path {
 			fill: #ffcc00;
