@@ -30,6 +30,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\Tag;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCP\EventDispatcher\Event;
@@ -65,7 +66,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'important',
+			Tag::LABEL_IMPORTANT,
 			true
 		);
 		$this->serviceMock->getParameter('mapper')

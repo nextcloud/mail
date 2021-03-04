@@ -21,9 +21,9 @@
 			:data-starred="data.flags.flagged ? 'true' : 'false'"
 			@click.prevent="onToggleFlagged" />
 		<div
-			v-if="data.flags.important"
+			v-if="data.tags.$label1"
 			class="app-content-list-item-star icon-important"
-			:data-starred="data.flags.important ? 'true' : 'false'"
+			:data-starred="data.tags.$label1 ? 'true' : 'false'"
 			@click.prevent="onToggleImportant"
 			v-html="importantSvg" />
 		<div

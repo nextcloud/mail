@@ -31,6 +31,7 @@ use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -56,21 +57,26 @@ class SetupService {
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 
-	/** var LoggerInterface */
+	/** @var LoggerInterface */
 	private $logger;
+
+	/** @var TagMapper */
+	private $tagMapper;
 
 	public function __construct(AutoConfig $autoConfig,
 								AccountService $accountService,
 								ICrypto $crypto,
 								SmtpClientFactory $smtpClientFactory,
 								IMAPClientFactory $imapClientFactory,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								TagMapper $tagMapper) {
 		$this->autoConfig = $autoConfig;
 		$this->accountService = $accountService;
 		$this->crypto = $crypto;
 		$this->smtpClientFactory = $smtpClientFactory;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->logger = $logger;
+		$this->tagMapper = $tagMapper;
 	}
 
 	/**
@@ -78,6 +84,8 @@ class SetupService {
 	 * @param string $emailAddress
 	 * @param string $password
 	 * @return Account|null
+	 *
+	 * @link https://github.com/nextcloud/mail/issues/25
 	 */
 	public function createNewAutoConfiguredAccount($accountName, $emailAddress, $password) {
 		$this->logger->info('setting up auto detected account');
@@ -87,6 +95,8 @@ class SetupService {
 		}
 
 		$this->accountService->save($mailAccount);
+
+		$this->tagMapper->createDefaultTags($mailAccount);
 
 		return new Account($mailAccount);
 	}
@@ -138,6 +148,8 @@ class SetupService {
 
 		$this->accountService->save($newAccount);
 		$this->logger->debug("account created " . $newAccount->getId());
+
+		$this->tagMapper->createDefaultTags($newAccount);
 
 		return $account;
 	}

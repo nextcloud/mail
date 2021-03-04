@@ -31,6 +31,8 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -74,6 +76,9 @@ class MailManagerTest extends TestCase {
 	/** @var MockObject|LoggerInterface */
 	private $logger;
 
+	/** @var MockObject|TagMapper */
+	private $tagMapper;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -85,6 +90,7 @@ class MailManagerTest extends TestCase {
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->tagMapper = $this->createMock(TagMapper::class);
 
 		$this->manager = new MailManager(
 			$this->imapClientFactory,
@@ -94,7 +100,8 @@ class MailManagerTest extends TestCase {
 			$this->imapMessageMapper,
 			$this->dbMessageMapper,
 			$this->eventDispatcher,
-			$this->logger
+			$this->logger,
+			$this->tagMapper
 		);
 	}
 
@@ -310,8 +317,8 @@ class MailManagerTest extends TestCase {
 		$this->imapMessageMapper->expects($this->never())
 			->method('removeFlag');
 
-		$this->manager->flagMessage($account, 'INBOX', 123, 'important', true);
-		$this->manager->flagMessage($account, 'INBOX', 123, 'important', false);
+		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, true);
+		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, false);
 	}
 
 	public function testSetCustomFlagWithIMAPCapabilities(): void {
@@ -327,7 +334,7 @@ class MailManagerTest extends TestCase {
 		$this->imapMessageMapper->expects($this->once())
 			->method('addFlag');
 
-		$this->manager->flagMessage($account, 'INBOX', 123, 'important', true);
+		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, true);
 	}
 
 	public function testUnsetCustomFlagWithIMAPCapabilities(): void {
@@ -343,7 +350,7 @@ class MailManagerTest extends TestCase {
 		$this->imapMessageMapper->expects($this->once())
 			->method('removeFlag');
 
-		$this->manager->flagMessage($account, 'INBOX', 123, 'important', false);
+		$this->manager->flagMessage($account, 'INBOX', 123, Tag::LABEL_IMPORTANT, false);
 	}
 
 	public function testFilterFlagStandard(): void {
@@ -378,7 +385,7 @@ class MailManagerTest extends TestCase {
 		->method('getClient')
 		->willReturn($client);
 
-		$this->assertEquals([],  $this->manager->filterFlags($account, '$important' , 'INBOX'));
+		$this->assertEquals([],  $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT , 'INBOX'));
 	}
 
 	public function testSetFilterFlagsImportant() {
@@ -392,7 +399,7 @@ class MailManagerTest extends TestCase {
 			->method('status')
 			->willReturn(['permflags' => [ "11" => "\*" ]]);
 
-		$this->assertEquals(['$important'],  $this->manager->filterFlags($account, 'important' , 'INBOX'));
+		$this->assertEquals([Tag::LABEL_IMPORTANT],  $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT , 'INBOX'));
 	}
 
 	public function testIsPermflagsEnabledTrue(): void {
@@ -441,6 +448,94 @@ class MailManagerTest extends TestCase {
 			->with($client, $mb, 123, '\\seen');
 
 		$this->manager->flagMessage($account, 'INBOX', 123, 'seen', false);
+	}
+
+	public function testTagMessage(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+		$tag = new Tag();
+		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(123);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$this->imapClientFactory->expects($this->any())
+			->method('getClient')
+			->willReturn($client);
+		$mb = $this->createMock(Mailbox::class);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'INBOX')
+			->willReturn($mb);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn(['permflags' => [ "11" => "\*"] ]);
+		$this->imapMessageMapper->expects($this->once())
+			->method('addFlag')
+			->with($client, $mb, 123, Tag::LABEL_IMPORTANT);
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('test');
+		$this->manager->tagMessage($account, 'INBOX', $message, $tag, true);
+	}
+
+	public function testUntagMessage(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+		$tag = new Tag();
+		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(123);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$this->imapClientFactory->expects($this->any())
+			->method('getClient')
+			->willReturn($client);
+		$mb = $this->createMock(Mailbox::class);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'INBOX')
+			->willReturn($mb);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn(['permflags' => [ "11" => "\*"] ]);
+		$this->imapMessageMapper->expects($this->once())
+			->method('removeFlag')
+			->with($client, $mb, 123, Tag::LABEL_IMPORTANT);
+		$this->imapMessageMapper->expects($this->never())
+			->method('addFlag');
+		$account->expects($this->never())
+			->method('getUserId')
+			->willReturn('test');
+		$this->manager->tagMessage($account, 'INBOX', $message, $tag, false);
+	}
+
+	public function testTagNoIMAPCapabilities(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(123);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$tag = new Tag();
+		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
+
+		$this->imapClientFactory->expects($this->any())
+			->method('getClient')
+			->willReturn($client);
+		$mb = $this->createMock(Mailbox::class);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'INBOX')
+			->willReturn($mb);
+		$client->expects($this->once())
+			->method('status')
+			->willReturn([]);
+		$this->imapMessageMapper->expects($this->never())
+			->method('removeFlag');
+		$this->imapMessageMapper->expects($this->never())
+			->method('addFlag');
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('test');
+		$this->manager->tagMessage($account, 'INBOX', $message, $tag, true);
 	}
 
 	public function testGetThread(): void {

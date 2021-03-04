@@ -595,20 +595,20 @@ export default {
 	},
 	toggleEnvelopeImportant({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
-		const oldState = envelope.flags.important
-		commit('flagEnvelope', {
+		const oldState = envelope.tags.$label1
+		commit('tagEnvelope', {
 			envelope,
-			flag: 'important',
+			tag: '$label1',
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.databaseId, 'important', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.databaseId, '$label1', !oldState).catch((e) => {
 			console.error('could not toggle message important state', e)
 
 			// Revert change
-			commit('flagEnvelope', {
+			commit('tagEnvelope', {
 				envelope,
-				flag: 'important',
+				tag: '$label1',
 				value: oldState,
 			})
 		})

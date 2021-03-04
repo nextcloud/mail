@@ -29,29 +29,32 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
-use Exception;
-use Horde_Imap_Client;
-use Horde_Imap_Client_Data_Envelope;
-use Horde_Imap_Client_Data_Fetch;
-use Horde_Imap_Client_DateTime;
-use Horde_Imap_Client_Fetch_Query;
-use Horde_Imap_Client_Ids;
-use Horde_Imap_Client_Mailbox;
-use Horde_Imap_Client_Socket;
-use Horde_Mime_Headers;
-use Horde_Mime_Headers_MessageId;
-use Horde_Mime_Part;
-use JsonSerializable;
 use OC;
-use OCA\Mail\AddressList;
-use OCA\Mail\Db\LocalAttachment;
-use OCA\Mail\Service\Html;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\Files\File;
-use OCP\Files\SimpleFS\ISimpleFile;
-use function in_array;
-use function mb_convert_encoding;
+use Exception;
 use function trim;
+use OCP\Files\File;
+use Horde_Mime_Part;
+use OCA\Mail\Db\Tag;
+use JsonSerializable;
+use function in_array;
+use Horde_Imap_Client;
+use Horde_Mime_Headers;
+use OCA\Mail\Db\Message;
+use OCA\Mail\AddressList;
+use Horde_Imap_Client_Ids;
+use OCA\Mail\Service\Html;
+use OCA\Mail\Db\MailAccount;
+use Horde_Imap_Client_Socket;
+use Horde_Imap_Client_Mailbox;
+use Horde_Imap_Client_DateTime;
+use OCA\Mail\Db\LocalAttachment;
+use function mb_convert_encoding;
+use Horde_Imap_Client_Data_Fetch;
+use Horde_Mime_Headers_MessageId;
+use Horde_Imap_Client_Fetch_Query;
+use OCP\Files\SimpleFS\ISimpleFile;
+use Horde_Imap_Client_Data_Envelope;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
@@ -149,7 +152,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
 			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure()),
 			'mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true),
-			'important' => in_array('$important', $flags, true)
+			'important' => in_array(Tag::LABEL_IMPORTANT, $flags, true)
 		];
 	}
 
@@ -673,8 +676,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('not implemented');
 	}
 
-	public function toDbMessage(int $mailboxId): \OCA\Mail\Db\Message {
-		$msg = new \OCA\Mail\Db\Message();
+	/**
+	 * Cast all values from an IMAP message into the correct DB format
+	 *
+	 * @param integer $mailboxId
+	 * @return Message
+	 */
+	public function toDbMessage(int $mailboxId, MailAccount $account): Message {
+		$msg = new Message();
 
 		$messageId = $this->getMessageId();
 		if (empty(trim($messageId))) {
@@ -707,10 +716,58 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			in_array('junk', $flags, true)
 		);
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true));
-		$msg->setFlagImportant(in_array('$important', $flags, true));
+		// @todo remove this as soon as possible @link https://github.com/nextcloud/mail/issues/25
+		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
 
+		$allowed = [
+			Horde_Imap_Client::FLAG_SEEN,
+			Horde_Imap_Client::FLAG_ANSWERED,
+			Horde_Imap_Client::FLAG_FLAGGED,
+			Horde_Imap_Client::FLAG_DELETED,
+			Horde_Imap_Client::FLAG_DRAFT,
+			Horde_Imap_Client::FLAG_RECENT,
+			Horde_Imap_Client::FLAG_JUNK,
+			Horde_Imap_Client::FLAG_MDNSENT,
+		];
+		// remove all standard IMAP flags from $filters
+		$tags = array_filter($flags, function ($flag) use ($allowed) {
+			return in_array($flag, $allowed, true) === false;
+		});
+
+		if (empty($tags) === true) {
+			return $msg;
+		}
+		// cast all leftover $flags to be used as tags
+		$msg->setTags($this->generateTagEntites($tags, $account->getUserId()));
 		return $msg;
+	}
+
+	/**
+	 * Build tag entities from keywords sent by IMAP
+	 *
+	 * Will use IMAP keyword '$xxx' to create a value for
+	 * display_name like 'xxx'
+	 *
+	 * @link https://github.com/nextcloud/mail/issues/25
+	 *
+	 * @param string[] $tags
+	 * @return Tag[]
+	 */
+	private function generateTagEntites(array $tags, string $userId): array {
+		$t = [];
+		foreach ($tags as $keyword) {
+			// Map the old $important to $label1 until we have caught them all
+			if ($keyword === '$important') {
+				$keyword = Tag::LABEL_IMPORTANT;
+			}
+			$tag = new Tag();
+			$tag->setImapLabel($keyword);
+			$tag->setDisplayName(str_replace('$', '', $keyword));
+			$tag->setUserId($userId);
+			$t[] = $tag;
+		}
+		return $t;
 	}
 }
