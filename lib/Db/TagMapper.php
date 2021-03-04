@@ -25,11 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use OCP\DB\Exception;
-use Throwable;
 use function array_map;
-
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
@@ -119,29 +115,10 @@ class TagMapper extends QBMapper {
 		}
 
 		$qb = $this->db->getQueryBuilder();
-		$qb->insert('mail_message_tags')
-		   ->setValue('imap_message_id', $qb->createNamedParameter($messageId))
-		   ->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
-		try {
-			$qb->execute();
-		} catch (Throwable $e) {
-			/**
-			 * @psalm-suppress all
-			 */
-			if (class_exists(Exception::class) && ($e instanceof Exception) && $e->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-				// OK -> ignore
-				return;
-			}
-			/**
-			 * @psalm-suppress all
-			 */
-			if (class_exists(UniqueConstraintViolationException::class) && ($e instanceof UniqueConstraintViolationException)) {
-				// OK -> ignore
-				return;
-			}
-
-			throw $e;
-		}
+		$qb->insert('mail_message_tags');
+		$qb->setValue('imap_message_id', $qb->createNamedParameter($messageId));
+		$qb->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
+		$qb->execute();
 	}
 
 	/**
@@ -153,7 +130,7 @@ class TagMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete('mail_message_tags')
 			->where($qb->expr()->eq('imap_message_id', $qb->createNamedParameter($messageId)))
-			->andWhere($qb->expr()->eq('tag_id', $qb->createNamedParameter($tag->getId())));
+			->where($qb->expr()->eq('tag_id', $qb->createNamedParameter($tag->getId())));
 		$qb->execute();
 	}
 
@@ -167,31 +144,22 @@ class TagMapper extends QBMapper {
 		}, $messages);
 
 		$qb = $this->db->getQueryBuilder();
-		$tagsQuery = $qb->select('t.*', 'mt.imap_message_id')
-			->from($this->getTableName(), 't')
-			->join('t', 'mail_message_tags', 'mt', $qb->expr()->eq('t.id', 'mt.tag_id', IQueryBuilder::PARAM_INT))
+		$idsQuery = $qb->select('mt.*')
+			->from('mail_message_tags', 'mt')
 			->where(
-				$qb->expr()->in('mt.imap_message_id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('imap_message_id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY))
 			);
-		$queryResult = $tagsQuery->execute();
-		$tags = [];
-		while (($row = $queryResult->fetch()) !== false) {
-			$messageId = $row['imap_message_id'];
-			if (!isset($tags[$messageId])) {
-				$tags[$messageId] = [];
-			}
-
-			// Construct a Tag instance but omit any other joined columns
-			$tags[$messageId][] = Tag::fromRow(array_filter(
-				$row,
-				function (string $key) {
-					return $key !== 'imap_message_id';
-				},
-				ARRAY_FILTER_USE_KEY
-			));
+		$idsQuery = $idsQuery->execute();
+		$queryResult = $idsQuery->fetchAll();
+		if (empty($queryResult)) {
+			return [];
 		}
-		$queryResult->closeCursor();
-		return $tags;
+		$result = [];
+		foreach ($queryResult as $qr) {
+			$result[] = $qr['imap_message_id'];
+			$result[$qr['imap_message_id']][] = $this->getTag((int)$qr['tag_id']);
+		};
+		return $result;
 	}
 
 	/**

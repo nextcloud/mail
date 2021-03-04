@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Migration;
 
 use Closure;
+use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Db\TagMapper;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -13,6 +15,21 @@ use OCP\Migration\SimpleMigrationStep;
  * @link https://github.com/nextcloud/mail/issues/25
  */
 class Version1100Date20210304143008 extends SimpleMigrationStep {
+
+	/**
+	 * @var TagMapper
+	 */
+	protected $tagMapper;
+
+	/**
+	 * @var MailAccountMapper
+	 */
+	protected $mailAccountMapper;
+
+	public function __construct(TagMapper $tagMapper, MailAccountMapper $mailAccountMapper) {
+		$this->tagMapper = $tagMapper;
+		$this->mailAccountMapper = $mailAccountMapper;
+	}
 
 	/**
 	 * @param IOutput $output
@@ -87,5 +104,17 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 			);
 		}
 		return $schema;
+	}
+
+	/**
+	 * @param IOutput $output
+	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
+	 * @param array $options
+	 */
+	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
+		$accounts = $this->mailAccountMapper->getAllUserIdsWithAccounts();
+		foreach ($accounts as $account) {
+			$this->tagMapper->createDefaultTags($account);
+		}
 	}
 }
