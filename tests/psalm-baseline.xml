@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.4.1@9fd7a7d885b3a216cff8dec9d8c21a132f275224">
+<files psalm-version="4.6.1@e93e532e4eaad6d68c4d7b606853800eaceccc72">
   <file src="lib/Attachment.php">
     <MissingDocblockType occurrences="1">
       <code>$fetch</code>
@@ -30,9 +30,31 @@
     </ImplicitToStringCast>
   </file>
   <file src="lib/Db/MessageMapper.php">
-    <ImplicitToStringCast occurrences="23">
+    <ImplicitToStringCast occurrences="26">
+      <code>$deleteRecipientsQuery-&gt;createFunction($messageIdQuery-&gt;getSQL())</code>
+      <code>$deleteRecipientsQuery-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$messageIdQuery-&gt;createFunction($messageIdQuery-&gt;getSQL())</code>
       <code>$messagesQuery-&gt;createFunction($mailboxesQuery-&gt;getSQL())</code>
       <code>$qb-&gt;createFunction($mailboxIdsQuery-&gt;getSQL())</code>
+      <code>$qb-&gt;createFunction($mailboxIdsQuery-&gt;getSQL())</code>
+      <code>$qb-&gt;createFunction($selectMailboxIds-&gt;getSQL())</code>
+      <code>$qb-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getBcc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getBcc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getCc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getCc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getFrom(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getFrom(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getTo(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getTo(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createNamedParameter(array_keys($indexedMessages), IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb4-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$query-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$query-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>

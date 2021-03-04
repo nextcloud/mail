@@ -406,6 +406,17 @@ class MessageMapper extends QBMapper {
 	}
 
 	public function deleteAll(Mailbox $mailbox): void {
+		$messageIdQuery = $this->db->getQueryBuilder();
+		$deleteRecipientsQuery = $this->db->getQueryBuilder();
+		$messageIdQuery->select('id')
+			->from($this->getTableName())
+			->where($messageIdQuery->expr()->eq('mailbox_id', $deleteRecipientsQuery->createNamedParameter($mailbox->getId())));
+
+		// delete all related recipient entries
+		$deleteRecipientsQuery->delete('mail_recipients')
+			->where($deleteRecipientsQuery->expr()->in('message_id', $deleteRecipientsQuery->createFunction($messageIdQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY));
+		$deleteRecipientsQuery->execute();
+
 		$query = $this->db->getQueryBuilder();
 
 		$query->delete($this->getTableName())
@@ -415,6 +426,20 @@ class MessageMapper extends QBMapper {
 	}
 
 	public function deleteByUid(Mailbox $mailbox, int ...$uids): void {
+		$messageIdQuery = $this->db->getQueryBuilder();
+		$deleteRecipientsQuery = $this->db->getQueryBuilder();
+
+		$messageIdQuery->select('id')
+			->from($this->getTableName())
+			->where(
+				$messageIdQuery->expr()->eq('mailbox_id', $deleteRecipientsQuery->createNamedParameter($mailbox->getId())),
+				$messageIdQuery->expr()->in('uid', $deleteRecipientsQuery->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
+			);
+		// delete all related recipient entries
+		$deleteRecipientsQuery->delete('mail_recipients')
+			->where($deleteRecipientsQuery->expr()->in('message_id', $messageIdQuery->createFunction($messageIdQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY));
+		$deleteRecipientsQuery->execute();
+
 		$query = $this->db->getQueryBuilder();
 
 		$query->delete($this->getTableName())
