@@ -86,8 +86,9 @@ class Message extends Entity implements JsonSerializable {
 		'forwarded',
 		'junk',
 		'notjunk',
-		'important',
-		'mdnsent'
+		'mdnsent',
+		Tag::LABEL_IMPORTANT,
+		'$important' // @todo remove this when we have removed all references on IMAP to $important @link https://github.com/nextcloud/mail/issues/25
 	];
 
 	protected $uid;
@@ -124,6 +125,9 @@ class Message extends Entity implements JsonSerializable {
 
 	/** @var AddressList */
 	private $bcc;
+
+	/** @var Tag[] */
+	private $tags = [];
 
 	public function __construct() {
 		$this->from = new AddressList([]);
@@ -200,6 +204,20 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	/**
+	 * @return Tag[]
+	 */
+	public function getTags(): array {
+		return $this->tags;
+	}
+
+	/**
+	 * @param array $tags
+	 */
+	public function setTags(array $tags): void {
+		$this->tags = $tags;
+	}
+
+	/**
 	 * @return AddressList
 	 */
 	public function getCc(): AddressList {
@@ -232,11 +250,14 @@ class Message extends Entity implements JsonSerializable {
 			// Ignore
 			return;
 		}
-
-		$this->setter(
-			$this->columnToProperty("flag_$flag"),
-			[$value]
-		);
+		if ($flag === Tag::LABEL_IMPORTANT) {
+			$this->setFlagImportant($value);
+		} else {
+			$this->setter(
+				$this->columnToProperty("flag_$flag"),
+				[$value]
+			);
+		}
 	}
 
 	public function jsonSerialize() {
@@ -253,10 +274,10 @@ class Message extends Entity implements JsonSerializable {
 				'draft' => $this->getFlagDraft(),
 				'forwarded' => $this->getFlagForwarded(),
 				'hasAttachments' => $this->getFlagAttachments() ?? false,
-				'important' => $this->getFlagImportant(),
 				'junk' => $this->getFlagJunk(),
 				'mdnsent' => $this->getFlagMdnsent(),
 			],
+			'tags' => $this->getTags(),
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),
 			'cc' => $this->getCc()->jsonSerialize(),

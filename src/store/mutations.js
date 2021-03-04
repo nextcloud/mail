@@ -173,9 +173,13 @@ export default {
 			return
 		}
 		Vue.set(existing, 'flags', envelope.flags)
+		Vue.set(existing, 'tags', envelope.tags)
 	},
 	flagEnvelope(state, { envelope, flag, value }) {
 		envelope.flags[flag] = value
+	},
+	tagEnvelope(state, { envelope, tag, value }) {
+		envelope.tags[tag] = value
 	},
 	removeEnvelope(state, { id }) {
 		const envelope = state.envelopes[id]

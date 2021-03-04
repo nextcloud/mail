@@ -292,8 +292,8 @@ class ImapToDbSynchronizer {
 		}
 
 		foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
-			$this->dbMapper->insertBulk(...array_map(function (IMAPMessage $imapMessage) use ($mailbox) {
-				return $imapMessage->toDbMessage($mailbox->getId());
+			$this->dbMapper->insertBulk($account, ...array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+				return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 			}, $chunk));
 		}
 		$perf->step('persist messages in database');
@@ -349,8 +349,8 @@ class ImapToDbSynchronizer {
 			$perf->step('get new messages via Horde');
 
 			foreach (array_chunk($response->getNewMessages(), 500) as $chunk) {
-				$dbMessages = array_map(function (IMAPMessage $imapMessage) use ($mailbox) {
-					return $imapMessage->toDbMessage($mailbox->getId());
+				$dbMessages = array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk);
 
 				$this->dispatcher->dispatch(
@@ -359,7 +359,7 @@ class ImapToDbSynchronizer {
 				);
 				$perf->step('classified a chunk of new messages');
 
-				$this->dbMapper->insertBulk(...$dbMessages);
+				$this->dbMapper->insertBulk($account, ...$dbMessages);
 			}
 			$perf->step('persist new messages');
 
@@ -378,8 +378,8 @@ class ImapToDbSynchronizer {
 			$perf->step('get changed messages via Horde');
 
 			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
-				$this->dbMapper->updateBulk(...array_map(function (IMAPMessage $imapMessage) use ($mailbox) {
-					return $imapMessage->toDbMessage($mailbox->getId());
+				$this->dbMapper->updateBulk($account, ...array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk));
 			}
 			$perf->step('persist changed messages');
