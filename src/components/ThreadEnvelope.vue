@@ -242,6 +242,12 @@ export default {
 			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
 			window.scrollTo({ top })
 		},
+		onToggleImportant() {
+			this.$store.dispatch('toggleEnvelopeImportant', this.data)
+		},
+		onToggleFlagged() {
+			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+		},
 	},
 }
 </script>
