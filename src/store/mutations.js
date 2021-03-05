@@ -221,6 +221,16 @@ export default {
 					list.splice(idx, 1)
 				}
 			})
+
+		// Delete references from other threads
+		for (const [key, env] of Object.entries(state.envelopes)) {
+			if (!env.thread) {
+				continue
+			}
+
+			const thread = env.thread.filter(threadId => threadId !== id)
+			Vue.set(state.envelopes[key], 'thread', thread)
+		}
 	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)

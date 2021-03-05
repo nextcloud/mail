@@ -824,6 +824,12 @@ describe('Vuex store mutations', () => {
 					id: 123,
 					uid: 12345,
 				},
+				12346: {
+					mailboxId: 27,
+					id: 123,
+					uid: 12345,
+					thread: [12345, 12346],
+				},
 			},
 			mailboxes: {
 				27: {
@@ -869,6 +875,12 @@ describe('Vuex store mutations', () => {
 					mailboxId: 27,
 					id: 123,
 					uid: 12345,
+				},
+				12346: {
+					mailboxId: 27,
+					id: 123,
+					uid: 12345,
+					thread: [12346],
 				},
 			},
 			mailboxes: {
