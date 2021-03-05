@@ -38,7 +38,7 @@
 			:body="message.body"
 			:signature="message.signature"
 			:message="message" />
-		<Popover v-if="message.attachments[0]" class="attachment-popover">
+		<Popover v-if="message.flags.hasAttachments" class="attachment-popover">
 			<Actions slot="trigger">
 				<ActionButton icon="icon-public icon-attachment">
 					{{ t('mail', 'Attachments') }}
