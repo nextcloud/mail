@@ -243,10 +243,10 @@ export default {
 			window.scrollTo({ top })
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.data)
+			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
 		},
 	},
 }
