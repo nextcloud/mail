@@ -4071,12 +4071,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "a6bfc5a1416f0dde1f53b7737b2cf983352737b8"
+                "reference": "0745f820eed6cb92603ca44a9c137ff8ce315e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a6bfc5a1416f0dde1f53b7737b2cf983352737b8",
-                "reference": "a6bfc5a1416f0dde1f53b7737b2cf983352737b8",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0745f820eed6cb92603ca44a9c137ff8ce315e86",
+                "reference": "0745f820eed6cb92603ca44a9c137ff8ce315e86",
                 "shasum": ""
             },
             "conflict": {
@@ -4142,6 +4142,7 @@
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
                 "ezyang/htmlpurifier": "<4.1.1",
+                "facade/ignition": "<=2.5.1,>=2.0|<=1.16.13",
                 "firebase/php-jwt": "<2",
                 "flarum/sticky": ">=0.1-beta.14,<=0.1-beta.15",
                 "flarum/tags": "<=0.1-beta.13",
@@ -4386,7 +4387,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-26T20:02:39+00:00"
+            "time": "2021-03-03T23:02:20+00:00"
         },
         {
             "name": "sabre/event",
@@ -6223,7 +6224,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.2.3",
+            "version": "v5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -6417,16 +6418,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v5.2.3",
+            "version": "v5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "c95468897f408dd0aca2ff582074423dd0455122"
+                "reference": "4e78d7d47061fa183639927ec40d607973699609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/c95468897f408dd0aca2ff582074423dd0455122",
-                "reference": "c95468897f408dd0aca2ff582074423dd0455122",
+                "url": "https://api.github.com/repos/symfony/string/zipball/4e78d7d47061fa183639927ec40d607973699609",
+                "reference": "4e78d7d47061fa183639927ec40d607973699609",
                 "shasum": ""
             },
             "require": {
@@ -6493,7 +6494,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-25T15:14:59+00:00"
+            "time": "2021-02-16T10:20:28+00:00"
         },
         {
             "name": "theseer/tokenizer",
