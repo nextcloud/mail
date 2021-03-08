@@ -231,6 +231,8 @@ export default {
 			const thread = env.thread.filter(threadId => threadId !== id)
 			Vue.set(state.envelopes[key], 'thread', thread)
 		}
+
+		Vue.delete(state.envelopes, id)
 	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
