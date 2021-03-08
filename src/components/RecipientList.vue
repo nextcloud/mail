@@ -1,5 +1,5 @@
 <template>
-	<div ref="avatarHeader" class="avatar-header">
+	<div class="avatar-header">
 		<div v-if="label" ref="label" class="label">
 			<span>{{ label }}</span>
 		</div>
@@ -94,18 +94,18 @@ export default {
 	methods: {
 		updateParticipantsToDisplay() {
 			// Wait until everything is in place
-			if (!this.$refs.avatarHeader || !this.participants) {
+			if (!this.participants) {
 				return
 			}
 
 			// Only include recipient bubbles
 			const children = Array
-				.from(this.$refs.avatarHeader.childNodes)
+				.from(this.$el.childNodes)
 				.filter((node) => node.nodeType === Node.ELEMENT_NODE)
 				.filter((node) => node.classList.contains('avatar'))
 
-			// Reserve 100px for the avatar-more span
-			const maxWidth = this.$refs.avatarHeader.clientWidth - 100
+			// Reserve 100px for the avatar-more span and header toggle caret
+			const maxWidth = this.$el.clientWidth - 100
 
 			let childrenWidth = 0
 			let fits = 0
