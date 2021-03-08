@@ -22,6 +22,7 @@
 <template>
 	<UserBubble :display-name="label"
 		:avatar-image="avatarUrlAbsolute"
+		:avatar-only="true"
 		@click="onClick">
 		<span class="user-bubble-email">{{ email }}</span>
 	</UserBubble>
