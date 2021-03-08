@@ -871,11 +871,6 @@ describe('Vuex store mutations', () => {
 				},
 			},
 			envelopes: {
-				12345: {
-					mailboxId: 27,
-					id: 123,
-					uid: 12345,
-				},
 				12346: {
 					mailboxId: 27,
 					id: 123,
