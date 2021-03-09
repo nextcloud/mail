@@ -27,7 +27,7 @@
     "@ckeditor/ckeditor5-link": "~25.0.0",
     "@ckeditor/ckeditor5-list": "~25.0.0",
     "@ckeditor/ckeditor5-paragraph": "~25.0.0",
-    "@ckeditor/ckeditor5-theme-lark": "~25.0.0",
+    "@ckeditor/ckeditor5-theme-lark": "~26.0.0",
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
     "@nextcloud/auth": "^1.3.0",
     "@nextcloud/axios": "^1.6.0",
