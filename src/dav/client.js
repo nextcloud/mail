@@ -1,7 +1,7 @@
 /*
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,19 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getClient } from '../dav/client'
+import * as webdav from 'webdav'
+import axios from '@nextcloud/axios'
+import memoize from 'lodash/fp/memoize'
+import { generateRemoteUrl } from '@nextcloud/router'
+import { getCurrentUser } from '@nextcloud/auth'
 
-export async function getFileSize(path) {
-	const response = await getClient('files').stat(path, {
-		data: `<?xml version="1.0"?>
-			<d:propfind  xmlns:d="DAV:"
-				xmlns:oc="http://owncloud.org/ns">
-				<d:prop>
-					<oc:size />
-				</d:prop>
-			</d:propfind>`,
-		details: true,
-	})
+export const getClient = memoize((service) => {
+	// Add this so the server knows it is an request from the browser
+	axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
 
-	return response?.data?.props?.size
-}
+	// force our axios
+	const patcher = webdav.getPatcher()
+	patcher.patch('request', axios)
+
+	return webdav.createClient(
+		generateRemoteUrl(`dav/${service}/${getCurrentUser().uid}`)
+	)
+})

@@ -17,112 +17,68 @@
  *
  */
 
-import { Client } from 'davclient.js'
 import ical from 'ical.js'
-import { getCurrentUser, getRequestToken } from '@nextcloud/auth'
-import { generateRemoteUrl } from '@nextcloud/router'
+import { getClient } from '../dav/client'
 import Axios from '@nextcloud/axios'
 
 import Logger from '../logger'
+import { generateRemoteUrl } from '@nextcloud/router'
+import { getCurrentUser } from '@nextcloud/auth'
 
-const client = new Client({
-	baseUrl: generateRemoteUrl('dav/calendars'),
-	xmlNamespaces: {
-		'DAV:': 'd',
-		'urn:ietf:params:xml:ns:caldav': 'c',
-		'http://apple.com/ns/ical/': 'aapl',
-		'http://owncloud.org/ns': 'oc',
-		'http://calendarserver.org/ns/': 'cs',
-	},
-})
-const props = [
-	'{DAV:}displayname',
-	'{urn:ietf:params:xml:ns:caldav}calendar-description',
-	'{urn:ietf:params:xml:ns:caldav}calendar-timezone',
-	'{http://apple.com/ns/ical/}calendar-order',
-	'{http://apple.com/ns/ical/}calendar-color',
-	'{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set',
-	'{http://owncloud.org/ns}calendar-enabled',
-	'{DAV:}acl',
-	'{DAV:}owner',
-	'{http://owncloud.org/ns}invite',
-]
+const canWrite = (properties) => {
+	const acls = properties?.acl?.ace
 
-const getResponseCodeFromHTTPResponse = (t) => {
-	return parseInt(t.split(' ')[1])
-}
+	if (!acls) {
+		return false
+	}
 
-const getACLFromResponse = (properties) => {
-	let canWrite = false
-	const acl = properties['{DAV:}acl']
-	if (acl) {
-		for (let k = 0; k < acl.length; k++) {
-			let href = acl[k].getElementsByTagNameNS('DAV:', 'href')
-			if (href.length === 0) {
-				continue
-			}
-			href = href[0].textContent
-			const writeNode = acl[k].getElementsByTagNameNS('DAV:', 'write')
-			if (writeNode.length > 0) {
-				canWrite = true
-			}
+	for (const acl of acls) {
+		if (acl.grant?.privilege?.write !== undefined) {
+			return true
 		}
 	}
-	properties.canWrite = canWrite
+
+	return false
 }
 
-const getCalendarData = (properties) => {
-	getACLFromResponse(properties)
-
-	const data = {
-		displayname: properties['{DAV:}displayname'],
-		color: properties['{http://apple.com/ns/ical/}calendar-color'],
-		order: properties['{http://apple.com/ns/ical/}calendar-order'],
+const getCalendarData = (calendar) => {
+	return {
+		displayname: calendar.props.displayname,
+		order: calendar.props['calendar-order'],
 		components: {
-			vevent: false,
+			vevent: true, // check if VEVENT exists in props['supported-calendar-component-set'].comps
 		},
-		writable: properties.canWrite,
+		writable: canWrite(calendar.props),
+		url: generateRemoteUrl(`dav/calendars/${getCurrentUser().uid}${calendar.filename}/`),
 	}
-
-	const components = properties['{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set'] || []
-	for (let i = 0; i < components.length; i++) {
-		const name = components[i].attributes.getNamedItem('name').textContent.toLowerCase()
-		if (Object.hasOwnProperty.call(data.components, name)) {
-			data.components[name] = true
-		}
-	}
-
-	return data
 }
 
 /**
  * @returns {Promise}
  */
-export const getUserCalendars = () => {
-	const url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUser().uid + '/'
-
-	return client
-		.propFind(url, props, 1, {
-			requesttoken: getRequestToken(),
+export const getUserCalendars = async() => {
+	const response = await getClient('calendars')
+		.getDirectoryContents('/', {
+			data: `<?xml version="1.0"?>
+<d:propfind  xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav" xmlns:aapl="http://apple.com/ns/ical/" xmlns:oc="http://owncloud.org/ns" xmlns:cs="http://calendarserver.org/ns/">
+  <d:prop>
+    <d:displayname />
+    <c:calendar-description />
+    <c:calendar-timezone />
+    <aapl:calendar-order />
+    <c:supported-calendar-component-set />
+    <oc:calendar-enabled />
+    <d:acl />
+    <d:owner />
+    <oc:invite />
+  </d:prop>
+</d:propfind>`,
+			details: true,
 		})
-		.then((data) => {
-			const calendars = []
 
-			data.body.forEach((cal) => {
-				if (cal.propStat.length < 1) {
-					return
-				}
-				if (getResponseCodeFromHTTPResponse(cal.propStat[0].status) === 200) {
-					const properties = getCalendarData(cal.propStat[0].properties)
-					if (properties && properties.components.vevent && properties.writable === true) {
-						properties.url = cal.href
-						calendars.push(properties)
-					}
-				}
-			})
-
-			return calendars
-		})
+	return response.data
+		.map(getCalendarData)
+		.filter(props => props.components.vevent && props.writable === true)
 }
 
 const getRandomString = () => {
