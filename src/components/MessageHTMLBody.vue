@@ -3,7 +3,7 @@
 		<MdnRequest :message="message" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<Actions default-icon="icon-toggle">
+			<Actions default-icon="icon-toggle" :menu-title="t('mail', 'Show')">
 				<ActionButton icon="icon-toggle"
 					@click="onShowBlockedContent">
 					{{ t('mail', 'Always show images from {sender}', {sender: message.from[0].email}) }}
@@ -152,7 +152,12 @@ export default {
 		overflow-y: auto;
 	}
 }
-
+::v-deep .icon-toggle {
+	background-image: var(--icon-toggle-000) !important;
+}
+::v-deep .action-item__menutoggle--with-title {
+	background-color: var(--color-background-hover) !important;
+}
 .message-frame {
 	width: 100%;
 }
