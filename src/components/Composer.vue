@@ -374,6 +374,7 @@ export default {
 			editorMode: 'html',
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
+			signatureAboveQuote: false,
 			appendSignature: true,
 		}
 	},
@@ -641,8 +642,8 @@ export default {
 		onInputChanged() {
 			this.saveDraftDebounced(this.getMessageData)
 			if (this.appendSignature) {
-				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
-				this.bus.$emit('insertSignature', signatureValue, this.selectedAlias.signatureAboveQuote)
+				const signature = this.selectedAlias?.signature || ''
+				this.bus.$emit('insertSignature', toHtml(detect(signature)).value)
 				this.appendSignature = false
 			}
 		},
