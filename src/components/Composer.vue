@@ -6,7 +6,7 @@
 			</label>
 			<Multiselect
 				id="from"
-				v-model="selectedAlias"
+				:value="selectedAlias"
 				:options="aliases"
 				label="name"
 				track-by="selectId"
@@ -15,7 +15,7 @@
 				:custom-label="formatAliases"
 				:placeholder="t('mail', 'Select account')"
 				:clear-on-select="false"
-				@keyup="onInputChanged" />
+				@select="onAliasChange" />
 		</div>
 		<div class="composer-fields">
 			<label class="to-label" for="to">
@@ -338,13 +338,19 @@ export default {
 		},
 	},
 	data() {
+		let bodyVal = toHtml(this.body).value
+		if (bodyVal.length === 0) {
+			// an empty body (e.g "") does not trigger an onInput event.
+			// but to append the signature a onInput event is required.
+			bodyVal = '<p></p><p></p>'
+		}
 		return {
 			showCC: this.cc.length > 0,
 			selectedAlias: NO_ALIAS_SET, // Fixed in `beforeMount`
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal: toHtml(this.body).value,
+			bodyVal,
 			attachments: [],
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			draftsPromise: Promise.resolve(),
@@ -368,6 +374,7 @@ export default {
 			editorMode: 'html',
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
+			appendSignature: true,
 		}
 	},
 	computed: {
@@ -531,29 +538,26 @@ export default {
 			this.mailvelope.keysMissing = recipients.filter((r) => keysValid[r] === false)
 		},
 		initBody() {
+			/** @var {Text} body **/
+			let body
 			if (this.replyTo) {
-				this.bodyVal = this.bodyWithSignature(
-					this.selectedAlias,
-					buildReplyBody(
-						this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
-						this.replyTo.from[0],
-						this.replyTo.dateInt,
-						this.$store.getters.getPreference('reply-mode', 'top') === 'top'
-					).value
+				body = buildReplyBody(
+					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
+					this.replyTo.from[0],
+					this.replyTo.dateInt,
+					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
 				).value
 			} else if (this.forwardFrom) {
-				this.bodyVal = this.bodyWithSignature(
-					this.selectedAlias,
-					buildReplyBody(
-						this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
-						this.forwardFrom.from[0],
-						this.forwardFrom.dateInt,
-						this.$store.getters.getPreference('reply-mode', 'top') === 'top'
-					).value
+				body = buildReplyBody(
+					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
+					this.forwardFrom.from[0],
+					this.forwardFrom.dateInt,
+					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
 				).value
 			} else {
-				this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal).value
+				body = this.bodyVal
 			}
+			this.bodyVal = html(body).value
 		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
@@ -636,6 +640,17 @@ export default {
 		},
 		onInputChanged() {
 			this.saveDraftDebounced(this.getMessageData)
+			if (this.appendSignature) {
+				const signature = this.selectedAlias?.signature || ''
+				this.bus.$emit('insertSignature', toHtml(detect(signature)).value)
+				this.appendSignature = false
+			}
+		},
+		onAliasChange(alias) {
+			logger.debug('changed alias', { alias })
+			this.selectedAlias = alias
+			this.appendSignature = true
+			this.onInputChanged()
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('onAddLocalAttachment')
@@ -736,13 +751,14 @@ export default {
 			this.selectCc = []
 			this.selectBcc = []
 			this.subjectVal = ''
-			this.bodyVal = ''
+			this.bodyVal = '<p></p><p></p>'
 			this.attachments = []
 			this.errorText = undefined
 			this.state = STATES.EDITING
 			this.autocompleteRecipients = []
 			this.newRecipients = []
 			this.requestMdn = false
+			this.appendSignature = true
 
 			this.setAlias()
 			this.initBody()
@@ -764,15 +780,6 @@ export default {
 			}
 
 			return `${alias.name} <${alias.emailAddress}>`
-		},
-		bodyWithSignature(alias, body) {
-			if (!alias || !alias.signature) {
-				return html(body)
-			}
-
-			return html(body)
-				.append(html('<br>--<br>'))
-				.append(toHtml(detect(alias.signature)))
 		},
 	},
 }
