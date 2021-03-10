@@ -27,12 +27,12 @@
 		:loading="loading"
 		@hide="() => {}"
 		@markDone="() => {}">
-		<template v-slot:default="{ item }">
+		<template #default="{ item }">
 			<DashboardWidgetItem :class="{unread: itemUnread(item)}"
 				:target-url="itemTargetUrl(item)"
 				:main-text="itemMainText(item)"
 				:sub-text="itemSubText(item)">
-				<template v-slot:avatar>
+				<template #avatar>
 					<Avatar v-if="item.from"
 						:email="item.from[0].email"
 						:display-name="item.from[0].label"
@@ -41,7 +41,7 @@
 				</template>
 			</DashboardWidgetItem>
 		</template>
-		<template v-slot:empty-content>
+		<template #empty-content>
 			<EmptyContent id="mail--empty-content" icon="icon-checkmark">
 				<template #desc>
 					{{ t('mail', 'No message found yet') }}

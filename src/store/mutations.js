@@ -239,7 +239,7 @@ export default {
 	},
 	addEnvelopeThread(state, { id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists
-		thread.map(e => {
+		thread.forEach(e => {
 			const mailbox = state.mailboxes[e.mailboxId]
 			Vue.set(e, 'accountId', mailbox.accountId)
 			Vue.set(state.envelopes, e.databaseId, Object.assign({}, state.envelopes[e.databaseId] || {}, e))

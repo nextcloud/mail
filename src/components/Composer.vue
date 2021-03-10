@@ -463,7 +463,7 @@ export default {
 
 		// Add attachments in case of forward
 		if (this.forwardFrom?.attachments !== undefined) {
-			this.forwardFrom.attachments.map(att => {
+			this.forwardFrom.attachments.forEach(att => {
 				this.attachments.push({
 					fileName: att.fileName,
 					displayName: trimStart('/', att.fileName),
@@ -481,7 +481,7 @@ export default {
 		} else if (this.$route.query.forwardedMessages && isArray(this.$route.query.forwardedMessages)) {
 			forwards = this.$route.query.forwardedMessages
 		}
-		forwards.map(id => {
+		forwards.forEach(id => {
 			const env = this.$store.getters.getEnvelope(id)
 			if (!env) {
 				// TODO: also happens when the composer page is reloaded
