@@ -414,6 +414,8 @@ export default {
 		})
 	},
 	syncEnvelopes({ commit, getters, dispatch }, { mailboxId, query, init = false }) {
+		logger.debug(`starting mailbox sync of ${mailboxId} (${query})`)
+
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -457,9 +459,10 @@ export default {
 		}
 
 		const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
+		logger.debug(`mailbox sync of ${mailboxId} (${query}) has ${ids.length} known IDs`)
 		return syncEnvelopes(mailbox.accountId, mailboxId, ids, query, init)
 			.then((syncData) => {
-				logger.info(`mailbox ${mailboxId} synchronized, ${syncData.newMessages.length} new, ${syncData.changedMessages.length} changed and ${syncData.vanishedMessages.length} vanished messages`)
+				logger.debug(`mailbox ${mailboxId} (${query}) synchronized, ${syncData.newMessages.length} new, ${syncData.changedMessages.length} changed and ${syncData.vanishedMessages.length} vanished messages`)
 
 				const unifiedMailbox = getters.getUnifiedMailbox(mailbox.specialRole)
 
@@ -491,10 +494,15 @@ export default {
 			.catch((error) => {
 				return matchError(error, {
 					[SyncIncompleteError.getName()]() {
-						console.warn('(initial) sync is incomplete, retriggering')
+						console.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
 						return dispatch('syncEnvelopes', { mailboxId, query, init })
 					},
 					[MailboxLockedError.getName()](error) {
+						if (init) {
+							logger.info('Sync failed because the mailbox is locked, stopping here because this is an initial sync', { error })
+							throw error
+						}
+
 						logger.info('Sync failed because the mailbox is locked, retriggering', { error })
 						return wait(1500).then(() => dispatch('syncEnvelopes', { mailboxId, query, init }))
 					},
