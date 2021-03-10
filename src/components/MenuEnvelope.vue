@@ -5,6 +5,12 @@
 			menu-align="right"
 			event=""
 			@click.native.prevent>
+			<ActionRouter v-if="withReply"
+				:icon="hasMultipleRecipients ? 'icon-reply-all' : 'icon-reply'"
+				:close-after-click="true"
+				:to="hasMultipleRecipients ? replyAllLink : replyOneLink">
+				{{ t('mail', 'Reply') }}
+			</ActionRouter>
 			<ActionRouter v-if="hasMultipleRecipients"
 				icon="icon-reply"
 				:close-after-click="true"
@@ -134,24 +140,35 @@ export default {
 		MoveModal,
 	},
 	props: {
-		envelope: { // The envelope on which this menu will act
+		envelope: {
+			// The envelope on which this menu will act
 			type: Object,
 			required: true,
 		},
-		mailbox: { // It is just used to get the accountId when envelope doesn't have it
+		mailbox: {
+			// It is just used to get the accountId when envelope doesn't have it
 			type: Object,
 			required: false,
 			default: undefined,
 		},
-		isSelected: { // Indicates if the envelope is currently selected
+		isSelected: {
+			// Indicates if the envelope is currently selected
 			type: Boolean,
 			default: false,
 		},
-		withSelect: { // "Select" action should only appear in envelopes from the envelope list
+		withReply: {
+			// "Reply" action should only appear in envelopes from the envelope list
+			// (Because in thread envelopes, this action is already set as primary button of this menu) 
 			type: Boolean,
 			default: true,
 		},
-		withShowSource: { // "Show source" action should only appear in thread envelopes
+		withSelect: {
+			// "Select" action should only appear in envelopes from the envelope list
+			type: Boolean,
+			default: true,
+		},
+		withShowSource: {
+			// "Show source" action should only appear in thread envelopes
 			type: Boolean,
 			default: true,
 		},

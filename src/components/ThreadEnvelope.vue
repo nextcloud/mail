@@ -66,6 +66,7 @@
 				</router-link>
 				<MenuEnvelope class="app-content-list-item-menu"
 					:envelope="envelope"
+					:with-reply="false"
 					:with-select="false"
 					:with-show-source="true" />
 			</div>
