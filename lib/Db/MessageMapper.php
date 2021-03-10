@@ -926,4 +926,19 @@ class MessageMapper extends QBMapper {
 		}
 		return (int) $rows[0]['id'];
 	}
+
+	/**
+	 * @return Message[]
+	 */
+	public function findWithEmptyMessageId(): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->isNull('message_id')
+			);
+
+		return $this->findEntities($select);
+	}
 }

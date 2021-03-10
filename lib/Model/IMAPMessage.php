@@ -39,6 +39,7 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Headers;
+use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Part;
 use JsonSerializable;
 use OC;
@@ -50,6 +51,7 @@ use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 use function in_array;
 use function mb_convert_encoding;
+use function trim;
 
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
@@ -120,6 +122,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @var Horde_Imap_Client_Data_Fetch
 	 */
 	private $fetch;
+
+	public static function generateMessageId(): string {
+		return Horde_Mime_Headers_MessageId::create('nextcloud-mail-generated')->value;
+	}
 
 	/**
 	 * @return int
@@ -669,10 +675,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public function toDbMessage(int $mailboxId): \OCA\Mail\Db\Message {
 		$msg = new \OCA\Mail\Db\Message();
 
+		$messageId = $this->getMessageId();
+		if (empty(trim($messageId))) {
+			// Sometimes the message ID is missing. Then we create one.
+			$messageId = self::generateMessageId();
+		}
+
 		$msg->setUid($this->getUid());
-		$msg->setMessageId($this->getMessageId());
+		$msg->setMessageId($messageId);
 		$msg->setRawReferences($this->getRawReferences());
-		$msg->setThreadRootId($this->getMessageId());
+		$msg->setThreadRootId($messageId);
 		$msg->setInReplyTo($this->getRawInReplyTo());
 		$msg->setMailboxId($mailboxId);
 		$msg->setFrom($this->getFrom());
