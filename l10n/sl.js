@@ -179,6 +179,7 @@ OC.L10N.register(
     "Remove account {email}" : "Odstrani račun {email}",
     "Remove {email}" : "Odstrani {email}",
     "Cancel" : "Prekliči",
+    "Show all subscribed mailboxes" : "Pokaži vse naročene poštne predale",
     "Show all mailboxes" : "Pokaži vse poštne predale",
     "Collapse mailboxes" : "Skrči poštne predale",
     "Mark all as read" : "Označi vse kot prebrano",
