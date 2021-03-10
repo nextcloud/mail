@@ -189,7 +189,7 @@ export default {
 		return Promise.all(
 			accounts.map((account, idx) => {
 				if (account.id === 0) {
-					return
+					return Promise.resolve()
 				}
 				commit('saveAccountsOrder', { account, order: idx })
 				return patchAccount(account, { order: idx })
