@@ -43,7 +43,7 @@
 		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"psr/log": "^1",
-		"rubix/ml": "0.2.4"
+		"rubix/ml": "0.4.0"
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "v20.0.7",
