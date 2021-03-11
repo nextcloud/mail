@@ -463,7 +463,9 @@ export default {
 
 		// Add attachments in case of forward
 		if (this.forwardFrom?.attachments !== undefined) {
-			this.forwardFrom.attachments.forEach(att => {
+			// We filter attachments with contentDisposition header set to 'inline' as theyr are rendered
+			// in the HTML body
+			this.forwardFrom.attachments.filter(att => att.disposition !== 'inline').forEach(att => {
 				this.attachments.push({
 					fileName: att.fileName,
 					displayName: trimStart('/', att.fileName),
