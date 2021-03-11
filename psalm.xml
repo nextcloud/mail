@@ -18,7 +18,6 @@
         <directory name="vendor" />
 		<directory name="lib/Vendor" />
 		<ignoreFiles>
-			<directory name="vendor/phpunit/php-code-coverage" />
 			<directory name="vendor/vimeo" />
 		</ignoreFiles>
     </extraFiles>
