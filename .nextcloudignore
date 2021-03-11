@@ -25,7 +25,6 @@ codecov.yml
 /node_modules
 /package.json
 /package-lock.json
-/.phan
 /phpunit*xml
 /postcss.config.js
 /psalm.xml

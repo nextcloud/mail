@@ -47,7 +47,6 @@
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "v20.0.7",
-		"phan/phan": "^4.0",
 		"roave/security-advisories": "dev-master",
 		"vimeo/psalm": "^4.1"
 	},
@@ -55,7 +54,6 @@
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
-		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
 		"psalm": "psalm",
 		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
 		"post-install-cmd": [
