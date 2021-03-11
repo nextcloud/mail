@@ -143,6 +143,7 @@ export default {
 		mailbox() {
 			this.loadEnvelopes()
 				.then(() => {
+					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mailbox change`)
 					this.sync(false)
 				})
 		},
@@ -159,6 +160,7 @@ export default {
 	async mounted() {
 		this.loadEnvelopes()
 			.then(() => {
+				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
 				this.sync(false)
 			})
 	},
@@ -173,6 +175,7 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
+			logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) during cache initalization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
@@ -181,7 +184,7 @@ export default {
 				})
 		},
 		async loadEnvelopes() {
-			logger.debug(`fetching envelopes for mailbox ${this.mailbox.databaseId} and query ${this.searchQuery}`, this.mailbox)
+			logger.debug(`Fetching envelopes for mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
 			this.loadingEnvelopes = true
 			this.loadingCacheInitialization = false
 			this.error = false
@@ -228,25 +231,25 @@ export default {
 			} catch (error) {
 				await matchError(error, {
 					[MailboxLockedError.getName()]: async(error) => {
-						logger.info('Mailbox is locked', { error })
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
 
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
 					[MailboxNotCachedError.getName()]: async(error) => {
-						logger.info('Mailbox not cached. Triggering initialization', { error })
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization`, { error })
 						this.loadingEnvelopes = false
 
 						try {
 							await this.initializeCache()
 						} catch (error) {
-							logger.error('Could not initialize cache', { error })
+							logger.error(`Could not initialize cache of mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
 							this.error = error
 						}
 					},
 					default: (error) => {
-						logger.error('Could not fetch envelopes', { error })
+						logger.error(`Could not fetch envelopes of mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
 						this.loadingEnvelopes = false
 						this.error = error
 					},
@@ -356,7 +359,7 @@ export default {
 				)
 				break
 			case 'refresh':
-				logger.debug('syncing envelopes via shortkey')
+				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
 				this.sync(false)
 
 				break
@@ -374,9 +377,8 @@ export default {
 			}
 		},
 		async sync(init = false) {
-			logger.debug('syncing mailbox')
 			if (this.refreshing) {
-				logger.debug("already sync'ing, aborting")
+				logger.debug(`already sync'ing mailbox ${this.mailbox.databaseId} (${this.searchQuery}), aborting`, { init })
 				return
 			}
 
@@ -390,15 +392,15 @@ export default {
 			} catch (error) {
 				matchError(error, {
 					[MailboxLockedError.getName()](error) {
-						logger.info('Background sync failed because the mailbox is locked', { error })
+						logger.info('Background sync failed because the mailbox is locked', { error, init })
 					},
 					default(error) {
-						logger.error('Could not sync envelopes: ' + error.message, { error })
+						logger.error('Could not sync envelopes: ' + error.message, { error, init })
 					},
 				})
 			} finally {
 				this.refreshing = false
-				logger.debug("finished sync'ing mailbox")
+				logger.debug(`finished sync'ing mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
 			}
 		},
 		onDelete(id) {
@@ -444,6 +446,7 @@ export default {
 				return
 			}
 			try {
+				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) in background`)
 				await this.sync(false)
 			} catch (error) {
 				logger.error('Background sync failed: ' + error.message, { error })
