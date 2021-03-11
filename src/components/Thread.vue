@@ -262,7 +262,7 @@ export default {
 	position: fixed; // ie fallback
 	position: -webkit-sticky; // ios/safari fallback
 	position: sticky;
-	top: var(--header-height);
+	top: 0;
 	background: -webkit-linear-gradient(var(--color-main-background), var(--color-main-background) 80%, rgba(255,255,255,0));
 	background: -o-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
 	background: -moz-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
