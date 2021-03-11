@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.9.2 – 2021-03-11
+### Fixed
+- Handling of IMAP messages without a Message-Id header
+- Missing reply action
+- Scrolling of message source
+- Message important/flagged toggle
+- Forwarding of messages with inline images
+- Browser lag after the initial inbox synchronization
+
 ## 1.9.1 - 2021-03-03
 ### Fixed
 - Missing route for attachments zip response
