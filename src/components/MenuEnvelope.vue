@@ -158,7 +158,7 @@ export default {
 		},
 		withReply: {
 			// "Reply" action should only appear in envelopes from the envelope list
-			// (Because in thread envelopes, this action is already set as primary button of this menu) 
+			// (Because in thread envelopes, this action is already set as primary button of this menu)
 			type: Boolean,
 			default: true,
 		},
