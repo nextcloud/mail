@@ -9,12 +9,12 @@ OC.L10N.register(
     "Choose" : "منتخب کریں",
     "Favorites" : "Favorites",
     "Other" : "دیگر",
+    "Reply" : "جواب",
     "Select" : "Select",
     "Move" : "Move",
     "Delete" : "حذف کریں",
     "Settings" : "سیٹینگز",
     "Cancel" : "منسوخ کریں",
-    "Reply" : "جواب",
     "User" : "User",
     "Search" : "Search"
 },
