@@ -279,7 +279,7 @@ export default {
 		}
 	}
 	.button {
-		color: var(--color-main-background);
+		color: var(--color-main-background) !important;
 		&:not(.active):not(.primary) {
 			display: none;
 
@@ -289,6 +289,27 @@ export default {
 				margin-bottom: 0;
 
 			}
+		}
+	}
+	::v-deep .icon-reply-white,
+	::v-deep .icon-reply-all-white {
+		height: 44px;
+		min-width: 44px;
+		margin: 0;
+		padding: 9px 18px 10px 32px;
+	}
+
+	/* Show action button label and move icon to the left
+	   on screens larger than 600px */
+	@media only screen and (max-width: 600px) {
+		.action-label {
+			display: none;
+		}
+	}
+	@media only screen and (min-width: 600px) {
+		::v-deep .icon-reply-white,
+		::v-deep .icon-reply-all-white {
+			background-position: 12px center;
 		}
 	}
 	.avatardiv {
