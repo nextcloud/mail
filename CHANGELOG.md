@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.9.3 – 2021-03-12
+### Fixed
+- Upgrade error from v1.9.1
+
 ## 1.9.2 – 2021-03-11
 ### Fixed
 - Handling of IMAP messages without a Message-Id header
