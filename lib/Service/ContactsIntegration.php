@@ -118,4 +118,109 @@ class ContactsIntegration {
 			return null;
 		}
 	}
+
+	/**
+	 * Adds a new email to an existing Contact
+	 *
+	 * @param string $uid
+	 * @param string $mailAddr
+	 * @param string $type
+	 * @return array|null
+	 */
+	public function addEmailToContact(string $uid, string $mailAddr, string $type = 'HOME') {
+		if (!$this->contactsManager->isEnabled()) {
+			return null;
+		}
+
+		$result = $this->contactsManager->search($uid, ['UID'], ['types' => true, 'limit' => 1]);
+		
+		if (count($result) !== 1) {
+			return null; // no match
+		}
+		
+		$newEntry = [
+			'type' => $type,
+			'value' => $mailAddr
+		];
+		
+		$match = $result[0];
+		$email = $match['EMAIL'] ?? [];
+		if (!empty($email) && !is_array($email[0])) {
+			$email = [$email];
+		}
+		$email[] = $newEntry;
+		$match['EMAIL'] = $email;
+
+		$updatedContact = $this->contactsManager->createOrUpdate($match, $match['addressbook-key']);
+		return $updatedContact;
+	}
+
+	/**
+	 * Adds a new contact with the specified email to an addressbook
+	 *
+	 * @param string $uid
+	 * @param string $mailAddr
+	 * @param string $addressbook
+	 * @return array|null
+	 */
+	public function newContact(string $name, string $mailAddr, string $type = 'HOME', string $addressbook = null) {
+		if (!$this->contactsManager->isEnabled()) {
+			return null;
+		}
+
+		if (!isset($addressbook)) {
+			$addressbook = key($this->contactsManager->getUserAddressBooks());
+		}
+
+		$contact = [
+			'FN' => $name,
+			'EMAIL' => [
+				[
+					'type' => $type,
+					'value' => $mailAddr
+				]
+			]
+		];
+		$createdContact = $this->contactsManager->createOrUpdate($contact, $addressbook);
+		return $createdContact;
+	}
+
+	private function doSearch($term, $fields): array {
+		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+
+		$result = $this->contactsManager->search($term, $fields);
+		$matches = [];
+		foreach ($result as $r) {
+			if (!$allowSystemUsers && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
+				continue;
+			}
+			$id = $r['UID'];
+			$fn = $r['FN'];
+			$matches[] = [
+				'id' => $id,
+				'label' => $fn,
+			];
+		}
+		return $matches;
+	}
+
+	/**
+	 * Extracts all Contacts with the specified mail address
+	 *
+	 * @param string $mailAddr
+	 * @return array
+	 */
+	public function getContactsWithMail(string $mailAddr) {
+		return $this->doSearch($mailAddr, ['EMAIL']);
+	}
+
+	/**
+	 * Extracts all Contacts with the specified name
+	 *
+	 * @param string $mailAddr
+	 * @return array
+	 */
+	public function getContactsWithName($name) {
+		return $this->doSearch($name, ['FN']);
+	}
 }

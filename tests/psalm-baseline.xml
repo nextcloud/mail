@@ -256,6 +256,11 @@
       <code>$predictedValidationLabel</code>
     </InvalidScalarArgument>
   </file>
+  <file src="lib/Service/ContactsIntegration.php">
+    <UndefinedDocblockClass occurrences="1">
+      <code>$this-&gt;contactsManager-&gt;getUserAddressBooks()</code>
+    </UndefinedDocblockClass>
+  </file>
   <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
     <NullArgument occurrences="3">
       <code>null</code>
