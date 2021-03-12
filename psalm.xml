@@ -4,7 +4,7 @@
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    xsi:schemaLocation="https://getpsalm.org/schema/config"
     errorBaseline="tests/psalm-baseline.xml"
 >
     <projectFiles>
@@ -17,9 +17,6 @@
     <extraFiles>
         <directory name="vendor" />
 		<directory name="lib/Vendor" />
-		<ignoreFiles>
-			<directory name="vendor/vimeo" />
-		</ignoreFiles>
     </extraFiles>
 	<issueHandlers>
 		<UndefinedClass>

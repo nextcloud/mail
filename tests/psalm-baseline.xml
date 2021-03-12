@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.6.2@bca09d74adc704c4eaee36a3c3e9d379e290fc3b">
+<files psalm-version="4.x-dev@">
   <file src="lib/AppInfo/Application.php">
     <MissingDependency occurrences="12">
       <code>DraftSavedEvent</code>
@@ -15,6 +15,9 @@
       <code>SynchronizationEvent</code>
       <code>UserDeletedEvent</code>
     </MissingDependency>
+    <UndefinedClass occurrences="1">
+      <code>ContainerInterface</code>
+    </UndefinedClass>
   </file>
   <file src="lib/Attachment.php">
     <MissingDocblockType occurrences="1">
@@ -29,6 +32,51 @@
       <code>get</code>
       <code>get</code>
     </TooManyArguments>
+  </file>
+  <file src="lib/Command/CleanUp.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/CreateAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/DeleteAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/DiagnoseAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/ExportAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/ExportAccountThreads.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/SyncAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/Thread.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/TrainAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
   </file>
   <file src="lib/Db/AliasMapper.php">
     <ImplicitToStringCast occurrences="1">
@@ -244,5 +292,22 @@
       <code>SynchronizationEvent</code>
       <code>SynchronizationEvent</code>
     </MissingDependency>
+  </file>
+  <file src="lib/Support/ConsoleLoggerDecorator.php">
+    <UndefinedClass occurrences="1">
+      <code>OutputInterface</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="10">
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>$this-&gt;consoleOutput</code>
+      <code>OutputInterface</code>
+    </UndefinedDocblockClass>
   </file>
 </files>
