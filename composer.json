@@ -47,15 +47,15 @@
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "v20.0.7",
-		"roave/security-advisories": "dev-master",
-		"vimeo/psalm": "^4.1"
+		"psalm/phar": "^4.6",
+		"roave/security-advisories": "dev-master"
 	},
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
-		"psalm": "psalm",
-		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
+		"psalm": "psalm.phar",
+		"psalm:fix": "psalm.phar --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
 		"post-install-cmd": [
 			"@composer bin all install --ansi",
 			"\"vendor/bin/mozart\" compose",
