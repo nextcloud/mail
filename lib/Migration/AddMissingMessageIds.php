@@ -30,6 +30,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
+use function method_exists;
 use function sprintf;
 
 class AddMissingMessageIds implements IRepairStep {
@@ -52,6 +53,21 @@ class AddMissingMessageIds implements IRepairStep {
 
 	public function run(IOutput $output) {
 		$output->info('Looking up messages without a message-id');
+
+		/**
+		 * During the upgrade to v1.9.2/v1.10.0 the old version of the
+		 * mapper is loaded before this new repair step is performed. Hence even after
+		 * the program code got replaced, the class doesn't have the new method. We
+		 *
+		 * Do the ugly method check here and hope that the repair is run soonish.
+		 *
+		 * @see https://github.com/nextcloud/mail/issues/4746
+		 */
+		if (!method_exists($this->mapper, 'findWithEmptyMessageId')) {
+			$output->warning('New Mail code hasn\'t been loaded yes, skipping message clean-up. Please run `occ maintenance:repair` after the upgrade.');
+			return;
+		}
+
 		$toFix = $this->mapper->findWithEmptyMessageId();
 		$output->info(sprintf('%d messages need an update', count($toFix)));
 		$output->startProgress(count($toFix));
