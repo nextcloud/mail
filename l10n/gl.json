@@ -160,6 +160,7 @@
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Esta mensaxe está cifrada con PGP. Instale Mailvelope para descifralo.",
     "The images have been blocked to protect your privacy." : "As imaxes foron bloqueadas para protexer a súa intimidade.",
     "Show" : "Amosar",
+    "Show images temporarily" : "Amosar as imaxes temporalmente",
     "Always show images from {sender}" : "Amosar sempre as imaxes de {sender}",
     "Always show images from {domain}" : "Amosar sempre as imaxes de {domain}",
     "Message frame" : "Marco da mensaxe",

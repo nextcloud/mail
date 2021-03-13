@@ -162,6 +162,7 @@ OC.L10N.register(
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Diese Nachricht wurde mit PGP verschlüsselt. Installiere Mailvelope um sie zu entschlüsseln.",
     "The images have been blocked to protect your privacy." : "Die Bilder wurden blockiert um Deine Privatsphäre zu schützen.",
     "Show" : "Anzeigen",
+    "Show images temporarily" : "Bilder temporär anzeigen",
     "Always show images from {sender}" : "Bilder von {sender} immer anzeigen",
     "Always show images from {domain}" : "Bilder von {domain} immer anzeigen",
     "Message frame" : "Nachrichtenrahmen",

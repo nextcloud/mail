@@ -162,6 +162,7 @@ OC.L10N.register(
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "此消息已使用 PGP 加密。 安装 Mailvelope 对其进行解密。",
     "The images have been blocked to protect your privacy." : "图片已被禁用，以保护您的隐私。",
     "Show" : "显示",
+    "Show images temporarily" : "暂时显示图像",
     "Always show images from {sender}" : "始终显示来自 {sender} 的邮件",
     "Always show images from {domain}" : "始终显示来自 {domain} 的图片",
     "Message frame" : "消息框",
