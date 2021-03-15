@@ -61,6 +61,7 @@ use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
@@ -99,6 +100,9 @@ class MailTransmission implements IMailTransmission {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var PerformanceLogger */
+	private $performanceLogger;
+
 	/**
 	 * @param Folder $userFolder
 	 */
@@ -111,7 +115,8 @@ class MailTransmission implements IMailTransmission {
 								IEventDispatcher $eventDispatcher,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								PerformanceLogger $performanceLogger) {
 		$this->accountService = $accountService;
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
@@ -122,6 +127,7 @@ class MailTransmission implements IMailTransmission {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->logger = $logger;
+		$this->performanceLogger = $performanceLogger;
 	}
 
 	public function sendMessage(NewMessageData $messageData,
@@ -209,10 +215,12 @@ class MailTransmission implements IMailTransmission {
 	 * @throws ServiceException
 	 */
 	public function saveDraft(NewMessageData $message, Message $previousDraft = null): array {
+		$perfLogger = $this->performanceLogger->start('save draft');
 		$this->eventDispatcher->dispatch(
 			SaveDraftEvent::class,
 			new SaveDraftEvent($message->getAccount(), $message, $previousDraft)
 		);
+		$perfLogger->step('emit pre event');
 
 		$account = $message->getAccount();
 		$imapMessage = $account->newMessage();
@@ -244,11 +252,13 @@ class MailTransmission implements IMailTransmission {
 			$mail->setBody($imapMessage->getContent());
 		}
 		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$perfLogger->step('build draft message');
 
 		// 'Send' the message
 		try {
 			$transport = new Horde_Mail_Transport_Null();
 			$mail->send($transport, false, false);
+			$perfLogger->step('create IMAP message');
 			// save the message in the drafts folder
 			$client = $this->imapClientFactory->getClient($account);
 			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
@@ -262,6 +272,7 @@ class MailTransmission implements IMailTransmission {
 				$mail,
 				[Horde_Imap_Client::FLAG_DRAFT]
 			);
+			$perfLogger->step('save message on IMAP');
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
 		} catch (Horde_Exception $e) {
@@ -272,7 +283,9 @@ class MailTransmission implements IMailTransmission {
 			DraftSavedEvent::class,
 			new DraftSavedEvent($account, $message, $previousDraft)
 		);
+		$perfLogger->step('emit post event');
 
+		$perfLogger->end();
 		return [$account, $draftsMailbox, $newUid];
 	}
 
