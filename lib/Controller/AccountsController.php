@@ -466,7 +466,7 @@ class AccountsController extends Controller {
 			$this->syncService->syncMailbox(
 				$account,
 				$draftsMailbox,
-				Horde_Imap_Client::SYNC_NEWMSGS,
+				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 				[],
 				false
 			);
