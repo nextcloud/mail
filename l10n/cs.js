@@ -151,7 +151,7 @@ OC.L10N.register(
     "Message body" : "Tělo zprávy",
     "Attachments" : "Přílohy",
     "Import into calendar" : "Importovat do kalendáře",
-    "Download attachment" : "Stáhnout přílohu",
+    "Download attachment" : "Stáhnout si přílohu",
     "Save to Files" : "Uložit do Souborů",
     "Unnamed" : "Nepojmenovaný",
     "Embedded message" : "Zapouzdřená zpráva",
