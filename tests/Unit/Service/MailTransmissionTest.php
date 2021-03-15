@@ -43,6 +43,7 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCA\Mail\Support\PerformanceLogger;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -96,6 +97,7 @@ class MailTransmissionTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
 
 		$this->transmission = new MailTransmission(
 			$this->userFolder,
@@ -107,7 +109,8 @@ class MailTransmissionTest extends TestCase {
 			$this->eventDispatcher,
 			$this->mailboxMapper,
 			$this->messageMapper,
-			$this->logger
+			$this->logger,
+			$this->performanceLogger
 		);
 	}
 

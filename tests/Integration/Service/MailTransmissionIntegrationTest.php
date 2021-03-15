@@ -42,6 +42,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -112,7 +113,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 			OC::$server->query(IEventDispatcher::class),
 			OC::$server->query(MailboxMapper::class),
 			OC::$server->query(MessageMapper::class),
-			OC::$server->query(LoggerInterface::class)
+			OC::$server->query(LoggerInterface::class),
+			OC::$server->query(PerformanceLogger::class)
 		);
 	}
 
