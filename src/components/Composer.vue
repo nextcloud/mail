@@ -351,7 +351,7 @@ export default {
 			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
 			savingDraft: undefined,
-			saveDraftDebounced: debounce(700, this.saveDraft),
+			saveDraftDebounced: debounce(10 * 1000, this.saveDraft),
 			state: STATES.EDITING,
 			errorText: undefined,
 			STATES,
