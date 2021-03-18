@@ -307,6 +307,14 @@ export default {
 					}))
 				}
 			})
+
+			// Get new messages
+			this.$store.dispatch('fetchNextEnvelopes', {
+				mailboxId: this.mailbox.databaseId,
+				query: this.searchQuery,
+				quantity: this.selectedEnvelopes.length
+			})
+
 			this.unselectAll()
 		},
 		setEnvelopeSelected(envelope, selected) {
