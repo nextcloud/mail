@@ -269,6 +269,8 @@ export default {
 		deleteAllSelected() {
 			this.selectedEnvelopes.forEach(async(envelope) => {
 				// Navigate if the message being deleted is the one currently viewed
+				// Shouldn't we simply use $emit here?
+				// Would be better to navigate after all messages have been deleted
 				if (envelope.databaseId === this.$route.params.threadId) {
 					const index = this.envelopes.indexOf(envelope)
 					let next
@@ -305,6 +307,14 @@ export default {
 					}))
 				}
 			})
+
+			// Get new messages
+			this.$store.dispatch('fetchNextEnvelopes', {
+				mailboxId: this.mailbox.databaseId,
+				query: this.searchQuery,
+				quantity: this.selectedEnvelopes.length
+			})
+
 			this.unselectAll()
 		},
 		setEnvelopeSelected(envelope, selected) {

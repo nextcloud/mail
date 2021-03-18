@@ -66,6 +66,7 @@
 			:is-selected="selected"
 			:with-select="true"
 			:with-show-source="false"
+			@delete="$emit('delete', data.databaseId)"
 			@unselect="unselect"
 			@update:selected="toggleSelected" />
 	</router-link>

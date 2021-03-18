@@ -27,7 +27,7 @@ import actions from '../../../store/actions'
 import * as MailboxService from '../../../service/MailboxService'
 import * as MessageService from '../../../service/MessageService'
 import * as NotificationService from '../../../service/NotificationService'
-import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../../../store/constants'
+import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants'
 
 const mockEnvelope = curry((mailboxId, uid) => ({
 	mailboxId,
@@ -234,15 +234,7 @@ describe('Vuex store actions', () => {
 			mailboxId: 13,
 		})
 
-		expect(page).to.deep.equal(
-			reverse(
-				range(1, 21).map((n) => ({
-					uid: n,
-					dateInt: n * 10000,
-				}))
-			)
-		)
-		expect(context.commit).to.have.callCount(20)
+		expect(context.dispatch).to.have.been.calledOnce
 	})
 
 	it('builds the next unified page with local data', async() => {
@@ -304,8 +296,12 @@ describe('Vuex store actions', () => {
 			mailboxId: UNIFIED_INBOX_ID,
 		})
 
-		expect(context.dispatch).not.have.been.called
-		expect(page.length).to.equal(20)
+		expect(context.dispatch).to.have.been.calledOnce
+		expect(context.dispatch).have.been.calledWith('fetchNextEnvelopes', {
+			mailboxId: UNIFIED_INBOX_ID,
+			query: undefined,
+			quantity: PAGE_SIZE
+		})
 	})
 
 	it('builds the next unified page with partial fetch', async() => {
@@ -368,15 +364,11 @@ describe('Vuex store actions', () => {
 			mailboxId: UNIFIED_INBOX_ID,
 		})
 
-		expect(context.dispatch).have.been.calledTwice
-		expect(context.dispatch).have.been.calledWith('fetchNextEnvelopePage', {
-			mailboxId: 21,
-			query: undefined,
-		})
-		expect(context.dispatch).have.been.calledWith('fetchNextEnvelopePage', {
+		expect(context.dispatch).have.been.calledOnce
+		expect(context.dispatch).have.been.calledWith('fetchNextEnvelopes', {
 			mailboxId: UNIFIED_INBOX_ID,
 			query: undefined,
-			rec: false,
+			quantity: PAGE_SIZE
 		})
 	})
 

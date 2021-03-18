@@ -22,3 +22,4 @@
 export const UNIFIED_ACCOUNT_ID = 0
 export const UNIFIED_INBOX_ID = 'unified'
 export const PRIORITY_INBOX_ID = 'priority'
+export const PAGE_SIZE = 20
