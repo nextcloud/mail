@@ -27,6 +27,10 @@
 			button-class="icon-add"
 			role="complementary"
 			@click="onNewMessage" />
+		<button v-if="currentMailbox"
+			class="button icon-history"
+			:disabled="refreshing"
+			@click="refreshMailbox" />
 		<template #list>
 			<ul id="accounts-list">
 				<template v-for="group in menu">
@@ -97,6 +101,11 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 	},
+	data() {
+		return {
+			refreshing: false,
+		}
+	},
 	computed: {
 		menu() {
 			return this.$store.getters.accounts.map((account) => {
@@ -113,6 +122,12 @@ export default {
 					isCollapsible,
 				}
 			})
+		},
+		currentMailbox() {
+			if (this.$route.name === 'message' || this.$route.name === 'mailbox') {
+				return this.$store.getters.getMailbox(this.$route.params.mailboxId)
+			}
+			return undefined
 		},
 	},
 	methods: {
@@ -166,9 +181,57 @@ export default {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[accounts.length - 1]
 		},
+		async refreshMailbox() {
+			if (this.refreshing === true) {
+				logger.debug('already sync\'ing mailbox.. aborting')
+				return
+			}
+			this.refreshing = true
+			try {
+				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.currentMailbox.databaseId })
+				logger.debug('Current mailbox is sync\'ing ')
+			} catch (error) {
+				logger.error('could not sync current mailbox', { error })
+			} finally {
+				this.refreshing = false
+			}
+		},
 	},
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.button {
+	width: 44px;
+	height: 44px;
+	background-color: var(--color-main-background);
+	border: none;
+	display: inline-block;
+	position: absolute;
+	margin-left: 254px;
+	margin-top: 13px;
+	opacity: .7;
+	&:hover,
+	&:focus {
+		opacity: 1;
+		background-color:var(--color-background-hover);
+	}
+	&:disabled {
+		cursor: not-allowed;
+		opacity: .5;
+		animation: rotation 2s linear;
+	}
+}
+::v-deep .app-navigation-new button {
+	width: 240px !important;
+	height: 44px;
+}
+@keyframes rotation {
+from {
+	transform: rotate(-0deg);
+}
+to {
+		transform: rotate(-360deg);
+	}
+}
 </style>
