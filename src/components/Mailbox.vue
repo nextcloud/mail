@@ -143,7 +143,7 @@ export default {
 				const first = this.envelopes[0]
 				if (typeof first !== 'undefined') {
 					logger.debug('refreshing mailbox')
-					if (first.flags.draft) {
+					if (this.$route.params.mailboxId === this.account.draftsMailboxId) {
 						this.$router.replace({
 							name: 'message',
 							params: {
@@ -236,7 +236,7 @@ export default {
 					// Keep the selected account-mailbox combination, but navigate to the message
 					// (it's not a bug that we don't use first.accountId and first.mailboxId here)
 					logger.debug('showing the first message of mailbox ' + this.$route.params.mailboxId)
-					if (first.flags.draft) {
+					if (this.$route.params.mailboxId === this.account.draftsMailboxId) {
 						this.$router.replace({
 							name: 'message',
 							params: {
