@@ -93,6 +93,11 @@
       <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>
   </file>
+  <file src="lib/Db/TagMapper.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$qb-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY)</code>
+    </ImplicitToStringCast>
+  </file>
   <file src="lib/Db/MessageMapper.php">
     <ImplicitToStringCast occurrences="26">
       <code>$deleteRecipientsQuery-&gt;createFunction($messageIdQuery-&gt;getSQL())</code>

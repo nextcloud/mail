@@ -175,6 +175,16 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'messages#setTag',
+			'url' => '/api/messages/{id}/tags/{imapLabel}',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'messages#removeTag',
+			'url' => '/api/messages/{id}/tags/{imapLabel}',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'messages#move',
 			'url' => '/api/messages/{id}/move',
 			'verb' => 'POST'

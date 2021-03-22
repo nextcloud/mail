@@ -24,40 +24,41 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
-use ChristophWurst\Nextcloud\Testing\TestCase;
-use OC\AppFramework\Http\Request;
-use OC\Security\CSP\ContentSecurityPolicyNonceManager;
-use OCA\Mail\Account;
-use OCA\Mail\Attachment;
-use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailSearch;
-use OCA\Mail\Contracts\IMailTransmission;
-use OCA\Mail\Contracts\ITrustedSenderService;
-use OCA\Mail\Controller\MessagesController;
-use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Http\AttachmentDownloadResponse;
-use OCA\Mail\Http\HtmlResponse;
-use OCA\Mail\Mailbox;
-use OCA\Mail\Model\IMAPMessage;
-use OCA\Mail\Model\Message;
-use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\ItineraryService;
-use OCA\Mail\Service\MailManager;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\ZipResponse;
-use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\Files\Folder;
-use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\IRequest;
-use OCP\IURLGenerator;
-use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Account;
+use OCA\Mail\Mailbox;
+use OCP\Files\Folder;
 use ReflectionObject;
+use OCP\IURLGenerator;
+use OCA\Mail\Attachment;
+use OCP\AppFramework\Http;
+use OCA\Mail\Model\Message;
+use Psr\Log\LoggerInterface;
+use OCA\Mail\Http\HtmlResponse;
+use OCA\Mail\Model\IMAPMessage;
+use OCP\Files\IMimeTypeDetector;
+use OC\AppFramework\Http\Request;
+use OCA\Mail\Service\MailManager;
+use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\ItineraryService;
+use OCP\AppFramework\Http\ZipResponse;
+use OCA\Mail\Exception\ClientException;
+use OCP\AppFramework\Http\JSONResponse;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Contracts\IMailTransmission;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCA\Mail\Controller\MessagesController;
+use PHPUnit\Framework\MockObject\MockObject;
+use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Http\AttachmentDownloadResponse;
+use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
+use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 
 class MessagesControllerTest extends TestCase {
 
@@ -645,6 +646,208 @@ class MessagesControllerTest extends TestCase {
 		);
 
 		$this->assertEquals($expected, $response);
+	}
+
+	public function testSetTagFailing() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 1;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willThrowException(new DoesNotExistException(''));
+		$this->mailManager->expects($this->never())
+			->method('getTagByImapLabel');
+		$this->mailManager->expects($this->never())
+			->method('tagMessage');
+
+		$this->controller->setTag($id, Tag::LABEL_IMPORTANT);
+	}
+
+	public function testSetTagNotFound() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 1;
+		$imapLabel = '$label6';
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->mailManager->expects($this->once())
+			->method('getTagByImapLabel')
+			->with($imapLabel,$this->userId)
+			->willThrowException(new DoesNotExistException(''));
+		$this->mailManager->expects($this->never())
+			->method('tagMessage');
+
+		$this->controller->setTag($id, $imapLabel);
+	}
+
+	public function testSetTag() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 1;
+		$tag = new Tag();
+		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->mailManager->expects($this->once())
+			->method('getTagByImapLabel')
+			->with($tag->getImapLabel(),$this->userId)
+			->willReturn($tag);
+		$this->mailManager->expects($this->once())
+			->method('tagMessage')
+			->with($this->account, $mailbox->getName(), $message, $tag, true);
+
+		$this->controller->setTag($id, $tag->getImapLabel());
+	}
+
+	public function testRemoveTagFailing() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 1;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willThrowException(new DoesNotExistException(''));
+		$this->mailManager->expects($this->never())
+			->method('getTagByImapLabel');
+		$this->mailManager->expects($this->never())
+			->method('tagMessage');
+
+		$this->controller->removeTag($id, Tag::LABEL_IMPORTANT);
+	}
+
+	public function testRemoveTagNotFound() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 1;
+		$imapLabel = '$label6';
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->mailManager->expects($this->once())
+			->method('getTagByImapLabel')
+			->with($imapLabel,$this->userId)
+			->willThrowException(new DoesNotExistException(''));
+		$this->mailManager->expects($this->never())
+			->method('tagMessage');
+
+		$this->controller->removeTag($id, $imapLabel);
+	}
+
+	public function testRemoveTag() {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 1;
+		$tag = new Tag();
+		$tag->setImapLabel(Tag::LABEL_IMPORTANT);
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setMessageId('<jhfjkhdsjkfhdsjkhfjkdsh@test.com>');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->mailManager->expects($this->once())
+			->method('getTagByImapLabel')
+			->with($tag->getImapLabel(),$this->userId)
+			->willReturn($tag);
+		$this->mailManager->expects($this->once())
+			->method('tagMessage')
+			->with($this->account, $mailbox->getName(), $message, $tag, false);
+
+		$this->controller->removeTag($id, $tag->getImapLabel());
 	}
 
 	public function testSetFlagsFlagged() {

@@ -148,4 +148,13 @@ class MailAccountMapper extends QBMapper {
 
 		return $this->findEntities($query);
 	}
+
+	public function getAllUserIdsWithAccounts(): array {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->selectDistinct('user_id')
+			->from($this->getTableName());
+
+		return $this->findEntities($query);
+	}
 }
