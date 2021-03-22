@@ -368,6 +368,7 @@ export default {
 			editorMode: 'html',
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
+			signatureAboveQuote: false,
 		}
 	},
 	computed: {
@@ -383,6 +384,7 @@ export default {
 					signature: account.signature,
 					name: account.name,
 					emailAddress: account.emailAddress,
+					signatureAboveQuote: account.signatureAboveQuote,
 				},
 				account.aliases.map((alias) => {
 					return {
@@ -393,6 +395,7 @@ export default {
 						signature: account.signature,
 						name: alias.name,
 						emailAddress: alias.alias,
+						signatureAboveQuote: account.signatureAboveQuote,
 					}
 				}),
 			])
@@ -519,6 +522,7 @@ export default {
 			if (previous === NO_ALIAS_SET) {
 				this.editorMode = this.selectedAlias.editorMode
 			}
+			this.signatureAboveQuote = this.selectedAlias.signatureAboveQuote
 		},
 		async checkRecipientsKeys() {
 			if (!this.encrypt || !this.mailvelope.available) {
@@ -770,9 +774,8 @@ export default {
 				return html(body)
 			}
 
-			return html(body)
-				.append(html('<br>--<br>'))
-				.append(toHtml(detect(alias.signature)))
+			const signature = html('<br>-- <br>').append(toHtml(detect(alias.signature)))
+			return this.signatureAboveQuote ? signature.append(html('<br>')).append(html(body)) : html(body).append(signature)
 		},
 	},
 }

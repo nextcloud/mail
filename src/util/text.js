@@ -132,6 +132,7 @@ export const toPlain = (text) => {
 			.replace(/\n\n\n/g, '\n\n') // remove triple line breaks
 			.replace(/^[\n\r]+/g, '') // trim line breaks at beginning and end
 			.replace(/ $/gm, '') // trim white space at end of each line
+			.replace(/^--$/gm, '-- ') // hack to create the correct email signature separator
 	)
 }
 

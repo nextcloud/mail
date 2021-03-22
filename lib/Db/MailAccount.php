@@ -89,6 +89,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSieveUser(?string $sieveUser)
  * @method string|null getSievePassword()
  * @method void setSievePassword(?string $sievePassword)
+ * @method bool getSignatureAboveQuote()
+ * @method void setSignatureAboveQuote(bool $signatureAboveQuote)
  */
 class MailAccount extends Entity {
 	protected $userId;
@@ -133,6 +135,9 @@ class MailAccount extends Entity {
 	protected $sieveUser;
 	/** @var string|null */
 	protected $sievePassword;
+
+	/** @var bool */
+	protected $signatureAboveQuote = false;
 
 	/**
 	 * @param array $params
@@ -183,6 +188,10 @@ class MailAccount extends Entity {
 			$this->setShowSubscribedOnly($params['showSubscribedOnly']);
 		}
 
+		if (isset($params['signatureAboveQuote'])) {
+			$this->setSignatureAboveQuote($params['signatureAboveQuote']);
+		}
+
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
 		$this->addType('lastMailboxSync', 'integer');
@@ -195,6 +204,7 @@ class MailAccount extends Entity {
 		$this->addType('trashMailboxId', 'integer');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
+		$this->addType('signatureAboveQuote', 'boolean');
 	}
 
 	/**
@@ -220,6 +230,7 @@ class MailAccount extends Entity {
 			'sentMailboxId' => $this->getSentMailboxId(),
 			'trashMailboxId' => $this->getTrashMailboxId(),
 			'sieveEnabled' => $this->isSieveEnabled(),
+			'signatureAboveQuote' => $this->getSignatureAboveQuote(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

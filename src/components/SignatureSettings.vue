@@ -21,6 +21,16 @@
 
 <template>
 	<div class="section">
+		<div>
+			<input
+				id="signature-above-quote-toggle"
+				v-model="signatureAboveQuoteToggle"
+				type="checkbox"
+				class="checkbox">
+			<label for="signature-above-quote-toggle">
+				{{ t("mail", "Place signature above quoted text") }}
+			</label>
+		</div>
 		<TextEditor v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
@@ -59,7 +69,29 @@ export default {
 		return {
 			loading: false,
 			bus: new Vue(),
+			signatureAboveQuoteToggle: this.account.signatureAboveQuote,
 		}
+	},
+	watch: {
+		signatureAboveQuoteToggle(val, oldVal) {
+			this.$store
+				.dispatch('patchAccount', {
+					account: this.account,
+					data: {
+						signatureAboveQuote: val,
+					},
+				})
+				.then(() => {
+					logger.info('signature above quoted updated to ' + val)
+				})
+				.catch((error) => {
+					logger.error('could not update signature above quote', {
+						error,
+					})
+					this.signatureAboveQuoteToggle = oldVal
+					throw error
+				})
+		},
 	},
 	created() {
 		this.signature = this.account.signature ? toHtml(detect(this.account.signature)).value : ''

@@ -233,6 +233,10 @@ class AccountsController extends Controller {
 	 * @param string|null $editorMode
 	 * @param int|null $order
 	 * @param bool|null $showSubscribedOnly
+	 * @param int|null $draftsMailboxId
+	 * @param int|null $sentMailboxId
+	 * @param int|null $trashMailboxId
+	 * @param bool|null $signatureAboveQuote
 	 *
 	 * @return JSONResponse
 	 *
@@ -244,7 +248,8 @@ class AccountsController extends Controller {
 								 bool $showSubscribedOnly = null,
 								 int $draftsMailboxId = null,
 								 int $sentMailboxId = null,
-								 int $trashMailboxId = null): JSONResponse {
+								 int $trashMailboxId = null,
+								 bool $signatureAboveQuote = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -265,6 +270,9 @@ class AccountsController extends Controller {
 		}
 		if ($trashMailboxId !== null) {
 			$dbAccount->setTrashMailboxId($trashMailboxId);
+		}
+		if ($signatureAboveQuote !== null) {
+			$dbAccount->setSignatureAboveQuote($signatureAboveQuote);
 		}
 		return new JSONResponse(
 			$this->accountService->save($dbAccount)->toJson()
