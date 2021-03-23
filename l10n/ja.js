@@ -83,7 +83,7 @@ OC.L10N.register(
     "Draft: " : "下書き",
     "Blind copy recipients only" : "BCC受信者のみ",
     "Load more" : "さらに読み込む",
-    "Report this bug" : "バグを報告",
+    "Report this bug" : "不具合を報告",
     "Could not open mailbox" : "メールボックスを開けませんでした",
     "Loading messages" : "メッセージの読み込み中",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "メールをインデックスしています。大きいメールボックスの場合はしばらくお待ちください。",
