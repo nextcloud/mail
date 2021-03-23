@@ -38,6 +38,7 @@
 	</dependencies>
 	<repair-steps>
 		<post-migration>
+			<step>OCA\Mail\Migration\AddMissingDefaultTags</step>
 			<step>OCA\Mail\Migration\AddMissingMessageIds</step>
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
 			<step>OCA\Mail\Migration\FixBackgroundJobs</step>
