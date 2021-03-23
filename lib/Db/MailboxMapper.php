@@ -148,7 +148,7 @@ class MailboxMapper extends QBMapper {
 		$now = $this->timeFactory->getTime();
 
 		if ($lock !== null
-			&& $lock > ($now - 5 * 60)) {
+			&& $lock > ($now - Mailbox::LOCK_TIMEOUT)) {
 			// Another process is syncing
 			throw MailboxLockedException::from($mailbox);
 		}
