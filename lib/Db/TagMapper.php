@@ -158,7 +158,7 @@ class TagMapper extends QBMapper {
 		foreach ($queryResult as $qr) {
 			$result[] = $qr['imap_message_id'];
 			$result[$qr['imap_message_id']][] = $this->getTag((int)$qr['tag_id']);
-		};
+		}
 		return $result;
 	}
 
