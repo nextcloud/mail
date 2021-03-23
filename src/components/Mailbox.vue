@@ -80,6 +80,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		load: {
+			type: Boolean,
+			default: true,
+		},
 		bus: {
 			type: Object,
 			required: true,
@@ -147,6 +151,17 @@ export default {
 					this.sync(false)
 				})
 		},
+		async load(load) {
+			if (load) {
+				try {
+					await this.loadEnvelopes()
+					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after load prop change`)
+					await this.sync(false)
+				} finally {
+					this.$emit('loaded')
+				}
+			}
+		},
 		searchQuery() {
 			this.loadEnvelopes()
 		},
@@ -158,11 +173,17 @@ export default {
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
-		this.loadEnvelopes()
-			.then(() => {
+		if (this.load) {
+			try {
+				this.loadEnvelopes()
 				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
-				this.sync(false)
-			})
+				await this.sync(false)
+			} finally {
+				 this.$emit('loaded')
+			}
+		} else {
+			logger.debug(`skipping loading of mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
+		}
 	},
 	destroyed() {
 		this.bus.$off('loadMore', this.onScroll)

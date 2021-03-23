@@ -36,22 +36,26 @@
 						:is-priority-inbox="true"
 						:initial-page-size="5"
 						:collapsible="true"
-						:bus="bus" />
+						:bus="bus"
+						@loaded="loadPriorityInboxSection.starred = true" />
 					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
 					<Mailbox
 						class="namestarred"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
+						:load="loadPriorityInboxSection.starred"
 						:search-query="appendToSearch('is:pi-starred')"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
-						:bus="bus" />
+						:bus="bus"
+						@loaded="loadPriorityInboxSection.other = true"/>
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
 					<Mailbox
 						class="nameother"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
+						:load="loadPriorityInboxSection.other"
 						:open-first="false"
 						:search-query="appendToSearch('is:pi-other')"
 						:is-priority-inbox="true"
@@ -120,6 +124,10 @@ export default {
 				prev: ['arrowleft'],
 				refresh: ['r'],
 				unseen: ['u'],
+			},
+			loadPriorityInboxSection: {
+				starred: false,
+				other: false,
 			},
 		}
 	},
