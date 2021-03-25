@@ -25,7 +25,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use OCP\DB\Exception;
+use Throwable;
 use function array_map;
+
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
@@ -115,10 +119,29 @@ class TagMapper extends QBMapper {
 		}
 
 		$qb = $this->db->getQueryBuilder();
-		$qb->insert('mail_message_tags');
-		$qb->setValue('imap_message_id', $qb->createNamedParameter($messageId));
-		$qb->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
-		$qb->execute();
+		$qb->insert('mail_message_tags')
+		   ->setValue('imap_message_id', $qb->createNamedParameter($messageId))
+		   ->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
+		try {
+			$qb->execute();
+		} catch (Throwable $e) {
+			/**
+			 * @psalm-suppress all
+			 */
+			if (class_exists(Exception::class) && ($e instanceof Exception) && $e->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+				// OK -> ignore
+				return;
+			}
+			/**
+			 * @psalm-suppress all
+			 */
+			if (class_exists(UniqueConstraintViolationException::class) && ($e instanceof UniqueConstraintViolationException)) {
+				// OK -> ignore
+				return;
+			}
+
+			throw $e;
+		}
 	}
 
 	/**
