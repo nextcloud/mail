@@ -82,6 +82,12 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $specialUse;
 	protected $syncInBackground;
 
+	/**
+	 * @var int
+	 * Lock timeout for sync (5 minutes)
+	 */
+	public const LOCK_TIMEOUT = 300;
+
 	public function __construct() {
 		$this->addType('accountId', 'integer');
 		$this->addType('messages', 'integer');
@@ -119,10 +125,17 @@ class Mailbox extends Entity implements JsonSerializable {
 			&& $this->getSyncVanishedToken() !== null;
 	}
 
-	public function hasLocks(): bool {
-		return $this->getSyncNewLock() !== null
-			|| $this->getSyncChangedLock() !== null
-			|| $this->getSyncVanishedLock() !== null;
+	public function hasLocks(int $now): bool {
+		if ($this->getSyncNewLock() !== null || $this->getSyncNewLock() > ($now - self::LOCK_TIMEOUT)) {
+			return true;
+		}
+		if ($this->getSyncChangedLock() !== null || $this->getSyncChangedLock() > ($now - self::LOCK_TIMEOUT)) {
+			return true;
+		}
+		if ($this->getSyncVanishedLock() !== null || $this->getSyncVanishedLock() > ($now - self::LOCK_TIMEOUT)) {
+			return true;
+		}
+		return false;
 	}
 
 	public function jsonSerialize() {
