@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.9.4 – 2021-03-25
+### Fixed
+- "Show images" icon in HTML mails using Nextcloud's dark theme
+- Drafts synchronization
+- Drafts auto save timer
+- Timeout-based unlocking a locked mailboxes after sync errors
+
 ## 1.9.3 – 2021-03-12
 ### Fixed
 - Upgrade error from v1.9.1
