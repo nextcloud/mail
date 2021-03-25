@@ -89,6 +89,9 @@ const normalizeTags = (state, envelope) => {
 			if (!state.tags[tag.id]) {
 				Vue.set(state.tags, tag.id, tag)
 			}
+			if (!state.tagList.includes(tag.id)) {
+				state.tagList.push(tag.id)
+			}
 			return tag.id
 		})
 
@@ -214,6 +217,7 @@ export default {
 	},
 	addTag(state, { tag }) {
 		Vue.set(state.tags, tag.id, tag)
+		state.tagList.push(tag.id)
 	},
 	addEnvelopeTag(state, { envelope, tagId }) {
 		Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))

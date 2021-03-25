@@ -86,6 +86,7 @@ export default new Vuex.Store({
 		messages: {},
 		autocompleteEntries: [],
 		tags: {},
+		tagList: [],
 	},
 	getters,
 	mutations,

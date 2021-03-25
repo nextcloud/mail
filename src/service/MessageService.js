@@ -126,13 +126,13 @@ export async function setEnvelopeTag(id, imapLabel) {
 	return data
 }
 
-export function removeEnvelopeTag(id, imapLabel) {
+export async function removeEnvelopeTag(id, imapLabel) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/tags/{imapLabel}', {
 		id, imapLabel,
 	})
 
-	return axios
-		.delete(url)
+	const { data } = await axios.delete(url)
+	return data
 }
 
 export async function fetchMessage(id) {

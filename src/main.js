@@ -79,6 +79,7 @@ store.commit('savePreference', {
 
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
+const tags = loadState('mail', 'tags', [])
 
 accounts.map(fixAccountId).forEach((account) => {
 	const settings = accountSettings.find(settings => settings.accountId === account.id)
@@ -94,6 +95,8 @@ accounts.map(fixAccountId).forEach((account) => {
 	}
 	store.commit('addAccount', { ...account, ...settings })
 })
+
+tags.forEach(tag => store.commit('addTag', { tag }))
 
 export default new Vue({
 	el: '#content',

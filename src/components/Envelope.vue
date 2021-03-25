@@ -92,6 +92,12 @@
 					selected ? t('mail', 'Unselect') : t('mail', 'Select')
 				}}
 			</ActionButton>
+			<ActionButton
+				icon="icon-tag"
+				:close-after-click="true"
+				@click.prevent="onOpenTagModal">
+				{{ t('mail', 'Add tags') }}
+			</ActionButton>
 			<ActionButton icon="icon-external"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
@@ -135,6 +141,11 @@
 				:envelopes="[data]"
 				@move="onMove"
 				@close="onCloseMoveModal" />
+			<TagModal
+				v-if="showTagModal"
+				:account="account"
+				:envelope="data"
+				@close="onCloseTagModal" />
 		</template>
 	</ListItem>
 </template>
@@ -154,6 +165,7 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger'
 import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
+import TagModal from './TagModal'
 
 export default {
 	name: 'Envelope',
@@ -163,6 +175,7 @@ export default {
 		ActionButton,
 		ActionRouter,
 		MoveModal,
+		TagModal,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -200,6 +213,7 @@ export default {
 		return {
 			importantSvg,
 			showMoveModal: false,
+			showTagModal: false,
 		}
 	},
 	computed: {
@@ -350,6 +364,12 @@ export default {
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+		onOpenTagModal() {
+			this.showTagModal = true
+		},
+		onCloseTagModal() {
+			this.showTagModal = false
 		},
 	},
 }
