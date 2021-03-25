@@ -179,7 +179,7 @@ export default {
 		envelope.flags[flag] = value
 	},
 	tagEnvelope(state, { envelope, tag, value }) {
-		envelope.tags[tag] = value
+		Vue.set(envelope.tags, tag, value)
 	},
 	removeEnvelope(state, { id }) {
 		const envelope = state.envelopes[id]

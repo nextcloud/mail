@@ -318,7 +318,7 @@ export default {
 		const envelopes = await dispatch('fetchNextEnvelopes', {
 			mailboxId,
 			query,
-			quantity: PAGE_SIZE
+			quantity: PAGE_SIZE,
 		})
 		return envelopes
 	},
@@ -601,7 +601,7 @@ export default {
 			tag: '$label1',
 			value: !oldState,
 		})
-
+		// TODO: Use setEnvelopeTag instead of setEnvelopeFlag
 		setEnvelopeFlag(envelope.databaseId, '$label1', !oldState).catch((e) => {
 			console.error('could not toggle message important state', e)
 
