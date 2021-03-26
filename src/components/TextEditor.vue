@@ -202,8 +202,11 @@ export default {
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
 		},
-		onInsertSignature(signature) {
-			this.editorInstance.execute('insertSignature', { value: signature })
+		onInsertSignature(signatureParam, signatureAboveQuoteParam) {
+			this.editorInstance.execute('insertSignature', {
+				signature: signatureParam,
+				signatureAboveQuote: signatureAboveQuoteParam,
+			})
 		},
 	},
 }
