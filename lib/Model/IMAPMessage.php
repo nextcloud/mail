@@ -107,6 +107,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public $htmlMessage = '';
 	public $plainMessage = '';
 	public $attachments = [];
+	public $inlineAttachments = [];
 	private $loadHtmlMessage = false;
 	private $hasHtmlMessage = false;
 
@@ -327,19 +328,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	private function hasAttachments($part) {
 		foreach ($part->getParts() as $p) {
-			/** @var Horde_Mime_Part $p */
-			$filename = $p->getName();
-
-			if ($p->getContentId() !== null) {
-				continue;
-			}
-			// TODO: show embedded messages and don't treat them as attachments
-			if ($p->getType() === 'message/rfc822' || isset($filename)) {
-				// do not show technical attachments
-				if (in_array($filename, $this->attachmentsToIgnore)) {
-					continue;
-				}
-
+			if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
 				return true;
 			}
 			if ($this->hasAttachments($p)) {
@@ -402,23 +391,36 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return void
 	 */
 	private function getPart(Horde_Mime_Part $p, $partNo): void {
-		// ATTACHMENT
-		// Any part with a filename is an attachment,
-		// so an attached text file (type 0) is not mistaken as the message.
+		// Regular attachments
+		if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
+			$this->attachments[] = [
+				'id' => $p->getMimeId(),
+				'messageId' => $this->messageId,
+				'fileName' => $p->getName(),
+				'mime' => $p->getType(),
+				'size' => $p->getBytes(),
+				'cid' => $p->getContentId(),
+				'disposition' => $p->getDisposition()
+			];
+			return;
+		}
+
+		// Inline attachments
+		// Horde doesn't consider parts with content-disposition set to inline as
+		// attachment so we need to use another way to get them.
+		// We use these inline attachments to render a message's html body in $this->getHtmlBody()
 		$filename = $p->getName();
-		// TODO: show embedded messages and don't treat them as attachments
 		if ($p->getType() === 'message/rfc822' || isset($filename)) {
 			if (in_array($filename, $this->attachmentsToIgnore)) {
 				return;
 			}
-			$this->attachments[] = [
+			$this->inlineAttachments[] = [
 				'id' => $p->getMimeId(),
 				'messageId' => $this->messageId,
 				'fileName' => $filename,
 				'mime' => $p->getType(),
 				'size' => $p->getBytes(),
-				'cid' => $p->getContentId(),
-				'disposition' => $p->getDisposition()
+				'cid' => $p->getContentId()
 			];
 			return;
 		}
@@ -507,7 +509,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
 			'id' => $id,
 		], function ($cid) {
-			$match = array_filter($this->attachments,
+			$match = array_filter($this->inlineAttachments,
 				function ($a) use ($cid) {
 					return $a['cid'] === $cid;
 				});
