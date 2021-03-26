@@ -36,12 +36,11 @@ export default class InsertSignatureCommand extends Command {
 	}
 
 	/**
-	 * 
-	 * @param {*} editor 
-	 * @param {*} writer 
+	 *
+	 * @param {*} editor the editor instance
+	 * @param {*} writer the writer instance
 	 * @param {string} signature the signature text
 	 * @param {boolean} signatureAboveQuote the signature position: above/below the quoted text
-	 * @returns 
 	 */
 	insertSignatureElement(editor, writer, signature, signatureAboveQuote) {
 		// Skip empty signature
@@ -74,7 +73,7 @@ export default class InsertSignatureCommand extends Command {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param {*} param0 the signature text and position
 	 */
 	execute({ signature, signatureAboveQuote }) {

@@ -203,8 +203,10 @@ export default {
 			this.editorInstance.model.insertContent(modelFragment)
 		},
 		onInsertSignature(signatureParam, signatureAboveQuoteParam) {
-			this.editorInstance.execute('insertSignature', { signature: signatureParam,
-																signatureAboveQuote: signatureAboveQuoteParam })
+			this.editorInstance.execute('insertSignature', {
+				signature: signatureParam,
+				signatureAboveQuote: signatureAboveQuoteParam,
+			})
 		},
 	},
 }
