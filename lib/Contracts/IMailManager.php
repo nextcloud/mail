@@ -23,15 +23,16 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Folder;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Folder;
+use OCA\Mail\Service\Quota;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\Model\IMAPMessage;
-use OCA\Mail\Service\Quota;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailManager {
@@ -172,6 +173,18 @@ interface IMailManager {
 
 	/**
 	 * @param Account $account
+	 * @param string $mailbox
+	 * @param int $uid
+	 * @param Tag $tag
+	 * @param bool $value
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void;
+
+	/**
+	 * @param Account $account
 	 *
 	 * @return Quota|null
 	 */
@@ -229,4 +242,12 @@ interface IMailManager {
 	 * @return array
 	 */
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message) : array;
+
+	/**
+	 * @param string $imapLabel
+	 * @param string $userId
+	 * @return Tag
+	 * @throws DoesNotExistException
+	 */
+	public function getTagByImapLabel(string $imapLabel, string $userId): Tag;
 }

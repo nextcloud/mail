@@ -25,26 +25,28 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
+use OCP\IUser;
+use function ltrim;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
-use OCA\Mail\AddressList;
-use OCA\Mail\IMAP\Threading\DatabaseMessage;
-use OCA\Mail\Service\Search\Flag;
-use OCA\Mail\Service\Search\FlagExpression;
-use OCA\Mail\Service\Search\SearchQuery;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\QBMapper;
-use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
-use OCP\IUser;
 use RuntimeException;
-use function array_combine;
-use function array_keys;
+use OCP\IDBConnection;
 use function array_map;
 use function get_class;
-use function ltrim;
 use function mb_substr;
+use function array_keys;
+use function array_combine;
+use function array_udiff;
+use OCA\Mail\AddressList;
+use OCA\Mail\Service\Search\Flag;
+use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCA\Mail\Service\Search\SearchQuery;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCA\Mail\Service\Search\FlagExpression;
+use OCA\Mail\IMAP\Threading\DatabaseMessage;
+use OCA\Mail\Support\PerformanceLogger;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 /**
  * @template-extends QBMapper<Message>
@@ -54,10 +56,21 @@ class MessageMapper extends QBMapper {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
+	/** @var TagMapper */
+	private $tagMapper;
+
+	/** @var PerformanceLogger */
+	private $performanceLogger;
+
 	public function __construct(IDBConnection $db,
-								ITimeFactory $timeFactory) {
+								ITimeFactory $timeFactory,
+								TagMapper $tagMapper,
+								PerformanceLogger $performanceLogger
+								) {
 		parent::__construct($db, 'mail_messages');
 		$this->timeFactory = $timeFactory;
+		$this->tagMapper = $tagMapper;
+		$this->performanceLogger = $performanceLogger;
 	}
 
 	/**
@@ -119,7 +132,7 @@ class MessageMapper extends QBMapper {
 				$query->expr()->eq('m.id', $query->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 
-		$results = $this->findRecipients($this->findEntities($query));
+		$results = $this->findRelatedData($this->findEntities($query));
 		if (empty($results)) {
 			throw new DoesNotExistException("Message $id does not exist");
 		}
@@ -229,7 +242,11 @@ class MessageMapper extends QBMapper {
 		$this->db->commit();
 	}
 
-	public function insertBulk(Message ...$messages): void {
+	/**
+	 * @param Message ...$messages
+	 * @return void
+	 */
+	public function insertBulk(Account $account, Message ...$messages): void {
 		$this->db->beginTransaction();
 
 		$qb1 = $this->db->getQueryBuilder();
@@ -309,18 +326,25 @@ class MessageMapper extends QBMapper {
 					$qb2->execute();
 				}
 			}
+			foreach ($message->getTags() as $tag) {
+				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+			}
 		}
 
 		$this->db->commit();
 	}
 
 	/**
-	 * @param Message ...$messages
-	 *
+	 * @param Account $account
+	 * @param Message[] $messages
 	 * @return Message[]
 	 */
-	public function updateBulk(Message ...$messages): array {
+	public function updateBulk(Account $account, Message ...$messages): array {
 		$this->db->beginTransaction();
+
+		$perf = $this->performanceLogger->start(
+			'partial sync ' . $account->getId() . ':' . $account->getName()
+		);
 
 		$query = $this->db->getQueryBuilder();
 		$query->update($this->getTableName())
@@ -339,7 +363,9 @@ class MessageMapper extends QBMapper {
 				$query->expr()->eq('uid', $query->createParameter('uid')),
 				$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
 			));
-
+		// get all tags before the loop and create a mapping [message_id => [tag,...]]
+		$tags = $this->tagMapper->getAllTagsForMessages($messages);
+		$perf->step("Selected Tags for all messages");
 		foreach ($messages as $message) {
 			if (empty($message->getUpdatedFields())) {
 				// Micro optimization
@@ -360,13 +386,59 @@ class MessageMapper extends QBMapper {
 			$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
 
 			$query->execute();
+			$perf->step('Updated message ' . $message->getId());
+
+
+			$imapTags = $message->getTags();
+			$dbTags = $tags[$message->getMessageId()] ?? [];
+
+			if (empty($imapTags) === true && empty($dbTags) === true) {
+				// neither old nor new tags
+				continue;
+			}
+
+			$toAdd = array_udiff($imapTags, $dbTags, function (Tag $a, Tag $b) {
+				return strcmp($a->getImapLabel(), $b->getImapLabel());
+			});
+			foreach ($toAdd as $tag) {
+				// add logging
+				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+			}
+			$perf->step("Tagged messages");
+
+			if (empty($dbTags) === true) {
+				// we have nothing to possibly remove
+				continue;
+			}
+
+			$toRemove = array_udiff($dbTags, $imapTags, function (Tag $a, Tag $b) {
+				return strcmp($a->getImapLabel(), $b->getImapLabel());
+			});
+			foreach ($toRemove as $tag) {
+				//add logging
+				$this->tagMapper->untagMessage($tag, $message->getMessageId());
+			}
+			$perf->step("Untagged messages");
 		}
 
 		$this->db->commit();
+		$perf->end();
 
 		return $messages;
 	}
 
+	public function getTags(Message $message) : array {
+		$mqb = $this->db->getQueryBuilder();
+		$mqb->select('tag_id')
+			->from('mail_message_tags')
+			->where($mqb->expr()->eq('imap_message_id', $mqb->createNamedParameter($message->getMessageId())));
+		$result = $mqb->execute();
+		$ids = array_map(function (array $row) {
+			return (int)$row['tag_id'];
+		}, $result->fetchAll());
+
+		return $ids;
+	}
 	/**
 	 * @param Message ...$messages
 	 *
@@ -480,7 +552,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->isNotNull('m1.thread_root_id')
 			)
 			->orderBy('sent_at', 'desc');
-		return $this->findRecipients($this->findEntities($selectMessages));
+		return $this->findRelatedData($this->findEntities($selectMessages));
 	}
 
 	/**
@@ -711,6 +783,10 @@ class MessageMapper extends QBMapper {
 	}
 
 	private function flagToColumnName(Flag $flag): string {
+		// workaround for @link https://github.com/nextcloud/mail/issues/25
+		if ($flag->getFlag() === Tag::LABEL_IMPORTANT) {
+			return "flag_important";
+		}
 		$key = ltrim($flag->getFlag(), '\\$');
 		return "flag_$key";
 	}
@@ -733,7 +809,7 @@ class MessageMapper extends QBMapper {
 			)
 			->orderBy('sent_at', 'desc');
 
-		return $this->findRecipients($this->findEntities($select));
+		return $this->findRelatedData($this->findEntities($select));
 	}
 
 	/**
@@ -755,7 +831,7 @@ class MessageMapper extends QBMapper {
 			)
 			->orderBy('sent_at', 'desc');
 
-		return $this->findRecipients($this->findEntities($select));
+		return $this->findRelatedData($this->findEntities($select));
 	}
 
 	/**
@@ -809,6 +885,21 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param Message[] $messages
+	 * @return Message[]
+	 */
+	public function findRelatedData(array $messages): array {
+		$messages = $this->findRecipients($messages);
+		$tags = $this->tagMapper->getAllTagsForMessages($messages);
+		/** @var Message $message */
+		$messages = array_map(function ($message) use ($tags) {
+			$message->setTags($tags[$message->getMessageId()] ?? []);
+			return $message;
+		}, $messages);
+		return $messages;
+	}
+
+	/**
 	 * @param Mailbox $mailbox
 	 * @param int $highest
 	 *
@@ -847,7 +938,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->gt('updated_at', $qb->createNamedParameter($since, IQueryBuilder::PARAM_INT))
 			);
 
-		return $this->findRecipients($this->findEntities($select));
+		return $this->findRelatedData($this->findEntities($select));
 	}
 
 	/**
@@ -870,7 +961,7 @@ class MessageMapper extends QBMapper {
 			->orderBy('sent_at', 'desc')
 			->setMaxResults($limit);
 
-		return $this->findRecipients($this->findEntities($select));
+		return $this->findRelatedData($this->findEntities($select));
 	}
 
 	public function deleteOrphans(): void {

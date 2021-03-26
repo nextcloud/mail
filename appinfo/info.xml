@@ -12,7 +12,7 @@
 - **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
 - **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 	]]></description>
-	<version>1.10.0-alpha.2</version>
+	<version>1.10.0-alpha.3</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author>Greta Doçi</author>
@@ -38,6 +38,7 @@
 	</dependencies>
 	<repair-steps>
 		<post-migration>
+			<step>OCA\Mail\Migration\AddMissingDefaultTags</step>
 			<step>OCA\Mail\Migration\AddMissingMessageIds</step>
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
 			<step>OCA\Mail\Migration\FixBackgroundJobs</step>

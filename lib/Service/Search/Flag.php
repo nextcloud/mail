@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Search;
 
 use Horde_Imap_Client;
+use OCA\Mail\Db\Tag;
 
 /**
  * @psalm-immutable
@@ -34,7 +35,8 @@ class Flag {
 	public const ANSWERED = Horde_Imap_Client::FLAG_ANSWERED;
 	public const SEEN = Horde_Imap_Client::FLAG_SEEN;
 	public const FLAGGED = Horde_Imap_Client::FLAG_FLAGGED;
-	public const IMPORTANT = '\\important';
+	/** @deprecated */
+	public const IMPORTANT = Tag::LABEL_IMPORTANT;
 	public const DELETED = Horde_Imap_Client::FLAG_DELETED;
 
 	/** @var string */

@@ -24,4 +24,6 @@ DROP TABLE oc_mail_messages;
 DROP TABLE oc_mail_recipients;
 DROP TABLE oc_mail_classifiers;
 DROP TABLE oc_mail_trusted_senders;
+DROP TABLE oc_mail_tags;
+DROP TABLE oc_mail_message_tags;
 ```

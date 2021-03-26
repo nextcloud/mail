@@ -40,7 +40,7 @@
 				:close-after-click="true"
 				@click.prevent="onToggleImportant">
 				{{
-					envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+					envelope.tags.$label1 ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 				}}
 			</ActionButton>
 			<ActionButton :icon="iconFavorite"

@@ -41,6 +41,7 @@ import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import SignaturePlugin from '../ckeditor/signature/SignaturePlugin'
 
 import { getLanguage } from '@nextcloud/l10n'
 import DOMPurify from 'dompurify'
@@ -75,7 +76,7 @@ export default {
 		},
 	},
 	data() {
-		const plugins = [EssentialsPlugin, ParagraphPlugin]
+		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
@@ -189,6 +190,7 @@ export default {
 			logger.debug(`setting TextEditor contents to <${this.text}>`)
 
 			this.bus.$on('appendToBodyAtCursor', this.appendToBodyAtCursor)
+			this.bus.$on('insertSignature', this.onInsertSignature)
 		},
 		onInput() {
 			logger.debug(`TextEditor input changed to <${this.text}>`)
@@ -199,6 +201,10 @@ export default {
 			const viewFragment = this.editorInstance.data.processor.toView(toAppend)
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
+		},
+		onInsertSignature(signatureParam, signatureAboveQuoteParam) {
+			this.editorInstance.execute('insertSignature', { signature: signatureParam,
+																signatureAboveQuote: signatureAboveQuoteParam })
 		},
 	},
 }

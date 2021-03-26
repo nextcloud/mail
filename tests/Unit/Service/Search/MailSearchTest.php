@@ -39,6 +39,7 @@ use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\Search\SearchQuery;
+use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailSearchTest extends TestCase {
@@ -61,6 +62,9 @@ class MailSearchTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
+	/** @var ITimeFactory|MockObject */
+	private $timeFactory;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -69,13 +73,15 @@ class MailSearchTest extends TestCase {
 		$this->imapSearchProvider = $this->createMock(Provider::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->previewEnhancer = $this->createMock(PreviewEnhancer::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->search = new MailSearch(
 			$this->filterStringParser,
 			$this->mailboxMapper,
 			$this->imapSearchProvider,
 			$this->messageMapper,
-			$this->previewEnhancer
+			$this->previewEnhancer,
+			$this->timeFactory
 		);
 	}
 

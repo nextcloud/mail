@@ -34,6 +34,7 @@ use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Db\TagMapper;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -61,6 +62,9 @@ class SetupServiceTest extends TestCase {
 	/** @var SetupService */
 	private $service;
 
+	/** @var TagMapper|MockObject */
+	private $tagMapper;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -70,6 +74,7 @@ class SetupServiceTest extends TestCase {
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->tagMapper = $this->createMock(TagMapper::class);
 
 		$this->service = new SetupService(
 			$this->autoConfig,
@@ -77,7 +82,8 @@ class SetupServiceTest extends TestCase {
 			$this->crypto,
 			$this->smtpClientFactory,
 			$this->imapClientFactory,
-			$this->logger
+			$this->logger,
+			$this->tagMapper
 		);
 	}
 
@@ -109,6 +115,11 @@ class SetupServiceTest extends TestCase {
 		$this->accountService->expects($this->once())
 			->method('save')
 			->with($account);
+
+		$this->tagMapper->expects($this->once())
+		->method('createDefaultTags')
+		->with($account);
+
 		$expected = new Account($account);
 
 		$actual = $this->service->createNewAutoConfiguredAccount($name, $email, $password);

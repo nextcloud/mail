@@ -23,34 +23,36 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use Horde_Imap_Client;
-use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Exception_NoSupportExtension;
-use Horde_Imap_Client_Socket;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Folder;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailManager;
+use Horde_Imap_Client;
+use function array_map;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Db\MessageMapper as DbMessageMapper;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use function array_values;
+use OCA\Mail\Db\TagMapper;
+use Psr\Log\LoggerInterface;
+use Horde_Imap_Client_Socket;
+use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\IMAP\FolderStats;
+use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\Model\IMAPMessage;
+use Horde_Imap_Client_Exception;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Exception\TrashMailboxNotSetException;
-use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\FolderStats;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
-use OCA\Mail\Model\IMAPMessage;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
-use Psr\Log\LoggerInterface;
-use function array_map;
-use function array_values;
+use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use Horde_Imap_Client_Exception_NoSupportExtension;
+use OCA\Mail\Exception\TrashMailboxNotSetException;
+use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 
 class MailManager implements IMailManager {
 
@@ -86,8 +88,12 @@ class MailManager implements IMailManager {
 	/** @var DbMessageMapper */
 	private $dbMessageMapper;
 
+	/** @var TagMapper */
+	private $tagMapper;
+
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
+
 	/**
 	 * @var LoggerInterface
 	 */
@@ -100,7 +106,8 @@ class MailManager implements IMailManager {
 								ImapMessageMapper $messageMapper,
 								DbMessageMapper $dbMessageMapper,
 								IEventDispatcher $eventDispatcher,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								TagMapper $tagMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
@@ -109,6 +116,7 @@ class MailManager implements IMailManager {
 		$this->dbMessageMapper = $dbMessageMapper;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->logger = $logger;
+		$this->tagMapper = $tagMapper;
 	}
 
 	public function getMailbox(string $uid, int $id): Mailbox {
@@ -393,7 +401,7 @@ class MailManager implements IMailManager {
 				if (empty($imapFlag) === true) {
 					continue;
 				}
-				if ($value === true) {
+				if ($value) {
 					$this->imapMessageMapper->addFlag($client, $mb, $uid, $imapFlag);
 				} else {
 					$this->imapMessageMapper->removeFlag($client, $mb, $uid, $imapFlag);
@@ -417,6 +425,50 @@ class MailManager implements IMailManager {
 				$value
 			)
 		);
+	}
+
+	/**
+	 * Tag (flag) a message on IMAP
+	 *
+	 * @param Account $account
+	 * @param string $mailbox
+	 * @param integer $uid
+	 * @param Tag $tag
+	 * @param boolean $value
+	 * @return void
+	 *
+	 * @uses
+	 *
+	 * @link https://github.com/nextcloud/mail/issues/25
+	 */
+	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void {
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$mb = $this->mailboxMapper->find($account, $mailbox);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
+		}
+		if ($this->isPermflagsEnabled($account, $mailbox) === true) {
+			try {
+				if ($value) {
+					// imap keywords and flags work the same way
+					$this->imapMessageMapper->addFlag($client, $mb, $message->getUid(), $tag->getImapLabel());
+				} else {
+					$this->imapMessageMapper->removeFlag($client, $mb, $message->getUid(), $tag->getImapLabel());
+				}
+			} catch (Horde_Imap_Client_Exception $e) {
+				throw new ServiceException(
+					"Could not set message keyword on IMAP: " . $e->getMessage(),
+					(int) $e->getCode(),
+					$e
+				);
+			}
+		}
+		if ($value) {
+			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+		} else {
+			$this->tagMapper->untagMessage($tag, $message->getMessageId());
+		}
 	}
 
 	/**
@@ -518,6 +570,21 @@ class MailManager implements IMailManager {
 	}
 
 	/**
+	 * @param string $imapLabel
+	 * @param string $userId
+	 * @return Tag
+	 * @throws DoesNotExistException
+	 */
+	public function getTagByImapLabel(string $imapLabel, string $userId): Tag {
+		try {
+			return $this->tagMapper->getTagByImapLabel($imapLabel, $userId);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException('Unknow Tag', (int)$e->getCode(), $e);
+		}
+	}
+
+
+	/**
 	 * Filter out IMAP flags that aren't supported by the client server
 	 *
 	 * @param Horde_Imap_Client_Socket $client
@@ -534,7 +601,7 @@ class MailManager implements IMailManager {
 		// Only allow flag setting if IMAP supports Permaflags
 		// @TODO check if there are length & char limits on permflags
 		if ($this->isPermflagsEnabled($account, $mailbox) === true) {
-			return ["$" . $flag];
+			return [$flag];
 		}
 		return [];
 	}

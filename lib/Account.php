@@ -218,6 +218,13 @@ class Account implements JsonSerializable {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getUserId() {
+		return $this->account->getUserId();
+	}
+
+	/**
 	 * @deprecated
 	 *
 	 * @return void

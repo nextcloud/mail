@@ -28,9 +28,9 @@
 				:disable-tooltip="true"
 				:size="40" />
 			<div
-				v-if="envelope.flags.important"
+				v-if="envelope.tags.$label1"
 				class="app-content-list-item-star icon-important"
-				:data-starred="envelope.flags.important ? 'true' : 'false'"
+				:data-starred="envelope.tags.$label1 ? 'true' : 'false'"
 				@click.prevent="onToggleImportant"
 				v-html="importantSvg" />
 			<div
