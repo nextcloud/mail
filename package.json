@@ -26,7 +26,7 @@
     "@ckeditor/ckeditor5-essentials": "~26.0.0",
     "@ckeditor/ckeditor5-heading": "~26.0.0",
     "@ckeditor/ckeditor5-link": "~26.0.0",
-    "@ckeditor/ckeditor5-list": "~26.0.0",
+    "@ckeditor/ckeditor5-list": "~27.0.0",
     "@ckeditor/ckeditor5-paragraph": "~26.0.0",
     "@ckeditor/ckeditor5-theme-lark": "~26.0.0",
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
