@@ -25,11 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use OCP\DB\Exception;
-use Throwable;
 use function array_map;
-
+use function array_chunk;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
@@ -83,7 +80,7 @@ class TagMapper extends QBMapper {
 	 * @return Tag[]
 	 * @throws DoesNotExistException
 	 */
-	public function getAllTagForUser(string $userId): array {
+	public function getAllTagsForUser(string $userId): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -91,17 +88,6 @@ class TagMapper extends QBMapper {
 					$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
 				);
 		return $this->findEntities($qb);
-	}
-
-	/**
-	 * @throws DoesNotExistException
-	 */
-	public function getTag(int $id): Entity {
-		$qb = $this->db->getQueryBuilder();
-		$qb->select('*')
-			->from($this->getTableName())
-			->where($qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT)));
-		return $this->findEntity($qb);
 	}
 
 	/**
@@ -122,26 +108,7 @@ class TagMapper extends QBMapper {
 		$qb->insert('mail_message_tags')
 		   ->setValue('imap_message_id', $qb->createNamedParameter($messageId))
 		   ->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
-		try {
-			$qb->execute();
-		} catch (Throwable $e) {
-			/**
-			 * @psalm-suppress all
-			 */
-			if (class_exists(Exception::class) && ($e instanceof Exception) && $e->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-				// OK -> ignore
-				return;
-			}
-			/**
-			 * @psalm-suppress all
-			 */
-			if (class_exists(UniqueConstraintViolationException::class) && ($e instanceof UniqueConstraintViolationException)) {
-				// OK -> ignore
-				return;
-			}
-
-			throw $e;
-		}
+		$qb->execute();
 	}
 
 	/**
@@ -159,21 +126,24 @@ class TagMapper extends QBMapper {
 
 	/**
 	 * @param Message[] $messages
+	 * @param string $userId
 	 * @return Tag[][]
 	 */
-	public function getAllTagsForMessages(array $messages): array {
+	public function getAllTagsForMessages(array $messages, string $userId): array {
 		$ids = array_map(function (Message $message) {
 			return $message->getMessageId();
 		}, $messages);
 
 		$qb = $this->db->getQueryBuilder();
-		$tagsQuery = $qb->select('t.*', 'mt.imap_message_id')
+		$tagsQuery = $qb->selectDistinct(['t.*', 'mt.imap_message_id'])
 			->from($this->getTableName(), 't')
 			->join('t', 'mail_message_tags', 'mt', $qb->expr()->eq('t.id', 'mt.tag_id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->in('mt.imap_message_id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('mt.imap_message_id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('t.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
 			);
 		$queryResult = $tagsQuery->execute();
+
 		$tags = [];
 		while (($row = $queryResult->fetch()) !== false) {
 			$messageId = $row['imap_message_id'];
@@ -240,12 +210,60 @@ class TagMapper extends QBMapper {
 			}
 			$tags[] = $tag;
 		}
-		$dbTags = $this->getAllTagForUser($account->getUserId());
+		$dbTags = $this->getAllTagsForUser($account->getUserId());
 		$toInsert = array_udiff($tags, $dbTags, function (Tag $a, Tag $b) {
 			return strcmp($a->getImapLabel(), $b->getImapLabel());
 		});
 		foreach ($toInsert as $entity) {
 			$this->insert($entity);
+		}
+	}
+
+	public function deleteDuplicates(): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('mt2.id')
+		->from('mail_message_tags', 'mt2')
+		->join('mt2','mail_message_tags', 'mt1', $qb->expr()->andX(
+			$qb->expr()->gt('mt1.id', 'mt2.id'),
+			$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
+			$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
+			)
+		);
+		$result = $qb->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		$ids = array_unique(array_map(function ($row) {
+			return $row['id'];
+		}, $rows));
+
+		$deleteQB = $this->db->getQueryBuilder();
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$deleteQB->delete('mail_message_tags')
+				->where($deleteQB->expr()->in('id', $deleteQB->createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
+			$deleteQB->execute();
+		}
+	}
+
+	public function deleteOrphans(): void {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->select('mt.id')
+		->from('mail_message_tags', 'mt')
+		->leftJoin('mt', $this->getTableName(), 't', $qb->expr()->eq('t.id', 'mt.tag_id'))
+		->where($qb->expr()->isNull('t.id'));
+		$result = $qb->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		$ids = array_map(function (array $row) {
+			return $row['id'];
+		}, $rows);
+
+		$deleteQB = $this->db->getQueryBuilder();
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$deleteQB->delete('mail_message_tags')
+				->where($deleteQB->expr()->in('id', $deleteQB->createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
+			$deleteQB->execute();
 		}
 	}
 }

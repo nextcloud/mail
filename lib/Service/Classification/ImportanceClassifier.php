@@ -164,7 +164,7 @@ class ImportanceClassifier {
 			return $mailbox->getId();
 		}, $incomingMailboxes);
 		$messages = array_filter(
-			$this->messageMapper->findLatestMessages($mailboxIds, self::MAX_TRAINING_SET_SIZE),
+			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
 		$importantMessages = array_filter($messages, function (Message $message) {

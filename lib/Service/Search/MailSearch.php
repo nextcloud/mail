@@ -130,7 +130,7 @@ class MailSearch implements IMailSearch {
 		return $this->previewEnhancer->process(
 			$account,
 			$mailbox,
-			$this->messageMapper->findByIds(
+			$this->messageMapper->findByIds($account->getUserId(),
 				$this->getIdsLocally($account, $mailbox, $query, $limit)
 			)
 		);
@@ -155,7 +155,7 @@ class MailSearch implements IMailSearch {
 			$query->setCursor($cursor);
 		}
 
-		return $this->messageMapper->findByIds(
+		return $this->messageMapper->findByIds($user->getUID(),
 			$this->getIdsGlobally($user, $query, $limit)
 		);
 	}

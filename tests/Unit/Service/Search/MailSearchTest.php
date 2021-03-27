@@ -118,6 +118,9 @@ class MailSearchTest extends TestCase {
 
 	public function testNoFindMessages() {
 		$account = $this->createMock(Account::class);
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('admin');
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
@@ -136,6 +139,9 @@ class MailSearchTest extends TestCase {
 
 	public function testFindFlagsLocally() {
 		$account = $this->createMock(Account::class);
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('admin');
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
@@ -171,6 +177,9 @@ class MailSearchTest extends TestCase {
 
 	public function testFindText() {
 		$account = $this->createMock(Account::class);
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('admin');
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
