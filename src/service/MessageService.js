@@ -115,19 +115,19 @@ export function setEnvelopeFlag(id, flag, value) {
 			},
 		})
 }
-
-export function setEnvelopeTag(id, tagId) {
-	const url = generateUrl('/apps/mail/api/messages/{id}/tags/{tagId}', {
-		id, tagId,
+//  Todo IMAPlabel change this instead of tagid
+export function setEnvelopeTag(id, imapLabel) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/tags/{imapLabel}', {
+		id, imapLabel,
 	})
 
 	return axios
 		.put(url)
 }
-
-export function removeEnvelopeTag(id, tagId) {
-	const url = generateUrl('/apps/mail/api/messages/{id}/tags/{tagId}', {
-		id, tagId,
+//  Todo IMAPlabel change this instead of tagid
+export function removeEnvelopeTag(id, imapLabel) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/tags/{imapLabel}', {
+		id, imapLabel,
 	})
 
 	return axios

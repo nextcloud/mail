@@ -118,6 +118,8 @@
 			@close="onCloseMoveModal" />
 		<TagModal
 			v-if="showTagModal"
+			:account="account"
+			:envelope="envelope"
 			icon="icon-tag"
 			@close="onCloseTagModal">
 		</TagModal>

@@ -64,7 +64,7 @@ import {
 	fetchMessage,
 	fetchThread,
 	moveMessage,
-	setEnvelopeFlag,
+	setEnvelopeFlag, setEnvelopeTag,
 	syncEnvelopes,
 } from '../service/MessageService'
 import { createAlias, deleteAlias } from '../service/AliasService'
@@ -630,6 +630,29 @@ export default {
 			commit('flagEnvelope', {
 				envelope,
 				flag: 'seen',
+				value: oldState,
+			})
+		})
+	},
+	toggleTagImportant({commit, getters }, envelope) {
+		// Change immediately and switch back on error
+		//check if the prop exist and if yes, save it
+		const oldState = envelope.tags
+		commit('tagEnvelope', {
+			envelope,
+			tag: '$label1',
+			// exists? Yes? So unset - (untag) the message
+			// if it doesn't, add /tag) the message,
+			value: !oldState,
+		})
+
+		setEnvelopeTag(envelope.databaseId, '$label1', !oldState).catch((e) => {
+			console.error('could not toggle message important state', e)
+
+			// Revert change
+			commit('tagEnvelope', {
+				envelope,
+				tag: '$label1',
 				value: oldState,
 			})
 		})
