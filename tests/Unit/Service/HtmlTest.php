@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -25,6 +27,8 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC;
 use OCA\Mail\Service\Html;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class HtmlTest extends TestCase {
 
@@ -33,19 +37,21 @@ class HtmlTest extends TestCase {
 	 * @param $expected
 	 * @param $text
 	 */
-	public function testLinkDetection($expected, $text) {
-		$urlGenerator = OC::$server->getURLGenerator();
-		$request = OC::$server->getRequest();
+	public function testLinkDetection(string $expected, string $text) {
+		$urlGenerator = OC::$server->get(IURLGenerator::class);
+		$request = OC::$server->get(IRequest::class);
+
 		$html = new Html($urlGenerator, $request);
 		$withLinks = $html->convertLinks($text);
-		$this->assertSame($expected, $withLinks);
+
+		self::assertSame($expected, $withLinks);
 	}
 
 	public function linkDetectionProvider() {
 		return [
 			['abc', 'abc'],
 			['&lt;&gt;', '<>'],
-			['&amp;lt;&amp;gt;', '&lt;&gt;'],
+			['&lt;&gt;', '&lt;&gt;'], // no double encoding
 			['foo&amp;bar', 'foo&bar'],
 			['<a href="http://google.com" rel="noreferrer noopener" target="_blank">google.com</a>', 'http://google.com'],
 			['<a href="https://google.com" rel="noreferrer noopener" target="_blank">google.com</a>', 'https://google.com'],
