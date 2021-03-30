@@ -33,6 +33,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tags: {},
 		}
 
 		mutations.addAccount(state, {
@@ -53,6 +54,7 @@ describe('Vuex store mutations', () => {
 			},
 			envelopes: {},
 			mailboxes: {},
+			tags: {},
 		})
 	})
 
@@ -62,6 +64,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tags: {},
 		}
 
 		mutations.addAccount(state, {
@@ -101,6 +104,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -110,6 +114,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tags: {},
 		}
 
 		mutations.addAccount(state, {
@@ -175,6 +180,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				}
 			},
+			tags: {},
 		})
 	})
 
@@ -184,6 +190,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tags: {},
 		}
 
 		mutations.addAccount(state, {
@@ -248,6 +255,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -257,6 +265,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tags: {},
 		}
 
 		mutations.addAccount(state, {
@@ -342,6 +351,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -374,6 +384,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				}
 			},
+			tags: {},
 		}
 
 		mutations.addMailbox(
@@ -429,6 +440,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -461,6 +473,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				}
 			},
+			tags: {},
 		}
 
 		mutations.addMailbox(
@@ -517,6 +530,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -537,6 +551,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		}
 
 		mutations.removeMailbox(state, {
@@ -552,6 +567,7 @@ describe('Vuex store mutations', () => {
 				},
 			},
 			mailboxes: {},
+			tags: {},
 		})
 	})
 
@@ -578,6 +594,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		}
 
 		mutations.removeMailbox(state, {
@@ -600,6 +617,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -620,6 +638,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 				},
 			},
+			tags: {},
 		}
 
 		mutations.addEnvelope(state, {
@@ -648,6 +667,7 @@ describe('Vuex store mutations', () => {
 					uid: 321,
 					id: 123,
 					subject: 'henlo',
+					tags: [],
 				},
 			},
 			mailboxes: {
@@ -659,6 +679,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -679,6 +700,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 				},
 			},
+			tags: {},
 		}
 
 		mutations.addEnvelope(state, {
@@ -717,6 +739,7 @@ describe('Vuex store mutations', () => {
 					uid: 321,
 					id: 123,
 					subject: 'henlo',
+					tags: [],
 				},
 				12346: {
 					mailboxId: 27,
@@ -724,6 +747,7 @@ describe('Vuex store mutations', () => {
 					id: 124,
 					subject: 'henlo 2',
 					uid: 322,
+					tags: [],
 				},
 			},
 			mailboxes: {
@@ -735,6 +759,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -761,6 +786,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 				},
 			},
+			tags: {},
 		}
 
 		mutations.addEnvelope(state, {
@@ -787,6 +813,7 @@ describe('Vuex store mutations', () => {
 					mailboxId: 27,
 					uid: 321,
 					subject: 'henlo',
+					tags: [],
 				},
 			},
 			mailboxes: {
@@ -806,6 +833,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -856,6 +884,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tags: {},
 		}
 
 		mutations.removeEnvelope(state, {
@@ -903,6 +932,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tags: {},
 		})
 	})
 
@@ -922,6 +952,7 @@ describe('Vuex store mutations', () => {
 			envelopes: {
 				[envelope.databaseId]: envelope,
 			},
+			tags: {},
 		}
 
 		mutations.addEnvelopeThread(state, {
@@ -958,6 +989,7 @@ describe('Vuex store mutations', () => {
 					mailboxId: 27,
 					accountId: 1,
 					uid: 12344,
+					tags: [],
 				},
 				123: {
 					databaseId: 123,
@@ -968,13 +1000,380 @@ describe('Vuex store mutations', () => {
 						122,
 						123,
 						124,
-					]
+					],
+					tags: [],
 				},
 				124: {
 					databaseId: 124,
 					mailboxId: 27,
 					accountId: 1,
 					uid: 12346,
+					tags: [],
+				},
+			},
+			tags: {},
+		})
+	})
+
+	it('normalizes tags from envelopes', () => {
+		const state = {
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					mailboxes: [],
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				27: {
+					name: 'INBOX',
+					accountId: 13,
+					envelopeLists: {},
+				},
+			},
+			tags: {},
+		}
+
+		mutations.addEnvelope(state, {
+			query: undefined,
+			envelope: {
+				mailboxId: 27,
+				databaseId: 12345,
+				id: 123,
+				subject: 'henlo',
+				uid: 321,
+				tags: {
+					1: {
+						id: 1,
+						userId: 'user',
+						displayName: 'Important',
+						imapLabel: '$label1',
+						color: '#ffffff',
+						isDefaultTag: true,
+					},
+				},
+			},
+		})
+
+		expect(state).to.deep.equal({
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					mailboxes: [],
+				},
+			},
+			envelopes: {
+				12345: {
+					mailboxId: 27,
+					databaseId: 12345,
+					uid: 321,
+					id: 123,
+					subject: 'henlo',
+					tags: [1],
+				},
+			},
+			mailboxes: {
+				27: {
+					name: 'INBOX',
+					accountId: 13,
+					envelopeLists: {
+						'': [12345],
+					},
+				},
+			},
+			tags: {
+				1: {
+					id: 1,
+					userId: 'user',
+					displayName: 'Important',
+					imapLabel: '$label1',
+					color: '#ffffff',
+					isDefaultTag: true,
+				},
+			},
+		})
+	})
+
+	it('normalizes tags from envelope threads', () => {
+		const tag = {
+			id: 1,
+			userId: 'user',
+			displayName: 'Important',
+			imapLabel: '$label1',
+			color: '#ffffff',
+			isDefaultTag: true,
+		}
+		const envelope = {
+			databaseId: 123,
+			mailboxId: 27,
+			uid: 12345,
+		}
+		const state = {
+			mailboxes: {
+				27: {
+					databaseId: 27,
+					accountId: 1,
+				},
+			},
+			envelopes: {
+				[envelope.databaseId]: envelope,
+			},
+			// State contains old version of envelope with no label
+			tags: {},
+		}
+
+		mutations.addEnvelopeThread(state, {
+			id: 123,
+			thread: [
+				{
+					databaseId: 122,
+					mailboxId: 27,
+					uid: 12344,
+					tags: {
+						$label1: tag,
+					},
+				},
+				{
+					databaseId: 123,
+					mailboxId: 27,
+					uid: 12345,
+					tags: {
+						$label1: tag,
+					},
+				},
+			],
+		})
+
+		expect(state).to.deep.equal({
+			mailboxes: {
+				27: {
+					databaseId: 27,
+					accountId: 1,
+				},
+			},
+			envelopes: {
+				122: {
+					databaseId: 122,
+					mailboxId: 27,
+					accountId: 1,
+					uid: 12344,
+					tags: [1],
+				},
+				123: {
+					databaseId: 123,
+					mailboxId: 27,
+					accountId: 1,
+					uid: 12345,
+					thread: [
+						122,
+						123,
+					],
+					tags: [1],
+				},
+			},
+			tags: {
+				1: {
+					id: 1,
+					userId: 'user',
+					displayName: 'Important',
+					imapLabel: '$label1',
+					color: '#ffffff',
+					isDefaultTag: true,
+				},
+			},
+		})
+	})
+
+	it('normalizes tags from updated envelopes', () => {
+		const envelope = {
+			databaseId: 123,
+			mailboxId: 27,
+			uid: 12345,
+			accountId: 1,
+		}
+		const state = {
+			mailboxes: {
+				27: {
+					databaseId: 27,
+					accountId: 1,
+				},
+			},
+			envelopes: {
+				[envelope.databaseId]: envelope,
+			},
+			// State contains old version of envelope with no label
+			tags: {},
+		}
+
+		mutations.updateEnvelope(state, {
+			envelope: {
+				...envelope,
+				tags: {
+					$label1: {
+						id: 1,
+						userId: 'user',
+						displayName: 'Important',
+						imapLabel: '$label1',
+						color: '#ffffff',
+						isDefaultTag: true,
+					},
+				},
+			},
+		})
+
+		expect(state).to.deep.equal({
+			mailboxes: {
+				27: {
+					databaseId: 27,
+					accountId: 1,
+				},
+			},
+			envelopes: {
+				123: {
+					databaseId: 123,
+					mailboxId: 27,
+					accountId: 1,
+					uid: 12345,
+					flags: undefined,
+					tags: [1],
+				},
+			},
+			tags: {
+				1: {
+					id: 1,
+					userId: 'user',
+					displayName: 'Important',
+					imapLabel: '$label1',
+					color: '#ffffff',
+					isDefaultTag: true,
+				},
+			},
+		})
+	})
+
+	it('removes a tag from an envelope', () => {
+		const tag = {
+			id: 1,
+			userId: 'user',
+			displayName: 'Important',
+			imapLabel: '$label1',
+			color: '#ffffff',
+			isDefaultTag: true,
+		}
+		const envelope = {
+			mailboxId: 27,
+			databaseId: 12345,
+			id: 123,
+			subject: 'henlo',
+			uid: 321,
+			tags: [tag.id],
+		}
+		const state = {
+			envelopes: {
+				[envelope.databaseId]: envelope,
+			},
+			tags: {
+				[tag.id]: tag,
+			},
+		}
+
+		mutations.removeEnvelopeTag(state, {
+			envelope,
+			tagId: tag.id,
+		})
+
+		expect(state).to.deep.equal({
+			envelopes: {
+				12345: {
+					mailboxId: 27,
+					databaseId: 12345,
+					uid: 321,
+					id: 123,
+					subject: 'henlo',
+					tags: [],
+				},
+			},
+			tags: {
+				[tag.id]: tag,
+			},
+		})
+	})
+
+	it('adds a tag to an envelope', () => {
+		const tag = {
+			id: 1,
+			userId: 'user',
+			displayName: 'Important',
+			imapLabel: '$label1',
+			color: '#ffffff',
+			isDefaultTag: true,
+		}
+		const envelope = {
+			mailboxId: 27,
+			databaseId: 12345,
+			id: 123,
+			subject: 'henlo',
+			uid: 321,
+			tags: [],
+		}
+		const state = {
+			envelopes: {
+				[envelope.databaseId]: envelope,
+			},
+			tags: {
+				[tag.id]: tag,
+			},
+		}
+
+		mutations.addEnvelopeTag(state, {
+			envelope,
+			tagId: tag.id,
+		})
+
+		expect(state).to.deep.equal({
+			envelopes: {
+				12345: {
+					mailboxId: 27,
+					databaseId: 12345,
+					uid: 321,
+					id: 123,
+					subject: 'henlo',
+					tags: [1],
+				},
+			},
+			tags: {
+				[tag.id]: tag,
+			},
+		})
+	})
+
+	it('adds a global tag', () => {
+		const state = {
+			tags: {},
+		}
+
+		mutations.addTag(state, {
+			tag: {
+				id: 1,
+				userId: 'user',
+				displayName: 'Important',
+				imapLabel: '$label1',
+				color: '#ffffff',
+				isDefaultTag: true,
+			},
+		})
+
+		expect(state).to.deep.equal({
+			tags: {
+				1: {
+					id: 1,
+					userId: 'user',
+					displayName: 'Important',
+					imapLabel: '$label1',
+					color: '#ffffff',
+					isDefaultTag: true,
 				},
 			},
 		})

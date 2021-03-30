@@ -676,7 +676,7 @@ class MessagesController extends Controller {
 		}
 
 		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, true);
-		return new JSONResponse();
+		return new JSONResponse($tag);
 	}
 
 	/**

@@ -64,7 +64,9 @@ import {
 	fetchMessage,
 	fetchThread,
 	moveMessage,
+	removeEnvelopeTag,
 	setEnvelopeFlag,
+	setEnvelopeTag,
 	syncEnvelopes,
 } from '../service/MessageService'
 import { createAlias, deleteAlias } from '../service/AliasService'
@@ -593,25 +595,22 @@ export default {
 			})
 		})
 	},
-	toggleEnvelopeImportant({ commit, getters }, envelope) {
-		// Change immediately and switch back on error
-		const oldState = envelope.tags.$label1
-		commit('tagEnvelope', {
-			envelope,
-			tag: '$label1',
-			value: !oldState,
-		})
-
-		setEnvelopeFlag(envelope.databaseId, '$label1', !oldState).catch((e) => {
-			console.error('could not toggle message important state', e)
-
-			// Revert change
-			commit('tagEnvelope', {
+	async toggleEnvelopeImportant({ dispatch, getters }, envelope) {
+		const importantLabel = '$label1'
+		const tag = getters
+			.getEnvelopeTags(envelope.databaseId)
+			.find((tag) => tag.imapLabel === importantLabel)
+		if (tag) {
+			await dispatch('removeEnvelopeTag', {
 				envelope,
-				tag: '$label1',
-				value: oldState,
+				tag,
 			})
-		})
+		} else {
+			await dispatch('addEnvelopeTag', {
+				envelope,
+				imapLabel: importantLabel,
+			})
+		}
 	},
 	toggleEnvelopeSeen({ commit, getters }, { envelope, seen }) {
 		// Change immediately and switch back on error
@@ -741,5 +740,24 @@ export default {
 			logger.error('failed to update sieve account: ', { error })
 			throw error
 		}
+	},
+	async addEnvelopeTag({ commit, getters }, { envelope, imapLabel }) {
+		// TODO: fetch tags indepently of envelopes and only send tag id here
+		const tag = await setEnvelopeTag(envelope.databaseId, imapLabel)
+		if (!getters.getTag(tag.id)) {
+			commit('addTag', { tag })
+		}
+
+		commit('addEnvelopeTag', {
+			envelope,
+			tagId: tag.id,
+		})
+	},
+	async removeEnvelopeTag({ commit }, { envelope, tag }) {
+		await removeEnvelopeTag(envelope.databaseId, tag.imapLabel)
+		commit('removeEnvelopeTag', {
+			envelope,
+			tagId: tag.id,
+		})
 	},
 }

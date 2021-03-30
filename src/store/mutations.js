@@ -72,6 +72,29 @@ const sortAccounts = (accounts) => {
 	return accounts
 }
 
+/**
+ * Convert envelope tag objects to references and add new tags to global list.
+ * @param {Object} state vuex state
+ * @param {Object} envelope envelope with tag objects
+ */
+const normalizeTags = (state, envelope) => {
+	if (Array.isArray(envelope.tags)) {
+		// Tags have been normalized already
+		return
+	}
+
+	const tags = Object
+		.entries(envelope.tags ?? {})
+		.map(([imapLabel, tag]) => {
+			if (!state.tags[tag.id]) {
+				Vue.set(state.tags, tag.id, tag)
+			}
+			return tag.id
+		})
+
+	Vue.set(envelope, 'tags', tags)
+}
+
 export default {
 	savePreference(state, { key, value }) {
 		Vue.set(state.preferences, key, value)
@@ -145,6 +168,7 @@ export default {
 		removeRec(account)
 	},
 	addEnvelope(state, { query, envelope }) {
+		normalizeTags(state, envelope)
 		const mailbox = state.mailboxes[envelope.mailboxId]
 		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
 		Vue.set(envelope, 'accountId', mailbox.accountId)
@@ -172,14 +196,21 @@ export default {
 		if (!existing) {
 			return
 		}
+		normalizeTags(state, envelope)
 		Vue.set(existing, 'flags', envelope.flags)
 		Vue.set(existing, 'tags', envelope.tags)
 	},
 	flagEnvelope(state, { envelope, flag, value }) {
 		envelope.flags[flag] = value
 	},
-	tagEnvelope(state, { envelope, tag, value }) {
-		envelope.tags[tag] = value
+	addTag(state, { tag }) {
+		Vue.set(state.tags, tag.id, tag)
+	},
+	addEnvelopeTag(state, { envelope, tagId }) {
+		Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
+	},
+	removeEnvelopeTag(state, { envelope, tagId }) {
+		Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
 	},
 	removeEnvelope(state, { id }) {
 		const envelope = state.envelopes[id]
@@ -244,6 +275,7 @@ export default {
 	addEnvelopeThread(state, { id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists
 		thread.forEach(e => {
+			normalizeTags(state, e)
 			const mailbox = state.mailboxes[e.mailboxId]
 			Vue.set(e, 'accountId', mailbox.accountId)
 			Vue.set(state.envelopes, e.databaseId, Object.assign({}, state.envelopes[e.databaseId] || {}, e))

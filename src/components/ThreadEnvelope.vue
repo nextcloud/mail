@@ -28,9 +28,9 @@
 				:disable-tooltip="true"
 				:size="40" />
 			<div
-				v-if="envelope.tags.$label1"
+				v-if="isImportant"
 				class="app-content-list-item-star icon-important"
-				:data-starred="envelope.tags.$label1 ? 'true' : 'false'"
+				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="onToggleImportant"
 				v-html="importantSvg" />
 			<div
@@ -188,6 +188,11 @@ export default {
 					threadId: this.envelope.databaseId,
 				},
 			}
+		},
+		isImportant() {
+			return this.$store.getters
+				.getEnvelopeTags(this.envelope.databaseId)
+				.find((tag) => tag.imapLabel === '$label1')
 		},
 	},
 	watch: {
