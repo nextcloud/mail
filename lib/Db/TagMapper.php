@@ -153,7 +153,7 @@ class TagMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete('mail_message_tags')
 			->where($qb->expr()->eq('imap_message_id', $qb->createNamedParameter($messageId)))
-			->where($qb->expr()->eq('tag_id', $qb->createNamedParameter($tag->getId())));
+			->andWhere($qb->expr()->eq('tag_id', $qb->createNamedParameter($tag->getId())));
 		$qb->execute();
 	}
 
