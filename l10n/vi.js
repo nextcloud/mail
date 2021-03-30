@@ -6,7 +6,7 @@ OC.L10N.register(
     "Creating account failed: " : "Tạo tài khoản không thành công:",
     "Embedded message %s" : "Đã đính kèm tin nhắn %s",
     "Important mail" : "Thư quan trọng",
-    "Unread mail" : "Thủ chưa đọc",
+    "Unread mail" : "Thư chưa đọc",
     "Important" : "Quan trọng",
     "Work" : "Công việc",
     "Personal" : "Cá nhân",
