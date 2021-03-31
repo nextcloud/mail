@@ -25,14 +25,21 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
+use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ClientException;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesService {
 
 	/** @var AliasMapper */
-	private $mapper;
+	private $aliasMapper;
 
-	public function __construct(AliasMapper $mapper) {
-		$this->mapper = $mapper;
+	/** @var MailAccountMapper */
+	private $mailAccountMapper;
+
+	public function __construct(AliasMapper $aliasMapper, MailAccountMapper $mailAccountMapper) {
+		$this->aliasMapper = $aliasMapper;
+		$this->mailAccountMapper = $mailAccountMapper;
 	}
 
 	/**
@@ -41,7 +48,7 @@ class AliasesService {
 	 * @return Alias[]
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
-		return $this->mapper->findAll($accountId, $currentUserId);
+		return $this->aliasMapper->findAll($accountId, $currentUserId);
 	}
 
 	/**
@@ -50,21 +57,31 @@ class AliasesService {
 	 * @return Alias
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
-		return $this->mapper->find($aliasId, $currentUserId);
+		return $this->aliasMapper->find($aliasId, $currentUserId);
 	}
 
 	/**
+	 * @param string $currentUserId
 	 * @param int $accountId
 	 * @param string $alias
 	 * @param string $aliasName
+	 *
 	 * @return Alias
+	 * @throws ClientException
 	 */
-	public function create(int $accountId, string $alias, string $aliasName) {
+	public function create(string $currentUserId, int $accountId, string $alias, string $aliasName): Alias {
+		try {
+			$this->mailAccountMapper->find($currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Account $accountId does not exist or no permission to access it");
+		}
+
 		$aliasEntity = new Alias();
 		$aliasEntity->setAccountId($accountId);
 		$aliasEntity->setAlias($alias);
 		$aliasEntity->setName($aliasName);
-		return $this->mapper->insert($aliasEntity);
+
+		return $this->aliasMapper->insert($aliasEntity);
 	}
 
 	/**
@@ -73,8 +90,8 @@ class AliasesService {
 	 * @return Alias
 	 */
 	public function delete(int $aliasId, string $currentUserId): Alias {
-		$alias = $this->mapper->find($aliasId, $currentUserId);
-		$this->mapper->delete($alias);
+		$alias = $this->aliasMapper->find($aliasId, $currentUserId);
+		$this->aliasMapper->delete($alias);
 		return $alias;
 	}
 
@@ -87,6 +104,6 @@ class AliasesService {
 	 * @return void
 	 */
 	public function deleteAll($accountId): void {
-		$this->mapper->deleteAll($accountId);
+		$this->aliasMapper->deleteAll($accountId);
 	}
 }
