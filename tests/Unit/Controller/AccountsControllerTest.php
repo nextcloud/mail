@@ -441,21 +441,25 @@ class AccountsControllerTest extends TestCase {
 
 	public function testSendingManyRecipientsError() {
 		$this->expectException(ManyRecipientsException::class);
+
 		$recipients = [];
-		for ($i = 0; $i < 11; $i++) {
+		for ($i = 0; $i <= 10; $i++) {
 			$recipients[] = "$i@x.com";
 		}
 		$recipients = implode(',', $recipients);
+
 		$this->controller->send(13, 'sub', 'bod', $recipients, '', '');
 	}
 
 	public function testSendingManyRecipientsCcError() {
 		$this->expectException(ManyRecipientsException::class);
+
 		$recipients = [];
-		for ($i = 0; $i < 11; $i++) {
+		for ($i = 0; $i <= 10; $i++) {
 			$recipients[] = "$i@x.com";
 		}
 		$recipients = implode(',', $recipients);
+
 		$this->controller->send(13, 'sub', 'bod', '', $recipients, '');
 	}
 

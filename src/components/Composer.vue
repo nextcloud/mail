@@ -291,8 +291,8 @@ const STATES = Object.seal({
 	UPLOADING: 1,
 	SENDING: 2,
 	ERROR: 3,
-	FINISHED: 4,
-	WARNING: 5,
+	WARNING: 4,
+	FINISHED: 5,
 })
 
 export default {

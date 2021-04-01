@@ -1,6 +1,4 @@
 /**
- * @copyright 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
  * @author 2021 Matthias Rella <mrella@pisys.eu>
  *
  * @license GNU AGPL version 3 or any later version

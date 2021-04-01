@@ -393,7 +393,7 @@ class AccountsController extends Controller {
 		$expandedCc = $this->groupsIntegration->expand($cc);
 		$expandedBcc = $this->groupsIntegration->expand($bcc);
 
-		$count = substr_count($expandedTo, ',') + substr_count($expandedCc, ',');
+		$count = substr_count($expandedTo, ',') + substr_count($expandedCc, ',') + 1;
 		if (!$force && $count >= 10) {
 			throw new ManyRecipientsException();
 		}
