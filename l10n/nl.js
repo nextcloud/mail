@@ -53,7 +53,7 @@ OC.L10N.register(
     "Sieve filter server" : "Sieve filterserver",
     "Sieve filter rules" : "Sieve filterregels",
     "Trusted senders" : "Vertrouwde afzenders",
-    "Add alias" : "Voeg alias toe",
+    "Add alias" : "Voeg bijnaam toe",
     "Add mail account" : "Voeg e-mailaccount toe",
     "Use Gravatar and favicon avatars" : "Gebruik Gravatar en favicon avatars",
     "Register as application for mail links" : "Registreer als applicatie voor e-maillinks",
