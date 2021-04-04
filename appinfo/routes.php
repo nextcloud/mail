@@ -150,6 +150,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#saveInlineImage',
+			'url' => '/api/messages/image',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#getBody',
 			'url' => '/api/messages/{id}/body',
 			'verb' => 'GET'

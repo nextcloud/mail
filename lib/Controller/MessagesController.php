@@ -32,6 +32,7 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
+use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -42,6 +43,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\ItineraryService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -63,6 +65,9 @@ class MessagesController extends Controller {
 
 	/** @var AccountService */
 	private $accountService;
+
+	 /** @var IAttachmentService */
+	private $attachmentService;
 
 	/** @var IMailManager */
 	private $mailManager;
@@ -103,6 +108,7 @@ class MessagesController extends Controller {
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
+	 * @param IAttachmentService $attachmentService
 	 * @param AccountService $accountService
 	 * @param IMailManager $mailManager
 	 * @param IMailSearch $mailSearch
@@ -120,6 +126,7 @@ class MessagesController extends Controller {
 	public function __construct(string $appName,
 								IRequest $request,
 								AccountService $accountService,
+								IAttachmentService $attachmentService,
 								IMailManager $mailManager,
 								IMailSearch $mailSearch,
 								ItineraryService $itineraryService,
@@ -134,6 +141,7 @@ class MessagesController extends Controller {
 								IMailTransmission $mailTransmission) {
 		parent::__construct($appName, $request);
 
+		$this->attachmentService = $attachmentService;
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
 		$this->mailSearch = $mailSearch;
@@ -618,6 +626,27 @@ class MessagesController extends Controller {
 			$newFile->putContent($attachment->getContents());
 		}
 		return new JSONResponse();
+	}
+
+	/**
+	 *
+	 * @NoAdminRequired
+	 * @throws ClientException
+	 * @return JsonResponse
+	 *
+	 */
+	public function saveInlineImage() : JsonResponse {
+		$file = $this->request->getUploadedFile('upload');
+
+		if (is_null($file)) {
+			throw new ClientException('no file attached');
+		}
+		
+		$image = new UploadedFile($file);
+		$image = $this->attachmentService->addFile($this->currentUserId, $image);
+
+		return new JSONResponse($image, Http::STATUS_CREATED);
+	
 	}
 
 	/**
