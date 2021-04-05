@@ -214,7 +214,7 @@ OC.L10N.register(
     "Contacts with this address" : "具有此地址的聯絡人",
     "Add to Contact" : "新增聯絡人",
     "New Contact" : "新聯絡人",
-    "Contact name …" : "聯絡人名稱 。。。",
+    "Contact name …" : "聯絡人名稱 ...",
     "Add" : "新增",
     "Disabled" : "停用",
     "Enabled" : "啟用",
