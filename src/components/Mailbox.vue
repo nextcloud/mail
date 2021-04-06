@@ -409,7 +409,7 @@ export default {
 			this.$store.dispatch('fetchNextEnvelopes', {
 				mailboxId: this.mailbox.databaseId,
 				query: this.searchQuery,
-				quantity: 1
+				quantity: 1,
 			})
 			const idx = findIndex(propEq('databaseId', id), this.envelopes)
 			if (idx === -1) {
