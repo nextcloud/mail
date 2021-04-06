@@ -52,7 +52,6 @@ updates:
       - php
   allow:
       - dependency-type: direct
-      - dependency-type: indirect
 - package-ecosystem: composer
   directory: "/vendor-bin/cs-fixer/"
   schedule:
@@ -67,7 +66,6 @@ updates:
       - php
   allow:
       - dependency-type: direct
-      - dependency-type: indirect
 - package-ecosystem: composer
   directory: "/vendor-bin/phpunit/"
   schedule:
@@ -82,4 +80,3 @@ updates:
       - php
   allow:
       - dependency-type: direct
-      - dependency-type: indirect
