@@ -26,7 +26,6 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
-use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesService {
@@ -61,20 +60,16 @@ class AliasesService {
 	}
 
 	/**
-	 * @param string $currentUserId
+	 * @param string $userId
 	 * @param int $accountId
 	 * @param string $alias
 	 * @param string $aliasName
 	 *
 	 * @return Alias
-	 * @throws ClientException
+	 * @throws DoesNotExistException
 	 */
-	public function create(string $currentUserId, int $accountId, string $alias, string $aliasName): Alias {
-		try {
-			$this->mailAccountMapper->find($currentUserId, $accountId);
-		} catch (DoesNotExistException $e) {
-			throw new ClientException("Account $accountId does not exist or no permission to access it");
-		}
+	public function create(string $userId, int $accountId, string $alias, string $aliasName): Alias {
+		$this->mailAccountMapper->find($userId, $accountId);
 
 		$aliasEntity = new Alias();
 		$aliasEntity->setAccountId($accountId);
