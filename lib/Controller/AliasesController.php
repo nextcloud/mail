@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -96,7 +96,7 @@ class AliasesController extends Controller {
 	 * @param string $aliasName
 	 *
 	 * @return JSONResponse
-	 * @throws ClientException
+	 * @throws DoesNotExistException
 	 */
 	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
 		return new JSONResponse(

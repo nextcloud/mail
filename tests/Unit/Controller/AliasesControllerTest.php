@@ -26,7 +26,6 @@ use OCA\Mail\Controller\AliasesController;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -143,7 +142,7 @@ class AliasesControllerTest extends TestCase {
 	}
 
 	public function testCreateForbiddenAccountId(): void {
-		$this->expectException(ClientException::class);
+		$this->expectException(DoesNotExistException::class);
 
 		$entity = new Alias();
 		$entity->setAccountId(200);
