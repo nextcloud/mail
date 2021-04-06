@@ -21,6 +21,15 @@
 
 <template>
 	<div class="section">
+		<Multiselect
+			v-if="identities.length > 1"
+			:allow-empty="false"
+			:options="identities"
+			:searchable="false"
+			:value="identity"
+			label="label"
+			track-by="id"
+			@select="changeIdentity" />
 		<TextEditor v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
@@ -43,11 +52,13 @@ import logger from '../logger'
 import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
+		Multiselect,
 	},
 	props: {
 		account: {
@@ -59,32 +70,58 @@ export default {
 		return {
 			loading: false,
 			bus: new Vue(),
+			identity: null,
+			signature: '',
 		}
 	},
-	created() {
-		this.signature = this.account.signature ? toHtml(detect(this.account.signature)).value : ''
+	computed: {
+		identities() {
+			const identities = this.account.aliases.map((alias) => {
+				return {
+					id: alias.id,
+					label: alias.name + ' (' + alias.alias + ')',
+					signature: alias.signature,
+				}
+			})
+
+			identities.unshift({
+				id: -1,
+				label: this.account.name + ' (' + this.account.emailAddress + ')',
+				signature: this.account.signature,
+			})
+
+			return identities
+		},
+	},
+	beforeMount() {
+		this.changeIdentity(this.identities[0])
 	},
 	methods: {
-		deleteSignature() {
-			this.loading = true
-
-			this.$store
-				.dispatch('updateAccountSignature', { account: this.account, signature: null })
-				.then(() => {
-					logger.info('signature deleted')
-					this.signature = ''
-					this.loading = false
-				})
-				.catch((error) => {
-					logger.error('could not delete account signature', { error })
-					throw error
-				})
+		changeIdentity(identity) {
+			logger.debug('select identity', { identity })
+			this.identity = identity
+			this.signature = identity.signature ? toHtml(detect(identity.signature)).value : ''
 		},
-		saveSignature() {
+		async deleteSignature() {
+			this.signature = null
+			await this.saveSignature()
+		},
+		async saveSignature() {
 			this.loading = true
 
-			this.$store
-				.dispatch('updateAccountSignature', { account: this.account, signature: this.signature })
+			let dispatchType = 'updateAccountSignature'
+			const payload = {
+				account: this.account,
+				signature: this.signature,
+			}
+
+			if (this.identity.id > -1) {
+				dispatchType = 'updateAliasSignature'
+				payload.aliasId = this.identity.id
+			}
+
+			return this.$store
+				.dispatch(dispatchType, payload)
 				.then(() => {
 					logger.info('signature updated')
 					this.loading = false
@@ -101,7 +138,7 @@ export default {
 <style lang="scss" scoped>
 
 .ck.ck-editor__editable_inline {
-	width: 330px;
+	width: 100%;
 	max-width: 78vw;
 	height: 100px;
 	border-radius: var(--border-radius) !important;
@@ -134,6 +171,9 @@ export default {
 	display: block;
 	padding: 0;
 	margin-bottom: 23px;
+}
+.multiselect--single {
+	width: 100%;
 }
 </style>
 <style>

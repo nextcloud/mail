@@ -54,6 +54,7 @@ class AliasesService {
 	 * @param int $aliasId
 	 * @param string $currentUserId
 	 * @return Alias
+	 * @throws DoesNotExistException
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
 		return $this->aliasMapper->find($aliasId, $currentUserId);
@@ -83,6 +84,7 @@ class AliasesService {
 	 * @param int $aliasId
 	 * @param String $currentUserId
 	 * @return Alias
+	 * @throws DoesNotExistException
 	 */
 	public function delete(int $aliasId, string $currentUserId): Alias {
 		$alias = $this->aliasMapper->find($aliasId, $currentUserId);
@@ -100,5 +102,19 @@ class AliasesService {
 	 */
 	public function deleteAll($accountId): void {
 		$this->aliasMapper->deleteAll($accountId);
+	}
+
+	/**
+	 * Update signature for alias
+	 *
+	 * @param string $userId
+	 * @param int $aliasId
+	 * @param string|null $signature
+	 * @throws DoesNotExistException
+	 */
+	public function updateSignature(string $userId, int $aliasId, string $signature = null): void {
+		$alias = $this->find($aliasId, $userId);
+		$alias->setSignature($signature);
+		$this->aliasMapper->update($alias);
 	}
 }

@@ -147,4 +147,28 @@ class AliasesServiceTest extends TestCase {
 
 		$this->service->delete($aliasId, $this->user);
 	}
+
+	public function testUpdateSignature(): void {
+		$aliasId = 400;
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->with($aliasId, $this->user)
+			->willReturn($this->alias);
+		$this->aliasMapper->expects($this->once())
+			->method('update');
+
+		$this->service->updateSignature($this->user, $aliasId, 'Kind regards<br>Herbert');
+	}
+
+	public function testUpateSignatureInvalidAliasId(): void {
+		$this->expectException(DoesNotExistException::class);
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->willThrowException(new DoesNotExistException('Alias does not exist'));
+		$this->aliasMapper->expects($this->never())
+			->method('update');
+
+		$this->service->updateSignature($this->user, '999999', 'Kind regards<br>Herbert');
+	}
 }

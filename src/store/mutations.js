@@ -293,5 +293,9 @@ export default {
 	deleteAlias(state, { account, alias }) {
 		account.aliases.splice(account.aliases.indexOf(alias), 1)
 	},
+	patchAlias(state, { account, aliasId, data }) {
+		const index = account.aliases.findIndex((temp) => aliasId === temp.id)
+		account.aliases[index] = Object.assign({}, account.aliases[index], data)
+	},
 
 }
