@@ -65,11 +65,34 @@ export default class InsertSignatureCommand extends Command {
 		writer.append(writer.createText('-- '), signatureElement)
 		writer.append(writer.createElement('paragraph'), signatureElement)
 		writer.append(modelFragment, signatureElement)
+		if (signatureAboveQuote) {
+			writer.append(writer.createElement('paragraph'), signatureElement)
+		}
 
-		editor.model.insertContent(
-			signatureElement,
-			(signatureAboveQuote ? writer.createPositionAt(editor.model.document.getRoot(), 1) : writer.createPositionAt(editor.model.document.getRoot(), 'end'))
+		const signaturePosition = signatureAboveQuote ? this.findPositionAboveQuote(editor, writer) : writer.createPositionAt(editor.model.document.getRoot(), 'end')
+		editor.model.insertContent(signatureElement, signaturePosition)
+	}
+
+	/**
+	 *
+	 * @param {*} editor the editor instance
+	 * @param {*} writer the writer instance
+	 * @returns {*} the position above the quoted text; position 1 if no quote found
+	 */
+	findPositionAboveQuote(editor, writer) {
+		// Create a range spanning over the entire root content:
+		const range = editor.model.createRangeIn(
+			editor.model.document.getRoot()
 		)
+
+		// Iterate over all items in this range:
+		for (const value of range.getWalker({ shallow: true })) {
+			if (value.item.is('element') && value.item.name === 'quote') {
+			 return writer.createPositionBefore(value.item)
+			}
+		}
+
+		return writer.createPositionAt(editor.model.document.getRoot(), 1)
 	}
 
 	/**

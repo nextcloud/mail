@@ -34,6 +34,8 @@ import { html } from './util/text'
  */
 export const buildReplyBody = (original, from, date, replyOnTop = true) => {
 	const startEnd = '<p></p><p></p>'
+	const quoteStart = '<div class="quote">'
+	const quoteEnd = '</div>'
 	const plainBody = '<br>&gt; ' + original.value.replace(/\n/g, '<br>&gt; ')
 	const htmlBody = `<blockquote>${original.value}</blockquote>`
 
@@ -42,23 +44,23 @@ export const buildReplyBody = (original, from, date, replyOnTop = true) => {
 		if (from) {
 			const dateString = moment.unix(date).format('LLL')
 			return replyOnTop
-				? html(`${startEnd}"${from.label}" ${from.email} – ${dateString}` + plainBody)
-				: html(`"${from.label}" ${from.email} – ${dateString}` + plainBody + startEnd)
+				? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd)
+				: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}` + plainBody + quoteEnd + startEnd)
 		} else {
 			return replyOnTop
-				? html(`${startEnd}${plainBody}`)
-				: html(`${plainBody}${startEnd}`)
+				? html(`${startEnd}${quoteStart}${plainBody}${quoteEnd}`)
+				: html(`${quoteStart}${plainBody}${quoteEnd}${startEnd}`)
 		}
 	case 'html':
 		if (from) {
 			const dateString = moment.unix(date).format('LLL')
 			return replyOnTop
-				? html(`${startEnd}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}`)
-				: html(`"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${startEnd}`)
+				? html(`${startEnd}${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}`)
+				: html(`${quoteStart}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}${quoteEnd}${startEnd}`)
 		} else {
 			return replyOnTop
-				? html(`${startEnd}${htmlBody}`)
-				: html(`${htmlBody}${startEnd}`)
+				? html(`${startEnd}${quoteStart}${htmlBody}${quoteEnd}`)
+				: html(`${quoteStart}${htmlBody}${quoteEnd}${startEnd}`)
 		}
 	}
 
