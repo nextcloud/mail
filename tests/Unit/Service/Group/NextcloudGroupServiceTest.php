@@ -2,6 +2,7 @@
 
 /**
  * @author Matthias Rella <mrella@pisys.eu>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * Mail
  *
@@ -24,19 +25,32 @@ namespace OCA\Mail\Tests\Unit\Service\Group;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
+use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IGroup;
 use OCP\IUser;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class NextcloudGroupServiceTest extends TestCase {
+	/**
+	 * @var IGroupManager|MockObject
+	 */
 	private $groupsManager;
+	/**
+	 * @var IGroupManager|MockObject
+	 */
+	private $config;
+	/**
+	 * @var NextcloudGroupService
+	 */
 	private $groupService;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->groupsManager = $this->createMock(IGroupManager::class);
-		$this->groupService = new NextcloudGroupService($this->groupsManager);
+		$this->config = $this->createMock(IConfig::class);
+		$this->groupService = new NextcloudGroupService($this->groupsManager, $this->config);
 	}
 
 	private function createTestGroup($id, $name, $users = []) {
@@ -67,32 +81,49 @@ class NextcloudGroupServiceTest extends TestCase {
 		return $mockUser;
 	}
 
+	public function dataForTestSearch(): array {
+		return [
+			['yes', [
+				[
+					'id' => 'testgroup',
+					'name' => 'first test group',
+				],
+				[
+					'id' => 'testgroup2',
+					'name' => 'second test group',
+				]
+			]],
+			['no', []]
+		];
+	}
 
-	public function testSearch() {
+
+	/**
+	 * @dataProvider dataForTestSearch
+	 * @param string $allowGroupSharing
+	 * @param array $expected
+	 */
+	public function testSearch(string $allowGroupSharing, array $expected): void {
 		$term = 'te'; // searching for: John Doe
 		$searchResult = [
 			$this->createTestGroup('testgroup', 'first test group'),
 			$this->createTestGroup('testgroup2', 'second test group'),
 		];
 
-		$this->groupsManager->expects($this->once())
+		$this->groupsManager->expects($allowGroupSharing === 'yes' ? self::once() : self::never())
 			->method('search')
 			->with($term)
-			->will($this->returnValue($searchResult));
+			->willReturn($searchResult);
 
-		$expected = [
-			[
-				'id' => 'testgroup',
-				'name' => 'first test group',
-			],
-			[
-				'id' => 'testgroup2',
-				'name' => 'second test group',
-			]
-		];
+		$this->config->expects(self::once())
+			->method('getAppValue')
+			->with('core', 'shareapi_allow_group_sharing', 'yes')
+			->willReturn($allowGroupSharing);
+
+
 		$actual = $this->groupService->search($term);
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	public function testGetUsers() {

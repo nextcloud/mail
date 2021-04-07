@@ -33,7 +33,6 @@ use HTMLPurifier_Config;
 use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
-use Kwi\UrlLinker;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
 use OCA\Mail\Service\HtmlPurify\TransformCSSBackground;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
@@ -43,6 +42,7 @@ use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Util;
+use Youthweb\UrlLinker\UrlLinker;
 
 require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
 
@@ -64,7 +64,10 @@ class Html {
 	 * @return string
 	 */
 	public function convertLinks(string $data): string {
-		$linker = new UrlLinker(true, false);
+		$linker = new UrlLinker([
+			'allowFtpAddresses' => true,
+			'allowUpperCaseUrlSchemes' => false,
+		]);
 		$data = $linker->linkUrlsAndEscapeHtml($data);
 
 		$config = HTMLPurifier_Config::createDefault();

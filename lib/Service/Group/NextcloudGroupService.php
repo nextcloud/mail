@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Matthias Rella <mrella@pisys.eu>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * Mail
  *
@@ -23,6 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Group;
 
+use OCP\IConfig;
 use OCP\IGroupManager;
 use OCA\Mail\Exception\ServiceException;
 
@@ -36,14 +38,20 @@ class NextcloudGroupService implements IGroupService {
 	private $groupManager;
 
 	/**
+	 * @var IConfig
+	 */
+	private $config;
+
+	/**
 	 * Group's namespace
 	 *
 	 * @var string
 	 */
 	private $namespace = "Nextcloud";
 
-	public function __construct(IGroupManager $groupManager) {
+	public function __construct(IGroupManager $groupManager, IConfig $config) {
 		$this->groupManager = $groupManager;
+		$this->config = $config;
 	}
 
 	public function getNamespace(): string {
@@ -51,6 +59,9 @@ class NextcloudGroupService implements IGroupService {
 	}
 
 	public function search(string $term): array {
+		if ($this->config->getAppValue('core', 'shareapi_allow_group_sharing', 'yes') !== 'yes') {
+			return [];
+		}
 		$groups = $this->groupManager->search($term);
 
 		return array_map(
