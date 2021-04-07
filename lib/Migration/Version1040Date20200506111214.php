@@ -72,7 +72,7 @@ class Version1040Date20200506111214 extends SimpleMigrationStep {
 			'length' => 4,
 		]);
 		$table->addColumn('active', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$table->addColumn('created_at', 'integer', [

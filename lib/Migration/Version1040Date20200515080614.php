@@ -25,7 +25,7 @@ class Version1040Date20200515080614 extends SimpleMigrationStep {
 		$accountsTable = $schema->getTable('mail_accounts');
 
 		$accountsTable->addColumn('show_subscribed_only', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 

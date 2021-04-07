@@ -58,35 +58,35 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 			'length' => 4,
 		]);
 		$messagesTable->addColumn('flag_answered', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_deleted', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_draft', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_flagged', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_seen', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_forwarded', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_junk', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_notjunk', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('updated_at', 'integer', [

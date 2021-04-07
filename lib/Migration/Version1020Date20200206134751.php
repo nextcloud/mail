@@ -24,7 +24,7 @@ class Version1020Date20200206134751 extends SimpleMigrationStep {
 
 		$messagesTable = $schema->getTable('mail_messages');
 		$messagesTable->addColumn('structure_analyzed', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_attachments', 'boolean', [
