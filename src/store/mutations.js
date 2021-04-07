@@ -168,7 +168,7 @@ export default {
 			})
 	},
 	updateEnvelope(state, { envelope }) {
-		const existing = state.envelopes[envelope.uid]
+		const existing = state.envelopes[envelope.databaseId]
 		if (!existing) {
 			return
 		}
