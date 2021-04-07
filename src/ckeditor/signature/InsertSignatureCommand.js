@@ -99,7 +99,7 @@ export default class InsertSignatureCommand extends Command {
 	 *
 	 * @param {*} param0 the signature text and position
 	 */
-	execute({ signature, signatureAboveQuote }) {
+	 execute({ signature, signatureAboveQuote }) {
 		this.editor.model.change(writer => {
 			this.removeSignatureElement(this.editor, writer)
 			this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
