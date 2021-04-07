@@ -23,7 +23,7 @@ class Version1080Date20210108093802 extends SimpleMigrationStep {
 
 		$messagesTable = $schema->getTable('mail_messages');
 		$messagesTable->addColumn('flag_mdnsent', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 

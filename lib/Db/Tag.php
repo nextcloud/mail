@@ -37,7 +37,7 @@ use OCP\AppFramework\Db\Entity;
  * @method void setImapLabel(string $imapLabel)
  * @method string getColor()
  * @method void setColor(string $color)
- * @method bool getIsDefaultTag()
+ * @method bool|null getIsDefaultTag()
  * @method void setIsDefaultTag(bool $flag)
  */
 class Tag extends Entity implements JsonSerializable {
@@ -62,7 +62,7 @@ class Tag extends Entity implements JsonSerializable {
 			'displayName' => $this->getDisplayName(),
 			'imapLabel' => $this->getImapLabel(),
 			'color' => $this->getColor(),
-			'isDefaultTag' => $this->getIsDefaultTag(),
+			'isDefaultTag' => ($this->getIsDefaultTag() === true),
 		];
 	}
 }

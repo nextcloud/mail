@@ -45,7 +45,7 @@ class Version0190Date20191118160843 extends SimpleMigrationStep {
 
 		$accountsTable = $schema->getTable('mail_accounts');
 		$accountsTable->addColumn('provisioned', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$accountsTable->changeColumn('inbound_password', [
