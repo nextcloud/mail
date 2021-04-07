@@ -106,7 +106,7 @@ class MessageMapper extends QBMapper {
 	public function findHighestUid(Mailbox $mailbox): ?int {
 		$query = $this->db->getQueryBuilder();
 
-		$query->select($query->createFunction('MAX(' . $query->getColumnName('uid') . ')'))
+		$query->select($query->func()->max('uid'))
 			->from($this->getTableName())
 			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
 
