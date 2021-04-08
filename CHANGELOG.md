@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.9.5 – 2021-04-08
+### Fixed
+- Handling of some inline attachments
+- Missing lock for the initial sync
+- Missing check for group sharing settings
+- Alias handling
+- Message background styling
+- Warning with too many literals in an SQL IN clause
+- Envelope change handling
+
 ## 1.9.4 – 2021-03-25
 ### Fixed
 - "Show images" icon in HTML mails using Nextcloud's dark theme
