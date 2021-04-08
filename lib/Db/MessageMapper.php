@@ -163,10 +163,18 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
-				$query->expr()->in('id', $query->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+				$query->expr()->in('id', $query->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
 			);
 
-		return $this->findUids($query);
+		$chunks = array_chunk($ids, 1000);
+
+		$results = [];
+		foreach ($chunks as $chunk) {
+			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$results[] = $this->findUids($query);
+		}
+
+		return array_merge(...$results);
 	}
 
 	/**

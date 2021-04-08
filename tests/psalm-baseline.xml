@@ -55,7 +55,6 @@
       <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$qb2-&gt;createNamedParameter(array_keys($indexedMessages), IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$qb4-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$query-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$query-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>
   </file>
