@@ -65,8 +65,7 @@ class MessageMapper extends QBMapper {
 	public function __construct(IDBConnection $db,
 								ITimeFactory $timeFactory,
 								TagMapper $tagMapper,
-								PerformanceLogger $performanceLogger
-								) {
+								PerformanceLogger $performanceLogger) {
 		parent::__construct($db, 'mail_messages');
 		$this->timeFactory = $timeFactory;
 		$this->tagMapper = $tagMapper;
@@ -120,7 +119,7 @@ class MessageMapper extends QBMapper {
 		return $max;
 	}
 
-	public function findByUserId(string $uid, int $id): Message {
+	public function findByUserId(string $userId, int $id): Message {
 		$query = $this->db->getQueryBuilder();
 
 		$query->select('m.*')
@@ -128,11 +127,11 @@ class MessageMapper extends QBMapper {
 			->join('m', 'mail_mailboxes', 'mb', $query->expr()->eq('m.mailbox_id', 'mb.id', IQueryBuilder::PARAM_INT))
 			->join('m', 'mail_accounts', 'a', $query->expr()->eq('mb.account_id', 'a.id', IQueryBuilder::PARAM_INT))
 			->where(
-				$query->expr()->eq('a.user_id', $query->createNamedParameter($uid)),
+				$query->expr()->eq('a.user_id', $query->createNamedParameter($userId)),
 				$query->expr()->eq('m.id', $query->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 
-		$results = $this->findRelatedData($this->findEntities($query));
+		$results = $this->findRelatedData($this->findEntities($query), $userId);
 		if (empty($results)) {
 			throw new DoesNotExistException("Message $id does not exist");
 		}
@@ -364,7 +363,7 @@ class MessageMapper extends QBMapper {
 				$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
 			));
 		// get all tags before the loop and create a mapping [message_id => [tag,...]]
-		$tags = $this->tagMapper->getAllTagsForMessages($messages);
+		$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
 		$perf->step("Selected Tags for all messages");
 		foreach ($messages as $message) {
 			if (empty($message->getUpdatedFields())) {
@@ -552,7 +551,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->isNotNull('m1.thread_root_id')
 			)
 			->orderBy('sent_at', 'desc');
-		return $this->findRelatedData($this->findEntities($selectMessages));
+		return $this->findRelatedData($this->findEntities($selectMessages), $account->getUserId());
 	}
 
 	/**
@@ -808,8 +807,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
 			)
 			->orderBy('sent_at', 'desc');
-
-		return $this->findRelatedData($this->findEntities($select));
+		return $this->findRecipients($this->findEntities($select));
 	}
 
 	/**
@@ -817,7 +815,7 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return Message[]
 	 */
-	public function findByIds(array $ids): array {
+	public function findByIds(string $userId, array $ids): array {
 		if (empty($ids)) {
 			return [];
 		}
@@ -831,7 +829,7 @@ class MessageMapper extends QBMapper {
 			)
 			->orderBy('sent_at', 'desc');
 
-		return $this->findRelatedData($this->findEntities($select));
+		return $this->findRelatedData($this->findEntities($select), $userId);
 	}
 
 	/**
@@ -888,9 +886,9 @@ class MessageMapper extends QBMapper {
 	 * @param Message[] $messages
 	 * @return Message[]
 	 */
-	public function findRelatedData(array $messages): array {
+	public function findRelatedData(array $messages, string $userId): array {
 		$messages = $this->findRecipients($messages);
-		$tags = $this->tagMapper->getAllTagsForMessages($messages);
+		$tags = $this->tagMapper->getAllTagsForMessages($messages, $userId);
 		/** @var Message $message */
 		$messages = array_map(function ($message) use ($tags) {
 			$message->setTags($tags[$message->getMessageId()] ?? []);
@@ -927,7 +925,10 @@ class MessageMapper extends QBMapper {
 		return $this->findIds($select);
 	}
 
-	public function findChanged(Mailbox $mailbox, int $since): array {
+	/**
+	 * Currently unused
+	 */
+	public function findChanged(Account $account, Mailbox $mailbox, int $since): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb
@@ -937,8 +938,8 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 				$qb->expr()->gt('updated_at', $qb->createNamedParameter($since, IQueryBuilder::PARAM_INT))
 			);
-
-		return $this->findRelatedData($this->findEntities($select));
+		// TODO: change this to findRelatedData
+		return $this->findRelatedData($this->findEntities($select), $account->getUserId());
 	}
 
 	/**
@@ -947,7 +948,7 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return Message[]
 	 */
-	public function findLatestMessages(array $mailboxIds, int $limit): array {
+	public function findLatestMessages(string $userId, array $mailboxIds, int $limit): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb
@@ -961,7 +962,7 @@ class MessageMapper extends QBMapper {
 			->orderBy('sent_at', 'desc')
 			->setMaxResults($limit);
 
-		return $this->findRelatedData($this->findEntities($select));
+		return $this->findRelatedData($this->findEntities($select), $userId);
 	}
 
 	public function deleteOrphans(): void {

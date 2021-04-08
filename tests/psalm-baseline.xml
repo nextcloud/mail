@@ -93,11 +93,6 @@
       <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>
   </file>
-  <file src="lib/Db/TagMapper.php">
-    <ImplicitToStringCast occurrences="1">
-      <code>$qb-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY)</code>
-    </ImplicitToStringCast>
-  </file>
   <file src="lib/Db/MessageMapper.php">
     <ImplicitToStringCast occurrences="26">
       <code>$deleteRecipientsQuery-&gt;createFunction($messageIdQuery-&gt;getSQL())</code>
@@ -138,6 +133,14 @@
       <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>
+  </file>
+  <file src="lib/Db/TagMapper.php">
+    <ImplicitToStringCast occurrences="3">
+      <code>$deleteQB-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$deleteQB-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY)</code>
+    </ImplicitToStringCast>
+    <InvalidArgument occurrences="1"/>
   </file>
   <file src="lib/Events/BeforeMessageDeletedEvent.php">
     <MissingDependency occurrences="1">
@@ -265,6 +268,11 @@
     <UndefinedDocblockClass occurrences="1">
       <code>$this-&gt;contactsManager-&gt;getUserAddressBooks()</code>
     </UndefinedDocblockClass>
+  </file>
+  <file src="lib/Service/Html.php">
+    <UndefinedClass occurrences="1">
+      <code>UrlLinker</code>
+    </UndefinedClass>
   </file>
   <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
     <NullArgument occurrences="3">

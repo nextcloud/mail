@@ -155,16 +155,16 @@ class SyncService {
 			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
 			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $newUids);
 		}
-		$new = $this->messageMapper->findByIds($newIds);
+		$new = $this->messageMapper->findByIds($account->getUserId(), $newIds);
 
-		// TODO: $changed = $this->messageMapper->findChanged($mailbox, $uids);
+		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
 			$changedUids = $this->messageMapper->findUidsForIds($mailbox, $knownIds);
 			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $changedUids);
 		} else {
 			$changedIds = $knownIds;
 		}
-		$changed = $this->messageMapper->findByIds($changedIds);
+		$changed = $this->messageMapper->findByIds($account->getUserId(), $changedIds);
 
 		$stillKnownIds = array_map(static function (Message $msg) {
 			return $msg->getId();
