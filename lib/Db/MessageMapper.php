@@ -47,6 +47,7 @@ use OCA\Mail\Service\Search\FlagExpression;
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
+use function OCA\Mail\array_flat_map;
 
 /**
  * @template-extends QBMapper<Message>
@@ -178,15 +179,10 @@ class MessageMapper extends QBMapper {
 				$query->expr()->in('id', $query->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
 			);
 
-		$chunks = array_chunk($ids, 1000);
-
-		$results = [];
-		foreach ($chunks as $chunk) {
+		return array_flat_map(function (array $chunk) use ($query) {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$results[] = $this->findUids($query);
-		}
-
-		return array_merge(...$results);
+			return $this->findUids($query);
+		}, array_chunk($ids, 1000));
 	}
 
 	/**
