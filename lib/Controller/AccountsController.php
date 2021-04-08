@@ -35,6 +35,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Model\NewMessageData;
@@ -383,13 +384,19 @@ class AccountsController extends Controller {
 						 int $draftId = null,
 						 int $messageId = null,
 						 array $attachments = [],
-						 int $aliasId = null): JSONResponse {
+						 int $aliasId = null,
+						 bool $force = false): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
 		$expandedTo = $this->groupsIntegration->expand($to);
 		$expandedCc = $this->groupsIntegration->expand($cc);
 		$expandedBcc = $this->groupsIntegration->expand($bcc);
+
+		$count = substr_count($expandedTo, ',') + substr_count($expandedCc, ',') + 1;
+		if (!$force && $count >= 10) {
+			throw new ManyRecipientsException();
+		}
 
 		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml, $requestMdn);
 		$repliedMessageData = null;

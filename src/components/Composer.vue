@@ -226,6 +226,18 @@
 			{{ t('mail', 'Retry') }}
 		</button>
 	</div>
+	<div v-else-if="state === STATES.WARNING" class="emptycontent" role="alert">
+		<h2>{{ t('mail', 'Warning sending your message') }}</h2>
+		<p v-if="errorText">
+			{{ errorText }}
+		</p>
+		<button class="button primary" @click="state = STATES.EDITING">
+			{{ t('mail', 'Go back') }}
+		</button>
+		<button class="button" @click="onForceSend">
+			{{ t('mail', 'Send anyway') }}
+		</button>
+	</div>
 	<div v-else class="emptycontent">
 		<h2>{{ t('mail', 'Message sent!') }}</h2>
 		<button v-if="!isReply" class="button primary" @click="reset">
@@ -265,6 +277,8 @@ import NoSentMailboxConfiguredError
 	from '../errors/NoSentMailboxConfiguredError'
 import NoDraftsMailboxConfiguredError
 	from '../errors/NoDraftsMailboxConfiguredError'
+import ManyRecipientsError
+	from '../errors/ManyRecipientsError'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -277,7 +291,8 @@ const STATES = Object.seal({
 	UPLOADING: 1,
 	SENDING: 2,
 	ERROR: 3,
-	FINISHED: 4,
+	WARNING: 4,
+	FINISHED: 5,
 })
 
 export default {
@@ -701,7 +716,7 @@ export default {
 			this.newRecipients.push(res)
 			list.push(res)
 		},
-		async onSend() {
+		async onSend(_, force = false) {
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
@@ -713,22 +728,24 @@ export default {
 				.then(() => (this.state = STATES.SENDING))
 				.then(() => this.draftsPromise)
 				.then(this.getMessageData)
-				.then((data) => this.send(data))
+				.then((data) => this.send({ ...data, force }))
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
 				.catch(async(error) => {
-					logger.error('could not send message', { error })
-					this.errorText = await matchError(error, {
+					logger.error('could not send message', { error });
+					[this.errorText, this.state] = await matchError(error, {
 						[NoSentMailboxConfiguredError.getName()]() {
-							return t('mail', 'No sent mailbox configured. Please pick one in the account settings.')
+							return [t('mail', 'No sent mailbox configured. Please pick one in the account settings.'), STATES.ERROR]
+						},
+						[ManyRecipientsError.getName()]() {
+							return [t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.'), STATES.WARNING]
 						},
 						default(error) {
 							if (error && error.toString) {
-								return error.toString()
+								return [error.toString(), STATES.ERROR]
 							}
 						},
 					})
-					this.state = STATES.ERROR
 				})
 
 			// Sync sent mailbox when it's currently open
@@ -742,6 +759,9 @@ export default {
 					})
 				}, 500)
 			}
+		},
+		async onForceSend() {
+			await this.onSend(null, true)
 		},
 		reset() {
 			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
