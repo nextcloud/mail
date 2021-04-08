@@ -50,6 +50,11 @@
 		"psalm/phar": "^4.6",
 		"roave/security-advisories": "dev-master"
 	},
+	"autoload": {
+		"files": [
+			"lib/functions.php"
+		]
+	},
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
