@@ -405,6 +405,7 @@ export default {
 					signature: account.signature,
 					name: account.name,
 					emailAddress: account.emailAddress,
+					signatureAboveQuote: account.signatureAboveQuote,
 				},
 				account.aliases.map((alias) => {
 					return {
@@ -415,6 +416,7 @@ export default {
 						signature: account.signature,
 						name: alias.name,
 						emailAddress: alias.alias,
+						signatureAboveQuote: account.signatureAboveQuote,
 					}
 				}),
 			])
@@ -654,8 +656,8 @@ export default {
 		onInputChanged() {
 			this.saveDraftDebounced(this.getMessageData)
 			if (this.appendSignature) {
-				const signature = this.selectedAlias?.signature || ''
-				this.bus.$emit('insertSignature', toHtml(detect(signature)).value)
+				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
+				this.bus.$emit('insertSignature', signatureValue, this.selectedAlias.signatureAboveQuote)
 				this.appendSignature = false
 			}
 		},
