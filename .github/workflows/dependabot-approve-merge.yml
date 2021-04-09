@@ -1,8 +1,5 @@
 name: Dependabot
-on:
-  pull_request:
-    branches:
-      - 'dependabot/**'
+on: pull_request_target
 
 jobs:
   auto-merge:
