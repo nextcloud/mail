@@ -40,7 +40,7 @@
 				:close-after-click="true"
 				@click.prevent="onToggleImportant">
 				{{
-					envelope.tags.$label1 ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+					isImportant ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 				}}
 			</ActionButton>
 			<ActionButton :icon="iconFavorite"
@@ -252,6 +252,11 @@ export default {
 		},
 		iconFavorite() {
 			return this.envelope.flags.flagged ? 'icon-favorite' : 'icon-starred'
+		},
+		isImportant() {
+			return this.$store.getters
+				.getEnvelopeTags(this.envelope.databaseId)
+				.find((tag) => tag.imapLabel === '$label1')
 		},
 	},
 	methods: {

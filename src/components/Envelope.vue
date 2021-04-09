@@ -21,9 +21,9 @@
 			:data-starred="data.flags.flagged ? 'true' : 'false'"
 			@click.prevent="onToggleFlagged" />
 		<div
-			v-if="data.tags.$label1"
+			v-if="isImportant"
 			class="app-content-list-item-star icon-important"
-			:data-starred="data.tags.$label1 ? 'true' : 'false'"
+			:data-starred="isImportant ? 'true' : 'false'"
 			@click.prevent="onToggleImportant"
 			v-html="importantSvg" />
 		<div
@@ -180,6 +180,11 @@ export default {
 			} else {
 				return undefined
 			}
+		},
+		isImportant() {
+			return this.$store.getters
+				.getEnvelopeTags(this.data.databaseId)
+				.find((tag) => tag.imapLabel === '$label1')
 		},
 	},
 	methods: {
