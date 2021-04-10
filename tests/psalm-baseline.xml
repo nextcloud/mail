@@ -4,7 +4,7 @@
     <MissingDependency occurrences="12">
       <code>DraftSavedEvent</code>
       <code>MailboxesSynchronizedEvent</code>
-      <code>MessageDeletedEvent</code>
+      <code>MessagesDeletedEvent</code>
       <code>MessageFlaggedEvent</code>
       <code>MessageSentEvent</code>
       <code>MessageSentEvent</code>
@@ -142,7 +142,7 @@
     </ImplicitToStringCast>
     <InvalidArgument occurrences="1"/>
   </file>
-  <file src="lib/Events/BeforeMessageDeletedEvent.php">
+  <file src="lib/Events/BeforeMessagesDeletedEvent.php">
     <MissingDependency occurrences="1">
       <code>Event</code>
     </MissingDependency>
@@ -157,7 +157,7 @@
       <code>Event</code>
     </MissingDependency>
   </file>
-  <file src="lib/Events/MessageDeletedEvent.php">
+  <file src="lib/Events/MessagesDeletedEvent.php">
     <MissingDependency occurrences="1">
       <code>Event</code>
     </MissingDependency>
@@ -214,7 +214,7 @@
     <MissingDependency occurrences="3">
       <code>DeleteDraftListener</code>
       <code>DraftSavedEvent</code>
-      <code>MessageDeletedEvent</code>
+      <code>MessagesDeletedEvent</code>
     </MissingDependency>
   </file>
   <file src="lib/Listener/FlagRepliedMessageListener.php">
@@ -278,12 +278,12 @@
   </file>
   <file src="lib/Service/MailManager.php">
     <MissingDependency occurrences="8">
-      <code>BeforeMessageDeletedEvent</code>
-      <code>BeforeMessageDeletedEvent</code>
-      <code>MessageDeletedEvent</code>
-      <code>MessageDeletedEvent</code>
-      <code>MessageDeletedEvent</code>
-      <code>MessageDeletedEvent</code>
+      <code>BeforeMessagesDeletedEvent</code>
+      <code>BeforeMessagesDeletedEvent</code>
+      <code>MessagesDeletedEvent</code>
+      <code>MessagesDeletedEvent</code>
+      <code>MessagesDeletedEvent</code>
+      <code>MessagesDeletedEvent</code>
       <code>MessageFlaggedEvent</code>
       <code>MessageFlaggedEvent</code>
     </MissingDependency>

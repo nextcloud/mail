@@ -357,8 +357,8 @@ export default {
 				logger.debug('deleting', { env })
 				this.onDelete(env.databaseId)
 				try {
-					await this.$store.dispatch('deleteThread', {
-						envelope: env,
+					await this.$store.dispatch('deleteThreads', {
+						ids: env.databaseId,
 					})
 				} catch (error) {
 					logger.error('could not delete envelope', {
@@ -371,7 +371,7 @@ export default {
 							return t('mail', 'No trash mailbox configured')
 						},
 						default() {
-							return t('mail', 'Could not delete message')
+							return t('mail', 'Could not delete messages')
 						},
 					}))
 				}

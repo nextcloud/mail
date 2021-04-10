@@ -301,8 +301,8 @@ export default {
 			logger.info(`deleting message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('deleteMessage', {
-					id: this.envelope.databaseId,
+				await this.$store.dispatch('deleteThreads', {
+					ids: [this.envelope.databaseId],
 				})
 			} catch (error) {
 				showError(await matchError(error, {

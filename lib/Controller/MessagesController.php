@@ -314,7 +314,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $id
+	 * @param int[] $ids
 	 * @param int $destFolderId
 	 *
 	 * @return JSONResponse
@@ -322,24 +322,41 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function move(int $id, int $destFolderId): JSONResponse {
+	public function move(array $ids, int $destFolderId): JSONResponse {
+		$uids = [];
+
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			// Get the source and destination account/mailbox
+			$message = $this->mailManager->getMessage($this->currentUserId, $ids[0]);
 			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destFolderId);
 			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
+
+			// Get uid of all messages provided and make sure all messages come from the same mailbox
+			foreach ($ids as $id) {
+				$message = $this->mailManager->getMessage($this->currentUserId, $id);
+				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+
+				if ($mailbox->getAccountId() !== $srcMailbox->getAccountId() || $mailbox->getId() !== $srcMailbox->getId()) {
+					return new JSONResponse([], Http::STATUS_FORBIDDEN);
+				}
+
+				array_push($uids,$message->getUid());
+			}
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->moveMessage(
+		// Move all messages provided
+		$this->mailManager->moveMessages(
 			$srcAccount,
 			$srcMailbox->getName(),
-			$message->getUid(),
+			$uids,
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+
 		return new JSONResponse();
 	}
 
@@ -716,28 +733,40 @@ class MessagesController extends Controller {
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
-	 * @param int $id
+	 * @param int[] $ids
 	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function destroy(int $id): JSONResponse {
+	public function deleteMessages(array $ids): JSONResponse {
+		$uids = [];
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+			// Makes sure all messages to be deleted come from the same mailbox
+			$message = $this->mailManager->getMessage($this->currentUserId, $ids[0]);
+			$firstMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$firstAccount = $this->accountService->find($this->currentUserId, $firstMailbox->getAccountId());
+			foreach ($ids as $id) {
+				$message = $this->mailManager->getMessage($this->currentUserId, $id);
+				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+
+				if ($mailbox->getAccountId() !== $firstMailbox->getAccountId() || $mailbox->getId() !== $firstMailbox->getId()) {
+					return new JSONResponse([], Http::STATUS_FORBIDDEN);
+				}
+
+				array_push($uids,$message->getUid());
+			}
+		} catch (exception $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->logger->debug("deleting message <$id>");
+		$this->logger->debug("deleting messages");
 
-		$this->mailManager->deleteMessage(
-			$account,
-			$mailbox->getName(),
-			$message->getUid()
+		$this->mailManager->deleteMessages(
+			$firstAccount,
+			$firstMailbox->getName(),
+			$uids
 		);
 		return new JSONResponse();
 	}

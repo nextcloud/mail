@@ -236,17 +236,17 @@ class MessageMapper {
 	/**
 	 * @param Horde_Imap_Client_Base $client
 	 * @param string $sourceFolderId
-	 * @param int $messageId
+	 * @param int[] $messageIds
 	 * @param string $destFolderId
 	 */
 	public function move(Horde_Imap_Client_Base $client,
 						 string $sourceFolderId,
-						 int $messageId,
+						 array $messageIds,
 						 string $destFolderId): void {
 		try {
 			$client->copy($sourceFolderId, $destFolderId,
 				[
-					'ids' => new Horde_Imap_Client_Ids($messageId),
+					'ids' => new Horde_Imap_Client_Ids($messageIds),
 					'move' => true,
 				]);
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -257,7 +257,7 @@ class MessageMapper {
 			);
 
 			throw new ServiceException(
-				"Could not move message $$messageId from $sourceFolderId to $destFolderId",
+				"Could not move messages from $sourceFolderId to $destFolderId",
 				0,
 				$e
 			);
@@ -274,16 +274,20 @@ class MessageMapper {
 	}
 
 	/**
+	 * @param Horde_Imap_Client_Base $client
+	 * @param string $mailbox
+	 * @param int[] ids
+	 *
 	 * @throws ServiceException
 	 */
 	public function expunge(Horde_Imap_Client_Base $client,
 							string $mailbox,
-							int $id): void {
+							array $ids): void {
 		try {
 			$client->expunge(
 				$mailbox,
 				[
-					'ids' => new Horde_Imap_Client_Ids([$id]),
+					'ids' => new Horde_Imap_Client_Ids($ids),
 					'delete' => true,
 				]);
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -293,10 +297,10 @@ class MessageMapper {
 				]
 			);
 
-			throw new ServiceException("Could not expunge message $id", 0, $e);
+			throw new ServiceException("Could not expunge messages", 0, $e);
 		}
 
-		$this->logger->info("Message expunged: $id from mailbox $mailbox");
+		$this->logger->info("Messages expunged from mailbox $mailbox");
 	}
 
 	/**

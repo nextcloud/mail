@@ -58,13 +58,12 @@ import {
 	patchMailbox,
 } from '../service/MailboxService'
 import {
-	createEnvelopeTag,
-	deleteMessage,
+	deleteMessages,
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
 	fetchThread,
-	moveMessage,
+	moveMessages,
 	removeEnvelopeTag,
 	setEnvelopeFlag,
 	setEnvelopeTag,
@@ -721,21 +720,17 @@ export default {
 		}
 		return message
 	},
-	async deleteMessage({ getters, commit }, { id }) {
-		commit('removeEnvelope', { id })
+	async deleteMessages({ getters, commit }, { ids }) {
 
 		try {
-			await deleteMessage(id)
-			commit('removeMessage', { id })
-			console.debug('message removed')
+			await deleteMessages(ids)
+			ids.forEach(id => {
+				commit('removeEnvelope', { id })
+				commit('removeMessage', { id })
+			})
+			console.debug('messages removed')
 		} catch (err) {
-			console.error('could not delete message', err)
-			const envelope = getters.getEnvelope(id)
-			if (envelope) {
-				commit('addEnvelope', { envelope })
-			} else {
-				logger.error('could not find envelope', { id })
-			}
+			console.error('could not delete messages', err)
 			throw err
 		}
 	},
@@ -761,10 +756,12 @@ export default {
 		commit('removeMailbox', { id: mailbox.databaseId })
 		commit('addMailbox', { account, mailbox: newMailbox })
 	},
-	async moveMessage({ commit }, { id, destMailboxId }) {
-		await moveMessage(id, destMailboxId)
-		commit('removeEnvelope', { id })
-		commit('removeMessage', { id })
+	async moveMessages({ commit }, { ids, destMailboxId }) {
+		await moveMessages(ids, destMailboxId)
+		ids.forEach(id => {
+			commit('removeEnvelope', { id })
+			commit('removeMessage', { id })
+		})
 	},
 	async updateSieveAccount({ commit }, { account, data }) {
 		logger.debug(`update sieve settings for account ${account.id}`)
@@ -800,17 +797,20 @@ export default {
 			tagId: tag.id,
 		})
 	},
-	async deleteThread({ getters, commit }, { envelope }) {
-		commit('removeEnvelope', { id: envelope.databaseId })
-
-		try {
-			await ThreadService.deleteThread(envelope.databaseId)
-			console.debug('thread removed')
-		} catch (e) {
-			commit('addEnvelope', envelope)
-			console.error('could not delete thread', e)
-			throw e
+	async deleteThreads({ getters, commit }, { ids }) {
+		for (let index = 0; index < array.length; index++) {
+			commit('removeEnvelope', { id })
+			ThreadService.deleteThread(id).then((resp) => {
+				// eslint-disable-next-line
+				console.log(resp)
+			})
+			.catch((err) => {
+				commit('addEnvelope', id)
+				console.error('could not delete message/thread ' + id, err)
+				throw err
+			})
 		}
+		console.debug('messages/threads removed')
 	},
 	async moveThread({ getters, commit }, { envelope, destMailboxId }) {
 		commit('removeEnvelope', { id: envelope.databaseId })

@@ -13,8 +13,7 @@
 								{
 									number: selection.length,
 								}
-							)
-							: n(
+							) : n(
 								'mail',
 								'Mark {number} read',
 								'Mark {number} read',
@@ -39,8 +38,7 @@
 									{
 										number: selection.length,
 									}
-								)
-								: n(
+								) : n(
 									'mail',
 									'Favorite {number}',
 									'Favorite {number}',
@@ -119,7 +117,7 @@
 			<div id="list-refreshing"
 				key="loading"
 				class="icon-loading-small"
-				:class="{refreshing: refreshing}" />
+				:class="{refreshing: refreshing || deleting}" />
 			<Envelope
 				v-for="(env, index) in envelopes"
 				:key="env.databaseId"
@@ -203,6 +201,7 @@ export default {
 			selection: [],
 			showMoveModal: false,
 			lastToggledIndex: undefined,
+			deleting: false, // True, when we are deleting messages
 		}
 	},
 	computed: {
@@ -269,9 +268,12 @@ export default {
 		},
 		async deleteAllSelected() {
 			for (const envelope of this.selectedEnvelopes) {
+				// Find all envelope ids and navigate if the message being deleted is the one currently viewed
+				const ids = []
 				// Navigate if the message being deleted is the one currently viewed
 				// Shouldn't we simply use $emit here?
 				// Would be better to navigate after all messages have been deleted
+				ids.push(envelope.databaseId)
 				if (envelope.databaseId === this.$route.params.threadId) {
 					const index = this.envelopes.indexOf(envelope)
 					let next
@@ -282,6 +284,7 @@ export default {
 					}
 
 					if (next) {
+						logger.info('deleting message currently viewed, navigating away')
 						this.$router.push({
 							name: 'message',
 							params: {
@@ -316,7 +319,32 @@ export default {
 				quantity: this.selectedEnvelopes.length,
 			})
 
+			logger.info('deleting messages')
+			this.deleting = true
 			this.unselectAll()
+
+			try {
+				// Delete messages per batch of 50 messages so as to not overload server or create timeouts
+				let start = 0
+				let batch = []
+				do {
+					batch = ids.slice(start, start + 50)
+					await this.$store.dispatch('deleteThreads', { ids: batch })
+					start += 50
+				} while (batch.length === 50)
+			} catch (error) {
+				showError(await matchError(error, {
+					[NoTrashMailboxConfiguredError.getName()]() {
+						return t('mail', 'No trash mailbox configured')
+					},
+					default(error) {
+						logger.error('could not delete messages', error)
+						return t('mail', 'Could not delete messages')
+					},
+				}))
+			}
+
+			this.deleting = false
 		},
 		setEnvelopeSelected(envelope, selected) {
 			const alreadySelected = this.selection.includes(envelope.databaseId)

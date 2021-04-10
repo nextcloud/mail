@@ -30,32 +30,32 @@ use OCA\Mail\Db\Tag;
 use OCA\Mail\Account;
 use OCA\Mail\Mailbox;
 use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
 use ReflectionObject;
 use OCP\IURLGenerator;
 use OCA\Mail\Attachment;
-use OCP\AppFramework\Http;
-use OCA\Mail\Model\Message;
 use Psr\Log\LoggerInterface;
-use OCA\Mail\Http\HtmlResponse;
-use OCA\Mail\Model\IMAPMessage;
-use OCP\Files\IMimeTypeDetector;
-use OC\AppFramework\Http\Request;
-use OCA\Mail\Service\MailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Controller\MessagesController;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\AttachmentDownloadResponse;
+use OCA\Mail\Http\HtmlResponse;
+use OCA\Mail\Model\Message;
+use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ItineraryService;
-use OCP\AppFramework\Http\ZipResponse;
-use OCA\Mail\Exception\ClientException;
-use OCP\AppFramework\Http\JSONResponse;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCA\Mail\Controller\MessagesController;
 use PHPUnit\Framework\MockObject\MockObject;
-use OCA\Mail\Contracts\ITrustedSenderService;
-use OCA\Mail\Http\AttachmentDownloadResponse;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCP\AppFramework\Http;
+use OC\AppFramework\Http\Request;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\ZipResponse;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
@@ -304,6 +304,101 @@ class MessagesControllerTest extends TestCase {
 			$id,
 			$attachmentId
 		);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testMoveSuccesfull() {
+		$ids = [1, 2];
+		$destFolderId = 42;
+
+		$accountId = 17;
+		$srcMailboxId = 987;
+
+		$message1 = new \OCA\Mail\Db\Message();
+		$message1->setMailboxId($srcMailboxId);
+		$message1->setUid(321);
+		$message2 = new \OCA\Mail\Db\Message();
+		$message2->setMailboxId($srcMailboxId);
+		$message2->setUid(322);
+		$srcMailbox = new \OCA\Mail\Db\Mailbox();
+		$srcMailbox->setId($srcMailboxId);
+		$srcMailbox->setName('INBOX');
+		$srcMailbox->setAccountId($accountId);
+		$dstMailbox = new \OCA\Mail\Db\Mailbox();
+		$dstMailbox->setName('Dummy');
+		$srcMailbox->setId($destFolderId);
+		$dstMailbox->setAccountId($accountId);
+
+		$this->mailManager->expects($this->any())
+			->method('getMessage')
+			->withConsecutive([$this->userId, $ids[0]], [$this->userId, $ids[0]], [$this->userId, $ids[1]])
+			->willReturnOnConsecutiveCalls($message1, $message1, $message2);
+		$this->mailManager->expects($this->any())
+			->method('getMailbox')
+			->withConsecutive([$this->userId, $message1->getMailboxId()],
+				[$this->userId, $destFolderId],
+				[$this->userId, $message1->getMailboxId()],
+				[$this->userId, $message2->getMailboxId()]
+			)
+			->willReturnOnConsecutiveCalls($srcMailbox, $dstMailbox, $srcMailbox, $srcMailbox);
+
+		$this->mailManager->expects($this->once())
+			->method('moveMessages');
+			
+		$response = $this->controller->move(
+			$ids,
+			$destFolderId
+		);
+
+		$expected = new JSONResponse();
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testCantMoveFromSeveralMailboxes() {
+		$ids = [1, 2];
+		$destFolderId = 42;
+
+		$accountId = 17;
+		$srcMailboxId1 = 987;
+		$srcMailboxId2 = 988;
+
+		$message1 = new \OCA\Mail\Db\Message();
+		$message1->setMailboxId($srcMailboxId2);
+		$message1->setUid(321);
+		$message2 = new \OCA\Mail\Db\Message();
+		$message2->setMailboxId($srcMailboxId2);
+		$message2->setUid(322);
+		$srcMailbox = new \OCA\Mail\Db\Mailbox();
+		$srcMailbox->setName('INBOX');
+		$srcMailbox->setId($srcMailboxId1);
+		$srcMailbox->setAccountId($accountId);
+		$dstMailbox = new \OCA\Mail\Db\Mailbox();
+		$dstMailbox->setName('Dummy');
+		$srcMailbox->setId($srcMailboxId2);
+		$dstMailbox->setAccountId($accountId);
+
+		$this->mailManager->expects($this->exactly(3))
+			->method('getMessage')
+			->withConsecutive([$this->userId, $ids[0]], [$this->userId, $ids[0]], [$this->userId, $ids[1]])
+			->willReturnOnConsecutiveCalls($message1, $message1, $message2);
+		$this->mailManager->expects($this->exactly(4))
+			->method('getMailbox')
+			->withConsecutive(
+				[$this->userId, $message1->getMailboxId()],
+				[$this->userId, $destFolderId],
+				[$this->userId, $message1->getMailboxId()],
+				[$this->userId, $message2->getMailboxId()]
+			)
+			->willReturnOnConsecutiveCalls($srcMailbox, $dstMailbox, $srcMailbox, $dstMailbox);
+
+		$response = $this->controller->move(
+			$ids,
+			$destFolderId
+		);
+
+		$expected = new JSONResponse([], Http::STATUS_FORBIDDEN);
 
 		$this->assertEquals($expected, $response);
 	}
@@ -898,11 +993,11 @@ class MessagesControllerTest extends TestCase {
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects($this->exactly(2))
 			->method('getMessage')
 			->with($this->userId, $id)
 			->willReturn($message);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects($this->exactly(2))
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);
@@ -911,11 +1006,11 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('deleteMessage')
-			->with($this->account, 'INBOX', 444);
+			->method('deleteMessages')
+			->with($this->account, 'INBOX', [444]);
 
 		$expected = new JSONResponse();
-		$result = $this->controller->destroy($id);
+		$result = $this->controller->deleteMessages([$id]);
 
 		$this->assertEquals($expected, $result);
 	}
@@ -941,11 +1036,11 @@ class MessagesControllerTest extends TestCase {
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->will($this->throwException(new DoesNotExistException('')));
+			->willThrowException(new ClientException());
 
 		$expected = new JSONResponse([], Http::STATUS_FORBIDDEN);
 
-		$this->assertEquals($expected, $this->controller->destroy($id));
+		$this->assertEquals($expected, $this->controller->deleteMessages([$id]));
 	}
 
 	public function testDestroyWithFolderOrMessageNotFound() {
@@ -958,11 +1053,11 @@ class MessagesControllerTest extends TestCase {
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects($this->exactly(2))
 			->method('getMessage')
 			->with($this->userId, $id)
 			->willReturn($message);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects($this->exactly(2))
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);
@@ -971,11 +1066,11 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
-			->method('deleteMessage')
-			->with($this->account, 'INBOX', 444)
+			->method('deleteMessages')
+			->with($this->account, 'INBOX', [444])
 			->willThrowException(new ServiceException());
 		$this->expectException(ServiceException::class);
 
-		$this->controller->destroy($id);
+		$this->controller->deleteMessages([$id]);
 	}
 }
