@@ -45,8 +45,18 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'page#filteredThread',
+			'url' => '/box/{filter}/{mailboxId}/thread/{id}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'page#draft',
 			'url' => '/box/{mailboxId}/thread/new/{draftId}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#filteredDraft',
+			'url' => '/box/{filter}/{mailboxId}/thread/new/{draftId}',
 			'verb' => 'GET'
 		],
 		[

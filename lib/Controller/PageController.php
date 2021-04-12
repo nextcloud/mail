@@ -196,7 +196,27 @@ class PageController extends Controller {
 	 *
 	 * @return TemplateResponse
 	 */
+	public function filteredThread(string $filter, int $mailboxId, int $id): TemplateResponse {
+		return $this->index();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @return TemplateResponse
+	 */
 	public function draft(int $mailboxId, int $draftId): TemplateResponse {
+		return $this->index();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @return TemplateResponse
+	 */
+	public function filteredDraft(string $filter, int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
 	}
 
