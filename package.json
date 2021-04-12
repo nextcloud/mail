@@ -90,7 +90,7 @@
     "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
     "css-loader": "^5.2.0",
-    "eslint": "^7.23.0",
+    "eslint": "^7.24.0",
     "eslint-config-standard": "^16.0.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
