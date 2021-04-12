@@ -152,7 +152,7 @@
 				@upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
 				<p class="composer-actions-draft">
-					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Can not save draft because this account does not have a drafts mailbox configured.') }}</span>
+					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Cannot save draft because this account does not have a drafts mailbox configured.') }}</span>
 					<span v-else-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 					<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
