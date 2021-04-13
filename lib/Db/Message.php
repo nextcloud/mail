@@ -48,29 +48,29 @@ use function json_encode;
  * @method void setSentAt(int $time)
  * @method int getSentAt()
  * @method void setFlagAnswered(bool $answered)
- * @method bool getFlagAnswered()
+ * @method bool|null getFlagAnswered()
  * @method void setFlagDeleted(bool $deleted)
- * @method bool getFlagDeleted()
+ * @method bool|null getFlagDeleted()
  * @method void setFlagDraft(bool $answered)
- * @method bool getFlagDraft()
+ * @method bool|null|null getFlagDraft()
  * @method void setFlagFlagged(bool $flagged)
- * @method bool getFlagFlagged()
+ * @method bool|null getFlagFlagged()
  * @method void setFlagSeen(bool $seen)
- * @method bool getFlagSeen()
+ * @method bool|null getFlagSeen()
  * @method void setFlagForwarded(bool $forwarded)
- * @method bool getFlagForwarded()
+ * @method bool|null getFlagForwarded()
  * @method void setFlagJunk(bool $junk)
- * @method bool getFlagJunk()
+ * @method bool|null getFlagJunk()
  * @method void setFlagNotjunk(bool $notjunk)
- * @method bool getFlagNotjunk()
+ * @method bool|null getFlagNotjunk()
  * @method void setStructureAnalyzed(bool $analyzed)
- * @method bool getStructureAnalyzed()
+ * @method bool|null getStructureAnalyzed()
  * @method void setFlagAttachments(?bool $hasAttachments)
  * @method null|bool getFlagAttachments()
  * @method void setFlagImportant(bool $important)
- * @method bool getFlagImportant()
+ * @method bool|null getFlagImportant()
  * @method void setFlagMdnsent(bool $mdnsent)
- * @method bool getFlagMdnsent()
+ * @method bool|null getFlagMdnsent()
  * @method void setPreviewText(?string $subject)
  * @method null|string getPreviewText()
  * @method void setUpdatedAt(int $time)
@@ -134,18 +134,18 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('uid', 'integer');
 		$this->addType('mailboxId', 'integer');
 		$this->addType('sentAt', 'integer');
-		$this->addType('flagAnswered', 'bool');
-		$this->addType('flagDeleted', 'bool');
-		$this->addType('flagDraft', 'bool');
-		$this->addType('flagFlagged', 'bool');
-		$this->addType('flagSeen', 'bool');
-		$this->addType('flagForwarded', 'bool');
-		$this->addType('flagJunk', 'bool');
-		$this->addType('flagNotjunk', 'bool');
-		$this->addType('structureAnalyzed', 'bool');
-		$this->addType('flagAttachments', 'bool');
-		$this->addType('flagImportant', 'bool');
-		$this->addType('flagMdnsent', 'bool');
+		$this->addType('flagAnswered', 'boolean');
+		$this->addType('flagDeleted', 'boolean');
+		$this->addType('flagDraft', 'boolean');
+		$this->addType('flagFlagged', 'boolean');
+		$this->addType('flagSeen', 'boolean');
+		$this->addType('flagForwarded', 'boolean');
+		$this->addType('flagJunk', 'boolean');
+		$this->addType('flagNotjunk', 'boolean');
+		$this->addType('structureAnalyzed', 'boolean');
+		$this->addType('flagAttachments', 'boolean');
+		$this->addType('flagImportant', 'boolean');
+		$this->addType('flagMdnsent', 'boolean');
 		$this->addType('updatedAt', 'integer');
 	}
 
@@ -246,16 +246,16 @@ class Message extends Entity implements JsonSerializable {
 			'subject' => $this->getSubject(),
 			'dateInt' => $this->getSentAt(),
 			'flags' => [
-				'seen' => $this->getFlagSeen(),
-				'flagged' => $this->getFlagFlagged(),
-				'answered' => $this->getFlagAnswered(),
-				'deleted' => $this->getFlagDeleted(),
-				'draft' => $this->getFlagDraft(),
-				'forwarded' => $this->getFlagForwarded(),
-				'hasAttachments' => $this->getFlagAttachments() ?? false,
-				'important' => $this->getFlagImportant(),
-				'junk' => $this->getFlagJunk(),
-				'mdnsent' => $this->getFlagMdnsent(),
+				'seen' => ($this->getFlagSeen() === true),
+				'flagged' => ($this->getFlagFlagged() === true),
+				'answered' => ($this->getFlagAnswered() === true),
+				'deleted' => ($this->getFlagDeleted() === true),
+				'draft' => ($this->getFlagDraft() === true),
+				'forwarded' => ($this->getFlagForwarded() === true),
+				'hasAttachments' => ($this->getFlagAttachments() ?? false),
+				'important' => ($this->getFlagImportant() === true),
+				'junk' => ($this->getFlagJunk() === true),
+				'mdnsent' => ($this->getFlagMdnsent() === true),
 			],
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),

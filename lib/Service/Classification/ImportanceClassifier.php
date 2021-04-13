@@ -168,7 +168,7 @@ class ImportanceClassifier {
 			[$this, 'filterMessageHasSenderEmail']
 		);
 		$importantMessages = array_filter($messages, function (Message $message) {
-			return $message->getFlagImportant();
+			return ($message->getFlagImportant() === true);
 		});
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {

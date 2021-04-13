@@ -63,11 +63,11 @@ use OCP\AppFramework\Db\Entity;
  * @method void setLastMailboxSync(int $time)
  * @method string getEditorMode()
  * @method void setEditorMode(string $editorMode)
- * @method bool getProvisioned()
+ * @method bool|null getProvisioned()
  * @method void setProvisioned(bool $provisioned)
  * @method int getOrder()
  * @method void setOrder(int $order)
- * @method bool getShowSubscribedOnly()
+ * @method bool|null getShowSubscribedOnly()
  * @method void setShowSubscribedOnly(bool $showSubscribedOnly)
  * @method string|null getPersonalNamespace()
  * @method void setPersonalNamespace(string|null $personalNamespace)
@@ -77,7 +77,7 @@ use OCP\AppFramework\Db\Entity;
  * @method int|null getSentMailboxId()
  * @method void setTrashMailboxId(?int $id)
  * @method int|null getTrashMailboxId()
- * @method bool isSieveEnabled()
+ * @method bool|null isSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
  * @method void setSieveHost(?string $sieveHost)
@@ -186,7 +186,7 @@ class MailAccount extends Entity {
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
 		$this->addType('lastMailboxSync', 'integer');
-		$this->addType('provisioned', 'bool');
+		$this->addType('provisioned', 'boolean');
 		$this->addType('order', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
 		$this->addType('personalNamespace', 'string');
@@ -213,13 +213,13 @@ class MailAccount extends Entity {
 			'imapSslMode' => $this->getInboundSslMode(),
 			'signature' => $this->getSignature(),
 			'editorMode' => $this->getEditorMode(),
-			'provisioned' => $this->getProvisioned(),
-			'showSubscribedOnly' => $this->getShowSubscribedOnly(),
+			'provisioned' => ($this->getProvisioned() === true),
+			'showSubscribedOnly' => ($this->getShowSubscribedOnly() === true),
 			'personalNamespace' => $this->getPersonalNamespace(),
 			'draftsMailboxId' => $this->getDraftsMailboxId(),
 			'sentMailboxId' => $this->getSentMailboxId(),
 			'trashMailboxId' => $this->getTrashMailboxId(),
-			'sieveEnabled' => $this->isSieveEnabled(),
+			'sieveEnabled' => ($this->isSieveEnabled() === true),
 		];
 
 		if (!is_null($this->getOutboundHost())) {
