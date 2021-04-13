@@ -65,7 +65,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Η αλληλογραφία προέρχεται από διεύθυνση η οποία δεν δέχεται απαντήσεις, οπότε η απάντησή σας πιθανότατα δεν θα διαβαστεί.",
     "The following recipients do not have a PGP key: {recipients}." : "Οι ακόλουθοι παραλήπτες δεν έχουν κλειδί PGP: {recipients}.",
     "Write message …" : "Εγγραφή μηνύματος ...",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Δεν είναι δυνατή η αποθήκευση προχείρου, επειδή αυτός ο λογαριασμός δεν έχει ρυθμισμένο γραμματοκιβώτιο προχείρων.",
     "Saving draft …" : "Αποθήκευση προχείρου ...",
     "Draft saved" : "Το πρόχειρο αποθηκεύτηκε",
     "Upload attachment" : "Μεταφόρτωση συνημμένων",

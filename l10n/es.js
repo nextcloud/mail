@@ -67,7 +67,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Este correo viene de una dirección noreply (no responder), por lo que probablemente su respuesta no será leída.",
     "The following recipients do not have a PGP key: {recipients}." : "Los siguientes destinatarios no tienen una clave PGP: {recipients}",
     "Write message …" : "Escribir mensaje …",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "No se pudo guardar el borrador porque esta cuenta no tiene una bandeja de borradores configurada.",
     "Saving draft …" : "Guardando borrador…",
     "Draft saved" : "Borrador guardado",
     "Upload attachment" : "Subir adjunto",

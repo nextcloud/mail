@@ -73,7 +73,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Ta wiadomość przyszła z adresu noreply, więc Twoja odpowiedź prawdopodobnie nie zostanie odczytana.",
     "The following recipients do not have a PGP key: {recipients}." : "Następujący odbiorcy nie mają klucza PGP: {recipients}.",
     "Write message …" : "Wpisz wiadomość…",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Nie można zapisać wersji roboczej, ponieważ to konto nie ma skonfigurowanej skrzynki pocztowej dla wersji roboczych.",
     "Saving draft …" : "Zapisywanie wersji roboczej…",
     "Draft saved" : "Zapisana wersja robocza",
     "Upload attachment" : "Dodaj załącznik",

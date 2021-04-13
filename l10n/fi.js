@@ -60,7 +60,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Tämä viesti saapui noreply-osoitteesta, joten vastaustasi ei luultavasti lueta.",
     "The following recipients do not have a PGP key: {recipients}." : "Seuraavilla vastaanottajilla ei ole PGP-avainta: {recipients}.",
     "Write message …" : "Kirjoita viesti…",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Ei voida tallentaa luonnosta, koska tälle käyttäjälle ei ole määritelty postilaatikkoa luonnoksille.",
     "Saving draft …" : "Tallennetaan luonnosta…",
     "Draft saved" : "Luonnos tallennettu",
     "Upload attachment" : "Lähetä liite",

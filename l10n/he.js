@@ -64,7 +64,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "הודעה זו הגיעה מכתובת שאינה מיועדת למענה (noreply) ולכן כנראה שהתגובה שלך לא תיקרא.",
     "The following recipients do not have a PGP key: {recipients}." : "לנמענים הבאים אין מפתח PGP‏: {recipients}.",
     "Write message …" : "כתיבת הודעה…",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "לא ניתן לשמור את הטיוטה כיוון שלחשבון הזה לא מוגדרת תיבת דוא״ל לטיוטות.",
     "Saving draft …" : "הטיוטה נשמרת…",
     "Draft saved" : "הטיוטה נשמרה",
     "Upload attachment" : "העלאת קובץ מצורף",

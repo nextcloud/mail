@@ -73,7 +73,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "标记的消息来自一个无法回复的地址，您的回复可能不会被阅读。",
     "The following recipients do not have a PGP key: {recipients}." : "以下收件人没有 PGP 密钥：{recipients}。",
     "Write message …" : "编写消息...",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "无法保存草稿，因为该账号没有配置草稿邮箱。",
     "Saving draft …" : "正在保存草稿 …",
     "Draft saved" : "草稿已保存",
     "Upload attachment" : "上传附件",

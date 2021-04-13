@@ -71,7 +71,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Ce message vient d'une adresse de non-réponse (noreply), donc votre réponse ne sera probablement pas lue.",
     "The following recipients do not have a PGP key: {recipients}." : "Les destinataires suivants n'ont pas de clé PGP : {destinataires}.",
     "Write message …" : "Rédiger le message …",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Impossible d'enregistrer le brouillon car ce compte n'a pas de boîte aux lettres de brouillons configurée.",
     "Saving draft …" : "Sauvegarde du brouillon en cours …",
     "Draft saved" : "Brouillon sauvegardé",
     "Upload attachment" : "Téléverser les pièces jointes",

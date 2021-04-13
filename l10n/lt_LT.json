@@ -61,7 +61,6 @@
     "This message came from a noreply address so your reply will probably not be read." : "Šis laiškas atėjo iš adreso, kuris nėra skirtas atsakyti, taigi jūsų atsakymas, tikriausiai, nebus perskaitytas.",
     "The following recipients do not have a PGP key: {recipients}." : "Šie gavėjai neturi PGP rakto: {recipients}.",
     "Write message …" : "Rašykite laišką…",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Nepavyko įrašyti juodraščio, nes šioje paskyroje nėra sukonfigūruota juodraščių pašto dėžutė.",
     "Saving draft …" : "Įrašomas juodraštis …",
     "Draft saved" : "Juodraštis įrašytas",
     "Upload attachment" : "Įkelti priedą",

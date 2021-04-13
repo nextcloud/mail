@@ -65,7 +65,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Това съобщение дойде от адрес с настройка без отговор, така че отговорът ви вероятно няма да бъде прочетен.",
     "The following recipients do not have a PGP key: {recipients}." : "Следните получатели нямат PGP ключ: {recipients}.",
     "Write message …" : "Писане на съобщение ...",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Черновата не може да бъде записана, защото този профил няма конфигурирани чернови в пощенската кутия.",
     "Saving draft …" : "Записване на чернова …",
     "Draft saved" : "Черновата записана",
     "Upload attachment" : "Качи прикачен файл/ове",

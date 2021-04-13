@@ -71,7 +71,6 @@
     "This message came from a noreply address so your reply will probably not be read." : "Ova je poruka poslana s adrese na koju se ne može odgovoriti pa vaš odgovor vjerojatno nitko neće pročitati.",
     "The following recipients do not have a PGP key: {recipients}." : "Sljedeći primatelji nemaju PGP-ključ: {recipients}.",
     "Write message …" : "Napiši poruku...",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Nije moguće spremiti nacrt poruke jer za ovaj račun nije konfiguriran sandučić za nacrte.",
     "Saving draft …" : "Spremanje skice...",
     "Draft saved" : "Skica je spremljena",
     "Upload attachment" : "Otpremi privitak",

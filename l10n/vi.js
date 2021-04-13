@@ -66,7 +66,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Thư này đến từ một địa chỉ không trả lời nên có thể sẽ không đọc được thư trả lời của bạn.",
     "The following recipients do not have a PGP key: {recipients}." : "Những người nhận sau không có khóa PGP: {recipients}.",
     "Write message …" : "Viết tin nhắn …",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Không thể lưu thư nháp vì tài khoản này chưa định cấu hình hộp thư nháp.",
     "Saving draft …" : "Đang lưu bản nháp …",
     "Draft saved" : "Bản nháp đã được lưu",
     "Upload attachment" : "Tải lên một đính kèm",

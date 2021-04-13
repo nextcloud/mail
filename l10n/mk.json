@@ -61,7 +61,6 @@
     "This message came from a noreply address so your reply will probably not be read." : "Оваа порака е испратена од адреса што е назначена без одговор, така што вашиот одговор веројатно нема да биде прочитан.",
     "The following recipients do not have a PGP key: {recipients}." : "Следниве примачи не поседуваат PGP клуч: {recipients}.",
     "Write message …" : "Напиши порака ...",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Неможе да се зачува шаблон бидејќи сметката нема конфигурирано сандаче за шаблони.",
     "Saving draft …" : "Зачувување како нацрт ...",
     "Draft saved" : "Нацртот е зачуван",
     "Upload attachment" : "Прикачи прилог",

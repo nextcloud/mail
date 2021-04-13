@@ -71,7 +71,6 @@
     "This message came from a noreply address so your reply will probably not be read." : "Bu ileti yanıt verilmeyecek bir e-posta adresinden geldiğinden yanıtınız okunmayabilir.",
     "The following recipients do not have a PGP key: {recipients}." : "Şu alıcıların PGP anahtarı yok: {recipients}.",
     "Write message …" : "İleti yaz …",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Bu hesap için bir taslak iletiler kutusu yapılandırılmamış olduğundan taslak kaydedilemiyor.",
     "Saving draft …" : "Taslak kaydediliyor …",
     "Draft saved" : "Taslak kaydedildi",
     "Upload attachment" : "Ek dosya yükle",

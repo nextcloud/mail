@@ -65,7 +65,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Это сообщение было отправлено с адреса, не предусматривающего получения ответов. Ваше сообщение, направленное на этот адрес, возможно никогда не будет прочитано.",
     "The following recipients do not have a PGP key: {recipients}." : "У следующих получателей отсутствуют ключи PGP: {recipients}.",
     "Write message …" : "Напишите сообщение…",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "Не удалось сохранить черновик сообщения, в этой учётной записи не настроена папка для сохранения черновиков.",
     "Saving draft …" : "Сохранение черновика ...",
     "Draft saved" : "Черновик сохранён",
     "Upload attachment" : "Загрузить файл с ПК",
