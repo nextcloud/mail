@@ -92,7 +92,7 @@ export default class InsertSignatureCommand extends Command {
 			}
 		}
 
-		return writer.createPositionAt(editor.model.document.getRoot(), 1)
+		return writer.createPositionAt(editor.model.document.getRoot(), 'end')
 	}
 
 	/**
