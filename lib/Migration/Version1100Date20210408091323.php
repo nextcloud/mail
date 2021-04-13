@@ -25,7 +25,7 @@ class Version1100Date20210408091323 extends SimpleMigrationStep {
 		$accountsTable = $schema->getTable('mail_accounts');
 		
 		$accountsTable->addColumn('signature_above_quote', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 
