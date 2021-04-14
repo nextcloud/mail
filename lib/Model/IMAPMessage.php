@@ -766,7 +766,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$t = [];
 		foreach ($tags as $keyword) {
 			// Map the old $important to $label1 until we have caught them all
-			if ($keyword === '$important') {
+			if ($keyword === '$important' || $keyword === 'important') {
 				$keyword = Tag::LABEL_IMPORTANT;
 			}
 			$tag = new Tag();
