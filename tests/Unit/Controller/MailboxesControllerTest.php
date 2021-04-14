@@ -31,7 +31,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderStats;
+use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\AppFramework\Http\JSONResponse;
@@ -137,26 +137,17 @@ class MailboxesControllerTest extends TestCase {
 	}
 
 	public function testStats() {
-		$account = $this->createMock(Account::class);
-		$stats = $this->createMock(FolderStats::class);
-		$accountId = 28;
 		$mailbox = new Mailbox();
-		$mailbox->setAccountId($accountId);
+		$mailbox->setUnseen(10);
+		$mailbox->setMessages(42);
 		$this->mailManager->expects($this->once())
 			->method('getMailbox')
 			->with('john', 13)
 			->willReturn($mailbox);
-		$this->accountService->expects($this->once())
-			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($accountId))
-			->willReturn($account);
-		$this->mailManager->expects($this->once())
-			->method('getMailboxStats')
-			->with($this->equalTo($account), $mailbox)
-			->willReturn($stats);
 
 		$response = $this->controller->stats(13);
 
+		$stats = new MailboxStats(42, 10);
 		$expected = new JSONResponse($stats);
 		$this->assertEquals($expected, $response);
 	}

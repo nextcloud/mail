@@ -201,7 +201,16 @@ export default {
 		Vue.set(existing, 'tags', envelope.tags)
 	},
 	flagEnvelope(state, { envelope, flag, value }) {
-		envelope.flags[flag] = value
+		const mailbox = state.mailboxes[envelope.mailboxId]
+		if (mailbox && flag === 'seen') {
+			const unread = mailbox.unread ?? 0
+			if (envelope.flags[flag] && !value) {
+				Vue.set(mailbox, 'unread', unread + 1)
+			} else if (!envelope.flags[flag] && value) {
+				Vue.set(mailbox, 'unread', Math.max(unread - 1, 0))
+			}
+		}
+		Vue.set(envelope.flags, flag, value)
 	},
 	addTag(state, { tag }) {
 		Vue.set(state.tags, tag.id, tag)
@@ -230,6 +239,10 @@ export default {
 			}
 			console.debug('envelope ' + id + ' removed from mailbox list ' + listId)
 			list.splice(idx, 1)
+		}
+
+		if (!envelope.seen && mailbox.unread) {
+			Vue.set(mailbox, 'unread', mailbox.unread - 1)
 		}
 
 		state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
@@ -297,5 +310,7 @@ export default {
 		const index = account.aliases.findIndex((temp) => aliasId === temp.id)
 		account.aliases[index] = Object.assign({}, account.aliases[index], data)
 	},
-
+	setMailboxUnreadCount(state, { id, unread }) {
+		Vue.set(state.mailboxes[id], 'unread', unread ?? 0)
+	},
 }

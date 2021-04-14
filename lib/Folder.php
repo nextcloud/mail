@@ -79,6 +79,13 @@ class Folder {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getStatus(): array {
+		return $this->status;
+	}
+
+	/**
 	 * @param array $status
 	 *
 	 * @return void

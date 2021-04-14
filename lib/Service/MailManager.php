@@ -35,7 +35,6 @@ use OCA\Mail\Db\TagMapper;
 use Psr\Log\LoggerInterface;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\Model\IMAPMessage;
@@ -165,19 +164,6 @@ class MailManager implements IMailManager {
 		$this->mailboxSync->sync($account, $this->logger,true);
 
 		return $this->mailboxMapper->find($account, $name);
-	}
-
-	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 *
-	 * @return FolderStats
-	 * @throws Horde_Imap_Client_Exception
-	 */
-	public function getMailboxStats(Account $account, Mailbox $mailbox): FolderStats {
-		$client = $this->imapClientFactory->getClient($account);
-
-		return $this->folderMapper->getFoldersStatusAsObject($client, $mailbox->getName());
 	}
 
 	public function getImapMessage(Account $account,

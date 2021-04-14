@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -27,7 +28,7 @@ namespace OCA\Mail\IMAP;
 
 use JsonSerializable;
 
-class FolderStats implements JsonSerializable {
+class MailboxStats implements JsonSerializable {
 
 	/** @var int */
 	private $total;
@@ -38,6 +39,20 @@ class FolderStats implements JsonSerializable {
 	public function __construct(int $total, int $unread) {
 		$this->total = $total;
 		$this->unread = $unread;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getTotal(): int {
+		return $this->total;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getUnread(): int {
+		return $this->unread;
 	}
 
 	public function jsonSerialize() {
