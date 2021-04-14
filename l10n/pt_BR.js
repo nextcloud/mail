@@ -73,6 +73,7 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Esta mensagem veio de um endereço noreply, portanto sua resposta provavelmente não será lida.",
     "The following recipients do not have a PGP key: {recipients}." : "Os seguintes destinatários não possuem uma chave PGP: {recipients}.",
     "Write message …" : "Escrever mensagem...",
+    "Cannot save draft because this account does not have a drafts mailbox configured." : "Não é possível salvar o rascunho porque esta conta não tem uma caixa de correio de rascunhos configurada. ",
     "Saving draft …" : "Salvando rascunho...",
     "Draft saved" : "Rascunho salvo",
     "Upload attachment" : "Enviar anexo",
