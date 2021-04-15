@@ -53,6 +53,14 @@ class AvatarServiceIntegrationTest extends TestCase {
 		$this->service = OC::$server->query(IAvatarService::class);
 	}
 
+	public function testJansGravatar() {
+		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');
+		$this->assertNotNull($avatar);
+		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar->getUrl());
+		$image = $this->service->getAvatarImage('hey@jancborchardt.net', 'john');
+		$this->assertNotNull($image);
+	}
+
 	public function testChristophsFavicon() {
 		$avatar = $this->service->getAvatar('christoph@winzerhof-wurst.at', 'jan');
 		$this->assertNull($avatar); // There is none
