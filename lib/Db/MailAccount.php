@@ -63,8 +63,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setLastMailboxSync(int $time)
  * @method string getEditorMode()
  * @method void setEditorMode(string $editorMode)
- * @method bool|null getProvisioned()
- * @method void setProvisioned(bool $provisioned)
+ * @method int|null getProvisioningId()
+ * @method void setProvisioningId(int $provisioningId)
  * @method int getOrder()
  * @method void setOrder(int $order)
  * @method bool|null getShowSubscribedOnly()
@@ -109,7 +109,6 @@ class MailAccount extends Entity {
 	protected $signature;
 	protected $lastMailboxSync;
 	protected $editorMode;
-	protected $provisioned;
 	protected $order;
 	protected $showSubscribedOnly;
 	protected $personalNamespace;
@@ -137,6 +136,10 @@ class MailAccount extends Entity {
 	protected $sievePassword;
 	/** @var bool */
 	protected $signatureAboveQuote = false;
+
+	/** @var int|null */
+	protected $provisioningId;
+
 
 	/**
 	 * @param array $params
@@ -193,7 +196,7 @@ class MailAccount extends Entity {
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
 		$this->addType('lastMailboxSync', 'integer');
-		$this->addType('provisioned', 'boolean');
+		$this->addType('provisioning_id', 'integer');
 		$this->addType('order', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
 		$this->addType('personalNamespace', 'string');
@@ -221,7 +224,7 @@ class MailAccount extends Entity {
 			'imapSslMode' => $this->getInboundSslMode(),
 			'signature' => $this->getSignature(),
 			'editorMode' => $this->getEditorMode(),
-			'provisioned' => ($this->getProvisioned() === true),
+			'provisioningId' => $this->getProvisioningId(),
 			'showSubscribedOnly' => ($this->getShowSubscribedOnly() === true),
 			'personalNamespace' => $this->getPersonalNamespace(),
 			'draftsMailboxId' => $this->getDraftsMailboxId(),

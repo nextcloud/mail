@@ -26,10 +26,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Exception\ValidationException;
+use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use function array_merge;
 
 class SettingsController extends Controller {
 
@@ -42,42 +45,45 @@ class SettingsController extends Controller {
 		$this->provisioningManager = $provisioningManager;
 	}
 
-	public function provisioning(string $emailTemplate,
-								 string $imapUser,
-								 string $imapHost,
-								 int $imapPort,
-								 string $imapSslMode,
-								 string $smtpUser,
-								 string $smtpHost,
-								 int $smtpPort,
-								 string $smtpSslMode,
-								 bool $sieveEnabled,
-								 string $sieveUser,
-								 string $sieveHost,
-								 int $sievePort,
-								 string $sieveSslMode): JSONResponse {
-		$this->provisioningManager->newProvisioning(
-			$emailTemplate,
-			$imapUser,
-			$imapHost,
-			$imapPort,
-			$imapSslMode,
-			$smtpUser,
-			$smtpHost,
-			$smtpPort,
-			$smtpSslMode,
-			$sieveEnabled,
-			$sieveUser,
-			$sieveHost,
-			$sievePort,
-			$sieveSslMode
-		);
+	public function index(): JSONResponse {
+		$provisionings = $this->provisioningManager->getConfigs();
+		return new JSONResponse($provisionings);
+	}
+
+	public function provision() : JSONResponse {
+		$count = $this->provisioningManager->provision();
+		return new JSONResponse(['count' => $count]);
+	}
+
+	public function createProvisioning(array $data): JSONResponse {
+		try {
+			$this->provisioningManager->newProvisioning($data);
+		} catch (ValidationException $e) {
+			return HttpJsonResponse::fail([$e->getFields()]);
+		}
 
 		return new JSONResponse([]);
 	}
 
-	public function deprovision(): JSONResponse {
-		$this->provisioningManager->deprovision();
+	public function updateProvisioning(int $id, array $data): JSONResponse {
+		try {
+			$this->provisioningManager->updateProvisioning(array_merge(
+				$data,
+				['id' => $id]
+			));
+		} catch (ValidationException $e) {
+			return HttpJsonResponse::fail([$e->getFields()]);
+		}
+
+		return new JSONResponse([]);
+	}
+
+	public function deprovision(int $id): JSONResponse {
+		$provisioning = $this->provisioningManager->getConfigById($id);
+
+		if ($provisioning !== null) {
+			$this->provisioningManager->deprovision($provisioning);
+		}
 
 		return new JSONResponse([]);
 	}

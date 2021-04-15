@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Settings;
 
 use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Service\Provisioning\Config;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IInitialStateService;
@@ -50,23 +49,7 @@ class AdminSettings implements ISettings {
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
 			'provisioning_settings',
-			$this->provisioningManager->getConfig() ?? new Config([
-				'active' => false,
-				'email' => '%USERID%@domain.com',
-				'imapUser' => '%USERID%@domain.com',
-				'imapHost' => 'imap.domain.com',
-				'imapPort' => 993,
-				'imapSslMode' => 'ssl',
-				'smtpUser' => '%USERID%@domain.com',
-				'smtpHost' => 'smtp.domain.com',
-				'smtpPort' => 587,
-				'smtpSslMode' => 'tls',
-				'sieveEnabled' => false,
-				'sieveUser' => '%USERID%@domain.com',
-				'sieveHost' => 'imap.domain.com',
-				'sievePort' => 4190,
-				'sieveSslMode' => 'tls',
-			])
+			$this->provisioningManager->getConfigs()
 		);
 
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');

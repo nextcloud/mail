@@ -27,6 +27,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use OCA\Mail\Controller\SettingsController;
+use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\AppFramework\Http\JSONResponse;
 
@@ -48,50 +49,25 @@ class SettingsControllerTest extends TestCase {
 	public function testProvisioning() {
 		$this->mock->getParameter('provisioningManager')
 			->expects($this->once())
-			->method('newProvisioning')
-			->with(
-				'%USERID%@domain.com',
-				'%USERID%@domain.com',
-				'mx.domain.com',
-				993,
-				'ssl',
-				'%USERID%@domain.com',
-				'mx.domain.com',
-				567,
-				'tls',
-				false,
-				'',
-				'',
-				0,
-				''
-			);
+			->method('provision')
+			->with();
 
-		$response = $this->controller->provisioning(
-			'%USERID%@domain.com',
-			'%USERID%@domain.com',
-			'mx.domain.com',
-			993,
-			'ssl',
-			'%USERID%@domain.com',
-			'mx.domain.com',
-			567,
-			'tls',
-			false,
-			'',
-			'',
-			0,
-			''
-		);
+		$response = $this->controller->provision();
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
 	public function testDeprovision() {
+		$provisioning = new Provisioning();
 		$this->mock->getParameter('provisioningManager')
 			->expects($this->once())
-			->method('deprovision');
-
-		$response = $this->controller->deprovision();
+			->method('getConfigById')
+			->willReturn($provisioning);
+		$this->mock->getParameter('provisioningManager')
+			->expects($this->once())
+			->method('deprovision')
+			->with($provisioning);
+		$response = $this->controller->deprovision(1);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}

@@ -110,7 +110,7 @@ class MailAccountMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($user->getUID())),
-				$qb->expr()->eq('provisioned', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
+				$qb->expr()->isNotNull('provisioning_id')
 			);
 
 		return $this->findEntity($query);
@@ -131,11 +131,23 @@ class MailAccountMapper extends QBMapper {
 		return $this->update($account);
 	}
 
-	public function deleteProvisionedAccounts(): void {
+	public function deleteProvisionedAccounts(int $provisioningId): void {
 		$qb = $this->db->getQueryBuilder();
 
 		$delete = $qb->delete($this->getTableName())
-			->where($qb->expr()->eq('provisioned', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)));
+			->where($qb->expr()->eq('provisioning_id', $qb->createNamedParameter($provisioningId, IQueryBuilder::PARAM_BOOL)));
+
+		$delete->execute();
+	}
+
+	public function deleteProvisionedAccountsByUid(string $uid): void {
+		$qb = $this->db->getQueryBuilder();
+
+		$delete = $qb->delete($this->getTableName())
+			->where(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
+				$qb->expr()->isNotNull('provisioning_id')
+			);
 
 		$delete->execute();
 	}

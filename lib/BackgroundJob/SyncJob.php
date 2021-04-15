@@ -82,7 +82,7 @@ class SyncJob extends TimedJob {
 		}
 
 		$dbAccount = $account->getMailAccount();
-		if ($dbAccount->getProvisioned() && $dbAccount->getInboundPassword() === null) {
+		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
 			$this->logger->info("Ignoring cron sync for provisioned account that has no password set yet");
 			return;
 		}
