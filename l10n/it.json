@@ -71,6 +71,7 @@
     "This message came from a noreply address so your reply will probably not be read." : "Nota che il messaggio è arrivato da un indirizzo noreply, perciò la tua risposta non sarà probabilmente letta.",
     "The following recipients do not have a PGP key: {recipients}." : "I seguenti destinatari non hanno una chiave PGP: {recipients}.",
     "Write message …" : "Scrivi messaggio...",
+    "Cannot save draft because this account does not have a drafts mailbox configured." : "Impossibile salvare la bozza perché questo account non dispone di una casella delle bozze configurata.",
     "Saving draft …" : "Salvataggio bozza…",
     "Draft saved" : "Bozza salvata",
     "Upload attachment" : "Carica allegato",

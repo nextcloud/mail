@@ -73,6 +73,7 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Vedd figyelembe, hogy egy \"ne válaszolj\" címről jött a levél, így válaszodat valószínűleg nem fogják elolvasni.",
     "The following recipients do not have a PGP key: {recipients}." : "A következő címzettek nem rendelkeznek PGP kulccsal: {recipents}",
     "Write message …" : "Írjon üzenetet …",
+    "Cannot save draft because this account does not have a drafts mailbox configured." : "Nem menthető a vázlat, mert nincs beállítva alapértelmezett mappa a vázlatoknak.",
     "Saving draft …" : "Vázlat mentése …",
     "Draft saved" : "Vázlat elmentve",
     "Upload attachment" : "Csatolmány feltöltése",
