@@ -99,7 +99,7 @@
     "eslint-plugin-standard": "^4.1.0",
     "eslint-plugin-vue": "^7.8.0",
     "file-loader": "^6.2.0",
-    "jsdom": "^16.5.2",
+    "jsdom": "^16.5.3",
     "jsdom-global": "^3.0.2",
     "mocha": "^8.3.2",
     "mochapack": "^2.0.6",
