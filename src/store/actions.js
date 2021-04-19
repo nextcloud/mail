@@ -69,7 +69,7 @@ import {
 	setEnvelopeTag,
 	syncEnvelopes,
 } from '../service/MessageService'
-import { createAlias, deleteAlias } from '../service/AliasService'
+import * as AliasService from '../service/AliasService'
 import logger from '../logger'
 import { normalizedEnvelopeListId } from './normalization'
 import { showNewMessagesNotification } from '../service/NotificationService'
@@ -320,7 +320,7 @@ export default {
 		const envelopes = await dispatch('fetchNextEnvelopes', {
 			mailboxId,
 			query,
-			quantity: PAGE_SIZE
+			quantity: PAGE_SIZE,
 		})
 		return envelopes
 	},
@@ -710,12 +710,17 @@ export default {
 		}
 	},
 	async createAlias({ commit }, { account, aliasToAdd }) {
-		const alias = await createAlias(account, aliasToAdd)
+		const alias = await AliasService.createAlias(account, aliasToAdd)
 		commit('createAlias', { account, alias })
 	},
 	async deleteAlias({ commit }, { account, aliasToDelete }) {
-		await deleteAlias(account, aliasToDelete)
+		await AliasService.deleteAlias(account, aliasToDelete)
 		commit('deleteAlias', { account, alias: aliasToDelete })
+	},
+	async updateAliasSignature({ commit }, { account, aliasId, signature }) {
+		await AliasService.updateSignature(account.id, aliasId, signature)
+		commit('patchAlias', { account, aliasId, data: { signature } })
+		commit('editAccount', account)
 	},
 	async renameMailbox({ commit }, { account, mailbox, newName }) {
 		const newMailbox = await patchMailbox(mailbox.databaseId, {

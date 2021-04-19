@@ -6,16 +6,13 @@ export const createAlias = async(account, data) => {
 		id: account.accountId,
 	})
 
-	return axios
-		.post(url, data)
-		.then((resp) => resp.data)
-		.catch((e) => {
-			if (e.response && e.response.status === 400) {
-				throw e.response.data
-			}
+	return axios.post(url, data).then((resp) => resp.data).catch((e) => {
+		if (e.response && e.response.status === 400) {
+			throw e.response.data
+		}
 
-			throw e
-		})
+		throw e
+	})
 }
 
 export const deleteAlias = async(account, alias) => {
@@ -25,4 +22,14 @@ export const deleteAlias = async(account, alias) => {
 	})
 
 	return axios.delete(url).then((resp) => resp.data)
+}
+
+export const updateSignature = async(accountId, aliasId, signature) => {
+	const url = generateUrl(
+		'/apps/mail/api/accounts/{id}/aliases/{aliasId}/signature', {
+			id: accountId,
+			aliasId,
+		})
+
+	return axios.put(url, { signature })
 }

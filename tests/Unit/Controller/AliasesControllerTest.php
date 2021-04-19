@@ -159,4 +159,49 @@ class AliasesControllerTest extends TestCase {
 			$entity->getName()
 		);
 	}
+
+	public function testUpdateSignature(): void {
+		$alias = new Alias();
+		$alias->setId(102);
+		$alias->setAccountId(200);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
+		$alias->setSignature('my old signature');
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->willReturn($alias);
+		$this->aliasMapper->expects($this->once())
+			->method('update');
+
+		$expectedResponse = new JSONResponse(
+			[],
+			Http::STATUS_OK
+		);
+		$response = $this->controller->updateSignature(
+			$alias->getId(),
+			'my new signature'
+		);
+
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testUpdateSignatureInvalidAliasId(): void {
+		$this->expectException(DoesNotExistException::class);
+
+		$entity = new Alias();
+		$entity->setId(999999);
+		$entity->setAccountId(200);
+		$entity->setAlias('jane@doe.com');
+		$entity->setName('Jane Doe');
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->willThrowException(new DoesNotExistException('Alias does not exist'));
+
+		$this->controller->updateSignature(
+			$entity->getId(),
+			'my new signature'
+		);
+	}
 }

@@ -100,6 +100,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'aliases#updateSignature',
+			'url' => '/api/accounts/{accountId}/aliases/{id}/signature',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'contactIntegration#autoComplete',
 			'url' => '/api/contactIntegration/autoComplete/{term}',
 			'verb' => 'GET'

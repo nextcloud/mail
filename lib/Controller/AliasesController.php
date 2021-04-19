@@ -104,4 +104,19 @@ class AliasesController extends Controller {
 			Http::STATUS_CREATED
 		);
 	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 * @param string|null $signature
+	 *
+	 * @return JSONResponse
+	 * @throws DoesNotExistException
+	 */
+	public function updateSignature(int $id, string $signature = null): JSONResponse {
+		$this->aliasService->updateSignature($this->currentUserId, $id, $signature);
+		return new JSONResponse();
+	}
 }

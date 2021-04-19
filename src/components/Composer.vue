@@ -11,7 +11,6 @@
 				label="name"
 				track-by="selectId"
 				:searchable="false"
-				:hide-selected="true"
 				:custom-label="formatAliases"
 				:placeholder="t('mail', 'Select account')"
 				:clear-on-select="false"
@@ -412,7 +411,7 @@ export default {
 						aliasId: alias.id,
 						selectId: cnt++,
 						editorMode: account.editorMode,
-						signature: account.signature,
+						signature: alias.signature,
 						name: alias.name,
 						emailAddress: alias.alias,
 					}
@@ -461,6 +460,21 @@ export default {
 		},
 		allRecipients() {
 			this.checkRecipientsKeys()
+		},
+		aliases(newAliases) {
+			console.debug('aliases changed')
+			if (this.selectedAlias === NO_ALIAS_SET) {
+				return
+			}
+
+			const newAlias = newAliases.find(alias => alias.id === this.selectedAlias.id && alias.aliasId === this.selectedAlias.aliasId)
+			if (newAlias === undefined) {
+				// selected alias does not exist anymore.
+				this.onAliasChange(newAliases[0])
+			} else {
+				// update the selected alias
+				this.onAliasChange(newAlias)
+			}
 		},
 	},
 	async beforeMount() {
