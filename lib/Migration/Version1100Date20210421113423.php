@@ -30,28 +30,26 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version1100Date20210421113423 extends SimpleMigrationStep
-{
+class Version1100Date20210421113423 extends SimpleMigrationStep {
 
-    /**
-     * @param IOutput $output
-     * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-     * @param array $options
-     *
-     * @return ISchemaWrapper
-     */
-    public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
-    {
-        /** @var ISchemaWrapper $schema */
-        $schema = $schemaClosure();
+	/**
+	 * @param IOutput $output
+	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
+	 * @param array $options
+	 *
+	 * @return ISchemaWrapper
+	 */
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+		/** @var ISchemaWrapper $schema */
+		$schema = $schemaClosure();
 
-        $accountsTable = $schema->getTable('mail_accounts');
+		$accountsTable = $schema->getTable('mail_accounts');
 
-        $accountsTable->addColumn('signature_above_quote', 'boolean', [
-            'notnull' => false,
-            'default' => false,
-        ]);
+		$accountsTable->addColumn('signature_above_quote', 'boolean', [
+			'notnull' => false,
+			'default' => false,
+		]);
 
-        return $schema;
-    }
+		return $schema;
+	}
 }
