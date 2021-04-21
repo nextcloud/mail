@@ -71,6 +71,7 @@
     "This message came from a noreply address so your reply will probably not be read." : "Sporočilo je bilo poslano z naslova, ki ni namenjen odgovarjanju, zato odgovor najverjetneje ne bo prispel do naslovnika.",
     "The following recipients do not have a PGP key: {recipients}." : "Nekateri prejemniki so brez ključa PGP: {recipients}.",
     "Write message …" : "Besedilo sporočila ...",
+    "Cannot save draft because this account does not have a drafts mailbox configured." : "Osnutka ni mogoče shraniti, ker na računu predal za ta sporočila ni nastavljen.",
     "Saving draft …" : "Poteka shranjevanje osnutka ...",
     "Draft saved" : "Osnutek je shranjen",
     "Upload attachment" : "Pošlji prilogo",
