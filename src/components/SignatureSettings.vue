@@ -21,6 +21,16 @@
 
 <template>
 	<div class="section">
+		<div>
+			<input
+				id="signature-above-quote-toggle"
+				v-model="signatureAboveQuote"
+				type="checkbox"
+				class="checkbox">
+			<label for="signature-above-quote-toggle">
+				{{ t("mail", "Place signature above quoted text") }}
+			</label>
+		</div>
 		<Multiselect
 			v-if="identities.length > 1"
 			:allow-empty="false"
@@ -72,6 +82,7 @@ export default {
 			bus: new Vue(),
 			identity: null,
 			signature: '',
+			signatureAboveQuote: this.account.signatureAboveQuote,
 		}
 	},
 	computed: {
@@ -91,6 +102,27 @@ export default {
 			})
 
 			return identities
+		},
+	},
+	watch: {
+		async signatureAboveQuote(val, oldVal) {
+			await this.$store
+				.dispatch('patchAccount', {
+					account: this.account,
+					data: {
+						signatureAboveQuote: val,
+					},
+				})
+				.then(() => {
+					logger.debug('signature above quoted updated to ' + val)
+				})
+				.catch((error) => {
+					logger.error('could not update signature above quote', {
+						error,
+					})
+					this.signatureAboveQuote = oldVal
+					throw error
+				})
 		},
 	},
 	beforeMount() {
