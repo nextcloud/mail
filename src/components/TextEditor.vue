@@ -42,6 +42,12 @@ import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin'
+// The following imports are needed for inserting inline images
+import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository'
+import Image from '@ckeditor/ckeditor5-image/src/image'
+import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
+import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
+import NCUploadAdapterPlugin from '../ckeditor/uploadAdapter/NCUploadAdapterPlugin'
 
 import { getLanguage } from '@nextcloud/l10n'
 import DOMPurify from 'dompurify'
@@ -77,11 +83,16 @@ export default {
 	},
 	data() {
 		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin]
+		const extraPlugins = []
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
-			plugins.push(...[HeadingPlugin, AlignmentPlugin, BoldPlugin, ItalicPlugin, BlockQuotePlugin, LinkPlugin, ListStyle])
-			toolbar.unshift(...['heading', 'alignment', 'bold', 'italic', 'bulletedList', 'numberedList', 'blockquote', 'link'])
+			plugins.push(...[
+				HeadingPlugin, AlignmentPlugin, BoldPlugin, Image, ImageToolbar, ImageUpload,
+				ItalicPlugin, BlockQuotePlugin, LinkPlugin, ListStyle, FileRepository
+			])
+			extraPlugins.push(NCUploadAdapterPlugin)
+			toolbar.unshift(...['heading', 'alignment', 'bold', 'italic', 'bulletedList', 'numberedList', 'blockquote', 'uploadImage', 'link'])
 		}
 
 		return {
@@ -91,6 +102,7 @@ export default {
 			config: {
 				placeholder: this.placeholder,
 				plugins,
+				extraPlugins,
 				toolbar: {
 					items: toolbar,
 				},
