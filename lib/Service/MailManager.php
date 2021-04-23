@@ -269,8 +269,7 @@ class MailManager implements IMailManager {
 			);
 
 			// Delete cached source message (the source imap message is copied and deleted)
-			$this->eventDispatcher->dispatch(
-				MessagesDeletedEvent::class,
+			$this->eventDispatcher->dispatchTyped(
 				new MessagesDeletedEvent($sourceAccount, $sourceMailbox, $uids)
 			);
 		} else {
@@ -286,8 +285,7 @@ class MailManager implements IMailManager {
 	public function deleteMessages(Account $account,
 								  string $mailboxId,
 								  array $messageIds): void {
-		$this->eventDispatcher->dispatch(
-			BeforeMessagesDeletedEvent::class,
+		$this->eventDispatcher->dispatchTyped(
 			new BeforeMessagesDeletedEvent($account, $mailboxId, $messageIds)
 		);
 
@@ -322,8 +320,7 @@ class MailManager implements IMailManager {
 			);
 		}
 
-		$this->eventDispatcher->dispatch(
-			MessagesDeletedEvent::class,
+		$this->eventDispatcher->dispatchTyped(
 			new MessagesDeletedEvent($account, $sourceMailbox, $messageIds)
 		);
 	}
