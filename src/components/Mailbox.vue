@@ -137,6 +137,35 @@ export default {
 		},
 	},
 	watch: {
+		// Force the envelope list to re-render when user clicks on the folder it's currently in
+		$route(to) {
+			if (to.params.threadId === undefined) {
+				const first = this.envelopes[0]
+				if (typeof first !== 'undefined') {
+					logger.debug('refreshing mailbox')
+					if (this.$route.params.mailboxId === this.account.draftsMailboxId) {
+						this.$router.replace({
+							name: 'message',
+							params: {
+								mailboxId: this.$route.params.mailboxId,
+								filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+								threadId: 'new',
+								draftId: first.databaseId,
+							},
+						})
+					} else {
+						this.$router.replace({
+							name: 'message',
+							params: {
+								mailboxId: this.$route.params.mailboxId,
+								filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+								threadId: first.databaseId,
+							},
+						})
+					}
+				}
+			}
+		},
 		account() {
 			this.loadEnvelopes()
 		},
@@ -207,7 +236,7 @@ export default {
 					// Keep the selected account-mailbox combination, but navigate to the message
 					// (it's not a bug that we don't use first.accountId and first.mailboxId here)
 					logger.debug('showing the first message of mailbox ' + this.$route.params.mailboxId)
-					if (first.flags.draft) {
+					if (this.$route.params.mailboxId === this.account.draftsMailboxId) {
 						this.$router.replace({
 							name: 'message',
 							params: {

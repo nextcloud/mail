@@ -78,13 +78,6 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 				'length' => 4,
 			]);
 			$tagsMessageTable->setPrimaryKey(['id']);
-			$tagsMessageTable->addUniqueIndex(
-				[
-					'imap_message_id',
-					'tag_id',
-				],
-				'mail_msg_tag_id_idx'
-			);
 		}
 		return $schema;
 	}

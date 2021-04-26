@@ -79,7 +79,7 @@ class CollectedAddressMapper extends QBMapper {
 	public function getTotal() {
 		/* @var $qb IQueryBuilder */
 		$qb = $this->db->getQueryBuilder();
-		$qb->select($qb->createFunction('COUNT(*)'))
+		$qb->select($qb->func()->count())
 			->from($this->getTableName());
 		$result = $qb->execute();
 

@@ -27,7 +27,6 @@
 		"christophwurst/kitinerary-sys": "^0.1.0",
 		"ezyang/htmlpurifier": "4.13.0",
 		"gravatarphp/gravatar": "^2.0",
-		"kwi/urllinker": "dev-bleeding",
 		"pear-pear.horde.org/horde_date": "^2.4.1@stable",
 		"pear-pear.horde.org/horde_exception": "^2.0.8@stable",
 		"pear-pear.horde.org/horde_imap_client": "^2.29.16@stable",
@@ -43,12 +42,18 @@
 		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"psr/log": "^1",
-		"rubix/ml": "0.4.0"
+		"rubix/ml": "0.4.1",
+		"youthweb/urllinker": "^1.3"
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "v20.0.7",
 		"psalm/phar": "^4.6",
 		"roave/security-advisories": "dev-master"
+	},
+	"autoload": {
+		"files": [
+			"lib/functions.php"
+		]
 	},
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",

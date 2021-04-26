@@ -149,6 +149,7 @@ export default {
 #message-container {
 	flex: 1;
 	display: flex;
+	background-color: #FFFFFF;
 
 	// TODO: collapse quoted text and remove inner scrollbar
 	&.scroll {

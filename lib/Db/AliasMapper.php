@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
@@ -36,6 +37,7 @@ class AliasMapper extends QBMapper {
 	 * @param string $currentUserId
 	 *
 	 * @return Alias
+	 * @throws DoesNotExistException
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
 		$qb = $this->db->getQueryBuilder();

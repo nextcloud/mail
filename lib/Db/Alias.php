@@ -34,6 +34,8 @@ use OCP\AppFramework\Db\Entity;
  * @method string getName()
  * @method void setAlias(string $alias)
  * @method string getAlias()
+ * @method void setSignature(string|null $signature)
+ * @method string|null getSignature()
  */
 class Alias extends Entity implements JsonSerializable {
 
@@ -46,6 +48,9 @@ class Alias extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $alias;
 
+	/** @var string|null */
+	protected $signature;
+
 	public function __construct() {
 		$this->addType('accountId', 'int');
 		$this->addType('name', 'string');
@@ -56,7 +61,8 @@ class Alias extends Entity implements JsonSerializable {
 		return [
 			'id' => $this->getId(),
 			'name' => $this->getName(),
-			'alias' => $this->getAlias()
+			'alias' => $this->getAlias(),
+			'signature' => $this->getSignature(),
 		];
 	}
 }

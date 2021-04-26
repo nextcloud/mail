@@ -34,6 +34,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
@@ -436,6 +437,30 @@ class AccountsControllerTest extends TestCase {
 		$this->expectException(Horde_Exception::class);
 
 		$this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
+	}
+
+	public function testSendingManyRecipientsError() {
+		$this->expectException(ManyRecipientsException::class);
+
+		$recipients = [];
+		for ($i = 0; $i <= 10; $i++) {
+			$recipients[] = "$i@x.com";
+		}
+		$recipients = implode(',', $recipients);
+
+		$this->controller->send(13, 'sub', 'bod', $recipients, '', '');
+	}
+
+	public function testSendingManyRecipientsCcError() {
+		$this->expectException(ManyRecipientsException::class);
+
+		$recipients = [];
+		for ($i = 0; $i <= 10; $i++) {
+			$recipients[] = "$i@x.com";
+		}
+		$recipients = implode(',', $recipients);
+
+		$this->controller->send(13, 'sub', 'bod', '', $recipients, '');
 	}
 
 	public function testSendReply() {

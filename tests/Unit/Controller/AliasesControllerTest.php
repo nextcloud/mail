@@ -24,6 +24,11 @@ namespace OCA\Mail\Tests\Unit\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AliasesController;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\AliasMapper;
+use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Service\AliasesService;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 
@@ -31,90 +36,172 @@ class AliasesControllerTest extends TestCase {
 	private $controller;
 	private $appName = 'mail';
 	private $request;
-	private $aliasService;
 	private $userId = 'user12345';
-	private $userSession;
-	private $user;
 	private $alias;
+
+	/** @var AliasMapper */
+	private $aliasMapper;
+
+	/** @var MailAccountMapper */
+	private $mailAccountMapper;
+
+	/** @var AliasesService */
+	private $aliasService;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->request = $this->getMockBuilder('OCP\IRequest')
 			->getMock();
-		$this->aliasService = $this->getMockBuilder('OCA\Mail\Service\AliasesService')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->userSession = $this->getMockBuilder('OCP\IUserSession')
-			->getMock();
-		$this->user = $this->getMockBuilder('OCP\IUser')
-			->getMock();
+
 		$this->alias = $this->getMockBuilder('\OCA\Mail\Db\Alias')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->userSession->expects($this->once())
-			->method('getUser')
-			->will($this->returnValue($this->user));
 
-		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userSession);
+		$this->aliasMapper = $this->createMock(AliasMapper::class);
+		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
+
+		$this->aliasService = new AliasesService($this->aliasMapper, $this->mailAccountMapper);
+		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userId);
 	}
 
-	public function testIndex() {
-		$accountId = 123;
-		$this->user->expects($this->once())
-			->method('getUID')
-			->will($this->returnValue($this->userId));
-		$this->aliasService->expects($this->once())
+	public function testIndex(): void {
+		$alias = new Alias();
+		$alias->setId(100);
+		$alias->setAccountId(200);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
+
+		$this->aliasMapper->expects($this->once())
 			->method('findAll')
-			->with($accountId, $this->userId)
-			->will($this->returnValue([$this->alias]));
+			->with($alias->getAccountId(), $this->userId)
+			->willReturn([$alias]);
 
-		$response = $this->controller->index($accountId);
+		$expectedResponse = new JSONResponse([$alias]);
+		$response = $this->controller->index($alias->getAccountId());
 
-		$expectedResponse = new JSONResponse([
-			$this->alias
-		]);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
-	public function testDestroy() {
-		$aliasId = 123;
-		$alias = $this->createMock(Alias::class);
-		$this->user->expects($this->once())
-			->method('getUID')
-			->will($this->returnValue($this->userId));
-		$this->aliasService->expects($this->once())
-			->method('delete')
-			->with($this->equalTo($aliasId), $this->equalTo($this->userId))
-			->will($this->returnValue($alias));
+	public function testShow(): void {
+		$this->expectException(NotImplemented::class);
+		$this->controller->show();
+	}
 
-		$response = $this->controller->destroy($aliasId);
+	public function testUpdate(): void {
+		$this->expectException(NotImplemented::class);
+		$this->controller->update();
+	}
+
+	public function testDestroy(): void {
+		$alias = new Alias();
+		$alias->setId(101);
+		$alias->setAccountId(200);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->with($alias->getId(), $this->userId)
+			->willReturn($alias);
+
+		$this->aliasMapper->expects($this->once())
+			->method('delete')
+			->with($alias);
 
 		$expectedResponse = new JSONResponse($alias);
+		$response = $this->controller->destroy($alias->getId());
+
 		$this->assertEquals($expectedResponse, $response);
 	}
 
-	public function testCreate() {
-		$accountId = 123;
-		$alias = "alias@marvel.com";
-		$aliasName = "Peter Parker";
-		$this->aliasService->expects($this->once())
-			->method('create')
-			->with($this->equalTo($accountId), $this->equalTo($alias), $this->equalTo($aliasName))
-			->will($this->returnValue([
-				'accountId' => $accountId,
-				'name' => $aliasName,
-				'alias' => $alias,
-				'id' => 123
-			]));
+	public function testCreate(): void {
+		$alias = new Alias();
+		$alias->setId(102);
+		$alias->setAccountId(200);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
 
-		$response = $this->controller->create($accountId, $alias, $aliasName);
+		$this->mailAccountMapper->expects($this->once())
+			->method('find');
 
-		$expected = new JSONResponse([
-			'accountId' => $accountId,
-			'name' => $aliasName,
-			'alias' => $alias,
-			'id' => 123
-		], Http::STATUS_CREATED);
-		$this->assertEquals($expected, $response);
+		$this->aliasMapper->expects($this->once())
+			->method('insert')
+			->willReturn($alias);
+
+		$expectedResponse = new JSONResponse(
+			$alias,
+			Http::STATUS_CREATED
+		);
+		$response = $this->controller->create(
+			$alias->getAccountId(),
+			$alias->getAlias(),
+			$alias->getName()
+		);
+
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testCreateForbiddenAccountId(): void {
+		$this->expectException(DoesNotExistException::class);
+
+		$entity = new Alias();
+		$entity->setAccountId(200);
+		$entity->setAlias('jane@doe.com');
+		$entity->setName('Jane Doe');
+
+		$this->mailAccountMapper->expects($this->once())
+			->method('find')
+			->willThrowException(new DoesNotExistException('Account does not exist'));
+
+		$this->controller->create(
+			$entity->getAccountId(),
+			$entity->getAlias(),
+			$entity->getName()
+		);
+	}
+
+	public function testUpdateSignature(): void {
+		$alias = new Alias();
+		$alias->setId(102);
+		$alias->setAccountId(200);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
+		$alias->setSignature('my old signature');
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->willReturn($alias);
+		$this->aliasMapper->expects($this->once())
+			->method('update');
+
+		$expectedResponse = new JSONResponse(
+			[],
+			Http::STATUS_OK
+		);
+		$response = $this->controller->updateSignature(
+			$alias->getId(),
+			'my new signature'
+		);
+
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testUpdateSignatureInvalidAliasId(): void {
+		$this->expectException(DoesNotExistException::class);
+
+		$entity = new Alias();
+		$entity->setId(999999);
+		$entity->setAccountId(200);
+		$entity->setAlias('jane@doe.com');
+		$entity->setName('Jane Doe');
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->willThrowException(new DoesNotExistException('Alias does not exist'));
+
+		$this->controller->updateSignature(
+			$entity->getId(),
+			'my new signature'
+		);
 	}
 }

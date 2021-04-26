@@ -42,6 +42,7 @@ import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin'
+import QuotePlugin from '../ckeditor/quote/QuotePlugin'
 
 import { getLanguage } from '@nextcloud/l10n'
 import DOMPurify from 'dompurify'
@@ -76,7 +77,7 @@ export default {
 		},
 	},
 	data() {
-		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin]
+		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin, QuotePlugin]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
@@ -202,8 +203,11 @@ export default {
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
 		},
-		onInsertSignature(signature) {
-			this.editorInstance.execute('insertSignature', { value: signature })
+		onInsertSignature(signatureParam, signatureAboveQuoteParam) {
+			this.editorInstance.execute('insertSignature', {
+				signature: signatureParam,
+				signatureAboveQuote: signatureAboveQuoteParam,
+			})
 		},
 	},
 }

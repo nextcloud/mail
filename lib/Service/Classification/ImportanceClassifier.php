@@ -164,11 +164,11 @@ class ImportanceClassifier {
 			return $mailbox->getId();
 		}, $incomingMailboxes);
 		$messages = array_filter(
-			$this->messageMapper->findLatestMessages($mailboxIds, self::MAX_TRAINING_SET_SIZE),
+			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
 		$importantMessages = array_filter($messages, function (Message $message) {
-			return $message->getFlagImportant();
+			return ($message->getFlagImportant() === true);
 		});
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {

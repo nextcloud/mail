@@ -69,4 +69,11 @@ export const getters = {
 		const envelopes = thread.map(id => state.envelopes[id])
 		return sortBy(prop('dateInt'), envelopes)
 	},
+	getEnvelopeTags: (state) => (id) => {
+		const tags = state.envelopes[id]?.tags ?? []
+		return tags.map((tagId) => state.tags[tagId])
+	},
+	getTag: (state) => (id) => {
+		return state.tags[id]
+	},
 }

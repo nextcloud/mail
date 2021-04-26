@@ -29,6 +29,7 @@ use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Db\TagMapper;
 
 class CleanupService {
 
@@ -44,14 +45,19 @@ class CleanupService {
 	/** @var CollectedAddressMapper */
 	private $collectedAddressMapper;
 
+	/** @var TagMapper */
+	private $tagMapper;
+
 	public function __construct(AliasMapper $aliasMapper,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
-								CollectedAddressMapper $collectedAddressMapper) {
+								CollectedAddressMapper $collectedAddressMapper,
+								TagMapper $tagMapper) {
 		$this->aliasMapper = $aliasMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->collectedAddressMapper = $collectedAddressMapper;
+		$this->tagMapper = $tagMapper;
 	}
 
 	public function cleanUp(): void {
@@ -59,5 +65,7 @@ class CleanupService {
 		$this->mailboxMapper->deleteOrphans();
 		$this->messageMapper->deleteOrphans();
 		$this->collectedAddressMapper->deleteOrphans();
+		$this->tagMapper->deleteOrphans();
+		$this->tagMapper->deleteDuplicates();
 	}
 }

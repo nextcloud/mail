@@ -27,61 +27,59 @@
 			@click="onClickOpenContactDialog">
 			<span class="user-bubble-email">{{ email }}</span>
 		</UserBubble>
-		<template>
-			<div class="contact-wrapper">
-				<div v-if="contactsWithEmail && contactsWithEmail.length > 0" class="contact-existing">
-					<span class="icon-details">
-						{{ t('mail', 'Contacts with this address') }}:
-					</span>
-					<span>
-						{{ contactsWithEmailComputed }}
-					</span>
-				</div>
-				<div v-if="selection === ContactSelectionStateEnum.select">
-					<a class="icon-reply" @click="onClickReply">
-						<span class="action-label">{{ t('mail', 'Reply') }}</span>
-					</a>
-					<a class="icon-user" @click="selection = ContactSelectionStateEnum.existing">
-						<span class="action-label">{{ t('mail', 'Add to Contact') }}</span>
-					</a>
-					<a class="icon-add" @click="selection = ContactSelectionStateEnum.new">
-						<span class="action-label">{{ t('mail', 'New Contact') }}</span>
-					</a>
-				</div>
-				<div v-else class="contact-input-wrapper">
-					<Multiselect
-						v-if="selection === ContactSelectionStateEnum.existing"
-						id="contact-selection"
-						ref="contact-selection-label"
-						v-model="selectedContact"
-						:options="selectableContacts"
-						:taggable="true"
-						label="label"
-						track-by="label"
-						:multiple="false"
-						:placeholder="t('name', 'Contact name …')"
-						:clear-on-select="false"
-						:show-no-options="false"
-						:preserve-search="true"
-						@search-change="onAutocomplete" />
-
-					<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
-				</div>
-				<div v-if="selection !== ContactSelectionStateEnum.select">
-					<a class="icon-close" type="button" @click="selection = ContactSelectionStateEnum.select">
-						{{ t('mail', 'Go back') }}
-					</a>
-					<a
-						v-close-popover
-						:disabled="addButtonDisabled"
-						class="icon-checkmark"
-						type="button"
-						@click="onClickAddToContact">
-						{{ t('mail', 'Add') }}
-					</a>
-				</div>
+		<div class="contact-wrapper">
+			<div v-if="contactsWithEmail && contactsWithEmail.length > 0" class="contact-existing">
+				<span class="icon-details">
+					{{ t('mail', 'Contacts with this address') }}:
+				</span>
+				<span>
+					{{ contactsWithEmailComputed }}
+				</span>
 			</div>
-		</template>
+			<div v-if="selection === ContactSelectionStateEnum.select">
+				<a class="icon-reply" @click="onClickReply">
+					<span class="action-label">{{ t('mail', 'Reply') }}</span>
+				</a>
+				<a class="icon-user" @click="selection = ContactSelectionStateEnum.existing">
+					<span class="action-label">{{ t('mail', 'Add to Contact') }}</span>
+				</a>
+				<a class="icon-add" @click="selection = ContactSelectionStateEnum.new">
+					<span class="action-label">{{ t('mail', 'New Contact') }}</span>
+				</a>
+			</div>
+			<div v-else class="contact-input-wrapper">
+				<Multiselect
+					v-if="selection === ContactSelectionStateEnum.existing"
+					id="contact-selection"
+					ref="contact-selection-label"
+					v-model="selectedContact"
+					:options="selectableContacts"
+					:taggable="true"
+					label="label"
+					track-by="label"
+					:multiple="false"
+					:placeholder="t('name', 'Contact name …')"
+					:clear-on-select="false"
+					:show-no-options="false"
+					:preserve-search="true"
+					@search-change="onAutocomplete" />
+
+				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
+			</div>
+			<div v-if="selection !== ContactSelectionStateEnum.select">
+				<a class="icon-close" type="button" @click="selection = ContactSelectionStateEnum.select">
+					{{ t('mail', 'Go back') }}
+				</a>
+				<a
+					v-close-popover
+					:disabled="addButtonDisabled"
+					class="icon-checkmark"
+					type="button"
+					@click="onClickAddToContact">
+					{{ t('mail', 'Add') }}
+				</a>
+			</div>
+		</div>
 	</Popover>
 </template>
 

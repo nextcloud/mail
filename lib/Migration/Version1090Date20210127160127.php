@@ -22,7 +22,7 @@ class Version1090Date20210127160127 extends SimpleMigrationStep {
 
 		$table = $schema->getTable('mail_accounts');
 		$table->addColumn('sieve_enabled', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$table->addColumn('sieve_host', 'string', [

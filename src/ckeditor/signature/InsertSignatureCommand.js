@@ -35,14 +35,21 @@ export default class InsertSignatureCommand extends Command {
 		}
 	}
 
-	insertSignatureElement(editor, writer, value) {
+	/**
+	 *
+	 * @param {*} editor the editor instance
+	 * @param {*} writer the writer instance
+	 * @param {string} signature the signature text
+	 * @param {boolean} signatureAboveQuote the signature position: above/below the quoted text
+	 */
+	insertSignatureElement(editor, writer, signature, signatureAboveQuote) {
 		// Skip empty signature
-		if (value.length === 0) {
+		if (signature.length === 0) {
 			return
 		}
 
 		// Convert an HTML string to a view document fragment:
-		const viewFragment = editor.data.processor.toView(value)
+		const viewFragment = editor.data.processor.toView(signature)
 
 		// Convert the view document fragment to a model document fragment
 		// in the context of $root. This conversion takes the schema into
@@ -54,24 +61,47 @@ export default class InsertSignatureCommand extends Command {
 		// which has a loosened schema.
 		const modelFragment = editor.data.toModel(viewFragment)
 
-		const signature = writer.createElement('signature')
-		writer.append(writer.createText('--'), signature)
-		writer.append(writer.createElement('paragraph'), signature)
-		writer.append(modelFragment, signature)
+		const signatureElement = writer.createElement('signature')
+		writer.append(writer.createText('-- '), signatureElement)
+		writer.append(writer.createElement('paragraph'), signatureElement)
+		writer.append(modelFragment, signatureElement)
+		if (signatureAboveQuote) {
+			writer.append(writer.createElement('paragraph'), signatureElement)
+		}
 
-		editor.model.insertContent(
-			signature,
-			writer.createPositionAt(editor.model.document.getRoot(), 'end')
-		)
+		const signaturePosition = signatureAboveQuote ? this.findPositionAboveQuote(editor, writer) : writer.createPositionAt(editor.model.document.getRoot(), 'end')
+		editor.model.insertContent(signatureElement, signaturePosition)
 	}
 
 	/**
-	 * @param {string} value signature to append
+	 *
+	 * @param {*} editor the editor instance
+	 * @param {*} writer the writer instance
+	 * @returns {*} the position above the quoted text; position 1 if no quote found
 	 */
-	execute({ value }) {
+	findPositionAboveQuote(editor, writer) {
+		// Create a range spanning over the entire root content:
+		const range = editor.model.createRangeIn(
+			editor.model.document.getRoot()
+		)
+
+		// Iterate over all items in this range:
+		for (const value of range.getWalker({ shallow: true })) {
+			if (value.item.is('element') && value.item.name === 'quote') {
+				return writer.createPositionBefore(value.item)
+			}
+		}
+
+		return writer.createPositionAt(editor.model.document.getRoot(), 'end')
+	}
+
+	/**
+	 * @param {*} param0 the signature text and position
+	 */
+	execute({ signature, signatureAboveQuote }) {
 		this.editor.model.change(writer => {
 			this.removeSignatureElement(this.editor, writer)
-			this.insertSignatureElement(this.editor, writer, value)
+			this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
 		})
 	}
 

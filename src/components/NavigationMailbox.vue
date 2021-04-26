@@ -39,79 +39,77 @@
 		@update:menuOpen="onMenuToggle">
 		<!-- actions -->
 		<template slot="actions">
-			<template>
-				<ActionText
-					v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
-					icon="icon-info"
-					:title="mailbox.name">
-					{{ statsText }}
-				</ActionText>
+			<ActionText
+				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
+				icon="icon-info"
+				:title="mailbox.name">
+				{{ statsText }}
+			</ActionText>
 
-				<ActionButton
-					v-if="mailbox.specialRole !== 'flagged' && !account.isUnified"
-					icon="icon-mail"
-					:title="t('mail', 'Mark all as read')"
-					:disabled="loadingMarkAsRead"
-					@click="markAsRead">
-					{{ t('mail', 'Mark all messages of this mailbox as read') }}
-				</ActionButton>
-				<ActionButton
-					v-if="!editing && top && !account.isUnified && mailbox.specialRole !== 'flagged'"
-					icon="icon-folder"
-					@click="openCreateMailbox">
-					{{ t('mail', 'Add submailbox') }}
-				</ActionButton>
-				<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createMailbox" />
-				<ActionButton
-					v-if="renameLabel && !hasSubMailboxes && !account.isUnified"
-					icon="icon-rename"
-					@click.prevent.stop="openRenameInput">
-					{{ t('mail', 'Edit name') }}
-				</ActionButton>
-				<ActionInput
-					v-if="renameInput"
-					icon="icon-rename"
-					:value.sync="mailboxName"
-					@submit.prevent.stop="renameMailbox" />
-				<ActionText v-if="showSaving" icon="icon-loading-small">
-					{{ t('mail', 'Saving') }}
-				</ActionText>
-				<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes"
-					:id="genId(mailbox)"
-					icon="icon-external"
-					:close-after-click="true"
-					@click.prevent="onOpenMoveModal">
-					{{ t('mail', 'Move') }}
-				</ActionButton>
-				<ActionButton
-					v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
-					icon="icon-settings"
-					:title="t('mail', 'Clear cache')"
-					:disabled="clearingCache"
-					@click="clearCache">
-					{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
-				</ActionButton>
+			<ActionButton
+				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified"
+				icon="icon-mail"
+				:title="t('mail', 'Mark all as read')"
+				:disabled="loadingMarkAsRead"
+				@click="markAsRead">
+				{{ t('mail', 'Mark all messages of this mailbox as read') }}
+			</ActionButton>
+			<ActionButton
+				v-if="!editing && top && !account.isUnified && mailbox.specialRole !== 'flagged'"
+				icon="icon-folder"
+				@click="openCreateMailbox">
+				{{ t('mail', 'Add submailbox') }}
+			</ActionButton>
+			<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createMailbox" />
+			<ActionButton
+				v-if="renameLabel && !hasSubMailboxes && !account.isUnified"
+				icon="icon-rename"
+				@click.prevent.stop="openRenameInput">
+				{{ t('mail', 'Edit name') }}
+			</ActionButton>
+			<ActionInput
+				v-if="renameInput"
+				icon="icon-rename"
+				:value.sync="mailboxName"
+				@submit.prevent.stop="renameMailbox" />
+			<ActionText v-if="showSaving" icon="icon-loading-small">
+				{{ t('mail', 'Saving') }}
+			</ActionText>
+			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes"
+				:id="genId(mailbox)"
+				icon="icon-external"
+				:close-after-click="true"
+				@click.prevent="onOpenMoveModal">
+				{{ t('mail', 'Move') }}
+			</ActionButton>
+			<ActionButton
+				v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
+				icon="icon-settings"
+				:title="t('mail', 'Clear cache')"
+				:disabled="clearingCache"
+				@click="clearCache">
+				{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
+			</ActionButton>
 
-				<ActionCheckbox
-					v-if="notVirtual"
-					:checked="isSubscribed"
-					:disabled="changeSubscription"
-					@update:checked="changeFolderSubscription">
-					{{ t('mail', 'Subscribed') }}
-				</ActionCheckbox>
+			<ActionCheckbox
+				v-if="notVirtual"
+				:checked="isSubscribed"
+				:disabled="changeSubscription"
+				@update:checked="changeFolderSubscription">
+				{{ t('mail', 'Subscribed') }}
+			</ActionCheckbox>
 
-				<ActionCheckbox
-					v-if="notVirtual && notInbox"
-					:checked="mailbox.syncInBackground"
-					:disabled="changingSyncInBackground"
-					@update:checked="changeSyncInBackground">
-					{{ t('mail', 'Sync in background') }}
-				</ActionCheckbox>
+			<ActionCheckbox
+				v-if="notVirtual && notInbox"
+				:checked="mailbox.syncInBackground"
+				:disabled="changingSyncInBackground"
+				@update:checked="changeSyncInBackground">
+				{{ t('mail', 'Sync in background') }}
+			</ActionCheckbox>
 
-				<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" icon="icon-delete" @click="deleteMailbox">
-					{{ t('mail', 'Delete mailbox') }}
-				</ActionButton>
-			</template>
+			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" icon="icon-delete" @click="deleteMailbox">
+				{{ t('mail', 'Delete mailbox') }}
+			</ActionButton>
 		</template>
 		<AppNavigationCounter v-if="mailbox.unread" slot="counter">
 			{{ mailbox.unread }}

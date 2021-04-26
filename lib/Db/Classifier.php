@@ -113,7 +113,7 @@ class Classifier extends Entity {
 		$this->addType('precisionImportant', 'float');
 		$this->addType('f1ScoreImportant', 'float');
 		$this->addType('duration', 'int');
-		$this->addType('active', 'bool');
+		$this->addType('active', 'boolean');
 		$this->addType('createdAt', 'int');
 	}
 }

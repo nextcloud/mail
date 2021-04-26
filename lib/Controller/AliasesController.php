@@ -26,27 +26,26 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use OCP\IUser;
-use OCP\IUserSession;
 
 class AliasesController extends Controller {
 
 	/** @var AliasesService */
 	private $aliasService;
 
-	/** @var IUser */
-	private $currentUser;
+	/** @var string */
+	private $currentUserId;
 
 	public function __construct(string $appName,
 								IRequest $request,
 								AliasesService $aliasesService,
-								IUserSession $userSession) {
+								string $UserId) {
 		parent::__construct($appName, $request);
 		$this->aliasService = $aliasesService;
-		$this->currentUser = $userSession->getUser();
+		$this->currentUserId = $UserId;
 	}
 
 	/**
@@ -58,7 +57,7 @@ class AliasesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function index(int $accountId): JSONResponse {
-		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUser->getUID()));
+		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUserId));
 	}
 
 	/**
@@ -85,7 +84,7 @@ class AliasesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function destroy(int $id): JSONResponse {
-		return new JSONResponse($this->aliasService->delete($id, $this->currentUser->getUID()));
+		return new JSONResponse($this->aliasService->delete($id, $this->currentUserId));
 	}
 
 	/**
@@ -97,8 +96,27 @@ class AliasesController extends Controller {
 	 * @param string $aliasName
 	 *
 	 * @return JSONResponse
+	 * @throws DoesNotExistException
 	 */
 	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
-		return new JSONResponse($this->aliasService->create($accountId, $alias, $aliasName), Http::STATUS_CREATED);
+		return new JSONResponse(
+			$this->aliasService->create($this->currentUserId, $accountId, $alias, $aliasName),
+			Http::STATUS_CREATED
+		);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 * @param string|null $signature
+	 *
+	 * @return JSONResponse
+	 * @throws DoesNotExistException
+	 */
+	public function updateSignature(int $id, string $signature = null): JSONResponse {
+		$this->aliasService->updateSignature($this->currentUserId, $id, $signature);
+		return new JSONResponse();
 	}
 }

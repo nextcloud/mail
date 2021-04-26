@@ -77,6 +77,7 @@ class AliasMapperTest extends TestCase {
 		$this->alias->setAccountId($a->getId());
 		$this->alias->setAlias('alias@marvel.com');
 		$this->alias->setName('alias');
+		$this->alias->setSignature('Kind regards<br>Alias');
 		/** @var Alias $b */
 		$b = $this->mapper->insert($this->alias);
 
@@ -87,12 +88,14 @@ class AliasMapperTest extends TestCase {
 				'accountId' => $this->alias->getAccountId(),
 				'name' => $this->alias->getName(),
 				'alias' => $this->alias->getAlias(),
-				'id' => $this->alias->getId()
+				'id' => $this->alias->getId(),
+				'signature' => $this->alias->getSignature(),
 			], [
 				'accountId' => $result->getAccountId(),
 				'name' => $result->getName(),
 				'alias' => $result->getAlias(),
-				'id' => $result->getId()
+				'id' => $result->getId(),
+				'signature' => $this->alias->getSignature(),
 			]
 		);
 	}

@@ -24,7 +24,7 @@ class Version1050Date20200923180030 extends SimpleMigrationStep {
 
 		$accountsTable = $schema->getTable('mail_mailboxes');
 		$accountsTable->addColumn('sync_in_background', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 

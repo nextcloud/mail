@@ -34,7 +34,6 @@ OC.L10N.register(
     "Add mail account" : "أضف حساب بريدي",
     "Select account" : "إختيار حساب",
     "Subject" : "الموضوع",
-    "Can not save draft because this account does not have a drafts mailbox configured." : "لا يمكن حفظ المسودة وذلك بسبب عدم ضبط اعدادات المسودات صندوق البريد في هذا الحساب.",
     "Upload attachment" : "رفع المرفقات",
     "Add attachment from Files" : "إضافة مرفقات مِن الملفات",
     "Sending …" : "جار الإرسال",

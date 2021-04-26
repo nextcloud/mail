@@ -50,46 +50,47 @@ class Version1040Date20200422142920 extends SimpleMigrationStep {
 			'length' => 4,
 		]);
 		$messagesTable->addColumn('flag_answered', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_deleted', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_draft', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_flagged', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_seen', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_forwarded', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_junk', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_notjunk', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_attachments', 'boolean', [
 			'notnull' => false,
+			'default' => false,
 		]);
 		$messagesTable->addColumn('flag_important', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('structure_analyzed', 'boolean', [
-			'notnull' => true,
+			'notnull' => false,
 			'default' => false,
 		]);
 		$messagesTable->addColumn('preview_text', 'string', [

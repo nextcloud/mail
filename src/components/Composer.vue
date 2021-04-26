@@ -11,7 +11,6 @@
 				label="name"
 				track-by="selectId"
 				:searchable="false"
-				:hide-selected="true"
 				:custom-label="formatAliases"
 				:placeholder="t('mail', 'Select account')"
 				:clear-on-select="false"
@@ -152,7 +151,7 @@
 				@upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
 				<p class="composer-actions-draft">
-					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Can not save draft because this account does not have a drafts mailbox configured.') }}</span>
+					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Cannot save draft because this account does not have a drafts mailbox configured.') }}</span>
 					<span v-else-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 					<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
@@ -226,6 +225,18 @@
 			{{ t('mail', 'Retry') }}
 		</button>
 	</div>
+	<div v-else-if="state === STATES.WARNING" class="emptycontent" role="alert">
+		<h2>{{ t('mail', 'Warning sending your message') }}</h2>
+		<p v-if="errorText">
+			{{ errorText }}
+		</p>
+		<button class="button primary" @click="state = STATES.EDITING">
+			{{ t('mail', 'Go back') }}
+		</button>
+		<button class="button" @click="onForceSend">
+			{{ t('mail', 'Send anyway') }}
+		</button>
+	</div>
 	<div v-else class="emptycontent">
 		<h2>{{ t('mail', 'Message sent!') }}</h2>
 		<button v-if="!isReply" class="button primary" @click="reset">
@@ -265,6 +276,8 @@ import NoSentMailboxConfiguredError
 	from '../errors/NoSentMailboxConfiguredError'
 import NoDraftsMailboxConfiguredError
 	from '../errors/NoDraftsMailboxConfiguredError'
+import ManyRecipientsError
+	from '../errors/ManyRecipientsError'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -277,7 +290,8 @@ const STATES = Object.seal({
 	UPLOADING: 1,
 	SENDING: 2,
 	ERROR: 3,
-	FINISHED: 4,
+	WARNING: 4,
+	FINISHED: 5,
 })
 
 export default {
@@ -390,6 +404,7 @@ export default {
 					signature: account.signature,
 					name: account.name,
 					emailAddress: account.emailAddress,
+					signatureAboveQuote: account.signatureAboveQuote,
 				},
 				account.aliases.map((alias) => {
 					return {
@@ -397,9 +412,10 @@ export default {
 						aliasId: alias.id,
 						selectId: cnt++,
 						editorMode: account.editorMode,
-						signature: account.signature,
+						signature: alias.signature,
 						name: alias.name,
 						emailAddress: alias.alias,
+						signatureAboveQuote: account.signatureAboveQuote,
 					}
 				}),
 			])
@@ -447,6 +463,21 @@ export default {
 		allRecipients() {
 			this.checkRecipientsKeys()
 		},
+		aliases(newAliases) {
+			console.debug('aliases changed')
+			if (this.selectedAlias === NO_ALIAS_SET) {
+				return
+			}
+
+			const newAlias = newAliases.find(alias => alias.id === this.selectedAlias.id && alias.aliasId === this.selectedAlias.aliasId)
+			if (newAlias === undefined) {
+				// selected alias does not exist anymore.
+				this.onAliasChange(newAliases[0])
+			} else {
+				// update the selected alias
+				this.onAliasChange(newAlias)
+			}
+		},
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -473,9 +504,7 @@ export default {
 
 		// Add attachments in case of forward
 		if (this.forwardFrom?.attachments !== undefined) {
-			// We filter attachments with contentDisposition header set to 'inline' as theyr are rendered
-			// in the HTML body
-			this.forwardFrom.attachments.filter(att => att.disposition !== 'inline').forEach(att => {
+			this.forwardFrom.attachments.forEach(att => {
 				this.attachments.push({
 					fileName: att.fileName,
 					displayName: trimStart('/', att.fileName),
@@ -641,8 +670,8 @@ export default {
 		onInputChanged() {
 			this.saveDraftDebounced(this.getMessageData)
 			if (this.appendSignature) {
-				const signature = this.selectedAlias?.signature || ''
-				this.bus.$emit('insertSignature', toHtml(detect(signature)).value)
+				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
+				this.bus.$emit('insertSignature', signatureValue, this.selectedAlias.signatureAboveQuote)
 				this.appendSignature = false
 			}
 		},
@@ -703,7 +732,7 @@ export default {
 			this.newRecipients.push(res)
 			list.push(res)
 		},
-		async onSend() {
+		async onSend(_, force = false) {
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
@@ -715,22 +744,24 @@ export default {
 				.then(() => (this.state = STATES.SENDING))
 				.then(() => this.draftsPromise)
 				.then(this.getMessageData)
-				.then((data) => this.send(data))
+				.then((data) => this.send({ ...data, force }))
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
 				.catch(async(error) => {
-					logger.error('could not send message', { error })
-					this.errorText = await matchError(error, {
+					logger.error('could not send message', { error });
+					[this.errorText, this.state] = await matchError(error, {
 						[NoSentMailboxConfiguredError.getName()]() {
-							return t('mail', 'No sent mailbox configured. Please pick one in the account settings.')
+							return [t('mail', 'No sent mailbox configured. Please pick one in the account settings.'), STATES.ERROR]
+						},
+						[ManyRecipientsError.getName()]() {
+							return [t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.'), STATES.WARNING]
 						},
 						default(error) {
 							if (error && error.toString) {
-								return error.toString()
+								return [error.toString(), STATES.ERROR]
 							}
 						},
 					})
-					this.state = STATES.ERROR
 				})
 
 			// Sync sent mailbox when it's currently open
@@ -744,6 +775,9 @@ export default {
 					})
 				}, 500)
 			}
+		},
+		async onForceSend() {
+			await this.onSend(null, true)
 		},
 		reset() {
 			this.draftsPromise = Promise.resolve() // "resets" draft uid as well

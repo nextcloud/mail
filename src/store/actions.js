@@ -64,10 +64,12 @@ import {
 	fetchMessage,
 	fetchThread,
 	moveMessage,
-	setEnvelopeFlag, setEnvelopeTag,
+	removeEnvelopeTag,
+	setEnvelopeFlag,
+	setEnvelopeTag,
 	syncEnvelopes,
 } from '../service/MessageService'
-import { createAlias, deleteAlias } from '../service/AliasService'
+import * as AliasService from '../service/AliasService'
 import logger from '../logger'
 import { normalizedEnvelopeListId } from './normalization'
 import { showNewMessagesNotification } from '../service/NotificationService'
@@ -318,7 +320,7 @@ export default {
 		const envelopes = await dispatch('fetchNextEnvelopes', {
 			mailboxId,
 			query,
-			quantity: PAGE_SIZE
+			quantity: PAGE_SIZE,
 		})
 		return envelopes
 	},
@@ -593,25 +595,22 @@ export default {
 			})
 		})
 	},
-	toggleEnvelopeImportant({ commit, getters }, envelope) {
-		// Change immediately and switch back on error
-		const oldState = envelope.tags.$label1
-		commit('tagEnvelope', {
-			envelope,
-			tag: '$label1',
-			value: !oldState,
-		})
-
-		setEnvelopeFlag(envelope.databaseId, '$label1', !oldState).catch((e) => {
-			console.error('could not toggle message important state', e)
-
-			// Revert change
-			commit('tagEnvelope', {
+	async toggleEnvelopeImportant({ dispatch, getters }, envelope) {
+		const importantLabel = '$label1'
+		const tag = getters
+			.getEnvelopeTags(envelope.databaseId)
+			.find((tag) => tag.imapLabel === importantLabel)
+		if (tag) {
+			await dispatch('removeEnvelopeTag', {
 				envelope,
-				tag: '$label1',
-				value: oldState,
+				tag,
 			})
-		})
+		} else {
+			await dispatch('addEnvelopeTag', {
+				envelope,
+				imapLabel: importantLabel,
+			})
+		}
 	},
 	toggleEnvelopeSeen({ commit, getters }, { envelope, seen }) {
 		// Change immediately and switch back on error
@@ -630,29 +629,6 @@ export default {
 			commit('flagEnvelope', {
 				envelope,
 				flag: 'seen',
-				value: oldState,
-			})
-		})
-	},
-	toggleTagImportant({commit, getters }, envelope) {
-		// Change immediately and switch back on error
-		//check if the prop exist and if yes, save it
-		const oldState = envelope.tags
-		commit('tagEnvelope', {
-			envelope,
-			tag: '$label1',
-			// exists? Yes? So unset - (untag) the message
-			// if it doesn't, add /tag) the message,
-			value: !oldState,
-		})
-
-		setEnvelopeTag(envelope.databaseId, '$label1', !oldState).catch((e) => {
-			console.error('could not toggle message important state', e)
-
-			// Revert change
-			commit('tagEnvelope', {
-				envelope,
-				tag: '$label1',
 				value: oldState,
 			})
 		})
@@ -734,12 +710,17 @@ export default {
 		}
 	},
 	async createAlias({ commit }, { account, aliasToAdd }) {
-		const alias = await createAlias(account, aliasToAdd)
+		const alias = await AliasService.createAlias(account, aliasToAdd)
 		commit('createAlias', { account, alias })
 	},
 	async deleteAlias({ commit }, { account, aliasToDelete }) {
-		await deleteAlias(account, aliasToDelete)
+		await AliasService.deleteAlias(account, aliasToDelete)
 		commit('deleteAlias', { account, alias: aliasToDelete })
+	},
+	async updateAliasSignature({ commit }, { account, aliasId, signature }) {
+		await AliasService.updateSignature(account.id, aliasId, signature)
+		commit('patchAlias', { account, aliasId, data: { signature } })
+		commit('editAccount', account)
 	},
 	async renameMailbox({ commit }, { account, mailbox, newName }) {
 		const newMailbox = await patchMailbox(mailbox.databaseId, {
@@ -764,5 +745,24 @@ export default {
 			logger.error('failed to update sieve account: ', { error })
 			throw error
 		}
+	},
+	async addEnvelopeTag({ commit, getters }, { envelope, imapLabel }) {
+		// TODO: fetch tags indepently of envelopes and only send tag id here
+		const tag = await setEnvelopeTag(envelope.databaseId, imapLabel)
+		if (!getters.getTag(tag.id)) {
+			commit('addTag', { tag })
+		}
+
+		commit('addEnvelopeTag', {
+			envelope,
+			tagId: tag.id,
+		})
+	},
+	async removeEnvelopeTag({ commit }, { envelope, tag }) {
+		await removeEnvelopeTag(envelope.databaseId, tag.imapLabel)
+		commit('removeEnvelopeTag', {
+			envelope,
+			tagId: tag.id,
+		})
 	},
 }
