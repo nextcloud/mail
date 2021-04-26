@@ -70,6 +70,7 @@ class MailAccountTest extends TestCase {
 			'sentMailboxId' => null,
 			'trashMailboxId' => null,
 			'sieveEnabled' => false,
+			'signatureAboveQuote' => false,
 		], $a->toJson());
 	}
 
@@ -97,6 +98,7 @@ class MailAccountTest extends TestCase {
 			'sentMailboxId' => null,
 			'trashMailboxId' => null,
 			'sieveEnabled' => false,
+			'signatureAboveQuote' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency
