@@ -33,7 +33,7 @@ use RuntimeException;
 use OCP\IDBConnection;
 use function array_map;
 use function get_class;
-use function mb_substr;
+use function mb_strcut;
 use function array_keys;
 use function array_combine;
 use function array_udiff;
@@ -323,7 +323,7 @@ class MessageMapper extends QBMapper {
 
 					$qb2->setParameter('message_id', $messageId, IQueryBuilder::PARAM_INT);
 					$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
-					$qb2->setParameter('label', mb_substr($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
+					$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
 					$qb2->setParameter('email', $recipient->getEmail(), IQueryBuilder::PARAM_STR);
 
 					$qb2->execute();
