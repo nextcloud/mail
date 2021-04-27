@@ -37,7 +37,6 @@ use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
@@ -151,28 +150,6 @@ class MailManagerTest extends TestCase {
 		$created = $this->manager->createMailbox($account, 'new');
 
 		$this->assertEquals($mailbox, $created);
-	}
-
-	public function testGetFolderStats() {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
-		$stats = $this->createMock(FolderStats::class);
-		$this->folderMapper->expects($this->once())
-			->method('getFoldersStatusAsObject')
-			->with($this->equalTo($client), $this->equalTo('INBOX'))
-			->willReturn($stats);
-		$mailbox = new Mailbox();
-		$mailbox->setName('INBOX');
-
-		$actual = $this->manager->getMailboxStats(
-			$account,
-			$mailbox
-		);
-
-		$this->assertEquals($stats, $actual);
 	}
 
 	public function testDeleteMessageSourceFolderNotFound(): void {

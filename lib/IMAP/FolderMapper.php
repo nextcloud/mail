@@ -139,13 +139,13 @@ class FolderMapper {
 	 *
 	 * @throws Horde_Imap_Client_Exception
 	 *
-	 * @return FolderStats
+	 * @return MailboxStats
 	 */
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
-											 string $mailbox): FolderStats {
+											 string $mailbox): MailboxStats {
 		$status = $client->status($mailbox);
 
-		return new FolderStats(
+		return new MailboxStats(
 			$status['messages'],
 			$status['unseen']
 		);

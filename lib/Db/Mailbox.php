@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Db;
 
 use JsonSerializable;
+use OCA\Mail\IMAP\MailboxStats;
 use OCP\AppFramework\Db\Entity;
 use function base64_encode;
 use function in_array;
@@ -138,6 +139,13 @@ class Mailbox extends Entity implements JsonSerializable {
 		return false;
 	}
 
+	/**
+	 * @return MailboxStats
+	 */
+	public function getStats(): MailboxStats {
+		return new MailboxStats($this->getMessages(), $this->getUnseen());
+	}
+
 	public function jsonSerialize() {
 		$specialUse = $this->getSpecialUseParsed();
 		return [
@@ -152,6 +160,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'specialRole' => $specialUse[0] ?? 0,
 			'mailboxes' => [],
 			'syncInBackground' => ($this->getSyncInBackground() === true),
+			'unread' => $this->unseen,
 		];
 	}
 }
