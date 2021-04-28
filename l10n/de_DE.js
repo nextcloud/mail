@@ -233,6 +233,7 @@ OC.L10N.register(
     "Save sieve settings" : "Sieve-Einstellungen speichern",
     "Save sieve script" : "Sieve-Skript speichern",
     "Signature …" : "Signatur …",
+    "Place signature above quoted text" : "Signatur über dem zitierten Text platzieren",
     "Save signature" : "Signatur speichern",
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "Remove" : "Entfernen",

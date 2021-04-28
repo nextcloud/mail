@@ -233,6 +233,7 @@ OC.L10N.register(
     "Save sieve settings" : "Sieve ayarlarını kaydet",
     "Save sieve script" : "Sieve betiğini kaydet",
     "Signature …" : "İmza …",
+    "Place signature above quoted text" : "İmza alıntılanan metnin üzerine yerleştirilsin",
     "Save signature" : "İmzayı kaydet",
     "Could not load your message thread" : "İleti grubunuz yüklenemedi",
     "Remove" : "Sil",
