@@ -38,6 +38,7 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -725,6 +726,20 @@ class MessagesController extends Controller {
 
 		$this->mailManager->tagMessage($account, $mailbox->getName(), $message, $tag, false);
 		return new JSONResponse($tag);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * Messages are not expected to be deleted one by one anymore
+	 * => function deleteMessages is expected to be used.
+	 * @param int $id
+	 *
+	 * @throws NotImplemented
+	 */
+	public function destroy(int $id): void {
+		throw new \OCA\Mail\Exception\NotImplemented();
 	}
 
 	/**
