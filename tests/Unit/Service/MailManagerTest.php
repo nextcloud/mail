@@ -163,11 +163,8 @@ class MailManagerTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessagesDeletedEvent::class),
-				$this->anything()
-			);
+			->method('dispatchTyped')
+			->with($this->anything());
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -188,11 +185,8 @@ class MailManagerTest extends TestCase {
 		$mailAccount->setTrashMailboxId(123);
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessagesDeletedEvent::class),
-				$this->anything()
-			);
+			->method('dispatchTyped')
+			->with($this->anything());
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -221,7 +215,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -261,7 +255,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'Trash')
