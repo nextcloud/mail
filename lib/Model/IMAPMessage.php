@@ -49,6 +49,7 @@ use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_DateTime;
 use OCA\Mail\Db\LocalAttachment;
 use function mb_convert_encoding;
+use function mb_strcut;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Mime_Headers_MessageId;
 use Horde_Imap_Client_Fetch_Query;
@@ -703,7 +704,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setTo($this->getTo());
 		$msg->setCc($this->getCc());
 		$msg->setBcc($this->getBcc());
-		$msg->setSubject(mb_substr($this->getSubject(), 0, 255));
+		$msg->setSubject(mb_strcut($this->getSubject(), 0, 255));
 		$msg->setSentAt($this->getSentDate()->getTimestamp());
 
 		$flags = $this->fetch->getFlags();

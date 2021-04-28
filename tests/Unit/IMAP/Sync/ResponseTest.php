@@ -34,6 +34,7 @@ class ResponseTest extends TestCase {
 			'newMessages' => [],
 			'changedMessages' => [],
 			'vanishedMessages' => [],
+			'stats' => null,
 		];
 
 		$json = $response->jsonSerialize();

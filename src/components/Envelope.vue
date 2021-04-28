@@ -54,12 +54,6 @@
 				<em>{{ t('mail', 'Draft: ') }}</em>
 			</span>
 			{{ data.subject }}
-<!--				<div v-for="tag in tags"
-					:key="tag.id"
-					:style="{'background-color': tag.color}"
-					class="tagGroup">
-					<span class="tagLabel">{{ tag.displayName }} </span>
-				</div>-->
 		</template>
 		<template #actions>
 			<ActionButton icon="icon-important"
@@ -122,6 +116,14 @@
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</template>
+			<template #extra>
+			<div v-for="tag in tags"
+				:key="tag.id"
+				:style="{'background-color': tag.color}"
+				class="tagGroup">
+				<span class="tagLabel">{{ tag.displayName }} </span>
+			</div>
+			</template>
 	</ListItem>
 </template>
 <script>
@@ -184,6 +186,7 @@ export default {
 	data() {
 		return {
 			importantSvg,
+			showMoveModal: false,
 		}
 	},
 	computed: {
@@ -321,6 +324,9 @@ export default {
 					},
 				}))
 			}
+		},
+		onOpenMoveModal() {
+			this.showMoveModal = true
 		},
 	},
 }

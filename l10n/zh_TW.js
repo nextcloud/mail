@@ -233,6 +233,7 @@ OC.L10N.register(
     "Save sieve settings" : "儲存過濾設定",
     "Save sieve script" : "儲存過濾指令稿",
     "Signature …" : "簽名……",
+    "Place signature above quoted text" : "將簽名置於引用文字上方",
     "Save signature" : "儲存簽名",
     "Could not load your message thread" : "無法載入您的郵件串",
     "Remove" : "移除",

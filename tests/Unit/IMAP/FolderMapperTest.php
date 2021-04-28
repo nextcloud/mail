@@ -29,7 +29,7 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\FolderStats;
+use OCA\Mail\IMAP\MailboxStats;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 
 class FolderMapperTest extends TestCase {
@@ -207,7 +207,7 @@ class FolderMapperTest extends TestCase {
 
 		$stats = $this->mapper->getFoldersStatusAsObject($client, 'INBOX');
 
-		$expected = new FolderStats(123, 2);
+		$expected = new MailboxStats(123, 2);
 		$this->assertEquals($expected, $stats);
 	}
 

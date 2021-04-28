@@ -25,6 +25,7 @@ namespace OCA\Mail\IMAP\Sync;
 
 use JsonSerializable;
 use OCA\Mail\Db\Message;
+use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Model\IMAPMessage;
 
 class Response implements JsonSerializable {
@@ -38,18 +39,23 @@ class Response implements JsonSerializable {
 	/** @var int[] */
 	private $vanishedMessageUids;
 
+	/** @var MailboxStats */
+	private $stats;
+
 	/**
-	 * @param string $syncToken
 	 * @param IMAPMessage[]|Message[] $newMessages
 	 * @param IMAPMessage[]|Message[] $changedMessages
 	 * @param int[] $vanishedMessageUids
+	 * @param MailboxStats|null $stats
 	 */
 	public function __construct(array $newMessages = [],
 								array $changedMessages = [],
-								array $vanishedMessageUids = []) {
+								array $vanishedMessageUids = [],
+								MailboxStats $stats = null) {
 		$this->newMessages = $newMessages;
 		$this->changedMessages = $changedMessages;
 		$this->vanishedMessageUids = $vanishedMessageUids;
+		$this->stats = $stats;
 	}
 
 	/**
@@ -73,11 +79,19 @@ class Response implements JsonSerializable {
 		return $this->vanishedMessageUids;
 	}
 
+	/**
+	 * @return MailboxStats
+	 */
+	public function getStats(): MailboxStats {
+		return $this->stats;
+	}
+
 	public function jsonSerialize(): array {
 		return [
 			'newMessages' => $this->newMessages,
 			'changedMessages' => $this->changedMessages,
 			'vanishedMessages' => $this->vanishedMessageUids,
+			'stats' => $this->stats,
 		];
 	}
 

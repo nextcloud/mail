@@ -226,11 +226,7 @@ class MailboxesController extends Controller {
 	 */
 	public function stats(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
-		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-
-		$stats = $this->mailManager->getMailboxStats($account, $mailbox);
-
-		return new JSONResponse($stats);
+		return new JSONResponse($mailbox->getStats());
 	}
 
 	/**

@@ -21,6 +21,16 @@
 
 <template>
 	<div class="section">
+		<div>
+			<input
+				id="signature-above-quote-toggle"
+				v-model="signatureAboveQuote"
+				type="checkbox"
+				class="checkbox">
+			<label for="signature-above-quote-toggle">
+				{{ t("mail", "Place signature above quoted text") }}
+			</label>
+		</div>
 		<Multiselect
 			v-if="identities.length > 1"
 			:allow-empty="false"
@@ -30,7 +40,8 @@
 			label="label"
 			track-by="id"
 			@select="changeIdentity" />
-		<TextEditor v-model="signature"
+		<TextEditor
+			v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus" />
@@ -39,10 +50,10 @@
 			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
 			:disabled="loading"
 			@click="saveSignature">
-			{{ t('mail', 'Save signature') }}
+			{{ t("mail", "Save signature") }}
 		</button>
 		<button v-if="signature" class="button-text" @click="deleteSignature">
-			{{ t('mail', 'Delete') }}
+			{{ t("mail", "Delete") }}
 		</button>
 	</div>
 </template>
@@ -72,6 +83,7 @@ export default {
 			bus: new Vue(),
 			identity: null,
 			signature: '',
+			signatureAboveQuote: this.account.signatureAboveQuote,
 		}
 	},
 	computed: {
@@ -93,6 +105,22 @@ export default {
 			return identities
 		},
 	},
+	watch: {
+		async signatureAboveQuote(val, oldVal) {
+			try {
+				await this.$store.dispatch('patchAccount', {
+					account: this.account,
+					data: {
+						signatureAboveQuote: val,
+					},
+				})
+				logger.debug('signature above quoted updated to ' + val)
+			} catch (e) {
+				logger.error('could not update signature above quote', { e })
+				this.signatureAboveQuote = oldVal
+			}
+		},
+	},
 	beforeMount() {
 		this.changeIdentity(this.identities[0])
 	},
@@ -100,7 +128,9 @@ export default {
 		changeIdentity(identity) {
 			logger.debug('select identity', { identity })
 			this.identity = identity
-			this.signature = identity.signature ? toHtml(detect(identity.signature)).value : ''
+			this.signature = identity.signature
+				? toHtml(detect(identity.signature)).value
+				: ''
 		},
 		async deleteSignature() {
 			this.signature = null
@@ -136,48 +166,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .ck.ck-editor__editable_inline {
-	width: 100%;
-	max-width: 78vw;
-	height: 100px;
-	border-radius: var(--border-radius) !important;
-	border: 1px solid var(--color-border) !important;
-	box-shadow: none !important;
+  width: 100%;
+  max-width: 78vw;
+  height: 100px;
+  border-radius: var(--border-radius) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: none !important;
 }
 
 .primary {
-	padding-left: 26px;
-	background-position: 6px;
-	color: var(--color-main-background);
+  padding-left: 26px;
+  background-position: 6px;
+  color: var(--color-main-background);
 
-	&:after {
-		left: 14px;
-	}
+  &:after {
+    left: 14px;
+  }
 }
 
 .button-text {
-	background-color: transparent;
-	border: none;
-	color: var(--color-text-maxcontrast);
-	font-weight: normal;
+  background-color: transparent;
+  border: none;
+  color: var(--color-text-maxcontrast);
+  font-weight: normal;
 
-	&:hover,
-	&:focus {
-		color: var(--color-main-text);
-	}
+  &:hover,
+  &:focus {
+    color: var(--color-main-text);
+  }
 }
 .section {
-	display: block;
-	padding: 0;
-	margin-bottom: 23px;
+  display: block;
+  padding: 0;
+  margin-bottom: 23px;
 }
 .multiselect--single {
-	width: 100%;
+  width: 100%;
 }
 </style>
 <style>
 .ck-balloon-panel {
-	z-index: 10000 !important;
+  z-index: 10000 !important;
 }
 </style>

@@ -233,6 +233,7 @@ OC.L10N.register(
     "Save sieve settings" : "保存 sieve 设置",
     "Save sieve script" : "保存 sieve 脚本",
     "Signature …" : "签名...",
+    "Place signature above quoted text" : "把签名放在引用文本上方",
     "Save signature" : "保存签名",
     "Could not load your message thread" : "无法加载您的消息线线程",
     "Remove" : "删除",

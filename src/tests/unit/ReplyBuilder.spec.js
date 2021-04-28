@@ -23,9 +23,9 @@
 import {
 	buildRecipients,
 	buildReplyBody,
-	buildReplySubject
+	buildReplySubject,
 } from '../../ReplyBuilder'
-import {html, plain} from '../../util/text'
+import { html, plain } from '../../util/text'
 
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {
@@ -34,8 +34,8 @@ describe('ReplyBuilder', () => {
 		const replyBodyTop = buildReplyBody(body)
 		const replyBodyBottom = buildReplyBody(body, undefined, undefined, false)
 
-		expect(replyBodyTop).to.deep.equal(html('<p></p><p></p><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers'))
-		expect(replyBodyBottom).to.deep.equal(html('<br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers<p></p><p></p>'))
+		expect(replyBodyTop).to.deep.equal(html('<p></p><p></p><div class="quote"><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers</div>'))
+		expect(replyBodyBottom).to.deep.equal(html('<div class="quote"><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers</div><p></p><p></p>'))
 	})
 
 	it('creates a reply body', () => {
@@ -59,7 +59,7 @@ describe('ReplyBuilder', () => {
 			false
 		)
 
-		expect(replyBodyTop.value.startsWith(html('<p></p><p></p>"Test User" test@user.ru – November 5, 2018 ').value)).to.be.true
+		expect(replyBodyTop.value.startsWith(html('<p></p><p></p><div class="quote">"Test User" test@user.ru – November 5, 2018 ').value)).to.be.true
 		expect(replyBodyBottom.value.endsWith(html('<p></p><p></p>').value)).to.be.true
 	})
 

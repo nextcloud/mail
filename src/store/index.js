@@ -47,6 +47,7 @@ export default new Vuex.Store({
 				emailAddress: '',
 				name: '',
 				showSubscribedOnly: false,
+				signatureAboveQuote: false,
 			},
 		},
 		accountList: [UNIFIED_ACCOUNT_ID],

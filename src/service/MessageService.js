@@ -81,6 +81,7 @@ export async function syncEnvelopes(accountId, id, ids, query, init = false) {
 			newMessages: response.data.newMessages.map(amend),
 			changedMessages: response.data.changedMessages.map(amend),
 			vanishedMessages: response.data.vanishedMessages,
+			stats: response.data.stats,
 		}
 	} catch (e) {
 		throw convertAxiosError(e)
