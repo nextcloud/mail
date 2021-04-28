@@ -13,7 +13,8 @@
 								{
 									number: selection.length,
 								}
-							) : n(
+							)
+							: n(
 								'mail',
 								'Mark {number} read',
 								'Mark {number} read',
@@ -38,7 +39,8 @@
 									{
 										number: selection.length,
 									}
-								) : n(
+								)
+								: n(
 									'mail',
 									'Favorite {number}',
 									'Favorite {number}',
@@ -325,13 +327,10 @@ export default {
 
 			try {
 				// Delete messages per batch of 50 messages so as to not overload server or create timeouts
-				let start = 0
-				let batch = []
-				do {
-					batch = ids.slice(start, start + 50)
+				while (ids.length > 0) {
+					const batch = ids.splice(-50)
 					await this.$store.dispatch('deleteThreads', { ids: batch })
-					start += 50
-				} while (batch.length === 50)
+				}
 			} catch (error) {
 				showError(await matchError(error, {
 					[NoTrashMailboxConfiguredError.getName()]() {

@@ -107,17 +107,13 @@ export class DroppableMailbox {
 			})
 
 			// Move messages per batch of 50 messages so as to not overload server or create timeouts
-			let start = 0
-			let batch = []
-			do {
-				batch = ids.slice(start, 50)
+			while (ids.length > 0) {
+				const batch = ids.splice(-50)
 				await store.dispatch('moveMessages', {
 					ids: batch,
 					destMailboxId: this.options.mailboxId,
 				})
-				start += 50
-			} while (batch.length === 50)
-
+			}
 		} catch (error) {
 			envelopesBeingDragged.map(envelope => {
 				const id = envelope.envelopeId
