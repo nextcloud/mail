@@ -993,11 +993,11 @@ class MessagesControllerTest extends TestCase {
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
-		$this->mailManager->expects($this->exactly(2))
+		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id)
 			->willReturn($message);
-		$this->mailManager->expects($this->exactly(2))
+		$this->mailManager->expects($this->once())
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);
@@ -1053,11 +1053,11 @@ class MessagesControllerTest extends TestCase {
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
-		$this->mailManager->expects($this->exactly(2))
+		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id)
 			->willReturn($message);
-		$this->mailManager->expects($this->exactly(2))
+		$this->mailManager->expects($this->once())
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);

@@ -752,37 +752,35 @@ class MessagesController extends Controller {
 	 *
 	 * @return JSONResponse
 	 *
-	 * @throws ClientException
-	 * @throws ServiceException
 	 */
 	public function deleteMessages(array $ids): JSONResponse {
-		$uids = [];
-		try {
-			// Makes sure all messages to be deleted come from the same mailbox
-			$message = $this->mailManager->getMessage($this->currentUserId, $ids[0]);
-			$firstMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$firstAccount = $this->accountService->find($this->currentUserId, $firstMailbox->getAccountId());
-			foreach ($ids as $id) {
-				$message = $this->mailManager->getMessage($this->currentUserId, $id);
-				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-
-				if ($mailbox->getAccountId() !== $firstMailbox->getAccountId() || $mailbox->getId() !== $firstMailbox->getId()) {
-					return new JSONResponse([], Http::STATUS_FORBIDDEN);
-				}
-
-				array_push($uids,$message->getUid());
+		// Creates a deletion batch subdivised in accounts and mailboxes
+		$batch = [];
+		foreach ($ids as $id) {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$mailboxName = $mailbox->getName();
+			$accountId = $mailbox->getAccountId();
+			if (!array_key_exists($accountId, $batch)) {
+				$batch[$accountId] = [];
 			}
-		} catch (exception $e) {
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+			if (!array_key_exists($mailboxName, $batch[$accountId])) {
+				$batch[$accountId][$mailboxName] = [];
+			}
+			array_push($batch[$accountId][$mailboxName],$message->getUid());
 		}
 
-		$this->logger->debug("deleting messages");
+		// Deletes messages from batch
+		foreach ($batch as $accountId => $subbatch) {
+			foreach($subbatch as $mailboxName => $uids) {
+				$this->mailManager->deleteMessages(
+					$this->accountService->find($this->currentUserId, $accountId),
+					$mailboxName,
+					$uids
+				);
+			};
+		};
 
-		$this->mailManager->deleteMessages(
-			$firstAccount,
-			$firstMailbox->getName(),
-			$uids
-		);
 		return new JSONResponse();
 	}
 
