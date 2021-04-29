@@ -231,6 +231,7 @@
     "Save sieve settings" : "保存 Sieve 設置",
     "Save sieve script" : "保存 Sieve 腳本語言（script）",
     "Signature …" : "簽名……",
+    "Place signature above quoted text" : "將簽名置於引用文字上方",
     "Save signature" : "儲存簽名",
     "Could not load your message thread" : "無法載入您的郵件串",
     "Remove" : "移除",
