@@ -59,6 +59,7 @@
 			</ActionButton>
 			<ActionButton icon="icon-junk"
 				:close-after-click="true"
+				v-if="accountHasSpamFolder"
 				@click.prevent="onToggleJunk">
 				{{
 					envelope.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
@@ -212,6 +213,9 @@ export default {
 				email: this.account.emailAddress,
 			})
 			return recipients.to.concat(recipients.cc).length > 1
+		},
+		accountHasSpamFolder() {
+			return this.account.imapHost !== 'mail.dotplex.com'
 		},
 		replyOneLink() {
 			return {
