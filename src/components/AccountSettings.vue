@@ -56,7 +56,7 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioned" :title="t('mail', 'Mail server')">
+		<AppSettingsSection v-if="showImapSettings && account && !account.provisioned" :title="t('mail', 'Mail server')">
 			<div id="mail-settings">
 				<AccountForm
 					:key="account.accountId"
@@ -140,6 +140,9 @@ export default {
 		email() {
 			return this.account.emailAddress
 		},
+		showImapSettings() {
+			return this.account.imapHost !== 'mail.dotplex.com'
+		}
 	},
 	watch: {
 		showSettings(value) {
