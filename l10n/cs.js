@@ -233,6 +233,7 @@ OC.L10N.register(
     "Save sieve settings" : "Uložit nastavení pro sieve",
     "Save sieve script" : "Uložit sieve skript",
     "Signature …" : "Podpis…",
+    "Place signature above quoted text" : "Vložit podpis nad citovaný text",
     "Save signature" : "Uložit podpis",
     "Could not load your message thread" : "Nepodařilo se načíst vlákno s danou zprávou",
     "Remove" : "Odebrat",
