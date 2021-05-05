@@ -524,7 +524,7 @@ export default {
 			const translated = translateMailboxName(mailbox)
 			switch (translated) {
 				case 'Vorrangiger Posteingang':
-					return 'Kombinierter Posteingang'
+					return 'Übersicht'
 				case 'Archivieren':
 					return 'Archiv'
 				default:
