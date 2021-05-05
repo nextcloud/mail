@@ -142,6 +142,13 @@ export default {
 		},
 		showImapSettings() {
 			return this.account.imapHost !== 'mail.dotplex.com'
+				|| !this.account.imapPort
+				|| !this.account.imapUser
+				|| !this.account.emailAddress
+				|| !this.account.smtpHost
+				|| !this.account.smtpPort
+				|| !this.account.smtpSslMode
+				|| !this.account.smtpUser
 		}
 	},
 	watch: {
