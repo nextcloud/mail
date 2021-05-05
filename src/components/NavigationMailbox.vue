@@ -220,7 +220,7 @@ export default {
 					specialUse: ['flagged'],
 				})
 			}
-			return translateMailboxName(this.mailbox)
+			return this.dotplexOverrideTranslateMailboxName(this.mailbox)
 		},
 		icon() {
 			if (this.filter === 'starred') {
@@ -520,6 +520,17 @@ export default {
 				})
 			}
 		},
+		dotplexOverrideTranslateMailboxName(mailbox) {
+			const translated = translateMailboxName(mailbox)
+			switch (translated) {
+				case 'Vorrangiger Posteingang':
+					return 'Kombinierter Posteingang'
+				case 'Archivieren':
+					return 'Archiv'
+				default:
+					return translated
+			}
+		}
 	},
 }
 </script>
