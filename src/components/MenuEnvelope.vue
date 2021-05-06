@@ -83,7 +83,7 @@
 				:disabled="sourceLoading"
 				:close-after-click="true"
 				@click.prevent="onShowSourceModal">
-				{{ t('mail', 'View source') }}
+				{{ dotplexOverrideTranslation(t('mail', 'View source')) }}
 			</ActionButton>
 			<ActionLink v-if="debug"
 				icon="icon-download"
@@ -330,6 +330,14 @@ export default {
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+		dotplexOverrideTranslation(string) {
+			switch (string) {
+				case 'Quelle ansehen':
+					return 'Quelltext anzeigen'
+				default:
+					return string
+			}
 		},
 	},
 }
