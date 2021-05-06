@@ -477,19 +477,4 @@ div {
 		display: block;
 	}
 }
-
-::v-deep .list-header {
-	padding-left: 40px;
-	border-bottom: 1px solid var(--color-border);
-
-	.app-content-list-item {
-		height: auto;
-		padding: 7px 10px 7px 17px;
-		border-left: 1px solid var(--color-border);
-	}
-
-	h2 {
-		margin-bottom: 0;
-	}
-}
 </style>

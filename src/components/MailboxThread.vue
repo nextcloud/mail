@@ -18,7 +18,10 @@
 					:search-query="query"
 					:bus="bus" />
 				<template v-else>
-					<div class="app-content-list-item">
+					<div class="list-header">
+						<SectionTitle :name="sectionTitle(t('mail', 'Priority inbox'))" />
+					</div>
+					<div class="list-subheader first">
 						<SectionTitle class="important" :name="t('mail', 'Important and unread')" />
 						<Popover trigger="hover focus">
 							<button slot="trigger" :aria-label="t('mail', 'Important info')" class="button icon-info" />
@@ -37,7 +40,9 @@
 						:initial-page-size="5"
 						:collapsible="true"
 						:bus="bus" />
-					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
+					<div class="list-subheader">
+						<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
+					</div>
 					<Mailbox
 						class="namestarred"
 						:account="unifiedAccount"
@@ -47,7 +52,9 @@
 						:is-priority-inbox="true"
 						:initial-page-size="5"
 						:bus="bus" />
-					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
+					<div class="list-subheader">
+						<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
+					</div>
 					<Mailbox
 						class="nameother"
 						:account="unifiedAccount"
@@ -80,6 +87,7 @@ import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 
 export default {
 	name: 'MailboxThread',
@@ -172,6 +180,18 @@ export default {
 			}
 			return this.searchQuery + ' ' + str
 		},
+		sectionTitle(title) {
+			switch (title) {
+				case 'Priority inbox':
+					return 'Overview'
+				case 'Vorrangiger Posteingang':
+					return 'Übersicht'
+				case 'Archivieren':
+					return 'Archiv'
+				default:
+					return translated
+			}
+		},
 	},
 }
 </script>
@@ -209,5 +229,59 @@ export default {
 
 #app-content-wrapper {
 	display: flex;
+}
+
+::v-deep {
+	.list-header,
+	.list-subheader {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		padding-left: 40px;
+		border-bottom: 1px solid var(--color-border);
+
+		.app-content-list-item {
+			height: auto;
+			padding: 12px 10px 11px 17px;
+			border-left: 1px solid var(--color-border);
+		}
+
+		h2 {
+			margin-bottom: 0;
+			font-size: 18px;
+			line-height: 20px;
+		}
+	}
+
+	.list-subheader {
+		border-top: 1px solid var(--color-border);
+		padding-left: 0;
+		margin-top: 30px;
+
+		&.first {
+			margin-top: 0;
+			border-top: none;
+		}
+
+		.app-content-list-item {
+			height: auto;
+			border-left: none;
+			padding: 12px 10px 11px 14px;
+
+			.app-content-list-item {
+				padding: 0;
+			}
+		}
+
+		h2 {
+			margin-bottom: 0;
+			font-size: 16px;
+			line-height: 20px;
+		}
+
+		.button {
+			margin: 0;
+		}
+	}
 }
 </style>
