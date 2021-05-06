@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div class="list-header">
-			<SectionTitle v-if="!account.isUnified" :name="sectionTitle" />
+		<div class="list-header" v-if="!account.isUnified">
+			<SectionTitle :name="sectionTitle" />
 		</div>
 		<transition name="multiselect-header">
 			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
