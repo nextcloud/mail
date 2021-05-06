@@ -100,7 +100,7 @@ export default {
 		Vue.set(state.preferences, key, value)
 	},
 	addAccount(state, account) {
-		account.collapsed = account.collapsed ?? true
+		account.collapsed = account.collapsed ?? false
 		Vue.set(state.accounts, account.id, account)
 		Vue.set(
 			state,
