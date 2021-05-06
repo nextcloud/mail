@@ -388,9 +388,9 @@ class MailManager implements IMailManager {
 					continue;
 				}
 				if ($value) {
-					$this->imapMessageMapper->addFlag($client, $mb, $uid, $imapFlag);
+					$this->imapMessageMapper->addFlag($client, $mb, [$uid], $imapFlag);
 				} else {
-					$this->imapMessageMapper->removeFlag($client, $mb, $uid, $imapFlag);
+					$this->imapMessageMapper->removeFlag($client, $mb, [$uid], $imapFlag);
 				}
 			}
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -438,9 +438,9 @@ class MailManager implements IMailManager {
 			try {
 				if ($value) {
 					// imap keywords and flags work the same way
-					$this->imapMessageMapper->addFlag($client, $mb, $message->getUid(), $tag->getImapLabel());
+					$this->imapMessageMapper->addFlag($client, $mb, [$message->getUid()], $tag->getImapLabel());
 				} else {
-					$this->imapMessageMapper->removeFlag($client, $mb, $message->getUid(), $tag->getImapLabel());
+					$this->imapMessageMapper->removeFlag($client, $mb, [$message->getUid()], $tag->getImapLabel());
 				}
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(

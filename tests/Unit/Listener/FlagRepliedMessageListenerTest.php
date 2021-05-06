@@ -150,7 +150,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 			->with(
 				$client,
 				$mailbox,
-				321,
+				[321],
 				\Horde_Imap_Client::FLAG_ANSWERED
 			);
 		$this->logger->expects($this->never())

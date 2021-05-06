@@ -30,6 +30,7 @@ use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -235,5 +236,69 @@ class MessageMapperTest extends TestCase {
 			5000,
 			300
 		);
+	}
+
+	public function testGetFlagged() {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('inbox');
+		$flag = '$label1';
+		$idsObject = new Horde_Imap_Client_Ids(1);
+
+		$searchResult = [
+			'count' => 1,
+			'match' => $idsObject,
+			'max' => 1,
+			'min' => 1,
+			'relevancy' => []
+		];
+
+		$imapClient->expects($this->once())
+			->method('search')
+			->willReturn($searchResult);
+
+		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
+		$this->assertEquals($result, [1]);
+	}
+
+	public function testGetFlaggedNoMatches() {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('inbox');
+		$flag = '$label1';
+
+		$searchResult = [
+			'count' => 0,
+			'match' => [],
+			'max' => 0,
+			'min' => 0,
+			'relevancy' => []
+		];
+
+		$imapClient->expects($this->once())
+			->method('search')
+			->willReturn($searchResult);
+
+		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
+		$this->assertEquals($result, []);
+	}
+
+	public function testGetFlaggedSearchResultUnexpectedStructure() {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = new Mailbox();
+		$mailbox->setName('inbox');
+		$flag = '$label1';
+
+		$searchResult = [[]];
+
+		$imapClient->expects($this->once())
+			->method('search')
+			->willReturn($searchResult);
+
+		$result = $this->mapper->getFlagged($imapClient, $mailbox, $flag);
+		$this->assertEquals($result, []);
 	}
 }

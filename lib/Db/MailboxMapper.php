@@ -66,6 +66,21 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
+	 * @return \Generator<int>
+	 */
+	public function findAllIds(): \Generator {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('id')
+			->from($this->getTableName());
+
+		$cursor = $qb->execute();
+		while ($row = $cursor->fetch()) {
+			yield (int)$row['id'];
+		}
+		$cursor->closeCursor();
+	}
+
+	/**
 	 * @throws DoesNotExistException
 	 * @throws ServiceException
 	 */
@@ -245,5 +260,28 @@ class MailboxMapper extends QBMapper {
 			->delete($this->getTableName())
 			->where($qb2->expr()->in('id', $qb2->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
 		$query->execute();
+	}
+
+	/**
+	 * Get all UIDS for mail_messages.flag_important = true
+	 *
+	 * @return int[]
+	 */
+	public function findFlaggedImportantUids(int $mailboxId) : array {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb->select('uid')
+				->from('mail_messages')
+				->where(
+					$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailboxId)),
+					$qb->expr()->eq('flag_important', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
+				);
+
+		$cursor = $query->execute();
+		$uids = array_map(function (array $row) {
+			return (int)$row['uid'];
+		}, $cursor->fetchAll());
+		$cursor->closeCursor();
+
+		return $uids;
 	}
 }

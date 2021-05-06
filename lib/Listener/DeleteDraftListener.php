@@ -96,7 +96,7 @@ class DeleteDraftListener implements IEventListener {
 			$this->messageMapper->addFlag(
 				$client,
 				$draftsMailbox,
-				$draft->getUid(), // TODO: the UID could be from another mailbox
+				[$draft->getUid()], // TODO: the UID could be from another mailbox
 				Horde_Imap_Client::FLAG_DELETED
 			);
 		} catch (Horde_Imap_Client_Exception $e) {

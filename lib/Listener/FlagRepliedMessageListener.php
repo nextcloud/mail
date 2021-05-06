@@ -83,7 +83,7 @@ class FlagRepliedMessageListener implements IEventListener {
 			$this->messageMapper->addFlag(
 				$client,
 				$mailbox,
-				$event->getRepliedMessageData()->getMessage()->getUid(),
+				[$event->getRepliedMessageData()->getMessage()->getUid()],
 				Horde_Imap_Client::FLAG_ANSWERED
 			);
 		} catch (Horde_Imap_Client_Exception $e) {

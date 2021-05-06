@@ -111,7 +111,7 @@ class SyncService {
 	public function syncMailbox(Account $account,
 								Mailbox $mailbox,
 								int $criteria,
-								array $knownIds,
+								array $knownIds = null,
 								bool $partialOnly,
 								string $filter = null): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
@@ -123,7 +123,7 @@ class SyncService {
 			$mailbox,
 			$this->logger,
 			$criteria,
-			$this->messageMapper->findUidsForIds($mailbox, $knownIds),
+			$knownIds === null ? null : $this->messageMapper->findUidsForIds($mailbox, $knownIds),
 			!$partialOnly
 		);
 
@@ -133,7 +133,7 @@ class SyncService {
 		return $this->getDatabaseSyncChanges(
 			$account,
 			$mailbox,
-			$knownIds,
+			$knownIds ?? [],
 			$query
 		);
 	}

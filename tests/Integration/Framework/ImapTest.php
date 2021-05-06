@@ -27,6 +27,7 @@ use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_Address;
+use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
 use OCA\Mail\Account;
@@ -145,6 +146,7 @@ trait ImapTest {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
+		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
 		$body = new Horde_Mime_Part();
 		$body->setType('text/plain');
 		$body->setContents($message->getBody());
