@@ -523,6 +523,8 @@ export default {
 		dotplexOverrideTranslateMailboxName(mailbox) {
 			const translated = translateMailboxName(mailbox)
 			switch (translated) {
+				case 'Priority inbox':
+					return 'Overview'
 				case 'Vorrangiger Posteingang':
 					return 'Übersicht'
 				case 'Archivieren':
