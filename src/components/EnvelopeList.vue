@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<div class="list-header">
+			<SectionTitle v-if="!account.isUnified" :name="sectionTitle" />
+		</div>
 		<transition name="multiselect-header">
 			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
 				<div class="button primary" @click.prevent="markSelectedSeenOrUnseen">
@@ -155,6 +158,8 @@ import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 import { differenceWith } from 'ramda'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
+import SectionTitle from './SectionTitle'
 
 export default {
 	name: 'EnvelopeList',
@@ -163,6 +168,7 @@ export default {
 		ActionButton,
 		Envelope,
 		MoveModal,
+		SectionTitle,
 	},
 	props: {
 		account: {
@@ -219,6 +225,19 @@ export default {
 		},
 		selectedEnvelopes() {
 			return this.envelopes.filter((env) => this.selection.includes(env.databaseId))
+		},
+		sectionTitle() {
+			const translated = translateMailboxName(this.mailbox)
+			switch (translated) {
+				case 'Priority inbox':
+					return 'Overview'
+				case 'Vorrangiger Posteingang':
+					return 'Übersicht'
+				case 'Archivieren':
+					return 'Archiv'
+				default:
+					return translated
+			}
 		},
 	},
 	watch: {
@@ -415,7 +434,7 @@ div {
 
 #list-refreshing {
 	position: absolute;
-	left: calc(50% - 8px);
+	right: 10px;
 	overflow: hidden;
 	padding: 12px;
 	background-color: var(--color-main-background);
@@ -429,7 +448,7 @@ div {
 	transition-timing-function: ease-in-out;
 
 	&.refreshing {
-		top: 4px;
+		top: 9px;
 		opacity: 1;
 	}
 }
@@ -456,6 +475,21 @@ div {
 @media only screen and (min-width: 600px) {
 	#action-label {
 		display: block;
+	}
+}
+
+::v-deep .list-header {
+	padding-left: 40px;
+	border-bottom: 1px solid var(--color-border);
+
+	.app-content-list-item {
+		height: auto;
+		padding: 7px 10px 7px 17px;
+		border-left: 1px solid var(--color-border);
+	}
+
+	h2 {
+		margin-bottom: 0;
 	}
 }
 </style>
