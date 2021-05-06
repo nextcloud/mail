@@ -11,8 +11,8 @@
 						<!-- Participants that can fit in the parent div -->
 						<RecipientBubble v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
 							:key="participant.email"
-							:email="participant.label"
-							:label="participantLabel(participant)" />
+							:email="participant.email"
+							:label="participant.label" />
 						<!-- Indicator to show that there are more participants than displayed -->
 						<Popover v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
@@ -230,12 +230,6 @@ export default {
 				}
 			}
 		},
-		participantLabel(participant) {
-			if (participant.label !== participant.email) {
-				return `${participant.label} <${participant.email}>`
-			}
-			return participant.email
-		}
 	},
 }
 </script>
