@@ -284,11 +284,12 @@ export default {
 	}
 
 	.cc-recipients {
-		opacity: 0.5;
+		margin-left: 5px;
 	}
 
 	.cc-recipient,
 	.main-recipient {
+		opacity: 0.5;
 		display: inline-block;
 	}
 
@@ -297,7 +298,7 @@ export default {
 
 		&:after {
 			content: ',';
-			margin-right: 3px;
+			margin-right: 5px;
 		}
 
 		&:last-child {
