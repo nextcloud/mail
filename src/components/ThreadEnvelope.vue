@@ -51,6 +51,14 @@
 						{{ envelope.subject }}
 					</span>
 				</div>
+				<div class="recipients" v-if="expanded">
+					To: <span class="main-recipient">{{ envelope.to && envelope.to[0] ? `${envelope.to[0].label} <${envelope.to[0].email}>` : '' }}</span>
+					<span v-if="envelope.cc.length" class="cc-recipients">
+						Cc: <span v-for="ccRec in envelope.cc"
+							:key="`cc-${ccRec.email}`"
+							class="cc-recipient">{{ ccRec.label !== ccRec.email ? `${ccRec.label} <${ccRec.email}>` : ccRec.email }}</span>
+					</span>
+				</div>
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
@@ -261,7 +269,42 @@ export default {
 
 <style lang="scss" scoped>
 	.sender {
+		font-weight: bold;
+	}
+	.sender,
+	.recipients {
 		margin-left: 8px;
+	}
+
+	.recipients {
+		display: block;
+		font-size: .8em;
+		line-height: 1.5em;
+		margin-top: 5px;
+	}
+
+	.cc-recipients {
+		opacity: 0.5;
+	}
+
+	.cc-recipient,
+	.main-recipient {
+		display: inline-block;
+	}
+
+	.cc-recipient {
+		position: relative;
+
+		&:after {
+			content: ',';
+			margin-right: 3px;
+		}
+
+		&:last-child {
+			&:after {
+				content: '';
+			}
+		}
 	}
 
 	.right {
