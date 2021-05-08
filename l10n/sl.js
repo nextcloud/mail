@@ -233,6 +233,7 @@ OC.L10N.register(
     "Save sieve settings" : "Shrani nastavitve sieve",
     "Save sieve script" : "Shrani skript sieve",
     "Signature …" : "Podpis ...",
+    "Place signature above quoted text" : "Postavi podpis nad navedeno besedilo.",
     "Save signature" : "Shrani podpis",
     "Could not load your message thread" : "Ni mogoče naložiti niti sporočil",
     "Remove" : "Odstrani",
