@@ -51,7 +51,7 @@ class AddMissingMessageIds implements IRepairStep {
 		return 'Add a generated message-id to all Mail messages that have none';
 	}
 
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		$output->info('Looking up messages without a message-id');
 
 		/**
@@ -69,6 +69,9 @@ class AddMissingMessageIds implements IRepairStep {
 		}
 
 		$toFix = $this->mapper->findWithEmptyMessageId();
+		if (empty($toFix)) {
+			return;
+		}
 		$output->info(sprintf('%d messages need an update', count($toFix)));
 		$output->startProgress(count($toFix));
 		foreach ($toFix as $message) {
