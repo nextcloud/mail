@@ -443,9 +443,10 @@ export default {
 	margin: 0 10px;
 	}
 	.tagGroup {
+	font-size: calc(var(--default-font-size) * 0.8);
 	display: inline-block;
 	border: 1px solid transparent;
-	border-radius: 35px;
+	border-radius: var(--border-radius-pill);
 	width: fit-content;
 	font-weight: normal;
 	z-index: 1;
