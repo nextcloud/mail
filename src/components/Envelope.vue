@@ -304,6 +304,7 @@ export default {
 	}
 
 	.app-content-list-item-line-two {
+		opacity: 1;
 		padding-right: 0;
 		margin-top: -3px;
 		font-size: .8em;
