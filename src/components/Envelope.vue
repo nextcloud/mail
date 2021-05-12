@@ -440,7 +440,7 @@ export default {
 
 	.app-content-list-item-details {
 		padding-right: 7px;
-	}
+		}
 	}
 	.tagLabel {
 		margin: 0 10px;
