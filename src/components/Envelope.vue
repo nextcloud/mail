@@ -121,7 +121,10 @@
 				:key="tag.id"
 				:style="{'background-color': tag.color}"
 				class="tagGroup">
-				<span class="tagLabel">{{ tag.displayName }} </span>
+
+				<div class="tagLabel">
+				<span>{{ tag.displayName }} </span>
+			</div>
 			</div>
 			</template>
 	</ListItem>
@@ -436,23 +439,24 @@ export default {
 	}
 
 	.app-content-list-item-details {
-	padding-right: 7px;
+		padding-right: 7px;
 	}
 	}
 	.tagLabel {
-	margin: 0 10px;
+		margin: 0 10px;
+		opacity: 1;
+		font-size: calc(var(--default-font-size) * 0.8);
 	}
 	.tagGroup {
-	font-size: calc(var(--default-font-size) * 0.8);
-	display: inline-block;
-	border: 1px solid transparent;
-	border-radius: var(--border-radius-pill);
-	width: fit-content;
-	font-weight: normal;
-	z-index: 1;
-	position: relative;
-	margin: 0 1px;
-	color: #FFFFFF;
+		display: inline-block;
+		border: 1px solid transparent;
+		border-radius: var(--border-radius-pill);
+		width: fit-content;
+		font-weight: normal;
+		z-index: 1;
+		position: relative;
+		margin: 0 1px;
+		opacity: .2;
 	}
 ::v-deep.list-item__wrapper {
 		list-style: none;
