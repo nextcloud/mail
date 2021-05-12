@@ -232,6 +232,10 @@ export default {
 }
 
 ::v-deep {
+	.app-content-list {
+		max-width: 350px;
+	}
+
 	.list-header,
 	.list-subheader {
 		display: flex;

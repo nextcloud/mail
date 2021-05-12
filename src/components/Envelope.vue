@@ -10,45 +10,47 @@
 		class="list-item-style"
 		:class="{seen: data.flags.seen, draft, selected: selected}"
 		:to="link"
-		:data-envelope-id="data.databaseId"
-		:title="addresses"
-		:details="formatted()">
-		<template #icon>
-			<div
-				v-if="mailbox.isUnified"
-				class="mail-message-account-color"
-				:style="{'background-color': accountColor}" />
-			<div
-				v-if="data.flags.flagged"
-				class="app-content-list-item-star icon-starred"
-				:data-starred="data.flags.flagged ? 'true' : 'false'"
-				@click.prevent="onToggleFlagged" />
-			<div
-				v-if="isImportant"
-				class="app-content-list-item-star svg icon-important"
-				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="onToggleImportant"
-				v-html="importantSvg" />
-			<div
-				v-if="data.flags.junk"
-				class="app-content-list-item-star icon-junk"
-				:data-starred="data.flags.junk ? 'true' : 'false'"
-				@click.prevent="onToggleJunk" />
-			<div class="app-content-list-item-icon">
-				<Avatar :display-name="addresses" :email="avatarEmail" />
-				<p v-if="selectMode" class="app-content-list-item-select-checkbox">
-					<input :id="`select-checkbox-${data.uid}`"
-						class="checkbox"
-						type="checkbox"
-						:checked="selected">
-					<label
-						:for="`select-checkbox-${data.uid}`"
-						@click.exact.prevent="toggleSelected"
-						@click.shift.prevent="onSelectMultiple" />
-				</p>
-			</div>
-		</template>
-		<template #subtitle>
+		:data-envelope-id="data.databaseId">
+		<div
+			v-if="mailbox.isUnified"
+			class="mail-message-account-color"
+			:style="{'background-color': accountColor}" />
+		<div
+			v-if="data.flags.flagged"
+			class="app-content-list-item-star icon-starred"
+			:data-starred="data.flags.flagged ? 'true' : 'false'"
+			@click.prevent="onToggleFlagged" />
+		<div
+			v-if="isImportant"
+			class="app-content-list-item-star icon-important"
+			:data-starred="isImportant ? 'true' : 'false'"
+			@click.prevent="onToggleImportant"
+			v-html="importantSvg" />
+		<div
+			v-if="data.flags.junk"
+			class="app-content-list-item-star icon-junk"
+			:data-starred="data.flags.junk ? 'true' : 'false'"
+			@click.prevent="onToggleJunk" />
+		<div class="app-content-list-item-icon">
+			<Avatar :display-name="addresses" :email="avatarEmail" />
+			<p v-if="selectMode" class="app-content-list-item-select-checkbox">
+				<input :id="`select-checkbox-${data.uid}`"
+					class="checkbox"
+					type="checkbox"
+					:checked="selected">
+				<label
+					:for="`select-checkbox-${data.uid}`"
+					@click.exact.prevent="toggleSelected"
+					@click.shift.prevent="onSelectMultiple" />
+			</p>
+		</div>
+		<div class="app-content-list-item-line-one"
+			:title="addresses">
+			{{ addresses }}
+		</div>
+		<div class="app-content-list-item-line-two"
+			:title="data.subject">
+			<span v-if="data.flags.answered" class="icon-reply"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"><path d="M15 15s-.4-7.8-7-10V1L1 8l7 7v-4c5.1 0 7 4 7 4z"/></svg></span>
 			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">
 				<em>{{ t('mail', 'Draft: ') }}</em>
@@ -450,6 +452,8 @@ list-item-style.draft .app-content-list-item-line-two {
 .icon-attachment {
 	display: inline-block;
 	vertical-align: text-top;
+	transform: scale(.8);
+	margin-top: -1px;
 }
 
 .icon-reply {
@@ -468,27 +472,39 @@ list-item-style.draft .app-content-list-item-line-two {
 .app-content-list .list-item {
 	padding-right: 0;
 
+	.app-content-list-item-line-one {
+		font-weight: 500;
+	}
+
 	.app-content-list-item-line-two {
-	padding-right: 0;
-	margin-top: -8px;
+		padding-right: 0;
+		margin-top: -3px;
+		font-size: .8em;
 	}
 
 	.app-content-list-item-menu {
-	margin-right: -2px;
-	margin-top: -8px;
+		margin-right: -2px;
+		margin-top: -7px;
 
-	::v-deep .action-item__menu {
-	right: 7px !important;
+		::v-deep .action-item__menu {
+			right: 7px !important;
 
-	.action-item__menu_arrow {
-	right: 6px !important;
-	}
-	}
+			.action-item__menu_arrow {
+				right: 6px !important;
+			}
+
+			::v-deep .action-item__menutoggle {
+				min-width: 25px;
+				min-height: 25px;
+				width: 25px;
+				height: 25px;
+			}
+		}
 	}
 
 	.app-content-list-item-details {
 		padding-right: 7px;
-		}
+	}
 }
 ::v-deep .list-item__extra {
 	margin-left: 41px !important;
