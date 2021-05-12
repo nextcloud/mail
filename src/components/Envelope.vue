@@ -477,6 +477,7 @@ list-item-style.draft .app-content-list-item-line-two {
 	}
 
 	.app-content-list-item-line-two {
+		opacity: 1;
 		padding-right: 0;
 		margin-top: -3px;
 		font-size: .8em;
