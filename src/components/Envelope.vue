@@ -50,7 +50,7 @@
 		</div>
 		<div class="app-content-list-item-line-two"
 			:title="data.subject">
-			<span v-if="data.flags.answered" class="icon-reply" />
+			<span v-if="data.flags.answered" class="icon-reply"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"><path d="M15 15s-.4-7.8-7-10V1L1 8l7 7v-4c5.1 0 7 4 7 4z"/></svg></span>
 			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">
 				<em>{{ t('mail', 'Draft: ') }}</em>
@@ -279,6 +279,8 @@ export default {
 .icon-attachment {
 	display: inline-block;
 	vertical-align: text-top;
+	transform: scale(.8);
+	margin-top: -1px;
 }
 
 .icon-reply {
@@ -297,14 +299,19 @@ export default {
 .app-content-list .app-content-list-item {
 	padding-right: 0;
 
+	.app-content-list-item-line-one {
+		font-weight: 500;
+	}
+
 	.app-content-list-item-line-two {
 		padding-right: 0;
-		margin-top: -8px;
+		margin-top: -3px;
+		font-size: .8em;
 	}
 
 	.app-content-list-item-menu {
 		margin-right: -2px;
-		margin-top: -8px;
+		margin-top: -7px;
 
 		::v-deep .action-item__menu {
 			right: 7px !important;
@@ -312,6 +319,13 @@ export default {
 			.action-item__menu_arrow {
 				right: 6px !important;
 			}
+		}
+
+		::v-deep .action-item__menutoggle {
+			    min-width: 25px;
+				min-height: 25px;
+				width: 25px;
+				height: 25px;
 		}
 	}
 
