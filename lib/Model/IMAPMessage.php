@@ -51,6 +51,7 @@ use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 use function in_array;
 use function mb_convert_encoding;
+use function mb_strcut;
 use function trim;
 
 class IMAPMessage implements IMessage, JsonSerializable {
@@ -692,7 +693,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setTo($this->getTo());
 		$msg->setCc($this->getCc());
 		$msg->setBcc($this->getBcc());
-		$msg->setSubject(mb_substr($this->getSubject(), 0, 255));
+		$msg->setSubject(mb_strcut($this->getSubject(), 0, 255));
 		$msg->setSentAt($this->getSentDate()->getTimestamp());
 
 		$flags = $this->fetch->getFlags();
