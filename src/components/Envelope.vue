@@ -57,47 +57,47 @@
 		</template>
 		<template #actions>
 			<ActionButton icon="icon-important"
-						  :close-after-click="true"
-						  @click.prevent="onToggleImportant">
+				:close-after-click="true"
+				@click.prevent="onToggleImportant">
 				{{
 					data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-starred"
-						  :close-after-click="true"
-						  @click.prevent="onToggleFlagged">
+				:close-after-click="true"
+				@click.prevent="onToggleFlagged">
 				{{
 					data.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-mail"
-						  :close-after-click="true"
-						  @click.prevent="onToggleSeen">
+				:close-after-click="true"
+				@click.prevent="onToggleSeen">
 				{{
 					data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-junk"
-						  :close-after-click="true"
-						  @click.prevent="onToggleJunk">
+				:close-after-click="true"
+				@click.prevent="onToggleJunk">
 				{{
 					data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-checkmark"
-						  :close-after-click="true"
-						  @click.prevent="toggleSelected">
+				:close-after-click="true"
+				@click.prevent="toggleSelected">
 				{{
 					selected ? t('mail', 'Unselect') : t('mail', 'Select')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-external"
-						  :close-after-click="true"
-						  @click.prevent="onOpenMoveModal">
+				:close-after-click="true"
+				@click.prevent="onOpenMoveModal">
 				{{ t('mail', 'Move') }}
 			</ActionButton>
 			<ActionRouter icon="icon-add"
-						  :to="{
+				:to="{
 					name: 'message',
 					params: {
 						mailboxId: $route.params.mailboxId,
@@ -111,22 +111,21 @@
 				{{ t('mail', 'Edit as new message') }}
 			</ActionRouter>
 			<ActionButton icon="icon-delete"
-						  :close-after-click="true"
-						  @click.prevent="onDelete">
+				:close-after-click="true"
+				@click.prevent="onDelete">
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</template>
-			<template #extra>
+		<template #extra>
 			<div v-for="tag in tags"
 				:key="tag.id"
 				:style="{'background-color': tag.color}"
 				class="tagGroup">
-
 				<div class="tagLabel">
-				<span>{{ tag.displayName }} </span>
+					<span>{{ tag.displayName }} </span>
+				</div>
 			</div>
-			</div>
-			</template>
+		</template>
 	</ListItem>
 </template>
 <script>
@@ -134,7 +133,6 @@ import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import Avatar from './Avatar'
-import MenuEnvelope from './MenuEnvelope'
 import { calculateAccountColor } from '../util/AccountColor'
 import moment from '@nextcloud/moment'
 import importantSvg from '../../img/important.svg'
@@ -144,13 +142,13 @@ import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 import logger from '../logger'
+import { matchError } from '../errors/match'
 
 export default {
 	name: 'Envelope',
 	components: {
 		ListItem,
 		Avatar,
-		MenuEnvelope,
 		ActionButton,
 		ActionRouter,
 	},
@@ -451,9 +449,7 @@ export default {
 		display: inline-block;
 		border: 1px solid transparent;
 		border-radius: var(--border-radius-pill);
-		width: fit-content;
 		font-weight: normal;
-		z-index: 1;
 		position: relative;
 		margin: 0 1px;
 		opacity: .2;
