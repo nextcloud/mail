@@ -119,11 +119,12 @@
 		<template #extra>
 			<div v-for="tag in tags"
 				:key="tag.id"
-				:style="{'background-color': tag.color}"
-				class="tagGroup">
-				<div class="tagLabel">
-					<span>{{ tag.displayName }} </span>
+				class="tag-group">
+				<div class="tag-group__bg"
+					 :style="{'background-color': tag.color}">
 				</div>
+				<span class="tag-group__label"
+					  :style="{color: tag.color}">{{ tag.displayName }} </span>
 			</div>
 		</template>
 	</ListItem>
@@ -440,19 +441,28 @@ export default {
 		padding-right: 7px;
 		}
 	}
-	.tagLabel {
+	.tag-group__label {
 		margin: 0 10px;
 		opacity: 1;
 		font-size: calc(var(--default-font-size) * 0.8);
 	}
-	.tagGroup {
+.tag-group__bg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	opacity: 15%;
+}
+	.tag-group {
 		display: inline-block;
 		border: 1px solid transparent;
 		border-radius: var(--border-radius-pill);
 		font-weight: normal;
 		position: relative;
 		margin: 0 1px;
-		opacity: .2;
+		overflow: hidden;
 	}
 ::v-deep.list-item__wrapper {
 		list-style: none;
