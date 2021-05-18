@@ -121,8 +121,7 @@
 			:account="account"
 			:envelope="envelope"
 			icon="icon-tag"
-			@close="onCloseTagModal">
-		</TagModal>
+			@close="onCloseTagModal" />
 	</div>
 </template>
 
