@@ -121,10 +121,9 @@
 				:key="tag.id"
 				class="tag-group">
 				<div class="tag-group__bg"
-					 :style="{'background-color': tag.color}">
-				</div>
+					:style="{'background-color': tag.color}" />
 				<span class="tag-group__label"
-					  :style="{color: tag.color}">{{ tag.displayName }} </span>
+					:style="{color: tag.color}">{{ tag.displayName }} </span>
 			</div>
 		</template>
 	</ListItem>
@@ -368,55 +367,55 @@ export default {
 	opacity: 0.5;
 	}
 	}
-	}
+}
 
-	.app-content-list-item .app-content-list-item-select-checkbox {
+.app-content-list-item .app-content-list-item-select-checkbox {
 	display: inline-block;
 	vertical-align: middle;
 	position: absolute;
 	left: 22px;
 	top: 20px;
 	z-index: 50; // same as icon-starred
-	}
+}
 
-	.app-content-list-item:not(.seen) {
+.app-content-list-item:not(.seen) {
 	font-weight: bold;
-	}
-	.app-content-list-item.selected {
+}
+.app-content-list-item.selected {
 	background-color: var(--color-background-dark);
 	font-weight: bold;
-	}
-	.app-content-list-item-star.junk {
+}
+.app-content-list-item-star.junk {
 	background-image: var(--icon-junk-000);
 	opacity: 1;
-	}
-	.app-content-list-item.draft .app-content-list-item-line-two {
+}
+.app-content-list-item.draft .app-content-list-item-line-two {
 	font-style: italic;
-	}
-	.app-content-list-item.active {
+}
+.app-content-list-item.active {
 	background-color: var(--color-primary-light);
-	}
+}
 
-	.icon-reply,
-	.icon-attachment {
+.icon-reply,
+.icon-attachment {
 	display: inline-block;
 	vertical-align: text-top;
-	}
+}
 
-	.icon-reply {
+.icon-reply {
 	background-image: url('../../img/reply.svg');
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)';
 	opacity: 0.5;
-	}
+}
 
-	.icon-attachment {
+.icon-attachment {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
 	opacity: 0.25;
-	}
+}
 
 	// Fix layout of messages in list until we move to component
 
-	.app-content-list .app-content-list-item {
+.app-content-list .app-content-list-item {
 	padding-right: 0;
 
 	.app-content-list-item-line-two {
@@ -440,33 +439,33 @@ export default {
 	.app-content-list-item-details {
 		padding-right: 7px;
 		}
-	}
-	.tag-group__label {
-		margin: 0 10px;
-		opacity: 1;
-		font-size: calc(var(--default-font-size) * 0.8);
-	}
+}
+.tag-group__label {
+	margin: 0 7px;
+	z-index: 2;
+	font-size: calc(var(--default-font-size) * 0.8);
+	font-weight: bold;
+}
 .tag-group__bg {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	z-index: -1;
 	top: 0;
 	left: 0;
 	opacity: 15%;
 }
-	.tag-group {
-		display: inline-block;
-		border: 1px solid transparent;
-		border-radius: var(--border-radius-pill);
-		font-weight: normal;
-		position: relative;
-		margin: 0 1px;
-		overflow: hidden;
-	}
+.tag-group {
+	display: inline-block;
+	border: 1px solid transparent;
+	border-radius: var(--border-radius-pill);
+	font-weight: normal;
+	position: relative;
+	margin: 0 1px;
+	overflow: hidden;
+}
 ::v-deep.list-item__wrapper {
-		list-style: none;
-	}
+	list-style: none;
+}
 .app-content-list-item-star.icon-starred {
 	display: block;
 }

@@ -204,7 +204,7 @@ class TagMapper extends QBMapper {
 						break;
 					case 5:
 						$tag->setDisplayName($this->l10n->t('Later'));
-						$tag->setColor('#DFCC54');
+						$tag->setColor('#B4A443');
 						$tag->setIsDefaultTag(true);
 						break;
 			}
