@@ -102,7 +102,7 @@
     "jsdom": "^16.5.3",
     "jsdom-global": "^3.0.2",
     "mocha": "^8.4.0",
-    "mochapack": "^2.0.6",
+    "mochapack": "^2.1.1",
     "node-sass": "^5.0.0",
     "sass": "^1.32.12",
     "sass-loader": "^10.1.1",
