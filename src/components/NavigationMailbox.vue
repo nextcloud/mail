@@ -111,7 +111,7 @@
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
 		</template>
-		<AppNavigationCounter v-if="mailbox.unread" slot="counter">
+		<AppNavigationCounter v-if="showUnreadCounter" slot="counter">
 			{{ mailbox.unread }}
 		</AppNavigationCounter>
 		<template slot="extra">
@@ -292,6 +292,9 @@ export default {
 				return true
 			}
 			return this.mailbox.specialUse.includes('inbox') && this.$store.getters.accounts.length > 2
+		},
+		showUnreadCounter() {
+			return this.mailbox.unread > 0 && this.filter !== 'starred'
 		},
 	},
 	mounted() {

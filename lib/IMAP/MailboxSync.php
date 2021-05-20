@@ -126,6 +126,33 @@ class MailboxSync {
 		);
 	}
 
+	/**
+	 * Sync unread and total message statistics.
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 *
+	 * @throws ServiceException
+	 */
+	public function syncStats(Account $account, Mailbox $mailbox): void {
+		$client = $this->imapClientFactory->getClient($account);
+
+		try {
+			$stats = $this->folderMapper->getFoldersStatusAsObject($client, $mailbox->getName());
+		} catch (Horde_Imap_Client_Exception $e) {
+			$id = $mailbox->getId();
+			throw new ServiceException(
+				"Could not fetch stats of mailbox $id. IMAP error: " . $e->getMessage(),
+				(int)$e->getCode(),
+				$e
+			);
+		}
+
+		$mailbox->setMessages($stats->getTotal());
+		$mailbox->setUnseen($stats->getUnread());
+		$this->mailboxMapper->update($mailbox);
+	}
+
 	private function persist(Account $account, array $folders, array $existing): void {
 		foreach ($folders as $folder) {
 			if (isset($existing[$folder->getMailbox()])) {
@@ -164,8 +191,8 @@ class MailboxSync {
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
-		$mailbox->setMessages(0); // TODO
-		$mailbox->setUnseen(0); // TODO
+		$mailbox->setMessages($folder->getStatus()['messages'] ?? 0);
+		$mailbox->setUnseen($folder->getStatus()['unseen'] ?? 0);
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->update($mailbox);
@@ -177,8 +204,8 @@ class MailboxSync {
 		$mailbox->setAccountId($account->getId());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
-		$mailbox->setMessages(0); // TODO
-		$mailbox->setUnseen(0); // TODO
+		$mailbox->setMessages($folder->getStatus()['messages'] ?? 0);
+		$mailbox->setUnseen($folder->getStatus()['unseen'] ?? 0);
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->insert($mailbox);

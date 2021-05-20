@@ -34,6 +34,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
@@ -62,18 +63,23 @@ class SyncService {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var MailboxSync */
+	private $mailboxSync;
+
 	public function __construct(ImapToDbSynchronizer $synchronizer,
 								FilterStringParser $filterStringParser,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								PreviewEnhancer $previewEnhancer,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								MailboxSync $mailboxSync) {
 		$this->synchronizer = $synchronizer;
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;
 		$this->logger = $logger;
+		$this->mailboxSync = $mailboxSync;
 	}
 
 	/**
@@ -120,6 +126,8 @@ class SyncService {
 			$this->messageMapper->findUidsForIds($mailbox, $knownIds),
 			!$partialOnly
 		);
+
+		$this->mailboxSync->syncStats($account, $mailbox);
 
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
 		return $this->getDatabaseSyncChanges(
@@ -174,7 +182,8 @@ class SyncService {
 		return new Response(
 			$this->previewEnhancer->process($account, $mailbox, $new),
 			$changed,
-			$vanished
+			$vanished,
+			$mailbox->getStats()
 		);
 	}
 }

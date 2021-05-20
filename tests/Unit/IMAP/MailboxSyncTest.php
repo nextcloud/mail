@@ -32,10 +32,12 @@ use OC\AppFramework\Utility\TimeFactory;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -117,6 +119,12 @@ class MailboxSyncTest extends TestCase {
 			$this->createMock(Folder::class),
 			$this->createMock(Folder::class),
 		];
+		$status = [
+			'unseen' => 10,
+			'messages' => 42,
+		];
+		$folders[0]->method('getStatus')->willReturn($status);
+		$folders[1]->method('getStatus')->willReturn($status);
 		$this->folderMapper->expects($this->once())
 			->method('getFolders')
 			->with($account, $client)
@@ -130,5 +138,29 @@ class MailboxSyncTest extends TestCase {
 			->with($this->equalTo(new MailboxesSynchronizedEvent($account)));
 
 		$this->sync->sync($account, new NullLogger());
+	}
+
+	public function testSyncStats() {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$stats = new MailboxStats(42, 10);
+		$mailbox = new Mailbox();
+		$mailbox->setName('mailbox');
+		$this->folderMapper->expects($this->once())
+			->method('getFoldersStatusAsObject')
+			->with($client, $mailbox->getName())
+			->willReturn($stats);
+		$this->mailboxMapper->expects($this->once())
+			->method('update')
+			->with($mailbox);
+
+		$this->sync->syncStats($account, $mailbox);
+
+		$this->assertEquals(42, $mailbox->getMessages());
+		$this->assertEquals(10, $mailbox->getUnseen());
 	}
 }

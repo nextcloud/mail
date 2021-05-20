@@ -499,6 +499,11 @@ export default {
 					// Already removed from unified inbox
 				})
 
+				commit('setMailboxUnreadCount', {
+					id: mailboxId,
+					unread: syncData.stats.unread,
+				})
+
 				return syncData.newMessages
 			})
 			.catch((error) => {

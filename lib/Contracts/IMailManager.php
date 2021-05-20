@@ -24,12 +24,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Db\Tag;
-use OCA\Mail\Folder;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\Quota;
-use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -65,14 +63,6 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function createMailbox(Account $account, string $name): Mailbox;
-
-	/**
-	 * @param Account $account
-	 * @param Mailbox $mailbox
-	 *
-	 * @return FolderStats
-	 */
-	public function getMailboxStats(Account $account, Mailbox $mailbox): FolderStats;
 
 	/**
 	 * @param Mailbox $mailbox
