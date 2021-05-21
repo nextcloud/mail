@@ -50,12 +50,6 @@
 						{{ t('mail','Remove') }}
 					</button>
 				</div>
-				<button @click.stop="saveNewTag">
-					{{ t('mail', 'Add new tag') }}
-				</button>
-				<ColorPicker v-model="color" class="app-navigation-entry-bullet-wrapper">
-					<div :style="{ backgroundColor: color }" class="color0 icon-colorpicker app-navigation-entry-bullet" />
-				</ColorPicker>
 			</div>
 		</div>
 	</Modal>
@@ -64,15 +58,6 @@
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
-
-function randomColor() {
-	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
-	while (randomHexColor.length < 6) {
-		randomHexColor = '0' + randomHexColor
-	}
-	return '#' + randomHexColor
-}
-
 export default {
 	name: 'TagModal',
 	components: {
@@ -128,23 +113,5 @@ export default {
 	width: 100px;
 	background-color: var(--color-main-background);
 	border: none;
-}
-.app-navigation-entry-bullet-wrapper {
-	width: 44px;
-	height: 44px;
-	display: inline-block;
-	position: absolute;
-	margin-left: 50px;
-	margin-top: 10px;
-	.color0 {
-		width: 30px !important;
-		height: 30px;
-		border-radius: 50%;
-		background-size: 14px;
-	}
-}
- // just a test because the colorpicket is not shown
-.icon-colorpicker {
-	background-image: var(--icon-add-fff);
 }
 </style>
