@@ -109,7 +109,7 @@
     "Embedded message" : "埋込メッセージ",
     "Choose a folder to store the attachment in" : "添付ファイルを保存するフォルダーを選択",
     "Save all to Files" : "すべてファイルに保存",
-    "Choose a folder to store the attachments in" : "添付ファイルを保存するフォルダを選択してください",
+    "Choose a folder to store the attachments in" : "添付ファイルを保存するフォルダーを選択してください",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "PGPで本文が暗号化されています。復号化するためにMailvelopeをインストールしてください。",
     "The images have been blocked to protect your privacy." : "画像はあなたのプライバシーを守るためにブロックされています。",
     "New message" : "新規メッセージ",
