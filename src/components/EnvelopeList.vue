@@ -312,7 +312,7 @@ export default {
 			this.$store.dispatch('fetchNextEnvelopes', {
 				mailboxId: this.mailbox.databaseId,
 				query: this.searchQuery,
-				quantity: this.selectedEnvelopes.length
+				quantity: this.selectedEnvelopes.length,
 			})
 
 			this.unselectAll()

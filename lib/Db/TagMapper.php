@@ -184,27 +184,27 @@ class TagMapper extends QBMapper {
 			switch ($i) {
 					case 1:
 						$tag->setDisplayName($this->l10n->t('Important'));
-						$tag->setColor('#FF0000');
+						$tag->setColor('#FF7A66');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 2:
 						$tag->setDisplayName($this->l10n->t('Work'));
-						$tag->setColor('#FFC300');
+						$tag->setColor('#31CC7C');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 3:
 						$tag->setDisplayName($this->l10n->t('Personal'));
-						$tag->setColor('#008000');
+						$tag->setColor('#A85BF7');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 4:
 						$tag->setDisplayName($this->l10n->t('To Do'));
-						$tag->setColor('#000080');
+						$tag->setColor('#317CCC');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 5:
 						$tag->setDisplayName($this->l10n->t('Later'));
-						$tag->setColor('#800080');
+						$tag->setColor('#B4A443');
 						$tag->setIsDefaultTag(true);
 						break;
 			}
