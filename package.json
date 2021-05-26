@@ -20,7 +20,7 @@
     "@ckeditor/ckeditor5-block-quote": "~27.1.0",
     "@ckeditor/ckeditor5-build-balloon": "~27.1.0",
     "@ckeditor/ckeditor5-core": "^27.1.0",
-    "@ckeditor/ckeditor5-dev-utils": "25.0.0",
+    "@ckeditor/ckeditor5-dev-utils": "25.2.1",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "^25.2.1",
     "@ckeditor/ckeditor5-editor-balloon": "~27.1.0",
     "@ckeditor/ckeditor5-essentials": "~27.1.0",
