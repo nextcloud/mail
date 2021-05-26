@@ -422,7 +422,7 @@ class MailManagerTest extends TestCase {
 			->method('addFlag');
 		$this->imapMessageMapper->expects($this->once())
 			->method('removeFlag')
-			->with($client, $mb, 123, '\\seen');
+			->with($client, $mb, [123], '\\seen');
 
 		$this->manager->flagMessage($account, 'INBOX', 123, 'seen', false);
 	}
@@ -448,7 +448,7 @@ class MailManagerTest extends TestCase {
 			->willReturn(['permflags' => [ "11" => "\*"] ]);
 		$this->imapMessageMapper->expects($this->once())
 			->method('addFlag')
-			->with($client, $mb, 123, Tag::LABEL_IMPORTANT);
+			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);
 		$account->expects($this->once())
 			->method('getUserId')
 			->willReturn('test');
@@ -476,7 +476,7 @@ class MailManagerTest extends TestCase {
 			->willReturn(['permflags' => [ "11" => "\*"] ]);
 		$this->imapMessageMapper->expects($this->once())
 			->method('removeFlag')
-			->with($client, $mb, 123, Tag::LABEL_IMPORTANT);
+			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);
 		$this->imapMessageMapper->expects($this->never())
 			->method('addFlag');
 		$account->expects($this->never())

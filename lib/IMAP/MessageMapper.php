@@ -28,6 +28,7 @@ use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
+use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Mail;
@@ -327,12 +328,12 @@ class MessageMapper {
 	 */
 	public function addFlag(Horde_Imap_Client_Socket $client,
 							Mailbox $mailbox,
-							int $uid,
+							array $uids,
 							string $flag): void {
 		$client->store(
 			$mailbox->getName(),
 			[
-				'ids' => new Horde_Imap_Client_Ids($uid),
+				'ids' => new Horde_Imap_Client_Ids($uids),
 				'add' => [$flag],
 			]
 		);
@@ -343,15 +344,32 @@ class MessageMapper {
 	 */
 	public function removeFlag(Horde_Imap_Client_Socket $client,
 							   Mailbox $mailbox,
-							   int $uid,
+							   array $uids,
 							   string $flag): void {
 		$client->store(
 			$mailbox->getName(),
 			[
-				'ids' => new Horde_Imap_Client_Ids($uid),
+				'ids' => new Horde_Imap_Client_Ids($uids),
 				'remove' => [$flag],
 			]
 		);
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param Mailbox $mailbox
+	 * @param string $flag
+	 * @return int[]
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function getFlagged(Horde_Imap_Client_Socket $client,
+							   Mailbox $mailbox,
+							   string $flag): array {
+		$query = new Horde_Imap_Client_Search_Query();
+		$query->flag($flag, true);
+		$messages = $client->search($mailbox->getName(), $query);
+		return $messages['match']->ids ?? [];
 	}
 
 	/**
