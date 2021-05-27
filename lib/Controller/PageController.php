@@ -137,7 +137,7 @@ class PageController extends Controller {
 		);
 		$this->initialStateService->provideInitialState(
 			'account-settings',
-			json_decode($this->preferences->getPreference('account-settings'), true, 512, JSON_THROW_ON_ERROR) ?? []
+			json_decode($this->preferences->getPreference('account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
 		);
 
 		$user = $this->userSession->getUser();
