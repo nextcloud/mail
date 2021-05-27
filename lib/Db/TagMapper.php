@@ -134,33 +134,37 @@ class TagMapper extends QBMapper {
 			return $message->getMessageId();
 		}, $messages);
 
+		$tags = [];
 		$qb = $this->db->getQueryBuilder();
 		$tagsQuery = $qb->selectDistinct(['t.*', 'mt.imap_message_id'])
 			->from($this->getTableName(), 't')
 			->join('t', 'mail_message_tags', 'mt', $qb->expr()->eq('t.id', 'mt.tag_id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->in('mt.imap_message_id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->in('mt.imap_message_id', $qb->createParameter('ids')),
 				$qb->expr()->eq('t.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
 			);
-		$queryResult = $tagsQuery->execute();
 
-		$tags = [];
-		while (($row = $queryResult->fetch()) !== false) {
-			$messageId = $row['imap_message_id'];
-			if (!isset($tags[$messageId])) {
-				$tags[$messageId] = [];
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$queryResult = $tagsQuery->execute();
+
+			while (($row = $queryResult->fetch()) !== false) {
+				$messageId = $row['imap_message_id'];
+				if (!isset($tags[$messageId])) {
+					$tags[$messageId] = [];
+				}
+
+				// Construct a Tag instance but omit any other joined columns
+				$tags[$messageId][] = Tag::fromRow(array_filter(
+					$row,
+					function (string $key) {
+						return $key !== 'imap_message_id';
+					},
+					ARRAY_FILTER_USE_KEY
+				));
 			}
-
-			// Construct a Tag instance but omit any other joined columns
-			$tags[$messageId][] = Tag::fromRow(array_filter(
-				$row,
-				function (string $key) {
-					return $key !== 'imap_message_id';
-				},
-				ARRAY_FILTER_USE_KEY
-			));
+			$queryResult->closeCursor();
 		}
-		$queryResult->closeCursor();
 		return $tags;
 	}
 
