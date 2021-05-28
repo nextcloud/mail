@@ -54,7 +54,7 @@ class MessageMapperTest extends TestCase {
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->get(SyncService::class);
-		/** @var ImapMessageMapper $messageMapper */
+		/** @var ImapMessageMapper $imapMessageMapper */
 		$imapMessageMapper = OC::$server->get(ImapMessageMapper::class);
 		/** @var MessageMapper $messageMapper */
 		$messageMapper = OC::$server->get(MessageMapper::class);
