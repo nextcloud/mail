@@ -27,6 +27,7 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -65,6 +66,7 @@ class TagsController extends Controller {
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function create(string $displayName, string $color): JSONResponse {
 		$imapLabel = str_replace(' ', '_', $displayName);
@@ -89,7 +91,7 @@ class TagsController extends Controller {
 		try {
 			$tag = $this->tagMapper->insert($tag);
 		} catch (\OCP\DB\Exception $e) {
-			throw new ClientException($e->getMessage(), 0);
+			throw new ServiceException($e->getMessage(), 0);
 		}
 
 		return new JSONResponse($tag);
@@ -103,8 +105,8 @@ class TagsController extends Controller {
 	 * @param string $color
 	 *
 	 * @return JSONResponse
-	 * @throws ClientException
 	 * @throws DoesNotExistException
+	 * @throws ServiceException
 	 */
 	public function update(int $id, string $displayName, string $color): JSONResponse {
 		$tag = $this->tagMapper->getTagForUser($id, $this->currentUserId);
@@ -115,7 +117,7 @@ class TagsController extends Controller {
 		try {
 			$tag = $this->tagMapper->update($tag);
 		} catch (\OCP\DB\Exception $e) {
-			throw new ClientException($e->getMessage(), 0);
+			throw new ServiceException($e->getMessage(), 0);
 		}
 
 		return new JSONResponse($tag);
