@@ -140,12 +140,12 @@ class TagMapper extends QBMapper {
 			->from($this->getTableName(), 't')
 			->join('t', 'mail_message_tags', 'mt', $qb->expr()->eq('t.id', 'mt.tag_id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->in('mt.imap_message_id', $qb->createParameter('ids')),
+				$qb->expr()->in('mt.imap_message_id', $qb->createParameter('ids'), IQueryBuilder::PARAM_STR_ARRAY),
 				$qb->expr()->eq('t.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
 			);
 
 		foreach (array_chunk($ids, 1000) as $chunk) {
-			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
 			$queryResult = $tagsQuery->execute();
 
 			while (($row = $queryResult->fetch()) !== false) {
