@@ -185,7 +185,7 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 		$updateQb = $this->connection->getQueryBuilder();
 		$updateQb = $updateQb->update('mail_accounts')
 			->set('provisioning_id', $updateQb->createNamedParameter($id, IQueryBuilder::PARAM_INT))
-			->where($updateQb->expr()->eq('provisioned', $updateQb->createNamedParameter('true', IQueryBuilder::PARAM_BOOL)));
+			->where($updateQb->expr()->eq('provisioned', $updateQb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)));
 		$updateQb->execute();
 
 		$this->config->deleteAppValue(
