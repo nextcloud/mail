@@ -100,6 +100,16 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'tags#create',
+			'url' => '/api/tags',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'tags#update',
+			'url' => '/api/tags/{id}',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'aliases#updateSignature',
 			'url' => '/api/accounts/{accountId}/aliases/{id}/signature',
 			'verb' => 'PUT'
