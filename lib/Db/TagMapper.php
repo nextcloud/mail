@@ -28,7 +28,6 @@ namespace OCA\Mail\Db;
 use function array_map;
 use function array_chunk;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
@@ -51,7 +50,7 @@ class TagMapper extends QBMapper {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function getTagByImapLabel(string $imapLabel, string $userId): Entity {
+	public function getTagByImapLabel(string $imapLabel, string $userId): Tag {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -65,7 +64,7 @@ class TagMapper extends QBMapper {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function getTagForUser(int $id, string $userId): Entity {
+	public function getTagForUser(int $id, string $userId): Tag {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -78,7 +77,6 @@ class TagMapper extends QBMapper {
 
 	/**
 	 * @return Tag[]
-	 * @throws DoesNotExistException
 	 */
 	public function getAllTagsForUser(string $userId): array {
 		$qb = $this->db->getQueryBuilder();

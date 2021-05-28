@@ -29,33 +29,33 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
-use OC;
 use Exception;
-use function trim;
-use OCP\Files\File;
-use Horde_Mime_Part;
-use OCA\Mail\Db\Tag;
-use JsonSerializable;
-use function in_array;
 use Horde_Imap_Client;
-use Horde_Mime_Headers;
-use OCA\Mail\Db\Message;
-use OCA\Mail\AddressList;
-use Horde_Imap_Client_Ids;
-use OCA\Mail\Service\Html;
-use OCA\Mail\Db\MailAccount;
-use Horde_Imap_Client_Socket;
-use Horde_Imap_Client_Mailbox;
+use Horde_Imap_Client_Data_Envelope;
+use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_DateTime;
+use Horde_Imap_Client_Fetch_Query;
+use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Mailbox;
+use Horde_Imap_Client_Socket;
+use Horde_Mime_Headers;
+use Horde_Mime_Headers_MessageId;
+use Horde_Mime_Part;
+use JsonSerializable;
+use OC;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Message;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Service\Html;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\Files\File;
+use OCP\Files\SimpleFS\ISimpleFile;
+use function in_array;
 use function mb_convert_encoding;
 use function mb_strcut;
-use Horde_Imap_Client_Data_Fetch;
-use Horde_Mime_Headers_MessageId;
-use Horde_Imap_Client_Fetch_Query;
-use OCP\Files\SimpleFS\ISimpleFile;
-use Horde_Imap_Client_Data_Envelope;
-use OCP\AppFramework\Db\DoesNotExistException;
+use function trim;
 
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
@@ -769,9 +769,19 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			if ($keyword === '$important') {
 				$keyword = Tag::LABEL_IMPORTANT;
 			}
+
+			$displayName = str_replace('_', ' ', $keyword);
+			$displayName = strtoupper($displayName);
+			$displayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
+			$displayName = strtolower($displayName);
+			$displayName = ucwords($displayName);
+
+			$keyword = mb_strcut($keyword, 0, 64);
+			$displayName = mb_strcut($displayName, 0, 128);
+
 			$tag = new Tag();
 			$tag->setImapLabel($keyword);
-			$tag->setDisplayName(str_replace('$', '', $keyword));
+			$tag->setDisplayName($displayName);
 			$tag->setUserId($userId);
 			$t[] = $tag;
 		}

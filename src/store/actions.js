@@ -58,6 +58,7 @@ import {
 	patchMailbox,
 } from '../service/MailboxService'
 import {
+	createEnvelopeTag,
 	deleteMessage,
 	fetchEnvelope,
 	fetchEnvelopes,
@@ -776,6 +777,11 @@ export default {
 			logger.error('failed to update sieve account: ', { error })
 			throw error
 		}
+	},
+	async createTag({ commit }, { displayName, color }) {
+		const tag = await createEnvelopeTag(displayName, color)
+		commit('addTag', { tag })
+
 	},
 	async addEnvelopeTag({ commit, getters }, { envelope, imapLabel }) {
 		// TODO: fetch tags indepently of envelopes and only send tag id here

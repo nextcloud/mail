@@ -49,7 +49,6 @@
 			</div>
 		</template>
 		<template #subtitle>
-			<span v-if="data.flags.answered" class="icon-reply" />
 			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">
 				<em>{{ t('mail', 'Draft: ') }}</em>
