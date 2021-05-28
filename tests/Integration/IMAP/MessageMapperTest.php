@@ -43,19 +43,23 @@ class MessageMapperTest extends TestCase {
 		parent::setUp();
 	}
 
-	public function testTagging() {
+	public function tearDown(): void {
+		$this->resetImapAccount();
+	}
+
+	public function testTagging(): void {
 		// First, set up account and retrieve sync token
 		$this->resetImapAccount();
 
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
+		$syncService = OC::$server->get(SyncService::class);
 		/** @var ImapMessageMapper $messageMapper */
-		$imapMessageMapper = OC::$server->query(ImapMessageMapper::class);
+		$imapMessageMapper = OC::$server->get(ImapMessageMapper::class);
 		/** @var MessageMapper $messageMapper */
-		$messageMapper = OC::$server->query(MessageMapper::class);
+		$messageMapper = OC::$server->get(MessageMapper::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->query(IMailManager::class);
+		$mailManager = OC::$server->get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -76,7 +80,7 @@ class MessageMapperTest extends TestCase {
 		try {
 			$imapMessageMapper->addFlag($this->getClient($account), $mailBox, [$newUid], '$label1');
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->fail('Could not tag message');
+			self::fail('Could not tag message');
 		}
 
 		// sync
@@ -93,7 +97,8 @@ class MessageMapperTest extends TestCase {
 		$related = $messageMapper->findRelatedData($messages, $account->getUserId());
 		foreach ($related as $message) {
 			$tags = $message->getTags();
-			$this->assertEquals('$label1', $tags[0]->getImapLabel());
+			self::assertCount(1, $tags);
+			self::assertEquals('$label1', $tags[0]->getImapLabel());
 		}
 
 
@@ -101,7 +106,7 @@ class MessageMapperTest extends TestCase {
 		try {
 			$imapMessageMapper->removeFlag($this->getClient($account), $mailBox, [$newUid], '$label1');
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->fail('Could not untag message');
+			self::fail('Could not untag message');
 		}
 
 		// sync again
@@ -117,19 +122,19 @@ class MessageMapperTest extends TestCase {
 		$related = $messageMapper->findRelatedData($messages, $account->getUserId());
 		foreach ($related as $message) {
 			$tags = $message->getTags();
-			$this->assertEmpty($tags);
+			self::assertEmpty($tags);
 		}
 	}
 
-	public function testGetFlagged() {
+	public function testGetFlagged(): void {
 		// First, set up account and retrieve sync token
 		$this->resetImapAccount();
 
 		$account = $this->createTestAccount();
 		/** @var ImapMessageMapper $messageMapper */
-		$imapMessageMapper = OC::$server->query(ImapMessageMapper::class);
+		$imapMessageMapper = OC::$server->get(ImapMessageMapper::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->query(IMailManager::class);
+		$mailManager = OC::$server->get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -165,39 +170,34 @@ class MessageMapperTest extends TestCase {
 		try {
 			$imapMessageMapper->addFlag($this->getClient($account), $mailBox, [$newUid], '$label1');
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->fail('Could not tag message');
+			self::fail('Could not tag message');
 		}
-
 
 		// now we tag this and the previous message with $label2
 		try {
 			$imapMessageMapper->addFlag($this->getClient($account), $mailBox, [$newUid, $newUid2], '$label2');
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->fail('Could not tag message');
+			self::fail('Could not tag message');
 		}
 
 		// test for labels
 		$tagged = $imapMessageMapper->getFlagged($this->getClient($account), $mailBox, '$label1');
-		$this->assertNotEmpty($tagged);
+		self::assertNotEmpty($tagged);
 		// are the counts correct?
-		$this->assertCount(1, $tagged);
+		self::assertCount(1, $tagged);
 
 		$tagged = $imapMessageMapper->getFlagged($this->getClient($account), $mailBox, '$label2');
-		$this->assertNotEmpty($tagged);
-		$this->assertCount(2, $tagged);
+		self::assertNotEmpty($tagged);
+		self::assertCount(2, $tagged);
 
 		// test for labels that wasn't set
 		$tagged = $imapMessageMapper->getFlagged($this->getClient($account), $mailBox, '$notAvailable');
-		$this->assertEmpty($tagged);
+		self::assertEmpty($tagged);
 
 		// test for regular flag - recent
 		$tagged = $imapMessageMapper->getFlagged($this->getClient($account), $mailBox, Horde_Imap_Client::FLAG_RECENT);
-		$this->assertNotEmpty($tagged);
+		self::assertNotEmpty($tagged);
 		// should return all messages
-		$this->assertCount(3, $tagged);
-	}
-
-	public function tearDown(): void {
-		$this->resetImapAccount();
+		self::assertCount(3, $tagged);
 	}
 }
