@@ -776,6 +776,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			$displayName = strtolower($displayName);
 			$displayName = ucwords($displayName);
 
+			$keyword = mb_strcut($keyword, 0, 64);
+			$displayName = mb_strcut($displayName, 0, 128);
+
 			$tag = new Tag();
 			$tag->setImapLabel($keyword);
 			$tag->setDisplayName($displayName);

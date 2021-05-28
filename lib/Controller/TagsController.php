@@ -69,11 +69,15 @@ class TagsController extends Controller {
 	 * @throws ServiceException
 	 */
 	public function create(string $displayName, string $color): JSONResponse {
+		$this->validateDisplayName($displayName);
+		$this->validateColor($color);
+
 		$imapLabel = str_replace(' ', '_', $displayName);
 		$imapLabel = mb_convert_encoding($imapLabel, 'UTF7-IMAP', 'UTF-8');
 		if ($imapLabel === false) {
 			throw new ClientException('Error converting display name to UTF7-IMAP ', 0);
 		}
+		$imapLabel = mb_strcut($imapLabel, 0, 64);
 
 		try {
 			return new JSONResponse($this->tagMapper->getTagByImapLabel($imapLabel, $this->currentUserId));
@@ -107,8 +111,12 @@ class TagsController extends Controller {
 	 * @return JSONResponse
 	 * @throws DoesNotExistException
 	 * @throws ServiceException
+	 * @throws ClientException
 	 */
 	public function update(int $id, string $displayName, string $color): JSONResponse {
+		$this->validateDisplayName($displayName);
+		$this->validateColor($color);
+
 		$tag = $this->tagMapper->getTagForUser($id, $this->currentUserId);
 
 		$tag->setDisplayName($displayName);
@@ -121,5 +129,23 @@ class TagsController extends Controller {
 		}
 
 		return new JSONResponse($tag);
+	}
+
+	/**
+	 * @throws ClientException
+	 */
+	private function validateDisplayName(string $displayName): void {
+		if (mb_strlen($displayName) > 128) {
+			throw new ClientException('The maximum length for displayName is 128');
+		}
+	}
+
+	/**
+	 * @throws ClientException
+	 */
+	private function validateColor(string $color): void {
+		if (mb_strlen($color) > 9) {
+			throw new ClientException('The maximum length for color is 9');
+		}
 	}
 }
