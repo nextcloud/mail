@@ -23,9 +23,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Provisioning;
 
+use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Db\Provisioning;
+use OCA\Mail\Db\ProvisioningMapper;
+use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\Security\ICrypto;
@@ -36,8 +41,8 @@ class Manager {
 	/** @var IUserManager */
 	private $userManager;
 
-	/** @var ConfigMapper */
-	private $configMapper;
+	/** @var ProvisioningMapper */
+	private $provisioningMapper;
 
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
@@ -49,85 +54,106 @@ class Manager {
 	private $logger;
 
 	public function __construct(IUserManager $userManager,
-								ConfigMapper $configMapper,
+								ProvisioningMapper $provisioningMapper,
 								MailAccountMapper $mailAccountMapper,
 								ICrypto $crypto,
 								LoggerInterface $logger) {
 		$this->userManager = $userManager;
-		$this->configMapper = $configMapper;
+		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->crypto = $crypto;
 		$this->logger = $logger;
 	}
 
-	public function getConfig(): ?Config {
-		return $this->configMapper->load();
+	public function getConfigById(int $provisioningId): ?Provisioning {
+		return $this->provisioningMapper->get($provisioningId);
 	}
 
-	public function provision(Config $config): int {
+	public function getConfigs(): array {
+		return $this->provisioningMapper->getAll();
+	}
+
+	public function provision(): int {
 		$cnt = 0;
-		$this->userManager->callForAllUsers(function (IUser $user) use ($config, &$cnt) {
-			$this->provisionSingleUser($config, $user);
-			$cnt++;
+		$configs = $this->getConfigs();
+		$this->userManager->callForAllUsers(function (IUser $user) use ($configs, &$cnt) {
+			if ($this->provisionSingleUser($configs, $user) === true) {
+				$cnt++;
+			}
 		});
 		return $cnt;
 	}
 
-	public function provisionSingleUser(Config $config, IUser $user): void {
+	/**
+	 * @param Provisioning[] $provisionings
+	 */
+	public function provisionSingleUser(array $provisionings, IUser $user): bool {
+		$provisioning = $this->findMatchingConfig($provisionings, $user);
+
+		if ($provisioning === null) {
+			return false;
+		}
+
 		try {
+			// TODO: match by UID only, catch multiple objects returned below and delete all those accounts
 			$existing = $this->mailAccountMapper->findProvisionedAccount($user);
 
 			$this->mailAccountMapper->update(
-				$this->updateAccount($user, $existing, $config)
+				$this->updateAccount($user, $existing, $provisioning)
 			);
+			return true;
 		} catch (DoesNotExistException $e) {
 			// Fine, then we create a new one
 			$new = new MailAccount();
 			$new->setUserId($user->getUID());
-			$new->setProvisioned(true);
 
 			$this->mailAccountMapper->insert(
-				$this->updateAccount($user, $new, $config)
+				$this->updateAccount($user, $new, $provisioning)
 			);
+			return true;
+		} catch (MultipleObjectsReturnedException $e) {
+			// This is unlikely to happen but not impossible.
+			// Let's wipe any existing accounts and start fresh
+			$this->mailAccountMapper->deleteProvisionedAccountsByUid($user->getUID());
+
+			$new = new MailAccount();
+			$new->setUserId($user->getUID());
+
+			$this->mailAccountMapper->insert(
+				$this->updateAccount($user, $new, $provisioning)
+			);
+			return true;
 		}
+		return false;
 	}
 
-	public function newProvisioning(string $email,
-									string $imapUser,
-									string $imapHost,
-									int $imapPort,
-									string $imapSslMode,
-									string $smtpUser,
-									string $smtpHost,
-									int $smtpPort,
-									string $smtpSslMode,
-									bool $sieveEnabled,
-									string $sieveUser,
-									string $sieveHost,
-									int $sievePort,
-									string $sieveSslMode): void {
-		$config = $this->configMapper->save(new Config([
-			'active' => true,
-			'email' => $email,
-			'imapUser' => $imapUser,
-			'imapHost' => $imapHost,
-			'imapPort' => $imapPort,
-			'imapSslMode' => $imapSslMode,
-			'smtpUser' => $smtpUser,
-			'smtpHost' => $smtpHost,
-			'smtpPort' => $smtpPort,
-			'smtpSslMode' => $smtpSslMode,
-			'sieveEnabled' => $sieveEnabled,
-			'sieveUser' => $sieveUser,
-			'sieveHost' => $sieveHost,
-			'sievePort' => $sievePort,
-			'sieveSslMode' => $sieveSslMode,
-		]));
-
-		$this->provision($config);
+	public function newProvisioning(array $data): void {
+		try {
+			$provisioning = $this->provisioningMapper->validate(
+				$data
+			);
+		} catch (ValidationException $e) {
+			throw $e;
+		}
+		$this->provisioningMapper->insert($provisioning);
 	}
 
-	private function updateAccount(IUser $user, MailAccount $account, Config $config): MailAccount {
+	public function updateProvisioning(array $data): void {
+		try {
+			$provisioning = $this->provisioningMapper->validate(
+				$data
+			);
+		} catch (ValidationException $e) {
+			throw $e;
+		}
+
+		$this->provisioningMapper->update($provisioning);
+	}
+
+	private function updateAccount(IUser $user, MailAccount $account, Provisioning $config): MailAccount {
+		// Set the ID to make sure it reflects when the account switches from one config to another
+		$account->setProvisioningId($config->getId());
+
 		$account->setEmail($config->buildEmail($user));
 		$account->setName($user->getDisplayName());
 		$account->setInboundUser($config->buildImapUser($user));
@@ -155,26 +181,9 @@ class Manager {
 		return $account;
 	}
 
-	public function deprovision(): void {
-		$this->mailAccountMapper->deleteProvisionedAccounts();
-
-		$config = $this->configMapper->load();
-		if ($config !== null) {
-			$config->setActive(false);
-			$this->configMapper->save($config);
-		}
-	}
-
-	public function importConfig(array $data): Config {
-		if (!isset($data['imapUser'])) {
-			$data['imapUser'] = $data['email'];
-		}
-		if (!isset($data['smtpUser'])) {
-			$data['smtpUser'] = $data['email'];
-		}
-		$data['active'] = true;
-
-		return $this->configMapper->save(new Config($data));
+	public function deprovision(Provisioning $provisioning): void {
+		$this->mailAccountMapper->deleteProvisionedAccounts($provisioning->getId());
+		$this->provisioningMapper->delete($provisioning);
 	}
 
 	public function updatePassword(IUser $user, string $password): void {
@@ -197,5 +206,27 @@ class Manager {
 		} catch (DoesNotExistException $e) {
 			// Nothing to update
 		}
+	}
+
+	/**
+	 * @param Provisioning[] $provisionings
+	 */
+	private function findMatchingConfig(array $provisionings, IUser $user): ?Provisioning {
+		foreach ($provisionings as $provisioning) {
+			if ($provisioning->getProvisioningDomain() === Provisioning::WILDCARD) {
+				return $provisioning;
+			}
+
+			$email = $user->getEMailAddress();
+			if ($email === null) {
+				continue;
+			}
+			$rfc822Address = new Horde_Mail_Rfc822_Address($email);
+			if ($rfc822Address->matchDomain($provisioning->getProvisioningDomain())) {
+				return $provisioning;
+			}
+		}
+
+		return null;
 	}
 }

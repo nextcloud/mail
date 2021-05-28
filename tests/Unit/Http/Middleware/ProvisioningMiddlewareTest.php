@@ -27,8 +27,8 @@ namespace OCA\Mail\Tests\Unit\Http\Middleware;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\PageController;
+use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
-use OCA\Mail\Service\Provisioning\Config;
 use OCA\Mail\Service\Provisioning\Manager;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\Exceptions\PasswordUnavailableException;
@@ -85,17 +85,19 @@ class ProvisioningMiddlewareTest extends TestCase {
 	}
 
 	public function testBeforeControllerNoCredentialsAvailable() {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com'
+		]);
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->willReturn($user);
-		$config = $this->createMock(Config::class);
+		$configs = [new Provisioning()];
 		$this->provisioningManager->expects($this->once())
-			->method('getConfig')
-			->willReturn($config);
-		$config->expects($this->once())
-			->method('isActive')
-			->willReturn(true);
+			->method('getConfigs')
+			->willReturn($configs);
+		$this->provisioningManager->expects($this->once())
+			->method('provisionSingleUser')
+			->with($configs, $user);
 		$this->credentialStore->expects($this->once())
 			->method('getLoginCredentials')
 			->willThrowException($this->createMock(CredentialsUnavailableException::class));
@@ -109,17 +111,19 @@ class ProvisioningMiddlewareTest extends TestCase {
 	}
 
 	public function testBeforeControllerNoPasswordAvailable() {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com'
+		]);
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->willReturn($user);
-		$config = $this->createMock(Config::class);
+		$configs = [new Provisioning()];
 		$this->provisioningManager->expects($this->once())
-			->method('getConfig')
-			->willReturn($config);
-		$config->expects($this->once())
-			->method('isActive')
-			->willReturn(true);
+			->method('getConfigs')
+			->willReturn($configs);
+		$this->provisioningManager->expects($this->once())
+			->method('provisionSingleUser')
+			->with($configs, $user);
 		$credentials = $this->createMock(ICredentials::class);
 		$this->credentialStore->expects($this->once())
 			->method('getLoginCredentials')
@@ -137,36 +141,15 @@ class ProvisioningMiddlewareTest extends TestCase {
 	}
 
 	public function testBeforeControllerNoConfigAvailable() {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com'
+		]);
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->willReturn($user);
-		$this->provisioningManager->expects($this->once())
-			->method('getConfig')
-			->willReturn(null);
-		$this->credentialStore->expects($this->never())
-			->method('getLoginCredentials');
-		$this->provisioningManager->expects($this->never())
-			->method('updatePassword');
-
-		$this->middleware->beforeController(
-			$this->createMock(PageController::class),
-			'index'
-		);
-	}
-
-	public function testBeforeControllerNotActive() {
-		$user = $this->createMock(IUser::class);
-		$this->userSession->expects($this->once())
-			->method('getUser')
-			->willReturn($user);
-		$config = $this->createMock(Config::class);
-		$this->provisioningManager->expects($this->once())
-			->method('getConfig')
-			->willReturn($config);
-		$config->expects($this->once())
-			->method('isActive')
-			->willReturn(false);
+		$this->provisioningManager->expects($this->any())
+			->method('getConfigs')
+			->willReturn([]);
 		$this->credentialStore->expects($this->never())
 			->method('getLoginCredentials');
 		$this->provisioningManager->expects($this->never())
@@ -179,17 +162,21 @@ class ProvisioningMiddlewareTest extends TestCase {
 	}
 
 	public function testBeforeController() {
-		$user = $this->createMock(IUser::class);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com'
+		]);
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->willReturn($user);
-		$config = $this->createMock(Config::class);
+		$config = new Provisioning();
+		$config->setId(1);
+		$configs = [$config];
 		$this->provisioningManager->expects($this->once())
-			->method('getConfig')
-			->willReturn($config);
-		$config->expects($this->once())
-			->method('isActive')
-			->willReturn(true);
+			->method('getConfigs')
+			->willReturn($configs);
+		$this->provisioningManager->expects($this->once())
+			->method('provisionSingleUser')
+			->with($configs, $user);
 		$credentials = $this->createMock(ICredentials::class);
 		$this->credentialStore->expects($this->once())
 			->method('getLoginCredentials')

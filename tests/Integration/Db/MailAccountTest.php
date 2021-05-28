@@ -44,7 +44,7 @@ class MailAccountTest extends TestCase {
 		$a->setOutboundPassword('xxxx');
 		$a->setOutboundSslMode('ssl');
 		$a->setEditorMode('html');
-		$a->setProvisioned(false);
+		$a->setProvisioningId(null);
 		$a->setOrder(13);
 
 		$this->assertEquals([
@@ -62,7 +62,7 @@ class MailAccountTest extends TestCase {
 			'smtpSslMode' => 'ssl',
 			'signature' => null,
 			'editorMode' => 'html',
-			'provisioned' => false,
+			'provisioningId' => null,
 			'order' => 13,
 			'showSubscribedOnly' => null,
 			'personalNamespace' => null,
@@ -90,15 +90,15 @@ class MailAccountTest extends TestCase {
 			'smtpSslMode' => 'ssl',
 			'signature' => null,
 			'editorMode' => null,
-			'provisioned' => false,
+			'provisioningId' => null,
 			'order' => null,
-			'showSubscribedOnly' => null,
+			'showSubscribedOnly' => false,
 			'personalNamespace' => null,
 			'draftsMailboxId' => null,
 			'sentMailboxId' => null,
 			'trashMailboxId' => null,
 			'sieveEnabled' => false,
-			'signatureAboveQuote' => false,
+			'signatureAboveQuote' => false
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

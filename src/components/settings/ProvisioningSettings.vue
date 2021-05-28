@@ -20,45 +20,32 @@
   -->
 
 <template>
-	<div>
-		<h3>Account provisioning</h3>
-		<p>
-			{{
-				t(
-					'mail',
-					'You can configure a template for account settings, from which all users will get an account provisioned from.'
-				)
-			}}
-			{{
-				t(
-					'mail',
-					"This setting only makes most sense if you use the same user back-end for your organization's Nextcloud and mail server."
-				)
-			}}
-		</p>
-		<div>
-			<input id="mail-provision-toggle"
-				v-model="active"
-				type="checkbox"
-				class="checkbox">
-			<label for="mail-provision-toggle">
-				{{ t('mail', 'Provision an account for every user') }}
-			</label>
-		</div>
-		<div v-if="active" class="form-preview-row">
-			<form @submit.prevent="submit">
+	<div class="section">
+		<h4>{{ t('mail','Configuration for "{provisioningDomain}"', {provisioningDomain}) }}</h4>
+		<div class="form-preview-row">
+			<form :id="'prov-form-' + setting.id" @submit.prevent="submitForm">
 				<div class="settings-group">
 					<div class="group-title">
 						{{ t('mail', 'General') }}
 					</div>
 					<div class="group-inputs">
-						<label for="mail-provision-email"> {{ t('mail', 'Email address') }}* </label>
+						<br>
+						<label :for="'mail-provision-domain' + setting.id"> {{ t('mail', 'Provisioning domain') }}* </label>
 						<br>
 						<input
-							id="mail-provision-email"
+							:id="'mail-provision-domain' + setting.id"
+							v-model="provisioningDomain"
+							:disabled="loading"
+							name="provisioningDomain"
+							type="text">
+						<br>
+						<label :for="'mail-provision-email' + setting.id"> {{ t('mail', 'Email address template') }}* </label>
+						<br>
+						<input
+							:id="'mail-provision-email' + setting.id"
 							v-model="emailTemplate"
 							:disabled="loading"
-							name="email"
+							name="emailTemplate"
 							type="text">
 					</div>
 				</div>
@@ -67,32 +54,32 @@
 						{{ t('mail', 'IMAP') }}
 					</div>
 					<div class="group-inputs">
-						<label for="mail-provision-imap-user">
+						<label :for="'mail-provision-imap-user' + setting.id">
 							{{ t('mail', 'User') }}*
 							<br>
 							<input
-								id="mail-provision-imap-user"
+								:id="'mail-provision-imap-user' + setting.id"
 								v-model="imapUser"
 								:disabled="loading"
 								name="email"
 								type="text">
 						</label>
 						<div class="flex-row">
-							<label for="mail-provision-imap-host">
+							<label :for="'mail-provision-imap-host' + setting.id">
 								{{ t('mail', 'Host') }}
 								<br>
 								<input
-									id="mail-provision-imap-host"
+									:id="'mail-provision-imap-host' + setting.id"
 									v-model="imapHost"
 									:disabled="loading"
 									name="email"
 									type="text">
 							</label>
-							<label for="mail-provision-imap-port">
+							<label :for="'mail-provision-imap-port' + setting.id">
 								{{ t('mail', 'Port') }}
 								<br>
 								<input
-									id="mail-provision-imap-port"
+									:id="'mail-provision-imap-port' + setting.id"
 									v-model="imapPort"
 									:disabled="loading"
 									name="email"
@@ -101,7 +88,7 @@
 						</div>
 						<div class="flex-row">
 							<input
-								id="mail-provision-imap-user-none"
+								:id="'mail-provision-imap-user-none' + setting.id"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
@@ -109,10 +96,10 @@
 								value="none">
 							<label
 								class="button"
-								for="mail-provision-imap-user-none"
+								:for="'mail-provision-imap-user-none' + setting.id"
 								:class="{primary: imapSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 							<input
-								id="mail-provision-imap-user-ssl"
+								:id="'mail-provision-imap-user-ssl' + setting.id"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
@@ -120,10 +107,10 @@
 								value="ssl">
 							<label
 								class="button"
-								for="mail-provision-imap-user-ssl"
+								:for="'mail-provision-imap-user-ssl' + setting.id"
 								:class="{primary: imapSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
 							<input
-								id="mail-provision-imap-user-tls"
+								:id="'mail-provision-imap-user-tls' + setting.id"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
@@ -131,7 +118,7 @@
 								value="tls">
 							<label
 								class="button"
-								for="mail-provision-imap-user-tls"
+								:for="'mail-provision-imap-user-tls' + setting.id"
 								:class="{primary: imapSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
@@ -141,32 +128,32 @@
 						{{ t('mail', 'SMTP') }}
 					</div>
 					<div class="group-inputs">
-						<label for="mail-provision-smtp-user">
+						<label :for="'mail-provision-smtp-user' + setting.id">
 							{{ t('mail', 'User') }}*
 							<br>
 							<input
-								id="mail-provision-smtp-user"
+								:id="'mail-provision-smtp-user' + setting.id"
 								v-model="smtpUser"
 								:disabled="loading"
 								name="email"
 								type="text">
 						</label>
 						<div class="flex-row">
-							<label for="mail-provision-smtp-host">
+							<label :for="'mail-provision-smtp-host' + setting.id">
 								{{ t('mail', 'Host') }}
 								<br>
 								<input
-									id="mail-provision-smtp-host"
+									:id="'mail-provision-smtp-host' + setting.id"
 									v-model="smtpHost"
 									:disabled="loading"
 									name="email"
 									type="text">
 							</label>
-							<label for="mail-provision-smtp-port">
+							<label :for="'mail-provision-smtp-port' + setting.id">
 								{{ t('mail', 'Port') }}
 								<br>
 								<input
-									id="mail-provision-smtp-port"
+									:id="'mail-provision-smtp-port' + setting.id"
 									v-model="smtpPort"
 									:disabled="loading"
 									name="email"
@@ -175,7 +162,7 @@
 						</div>
 						<div class="flex-row">
 							<input
-								id="mail-provision-smtp-user-none"
+								:id="'mail-provision-smtp-user-none' + setting.id"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
@@ -183,10 +170,10 @@
 								value="none">
 							<label
 								class="button"
-								for="mail-provision-smtp-user-none"
+								:for="'mail-provision-smtp-user-none' + setting.id"
 								:class="{primary: smtpSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 							<input
-								id="mail-provision-smtp-user-ssl"
+								:id="'mail-provision-smtp-user-ssl' + setting.id"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
@@ -194,10 +181,10 @@
 								value="ssl">
 							<label
 								class="button"
-								for="mail-provision-smtp-user-ssl"
+								:for="'mail-provision-smtp-user-ssl' + setting.id"
 								:class="{primary: smtpSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
 							<input
-								id="mail-provision-smtp-user-tls"
+								:id="'mail-provision-smtp-user-tls' + setting.id"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
@@ -205,7 +192,7 @@
 								value="tls">
 							<label
 								class="button"
-								for="mail-provision-smtp-user-tls"
+								:for="'mail-provision-smtp-user-tls' + setting.id"
 								:class="{primary: smtpSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
@@ -216,40 +203,41 @@
 					</div>
 					<div class="group-inputs">
 						<div>
-							<input id="mail-provision-sieve-enabled"
+							<input
+								:id="'mail-provision-sieve-enabled' + setting.id"
 								v-model="sieveEnabled"
 								type="checkbox"
 								class="checkbox">
-							<label for="mail-provision-sieve-enabled">
+							<label :for="'mail-provision-sieve-enabled' + setting.id">
 								{{ t('mail', 'Enable sieve integration') }}
 							</label>
 						</div>
-						<label for="mail-provision-sieve-user">
+						<label :for="'mail-provision-sieve-user' + setting.id">
 							{{ t('mail', 'User') }}*
 							<br>
 							<input
-								id="mail-provision-sieve-user"
+								:id="'mail-provision-sieve-user' + setting.id"
 								v-model="sieveUser"
 								:disabled="loading"
 								name="email"
 								type="text">
 						</label>
 						<div class="flex-row">
-							<label for="mail-provision-sieve-host">
+							<label :for="'mail-provision-sieve-host' + setting.id">
 								{{ t('mail', 'Host') }}
 								<br>
 								<input
-									id="mail-provision-sieve-host"
+									:id="'mail-provision-sieve-host' + setting.id"
 									v-model="sieveHost"
 									:disabled="loading"
 									name="email"
 									type="text">
 							</label>
-							<label for="mail-provision-sieve-port">
+							<label :for="'mail-provision-sieve-port' + setting.id">
 								{{ t('mail', 'Port') }}
 								<br>
 								<input
-									id="mail-provision-sieve-port"
+									:id="'mail-provision-sieve-port' + setting.id"
 									v-model="sievePort"
 									:disabled="loading"
 									name="email"
@@ -258,7 +246,7 @@
 						</div>
 						<div class="flex-row">
 							<input
-								id="mail-provision-sieve-user-none"
+								:id="'mail-provision-sieve-user-none' + setting.id"
 								v-model="sieveSslMode"
 								type="radio"
 								name="man-sieve-sec"
@@ -266,10 +254,10 @@
 								value="none">
 							<label
 								class="button"
-								for="mail-provision-sieve-user-none"
+								:for="'mail-provision-sieve-user-none' + setting.id"
 								:class="{primary: sieveSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 							<input
-								id="mail-provision-sieve-user-ssl"
+								:id="'mail-provision-sieve-user-ssl' + setting.id"
 								v-model="sieveSslMode"
 								type="radio"
 								name="man-sieve-sec"
@@ -277,10 +265,10 @@
 								value="ssl">
 							<label
 								class="button"
-								for="mail-provision-sieve-user-ssl"
+								:for="'mail-provision-sieve-user-ssl' + setting.id"
 								:class="{primary: sieveSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
 							<input
-								id="mail-provision-sieve-user-tls"
+								:id="'mail-provision-sieve-user-tls' + setting.id"
 								v-model="sieveSslMode"
 								type="radio"
 								name="man-sieve-sec"
@@ -288,7 +276,7 @@
 								value="tls">
 							<label
 								class="button"
-								for="mail-provision-sieve-user-tls"
+								:for="'mail-provision-sieve-user-tls' + setting.id"
 								:class="{primary: sieveSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
@@ -297,15 +285,17 @@
 					<div class="group-title" />
 					<div class="group-inputs">
 						<input
+							class="button config-button icon-upload"
 							type="submit"
-							class="primary"
 							:disabled="loading"
-							:value="t('mail', 'Apply and create/update for all users')">
+							:value="t('mail', 'Save Config')">
 						<input
+							v-if="deleteButton"
 							type="button"
+							class="button config-button icon-delete"
 							:disabled="loading"
-							:value="t('mail', 'Disable and un-provision existing accounts')"
-							@click="disable">
+							:value="t('mail', 'Unprovision & Delete Config')"
+							@click="disableConfig()">
 						<br>
 						<small>{{
 							t('mail', "* %USERID% and %EMAIL% will be replaced with the user's UID and email")
@@ -328,38 +318,53 @@
 		</div>
 	</div>
 </template>
-
 <script>
 import logger from '../../logger'
 import ProvisionPreview from './ProvisionPreview'
-import { disableProvisioning, saveProvisioningSettings } from '../../service/SettingsService'
 
 export default {
 	name: 'ProvisioningSettings',
-	components: { ProvisionPreview },
+	components: {
+		ProvisionPreview,
+	},
 	props: {
-		settings: {
+		setting: {
 			type: Object,
 			required: true,
+		},
+		submit: {
+			type: Function,
+			required: true,
+		},
+		disable: {
+			type: Function,
+			required: false,
+			default: undefined,
+		},
+		deleteButton: {
+			type: Boolean,
+			required: false,
+			default: true,
 		},
 	},
 	data() {
 		return {
-			active: !!this.settings.active,
-			emailTemplate: this.settings.email || '',
-			imapHost: this.settings.imapHost || 'mx.domain.com',
-			imapPort: this.settings.imapPort || 993,
-			imapUser: this.settings.imapUser || '%USERID%domain.com',
-			imapSslMode: this.settings.imapSslMode || 'ssl',
-			smtpHost: this.settings.smtpHost || 'mx.domain.com',
-			smtpPort: this.settings.smtpPort || 587,
-			smtpUser: this.settings.smtpUser || '%USERID%domain.com',
-			smtpSslMode: this.settings.smtpSslMode || 'tls',
-			sieveEnabled: this.settings.sieveEnabled,
-			sieveHost: this.settings.sieveHost,
-			sievePort: this.settings.sievePort,
-			sieveSslMode: this.settings.sieveSslMode,
-			sieveUser: this.settings.sieveUser,
+			active: !!this.setting.active,
+			provisioningDomain: this.setting.provisioningDomain || '',
+			emailTemplate: this.setting.emailTemplate || '',
+			imapHost: this.setting.imapHost || 'mx.domain.com',
+			imapPort: this.setting.imapPort || 993,
+			imapUser: this.setting.imapUser || '%USERID%domain.com',
+			imapSslMode: this.setting.imapSslMode || 'ssl',
+			smtpHost: this.setting.smtpHost || 'mx.domain.com',
+			smtpPort: this.setting.smtpPort || 587,
+			smtpUser: this.setting.smtpUser || '%USERID%domain.com',
+			smtpSslMode: this.setting.smtpSslMode || 'tls',
+			sieveEnabled: this.setting.sieveEnabled || '',
+			sieveHost: this.setting.sieveHost || '',
+			sievePort: this.setting.sievePort || '',
+			sieveSslMode: this.setting.sieveSslMode || '',
+			sieveUser: this.setting.sieveUser || '',
 			previewData1: {
 				uid: 'user123',
 				email: '',
@@ -375,6 +380,7 @@ export default {
 		previewTemplates() {
 			return {
 				email: this.emailTemplate,
+				provisioningDomain: this.provisioningDomain,
 				imapUser: this.imapUser,
 				imapHost: this.imapHost,
 				imapPort: this.imapPort,
@@ -392,53 +398,49 @@ export default {
 		},
 	},
 	beforeMount() {
-		logger.debug('provisioning settings loaded', { settings: this.settings })
+		logger.debug('provisioning setting loaded', { setting: this.setting })
 	},
 	methods: {
-		submit() {
+		async submitForm() {
 			this.loading = true
 
-			return saveProvisioningSettings({
-				emailTemplate: this.emailTemplate,
-				imapUser: this.imapUser,
-				imapHost: this.imapHost,
-				imapPort: this.imapPort,
-				imapSslMode: this.imapSslMode,
-				smtpUser: this.smtpUser,
-				smtpHost: this.smtpHost,
-				smtpPort: this.smtpPort,
-				smtpSslMode: this.smtpSslMode,
-				sieveEnabled: this.sieveEnabled,
-				sieveUser: this.sieveUser,
-				sieveHost: this.sieveHost,
-				sievePort: this.sievePort,
-				sieveSslMode: this.sieveSslMode,
-			})
-				.then(() => {
-					logger.info('provisioning settings updated')
+			try {
+				await this.submit({
+					id: this.setting.id || null,
+					active: this.setting.active || true,
+					emailTemplate: this.emailTemplate,
+					provisioningDomain: this.provisioningDomain,
+					imapUser: this.imapUser,
+					imapHost: this.imapHost,
+					imapPort: this.imapPort,
+					imapSslMode: this.imapSslMode,
+					smtpUser: this.smtpUser,
+					smtpHost: this.smtpHost,
+					smtpPort: this.smtpPort,
+					smtpSslMode: this.smtpSslMode,
+					sieveEnabled: this.sieveEnabled,
+					sieveUser: this.sieveUser,
+					sieveHost: this.sieveHost,
+					sievePort: this.sievePort,
+					sieveSslMode: this.sieveSslMode,
 				})
-				.catch((error) => {
-					// TODO: show user feedback
-					logger.error('Could not save provisioning settings', { error })
-				})
-				.then(() => {
-					this.loading = false
-				})
+
+				logger.info('provisioning setting updated')
+			} catch (error) {
+				logger.error('Could not save provisioning setting', { error })
+			} finally {
+				this.loading = false
+			}
 		},
-		disable() {
+		async disableConfig() {
 			this.loading = true
-
-			return disableProvisioning()
-				.then(() => {
-					logger.info('deprovisioned successfully')
-				})
-				.catch((error) => {
-					logger.error('could not deprovision accounts', { error })
-				})
-				.then(() => {
-					this.active = false
-					this.loading = false
-				})
+			try {
+				await this.disable(this.setting.id)
+			} catch (error) {
+				logger.error('Could not delete provisioning setting', { error })
+			} finally {
+				this.loading = false
+			}
 		},
 	},
 }
@@ -447,8 +449,6 @@ export default {
 <style lang="scss" scoped>
 .form-preview-row {
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
 
 	div:last-child {
 		margin-top: 10px;
@@ -472,6 +472,13 @@ export default {
 
 		input[type='text'] {
 			min-width: 200px;
+		}
+		.config-button {
+			line-height: 24px;
+			padding-left: 48px;
+			padding-top: 6px;
+			padding-bottom: 6px;
+			background-position: 24px;
 		}
 	}
 }
@@ -499,7 +506,6 @@ input[type='radio'] {
 .flex-row {
 	display: flex;
 }
-
 form {
 	label {
 		color: var(--color-text-maxcontrast);

@@ -70,7 +70,7 @@ class DeleteAccount extends Command {
 		}
 		$output->writeLn("<info>Found account with email: " . $account->getEmail() . "</info>");
 
-		if ($account->getMailAccount()->getProvisioned() === true) {
+		if (!is_null($account->getMailAccount()->getProvisioningId())) {
 			$output->writeLn('<error>This is a provisioned account which can not be deleted from CLI. Use the Provisioning UI instead.</error>');
 			return 2;
 		}

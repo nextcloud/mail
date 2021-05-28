@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2021 Anna Larch <anna@nextcloud.com>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Anna Larch <anna@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,29 +21,37 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace OCA\mail\tests\Unit\Service\Provisioning;
+namespace OCA\Mail\Exception;
 
-use OCA\Mail\Service\Provisioning\Config;
+use Exception;
+use OCP\AppFramework\Http;
 
-class TestConfig extends Config {
+class ValidationException extends Exception {
+	/** @var bool[] */
+	private $fields;
+
 	public function __construct() {
-		parent::__construct([
-			'email' => '%USERID%@domain.com',
-			'imapUser' => '%USERID%@domain.com',
-			'imapHost' => 'mx.domain.com',
-			'imapPort' => 993,
-			'imapSslMode' => 'ssl',
-			'smtpUser' => '%USERID%@domain.com',
-			'smtpHost' => 'mx.domain.com',
-			'smtpPort' => 567,
-			'smtpSslMode' => 'tls',
-			'sieveEnabled' => false,
-			'sieveHost' => '',
-			'sievePort' => 4190,
-			'sieveUser' => '',
-			'sieveSslMode' => 'tls',
-		]);
+		$this->fields = [];
+	}
+
+	public function getHttpCode(): int {
+		return Http::STATUS_BAD_REQUEST;
+	}
+
+	public function getFields(): array {
+		return $this->fields;
+	}
+
+	public function setField(string $key, bool $validates): void {
+		$this->fields[$key] = $validates;
+	}
+
+	public function setFields(array $fields): void {
+		foreach ($fields as $key => $validates) {
+			$this->setField($key, $validates);
+		}
 	}
 }

@@ -22,6 +22,7 @@
 import { generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 import { loadState } from '@nextcloud/initial-state'
+import '@nextcloud/dialogs/styles/toast.scss'
 import Vue from 'vue'
 
 import AdminSettings from './components/settings/AdminSettings'
@@ -37,6 +38,6 @@ Vue.mixin(Nextcloud)
 const View = Vue.extend(AdminSettings)
 new View({
 	propsData: {
-		provisioningSettings: loadState('mail', 'provisioning_settings') || {},
+		provisioningSettings: loadState('mail', 'provisioning_settings') || [],
 	},
 }).$mount('#mail-admin-settings')
