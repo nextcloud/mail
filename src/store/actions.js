@@ -609,11 +609,14 @@ export default {
 			await dispatch('removeEnvelopeTag', {
 				envelope,
 				tag,
+
 			})
 		} else {
 			await dispatch('addEnvelopeTag', {
+
 				envelope,
 				imapLabel: importantLabel,
+
 			})
 		}
 	},
@@ -634,6 +637,29 @@ export default {
 			commit('flagEnvelope', {
 				envelope,
 				flag: 'seen',
+				value: oldState,
+			})
+		})
+	},
+	toggleTagImportant({ commit, getters }, envelope) {
+		// Change immediately and switch back on error
+		// check if the prop exist and if yes, save it
+		const oldState = envelope.tags
+		commit('tagEnvelope', {
+			envelope,
+			tag: '$label1',
+			// exists? Yes? So unset - (untag) the message
+			// if it doesn't, add /tag) the message,
+			value: !oldState,
+		})
+
+		setEnvelopeTag(envelope.databaseId, '$label1', !oldState).catch((e) => {
+			console.error('could not toggle message important state', e)
+
+			// Revert change
+			commit('tagEnvelope', {
+				envelope,
+				tag: '$label1',
 				value: oldState,
 			})
 		})
@@ -763,8 +789,8 @@ export default {
 			tagId: tag.id,
 		})
 	},
-	async removeEnvelopeTag({ commit }, { envelope, tag }) {
-		await removeEnvelopeTag(envelope.databaseId, tag.imapLabel)
+	async removeEnvelopeTag({ commit }, { envelope, imapLabel }) {
+		const tag = await removeEnvelopeTag(envelope.databaseId, imapLabel)
 		commit('removeEnvelopeTag', {
 			envelope,
 			tagId: tag.id,

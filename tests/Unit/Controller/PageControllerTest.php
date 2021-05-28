@@ -28,6 +28,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
@@ -75,6 +76,9 @@ class PageControllerTest extends TestCase {
 	/** @var MailManager|MockObject */
 	private $mailManager;
 
+	/** @var TagMapper|MockObject */
+	private $tagMapper;
+
 	/** @var IInitialState|MockObject */
 	private $initialState;
 
@@ -97,6 +101,7 @@ class PageControllerTest extends TestCase {
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->mailManager = $this->createMock(MailManager::class);
+		$this->tagMapper = $this->createMock(TagMapper::class);
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
@@ -111,6 +116,7 @@ class PageControllerTest extends TestCase {
 			$this->userSession,
 			$this->preferences,
 			$this->mailManager,
+			$this->tagMapper,
 			$this->initialState,
 			$this->logger
 		);
@@ -213,12 +219,13 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(5))
+		$this->initialState->expects($this->exactly(6))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
 				['accounts', $accountsJson],
 				['account-settings', []],
+				['tags', []],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz']
 			);

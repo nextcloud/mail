@@ -76,4 +76,7 @@ export const getters = {
 	getTag: (state) => (id) => {
 		return state.tags[id]
 	},
+	getTags: (state) => {
+		return state.tagList.map(tagId => state.tags[tagId])
+	},
 }

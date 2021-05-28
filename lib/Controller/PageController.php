@@ -29,6 +29,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
@@ -69,6 +70,9 @@ class PageController extends Controller {
 	/** @var IMailManager */
 	private $mailManager;
 
+	/** @var TagMapper */
+	private $tagMapper;
+
 	/** @var IInitialState */
 	private $initialStateService;
 
@@ -85,6 +89,7 @@ class PageController extends Controller {
 								IUserSession $userSession,
 								IUserPreferences $preferences,
 								IMailManager $mailManager,
+								TagMapper $tagMapper,
 								IInitialState $initialStateService,
 								LoggerInterface $logger) {
 		parent::__construct($appName, $request);
@@ -97,6 +102,7 @@ class PageController extends Controller {
 		$this->userSession = $userSession;
 		$this->preferences = $preferences;
 		$this->mailManager = $mailManager;
+		$this->tagMapper = $tagMapper;
 		$this->initialStateService = $initialStateService;
 		$this->logger = $logger;
 	}
@@ -138,6 +144,10 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'account-settings',
 			json_decode($this->preferences->getPreference('account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+		);
+		$this->initialStateService->provideInitialState(
+			'tags',
+			$this->tagMapper->getAllTagsForUser($this->currentUserId)
 		);
 
 		$user = $this->userSession->getUser();
