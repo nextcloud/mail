@@ -116,17 +116,17 @@ class PageControllerTest extends TestCase {
 		);
 	}
 
-	public function testIndex() {
+	public function testIndex(): void {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$this->preferences->expects($this->exactly(4))
 			->method('getPreference')
 			->willReturnMap([
+				['account-settings', '[]', json_encode([])],
 				['external-avatars', 'true', 'true'],
 				['reply-mode', 'top', 'bottom'],
 				['collect-data', 'true', 'true'],
-				['account-settings', null, json_encode([])],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
