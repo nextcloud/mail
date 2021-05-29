@@ -77,7 +77,6 @@ OC.L10N.register(
     "Not found" : "غير موجود",
     "Attachments were not copied. Please add them manually." : "المرفقات لم يتم نسخها. يرجى اضافتها يدويا.",
     "General" : "العامة",
-    "Email address" : "عنوان البريد الإلكتروني",
     "User" : "المستخدم",
     "Host" : "المضيف",
     "Port" : "المنفذ",

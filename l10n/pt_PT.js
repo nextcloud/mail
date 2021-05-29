@@ -176,7 +176,6 @@ OC.L10N.register(
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} em {host}:{port} ({ssl} encryption)",
     "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP: {user} em {host}:{port} ({ssl} encryption)",
     "General" : "Geral",
-    "Email address" : "Endereço de email",
     "IMAP" : "IMAP",
     "User" : "Utilizador",
     "Host" : "Anfitrião",

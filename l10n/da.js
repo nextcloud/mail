@@ -116,7 +116,6 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} fra {depStation} til {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}",
     "General" : "Generelt",
-    "Email address" : "E-mailadresse",
     "IMAP" : "IMAP",
     "User" : "ruger",
     "Host" : "Vært",

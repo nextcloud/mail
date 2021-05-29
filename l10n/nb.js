@@ -83,7 +83,6 @@ OC.L10N.register(
     "Not found" : "Ikke funnet",
     "Could not load your draft" : "Kunne ikke laste inn denne kladden",
     "General" : "Generell",
-    "Email address" : "E-post adresse",
     "User" : "Bruker",
     "Host" : "Server",
     "Port" : "Port",

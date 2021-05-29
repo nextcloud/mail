@@ -141,7 +141,6 @@ OC.L10N.register(
     "Mail app" : "Застосунок ел.пошти",
     "Email: {email}" : "Ел.пошта: {email}",
     "General" : "Загальна",
-    "Email address" : "Адреса ел.пошти",
     "IMAP" : "IMAP",
     "User" : "Користувач",
     "Host" : "Хост",
