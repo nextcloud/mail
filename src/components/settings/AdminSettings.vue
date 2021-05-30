@@ -64,14 +64,14 @@
 					{{
 						t(
 							'mail',
-							'There can only be one configuartion per domain, and only one wildcard domain configuration.'
+							'There can only be one configuration per domain and only one wildcard domain configuration.'
 						)
 					}}
 					<br>
 					{{
 						t(
 							'mail',
-							'These settings can be used in conjuction with each other.'
+							'These settings can be used in conjunction with each other.'
 						)
 					}}
 					<br>
@@ -208,7 +208,7 @@ export default {
 				await disableProvisioning(id)
 				logger.info('deprovisioned successfully')
 				this.configs = this.configs.filter(c => c.id !== id)
-				showSuccess(t('mail', 'Sucessfully deleted and deprovisioned accounts for "{domain}"', { domain: deleted.provisioningDomain }))
+				showSuccess(t('mail', 'Successfully deleted and deprovisioned accounts for "{domain}"', { domain: deleted.provisioningDomain }))
 			} catch (error) {
 				showError(t('mail', 'Error when deleting and deprovisioning accounts for "{domain}"', { domain: deleted.provisioningDomain }))
 				logger.error('Could not delete provisioning config', { error })
