@@ -64,7 +64,7 @@
 					{{
 						t(
 							'mail',
-							'There can only be one configuartion per domain, and only one wildcard domain configuration.'
+							'There can only be one configuration per domain, and only one wildcard domain configuration.'
 						)
 					}}
 					<br>
