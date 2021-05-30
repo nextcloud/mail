@@ -71,7 +71,7 @@
 					{{
 						t(
 							'mail',
-							'These settings can be used in conjuction with each other.'
+							'These settings can be used in conjunction with each other.'
 						)
 					}}
 					<br>
