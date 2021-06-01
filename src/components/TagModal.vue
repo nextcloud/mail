@@ -26,11 +26,13 @@
 				{{ t('mail', 'Add default tags') }}
 			</h2>
 			<div v-for="tag in tags" :key="tag.id" class="tag-group">
-				<div class="tag-group__bg button"
-					:style="{'background-color': tag.color}" />
-				<span class="tag-group__label"
-					:style="{color: tag.color}">
-					{{ tag.displayName }} </span>
+				<button class="tag-group__label"
+					:style="{
+						color: convertHex(tag.color, 1),
+						'background-color': convertHex(tag.color, 0.15)
+					}">
+					{{ tag.displayName }}
+				</button>
 				<button v-if="!isSet(tag.imapLabel)"
 					class="tag-actions"
 					@click="addTag(tag.imapLabel)">
@@ -140,6 +142,20 @@ export default {
 				this.tagLabel = true
 			}
 		},
+		convertHex(color, opacity) {
+			if (color.length === 4) {
+				const r = parseInt(color.substring(1, 2), 16)
+				const g = parseInt(color.substring(2, 3), 16)
+				const b = parseInt(color.substring(3, 4), 16)
+				return `rgba(${r}, ${g}, ${b}, ${opacity})`
+			} else {
+				const r = parseInt(color.substring(1, 3), 16)
+				const g = parseInt(color.substring(3, 5), 16)
+				const b = parseInt(color.substring(5, 7), 16)
+				return `rgba(${r}, ${g}, ${b}, ${opacity})`
+			}
+		},
+
 	},
 }
 
@@ -150,7 +166,9 @@ export default {
 	padding-left: 20px;
 	padding-right: 20px;
 	// modal jumps on the right when text is changed to 'remove'
-	width: 220px;
+	width: 250px;
+	max-height: calc(100vh - 210px);
+	overflow-y: auto;
 }
 .tag-title {
 	margin-top: 20px;
@@ -158,34 +176,27 @@ export default {
 }
 .tag-group {
 	display: block;
-	border: 1px solid transparent;
-	border-radius: var(--border-radius-pill);
 	position: relative;
 	margin: 0 1px;
 	overflow: hidden;
 	left: 4px;
 }
 .tag-actions {
-	margin-left: 115px;
 	background-color: transparent;
 	border: none;
+	float: right;
 	&:hover,
 	&:focus {
 		opacity: .7;
 	}
 }
-.tag-group__bg {
-	position: absolute;
-	opacity: 15%;
-	margin-left: 5px;
-	min-width: 110px;
-	cursor: default;
-}
 .tag-group__label {
-	position: absolute;
 	z-index: 2;
 	font-weight: bold;
-	margin: 8px 24px;
+	border: none;
+	background-color: transparent;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 .app-navigation-entry-bullet-wrapper {
 	width: 44px;
