@@ -2,8 +2,8 @@
 	<MailboxPicker :account="account"
 		:selected.sync="destMailboxId"
 		:loading="moving"
-		:label-select="t('mail', 'Move')"
-		:label-select-loading="t('mail', 'Moving')"
+		:label-select="moveThread ? t('mail', 'Move thread') : t('mail', 'Move message')"
+		:label-select-loading="moveThread ? t('mail', 'Moving thread') : t('mail', 'Moving message')"
 		@select="onMove"
 		@close="onClose" />
 </template>
@@ -26,6 +26,10 @@ export default {
 			type: Array,
 			required: true,
 		},
+		moveThread: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -41,18 +45,20 @@ export default {
 			this.moving = true
 
 			try {
-				const envelopeIds = this.envelopes
-					.filter((envelope) => envelope.mailboxId !== this.destMailboxId)
-					.map((envelope) => envelope.databaseId)
+				const envelopes = this.envelopes
+					.filter(envelope => envelope.mailboxId !== this.destMailboxId)
 
-				if (envelopeIds.length === 0) {
+				if (envelopes.length === 0) {
 					return
 				}
 
-				await Promise.all(envelopeIds.map((id) => this.$store.dispatch('moveMessage', {
-					id,
-					destMailboxId: this.destMailboxId,
-				})))
+				for (const envelope of envelopes) {
+					if (this.moveThread) {
+						await this.$store.dispatch('moveThread', { envelope, destMailboxId: this.destMailboxId })
+					} else {
+						await this.$store.dispatch('moveMessage', { id: envelope.databaseId, destMailboxId: this.destMailboxId })
+					}
+				}
 
 				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
 				this.$emit('move')

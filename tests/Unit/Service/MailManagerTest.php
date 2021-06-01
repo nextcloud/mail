@@ -33,6 +33,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -79,6 +80,9 @@ class MailManagerTest extends TestCase {
 	/** @var MockObject|TagMapper */
 	private $tagMapper;
 
+	/** @var ThreadMapper|MockObject */
+	private $threadMapper;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -91,6 +95,7 @@ class MailManagerTest extends TestCase {
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->tagMapper = $this->createMock(TagMapper::class);
+		$this->threadMapper = $this->createMock(ThreadMapper::class);
 
 		$this->manager = new MailManager(
 			$this->imapClientFactory,
@@ -101,7 +106,8 @@ class MailManagerTest extends TestCase {
 			$this->dbMessageMapper,
 			$this->eventDispatcher,
 			$this->logger,
-			$this->tagMapper
+			$this->tagMapper,
+			$this->threadMapper
 		);
 	}
 
@@ -518,12 +524,13 @@ class MailManagerTest extends TestCase {
 
 	public function testGetThread(): void {
 		$account = $this->createMock(Account::class);
-		$messageId = 123;
+		$threadRootId = '<some.message.id@localhost>';
+
 		$this->dbMessageMapper->expects($this->once())
 			->method('findThread')
-			->with($account, $messageId);
+			->with($account, $threadRootId);
 
-		$this->manager->getThread($account, $messageId);
+		$this->manager->getThread($account, $threadRootId);
 	}
 
 	public function testGetMailAttachments(): void {
@@ -630,5 +637,188 @@ class MailManagerTest extends TestCase {
 			->method('update');
 
 		$this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
+	}
+
+	public function testMoveInbox(): void {
+		$srcMailboxId = 20;
+		$dstMailboxId = 80;
+		$threadRootId = 'some-thread-root-id-1';
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setTrashMailboxId(80);
+		$account = new Account($mailAccount);
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId($srcMailboxId);
+		$srcMailbox->setAccountId($mailAccount->getId());
+		$srcMailbox->setName('INBOX');
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $srcMailbox->getName())
+			->willReturn($srcMailbox);
+		$this->threadMapper
+			->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, $threadRootId, false)
+			->willReturn([
+				['messageUid' => 200, 'mailboxName' => 'INBOX'],
+				['messageUid' => 300, 'mailboxName' => 'INBOX'],
+			]);
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId($dstMailboxId);
+		$dstMailbox->setAccountId($mailAccount->getId());
+		$dstMailbox->setName('Trash');
+
+		$this->imapMessageMapper
+			->expects(self::exactly(2))
+			->method('move');
+		$this->eventDispatcher
+			->expects(self::exactly(2))
+			->method('dispatch');
+
+		$this->manager->moveThread(
+			$account,
+			$srcMailbox,
+			$account,
+			$dstMailbox,
+			$threadRootId
+		);
+	}
+
+	public function testMoveTrash(): void {
+		$srcMailboxId = 20;
+		$dstMailboxId = 80;
+		$threadRootId = 'some-thread-root-id-1';
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setTrashMailboxId($srcMailboxId);
+		$account = new Account($mailAccount);
+		$srcMailbox = new Mailbox();
+		$srcMailbox->setId($srcMailboxId);
+		$srcMailbox->setAccountId($mailAccount->getId());
+		$srcMailbox->setName('Trash');
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $srcMailbox->getName())
+			->willReturn($srcMailbox);
+		$this->threadMapper
+			->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, $threadRootId, true)
+			->willReturn([
+				['messageUid' => 200, 'mailboxName' => 'Trash'],
+				['messageUid' => 300, 'mailboxName' => 'Trash'],
+			]);
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId($dstMailboxId);
+		$dstMailbox->setAccountId($mailAccount->getId());
+		$dstMailbox->setName('INBOX');
+
+		$this->imapMessageMapper
+			->expects(self::exactly(2))
+			->method('move');
+		$this->eventDispatcher
+			->expects(self::exactly(2))
+			->method('dispatch');
+
+		$this->manager->moveThread(
+			$account,
+			$srcMailbox,
+			$account,
+			$dstMailbox,
+			$threadRootId
+		);
+	}
+
+	public function testDeleteInbox(): void {
+		$mailboxId = 20;
+		$trashMailboxId = 80;
+		$threadRootId = 'some-thread-root-id-1';
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setTrashMailboxId($trashMailboxId);
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId($mailAccount->getId());
+		$mailbox->setName('INBOX');
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $mailbox->getName())
+			->willReturn($mailbox);
+		$this->threadMapper
+			->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, $threadRootId, false)
+			->willReturn([
+				['messageUid' => 200, 'mailboxName' => 'INBOX'],
+				['messageUid' => 300, 'mailboxName' => 'INBOX'],
+			]);
+		$trashMailbox = new Mailbox();
+		$trashMailbox->setId($trashMailboxId);
+		$trashMailbox->setAccountId($mailAccount->getId());
+		$trashMailbox->setName('Trash');
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('findById')
+			->with($trashMailbox->getId())
+			->willReturn($trashMailbox);
+		$this->imapMessageMapper
+			->expects(self::exactly(2))
+			->method('move');
+		$this->eventDispatcher
+			->expects(self::exactly(4))
+			->method('dispatch');
+
+		$this->manager->deleteThread(
+			$account,
+			$mailbox,
+			$threadRootId
+		);
+	}
+
+	public function testDeleteTrash(): void {
+		$mailboxId = 80;
+		$threadRootId = 'some-thread-root-id-1';
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$mailAccount->setTrashMailboxId($mailboxId);
+		$account = new Account($mailAccount);
+		$mailbox = new Mailbox();
+		$mailbox->setId($mailboxId);
+		$mailbox->setAccountId($mailAccount->getId());
+		$mailbox->setName('Trash');
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $mailbox->getName())
+			->willReturn($mailbox);
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('findById')
+			->with($mailbox->getId())
+			->willReturn($mailbox);
+		$this->threadMapper
+			->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, $threadRootId, true)
+			->willReturn([
+				['messageUid' => 200, 'mailboxName' => 'Trash'],
+				['messageUid' => 300, 'mailboxName' => 'Trash'],
+			]);
+		$this->imapMessageMapper
+			->expects(self::exactly(2))
+			->method('expunge');
+		$this->eventDispatcher
+			->expects(self::exactly(4))
+			->method('dispatch');
+
+		$this->manager->deleteThread(
+			$account,
+			$mailbox,
+			$threadRootId
+		);
 	}
 }

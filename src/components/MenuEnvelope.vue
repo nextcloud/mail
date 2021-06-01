@@ -81,7 +81,7 @@
 			<ActionButton icon="icon-external"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move') }}
+				{{ t('mail', 'Move message') }}
 			</ActionButton>
 			<ActionButton v-if="withShowSource"
 				:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
@@ -100,7 +100,7 @@
 			<ActionButton icon="icon-delete"
 				:close-after-click="true"
 				@click.prevent="onDelete">
-				{{ t('mail', 'Delete') }}
+				{{ t('mail', 'Delete message') }}
 			</ActionButton>
 		</Actions>
 		<Modal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
@@ -297,6 +297,9 @@ export default {
 
 			// Delete
 			this.$emit('delete', this.envelope.databaseId)
+
+			logger.info(`deleting message ${this.envelope.databaseId}`)
+
 			try {
 				await this.$store.dispatch('deleteMessage', {
 					id: this.envelope.databaseId,

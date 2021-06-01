@@ -293,6 +293,16 @@ return [
 			'name' => 'sieve#updateActiveScript',
 			'url' => '/api/sieve/active/{id}',
 			'verb' => 'PUT'
+		],
+		[
+			'name' => 'thread#delete',
+			'url' => '/api/thread/{id}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'thread#move',
+			'url' => '/api/thread/{id}',
+			'verb' => 'POST'
 		]
 	],
 	'resources' => [

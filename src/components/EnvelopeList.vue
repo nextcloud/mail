@@ -71,8 +71,8 @@
 						@click.prevent="onOpenMoveModal">
 						{{ n(
 							'mail',
-							'Move {number}',
-							'Move {number}',
+							'Move {number} thread',
+							'Move {number} threads',
 							selection.length,
 							{
 								number: selection.length,
@@ -98,8 +98,8 @@
 						@click.prevent="deleteAllSelected">
 						{{ n(
 							'mail',
-							'Delete {number}',
-							'Delete {number}',
+							'Delete {number} thread',
+							'Delete {number} threads',
 							selection.length,
 							{
 								number: selection.length,
@@ -111,6 +111,7 @@
 					v-if="showMoveModal"
 					:account="account"
 					:envelopes="selectedEnvelopes"
+					:move-thread="true"
 					@close="onCloseMoveModal" />
 			</div>
 		</transition>
@@ -266,8 +267,8 @@ export default {
 			})
 			this.unselectAll()
 		},
-		deleteAllSelected() {
-			this.selectedEnvelopes.forEach(async(envelope) => {
+		async deleteAllSelected() {
+			for (const envelope of this.selectedEnvelopes) {
 				// Navigate if the message being deleted is the one currently viewed
 				// Shouldn't we simply use $emit here?
 				// Would be better to navigate after all messages have been deleted
@@ -290,10 +291,10 @@ export default {
 						})
 					}
 				}
-				logger.info(`deleting message ${envelope.databaseId}`)
+				logger.info(`deleting thread ${envelope.threadRootId}`)
 				try {
-					await this.$store.dispatch('deleteMessage', {
-						id: envelope.databaseId,
+					await this.$store.dispatch('deleteThread', {
+						envelope,
 					})
 				} catch (error) {
 					showError(await matchError(error, {
@@ -306,7 +307,7 @@ export default {
 						},
 					}))
 				}
-			})
+			}
 
 			// Get new messages
 			this.$store.dispatch('fetchNextEnvelopes', {

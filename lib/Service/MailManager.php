@@ -35,6 +35,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
@@ -87,16 +88,17 @@ class MailManager implements IMailManager {
 	/** @var DbMessageMapper */
 	private $dbMessageMapper;
 
-	/** @var TagMapper */
-	private $tagMapper;
-
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/**
-	 * @var LoggerInterface
-	 */
+	/** @var LoggerInterface */
 	private $logger;
+
+	/** @var TagMapper */
+	private $tagMapper;
+
+	/** @var ThreadMapper */
+	private $threadMapper;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								MailboxMapper $mailboxMapper,
@@ -106,7 +108,8 @@ class MailManager implements IMailManager {
 								DbMessageMapper $dbMessageMapper,
 								IEventDispatcher $eventDispatcher,
 								LoggerInterface $logger,
-								TagMapper $tagMapper) {
+								TagMapper $tagMapper,
+								ThreadMapper $threadMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
@@ -116,6 +119,7 @@ class MailManager implements IMailManager {
 		$this->eventDispatcher = $eventDispatcher;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
+		$this->threadMapper = $threadMapper;
 	}
 
 	public function getMailbox(string $uid, int $id): Mailbox {
@@ -155,13 +159,13 @@ class MailManager implements IMailManager {
 			throw new ServiceException(
 				"Could not get mailbox status: " .
 				$e->getMessage(),
-				(int) $e->getCode(),
+				(int)$e->getCode(),
 				$e
 			);
 		}
 		$this->folderMapper->detectFolderSpecialUse([$folder]);
 
-		$this->mailboxSync->sync($account, $this->logger,true);
+		$this->mailboxSync->sync($account, $this->logger, true);
 
 		return $this->mailboxMapper->find($account, $name);
 	}
@@ -182,14 +186,14 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException(
 				"Could not load message",
-				(int) $e->getCode(),
+				(int)$e->getCode(),
 				$e
 			);
 		}
 	}
 
-	public function getThread(Account $account, int $messageId): array {
-		return $this->dbMessageMapper->findThread($account, $messageId);
+	public function getThread(Account $account, string $threadRootId): array {
+		return $this->dbMessageMapper->findThread($account, $threadRootId);
 	}
 
 	public function getMessageIdForUid(Mailbox $mailbox, $uid): ?int {
@@ -349,7 +353,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not set subscription status for mailbox " . $mailbox->getId() . " on IMAP: " . $e->getMessage(),
-				(int) $e->getCode(),
+				(int)$e->getCode(),
 				$e
 			);
 		}
@@ -357,7 +361,7 @@ class MailManager implements IMailManager {
 		/**
 		 * 2. Pull changes into the mailbox database cache
 		 */
-		$this->mailboxSync->sync($account, $this->logger,true);
+		$this->mailboxSync->sync($account, $this->logger, true);
 
 		/**
 		 * 3. Return the updated object
@@ -396,7 +400,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not set message flag on IMAP: " . $e->getMessage(),
-				(int) $e->getCode(),
+				(int)$e->getCode(),
 				$e
 			);
 		}
@@ -445,7 +449,7 @@ class MailManager implements IMailManager {
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
 					"Could not set message keyword on IMAP: " . $e->getMessage(),
-					(int) $e->getCode(),
+					(int)$e->getCode(),
 					$e
 				);
 			}
@@ -520,7 +524,7 @@ class MailManager implements IMailManager {
 		/**
 		 * 2. Get the IMAP changes into our database cache
 		 */
-		$this->mailboxSync->sync($account, $this->logger,true);
+		$this->mailboxSync->sync($account, $this->logger, true);
 
 		/**
 		 * 3. Return the cached object with the new ID
@@ -605,7 +609,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not get message flag options from IMAP: " . $e->getMessage(),
-				(int) $e->getCode(),
+				(int)$e->getCode(),
 				$e
 			);
 		}
@@ -648,5 +652,60 @@ class MailManager implements IMailManager {
 		$tag->setColor($color);
 
 		return $this->tagMapper->update($tag);
+	}
+
+	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): void {
+		$mailAccount = $srcAccount->getMailAccount();
+		$messageInTrash = $srcMailbox->getId() === $mailAccount->getTrashMailboxId();
+
+		$messages = $this->threadMapper->findMessageUidsAndMailboxNamesByAccountAndThreadRoot(
+			$mailAccount,
+			$threadRootId,
+			$messageInTrash
+		);
+
+		foreach ($messages as $message) {
+			$this->logger->debug('move message', [
+				'messageId' => $message['messageUid'],
+				'srcMailboxId' => $srcMailbox->getId(),
+				'dstMailboxId' => $dstMailbox->getId()
+			]);
+
+			$this->moveMessage(
+				$srcAccount,
+				$message['mailboxName'],
+				$message['messageUid'],
+				$dstAccount,
+				$dstMailbox->getName()
+			);
+		}
+	}
+
+	/**
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function deleteThread(Account $account, Mailbox $mailbox, string $threadRootId): void {
+		$mailAccount = $account->getMailAccount();
+		$messageInTrash = $mailbox->getId() === $mailAccount->getTrashMailboxId();
+
+		$messages = $this->threadMapper->findMessageUidsAndMailboxNamesByAccountAndThreadRoot(
+			$mailAccount,
+			$threadRootId,
+			$messageInTrash
+		);
+
+		foreach ($messages as $message) {
+			$this->logger->debug('deleting message', [
+				'messageId' => $message['messageUid'],
+				'mailboxId' => $mailbox->getId(),
+			]);
+
+			$this->deleteMessage(
+				$account,
+				$message['mailboxName'],
+				$message['messageUid']
+			);
+		}
 	}
 }

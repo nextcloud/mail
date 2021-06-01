@@ -90,7 +90,25 @@ export default {
 			return parseInt(this.$route.params.threadId, 10)
 		},
 		thread() {
-			return this.$store.getters.getEnvelopeThread(this.threadId)
+			const envelopes = this.$store.getters.getEnvelopeThread(this.threadId)
+			const envelope = envelopes.find(envelope => envelope.databaseId === this.threadId)
+
+			if (envelope === undefined) {
+				return []
+			}
+
+			const currentMailbox = this.$store.getters.getMailbox(envelope.mailboxId)
+			const trashMailbox = this.$store.getters.getMailboxes(currentMailbox.accountId).find(mailbox => mailbox.specialRole === 'trash')
+
+			if (trashMailbox === undefined) {
+				return envelopes
+			}
+
+			if (currentMailbox.databaseId === trashMailbox.databaseId) {
+				return envelopes.filter(envelope => envelope.mailboxId === trashMailbox.databaseId)
+			} else {
+				return envelopes.filter(envelope => envelope.mailboxId !== trashMailbox.databaseId)
+			}
 		},
 		threadParticipants() {
 			const recipients = this.thread.flatMap(envelope => {
