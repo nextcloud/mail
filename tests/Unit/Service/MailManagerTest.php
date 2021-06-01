@@ -34,6 +34,7 @@ use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -552,5 +553,82 @@ class MailManagerTest extends TestCase {
 			)->willReturn($attachments);
 		$result = $this->manager->getMailAttachments($account, $mailbox, $message);
 		$this->assertEquals($attachments, $result);
+	}
+
+	public function testCreateTag(): void {
+		$this->tagMapper->expects($this->once())
+			->method('getTagByImapLabel')
+			->willThrowException(new DoesNotExistException('Computer says no'));
+		$this->tagMapper->expects($this->once())
+			->method('insert')
+			->willReturnCallback(static function (Tag $tag) {
+				return $tag;
+			});
+
+		$tag = $this->manager->createTag('Hello Hello 👋', '#0082c9', 'admin');
+
+		self::assertEquals('admin', $tag->getUserId());
+		self::assertEquals('Hello Hello 👋', $tag->getDisplayName());
+		self::assertEquals('Hello_Hello_&2D3cSw-', $tag->getImapLabel());
+		self::assertEquals('#0082c9', $tag->getColor());
+	}
+
+	public function testCreateTagSameImapLabel(): void {
+		$existingTag = new Tag();
+		$existingTag->setUserId('admin');
+		$existingTag->setDisplayName('Hello Hello Hello 👋');
+		$existingTag->setImapLabel('Hello_Hello_&2D3cSw-');
+		$existingTag->setColor('#0082c9');
+
+		$this->tagMapper->expects($this->once())
+			->method('getTagByImapLabel')
+			->willReturn($existingTag);
+		$this->tagMapper->expects($this->never())
+			->method('insert');
+
+		$tag = $this->manager->createTag('Hello Hello 👋', '#e9322d', 'admin');
+
+		self::assertEquals('admin', $tag->getUserId());
+		self::assertEquals('Hello Hello Hello 👋', $tag->getDisplayName());
+		self::assertEquals('Hello_Hello_&2D3cSw-', $tag->getImapLabel());
+		self::assertEquals('#0082c9', $tag->getColor());
+	}
+
+	public function testUpdateTag(): void {
+		$existingTag = new Tag();
+		$existingTag->setId(100);
+		$existingTag->setUserId('admin');
+		$existingTag->setDisplayName('Hello Hello Hello 👋');
+		$existingTag->setImapLabel('Hello_Hello_&2D3cSw-');
+		$existingTag->setColor('#0082c9');
+
+		$this->tagMapper->expects($this->once())
+			->method('getTagForUser')
+			->willReturn($existingTag);
+		$this->tagMapper->expects($this->once())
+			->method('update')
+			->willReturnCallback(static function (Tag $tag) {
+				return $tag;
+			});
+
+		$tag = $this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
+
+		self::assertEquals('admin', $tag->getUserId());
+		self::assertEquals('Hello Hello 👋', $tag->getDisplayName());
+		self::assertEquals('Hello_Hello_&2D3cSw-', $tag->getImapLabel());
+		self::assertEquals('#0082c9', $tag->getColor());
+	}
+
+	public function testUpdateTagUnknownTag(): void {
+		$this->expectException(ClientException::class);
+		$this->expectExceptionMessage('Tag not found');
+
+		$this->tagMapper->expects($this->once())
+			->method('getTagForUser')
+			->willThrowException(new DoesNotExistException('Computer says no'));
+		$this->tagMapper->expects($this->never())
+			->method('update');
+
+		$this->manager->updateTag(100, 'Hello Hello 👋', '#0082c9', 'admin');
 	}
 }

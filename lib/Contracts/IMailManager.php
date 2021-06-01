@@ -23,14 +23,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
-use OCA\Mail\Db\Tag;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Service\Quota;
-use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\Quota;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailManager {
@@ -237,7 +237,30 @@ interface IMailManager {
 	 * @param string $imapLabel
 	 * @param string $userId
 	 * @return Tag
-	 * @throws DoesNotExistException
+	 * @throws ClientException
 	 */
 	public function getTagByImapLabel(string $imapLabel, string $userId): Tag;
+
+	/**
+	 * Create a mail tag
+	 *
+	 * @param string $userId
+	 * @param string $displayName
+	 * @param string $color
+	 * @return Tag
+	 * @throws ClientException if display name does not work as imap label
+	 */
+	public function createTag(string $displayName, string $color, string $userId): Tag;
+
+	/**
+	 * Update a mail tag
+	 *
+	 * @param string $userId
+	 * @param int $id
+	 * @param string $displayName
+	 * @param string $color
+	 * @return Tag
+	 * @throws ClientException if the given tag does not exist
+	 */
+	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag;
 }

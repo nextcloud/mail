@@ -706,7 +706,7 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('getTagByImapLabel')
 			->with($imapLabel,$this->userId)
-			->willThrowException(new DoesNotExistException(''));
+			->willThrowException(new ClientException('Computer says no'));
 		$this->mailManager->expects($this->never())
 			->method('tagMessage');
 
@@ -807,7 +807,7 @@ class MessagesControllerTest extends TestCase {
 		$this->mailManager->expects($this->once())
 			->method('getTagByImapLabel')
 			->with($imapLabel,$this->userId)
-			->willThrowException(new DoesNotExistException(''));
+			->willThrowException(new ClientException('Computer says no'));
 		$this->mailManager->expects($this->never())
 			->method('tagMessage');
 
