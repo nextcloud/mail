@@ -603,21 +603,18 @@ export default {
 	},
 	async toggleEnvelopeImportant({ dispatch, getters }, envelope) {
 		const importantLabel = '$label1'
-		const tag = getters
+		const hasTag = getters
 			.getEnvelopeTags(envelope.databaseId)
-			.find((tag) => tag.imapLabel === importantLabel)
-		if (tag) {
+			.some((tag) => tag.imapLabel === importantLabel)
+		if (hasTag) {
 			await dispatch('removeEnvelopeTag', {
 				envelope,
-				tag,
-
+				imapLabel: importantLabel,
 			})
 		} else {
 			await dispatch('addEnvelopeTag', {
-
 				envelope,
 				imapLabel: importantLabel,
-
 			})
 		}
 	},

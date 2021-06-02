@@ -270,7 +270,7 @@ export default {
 		isImportant() {
 			return this.$store.getters
 				.getEnvelopeTags(this.envelope.databaseId)
-				.find((tag) => tag.imapLabel === '$label1')
+				.some((tag) => tag.imapLabel === '$label1')
 		},
 	},
 	methods: {

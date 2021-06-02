@@ -60,7 +60,7 @@
 				:close-after-click="true"
 				@click.prevent="onToggleImportant">
 				{{
-					data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+					isImportant ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-starred"
@@ -296,7 +296,7 @@ export default {
 		isImportant() {
 			return this.$store.getters
 				.getEnvelopeTags(this.data.databaseId)
-				.find((tag) => tag.imapLabel === '$label1')
+				.some((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
 			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel !== '$label1')
