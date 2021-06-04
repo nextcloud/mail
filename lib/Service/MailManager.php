@@ -23,35 +23,35 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Db\Tag;
-use OCA\Mail\Folder;
-use OCA\Mail\Account;
 use Horde_Imap_Client;
-use function array_map;
-use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\Message;
-use function array_values;
-use OCA\Mail\Db\TagMapper;
-use Psr\Log\LoggerInterface;
-use Horde_Imap_Client_Socket;
-use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\Model\IMAPMessage;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
+use Horde_Imap_Client_Socket;
+use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
+use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCP\EventDispatcher\IEventDispatcher;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCA\Mail\Db\MessageMapper as DbMessageMapper;
-use Horde_Imap_Client_Exception_NoSupportExtension;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
+use OCA\Mail\Folder;
+use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
+use OCA\Mail\Model\IMAPMessage;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\EventDispatcher\IEventDispatcher;
+use Psr\Log\LoggerInterface;
+use function array_map;
+use function array_values;
 
 class MailManager implements IMailManager {
 
@@ -559,16 +559,15 @@ class MailManager implements IMailManager {
 	 * @param string $imapLabel
 	 * @param string $userId
 	 * @return Tag
-	 * @throws DoesNotExistException
+	 * @throws ClientException
 	 */
 	public function getTagByImapLabel(string $imapLabel, string $userId): Tag {
 		try {
 			return $this->tagMapper->getTagByImapLabel($imapLabel, $userId);
 		} catch (DoesNotExistException $e) {
-			throw new ClientException('Unknow Tag', (int)$e->getCode(), $e);
+			throw new ClientException('Unknown Tag', 0, $e);
 		}
 	}
-
 
 	/**
 	 * Filter out IMAP flags that aren't supported by the client server
@@ -611,5 +610,43 @@ class MailManager implements IMailManager {
 			);
 		}
 		return (is_array($capabilities) === true && array_key_exists('permflags', $capabilities) === true && in_array("\*", $capabilities['permflags'], true) === true);
+	}
+
+	public function createTag(string $displayName, string $color, string $userId): Tag {
+		$imapLabel = str_replace(' ', '_', $displayName);
+		/** @var string|false $imapLabel */
+		$imapLabel = mb_convert_encoding($imapLabel, 'UTF7-IMAP', 'UTF-8');
+		if ($imapLabel === false) {
+			throw new ClientException('Error converting display name to UTF7-IMAP ', 0);
+		}
+		$imapLabel = mb_strcut($imapLabel, 0, 64);
+
+		try {
+			return $this->getTagByImapLabel($imapLabel, $userId);
+		} catch (ClientException $e) {
+			// it's valid that a tag does not exist.
+		}
+
+		$tag = new Tag();
+		$tag->setUserId($userId);
+		$tag->setDisplayName($displayName);
+		$tag->setImapLabel($imapLabel);
+		$tag->setColor($color);
+		$tag->setIsDefaultTag(false);
+
+		return $this->tagMapper->insert($tag);
+	}
+
+	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag {
+		try {
+			$tag = $this->tagMapper->getTagForUser($id, $userId);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException('Tag not found', 0, $e);
+		}
+
+		$tag->setDisplayName($displayName);
+		$tag->setColor($color);
+
+		return $this->tagMapper->update($tag);
 	}
 }

@@ -671,7 +671,7 @@ class MessagesController extends Controller {
 
 		try {
 			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
-		} catch (DoesNotExistException $e) {
+		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -702,7 +702,7 @@ class MessagesController extends Controller {
 
 		try {
 			$tag = $this->mailManager->getTagByImapLabel($imapLabel, $this->currentUserId);
-		} catch (DoesNotExistException $e) {
+		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
