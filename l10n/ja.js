@@ -81,6 +81,8 @@ OC.L10N.register(
     "Draft: " : "下書き",
     "Mark unimportant" : "重要マークを外す",
     "Mark important" : "重要マークをつける",
+    "Mark unfavorite" : "お気に入りマークを外す",
+    "Mark favorite" : "お気に入りとしてマーク",
     "Mark unread" : "未読にする",
     "Mark read" : "既読にする",
     "Mark not spam" : "迷惑メールとしない",
