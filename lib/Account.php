@@ -120,6 +120,10 @@ class Account implements JsonSerializable {
 		return $this->account->getEmail();
 	}
 
+	public function getUserId(): string {
+		return $this->account->getUserId();
+	}
+
 	/**
 	 * @deprecated use \OCA\Mail\IMAP\IMAPClientFactory instead
 	 * @return Horde_Imap_Client_Socket
