@@ -313,7 +313,7 @@
     "Inbox" : "收件匣",
     "Junk" : "垃圾郵件",
     "Sent" : "發送",
-    "Trash" : "回收筒",
+    "Trash" : "回收桶",
     "Error while sharing file" : "分享檔案時發生錯誤",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n 則新信件\n來自 {from}"],

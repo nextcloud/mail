@@ -267,7 +267,7 @@ OC.L10N.register(
     "If you only want to provision one domain for all users, use the wildcard (*)." : "Wenn Sie nur eine Domäne für alle Benutzer bereitstellen möchten, verwenden Sie den Platzhalter (*).",
     "Add new config" : "Neue Einstellungen hinzufügen",
     "Provision all accounts" : "Alle Konten bereitstellen",
-    "Successfully updated config for \"{domain}\"" : "Einstellungen erfolgrecih aktualisiert für \"{domain}\"",
+    "Successfully updated config for \"{domain}\"" : "Einstellungen für \"{domain}\" erfolgreich aktualisiert",
     "Error saving config" : "Fehler beim Speichern der Einstellungen",
     "Saved config for \"{domain}\"" : "Einstellungen gespeichert für \"{domain}\"",
     "Could not save provisioning setting" : "Bereitstellungseinstellung konnte nicht gespeichert werden",
