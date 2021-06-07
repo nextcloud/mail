@@ -283,6 +283,7 @@ class Message extends Entity implements JsonSerializable {
 				'draft' => ($this->getFlagDraft() === true),
 				'forwarded' => ($this->getFlagForwarded() === true),
 				'hasAttachments' => ($this->getFlagAttachments() ?? false),
+				'important' => ($this->getFlagImportant() === true),
 				'junk' => ($this->getFlagJunk() === true),
 				'mdnsent' => ($this->getFlagMdnsent() === true),
 			],

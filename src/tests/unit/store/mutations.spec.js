@@ -33,6 +33,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tagList: [],
 			tags: {},
 		}
 
@@ -54,6 +55,7 @@ describe('Vuex store mutations', () => {
 			},
 			envelopes: {},
 			mailboxes: {},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -64,6 +66,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tagList: [],
 			tags: {},
 		}
 
@@ -104,6 +107,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -114,6 +118,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tagList: [],
 			tags: {},
 		}
 
@@ -180,6 +185,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				}
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -190,6 +196,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tagList: [],
 			tags: {},
 		}
 
@@ -255,6 +262,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -265,6 +273,7 @@ describe('Vuex store mutations', () => {
 			accounts: {},
 			envelopes: {},
 			mailboxes: {},
+			tagList: [],
 			tags: {},
 		}
 
@@ -351,6 +360,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -384,6 +394,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				}
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -440,6 +451,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -473,6 +485,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				}
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -530,6 +543,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -551,6 +565,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -567,6 +582,7 @@ describe('Vuex store mutations', () => {
 				},
 			},
 			mailboxes: {},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -594,6 +610,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -617,6 +634,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -638,6 +656,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 				},
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -679,6 +698,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -700,6 +720,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 				},
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -759,6 +780,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -786,6 +808,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 				},
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -833,6 +856,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -884,6 +908,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -932,6 +957,7 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -952,6 +978,7 @@ describe('Vuex store mutations', () => {
 			envelopes: {
 				[envelope.databaseId]: envelope,
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -1011,6 +1038,7 @@ describe('Vuex store mutations', () => {
 					tags: [],
 				},
 			},
+			tagList: [],
 			tags: {},
 		})
 	})
@@ -1032,6 +1060,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 				},
 			},
+			tagList: [],
 			tags: {},
 		}
 
@@ -1083,6 +1112,9 @@ describe('Vuex store mutations', () => {
 					},
 				},
 			},
+			tagList: [
+				1,
+			],
 			tags: {
 				1: {
 					id: 1,
@@ -1121,6 +1153,7 @@ describe('Vuex store mutations', () => {
 				[envelope.databaseId]: envelope,
 			},
 			// State contains old version of envelope with no label
+			tagList: [],
 			tags: {},
 		}
 
@@ -1173,6 +1206,9 @@ describe('Vuex store mutations', () => {
 					tags: [1],
 				},
 			},
+			tagList: [
+				1,
+			],
 			tags: {
 				1: {
 					id: 1,
@@ -1204,6 +1240,7 @@ describe('Vuex store mutations', () => {
 				[envelope.databaseId]: envelope,
 			},
 			// State contains old version of envelope with no label
+			tagList: [],
 			tags: {},
 		}
 
@@ -1240,6 +1277,9 @@ describe('Vuex store mutations', () => {
 					tags: [1],
 				},
 			},
+			tagList: [
+				1,
+			],
 			tags: {
 				1: {
 					id: 1,
@@ -1351,6 +1391,7 @@ describe('Vuex store mutations', () => {
 
 	it('adds a global tag', () => {
 		const state = {
+			tagList: [],
 			tags: {},
 		}
 
@@ -1366,6 +1407,9 @@ describe('Vuex store mutations', () => {
 		})
 
 		expect(state).to.deep.equal({
+			tagList: [
+				1,
+			],
 			tags: {
 				1: {
 					id: 1,

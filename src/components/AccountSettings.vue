@@ -149,7 +149,7 @@ export default {
 				|| !this.account.smtpPort
 				|| !this.account.smtpSslMode
 				|| !this.account.smtpUser
-		},
+		}
 	},
 	watch: {
 		showSettings(value) {

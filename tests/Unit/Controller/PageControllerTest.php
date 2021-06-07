@@ -28,14 +28,15 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
-use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUser;
@@ -75,7 +76,10 @@ class PageControllerTest extends TestCase {
 	/** @var MailManager|MockObject */
 	private $mailManager;
 
-	/** @var IInitialStateService|MockObject */
+	/** @var TagMapper|MockObject */
+	private $tagMapper;
+
+	/** @var IInitialState|MockObject */
 	private $initialState;
 
 	/** @var PageController */
@@ -97,7 +101,8 @@ class PageControllerTest extends TestCase {
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->mailManager = $this->createMock(MailManager::class);
-		$this->initialState = $this->createMock(IInitialStateService::class);
+		$this->tagMapper = $this->createMock(TagMapper::class);
+		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->controller = new PageController(
@@ -111,22 +116,23 @@ class PageControllerTest extends TestCase {
 			$this->userSession,
 			$this->preferences,
 			$this->mailManager,
+			$this->tagMapper,
 			$this->initialState,
 			$this->logger
 		);
 	}
 
-	public function testIndex() {
+	public function testIndex(): void {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$this->preferences->expects($this->exactly(4))
 			->method('getPreference')
 			->willReturnMap([
+				['account-settings', '[]', json_encode([])],
 				['external-avatars', 'true', 'true'],
 				['reply-mode', 'top', 'bottom'],
 				['collect-data', 'true', 'true'],
-				['account-settings', json_encode([]), json_encode([])],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -150,9 +156,6 @@ class PageControllerTest extends TestCase {
 			->will($this->returnValue([
 				'accountId' => 1,
 			]));
-		$mailbox->expects($this->once())
-			->method('jsonSerialize')
-			->willReturn(['id' => 'inbox']);
 		$account1->expects($this->once())
 			->method('getId')
 			->will($this->returnValue(1));
@@ -178,9 +181,7 @@ class PageControllerTest extends TestCase {
 					'a12',
 				],
 				'mailboxes' => [
-					[
-						'id' => 'inbox',
-					],
+					$mailbox,
 				],
 			],
 			[
@@ -218,23 +219,24 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(2))
+		$this->initialState->expects($this->exactly(6))
 			->method('provideInitialState')
 			->withConsecutive(
-				['mail', 'prefill_displayName', 'Jane Doe'],
-				['mail', 'prefill_email', 'jane@doe.cz']
+				['debug', true],
+				['accounts', $accountsJson],
+				['account-settings', []],
+				['tags', []],
+				['prefill_displayName', 'Jane Doe'],
+				['prefill_email', 'jane@doe.cz']
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index',
 			[
-				'debug' => true,
 				'attachment-size-limit' => 123,
 				'external-avatars' => 'true',
 				'reply-mode' => 'bottom',
 				'app-version' => '1.2.3',
-				'accounts' => base64_encode(json_encode($accountsJson)),
 				'collect-data' => 'true',
-				'account-settings' => base64_encode(json_encode([])),
 			]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');

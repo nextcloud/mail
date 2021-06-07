@@ -33,10 +33,15 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
+use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function sprintf;
 
 class SyncJob extends TimedJob {
+
+	/** @var IUserManager */
+	private $userManager;
 
 	/** @var AccountService */
 	private $accountService;
@@ -54,6 +59,7 @@ class SyncJob extends TimedJob {
 	private $jobList;
 
 	public function __construct(ITimeFactory $time,
+								IUserManager $userManager,
 								AccountService $accountService,
 								MailboxSync $mailboxSync,
 								ImapToDbSynchronizer $syncService,
@@ -61,13 +67,14 @@ class SyncJob extends TimedJob {
 								IJobList $jobList) {
 		parent::__construct($time);
 
+		$this->userManager = $userManager;
 		$this->accountService = $accountService;
 		$this->syncService = $syncService;
 		$this->mailboxSync = $mailboxSync;
 		$this->logger = $logger;
+		$this->jobList = $jobList;
 
 		$this->setInterval(3600);
-		$this->jobList = $jobList;
 	}
 
 	protected function run($argument) {
@@ -81,8 +88,18 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
+		$user = $this->userManager->get($account->getUserId());
+		if ($user === null || !$user->isEnabled()) {
+			$this->logger->debug(sprintf(
+				'Account %d of user %s could not be found or was disabled, skipping background sync',
+				$account->getId(),
+				$account->getUserId()
+			));
+			return;
+		}
+
 		$dbAccount = $account->getMailAccount();
-		if ($dbAccount->getProvisioned() && $dbAccount->getInboundPassword() === null) {
+		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
 			$this->logger->info("Ignoring cron sync for provisioned account that has no password set yet");
 			return;
 		}

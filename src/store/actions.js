@@ -58,6 +58,7 @@ import {
 	patchMailbox,
 } from '../service/MailboxService'
 import {
+	createEnvelopeTag,
 	deleteMessage,
 	fetchEnvelope,
 	fetchEnvelopes,
@@ -602,13 +603,13 @@ export default {
 	},
 	async toggleEnvelopeImportant({ dispatch, getters }, envelope) {
 		const importantLabel = '$label1'
-		const tag = getters
+		const hasTag = getters
 			.getEnvelopeTags(envelope.databaseId)
-			.find((tag) => tag.imapLabel === importantLabel)
-		if (tag) {
+			.some((tag) => tag.imapLabel === importantLabel)
+		if (hasTag) {
 			await dispatch('removeEnvelopeTag', {
 				envelope,
-				tag,
+				imapLabel: importantLabel,
 			})
 		} else {
 			await dispatch('addEnvelopeTag', {
@@ -634,6 +635,29 @@ export default {
 			commit('flagEnvelope', {
 				envelope,
 				flag: 'seen',
+				value: oldState,
+			})
+		})
+	},
+	toggleTagImportant({ commit, getters }, envelope) {
+		// Change immediately and switch back on error
+		// check if the prop exist and if yes, save it
+		const oldState = envelope.tags
+		commit('tagEnvelope', {
+			envelope,
+			tag: '$label1',
+			// exists? Yes? So unset - (untag) the message
+			// if it doesn't, add /tag) the message,
+			value: !oldState,
+		})
+
+		setEnvelopeTag(envelope.databaseId, '$label1', !oldState).catch((e) => {
+			console.error('could not toggle message important state', e)
+
+			// Revert change
+			commit('tagEnvelope', {
+				envelope,
+				tag: '$label1',
 				value: oldState,
 			})
 		})
@@ -751,6 +775,11 @@ export default {
 			throw error
 		}
 	},
+	async createTag({ commit }, { displayName, color }) {
+		const tag = await createEnvelopeTag(displayName, color)
+		commit('addTag', { tag })
+
+	},
 	async addEnvelopeTag({ commit, getters }, { envelope, imapLabel }) {
 		// TODO: fetch tags indepently of envelopes and only send tag id here
 		const tag = await setEnvelopeTag(envelope.databaseId, imapLabel)
@@ -763,8 +792,8 @@ export default {
 			tagId: tag.id,
 		})
 	},
-	async removeEnvelopeTag({ commit }, { envelope, tag }) {
-		await removeEnvelopeTag(envelope.databaseId, tag.imapLabel)
+	async removeEnvelopeTag({ commit }, { envelope, imapLabel }) {
+		const tag = await removeEnvelopeTag(envelope.databaseId, imapLabel)
 		commit('removeEnvelopeTag', {
 			envelope,
 			tagId: tag.id,

@@ -28,7 +28,6 @@ namespace OCA\Mail\Db;
 use function array_map;
 use function array_chunk;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
@@ -51,7 +50,7 @@ class TagMapper extends QBMapper {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function getTagByImapLabel(string $imapLabel, string $userId): Entity {
+	public function getTagByImapLabel(string $imapLabel, string $userId): Tag {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -65,7 +64,7 @@ class TagMapper extends QBMapper {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function getTagForUser(int $id, string $userId): Entity {
+	public function getTagForUser(int $id, string $userId): Tag {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -78,7 +77,6 @@ class TagMapper extends QBMapper {
 
 	/**
 	 * @return Tag[]
-	 * @throws DoesNotExistException
 	 */
 	public function getAllTagsForUser(string $userId): array {
 		$qb = $this->db->getQueryBuilder();
@@ -134,33 +132,37 @@ class TagMapper extends QBMapper {
 			return $message->getMessageId();
 		}, $messages);
 
+		$tags = [];
 		$qb = $this->db->getQueryBuilder();
 		$tagsQuery = $qb->selectDistinct(['t.*', 'mt.imap_message_id'])
 			->from($this->getTableName(), 't')
 			->join('t', 'mail_message_tags', 'mt', $qb->expr()->eq('t.id', 'mt.tag_id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->in('mt.imap_message_id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->in('mt.imap_message_id', $qb->createParameter('ids'), IQueryBuilder::PARAM_STR_ARRAY),
 				$qb->expr()->eq('t.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
 			);
-		$queryResult = $tagsQuery->execute();
 
-		$tags = [];
-		while (($row = $queryResult->fetch()) !== false) {
-			$messageId = $row['imap_message_id'];
-			if (!isset($tags[$messageId])) {
-				$tags[$messageId] = [];
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$queryResult = $tagsQuery->execute();
+
+			while (($row = $queryResult->fetch()) !== false) {
+				$messageId = $row['imap_message_id'];
+				if (!isset($tags[$messageId])) {
+					$tags[$messageId] = [];
+				}
+
+				// Construct a Tag instance but omit any other joined columns
+				$tags[$messageId][] = Tag::fromRow(array_filter(
+					$row,
+					function (string $key) {
+						return $key !== 'imap_message_id';
+					},
+					ARRAY_FILTER_USE_KEY
+				));
 			}
-
-			// Construct a Tag instance but omit any other joined columns
-			$tags[$messageId][] = Tag::fromRow(array_filter(
-				$row,
-				function (string $key) {
-					return $key !== 'imap_message_id';
-				},
-				ARRAY_FILTER_USE_KEY
-			));
+			$queryResult->closeCursor();
 		}
-		$queryResult->closeCursor();
 		return $tags;
 	}
 
@@ -184,27 +186,27 @@ class TagMapper extends QBMapper {
 			switch ($i) {
 					case 1:
 						$tag->setDisplayName($this->l10n->t('Important'));
-						$tag->setColor('#FF0000');
+						$tag->setColor('#FF7A66');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 2:
 						$tag->setDisplayName($this->l10n->t('Work'));
-						$tag->setColor('#FFC300');
+						$tag->setColor('#31CC7C');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 3:
 						$tag->setDisplayName($this->l10n->t('Personal'));
-						$tag->setColor('#008000');
+						$tag->setColor('#A85BF7');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 4:
 						$tag->setDisplayName($this->l10n->t('To Do'));
-						$tag->setColor('#000080');
+						$tag->setColor('#317CCC');
 						$tag->setIsDefaultTag(true);
 						break;
 					case 5:
 						$tag->setDisplayName($this->l10n->t('Later'));
-						$tag->setColor('#800080');
+						$tag->setColor('#B4A443');
 						$tag->setIsDefaultTag(true);
 						break;
 			}

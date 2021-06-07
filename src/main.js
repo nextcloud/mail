@@ -34,7 +34,7 @@ import Nextcloud from './mixins/Nextcloud'
 import router from './router'
 import store from './store'
 import { fixAccountId } from './service/AccountService'
-import { Base64 } from 'js-base64'
+import { loadState } from '@nextcloud/initial-state'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
@@ -58,7 +58,7 @@ const getPreferenceFromPage = (key) => {
 
 store.commit('savePreference', {
 	key: 'debug',
-	value: getPreferenceFromPage('debug-mode'),
+	value: loadState('mail', 'debug', false),
 })
 store.commit('savePreference', {
 	key: 'attachment-size-limit',
@@ -77,8 +77,10 @@ store.commit('savePreference', {
 	value: getPreferenceFromPage('collect-data'),
 })
 
-const accountSettings = JSON.parse(Base64.decode(getPreferenceFromPage('account-settings')))
-const accounts = JSON.parse(Base64.decode(getPreferenceFromPage('serialized-accounts')))
+const accountSettings = loadState('mail', 'account-settings')
+const accounts = loadState('mail', 'accounts', [])
+const tags = loadState('mail', 'tags', [])
+
 accounts.map(fixAccountId).forEach((account) => {
 	const settings = accountSettings.find(settings => settings.accountId === account.id)
 	if (settings) {
@@ -93,6 +95,8 @@ accounts.map(fixAccountId).forEach((account) => {
 	}
 	store.commit('addAccount', { ...account, ...settings })
 })
+
+tags.forEach(tag => store.commit('addTag', { tag }))
 
 export default new Vue({
 	el: '#content',

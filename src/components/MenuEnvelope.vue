@@ -65,6 +65,12 @@
 					envelope.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
+			<ActionButton
+				icon="icon-tag"
+				:close-after-click="true"
+				@click.prevent="onOpenTagModal">
+				{{ t('mail', 'Add tags') }}
+			</ActionButton>
 			<ActionButton v-if="withSelect"
 				icon="icon-checkmark"
 				:close-after-click="true"
@@ -111,6 +117,11 @@
 			:envelopes="[envelope]"
 			@move="onMove"
 			@close="onCloseMoveModal" />
+		<TagModal
+			v-if="showTagModal"
+			:account="account"
+			:envelope="envelope"
+			@close="onCloseTagModal" />
 	</div>
 </template>
 
@@ -126,6 +137,7 @@ import { generateUrl } from '@nextcloud/router'
 import logger from '../logger'
 import { matchError } from '../errors/match'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+import TagModal from './TagModal'
 import MoveModal from './MoveModal'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 import { showError } from '@nextcloud/dialogs'
@@ -139,6 +151,7 @@ export default {
 		ActionRouter,
 		Modal,
 		MoveModal,
+		TagModal,
 	},
 	props: {
 		envelope: {
@@ -181,6 +194,7 @@ export default {
 			sourceLoading: false,
 			showSourceModal: false,
 			showMoveModal: false,
+			showTagModal: false,
 		}
 	},
 	computed: {
@@ -260,7 +274,7 @@ export default {
 		isImportant() {
 			return this.$store.getters
 				.getEnvelopeTags(this.envelope.databaseId)
-				.find((tag) => tag.imapLabel === '$label1')
+				.some((tag) => tag.imapLabel === '$label1')
 		},
 	},
 	methods: {
@@ -330,6 +344,12 @@ export default {
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+		onOpenTagModal() {
+			this.showTagModal = true
+		},
+		onCloseTagModal() {
+			this.showTagModal = false
 		},
 		dotplexOverrideTranslation(string) {
 			switch (string) {

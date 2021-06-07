@@ -100,6 +100,16 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'tags#create',
+			'url' => '/api/tags',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'tags#update',
+			'url' => '/api/tags/{id}',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'aliases#updateSignature',
 			'url' => '/api/accounts/{accountId}/aliases/{id}/signature',
 			'verb' => 'PUT'
@@ -230,13 +240,28 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'settings#provisioning',
+			'name' => 'settings#index',
+			'url' => '/api/settings/provisioning',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'settings#createProvisioning',
 			'url' => '/api/settings/provisioning',
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'settings#updateProvisioning',
+			'url' => '/api/settings/provisioning/{id}',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'settings#provision',
+			'url' => '/api/settings/provisioning/all',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'settings#deprovision',
-			'url' => '/api/settings/provisioning',
+			'url' => '/api/settings/provisioning/{id}',
 			'verb' => 'DELETE'
 		],
 		[

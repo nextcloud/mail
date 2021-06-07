@@ -27,21 +27,22 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Exception;
-use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
-use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
+use function json_decode;
 
 class PageController extends Controller {
 
@@ -69,7 +70,10 @@ class PageController extends Controller {
 	/** @var IMailManager */
 	private $mailManager;
 
-	/** @var IInitialStateService */
+	/** @var TagMapper */
+	private $tagMapper;
+
+	/** @var IInitialState */
 	private $initialStateService;
 
 	/** @var LoggerInterface */
@@ -85,7 +89,8 @@ class PageController extends Controller {
 								IUserSession $userSession,
 								IUserPreferences $preferences,
 								IMailManager $mailManager,
-								IInitialStateService $initialStateService,
+								TagMapper $tagMapper,
+								IInitialState $initialStateService,
 								LoggerInterface $logger) {
 		parent::__construct($appName, $request);
 
@@ -97,6 +102,7 @@ class PageController extends Controller {
 		$this->userSession = $userSession;
 		$this->preferences = $preferences;
 		$this->mailManager = $mailManager;
+		$this->tagMapper = $tagMapper;
 		$this->initialStateService = $initialStateService;
 		$this->logger = $logger;
 	}
@@ -108,8 +114,12 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index(): TemplateResponse {
-		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
+		$this->initialStateService->provideInitialState(
+			'debug',
+			$this->config->getSystemValue('debug', false)
+		);
 
+		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$json = $mailAccount->jsonSerialize();
@@ -127,28 +137,33 @@ class PageController extends Controller {
 			}
 			$accountsJson[] = $json;
 		}
-
-		$accountSettings = $this->preferences->getPreference('account-settings', json_encode([]));
+		$this->initialStateService->provideInitialState(
+			'accounts',
+			$accountsJson
+		);
+		$this->initialStateService->provideInitialState(
+			'account-settings',
+			json_decode($this->preferences->getPreference('account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+		);
+		$this->initialStateService->provideInitialState(
+			'tags',
+			$this->tagMapper->getAllTagsForUser($this->currentUserId)
+		);
 
 		$user = $this->userSession->getUser();
 		$response = new TemplateResponse($this->appName, 'index',
 			[
-				'debug' => $this->config->getSystemValue('debug', false),
 				'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
 				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
-				'accounts' => base64_encode(json_encode($accountsJson)),
 				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
 				'reply-mode' => $this->preferences->getPreference('reply-mode', 'top'),
 				'collect-data' => $this->preferences->getPreference('collect-data', 'true'),
-				'account-settings' => base64_encode($accountSettings),
 			]);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'prefill_displayName',
 			$user->getDisplayName()
 		);
 		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'prefill_email',
 			$this->config->getUserValue($user->getUID(), 'settings', 'email', '')
 		);

@@ -191,8 +191,8 @@ class MailboxSync {
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
-		$mailbox->setMessages($folder->getStatus()['messages']);
-		$mailbox->setUnseen($folder->getStatus()['unseen']);
+		$mailbox->setMessages($folder->getStatus()['messages'] ?? 0);
+		$mailbox->setUnseen($folder->getStatus()['unseen'] ?? 0);
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->update($mailbox);
@@ -204,8 +204,8 @@ class MailboxSync {
 		$mailbox->setAccountId($account->getId());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
-		$mailbox->setMessages($folder->getStatus()['messages']);
-		$mailbox->setUnseen($folder->getStatus()['unseen']);
+		$mailbox->setMessages($folder->getStatus()['messages'] ?? 0);
+		$mailbox->setUnseen($folder->getStatus()['unseen'] ?? 0);
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->insert($mailbox);

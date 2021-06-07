@@ -9,10 +9,10 @@
 - **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
 - **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.
 - **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
-- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
+- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.
 - **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 	]]></description>
-	<version>1.10.0-alpha.3</version>
+	<version>1.10.0-alpha.6</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author>Greta Doçi</author>
@@ -43,8 +43,6 @@
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
 			<step>OCA\Mail\Migration\FixBackgroundJobs</step>
 			<step>OCA\Mail\Migration\MakeItineraryExtractorExecutable</step>
-			<step>OCA\Mail\Migration\MigrateProvisioningConfig</step>
-			<step>OCA\Mail\Migration\AddSieveToProvisioningConfig</step>
 			<step>OCA\Mail\Migration\ProvisionAccounts</step>
 		</post-migration>
 	</repair-steps>

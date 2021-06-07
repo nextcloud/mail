@@ -32,6 +32,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
+use OCP\IRequest;
 
 class MailboxSynchronizationTest extends TestCase {
 	use ImapTest,
@@ -45,18 +46,18 @@ class MailboxSynchronizationTest extends TestCase {
 
 		$this->foldersController = new MailboxesController(
 			'mail',
-			OC::$server->getRequest(),
-			OC::$server->query(AccountService::class),
+			OC::$server->get(IRequest::class),
+			OC::$server->get(AccountService::class),
 			$this->getTestAccountUserId(),
-			OC::$server->query(IMailManager::class),
-			OC::$server->query(SyncService::class)
+			OC::$server->get(IMailManager::class),
+			OC::$server->get(SyncService::class)
 		);
 	}
 
 	public function testSyncEmptyMailbox() {
 		$account = $this->createTestAccount();
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->query(IMailManager::class);
+		$mailManager = OC::$server->get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -81,21 +82,21 @@ class MailboxSynchronizationTest extends TestCase {
 		);
 
 		$data = $jsonResponse->getData()->jsonSerialize();
-		$this->assertArrayHasKey('newMessages', $data);
-		$this->assertArrayHasKey('changedMessages', $data);
-		$this->assertArrayHasKey('vanishedMessages', $data);
-		$this->assertEmpty($data['newMessages']);
-		$this->assertEmpty($data['changedMessages']);
-		$this->assertEmpty($data['vanishedMessages']);
+		self::assertArrayHasKey('newMessages', $data);
+		self::assertArrayHasKey('changedMessages', $data);
+		self::assertArrayHasKey('vanishedMessages', $data);
+		self::assertEmpty($data['newMessages']);
+		self::assertEmpty($data['changedMessages']);
+		self::assertEmpty($data['vanishedMessages']);
 	}
 
 	public function testSyncNewMessage() {
 		// First, set up account and retrieve sync token
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
+		$syncService = OC::$server->get(SyncService::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->query(IMailManager::class);
+		$mailManager = OC::$server->get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -124,16 +125,16 @@ class MailboxSynchronizationTest extends TestCase {
 		);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
-		$this->assertCount(1, $syncJson['newMessages']);
-		$this->assertEquals($newUid, $syncJson['newMessages'][0]->getUid());
-		$this->assertCount(0, $syncJson['changedMessages']);
-		$this->assertCount(0, $syncJson['vanishedMessages']);
+		self::assertCount(1, $syncJson['newMessages']);
+		self::assertEquals($newUid, $syncJson['newMessages'][0]->getUid());
+		self::assertCount(0, $syncJson['changedMessages']);
+		self::assertCount(0, $syncJson['vanishedMessages']);
 	}
 
 	public function testSyncChangedMessage() {
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
+		$syncService = OC::$server->get(SyncService::class);
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
@@ -141,7 +142,7 @@ class MailboxSynchronizationTest extends TestCase {
 			->finish();
 		$uid = $this->saveMessage($mailbox, $message, $account);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->query(IMailManager::class);
+		$mailManager = OC::$server->get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -167,9 +168,9 @@ class MailboxSynchronizationTest extends TestCase {
 			]);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
-		$this->assertCount(0, $syncJson['newMessages']);
-		$this->assertCount(1, $syncJson['changedMessages']);
-		$this->assertCount(0, $syncJson['vanishedMessages']);
+		self::assertCount(0, $syncJson['newMessages']);
+		self::assertCount(1, $syncJson['changedMessages']);
+		self::assertCount(0, $syncJson['vanishedMessages']);
 	}
 
 	public function testSyncVanishedMessage() {
@@ -180,9 +181,9 @@ class MailboxSynchronizationTest extends TestCase {
 			->from('ralph@buffington@domain.tld')
 			->to('user@domain.tld')
 			->finish();
-		$id = $this->saveMessage($mailbox, $message, $account);
+		$uid = $this->saveMessage($mailbox, $message, $account);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->query(IMailManager::class);
+		$mailManager = OC::$server->get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -192,7 +193,7 @@ class MailboxSynchronizationTest extends TestCase {
 			}
 		}
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
+		$syncService = OC::$server->get(SyncService::class);
 		$syncService->syncMailbox(
 			new Account($account),
 			$inbox,
@@ -200,18 +201,18 @@ class MailboxSynchronizationTest extends TestCase {
 			[],
 			false
 		);
-		$this->deleteMessage($mailbox, $id, $account);
+		$this->deleteMessage($mailbox, $uid, $account);
 
 		$jsonResponse = $this->foldersController->sync(
 			$inbox->getId(),
 			[
-				$id
+				$uid // This will only work if UID and database ID are equal (1 on a clean setup), otherwise this fails
 			]);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
-		$this->assertCount(0, $syncJson['newMessages']);
+		self::assertCount(0, $syncJson['newMessages']);
 		// TODO: deleted messages are flagged as changed? could be a testing-only issue
-		// $this->assertCount(0, $syncJson['changedMessages']);
-		$this->assertCount(1, $syncJson['vanishedMessages']);
+		// self::assertCount(0, $syncJson['changedMessages']);
+		self::assertCount(1, $syncJson['vanishedMessages'], 'Message does not show as vanished, possibly because UID and ID are mixed up above.');
 	}
 }

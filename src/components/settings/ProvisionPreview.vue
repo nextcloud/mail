@@ -26,6 +26,8 @@
 			<span v-if="data.email">email={{ email }}</span>
 		</b>
 		<br>
+		{{ t('mail', 'Domain Match: {provisioningDomain}', {provisioningDomain}) }}
+		<br>
 		{{ t('mail', 'Email: {email}', {email}) }}<br>
 		{{
 			t('mail', 'IMAP: {user} on {host}:{port} ({ssl} encryption)', {
@@ -72,6 +74,9 @@ export default {
 	computed: {
 		email() {
 			return this.templates.email.replace('%USERID%', this.data.uid).replace('%EMAIL%', this.data.email)
+		},
+		provisioningDomain() {
+			return this.templates.provisioningDomain
 		},
 		imapHost() {
 			return this.templates.imapHost

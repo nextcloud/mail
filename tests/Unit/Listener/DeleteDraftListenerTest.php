@@ -238,7 +238,7 @@ class DeleteDraftListenerTest extends TestCase {
 			->with(
 				$client,
 				$mailbox,
-				$uid,
+				[$uid],
 				\Horde_Imap_Client::FLAG_DELETED
 			);
 		$client->expects($this->once())
