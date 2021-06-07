@@ -40,7 +40,8 @@
 						:account="group.account"
 						:first-mailbox="group.mailboxes[0]"
 						:is-first="isFirst(group.account)"
-						:is-last="isLast(group.account)" />
+						:is-last="isLast(group.account)"
+						:mainAccountId="mainAccountId" />
 					<template v-for="item in group.mailboxes">
 						<NavigationMailbox
 							v-show="
@@ -129,6 +130,15 @@ export default {
 			}
 			return undefined
 		},
+		mainAccountId() {
+			const accounts = this.$store.getters.accounts.map((acc) => acc.accountId)
+			const accs = accounts.sort((a, b) => {
+				return a - b;
+			}).filter((account) => {
+				return account > 0
+			})
+			return accs[0] ? accs[0] : 0
+		}
 	},
 	methods: {
 		isCollapsed(account, mailbox) {

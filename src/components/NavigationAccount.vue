@@ -63,7 +63,7 @@
 			<ActionButton v-if="!isLast" icon="icon-triangle-s" @click="changeAccountOrderDown">
 				{{ t('mail', 'Move down') }}
 			</ActionButton>
-			<ActionButton v-if="!account.provisioned && !isDotplexAccount" icon="icon-delete" @click="removeAccount">
+			<ActionButton v-if="!account.provisioned && !isMainAccount" icon="icon-delete" @click="removeAccount">
 				{{ t('mail', 'Remove account') }}
 			</ActionButton>
 		</template>
@@ -116,6 +116,9 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		mainAccountId: {
+			type: Number,
+		},
 	},
 	data() {
 		return {
@@ -149,8 +152,8 @@ export default {
 		id() {
 			return 'account-' + this.account.id
 		},
-		isDotplexAccount() {
-			return this.account.imapHost === 'mail.dotplex.com'
+		isMainAccount() {
+			return this.account.accountId === this.mainAccountId
 		},
 		bulletColor() {
 			return this.account.error ? undefined : calculateAccountColor(this.account.emailAddress)
