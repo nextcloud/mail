@@ -51,6 +51,14 @@
 						{{ envelope.subject }}
 					</span>
 				</div>
+				<div v-for="tag in tags"
+					:key="tag.id"
+					class="tag-group">
+					<div class="tag-group__bg"
+						:style="{'background-color': tag.color}" />
+					<span class="tag-group__label"
+						:style="{color: tag.color}">{{ tag.displayName }} </span>
+				</div>
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
@@ -193,6 +201,9 @@ export default {
 			return this.$store.getters
 				.getEnvelopeTags(this.envelope.databaseId)
 				.find((tag) => tag.imapLabel === '$label1')
+		},
+		tags() {
+			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter((tag) => tag.imapLabel !== '$label1')
 		},
 	},
 	watch: {
@@ -355,6 +366,31 @@ export default {
 	}
 	.left:not(.seen) {
 		font-weight: bold;
+	}
+	.tag-group__label {
+		margin: 0 7px;
+		z-index: 2;
+		font-size: calc(var(--default-font-size) * 0.8);
+		font-weight: bold;
+		padding-left: 2px;
+		padding-right: 2px;
+	}
+	.tag-group__bg {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		opacity: 15%;
+	}
+	.tag-group {
+		display: inline-block;
+		border: 1px solid transparent;
+		border-radius: var(--border-radius-pill);
+		position: relative;
+		margin: 0 1px;
+		overflow: hidden;
+		left: 4px;
 	}
 
 </style>
