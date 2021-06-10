@@ -195,7 +195,7 @@ export default {
 		async provisionAll() {
 			try {
 				const count = await provisionAll()
-				showSuccess(t('mail', 'Successfully provisioned {count} accounts.', { count: count.count }))
+				showSuccess(n('mail', 'Successfully provisioned {count} account.', 'Successfully provisioned {count} accounts.', count.count, { count: count.count }))
 
 			} catch (error) {
 				showError(t('mail', 'There was an error when provisioning accounts.'))
@@ -206,7 +206,7 @@ export default {
 			const deleted = this.configs.find(c => c.id === id)
 			try {
 				await disableProvisioning(id)
-				logger.info('deprovisioned successfully')
+				logger.info('Deprovisioned successfully')
 				this.configs = this.configs.filter(c => c.id !== id)
 				showSuccess(t('mail', 'Successfully deleted and deprovisioned accounts for "{domain}"', { domain: deleted.provisioningDomain }))
 			} catch (error) {
