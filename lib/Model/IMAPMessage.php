@@ -436,9 +436,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			return;
 		}
 
-		// TEXT
 		if ($p->getType() === 'text/calendar') {
-			// TODO: skip inline ics for now
+			$this->attachments[] = [
+				'id' => $p->getMimeId(),
+				'messageId' => $this->messageId,
+				'fileName' => $p->getName() ?? 'calendar.ics',
+				'mime' => $p->getType(),
+				'size' => $p->getBytes(),
+				'cid' => $p->getContentId(),
+				'disposition' => $p->getDisposition()
+			];
 			return;
 		}
 
