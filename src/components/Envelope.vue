@@ -100,7 +100,7 @@
 			<ActionButton icon="icon-external"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move') }}
+				{{ t('mail', 'Move thread') }}
 			</ActionButton>
 			<ActionRouter icon="icon-add"
 				:to="{
@@ -119,7 +119,7 @@
 			<ActionButton icon="icon-delete"
 				:close-after-click="true"
 				@click.prevent="onDelete">
-				{{ t('mail', 'Delete') }}
+				{{ t('mail', 'Delete thread') }}
 			</ActionButton>
 		</template>
 		<template #extra>
@@ -138,6 +138,7 @@
 			<MoveModal v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
+				:move-thread="true"
 				@move="onMove"
 				@close="onCloseMoveModal" />
 			<TagModal
@@ -338,10 +339,11 @@ export default {
 			// Remove from selection first
 			this.setSelected(false)
 			// Delete
-			this.$emit('delete')
+			this.$emit('delete', this.data.databaseId)
+
 			try {
-				await this.$store.dispatch('deleteMessage', {
-					id: this.data.databaseId,
+				await this.$store.dispatch('deleteThread', {
+					envelope: this.data,
 				})
 			} catch (error) {
 				showError(await matchError(error, {

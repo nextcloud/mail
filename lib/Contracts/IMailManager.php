@@ -110,11 +110,11 @@ interface IMailManager {
 
 	/**
 	 * @param Account $account
-	 * @param int $messageId database message ID
+	 * @param string $threadRootId thread root id
 	 *
 	 * @return Message[]
 	 */
-	public function getThread(Account $account, int $messageId): array;
+	public function getThread(Account $account, string $threadRootId): array;
 
 	/**
 	 * @param Account $sourceAccount
@@ -263,4 +263,25 @@ interface IMailManager {
 	 * @throws ClientException if the given tag does not exist
 	 */
 	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag;
+
+	/**
+	 * @param Account $srcAccount
+	 * @param Mailbox $srcMailbox
+	 * @param Account $dstAccount
+	 * @param Mailbox $dstMailbox
+	 * @param string $threadRootId
+	 * @return void
+	 * @throws ServiceException
+	 */
+	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): void;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param string $threadRootId
+	 * @return void
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function deleteThread(Account $account, Mailbox $mailbox, string $threadRootId): void;
 }

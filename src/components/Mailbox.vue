@@ -357,8 +357,8 @@ export default {
 				logger.debug('deleting', { env })
 				this.onDelete(env.databaseId)
 				try {
-					await this.$store.dispatch('deleteMessage', {
-						id: env.databaseId,
+					await this.$store.dispatch('deleteThread', {
+						envelope: env,
 					})
 				} catch (error) {
 					logger.error('could not delete envelope', {

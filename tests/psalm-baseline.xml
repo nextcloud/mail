@@ -94,14 +94,12 @@
     </ImplicitToStringCast>
   </file>
   <file src="lib/Db/MessageMapper.php">
-    <ImplicitToStringCast occurrences="26">
+    <ImplicitToStringCast occurrences="25">
       <code>$deleteMessagesQuery-&gt;createParameter('messageIds')</code>
       <code>$deleteRecipientsQuery-&gt;createParameter('ids')</code>
       <code>$deleteRecipientsQuery-&gt;createParameter('messageIds')</code>
       <code>$messageIdQuery-&gt;createParameter('uids')</code>
       <code>$messagesQuery-&gt;createFunction($mailboxesQuery-&gt;getSQL())</code>
-      <code>$qb-&gt;createFunction($mailboxIdsQuery-&gt;getSQL())</code>
-      <code>$qb-&gt;createFunction($mailboxIdsQuery-&gt;getSQL())</code>
       <code>$qb-&gt;createFunction($selectMailboxIds-&gt;getSQL())</code>
       <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$qb-&gt;createNamedParameter($query-&gt;getBcc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
