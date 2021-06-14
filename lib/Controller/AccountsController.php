@@ -254,6 +254,19 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
+
+		if ($draftsMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $draftsMailboxId);
+			$dbAccount->setDraftsMailboxId($draftsMailboxId);
+		}
+		if ($sentMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $sentMailboxId);
+			$dbAccount->setSentMailboxId($sentMailboxId);
+		}
+		if ($trashMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $trashMailboxId);
+			$dbAccount->setTrashMailboxId($trashMailboxId);
+		}
 		if ($editorMode !== null) {
 			$dbAccount->setEditorMode($editorMode);
 		}
@@ -262,15 +275,6 @@ class AccountsController extends Controller {
 		}
 		if ($showSubscribedOnly !== null) {
 			$dbAccount->setShowSubscribedOnly($showSubscribedOnly);
-		}
-		if ($draftsMailboxId !== null) {
-			$dbAccount->setDraftsMailboxId($draftsMailboxId);
-		}
-		if ($sentMailboxId !== null) {
-			$dbAccount->setSentMailboxId($sentMailboxId);
-		}
-		if ($trashMailboxId !== null) {
-			$dbAccount->setTrashMailboxId($trashMailboxId);
 		}
 		if ($signatureAboveQuote !== null) {
 			$dbAccount->setSignatureAboveQuote($signatureAboveQuote);
