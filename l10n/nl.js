@@ -271,6 +271,7 @@ OC.L10N.register(
     "Could not save provisioning setting" : "Kan inrichtingsinstelling niet opslaan",
     "There was an error when provisioning accounts." : "Er trad een fout op bij het inrichten van accounts.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Accounts for \"{domain}\" succesvol verwijderd en ge-deprovisiond ",
+    "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Fout bij het verwijderen en uitschrijven van accounts voor '{domain}'",
     "Domain Match: {provisioningDomain}" : "Domein overeenkomst: {provisioningDomain}",
     "Email: {email}" : "E-mail: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} op {host}:{port} ({ssl} versleuteling)",
