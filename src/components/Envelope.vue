@@ -103,6 +103,11 @@
 				@click.prevent="onOpenMoveModal">
 				{{ t('mail', 'Move thread') }}
 			</ActionButton>
+			<ActionButton icon="icon-calendar-dark"
+				:close-after-click="true"
+				@click.prevent="showEventModal = true">
+				{{ t('mail', 'Create event') }}
+			</ActionButton>
 			<ActionRouter icon="icon-add"
 				:to="{
 					name: 'message',
@@ -142,6 +147,9 @@
 				:move-thread="true"
 				@move="onMove"
 				@close="onCloseMoveModal" />
+			<EventModal v-if="showEventModal"
+				:envelope="data"
+				@close="showEventModal = false" />
 			<TagModal
 				v-if="showTagModal"
 				:account="account"
@@ -167,10 +175,12 @@ import logger from '../logger'
 import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import TagModal from './TagModal'
+import EventModal from './EventModal'
 
 export default {
 	name: 'Envelope',
 	components: {
+		EventModal,
 		ListItem,
 		Avatar,
 		ActionButton,
@@ -214,6 +224,7 @@ export default {
 		return {
 			importantSvg,
 			showMoveModal: false,
+			showEventModal: false,
 			showTagModal: false,
 		}
 	},
@@ -360,6 +371,9 @@ export default {
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true
+		},
+		onOpenEventModal() {
+			this.showEventModal = true
 		},
 		onMove() {
 			this.$emit('move')
