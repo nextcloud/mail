@@ -26,7 +26,6 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
@@ -422,11 +421,13 @@ class MailManager implements IMailManager {
 	 *
 	 * @param Account $account
 	 * @param string $mailbox
-	 * @param integer $uid
+	 * @param Message $message
 	 * @param Tag $tag
 	 * @param boolean $value
 	 * @return void
 	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 * @uses
 	 *
 	 * @link https://github.com/nextcloud/mail/issues/25
@@ -576,7 +577,6 @@ class MailManager implements IMailManager {
 	/**
 	 * Filter out IMAP flags that aren't supported by the client server
 	 *
-	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $flag
 	 * @param string $mailbox
 	 * @return array

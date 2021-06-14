@@ -164,7 +164,7 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $mailbox
-	 * @param int $uid
+	 * @param Message $message
 	 * @param Tag $tag
 	 * @param bool $value
 	 *
@@ -240,6 +240,15 @@ interface IMailManager {
 	 * @throws ClientException
 	 */
 	public function getTagByImapLabel(string $imapLabel, string $userId): Tag;
+
+	/**
+	 * Check IMAP server for support for PERMANENTFLAGS
+	 *
+	 * @param Account $account
+	 * @param string $mailbox
+	 * @return boolean
+	 */
+	public function isPermflagsEnabled(Account $account, string $mailbox): bool;
 
 	/**
 	 * Create a mail tag

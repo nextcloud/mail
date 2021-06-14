@@ -33,6 +33,7 @@ use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\FlagExpression;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCA\Mail\Support\PerformanceLogger;
+use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -339,10 +340,11 @@ class MessageMapper extends QBMapper {
 
 	/**
 	 * @param Account $account
+	 * @param bool $permflagsEnabled
 	 * @param Message[] $messages
 	 * @return Message[]
 	 */
-	public function updateBulk(Account $account, Message ...$messages): array {
+	public function updateBulk(Account $account, bool $permflagsEnabled, Message ...$messages): array {
 		$this->db->beginTransaction();
 
 		$perf = $this->performanceLogger->start(
@@ -366,68 +368,80 @@ class MessageMapper extends QBMapper {
 				$query->expr()->eq('uid', $query->createParameter('uid')),
 				$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
 			));
-		// get all tags before the loop and create a mapping [message_id => [tag,...]]
-		$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
-		$perf->step("Selected Tags for all messages");
+
+		// get all tags before the loop and create a mapping [message_id => [tag,...]] but only if permflags are enabled
+		$tags = [];
+		if ($permflagsEnabled) {
+			$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
+			$perf->step("Selected Tags for all messages");
+		}
+
 		foreach ($messages as $message) {
-			if (empty($message->getUpdatedFields())) {
-				// Micro optimization
-				continue;
+			if (empty($message->getUpdatedFields()) === false) {
+				// only run if there is anything to actually update
+				$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
+				$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
+				$query->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
+				$query->execute();
+				$perf->step('Updated message ' . $message->getId());
 			}
 
-			$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
-			$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
-			$query->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
-
-			$query->execute();
-			$perf->step('Updated message ' . $message->getId());
-
-
-			$imapTags = $message->getTags();
-			$dbTags = $tags[$message->getMessageId()] ?? [];
-
-			if (empty($imapTags) === true && empty($dbTags) === true) {
-				// neither old nor new tags
-				continue;
+			// check permflags and only go through the tagging logic if they're enabled
+			if ($permflagsEnabled) {
+				$this->updateTags($account, $message, $tags, $perf);
 			}
-
-			$toAdd = array_udiff($imapTags, $dbTags, function (Tag $a, Tag $b) {
-				return strcmp($a->getImapLabel(), $b->getImapLabel());
-			});
-			foreach ($toAdd as $tag) {
-				// add logging
-				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
-			}
-			$perf->step("Tagged messages");
-
-			if (empty($dbTags) === true) {
-				// we have nothing to possibly remove
-				continue;
-			}
-
-			$toRemove = array_udiff($dbTags, $imapTags, function (Tag $a, Tag $b) {
-				return strcmp($a->getImapLabel(), $b->getImapLabel());
-			});
-			foreach ($toRemove as $tag) {
-				//add logging
-				$this->tagMapper->untagMessage($tag, $message->getMessageId());
-			}
-			$perf->step("Untagged messages");
 		}
 
 		$this->db->commit();
 		$perf->end();
 
 		return $messages;
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Message $message
+	 * @param Tag[][] $tags
+	 * @param PerformanceLoggerTask $perf
+	 */
+	private function updateTags(Account $account, Message $message, array $tags, PerformanceLoggerTask $perf): void {
+		$imapTags = $message->getTags();
+		$dbTags = $tags[$message->getMessageId()] ?? [];
+
+		if (empty($imapTags) && empty($dbTags)) {
+			// neither old nor new tags
+			return;
+		}
+
+		$toAdd = array_udiff($imapTags, $dbTags, static function (Tag $a, Tag $b) {
+			return strcmp($a->getImapLabel(), $b->getImapLabel());
+		});
+		foreach ($toAdd as $tag) {
+			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+		}
+		$perf->step("Tagged messages");
+
+		if (empty($dbTags)) {
+			// we have nothing to possibly remove
+			return;
+		}
+
+		$toRemove = array_udiff($dbTags, $imapTags, static function (Tag $a, Tag $b) {
+			return strcmp($a->getImapLabel(), $b->getImapLabel());
+		});
+		foreach ($toRemove as $tag) {
+			$this->tagMapper->untagMessage($tag, $message->getMessageId());
+		}
+		$perf->step("Untagged messages");
 	}
 
 	public function getTags(Message $message) : array {

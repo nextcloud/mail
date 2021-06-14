@@ -773,7 +773,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private function generateTagEntites(array $tags, string $userId): array {
 		$t = [];
 		foreach ($tags as $keyword) {
-			if ($keyword === '$important' || $keyword === '$labelimportant') {
+			if ($keyword === '$important' || $keyword === 'important' || $keyword === '$labelimportant') {
 				$keyword = Tag::LABEL_IMPORTANT;
 			}
 			if ($keyword === '$labelwork') {
