@@ -183,7 +183,12 @@ class PersistenceService {
 				throw new ServiceException("Could not load classifier $id: " . $e->getMessage(), 0, $e);
 			}
 
-			$serialized = $modelFile->getContent();
+			try {
+				$serialized = $modelFile->getContent();
+			} catch (NotFoundException | NotPermittedException $e) {
+				$this->logger->debug("Could not load content for model file with classifier id $id: " . $e->getMessage());
+				throw new ServiceException("Could not load content for model file with classifier id $id: " . $e->getMessage(), 0, $e);
+			}
 			$size = strlen($serialized);
 			$this->logger->debug("Serialized classifier loaded (size=$size)");
 

@@ -32,7 +32,6 @@ use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
-use Throwable;
 
 class NewMessageClassificationListener implements IEventListener {
 	private const EXEMPT_FROM_CLASSIFICATION = [
@@ -84,8 +83,7 @@ class NewMessageClassificationListener implements IEventListener {
 					$message->setFlagImportant(true);
 				}
 			}
-		} catch (Throwable | ServiceException $e) {
-			// TODO: remove Throwable catch once https://github.com/RubixML/RubixML/pull/69 landed here
+		} catch (ServiceException $e) {
 			$this->logger->error('Could not classify incoming message importance: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
