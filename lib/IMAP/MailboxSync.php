@@ -153,6 +153,11 @@ class MailboxSync {
 		$this->mailboxMapper->update($mailbox);
 	}
 
+	/**
+	 * @param Account $account
+	 * @param Folder[] $folders
+	 * @param Mailbox[] $existing
+	 */
 	private function persist(Account $account, array $folders, array $existing): void {
 		foreach ($folders as $folder) {
 			if (isset($existing[$folder->getMailbox()])) {
