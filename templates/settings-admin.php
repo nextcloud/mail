@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-script(\OCA\Mail\AppInfo\Application::APP_ID, 'settings');
+script(\OCA\Mail\AppInfo\Application::APP_ID, 'mail-settings');
 
 ?>
 <div id="mail-admin-settings">

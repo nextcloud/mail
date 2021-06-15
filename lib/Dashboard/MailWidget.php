@@ -89,7 +89,7 @@ abstract class MailWidget implements IWidget {
 	 * @inheritDoc
 	 */
 	public function load(): void {
-		Util::addScript(Application::APP_ID, 'dashboard');
+		Util::addScript(Application::APP_ID, 'mail-dashboard');
 
 		$this->initialState->provideInitialState(
 			'mail-accounts',
