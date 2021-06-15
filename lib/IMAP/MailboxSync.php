@@ -41,6 +41,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Folder;
 use OCP\AppFramework\Utility\ITimeFactory;
+use function sprintf;
 
 class MailboxSync {
 
@@ -104,7 +105,7 @@ class MailboxSync {
 			$this->folderMapper->getFoldersStatus($folders, $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"IMAP error: " . $e->getMessage(),
+				sprintf("IMAP error synchronizing account %d: %s", $account->getId(), $e->getMessage()),
 				(int)$e->getCode(),
 				$e
 			);
