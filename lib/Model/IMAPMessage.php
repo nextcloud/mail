@@ -727,7 +727,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		);
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true) || in_array('nonjunk', $flags, true));// While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
 		// @todo remove this as soon as possible @link https://github.com/nextcloud/mail/issues/25
-		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
+		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
 
@@ -765,6 +765,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * display_name like 'xxx'
 	 *
 	 * @link https://github.com/nextcloud/mail/issues/25
+	 * @link https://github.com/nextcloud/mail/issues/5150
 	 *
 	 * @param string[] $tags
 	 * @return Tag[]
@@ -772,9 +773,20 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private function generateTagEntites(array $tags, string $userId): array {
 		$t = [];
 		foreach ($tags as $keyword) {
-			// Map the old $important to $label1 until we have caught them all
-			if ($keyword === '$important') {
+			if ($keyword === '$important' || $keyword === '$labelimportant') {
 				$keyword = Tag::LABEL_IMPORTANT;
+			}
+			if ($keyword === '$labelwork') {
+				$keyword = Tag::LABEL_WORK;
+			}
+			if ($keyword === '$labelpersonal') {
+				$keyword = Tag::LABEL_PERSONAL;
+			}
+			if ($keyword === '$labeltodo') {
+				$keyword = Tag::LABEL_TODO;
+			}
+			if ($keyword === '$labellater') {
+				$keyword = Tag::LABEL_LATER;
 			}
 
 			$displayName = str_replace('_', ' ', $keyword);

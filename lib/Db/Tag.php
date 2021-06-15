@@ -48,6 +48,10 @@ class Tag extends Entity implements JsonSerializable {
 	protected $isDefaultTag;
 
 	public const LABEL_IMPORTANT = '$label1';
+	public const LABEL_WORK = '$label2';
+	public const LABEL_PERSONAL = '$label3';
+	public const LABEL_TODO = '$label4';
+	public const LABEL_LATER = '$label5';
 
 	public function __construct() {
 		$this->addType('isDefaultTag', 'boolean');
