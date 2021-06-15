@@ -132,6 +132,7 @@ export default {
 .attachments-button-wrapper {
 	text-align: center;
 }
+
 .attachments-save-to-cloud {
 	display: inline-block;
 	margin: 16px;
@@ -139,6 +140,7 @@ export default {
 	padding: 12px;
 	padding-left: 44px;
 }
+
 .oc-dialog {
 	z-index: 10000000;
 }

@@ -167,46 +167,48 @@ export default {
 
 <style lang="scss" scoped>
 .ck.ck-editor__editable_inline {
-  width: 100%;
-  max-width: 78vw;
-  height: 100px;
-  border-radius: var(--border-radius) !important;
-  border: 1px solid var(--color-border) !important;
-  box-shadow: none !important;
+	width: 100%;
+	max-width: 78vw;
+	height: 100px;
+	border-radius: var(--border-radius) !important;
+	border: 1px solid var(--color-border) !important;
+	box-shadow: none !important;
 }
 
 .primary {
-  padding-left: 26px;
-  background-position: 6px;
-  color: var(--color-main-background);
+	padding-left: 26px;
+	background-position: 6px;
+	color: var(--color-main-background);
 
-  &:after {
-    left: 14px;
-  }
+	&:after {
+		left: 14px;
+	}
 }
 
 .button-text {
-  background-color: transparent;
-  border: none;
-  color: var(--color-text-maxcontrast);
-  font-weight: normal;
+	background-color: transparent;
+	border: none;
+	color: var(--color-text-maxcontrast);
+	font-weight: normal;
 
-  &:hover,
-  &:focus {
-    color: var(--color-main-text);
-  }
+	&:hover,
+	&:focus {
+		color: var(--color-main-text);
+	}
 }
+
 .section {
-  display: block;
-  padding: 0;
-  margin-bottom: 23px;
+	display: block;
+	padding: 0;
+	margin-bottom: 23px;
 }
+
 .multiselect--single {
-  width: 100%;
+	width: 100%;
 }
 </style>
 <style>
 .ck-balloon-panel {
-  z-index: 10000 !important;
+	z-index: 10000 !important;
 }
 </style>

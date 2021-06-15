@@ -217,6 +217,7 @@ export default {
 ::v-deep a {
 	color: #07d;
 }
+
 ::v-deep p {
 	cursor: text;
 }

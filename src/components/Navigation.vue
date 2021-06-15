@@ -222,15 +222,16 @@ export default {
 		animation: rotation 2s linear;
 	}
 }
+
 ::v-deep .app-navigation-new button {
 	width: 240px !important;
 	height: 44px;
 }
 @keyframes rotation {
-from {
-	transform: rotate(-0deg);
-}
-to {
+	from {
+		transform: rotate(-0deg);
+	}
+	to {
 		transform: rotate(-360deg);
 	}
 }

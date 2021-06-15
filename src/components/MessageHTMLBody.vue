@@ -142,6 +142,7 @@ export default {
 	height: 100%;
 	background-color: #FFFFFF;
 }
+
 #mail-message-has-blocked-content {
 	margin-left: 8px;
 }
@@ -157,12 +158,15 @@ export default {
 		overflow-y: auto;
 	}
 }
+
 ::v-deep .icon-toggle {
 	background-image: var(--icon-toggle-000) !important;
 }
+
 ::v-deep .action-item__menutoggle--with-title {
 	background-color: var(--color-background-hover) !important;
 }
+
 .message-frame {
 	width: 100%;
 }

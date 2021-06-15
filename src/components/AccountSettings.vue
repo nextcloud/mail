@@ -186,6 +186,7 @@ export default {
 	box-shadow: 0 0 40px rgba(0,0,0,0.2);
 	padding: 30px 70px 20px;
 }
+
 .button.icon-rename {
 	background-image: var(--icon-rename-000);
 	background-color: var(--color-main-background);
@@ -196,11 +197,13 @@ export default {
 		opacity: 1;
 	}
 }
+
 .settings-hint {
 	margin-top: -12px;
 	margin-bottom: 6px;
 	color: var(--color-text-maxcontrast);
 }
+
 h2 {
 	font-weight: bold;
 	font-size: 20px;
@@ -209,7 +212,8 @@ h2 {
 	line-height: 30px;
 	color: var(--color-text-light);
 }
+
 .app-settings-section {
-margin-bottom: 45px;
+	margin-bottom: 45px;
 }
 </style>

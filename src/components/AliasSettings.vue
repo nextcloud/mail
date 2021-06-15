@@ -122,12 +122,15 @@ export default {
 		left: 14px;
 	}
 }
+
 input {
 	width: 195px;
 }
+
 .aliases-list {
 	margin: 0.5rem 0rem;
 }
+
 .icon-delete {
 	vertical-align: bottom;
 	background-image: var(--icon-delete-000);
@@ -139,6 +142,7 @@ input {
 		opacity: 1;
 	}
 }
+
 .icon-add {
 	background-image: var(--icon-add-fff);
 }

@@ -387,28 +387,28 @@ export default {
 
 .icon-important {
 	::v-deep path {
-	fill: #ffcc00;
-	stroke: var(--color-main-background);
+		fill: #ffcc00;
+		stroke: var(--color-main-background);
 	}
 	.list-item:hover &,
 	.list-item:focus &,
 	.list-item.active & {
-	::v-deep path {
-	stroke: var(--color-background-dark);
-	}
+		::v-deep path {
+			stroke: var(--color-background-dark);
+		}
 	}
 
 	// In message list, but not the one in the action menu
 	&.app-content-list-item-star {
-	background-image: none;
-	left: 7px;
-	top: 13px;
-	opacity: 1;
+		background-image: none;
+		left: 7px;
+		top: 13px;
+		opacity: 1;
 
-	&:hover,
-	&:focus {
-	opacity: 0.5;
-	}
+		&:hover,
+		&:focus {
+			opacity: 0.5;
+		}
 	}
 }
 
@@ -424,10 +424,12 @@ export default {
 .list-item-style:not(.seen) {
 	font-weight: bold;
 }
+
 .list-item-style.selected {
 	background-color: var(--color-background-dark);
 	font-weight: bold;
 }
+
 .icon-junk {
 	opacity: .2;
 	display: flex;
@@ -441,9 +443,11 @@ export default {
 	position: absolute;
 	z-index: 2;
 }
+
 list-item-style.draft .app-content-list-item-line-two {
 	font-style: italic;
 }
+
 .list-item-style.active {
 	background-color: var(--color-primary-light);
 }
@@ -465,36 +469,38 @@ list-item-style.draft .app-content-list-item-line-two {
 	opacity: 0.25;
 }
 
-	// Fix layout of messages in list until we move to component
+// Fix layout of messages in list until we move to component
 
 .app-content-list .list-item {
 	padding-right: 0;
 
 	.app-content-list-item-line-two {
-	padding-right: 0;
-	margin-top: -8px;
+		padding-right: 0;
+		margin-top: -8px;
 	}
 
 	.app-content-list-item-menu {
-	margin-right: -2px;
-	margin-top: -8px;
+		margin-right: -2px;
+		margin-top: -8px;
 
-	::v-deep .action-item__menu {
-	right: 7px !important;
+		::v-deep .action-item__menu {
+			right: 7px !important;
 
-	.action-item__menu_arrow {
-	right: 6px !important;
-	}
-	}
+			.action-item__menu_arrow {
+				right: 6px !important;
+			}
+		}
 	}
 
 	.app-content-list-item-details {
 		padding-right: 7px;
-		}
+	}
 }
+
 ::v-deep .list-item__extra {
 	margin-left: 41px !important;
 }
+
 .tag-group__label {
 	margin: 0 7px;
 	z-index: 2;
@@ -503,6 +509,7 @@ list-item-style.draft .app-content-list-item-line-two {
 	padding-left: 2px;
 	padding-right: 2px;
 }
+
 .tag-group__bg {
 	position: absolute;
 	width: 100%;
@@ -511,6 +518,7 @@ list-item-style.draft .app-content-list-item-line-two {
 	left: 0;
 	opacity: 15%;
 }
+
 .tag-group {
 	display: inline-block;
 	border: 1px solid transparent;
@@ -520,17 +528,17 @@ list-item-style.draft .app-content-list-item-line-two {
 	overflow: hidden;
 	left: 4px;
 }
+
 ::v-deep.list-item__wrapper {
 	list-style: none;
 }
-.app-content-list-item-star.icon-starred {
-	display: block;
-}
+
 ::v-deep.icon-important.app-content-list-item-star {
 	position: absolute;
 	top: 7px;
 	z-index: 1;
 }
+
 .app-content-list-item-star.icon-starred {
 	display: inline-block;
 	position: absolute;
@@ -539,6 +547,7 @@ list-item-style.draft .app-content-list-item-line-two {
 	cursor: pointer;
 	z-index: 1;
 }
+
 ::v-deep .svg svg{
 	height: 16px;
 	width: 16px;

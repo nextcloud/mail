@@ -499,6 +499,7 @@ h4 {
 		padding: 25px;
 	}
 }
+
 input[type='radio'] {
 	display: none;
 }
@@ -506,6 +507,7 @@ input[type='radio'] {
 .flex-row {
 	display: flex;
 }
+
 form {
 	label {
 		color: var(--color-text-maxcontrast);

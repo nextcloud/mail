@@ -11,6 +11,8 @@
     "watch": "NODE_ENV=development webpack --progress --watch --config webpack.js",
     "lint": "eslint --ext .js,.vue --ignore-pattern tests src",
     "lint:fix": "eslint --ext .js,.vue --ignore-pattern tests src --fix",
+    "stylelint": "stylelint src",
+		"stylelint:fix": "stylelint src --fix",
     "test": "NODE_ENV=testing mochapack --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\"",
     "test:watch": "NODE_ENV=testing mochapack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
   },

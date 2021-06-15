@@ -295,6 +295,7 @@ export default {
 			margin-bottom: 0;
 		}
 	}
+
 	.button {
 		color: var(--color-main-background);
 		&:not(.active):not(.primary) {
@@ -308,10 +309,12 @@ export default {
 			}
 		}
 	}
+
 	.avatardiv {
 		display: inline-block;
 		margin-bottom: -23px;
 	}
+
 	.subject {
 		margin-left: 8px;
 		cursor: default;
@@ -332,9 +335,11 @@ export default {
 			background-color: var(--color-background-hover);
 		}
 	}
+
 	.left {
 		flex-grow: 1;
 	}
+
 	.icon-important {
 		::v-deep path {
 			fill: #ffcc00;
@@ -357,6 +362,7 @@ export default {
 			}
 		}
 	}
+
 	.app-content-list-item-star.icon-starred {
 		display: inline-block;
 		position: absolute;
@@ -364,9 +370,11 @@ export default {
 		margin-left: 27px;
 		cursor: pointer;
 	}
+
 	.left:not(.seen) {
 		font-weight: bold;
 	}
+
 	.tag-group__label {
 		margin: 0 7px;
 		z-index: 2;
@@ -375,6 +383,7 @@ export default {
 		padding-left: 2px;
 		padding-right: 2px;
 	}
+
 	.tag-group__bg {
 		position: absolute;
 		width: 100%;
@@ -383,6 +392,7 @@ export default {
 		left: 0;
 		opacity: 15%;
 	}
+
 	.tag-group {
 		display: inline-block;
 		border: 1px solid transparent;

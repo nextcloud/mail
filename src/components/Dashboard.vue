@@ -152,10 +152,12 @@ export default {
 	text-align: center;
 	margin-top: 5vh;
 }
+
 .no-account {
 	margin-top: 5vh;
 	margin-right: 5px;
 }
+
 .unread ::v-deep .item__details {
 	font-weight: bold;
 }

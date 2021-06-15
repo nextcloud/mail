@@ -221,6 +221,7 @@ export default {
 	.ap-description {
 		margin-bottom: 24px;
 	}
+
 	.config-button {
 		line-height: 24px;
 		padding-left: 48px;

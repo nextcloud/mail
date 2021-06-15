@@ -170,10 +170,12 @@ export default {
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
+
 .tag-title {
 	margin-top: 20px;
 	margin-left: 10px;
 }
+
 .tag-group {
 	display: block;
 	position: relative;
@@ -181,6 +183,7 @@ export default {
 	overflow: hidden;
 	left: 4px;
 }
+
 .tag-actions {
 	background-color: transparent;
 	border: none;
@@ -190,6 +193,7 @@ export default {
 		opacity: .7;
 	}
 }
+
 .tag-group__label {
 	z-index: 2;
 	font-weight: bold;
@@ -198,6 +202,7 @@ export default {
 	padding-left: 10px;
 	padding-right: 10px;
 }
+
 .app-navigation-entry-bullet-wrapper {
 	width: 44px;
 	height: 44px;
@@ -217,19 +222,24 @@ export default {
 		position: relative;
 	}
 }
+
 .icon-colorpicker {
 	background-image: var(--icon-add-fff);
 }
+
 .tagButton {
 	display: inline-block;
 	margin-left: 10px;
 }
+
 .action {
 	list-style: none;
 }
+
 ::v-deep .action-input {
 	margin-left: -31px;
 }
+
 ::v-deep .icon-tag {
 	background-image: none;
 }
