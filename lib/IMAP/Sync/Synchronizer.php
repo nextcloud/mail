@@ -36,7 +36,15 @@ use function array_chunk;
 use function array_merge;
 
 class Synchronizer {
-	private const UID_CHUNK_SIZE = 15000;
+
+	/**
+	 * This determines how many UIDs we send to IMAP for a check of changed or
+	 * vanished messages. The number needs a balance between good performance
+	 * (few chunks) and staying below the IMAP command size limits. 15k has
+	 * shown to cause IMAP errors for some accounts where the UID list can't be
+	 * compressed much by Horde.
+	 */
+	private const UID_CHUNK_SIZE = 10000;
 
 	/** @var MessageMapper */
 	private $messageMapper;
