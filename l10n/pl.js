@@ -75,7 +75,7 @@ OC.L10N.register(
     "Write message …" : "Wpisz wiadomość…",
     "Cannot save draft because this account does not have a drafts mailbox configured." : "Nie można zapisać wersji roboczej, ponieważ to konto nie ma skonfigurowanej skrzynki pocztowej dla wersji roboczych.",
     "Saving draft …" : "Zapisywanie wersji roboczej…",
-    "Draft saved" : "Zapisana wersja robocza",
+    "Draft saved" : "Zapisano wersję roboczą",
     "Upload attachment" : "Dodaj załącznik",
     "Add attachment from Files" : "Dodaj załącznik z Plików",
     "Enable formatting" : "Włącz formatowanie",
