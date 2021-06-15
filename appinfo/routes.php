@@ -60,11 +60,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'page#index',
-			'url' => '/',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'page#compose',
 			'url' => '/compose',
 			'verb' => 'GET'
