@@ -92,6 +92,7 @@ export default {
 			this.hasBlockedContent
 				= iframeDoc.querySelectorAll('[data-original-src]').length > 0
 				|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
+				|| iframeDoc.querySelectorAll('style[data-original-content]').length > 0
 
 			this.loading = false
 			if (this.isSenderTrusted) {
@@ -114,6 +115,11 @@ export default {
 			iframeDoc
 				.querySelectorAll('[data-original-style]')
 				.forEach((node) => node.setAttribute('style', node.getAttribute('data-original-style')))
+			iframeDoc
+				.querySelectorAll('style[data-original-content]')
+				.forEach((node) => {
+					node.innerHTML = node.getAttribute('data-original-content')
+				})
 			this.hasBlockedContent = false
 		},
 		async onShowBlockedContent() {

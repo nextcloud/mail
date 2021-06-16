@@ -43,6 +43,7 @@
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"psr/log": "^1",
 		"rubix/ml": "0.4.1",
+		"sabberworm/php-css-parser": "^8.3",
 		"youthweb/urllinker": "^1.3"
 	},
 	"require-dev": {
