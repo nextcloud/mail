@@ -41,13 +41,31 @@ class AliasMapper extends QBMapper {
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select('aliases.*')
+		$qb->select('aliases.*', 'accounts.provisioning_id')
 			->from($this->getTableName(), 'aliases')
 			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
 			->where(
 				$qb->expr()->andX(
 					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
 					$qb->expr()->eq('aliases.id', $qb->createNamedParameter($aliasId))
+				)
+			);
+
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findByAlias(string $alias, string $currentUserId): Alias {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*', 'accounts.provisioning_id')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
+					$qb->expr()->eq('aliases.alias', $qb->createNamedParameter($alias))
 				)
 			);
 
@@ -62,7 +80,7 @@ class AliasMapper extends QBMapper {
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select('aliases.*')
+		$qb->select('aliases.*', 'accounts.provisioning_id')
 			->from($this->getTableName(), 'aliases')
 			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
 			->where(
@@ -87,6 +105,29 @@ class AliasMapper extends QBMapper {
 			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($accountId)));
 
 		$query->execute();
+	}
+
+	/**
+	 * Delete all provisioned aliases for the given uid
+	 *
+	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
+	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
+	 *
+	 * @TODO: Change throws to \OCP\DB\Exception once Mail does not support Nextcloud 20.
+	 *
+	 * @throws \Exception
+	 */
+	public function deleteProvisionedAliasesByUid(string $uid): void {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->delete($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', 'accounts.id = aliases.account_id')
+			->where(
+				$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($uid)),
+				$qb->expr()->isNotNull('provisioning_id')
+			);
+
+		$qb->execute();
 	}
 
 	public function deleteOrphans(): void {

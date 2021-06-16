@@ -28,13 +28,15 @@
 		:show-navigation="true">
 		<AppSettingsSection
 			:title="t('mail', 'Account settings')">
-			<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
-			<a
-				v-if="!account.provisioningId"
-				class="button icon-rename"
-				:title="t('mail', 'Change name')"
-				@click="handleClick" />
-			<AliasSettings v-if="!account.provisioningId" :account="account" />
+			<div class="alias-item">
+				<p><strong>{{ displayName }}</strong> &lt;{{ email }}&gt;</p>
+				<a
+					v-if="!account.provisioningId"
+					class="button icon-rename"
+					:title="t('mail', 'Change name')"
+					@click="handleClick" />
+			</div>
+			<AliasSettings :account="account" />
 		</AppSettingsSection>
 		<AppSettingsSection :title="t('mail', 'Signature')">
 			<p class="settings-hint">
@@ -178,6 +180,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.alias-item {
+	display: flex;
+	justify-content: space-between;
+}
+
 ::v-deep .modal-container {
 	display: block;
 	overflow: scroll;

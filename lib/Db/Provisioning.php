@@ -60,6 +60,12 @@ use OCP\IUser;
  * @method void setSieveSslMode(?string $sieveSslMode)
  * @method string|null getSieveUser()
  * @method void setSieveUser(?string $sieveUser)
+ * @method array getAliases()
+ * @method void setAliases(array $aliases)
+ * @method bool getLdapAliasesProvisioning()
+ * @method void setLdapAliasesProvisioning(bool $ldapAliasesProvisioning)
+ * @method string|null getLdapAliasesAttribute()
+ * @method void setLdapAliasesAttribute(?string $ldapAliasesAttribute)
  */
 class Provisioning extends Entity implements JsonSerializable {
 	public const WILDCARD = '*';
@@ -79,13 +85,18 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $sieveHost;
 	protected $sievePort;
 	protected $sieveSslMode;
+	protected $aliases = [];
+	protected $ldapAliasesProvisioning;
+	protected $ldapAliasesAttribute;
 
 	public function __construct() {
 		$this->addType('imapPort', 'integer');
 		$this->addType('smtpPort', 'integer');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
+		$this->addType('ldapAliasesProvisioning', 'boolean');
 	}
+
 	/**
 	 * @return array
 	 */
@@ -107,6 +118,9 @@ class Provisioning extends Entity implements JsonSerializable {
 			'sieveHost' => $this->getSieveHost(),
 			'sievePort' => $this->getSievePort(),
 			'sieveSslMode' => $this->getSieveSslMode(),
+			'aliases' => $this->getAliases(),
+			'ldapAliasesProvisioning' => $this->getLdapAliasesProvisioning(),
+			'ldapAliasesAttribute' => $this->getLdapAliasesAttribute(),
 		];
 	}
 

@@ -307,12 +307,17 @@ export default {
 	createAlias(state, { account, alias }) {
 		account.aliases.push(alias)
 	},
-	deleteAlias(state, { account, alias }) {
-		account.aliases.splice(account.aliases.indexOf(alias), 1)
+	deleteAlias(state, { account, aliasId }) {
+		const index = account.aliases.findIndex(temp => aliasId === temp.id)
+		if (index !== -1) {
+			account.aliases.splice(index, 1)
+		}
 	},
 	patchAlias(state, { account, aliasId, data }) {
-		const index = account.aliases.findIndex((temp) => aliasId === temp.id)
-		account.aliases[index] = Object.assign({}, account.aliases[index], data)
+		const index = account.aliases.findIndex(temp => aliasId === temp.id)
+		if (index !== -1) {
+			account.aliases[index] = Object.assign({}, account.aliases[index], data)
+		}
 	},
 	setMailboxUnreadCount(state, { id, unread }) {
 		Vue.set(state.mailboxes[id], 'unread', unread ?? 0)

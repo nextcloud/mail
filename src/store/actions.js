@@ -739,17 +739,36 @@ export default {
 			throw err
 		}
 	},
-	async createAlias({ commit }, { account, aliasToAdd }) {
-		const alias = await AliasService.createAlias(account, aliasToAdd)
-		commit('createAlias', { account, alias })
+	async createAlias({ commit }, { account, alias, name }) {
+		const entity = await AliasService.createAlias(account.id, alias, name)
+		commit('createAlias', {
+			account,
+			alias: entity,
+		})
 	},
-	async deleteAlias({ commit }, { account, aliasToDelete }) {
-		await AliasService.deleteAlias(account, aliasToDelete)
-		commit('deleteAlias', { account, alias: aliasToDelete })
+	async deleteAlias({ commit }, { account, aliasId }) {
+		const entity = await AliasService.deleteAlias(account.id, aliasId)
+		commit('deleteAlias', {
+			account,
+			aliasId: entity.id,
+		})
+	},
+	async updateAlias({ commit }, { account, aliasId, alias, name }) {
+		const entity = await AliasService.updateAlias(account.id, aliasId, alias, name)
+		commit('patchAlias', {
+			account,
+			aliasId: entity.id,
+			data: { alias: entity.alias, name: entity.name },
+		})
+		commit('editAccount', account)
 	},
 	async updateAliasSignature({ commit }, { account, aliasId, signature }) {
-		await AliasService.updateSignature(account.id, aliasId, signature)
-		commit('patchAlias', { account, aliasId, data: { signature } })
+		const entity = await AliasService.updateSignature(account.id, aliasId, signature)
+		commit('patchAlias', {
+			account,
+			aliasId: entity.id,
+			data: { signature: entity.signature },
+		})
 		commit('editAccount', account)
 	},
 	async renameMailbox({ commit }, { account, mailbox, newName }) {
