@@ -215,6 +215,7 @@ export default {
 .user-bubble__title {
 	max-width: 30vw;
 }
+
 .user-bubble-email {
 	margin: 10px;
 }
@@ -222,6 +223,7 @@ export default {
 .contact-popover {
 	display: inline-block;
 }
+
 .contact-wrapper {
 	padding:10px;
 	min-width: 300px;
@@ -233,14 +235,16 @@ export default {
 		opacity: 1;
 	}
 }
+
 .contact-input-wrapper {
 	margin-top: 10px;
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 	input,
 	.multiselect {
 		width: 100%;
 	}
 }
+
 .icon-user,
 .icon-reply,
 .icon-checkmark,
@@ -260,10 +264,12 @@ export default {
 		background-position: 12px center;
 	}
 }
+
 .icon-add {
 	display: revert;
-    vertical-align: revert;
+	vertical-align: revert;
 }
+
 .contact-existing {
 	margin-bottom: 10px;
 	font-size: small;

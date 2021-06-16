@@ -936,9 +936,11 @@ export default {
 	background-position: 12px center;
 	margin-left: 4px;
 }
+
 ::v-deep .multiselect .multiselect__tags {
 	border: none !important;
 }
+
 .submit-message.send.primary.icon-confirm-white {
 	color: var(--color-main-background);
 }

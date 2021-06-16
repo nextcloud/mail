@@ -35,7 +35,7 @@ jobs:
       working-directory: nextcloud/3rdparty
       run: composer require nikic/php-parser:4.10
     - name: Checkout Mail
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
       with:
         path: nextcloud/apps/mail
     - name: Install dependencies
@@ -114,7 +114,7 @@ jobs:
           - name: Install Nextcloud
             run: php -f nextcloud/occ maintenance:install --database-host 127.0.0.1 --database-name nextcloud --database-user nextcloud --database-pass nextcloud --admin-user admin --admin-pass admin --database ${{ matrix.db }}
           - name: Checkout Mail
-            uses: actions/checkout@master
+            uses: actions/checkout@v2
             with:
                 path: nextcloud/apps/mail
           - name: Install dependencies
@@ -148,13 +148,15 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@master
+          - uses: actions/checkout@v2
           - name: Set up Node
-            uses: actions/setup-node@v2.1.5
+            uses: actions/setup-node@v2
             with:
-                node-version: 12.x
+                node-version: 14
+          - name: Set up npm7
+            run: npm i -g npm@7
           - name: npm install
-            run: npm install
+            run: npm ci
           - name: run tests
             run: npm run test
       env:

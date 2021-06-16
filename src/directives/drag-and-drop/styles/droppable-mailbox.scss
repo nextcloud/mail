@@ -36,11 +36,13 @@
 		}
 	}
 }
-[droppable-mailbox="disabled"] {
+
+[droppable-mailbox='disabled'] {
 	pointer-events: none;
 	opacity: .3;
 }
-[droppable-mailbox="dragover"] {
+
+[droppable-mailbox='dragover'] {
 	> a {
 		&:before {
 			content: '';

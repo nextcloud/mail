@@ -209,6 +209,7 @@ export default {
 	border-radius: var(--border-radius);
 	cursor: pointer;
 }
+
 .mail-attached-image:hover {
 	opacity: 0.8;
 }

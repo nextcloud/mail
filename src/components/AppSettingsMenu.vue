@@ -174,9 +174,11 @@ p.app-settings span.icon-loading-small {
 	vertical-align: middle;
 	padding: 5px 0;
 }
+
 p.app-settings {
 	padding: 10px 0;
 }
+
 .app-settings-button {
 	display: block;
 
@@ -184,9 +186,11 @@ p.app-settings {
 	background-position: 10px center;
 	text-align: left;
 }
+
 .app-settings-button.button.primary.new-button {
 	color: var(--color-main-background);
 }
+
 .app-settings-link {
 	text-decoration: underline;
 }

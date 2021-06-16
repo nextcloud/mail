@@ -73,12 +73,15 @@ export default {
 	border: 0;
 	width: 250px;
 }
+
 .vue-treeselect__control-arrow-container {
 	display: none;
 }
+
 .vue-treeselect--searchable .vue-treeselect__input-container {
 	padding-left: 0;
 }
+
 input.vue-treeselect__input {
 	margin: 0;
 	padding: 0;

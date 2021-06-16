@@ -75,7 +75,7 @@ textarea {
 	color: var(--color-main-background);
 
 	&:after {
-		 left: 14px;
-	 }
+		left: 14px;
+	}
 }
 </style>

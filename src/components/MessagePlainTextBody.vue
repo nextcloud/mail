@@ -75,6 +75,7 @@ export default {
 #mail-content, .mail-signature {
 	white-space: pre-wrap;
 }
+
 .mail-signature, .quoted {
 	color: var(--color-text-maxcontrast)
 }

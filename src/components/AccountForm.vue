@@ -398,9 +398,11 @@ label.button {
 	text-align: center;
 	flex-grow: 1;
 }
+
 label.primary {
 	color: var(--color-main-background);
 }
+
 input.primary {
 	color: var(--color-main-background);
 }

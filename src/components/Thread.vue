@@ -399,6 +399,7 @@ export default {
 	max-height: 24px;
 	overflow: hidden;
 }
+
 .avatar-more {
 	display: inline;
 	background-color: var(--color-background-dark);
@@ -406,9 +407,11 @@ export default {
 	border-radius: 10px;
 	cursor: pointer;
 }
+
 .avatar-hidden {
 	visibility: hidden;
 }
+
 .popover__wrapper {
 	max-width: 500px;
 }
@@ -416,9 +419,11 @@ export default {
 .app-content-list-item-star.icon-starred {
 	display: none;
 }
+
 .user-bubble__wrapper {
 	margin-right: 4px;
 }
+
 .user-bubble__title {
 	cursor: pointer;
 }
