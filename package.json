@@ -78,6 +78,10 @@
   "browserslist": [
     "extends @nextcloud/browserslist-config"
   ],
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=7.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.14.5",
     "@babel/eslint-parser": "^7.14.5",
