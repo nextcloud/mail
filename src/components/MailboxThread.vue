@@ -1,5 +1,5 @@
 <template>
-	<AppContent>
+	<AppContent pane-config-key="mail">
 		<div id="app-content-wrapper">
 			<AppContentList
 				v-infinite-scroll="onScroll"
