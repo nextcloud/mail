@@ -323,6 +323,7 @@ export default {
 	}
 
 	.envelope--header {
+		position: relative;
 		display: flex;
 		padding: 10px;
 		margin-bottom: 3px;
