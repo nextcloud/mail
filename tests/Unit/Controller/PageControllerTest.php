@@ -133,6 +133,7 @@ class PageControllerTest extends TestCase {
 				['external-avatars', 'true', 'true'],
 				['reply-mode', 'top', 'bottom'],
 				['collect-data', 'true', 'true'],
+				['pane-sizes', '{}', '{}'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -237,6 +238,7 @@ class PageControllerTest extends TestCase {
 				'reply-mode' => 'bottom',
 				'app-version' => '1.2.3',
 				'collect-data' => 'true',
+				'pane-sizes' => '{}',
 			]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');

@@ -59,12 +59,9 @@
 				</template>
 			</AppContentList>
 		</template>
-
-		<template slot="main">
 			<NewMessageDetail v-if="newMessage" />
 			<Thread v-else-if="showThread" @delete="deleteMessage" />
 			<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
-		</template>
 	</AppContent>
 </template>
 
