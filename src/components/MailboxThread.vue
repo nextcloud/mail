@@ -59,9 +59,9 @@
 				</template>
 			</AppContentList>
 		</template>
-			<NewMessageDetail v-if="newMessage" />
-			<Thread v-else-if="showThread" @delete="deleteMessage" />
-			<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
+		<NewMessageDetail v-if="newMessage" />
+		<Thread v-else-if="showThread" @delete="deleteMessage" />
+		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
 
