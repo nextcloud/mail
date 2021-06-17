@@ -73,7 +73,7 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Tato zpráva pochází z adresy noreply (neodpovídat), takže vaše odpověď pravděpodobně nebude přečtena.",
     "The following recipients do not have a PGP key: {recipients}." : "Následující příjemci nemají PGP klíč: {recipients}.",
     "Write message …" : "Napsat zprávu…",
-    "Cannot save draft because this account does not have a drafts mailbox configured." : "Koncept nelze uložit, protože tento účet nemá nakonfigurovanou schránku konceptů.",
+    "Cannot save draft because this account does not have a drafts mailbox configured." : "Koncept nelze uložit, protože tento účet nemá nastavenou schránku konceptů.",
     "Saving draft …" : "Ukládání konceptu…",
     "Draft saved" : "Koncept uložen",
     "Upload attachment" : "Nahrát přílohu",
