@@ -1,6 +1,6 @@
 <template>
 	<AppContent pane-config-key="mail">
-		<div id="app-content-wrapper">
+		<template slot="list">
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -58,10 +58,10 @@
 						:bus="bus" />
 				</template>
 			</AppContentList>
-			<NewMessageDetail v-if="newMessage" />
-			<Thread v-else-if="showThread" @delete="deleteMessage" />
-			<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
-		</div>
+		</template>
+		<NewMessageDetail v-if="newMessage" />
+		<Thread v-else-if="showThread" @delete="deleteMessage" />
+		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
 
