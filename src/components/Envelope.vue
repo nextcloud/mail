@@ -95,7 +95,7 @@
 				icon="icon-tag"
 				:close-after-click="true"
 				@click.prevent="onOpenTagModal">
-				{{ t('mail', 'Add tags') }}
+				{{ t('mail', 'Edit tags') }}
 			</ActionButton>
 			<ActionButton icon="icon-external"
 				:close-after-click="true"
