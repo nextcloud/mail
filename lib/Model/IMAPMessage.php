@@ -789,7 +789,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 				$keyword = Tag::LABEL_LATER;
 			}
 
-			$displayName = str_replace('_', ' ', $keyword);
+			$displayName = str_replace(['_', '$'], [' ', ''], $keyword);
 			$displayName = strtoupper($displayName);
 			$displayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
 			$displayName = strtolower($displayName);
