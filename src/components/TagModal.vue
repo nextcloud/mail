@@ -23,7 +23,7 @@
 	<Modal size="large" @close="onClose">
 		<div class="modal-content">
 			<h2 class="tag-title">
-				{{ t('mail', 'Add default tags') }}
+				{{ t('mail', 'Edit tags') }}
 			</h2>
 			<div v-for="tag in tags" :key="tag.id" class="tag-group">
 				<button class="tag-group__label"
