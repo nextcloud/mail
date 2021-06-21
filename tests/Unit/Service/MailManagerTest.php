@@ -576,7 +576,7 @@ class MailManagerTest extends TestCase {
 
 		self::assertEquals('admin', $tag->getUserId());
 		self::assertEquals('Hello Hello 👋', $tag->getDisplayName());
-		self::assertEquals('Hello_Hello_&2D3cSw-', $tag->getImapLabel());
+		self::assertEquals('$hello_hello_&2d3csw-', $tag->getImapLabel());
 		self::assertEquals('#0082c9', $tag->getColor());
 	}
 

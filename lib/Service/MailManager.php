@@ -623,7 +623,7 @@ class MailManager implements IMailManager {
 		if ($imapLabel === false) {
 			throw new ClientException('Error converting display name to UTF7-IMAP ', 0);
 		}
-		$imapLabel = mb_strcut($imapLabel, 0, 64);
+		$imapLabel = '$' . strtolower(mb_strcut($imapLabel, 0, 63));
 
 		try {
 			return $this->getTagByImapLabel($imapLabel, $userId);
