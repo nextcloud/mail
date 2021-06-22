@@ -94,10 +94,8 @@ class TagMapper extends QBMapper {
 	 * To tag (flag) a message on IMAP, @see \OCA\Mail\Service\MailManager::tagMessage
 	 */
 	public function tagMessage(Tag $tag, string $messageId, string $userId): void {
-		/** @var Tag $exists */
 		try {
-			$exists = $this->getTagByImapLabel($tag->getImapLabel(), $userId);
-			$tag->setId($exists->getId());
+			$tag = $this->getTagByImapLabel($tag->getImapLabel(), $userId);
 		} catch (DoesNotExistException $e) {
 			$tag = $this->insert($tag);
 		}
@@ -164,6 +162,40 @@ class TagMapper extends QBMapper {
 			$queryResult->closeCursor();
 		}
 		return $tags;
+	}
+
+	/**
+	 * @param Message[] $messages
+	 * @param string $userId
+	 * @param string $imapLabel
+	 * @return string[]
+	 */
+	public function getTaggedMessageIdsForMessages(array $messages, string $userId, string $imapLabel): array {
+		$ids = array_map(static function (Message $message) {
+			return $message->getMessageId();
+		}, $messages);
+
+		$qb = $this->db->getQueryBuilder();
+		$tagsQuery = $qb->selectDistinct(['t.*', 'mt.imap_message_id'])
+			->from($this->getTableName(), 't')
+			->join('t', 'mail_message_tags', 'mt', $qb->expr()->eq('t.id', 'mt.tag_id', IQueryBuilder::PARAM_INT))
+			->where(
+				$qb->expr()->in('mt.imap_message_id', $qb->createParameter('ids'), IQueryBuilder::PARAM_STR_ARRAY),
+				$qb->expr()->eq('t.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)),
+				$qb->expr()->eq('t.imap_label', $qb->createNamedParameter($imapLabel, IQueryBuilder::PARAM_STR))
+			);
+
+		$messageIds = [];
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$queryResult = $tagsQuery->execute();
+
+			while (($row = $queryResult->fetch()) !== false) {
+				$messageIds[] = $row['imap_message_id'];
+			}
+			$queryResult->closeCursor();
+		}
+		return $messageIds;
 	}
 
 	/**

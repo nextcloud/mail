@@ -26,9 +26,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Listener;
 
 use Horde_Imap_Client;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
@@ -45,13 +49,23 @@ class NewMessageClassificationListener implements IEventListener {
 	/** @var ImportanceClassifier */
 	private $classifier;
 
+	/** @var TagMapper */
+	private $tagMapper;
+
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var IMailManager */
+	private $mailManager;
+
 	public function __construct(ImportanceClassifier $classifier,
-								LoggerInterface $logger) {
+								TagMapper $tagMapper,
+								LoggerInterface $logger,
+								IMailManager $mailManager) {
 		$this->classifier = $classifier;
 		$this->logger = $logger;
+		$this->tagMapper = $tagMapper;
+		$this->mailManager = $mailManager;
 	}
 
 	public function handle(Event $event): void {
@@ -66,10 +80,27 @@ class NewMessageClassificationListener implements IEventListener {
 			}
 		}
 
-		// if the message is already flagged as important, we won't classify it again.
-		$messages = array_filter($event->getMessages(), function ($message) {
-			return ($message->getFlagImportant() === false);
+		$messages = $event->getMessages();
+
+		// if this is a message that's been flagged / tagged as important before, we don't want to reclassify it again.
+		$doNotReclassify = $this->tagMapper->getTaggedMessageIdsForMessages(
+						$event->getMessages(),
+						$event->getAccount()->getUserId(),
+						Tag::LABEL_IMPORTANT
+		);
+		$messages = array_filter($messages, static function ($message) use ($doNotReclassify) {
+			return ($message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
 		});
+
+		try {
+			$important = $this->tagMapper->getTagByImapLabel(Tag::LABEL_IMPORTANT, $event->getAccount()->getUserId());
+		} catch (DoesNotExistException $e) {
+			// just in case - if we get here, the tag is missing
+			$this->logger->error('Could not find important tag for ' . $event->getAccount()->getUserId(). ' ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return;
+		}
 
 		try {
 			$predictions = $this->classifier->classifyImportance(
@@ -80,7 +111,8 @@ class NewMessageClassificationListener implements IEventListener {
 
 			foreach ($event->getMessages() as $message) {
 				if ($predictions[$message->getUid()] ?? false) {
-					$message->setFlagImportant(true);
+					$this->mailManager->flagMessage($event->getAccount(), $event->getMailbox()->getName(), $message->getUid(), Tag::LABEL_IMPORTANT, true);
+					$this->mailManager->tagMessage($event->getAccount(), $event->getMailbox()->getName(), $message, $important, true);
 				}
 			}
 		} catch (ServiceException $e) {

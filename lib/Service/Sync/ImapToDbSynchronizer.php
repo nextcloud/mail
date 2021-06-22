@@ -28,6 +28,7 @@ namespace OCA\Mail\Service\Sync;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
@@ -84,6 +85,9 @@ class ImapToDbSynchronizer {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var IMailManager */
+	private $mailManager;
+
 	public function __construct(DatabaseMessageMapper $dbMapper,
 								IMAPClientFactory $clientFactory,
 								ImapMessageMapper $imapMapper,
@@ -92,7 +96,8 @@ class ImapToDbSynchronizer {
 								Synchronizer $synchronizer,
 								IEventDispatcher $dispatcher,
 								PerformanceLogger $performanceLogger,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								IMailManager $mailManager) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -102,6 +107,7 @@ class ImapToDbSynchronizer {
 		$this->dispatcher = $dispatcher;
 		$this->performanceLogger = $performanceLogger;
 		$this->logger = $logger;
+		$this->mailManager = $mailManager;
 	}
 
 	/**
@@ -353,13 +359,13 @@ class ImapToDbSynchronizer {
 					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk);
 
+				$this->dbMapper->insertBulk($account, ...$dbMessages);
+
 				$this->dispatcher->dispatch(
 					NewMessagesSynchronized::class,
 					new NewMessagesSynchronized($account, $mailbox, $dbMessages)
 				);
 				$perf->step('classified a chunk of new messages');
-
-				$this->dbMapper->insertBulk($account, ...$dbMessages);
 			}
 			$perf->step('persist new messages');
 
@@ -377,8 +383,10 @@ class ImapToDbSynchronizer {
 			);
 			$perf->step('get changed messages via Horde');
 
+			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($account, $mailbox->getName());
+
 			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
-				$this->dbMapper->updateBulk($account, ...array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk));
 			}
