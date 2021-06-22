@@ -45,7 +45,8 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 			$tagsTable->addColumn('color', 'string', [
 				'notnull' => false,
 				'length' => 9,
-				'default' => "#fff"
+				//just an example, we will need the themeing colour
+				'default' => "#d3d3d3"
 			]);
 			$tagsTable->addColumn('is_default_tag', 'boolean', [
 				'notnull' => false,
