@@ -49,6 +49,7 @@
 			</div>
 		</template>
 		<template #subtitle>
+			<span v-if="data.flags.answered" class="icon-reply" />
 			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">
 				<em>{{ t('mail', 'Draft: ') }}</em>
@@ -455,9 +456,8 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 
 .icon-reply {
-	background-image: url('../../img/reply.svg');
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)';
-	opacity: 0.5;
+	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
+	opacity: 0.25;
 }
 
 .icon-attachment {
