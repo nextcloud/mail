@@ -91,4 +91,28 @@ class HtmlTest extends TestCase {
 			["abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
 		];
 	}
+
+	public function testSanitizeStyleSheet() {
+		$blockedUrl = '/apps/mail/img/blocked-image.png';
+		$urlGenerator = self::createMock(IURLGenerator::class);
+		$urlGenerator->expects(self::any())
+			->method('imagePath')
+			->with('mail', 'blocked-image.png')
+			->willReturn($blockedUrl);
+		$request = OC::$server->get(IRequest::class);
+
+		$styleSheet = implode(' ', [
+			'big { background-image: url(https://tracker.com/script.png); }',
+			'ul { list-style: url(https://tracker.com/script.png) outside; }',
+		]);
+		$expected = implode('', [
+			"<style type=\"text/css\" data-original-content=\"$styleSheet\">",
+			"big{background-image:url(\"$blockedUrl\");}ul{list-style:url(\"$blockedUrl\") outside;}",
+			'</style>',
+		]);
+
+		$html = new Html($urlGenerator, $request);
+		$sanitizedStyleSheet = $html->sanitizeStyleSheet($styleSheet);
+		self::assertSame($expected, $sanitizedStyleSheet);
+	}
 }

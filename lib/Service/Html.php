@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @author Jakob Sack <jakob@owncloud.org>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * Mail
@@ -34,7 +35,7 @@ use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
-use OCA\Mail\Service\HtmlPurify\TransformCSSBackground;
+use OCA\Mail\Service\HtmlPurify\TransformStyleURLs;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
 use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
@@ -42,6 +43,10 @@ use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Util;
+use Sabberworm\CSS\OutputFormat;
+use Sabberworm\CSS\Parser;
+use Sabberworm\CSS\Value\CSSString;
+use Sabberworm\CSS\Value\URL;
 use Youthweb\UrlLinker\UrlLinker;
 
 require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
@@ -134,7 +139,7 @@ class Html {
 		/** @var HTMLPurifier_HTMLDefinition $html */
 		$html = $config->getDefinition('HTML');
 		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
-		$html->info_attr_transform_post['cssbackground'] = new TransformCSSBackground($this->urlGenerator);
+		$html->info_attr_transform_post['cssbackground'] = new TransformStyleURLs($this->urlGenerator);
 		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks($this->urlGenerator);
 
 		/** @var HTMLPurifier_URIDefinition $uri */
@@ -143,22 +148,53 @@ class Html {
 
 		HTMLPurifier_URISchemeRegistry::instance()->register('cid', new CidURIScheme());
 
-
 		$purifier = new HTMLPurifier($config);
 
 		$result = $purifier->purify($mailBody);
 		// eat xml parse errors within HTMLPurifier
 		libxml_clear_errors();
 
-		// Add back the style tag
+		// Sanitize CSS rules
 		$styles = $purifier->context->get('StyleBlocks');
 		if ($styles) {
-			$result = implode("\n", [
-				'<style type="text/css">',
-				implode("\n", $styles),
-				'</style>',
-				$result,]);
+			$joinedStyles = implode("\n", $styles);
+			$result = $this->sanitizeStyleSheet($joinedStyles) . $result;
 		}
 		return $result;
+	}
+
+	/**
+	 * Block all URLs in the given CSS style sheet and return a formatted html style tag.
+	 *
+	 * @param string $styles The CSS style sheet to sanitize.
+	 * @return string Rendered style tag to be used in a html response.
+	 */
+	public function sanitizeStyleSheet(string $styles): string {
+		$cssParser = new Parser($styles);
+		$css = $cssParser->parse();
+
+		// Replace urls with blocked image
+		$blockedUrl = new CSSString($this->urlGenerator->imagePath('mail', 'blocked-image.png'));
+		$hasBlockedContent = false;
+		foreach ($css->getAllValues() as $value) {
+			if ($value instanceof URL) {
+				$value->setURL($blockedUrl);
+				$hasBlockedContent = true;
+			}
+		}
+
+		// Save original styles to be able to restore them later
+		$savedStyles = '';
+		if ($hasBlockedContent) {
+			$savedStyles = 'data-original-content="' . htmlspecialchars($styles) . '"';
+			$styles = $css->render(OutputFormat::createCompact());
+		}
+
+		// Render style tag
+		return implode('', [
+			'<style type="text/css" ', $savedStyles, '>',
+			$styles,
+			'</style>',
+		]);
 	}
 }
