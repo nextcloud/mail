@@ -45,6 +45,7 @@ use OCA\Mail\HordeTranslationHandler;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
+use OCA\Mail\Listener\AntiSpamReportListener;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
 use OCA\Mail\Listener\InteractionListener;
@@ -101,6 +102,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MailboxesSynchronizedEvent::class, MailboxesSynchronizedSpecialMailboxesUpdater::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
+		$context->registerEventListener(MessageFlaggedEvent::class, AntiSpamReportListener::class);
 		$context->registerEventListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageSentEvent::class, AddressCollectionListener::class);
 		$context->registerEventListener(MessageSentEvent::class, DeleteDraftListener::class);

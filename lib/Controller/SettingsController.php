@@ -28,6 +28,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\ValidationException;
 use OCA\Mail\Http\JsonResponse as HttpJsonResponse;
+use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
@@ -39,10 +40,15 @@ class SettingsController extends Controller {
 	/** @var ProvisioningManager */
 	private $provisioningManager;
 
+	/** @var AntiSpamService */
+	private $service;
+
 	public function __construct(IRequest $request,
-								ProvisioningManager $provisioningManager) {
+								ProvisioningManager $provisioningManager,
+								AntiSpamService $service) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
+		$this->service = $service;
 	}
 
 	public function index(): JSONResponse {
@@ -85,6 +91,26 @@ class SettingsController extends Controller {
 			$this->provisioningManager->deprovision($provisioning);
 		}
 
+		return new JSONResponse([]);
+	}
+
+	/**
+	 * Store the credentials used for SMTP in the config
+	 *
+	 * @return JSONResponse
+	 */
+	public function setAntiSpamEmail(string $email): JSONResponse {
+		$this->service->setReportEmail($email);
+		return new JSONResponse([]);
+	}
+
+	/**
+	 * Store the credentials used for SMTP in the config
+	 *
+	 * @return JSONResponse
+	 */
+	public function deleteAntiSpamEmail(): JSONResponse {
+		$this->service->deleteConfig();
 		return new JSONResponse([]);
 	}
 }

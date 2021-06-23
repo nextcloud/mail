@@ -31,7 +31,7 @@
 				)
 			}}
 		</p>
-		<div class="ap-description">
+		<div class="app-description">
 			<h3>Account provisioning</h3>
 			<article>
 				<p>
@@ -111,6 +111,27 @@
 				:submit="saveSettings"
 				:disable="deleteProvisioning" />
 		</p>
+		<div class="app-description">
+			<h3>Anti Spam Service</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'You can set up an anti spam service email address here.'
+						)
+					}}
+					<br>
+					{{
+						t(
+							'mail',
+							'Any email that is marked as junk will not only be flagged as such but additionally sent to the anti spam service.'
+						)
+					}}
+				</p>
+			</article>
+			<AntiSpamSettings />
+		</div>
 	</SettingsSection>
 </template>
 
@@ -118,6 +139,7 @@
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import ProvisioningSettings from './ProvisioningSettings'
+import AntiSpamSettings from './AntiSpamSettings'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import {
 	disableProvisioning,
@@ -129,6 +151,7 @@ import {
 export default {
 	name: 'AdminSettings',
 	components: {
+		AntiSpamSettings,
 		ProvisioningSettings,
 		SettingsSection,
 	},
@@ -218,7 +241,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-	.ap-description {
+	.app-description {
 		margin-bottom: 24px;
 	}
 	.config-button {
