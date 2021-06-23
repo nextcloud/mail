@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.x-dev@">
   <file src="lib/AppInfo/Application.php">
-    <MissingDependency occurrences="12">
+    <MissingDependency occurrences="14">
       <code>DraftSavedEvent</code>
       <code>MailboxesSynchronizedEvent</code>
       <code>MessageDeletedEvent</code>
+      <code>MessageFlaggedEvent</code>
+      <code>MessageFlaggedEvent</code>
       <code>MessageFlaggedEvent</code>
       <code>MessageSentEvent</code>
       <code>MessageSentEvent</code>
@@ -228,6 +230,12 @@
       <code>MessageSentEvent</code>
     </MissingDependency>
   </file>
+  <file src="lib/Listener/HamReportListener.php">
+    <MissingDependency occurrences="2">
+      <code>HamReportListener</code>
+      <code>MessageFlaggedEvent</code>
+    </MissingDependency>
+  </file>
   <file src="lib/Listener/InteractionListener.php">
     <MissingDependency occurrences="2">
       <code>InteractionListener</code>
@@ -258,10 +266,21 @@
       <code>SaveSentMessageListener</code>
     </MissingDependency>
   </file>
+  <file src="lib/Listener/SpamReportListener.php">
+    <MissingDependency occurrences="2">
+      <code>MessageFlaggedEvent</code>
+      <code>SpamReportListener</code>
+    </MissingDependency>
+  </file>
   <file src="lib/Listener/UserDeletedListener.php">
     <MissingDependency occurrences="2">
       <code>UserDeletedEvent</code>
       <code>UserDeletedListener</code>
+    </MissingDependency>
+  </file>
+  <file src="lib/Service/AntiSpamService.php">
+    <MissingDependency occurrences="1">
+      <code>MessageFlaggedEvent</code>
     </MissingDependency>
   </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">

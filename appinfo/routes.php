@@ -260,6 +260,16 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'settings#setAntiSpamEmail',
+			'url' => '/api/settings/antispam',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'settings#deleteAntiSpamEmail',
+			'url' => '/api/settings/antispam',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'
