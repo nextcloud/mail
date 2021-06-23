@@ -119,6 +119,7 @@ OC.L10N.register(
     "Mark as spam" : "Označit jako spam",
     "Unselect" : "Zrušit výběr",
     "Select" : "Vybrat",
+    "Edit tags" : "Upravit štítky",
     "Move thread" : "Přesunout vlákno",
     "Edit as new message" : "Upravit jako novou zprávu",
     "Delete thread" : "Smazat vlákno",

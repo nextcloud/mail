@@ -119,6 +119,7 @@ OC.L10N.register(
     "Mark as spam" : "標記為垃圾郵件",
     "Unselect" : "取消選取",
     "Select" : "選取",
+    "Edit tags" : "編輯標籤",
     "Move thread" : "移動討論串",
     "Edit as new message" : "以新郵件的方式編輯",
     "Delete thread" : "刪除討論串",

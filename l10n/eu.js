@@ -150,6 +150,7 @@ OC.L10N.register(
     "Reply to sender only" : "Erantzun bakarrik igorleari",
     "Forward" : "Birbidali",
     "Add tags" : "Gehitu etiketak",
+    "Move message" : "Mugitu mezua",
     "View source" : "Ikusi iturburua",
     "Download thread data for debugging" : "Deskargatu hariaren datuak arazteko",
     "Message source" : "Mezuaren iturburua",
