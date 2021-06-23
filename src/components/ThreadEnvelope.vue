@@ -21,7 +21,8 @@
 
 <template>
 	<div class="envelope">
-		<div class="envelope--header">
+		<div class="envelope--header"
+			:class="{'list-item-style' : expanded }">
 			<Avatar v-if="envelope.from && envelope.from[0]"
 				:email="envelope.from[0].email"
 				:display-name="envelope.from[0].label"
@@ -331,6 +332,7 @@ export default {
 
 		&:hover {
 			background-color: var(--color-background-hover);
+			border-radius: 16px;
 		}
 	}
 	.left {
@@ -393,5 +395,8 @@ export default {
 		overflow: hidden;
 		left: 4px;
 	}
-
+	.envelope--header.list-item-style {
+		border-radius: 16px;
+		background-color: var(--color-primary-light);
+	}
 </style>
