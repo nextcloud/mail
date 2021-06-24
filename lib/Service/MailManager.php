@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
@@ -35,17 +36,10 @@ use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
-use Psr\Log\LoggerInterface;
-use Horde_Imap_Client_Socket;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\Model\IMAPMessage;
-use Horde_Imap_Client_Exception;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Events\BeforeMessagesDeletedEvent;
 use OCA\Mail\Events\MessagesDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
@@ -53,9 +47,6 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -679,10 +670,10 @@ class MailManager implements IMailManager {
 				'dstMailboxId' => $dstMailbox->getId()
 			]);
 
-			$this->moveMessage(
+			$this->moveMessages(
 				$srcAccount,
 				$message['mailboxName'],
-				$message['messageUid'],
+				[$message['messageUid']],
 				$dstAccount,
 				$dstMailbox->getName()
 			);
@@ -709,10 +700,10 @@ class MailManager implements IMailManager {
 				'mailboxId' => $mailbox->getId(),
 			]);
 
-			$this->deleteMessage(
+			$this->deleteMessages(
 				$account,
 				$message['mailboxName'],
-				$message['messageUid']
+				[$message['messageUid']]
 			);
 		}
 	}

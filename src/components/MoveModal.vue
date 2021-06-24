@@ -53,10 +53,10 @@ export default {
 				}
 
 				// Move messages per batch of 50 messages so as to not overload server or create timeouts
-				while (envelopeIds.length > 0) {
-					const batch = envelopeIds.splice(-50)
+				while (envelopes.length > 0) {
+					const batch = envelopes.splice(-50)
 					await this.$store.dispatch('moveThreads', {
-						ids: batch,
+						ids: batch.map(e => e.databaseId),
 						destMailboxId: this.destMailboxId,
 					})
 				}

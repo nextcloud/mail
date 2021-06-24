@@ -109,7 +109,7 @@ export class DroppableMailbox {
 			// Move messages per batch of 50 messages so as to not overload server or create timeouts
 			while (ids.length > 0) {
 				const batch = ids.splice(-50)
-				await store.dispatch('moveMessages', {
+				await store.dispatch('moveThreads', {
 					ids: batch,
 					destMailboxId: this.options.mailboxId,
 				})

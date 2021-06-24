@@ -64,31 +64,51 @@ class ThreadController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $id
+	 * @param inti[] $ids
 	 * @param int $destMailboxId
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function move(int $id, int $destMailboxId): JSONResponse {
+	public function move(array $ids, int $destMailboxId): JSONResponse {
+		$batch = [];
+		$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
+		$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
-			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
-			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
+			foreach ($ids as $id) {
+				$message = $this->mailManager->getMessage($this->currentUserId, $id);
+				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+				$mailboxName = $mailbox->getName();
+				$accountId = $mailbox->getAccountId();
+				if (!array_key_exists($accountId, $batch)) {
+					$batch[$accountId] = [];
+				}
+				if (!array_key_exists($mailboxName, $batch[$accountId])) {
+					$batch[$accountId][$mailboxName] = [];
+				}
+				array_push($batch[$accountId][$mailboxName],$message);
+			}
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->moveThread(
-			$srcAccount,
-			$srcMailbox,
-			$dstAccount,
-			$dstMailbox,
-			$message->getThreadRootId()
-		);
+		// Move threads from batch
+		foreach ($batch as $accountId => $subbatch) {
+			foreach ($subbatch as $mailboxName => $messages) {
+				foreach($messages as $message) {
+					$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+					$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
+					$this->mailManager->moveThread(
+						$srcAccount,
+						$srcMailbox,
+						$dstAccount,
+						$dstMailbox,
+						$message->getThreadRootId()
+					);
+				}
+			}
+		}
 
 		return new JSONResponse();
 	}
@@ -97,26 +117,41 @@ class ThreadController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $id
+	 * @param int[] $ids
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function delete(int $id): JSONResponse {
-		try {
+	public function delete(array $ids): JSONResponse {
+		// Creates a deletion batch subdivised in accounts and mailboxes
+		$batch = [];
+		foreach ($ids as $id) {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+			$mailboxName = $mailbox->getName();
+			$accountId = $mailbox->getAccountId();
+			if (!array_key_exists($accountId, $batch)) {
+				$batch[$accountId] = [];
+			}
+			if (!array_key_exists($mailboxName, $batch[$accountId])) {
+				$batch[$accountId][$mailboxName] = [];
+			}
+			array_push($batch[$accountId][$mailboxName],$message);
 		}
 
-		$this->mailManager->deleteThread(
-			$account,
-			$mailbox,
-			$message->getThreadRootId()
-		);
+		// Deletes threads from batch
+		foreach ($batch as $accountId => $subbatch) {
+			foreach ($subbatch as $mailboxName => $messages) {
+				foreach ($messages as $message) {
+					$this->mailManager->deleteThread(
+						$this->accountService->find($this->currentUserId, $accountId),
+						$this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId()),
+						$message->getThreadRootId()
+					);
+				};
+			};
+		};
 
 		return new JSONResponse();
 	}

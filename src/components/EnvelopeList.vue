@@ -269,9 +269,9 @@ export default {
 			this.unselectAll()
 		},
 		async deleteAllSelected() {
+			const ids = []
 			for (const envelope of this.selectedEnvelopes) {
 				// Find all envelope ids and navigate if the message being deleted is the one currently viewed
-				const ids = []
 				// Navigate if the message being deleted is the one currently viewed
 				// Shouldn't we simply use $emit here?
 				// Would be better to navigate after all messages have been deleted
@@ -296,22 +296,6 @@ export default {
 						})
 					}
 				}
-				logger.info(`deleting thread ${envelope.threadRootId}`)
-				try {
-					await this.$store.dispatch('deleteThread', {
-						envelope,
-					})
-				} catch (error) {
-					showError(await matchError(error, {
-						[NoTrashMailboxConfiguredError.getName()]() {
-							return t('mail', 'No trash mailbox configured')
-						},
-						default(error) {
-							logger.error('could not delete message', error)
-							return t('mail', 'Could not delete message')
-						},
-					}))
-				}
 			}
 
 			// Get new messages
@@ -325,24 +309,24 @@ export default {
 			this.deleting = true
 			this.unselectAll()
 
-			try {
-				// Delete messages per batch of 50 messages so as to not overload server or create timeouts
-				while (ids.length > 0) {
-					const batch = ids.splice(-50)
+			// Delete messages per batch of 50 messages so as to not overload server or create timeouts
+			logger.info('deleting threads')
+			while (ids.length > 0) {
+				const batch = ids.splice(-50)
+				try {
 					await this.$store.dispatch('deleteThreads', { ids: batch })
+				} catch (error) {
+					showError(await matchError(error, {
+						[NoTrashMailboxConfiguredError.getName()]() {
+							return t('mail', 'No trash mailbox configured')
+						},
+						default(error) {
+							logger.error('could not delete message/thread', error)
+							return t('mail', 'Could not delete message/thread')
+						},
+					}))
 				}
-			} catch (error) {
-				showError(await matchError(error, {
-					[NoTrashMailboxConfiguredError.getName()]() {
-						return t('mail', 'No trash mailbox configured')
-					},
-					default(error) {
-						logger.error('could not delete messages', error)
-						return t('mail', 'Could not delete messages')
-					},
-				}))
 			}
-
 			this.deleting = false
 		},
 		setEnvelopeSelected(envelope, selected) {

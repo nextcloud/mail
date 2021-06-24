@@ -721,7 +721,6 @@ export default {
 		return message
 	},
 	async deleteMessages({ getters, commit }, { ids }) {
-
 		try {
 			await deleteMessages(ids)
 			ids.forEach(id => {
@@ -798,29 +797,34 @@ export default {
 		})
 	},
 	async deleteThreads({ getters, commit }, { ids }) {
-		for (let index = 0; index < array.length; index++) {
+		ids.forEach((id) => {
 			commit('removeEnvelope', { id })
-			ThreadService.deleteThread(id).then((resp) => {
-				// eslint-disable-next-line
-				console.log(resp)
-			})
-			.catch((err) => {
-				commit('addEnvelope', id)
-				console.error('could not delete message/thread ' + id, err)
-				throw err
-			})
-		}
-		console.debug('messages/threads removed')
-	},
-	async moveThread({ getters, commit }, { envelope, destMailboxId }) {
-		commit('removeEnvelope', { id: envelope.databaseId })
-
+		})
 		try {
-			await ThreadService.moveThread(envelope.databaseId, destMailboxId)
-			console.debug('thread removed')
+			ThreadService.deleteThreads(ids).then(() => {
+				console.debug('messages/threads removed')
+			})
+		} catch (err) {
+			console.error('could not delete messages/threads', err)
+			ids.forEach((id) => {
+				commit('addEnvelope', { id })
+			})
+			throw err
+		}
+	},
+	async moveThreads({ getters, commit }, { ids, destMailboxId }) {
+		ids.forEach(id => {
+			commit('removeEnvelope', { id })
+		})
+		try {
+			ThreadService.moveThreads(ids, destMailboxId).then(() => {
+				console.debug('messages/threads moved')
+			})
 		} catch (e) {
-			commit('addEnvelope', envelope)
-			console.error('could not move thread', e)
+			console.error('could not move messages/threads', e)
+			ids.forEach((id) => {
+				commit('addEnvelope', { id })
+			})
 			throw e
 		}
 	},

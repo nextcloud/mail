@@ -295,12 +295,12 @@ return [
 		],
 		[
 			'name' => 'thread#delete',
-			'url' => '/api/thread/{id}',
+			'url' => '/api/thread',
 			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'thread#move',
-			'url' => '/api/thread/{id}',
+			'url' => '/api/thread',
 			'verb' => 'POST'
 		]
 	],

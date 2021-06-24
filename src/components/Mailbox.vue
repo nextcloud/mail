@@ -432,7 +432,7 @@ export default {
 			}
 		},
 		// onDelete(id): Load more message and navigate to other message if needed
-		// id: The id of the message being delete
+		// id: The id of the message being deleted
 		onDelete(id) {
 			// Get a new message
 			this.$store.dispatch('fetchNextEnvelopes', {
