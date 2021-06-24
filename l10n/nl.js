@@ -119,6 +119,7 @@ OC.L10N.register(
     "Mark as spam" : "Markeren als spam",
     "Unselect" : "Deselecteren",
     "Select" : "Selecteer",
+    "Edit tags" : "Bewerken tags",
     "Move thread" : "Verplaats draadje",
     "Edit as new message" : "Bewerk als nieuw bericht",
     "Delete thread" : "Verwijder draadje",
