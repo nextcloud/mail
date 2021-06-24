@@ -12,7 +12,7 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              ocp-version: [ 'dev-master', 'v20.0.4' ]
+              ocp-version: [ 'dev-master', 'dev-stable22', 'v20.0.4' ]
       name: Nextcloud ${{ matrix.ocp-version }}
       steps:
           - name: Checkout
