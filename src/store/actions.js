@@ -58,6 +58,7 @@ import {
 	patchMailbox,
 } from '../service/MailboxService'
 import {
+	createEnvelopeTag,
 	deleteMessages,
 	fetchEnvelope,
 	fetchEnvelopes,
