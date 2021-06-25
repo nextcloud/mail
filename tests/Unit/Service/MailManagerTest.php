@@ -34,7 +34,6 @@ use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
-use OCA\Mail\Events\BeforeMessagesDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
