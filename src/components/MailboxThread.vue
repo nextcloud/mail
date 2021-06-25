@@ -1,5 +1,5 @@
 <template>
-	<AppContent pane-config-key="mail">
+	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
 		<template slot="list">
 			<AppContentList
 				v-infinite-scroll="onScroll"
@@ -153,6 +153,9 @@ export default {
 				|| this.$route.params.threadId === 'asNew'
 			)
 		},
+		isThreadShown() {
+			return !!this.$route.params.threadId
+		},
 	},
 	methods: {
 		deleteMessage(id) {
@@ -171,6 +174,15 @@ export default {
 				return str
 			}
 			return this.searchQuery + ' ' + str
+		},
+		hideMessage() {
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					filter: this.$route.params?.filter,
+				},
+			})
 		},
 	},
 }
