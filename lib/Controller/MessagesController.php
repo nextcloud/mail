@@ -773,7 +773,7 @@ class MessagesController extends Controller {
 		// Deletes messages from batch
 		try {
 			foreach ($batch as $accountId => $subbatch) {
-				foreach($subbatch as $mailboxName => $uids) {
+				foreach ($subbatch as $mailboxName => $uids) {
 					$this->mailManager->deleteMessages(
 						$this->accountService->find($this->currentUserId, $accountId),
 						$mailboxName,

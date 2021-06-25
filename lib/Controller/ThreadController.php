@@ -96,7 +96,7 @@ class ThreadController extends Controller {
 		// Move threads from batch
 		foreach ($batch as $accountId => $subbatch) {
 			foreach ($subbatch as $mailboxName => $messages) {
-				foreach($messages as $message) {
+				foreach ($messages as $message) {
 					$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 					$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 					$this->mailManager->moveThread(
