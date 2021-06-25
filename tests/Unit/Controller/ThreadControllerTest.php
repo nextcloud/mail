@@ -75,11 +75,23 @@ class ThreadControllerTest extends TestCase {
 	}
 
 	public function testMoveForbidden() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$dstMailbox = new Mailbox();
+		$dstMailbox->setId(40);
+		$dstMailbox->setName('Archive');
+		$dstMailbox->setAccountId($mailAccount->getId());
+		$this->mailManager
+			->method('getMailbox')
+			->willReturn($dstMailbox);
+		$this->accountService
+			->method('find')
+			->willReturn(new Account($mailAccount));
 		$this->mailManager
 			->method('getMessage')
 			->willThrowException(new DoesNotExistException('for some reason there is no such record'));
 
-		$response = $this->controller->move(100, 20);
+		$response = $this->controller->move([100], $dstMailbox->getId());
 
 		$this->assertEquals(Http::STATUS_FORBIDDEN, $response->getStatus());
 	}
@@ -116,7 +128,7 @@ class ThreadControllerTest extends TestCase {
 			->expects(self::once())
 			->method('moveThread');
 
-		$response = $this->controller->move($message->getId(), $dstMailbox->getId());
+		$response = $this->controller->move([$message->getId()], $dstMailbox->getId());
 
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 	}
@@ -153,7 +165,7 @@ class ThreadControllerTest extends TestCase {
 			->expects(self::once())
 			->method('moveThread');
 
-		$response = $this->controller->move($message->getId(), $dstMailbox->getId());
+		$response = $this->controller->move([$message->getId()], $dstMailbox->getId());
 
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 	}
@@ -163,7 +175,7 @@ class ThreadControllerTest extends TestCase {
 			->method('getMessage')
 			->willThrowException(new DoesNotExistException('for some reason there is no such record'));
 
-		$response = $this->controller->delete(100);
+		$response = $this->controller->delete([100]);
 
 		$this->assertEquals(Http::STATUS_FORBIDDEN, $response->getStatus());
 	}
@@ -192,7 +204,7 @@ class ThreadControllerTest extends TestCase {
 			->expects(self::once())
 			->method('deleteThread');
 
-		$response = $this->controller->delete(300);
+		$response = $this->controller->delete([300]);
 
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 	}
@@ -221,7 +233,7 @@ class ThreadControllerTest extends TestCase {
 			->expects(self::once())
 			->method('deleteThread');
 
-		$response = $this->controller->delete($message->getId());
+		$response = $this->controller->delete([$message->getId()]);
 
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 	}

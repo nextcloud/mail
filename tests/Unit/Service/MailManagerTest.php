@@ -645,11 +645,6 @@ class MailManagerTest extends TestCase {
 		$srcMailbox->setId($srcMailboxId);
 		$srcMailbox->setAccountId($mailAccount->getId());
 		$srcMailbox->setName('INBOX');
-		$this->mailboxMapper
-			->expects(self::exactly(2))
-			->method('find')
-			->with($account, $srcMailbox->getName())
-			->willReturn($srcMailbox);
 		$this->threadMapper
 			->expects(self::once())
 			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
@@ -663,12 +658,17 @@ class MailManagerTest extends TestCase {
 		$dstMailbox->setAccountId($mailAccount->getId());
 		$dstMailbox->setName('Trash');
 
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $srcMailbox->getName())
+			->willReturn($srcMailbox);
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->moveThread(
 			$account,
@@ -691,11 +691,6 @@ class MailManagerTest extends TestCase {
 		$srcMailbox->setId($srcMailboxId);
 		$srcMailbox->setAccountId($mailAccount->getId());
 		$srcMailbox->setName('Trash');
-		$this->mailboxMapper
-			->expects(self::exactly(2))
-			->method('find')
-			->with($account, $srcMailbox->getName())
-			->willReturn($srcMailbox);
 		$this->threadMapper
 			->expects(self::once())
 			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
@@ -709,12 +704,17 @@ class MailManagerTest extends TestCase {
 		$dstMailbox->setAccountId($mailAccount->getId());
 		$dstMailbox->setName('INBOX');
 
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $srcMailbox->getName())
+			->willReturn($srcMailbox);
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->moveThread(
 			$account,
@@ -737,11 +737,6 @@ class MailManagerTest extends TestCase {
 		$mailbox->setId($mailboxId);
 		$mailbox->setAccountId($mailAccount->getId());
 		$mailbox->setName('INBOX');
-		$this->mailboxMapper
-			->expects(self::exactly(2))
-			->method('find')
-			->with($account, $mailbox->getName())
-			->willReturn($mailbox);
 		$this->threadMapper
 			->expects(self::once())
 			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
@@ -756,6 +751,11 @@ class MailManagerTest extends TestCase {
 		$trashMailbox->setName('Trash');
 		$this->mailboxMapper
 			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $mailbox->getName())
+			->willReturn($mailbox);
+		$this->mailboxMapper
+			->expects(self::exactly(2))
 			->method('findById')
 			->with($trashMailbox->getId())
 			->willReturn($trashMailbox);
@@ -764,7 +764,7 @@ class MailManagerTest extends TestCase {
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,
@@ -784,6 +784,14 @@ class MailManagerTest extends TestCase {
 		$mailbox->setId($mailboxId);
 		$mailbox->setAccountId($mailAccount->getId());
 		$mailbox->setName('Trash');
+		$this->threadMapper
+			->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, $threadRootId, true)
+			->willReturn([
+				['messageUid' => 200, 'mailboxName' => 'Trash'],
+				['messageUid' => 300, 'mailboxName' => 'Trash'],
+			]);
 		$this->mailboxMapper
 			->expects(self::exactly(2))
 			->method('find')
@@ -794,20 +802,12 @@ class MailManagerTest extends TestCase {
 			->method('findById')
 			->with($mailbox->getId())
 			->willReturn($mailbox);
-		$this->threadMapper
-			->expects(self::once())
-			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
-			->with($mailAccount, $threadRootId, true)
-			->willReturn([
-				['messageUid' => 200, 'mailboxName' => 'Trash'],
-				['messageUid' => 300, 'mailboxName' => 'Trash'],
-			]);
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('expunge');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,
