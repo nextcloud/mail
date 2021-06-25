@@ -126,18 +126,22 @@ class ThreadController extends Controller {
 	public function delete(array $ids): JSONResponse {
 		// Creates a deletion batch subdivised in accounts and mailboxes
 		$batch = [];
-		foreach ($ids as $id) {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$mailboxName = $mailbox->getName();
-			$accountId = $mailbox->getAccountId();
-			if (!array_key_exists($accountId, $batch)) {
-				$batch[$accountId] = [];
+		try {
+			foreach ($ids as $id) {
+				$message = $this->mailManager->getMessage($this->currentUserId, $id);
+				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+				$mailboxName = $mailbox->getName();
+				$accountId = $mailbox->getAccountId();
+				if (!array_key_exists($accountId, $batch)) {
+					$batch[$accountId] = [];
+				}
+				if (!array_key_exists($mailboxName, $batch[$accountId])) {
+					$batch[$accountId][$mailboxName] = [];
+				}
+				array_push($batch[$accountId][$mailboxName],$message);
 			}
-			if (!array_key_exists($mailboxName, $batch[$accountId])) {
-				$batch[$accountId][$mailboxName] = [];
-			}
-			array_push($batch[$accountId][$mailboxName],$message);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		// Deletes threads from batch
