@@ -64,7 +64,7 @@ class ThreadController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param inti[] $ids
+	 * @param int[] $ids
 	 * @param int $destMailboxId
 	 *
 	 * @return JSONResponse
