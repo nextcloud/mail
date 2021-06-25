@@ -2,12 +2,9 @@
 	<AppContent pane-config-key="mail">
 		<template slot="list">
 			<AppContentList
-				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
 				infinite-scroll-immediate-check="false"
 				:show-details="showThread"
-				:infinite-scroll-disabled="false"
-				:infinite-scroll-distance="10"
 				role="heading"
 				:aria-level="2"
 				@shortkey.native="onShortcut">
@@ -69,7 +66,6 @@
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
-import infiniteScroll from 'vue-infinite-scroll'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import Vue from 'vue'
@@ -83,9 +79,6 @@ import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 
 export default {
 	name: 'MailboxThread',
-	directives: {
-		infiniteScroll,
-	},
 	components: {
 		AppContent,
 		AppContentList,
