@@ -154,7 +154,6 @@ OC.L10N.register(
     "Reply" : "回覆",
     "Reply to sender only" : "僅回覆寄件人",
     "Forward" : "轉寄",
-    "Add tags" : "添加標籤",
     "Move message" : "移動訊息",
     "View source" : "檢視原始碼",
     "Download thread data for debugging" : "下載郵件串的資料以供除錯",

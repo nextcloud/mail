@@ -143,7 +143,6 @@ OC.L10N.register(
     "Reply" : "Odpovedať",
     "Reply to sender only" : "Odpovedať iba odosielateľovi",
     "Forward" : "Preposlať",
-    "Add tags" : "Pridať štítky",
     "Move message" : "Presunúť správu",
     "View source" : "Zobraziť zdrojový kód",
     "Download thread data for debugging" : "Prevziať dáta vlákna pre účely ladenia",

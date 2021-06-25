@@ -153,7 +153,6 @@ OC.L10N.register(
     "Reply" : "Yanıtla",
     "Reply to sender only" : "Yalnız gönderene yanıtla",
     "Forward" : "İlet",
-    "Add tags" : "Etiket ekle",
     "Move message" : "İletiyi taşı",
     "View source" : "Kaynağı görüntüle",
     "Download thread data for debugging" : "Hata ayıklama için görüşme verilerini indir",

@@ -153,7 +153,6 @@ OC.L10N.register(
     "Reply" : "Antworten",
     "Reply to sender only" : "Nur dem Absender antworten",
     "Forward" : "Weiterleiten",
-    "Add tags" : "Schlagworte hinzufügen",
     "Move message" : "Nachricht verschieben",
     "View source" : "Quelle ansehen",
     "Download thread data for debugging" : "Thread-Daten zum Debuggen herunterladen",

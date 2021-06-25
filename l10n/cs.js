@@ -154,7 +154,6 @@ OC.L10N.register(
     "Reply" : "Odpovědět",
     "Reply to sender only" : "Odpovědět pouze odesílateli",
     "Forward" : "Přeposlat",
-    "Add tags" : "Přidat štítky",
     "Move message" : "Přesunout zprávu",
     "View source" : "Zobrazit zdroj",
     "Download thread data for debugging" : "Stáhnout si data vlákna pro účely ladění",
