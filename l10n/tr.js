@@ -119,6 +119,7 @@ OC.L10N.register(
     "Mark as spam" : "İstenmeyen olarak işaretle",
     "Unselect" : "Bırak",
     "Select" : "Seç",
+    "Edit tags" : "Etiketleri düzenle",
     "Move thread" : "Konuyu taşı",
     "Edit as new message" : "Yeni ileti olarak düzenle",
     "Delete thread" : "Konuyu sil",
