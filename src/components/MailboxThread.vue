@@ -1,64 +1,62 @@
 <template>
 	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
-		<template slot="list">
-			<AppContentList
-				v-infinite-scroll="onScroll"
-				v-shortkey.once="shortkeys"
-				infinite-scroll-immediate-check="false"
-				:show-details="showThread"
-				:infinite-scroll-disabled="false"
-				:infinite-scroll-distance="10"
-				role="heading"
-				:aria-level="2"
-				@shortkey.native="onShortcut">
+		<AppContentList
+			v-infinite-scroll="onScroll"
+			v-shortkey.once="shortkeys"
+			infinite-scroll-immediate-check="false"
+			:show-details="showThread"
+			:infinite-scroll-disabled="false"
+			:infinite-scroll-distance="10"
+			role="heading"
+			:aria-level="2"
+			@shortkey.native="onShortcut">
+			<Mailbox
+				v-if="!mailbox.isPriorityInbox"
+				:account="account"
+				:mailbox="mailbox"
+				:search-query="query"
+				:bus="bus" />
+			<template v-else>
+				<div class="app-content-list-item">
+					<SectionTitle class="important" :name="t('mail', 'Important and unread')" />
+					<Popover trigger="hover focus">
+						<button slot="trigger" :aria-label="t('mail', 'Important info')" class="button icon-info" />
+						<p class="important-info">
+							{{ importantInfo }}
+						</p>
+					</Popover>
+				</div>
 				<Mailbox
-					v-if="!mailbox.isPriorityInbox"
-					:account="account"
-					:mailbox="mailbox"
-					:search-query="query"
+					class="nameimportant"
+					:account="unifiedAccount"
+					:mailbox="unifiedInbox"
+					:search-query="appendToSearch('is:pi-important')"
+					:paginate="'manual'"
+					:is-priority-inbox="true"
+					:initial-page-size="5"
+					:collapsible="true"
 					:bus="bus" />
-				<template v-else>
-					<div class="app-content-list-item">
-						<SectionTitle class="important" :name="t('mail', 'Important and unread')" />
-						<Popover trigger="hover focus">
-							<button slot="trigger" :aria-label="t('mail', 'Important info')" class="button icon-info" />
-							<p class="important-info">
-								{{ importantInfo }}
-							</p>
-						</Popover>
-					</div>
-					<Mailbox
-						class="nameimportant"
-						:account="unifiedAccount"
-						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:pi-important')"
-						:paginate="'manual'"
-						:is-priority-inbox="true"
-						:initial-page-size="5"
-						:collapsible="true"
-						:bus="bus" />
-					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
-					<Mailbox
-						class="namestarred"
-						:account="unifiedAccount"
-						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:pi-starred')"
-						:paginate="'manual'"
-						:is-priority-inbox="true"
-						:initial-page-size="5"
-						:bus="bus" />
-					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
-					<Mailbox
-						class="nameother"
-						:account="unifiedAccount"
-						:mailbox="unifiedInbox"
-						:open-first="false"
-						:search-query="appendToSearch('is:pi-other')"
-						:is-priority-inbox="true"
-						:bus="bus" />
-				</template>
-			</AppContentList>
-		</template>
+				<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
+				<Mailbox
+					class="namestarred"
+					:account="unifiedAccount"
+					:mailbox="unifiedInbox"
+					:search-query="appendToSearch('is:pi-starred')"
+					:paginate="'manual'"
+					:is-priority-inbox="true"
+					:initial-page-size="5"
+					:bus="bus" />
+				<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
+				<Mailbox
+					class="nameother"
+					:account="unifiedAccount"
+					:mailbox="unifiedInbox"
+					:open-first="false"
+					:search-query="appendToSearch('is:pi-other')"
+					:is-priority-inbox="true"
+					:bus="bus" />
+			</template>
+		</AppContentList>
 		<NewMessageDetail v-if="newMessage" />
 		<Thread v-else-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
