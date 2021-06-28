@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'stable21', 'stable22', 'master']
+        nextcloud-versions: ['stable20', 'stable21', 'stable22']
         include:
             - php: 8.0
               nextcloud-version: master
@@ -48,7 +48,7 @@ jobs:
         XDEBUG_MODE: coverage
     - name: Report coverage
       uses: codecov/codecov-action@v1.5.2
-      if: ${{ always() && matrix.nextcloud-versions == 'master' }}
+      if: ${{ always() && matrix.nextcloud-versions == 'stable22' }}
       with:
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
         flags: unittests
@@ -59,7 +59,7 @@ jobs:
       strategy:
           matrix:
               php-versions: [7.4, 8.0]
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable22']
               db: ['sqlite', 'mysql', 'pgsql']
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
