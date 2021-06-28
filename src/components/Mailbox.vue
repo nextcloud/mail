@@ -139,7 +139,7 @@ export default {
 	watch: {
 		// Force the envelope list to re-render when user clicks on the folder it's currently in
 		$route(to) {
-			if (to.params.threadId === undefined) {
+			if (to.params.threadId === undefined && !this.isMobile) {
 				const first = this.envelopes[0]
 				if (typeof first !== 'undefined') {
 					logger.debug('refreshing mailbox')
@@ -228,7 +228,6 @@ export default {
 				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
 				this.loadingEnvelopes = false
-
 				if (this.openFirst && !this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
 					// Show first message
 					const first = envelopes[0]
