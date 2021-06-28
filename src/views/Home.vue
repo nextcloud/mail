@@ -116,7 +116,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .app-content #app-content-wrapper .app-content-details {
+::v-deep .app-content-details {
 	margin: 0 auto;
 	max-width: 900px;
 	display: flex;
