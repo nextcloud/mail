@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 1.9.6 – 2021-06-30
 ### Changed
 - Reload mailbox when current mailbox is clicked in sidebar
+- Dependency updates
 ### Fixed
 - Don't run background syncs for disabled users
 - Sanitize CSS style sheets
