@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.9.6 – 2021-06-30
+### Changed
+- Reload mailbox when current mailbox is clicked in sidebar
+### Fixed
+- Don't run background syncs for disabled users
+- Sanitize CSS style sheets
+- Missing routes
+- Multibyte string truncation
+- Oracle compatibility with boolean columns
+
 ## 1.9.5 – 2021-04-08
 ### Fixed
 - Handling of some inline attachments
