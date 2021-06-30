@@ -58,11 +58,11 @@ use function strtolower;
  * @method void setMessages(int $messages)
  * @method int getUnseen()
  * @method void setUnseen(int $unseen)
- * @method bool getSelectable()
+ * @method bool|null getSelectable()
  * @method void setSelectable(bool $selectable)
  * @method string getSpecialUse()
  * @method void setSpecialUse(string $specialUse)
- * @method bool getSyncInBackground()
+ * @method bool|null getSyncInBackground()
  * @method void setSyncInBackground(bool $sync)
  */
 class Mailbox extends Entity implements JsonSerializable {
@@ -151,7 +151,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'specialUse' => $specialUse,
 			'specialRole' => $specialUse[0] ?? 0,
 			'mailboxes' => [],
-			'syncInBackground' => $this->getSyncInBackground(),
+			'syncInBackground' => ($this->getSyncInBackground() === true),
 		];
 	}
 }
