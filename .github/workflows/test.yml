@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'stable21', 'master']
+        nextcloud-versions: ['stable20', 'stable21', 'stable22']
         include:
             - php: 8.0
               nextcloud-version: master
@@ -54,7 +54,7 @@ jobs:
       strategy:
           matrix:
               php-versions: [7.4, 8.0]
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable22']
               db: ['sqlite', 'mysql', 'pgsql']
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:

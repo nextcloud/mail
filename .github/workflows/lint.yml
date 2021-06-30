@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            nextcloud-versions: ['master']
+            nextcloud-versions: ['stable22']
     name: Nextcloud ${{ matrix.nextcloud-versions }} app code check
     steps:
         - name: Set up php7.4
