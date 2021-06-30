@@ -69,11 +69,11 @@
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
-import infiniteScroll from 'vue-infinite-scroll'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import Vue from 'vue'
 
+import infiniteScroll from '../directives/infinite-scroll'
 import logger from '../logger'
 import Mailbox from './Mailbox'
 import NewMessageDetail from './NewMessageDetail'

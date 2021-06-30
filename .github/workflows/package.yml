@@ -1,6 +1,11 @@
 name: Packaging
 
-on: [push, pull_request]
+on:
+    pull_request:
+    push:
+        branches:
+            - master
+            - stable*
 
 jobs:
   release-tarball:
@@ -12,7 +17,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2.2.0
         with:
-          node-version: 12.x
+          node-version: 14.x
       - name: Set up php$
         uses: shivammathur/setup-php@master
         with:
