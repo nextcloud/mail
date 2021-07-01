@@ -154,7 +154,6 @@ OC.L10N.register(
     "Reply" : "Responder",
     "Reply to sender only" : "Responder somente ao remetente",
     "Forward" : "Encaminhar",
-    "Add tags" : "Adicionar etiquetas",
     "Move message" : "Mover mensagem",
     "View source" : "Ver o código-fonte",
     "Download thread data for debugging" : "Baixar dados da discussão para depuração",

@@ -154,7 +154,6 @@ OC.L10N.register(
     "Reply" : "Antwoord",
     "Reply to sender only" : "Antwoord alleen op afzender",
     "Forward" : "Doorsturen",
-    "Add tags" : "Toevoegen tags",
     "Move message" : "Verplaats bericht",
     "View source" : "Bekijk bron",
     "Download thread data for debugging" : "Download draadgegevens voor debuggen",

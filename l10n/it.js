@@ -150,7 +150,6 @@ OC.L10N.register(
     "Reply" : "Rispondi",
     "Reply to sender only" : "Rispondi solo al mittente",
     "Forward" : "Inoltra",
-    "Add tags" : "Aggiungi etichette",
     "Move message" : "Sposta messaggio",
     "View source" : "Visualizza sorgente",
     "Download thread data for debugging" : "Scarica i dati del conversazione per il debug",

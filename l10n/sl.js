@@ -148,7 +148,6 @@ OC.L10N.register(
     "Reply" : "Odgovori",
     "Reply to sender only" : "Odgovori le pošiljatelju",
     "Forward" : "Posreduj",
-    "Add tags" : "Dodaj oznake",
     "View source" : "Pokaži kode sporočila",
     "Download thread data for debugging" : "Prejmi podatke niti za razhroščevanje",
     "Message source" : "Vir sporočila",
