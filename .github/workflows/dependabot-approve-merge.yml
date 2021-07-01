@@ -22,7 +22,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # Nextcloud bot approve and merge request
-      - uses: ahmadnassri/action-dependabot-auto-merge@v1
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2.4
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           target: minor
