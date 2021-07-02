@@ -18,6 +18,20 @@
 			<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
 		</p>
 
+		<p v-if="toggleAutoTagging" class="app-settings">
+			<span class="icon-loading-small" />
+			{{ autoTaggingText }}
+		</p>
+		<p v-else class="app-settings">
+			<input
+				id="auto-tagging-toggle"
+				class="checkbox"
+				type="checkbox"
+				:checked="useAutoTagging"
+				@change="onToggleAutoTagging">
+			<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
+		</p>
+
 		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 			<span class="icon-loading-small" />
 			{{ t('mail', 'Use Gravatar and favicon avatars') }}
@@ -63,8 +77,10 @@
 </template>
 
 <script>
-import Logger from '../logger'
 import { generateUrl } from '@nextcloud/router'
+import { showError } from '@nextcloud/dialogs'
+
+import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'
 
 export default {
@@ -82,6 +98,9 @@ export default {
 			replySettingsText: t('mail', 'Put my text to the bottom of a reply instead of on top of it.'),
 			loadingReplySettings: false,
 			displayKeyboardShortcuts: false,
+			// eslint-disable-next-line
+			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
+			toggleAutoTagging: false,
 		}
 	},
 	computed: {
@@ -93,6 +112,11 @@ export default {
 		},
 		useDataCollection() {
 			return this.$store.getters.getPreference('collect-data', 'true') === 'true'
+		},
+		useAutoTagging() {
+			const b = this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
+			console.info('TAGGING?????', b)
+			return b
 		},
 	},
 	methods: {
@@ -134,6 +158,23 @@ export default {
 				.then(() => {
 					this.loadingOptOutSettings = false
 				})
+		},
+		async onToggleAutoTagging(e) {
+			this.toggleAutoTagging = true
+
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'tag-classified-messages',
+						value: e.target.checked ? 'true' : 'false',
+					})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.toggleAutoTagging = false
+			}
 		},
 		registerProtocolHandler() {
 			if (window.navigator.registerProtocolHandler) {
