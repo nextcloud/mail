@@ -158,6 +158,7 @@ class PageController extends Controller {
 				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
 				'reply-mode' => $this->preferences->getPreference('reply-mode', 'top'),
 				'collect-data' => $this->preferences->getPreference('collect-data', 'true'),
+				'tag-classified-messages' => $this->preferences->getPreference('tag-classified-messages', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',

@@ -27,6 +27,7 @@ namespace OCA\Mail\Listener;
 
 use Horde_Imap_Client;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
@@ -58,18 +59,28 @@ class NewMessageClassificationListener implements IEventListener {
 	/** @var IMailManager */
 	private $mailManager;
 
+	/** @var IUserPreferences */
+	private $preferences;
+
 	public function __construct(ImportanceClassifier $classifier,
 								TagMapper $tagMapper,
 								LoggerInterface $logger,
-								IMailManager $mailManager) {
+								IMailManager $mailManager,
+								IUserPreferences $preferences) {
 		$this->classifier = $classifier;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
 		$this->mailManager = $mailManager;
+		$this->preferences = $preferences;
 	}
 
 	public function handle(Event $event): void {
 		if (!($event instanceof NewMessagesSynchronized)) {
+			return;
+		}
+
+		$allowTagging = $this->preferences->getPreference('tag-classified-messages');
+		if ($allowTagging === "false") {
 			return;
 		}
 
