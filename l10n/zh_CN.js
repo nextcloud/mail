@@ -60,6 +60,8 @@ OC.L10N.register(
     "Show keyboard shortcuts" : "显示键盘快捷方式",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "允许该应用收集有关您的互动的数据。 根据这些数据，该应用程序将适应您的偏好。 数据将仅存储在本地。",
     "Put my text to the bottom of a reply instead of on top of it." : "把我的信息放在回复的最下面，而不是最上面。 ",
+    "Automatically classify importance of new email" : "自动分类新邮件的重要性 ",
+    "Could not update preference" : "无法更新首选项",
     "From" : "发件人",
     "Select account" : "选择账号",
     "To" : "收件人",
