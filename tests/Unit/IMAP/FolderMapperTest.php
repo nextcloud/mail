@@ -241,9 +241,6 @@ class FolderMapperTest extends TestCase {
 			->method('getSpecialUse')
 			->willReturn([]);
 		$folders[0]->expects($this->once())
-			->method('getDelimiter')
-			->willReturn('.');
-		$folders[0]->expects($this->once())
 			->method('getMailbox')
 			->willReturn('Sent');
 		$folders[0]->expects($this->once())
