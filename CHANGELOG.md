@@ -1,6 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.10.0 – 2021-07-05
+### Added
+- Message tagging – stores tags both locally as well as on IMAP (if supported), interoperable with other email clients
+- Threaded message list – messages of the same thread are now only shown once in the message list
+- Option to show images of a sender just temporarily
+- Multi account provisioning – admins can now provide not just one configuration, and the user email will determine what config to use
+- Refresh button to sync the currently open mailbox
+- Unread counter for mailboxes in the sidebar
+- Option to put the reply of a message underneath the quoted text
+- Signatures for aliases
+- Resizable message list column
+### Changed
+- Automatic message importance classification is now optional and can be turned off
+- Reload mailbox when it's already open and clicked again in the sidebar
+- Warn when a message is sent to many people in cc/bcc (e.g. when using groups)
+- Handling of text/calendar attachments
+- Updated and new translations
+- Dependency updates
+### Fixed
+- Handling of missing IMAP message IDs
+- Handling of inline message forwards
+- Drafts handling
+- Oracle compatibility
+- Stop background sync for disabled users
+
 ## 1.9.6 – 2021-06-30
 ### Changed
 - Reload mailbox when current mailbox is clicked in sidebar
