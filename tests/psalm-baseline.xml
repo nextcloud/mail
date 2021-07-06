@@ -43,6 +43,11 @@
       <code>Command</code>
     </UndefinedClass>
   </file>
+  <file src="lib/Command/CreateTagMigrationJobEntry.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
   <file src="lib/Command/DeleteAccount.php">
     <UndefinedClass occurrences="1">
       <code>Command</code>
