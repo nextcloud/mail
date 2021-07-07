@@ -24,7 +24,7 @@
 
 namespace OCA\Mail\Tests\Unit\Service;
 
-use OCA\Mail\Service\UserPreferenceSevice;
+use OCA\Mail\Service\UserPreferenceService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IConfig;
 
@@ -36,14 +36,14 @@ class UserPreferenceServiceTest extends TestCase {
 	/** @var string */
 	private $userId = 'claire';
 
-	/** @var UserPreferenceSevice */
+	/** @var UserPreferenceService */
 	private $service;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
-		$this->service = new UserPreferenceSevice($this->config, $this->userId);
+		$this->service = new UserPreferenceService($this->config, $this->userId);
 	}
 
 	public function testGetPreference() {
@@ -53,7 +53,7 @@ class UserPreferenceServiceTest extends TestCase {
 			->willReturn('123');
 		$expected = '123';
 
-		$actual = $this->service->getPreference('test');
+		$actual = $this->service->getPreference($this->userId, 'test');
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -64,6 +64,6 @@ class UserPreferenceServiceTest extends TestCase {
 			->with($this->userId, 'mail', 'test', '123')
 			->willReturn('123');
 
-		$this->service->setPreference('test', '123');
+		$this->service->setPreference($this->userId, 'test', '123');
 	}
 }

@@ -79,8 +79,8 @@ class NewMessageClassificationListener implements IEventListener {
 			return;
 		}
 
-		$allowTagging = $this->preferences->getPreference('tag-classified-messages');
-		if ($allowTagging === "false") {
+		$allowTagging = $this->preferences->getPreference($event->getAccount()->getUserId(), 'tag-classified-messages');
+		if ($allowTagging === 'false') {
 			return;
 		}
 

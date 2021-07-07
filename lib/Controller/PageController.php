@@ -143,7 +143,7 @@ class PageController extends Controller {
 		);
 		$this->initialStateService->provideInitialState(
 			'account-settings',
-			json_decode($this->preferences->getPreference('account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+			json_decode($this->preferences->getPreference($this->currentUserId, 'account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
 		);
 		$this->initialStateService->provideInitialState(
 			'tags',
@@ -155,10 +155,10 @@ class PageController extends Controller {
 			[
 				'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
 				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
-				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
-				'reply-mode' => $this->preferences->getPreference('reply-mode', 'top'),
-				'collect-data' => $this->preferences->getPreference('collect-data', 'true'),
-				'tag-classified-messages' => $this->preferences->getPreference('tag-classified-messages', 'true'),
+				'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
+				'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
+				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
+				'tag-classified-messages' => $this->preferences->getPreference($this->currentUserId, 'tag-classified-messages', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',

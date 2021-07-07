@@ -129,11 +129,11 @@ class PageControllerTest extends TestCase {
 		$this->preferences->expects($this->exactly(5))
 			->method('getPreference')
 			->willReturnMap([
-				['account-settings', '[]', json_encode([])],
-				['external-avatars', 'true', 'true'],
-				['reply-mode', 'top', 'bottom'],
-				['collect-data', 'true', 'true'],
-				['tag-classified-messages', 'true', 'true'],
+				[$this->userId, 'account-settings', '[]', json_encode([])],
+				[$this->userId, 'external-avatars', 'true', 'true'],
+				[$this->userId, 'reply-mode', 'top', 'bottom'],
+				[$this->userId, 'collect-data', 'true', 'true'],
+				[$this->userId, 'tag-classified-messages', 'true', 'true'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')

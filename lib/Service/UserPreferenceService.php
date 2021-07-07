@@ -29,38 +29,36 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IConfig;
 
-class UserPreferenceSevice implements IUserPreferences {
+class UserPreferenceService implements IUserPreferences {
 
 	/** @var IConfig */
 	private $config;
 
-	/** @var string */
-	private $UserId;
-
 	/**
 	 * @param IConfig $config
-	 * @param string $UserId
 	 */
-	public function __construct(IConfig $config, $UserId) {
+	public function __construct(IConfig $config) {
 		$this->config = $config;
-		$this->UserId = $UserId;
 	}
 
 	/**
+	 * @param string $userId
 	 * @param string $key
 	 * @param mixed $value
 	 * @return mixed new value
 	 */
-	public function setPreference($key, $value) {
-		$this->config->setUserValue($this->UserId, 'mail', $key, $value);
+	public function setPreference(string $userId, $key, $value) {
+		$this->config->setUserValue($userId, 'mail', $key, $value);
 		return $value;
 	}
 
 	/**
+	 * @param string $userId
 	 * @param string $key
 	 * @param mixed|null $default
+	 * @return string
 	 */
-	public function getPreference($key, $default = null) {
-		return $this->config->getUserValue($this->UserId, 'mail', $key, $default);
+	public function getPreference(string $userId, $key, $default = null) {
+		return $this->config->getUserValue($userId, 'mail', $key, $default);
 	}
 }
