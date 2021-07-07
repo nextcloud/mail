@@ -36,6 +36,7 @@ use OCA\Mail\Service\Avatar\IAvatarSource;
 use OCA\Mail\Service\AvatarService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IURLGenerator;
+use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AvatarServiceTest extends TestCase {
@@ -62,6 +63,9 @@ class AvatarServiceTest extends TestCase {
 	/** @var AvatarService */
 	private $avatarService;
 
+	/** @var IUser|MockObject */
+	private $user;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -71,9 +75,19 @@ class AvatarServiceTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
+		$this->user = $this->createConfiguredMock(IUser::class, [
+			'getUID' => 'test'
+		]);
 
-		$this->avatarService = new AvatarService($this->source, $this->downloader,
-			$this->cache, $this->urlGenerator, $this->avatarFactory, $this->preferences);
+		$this->avatarService = new AvatarService(
+			$this->source,
+			$this->downloader,
+			$this->cache,
+			$this->urlGenerator,
+			$this->avatarFactory,
+			$this->preferences,
+			$this->user
+		);
 	}
 
 	public function testGetCachedAvatarUrl() {
@@ -95,7 +109,7 @@ class AvatarServiceTest extends TestCase {
 		$uid = 'john';
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('external-avatars', 'true')
+			->with($uid, 'external-avatars', 'true')
 			->willReturn('true');
 		$this->cache->expects($this->once())
 			->method('get')
@@ -119,7 +133,7 @@ class AvatarServiceTest extends TestCase {
 		$uid = 'john';
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('external-avatars', 'true')
+			->with($uid, 'external-avatars', 'true')
 			->willReturn('true');
 		$this->cache->expects($this->once())
 			->method('get')
@@ -145,7 +159,7 @@ class AvatarServiceTest extends TestCase {
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('external-avatars', 'true')
+			->with($uid, 'external-avatars', 'true')
 			->willReturn('false');
 		$this->cache->expects($this->once())
 			->method('get')
@@ -170,7 +184,7 @@ class AvatarServiceTest extends TestCase {
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('external-avatars', 'true')
+			->with($uid, 'external-avatars', 'true')
 			->willReturn('true');
 		$this->cache->expects($this->once())
 			->method('get')

@@ -37,14 +37,19 @@ class PreferencesController extends Controller {
 	/** @var IUserPreferences */
 	private $userPreference;
 
+	/** @var string */
+	private $userId;
+
 	/**
 	 * @param IRequest $request
 	 * @param IUserPreferences $userPreference
+	 * @param string $UserId
 	 */
-	public function __construct(IRequest $request, IUserPreferences $userPreference) {
+	public function __construct(IRequest $request, IUserPreferences $userPreference, string $UserId) {
 		parent::__construct('mail', $request);
 
 		$this->userPreference = $userPreference;
+		$this->userId = $UserId;
 	}
 
 	/**
@@ -56,7 +61,7 @@ class PreferencesController extends Controller {
 	 */
 	public function show(string $id): JSONResponse {
 		return new JSONResponse([
-			'value' => $this->userPreference->getPreference($id)
+			'value' => $this->userPreference->getPreference($this->userId, $id)
 		]);
 	}
 
@@ -74,7 +79,8 @@ class PreferencesController extends Controller {
 			throw new ClientException('key or value missing');
 		}
 
-		$newValue = $this->userPreference->setPreference($key, $value);
+
+		$newValue = $this->userPreference->setPreference($this->userId, $key, $value);
 
 		return new JSONResponse([
 			'value' => $newValue,

@@ -56,7 +56,7 @@ class AddressCollectionListener implements IEventListener {
 		if (!($event instanceof MessageSentEvent)) {
 			return;
 		}
-		if ($this->preferences->getPreference('collect-data', 'true') !== 'true') {
+		if ($this->preferences->getPreference($event->getAccount()->getUserId(), 'collect-data', 'true') !== 'true') {
 			$this->logger->debug('Not collecting email addresses because the user opted out');
 			return;
 		}

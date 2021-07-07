@@ -77,8 +77,8 @@ class AvatarService implements IAvatarService {
 	/**
 	 * @return bool
 	 */
-	private function externalAvatarsAllowed(): bool {
-		return $this->preferences->getPreference('external-avatars', 'true') === 'true';
+	private function externalAvatarsAllowed(string $uid): bool {
+		return $this->preferences->getPreference($uid, 'external-avatars', 'true') === 'true';
 	}
 
 	/**
@@ -115,7 +115,7 @@ class AvatarService implements IAvatarService {
 			return null;
 		}
 
-		$avatar = $this->source->fetch($email, $this->avatarFactory, $this->externalAvatarsAllowed());
+		$avatar = $this->source->fetch($email, $this->avatarFactory, $this->externalAvatarsAllowed($uid));
 		if (is_null($avatar) || !$this->hasAllowedMime($avatar)) {
 			// Cannot locate any avatar -> nothing to do here
 

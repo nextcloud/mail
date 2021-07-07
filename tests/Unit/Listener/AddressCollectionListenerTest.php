@@ -82,10 +82,15 @@ class AddressCollectionListenerTest extends TestCase {
 	}
 
 	public function testHandleOptOut() {
-		$event = $this->createMock(MessageSentEvent::class);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => 'test'
+		]);
+		$event = $this->createConfiguredMock(MessageSentEvent::class, [
+			'getAccount' => $account
+		]);
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('collect-data', 'true')
+			->with('test', 'collect-data', 'true')
 			->willReturn('false');
 		$this->addressCollector->expects($this->never())
 			->method('addAddresses');
@@ -95,7 +100,9 @@ class AddressCollectionListenerTest extends TestCase {
 
 	public function testHandle() {
 		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => 'test'
+		]);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
 		/** @var RepliedMessageData|MockObject $repliedMessageData */
@@ -104,7 +111,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$message = $this->createMock(IMessage::class);
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('collect-data', 'true')
+			->with('test','collect-data', 'true')
 			->willReturn('true');
 		/** @var Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(Horde_Mime_Mail::class);
