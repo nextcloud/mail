@@ -59,6 +59,7 @@ OC.L10N.register(
     "Show keyboard shortcuts" : "Zobraziť klávesové skratky",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Povoľte aplikácii zhromažďovať údaje o vašich interakciách. Na základe týchto údajov sa aplikácia prispôsobí vašim preferenciám. Dáta sa budú ukladať iba lokálne.",
     "Put my text to the bottom of a reply instead of on top of it." : "Umiestniť môj text odpovede na koniec správy.",
+    "Could not update preference" : "Nepodarilo sa aktualizovať nastavenie",
     "From" : "Od",
     "Select account" : "Vybrať účet",
     "To" : "Pre",
