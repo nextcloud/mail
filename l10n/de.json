@@ -274,6 +274,7 @@
     "There was an error when provisioning accounts." : "Beim Bereitstellen von Konten ist ein Fehler aufgetreten.",
     "Successfully deleted and deprovisioned accounts for \"{domain}\"" : "Konten für \"{domain}\" erfolgreich gelöscht und aufgehoben",
     "Error when deleting and deprovisioning accounts for \"{domain}\"" : "Fehler beim Löschen und Aufheben der Bereitstellung von Konten für \"{domain}\"",
+    "_Successfully provisioned {count} account._::_Successfully provisioned {count} accounts._" : ["{count} Konto erfolgreich bereitgestellt.","{count} Konten erfolgreich bereitgestellt."],
     "Domain Match: {provisioningDomain}" : "Übereinstimmung der Domain: {provisioningDomain}",
     "Email: {email}" : "E-Mail: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} auf {host}:{port} ({ssl}-Verschlüsslung)",
