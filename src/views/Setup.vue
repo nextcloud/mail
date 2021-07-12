@@ -58,8 +58,8 @@ export default {
 				.catch((error) => {
 					logger.error('Could not create account', { error })
 
-					if (error.message) {
-						this.error = error.message
+					if (error?.data?.message) {
+						this.error = error.data.message
 					} else {
 						this.error = t('mail', 'Unexpected error during account creation')
 					}
