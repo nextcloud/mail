@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.10.1 – 2021-07-12
+### Changed
+- Updated and new translations
+### Fixed
+- Upgrade error due to missing method in cached application code
+
 ## 1.10.0 – 2021-07-05
 ### Added
 - Message tagging – stores tags both locally as well as on IMAP (if supported), interoperable with other email clients
