@@ -24,6 +24,7 @@
 
 namespace OCA\Mail\Tests\Integration\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Contracts\IAvatarService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -31,9 +32,11 @@ use OCP\ICache;
 use OCP\ICacheFactory;
 
 class AvatarServiceIntegrationTest extends TestCase {
+	use TestUser;
 
 	/** @var IAvatarService */
 	private $service;
+
 
 	private function clearCache() {
 		/* @var $cacheFactory ICacheFactory */
