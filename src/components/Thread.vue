@@ -326,7 +326,7 @@ export default {
 	text-align: left;
 }
 
-#mail-content, .mail-signature {
+#mail-content {
 	margin: 10px 38px 50px 60px;
 
 	.mail-message-body-html & {
