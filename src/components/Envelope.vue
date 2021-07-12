@@ -445,6 +445,10 @@ export default {
 list-item-style.draft .app-content-list-item-line-two {
 	font-style: italic;
 }
+.list-item-style {
+	margin: 2px 4px 2px 8px;
+	width: inherit;
+}
 .list-item-style.active {
 	background-color: var(--color-primary-light);
 	border-radius: 16px;
