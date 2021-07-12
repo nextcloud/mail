@@ -60,6 +60,8 @@ OC.L10N.register(
     "Show keyboard shortcuts" : "Pokaż skróty klawiaturowe",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Zezwól aplikacji na zbieranie danych o Twoich interakcjach. Na podstawie tych danych aplikacja dostosuje się do Twoich preferencji. Dane będą przechowywane tylko lokalnie.",
     "Put my text to the bottom of a reply instead of on top of it." : "Umieść mój tekst na dole odpowiedzi, zamiast nad nią.",
+    "Automatically classify importance of new email" : "Automatycznie klasyfikuj ważność nowej wiadomości e-mail",
+    "Could not update preference" : "Nie udało się zaktualizować preferencji",
     "From" : "Od",
     "Select account" : "Wybierz konto",
     "To" : "Do",
