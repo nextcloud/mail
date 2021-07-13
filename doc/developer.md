@@ -110,10 +110,10 @@ sufficient to configure some LDAP accounts on the IMAP service.
 imap:
   image: christophwurst/imap-devel:latest
   ports:
-    - 25:25
-    - 143:143
-    - 993:993
-    - 4190:4190
+    - "25:25"
+    - "143:143"
+    - "993:993"
+    - "4190:4190"
   environment:
     - MAILNAME=mail.domain.tld
     - MAIL_ACCOUNTS=admin@test.local,password 3268b904-582d-103b-83a5-c7ccb54ec103@planetexpress.com,bender 32657d7a-582d-103b-83a4-c7ccb54ec103@planetexpress.com,amy
@@ -131,7 +131,7 @@ Please lookup the right values in the Nextcloud user management.
 
 To create a IMAP account for Amy and Bender add to MAIL_ACCOUNTS.
 
-`32657d7a-582d-103b-83a4-c7ccb54ec103,amy 3268b904-582d-103b-83a5-c7ccb54ec103,bender`
+`32657d7a-582d-103b-83a4-c7ccb54ec103@planetexpress.com,amy 3268b904-582d-103b-83a5-c7ccb54ec103@planetexpress.com,bender`
 
 The password is (for our sample data) the display name in lowercase.
 Note that accounts are seperated by a space.
