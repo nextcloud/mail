@@ -32,7 +32,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Listener\AntiSpamReportListener;
+use OCA\Mail\Listener\SpamReportListener;
 use OCP\EventDispatcher\Event;
 
 class AntiSpamReportListenerTest extends TestCase {
@@ -40,25 +40,23 @@ class AntiSpamReportListenerTest extends TestCase {
 	/** @var ServiceMockObject */
 	private $serviceMock;
 
-	/** @var AntiSpamReportListener */
+	/** @var SpamReportListener */
 	private $listener;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->serviceMock = $this->createServiceMock(AntiSpamReportListener::class);
+		$this->serviceMock = $this->createServiceMock(SpamReportListener::class);
 		$this->listener = $this->serviceMock->getService();
 	}
 
 	public function testHandleUnrelated() {
 		$event = new Event();
 
+
 		$this->serviceMock->getParameter('service')
 			->expects($this->never())
-			->method('getReportEmail');
-		$this->serviceMock->getParameter('service')
-			->expects($this->never())
-			->method('sendSpamReport');
+			->method('sendReportEmail');
 		$this->serviceMock->getParameter('logger')
 			->expects($this->never())
 			->method('error');

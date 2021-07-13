@@ -32,22 +32,22 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
-class AntiSpamReportListener implements IEventListener {
+class HamReportListener implements IEventListener {
 
 	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var AntiSpamService */
-	private $service;
+	private $antiSpamService;
 
 	public function __construct(LoggerInterface $logger,
-								AntiSpamService $service) {
+								AntiSpamService $antiSpamService) {
 		$this->logger = $logger;
-		$this->service = $service;
+		$this->antiSpamService = $antiSpamService;
 	}
 
 	public function handle(Event $event): void {
-		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== 'junk') {
+		if (!$event instanceof MessageFlaggedEvent || $event->getFlag() !== 'notjunk') {
 			return;
 		}
 
@@ -55,14 +55,14 @@ class AntiSpamReportListener implements IEventListener {
 			return;
 		}
 
-		// No anti spam config found
-		if (empty($this->service->getReportEmail())) {
+		// No ham config found
+		if (empty($this->antiSpamService->getHamEmail())) {
 			return;
 		}
 
 		//Send message to reporting service
 		try {
-			$this->service->sendSpamReport($event->getAccount(), $event->getMailbox(), $event->getUid());
+			$this->antiSpamService->sendReportEmail($event->getAccount(), $event->getMailbox(), $event->getUid(), $this->antiSpamService->getHamEmail(), $this->antiSpamService->getHamSubject());
 		} catch (ServiceException $e) {
 			$this->logger->error("Could not send spam report: " . $e->getMessage(), ['exception' => $e]);
 		}

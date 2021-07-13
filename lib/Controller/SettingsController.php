@@ -41,14 +41,14 @@ class SettingsController extends Controller {
 	private $provisioningManager;
 
 	/** @var AntiSpamService */
-	private $service;
+	private $antiSpamService;
 
 	public function __construct(IRequest $request,
 								ProvisioningManager $provisioningManager,
-								AntiSpamService $service) {
+								AntiSpamService $antiSpamService) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
-		$this->service = $service;
+		$this->antiSpamService = $antiSpamService;
 	}
 
 	public function index(): JSONResponse {
@@ -95,12 +95,14 @@ class SettingsController extends Controller {
 	}
 
 	/**
-	 * Store the credentials used for SMTP in the config
 	 *
 	 * @return JSONResponse
 	 */
-	public function setAntiSpamEmail(string $email): JSONResponse {
-		$this->service->setReportEmail($email);
+	public function setAntiSpamEmail(array $data): JSONResponse {
+		$this->antiSpamService->setSpamEmail($data['spam']);
+		$this->antiSpamService->setSpamSubject($data['spamSubject']);
+		$this->antiSpamService->setHamEmail($data['ham']);
+		$this->antiSpamService->setHamSubject($data['hamSubject']);
 		return new JSONResponse([]);
 	}
 
@@ -110,7 +112,7 @@ class SettingsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function deleteAntiSpamEmail(): JSONResponse {
-		$this->service->deleteConfig();
+		$this->antiSpamService->deleteConfig();
 		return new JSONResponse([]);
 	}
 }

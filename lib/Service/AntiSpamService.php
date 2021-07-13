@@ -58,22 +58,67 @@ class AntiSpamService {
 	/**
 	 * @codeCoverageIgnore
 	 */
-	public function getReportEmail(): string {
-		return $this->config->getAppValue('mail', self::NAME);
+	public function getSpamEmail(): string {
+		return $this->config->getAppValue('mail', self::NAME . '_spam');
 	}
 
 	/**
 	 * @codeCoverageIgnore
 	 */
-	public function setReportEmail(string $email): void {
-		$this->config->setAppValue('mail', self::NAME, $email);
+	public function getHamEmail(): string {
+		return $this->config->getAppValue('mail', self::NAME. '_ham');
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function getSpamSubject(): string {
+		return $this->config->getAppValue('mail', self::NAME . '_spam_subject');
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function getHamSubject(): string {
+		return $this->config->getAppValue('mail', self::NAME. '_ham_subject');
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function setSpamEmail(string $email): void {
+		$this->config->setAppValue('mail', self::NAME . '_spam', $email);
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function setHamEmail(string $email): void {
+		$this->config->setAppValue('mail', self::NAME. '_ham', $email);
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function setSpamSubject(string $subject): void {
+		$this->config->setAppValue('mail', self::NAME . '_spam_subject', $subject);
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function setHamSubject(string $subject): void {
+		$this->config->setAppValue('mail', self::NAME. '_ham_subject', $subject);
 	}
 
 	/**
 	 * @codeCoverageIgnore
 	 */
 	public function deleteConfig(): void {
-		$this->config->deleteAppValue('mail', self::NAME);
+		$this->config->deleteAppValue('mail', self::NAME . '_spam');
+		$this->config->deleteAppValue('mail', self::NAME . '_spam_subject');
+		$this->config->deleteAppValue('mail', self::NAME . '_ham');
+		$this->config->deleteAppValue('mail', self::NAME . '_ham_subject');
 	}
 
 	/**
@@ -82,12 +127,7 @@ class AntiSpamService {
 	 * @param int $uid
 	 * @throws ServiceException
 	 */
-	public function sendSpamReport(Account $account, Mailbox $mailbox, int $uid): void {
-		if (empty($this->getReportEmail())) {
-			// fail silently
-			return;
-		}
-
+	public function sendReportEmail(Account $account, Mailbox $mailbox, int $uid, string $reportEmail, string $subject): void {
 		$attachedMessageId = $this->messageMapper->getIdForUid($mailbox, $uid);
 		if ($attachedMessageId === null) {
 			throw new ServiceException('Could not find reported message');
@@ -95,11 +135,11 @@ class AntiSpamService {
 
 		$messageData = NewMessageData::fromRequest(
 			$account,
-			$this->config->getAppValue('mail', self::NAME),
+			$reportEmail,
 			null,
 			null,
-			self::NAME,
-			'',
+			$subject,
+			$subject, // add any message body - not all IMAP servers accept empty emails
 			[['id' => $attachedMessageId, 'type' => self::MESSAGE_TYPE]]
 		);
 

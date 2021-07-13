@@ -39,15 +39,16 @@ class AdminSettings implements ISettings {
 
 	/** @var ProvisioningManager */
 	private $provisioningManager;
+
 	/** @var AntiSpamService */
-	private $service;
+	private $antiSpamService;
 
 	public function __construct(IInitialStateService $initialStateService,
 								ProvisioningManager $provisioningManager,
-								AntiSpamService $service) {
+								AntiSpamService $antiSpamService) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
-		$this->service = $service;
+		$this->antiSpamService = $antiSpamService;
 	}
 
 	public function getForm() {
@@ -60,7 +61,12 @@ class AdminSettings implements ISettings {
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
 			'antispam_setting',
-			$this->service->getReportEmail()
+			[
+				'spam' => $this->antiSpamService->getSpamEmail(),
+				'spamSubject' => $this->antiSpamService->getSpamSubject(),
+				'ham' => $this->antiSpamService->getHamEmail(),
+				'hamSubject' => $this->antiSpamService->getHamSubject()
+			]
 		);
 
 

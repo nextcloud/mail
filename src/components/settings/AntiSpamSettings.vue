@@ -29,14 +29,42 @@
 			<form id="antispam-form" @submit.prevent.stop="submitForm">
 				<div class="settings-group">
 					<div class="group-inputs">
-						<label for="mail-antispam-email"> {{ t('mail', 'Email address') }}* </label>
-						<br>
+						<label for="mail-antispam-email-spam"> {{ t('mail', 'Spam Email address') }}* </label>
 						<input
-							id="mail-antispam-email"
-							v-model="email"
+							id="mail-antispam-email-spam"
+							v-model="spam"
 							:disabled="loading"
-							name="email"
+							name="spam"
 							type="email">
+						<label for="mail-antispam-email-spam-subject"> {{ t('mail', 'Spam Email Subject') }}* </label>
+						<input
+							id="mail-antispam-email-spam-subject"
+							v-model="spamSubject"
+							:disabled="loading"
+							name="spamSubject"
+							type="text">
+					</div>
+				</div>
+				<div class="settings-group">
+					<div class="group-inputs">
+						<label for="mail-antispam-email-ham"> {{ t('mail', 'Not Spam Email address') }}* </label>
+						<input
+							id="mail-antispam-email-ham"
+							v-model="ham"
+							:disabled="loading"
+							name="ham"
+							type="email">
+						<label for="mail-antispam-email-ham-subject"> {{ t('mail', 'Not Spam Email Subject') }}* </label>
+						<input
+							id="mail-antispam-email-ham-subject"
+							v-model="hamSubject"
+							:disabled="loading"
+							name="hamSubject"
+							type="text">
+					</div>
+				</div>
+				<div class="settings-group">
+					<div class="group-inputs">
 						<input
 							:disabled="loading"
 							:value="t('mail', 'Save')"
@@ -60,13 +88,16 @@ import { loadState } from '@nextcloud/initial-state'
 import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 
-const email = loadState('mail', 'antispam_setting', '')
+const email = loadState('mail', 'antispam_setting', '[]')
 
 export default {
 	name: 'AntiSpamSettings',
 	data() {
 		return {
-			email,
+			ham: email.ham,
+			hamSubject: email.hamSubject,
+			spam: email.spam,
+			spamSubject: email.spamSubject,
 			loading: false,
 		}
 	},
@@ -75,12 +106,12 @@ export default {
 			this.loading = true
 
 			try {
-				await setAntiSpamEmail(this.email)
+				await setAntiSpamEmail(this.spam, this.spamSubject, this.ham, this.hamSubject)
 				logger.info('anti spam email updated')
-				showSuccess(t('mail', 'Successfully set up anti spam reporting email'))
+				showSuccess(t('mail', 'Successfully set up anti spam email addresses'))
 			} catch (error) {
 				logger.error('Could not save email setting', { error })
-				showError(t('mail', 'Error saving anti spam reporting email'))
+				showError(t('mail', 'Error saving anti spam email addresses'))
 			} finally {
 				this.loading = false
 			}
@@ -97,7 +128,10 @@ export default {
 
 			} finally {
 				this.loading = false
-				this.email = ''
+				this.ham = ''
+				this.hamSubject = ''
+				this.spam = ''
+				this.spamSubject = ''
 			}
 		},
 	},
