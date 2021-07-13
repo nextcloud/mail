@@ -60,6 +60,8 @@ OC.L10N.register(
     "Show keyboard shortcuts" : "Tuş takımı kısayollarını görüntüle",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Uygulamanın etkileşimleriniz ile ilgili veri toplamasına izin verin. Uygulama bu verilere göre ayarlarınızı değiştirir. Veriler yalnız yerel olarak saklanır ve başka bir yere aktarılmaz.",
     "Put my text to the bottom of a reply instead of on top of it." : "Yanıtlarken yazacağım metin en üst yerine en alta eklensin.",
+    "Automatically classify importance of new email" : "Yeni e-postaların önem düzeyi otomatik olarak belirlensin",
+    "Could not update preference" : "Ayar güncellenemedi",
     "From" : "Kimden",
     "Select account" : "Hesap seçin",
     "To" : "Kime",
