@@ -18,6 +18,17 @@ DROP TABLE oc_mail_tags;
 DROP TABLE oc_mail_message_tags;
 ```
 
+## Enable CKEditor Inspector
+
+![ckeditor inspector](./ckeditor_inspector.png)
+
+- `npm install --save-dev @ckeditor/ckeditor5-inspector`.
+- Open `src/components/TextEditor.vue` (CKEditor is initialized in this component).
+- Import the module `import CKEditorInspector from '@ckeditor/ckeditor5-inspector';`
+- Add `CKEditorInspector.attach( editor );` to `onEditorReady`
+
+Documentation: https://ckeditor.com/docs/ckeditor5/latest/framework/guides/development-tools.html
+
 ## Testing LDAP aliases provisioning
 
 Testing the ldap aliases provisioning requires:
