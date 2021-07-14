@@ -46,7 +46,8 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 	public function setUp():void {
 		parent::setUp();
 		$this->service = OC::$server->get(AntiSpamService::class);
-		$this->service->setReportEmail('user@domain.tld');
+		$this->service->setSpamEmail('spam@domain.tld');
+		$this->service->setHamEmail('notspam@domain.tld');
 	}
 
 	public function tearDown(): void {
@@ -97,6 +98,12 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 
 		// if everything runs through, we can assert the run has been fine,
 		// but we can't really test if Listener and Transmission have actually sent the message
+		$this->addToAssertionCount(1);
+
+		// now we flag this message as not junk
+		$mailManager->flagMessage(new Account($account), $inbox->getName(), $newUid, 'notjunk', true);
+
+		// same as before
 		$this->addToAssertionCount(1);
 	}
 }

@@ -49,9 +49,7 @@ class AntiSpamServiceNotActiveTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->config = $this->createConfiguredMock(IConfig::class, [
-			'getAppValue' => ''
-		]);
+		$this->config = $this->createMock(IConfig::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->transmission = $this->createMock(IMailTransmission::class);
 
@@ -70,6 +68,6 @@ class AntiSpamServiceNotActiveTest extends TestCase {
 		$this->transmission->expects($this->never())
 			->method('sendMessage');
 
-		$this->service->sendSpamReport($account, $mailbox, 123);
+		$this->service->sendReportEmail($account, $mailbox, 123, '', 'Learn as Junk');
 	}
 }

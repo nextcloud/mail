@@ -32,10 +32,11 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Listener\HamReportListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCP\EventDispatcher\Event;
 
-class SpamReportListenerTest extends TestCase {
+class HamReportListenerTest extends TestCase {
 
 	/** @var ServiceMockObject */
 	private $serviceMock;
@@ -46,7 +47,7 @@ class SpamReportListenerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->serviceMock = $this->createServiceMock(SpamReportListener::class);
+		$this->serviceMock = $this->createServiceMock(HamReportListener::class);
 		$this->listener = $this->serviceMock->getService();
 	}
 
@@ -77,7 +78,7 @@ class SpamReportListenerTest extends TestCase {
 
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->never())
-			->method('getSpamEmail');
+			->method('getHamEmail');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->never())
 			->method('sendReportEmail');
@@ -95,7 +96,7 @@ class SpamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'junk',
+			'notjunk',
 			false
 		);
 
@@ -116,13 +117,13 @@ class SpamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'junk',
+			'notjunk',
 			true
 		);
 
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->once())
-			->method('getSpamEmail')
+			->method('getHamEmail')
 			->willReturn('');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->never())
@@ -141,22 +142,22 @@ class SpamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'junk',
+			'notjunk',
 			true
 		);
 
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->exactly(2))
-			->method('getSpamEmail')
+			->method('getHamEmail')
 			->willReturn('SpammitySpam@WonderfulSpam.egg');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->once())
-			->method('getSpamSubject')
-			->willReturn('Learn as Junk');
+			->method('getHamSubject')
+			->willReturn('Learn as Not Junk');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->once())
 			->method('sendReportEmail')
-			->with($account, $mailbox, 123, 'SpammitySpam@WonderfulSpam.egg', 'Learn as Junk')
+			->with($account, $mailbox, 123, 'SpammitySpam@WonderfulSpam.egg', 'Learn as Not Junk')
 			->willThrowException(new ServiceException());
 		$this->serviceMock->getParameter('logger')
 			->expects($this->once())
@@ -172,22 +173,22 @@ class SpamReportListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'junk',
+			'notjunk',
 			true
 		);
 
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->exactly(2))
-			->method('getSpamEmail')
+			->method('getHamEmail')
 			->willReturn('SpammitySpam@WonderfulSpam.egg');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->once())
-			->method('getSpamSubject')
-			->willReturn('Learn as Junk');
+			->method('getHamSubject')
+			->willReturn('Learn as Not Junk');
 		$this->serviceMock->getParameter('antiSpamService')
 			->expects($this->once())
 			->method('sendReportEmail')
-			->with($account, $mailbox, 123, 'SpammitySpam@WonderfulSpam.egg', 'Learn as Junk');
+			->with($account, $mailbox, 123, 'SpammitySpam@WonderfulSpam.egg', 'Learn as Not Junk');
 		$this->serviceMock->getParameter('logger')
 			->expects($this->never())
 			->method('error');

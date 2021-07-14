@@ -112,6 +112,11 @@ class AntiSpamService {
 	 * @throws ServiceException
 	 */
 	public function sendReportEmail(Account $account, Mailbox $mailbox, int $uid, string $reportEmail, string $subject): void {
+		if(empty($reportEmail)) {
+			// quietly fail
+			return;
+		}
+
 		$attachedMessageId = $this->messageMapper->getIdForUid($mailbox, $uid);
 		if ($attachedMessageId === null) {
 			throw new ServiceException('Could not find reported message');
@@ -130,7 +135,7 @@ class AntiSpamService {
 		try {
 			$this->transmission->sendMessage($messageData);
 		} catch (SentMailboxNotSetException | ServiceException $e) {
-			throw new ServiceException('Could not send spam report', 0, $e);
+			throw new ServiceException('Could not send report email from anti spam email service', 0, $e);
 		}
 	}
 }

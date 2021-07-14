@@ -51,9 +51,7 @@ class AntiSpamServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->config = $this->createConfiguredMock(IConfig::class, [
-			'getAppValue' => 'test@test.com'
-		]);
+		$this->config = $this->createMock(IConfig::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->transmission = $this->createMock(IMailTransmission::class);
 
@@ -64,7 +62,7 @@ class AntiSpamServiceTest extends TestCase {
 		);
 	}
 
-	public function testSendSpamReportNoMessageFound(): void {
+	public function testSendReportEmailNoMessageFound(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 
@@ -76,10 +74,10 @@ class AntiSpamServiceTest extends TestCase {
 		$this->transmission->expects($this->never())
 			->method('sendMessage');
 
-		$this->service->sendSpamReport($account, $mailbox, 123);
+		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Junk');
 	}
 
-	public function testSendSpamReportTransmissionError(): void {
+	public function testsendReportEmailTransmissionError(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$messageData = NewMessageData::fromRequest(
@@ -87,8 +85,8 @@ class AntiSpamServiceTest extends TestCase {
 			'test@test.com',
 			null,
 			null,
-			'antispam_reporting',
-			'',
+			'Learn as Junk',
+			'Learn as Junk',
 			[['id' => 123, 'type' => 'message/rfc822']]
 		);
 
@@ -102,10 +100,10 @@ class AntiSpamServiceTest extends TestCase {
 			->willThrowException(new ServiceException());
 		$this->expectException(ServiceException::class);
 
-		$this->service->sendSpamReport($account, $mailbox, 123);
+		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Junk');
 	}
 
-	public function testSendSpamReport(): void {
+	public function testSendReportEmail(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$messageData = NewMessageData::fromRequest(
@@ -113,8 +111,8 @@ class AntiSpamServiceTest extends TestCase {
 			'test@test.com',
 			null,
 			null,
-			'antispam_reporting',
-			'',
+			'Learn as Junk',
+			'Learn as Junk',
 			[['id' => 123, 'type' => 'message/rfc822']]
 		);
 
@@ -126,6 +124,30 @@ class AntiSpamServiceTest extends TestCase {
 			->method('sendMessage')
 			->with($messageData);
 
-		$this->service->sendSpamReport($account, $mailbox, 123);
+		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Junk');
+	}
+
+	public function testSendReportEmailForHam(): void {
+		$account = $this->createMock(Account::class);
+		$mailbox = $this->createMock(Mailbox::class);
+		$messageData = NewMessageData::fromRequest(
+			$account,
+			'test@test.com',
+			null,
+			null,
+			'Learn as Not Junk',
+			'Learn as Not Junk',
+			[['id' => 123, 'type' => 'message/rfc822']]
+		);
+
+		$this->messageMapper->expects($this->once())
+			->method('getIdForUid')
+			->with($mailbox, 123)
+			->willReturn(123);
+		$this->transmission->expects($this->once())
+			->method('sendMessage')
+			->with($messageData);
+
+		$this->service->sendReportEmail($account, $mailbox, 123, 'test@test.com', 'Learn as Not Junk');
 	}
 }
