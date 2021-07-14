@@ -33,7 +33,7 @@ class IspDb {
 	/** @var LoggerInterface */
 	private $logger;
 
-	/** @var string[] */
+	/** @returns string[] */
 	public function getUrls(): array {
 		return [
 			'{SCHEME}://autoconfig.{DOMAIN}/mail/config-v1.1.xml?emailaddress={EMAIL}',
