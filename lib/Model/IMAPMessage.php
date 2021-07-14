@@ -678,11 +678,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @param string $message
+	 * @param string $id
 	 *
 	 * @return void
 	 */
-	public function setInReplyTo(string $message) {
+	public function setInReplyTo(string $id) {
 		throw new Exception('not implemented');
 	}
 
