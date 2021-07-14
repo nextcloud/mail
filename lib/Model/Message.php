@@ -237,6 +237,23 @@ class Message implements IMessage {
 	}
 
 	/**
+	 * @param string $name
+	 * @param string $content
+	 *
+	 * @return void
+	 */
+	public function addEmbeddedMessageAttachment(string $name, string $content): void {
+		$mime = 'message/rfc822';
+		$part = new Horde_Mime_Part();
+		$part->setCharset('us-ascii');
+		$part->setDisposition('attachment');
+		$part->setName($name);
+		$part->setContents($content);
+		$part->setType($mime);
+		$this->attachments[] = $part;
+	}
+
+	/**
 	 * @param File $file
 	 *
 	 * @return void

@@ -58,3 +58,13 @@ export const disableProvisioning = (id) => {
 	})
 	return axios.delete(url).then((resp) => resp.data)
 }
+
+export const setAntiSpamEmail = (data) => {
+	return axios.post(generateUrl('/apps/mail/api/settings/antispam'), { data })
+		.then((resp) => resp.data)
+}
+
+export const deleteAntiSpamEmail = () => {
+	return axios.delete(generateUrl('/apps/mail/api/settings/antispam'))
+		.then((resp) => resp.data)
+}

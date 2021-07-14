@@ -327,6 +327,9 @@ class MailTransmission implements IMailTransmission {
 			} elseif (isset($attachment['type']) && $attachment['type'] === 'message') {
 				// Adds another message as attachment
 				$this->handleForwardedMessageAttachment($account, $attachment, $message);
+			} elseif (isset($attachment['type']) && $attachment['type'] === 'message/rfc822') {
+				// Adds another message as attachment with mime type 'message/rfc822
+				$this->handleEmbeddedMessageAttachments($account, $attachment, $message);
 			} elseif (isset($attachment['type']) && $attachment['type'] === 'message-attachment') {
 				// Adds an attachment from another email (use case is, eg., a mail forward)
 				$this->handleForwardedAttachment($account, $attachment, $message);
@@ -386,6 +389,32 @@ class MailTransmission implements IMailTransmission {
 			$fullText
 		);
 	}
+
+	/**
+	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
+	 *
+	 * @param Account $account
+	 * @param mixed[] $attachment
+	 * @param IMessage $message
+	 */
+	private function handleEmbeddedMessageAttachments(Account $account, array $attachment, IMessage $message): void {
+		// Gets original of other message
+		$userId = $account->getMailAccount()->getUserId();
+		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
+		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
+
+		$fullText = $this->messageMapper->getFullText(
+			$this->imapClientFactory->getClient($account),
+			$mailbox->getName(),
+			$attachmentMessage->getUid()
+		);
+
+		$message->addEmbeddedMessageAttachment(
+			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
+			$fullText
+		);
+	}
+
 
 	/**
 	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)

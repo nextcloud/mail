@@ -48,6 +48,7 @@ trait ImapTestAccount {
 
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId($this->getTestAccountUserId());
+		$mailAccount->setName('Tester');
 		$mailAccount->setEmail('user@domain.tld');
 		$mailAccount->setInboundHost('127.0.0.1');
 		$mailAccount->setInboundPort(993);

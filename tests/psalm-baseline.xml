@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.x-dev@">
   <file src="lib/AppInfo/Application.php">
-    <MissingDependency occurrences="12">
+    <MissingDependency occurrences="13">
       <code>DraftSavedEvent</code>
       <code>MailboxesSynchronizedEvent</code>
       <code>MessageDeletedEvent</code>
+      <code>MessageFlaggedEvent</code>
       <code>MessageFlaggedEvent</code>
       <code>MessageSentEvent</code>
       <code>MessageSentEvent</code>
@@ -207,6 +208,12 @@
     <MissingDependency occurrences="2">
       <code>AddressCollectionListener</code>
       <code>MessageSentEvent</code>
+    </MissingDependency>
+  </file>
+  <file src="lib/Listener/AntiSpamReportListener.php">
+    <MissingDependency occurrences="2">
+      <code>AntiSpamReportListener</code>
+      <code>MessageFlaggedEvent</code>
     </MissingDependency>
   </file>
   <file src="lib/Listener/DashboardPanelListener.php">
