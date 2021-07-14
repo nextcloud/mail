@@ -83,6 +83,6 @@ class HtmlResponse extends Response {
 			return $this->content;
 		}
 
-		return '<script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script>' . $this->content;
+		return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script></head><body>' . $this->content . '</body></html>';
 	}
 }
