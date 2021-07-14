@@ -25,46 +25,31 @@
 		<p>
 			{{ t('mail', 'Add the email address of your anti spam report service here.') }}
 		</p>
+		<p>
+			{{ t('mail', 'When using this setting, an email will be sent to the SPAM report server with the original message as a "message/rfc822" attachment when a user clicks the "Mark as spam".') }}
+		</p>
 		<div class="form-preview-row">
 			<form id="antispam-form" @submit.prevent.stop="submitForm">
 				<div class="settings-group">
 					<div class="group-inputs">
-						<label for="mail-antispam-email-spam"> {{ t('mail', 'Spam Email address') }}* </label>
+						<label for="mail-antispam-email-spam"> {{ t('mail', '"Mark as Spam" Email Address') }}* </label>
+						<br>
 						<input
 							id="mail-antispam-email-spam"
-							v-model="spam"
+							v-model="email.spam"
 							:disabled="loading"
 							name="spam"
 							type="email">
-						<label for="mail-antispam-email-spam-subject"> {{ t('mail', 'Spam Email Subject') }}* </label>
-						<input
-							id="mail-antispam-email-spam-subject"
-							v-model="spamSubject"
-							:disabled="loading"
-							name="spamSubject"
-							type="text">
-					</div>
-				</div>
-				<div class="settings-group">
-					<div class="group-inputs">
-						<label for="mail-antispam-email-ham"> {{ t('mail', 'Not Spam Email address') }}* </label>
+						<br>
+						<label for="mail-antispam-email-ham"> {{ t('mail', '"Mark Not Junk" Email Address') }}* </label>
+						<br>
 						<input
 							id="mail-antispam-email-ham"
-							v-model="ham"
+							v-model="email.ham"
 							:disabled="loading"
 							name="ham"
 							type="email">
-						<label for="mail-antispam-email-ham-subject"> {{ t('mail', 'Not Spam Email Subject') }}* </label>
-						<input
-							id="mail-antispam-email-ham-subject"
-							v-model="hamSubject"
-							:disabled="loading"
-							name="hamSubject"
-							type="text">
-					</div>
-				</div>
-				<div class="settings-group">
-					<div class="group-inputs">
+						<br>
 						<input
 							:disabled="loading"
 							:value="t('mail', 'Save')"
@@ -94,10 +79,7 @@ export default {
 	name: 'AntiSpamSettings',
 	data() {
 		return {
-			ham: email.ham,
-			hamSubject: email.hamSubject,
-			spam: email.spam,
-			spamSubject: email.spamSubject,
+			email,
 			loading: false,
 		}
 	},
@@ -106,7 +88,7 @@ export default {
 			this.loading = true
 
 			try {
-				await setAntiSpamEmail(this.spam, this.spamSubject, this.ham, this.hamSubject)
+				await setAntiSpamEmail(email)
 				logger.info('anti spam email updated')
 				showSuccess(t('mail', 'Successfully set up anti spam email addresses'))
 			} catch (error) {
@@ -128,10 +110,7 @@ export default {
 
 			} finally {
 				this.loading = false
-				this.ham = ''
-				this.hamSubject = ''
-				this.spam = ''
-				this.spamSubject = ''
+				this.email = []
 			}
 		},
 	},

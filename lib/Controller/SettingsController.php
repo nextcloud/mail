@@ -100,9 +100,7 @@ class SettingsController extends Controller {
 	 */
 	public function setAntiSpamEmail(array $data): JSONResponse {
 		$this->antiSpamService->setSpamEmail($data['spam']);
-		$this->antiSpamService->setSpamSubject($data['spamSubject']);
 		$this->antiSpamService->setHamEmail($data['ham']);
-		$this->antiSpamService->setHamSubject($data['hamSubject']);
 		return new JSONResponse([]);
 	}
 

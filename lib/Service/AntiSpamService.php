@@ -73,14 +73,14 @@ class AntiSpamService {
 	 * @codeCoverageIgnore
 	 */
 	public function getSpamSubject(): string {
-		return $this->config->getAppValue('mail', self::NAME . '_spam_subject');
+		return 'Learn as Junk';
 	}
 
 	/**
 	 * @codeCoverageIgnore
 	 */
 	public function getHamSubject(): string {
-		return $this->config->getAppValue('mail', self::NAME. '_ham_subject');
+		return 'Learn as Not Junk';
 	}
 
 	/**
@@ -100,25 +100,9 @@ class AntiSpamService {
 	/**
 	 * @codeCoverageIgnore
 	 */
-	public function setSpamSubject(string $subject): void {
-		$this->config->setAppValue('mail', self::NAME . '_spam_subject', $subject);
-	}
-
-	/**
-	 * @codeCoverageIgnore
-	 */
-	public function setHamSubject(string $subject): void {
-		$this->config->setAppValue('mail', self::NAME. '_ham_subject', $subject);
-	}
-
-	/**
-	 * @codeCoverageIgnore
-	 */
 	public function deleteConfig(): void {
 		$this->config->deleteAppValue('mail', self::NAME . '_spam');
-		$this->config->deleteAppValue('mail', self::NAME . '_spam_subject');
 		$this->config->deleteAppValue('mail', self::NAME . '_ham');
-		$this->config->deleteAppValue('mail', self::NAME . '_ham_subject');
 	}
 
 	/**

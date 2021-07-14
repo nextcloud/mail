@@ -63,9 +63,7 @@ class AdminSettings implements ISettings {
 			'antispam_setting',
 			[
 				'spam' => $this->antiSpamService->getSpamEmail(),
-				'spamSubject' => $this->antiSpamService->getSpamSubject(),
 				'ham' => $this->antiSpamService->getHamEmail(),
-				'hamSubject' => $this->antiSpamService->getHamSubject()
 			]
 		);
 
