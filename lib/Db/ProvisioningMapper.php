@@ -51,11 +51,11 @@ class ProvisioningMapper extends QBMapper {
 	 *
 	 * @return Provisioning[]
 	 */
-	public function getAll() : array {
+	public function getAll(): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb = $qb->select('*')
-				->from($this->getTableName())
-				->orderBy('provisioning_domain', 'desc');
+			->from($this->getTableName())
+			->orderBy('provisioning_domain', 'desc');
 		try {
 			return $this->findEntities($qb);
 		} catch (DoesNotExistException $e) {
@@ -69,7 +69,7 @@ class ProvisioningMapper extends QBMapper {
 	 * @return Provisioning
 	 * @throws ValidationException
 	 */
-	public function validate(array $data) : Provisioning {
+	public function validate(array $data): Provisioning {
 		$exception = new ValidationException();
 
 		if (!isset($data['provisioningDomain']) || $data['provisioningDomain'] === '') {
@@ -103,10 +103,16 @@ class ProvisioningMapper extends QBMapper {
 			$exception->setField('smtpSslMode', false);
 		}
 
+		$ldapAliasesProvisioning = (bool)($data['ldapAliasesProvisioning'] ?? false);
+		$ldapAliasesAttribute = $data['ldapAliasesAttribute'] ?? '';
+
+		if ($ldapAliasesProvisioning && empty($ldapAliasesAttribute)) {
+			$exception->setField('ldapAliasesAttribute', false);
+		}
+
 		if (!empty($exception->getFields())) {
 			throw $exception;
 		}
-
 
 		$provisioning = new Provisioning();
 		$provisioning->setId($data['id'] ?? null);
@@ -127,14 +133,17 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSievePort($data['sievePort'] ?? null);
 		$provisioning->setSieveSslMode($data['sieveSslMode'] ?? '');
 
+		$provisioning->setLdapAliasesProvisioning($ldapAliasesProvisioning);
+		$provisioning->setLdapAliasesAttribute($ldapAliasesAttribute);
+
 		return $provisioning;
 	}
 
 	public function get(int $id): ?Provisioning {
 		$qb = $this->db->getQueryBuilder();
 		$qb = $qb->select('*')
-				->from($this->getTableName())
-				->where($qb->expr()->eq('id', $qb->createNamedParameter($id), IQueryBuilder::PARAM_INT));
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($id), IQueryBuilder::PARAM_INT));
 		try {
 			return $this->findEntity($qb);
 		} catch (DoesNotExistException $e) {

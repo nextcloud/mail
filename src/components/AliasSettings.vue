@@ -20,44 +20,40 @@
 <template>
 	<div>
 		<ul class="aliases-list">
-			<li v-for="curAlias in aliases" :key="curAlias.id">
-				<strong>{{ curAlias.name }}</strong> &lt;{{ curAlias.alias }}&gt;
-
-				<button class="icon-delete" @click="deleteAlias(curAlias)" />
+			<li v-for="alias in aliases" :key="alias.id">
+				<AliasForm :account="account" :alias="alias" />
+			</li>
+			<li v-if="showForm">
+				<form id="createAliasForm" @submit.prevent="createAlias">
+					<input v-model="newName"
+						type="text"
+						:placeholder="t('mail', 'Name')"
+						required>
+					<input v-model="newAlias"
+						type="email"
+						:placeholder="t('mail', 'Email-Address')"
+						required>
+				</form>
 			</li>
 		</ul>
 
-		<div>
-			<input
-				v-if="addMode"
-				id="alias-name"
-				v-model="alias.aliasName"
-				type="text"
-				:placeholder="t('mail', 'Name')"
-				:disabled="loading">
-
-			<input
-				v-if="addMode"
-				id="alias"
-				ref="email"
-				v-model="alias.alias"
-				type="email"
-				:placeholder="t('mail', 'Mail Address')"
-				:disabled="loading">
-		</div>
-
-		<div>
-			<button v-if="!addMode" class="primary icon-add" @click="enabledAddMode">
+		<div v-if="!account.provisioningId">
+			<button v-if="!showForm" class="primary icon-add" @click="showForm = true">
 				{{ t('mail', 'Add alias') }}
 			</button>
 
-			<button
-				v-if="addMode"
+			<button v-if="showForm"
 				class="primary"
 				:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
-				:disabled="loading"
-				@click="saveAlias">
-				{{ t('mail', 'Save') }}
+				type="submit"
+				form="createAliasForm"
+				:disabled="loading">
+				{{ t('mail', 'Create alias') }}
+			</button>
+			<button v-if="showForm"
+				class="button-text"
+				@click="resetCreate">
+				{{ t("mail", "Cancel") }}
 			</button>
 		</div>
 	</div>
@@ -65,10 +61,11 @@
 
 <script>
 import logger from '../logger'
-import Vue from 'vue'
+import AliasForm from './AliasForm'
 
 export default {
 	name: 'AliasSettings',
+	components: { AliasForm },
 	props: {
 		account: {
 			type: Object,
@@ -77,9 +74,10 @@ export default {
 	},
 	data() {
 		return {
-			addMode: false,
+			newAlias: '',
+			newName: this.account.name,
+			showForm: false,
 			loading: false,
-			alias: { aliasName: this.account.name, alias: '' },
 		}
 	},
 	computed: {
@@ -88,25 +86,28 @@ export default {
 		},
 	},
 	methods: {
-		enabledAddMode() {
-			this.addMode = true
-			Vue.nextTick(this.focusEmailField)
-		},
-		focusEmailField() {
-			this.$refs.email.focus()
-		},
-		async deleteAlias(alias) {
+		async createAlias() {
 			this.loading = true
-			await this.$store.dispatch('deleteAlias', { account: this.account, aliasToDelete: alias })
-			logger.info('alias deleted')
+
+			await this.$store.dispatch('createAlias', {
+				account: this.account,
+				alias: this.newAlias,
+				name: this.newName,
+			})
+
+			logger.debug('created alias', {
+				accountId: this.account.id,
+				alias: this.newAlias,
+				name: this.newName,
+			})
+
+			this.resetCreate()
 			this.loading = false
 		},
-		async saveAlias() {
-			this.loading = true
-			await this.$store.dispatch('createAlias', { account: this.account, aliasToAdd: this.alias })
-			logger.info('alias added')
-			this.alias = { aliasName: this.account.name, alias: '' }
-			this.loading = false
+		resetCreate() {
+			this.newAlias = ''
+			this.newName = this.account.name
+			this.showForm = false
 		},
 	},
 }
@@ -122,23 +123,23 @@ export default {
 		left: 14px;
 	}
 }
+
+.button-text {
+	background-color: transparent;
+	border: none;
+	color: var(--color-text-maxcontrast);
+	font-weight: normal;
+
+	&:hover,
+	&:focus {
+		color: var(--color-main-text);
+	}
+}
+
 input {
 	width: 195px;
 }
-.aliases-list {
-	margin: 0.5rem 0rem;
-}
-.icon-delete {
-	vertical-align: bottom;
-	background-image: var(--icon-delete-000);
-	background-color: var(--color-main-background);
-	border: none;
-	opacity: 0.7;
-	&:hover,
-	&:focus {
-		opacity: 1;
-	}
-}
+
 .icon-add {
 	background-image: var(--icon-add-fff);
 }

@@ -60,6 +60,8 @@ class SettingsController extends Controller {
 			$this->provisioningManager->newProvisioning($data);
 		} catch (ValidationException $e) {
 			return HttpJsonResponse::fail([$e->getFields()]);
+		} catch (\Exception $e) {
+			return HttpJsonResponse::fail([$e->getMessage()]);
 		}
 
 		return new JSONResponse([]);
@@ -67,12 +69,11 @@ class SettingsController extends Controller {
 
 	public function updateProvisioning(int $id, array $data): JSONResponse {
 		try {
-			$this->provisioningManager->updateProvisioning(array_merge(
-				$data,
-				['id' => $id]
-			));
+			$this->provisioningManager->updateProvisioning(array_merge($data, ['id' => $id]));
 		} catch (ValidationException $e) {
 			return HttpJsonResponse::fail([$e->getFields()]);
+		} catch (\Exception $e) {
+			return HttpJsonResponse::fail([$e->getMessage()]);
 		}
 
 		return new JSONResponse([]);

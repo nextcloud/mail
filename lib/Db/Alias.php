@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Db;
 
 use JsonSerializable;
-
 use OCP\AppFramework\Db\Entity;
 
 /**
@@ -36,6 +35,8 @@ use OCP\AppFramework\Db\Entity;
  * @method string getAlias()
  * @method void setSignature(string|null $signature)
  * @method string|null getSignature()
+ * @method void setProvisioningId(int $provisioningId)
+ * @method int|null getProvisioningId()
  */
 class Alias extends Entity implements JsonSerializable {
 
@@ -51,10 +52,18 @@ class Alias extends Entity implements JsonSerializable {
 	/** @var string|null */
 	protected $signature;
 
+	/** @var int|null */
+	protected $provisioningId;
+
 	public function __construct() {
 		$this->addType('accountId', 'int');
 		$this->addType('name', 'string');
 		$this->addType('alias', 'string');
+		$this->addType('provisioningId', 'int');
+	}
+
+	public function isProvisioned(): bool {
+		return $this->getProvisioningId() !== null;
 	}
 
 	public function jsonSerialize(): array {
@@ -63,6 +72,7 @@ class Alias extends Entity implements JsonSerializable {
 			'name' => $this->getName(),
 			'alias' => $this->getAlias(),
 			'signature' => $this->getSignature(),
+			'provisioned' => $this->isProvisioned(),
 		];
 	}
 }
