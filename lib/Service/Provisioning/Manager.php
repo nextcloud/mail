@@ -156,7 +156,7 @@ class Manager {
 
 		/** @psalm-suppress UndefinedInterfaceMethod */
 		if ($this->ldapProviderFactory->isAvailable() === false) {
-			$this->logger->debug('Request to provision mail aliases but ldap not available');
+			$this->logger->debug('Request to provision mail aliases but LDAP not available');
 			return $provisioning;
 		}
 
