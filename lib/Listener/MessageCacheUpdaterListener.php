@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Listener;
 
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Events\MessagesDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -59,11 +59,14 @@ class MessageCacheUpdaterListener implements IEventListener {
 			$message->setFlag($event->getFlag(), $event->isSet());
 
 			$this->mapper->update($message);
-		} elseif ($event instanceof MessageDeletedEvent) {
-			$this->mapper->deleteByUid(
-				$event->getMailbox(),
-				$event->getMessageId()
-			);
+		} elseif ($event instanceof MessagesDeletedEvent) {
+			$mailbox = $event->getMailbox();
+			foreach ($event->getMessageUids() as $uid) {
+				$this->mapper->deleteByUid(
+					$mailbox,
+					$uid
+				);
+			};
 		}
 	}
 }

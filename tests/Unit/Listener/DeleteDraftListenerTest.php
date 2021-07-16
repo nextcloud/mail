@@ -32,7 +32,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
-use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Events\MessagesDeletedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -247,10 +247,10 @@ class DeleteDraftListenerTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('error');
 
-		$messageDeletedEvent = new MessageDeletedEvent(
+		$messageDeletedEvent = new MessagesDeletedEvent(
 			$account,
 			$mailbox,
-			$draft->getUid()
+			[$draft->getUid()]
 		);
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')

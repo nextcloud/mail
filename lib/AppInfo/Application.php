@@ -37,7 +37,7 @@ use OCA\Mail\Dashboard\UnreadMailWidget;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
-use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Events\MessagesDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
@@ -101,7 +101,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MailboxesSynchronizedEvent::class, MailboxesSynchronizedSpecialMailboxesUpdater::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
-		$context->registerEventListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
+		$context->registerEventListener(MessagesDeletedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageSentEvent::class, AddressCollectionListener::class);
 		$context->registerEventListener(MessageSentEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MessageSentEvent::class, FlagRepliedMessageListener::class);

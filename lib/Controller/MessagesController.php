@@ -38,6 +38,7 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -314,7 +315,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $id
+	 * @param int[] $ids
 	 * @param int $destFolderId
 	 *
 	 * @return JSONResponse
@@ -322,24 +323,41 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function move(int $id, int $destFolderId): JSONResponse {
+	public function move(array $ids, int $destFolderId): JSONResponse {
+		$uids = [];
+
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			// Get the source and destination account/mailbox
+			$message = $this->mailManager->getMessage($this->currentUserId, $ids[0]);
 			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destFolderId);
 			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
+
+			// Get uid of all messages provided and make sure all messages come from the same mailbox
+			foreach ($ids as $id) {
+				$message = $this->mailManager->getMessage($this->currentUserId, $id);
+				$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+
+				if ($mailbox->getAccountId() !== $srcMailbox->getAccountId() || $mailbox->getId() !== $srcMailbox->getId()) {
+					return new JSONResponse([], Http::STATUS_FORBIDDEN);
+				}
+
+				array_push($uids,$message->getUid());
+			}
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->moveMessage(
+		// Move all messages provided
+		$this->mailManager->moveMessages(
 			$srcAccount,
 			$srcMailbox->getName(),
-			$message->getUid(),
+			$uids,
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+
 		return new JSONResponse();
 	}
 
@@ -714,31 +732,59 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
+	 * Messages are not expected to be deleted one by one anymore
+	 * => function deleteMessages is expected to be used.
+	 * @param int $id
+	 *
+	 * @throws NotImplemented
+	 */
+	public function destroy(int $id): void {
+		throw new \OCA\Mail\Exception\NotImplemented();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param int $accountId
 	 * @param string $folderId
-	 * @param int $id
+	 * @param int[] $ids
 	 *
 	 * @return JSONResponse
 	 *
-	 * @throws ClientException
-	 * @throws ServiceException
 	 */
-	public function destroy(int $id): JSONResponse {
-		try {
+	public function deleteMessages(array $ids): JSONResponse {
+		// Creates a deletion batch subdivised in accounts and mailboxes
+		$batch = [];
+		foreach ($ids as $id) {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
+			$mailboxName = $mailbox->getName();
+			$accountId = $mailbox->getAccountId();
+			if (!array_key_exists($accountId, $batch)) {
+				$batch[$accountId] = [];
+			}
+			if (!array_key_exists($mailboxName, $batch[$accountId])) {
+				$batch[$accountId][$mailboxName] = [];
+			}
+			array_push($batch[$accountId][$mailboxName],$message->getUid());
+		}
+
+		// Deletes messages from batch
+		try {
+			foreach ($batch as $accountId => $subbatch) {
+				foreach ($subbatch as $mailboxName => $uids) {
+					$this->mailManager->deleteMessages(
+						$this->accountService->find($this->currentUserId, $accountId),
+						$mailboxName,
+						$uids
+					);
+				};
+			};
+		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->logger->debug("deleting message <$id>");
-
-		$this->mailManager->deleteMessage(
-			$account,
-			$mailbox->getName(),
-			$message->getUid()
-		);
 		return new JSONResponse();
 	}
 

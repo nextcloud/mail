@@ -99,33 +99,34 @@ export class DroppableMailbox {
 		dragEventBus.$emit('envelopesDropped', { envelopes: envelopesBeingDragged })
 
 		try {
-			const processedEnvelopes = envelopesBeingDragged.map(async envelope => {
-				const processed = await this.processDroppedItem(parseInt(envelope.envelopeId))
-				return processed
+			const ids = envelopesBeingDragged.map(envelope => {
+				const id = envelope.envelopeId
+				const item = document.querySelector(`[data-envelope-id="${id}"]`)
+				item.setAttribute('draggable-envelope', 'pending')
+				return id
 			})
-			await Promise.all(processedEnvelopes)
+
+			// Move messages per batch of 50 messages so as to not overload server or create timeouts
+			while (ids.length > 0) {
+				const batch = ids.splice(-50)
+				await store.dispatch('moveThreads', {
+					ids: batch,
+					destMailboxId: this.options.mailboxId,
+				})
+			}
 		} catch (error) {
+			envelopesBeingDragged.map(envelope => {
+				const id = envelope.envelopeId
+				const item = document.querySelector(`[data-envelope-id="${id}"]`)
+				item.removeAttribute('draggable-envelope')
+				return id
+			})
 			logger.error('could not process dropped messages', error)
 		} finally {
 			dragEventBus.$emit('envelopesMoved', {
 				mailboxId: this.options.mailboxId,
 				movedEnvelopes: envelopesBeingDragged,
 			})
-		}
-	}
-
-	async processDroppedItem(envelopeId) {
-		const item = document.querySelector(`[data-envelope-id="${envelopeId}"]`)
-		item.setAttribute('draggable-envelope', 'pending')
-
-		try {
-			await store.dispatch('moveMessage', {
-				id: envelopeId,
-				destMailboxId: this.options.mailboxId,
-			})
-		} catch (error) {
-			item.removeAttribute('draggable-envelope')
-			logger.error('could not move messages', error)
 		}
 	}
 

@@ -183,24 +183,21 @@ export async function sendMessage(accountId, data) {
 	}
 }
 
-export async function deleteMessage(id) {
-	const url = generateUrl('/apps/mail/api/messages/{id}', {
-		id,
-	})
+export async function deleteMessages(ids) {
+	const url = generateUrl('/apps/mail/api/messages/delete')
 
 	try {
-		return (await axios.delete(url)).data
+		return (await axios.delete(url, { data: { ids } })).data
 	} catch (e) {
 		throw convertAxiosError(e)
 	}
 }
 
-export function moveMessage(id, destFolderId) {
-	const url = generateUrl('/apps/mail/api/messages/{id}/move', {
-		id,
-	})
+export function moveMessages(ids, destFolderId) {
+	const url = generateUrl('/apps/mail/api/messages/move')
 
 	return axios.post(url, {
+		ids,
 		destFolderId,
 	})
 }

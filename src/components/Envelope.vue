@@ -343,8 +343,8 @@ export default {
 			this.$emit('delete', this.data.databaseId)
 
 			try {
-				await this.$store.dispatch('deleteThread', {
-					envelope: this.data,
+				await this.$store.dispatch('deleteThreads', {
+					ids: [this.data.databaseId],
 				})
 			} catch (error) {
 				showError(await matchError(error, {
@@ -352,8 +352,8 @@ export default {
 						return t('mail', 'No trash mailbox configured')
 					},
 					default(error) {
-						logger.error('could not delete message', error)
-						return t('mail', 'Could not delete message')
+						logger.error('could not delete message/thread', error)
+						return t('mail', 'Could not delete message/thread')
 					},
 				}))
 			}

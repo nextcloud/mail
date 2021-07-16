@@ -34,7 +34,6 @@ use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -163,21 +162,18 @@ class MailManagerTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+			->method('dispatchTyped')
+			->with($this->anything());
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
 			->willThrowException(new DoesNotExistException(""));
 		$this->expectException(ServiceException::class);
 
-		$this->manager->deleteMessage(
+		$this->manager->deleteMessages(
 			$account,
 			'INBOX',
-			123
+			[123]
 		);
 	}
 
@@ -188,11 +184,8 @@ class MailManagerTest extends TestCase {
 		$mailAccount->setTrashMailboxId(123);
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+			->method('dispatchTyped')
+			->with($this->anything());
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -203,10 +196,10 @@ class MailManagerTest extends TestCase {
 			->willThrowException(new DoesNotExistException(""));
 		$this->expectException(ServiceException::class);
 
-		$this->manager->deleteMessage(
+		$this->manager->deleteMessages(
 			$account,
 			'INBOX',
-			123
+			[123]
 		);
 	}
 
@@ -221,7 +214,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -239,14 +232,14 @@ class MailManagerTest extends TestCase {
 			->with(
 				$client,
 				'INBOX',
-				123,
+				[123],
 				'Trash'
 			);
 
-		$this->manager->deleteMessage(
+		$this->manager->deleteMessages(
 			$account,
 			'INBOX',
-			123
+			[123]
 		);
 	}
 
@@ -261,7 +254,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'Trash')
@@ -279,13 +272,13 @@ class MailManagerTest extends TestCase {
 			->with(
 				$client,
 				'Trash',
-				123
+				[123]
 			);
 
-		$this->manager->deleteMessage(
+		$this->manager->deleteMessages(
 			$account,
 			'Trash',
-			123
+			[123]
 		);
 	}
 
@@ -651,11 +644,6 @@ class MailManagerTest extends TestCase {
 		$srcMailbox->setId($srcMailboxId);
 		$srcMailbox->setAccountId($mailAccount->getId());
 		$srcMailbox->setName('INBOX');
-		$this->mailboxMapper
-			->expects(self::exactly(2))
-			->method('find')
-			->with($account, $srcMailbox->getName())
-			->willReturn($srcMailbox);
 		$this->threadMapper
 			->expects(self::once())
 			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
@@ -669,12 +657,17 @@ class MailManagerTest extends TestCase {
 		$dstMailbox->setAccountId($mailAccount->getId());
 		$dstMailbox->setName('Trash');
 
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $srcMailbox->getName())
+			->willReturn($srcMailbox);
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->moveThread(
 			$account,
@@ -697,11 +690,6 @@ class MailManagerTest extends TestCase {
 		$srcMailbox->setId($srcMailboxId);
 		$srcMailbox->setAccountId($mailAccount->getId());
 		$srcMailbox->setName('Trash');
-		$this->mailboxMapper
-			->expects(self::exactly(2))
-			->method('find')
-			->with($account, $srcMailbox->getName())
-			->willReturn($srcMailbox);
 		$this->threadMapper
 			->expects(self::once())
 			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
@@ -715,12 +703,17 @@ class MailManagerTest extends TestCase {
 		$dstMailbox->setAccountId($mailAccount->getId());
 		$dstMailbox->setName('INBOX');
 
+		$this->mailboxMapper
+			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $srcMailbox->getName())
+			->willReturn($srcMailbox);
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->moveThread(
 			$account,
@@ -743,11 +736,6 @@ class MailManagerTest extends TestCase {
 		$mailbox->setId($mailboxId);
 		$mailbox->setAccountId($mailAccount->getId());
 		$mailbox->setName('INBOX');
-		$this->mailboxMapper
-			->expects(self::exactly(2))
-			->method('find')
-			->with($account, $mailbox->getName())
-			->willReturn($mailbox);
 		$this->threadMapper
 			->expects(self::once())
 			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
@@ -762,6 +750,11 @@ class MailManagerTest extends TestCase {
 		$trashMailbox->setName('Trash');
 		$this->mailboxMapper
 			->expects(self::exactly(2))
+			->method('find')
+			->with($account, $mailbox->getName())
+			->willReturn($mailbox);
+		$this->mailboxMapper
+			->expects(self::exactly(2))
 			->method('findById')
 			->with($trashMailbox->getId())
 			->willReturn($trashMailbox);
@@ -770,7 +763,7 @@ class MailManagerTest extends TestCase {
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,
@@ -790,6 +783,14 @@ class MailManagerTest extends TestCase {
 		$mailbox->setId($mailboxId);
 		$mailbox->setAccountId($mailAccount->getId());
 		$mailbox->setName('Trash');
+		$this->threadMapper
+			->expects(self::once())
+			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
+			->with($mailAccount, $threadRootId, true)
+			->willReturn([
+				['messageUid' => 200, 'mailboxName' => 'Trash'],
+				['messageUid' => 300, 'mailboxName' => 'Trash'],
+			]);
 		$this->mailboxMapper
 			->expects(self::exactly(2))
 			->method('find')
@@ -800,20 +801,12 @@ class MailManagerTest extends TestCase {
 			->method('findById')
 			->with($mailbox->getId())
 			->willReturn($mailbox);
-		$this->threadMapper
-			->expects(self::once())
-			->method('findMessageUidsAndMailboxNamesByAccountAndThreadRoot')
-			->with($mailAccount, $threadRootId, true)
-			->willReturn([
-				['messageUid' => 200, 'mailboxName' => 'Trash'],
-				['messageUid' => 300, 'mailboxName' => 'Trash'],
-			]);
 		$this->imapMessageMapper
 			->expects(self::exactly(2))
 			->method('expunge');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,

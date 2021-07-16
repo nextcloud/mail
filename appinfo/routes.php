@@ -206,13 +206,17 @@ return [
 		],
 		[
 			'name' => 'messages#move',
-			'url' => '/api/messages/{id}/move',
+			'url' => '/api/messages/move',
 			'verb' => 'POST'
 		],
 		[
 			'name' => 'messages#mdn',
 			'url' => '/api/messages/{id}/mdn',
-			'verb' => 'POST'
+		],
+		[
+			'name' => 'messages#deleteMessages',
+			'url' => '/api/messages/delete',
+			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'avatars#url',
@@ -291,12 +295,12 @@ return [
 		],
 		[
 			'name' => 'thread#delete',
-			'url' => '/api/thread/{id}',
+			'url' => '/api/thread',
 			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'thread#move',
-			'url' => '/api/thread/{id}',
+			'url' => '/api/thread',
 			'verb' => 'POST'
 		]
 	],

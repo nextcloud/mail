@@ -35,16 +35,16 @@ use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
-use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Events\BeforeMessagesDeletedEvent;
+use OCA\Mail\Events\MessagesDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
-use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -230,7 +230,7 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $sourceAccount
 	 * @param string $sourceFolderId
-	 * @param int $uid
+	 * @param int[] $uids
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 *
@@ -238,9 +238,9 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 *
 	 */
-	public function moveMessage(Account $sourceAccount,
+	public function moveMessages(Account $sourceAccount,
 								string $sourceFolderId,
-								int $uid,
+								array $uids,
 								Account $destinationAccount,
 								string $destFolderId) {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
@@ -250,17 +250,16 @@ class MailManager implements IMailManager {
 				throw new ServiceException("Source mailbox $sourceFolderId does not exist", 0, $e);
 			}
 
-			$this->moveMessageOnSameAccount(
+			$this->moveMessagesOnSameAccount(
 				$sourceAccount,
 				$sourceFolderId,
 				$destFolderId,
-				$uid
+				$uids
 			);
 
 			// Delete cached source message (the source imap message is copied and deleted)
-			$this->eventDispatcher->dispatch(
-				MessageDeletedEvent::class,
-				new MessageDeletedEvent($sourceAccount, $sourceMailbox, $uid)
+			$this->eventDispatcher->dispatchTyped(
+				new MessagesDeletedEvent($sourceAccount, $sourceMailbox, $uids)
 			);
 		} else {
 			throw new ServiceException('It is not possible to move across accounts yet');
@@ -272,12 +271,11 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 * @todo evaluate if we should sync mailboxes first
 	 */
-	public function deleteMessage(Account $account,
+	public function deleteMessages(Account $account,
 								  string $mailboxId,
-								  int $messageId): void {
-		$this->eventDispatcher->dispatch(
-			BeforeMessageDeletedEvent::class,
-			new BeforeMessageDeletedEvent($account, $mailboxId, $messageId)
+								  array $messageIds): void {
+		$this->eventDispatcher->dispatchTyped(
+			new BeforeMessagesDeletedEvent($account, $mailboxId, $messageIds)
 		);
 
 		try {
@@ -300,20 +298,19 @@ class MailManager implements IMailManager {
 			$this->imapMessageMapper->expunge(
 				$this->imapClientFactory->getClient($account),
 				$sourceMailbox->getName(),
-				$messageId
+				$messageIds
 			);
 		} else {
 			$this->imapMessageMapper->move(
 				$this->imapClientFactory->getClient($account),
 				$sourceMailbox->getName(),
-				$messageId,
+				$messageIds,
 				$trashMailbox->getName()
 			);
 		}
 
-		$this->eventDispatcher->dispatch(
-			MessageDeletedEvent::class,
-			new MessageDeletedEvent($account, $sourceMailbox, $messageId)
+		$this->eventDispatcher->dispatchTyped(
+			new MessagesDeletedEvent($account, $sourceMailbox, $messageIds)
 		);
 	}
 
@@ -321,19 +318,19 @@ class MailManager implements IMailManager {
 	 * @param Account $account
 	 * @param string $sourceFolderId
 	 * @param string $destFolderId
-	 * @param int $messageId
+	 * @param int[] $messageIds
 	 *
 	 * @return void
 	 * @throws ServiceException
 	 *
 	 */
-	private function moveMessageOnSameAccount(Account $account,
+	private function moveMessagesOnSameAccount(Account $account,
 											  string $sourceFolderId,
 											  string $destFolderId,
-											  int $messageId): void {
+											  array $messageIds): void {
 		$client = $this->imapClientFactory->getClient($account);
 
-		$this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
+		$this->imapMessageMapper->move($client, $sourceFolderId, $messageIds, $destFolderId);
 	}
 
 	public function markFolderAsRead(Account $account, Mailbox $mailbox): void {
@@ -671,10 +668,10 @@ class MailManager implements IMailManager {
 				'dstMailboxId' => $dstMailbox->getId()
 			]);
 
-			$this->moveMessage(
+			$this->moveMessages(
 				$srcAccount,
 				$message['mailboxName'],
-				$message['messageUid'],
+				[$message['messageUid']],
 				$dstAccount,
 				$dstMailbox->getName()
 			);
@@ -701,10 +698,10 @@ class MailManager implements IMailManager {
 				'mailboxId' => $mailbox->getId(),
 			]);
 
-			$this->deleteMessage(
+			$this->deleteMessages(
 				$account,
 				$message['mailboxName'],
-				$message['messageUid']
+				[$message['messageUid']]
 			);
 		}
 	}

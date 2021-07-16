@@ -52,12 +52,13 @@ export default {
 					return
 				}
 
-				for (const envelope of envelopes) {
-					if (this.moveThread) {
-						await this.$store.dispatch('moveThread', { envelope, destMailboxId: this.destMailboxId })
-					} else {
-						await this.$store.dispatch('moveMessage', { id: envelope.databaseId, destMailboxId: this.destMailboxId })
-					}
+				// Move messages per batch of 50 messages so as to not overload server or create timeouts
+				while (envelopes.length > 0) {
+					const batch = envelopes.splice(-50)
+					await this.$store.dispatch('moveThreads', {
+						ids: batch.map(e => e.databaseId),
+						destMailboxId: this.destMailboxId,
+					})
 				}
 
 				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
