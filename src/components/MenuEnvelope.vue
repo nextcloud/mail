@@ -83,6 +83,11 @@
 				@click.prevent="onOpenMoveModal">
 				{{ t('mail', 'Move message') }}
 			</ActionButton>
+			<ActionButton icon="icon-calendar-dark"
+				:close-after-click="true"
+				@click.prevent="showEventModal = true">
+				{{ t('mail', 'Create event') }}
+			</ActionButton>
 			<ActionButton v-if="withShowSource"
 				:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
 				:disabled="sourceLoading"
@@ -116,6 +121,9 @@
 			:envelopes="[envelope]"
 			@move="onMove"
 			@close="onCloseMoveModal" />
+		<EventModal v-if="showEventModal"
+			:envelope="data"
+			@close="showEventModal = false" />
 		<TagModal
 			v-if="showTagModal"
 			:account="account"
@@ -132,6 +140,7 @@ import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import { Base64 } from 'js-base64'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
+import EventModal from './EventModal'
 import { generateUrl } from '@nextcloud/router'
 import logger from '../logger'
 import { matchError } from '../errors/match'
@@ -148,6 +157,7 @@ export default {
 		ActionButton,
 		ActionLink,
 		ActionRouter,
+		EventModal,
 		Modal,
 		MoveModal,
 		TagModal,
@@ -193,6 +203,7 @@ export default {
 			sourceLoading: false,
 			showSourceModal: false,
 			showMoveModal: false,
+			showEventModal: false,
 			showTagModal: false,
 		}
 	},
@@ -343,6 +354,9 @@ export default {
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+		onOpenEventModal() {
+			this.showEventModal = true
 		},
 		onOpenTagModal() {
 			this.showTagModal = true

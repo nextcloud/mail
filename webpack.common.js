@@ -45,7 +45,7 @@ module.exports = {
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
-				exclude: /node_modules(?!(\/|\\)(@ckeditor|js-base64)(\/|\\))/
+				exclude: /node_modules(?!(\/|\\)(@ckeditor|calendar-js|js-base64|)(\/|\\))/
 			},
 			{
 				test: /\.(png|jpg|gif)$/,
