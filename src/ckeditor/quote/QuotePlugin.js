@@ -32,9 +32,7 @@ export default class Quote extends Plugin {
 		const schema = this.editor.model.schema
 
 		schema.register('quote', {
-			allowIn: '$root',
-			isLimit: true,
-			allowContentOf: '$block',
+			inheritAllFrom: '$block',
 		})
 	}
 
