@@ -295,7 +295,7 @@
 							<label :for="'mail-provision-ldap-aliases-provisioning' + setting.id">
 								{{ t('mail', 'Enable LDAP aliases integration') }}
 							</label>
-							<p>{{ t('mail', 'The LDAP aliases integration reads a attribute from the configured LDAP directory to provision email aliases.') }}</p>
+							<p>{{ t('mail', 'The LDAP aliases integration reads an attribute from the configured LDAP directory to provision email aliases.') }}</p>
 						</div>
 						<div>
 							<label :for="'mail-provision-ldap-aliases-attribute' + setting.id">
