@@ -307,7 +307,7 @@
 									:required="ldapAliasesProvisioning"
 									type="text">
 							</label>
-							<p>{{ t('mail', 'A multi value attribute to provision email aliases. For each value an alias is created. Alias existing in Nextcloud which not in the LDAP directory are deleted.') }}</p>
+							<p>{{ t('mail', 'A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted.') }}</p>
 						</div>
 					</div>
 				</div>
