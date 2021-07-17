@@ -31,7 +31,7 @@
 						required>
 					<input v-model="newAlias"
 						type="email"
-						:placeholder="t('mail', 'Email-Address')"
+						:placeholder="t('mail', 'Email address')"
 						required>
 				</form>
 			</li>

@@ -295,7 +295,7 @@
 							<label :for="'mail-provision-ldap-aliases-provisioning' + setting.id">
 								{{ t('mail', 'Enable LDAP aliases integration') }}
 							</label>
-							<p>{{ t('mail', 'The LDAP aliases integration reads a attribute from the configured LDAP directory to provision email aliases.') }}</p>
+							<p>{{ t('mail', 'The LDAP aliases integration reads an attribute from the configured LDAP directory to provision email aliases.') }}</p>
 						</div>
 						<div>
 							<label :for="'mail-provision-ldap-aliases-attribute' + setting.id">
@@ -307,7 +307,7 @@
 									:required="ldapAliasesProvisioning"
 									type="text">
 							</label>
-							<p>{{ t('mail', 'A multi value attribute to provision email aliases. For each value an alias is created. Alias existing in Nextcloud which not in the LDAP directory are deleted.') }}</p>
+							<p>{{ t('mail', 'A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted.') }}</p>
 						</div>
 					</div>
 				</div>
