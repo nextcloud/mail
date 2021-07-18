@@ -56,7 +56,6 @@ OC.L10N.register(
     "Update alias" : "Aktualizovať alternatívny názov",
     "Show update alias form" : "Zobraziť formulár pre aktualizáciu alternatívneho názvu",
     "Delete alias" : "Vymazať alternatívny názov",
-    "Email-Address" : "E-mailová adresa",
     "Add alias" : "Pridať alias",
     "Create alias" : "Vytvoriť alternatívny názov",
     "Cancel" : "Zrušiť",

@@ -56,7 +56,6 @@ OC.L10N.register(
     "Update alias" : "更新别名",
     "Show update alias form" : "显示更新别名表单",
     "Delete alias" : "删除别名",
-    "Email-Address" : "电子邮件地址",
     "Add alias" : "添加别名",
     "Create alias" : "创建别名",
     "Cancel" : "取消",
