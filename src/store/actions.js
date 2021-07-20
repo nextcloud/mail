@@ -68,7 +68,7 @@ import {
 	removeEnvelopeTag,
 	setEnvelopeFlag,
 	setEnvelopeTag,
-	syncEnvelopes,
+	syncEnvelopes, updateEnvelopeTag,
 } from '../service/MessageService'
 import * as AliasService from '../service/AliasService'
 import logger from '../logger'
@@ -818,6 +818,11 @@ export default {
 			envelope,
 			tagId: tag.id,
 		})
+	},
+	async updateTag({ commit }, { tag, displayName, color }) {
+		 await updateEnvelopeTag(tag.id, displayName, color)
+		console.debug('tag renamed')
+		commit('updateTag', { tag, displayName, color })
 	},
 	async deleteThread({ getters, commit }, { envelope }) {
 		commit('removeEnvelope', { id: envelope.databaseId })

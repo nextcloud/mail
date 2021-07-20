@@ -222,6 +222,10 @@ export default {
 	addEnvelopeTag(state, { envelope, tagId }) {
 		Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
 	},
+	updateTag(state, { tag, displayName, color }) {
+		tag.displayName = displayName
+		tag.color = color
+	},
 	removeEnvelopeTag(state, { envelope, tagId }) {
 		Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
 	},
