@@ -26,10 +26,14 @@ import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
 
 const canWrite = (properties) => {
-	const acls = properties?.acl?.ace
+	let acls = properties?.acl?.ace
 
 	if (!acls) {
 		return false
+	}
+	// There might only be one ACL, not a list
+	if (!Array.isArray(acls)) {
+		acls = [acls]
 	}
 
 	for (const acl of acls) {
