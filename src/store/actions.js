@@ -668,18 +668,38 @@ export default {
 		const oldState = envelope.flags.junk
 		commit('flagEnvelope', {
 			envelope,
-			flag: 'junk',
+			flag: '$junk',
 			value: !oldState,
 		})
+		commit('flagEnvelope', {
+			envelope,
+			flag: '$notjunk',
+			value: oldState,
+		})
 
-		setEnvelopeFlag(envelope.databaseId, 'junk', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.databaseId, '$junk', !oldState).catch((e) => {
 			console.error('could not toggle message junk state', e)
 
 			// Revert change
 			commit('flagEnvelope', {
 				envelope,
-				flag: 'junk',
+				flag: '$junk',
 				value: oldState,
+			})
+			commit('flagEnvelope', {
+				envelope,
+				flag: '$notjunk',
+				value: !oldState,
+			})
+		})
+		setEnvelopeFlag(envelope.databaseId, '$notjunk', oldState).catch((e) => {
+			console.error('could not toggle message junk state', e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				envelope,
+				flag: '$notjunk',
+				value: !oldState,
 			})
 		})
 	},
