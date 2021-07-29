@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.10.2 – 2021–07-29
+### Fixed
+- Junk and nonjunk flagging
+- Calendar ics attachment import
+- Missing HTML headers inside the HTML message iframe
+- Missing slash in shared file URL
+- Signature indentation
+
 ## 1.10.1 – 2021-07-12
 ### Changed
 - Updated and new translations
