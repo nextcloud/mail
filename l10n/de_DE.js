@@ -65,7 +65,7 @@ OC.L10N.register(
     "Register as application for mail links" : "Als Anwendung für Mail-Links registrieren",
     "Show keyboard shortcuts" : "Tastaturkürzel anzeigen",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Erlauben Sie der App, Daten über Ihre Interaktionen zu sammeln. Basierend auf diesen Daten passt sich die App an Ihre Vorlieben an. Die Daten werden nur lokal gespeichert.",
-    "Put my text to the bottom of a reply instead of on top of it." : "Füge meinen Text ans Ende einer Antwort stellen, statt darüber. ",
+    "Put my text to the bottom of a reply instead of on top of it." : "Meinen Text ans Ende einer Antwort stellen, statt darüber. ",
     "Automatically classify importance of new email" : "Automatische Einordnung der Wichtigkeit einer neuen E-Mail",
     "Could not update preference" : "Voreinstellung konnte nicht aktualisieren werden",
     "From" : "Von",
