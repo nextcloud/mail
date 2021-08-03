@@ -70,7 +70,7 @@ class ImapConnectivityTester {
 			$users = [$users];
 		}
 
-		$ports = [143, 585, 993];
+		$ports = [143, 993];
 		$encryptionProtocols = ['ssl', 'tls', 'none'];
 		$hostPrefixes = ['', 'imap.'];
 		foreach ($hostPrefixes as $hostPrefix) {
