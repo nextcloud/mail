@@ -66,10 +66,10 @@ class ImapConnectivityTesterTest extends TestCase {
 		$users = ['user'];
 		$password = 'mypassword';
 		$name = 'User';
-		$this->connectivityTester->expects($this->exactly(6))
+		$this->connectivityTester->expects($this->exactly(4))
 			->method('canConnect')
 			->willReturn(true);
-		$this->imapConnector->expects($this->exactly(18))
+		$this->imapConnector->expects($this->exactly(12))
 			->method('connect')
 			->with($email, $password, $name, $host, $this->anything(), $this->anything(), $users[0])
 			->willThrowException(new Horde_Imap_Client_Exception());
