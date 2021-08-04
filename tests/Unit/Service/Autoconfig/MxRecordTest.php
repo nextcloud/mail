@@ -40,16 +40,36 @@ class MxRecordTest extends TestCase {
 		$this->record = new MxRecord($logger);
 	}
 
-	public function testQuery() {
+	public function testQuery(): void {
 		$records = $this->record->query('nextcloud.com');
 
 		$this->assertIsArray($records);
 		$this->assertNotEmpty($records);
 	}
 
-	public function testQueryNoRecord() {
+	public function testQueryNoRecord(): void {
 		$records = $this->record->query('example.com');
 
 		$this->assertFalse($records);
+	}
+
+	public function testGetSanitizedRecords(): void {
+		$records = ['mx.google.com',
+			'testing.google.com',
+			'try.again.de',
+			'eins.zwei.drei.de'
+		];
+
+		$mxRecords = $this->record->getSanitizedRecords($records);
+		$this->assertContains('google.com', $mxRecords);
+		$this->assertContains('again.de', $mxRecords);
+		$this->assertContains('mx.google.com', $mxRecords);
+		$this->assertContains('testing.google.com', $mxRecords);
+		$this->assertContains('try.again.de', $mxRecords);
+		$this->assertContains('drei.de', $mxRecords);
+		$this->assertContains('eins.zwei.drei.de', $mxRecords);
+
+		$this->assertNotContains('', $mxRecords);
+		$this->assertNotContains('gaga.uh.lala', $mxRecords);
 	}
 }
