@@ -696,13 +696,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg = new Message();
 
 		$messageId = $this->getMessageId();
-		if (empty(trim($messageId))) {
-			// Sometimes the message ID is missing. Then we create one.
+		$msg->setMessageId($messageId);
+
+		// Sometimes the message ID is missing or invalid and therefore not set.
+		// Then we create one and set it.
+		if (!$msg->getMessageId()) {
 			$messageId = self::generateMessageId();
+			$msg->setMessageId($messageId);
 		}
 
 		$msg->setUid($this->getUid());
-		$msg->setMessageId($messageId);
 		$msg->setRawReferences($this->getRawReferences());
 		$msg->setThreadRootId($messageId);
 		$msg->setInReplyTo($this->getRawInReplyTo());
