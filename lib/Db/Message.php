@@ -36,7 +36,7 @@ use function json_encode;
 /**
  * @method void setUid(int $uid)
  * @method int getUid()
- * @method string getMessageId()
+ * @method string|null getMessageId()
  * @method void setReferences(string $references)
  * @method string|null getReferences()
  * @method string|null getInReplyTo()
@@ -153,6 +153,12 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('updatedAt', 'integer');
 	}
 
+	/**
+	 * @param string|null $messageId
+	 *
+	 * Parses the message ID to see if it is a valid Horde_Mail_Rfc822_Identification
+	 * before setting it, or sets null if it is not valid.
+	 */
 	public function setMessageId(?string $messageId): void {
 		$this->setMessageIdFieldIfNotEmpty('messageId', $messageId);
 	}
