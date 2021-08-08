@@ -452,16 +452,16 @@
         },
         {
             "name": "arthurhoaro/favicon",
-            "version": "v1.3.2",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArthurHoaro/favicon.git",
-                "reference": "ed3c3f6fd9ab39b28eb86567c4b0a0583ca264a6"
+                "reference": "b1acd8b87d6b37e5251fe0559ed488a95078f5b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/ed3c3f6fd9ab39b28eb86567c4b0a0583ca264a6",
-                "reference": "ed3c3f6fd9ab39b28eb86567c4b0a0583ca264a6",
+                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/b1acd8b87d6b37e5251fe0559ed488a95078f5b9",
+                "reference": "b1acd8b87d6b37e5251fe0559ed488a95078f5b9",
                 "shasum": ""
             },
             "require": {
@@ -501,7 +501,7 @@
                 "finder",
                 "icon"
             ],
-            "time": "2021-02-03T12:26:59+00:00"
+            "time": "2021-08-06T05:41:25+00:00"
         },
         {
             "name": "bamarni/composer-bin-plugin",
