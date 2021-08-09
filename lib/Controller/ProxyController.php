@@ -34,6 +34,8 @@ use OCP\Http\Client\IClientService;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Log\LoggerInterface;
 
 class ProxyController extends Controller {
 
@@ -46,29 +48,21 @@ class ProxyController extends Controller {
 	/** @var IClientService */
 	private $clientService;
 
-	/** @var string */
-	private $hostname;
+	/** @var LoggerInterface */
+	private $logger;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param IURLGenerator $urlGenerator
-	 * @param ISession $session
-	 * @param IClientService $clientService
-	 * @param string $hostname
-	 */
 	public function __construct(string $appName,
 								IRequest $request,
 								IURLGenerator $urlGenerator,
 								ISession $session,
 								IClientService $clientService,
-								$hostname) {
+								LoggerInterface $logger) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
 		$this->clientService = $clientService;
-		$this->hostname = $hostname;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -120,8 +114,14 @@ class ProxyController extends Controller {
 		$this->session->close();
 
 		$client = $this->clientService->newClient();
-		$response = $client->get($src);
-		$content = $response->getBody();
+		try {
+			$response = $client->get($src);
+			$content = $response->getBody();
+		} catch (ClientExceptionInterface $e) {
+			$this->logger->notice('Unable to proxy image', ['exception' => $e]);
+			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+		}
+
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 	}
 }

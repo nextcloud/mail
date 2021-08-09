@@ -33,6 +33,8 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ProxyControllerTest extends TestCase {
 
@@ -51,8 +53,8 @@ class ProxyControllerTest extends TestCase {
 	/** @var IClientService|MockObject */
 	private $clientService;
 
-	/** @var string */
-	private $hostname;
+	/** @var LoggerInterface */
+	private $logger;
 
 	/** @var ProxyController */
 	private $controller;
@@ -65,7 +67,7 @@ class ProxyControllerTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->session = $this->createMock(ISession::class);
 		$this->clientService = $this->createMock(IClientService::class);
-		$this->hostname = 'example.com';
+		$this->logger = new NullLogger();
 	}
 
 	public function redirectDataProvider() {
@@ -122,7 +124,7 @@ class ProxyControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->session,
 			$this->clientService,
-			'example.com'
+			$this->logger
 		);
 		$expected = new TemplateResponse(
 			$this->appName,
@@ -148,7 +150,7 @@ class ProxyControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->session,
 			$this->clientService,
-			''
+			$this->logger
 		);
 		$this->expectException(Exception::class);
 
@@ -165,14 +167,14 @@ class ProxyControllerTest extends TestCase {
 		$client = $this->getMockBuilder(IClient::class)->getMock();
 		$this->clientService->expects($this->once())
 			->method('newClient')
-			->will($this->returnValue($client));
+			->willReturn($client);
 		$client->expects($this->once())
 			->method('get')
 			->with($src)
-			->will($this->returnValue($httpResponse));
+			->willReturn($httpResponse);
 		$httpResponse->expects($this->once())
 			->method('getBody')
-			->will($this->returnValue($content));
+			->willReturn($content);
 
 		$expected = new ProxyDownloadResponse(
 			$content,
@@ -185,7 +187,7 @@ class ProxyControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->session,
 			$this->clientService,
-			''
+			$this->logger
 		);
 
 		$response = $this->controller->proxy($src);
