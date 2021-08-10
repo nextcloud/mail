@@ -32,6 +32,7 @@ use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
+use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -82,7 +83,13 @@ class SyncAccount extends Command {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 		$force = $input->getOption(self::OPTION_FORCE);
 
-		$account = $this->accountService->findById($accountId);
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException $e) {
+			$output->writeln("<error>Account $accountId does not exist</error>");
+
+			return 1;
+		}
 
 		$this->sync($account, $force, $output);
 
