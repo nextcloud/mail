@@ -128,6 +128,7 @@ class Html {
 		$config->set('URI.Host', Util::getServerHostName());
 
 		$config->set('Filter.ExtractStyleBlocks', true);
+		$config->set('Filter.ExtractStyleBlocks.TidyImpl', false);
 		$config->set('CSS.AllowTricky', true);
 		$config->set('CSS.Proprietary', true);
 
