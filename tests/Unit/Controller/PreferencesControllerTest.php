@@ -45,13 +45,13 @@ class PreferencesControllerTest extends TestCase {
 		$request = $this->createMock(IRequest::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
 
-		$this->controller = new PreferencesController($request, $this->preferences);
+		$this->controller = new PreferencesController($request, $this->preferences, 'george');
 	}
 
 	public function testGetPreference() {
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('test')
+			->with('george', 'test')
 			->willReturn(123);
 		$expected = new JSONResponse(['value' => 123]);
 
@@ -63,8 +63,8 @@ class PreferencesControllerTest extends TestCase {
 	public function testSetPreference() {
 		$this->preferences->expects($this->once())
 			->method('setPreference')
-			->with('test')
-			->willReturnArgument(1);
+			->with('george', 'test')
+			->willReturnArgument(2);
 		$expected = new JSONResponse([
 			'value' => 123,
 		]);

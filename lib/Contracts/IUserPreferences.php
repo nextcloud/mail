@@ -29,15 +29,17 @@ namespace OCA\Mail\Contracts;
 interface IUserPreferences {
 
 	/**
+	 * @param string $userId
 	 * @param string $key
 	 * @param mixed $value
 	 * @return mixed new value
 	 */
-	public function setPreference($key, $value);
+	public function setPreference(string $userId, $key, $value);
 
 	/**
+	 * @param string $userId
 	 * @param string $key
 	 * @param mixed|null $default
 	 */
-	public function getPreference($key, $default = null);
+	public function getPreference(string $userId, $key, $default = null);
 }

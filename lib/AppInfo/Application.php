@@ -61,7 +61,7 @@ use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\TrustedSenderService;
-use OCA\Mail\Service\UserPreferenceSevice;
+use OCA\Mail\Service\UserPreferenceService;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -96,7 +96,7 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(IMailSearch::class, MailSearch::class);
 		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
 		$context->registerServiceAlias(ITrustedSenderService::class, TrustedSenderService::class);
-		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceSevice::class);
+		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceService::class);
 
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MailboxesSynchronizedEvent::class, MailboxesSynchronizedSpecialMailboxesUpdater::class);
