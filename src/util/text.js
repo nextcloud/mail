@@ -122,7 +122,7 @@ export const toPlain = (text) => {
 					.replace(/^/gm, '> ') // add > quotation to each line
 			},
 			paragraph(element, fn, options) {
-				return fn(element.children, options) + '\n\n'
+				return fn(element.children, options) + '\n'
 			},
 		},
 	})
