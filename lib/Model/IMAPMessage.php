@@ -700,7 +700,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 		// Sometimes the message ID is missing or invalid and therefore not set.
 		// Then we create one and set it.
-		if (empty(trim($msg->getMessageId()))) {
+		if ($msg->getMessageId() === null || trim($msg->getMessageId()) === '') {
 			$messageId = self::generateMessageId();
 			$msg->setMessageId($messageId);
 		}
