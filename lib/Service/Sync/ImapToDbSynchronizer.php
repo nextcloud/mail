@@ -51,6 +51,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function array_chunk;
+use function array_filter;
 use function array_map;
 
 class ImapToDbSynchronizer {
@@ -354,7 +355,20 @@ class ImapToDbSynchronizer {
 			);
 			$perf->step('get new messages via Horde');
 
-			foreach (array_chunk($response->getNewMessages(), 500) as $chunk) {
+			$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
+			if ($highestKnownUid === null) {
+				// Everything is relevant
+				$newMessages = $response->getNewMessages();
+			} else {
+				// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
+				// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
+				// will be seen as *new* and therefore cause conflicts.
+				$newMessages = array_filter($response->getNewMessages(), function (IMAPMessage $imapMessage) use ($highestKnownUid) {
+					return $imapMessage->getUid() > $highestKnownUid;
+				});
+			}
+
+			foreach (array_chunk($newMessages, 500) as $chunk) {
 				$dbMessages = array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk);
