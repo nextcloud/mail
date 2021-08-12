@@ -41,6 +41,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
 use RuntimeException;
+use Throwable;
 use function array_combine;
 use function array_keys;
 use function array_map;
@@ -227,23 +228,30 @@ class MessageMapper extends QBMapper {
 	public function writeThreadIds(array $messages): void {
 		$this->db->beginTransaction();
 
-		$query = $this->db->getQueryBuilder();
-		$query->update($this->getTableName())
-			->set('thread_root_id', $query->createParameter('thread_root_id'))
-			->where($query->expr()->eq('id', $query->createParameter('id')));
+		try {
+			$query = $this->db->getQueryBuilder();
+			$query->update($this->getTableName())
+				->set('thread_root_id', $query->createParameter('thread_root_id'))
+				->where($query->expr()->eq('id', $query->createParameter('id')));
 
-		foreach ($messages as $message) {
-			$query->setParameter(
-				'thread_root_id',
-				$message->getThreadRootId(),
-				$message->getThreadRootId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
-			);
-			$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
+			foreach ($messages as $message) {
+				$query->setParameter(
+					'thread_root_id',
+					$message->getThreadRootId(),
+					$message->getThreadRootId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
+				);
+				$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
 
-			$query->execute();
+				$query->execute();
+			}
+
+			$this->db->commit();
+		} catch (Throwable $e) {
+			// Make sure to always roll back, otherwise the outer code runs in a failed transaction
+			$this->db->rollBack();
+
+			throw $e;
 		}
-
-		$this->db->commit();
 	}
 
 	/**
@@ -253,89 +261,96 @@ class MessageMapper extends QBMapper {
 	public function insertBulk(Account $account, Message ...$messages): void {
 		$this->db->beginTransaction();
 
-		$qb1 = $this->db->getQueryBuilder();
-		$qb1->insert($this->getTableName());
-		$qb1->setValue('uid', $qb1->createParameter('uid'));
-		$qb1->setValue('message_id', $qb1->createParameter('message_id'));
-		$qb1->setValue('references', $qb1->createParameter('references'));
-		$qb1->setValue('in_reply_to', $qb1->createParameter('in_reply_to'));
-		$qb1->setValue('thread_root_id', $qb1->createParameter('thread_root_id'));
-		$qb1->setValue('mailbox_id', $qb1->createParameter('mailbox_id'));
-		$qb1->setValue('subject', $qb1->createParameter('subject'));
-		$qb1->setValue('sent_at', $qb1->createParameter('sent_at'));
-		$qb1->setValue('flag_answered', $qb1->createParameter('flag_answered'));
-		$qb1->setValue('flag_deleted', $qb1->createParameter('flag_deleted'));
-		$qb1->setValue('flag_draft', $qb1->createParameter('flag_draft'));
-		$qb1->setValue('flag_flagged', $qb1->createParameter('flag_flagged'));
-		$qb1->setValue('flag_seen', $qb1->createParameter('flag_seen'));
-		$qb1->setValue('flag_forwarded', $qb1->createParameter('flag_forwarded'));
-		$qb1->setValue('flag_junk', $qb1->createParameter('flag_junk'));
-		$qb1->setValue('flag_notjunk', $qb1->createParameter('flag_notjunk'));
-		$qb1->setValue('flag_important', $qb1->createParameter('flag_important'));
-		$qb1->setValue('flag_mdnsent', $qb1->createParameter('flag_mdnsent'));
-		$qb2 = $this->db->getQueryBuilder();
+		try {
+			$qb1 = $this->db->getQueryBuilder();
+			$qb1->insert($this->getTableName());
+			$qb1->setValue('uid', $qb1->createParameter('uid'));
+			$qb1->setValue('message_id', $qb1->createParameter('message_id'));
+			$qb1->setValue('references', $qb1->createParameter('references'));
+			$qb1->setValue('in_reply_to', $qb1->createParameter('in_reply_to'));
+			$qb1->setValue('thread_root_id', $qb1->createParameter('thread_root_id'));
+			$qb1->setValue('mailbox_id', $qb1->createParameter('mailbox_id'));
+			$qb1->setValue('subject', $qb1->createParameter('subject'));
+			$qb1->setValue('sent_at', $qb1->createParameter('sent_at'));
+			$qb1->setValue('flag_answered', $qb1->createParameter('flag_answered'));
+			$qb1->setValue('flag_deleted', $qb1->createParameter('flag_deleted'));
+			$qb1->setValue('flag_draft', $qb1->createParameter('flag_draft'));
+			$qb1->setValue('flag_flagged', $qb1->createParameter('flag_flagged'));
+			$qb1->setValue('flag_seen', $qb1->createParameter('flag_seen'));
+			$qb1->setValue('flag_forwarded', $qb1->createParameter('flag_forwarded'));
+			$qb1->setValue('flag_junk', $qb1->createParameter('flag_junk'));
+			$qb1->setValue('flag_notjunk', $qb1->createParameter('flag_notjunk'));
+			$qb1->setValue('flag_important', $qb1->createParameter('flag_important'));
+			$qb1->setValue('flag_mdnsent', $qb1->createParameter('flag_mdnsent'));
+			$qb2 = $this->db->getQueryBuilder();
 
-		$qb2->insert('mail_recipients')
-			->setValue('message_id', $qb2->createParameter('message_id'))
-			->setValue('type', $qb2->createParameter('type'))
-			->setValue('label', $qb2->createParameter('label'))
-			->setValue('email', $qb2->createParameter('email'));
+			$qb2->insert('mail_recipients')
+				->setValue('message_id', $qb2->createParameter('message_id'))
+				->setValue('type', $qb2->createParameter('type'))
+				->setValue('label', $qb2->createParameter('label'))
+				->setValue('email', $qb2->createParameter('email'));
 
-		foreach ($messages as $message) {
-			$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
-			$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
-			$inReplyTo = $message->getInReplyTo();
-			$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-			$references = $message->getReferences();
-			$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-			$threadRootId = $message->getThreadRootId();
-			$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-			$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
-			$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
-			$qb1->setParameter('sent_at', $message->getSentAt(), IQueryBuilder::PARAM_INT);
-			$qb1->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
-			$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
+			foreach ($messages as $message) {
+				$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
+				$inReplyTo = $message->getInReplyTo();
+				$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$references = $message->getReferences();
+				$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$threadRootId = $message->getThreadRootId();
+				$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
+				$qb1->setParameter('sent_at', $message->getSentAt(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
 
-			$qb1->execute();
+				$qb1->execute();
 
-			$messageId = $qb1->getLastInsertId();
-			$recipientTypes = [
-				Address::TYPE_FROM => $message->getFrom(),
-				Address::TYPE_TO => $message->getTo(),
-				Address::TYPE_CC => $message->getCc(),
-				Address::TYPE_BCC => $message->getBcc(),
-			];
-			foreach ($recipientTypes as $type => $recipients) {
-				/** @var AddressList $recipients */
-				foreach ($recipients->iterate() as $recipient) {
-					/** @var Address $recipient */
-					if ($recipient->getEmail() === null) {
-						// If for some reason the e-mail is not set we should ignore this entry
-						continue;
+				$messageId = $qb1->getLastInsertId();
+				$recipientTypes = [
+					Address::TYPE_FROM => $message->getFrom(),
+					Address::TYPE_TO => $message->getTo(),
+					Address::TYPE_CC => $message->getCc(),
+					Address::TYPE_BCC => $message->getBcc(),
+				];
+				foreach ($recipientTypes as $type => $recipients) {
+					/** @var AddressList $recipients */
+					foreach ($recipients->iterate() as $recipient) {
+						/** @var Address $recipient */
+						if ($recipient->getEmail() === null) {
+							// If for some reason the e-mail is not set we should ignore this entry
+							continue;
+						}
+
+						$qb2->setParameter('message_id', $messageId, IQueryBuilder::PARAM_INT);
+						$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
+						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('email', $recipient->getEmail(), IQueryBuilder::PARAM_STR);
+
+						$qb2->execute();
 					}
-
-					$qb2->setParameter('message_id', $messageId, IQueryBuilder::PARAM_INT);
-					$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
-					$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
-					$qb2->setParameter('email', $recipient->getEmail(), IQueryBuilder::PARAM_STR);
-
-					$qb2->execute();
+				}
+				foreach ($message->getTags() as $tag) {
+					$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
 				}
 			}
-			foreach ($message->getTags() as $tag) {
-				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
-			}
-		}
 
-		$this->db->commit();
+			$this->db->commit();
+		} catch (Throwable $e) {
+			// Make sure to always roll back, otherwise the outer code runs in a failed transaction
+			$this->db->rollBack();
+
+			throw $e;
+		}
 	}
 
 	/**
@@ -351,57 +366,65 @@ class MessageMapper extends QBMapper {
 			'partial sync ' . $account->getId() . ':' . $account->getName()
 		);
 
-		$query = $this->db->getQueryBuilder();
-		$query->update($this->getTableName())
-			->set('flag_answered', $query->createParameter('flag_answered'))
-			->set('flag_deleted', $query->createParameter('flag_deleted'))
-			->set('flag_draft', $query->createParameter('flag_draft'))
-			->set('flag_flagged', $query->createParameter('flag_flagged'))
-			->set('flag_seen', $query->createParameter('flag_seen'))
-			->set('flag_forwarded', $query->createParameter('flag_forwarded'))
-			->set('flag_junk', $query->createParameter('flag_junk'))
-			->set('flag_notjunk', $query->createParameter('flag_notjunk'))
-			->set('flag_mdnsent', $query->createParameter('flag_mdnsent'))
-			->set('flag_important', $query->createParameter('flag_important'))
-			->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime()))
-			->where($query->expr()->andX(
-				$query->expr()->eq('uid', $query->createParameter('uid')),
-				$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
-			));
+		try {
+			$query = $this->db->getQueryBuilder();
+			$query->update($this->getTableName())
+				->set('flag_answered', $query->createParameter('flag_answered'))
+				->set('flag_deleted', $query->createParameter('flag_deleted'))
+				->set('flag_draft', $query->createParameter('flag_draft'))
+				->set('flag_flagged', $query->createParameter('flag_flagged'))
+				->set('flag_seen', $query->createParameter('flag_seen'))
+				->set('flag_forwarded', $query->createParameter('flag_forwarded'))
+				->set('flag_junk', $query->createParameter('flag_junk'))
+				->set('flag_notjunk', $query->createParameter('flag_notjunk'))
+				->set('flag_mdnsent', $query->createParameter('flag_mdnsent'))
+				->set('flag_important', $query->createParameter('flag_important'))
+				->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime()))
+				->where($query->expr()->andX(
+					$query->expr()->eq('uid', $query->createParameter('uid')),
+					$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
+				));
 
-		// get all tags before the loop and create a mapping [message_id => [tag,...]] but only if permflags are enabled
-		$tags = [];
-		if ($permflagsEnabled) {
-			$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
-			$perf->step("Selected Tags for all messages");
-		}
-
-		foreach ($messages as $message) {
-			if (empty($message->getUpdatedFields()) === false) {
-				// only run if there is anything to actually update
-				$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
-				$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
-				$query->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
-				$query->execute();
-				$perf->step('Updated message ' . $message->getId());
-			}
-
-			// check permflags and only go through the tagging logic if they're enabled
+			// get all tags before the loop and create a mapping [message_id => [tag,...]] but only if permflags are enabled
+			$tags = [];
 			if ($permflagsEnabled) {
-				$this->updateTags($account, $message, $tags, $perf);
+				$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
+				$perf->step("Selected Tags for all messages");
 			}
+
+			foreach ($messages as $message) {
+				if (empty($message->getUpdatedFields()) === false) {
+					// only run if there is anything to actually update
+					$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
+					$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
+					$query->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
+					$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
+					$query->execute();
+					$perf->step('Updated message ' . $message->getId());
+				}
+
+				// check permflags and only go through the tagging logic if they're enabled
+				if ($permflagsEnabled) {
+					$this->updateTags($account, $message, $tags, $perf);
+				}
+			}
+
+			$this->db->commit();
+		} catch (Throwable $e) {
+			// Make sure to always roll back, otherwise the outer code runs in a failed transaction
+			$this->db->rollBack();
+
+			throw $e;
 		}
 
-		$this->db->commit();
 		$perf->end();
 
 		return $messages;
@@ -465,32 +488,39 @@ class MessageMapper extends QBMapper {
 	public function updatePreviewDataBulk(Message ...$messages): array {
 		$this->db->beginTransaction();
 
-		$query = $this->db->getQueryBuilder();
-		$query->update($this->getTableName())
-			->set('flag_attachments', $query->createParameter('flag_attachments'))
-			->set('preview_text', $query->createParameter('preview_text'))
-			->set('structure_analyzed', $query->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
-			->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
-			->where($query->expr()->andX(
-				$query->expr()->eq('uid', $query->createParameter('uid')),
-				$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
-			));
+		try {
+			$query = $this->db->getQueryBuilder();
+			$query->update($this->getTableName())
+				->set('flag_attachments', $query->createParameter('flag_attachments'))
+				->set('preview_text', $query->createParameter('preview_text'))
+				->set('structure_analyzed', $query->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
+				->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
+				->where($query->expr()->andX(
+					$query->expr()->eq('uid', $query->createParameter('uid')),
+					$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
+				));
 
-		foreach ($messages as $message) {
-			if (empty($message->getUpdatedFields())) {
-				// Micro optimization
-				continue;
+			foreach ($messages as $message) {
+				if (empty($message->getUpdatedFields())) {
+					// Micro optimization
+					continue;
+				}
+
+				$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
+				$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
+				$query->setParameter('flag_attachments', $message->getFlagAttachments(), $message->getFlagAttachments() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('preview_text', $message->getPreviewText(), $message->getPreviewText() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+
+				$query->execute();
 			}
 
-			$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
-			$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
-			$query->setParameter('flag_attachments', $message->getFlagAttachments(), $message->getFlagAttachments() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_BOOL);
-			$query->setParameter('preview_text', $message->getPreviewText(), $message->getPreviewText() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+			$this->db->commit();
+		} catch (Throwable $e) {
+			// Make sure to always roll back, otherwise the outer code runs in a failed transaction
+			$this->db->rollBack();
 
-			$query->execute();
+			throw $e;
 		}
-
-		$this->db->commit();
 
 		return $messages;
 	}
