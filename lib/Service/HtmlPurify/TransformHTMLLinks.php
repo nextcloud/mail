@@ -26,7 +26,6 @@ namespace OCA\Mail\Service\HtmlPurify;
 use HTMLPurifier_AttrTransform;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
-use HTMLPurifier_URIParser;
 use OCP\IURLGenerator;
 
 /**
@@ -34,17 +33,11 @@ use OCP\IURLGenerator;
  */
 class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
 
-	/**
-	 * @type HTMLPurifier_URIParser
-	 */
-	private $parser;
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
 	public function __construct(IURLGenerator $urlGenerator) {
 		$this->urlGenerator = $urlGenerator;
-		$this->parser = new HTMLPurifier_URIParser();
 	}
 
 	/**
@@ -59,7 +52,7 @@ class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
 		}
 
 		$attr['target'] = '_blank';
-		$attr['rel'] = 'noopener';
+		$attr['rel'] = 'external noopener noreferrer';
 
 		// Open mailto: links in Mail
 		if (stripos($attr['href'], 'mailto:') === 0) {
