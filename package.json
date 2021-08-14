@@ -46,7 +46,7 @@
     "color-convert": "^2.0.1",
     "core-js": "^3.16.1",
     "debounce-promise": "^3.1.2",
-    "dompurify": "^2.3.0",
+    "dompurify": "^2.3.1",
     "html-to-text": "^5.1.1",
     "ical.js": "^1.4.0",
     "iframe-resizer": "^4.3.2",
