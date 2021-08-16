@@ -36,6 +36,9 @@
 		<php min-version="7.3" max-version="8.0" />
 		<nextcloud min-version="20" max-version="23" />
 	</dependencies>
+	<background-jobs>
+		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
+	</background-jobs>
 	<repair-steps>
 		<post-migration>
 			<step>OCA\Mail\Migration\AddMissingDefaultTags</step>
