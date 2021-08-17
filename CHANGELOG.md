@@ -1,6 +1,32 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.10.3 – 2021-08-17
+### Changed
+- Remove link proxy for external links
+### Fixed
+- Reply in quote block
+- Handling of invalid IMAP message IDs
+- Catch Guzzle error in proxy
+- Transaction handling after errors
+- Faulty HTML tidying
+- Unrecoverable bug during new message sync
+- Missing background clean-up job
+
+## 1.10.2 – 2021–07-29
+### Fixed
+- Junk and nonjunk flagging
+- Calendar ics attachment import
+- Missing HTML headers inside the HTML message iframe
+- Missing slash in shared file URL
+- Signature indentation
+
+## 1.10.1 – 2021-07-12
+### Changed
+- Updated and new translations
+### Fixed
+- Upgrade error due to missing method in cached application code
+
 ## 1.10.0 – 2021-07-05
 ### Added
 - Message tagging – stores tags both locally as well as on IMAP (if supported), interoperable with other email clients
