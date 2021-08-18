@@ -121,6 +121,7 @@ export default {
 	},
 	computed: {
 		envelopes() {
+			return this.$store.getters.getThreads(this.mailbox.databaseId, this.searchQuery)
 			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
 		envelopesToShow() {

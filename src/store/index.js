@@ -23,17 +23,65 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import {
+	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
-	PRIORITY_INBOX_ID,
 } from './constants'
 import actions from './actions'
 import { getters } from './getters'
 import mutations from './mutations'
-
+import { normalizedEnvelopeListId } from './normalization'
+import orderBy from 'lodash/fp/orderBy'
 Vue.use(Vuex)
 
+const moduleThreads = {
+	state: {
+		lists: {
+			[UNIFIED_INBOX_ID]: {},
+			[PRIORITY_INBOX_ID]: {},
+		},
+	},
+	mutations: {
+		addAccount(state, account) {
+			const mailboxes = account.mailboxes || []
+			mailboxes.map(mailboxId => Vue.set(state.lists, mailboxId, {}))
+		},
+		addMailbox(state, { mailbox }) {
+			Vue.set(state.lists, mailbox.databaseId, {})
+		},
+		addEnvelope(state, { query, envelope }) {
+			const mailboxId = envelope.mailboxId
+			const listId = normalizedEnvelopeListId(query)
+			const list = state.lists[mailboxId][listId] || []
+
+			const index = list.findIndex((item) => item.threadRootId === envelope.threadRootId)
+			const item = { threadRootId: envelope.threadRootId, messageId: envelope.databaseId, dateInt: envelope.dateInt }
+
+			if (index === -1) {
+				list.push(item)
+			} else {
+				list[index] = item
+			}
+
+			orderBy(list, 'dateInt', 'desc')
+			Vue.set(state.lists[mailboxId], listId, list)
+		},
+	},
+	actions: {},
+	getters: {
+		getThreads: (state, getters, rootState) => (mailboxId, query) => {
+			const listId = normalizedEnvelopeListId(query)
+			const list = state.lists[mailboxId][listId] || []
+
+			return list.map((item) => rootState.envelopes[item.messageId])
+		},
+	},
+}
+
 export default new Vuex.Store({
+	modules: {
+		threads: moduleThreads,
+	},
 	strict: process.env.NODE_ENV !== 'production',
 	state: {
 		preferences: {},
