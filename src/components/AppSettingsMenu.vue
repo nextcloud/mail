@@ -114,9 +114,7 @@ export default {
 			return this.$store.getters.getPreference('collect-data', 'true') === 'true'
 		},
 		useAutoTagging() {
-			const b = this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
-			console.info('TAGGING?????', b)
-			return b
+			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
 		},
 	},
 	methods: {
