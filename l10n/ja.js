@@ -47,6 +47,7 @@ OC.L10N.register(
     "Preferred writing mode for new messages and replies." : "新しいメッセージと返信に使うお好みの書き込みモード",
     "Default folders" : "デフォルトフォルダー",
     "Mail server" : "メールサーバー",
+    "Email address" : "メールアドレス",
     "Add alias" : "別名を追加",
     "Cancel" : "キャンセル",
     "Add mail account" : "メールアカウントを追加",
