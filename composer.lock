@@ -1942,6 +1942,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2021-05-25T05:36:16+00:00"
         },
         {
@@ -2307,16 +2308,16 @@
         },
         {
             "name": "psalm/phar",
-            "version": "4.8.1",
+            "version": "4.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "ce0856e5c28a78382d1fa4e1a11cf9aac6292231"
+                "reference": "05aeae540e7567d7f5de77a0ce200e33e94295ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/ce0856e5c28a78382d1fa4e1a11cf9aac6292231",
-                "reference": "ce0856e5c28a78382d1fa4e1a11cf9aac6292231",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/05aeae540e7567d7f5de77a0ce200e33e94295ca",
+                "reference": "05aeae540e7567d7f5de77a0ce200e33e94295ca",
                 "shasum": ""
             },
             "require": {
@@ -2334,7 +2335,7 @@
                 "MIT"
             ],
             "description": "Composer-based Psalm Phar",
-            "time": "2021-06-21T02:02:58+00:00"
+            "time": "2021-08-15T01:17:47+00:00"
         },
         {
             "name": "roave/security-advisories",
