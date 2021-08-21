@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b13706071837469e62edf63562b57c90",
+    "content-hash": "54065326ca05f02348d91aae0aad3273",
     "packages": [],
     "packages-dev": [
         {
@@ -288,16 +288,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.19.1",
+            "version": "v2.19.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "1fa4af92841f67362c053728989b262fba8eb1ec"
+                "reference": "d5c737c2e18ba502b75b44832b31fe627f82e307"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/1fa4af92841f67362c053728989b262fba8eb1ec",
-                "reference": "1fa4af92841f67362c053728989b262fba8eb1ec",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/d5c737c2e18ba502b75b44832b31fe627f82e307",
+                "reference": "d5c737c2e18ba502b75b44832b31fe627f82e307",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-08-02T17:52:09+00:00"
+            "time": "2021-08-18T19:55:46+00:00"
         },
         {
             "name": "nextcloud/coding-standard",
