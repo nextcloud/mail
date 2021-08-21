@@ -230,7 +230,7 @@ OC.L10N.register(
     "Contacts with this address" : "Kontakte mit dieser E-Mail Adresse",
     "Add to Contact" : "Zu Kontakt hinzufügen",
     "New Contact" : "Neuer Kontakt",
-    "Contact name …" : "Kontakt-Name ...",
+    "Contact name …" : "Kontakt-Name …",
     "Add" : "Hinzufügen",
     "Disabled" : "Deaktiviert",
     "Enabled" : "Aktiviert",
