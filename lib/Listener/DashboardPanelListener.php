@@ -35,6 +35,7 @@ use OCP\Dashboard\RegisterWidgetEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
+/** @extends IEventListener<MessageSentEvent> */
 class DashboardPanelListener implements IEventListener {
 
 	/**

@@ -36,6 +36,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/** @extends IEventListener<MessageSentEvent> */
 class SaveSentMessageListener implements IEventListener {
 
 	/** @var MailboxMapper */

@@ -33,6 +33,7 @@ use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
+/** @extends IEventListener<MessageSentEvent> */
 class AddressCollectionListener implements IEventListener {
 
 	/** @var IUserPreferences */

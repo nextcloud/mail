@@ -32,6 +32,7 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserDeletedEvent;
 use Psr\Log\LoggerInterface;
 
+/** @extends IEventListener<UserDeletedEvent> */
 class UserDeletedListener implements IEventListener {
 
 	/** @var AccountService */
