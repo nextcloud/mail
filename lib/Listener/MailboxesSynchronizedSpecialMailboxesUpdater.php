@@ -40,6 +40,7 @@ use function in_array;
 use function json_decode;
 use function strtolower;
 
+/** @extends IEventListener<MailboxesSynchronizedEvent> */
 class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 
 	/** @var MailAccountMapper */

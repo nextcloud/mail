@@ -37,6 +37,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/** @extends IEventListener<MessageSentEvent> */
 class FlagRepliedMessageListener implements IEventListener {
 
 	/** @var IMAPClientFactory */

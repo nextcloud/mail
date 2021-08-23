@@ -35,6 +35,7 @@ use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 use function class_exists;
 
+/** @extends IEventListener<MessageSentEvent> */
 class InteractionListener implements IEventListener {
 
 	/** @var IEventDispatcher */

@@ -36,6 +36,7 @@ use OCP\EventDispatcher\IEventListener;
 use function array_chunk;
 use function iterator_to_array;
 
+/** @extends IEventListener<SynchronizationEvent> */
 class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private const WRITE_IDS_CHUNK_SIZE = 500;
 
