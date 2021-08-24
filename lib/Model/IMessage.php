@@ -127,9 +127,17 @@ interface IMessage {
 
 	/**
 	 * @param string $name
-	 * @param string $content
+	 * @param string $content attached with mime type 'application/octet-stream'
 	 */
 	public function addRawAttachment(string $name, string $content): void;
+
+	/**
+	 * @param string $name
+	 * @param string $content attached with mime type 'message/rfc822'
+	 *
+	 * @return void
+	 */
+	public function addEmbeddedMessageAttachment(string $name, string $content): void;
 
 	/**
 	 * @param File $file

@@ -54,12 +54,19 @@ class AdminSettingsTest extends TestCase {
 	}
 
 	public function testGetForm() {
-		$this->serviceMock->getParameter('initialStateService')->expects($this->once())
+		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(2))
 			->method('provideInitialState')
-			->with(
-				Application::APP_ID,
-				'provisioning_settings',
-				$this->anything()
+			->withConsecutive(
+				[
+					Application::APP_ID,
+					'provisioning_settings',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'antispam_setting',
+					$this->anything()
+				]
 			);
 		$expected = new TemplateResponse(Application::APP_ID, 'settings-admin');
 
