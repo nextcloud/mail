@@ -20,7 +20,7 @@
  *
  */
 
-import {detect, html, plain, toPlain} from '../../../util/text'
+import { detect, html, plain, toPlain } from '../../../util/text'
 
 describe('text', () => {
 	describe('toPlain', () => {
@@ -70,7 +70,7 @@ describe('text', () => {
 
 		it('converts paragraphs to text', () => {
 			const source = html('<p>hello</p><p>world</p>')
-			const expected = plain('hello\n\nworld')
+			const expected = plain('hello\nworld')
 
 			const actual = toPlain(source)
 
@@ -92,7 +92,7 @@ describe('text', () => {
 					+ '<body><p>Hello!</p><p>this <i>is</i> <b>some</b> random <strong>text</strong></p></body>'
 					+ '</html>'
 			)
-			const expected = plain('Hello!\n\nthis is some random text')
+			const expected = plain('Hello!\nthis is some random text')
 
 			const actual = toPlain(source)
 
