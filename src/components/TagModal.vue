@@ -23,7 +23,7 @@
 	<Modal size="large" @close="onClose">
 		<div class="modal-content">
 			<h2 class="tag-title">
-				{{ t('mail', 'Edit tags') }}
+				{{ t('mail', 'Add default tags') }}
 			</h2>
 			<div v-for="tag in tags" :key="tag.id" class="tag-group">
 				<button class="tag-group__label"
@@ -33,6 +33,22 @@
 					}">
 					{{ tag.displayName }}
 				</button>
+				<Actions v-if="!tag.isDefaultTag" :force-menu="true">
+					<ActionButton v-if="renameTagLabel"
+						icon="icon-rename"
+						@click="openEditTag">
+						{{ t('mail','Rename tag') }}
+					</ActionButton>
+					<ActionInput v-if="renameTagInput"
+						icon="icon-tag"
+						:value="tag.displayName"
+						@submit="renameTag(tag, $event)" />
+					<ActionText
+						v-if="showSaving"
+						icon="icon-loading-small">
+						{{ t('mail', 'Saving new tag name …') }}
+					</ActionText>
+				</Actions>
 				<button v-if="!isSet(tag.imapLabel)"
 					class="tag-actions"
 					@click="addTag(tag.imapLabel)">
@@ -66,9 +82,11 @@
 
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import { showError } from '@nextcloud/dialogs'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { showError, showInfo } from '@nextcloud/dialogs'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -81,8 +99,10 @@ export default {
 	name: 'TagModal',
 	components: {
 		Modal,
+		Actions,
 		ActionText,
 		ActionInput,
+		ActionButton,
 	},
 	props: {
 		envelope: {
@@ -98,6 +118,8 @@ export default {
 			tagLabel: true,
 			tagInput: false,
 			showSaving: false,
+			renameTagLabel: true,
+			renameTagInput: false,
 			color: randomColor(),
 		}
 	},
@@ -155,6 +177,34 @@ export default {
 				return `rgba(${r}, ${g}, ${b}, ${opacity})`
 			}
 		},
+		openEditTag() {
+			this.renameTagLabel = false
+			this.renameTagInput = true
+			this.showSaving = false
+
+		},
+		async renameTag(tag, event) {
+			this.renameTagInput = false
+			this.showSaving = false
+			const displayName = event.target.querySelector('input[type=text]').value
+
+			try {
+				await this.$store.dispatch('updateTag', {
+					tag,
+					displayName,
+					color: tag.color,
+				})
+				this.renameTagLabel = true
+				this.renameTagInput = false
+				this.showSaving = false
+			} catch (error) {
+				showInfo(t('mail', 'An error occurred, unable to rename the tag.'))
+				console.error(error)
+				this.renameTagLabel = false
+				this.renameTagInput = false
+				this.showSaving = true
+			}
+		},
 
 	},
 }
@@ -187,7 +237,7 @@ export default {
 	float: right;
 	&:hover,
 	&:focus {
-		opacity: .7;
+		background-color: var(--color-border-dark);
 	}
 }
 .tag-group__label {
@@ -197,6 +247,9 @@ export default {
 	background-color: transparent;
 	padding-left: 10px;
 	padding-right: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 94px;
 }
 .app-navigation-entry-bullet-wrapper {
 	width: 44px;
@@ -224,13 +277,14 @@ export default {
 	display: inline-block;
 	margin-left: 10px;
 }
-.action {
-	list-style: none;
-}
 ::v-deep .action-input {
 	margin-left: -31px;
 }
 ::v-deep .icon-tag {
 	background-image: none;
+}
+.action-item {
+	right: 8px;
+	float: right;
 }
 </style>
