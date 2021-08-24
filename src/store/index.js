@@ -30,66 +30,13 @@ import {
 import actions from './actions'
 import { getters } from './getters'
 import mutations from './mutations'
-import { normalizedEnvelopeListId } from './normalization'
-import orderBy from 'lodash/fp/orderBy'
+import threadsStore from './threads'
+
 Vue.use(Vuex)
-
-const moduleThreads = {
-	state: {
-		lists: {
-			[UNIFIED_INBOX_ID]: {},
-			[PRIORITY_INBOX_ID]: {},
-		},
-	},
-	mutations: {
-		addAccount(state, account) {
-			const mailboxes = account.mailboxes || []
-			mailboxes.map(mailboxId => Vue.set(state.lists, mailboxId, {}))
-		},
-		addMailbox(state, { mailbox }) {
-			Vue.set(state.lists, mailbox.databaseId, {})
-		},
-		addThread(state, { mailboxId, query, envelope }) {
-			const listId = normalizedEnvelopeListId(query)
-			const list = state.lists[mailboxId][listId] || []
-
-			const index = list.findIndex((item) => item.threadRootId === envelope.threadRootId)
-			const item = { threadRootId: envelope.threadRootId, messageId: envelope.databaseId, dateInt: envelope.dateInt }
-
-			if (index === -1) {
-				list.push(item)
-			} else {
-				list[index] = item
-			}
-
-			orderBy(list, 'dateInt', 'desc')
-			Vue.set(state.lists[mailboxId], listId, list)
-		},
-		removeThread(state, { mailboxId, envelopeId }) {
-			const lists = state.lists[mailboxId]
-			const removeEnvelopeById = (item) => item.messageId !== envelopeId
-
-			for (let list in lists) {
-				list = list.filter(removeEnvelopeById)
-			}
-
-			Vue.set(state.lists, mailboxId, lists)
-		},
-	},
-	actions: {},
-	getters: {
-		getThreads: (state, getters, rootState) => (mailboxId, query) => {
-			const listId = normalizedEnvelopeListId(query)
-			const list = state.lists[mailboxId][listId] || []
-
-			return list.map((item) => rootState.envelopes[item.messageId])
-		},
-	},
-}
 
 export default new Vuex.Store({
 	modules: {
-		threads: moduleThreads,
+		threadsStore,
 	},
 	strict: process.env.NODE_ENV !== 'production',
 	state: {
