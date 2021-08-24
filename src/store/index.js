@@ -49,8 +49,7 @@ const moduleThreads = {
 		addMailbox(state, { mailbox }) {
 			Vue.set(state.lists, mailbox.databaseId, {})
 		},
-		addEnvelope(state, { query, envelope }) {
-			const mailboxId = envelope.mailboxId
+		addThread(state, { mailboxId, query, envelope }) {
 			const listId = normalizedEnvelopeListId(query)
 			const list = state.lists[mailboxId][listId] || []
 
@@ -65,6 +64,16 @@ const moduleThreads = {
 
 			orderBy(list, 'dateInt', 'desc')
 			Vue.set(state.lists[mailboxId], listId, list)
+		},
+		removeThread(state, { mailboxId, envelopeId }) {
+			const lists = state.lists[mailboxId]
+			const removeEnvelopeById = (item) => item.messageId !== envelopeId
+
+			for (let list in lists) {
+				list = list.filter(removeEnvelopeById)
+			}
+
+			Vue.set(state.lists, mailboxId, lists)
 		},
 	},
 	actions: {},

@@ -479,6 +479,11 @@ export default {
 				const unifiedMailbox = getters.getUnifiedMailbox(mailbox.specialRole)
 
 				syncData.newMessages.forEach((envelope) => {
+					commit('addThread', {
+						mailboxId,
+						envelope,
+						query,
+					})
 					commit('addEnvelope', {
 						envelope,
 						query,
@@ -495,6 +500,9 @@ export default {
 					})
 				})
 				syncData.vanishedMessages.forEach((id) => {
+					commit('removeThread', {
+						mailboxId, id,
+					})
 					commit('removeEnvelope', {
 						id,
 					})
