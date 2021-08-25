@@ -47,7 +47,7 @@ jobs:
       env:
         XDEBUG_MODE: coverage
     - name: Report coverage
-      uses: codecov/codecov-action@v2.0.2
+      uses: codecov/codecov-action@v2.0.3
       if: ${{ always() && matrix.nextcloud-versions == 'master' }}
       with:
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
@@ -138,7 +138,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@v2.0.2
+            uses: codecov/codecov-action@v2.0.3
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
