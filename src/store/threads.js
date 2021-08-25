@@ -22,8 +22,7 @@ const mutations = {
 		const listId = normalizedEnvelopeListId(query)
 		const list = state.lists[mailboxId][listId] || []
 
-		const index = list.findIndex(
-			(item) => item.threadRootId === envelope.threadRootId)
+		const index = list.findIndex((item) => item.threadRootId === envelope.threadRootId)
 		const item = {
 			threadRootId: envelope.threadRootId,
 			messageId: envelope.databaseId,
@@ -34,9 +33,12 @@ const mutations = {
 			list.push(item)
 		} else if (list[index].messageId < item.messageId) {
 			list[index] = item
+		} else {
+			return
 		}
 
-		list.sort(orderBy('dateInt', 'desc'))
+		list.sort((a, b) => b.dateInt - a.dateInt)
+		// list.sort(orderBy('dateInt', 'desc'))
 		Vue.set(state.lists[mailboxId], listId, list)
 	},
 	removeThread(state, { mailboxId, envelopeId }) {
