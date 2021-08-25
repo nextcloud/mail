@@ -262,6 +262,10 @@ export default {
 		const envelope = await fetchEnvelope(id)
 		// Only commit if not undefined (not found)
 		if (envelope) {
+			commit('addThread', {
+				mailboxId: envelope.mailboxId,
+				envelope,
+			})
 			commit('addEnvelope', {
 				envelope,
 			})
@@ -291,12 +295,17 @@ export default {
 				andThen(sliceToPage),
 				andThen(
 					tap(
-						map((envelope) =>
+						map((envelope) => {
+							commit('addThread', {
+								mailboxId,
+								envelope,
+								query,
+							})
 							commit('addEnvelope', {
 								envelope,
 								query,
 							})
-						)
+						})
 					)
 				)
 			)
@@ -308,12 +317,17 @@ export default {
 			fetchEnvelopes,
 			andThen(
 				tap(
-					map((envelope) =>
+					map((envelope) => {
+						commit('addThread', {
+							mailboxId,
+							envelope,
+							query,
+						})
 						commit('addEnvelope', {
 							query,
 							envelope,
 						})
-					)
+					})
 				)
 			)
 		)(mailboxId, query, undefined, PAGE_SIZE)
@@ -388,12 +402,17 @@ export default {
 			}
 
 			const envelopes = nextLocalUnifiedEnvelopes(getters.accounts)
-			envelopes.map((envelope) =>
+			envelopes.forEach((envelope) => {
+				commit('addThread', {
+					mailboxId,
+					envelope,
+					query,
+				})
 				commit('addEnvelope', {
 					query,
 					envelope,
 				})
-			)
+			})
 			return envelopes
 		}
 
@@ -416,12 +435,17 @@ export default {
 			logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 				envelopes,
 			})
-			envelopes.forEach((envelope) =>
+			envelopes.forEach((envelope) => {
+				commit('addThread', {
+					mailboxId,
+					envelope,
+					query,
+				})
 				commit('addEnvelope', {
 					query,
 					envelope,
 				})
-			)
+			})
 			return envelopes
 		})
 	},
@@ -503,9 +527,15 @@ export default {
 					commit('removeThread', {
 						mailboxId, id,
 					})
-					commit('removeEnvelope', {
-						id,
-					})
+					// if (!getters.isMessageMounted(mailboxId, id)) {
+					//
+					// }
+					// const envelope = getters.getEnvelope(id)
+					// if (envelope && getters.isThreadMounted(mailbox, envelope.threadRootId)) {
+					// 	commit('removeEnvelope', {
+					// 		id,
+					// 	})
+					// }
 					// Already removed from unified inbox
 				})
 

@@ -20,7 +20,7 @@ const mutations = {
 	},
 	addThread(state, { mailboxId, query, envelope }) {
 		const listId = normalizedEnvelopeListId(query)
-		const list = state.lists[mailboxId][listId] || []
+		let list = state.lists[mailboxId][listId] || []
 
 		const index = list.findIndex(
 			(item) => item.threadRootId === envelope.threadRootId)
@@ -32,18 +32,18 @@ const mutations = {
 
 		if (index === -1) {
 			list.push(item)
-		} else {
+		} else if (list[index].databaseId < item.databaseId) {
 			list[index] = item
 		}
 
-		orderBy(list, 'dateInt', 'desc')
+		list = orderBy(list, ['dateInt'], ['desc'])
 		Vue.set(state.lists[mailboxId], listId, list)
 	},
 	removeThread(state, { mailboxId, envelopeId }) {
-		const lists = state.lists[mailboxId]
 		const removeEnvelopeById = (item) => item.messageId !== envelopeId
+		const lists = state.lists[mailboxId]
 
-		for (let list in lists) {
+		for (let list of lists) {
 			list = list.filter(removeEnvelopeById)
 		}
 
@@ -59,6 +59,23 @@ const getters = {
 		const list = state.lists[mailboxId][listId] || []
 
 		return list.map((item) => rootState.envelopes[item.messageId])
+	},
+	isMessageMounted: (state, getters) => (mailboxId, messageId) => {
+		const envelope = getters.getEnvelope(messageId)
+		if (envelope === undefined) {
+			return false
+		}
+
+		const hasThreadRootId = (item) => item.threadRootId === envelope.threadRootId
+		const lists = state.lists[mailboxId]
+
+		for (const list of lists) {
+			if (list.some(hasThreadRootId)) {
+				return true
+			}
+		}
+
+		return false
 	},
 }
 
