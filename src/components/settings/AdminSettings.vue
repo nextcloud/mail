@@ -125,7 +125,7 @@
 					{{
 						t(
 							'mail',
-							'Any email that is marked as spam will not only be flagged as such but additionally sent to the anti spam service.'
+							'Any email that is marked as spam will be sent to the anti spam service.'
 						)
 					}}
 				</p>
