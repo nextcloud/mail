@@ -494,7 +494,8 @@ export default {
 			)
 		}
 
-		const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
+		// const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
+		const ids = getters.getThreads(mailboxId, query).map((env) => env.databaseId)
 		logger.debug(`mailbox sync of ${mailboxId} (${query}) has ${ids.length} known IDs`)
 		return syncEnvelopes(mailbox.accountId, mailboxId, ids, query, init)
 			.then((syncData) => {

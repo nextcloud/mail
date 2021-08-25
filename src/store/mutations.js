@@ -175,24 +175,24 @@ export default {
 		const mailbox = state.mailboxes[envelope.mailboxId]
 		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
 		Vue.set(envelope, 'accountId', mailbox.accountId)
-		const listId = normalizedEnvelopeListId(query)
-		const existing = mailbox.envelopeLists[listId] || []
-		const idToDateInt = (id) => state.envelopes[id].dateInt
-		const orderByDateInt = orderBy(idToDateInt, 'desc')
-		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
+		// const listId = normalizedEnvelopeListId(query)
+		// const existing = mailbox.envelopeLists[listId] || []
+		// const idToDateInt = (id) => state.envelopes[id].dateInt
+		// const orderByDateInt = orderBy(idToDateInt, 'desc')
+		// Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
 
-		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
-		unifiedAccount.mailboxes
-			.map((mbId) => state.mailboxes[mbId])
-			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
-			.forEach((mailbox) => {
-				const existing = mailbox.envelopeLists[listId] || []
-				Vue.set(
-					mailbox.envelopeLists,
-					listId,
-					uniq(orderByDateInt(existing.concat([envelope.databaseId])))
-				)
-			})
+		// const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
+		// unifiedAccount.mailboxes
+		// 	.map((mbId) => state.mailboxes[mbId])
+		// 	.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
+		// 	.forEach((mailbox) => {
+		// 		const existing = mailbox.envelopeLists[listId] || []
+		// 		Vue.set(
+		// 			mailbox.envelopeLists,
+		// 			listId,
+		// 			uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+		// 		)
+		// 	})
 	},
 	updateEnvelope(state, { envelope }) {
 		const existing = state.envelopes[envelope.databaseId]
@@ -232,47 +232,47 @@ export default {
 			return
 		}
 		const mailbox = state.mailboxes[envelope.mailboxId]
-		for (const listId in mailbox.envelopeLists) {
-			if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
-				continue
-			}
-			const list = mailbox.envelopeLists[listId]
-			const idx = list.indexOf(id)
-			if (idx < 0) {
-				continue
-			}
-			console.debug('envelope ' + id + ' removed from mailbox list ' + listId)
-			list.splice(idx, 1)
-		}
+		// for (const listId in mailbox.envelopeLists) {
+		// 	if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
+		// 		continue
+		// 	}
+		// 	const list = mailbox.envelopeLists[listId]
+		// 	const idx = list.indexOf(id)
+		// 	if (idx < 0) {
+		// 		continue
+		// 	}
+		// 	console.debug('envelope ' + id + ' removed from mailbox list ' + listId)
+		// 	list.splice(idx, 1)
+		// }
 
 		if (!envelope.seen && mailbox.unread) {
 			Vue.set(mailbox, 'unread', mailbox.unread - 1)
 		}
 
-		state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
-			.map((mailboxId) => state.mailboxes[mailboxId])
-			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
-			.forEach((mailbox) => {
-				for (const listId in mailbox.envelopeLists) {
-					if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
-						continue
-					}
-					const list = mailbox.envelopeLists[listId]
-					const idx = list.indexOf(id)
-					if (idx < 0) {
-						console.warn(
-							'envelope does not exist in unified mailbox',
-							mailbox.databaseId,
-							id,
-							listId,
-							list
-						)
-						continue
-					}
-					console.debug('envelope removed from unified mailbox', mailbox.databaseId, id)
-					list.splice(idx, 1)
-				}
-			})
+		// state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
+		// 	.map((mailboxId) => state.mailboxes[mailboxId])
+		// 	.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
+		// 	.forEach((mailbox) => {
+		// 		for (const listId in mailbox.envelopeLists) {
+		// 			if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
+		// 				continue
+		// 			}
+		// 			const list = mailbox.envelopeLists[listId]
+		// 			const idx = list.indexOf(id)
+		// 			if (idx < 0) {
+		// 				console.warn(
+		// 					'envelope does not exist in unified mailbox',
+		// 					mailbox.databaseId,
+		// 					id,
+		// 					listId,
+		// 					list
+		// 				)
+		// 				continue
+		// 			}
+		// 			console.debug('envelope removed from unified mailbox', mailbox.databaseId, id)
+		// 			list.splice(idx, 1)
+		// 		}
+		// 	})
 
 		// Delete references from other threads
 		for (const [key, env] of Object.entries(state.envelopes)) {

@@ -131,7 +131,8 @@ export default {
 			return this.$store.getters.getMailbox(UNIFIED_INBOX_ID)
 		},
 		hasEnvelopes() {
-			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
+			return this.$store.getters.getThreads(this.mailbox.databaseId, this.searchQuery).length > 0
+			// return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
 		},
 		showThread() {
 			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes) && this.$route.name === 'message'
