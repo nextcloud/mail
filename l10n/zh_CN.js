@@ -284,6 +284,7 @@ OC.L10N.register(
     "Add new config" : "添加新配置",
     "Provision all accounts" : "开通所有账户",
     "You can set up an anti spam service email address here." : "你可以在此设置反垃圾邮件服务的电邮地址。",
+    "Any email that is marked as spam will be sent to the anti spam service." : "任何被标记为垃圾邮件的电子邮件将被发送到反垃圾邮件服务",
     "Successfully updated config for \"{domain}\"" : "成功更新了  \"{domain}\" 的配置",
     "Error saving config" : "保存配置时出错",
     "Saved config for \"{domain}\"" : "已保存 \"{domain}\" 的配置",

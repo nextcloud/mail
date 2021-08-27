@@ -282,6 +282,7 @@
     "Add new config" : "添加新配置",
     "Provision all accounts" : "配置所有賬戶",
     "You can set up an anti spam service email address here." : "您可以在此設定反垃圾郵件服務的電郵地址。",
+    "Any email that is marked as spam will be sent to the anti spam service." : "任何被標記為垃圾郵件的電郵會被傳送到反垃圾郵件服務。",
     "Successfully updated config for \"{domain}\"" : "已成功更新 “{domain}” 的配置",
     "Error saving config" : "存儲配置時發生錯誤",
     "Saved config for \"{domain}\"" : "已成功保存 “{domain}” 的配置",

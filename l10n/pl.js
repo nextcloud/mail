@@ -284,6 +284,7 @@ OC.L10N.register(
     "Add new config" : "Dodaj nową konfigurację",
     "Provision all accounts" : "Zabezpiecz wszystkie konta",
     "You can set up an anti spam service email address here." : "Tutaj możesz ustawić adres e-mail usługi antyspamowej.",
+    "Any email that is marked as spam will be sent to the anti spam service." : "Każdy e-mail oznaczony jako spam zostanie wysłany do usługi antyspamowej.",
     "Successfully updated config for \"{domain}\"" : "Pomyślnie zaktualizowano konfigurację dla \"{domain}\"",
     "Error saving config" : "Błąd podczas zapisywania konfiguracji",
     "Saved config for \"{domain}\"" : "Zapisana konfiguracja dla \"{domain}\"",

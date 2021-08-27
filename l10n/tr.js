@@ -284,6 +284,7 @@ OC.L10N.register(
     "Add new config" : "Yeni yapılandırma ekle",
     "Provision all accounts" : "Tüm hesapları hazırla",
     "You can set up an anti spam service email address here." : "İstenmeyen e-posta hizmeti adresini buradan ayarlayabilirsiniz.",
+    "Any email that is marked as spam will be sent to the anti spam service." : "İstenmeyen olarak işaretlenen e-postalar istenmeyen e-posta önleme hizmetine gönderilir.",
     "Successfully updated config for \"{domain}\"" : "\"{domain}\" yapılandırması güncellendi",
     "Error saving config" : "Yapılandırma kaydedilirken sorun çıktı",
     "Saved config for \"{domain}\"" : "\"{domain}\" yapılandırması kaydedildi",
