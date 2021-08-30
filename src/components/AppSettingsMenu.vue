@@ -46,7 +46,7 @@
 			<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
 		</p>
 
-		<p v-if="loadingAvatarSettings" class="app-settings reply-settings">
+		<p v-if="loadingReplySettings" class="app-settings reply-settings">
 			<span class="icon-loading-small" />
 			{{ replySettingsText }}
 		</p>
