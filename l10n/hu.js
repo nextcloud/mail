@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a manuális módot.",
+    "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a kézi módot.",
     "Updating account failed: " : "Fiók frissítése sikertelen: ",
     "Creating account failed: " : "Fiók létrehozása sikertelen: ",
     "Embedded message %s" : "Beágyazott üzenet %s",
@@ -14,7 +14,7 @@ OC.L10N.register(
     "Later" : "Később",
     "Mails" : "Levelek",
     "Mail" : "Levelezés",
-    "💌 A mail app for Nextcloud" : "E-mail alkalmazás a Nextcloud-hoz",
+    "💌 A mail app for Nextcloud" : "E-mail alkalmazás a Nextcloudhoz",
     "Drafts are saved in:" : "Vázlat elmentve ide:",
     "Sent messages are saved in:" : "Elküldött üzenetek elmentve ide:",
     "Deleted messages are moved in:" : "Törölt üzenetek áthelyezve ide:",
