@@ -168,6 +168,10 @@ class PageController extends Controller {
 			'prefill_email',
 			$this->config->getUserValue($user->getUID(), 'settings', 'email', '')
 		);
+		$this->initialStateService->provideInitialState(
+			'sort-order',
+			$this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest-first')
+		);
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');

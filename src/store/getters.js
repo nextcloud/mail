@@ -61,6 +61,9 @@ export const getters = {
 		const list = getters.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
 		return list.map((msgId) => state.envelopes[msgId])
 	},
+	getLastMessageTimestamp: (state, getters) => (mailboxId, query) => {
+		return getters.getMailbox(mailboxId).lastMessageTimestamps[query]
+	},
 	getMessage: (state) => (id) => {
 		return state.messages[id]
 	},

@@ -50,6 +50,7 @@ describe('Vuex store actions', () => {
 				getMailboxes: sinon.stub(),
 				getEnvelope: sinon.stub(),
 				getEnvelopes: sinon.stub(),
+				getPreference: sinon.stub(),
 			},
 		}
 	})
@@ -134,6 +135,7 @@ describe('Vuex store actions', () => {
 		context.getters.getMailbox.returns({
 			isUnified: true,
 		})
+		context.getters.getPreference.withArgs('sort-order').returns('newest-first')
 
 		const envelopes = actions.fetchEnvelopes(context, {
 			mailboxId: UNIFIED_INBOX_ID,
@@ -198,13 +200,13 @@ describe('Vuex store actions', () => {
 			query: undefined,
 			addToUnifiedMailboxes: false,
 		})
-		expect(context.commit).to.have.been.calledWith('addEnvelope', {
-			envelope: {
+		expect(context.commit).to.have.been.calledWith('addEnvelopes', {
+			envelopes: [{
 				databaseId: 123,
 				mailboxId: 21,
 				uid: 321,
 				subject: 'msg1',
-			},
+			}],
 			query: undefined,
 		})
 	})
@@ -388,6 +390,7 @@ describe('Vuex store actions', () => {
 		})
 
 		it('fetches the inbox first', async() => {
+			context.getters.getPreference.withArgs('sort-order').returns('newest-first')
 			context.getters.accounts.push({
 				id: 13,
 			})
@@ -406,12 +409,14 @@ describe('Vuex store actions', () => {
 					databaseId: 11,
 					specialRole: 'inbox',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 				},
 				{
 					name: 'Drafts',
 					databaseId: 12,
 					specialRole: 'draft',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 				},
 			])
 			context.getters.getMailboxes.withArgs(26).returns([
@@ -421,6 +426,7 @@ describe('Vuex store actions', () => {
 					accountId: 26,
 					specialRole: 'inbox',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 				},
 				{
 					name: 'Drafts',
@@ -428,6 +434,7 @@ describe('Vuex store actions', () => {
 					accountId: 26,
 					specialRole: 'draft',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 				},
 			])
 
@@ -474,6 +481,7 @@ describe('Vuex store actions', () => {
 					envelopeLists: {
 						'': [],
 					},
+					lastMessageTimestamps: {},
 				},
 				{
 					name: 'Drafts',
@@ -482,6 +490,7 @@ describe('Vuex store actions', () => {
 					envelopeLists: {
 						'': [],
 					},
+					lastMessageTimestamps: {},
 				},
 			])
 			context.getters.getMailboxes.withArgs(26).returns([
@@ -493,6 +502,7 @@ describe('Vuex store actions', () => {
 					envelopeLists: {
 						'': [],
 					},
+					lastMessageTimestamps: {},
 				},
 				{
 					name: 'Drafts',
@@ -502,6 +512,7 @@ describe('Vuex store actions', () => {
 					envelopeLists: {
 						'': [],
 					},
+					lastMessageTimestamps: {},
 				},
 			])
 			context.dispatch

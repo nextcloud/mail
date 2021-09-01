@@ -33,6 +33,7 @@ const addMailboxToState = curry((state, account, mailbox) => {
 	mailbox.accountId = account.id
 	mailbox.mailboxes = []
 	Vue.set(mailbox, 'envelopeLists', {})
+	Vue.set(mailbox, 'lastMessageTimestamps', {})
 
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
 	const nameWithoutPrefix = account.personalNamespace
@@ -152,6 +153,9 @@ export default {
 	updateMailbox(state, { mailbox }) {
 		Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
 	},
+	updateMailboxLastMessageTimestamp(state, { mailbox, query, timestamp }) {
+		Vue.set(mailbox.lastMessageTimestamps, query, timestamp)
+	},
 	removeMailbox(state, { id }) {
 		const mailbox = state.mailboxes[id]
 		if (mailbox === undefined) {
@@ -170,32 +174,56 @@ export default {
 		}
 		removeRec(account)
 	},
-	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
-		normalizeTags(state, envelope)
-		const mailbox = state.mailboxes[envelope.mailboxId]
-		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
-		Vue.set(envelope, 'accountId', mailbox.accountId)
+	addEnvelopes(state, { query, envelopes, addToUnifiedMailboxes = true }) {
+		if (envelopes.length === 0) {
+			return
+		}
+
+		const mailbox = state.mailboxes[envelopes[0].mailboxId]
 		const listId = normalizedEnvelopeListId(query)
 		const existing = mailbox.envelopeLists[listId] || []
 		const idToDateInt = (id) => state.envelopes[id].dateInt
-		const orderByDateInt = orderBy(idToDateInt, 'desc')
-		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
+		const orderByDateInt = orderBy(idToDateInt, state.preferences['sort-order'] === 'newest-first' ? 'desc' : 'asc')
 
-		if (!addToUnifiedMailboxes) {
+		/*
+		 * Only add messages to the list if the list end (previous newest messages) is already shown in the oldest-first
+		 * sorting preference. There will be a notification, but the user has to scroll down to load all pages to finally
+		 * get to those new messages
+		 */
+		const lastId = orderByDateInt(existing)[0]
+		// If at least one message comes before the current tail then it's "just" a page and not just new messages. We can append those.
+		const isPage = lastId !== undefined && lastId && envelopes.some(envelope => envelope.dateInt < mailbox.lastMessageTimestamps[query])
+		if (!isPage && state.preferences['sort-order'] === 'oldest-first' && lastId && mailbox.lastMessageTimestamps[query] !== state.envelopes[lastId].dateInt) {
+			console.debug(`envelope(s) won't be added to mailbox ${mailbox.databaseId}'s list because it's too new`, {
+				expectedLastTimestamp: mailbox.lastMessageTimestamps[query],
+				actualLastTimestamp: state.envelopes[lastId].dateInt,
+			})
 			return
 		}
-		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
-		unifiedAccount.mailboxes
-			.map((mbId) => state.mailboxes[mbId])
-			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
-			.forEach((mailbox) => {
-				const existing = mailbox.envelopeLists[listId] || []
-				Vue.set(
-					mailbox.envelopeLists,
-					listId,
-					uniq(orderByDateInt(existing.concat([envelope.databaseId])))
-				)
-			})
+
+		envelopes.forEach((envelope) => {
+			const existing = mailbox.envelopeLists[listId] || []
+			normalizeTags(state, envelope)
+			Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
+			Vue.set(envelope, 'accountId', mailbox.accountId)
+			Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
+
+			if (!addToUnifiedMailboxes) {
+				return
+			}
+			const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
+			unifiedAccount.mailboxes
+				.map((mbId) => state.mailboxes[mbId])
+				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
+				.forEach((mailbox) => {
+					const existing = mailbox.envelopeLists[listId] || []
+					Vue.set(
+						mailbox.envelopeLists,
+						listId,
+						uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+					)
+				})
+		})
 	},
 	updateEnvelope(state, { envelope }) {
 		const existing = state.envelopes[envelope.databaseId]

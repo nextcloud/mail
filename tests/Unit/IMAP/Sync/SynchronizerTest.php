@@ -76,7 +76,7 @@ class SynchronizerTest extends TestCase {
 			->method('__get')
 			->with('vanisheduids')
 			->willReturn(new Horde_Imap_Client_Ids($vanishedMessageUids));
-		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids);
+		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids, null);
 
 		$response = $this->synchronizer->sync(
 			$imapClient,
@@ -105,7 +105,7 @@ class SynchronizerTest extends TestCase {
 		$hordeSync->expects($this->any())
 			->method('__get')
 			->willReturn(new Horde_Imap_Client_Ids([]));
-		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids);
+		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids, null);
 
 		$response = $this->synchronizer->sync(
 			$imapClient,

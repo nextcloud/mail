@@ -60,7 +60,25 @@
 			<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
 		</p>
 
-		<p>
+		<h4>{{ t('mail', 'Message sorting order') }}</h4>
+		<p class="app-settings">
+			<CheckboxRadioSwitch :checked.sync="sortOrderNew"
+				type="radio"
+				value="newest-first"
+				name="sort-order-radio"
+				@update:checked="onToggleSortOrder">
+				{{ t('mail', 'Newest first') }}
+			</CheckboxRadioSwitch>
+			<CheckboxRadioSwitch :checked.sync="sortOrderNew"
+				type="radio"
+				value="oldest-first"
+				name="sort-order-radio"
+				@update:checked="onToggleSortOrder">
+				{{ t('mail', 'Oldest first') }}
+			</CheckboxRadioSwitch>
+		</p>
+
+		<p class="app-settings">
 			<button class="icon-mail app-settings-button" @click="registerProtocolHandler">
 				{{ t('mail', 'Register as application for mail links') }}
 			</button>
@@ -79,6 +97,7 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
+import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 
 import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'
@@ -86,6 +105,7 @@ import KeyboardShortcuts from '../views/KeyboardShortcuts'
 export default {
 	name: 'AppSettingsMenu',
 	components: {
+		CheckboxRadioSwitch,
 		KeyboardShortcuts,
 	},
 	data() {
@@ -101,6 +121,7 @@ export default {
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
+			sortOrderNew: this.$store.getters.getPreference('sort-order', 'newest-first'),
 		}
 	},
 	computed: {
@@ -173,6 +194,20 @@ export default {
 			} finally {
 				this.toggleAutoTagging = false
 			}
+		},
+		async onToggleSortOrder() {
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'sort-order',
+						value: this.sortOrderNew,
+					})
+			} catch (error) {
+				Logger.error('could not save preferences for sorting order', { error })
+			}
+
+			// TODO: find a way around this
+			window.location.reload()
 		},
 		registerProtocolHandler() {
 			if (window.navigator.registerProtocolHandler) {

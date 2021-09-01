@@ -126,7 +126,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(5))
+		$this->preferences->expects($this->exactly(6))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -134,6 +134,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'reply-mode', 'top', 'bottom'],
 				[$this->userId, 'collect-data', 'true', 'true'],
 				[$this->userId, 'tag-classified-messages', 'true', 'true'],
+				[$this->userId, 'sort-order', 'newest-first', 'oldest-first'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -220,7 +221,7 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(6))
+		$this->initialState->expects($this->exactly(7))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -228,7 +229,8 @@ class PageControllerTest extends TestCase {
 				['account-settings', []],
 				['tags', []],
 				['prefill_displayName', 'Jane Doe'],
-				['prefill_email', 'jane@doe.cz']
+				['prefill_email', 'jane@doe.cz'],
+				['sort-order', 'oldest-first'],
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index',

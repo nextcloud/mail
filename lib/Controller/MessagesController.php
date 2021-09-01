@@ -155,9 +155,10 @@ class MessagesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $mailboxId
-	 * @param int $cursor
-	 * @param string $filter
+	 * @param int|null $cursor
+	 * @param string|null $filter
 	 * @param int|null $limit
+	 * @param string $sortOrder
 	 *
 	 * @return JSONResponse
 	 *
@@ -168,7 +169,8 @@ class MessagesController extends Controller {
 	public function index(int $mailboxId,
 						  int $cursor = null,
 						  string $filter = null,
-						  int $limit = null): JSONResponse {
+						  int $limit = null,
+						  string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST): JSONResponse {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -176,7 +178,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->logger->debug("loading messages of folder <$mailboxId>");
+		$this->logger->debug("loading messages of mailbox <$mailboxId>");
 
 		return new JSONResponse(
 			$this->mailSearch->findMessages(
@@ -184,7 +186,8 @@ class MessagesController extends Controller {
 				$mailbox,
 				$filter === '' ? null : $filter,
 				$cursor,
-				$limit
+				$limit,
+				$sortOrder
 			)
 		);
 	}

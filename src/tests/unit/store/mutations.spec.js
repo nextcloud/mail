@@ -6,7 +6,7 @@
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
+ * it under the terms of the GNU Affero General Public Licenseas
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
  *
@@ -103,6 +103,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'INBOX',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					mailboxes: [],
 				},
@@ -169,6 +170,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'inbox',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					mailboxes: [],
 				},
@@ -181,6 +183,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'sent',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: 'INBOX.',
 					mailboxes: [],
 				}
@@ -242,6 +245,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'Archive',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -256,6 +260,7 @@ describe('Vuex store mutations', () => {
 					displayName: '2020',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: 'Archive',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -326,6 +331,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'Archive',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -340,6 +346,7 @@ describe('Vuex store mutations', () => {
 					displayName: '2020',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: 'Archive',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -354,6 +361,7 @@ describe('Vuex store mutations', () => {
 					displayName: '08',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: 'Archive.2020',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -388,6 +396,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'Archive',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -433,6 +442,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'Archive',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -445,6 +455,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'Brchive',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -479,6 +490,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'Archive',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -523,6 +535,7 @@ describe('Vuex store mutations', () => {
 					displayName: 'Archive',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: '',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -537,6 +550,7 @@ describe('Vuex store mutations', () => {
 					displayName: '2020',
 					delimiter: '.',
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					path: 'Archive',
 					specialUse: ['archive'],
 					specialRole: 'archive',
@@ -654,21 +668,25 @@ describe('Vuex store mutations', () => {
 					name: 'INBOX',
 					accountId: 13,
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 				},
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
 		expect(state).to.deep.equal({
@@ -696,10 +714,14 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {
 						'': [12345],
 					},
+					lastMessageTimestamps: {},
 				},
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		})
 	})
 
@@ -718,31 +740,34 @@ describe('Vuex store mutations', () => {
 					name: 'INBOX',
 					accountId: 13,
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 				},
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
-				mailboxId: 27,
-				databaseId: 12345,
-				id: 123,
-				subject: 'henlo',
-				uid: 321,
-			},
-		})
-		mutations.addEnvelope(state, {
-			query: undefined,
-			envelope: {
-				mailboxId: 27,
-				databaseId: 12346,
-				id: 124,
-				subject: 'henlo 2',
-				uid: 322,
-			},
+			envelopes: [
+				{
+					mailboxId: 27,
+					databaseId: 12345,
+					id: 123,
+					subject: 'henlo',
+					uid: 321,
+				},
+				{
+					mailboxId: 27,
+					databaseId: 12346,
+					id: 124,
+					subject: 'henlo 2',
+					uid: 322,
+				}
+			],
 		})
 
 		expect(state).to.deep.equal({
@@ -778,10 +803,14 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {
 						'': [12345, 12346],
 					},
+					lastMessageTimestamps: {},
 				},
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		})
 	})
 
@@ -801,6 +830,7 @@ describe('Vuex store mutations', () => {
 					databaseId: 27,
 					accountId: 2,
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 					specialRole: 'inbox',
 				},
 				[UNIFIED_INBOX_ID]: {
@@ -810,16 +840,19 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
 		expect(state).to.deep.equal({
@@ -848,6 +881,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {
 						'': [12345],
 					},
+					lastMessageTimestamps: {},
 				},
 				[UNIFIED_INBOX_ID]: {
 					specialRole: 'inbox',
@@ -858,6 +892,9 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		})
 	})
 
@@ -890,6 +927,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {
 						'': [12345],
 					},
+					lastMessageTimestamps: {},
 				},
 				[UNIFIED_INBOX_ID]: {
 					id: UNIFIED_INBOX_ID,
@@ -910,6 +948,9 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		}
 
 		mutations.removeEnvelope(state, {
@@ -939,6 +980,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {
 						'': [],
 					},
+					lastMessageTimestamps: {},
 				},
 				[UNIFIED_INBOX_ID]: {
 					id: UNIFIED_INBOX_ID,
@@ -959,6 +1001,9 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		})
 	})
 
@@ -973,6 +1018,7 @@ describe('Vuex store mutations', () => {
 				27: {
 					databaseId: 27,
 					accountId: 1,
+					lastMessageTimestamps: {},
 				},
 			},
 			envelopes: {
@@ -1008,6 +1054,7 @@ describe('Vuex store mutations', () => {
 				27: {
 					databaseId: 27,
 					accountId: 1,
+					lastMessageTimestamps: {},
 				},
 			},
 			envelopes: {
@@ -1058,15 +1105,19 @@ describe('Vuex store mutations', () => {
 					name: 'INBOX',
 					accountId: 13,
 					envelopeLists: {},
+					lastMessageTimestamps: {},
 				},
 			},
 			tagList: [],
 			tags: {},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
@@ -1082,7 +1133,7 @@ describe('Vuex store mutations', () => {
 						isDefaultTag: true,
 					},
 				},
-			},
+			}],
 		})
 
 		expect(state).to.deep.equal({
@@ -1110,6 +1161,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {
 						'': [12345],
 					},
+					lastMessageTimestamps: {},
 				},
 			},
 			tagList: [
@@ -1125,6 +1177,9 @@ describe('Vuex store mutations', () => {
 					isDefaultTag: true,
 				},
 			},
+			preferences: {
+				'sort-order': 'newest-first',
+			}
 		})
 	})
 
@@ -1147,6 +1202,7 @@ describe('Vuex store mutations', () => {
 				27: {
 					databaseId: 27,
 					accountId: 1,
+					lastMessageTimestamps: {},
 				},
 			},
 			envelopes: {
@@ -1184,6 +1240,7 @@ describe('Vuex store mutations', () => {
 				27: {
 					databaseId: 27,
 					accountId: 1,
+					lastMessageTimestamps: {},
 				},
 			},
 			envelopes: {
@@ -1234,6 +1291,7 @@ describe('Vuex store mutations', () => {
 				27: {
 					databaseId: 27,
 					accountId: 1,
+					lastMessageTimestamps: {},
 				},
 			},
 			envelopes: {
@@ -1265,6 +1323,7 @@ describe('Vuex store mutations', () => {
 				27: {
 					databaseId: 27,
 					accountId: 1,
+					lastMessageTimestamps: {},
 				},
 			},
 			envelopes: {

@@ -80,6 +80,10 @@ store.commit('savePreference', {
 	key: 'tag-classified-messages',
 	value: getPreferenceFromPage('tag-classified-messages'),
 })
+store.commit('savePreference', {
+	key: 'sort-order',
+	value: loadState('mail', 'sort-order', 'newest-first'),
+})
 
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])

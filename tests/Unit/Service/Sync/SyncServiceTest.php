@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
@@ -89,7 +91,7 @@ class SyncServiceTest extends TestCase {
 	public function testPartialSyncOnUncachedMailbox() {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$mailbox->expects($this->once())
+		$mailbox->expects(self::once())
 			->method('isCached')
 			->willReturn(false);
 
@@ -99,6 +101,7 @@ class SyncServiceTest extends TestCase {
 			$mailbox,
 			42,
 			[],
+			null,
 			true
 		);
 	}
@@ -113,6 +116,7 @@ class SyncServiceTest extends TestCase {
 			[],
 			[],
 			[],
+			null,
 			new MailboxStats(42, 10)
 		);
 
@@ -120,7 +124,7 @@ class SyncServiceTest extends TestCase {
 			->method('findUidsForIds')
 			->with($mailbox, [])
 			->willReturn([]);
-		$this->synchronizer->expects($this->once())
+		$this->synchronizer->expects(self::once())
 			->method('sync')
 			->with(
 				$account,
@@ -130,7 +134,7 @@ class SyncServiceTest extends TestCase {
 				[],
 				true
 			);
-		$this->mailboxSync->expects($this->once())
+		$this->mailboxSync->expects(self::once())
 			->method('syncStats')
 			->with($account, $mailbox);
 
@@ -139,9 +143,10 @@ class SyncServiceTest extends TestCase {
 			$mailbox,
 			0,
 			[],
+			null,
 			false
 		);
 
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 }

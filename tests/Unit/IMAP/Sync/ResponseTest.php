@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -29,11 +31,12 @@ class ResponseTest extends TestCase {
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessages = [];
-		$response = new Response($newMessages, $changedMessages, $vanishedMessages);
+		$response = new Response($newMessages, $changedMessages, $vanishedMessages, null);
 		$expected = [
 			'newMessages' => [],
 			'changedMessages' => [],
 			'vanishedMessages' => [],
+			'lastMessageTimestamp' => null,
 			'stats' => null,
 		];
 

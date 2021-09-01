@@ -40,6 +40,9 @@ class Response implements JsonSerializable {
 	/** @var int[] */
 	private $vanishedMessageUids;
 
+	/** @var int|null */
+	private $lastMessageTimestamp;
+
 	/** @var MailboxStats */
 	private $stats;
 
@@ -47,15 +50,18 @@ class Response implements JsonSerializable {
 	 * @param T[] $newMessages
 	 * @param T[] $changedMessages
 	 * @param int[] $vanishedMessageUids
+	 * @param int|null $lastMessageTimestamp
 	 * @param MailboxStats|null $stats
 	 */
 	public function __construct(array $newMessages,
 								array $changedMessages,
 								array $vanishedMessageUids,
+								?int $lastMessageTimestamp,
 								MailboxStats $stats = null) {
 		$this->newMessages = $newMessages;
 		$this->changedMessages = $changedMessages;
 		$this->vanishedMessageUids = $vanishedMessageUids;
+		$this->lastMessageTimestamp = $lastMessageTimestamp;
 		$this->stats = $stats;
 	}
 
@@ -92,6 +98,7 @@ class Response implements JsonSerializable {
 			'newMessages' => $this->newMessages,
 			'changedMessages' => $this->changedMessages,
 			'vanishedMessages' => $this->vanishedMessageUids,
+			'lastMessageTimestamp' => $this->lastMessageTimestamp,
 			'stats' => $this->stats,
 		];
 	}

@@ -487,6 +487,7 @@ class AccountsController extends Controller {
 				$draftsMailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 				[],
+				null,
 				false
 			);
 			return new JSONResponse([

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Sync;
 
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -112,7 +113,9 @@ class SyncService {
 								Mailbox $mailbox,
 								int $criteria,
 								array $knownIds = null,
+								?int $lastMessageTimestamp,
 								bool $partialOnly,
+								string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST,
 								string $filter = null): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
@@ -134,6 +137,8 @@ class SyncService {
 			$account,
 			$mailbox,
 			$knownIds ?? [],
+			$lastMessageTimestamp,
+			$sortOrder,
 			$query
 		);
 	}
@@ -142,6 +147,8 @@ class SyncService {
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param int[] $knownIds
+	 * @param string $sortOrder
+	 * @psalm-param IMailSearch::ORDER_* $sortOrder
 	 * @param SearchQuery $query
 	 *
 	 * @return Response
@@ -151,24 +158,35 @@ class SyncService {
 	private function getDatabaseSyncChanges(Account $account,
 											Mailbox $mailbox,
 											array $knownIds,
+											?int $lastMessageTimestamp,
+											string $sortOrder,
 											?SearchQuery $query): Response {
-		if (empty($knownIds)) {
+		if (empty($knownIds) || $lastMessageTimestamp === null) {
+			// The front-end previously saw the full mailbox, but it was empty.
+			// So we return all currently known IDs and return them as new.
 			$newIds = $this->messageMapper->findAllIds($mailbox);
 		} else {
-			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds);
+			// The front end possibly had a list of messages. Now we try to find the
+			// newer ones but keep the previously highest UID in consideration to
+			// prevent loading messages between the currently shown list and the
+			// actually new messages. This is relevant for oldest-first sorting of
+			// a larger mailbox where only a few of the oldest messages are shown,
+			// then there are pages not yet loaded and least you'll have the actually
+			// new messages.
+			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds, $lastMessageTimestamp);
 		}
 
 		if ($query !== null) {
 			// Filter new messages to those that also match the current filter
 			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
-			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $newUids);
+			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $newUids, $sortOrder);
 		}
 		$new = $this->messageMapper->findByIds($account->getUserId(), $newIds);
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
 			$changedUids = $this->messageMapper->findUidsForIds($mailbox, $knownIds);
-			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $changedUids);
+			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $changedUids, $sortOrder);
 		} else {
 			$changedIds = $knownIds;
 		}
@@ -183,7 +201,8 @@ class SyncService {
 			$this->previewEnhancer->process($account, $mailbox, $new),
 			$changed,
 			$vanished,
-			$mailbox->getStats()
+			$this->messageMapper->findLastMessageTimestamp($account, $mailbox, $query, $sortOrder),
+			$mailbox->getStats(),
 		);
 	}
 }

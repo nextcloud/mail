@@ -30,10 +30,13 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\Search\Result;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
 
 interface IMailSearch {
+	public const ORDER_NEWEST_FIRST = 'newest-first';
+	public const ORDER_OLDEST_FIRST = 'oldest-first';
 
 	/**
 	 * @param Account $account
@@ -55,8 +58,10 @@ interface IMailSearch {
 	 * @param string|null $filter
 	 * @param int|null $cursor
 	 * @param int|null $limit
+	 * @param string $sortOrder
+	 * @psalm-param IMailSearch::ORDER_* $sortOrder
 	 *
-	 * @return Message[]
+	 * @return Result
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -65,7 +70,8 @@ interface IMailSearch {
 								 Mailbox $mailbox,
 								 ?string $filter,
 								 ?int $cursor,
-								 ?int $limit): array;
+								 ?int $limit,
+								 string $sortOrder): Result;
 
 	/**
 	 * @param IUser $user

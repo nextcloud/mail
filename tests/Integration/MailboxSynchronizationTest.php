@@ -73,6 +73,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 
@@ -110,6 +111,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		// Second, put a new message into the mailbox
@@ -156,6 +158,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		$this->flagMessage($mailbox, $uid, $account);
@@ -199,6 +202,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		$this->deleteMessage($mailbox, $uid, $account);

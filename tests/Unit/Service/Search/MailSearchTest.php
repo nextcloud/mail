@@ -27,6 +27,7 @@ namespace OCA\Mail\Tests\Unit\Service\Search;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -38,6 +39,7 @@ use OCA\Mail\IMAP\Search\Provider;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\MailSearch;
+use OCA\Mail\Service\Search\Result;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -85,7 +87,7 @@ class MailSearchTest extends TestCase {
 		);
 	}
 
-	public function testFindMessagesNotCached() {
+	public function testFindMessagesNotCached(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
@@ -97,11 +99,12 @@ class MailSearchTest extends TestCase {
 			$mailbox,
 			null,
 			null,
-			null
+			null,
+			IMailSearch::ORDER_NEWEST_FIRST,
 		);
 	}
 
-	public function testFindMessagesLocked() {
+	public function testFindMessagesLocked(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewLock(123);
@@ -112,13 +115,14 @@ class MailSearchTest extends TestCase {
 			$mailbox,
 			null,
 			null,
-			null
+			null,
+			IMailSearch::ORDER_NEWEST_FIRST,
 		);
 	}
 
-	public function testNoFindMessages() {
+	public function testFindNoMessages(): void {
 		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
+		$account->expects(self::once())
 			->method('getUserId')
 			->willReturn('admin');
 		$mailbox = new Mailbox();
@@ -126,20 +130,21 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncChangedToken('def');
 		$mailbox->setSyncVanishedToken('ghi');
 
-		$messages = $this->search->findMessages(
+		$result = $this->search->findMessages(
 			$account,
 			$mailbox,
 			null,
 			null,
-			null
+			null,
+			IMailSearch::ORDER_NEWEST_FIRST,
 		);
 
-		$this->assertEmpty($messages);
+		self::assertEquals(new Result([], null), $result);
 	}
 
-	public function testFindFlagsLocally() {
+	public function testFindFlagsLocally(): void {
 		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
+		$account->expects(self::once())
 			->method('getUserId')
 			->willReturn('admin');
 		$mailbox = new Mailbox();
@@ -148,36 +153,38 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncVanishedToken('ghi');
 		$query = new SearchQuery();
 		$query->addFlag(Flag::is(Flag::SEEN));
-		$this->filterStringParser->expects($this->once())
+		$this->filterStringParser->expects(self::once())
 			->method('parse')
 			->with('my search')
 			->willReturn($query);
-		$this->messageMapper->expects($this->once())
+		$messages = [
+			$this->createMock(Message::class),
+			$this->createMock(Message::class),
+		];
+		$this->messageMapper->expects(self::once())
 			->method('findByIds')
-			->willReturn([
-				$this->createMock(Message::class),
-				$this->createMock(Message::class),
-			]);
-		$this->imapSearchProvider->expects($this->never())
+			->willReturn($messages);
+		$this->imapSearchProvider->expects(self::never())
 			->method('findMatches');
-		$this->previewEnhancer->expects($this->once())
+		$this->previewEnhancer->expects(self::once())
 			->method('process')
 			->willReturnArgument(2);
 
-		$messages = $this->search->findMessages(
+		$result = $this->search->findMessages(
 			$account,
 			$mailbox,
 			'my search',
 			null,
-			null
+			null,
+			IMailSearch::ORDER_NEWEST_FIRST,
 		);
 
-		$this->assertCount(2, $messages);
+		self::assertEquals(new Result($messages, null), $result);
 	}
 
-	public function testFindText() {
+	public function testFindText(): void {
 		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
+		$account->expects(self::once())
 			->method('getUserId')
 			->willReturn('admin');
 		$mailbox = new Mailbox();
@@ -187,32 +194,34 @@ class MailSearchTest extends TestCase {
 		$query = new SearchQuery();
 		$query->addTextToken('my');
 		$query->addTextToken('search');
-		$this->filterStringParser->expects($this->once())
+		$this->filterStringParser->expects(self::once())
 			->method('parse')
 			->with('my search')
 			->willReturn($query);
-		$this->imapSearchProvider->expects($this->once())
+		$this->imapSearchProvider->expects(self::once())
 			->method('findMatches')
 			->with($account, $mailbox, $query)
 			->willReturn([2, 3]);
-		$this->messageMapper->expects($this->once())
+		$messages = [
+			$this->createMock(Message::class),
+			$this->createMock(Message::class),
+		];
+		$this->messageMapper->expects(self::once())
 			->method('findByIds')
-			->willReturn([
-				$this->createMock(Message::class),
-				$this->createMock(Message::class),
-			]);
-		$this->previewEnhancer->expects($this->once())
+			->willReturn($messages);
+		$this->previewEnhancer->expects(self::once())
 			->method('process')
 			->willReturnArgument(2);
 
-		$messages = $this->search->findMessages(
+		$result = $this->search->findMessages(
 			$account,
 			$mailbox,
 			'my search',
 			null,
-			null
+			null,
+			IMailSearch::ORDER_NEWEST_FIRST,
 		);
 
-		$this->assertCount(2, $messages);
+		self::assertEquals(new Result($messages, null), $result);
 	}
 }
