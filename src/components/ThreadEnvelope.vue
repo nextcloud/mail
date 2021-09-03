@@ -46,10 +46,10 @@
 				:class="{seen: envelope.flags.seen}"
 				@click.native.prevent="$emit('toggleExpand', $event)">
 				<span class="sender">{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}</span>
-				<div class="subject">
+				<div v-if="hasChangedSubject" class="subject">
 					<span class="preview">
 						<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
-						{{ envelope.subject }}
+						{{ cleanSubject }}
 					</span>
 				</div>
 				<div v-for="tag in tags"
@@ -126,6 +126,10 @@ export default {
 				Number,
 			],
 			default: undefined,
+		},
+		threadSubject: {
+			required: true,
+			type: String,
 		},
 		expanded: {
 			required: false,
@@ -205,6 +209,12 @@ export default {
 		},
 		tags() {
 			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter((tag) => tag.imapLabel !== '$label1')
+		},
+		hasChangedSubject() {
+			return this.cleanSubject !== this.threadSubject
+		},
+		cleanSubject() {
+			return this.envelope.subject.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
 		},
 	},
 	watch: {
