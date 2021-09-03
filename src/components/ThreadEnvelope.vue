@@ -45,7 +45,9 @@
 				class="left"
 				:class="{seen: envelope.flags.seen}"
 				@click.native.prevent="$emit('toggleExpand', $event)">
-				<span class="sender">{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}</span>
+				<div class="sender">
+					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
+				</div>
 				<div v-if="hasChangedSubject" class="subject">
 					<span class="preview">
 						<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
