@@ -199,7 +199,7 @@ OC.L10N.register(
     "Settings" : "Paramètres",
     "Quota" : "Quota",
     "Show only subscribed mailboxes" : "Afficher uniquement les dossiers abonnés",
-    "Add mailbox" : "Ajouter une boite aux lettres",
+    "Add mailbox" : "Créer un dossier",
     "Saving" : "Enregistrement",
     "Move up" : "Monter",
     "Move down" : "Descendre",
