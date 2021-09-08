@@ -23,16 +23,16 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
-use function array_filter;
-use function array_map;
-use function in_array;
-use function reset;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
+use function array_filter;
+use function array_map;
+use function in_array;
+use function reset;
 
 class FolderMapper {
 
@@ -236,8 +236,13 @@ class FolderMapper {
 			'junk' => ['junk', 'spam', 'bulk mail'],
 		];
 
-		$lowercaseExplode = explode($folder->getDelimiter(), $folder->getMailbox(), 2);
+		if ($folder->getDelimiter() === null) {
+			$lowercaseExplode = [$folder->getMailbox()];
+		} else {
+			$lowercaseExplode = explode($folder->getDelimiter(), $folder->getMailbox(), 2);
+		}
 		$lowercaseId = strtolower(array_pop($lowercaseExplode));
+
 		foreach ($specialFoldersDict as $specialRole => $specialNames) {
 			if (in_array($lowercaseId, $specialNames)) {
 				$folder->addSpecialUse($specialRole);

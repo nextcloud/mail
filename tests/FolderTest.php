@@ -60,6 +60,12 @@ class FolderTest extends TestCase {
 		$this->assertSame(',', $this->folder->getDelimiter());
 	}
 
+	public function testGetDelimiterNull(): void {
+		$this->mockFolder([], null);
+
+		$this->assertNull($this->folder->getDelimiter());
+	}
+
 	public function testGetAttributes() {
 		$this->mockFolder(['\noselect']);
 

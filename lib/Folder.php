@@ -45,13 +45,7 @@ class Folder {
 	/** @var string[] */
 	private $specialUse;
 
-	/**
-	 * @param Account $account
-	 * @param Horde_Imap_Client_Mailbox $mailbox
-	 * @param array $attributes
-	 * @param string $delimiter
-	 */
-	public function __construct(int $accountId, Horde_Imap_Client_Mailbox $mailbox, array $attributes, $delimiter) {
+	public function __construct(int $accountId, Horde_Imap_Client_Mailbox $mailbox, array $attributes, ?string $delimiter) {
 		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
@@ -67,10 +61,7 @@ class Folder {
 		return $this->mailbox->utf8;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getDelimiter() {
+	public function getDelimiter(): ?string {
 		return $this->delimiter;
 	}
 
