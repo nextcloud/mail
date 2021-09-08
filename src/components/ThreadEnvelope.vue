@@ -333,6 +333,21 @@ export default {
 	.envelope {
 		display: flex;
 		flex-direction: column;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		border-radius: 16px;
+		margin-left: 10px;
+		margin-right: 10px;
+		background-color: var(--color-main-background);
+		padding-bottom: 20px;
+
+		& + .envelope {
+			margin-top: -20px;
+		}
+
+		&:last-of-type {
+			margin-bottom: 10px;
+			padding-bottom: 0;
+		}
 	}
 
 	.envelope--header {
