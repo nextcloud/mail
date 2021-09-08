@@ -62,6 +62,9 @@
 		<NewMessageDetail v-if="newMessage" />
 		<Thread v-else-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
+		<NewMessageModal
+			v-if="showComposer"
+			@close="showComposer = false" />
 	</AppContent>
 </template>
 
@@ -80,6 +83,7 @@ import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
+import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'MailboxThread',
@@ -95,6 +99,7 @@ export default {
 		Popover,
 		SectionTitle,
 		Thread,
+		NewMessageModal,
 	},
 	mixins: [isMobile],
 	props: {
@@ -121,6 +126,7 @@ export default {
 				refresh: ['r'],
 				unseen: ['u'],
 			},
+			showComposer: false,
 		}
 	},
 	computed: {
@@ -150,12 +156,19 @@ export default {
 				this.$route.params.threadId === 'new'
 				|| this.$route.params.threadId === 'reply'
 				|| this.$route.params.threadId === 'replyAll'
-				|| this.$route.params.threadId === 'asNew'
 			)
 		},
 		isThreadShown() {
 			return !!this.$route.params.threadId
 		},
+	},
+	watch: {
+		$route() {
+			this.handleMailto()
+		},
+	},
+	created() {
+		this.handleMailto()
 	},
 	methods: {
 		deleteMessage(id) {
@@ -183,6 +196,11 @@ export default {
 					filter: this.$route.params?.filter,
 				},
 			})
+		},
+		handleMailto() {
+			if (this.$route.name === 'message' && this.$route.params.threadId === 'mailto') {
+				this.showComposer = true
+			}
 		},
 	},
 }

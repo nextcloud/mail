@@ -108,20 +108,11 @@
 				@click.prevent="showEventModal = true">
 				{{ t('mail', 'Create event') }}
 			</ActionButton>
-			<ActionRouter icon="icon-add"
-				:to="{
-					name: 'message',
-					params: {
-						mailboxId: $route.params.mailboxId,
-						threadId: 'asNew',
-						filter: $route.params.filter,
-					},
-					query: {
-						messageId: data.databaseId,
-					},
-				}">
+			<ActionButton icon="icon-add"
+				:close-after-click="true"
+				@click.prevent="onOpenEditAsNew">
 				{{ t('mail', 'Edit as new message') }}
-			</ActionRouter>
+			</ActionButton>
 			<ActionButton icon="icon-delete"
 				:close-after-click="true"
 				@click.prevent="onDelete">
@@ -155,13 +146,15 @@
 				:account="account"
 				:envelope="data"
 				@close="onCloseTagModal" />
+			<NewMessageModal v-if="showNewMessage"
+				:template-message-id="data.databaseId"
+				@close="showNewMessage = false" />
 		</template>
 	</ListItem>
 </template>
 <script>
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
 import moment from '@nextcloud/moment'
@@ -176,6 +169,7 @@ import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
+import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'Envelope',
@@ -184,9 +178,9 @@ export default {
 		ListItem,
 		Avatar,
 		ActionButton,
-		ActionRouter,
 		MoveModal,
 		TagModal,
+		NewMessageModal,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -226,6 +220,7 @@ export default {
 			showMoveModal: false,
 			showEventModal: false,
 			showTagModal: false,
+			showNewMessage: false,
 		}
 	},
 	computed: {
@@ -376,6 +371,9 @@ export default {
 					},
 				}))
 			}
+		},
+		onOpenEditAsNew() {
+			this.showNewMessage = true
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true

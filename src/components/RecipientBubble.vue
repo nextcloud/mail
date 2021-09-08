@@ -171,8 +171,8 @@ export default {
 			this.$router.push({
 				name: 'message',
 				params: {
-					mailboxId: 'priority', // TODO: figure out current mailbox
-					threadId: 'new',
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'mailto',
 				},
 				query: {
 					to: this.email,

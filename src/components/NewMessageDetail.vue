@@ -18,7 +18,8 @@
 			:draft="saveDraft"
 			:send="sendMessage"
 			:reply-to="composerData.replyTo"
-			:forward-from="composerData.forwardFrom" />
+			:forward-from="composerData.forwardFrom"
+			:template-message-id="templateMessageId" />
 	</AppContentDetails>
 </template>
 
@@ -26,14 +27,12 @@
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import { buildForwardSubject, buildReplySubject, buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import Composer from './Composer'
-import Error from './Error'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
-import { detect, html, plain, toPlain } from '../util/text'
+import { html, plain, toPlain } from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
 import { saveDraft, sendMessage } from '../service/MessageService'
@@ -43,7 +42,6 @@ export default {
 	components: {
 		AppContentDetails,
 		Composer,
-		Error,
 		Loading,
 	},
 	data() {
@@ -55,6 +53,7 @@ export default {
 			errorMessage: '',
 			error: undefined,
 			newDraftId: undefined,
+			templateMessageId: undefined,
 		}
 	},
 	computed: {
@@ -104,21 +103,6 @@ export default {
 						originalBody: this.originalBody,
 						replyTo: message,
 					}
-				} else if (this.$route.params.threadId === 'asNew') {
-					logger.debug('composing as new', { original: this.original })
-
-					if (this.original.attachments.length) {
-						showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
-					}
-
-					return {
-						accountId: message.accountId,
-						to: message.to,
-						cc: message.cc,
-						subject: message.subject,
-						body: this.originalBody,
-						originalBody: this.originalBody,
-					}
 				} else {
 					// forward
 					return {
@@ -132,24 +116,7 @@ export default {
 					}
 				}
 			} else {
-				// New or mailto: message
-				logger.debug('composing a new message or handling a mailto link', {
-					threadId: this.$route.params.threadId,
-				})
-
-				let accountId
-				// Only preselect an account when we're not in a unified mailbox
-				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
-					accountId = parseInt(this.$route.params.accountId, 10)
-				}
-
-				return {
-					accountId,
-					to: this.stringToRecipients(this.$route.query.to),
-					cc: this.stringToRecipients(this.$route.query.cc),
-					subject: this.$route.query.subject || '',
-					body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
-				}
+				throw new Error('new message details can only be for replies and forwards')
 			}
 		},
 	},
@@ -179,18 +146,6 @@ export default {
 		this.fetchMessage()
 	},
 	methods: {
-		stringToRecipients(str) {
-			if (str === undefined) {
-				return []
-			}
-
-			return [
-				{
-					label: str,
-					email: str,
-				},
-			]
-		},
 		fetchMessage() {
 			if (this.$route.params.draftId !== undefined) {
 				return this.fetchDraftMessage(this.$route.params.draftId)
@@ -301,7 +256,7 @@ export default {
 			const account = this.$store.getters.getAccount(data.account)
 			if (parseInt(this.$route.params.mailboxId, 10) === account.draftsMailboxId) {
 				this.newDraftId = id
-				this.$router.replace({
+				await this.$router.replace({
 					to: 'message',
 					params: {
 						mailboxId: this.$route.params.mailboxId,
