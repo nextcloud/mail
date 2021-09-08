@@ -40,7 +40,6 @@ import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin'
 
@@ -77,7 +76,7 @@ export default {
 		},
 	},
 	data() {
-		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin, QuotePlugin]
+		const plugins = [EssentialsPlugin, SignaturePlugin, QuotePlugin]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
