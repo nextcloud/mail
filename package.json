@@ -45,7 +45,7 @@
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^4.5.13",
     "color-convert": "^2.0.1",
-    "core-js": "^3.17.2",
+    "core-js": "^3.17.3",
     "debounce-promise": "^3.1.2",
     "dompurify": "^2.3.1",
     "html-to-text": "^5.1.1",
@@ -84,7 +84,7 @@
     "npm": ">=7.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.0",
+    "@babel/core": "^7.15.5",
     "@babel/eslint-parser": "^7.15.4",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.15.4",
