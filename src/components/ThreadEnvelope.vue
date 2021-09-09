@@ -354,7 +354,6 @@ export default {
 		position: relative;
 		display: flex;
 		padding: 10px;
-		margin-bottom: 3px;
 		border-radius: var(--border-radius);
 
 		&:hover {
