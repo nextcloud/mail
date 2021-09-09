@@ -58,7 +58,7 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Gravatar és favicon avatarok használata",
     "Register as application for mail links" : "Alkalmazás beállítása e-mail hivatkozásokhoz",
     "Show keyboard shortcuts" : "Billentyűparancsok mutatása",
-    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Engedélyezés az appnak, személyreszabás és a felhasználói élmény javítása érdekében adatokat gyűjtsön az interakcióidról. Az adatok lokálisan lesznek tárolva.",
+    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Engedélyezés az alkalmazásnak, hogy az adatokat gyűjtsön az interakcióiról. Az adatok alapján az alkalmazás alkalmazkodni fog a használati szokásaihoz. Az adatok helyben lesznek tárolva.",
     "Put my text to the bottom of a reply instead of on top of it." : "Helyezze a szövegt a válasz aljára, nem pedig a tetejére.",
     "From" : "Feladó",
     "Select account" : "Fiók kiválasztása",
