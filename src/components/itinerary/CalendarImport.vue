@@ -70,6 +70,13 @@ export default {
 				})
 		},
 	},
+
+	itineraryDateTime(dt) {
+		if (typeof dt === 'string') {
+			return dt
+		}
+		return dt['@value']
+	}
 }
 </script>
 

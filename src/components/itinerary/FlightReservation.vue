@@ -80,25 +80,25 @@ export default {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.departureTime['@value']).format('LT')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('LT')
 		},
 		departureDate() {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.departureTime['@value']).format('L')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('L')
 		},
 		arrivalTime() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.arrivalTime['@value']).format('LT')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('LT')
 		},
 		arrivalDate() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.arrivalTime['@value']).format('L')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('L')
 		},
 		flightNumber() {
 			return this.data.reservationFor.airline.iataCode + this.data.reservationFor.flightNumber
