@@ -46,6 +46,7 @@ OC.L10N.register(
     "Writing mode" : "書き込みモード",
     "Preferred writing mode for new messages and replies." : "新しいメッセージと返信に使うお好みの書き込みモード",
     "Default folders" : "デフォルトフォルダー",
+    "The folders to use for drafts, sent messages and deleted messages." : "下書き、送信済みメッセージ、削除済みメッセージに使用するフォルダです。",
     "Mail server" : "メールサーバー",
     "Email address" : "メールアドレス",
     "Add alias" : "別名を追加",
