@@ -93,7 +93,7 @@ OC.L10N.register(
     "Uploading attachments …" : "Wysyłanie załączników…",
     "Sending …" : "Wysyłanie…",
     "Error sending your message" : "Błąd podczas wysyłania wiadomości",
-    "Go back" : "Powrót",
+    "Go back" : "Wstecz",
     "Retry" : "Powtórz",
     "Warning sending your message" : "Ostrzeżenie podczas wysyłania wiadomości",
     "Send anyway" : "Wyślij mimo to",
