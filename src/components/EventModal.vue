@@ -59,11 +59,9 @@
 </template>
 
 <script>
-import { createEvent, getTimezoneManager } from '@nextcloud/calendar-js'
+import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
-import DateTimeValue from '@nextcloud/calendar-js/src/values/dateTimeValue'
 import jstz from 'jstz'
-import TextProperty from '@nextcloud/calendar-js/src/properties/textProperty'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
