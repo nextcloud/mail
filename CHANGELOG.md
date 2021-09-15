@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.10.4 – 2021-09-15
+### Fixed
+- External image handling when URL schema is missing
+- Reply settings loading spinner
+
 ## 1.10.3 – 2021-08-17
 ### Changed
 - Remove link proxy for external links
