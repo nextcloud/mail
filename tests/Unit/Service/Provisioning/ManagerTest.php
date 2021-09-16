@@ -67,7 +67,7 @@ class ManagerTest extends TestCase {
 		$config->setProvisioningDomain('batman.com');
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
-		$account = $this->createMock(MailAccount::class);
+		$account = new MailAccount();
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
@@ -86,6 +86,7 @@ class ManagerTest extends TestCase {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
+		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('batman.com');
@@ -97,7 +98,12 @@ class ManagerTest extends TestCase {
 			->willThrowException($this->createMock(DoesNotExistException::class));
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
-			->method('insert');
+			->method('insert')
+			->willReturn($account);
+		$this->mock->getParameter('tagMapper')
+			->expects($this->once())
+			->method('createDefaultTags')
+			->with($account);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -108,6 +114,7 @@ class ManagerTest extends TestCase {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
+		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
@@ -132,6 +139,7 @@ class ManagerTest extends TestCase {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
+		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('*');
@@ -143,7 +151,12 @@ class ManagerTest extends TestCase {
 			->willThrowException($this->createMock(DoesNotExistException::class));
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
-			->method('insert');
+			->method('insert')
+			->willReturn($account);
+		$this->mock->getParameter('tagMapper')
+			->expects($this->once())
+			->method('createDefaultTags')
+			->with($account);
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertTrue($result);
@@ -154,6 +167,7 @@ class ManagerTest extends TestCase {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'
 		]);
+		$account = new MailAccount();
 		$config = new Provisioning();
 		$config->setId(1);
 		$config->setProvisioningDomain('arkham-asylum.com');
@@ -168,6 +182,9 @@ class ManagerTest extends TestCase {
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->never())
 			->method('insert');
+		$this->mock->getParameter('tagMapper')
+			->expects($this->never())
+			->method('createDefaultTags');
 
 		$result = $this->manager->provisionSingleUser($configs, $user);
 		$this->assertFalse($result);

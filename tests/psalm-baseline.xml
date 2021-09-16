@@ -35,6 +35,11 @@
       <code>get</code>
     </TooManyArguments>
   </file>
+  <file src="lib/Command/AddMissingTags.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
   <file src="lib/Command/CleanUp.php">
     <UndefinedClass occurrences="1">
       <code>Command</code>
@@ -278,11 +283,6 @@
       <code>UserDeletedListener</code>
     </MissingDependency>
   </file>
-  <file src="lib/Service/AntiSpamService.php">
-    <MissingDependency occurrences="1">
-      <code>MessageFlaggedEvent</code>
-    </MissingDependency>
-  </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">
     <InvalidScalarArgument occurrences="1">
       <code>$predictedValidationLabel</code>
@@ -292,13 +292,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>$this-&gt;contactsManager-&gt;getUserAddressBooks()</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
-    <NullArgument occurrences="3">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-    </NullArgument>
   </file>
   <file src="lib/Service/MailManager.php">
     <MissingDependency occurrences="8">
