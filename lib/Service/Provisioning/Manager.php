@@ -30,6 +30,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Db\ProvisioningMapper;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -63,13 +64,17 @@ class Manager {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var TagMapper */
+	private $tagMapper;
+
 	public function __construct(IUserManager $userManager,
 								ProvisioningMapper $provisioningMapper,
 								MailAccountMapper $mailAccountMapper,
 								ICrypto $crypto,
 								ILDAPProviderFactory $ldapProviderFactory,
 								AliasMapper $aliasMapper,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								TagMapper $tagMapper) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -77,6 +82,7 @@ class Manager {
 		$this->ldapProviderFactory = $ldapProviderFactory;
 		$this->aliasMapper = $aliasMapper;
 		$this->logger = $logger;
+		$this->tagMapper = $tagMapper;
 	}
 
 	public function getConfigById(int $provisioningId): ?Provisioning {
@@ -199,6 +205,8 @@ class Manager {
 			$mailAccount = $this->mailAccountMapper->insert(
 				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
+
+			$this->tagMapper->createDefaultTags($mailAccount);
 		}
 
 		// @TODO: Remove method_exists once Mail requires Nextcloud 22 or above
