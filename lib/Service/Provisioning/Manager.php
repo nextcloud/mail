@@ -28,6 +28,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Db\ProvisioningMapper;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -53,16 +54,21 @@ class Manager {
 	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(IUserManager $userManager,
+	/** @var TagMapper */
+	private $tagMapper;
+
+	public function __construct(IUserManager       $userManager,
 								ProvisioningMapper $provisioningMapper,
-								MailAccountMapper $mailAccountMapper,
-								ICrypto $crypto,
-								LoggerInterface $logger) {
+								MailAccountMapper  $mailAccountMapper,
+								ICrypto            $crypto,
+								LoggerInterface    $logger,
+								TagMapper          $tagMapper) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->crypto = $crypto;
 		$this->logger = $logger;
+		$this->tagMapper = $tagMapper;
 	}
 
 	public function getConfigById(int $provisioningId): ?Provisioning {
@@ -107,9 +113,10 @@ class Manager {
 			$new = new MailAccount();
 			$new->setUserId($user->getUID());
 
-			$this->mailAccountMapper->insert(
+			$mailAccount = $this->mailAccountMapper->insert(
 				$this->updateAccount($user, $new, $provisioning)
 			);
+			$this->tagMapper->createDefaultTags($mailAccount);
 			return true;
 		} catch (MultipleObjectsReturnedException $e) {
 			// This is unlikely to happen but not impossible.
@@ -119,9 +126,10 @@ class Manager {
 			$new = new MailAccount();
 			$new->setUserId($user->getUID());
 
-			$this->mailAccountMapper->insert(
+			$mailAccount = $this->mailAccountMapper->insert(
 				$this->updateAccount($user, $new, $provisioning)
 			);
+			$this->tagMapper->createDefaultTags($mailAccount);
 			return true;
 		}
 		return false;

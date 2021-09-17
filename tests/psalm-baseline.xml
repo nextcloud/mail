@@ -33,6 +33,11 @@
       <code>get</code>
     </TooManyArguments>
   </file>
+  <file src="lib/Command/AddMissingTags.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
   <file src="lib/Command/CleanUp.php">
     <UndefinedClass occurrences="1">
       <code>Command</code>
@@ -273,13 +278,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>$this-&gt;contactsManager-&gt;getUserAddressBooks()</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
-    <NullArgument occurrences="3">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-    </NullArgument>
   </file>
   <file src="lib/Service/MailManager.php">
     <MissingDependency occurrences="8">
