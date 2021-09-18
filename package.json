@@ -102,7 +102,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^4.1.0",
-    "eslint-plugin-vue": "^7.17.0",
+    "eslint-plugin-vue": "^7.18.0",
     "file-loader": "^6.2.0",
     "jsdom": "^17.0.0",
     "jsdom-global": "^3.0.2",
