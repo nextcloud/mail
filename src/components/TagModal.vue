@@ -52,12 +52,12 @@
 				<button v-if="!isSet(tag.imapLabel)"
 					class="tag-actions"
 					@click="addTag(tag.imapLabel)">
-					{{ t('mail','Add') }}
+					{{ t('mail','Set') }}
 				</button>
 				<button v-else
 					class="tag-actions"
 					@click="removeTag(tag.imapLabel)">
-					{{ t('mail','Remove') }}
+					{{ t('mail','Unset') }}
 				</button>
 			</div>
 			<h2 class="tag-title">
@@ -286,5 +286,8 @@ export default {
 .action-item {
 	right: 8px;
 	float: right;
+}
+.create-tag {
+	list-style: none;
 }
 </style>
