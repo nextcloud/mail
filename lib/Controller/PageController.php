@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Exception;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\TagMapper;
@@ -42,6 +41,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use function json_decode;
 
 class PageController extends Controller {
@@ -128,7 +128,7 @@ class PageController extends Controller {
 			try {
 				$mailboxes = $this->mailManager->getMailboxes($mailAccount);
 				$json['mailboxes'] = $mailboxes;
-			} catch (Exception $ex) {
+			} catch (Throwable $ex) {
 				$this->logger->critical('Could not load account mailboxes: ' . $ex->getMessage(), [
 					'exception' => $ex,
 				]);
