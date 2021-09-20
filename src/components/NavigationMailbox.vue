@@ -111,7 +111,7 @@
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
 		</template>
-		<AppNavigationCounter v-if="showUnreadCounter" slot="counter">
+		<AppNavigationCounter v-if="showUnreadCounter && mailbox.specialRole !== 'trash'" slot="counter">
 			{{ mailbox.unread }}
 		</AppNavigationCounter>
 		<template slot="extra">
