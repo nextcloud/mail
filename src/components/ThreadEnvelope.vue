@@ -294,7 +294,6 @@ export default {
 		align-items: center;
 		justify-content: flex-end;
 		margin-left: 10px;
-		margin-right: 22px;
 		height: 44px;
 
 		.app-content-list-item-menu {
