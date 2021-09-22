@@ -135,7 +135,7 @@ class MailAccountMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 
 		$delete = $qb->delete($this->getTableName())
-			->where($qb->expr()->eq('provisioning_id', $qb->createNamedParameter($provisioningId, IQueryBuilder::PARAM_BOOL)));
+			->where($qb->expr()->eq('provisioning_id', $qb->createNamedParameter($provisioningId, IQueryBuilder::PARAM_INT)));
 
 		$delete->execute();
 	}
