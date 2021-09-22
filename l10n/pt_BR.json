@@ -255,6 +255,8 @@
     "Add default tags" : "Adicionar etiquetas padrão",
     "Rename tag" : "Renomear etiqueta",
     "Saving new tag name …" : "Salvando novo nome de etiquetas…",
+    "Set" : "Definir",
+    "Unset" : "Indefinir",
     "Add tag" : "Adicionar etiqueta",
     "Saving tag …" : "Salvando etiqueta ...",
     "An error occurred, unable to create the tag." : "Ocorreu um erro, não foi possível criar a etiqueta.",

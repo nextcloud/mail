@@ -257,6 +257,8 @@ OC.L10N.register(
     "Add default tags" : "Přidat výchozí štítky",
     "Rename tag" : "Přejmenovat štítek",
     "Saving new tag name …" : "Ukládání nového názvu štítku",
+    "Set" : "Nastavit",
+    "Unset" : "Zrušit nastavení",
     "Add tag" : "Přidat štítek",
     "Saving tag …" : "Ukládání štítku…",
     "An error occurred, unable to create the tag." : "Došlo k chybě, štíte se nepodařilo vytvořit.",

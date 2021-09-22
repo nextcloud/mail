@@ -257,6 +257,8 @@ OC.L10N.register(
     "Add default tags" : "添加默认标签",
     "Rename tag" : "重命名标签",
     "Saving new tag name …" : "保存新标签名中 …",
+    "Set" : "设置",
+    "Unset" : "取消设置",
     "Add tag" : "添加标签",
     "Saving tag …" : "正在保存标签 …",
     "An error occurred, unable to create the tag." : "发生了一个错误，无法创建标签",

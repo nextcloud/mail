@@ -257,6 +257,8 @@ OC.L10N.register(
     "Add default tags" : "Dodaj etykiety domyślne",
     "Rename tag" : "Zmień nazwę etykiety",
     "Saving new tag name …" : "Zapisywanie nowej nazwy etykiety…",
+    "Set" : "Ustaw",
+    "Unset" : "Usuń z ustawienia",
     "Add tag" : "Dodaj etykietę",
     "Saving tag …" : "Zapisywanie etykiety…",
     "An error occurred, unable to create the tag." : "Wystąpił błąd, nie można utworzyć etykiety.",

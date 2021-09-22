@@ -257,6 +257,8 @@ OC.L10N.register(
     "Add default tags" : "Standard-Schlagworte hinzufügen",
     "Rename tag" : "Schlagwort umbenennen",
     "Saving new tag name …" : "Speichere neues Schlagwort …",
+    "Set" : "Eingestellt",
+    "Unset" : "Entfernt",
     "Add tag" : "Schlagwort hinzufügen",
     "Saving tag …" : "Speichere Schlagwort …",
     "An error occurred, unable to create the tag." : "Ein Fehler ist aufgetreten. Das Schlagwort konnte nicht erstellt werden.",

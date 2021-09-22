@@ -257,6 +257,8 @@ OC.L10N.register(
     "Add default tags" : "Varsayılan etiketler ekle",
     "Rename tag" : "Etiketi yeniden adlandır",
     "Saving new tag name …" : "Yeni etiket adı kaydediliyor …",
+    "Set" : "Ayarla",
+    "Unset" : "Ayarı kaldır",
     "Add tag" : "Etiket ekle",
     "Saving tag …" : "Etiket kaydediliyor …",
     "An error occurred, unable to create the tag." : "Etiket eklenirken bir sorun çıktı.",

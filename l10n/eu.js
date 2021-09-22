@@ -257,6 +257,8 @@ OC.L10N.register(
     "Add default tags" : "Gehitu etiketa lehenetsiak",
     "Rename tag" : "Berrizendatu etiketa",
     "Saving new tag name …" : "Etiketa-izen berria gordetzen ...",
+    "Set" : "Ezarri",
+    "Unset" : "Kendu ezarpena",
     "Add tag" : "Gehitu etiketa",
     "Saving tag …" : "Etiketa gordetzen",
     "An error occurred, unable to create the tag." : "Errore bat gertatu da, ezin da etiketa sortu.",

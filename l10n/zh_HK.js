@@ -257,6 +257,8 @@ OC.L10N.register(
     "Add default tags" : "添加默認標籤",
     "Rename tag" : "重新命名標籤",
     "Saving new tag name …" : "正在儲存新的標籤名稱……",
+    "Set" : "設置",
+    "Unset" : "解除設置",
     "Add tag" : "添加標籤",
     "Saving tag …" : "標籤儲存中 ...",
     "An error occurred, unable to create the tag." : "發生錯誤，無法建立標籤。",
