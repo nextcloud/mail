@@ -55,10 +55,14 @@ class ImapServerDetectorTest extends TestCase {
 		$this->mxRecord->expects($this->once())
 			->method('query')
 			->with($this->equalTo('domain.tld'))
-			->willReturn(['mx.domain.tld']);
+			->willReturn(['domain.tld']);
+		$this->mxRecord->expects($this->once())
+			->method('getSanitizedRecords')
+			->with(['domain.tld'])
+			->willReturn(['domain.tld']);
 		$this->imapConnectivityTester->expects($this->once())
 			->method('test')
-			->with($this->equalTo($email), $this->equalTo('mx.domain.tld'), $this->equalTo(['user', 'user@domain.tld']))
+			->with($this->equalTo($email), $this->equalTo('domain.tld'), $this->equalTo(['user', 'user@domain.tld']))
 			->willReturn($this->createMock(MailAccount::class));
 
 		$account = $this->detector->detect($email, $password, $name);
@@ -75,6 +79,8 @@ class ImapServerDetectorTest extends TestCase {
 			->method('query')
 			->with($this->equalTo('domain.tld'))
 			->willReturn(false);
+		$this->mxRecord->expects($this->never())
+			->method('getSanitizedRecords');
 		$this->imapConnectivityTester->expects($this->once())
 			->method('test')
 			->with($this->equalTo($email), $this->equalTo('domain.tld'), $this->equalTo(['user', 'user@domain.tld']))
@@ -94,6 +100,8 @@ class ImapServerDetectorTest extends TestCase {
 			->method('query')
 			->with($this->equalTo('domain.tld'))
 			->willReturn(false);
+		$this->mxRecord->expects($this->never())
+			->method('getSanitizedRecords');
 		$this->imapConnectivityTester->expects($this->once())
 			->method('test')
 			->with($this->equalTo($email), $this->equalTo('domain.tld'), $this->equalTo(['user', 'user@domain.tld']))

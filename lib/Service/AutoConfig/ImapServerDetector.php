@@ -61,7 +61,9 @@ class ImapServerDetector {
 		 */
 		$mxHosts = $this->mxRecord->query($host);
 		if ($mxHosts) {
-			foreach ($mxHosts as $mxHost) {
+			// also test the parent domain
+			$toTest = $this->mxRecord->getSanitizedRecords($mxHosts);
+			foreach ($toTest as $mxHost) {
 				$result = $this->imapConnectivityTester->test(
 					$email,
 					$mxHost,
