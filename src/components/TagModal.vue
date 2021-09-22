@@ -125,7 +125,30 @@ export default {
 	},
 	computed: {
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1')
+			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1').sort((a, b) => {
+				if (a.isDefaultTag && !b.isDefaultTag) {
+					return -1
+				}
+				if (b.isDefaultTag && !a.isDefaultTag) {
+					return 1
+				}
+				if (a.isDefaultTag && b.isDefaultTag) {
+					if (a.displayName < b.displayName) {
+						return 1
+					}
+					return -1
+				}
+				if (this.isSet(a.imapLabel) && !this.isSet(b.imapLabel)) {
+					return -1
+				}
+				if (!this.isSet(a.imapLabel) && this.isSet(b.imapLabel)) {
+					return 1
+				}
+				if (a.displayName < b.displayName) {
+					return 1
+				}
+				return -1
+			})
 		},
 	},
 	methods: {
