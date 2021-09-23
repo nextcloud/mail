@@ -234,4 +234,7 @@ to {
 		transform: rotate(-360deg);
 	}
 }
+.app-navigation-spacer {
+	order: 0 !important;
+}
 </style>
