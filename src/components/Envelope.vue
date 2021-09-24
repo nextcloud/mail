@@ -4,7 +4,7 @@
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
 			envelopeId: data.databaseId,
-			draggableLabel: `${data.subject} (${data.from[0].label})`,
+			draggableLabel,
 			selectedEnvelopes,
 		}"
 		class="list-item-style"
@@ -288,7 +288,7 @@ export default {
 				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'Blind copy recipients only')
 			}
 			// Show sender label/address in other mailbox types
-			return this.data.from.length === 0 ? '?' : this.data.from[0].label || this.data.from[0].email
+			return this.data.from[0]?.label ?? this.data.from[0]?.email ?? '?'
 		},
 		avatarEmail() {
 			// Show first recipients' avatar in a sent mailbox (or undefined when sent to Bcc only)
@@ -296,14 +296,14 @@ export default {
 				const recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.email
 				})
-				return recipients.length > 0 ? recipients[0] : undefined
+				return recipients.length > 0 ? recipients[0] : ''
 			}
 
 			// Show sender avatar in other mailbox types
 			if (this.data.from.length > 0) {
 				return this.data.from[0].email
 			} else {
-				return undefined
+				return ''
 			}
 		},
 		isImportant() {
@@ -313,6 +313,14 @@ export default {
 		},
 		tags() {
 			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel !== '$label1')
+		},
+		draggableLabel() {
+			let label = this.data.subject
+			const sender = this.data.from[0]?.label ?? this.data.from[0]?.email
+			if (sender) {
+				label += ` (${sender})`
+			}
+			return label
 		},
 	},
 	methods: {
