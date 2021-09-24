@@ -75,7 +75,7 @@ export default {
 		scout.on('afterprint', this.onAfterPrint)
 	},
 	mounted() {
-		iframeResizer({}, this.$refs.iframe)
+		iframeResizer({ log: false, heightCalculationMethod: 'taggedElement' }, this.$refs.iframe)
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
