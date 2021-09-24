@@ -74,13 +74,13 @@ export default {
 			if (!('startDate' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.startDate).format('LT')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format('LT')
 		},
 		date() {
 			if (!('startDate' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.startDate).format('L')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format('L')
 		},
 		location() {
 			if (!('location' in this.data.reservationFor) || !('name' in this.data.reservationFor.location)) {
@@ -95,23 +95,21 @@ export default {
 	methods: {
 		getEndDateTime(event) {
 			if ('endDate' in this.data.reservationFor) {
-				return moment(this.data.reservationFor.endDate).format()
-			} else {
+				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.endDate)).format()
+			} else if ('startDate' in this.data.reservationFor) {
 				// Assume it's 2h and user will adjust if necessary
 				// TODO: handle 'duration' https://schema.org/Event
-				return moment('2019-10-22T12:00:00Z').add(2, 'hours').format()
+				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).add(2, 'hours').format()
 			}
 		},
 		handleImport(calendar) {
 			const event = new ical.Component('VEVENT')
 			event.updatePropertyWithValue('SUMMARY', this.eventName)
 
-			const start = moment(this.data.reservationFor.startDate).format()
+			const start = moment(CalendarImport.itineraryDateTime(this.data.reservationFor.startDate)).format()
 			event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(start))
-			event.updatePropertyWithValue(
-				'DTEND',
-				ical.Time.fromDateTimeString(this.getEndDateTime(this.data.reservationFor))
-			)
+			const end = this.getEndDateTime(this.data.reservationFor)
+			event.updatePropertyWithValue('DTEND', ical.Time.fromDateTimeString(end))
 
 			if ('location' in this.data.reservationFor) {
 				event.updatePropertyWithValue('LOCATION', this.data.reservationFor.location.name)
