@@ -269,6 +269,11 @@
       <code>UserDeletedListener</code>
     </MissingDependency>
   </file>
+  <file src="lib/Migration/Version1105Date20210922104324.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$qb-&gt;createNamedParameter($accountIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    </ImplicitToStringCast>
+  </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">
     <InvalidScalarArgument occurrences="1">
       <code>$predictedValidationLabel</code>
