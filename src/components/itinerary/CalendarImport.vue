@@ -34,6 +34,8 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ical from 'ical.js'
+import moment from '@nextcloud/moment'
 
 export default {
 	name: 'CalendarImport',
@@ -76,6 +78,14 @@ export default {
 			return dt
 		}
 		return dt['@value']
+	},
+
+	addIcalTimeProperty(icalEvent, itineraryDt, icalPropertyName) {
+		const t = moment(this.itineraryDateTime(itineraryDt)).format()
+		const prop = icalEvent.updatePropertyWithValue(icalPropertyName, ical.Time.fromDateTimeString(t))
+		if (typeof itineraryDt !== 'string') {
+			prop.setParameter('TZID', itineraryDt.timezone)
+		}
 	},
 }
 </script>

@@ -125,10 +125,8 @@ export default {
 				})
 			)
 
-			const depart = moment(this.data.reservationFor.departureTime['@value']).format()
-			event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(depart))
-			const arrive = moment(this.data.reservationFor.arrivalTime['@value']).format()
-			event.updatePropertyWithValue('DTEND', ical.Time.fromDateTimeString(arrive))
+			CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.departureTime, 'DTSTART')
+			CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.arrivalTime, 'DTEND')
 
 			// TODO: read version from package.json
 			event.updatePropertyWithValue('PRODID', 'Nextcloud Mail')
