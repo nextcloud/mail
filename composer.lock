@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "amphp/amp",
-            "version": "v2.6.0",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "caa95edeb1ca1bf7532e9118ede4a3c3126408cc"
+                "reference": "c5fc66a78ee38d7ac9195a37bacaf940eb3f65ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/caa95edeb1ca1bf7532e9118ede4a3c3126408cc",
-                "reference": "caa95edeb1ca1bf7532e9118ede4a3c3126408cc",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/c5fc66a78ee38d7ac9195a37bacaf940eb3f65ae",
+                "reference": "c5fc66a78ee38d7ac9195a37bacaf940eb3f65ae",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-16T20:06:06+00:00"
+            "time": "2021-09-23T18:43:08+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -928,16 +928,16 @@
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3"
+                "reference": "b38b25d7b372e9fddb00335400467b223349fd7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
-                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/b38b25d7b372e9fddb00335400467b223349fd7e",
+                "reference": "b38b25d7b372e9fddb00335400467b223349fd7e",
                 "shasum": ""
             },
             "require": {
@@ -976,7 +976,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-18T20:58:21+00:00"
+            "time": "2021-09-25T08:23:19+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
