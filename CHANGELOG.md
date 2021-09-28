@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.10.5 – 2021-09-28
+### Fixed
+- Wrong iframe height
+- Missing tags for provisioned accounts
+- Catch all errors of faulty accounts
+- Itinerary timestamp handling
+- Deletion of provisioned accounts
+- Hide delete button for provisioned accounts
+
 ## 1.10.4 – 2021-09-15
 ### Fixed
 - External image handling when URL schema is missing
