@@ -24,16 +24,17 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Sync;
 
 use JsonSerializable;
-use OCA\Mail\Db\Message;
 use OCA\Mail\IMAP\MailboxStats;
-use OCA\Mail\Model\IMAPMessage;
 
+/**
+ * @psalm-template T
+ */
 class Response implements JsonSerializable {
 
-	/** @var IMAPMessage[]|Message[] */
+	/** @var T[] */
 	private $newMessages;
 
-	/** @var IMAPMessage[]|Message[] */
+	/** @var T[] */
 	private $changedMessages;
 
 	/** @var int[] */
@@ -43,14 +44,14 @@ class Response implements JsonSerializable {
 	private $stats;
 
 	/**
-	 * @param IMAPMessage[]|Message[] $newMessages
-	 * @param IMAPMessage[]|Message[] $changedMessages
+	 * @param T[] $newMessages
+	 * @param T[] $changedMessages
 	 * @param int[] $vanishedMessageUids
 	 * @param MailboxStats|null $stats
 	 */
-	public function __construct(array $newMessages = [],
-								array $changedMessages = [],
-								array $vanishedMessageUids = [],
+	public function __construct(array $newMessages,
+								array $changedMessages,
+								array $vanishedMessageUids,
 								MailboxStats $stats = null) {
 		$this->newMessages = $newMessages;
 		$this->changedMessages = $changedMessages;
@@ -59,14 +60,14 @@ class Response implements JsonSerializable {
 	}
 
 	/**
-	 * @return IMAPMessage[]|Message[]
+	 * @return T[]
 	 */
 	public function getNewMessages(): array {
 		return $this->newMessages;
 	}
 
 	/**
-	 * @return IMAPMessage[]|Message[]
+	 * @return T[]
 	 */
 	public function getChangedMessages(): array {
 		return $this->changedMessages;
@@ -93,13 +94,5 @@ class Response implements JsonSerializable {
 			'vanishedMessages' => $this->vanishedMessageUids,
 			'stats' => $this->stats,
 		];
-	}
-
-	public function merge(Response $other): self {
-		return new self(
-			array_merge($this->getNewMessages(), $other->getNewMessages()),
-			array_merge($this->getChangedMessages(), $other->getChangedMessages()),
-			array_merge($this->getVanishedMessageUids(), $other->getVanishedMessageUids())
-		);
 	}
 }
