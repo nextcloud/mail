@@ -123,7 +123,7 @@ export default {
 		})
 
 		await Promise.all(inboxes.map(async(mailbox) => {
-			const messages = await fetchEnvelopes(mailbox.databaseId, this.query, undefined, 10)
+			const messages = await fetchEnvelopes(mailbox.accountId, mailbox.databaseId, this.query, undefined, 10)
 			this.messages = this.messages !== null ? [...this.messages, ...messages] : messages
 			this.fetchedAccounts++
 		}))
