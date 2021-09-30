@@ -76,7 +76,7 @@ export default {
 			return dt
 		}
 		return dt['@value']
-	}
+	},
 }
 </script>
 

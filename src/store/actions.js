@@ -270,7 +270,7 @@ export default {
 		// Always use the object from the store
 		return getters.getEnvelope(id)
 	},
-	fetchEnvelopes({ state, commit, getters, dispatch }, { mailboxId, query }) {
+	fetchEnvelopes({ state, commit, getters, dispatch }, { mailboxId, query, addToUnifiedMailboxes = true }) {
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -279,6 +279,7 @@ export default {
 					dispatch('fetchEnvelopes', {
 						mailboxId: mb.databaseId,
 						query,
+						addToUnifiedMailboxes: false,
 					})
 				),
 				Promise.all.bind(Promise),
@@ -312,6 +313,7 @@ export default {
 						commit('addEnvelope', {
 							query,
 							envelope,
+							addToUnifiedMailboxes,
 						})
 					)
 				)
@@ -326,7 +328,7 @@ export default {
 		})
 		return envelopes
 	},
-	async fetchNextEnvelopes({ commit, getters, dispatch }, { mailboxId, query, quantity, rec = true }) {
+	async fetchNextEnvelopes({ commit, getters, dispatch }, { mailboxId, query, quantity, rec = true, addToUnifiedMailboxes = true }) {
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -354,9 +356,9 @@ export default {
 			// We have to fetch individual envelopes only if it ends in the known
 			// next fetch. If it ended before, there is no data to fetch anyway. If
 			// it ends after, we have all the relevant data already
-			const needsFetch = curry((query, nextEnvelopes, f) => {
-				const c = individualCursor(query, f)
-				return nextEnvelopes.length < quantity || (c <= head(nextEnvelopes).dateInt && c >= last(nextEnvelopes).dateInt)
+			const needsFetch = curry((query, nextEnvelopes, mb) => {
+				const c = individualCursor(query, mb)
+				return nextEnvelopes.length < quantity || c >= head(nextEnvelopes).dateInt || c <= last(nextEnvelopes).dateInt
 			})
 
 			const mailboxesToFetch = (accounts) =>
@@ -367,12 +369,16 @@ export default {
 			const mbs = mailboxesToFetch(getters.accounts)
 
 			if (rec && mbs.length) {
+				logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
+					mailboxes: mbs.map(mb => mb.databaseId)
+				})
 				return pipe(
 					map((mb) =>
 						dispatch('fetchNextEnvelopes', {
 							mailboxId: mb.databaseId,
 							query,
 							quantity,
+							addToUnifiedMailboxes: false,
 						})
 					),
 					Promise.all.bind(Promise),
@@ -382,12 +388,14 @@ export default {
 							query,
 							quantity,
 							rec: false,
+							addToUnifiedMailboxes: false,
 						})
 					)
 				)(mbs)
 			}
 
 			const envelopes = nextLocalUnifiedEnvelopes(getters.accounts)
+			logger.debug('next unified page can be built locally and consists of ' + envelopes.length + ' envelopes', { addToUnifiedMailboxes })
 			envelopes.map((envelope) =>
 				commit('addEnvelope', {
 					query,
@@ -415,11 +423,13 @@ export default {
 		return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity).then((envelopes) => {
 			logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 				envelopes,
+				addToUnifiedMailboxes,
 			})
 			envelopes.forEach((envelope) =>
 				commit('addEnvelope', {
 					query,
 					envelope,
+					addToUnifiedMailboxes,
 				})
 			)
 			return envelopes
