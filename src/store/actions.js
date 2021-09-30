@@ -316,7 +316,7 @@ export default {
 					)
 				)
 			)
-		)(mailboxId, query, undefined, PAGE_SIZE)
+		)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE)
 	},
 	async fetchNextEnvelopePage({ commit, getters, dispatch }, { mailboxId, query }) {
 		const envelopes = await dispatch('fetchNextEnvelopes', {
@@ -412,7 +412,7 @@ export default {
 			return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 		}
 
-		return fetchEnvelopes(mailboxId, query, lastEnvelope.dateInt, quantity).then((envelopes) => {
+		return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity).then((envelopes) => {
 			logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 				envelopes,
 			})
