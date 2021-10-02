@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "A deteção automática falhou. Por favor, utilize o modo manual",
+    "Auto detect failed. Please use manual mode." : "A deteção automática falhou. Por favor, utilize o modo manual.",
     "Updating account failed: " : "A actualização da conta falhou:",
     "Creating account failed: " : "Não foi possível criar a conta:",
     "Embedded message %s" : "Mensagem embebida %s",
