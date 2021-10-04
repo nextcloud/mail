@@ -144,6 +144,7 @@ OC.L10N.register(
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Doorsturen {number} als bijlage","Doorsturen {number} als bijlage"],
     "_Delete {number} thread_::_Delete {number} threads_" : ["Verwijderen {number} draadje","Verwijderen {number} draadjes"],
     "Report this bug" : "Meld deze fout",
+    "All day" : "Alle dagen",
     "Could not create event" : "Kon afspraak niet creëren",
     "Could not open mailbox" : "Kon postbus niet openen",
     "Loading messages" : "Berichten aan het laden",
