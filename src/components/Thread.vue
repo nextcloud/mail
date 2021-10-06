@@ -328,11 +328,7 @@ export default {
 }
 
 #mail-content {
-	margin: 10px 38px 50px 60px;
-
-	.mail-message-body-html & {
-		margin-bottom: -44px; // accounting for the sticky attachment button
-	}
+	margin: 10px 38px 0 60px;
 }
 
 #mail-content iframe {

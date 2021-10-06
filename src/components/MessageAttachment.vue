@@ -20,42 +20,53 @@
   -->
 
 <template>
-	<div class="attachment" @click="download">
+	<div class="attachment">
 		<img v-if="isImage" class="mail-attached-image" :src="url">
 		<img class="attachment-icon" :src="mimeUrl">
 		<span class="attachment-name"
 			:title="label">{{ name }}
 			<span class="attachment-size">({{ humanReadable(size) }})</span>
 		</span>
-		<button
-			v-if="isCalendarEvent"
-			class="button attachment-import calendar"
-			:class="{'icon-add': !loadingCalendars, 'icon-loading-small': loadingCalendars}"
-			:disabled="loadingCalendars"
-			:title="t('mail', 'Import into calendar')"
-			@click.stop="loadCalendars" />
-		<button class="button icon-download attachment-download" :title="t('mail', 'Download attachment')" />
-		<button
-			class="attachment-save-to-cloud"
-			:class="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
-			:disabled="savingToCloud"
-			:title="t('mail', 'Save to Files')"
-			@click.stop="saveToCloud" />
-		<div
-			v-on-click-outside="closeCalendarPopover"
-			class="popovermenu bubble attachment-import-popover hidden"
-			:class="{open: showCalendarPopover}">
-			<PopoverMenu :menu="calendarMenuEntries" />
-		</div>
+		<Actions :boundaries-element="boundariesElement">
+			<ActionButton
+				v-if="isCalendarEvent"
+				class="attachment-import calendar"
+				:icon="{'icon-add': !loadingCalendars, 'icon-loading-small': loadingCalendars}"
+				:disabled="loadingCalendars"
+				@click.stop="loadCalendars">
+				{{ t('mail', 'Import into calendar') }}
+			</ActionButton>
+			<ActionButton icon="icon-download"
+				class="attachment-download"
+				@click="download">
+				{{ t('mail', 'Download attachment') }}
+			</ActionButton>
+			<ActionButton
+				class="attachment-save-to-cloud"
+				:icon="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
+				:disabled="savingToCloud"
+				@click.stop="saveToCloud">
+				{{ t('mail', 'Save to Files') }}
+			</ActionButton>
+			<div
+				v-on-click-outside="closeCalendarPopover"
+				class="popovermenu bubble attachment-import-popover hidden"
+				:class="{open: showCalendarPopover}">
+				<PopoverMenu :menu="calendarMenuEntries" />
+			</div>
+		</Actions>
 	</div>
 </template>
 
 <script>
+
 import { formatFileSize } from '@nextcloud/files'
-import { mixin as onClickOutside } from 'vue-on-click-outside'
 import { translate as t } from '@nextcloud/l10n'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
+import { mixin as onClickOutside } from 'vue-on-click-outside'
 import PopoverMenu from '@nextcloud/vue/dist/Components/PopoverMenu'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 
 import Logger from '../logger'
 
@@ -66,6 +77,8 @@ export default {
 	name: 'MessageAttachment',
 	components: {
 		PopoverMenu,
+		Actions,
+		ActionButton,
 	},
 	mixins: [onClickOutside],
 	props: {
@@ -132,6 +145,9 @@ export default {
 					action: this.importCalendar(cal.url),
 				}
 			})
+		},
+		boundariesElement() {
+			return document.querySelector('#content-vue')
 		},
 	},
 	methods: {
@@ -209,43 +225,13 @@ export default {
 	border-radius: var(--border-radius);
 	cursor: pointer;
 }
-.mail-attached-image:hover {
-	opacity: 0.8;
-}
-
-.attachment-save-to-cloud,
-.attachment-download,
-.attachment-import {
-	position: absolute;
-	padding: 21px;
-	margin: 0;
-	bottom: 6px;
-	background-color: transparent;
-	border-color: transparent;
-}
-
-.attachment-save-to-cloud {
-	right: 0;
-}
-
-.attachment-download {
-	right: 32px;
-	opacity: 0.6;
-}
-
-.attachment-import {
-	right: 64px;
-}
-
 .attachment-import-popover {
 	right: 32px;
 	top: 42px;
 }
-
-.attachment-import-popover::after {
-	right: 32px;
+.mail-attached-image:hover {
+	opacity: 0.8;
 }
-
 .attachment-name {
 	display: inline-block;
 	width: calc(100% - 72px);
@@ -253,6 +239,7 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	vertical-align: middle;
+	margin-bottom: 20px;
 }
 
 /* show attachment size less prominent */
@@ -264,5 +251,14 @@ export default {
 .attachment-icon {
 	vertical-align: middle;
 	text-align: left;
+	margin-bottom: 20px;
+}
+.action-item {
+	display: inline-block !important;
+	position: relative !important;
+}
+.mail-message-attachments {
+	overflow-x: auto;
+	overflow-y: auto;
 }
 </style>
