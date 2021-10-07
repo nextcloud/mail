@@ -83,7 +83,6 @@ OC.L10N.register(
     "Forward" : "Videresend",
     "View source" : "Vis kildekode",
     "Message source" : "Beskedens kildekode",
-    "Attachments" : "Vedhæftede filer",
     "Import into calendar" : "Importere til kalender",
     "Download attachment" : "Hent vedhæftning",
     "Save to Files" : "Gem til filer",

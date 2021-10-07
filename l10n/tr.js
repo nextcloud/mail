@@ -173,7 +173,6 @@ OC.L10N.register(
     "Delete message" : "İletiyi sil",
     "Message source" : "İleti kaynağı",
     "Message body" : "İleti gövdesi",
-    "Attachments" : "Ek dosyalar",
     "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara kaydet",

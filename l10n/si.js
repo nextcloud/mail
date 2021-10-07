@@ -16,7 +16,6 @@ OC.L10N.register(
     "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Reply" : "පිළිතුර",
-    "Attachments" : "ඇමිණුම්",
     "Settings" : "සැකසුම්",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Loading …" : "පූරණය වෙමින් …",

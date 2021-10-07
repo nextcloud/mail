@@ -170,7 +170,6 @@ OC.L10N.register(
     "Delete message" : "Verwijderen bericht",
     "Message source" : "Bericht brontekst",
     "Message body" : "Berichttekst",
-    "Attachments" : "Bijlagen",
     "Import into calendar" : "Toevoegen aan agenda",
     "Download attachment" : "Download bijlage",
     "Save to Files" : "Opslaan in Bestanden",

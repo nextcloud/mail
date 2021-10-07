@@ -20,7 +20,6 @@ OC.L10N.register(
     "Favorites" : "Favoritos",
     "Other" : "Altere",
     "Reply" : "Responder",
-    "Attachments" : "Attachamentos",
     "Unnamed" : "Non nominate",
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",
     "Move" : "Mover",

@@ -33,7 +33,6 @@ OC.L10N.register(
     "Other" : "Бусад",
     "Reply" : "хариулт",
     "Forward" : "дамжих",
-    "Attachments" : "Хавсралт",
     "Download attachment" : "Татаж авах хавсралт",
     "Save to Files" : "Файлд хадгална",
     "Choose a folder to store the attachment in" : "-д хавсралт хадгалах фолдер сонгоно уу",

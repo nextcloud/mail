@@ -169,7 +169,6 @@ OC.L10N.register(
     "Delete message" : "Cantzella messàgiu",
     "Message source" : "Fonte de su messàgiu",
     "Message body" : "Corpus de su messàgiu",
-    "Attachments" : "Alligongiados",
     "Import into calendar" : "Importa in su calendàriu",
     "Download attachment" : "Iscàrriga alligongiadu",
     "Save to Files" : "Sarva in Archìvios",

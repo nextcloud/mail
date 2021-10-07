@@ -60,7 +60,6 @@ OC.L10N.register(
     "Other" : "Annet",
     "Reply" : "Svar",
     "Forward" : "Fremover",
-    "Attachments" : "Vedlegg",
     "Import into calendar" : "Importer til kalender",
     "Download attachment" : "Last ned vedlegg",
     "Save to Files" : "Lagre i Filer",

@@ -52,7 +52,6 @@ OC.L10N.register(
     "Reply" : "Atbildēt",
     "Forward" : "Turpināt",
     "View source" : "Skatīt avotu",
-    "Attachments" : "Pielikumi",
     "Import into calendar" : "Importēt kalendārā",
     "Download attachment" : "Lejupielādēt pielikumu",
     "Save to Files" : "Saglabāt uz Datnes",

@@ -16,7 +16,6 @@ OC.L10N.register(
     "Other" : "Ostali",
     "Reply" : "Odgovori",
     "Forward" : "Prosledi",
-    "Attachments" : "Prilozi",
     "Move" : "Premesti",
     "Settings" : "Postavke",
     "Remove account" : "Ukloni nalog",

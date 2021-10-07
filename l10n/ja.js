@@ -119,7 +119,6 @@ OC.L10N.register(
     "Forward" : "転送",
     "View source" : "ソースを表示",
     "Message source" : "メッセージソース",
-    "Attachments" : "添付ファイル",
     "Import into calendar" : "カレンダーにインポート",
     "Download attachment" : "添付ファイルをダウンロード",
     "Save to Files" : "ファイルに保存",

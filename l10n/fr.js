@@ -173,7 +173,6 @@ OC.L10N.register(
     "Delete message" : "Supprimer le message",
     "Message source" : "Source du message",
     "Message body" : "Corps du message",
-    "Attachments" : "Pièces jointes",
     "Import into calendar" : "Importer dans le calendrier",
     "Download attachment" : "Télécharger les pièces jointes",
     "Save to Files" : "Enregistrer dans Fichiers",

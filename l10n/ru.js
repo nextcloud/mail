@@ -173,7 +173,6 @@ OC.L10N.register(
     "Delete message" : "Удалить сообщение",
     "Message source" : "Исходный текст сообщения",
     "Message body" : "Тело сообщения",
-    "Attachments" : "Вложения",
     "Import into calendar" : "Импортировать в календарь",
     "Download attachment" : "Скачать вложение",
     "Save to Files" : "Сохранить в файлы",

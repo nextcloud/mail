@@ -141,7 +141,6 @@ OC.L10N.register(
     "Download thread data for debugging" : "Tải xuống dữ liệu chuỗi để gỡ lỗi",
     "Message source" : "Nguồn tin nhắn",
     "Message body" : "Nội dung thư",
-    "Attachments" : "Đính kèm",
     "Import into calendar" : "Nhập vào lịch",
     "Download attachment" : "Tải xuống Tệp đính kèm",
     "Save to Files" : "Lưu vào Tệp",

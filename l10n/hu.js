@@ -154,7 +154,6 @@ OC.L10N.register(
     "Download thread data for debugging" : "Szálak adatainak letöltése hibakeresés céljából",
     "Message source" : "Üzenet forrása",
     "Message body" : "Üzenet törzse",
-    "Attachments" : "Mellékletek",
     "Import into calendar" : "Betöltés a naptárba",
     "Download attachment" : "Melléklet letöltése",
     "Save to Files" : "Metés a Fájlokba",

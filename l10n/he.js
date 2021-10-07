@@ -131,7 +131,6 @@ OC.L10N.register(
     "Forward" : "העברה",
     "View source" : "הצגת המקור",
     "Message source" : "מקור ההודעה",
-    "Attachments" : "קבצים מצורפים",
     "Import into calendar" : "ייבוא ליומן",
     "Download attachment" : "הורדת קובץ מצורף",
     "Save to Files" : "שמירה לקבצים",

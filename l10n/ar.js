@@ -57,7 +57,6 @@ OC.L10N.register(
     "Other" : "آخر",
     "Reply" : "رد",
     "Forward" : "إعادة توجيه ",
-    "Attachments" : "المرفقات",
     "Import into calendar" : "إستيراد من التقويم",
     "Download attachment" : "تنزيل الملحق",
     "Save to Files" : "حفظ للـ الملفات",

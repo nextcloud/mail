@@ -113,7 +113,6 @@ OC.L10N.register(
     "Forward" : "Áframsenda",
     "View source" : "Skoða frumkóða",
     "Message source" : "Uppruni skilaboða",
-    "Attachments" : "Viðhengi",
     "Import into calendar" : "Flytja inn dagatal",
     "Download attachment" : "Sækja viðhengi",
     "Save to Files" : "Vista í skrár",

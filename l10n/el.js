@@ -142,7 +142,6 @@ OC.L10N.register(
     "Download thread data for debugging" : "Λήψη δεδομένων νήματος ακολουθίας για εντοπισμό σφαλμάτων",
     "Message source" : "Πηγή μηνύματος",
     "Message body" : "Σώμα μηνύματος",
-    "Attachments" : "Συνημμένα",
     "Import into calendar" : "Εισαγωγή στο ημερολόγιο",
     "Download attachment" : "Λήψη συνημμένου",
     "Save to Files" : "Αποθήκευση στα Αρχεία",

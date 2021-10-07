@@ -28,7 +28,6 @@ OC.L10N.register(
     "Favorites" : "Disukai",
     "Other" : "Lainnya",
     "Reply" : "Balas",
-    "Attachments" : "Lampiran",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "Move" : "Pindah",
     "Settings" : "Setelan",

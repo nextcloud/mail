@@ -114,7 +114,6 @@ OC.L10N.register(
     "View source" : "Ver fonte",
     "Message source" : "Fonte da mensagem",
     "Message body" : "Corpo da mensagem",
-    "Attachments" : "Anexos",
     "Import into calendar" : "Importar para o calendário",
     "Download attachment" : "Transferir anexo",
     "Save to Files" : "Guardar em Ficheiros",

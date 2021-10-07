@@ -111,7 +111,6 @@ OC.L10N.register(
     "Forward" : "Vidarebefordra",
     "View source" : "Visa källa",
     "Message source" : "Meddelandekälla",
-    "Attachments" : "Bilagor",
     "Import into calendar" : "Importera till kalender",
     "Download attachment" : "Hämta bilaga",
     "Save to Files" : "Spara till filer",

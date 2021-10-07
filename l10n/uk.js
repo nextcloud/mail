@@ -100,7 +100,6 @@ OC.L10N.register(
     "Forward" : "Переслати",
     "View source" : "Джерело",
     "Message source" : "Джерело повідомлення",
-    "Attachments" : "Вкладення",
     "Import into calendar" : "Імпортувати до календаря",
     "Download attachment" : "Звантажити вкладення",
     "Save to Files" : "Зберегти до Файлів",

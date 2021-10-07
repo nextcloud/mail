@@ -111,7 +111,6 @@ OC.L10N.register(
     "Forward" : "Reenvia",
     "View source" : "Veure font",
     "Message source" : "Font de missatge",
-    "Attachments" : "Adjunts",
     "Import into calendar" : "Importa al calendari",
     "Download attachment" : "Descarrega l'adjunt",
     "Save to Files" : "Desa els fitxers",

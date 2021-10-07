@@ -112,7 +112,6 @@ OC.L10N.register(
     "View source" : "Погледај изворни код",
     "Download thread data for debugging" : "Преузми податке нити за потребе отклањања грешака",
     "Message source" : "Изворни код поруке",
-    "Attachments" : "Прилози",
     "Import into calendar" : "Увези у календар",
     "Download attachment" : "Скини прилог",
     "Save to Files" : "Сачувај у фајлове",

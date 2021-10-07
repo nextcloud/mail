@@ -86,7 +86,6 @@ OC.L10N.register(
     "Reply" : "پاسخ",
     "Reply to sender only" : "فقط به فرستنده پاسخ دهید",
     "Forward" : "فرستادن",
-    "Attachments" : "پیوست‌ها",
     "Import into calendar" : "وارد تقویم شوید",
     "Download attachment" : "پیوست را بارگیری کنید",
     "Save to Files" : "ذخیره در پرونده ها",

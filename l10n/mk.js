@@ -135,7 +135,6 @@ OC.L10N.register(
     "Download thread data for debugging" : "Преземи информации за развивачи",
     "Delete message" : "Избриши порака",
     "Message source" : "Извор на пораката",
-    "Attachments" : "Прилози",
     "Import into calendar" : "Увези во календар",
     "Download attachment" : "Преземи прилог",
     "Save to Files" : "Зачувај во датотеките",

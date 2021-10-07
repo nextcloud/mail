@@ -84,7 +84,6 @@ OC.L10N.register(
     "Reply" : "Respondi",
     "Reply to sender only" : "Respondi nur al sendinto",
     "Forward" : "Antaŭen",
-    "Attachments" : "Dosieraj aldonaĵoj",
     "Import into calendar" : "Importi en kalendaron",
     "Download attachment" : "Elŝuti kunsendaĵon",
     "Save to Files" : "Konservi en „Dosieroj“",

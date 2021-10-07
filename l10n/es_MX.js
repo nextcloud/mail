@@ -42,7 +42,6 @@ OC.L10N.register(
     "Other" : "Otro",
     "Reply" : "Responder",
     "Forward" : "Adelante",
-    "Attachments" : "Adjuntos",
     "Import into calendar" : "Importar al calendario",
     "Download attachment" : "Descargar adjunto",
     "Save to Files" : "Guardar a Archivos",

@@ -171,7 +171,6 @@ OC.L10N.register(
     "Delete message" : "Izbriši sporočilo",
     "Message source" : "Vir sporočila",
     "Message body" : "Telo sporočila",
-    "Attachments" : "Priloge",
     "Import into calendar" : "Uvozi v koledar",
     "Download attachment" : "Prejmi prilogo",
     "Save to Files" : "Shrani v Datoteke",

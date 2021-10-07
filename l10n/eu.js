@@ -173,7 +173,6 @@ OC.L10N.register(
     "Delete message" : "Mezua ezabatzen",
     "Message source" : "Mezuaren iturburua",
     "Message body" : "Mezuaren gorputza",
-    "Attachments" : "Eranskinak",
     "Import into calendar" : "Inportatu egutegira",
     "Download attachment" : "Deskargatu eranskina",
     "Save to Files" : "Gorde Fitxategiak-en",

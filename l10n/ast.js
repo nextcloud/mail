@@ -35,7 +35,6 @@ OC.L10N.register(
     "Favorites" : "Favorites",
     "Other" : "Otru",
     "Reply" : "Rempuesta",
-    "Attachments" : "Axuntos",
     "Download attachment" : "Baxar axuntu",
     "Unnamed" : "Ensin nome",
     "Choose a folder to store the attachment in" : "Escueyi una carpeta pa guardar l'axuntu",

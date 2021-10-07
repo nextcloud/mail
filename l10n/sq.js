@@ -40,7 +40,6 @@ OC.L10N.register(
     "Other" : "Tjetër",
     "Reply" : "Përgjigju",
     "Forward" : "Përpara",
-    "Attachments" : "Bashkangjitjet",
     "Import into calendar" : "Importo në kalendar",
     "Download attachment" : "Shkarko bashkëlidhjen",
     "Save to Files" : "Ruaje te Skedarët",

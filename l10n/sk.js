@@ -173,7 +173,6 @@ OC.L10N.register(
     "Delete message" : "Zmazať správu",
     "Message source" : "Zdrojový kód správy",
     "Message body" : "Telo správy",
-    "Attachments" : "Prílohy",
     "Import into calendar" : "Importovať do kalendára",
     "Download attachment" : "Stiahnuť prílohu",
     "Save to Files" : "Uložiť do Súborov",

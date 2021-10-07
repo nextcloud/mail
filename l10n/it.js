@@ -168,7 +168,6 @@ OC.L10N.register(
     "Delete message" : "Elimina messaggio",
     "Message source" : "Sorgente del messaggio",
     "Message body" : "Corpo del messaggio",
-    "Attachments" : "Allegati",
     "Import into calendar" : "Importa nel calendario",
     "Download attachment" : "Scarica allegato",
     "Save to Files" : "Salva in File",

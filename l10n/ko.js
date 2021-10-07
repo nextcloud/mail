@@ -99,7 +99,6 @@ OC.L10N.register(
     "Other" : "기타",
     "Reply" : "답장",
     "Forward" : "전달",
-    "Attachments" : "첨부파일",
     "Import into calendar" : "달력으로 가져오기",
     "Download attachment" : "첨부 파일 다운로드",
     "Save to Files" : "파일에 저장",

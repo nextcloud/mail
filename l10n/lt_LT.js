@@ -118,7 +118,6 @@ OC.L10N.register(
     "Reply" : "Atsakyti",
     "Reply to sender only" : "Atsakyti tik siuntėjui",
     "Forward" : "Persiųsti",
-    "Attachments" : "Priedai",
     "Import into calendar" : "Importuoti į kalendorių",
     "Download attachment" : "Atsisiųsti priedą",
     "Save to Files" : "Įrašyti į Failus",
