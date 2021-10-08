@@ -185,7 +185,7 @@ OC.L10N.register(
     "Show" : "Pokaži",
     "Show images temporarily" : "Pokaži slike začasno",
     "Always show images from {sender}" : "Pokaži slike pošiljatelja {sender}",
-    "Always show images from {domain}" : "Pokaži slike pošiljatelja {domain}",
+    "Always show images from {domain}" : "Pokaži slike z domene {domain}",
     "Message frame" : "Okvir sporočila",
     "Quoted text" : "Navedek besedila",
     "Move" : "Premakni",
