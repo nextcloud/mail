@@ -279,16 +279,16 @@
         },
         {
             "name": "amphp/process",
-            "version": "v1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/process.git",
-                "reference": "b88c6aef75c0b22f6f021141dd2d5e7c5db4c124"
+                "reference": "3d36327bf9b4c158cf3010f8f65c00854ec3a8b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/process/zipball/b88c6aef75c0b22f6f021141dd2d5e7c5db4c124",
-                "reference": "b88c6aef75c0b22f6f021141dd2d5e7c5db4c124",
+                "url": "https://api.github.com/repos/amphp/process/zipball/3d36327bf9b4c158cf3010f8f65c00854ec3a8b7",
+                "reference": "3d36327bf9b4c158cf3010f8f65c00854ec3a8b7",
                 "shasum": ""
             },
             "require": {
@@ -336,7 +336,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-30T20:04:22+00:00"
+            "time": "2021-10-08T15:55:53+00:00"
         },
         {
             "name": "amphp/serialization",
