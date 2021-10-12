@@ -422,6 +422,5 @@ export default {
 	}
 	.envelope--header.list-item-style {
 		border-radius: 16px;
-		background-color: var(--color-primary-light);
 	}
 </style>
