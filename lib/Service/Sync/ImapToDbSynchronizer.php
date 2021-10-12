@@ -234,11 +234,14 @@ class ImapToDbSynchronizer {
 					$logger->debug("Running initial sync for " . $mailbox->getId() . " after cache reset");
 					$this->runInitialSync($account, $mailbox, $logger);
 				} catch (MailboxDoesNotSupportModSequencesException $e) {
-					$logger->warning('Mailbox does not support mod-sequences error occured. Wiping cache and performing full sync for ' . $mailbox->getId(), [
+					$logger->warning('Mailbox does not support mod-sequences error occurred for mailbox ' . $mailbox->getId(), [
 						'exception' => $e,
 					]);
-					$this->resetCache($account, $mailbox);
-					$logger->debug("Running initial sync for " . $mailbox->getId() . " after cache reset - no mod-sequences error");
+					if ($knownUids !== null) {
+						$this->messageMapper->deleteByUid($mailbox, ...$knownUids);
+					} else {
+						$this->resetCache($account, $mailbox);
+					}
 					$this->runInitialSync($account, $mailbox, $logger);
 				}
 			}
