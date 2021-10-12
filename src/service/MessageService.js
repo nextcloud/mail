@@ -27,7 +27,7 @@ export function fetchEnvelope(id) {
 		})
 }
 
-export function fetchEnvelopes(mailboxId, query, cursor, limit) {
+export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit) {
 	const url = generateUrl('/apps/mail/api/messages')
 	const params = {
 		mailboxId,
@@ -48,6 +48,7 @@ export function fetchEnvelopes(mailboxId, query, cursor, limit) {
 			params,
 		})
 		.then((resp) => resp.data)
+		.then(envelopes => envelopes.map(amendEnvelopeWithIds(accountId)))
 		.catch((error) => {
 			throw convertAxiosError(error)
 		})
