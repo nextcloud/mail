@@ -170,7 +170,7 @@ export default {
 		}
 		removeRec(account)
 	},
-	addEnvelope(state, { query, envelope }) {
+	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
 		normalizeTags(state, envelope)
 		const mailbox = state.mailboxes[envelope.mailboxId]
 		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
@@ -181,6 +181,9 @@ export default {
 		const orderByDateInt = orderBy(idToDateInt, 'desc')
 		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
 
+		if (!addToUnifiedMailboxes) {
+			return
+		}
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
 		unifiedAccount.mailboxes
 			.map((mbId) => state.mailboxes[mbId])
