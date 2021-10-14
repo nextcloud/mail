@@ -72,7 +72,7 @@ class Attachment {
 		if (!isset($headers[$this->messageUid])) {
 			throw new DoesNotExistException('Unable to load the attachment.');
 		}
-		/** @var $fetch Horde_Imap_Client_Data_Fetch */
+		/** @var Horde_Imap_Client_Data_Fetch $fetch */
 		$fetch = $headers[$this->messageUid];
 		/** @var \Horde_Mime_Headers $mimeHeaders */
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
