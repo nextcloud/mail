@@ -327,7 +327,7 @@ export default {
 					return result.messages
 				}
 			)
-		)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, PAGE_SIZE, getters.getPreference)
+		)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, getters.getPreference('sort-order'))
 	},
 	async fetchNextEnvelopePage({ commit, getters, dispatch }, { mailboxId, query }) {
 		const envelopes = await dispatch('fetchNextEnvelopes', {

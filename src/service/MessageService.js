@@ -49,7 +49,10 @@ export function fetchEnvelopes(accountId, mailboxId, query, cursor, limit, sortO
 			params,
 		})
 		.then((resp) => resp.data)
-		.then(envelopes => envelopes.map(amendEnvelopeWithIds(accountId)))
+		.then(data => ({
+			...data,
+			messages: data.messages.map(amendEnvelopeWithIds(accountId)),
+		}))
 		.catch((error) => {
 			throw convertAxiosError(error)
 		})
