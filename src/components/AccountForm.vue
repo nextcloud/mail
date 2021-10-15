@@ -197,6 +197,11 @@
 			</Tab>
 		</Tabs>
 		<slot name="feedback" />
+		<input type="button"
+			class=""
+			:disabled="loading"
+			value="Lookup isp db"
+			@click.prevent="lookupIspDb">
 		<input type="submit"
 			class="primary"
 			:disabled="loading"
@@ -209,6 +214,7 @@
 import { Tab, Tabs } from 'vue-tabs-component'
 
 import logger from '../logger'
+import { translate as t } from '@nextcloud/l10n'
 
 export default {
 	name: 'AccountForm',
@@ -275,6 +281,42 @@ export default {
 		},
 	},
 	methods: {
+		async lookupIspDb() {
+			/** @var {ProviderConfig|null} provider **/
+			const provider = await this.$store.dispatch('lookupIspDb', { email: this.manualConfig.emailAddress })
+
+			if (provider.displayName) {
+				if (provider.imap && provider.imap[0]) {
+					this.manualConfig.imapHost = provider.imap[0].hostname
+					this.manualConfig.imapPort = provider.imap[0].port
+
+					if (provider.imap[0].socketType === 'SSL') {
+						this.manualConfig.imapSslMode = 'ssl'
+					} else if (provider.imap[0].socketType === 'STARTTLS') {
+						this.manualConfig.imapSslMode = 'tls'
+					}
+
+					if (provider.imap[0].username === '%EMAILADDRESS%') {
+						this.manualConfig.imapUser = this.manualConfig.emailAddress
+					}
+				}
+
+				if (provider.smtp && provider.smtp[0]) {
+					this.manualConfig.smtpHost = provider.smtp[0].hostname
+					this.manualConfig.smtpPort = provider.smtp[0].port
+
+					if (provider.smtp[0].socketType === 'SSL') {
+						this.manualConfig.smtpSslMode = 'ssl'
+					} else if (provider.smtp[0].socketType === 'STARTTLS') {
+						this.manualConfig.smtpSslMode = 'tls'
+					}
+
+					if (provider.smtp[0].username === '%EMAILADDRESS%') {
+						this.manualConfig.smtpUser = this.manualConfig.emailAddress
+					}
+				}
+			}
+		},
 		onModeChanged(e) {
 			this.mode = e.tab.id
 
