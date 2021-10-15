@@ -81,6 +81,7 @@ import { wait } from '../util/wait'
 import { updateAccount as updateSieveAccount } from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
+import * as AutoConfigService from '../service/AutoConfigService'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -370,7 +371,7 @@ export default {
 
 			if (rec && mbs.length) {
 				logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
-					mailboxes: mbs.map(mb => mb.databaseId)
+					mailboxes: mbs.map(mb => mb.databaseId),
 				})
 				return pipe(
 					map((mb) =>
@@ -876,6 +877,18 @@ export default {
 			commit('addEnvelope', envelope)
 			console.error('could not move thread', e)
 			throw e
+		}
+	},
+	/**
+	 * @returns {Promise<ProviderConfig|null>}
+	 */
+	async lookupIspDb({ getters }, { email }) {
+		try {
+			console.debug('lookup isp db for email ' + email)
+			return await AutoConfigService.ispDb(email)
+		} catch (e) {
+			console.error('lookup isp db failed for email' + email)
+			return null
 		}
 	},
 }

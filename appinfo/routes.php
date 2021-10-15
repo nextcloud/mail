@@ -308,6 +308,11 @@ return [
 			'name' => 'thread#move',
 			'url' => '/api/thread/{id}',
 			'verb' => 'POST'
+		],
+		[
+			'name' => 'autoConfig#ispDb',
+			'url' => '/api/autoconfig/ispdb',
+			'verb' => 'POST'
 		]
 	],
 	'resources' => [
