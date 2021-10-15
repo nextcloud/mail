@@ -8,13 +8,15 @@
 					@click="displayIframe">
 					{{ t('mail', 'Show images temporarily') }}
 				</ActionButton>
-				<ActionButton icon="icon-toggle"
+				<ActionButton v-if="sender"
+					icon="icon-toggle"
 					@click="onShowBlockedContent">
-					{{ t('mail', 'Always show images from {sender}', {sender: message.from[0].email}) }}
+					{{ t('mail', 'Always show images from {sender}', { sender }) }}
 				</ActionButton>
-				<ActionButton icon="icon-toggle"
+				<ActionButton v-if="domain"
+					icon="icon-toggle"
 					@click="onShowBlockedContentForDomain">
-					{{ t('mail', 'Always show images from {domain}', {domain: getDomain()}) }}
+					{{ t('mail', 'Always show images from {domain}', { domain }) }}
 				</ActionButton>
 			</Actions>
 		</div>
@@ -69,6 +71,14 @@ export default {
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
 		}
+	},
+	computed: {
+		sender() {
+			return this.message.from[0]?.email
+		},
+		domain() {
+			return this.sender?.split('@').pop()
+		},
 	},
 	beforeMount() {
 		scout.on('beforeprint', this.onBeforePrint)
@@ -125,9 +135,6 @@ export default {
 		async onShowBlockedContent() {
 			this.displayIframe()
 			await trustSender(this.message.from[0].email, 'individual', true)
-		},
-		getDomain() {
-			return this.message.from[0].email.split('@').pop()
 		},
 		async onShowBlockedContentForDomain() {
 			this.displayIframe()
