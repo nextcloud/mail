@@ -1037,7 +1037,7 @@ class MessageMapper extends QBMapper {
 
 		// MIN returns NULL if there are no rows selected
 		$subSelect
-			->select($subSelect->createFunction('IFNULL(MIN(`sent_at`), 0)'))
+			->select($subSelect->createFunction('IFNULL(MIN(' . $subSelect->getColumnName('sent_at') . '), 0)'))
 			->from($this->getTableName())
 			->where(
 				$subSelect->expr()->eq('mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
