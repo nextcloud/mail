@@ -433,21 +433,7 @@ class MessageMapper {
 			// No HTML part
 			return null;
 		}
-		$partsQuery = new Horde_Imap_Client_Fetch_Query();
-		$partsQuery->fullText();
-		foreach ($structure->partIterator() as $structurePart) {
-			/** @var Horde_Mime_Part $structurePart */
-			$partsQuery->bodyPart($structurePart->getMimeId(), [
-				'decode' => true,
-				'peek' => true,
-			]);
-			$partsQuery->bodyPartSize($structurePart->getMimeId());
-			if ($structurePart->getMimeId() === $htmlPartId) {
-				$partsQuery->mimeHeader($structurePart->getMimeId(), [
-					'peek' => true
-				]);
-			}
-		}
+		$partsQuery = $this->buildAttachmentsPartsQuery($structure, [$htmlPartId]);
 
 		$parts = $client->fetch($mailbox, $partsQuery, [
 			'ids' => new Horde_Imap_Client_Ids([$uid]),
