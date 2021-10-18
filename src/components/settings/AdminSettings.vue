@@ -85,7 +85,7 @@
 					{{
 						t(
 							'mail',
-							"This setting only makes most sense if you use the same user back-end for your organization's Nextcloud and mail server."
+							'This setting only makes most sense if you use the same user back-end for your Nextcloud and mail server of your organization.'
 						)
 					}}
 				</p>
