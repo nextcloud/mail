@@ -32,7 +32,14 @@
 			}}
 		</p>
 		<div class="app-description">
-			<h3>Account provisioning</h3>
+			<h3>
+				{{
+					t(
+						'mail',
+						'Account provisioning'
+					)
+				}}
+			</h3>
 			<article>
 				<p>
 					{{
@@ -91,7 +98,14 @@
 				</p>
 			</article>
 		</div>
-		<h3>Provisioning Configurations</h3>
+		<h3>
+			{{
+				t(
+					'mail',
+					'Provisioning Configurations'
+				)
+			}}
+		</h3>
 		<p>
 			<button class="config-button icon-add" @click="addNew=true">
 				{{ t('mail', 'Add new config') }}
@@ -112,7 +126,14 @@
 				:disable="deleteProvisioning" />
 		</p>
 		<div class="app-description">
-			<h3>Anti Spam Service</h3>
+			<h3>
+				{{
+					t(
+						'mail',
+						'Anti Spam Service'
+					)
+				}}
+			</h3>
 			<article>
 				<p>
 					{{
