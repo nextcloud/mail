@@ -318,7 +318,6 @@ export default {
 						mailbox,
 						query,
 						timestamp: result.lastMessageTimestamp,
-						addToUnifiedMailboxes,
 					})
 					commit('addEnvelopes', {
 						query,
