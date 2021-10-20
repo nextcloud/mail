@@ -322,7 +322,7 @@ export default {
 					commit('addEnvelopes', {
 						query,
 						envelopes: result.messages,
-						addToUnifiedMailboxes
+						addToUnifiedMailboxes,
 					})
 					return result.messages
 				}
