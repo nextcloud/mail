@@ -351,8 +351,8 @@ export default {
 .icon-reply-all-white {
 	height: 44px;
 	min-width: 44px;
-	margin: 0;
-	padding: 9px 18px 10px 32px;
+	margin: 0 !important;
+	padding: 9px 18px 10px 32px !important;
 }
 
 /* Show action button label and move icon to the left
