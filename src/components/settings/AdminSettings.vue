@@ -32,7 +32,14 @@
 			}}
 		</p>
 		<div class="app-description">
-			<h3>Account provisioning</h3>
+			<h3>
+				{{
+					t(
+						'mail',
+						'Account provisioning'
+					)
+				}}
+			</h3>
 			<article>
 				<p>
 					{{
@@ -85,13 +92,20 @@
 					{{
 						t(
 							'mail',
-							"This setting only makes most sense if you use the same user back-end for your organization's Nextcloud and mail server."
+							'This setting only makes most sense if you use the same user back-end for your Nextcloud and mail server of your organization.'
 						)
 					}}
 				</p>
 			</article>
 		</div>
-		<h3>Provisioning Configurations</h3>
+		<h3>
+			{{
+				t(
+					'mail',
+					'Provisioning Configurations'
+				)
+			}}
+		</h3>
 		<p>
 			<button class="config-button icon-add" @click="addNew=true">
 				{{ t('mail', 'Add new config') }}
@@ -112,7 +126,14 @@
 				:disable="deleteProvisioning" />
 		</p>
 		<div class="app-description">
-			<h3>Anti Spam Service</h3>
+			<h3>
+				{{
+					t(
+						'mail',
+						'Anti Spam Service'
+					)
+				}}
+			</h3>
 			<article>
 				<p>
 					{{

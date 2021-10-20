@@ -328,7 +328,7 @@
 							@click="disableConfig()">
 						<br>
 						<small>{{
-							t('mail', "* %USERID% and %EMAIL% will be replaced with the user's UID and email")
+							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email')
 						}}</small>
 					</div>
 				</div>

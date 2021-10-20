@@ -21,19 +21,10 @@
       <code>ContainerInterface</code>
     </UndefinedClass>
   </file>
-  <file src="lib/Attachment.php">
-    <MissingDocblockType occurrences="1">
-      <code>$fetch</code>
-    </MissingDocblockType>
-  </file>
   <file src="lib/Cache/Cache.php">
     <InvalidScalarArgument occurrences="1">
       <code>$slice</code>
     </InvalidScalarArgument>
-    <TooManyArguments occurrences="2">
-      <code>get</code>
-      <code>get</code>
-    </TooManyArguments>
   </file>
   <file src="lib/Command/AddMissingTags.php">
     <UndefinedClass occurrences="1">
