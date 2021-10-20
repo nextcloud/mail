@@ -26,9 +26,17 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\AutoConfig;
 
 use Exception;
+use OCP\Http\Client\IClient;
+use OCP\Http\Client\IClientService;
 use Psr\Log\LoggerInterface;
 
 class IspDb {
+
+	/** @var string[] */
+	private const SUPPORTED_TYPES = ['imap', 'smtp'];
+
+	/** @var IClient */
+	private $client;
 
 	/** @var LoggerInterface */
 	private $logger;
@@ -42,60 +50,65 @@ class IspDb {
 		];
 	}
 
-	public function __construct(LoggerInterface $logger) {
+	public function __construct(IClientService $clientService, LoggerInterface $logger) {
+		$this->client = $clientService->newClient();
 		$this->logger = $logger;
 	}
 
 	/**
-	 * @param string $url
+	 * Query IspDb for the given url
 	 */
 	private function queryUrl(string $url): array {
 		try {
-			$content = @file_get_contents($url, false, stream_context_create([
-				'http' => [
-					'timeout' => 7
-				]
-			]));
-			if ($content !== false) {
-				$xml = @simplexml_load_string($content);
-			} else {
-				$this->logger->debug("IsbDb: <$url> request timed out");
-				return [];
-			}
-
-			if (libxml_get_last_error() !== false || !is_object($xml) || !$xml->emailProvider) {
-				libxml_clear_errors();
-				return [];
-			}
-			$provider = [
-				'displayName' => (string)$xml->emailProvider->displayName,
-			];
-			foreach ($xml->emailProvider->children() as $tag => $server) {
-				if (!in_array($tag, ['incomingServer', 'outgoingServer'])) {
-					continue;
-				}
-				foreach ($server->attributes() as $name => $value) {
-					if ($name === 'type') {
-						$type = (string)$value;
-					}
-				}
-				$data = [];
-				foreach ($server as $name => $value) {
-					foreach ($value->children() as $tag => $val) {
-						$data[$name][$tag] = (string)$val;
-					}
-					if (!isset($data[$name])) {
-						$data[$name] = (string)$value;
-					}
-				}
-				$provider[$type][] = $data;
-			}
+			$xml = $this->client->get($url, [
+				'timeout' => 7,
+			])->getBody();
 		} catch (Exception $e) {
-			// ignore own not-found exception or xml parsing exceptions
-			unset($e);
-			$provider = [];
+			$this->logger->debug('IsbDb: <' . $url . '> failed with "' . $e->getMessage() . '"', [
+				'exception' => $e,
+			]);
+			return [];
 		}
+
+		$data = simplexml_load_string($xml);
+		if ($data === false || !isset($data->emailProvider)) {
+			return [];
+		}
+
+		$provider = [
+			'displayName' => (string)$data->emailProvider->displayName,
+			'imap' => [],
+			'smtp' => [],
+		];
+
+		foreach ($data->emailProvider->incomingServer as $server) {
+			$type = (string)$server['type'];
+			if (in_array($type, self::SUPPORTED_TYPES)) {
+				$provider[$type][] = $this->convertServerElement($server);
+			}
+		}
+
+		foreach ($data->emailProvider->outgoingServer as $server) {
+			$type = (string)$server['type'];
+			if (in_array($type, self::SUPPORTED_TYPES)) {
+				$provider[$type][] = $this->convertServerElement($server);
+			}
+		}
+
 		return $provider;
+	}
+
+	/**
+	 * Convert an incomingServer and outgoingServer xml element to array.
+	 */
+	private function convertServerElement(\SimpleXMLElement $server): array {
+		return [
+			'hostname' => (string)$server->hostname,
+			'port' => (int)$server->port,
+			'socketType' => (string)$server->socketType,
+			'username' => (string)$server->username,
+			'authentication' => (string)$server->authentication,
+		];
 	}
 
 	/**
@@ -112,11 +125,10 @@ class IspDb {
 
 		$provider = [];
 		foreach ($this->getUrls() as $url) {
-			$url = str_replace("{DOMAIN}", $domain, $url);
-			$url = str_replace("{EMAIL}", $email, $url);
-			if (strpos($url, "{SCHEME}") !== false) {
-				foreach (['https', 'http']  as $scheme) {
-					$completeurl = str_replace("{SCHEME}", $scheme, $url);
+			$url = str_replace(['{DOMAIN}', '{EMAIL}'], [$domain, $email], $url);
+			if (strpos($url, '{SCHEME}') !== false) {
+				foreach (['https', 'http'] as $scheme) {
+					$completeurl = str_replace('{SCHEME}', $scheme, $url);
 					$this->logger->debug("IsbDb: querying <$domain> via <$completeurl>");
 					$provider = $this->queryUrl($completeurl);
 					if (!empty($provider)) {
