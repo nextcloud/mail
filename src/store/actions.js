@@ -354,6 +354,7 @@ export default {
 			const nextLocalUnifiedEnvelopes = pipe(
 				findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
 				map(getIndivisualLists(query)),
+				tap((envelopes) => console.debug(envelopes)),
 				combineEnvelopeLists(getters.getPreference('sort-order')),
 				filter(
 					where({
@@ -364,21 +365,25 @@ export default {
 			)
 			// We know the next envelopes based on local data
 			// We have to fetch individual envelopes only if it ends in the known
-			// next fetch. If it ended before, there is no data to fetch anyway. If
-			// it ends after, we have all the relevant data already. The same logic
-			// applies regardless of sorting order
+			// next fetch. If it ends after, we have all the relevant data already.
+			// The same logic applies regardless of sorting order
 			const needsFetch = curry((query, nextEnvelopes, mb) => {
 				const c = individualCursor(query, mb)
 				if (nextEnvelopes.length < quantity) {
 					return true
 				}
 
-				return c >= head(nextEnvelopes).dateInt || c <= last(nextEnvelopes).dateInt
+				if (getters.getPreference('sort-order') === 'newest-first') {
+					return c >= last(nextEnvelopes).dateInt
+				} else {
+					return c <= last(nextEnvelopes).dateInt
+				}
 			})
 
 			const mailboxesToFetch = (accounts) =>
 				pipe(
 					findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
+					tap(mbs => console.info('individual mailboxes', mbs)),
 					filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts)))
 				)(accounts)
 			const mbs = mailboxesToFetch(getters.accounts)
@@ -403,7 +408,7 @@ export default {
 							query,
 							quantity,
 							rec: false,
-							addToUnifiedMailboxes: false,
+							addToUnifiedMailboxes: true,
 						})
 					)
 				)(mbs)
@@ -414,6 +419,7 @@ export default {
 			commit('addEnvelopes', {
 				query,
 				envelopes,
+				addToUnifiedMailboxes,
 			})
 			return envelopes
 		}
