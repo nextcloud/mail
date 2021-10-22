@@ -113,7 +113,7 @@ class SyncJob extends TimedJob {
 			]);
 		} catch (Throwable $e) {
 			$this->logger->error('Cron mail sync failed for account {accountId}', [
-				'accountId' => $account,
+				'accountId' => $accountId,
 				'exception' => $e,
 			]);
 		}
