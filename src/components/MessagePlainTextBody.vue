@@ -32,7 +32,7 @@ export default {
 	},
 	computed: {
 		enhancedBody() {
-			return this.body.replace(/(&gt;.*\n?)+/g, (match) => {
+			return this.body.replace(/(^&gt;.*\n)+/gm, (match) => {
 				return `<details class="quoted-text"><summary>${t('mail', 'Quoted text')}</summary>${match}</details>`
 			})
 		},
