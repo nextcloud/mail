@@ -312,7 +312,7 @@ export default {
 				.some((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel !== '$label1')
+			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1')
 		},
 		draggableLabel() {
 			let label = this.data.subject
