@@ -45,14 +45,14 @@ export class DraggableEnvelope {
 				envelopes.push({
 					accountId,
 					mailboxId,
-					envelopeId: envelope.databaseId,
+					databaseId: envelope.databaseId,
 					draggableLabel: `${envelope.subject} (${envelope.from[0].label})`,
 				})
 			})
 		} else {
 			// handle single dragged item
-			const { envelopeId, draggableLabel } = this.options
-			envelopes.push({ accountId, mailboxId, envelopeId, draggableLabel })
+			const { databaseId, draggableLabel } = this.options
+			envelopes.push({ accountId, mailboxId, databaseId, draggableLabel })
 		}
 
 		event.dataTransfer.setData('text/plain', JSON.stringify(envelopes))
