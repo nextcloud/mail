@@ -257,6 +257,7 @@ OC.L10N.register(
     "Rename tag" : "Preimenuj oznako",
     "Saving new tag name …" : "Poteka shranjevanje imena oznake ...",
     "Set" : "Nastavi",
+    "Unset" : "Odstrani izbor",
     "Add tag" : "Dodaj oznako",
     "Saving tag …" : "Poteka shranjevanje ozake ...",
     "An error occurred, unable to create the tag." : "Prišlo je do napake, oznake ni mogoče ustvariti.",
