@@ -197,7 +197,7 @@ export default {
 			renameInput: false,
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
-			hasDelimiter: !this.mailbox.delimiter,
+			hasDelimiter: !!this.mailbox.delimiter,
 		}
 	},
 	computed: {
