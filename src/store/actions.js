@@ -370,7 +370,7 @@ export default {
 
 			if (rec && mbs.length) {
 				logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
-					mailboxes: mbs.map(mb => mb.databaseId)
+					mailboxes: mbs.map(mb => mb.databaseId),
 				})
 				return pipe(
 					map((mb) =>
@@ -650,29 +650,6 @@ export default {
 			})
 		})
 	},
-	toggleTagImportant({ commit, getters }, envelope) {
-		// Change immediately and switch back on error
-		// check if the prop exist and if yes, save it
-		const oldState = envelope.tags
-		commit('tagEnvelope', {
-			envelope,
-			tag: '$label1',
-			// exists? Yes? So unset - (untag) the message
-			// if it doesn't, add /tag) the message,
-			value: !oldState,
-		})
-
-		setEnvelopeTag(envelope.databaseId, '$label1', !oldState).catch((e) => {
-			console.error('could not toggle message important state', e)
-
-			// Revert change
-			commit('tagEnvelope', {
-				envelope,
-				tag: '$label1',
-				value: oldState,
-			})
-		})
-	},
 	toggleEnvelopeJunk({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.junk
@@ -733,6 +710,24 @@ export default {
 			})
 		})
 	},
+	async markEnvelopeImportantOrUnimportant({ dispatch, getters }, { envelope, addTag }) {
+		const importantLabel = '$label1'
+		const hasTag = getters
+			.getEnvelopeTags(envelope.databaseId)
+			.some((tag) => tag.imapLabel === importantLabel)
+		if (hasTag && !addTag) {
+			await dispatch('removeEnvelopeTag', {
+				envelope,
+				imapLabel: importantLabel,
+			})
+		} else if (!hasTag && addTag) {
+			await dispatch('addEnvelopeTag', {
+				envelope,
+				imapLabel: importantLabel,
+			})
+		}
+	},
+
 	async fetchThread({ getters, commit }, id) {
 		const thread = await fetchThread(id)
 		commit('addEnvelopeThread', {

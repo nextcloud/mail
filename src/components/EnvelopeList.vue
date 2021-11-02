@@ -26,6 +26,40 @@
 					}}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
+					<ActionButton
+						v-if="isAtLeastOneSelectedUnimportant"
+						icon="icon-important"
+						:close-after-click="true"
+						@click.prevent="markSelectionImportant">
+						{{
+							n(
+								'mail',
+								'Mark {number} as important',
+								'Mark {number} as important',
+								selection.length,
+								{
+									number: selection.length,
+								}
+							)
+						}}
+					</ActionButton>
+					<ActionButton
+						v-if="isAtLeastOneSelectedImportant"
+						icon="icon-important"
+						:close-after-click="true"
+						@click.prevent="markSelectionUnimportant">
+						{{
+							n(
+								'mail',
+								'Mark {number} as unimportant',
+								'Mark {number} as unimportant',
+								selection.length,
+								{
+									number: selection.length,
+								}
+							)
+						}}
+					</ActionButton>
 					<ActionButton icon="icon-starred"
 						:close-after-click="true"
 						@click.prevent="favoriteOrUnfavoriteAll">
@@ -214,6 +248,22 @@ export default {
 			// returns false if at least one selected message has not been read yet
 			return this.selectedEnvelopes.every((env) => env.flags.seen === true)
 		},
+		isAtLeastOneSelectedImportant() {
+			// returns true if at least one selected message is marked as important
+			return this.selectedEnvelopes.some((env) => {
+				return this.$store.getters
+					.getEnvelopeTags(env.databaseId)
+					.some((tag) => tag.imapLabel === '$label1')
+			})
+		},
+		isAtLeastOneSelectedUnimportant() {
+			// returns true if at least one selected message is not marked as important
+			return this.selectedEnvelopes.some((env) => {
+				return !this.$store.getters
+					.getEnvelopeTags(env.databaseId)
+					.some((tag) => tag.imapLabel === '$label1')
+			})
+		},
 		areAllSelectedFavorite() {
 			// returns false if at least one selected message has not been favorited yet
 			return this.selectedEnvelopes.every((env) => env.flags.flagged === true)
@@ -253,6 +303,24 @@ export default {
 				this.$store.dispatch('toggleEnvelopeSeen', {
 					envelope,
 					seen,
+				})
+			})
+			this.unselectAll()
+		},
+		markSelectionImportant() {
+			this.selectedEnvelopes.forEach((envelope) => {
+				this.$store.dispatch('markEnvelopeImportantOrUnimportant', {
+					envelope,
+					addTag: true,
+				})
+			})
+			this.unselectAll()
+		},
+		markSelectionUnimportant() {
+			this.selectedEnvelopes.forEach((envelope) => {
+				this.$store.dispatch('markEnvelopeImportantOrUnimportant', {
+					envelope,
+					addTag: false,
 				})
 			})
 			this.unselectAll()
