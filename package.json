@@ -43,7 +43,7 @@
     "@nextcloud/vue": "^4.2.0",
     "@nextcloud/vue-dashboard": "^2",
     "@riophae/vue-treeselect": "^0.4.0",
-    "@vue/babel-preset-app": "^4.5.14",
+    "@vue/babel-preset-app": "^4.5.15",
     "color-convert": "^2.0.1",
     "core-js": "^3.18.3",
     "debounce-promise": "^3.1.2",
