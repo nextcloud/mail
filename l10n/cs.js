@@ -138,6 +138,8 @@ OC.L10N.register(
     "Load more" : "Načíst více",
     "_Mark {number} unread_::_Mark {number} unread_" : ["Označit {number} jako nepřečtený","Označit {number} jako nepřečtené","Označit {number} jako nepřečtených","Označit {number} jako nepřečtené"],
     "_Mark {number} read_::_Mark {number} read_" : ["Označit {number} jako přečtený","Označit {number} jako přečtené","Označit {number} jako přečtené","Označit {number} jako přečtené"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["Označit {number} jako důležité","Označit {number} jako důležité","Označit {number} jako důležité","Označit {number} jako důležité"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Označit {number} jako nedůležité","Označit {number} jako nedůležité","Označit {number} jako nedůležité","Označit {number} jako nedůležité"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["Odebrat {number} z oblíbených","Odebrat {number} z oblíbených","Odebrat {number} z oblíbených","Odebrat {number} z oblíbených"],
     "_Favorite {number}_::_Favorite {number}_" : ["Přidat {number} do oblíbených","Přidat {number} do oblíbených","Přidat {number} do oblíbených","Přidat {number} do oblíbených"],
     "_Unselect {number}_::_Unselect {number}_" : ["Zrušit výběr {number}","Zrušit výběr {number}","Zrušit výběr {number}","Zrušit výběr {number}"],

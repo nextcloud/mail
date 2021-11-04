@@ -138,6 +138,8 @@ OC.L10N.register(
     "Load more" : "Wczytaj więcej",
     "_Mark {number} unread_::_Mark {number} unread_" : ["Oznacz {number} jako nieprzeczytana","Oznacz {number} jako nieprzeczytane","Oznacz {number} jako nieprzeczytane","Oznacz {number} jako nieprzeczytane"],
     "_Mark {number} read_::_Mark {number} read_" : ["Oznacz {number} jako przeczytana","Oznacz {number} jako przeczytane","Oznacz {number} jako przeczytane","Oznacz {number} jako przeczytane"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["Oznacz {number} jako ważne","Oznacz {number} jako ważne","Oznacz {number} jako ważne","Oznacz {number} jako ważne"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Oznacz {number} jako nieważne","Oznacz {number} jako nieważne","Oznacz {number} jako nieważne","Oznacz {number} jako nieważne"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["Nie ulubiona {number}","Nie ulubione {number}","Nie ulubionych {number}","Nie ulubionych {number}"],
     "_Favorite {number}_::_Favorite {number}_" : ["Ulubiona {number}","Ulubione {number}","Ulubionych {number}","Ulubionych {number}"],
     "_Unselect {number}_::_Unselect {number}_" : ["Odznacz {number}","Odznacz {number}","Odznacz {number}","Odznacz {number}"],

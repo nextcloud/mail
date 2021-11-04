@@ -138,6 +138,8 @@ OC.L10N.register(
     "Load more" : "加载更多",
     "_Mark {number} unread_::_Mark {number} unread_" : ["标记 {number} 封未读"],
     "_Mark {number} read_::_Mark {number} read_" : ["标记  {number} 封已读"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["将 {number} 封邮件标记为重要"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["将 {number} 封邮件标记为不重要"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["取消收藏 {number} 封"],
     "_Favorite {number}_::_Favorite {number}_" : ["收藏 {number} 封"],
     "_Unselect {number}_::_Unselect {number}_" : ["取消选中 {number} 封"],

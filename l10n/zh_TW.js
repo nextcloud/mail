@@ -138,6 +138,8 @@ OC.L10N.register(
     "Load more" : "載入更多",
     "_Mark {number} unread_::_Mark {number} unread_" : ["將 {number} 標記為未讀"],
     "_Mark {number} read_::_Mark {number} read_" : ["將 {number} 標記為已讀"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["將 {number} 標記為重要"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["將 {number} 標記為不重要"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["取消我的最愛 {number}"],
     "_Favorite {number}_::_Favorite {number}_" : ["我的最愛 {number}"],
     "_Unselect {number}_::_Unselect {number}_" : ["取消選取 {number}"],

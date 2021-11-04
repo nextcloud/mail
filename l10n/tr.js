@@ -138,6 +138,8 @@ OC.L10N.register(
     "Load more" : "Diğerlerini yükle",
     "_Mark {number} unread_::_Mark {number} unread_" : ["{number} iletiyi okunmamış olarak işaretle","{number} iletiyi okunmamış olarak işaretle"],
     "_Mark {number} read_::_Mark {number} read_" : ["{number} iletiyi okunmuş olarak işaretle","{number} iletiyi okunmuş olarak işaretle"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["{number} iletiyi önemli olarak işaretle","{number} iletiyi önemli olarak işaretle"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["{number} iletiyi önemsiz olarak işaretle","{number} iletiyi önemsiz olarak işaretle"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["{number} iletiyi sık kullanılanlardan kaldır","{number} iletiyi sık kullanılanlardan kaldır"],
     "_Favorite {number}_::_Favorite {number}_" : ["{number} iletiyi sık kullanılanlara ekle","{number} iletiyi sık kullanılanlara ekle"],
     "_Unselect {number}_::_Unselect {number}_" : ["{number} iletiyi bırak","{number} iletiyi bırak"],
