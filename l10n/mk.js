@@ -109,6 +109,7 @@ OC.L10N.register(
     "Unselect" : "Поништи избор",
     "Select" : "Select",
     "Edit tags" : "Удери ознаки",
+    "Create event" : "Креирај настан",
     "Edit as new message" : "Измени како нова порака",
     "Blind copy recipients only" : "Само приматели на слепи копии",
     "No trash mailbox configured" : "Нема конфигурирано сандаче за отпадоци",

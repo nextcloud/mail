@@ -136,6 +136,8 @@
     "Load more" : "Načítať viac",
     "_Mark {number} unread_::_Mark {number} unread_" : ["Označiť {number} správu ako neprečítanú","Označiť {number} správy ako neprečítané","Označiť {number} správ ako neprečítané","Označiť {number} správ ako neprečítané"],
     "_Mark {number} read_::_Mark {number} read_" : ["Označiť {number} správu ako prečítanú","Označiť {number} správ ako prečítané","Označiť {number} správ ako prečítané","Označiť {number} správ ako prečítané"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["Označiť {number} správu ako dôležitú","Označiť {number} správ ako dôležité","Označiť {number} správ ako dôležité","Označiť {number} správ ako dôležité"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Označiť {number} správu ako nedôležitú","Označiť {number} správ ako nedôležité","Označiť {number} správ ako nedôležité","Označiť {number} správ ako nedôležité"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["Odobrať {number} z obľúbených","Odobrať {number} z obľúbených","Odobrať {number} z obľúbených","Odobrať {number} z obľúbených"],
     "_Favorite {number}_::_Favorite {number}_" : ["Pridať {number} k obľúbeným","Pridať {number} k obľúbeným","Pridať {number} k obľúbeným","Pridať {number} k obľúbeným"],
     "_Unselect {number}_::_Unselect {number}_" : ["Zrušiť výber {number}","Zrušiť výber {number}","Zrušiť výber {number}","Zrušiť výber {number}"],
