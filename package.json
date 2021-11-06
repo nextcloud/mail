@@ -45,7 +45,7 @@
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^4.5.15",
     "color-convert": "^2.0.1",
-    "core-js": "^3.19.0",
+    "core-js": "^3.19.1",
     "debounce-promise": "^3.1.2",
     "dompurify": "^2.3.3",
     "html-to-text": "^5.1.1",
