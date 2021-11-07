@@ -138,6 +138,8 @@ OC.L10N.register(
     "Load more" : "Kargatu gehiago",
     "_Mark {number} unread_::_Mark {number} unread_" : ["Markatu {number} irakurri gabe bezala","Markatu {number} irakurri gabe bezala"],
     "_Mark {number} read_::_Mark {number} read_" : [" 100% match \nMarkatu {number} irakurrita bezala","Markatu {number} irakurrita bezala"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["Markatu {number} garrantzizko","Markatu {number} garrantzizko"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Markatu {number} garrantzi gabe","Markatu {number} garrantzi gabe"],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["Kendu gogokoetatik {number}","Kendu gogokoetatik  {number}"],
     "_Favorite {number}_::_Favorite {number}_" : ["Gogokoa {number}","Gogokoa {number}"],
     "_Unselect {number}_::_Unselect {number}_" : ["Desautatu {number}","Desautatu {number}"],
