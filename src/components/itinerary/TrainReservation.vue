@@ -125,10 +125,8 @@ export default {
 			}
 
 			if ('departureTime' in this.data.reservationFor && 'arrivalTime' in this.data.reservationFor) {
-				const depart = moment(this.data.reservationFor.departureTime).format()
-				event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(depart))
-				const arrive = moment(this.data.reservationFor.arrivalTime).format()
-				event.updatePropertyWithValue('DTEND', ical.Time.fromDateTimeString(arrive))
+				CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.departureTime, 'DTSTART')
+				CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.arrivalTime, 'DTEND')
 			} else if ('departureDay' in this.data.reservationFor) {
 				const date = moment(this.data.reservationFor.departureDay).format()
 				event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(date))
