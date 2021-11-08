@@ -295,6 +295,7 @@ export default {
 		justify-content: flex-end;
 		margin-left: 10px;
 		height: 44px;
+		align-self: center;
 
 		.app-content-list-item-menu {
 			margin-left: 4px;
@@ -321,8 +322,7 @@ export default {
 		}
 	}
 	.avatardiv {
-		display: inline-block;
-		margin-bottom: -23px;
+		align-self: center
 	}
 	.subject {
 		margin-left: 8px;
