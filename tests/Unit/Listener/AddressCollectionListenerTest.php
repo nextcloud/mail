@@ -111,7 +111,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$message = $this->createMock(IMessage::class);
 		$this->preferences->expects($this->once())
 			->method('getPreference')
-			->with('test','collect-data', 'true')
+			->with('test', 'collect-data', 'true')
 			->willReturn('true');
 		/** @var Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(Horde_Mime_Mail::class);

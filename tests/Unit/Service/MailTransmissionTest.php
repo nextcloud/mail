@@ -293,7 +293,7 @@ class MailTransmissionTest extends TestCase {
 		$content = ['blablabla'];
 		$this->messageMapper->expects($this->once())
 			->method('getRawAttachments')
-			->with($this->imapClientFactory->getClient($account), $mailbox->getName(), $attachmentMessage->getUid(),[$originalAttachment[0]['id']])
+			->with($this->imapClientFactory->getClient($account), $mailbox->getName(), $attachmentMessage->getUid(), [$originalAttachment[0]['id']])
 			->willReturn($content);
 
 		$this->transmission->sendMessage($messageData, null);

@@ -105,7 +105,7 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
-			$this->mailboxSync->sync($account, $this->logger,true);
+			$this->mailboxSync->sync($account, $this->logger, true);
 			$this->syncService->syncAccount($account, $this->logger);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [

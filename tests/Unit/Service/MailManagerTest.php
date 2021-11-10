@@ -357,7 +357,7 @@ class MailManagerTest extends TestCase {
 
 		//standard flags
 		foreach ($flags as $k => $flag) {
-			$this->assertEquals($this->manager->filterFlags($account, $k , 'INBOX'), $flags[$k]);
+			$this->assertEquals($this->manager->filterFlags($account, $k, 'INBOX'), $flags[$k]);
 		}
 	}
 
@@ -369,7 +369,7 @@ class MailManagerTest extends TestCase {
 		->method('getClient')
 		->willReturn($client);
 
-		$this->assertEquals([],  $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT , 'INBOX'));
+		$this->assertEquals([], $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
 
 	public function testSetFilterFlagsImportant() {
@@ -383,7 +383,7 @@ class MailManagerTest extends TestCase {
 			->method('status')
 			->willReturn(['permflags' => [ "11" => "\*" ]]);
 
-		$this->assertEquals([Tag::LABEL_IMPORTANT],  $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT , 'INBOX'));
+		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
 
 	public function testIsPermflagsEnabledTrue(): void {
