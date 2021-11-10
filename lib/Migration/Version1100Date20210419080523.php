@@ -173,7 +173,7 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 		$insertQb->setValue('smtp_host', $insertQb->createNamedParameter($conf['smtpHost'] ?? 'smtp.domain.com'));
 		$insertQb->setValue('smtp_port', $insertQb->createNamedParameter($conf['smtpPort'] ?? 587, IQueryBuilder::PARAM_INT));
 		$insertQb->setValue('smtp_ssl_mode', $insertQb->createNamedParameter($conf['smtpSslMode'] ?? 'tls'));
-		$insertQb->setValue('sieve_enabled', $insertQb->createNamedParameter((bool)($conf['sieveEnabled'] ?? false),IQueryBuilder::PARAM_BOOL));
+		$insertQb->setValue('sieve_enabled', $insertQb->createNamedParameter((bool)($conf['sieveEnabled'] ?? false), IQueryBuilder::PARAM_BOOL));
 		$insertQb->setValue('sieve_user', $insertQb->createNamedParameter($conf['sieveUser'] ?? ''));
 		$insertQb->setValue('sieve_host', $insertQb->createNamedParameter($conf['sieveHost'] ?? ''));
 		$insertQb->setValue('sieve_port', $insertQb->createNamedParameter($conf['sievePort'] ?? 4190, IQueryBuilder::PARAM_INT));

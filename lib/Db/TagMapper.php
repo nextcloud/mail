@@ -257,7 +257,7 @@ class TagMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('mt2.id')
 		->from('mail_message_tags', 'mt2')
-		->join('mt2','mail_message_tags', 'mt1', $qb->expr()->andX(
+		->join('mt2', 'mail_message_tags', 'mt1', $qb->expr()->andX(
 			$qb->expr()->gt('mt1.id', 'mt2.id'),
 			$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
 			$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
