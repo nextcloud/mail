@@ -47,7 +47,7 @@
 		"youthweb/urllinker": "^1.3"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "v20.0.7",
+		"christophwurst/nextcloud": "v22.1.1",
 		"psalm/phar": "^4.6",
 		"roave/security-advisories": "dev-master"
 	},
