@@ -287,6 +287,7 @@
     "There can only be one configuration per domain and only one wildcard domain configuration." : "Domeinu bakoitzeko konfigurazio bakarra egon daiteke eta komodin-domeinuaren konfigurazio bakarra.",
     "These settings can be used in conjunction with each other." : "Ezarpen hauek beste batzuekin batera erabili daitezke.",
     "If you only want to provision one domain for all users, use the wildcard (*)." : "Bakarrik nahi baduzu erabiltzaile guztientzako domeinua hornitzea, erabili komodina (*).",
+    "This setting only makes most sense if you use the same user back-end for your Nextcloud and mail server of your organization." : "Ezarpen honek zentzua dauka zure Nextcloud eta mail zerbitzariek erabiltzaileen atzealde berdina erabiltzen badute zure erakundean.",
     "Provisioning Configurations" : "Horniketa konfigurazioak",
     "Add new config" : "Gehitu ezarpen berria",
     "Provision all accounts" : "Hornitu kontu guztiak",
