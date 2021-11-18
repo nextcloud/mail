@@ -36,6 +36,7 @@ import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
@@ -76,7 +77,7 @@ export default {
 		},
 	},
 	data() {
-		const plugins = [EssentialsPlugin, SignaturePlugin, QuotePlugin]
+		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin, QuotePlugin]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
