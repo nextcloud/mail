@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.0 - unreleased
+### Added
+- tbd
+### Changed
+- tbd
+### Fixed
+- tbd
+
 ## 1.10.5 – 2021-09-28
 ### Fixed
 - Wrong iframe height
