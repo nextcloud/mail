@@ -332,7 +332,7 @@ export default {
 	.envelope {
 		display: flex;
 		flex-direction: column;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 0 10px var(--color-box-shadow);
 		border-radius: 16px;
 		margin-left: 10px;
 		margin-right: 10px;
