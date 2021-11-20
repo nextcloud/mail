@@ -136,6 +136,8 @@
     "Load more" : "Carregar mais",
     "_Mark {number} unread_::_Mark {number} unread_" : ["Marcar {number} como não lido ","Marcar {number} como não lido"],
     "_Mark {number} read_::_Mark {number} read_" : ["Marque {number} como lido ","Marcar {number} como lido"],
+    "_Mark {number} as important_::_Mark {number} as important_" : ["Marque {number} como importante","Marque {number} como importante"],
+    "_Mark {number} as unimportant_::_Mark {number} as unimportant_" : ["Marque {number} como sem importância ","Marque {number} como sem importância "],
     "_Unfavorite {number}_::_Unfavorite {number}_" : ["{number} não favorito ","Não favorito {número}"],
     "_Favorite {number}_::_Favorite {number}_" : ["Favoritos {number}","Favorito {number}"],
     "_Unselect {number}_::_Unselect {number}_" : ["Deselecionar {number}","Desmarcar {number}"],
