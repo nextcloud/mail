@@ -72,14 +72,12 @@ export default {
 	},
 	beforeMount() {
 		scout.on('beforeprint', this.onBeforePrint)
-		scout.on('afterprint', this.onAfterPrint)
 	},
 	mounted() {
 		iframeResizer({ log: false, heightCalculationMethod: 'taggedElement' }, this.$refs.iframe)
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
-		scout.off('afterprint', this.onAfterPrint)
 		this.$refs.iframe.iFrameResizer.close()
 	},
 	methods: {
@@ -98,9 +96,6 @@ export default {
 			if (this.isSenderTrusted) {
 				this.displayIframe()
 			}
-		},
-		onAfterPrint() {
-			this.$refs.iframe.style.setProperty('height', '')
 		},
 		onBeforePrint() {
 			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
