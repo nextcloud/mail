@@ -373,7 +373,11 @@ export default {
 	#mail-thread-header-fields {
 		position: relative;
 	}
-
+	.app-content-details,
+	.splitpanes__pane-details {
+		max-width: unset !important;
+		width: 100% !important;
+	}
 	#header,
 	.app-navigation,
 	#reply-composer,
@@ -381,6 +385,7 @@ export default {
 	#mail-message-has-blocked-content,
 	.app-content-list,
 	.message-composer,
+	.splitpanes__pane-list,
 	.mail-message-attachments {
 		display: none !important;
 	}
