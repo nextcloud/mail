@@ -1,13 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.11.0 - unreleased
+## 1.11.0 - 2021-11-29
 ### Added
-- tbd
+- Nextcloud 23 support
+- Mark as important/unimportant for multiple messages
+- Provision aliases from an LDAP attribute
+- Anti spam reporting
+- Renaming of tag labels
 ### Changed
-- tbd
+- Thread design overhaul
+- Show attachments inline
+- Spacing between accounts in sidebar
+- Width handling of some HTML messages
+- Show thread subject only once if unchanged
+- Improved auto config
+- Removed unread counter from trash mailbox
 ### Fixed
-- tbd
+- IFrame sizing after print
+- Text quotes in plain text messages
+- Non-translatable strings
+- Missing unified inboxes colors
 
 ## 1.10.5 – 2021-09-28
 ### Fixed
