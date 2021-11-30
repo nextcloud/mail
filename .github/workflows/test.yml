@@ -159,3 +159,38 @@ jobs:
             run: npm run test
       env:
           CI: true
+
+  smoke-tests:
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              php-versions: ['7.4']
+              nextcloud-versions: ['stable20', 'stable21', 'stable22', 'stable23', 'master']
+      name: Nextcloud ${{ matrix.nextcloud-versions }} smoke test
+      steps:
+          - name: Set up php${{ matrix.php-versions }}
+            uses: shivammathur/setup-php@master
+            with:
+                php-version: ${{ matrix.php-versions }}
+                tools: composer:v1
+                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
+                coverage: xdebug
+          - name: Checkout Nextcloud
+            run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+          - name: Install Nextcloud
+            run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
+          - name: Fix php-parser on stable20 incompatibility with phpunit 9.3+
+            if: ${{ matrix.nextcloud-versions == 'stable20' }}
+            working-directory: nextcloud/3rdparty
+            run: composer require nikic/php-parser:4.10
+          - name: Checkout Mail
+            uses: actions/checkout@master
+            with:
+                path: nextcloud/apps/mail
+          - name: Install dependencies
+            working-directory: nextcloud/apps/mail
+            run: composer install
+          - name: Install Mail
+            run: php -f nextcloud/occ app:enable mail
+          - name: Run occ
+            run: php -f nextcloud/occ
