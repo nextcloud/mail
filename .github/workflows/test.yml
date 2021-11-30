@@ -192,5 +192,5 @@ jobs:
             run: composer install
           - name: Install Mail
             run: php -f nextcloud/occ app:enable mail
-          - name: Run occ
-            run: php -f nextcloud/occ
+          - name: Run repair steps
+            run: php -f nextcloud/occ maintenance:repair
