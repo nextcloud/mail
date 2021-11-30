@@ -165,7 +165,7 @@ jobs:
       strategy:
           matrix:
               php-versions: ['7.4']
-              nextcloud-versions: ['stable20', 'v21.0.0', 'stable22', 'stable23', 'fix/repair-step-query-exception-bubble']
+              nextcloud-versions: ['v21.0.0', 'v21.0.1', 'v21.0.2', 'v21.0.3', 'v21.0.4', 'v21.0.5', 'v21.0.6', 'v21.0.7', 'stable21']
       name: Nextcloud ${{ matrix.nextcloud-versions }} smoke test
       steps:
           - name: Set up php${{ matrix.php-versions }}
