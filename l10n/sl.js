@@ -286,6 +286,7 @@ OC.L10N.register(
     "Add new config" : "Dodaj nove nastavitve",
     "Provision all accounts" : "Zagotovi povezljivost vseh računov",
     "Anti Spam Service" : "Storitve proti neželeni pošti",
+    "You can set up an anti spam service email address here." : "Določiti je mogoče elektronski naslov za storitve neželenih sporočil.",
     "Successfully updated config for \"{domain}\"" : "Nastavitve za domeno »{domain}« so uspešno posodobljene.",
     "Error saving config" : "Napaka shranjevanja nastavitev",
     "Saved config for \"{domain}\"" : "Nastavitve za domeno »{domain}« so shranjene.",
