@@ -71,7 +71,6 @@ OC.L10N.register(
     "Go back" : "Gå tillbaka",
     "Retry" : "Försök igen",
     "Message sent!" : "Meddelande skickat!",
-    "Write another message" : "Skriv ett annat meddelande",
     "Send" : "Skicka",
     "Encrypt and send" : "Kryptera och skicka",
     "Send unencrypted" : "Skicka okrypterat",

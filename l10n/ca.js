@@ -71,7 +71,6 @@ OC.L10N.register(
     "Go back" : "Torna enrere",
     "Retry" : "Reintenta",
     "Message sent!" : "Missatge enviat!",
-    "Write another message" : "Escriu un altre missatge",
     "Send" : "Envia",
     "Encrypt and send" : "Encripta i enviï",
     "Send unencrypted" : "Envia sense encriptar",

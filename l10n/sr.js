@@ -71,7 +71,6 @@ OC.L10N.register(
     "Go back" : "Иди назад",
     "Retry" : "Покушај поново",
     "Message sent!" : "Порука послата!",
-    "Write another message" : "Напиши још једну поруку",
     "Send" : "Пошаљи",
     "Encrypt and send" : "Шифруј и пошаљи",
     "Send unencrypted" : "Пошаљи нешифровано",

@@ -44,7 +44,6 @@ OC.L10N.register(
     "Go back" : "Nôl",
     "Retry" : "Ceisio eto",
     "Message sent!" : "Neges wedi'i hanfon!",
-    "Write another message" : "Ysgrifennu neges arall",
     "Send" : "Anfon",
     "Uploading {percent}% …" : "Llwytho {percent}% ...",
     "Choose a file to add as attachment" : "Dewiswch ffeil i'w hychwanegu fel atodiad",

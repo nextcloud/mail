@@ -81,7 +81,6 @@ OC.L10N.register(
     "Warning sending your message" : "Aviso ao enviar a sua mensagem",
     "Send anyway" : "Enviar de qualquer maneira",
     "Message sent!" : "Mensagem enviada!",
-    "Write another message" : "Escreva outra mensagem",
     "Send" : "Enviar",
     "Encrypt and send" : "Cifrar e enviar",
     "Send unencrypted" : "Enviar sem cifra",

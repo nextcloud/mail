@@ -45,7 +45,6 @@ OC.L10N.register(
     "Go back" : "Gå tilbake",
     "Retry" : "Prøv igjen",
     "Message sent!" : "Melding sendt!",
-    "Write another message" : "Skriv en ny melding",
     "Send" : "Send",
     "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
     "Draft: " : "Kladd:",

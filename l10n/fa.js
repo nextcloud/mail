@@ -63,7 +63,6 @@ OC.L10N.register(
     "Go back" : "برگرد",
     "Retry" : "تلاش دوباره",
     "Message sent!" : "پیام ارسال شد!",
-    "Write another message" : "پیام دیگری بنویسید",
     "Send" : "ارسال",
     "Uploading {percent}% …" : "در حال بارگیری {درصد… ...",
     "Choose a file to add as attachment" : "پرونده ای را برای اضافه کردن به عنوان پیوست انتخاب کنید",

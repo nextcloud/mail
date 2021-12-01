@@ -41,7 +41,6 @@ OC.L10N.register(
     "Go back" : "Atpakaļ",
     "Retry" : "Mēģināt vēlreiz",
     "Message sent!" : "Vēstule aizsūtīta!",
-    "Write another message" : "Rakstiet citu ziņu ...",
     "Send" : "Sūtīt",
     "Choose a file to add as attachment" : "Izvēlēties datni ko pievienot kā pielikumu",
     "Unselect" : "Noņemt atlasi",

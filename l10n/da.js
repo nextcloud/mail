@@ -89,7 +89,6 @@ OC.L10N.register(
     "Warning sending your message" : "Advarsel om at sende din besked",
     "Send anyway" : "Send alligevel",
     "Message sent!" : "Beskeden blev sendt!",
-    "Write another message" : "Skriv en ny besked…",
     "Add share link from {productName} Files" : "Tilføj delingslink fra {productName} filer",
     "Send" : "Send",
     "Encrypt and send" : "Kryptér og send",

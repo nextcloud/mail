@@ -66,7 +66,6 @@ OC.L10N.register(
     "Go back" : "Повернутися назад",
     "Retry" : "Ще раз",
     "Message sent!" : "Повідомлення надіслано!",
-    "Write another message" : "Написати ще одне повідомлення",
     "Send" : "Надіслати",
     "Encrypt and send" : "Зашифрувати та надіслати",
     "Send unencrypted" : "Надіслати без шифрування",

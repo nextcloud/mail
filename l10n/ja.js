@@ -83,7 +83,6 @@ OC.L10N.register(
     "Go back" : "戻る",
     "Retry" : "再試行",
     "Message sent!" : "へメッセージを送信しました！",
-    "Write another message" : "他のメッセージを書く",
     "Send" : "送信",
     "Encrypt and send" : "暗号化して送信",
     "Send unencrypted" : "暗号化せずに送信",

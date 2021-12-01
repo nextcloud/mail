@@ -71,7 +71,6 @@ OC.L10N.register(
     "Go back" : "Fara til baka",
     "Retry" : "Reyna aftur",
     "Message sent!" : "Skilaboðin hafa verið send!",
-    "Write another message" : "Skrifa önnur skilaboð",
     "Send" : "Senda",
     "Encrypt and send" : "Dulrita og senda",
     "Send unencrypted" : "Senda ódulritað",
