@@ -75,7 +75,7 @@ export default {
 				name: 'message',
 				params: {
 					mailboxId: firstMailbox.databaseId,
-					threadId: 'new',
+					threadId: 'mailto',
 				},
 				query: {
 					to: this.$route.query.to,

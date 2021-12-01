@@ -236,7 +236,7 @@ export default {
 .new-message-attachments-action {
 	display: inline-block;
 	vertical-align: middle;
-	padding: 22px;
+	padding: 10px;
 	opacity: 0.5;
 }
 

@@ -22,20 +22,6 @@
 				:to="forwardLink">
 				{{ t('mail', 'Forward') }}
 			</ActionRouter>
-			<ActionRouter icon="icon-add"
-				:to="{
-					name: 'message',
-					params: {
-						mailboxId: $route.params.mailboxId,
-						threadId: 'asNew',
-						filter: $route.params.filter,
-					},
-					query: {
-						messageId: envelope.databaseId,
-					},
-				}">
-				{{ t('mail', 'Edit as new message') }}
-			</ActionRouter>
 			<ActionButton icon="icon-important"
 				:close-after-click="true"
 				@click.prevent="onToggleImportant">
@@ -88,6 +74,11 @@
 				@click.prevent="showEventModal = true">
 				{{ t('mail', 'Create event') }}
 			</ActionButton>
+			<ActionButton icon="icon-add"
+				:close-after-click="true"
+				@click="onOpenEditAsNew">
+				{{ t('mail', 'Edit as new message') }}
+			</ActionButton>
 			<ActionButton v-if="withShowSource"
 				:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
 				:disabled="sourceLoading"
@@ -129,6 +120,9 @@
 			:account="account"
 			:envelope="envelope"
 			@close="onCloseTagModal" />
+		<NewMessageModal v-if="showNewMessage"
+			:template-message-id="envelope.databaseId"
+			@close="showNewMessage = false" />
 	</div>
 </template>
 
@@ -149,6 +143,7 @@ import TagModal from './TagModal'
 import MoveModal from './MoveModal'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 import { showError } from '@nextcloud/dialogs'
+import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'MenuEnvelope',
@@ -161,6 +156,7 @@ export default {
 		Modal,
 		MoveModal,
 		TagModal,
+		NewMessageModal,
 	},
 	props: {
 		envelope: {
@@ -205,6 +201,7 @@ export default {
 			showMoveModal: false,
 			showEventModal: false,
 			showTagModal: false,
+			showNewMessage: false,
 		}
 	},
 	computed: {
@@ -363,6 +360,9 @@ export default {
 		},
 		onCloseTagModal() {
 			this.showTagModal = false
+		},
+		onOpenEditAsNew() {
+			this.showNewMessage = true
 		},
 	},
 }

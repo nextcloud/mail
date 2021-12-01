@@ -27,6 +27,7 @@
 			button-class="icon-add"
 			role="complementary"
 			@click="onNewMessage" />
+		<NewMessageModal v-if="showNewMessage" @close="showNewMessage = false" />
 		<button v-if="currentMailbox"
 			class="button icon-history"
 			:disabled="refreshing"
@@ -88,6 +89,7 @@ import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationMailbox from './NavigationMailbox'
 
 import AppSettingsMenu from '../components/AppSettingsMenu'
+import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'Navigation',
@@ -100,10 +102,12 @@ export default {
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
+		NewMessageModal,
 	},
 	data() {
 		return {
 			refreshing: false,
+			showNewMessage: false,
 		}
 	},
 	computed: {
@@ -147,31 +151,7 @@ export default {
 			return true
 		},
 		onNewMessage() {
-			const accountId = this.$route.params.accountId || this.$store.getters.accounts[0].id
-
-			const mailboxId = this.$route.params.mailboxId || this.$store.getters.getMailboxes(accountId)[0]?.databaseId
-			if (
-				this.$router.currentRoute.name === 'message'
-				&& this.$router.currentRoute.params.threadId === 'new'
-			) {
-				// If we already show the composer, navigating to it would be pointless (and doesn't work)
-				// instead trigger an event to reset the composer
-				this.$root.$emit('newMessage')
-				return
-			}
-
-			this.$router
-				.push({
-					name: 'message',
-					params: {
-						mailboxId,
-						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						threadId: 'new',
-					},
-				})
-				.catch((err) => {
-					logger.error(err)
-				})
+			this.showNewMessage = true
 		},
 		isFirst(account) {
 			const accounts = this.$store.getters.accounts

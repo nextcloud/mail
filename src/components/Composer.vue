@@ -150,6 +150,12 @@
 				:upload-size-limit="attachmentSizeLimit"
 				@upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
+				<button v-if="savingDraft === false"
+					class="button"
+					:title="t('mail', 'Discard & close draft')"
+					@click="discardDraft">
+					{{ t('mail', 'Discard draft') }}
+				</button>
 				<p class="composer-actions-draft">
 					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Cannot save draft because this account does not have a drafts mailbox configured.') }}</span>
 					<span v-else-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
@@ -212,7 +218,14 @@
 		</div>
 	</div>
 	<Loading v-else-if="state === STATES.UPLOADING" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-	<Loading v-else-if="state === STATES.SENDING" :hint="t('mail', 'Sending …')" role="alert" />
+	<Loading v-else-if="state === STATES.SENDING"
+		:hint="t('mail', 'Sending …')"
+		role="alert"
+		class="sending-hint" />
+	<Loading v-else-if="state === STATES.DISCARDING" :hint="t('mail', 'Discarding …')" class="emptycontent" />
+	<EmptyContent v-else-if="state === STATES.DISCARDED" icon="icon-mail">
+		<h2>{{ t('mail', 'Draft was discarded!') }}</h2>
+	</EmptyContent>
 	<div v-else-if="state === STATES.ERROR" class="emptycontent" role="alert">
 		<h2>{{ t('mail', 'Error sending your message') }}</h2>
 		<p v-if="errorText">
@@ -237,12 +250,9 @@
 			{{ t('mail', 'Send anyway') }}
 		</button>
 	</div>
-	<div v-else class="emptycontent">
+	<EmptyContent v-else icon="icon-checkmark">
 		<h2>{{ t('mail', 'Message sent!') }}</h2>
-		<button v-if="!isReply" class="button primary" @click="reset">
-			{{ t('mail', 'Write another message') }}
-		</button>
-	</div>
+	</EmptyContent>
 </template>
 
 <script>
@@ -256,6 +266,7 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import { showError } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
@@ -292,6 +303,8 @@ const STATES = Object.seal({
 	ERROR: 3,
 	WARNING: 4,
 	FINISHED: 5,
+	DISCARDING: 6,
+	DISCARDED: 7,
 })
 
 export default {
@@ -306,6 +319,7 @@ export default {
 		Loading,
 		Multiselect,
 		TextEditor,
+		EmptyContent,
 	},
 	props: {
 		fromAccount: {
@@ -349,6 +363,11 @@ export default {
 			type: Object,
 			required: false,
 			default: () => undefined,
+		},
+		forwardedMessages: {
+			type: Array,
+			required: false,
+			default: () => [],
 		},
 	},
 	data() {
@@ -490,18 +509,6 @@ export default {
 			this.$refs.toLabel.$el.focus()
 		}
 
-		// event is triggered when user clicks 'new message' in navigation
-		this.$root.$on('newMessage', () => {
-			this.draftsPromise
-				.then(() => {
-					return this.saveDraft(this.getMessageData)
-				})
-				.then(() => {
-					// wait for the draft to be saved before resetting the message content
-					this.reset()
-				})
-		})
-
 		// Add attachments in case of forward
 		if (this.forwardFrom?.attachments !== undefined) {
 			this.forwardFrom.attachments.forEach(att => {
@@ -514,13 +521,12 @@ export default {
 				})
 			})
 		}
-
 		// Add messages forwarded as attachments
 		let forwards = []
-		if (this.$route.query.forwardedMessages && !isArray(this.$route.query.forwardedMessages)) {
-			forwards = [this.$route.query.forwardedMessages]
-		} else if (this.$route.query.forwardedMessages && isArray(this.$route.query.forwardedMessages)) {
-			forwards = this.$route.query.forwardedMessages
+		if (this.forwardedMessages && !isArray(this.forwardedMessages)) {
+			forwards = [this.forwardedMessages]
+		} else if (this.forwardedMessages && isArray(this.forwardedMessages)) {
+			forwards = this.forwardedMessages
 		}
 		forwards.forEach(id => {
 			const env = this.$store.getters.getEnvelope(id)
@@ -540,8 +546,6 @@ export default {
 		})
 	},
 	beforeDestroy() {
-		this.$root.$off('newMessage')
-
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
@@ -793,6 +797,7 @@ export default {
 			this.newRecipients = []
 			this.requestMdn = false
 			this.appendSignature = true
+			this.savingDraft = undefined
 
 			this.setAlias()
 			this.initBody()
@@ -814,6 +819,13 @@ export default {
 			}
 
 			return `${alias.name} <${alias.emailAddress}>`
+		},
+		async discardDraft() {
+			this.state = STATES.DISCARDING
+			const id = await this.draftsPromise
+			await this.$store.dispatch('deleteMessage', { id })
+			this.state = STATES.DISCARDED
+			this.$emit('close')
 		},
 	},
 }
@@ -848,6 +860,7 @@ export default {
 
 	&.mail-account {
 		border-top: none;
+		padding-top: 10px;
 
 		& > .multiselect {
 			max-width: none;
@@ -873,7 +886,7 @@ export default {
 	font-size: 20px;
 	font-weight: bold;
 	margin: 0;
-	padding: 24px 12px;
+	padding: 24px 20px;
 }
 
 .warning-box {
@@ -882,13 +895,15 @@ export default {
 }
 
 .message-body {
-	min-height: 300px;
+	min-height: 570px;
 	width: 100%;
 	margin: 0;
-	padding: 12px;
 	border: none !important;
 	outline: none !important;
 	box-shadow: none !important;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	padding-left: 20px;
 }
 
 #draft-status {
@@ -902,7 +917,9 @@ export default {
 .copy-toggle,
 .cc-label,
 .bcc-label {
-	padding: 12px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	padding-right: 20px;
 	cursor: text;
 	color: var(--color-text-maxcontrast);
 	width: 100px;
@@ -941,5 +958,17 @@ export default {
 }
 .submit-message.send.primary.icon-confirm-white {
 	color: var(--color-main-background);
+}
+.sending-hint {
+	height: 50px;
+	margin-top: 50px;
+}
+.button {
+	background-color: transparent;
+	border: none;
+}
+.emptycontent {
+	margin-top: 250px;
+	height: 120px;
 }
 </style>
