@@ -1,156 +1,154 @@
 <template>
-	<ListItem
-		v-draggable-envelope="{
-			accountId: data.accountId ? data.accountId : mailbox.accountId,
-			mailboxId: data.mailboxId,
-			envelopeId: data.databaseId,
-			draggableLabel,
-			selectedEnvelopes,
-		}"
-		class="list-item-style"
-		:class="{seen: data.flags.seen, draft, selected: selected}"
-		:to="link"
-		:data-envelope-id="data.databaseId"
-		:title="addresses"
-		:details="formatted()">
-		<template #icon>
-			<div
-				v-if="mailbox.isUnified"
-				class="mail-message-account-color"
-				:style="{'background-color': accountColor}" />
-			<div
-				v-if="data.flags.flagged"
-				class="app-content-list-item-star icon-starred"
-				:data-starred="data.flags.flagged ? 'true' : 'false'"
-				@click.prevent="onToggleFlagged" />
-			<div
-				v-if="isImportant"
-				class="app-content-list-item-star svg icon-important"
-				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="onToggleImportant"
-				v-html="importantSvg" />
-			<div
-				v-if="data.flags.junk"
-				class="app-content-list-item-star icon-junk"
-				:data-starred="data.flags.junk ? 'true' : 'false'"
-				@click.prevent="onToggleJunk" />
-			<div class="app-content-list-item-icon">
-				<Avatar :display-name="addresses" :email="avatarEmail" />
-				<p v-if="selectMode" class="app-content-list-item-select-checkbox">
-					<input :id="`select-checkbox-${data.uid}`"
-						class="checkbox"
-						type="checkbox"
-						:checked="selected">
-					<label
-						:for="`select-checkbox-${data.uid}`"
-						@click.exact.prevent="toggleSelected"
-						@click.shift.prevent="onSelectMultiple" />
-				</p>
-			</div>
-		</template>
-		<template #subtitle>
-			<span v-if="data.flags.answered" class="icon-reply" />
-			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
-			<span v-if="draft" class="draft">
-				<em>{{ t('mail', 'Draft: ') }}</em>
-			</span>
-			{{ data.subject }}
-		</template>
-		<template #actions>
-			<ActionButton icon="icon-important"
-				:close-after-click="true"
-				@click.prevent="onToggleImportant">
-				{{
-					isImportant ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-starred"
-				:close-after-click="true"
-				@click.prevent="onToggleFlagged">
-				{{
-					data.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-mail"
-				:close-after-click="true"
-				@click.prevent="onToggleSeen">
-				{{
-					data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-junk"
-				:close-after-click="true"
-				@click.prevent="onToggleJunk">
-				{{
-					data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-checkmark"
-				:close-after-click="true"
-				@click.prevent="toggleSelected">
-				{{
-					selected ? t('mail', 'Unselect') : t('mail', 'Select')
-				}}
-			</ActionButton>
-			<ActionButton
-				icon="icon-tag"
-				:close-after-click="true"
-				@click.prevent="onOpenTagModal">
-				{{ t('mail', 'Edit tags') }}
-			</ActionButton>
-			<ActionButton icon="icon-external"
-				:close-after-click="true"
-				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move thread') }}
-			</ActionButton>
-			<ActionButton icon="icon-calendar-dark"
-				:close-after-click="true"
-				@click.prevent="showEventModal = true">
-				{{ t('mail', 'Create event') }}
-			</ActionButton>
-			<ActionButton icon="icon-add"
-				:close-after-click="true"
-				@click.prevent="onOpenEditAsNew">
-				{{ t('mail', 'Edit as new message') }}
-			</ActionButton>
-			<ActionButton icon="icon-delete"
-				:close-after-click="true"
-				@click.prevent="onDelete">
-				{{ t('mail', 'Delete thread') }}
-			</ActionButton>
-		</template>
-		<template #extra>
-			<div
-				v-if="mailbox.isUnified"
-				class="mail-message-account-color"
-				:style="{'background-color': accountColor}" />
-			<div v-for="tag in tags"
-				:key="tag.id"
-				class="tag-group">
-				<div class="tag-group__bg"
-					:style="{'background-color': tag.color}" />
-				<span class="tag-group__label"
-					:style="{color: tag.color}">{{ tag.displayName }} </span>
-			</div>
-			<MoveModal v-if="showMoveModal"
-				:account="account"
-				:envelopes="[data]"
-				:move-thread="true"
-				@move="onMove"
-				@close="onCloseMoveModal" />
-			<EventModal v-if="showEventModal"
-				:envelope="data"
-				@close="showEventModal = false" />
-			<TagModal
-				v-if="showTagModal"
-				:account="account"
-				:envelope="data"
-				@close="onCloseTagModal" />
-			<NewMessageModal v-if="showNewMessage"
-				:template-message-id="data.databaseId"
-				@close="showNewMessage = false" />
-		</template>
-	</ListItem>
+	<div>
+		<div
+			v-if="mailbox.isUnified"
+			class="mail-message-account-color"
+			:style="{'background-color': accountColor}" />
+		<ListItem
+			v-draggable-envelope="{
+				accountId: data.accountId ? data.accountId : mailbox.accountId,
+				mailboxId: data.mailboxId,
+				envelopeId: data.databaseId,
+				draggableLabel,
+				selectedEnvelopes,
+			}"
+			class="list-item-style"
+			:class="{seen: data.flags.seen, draft, selected: selected}"
+			:to="link"
+			:data-envelope-id="data.databaseId"
+			:title="addresses"
+			:details="formatted()">
+			<template #icon>
+				<div
+					v-if="data.flags.flagged"
+					class="app-content-list-item-star icon-starred"
+					:data-starred="data.flags.flagged ? 'true' : 'false'"
+					@click.prevent="onToggleFlagged" />
+				<div
+					v-if="isImportant"
+					class="app-content-list-item-star svg icon-important"
+					:data-starred="isImportant ? 'true' : 'false'"
+					@click.prevent="onToggleImportant"
+					v-html="importantSvg" />
+				<div
+					v-if="data.flags.junk"
+					class="app-content-list-item-star icon-junk"
+					:data-starred="data.flags.junk ? 'true' : 'false'"
+					@click.prevent="onToggleJunk" />
+				<div class="app-content-list-item-icon">
+					<Avatar :display-name="addresses" :email="avatarEmail" />
+					<p v-if="selectMode" class="app-content-list-item-select-checkbox">
+						<input :id="`select-checkbox-${data.uid}`"
+							class="checkbox"
+							type="checkbox"
+							:checked="selected">
+						<label
+							:for="`select-checkbox-${data.uid}`"
+							@click.exact.prevent="toggleSelected"
+							@click.shift.prevent="onSelectMultiple" />
+					</p>
+				</div>
+			</template>
+			<template #subtitle>
+				<span v-if="data.flags.answered" class="icon-reply" />
+				<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
+				<span v-if="draft" class="draft">
+					<em>{{ t('mail', 'Draft: ') }}</em>
+				</span>
+				{{ data.subject }}
+			</template>
+			<template #actions>
+				<ActionButton icon="icon-important"
+					:close-after-click="true"
+					@click.prevent="onToggleImportant">
+					{{
+						isImportant ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-starred"
+					:close-after-click="true"
+					@click.prevent="onToggleFlagged">
+					{{
+						data.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-mail"
+					:close-after-click="true"
+					@click.prevent="onToggleSeen">
+					{{
+						data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-junk"
+					:close-after-click="true"
+					@click.prevent="onToggleJunk">
+					{{
+						data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-checkmark"
+					:close-after-click="true"
+					@click.prevent="toggleSelected">
+					{{
+						selected ? t('mail', 'Unselect') : t('mail', 'Select')
+					}}
+				</ActionButton>
+				<ActionButton
+					icon="icon-tag"
+					:close-after-click="true"
+					@click.prevent="onOpenTagModal">
+					{{ t('mail', 'Edit tags') }}
+				</ActionButton>
+				<ActionButton icon="icon-external"
+					:close-after-click="true"
+					@click.prevent="onOpenMoveModal">
+					{{ t('mail', 'Move thread') }}
+				</ActionButton>
+				<ActionButton icon="icon-calendar-dark"
+					:close-after-click="true"
+					@click.prevent="showEventModal = true">
+					{{ t('mail', 'Create event') }}
+				</ActionButton>
+				<ActionButton icon="icon-add"
+					:close-after-click="true"
+					@click.prevent="onOpenEditAsNew">
+					{{ t('mail', 'Edit as new message') }}
+				</ActionButton>
+				<ActionButton icon="icon-delete"
+					:close-after-click="true"
+					@click.prevent="onDelete">
+					{{ t('mail', 'Delete thread') }}
+				</ActionButton>
+			</template>
+			<template v-if="tags" #extra>
+				<div v-for="tag in tags"
+					:key="tag.id"
+					class="tag-group">
+					<div class="tag-group__bg"
+						:style="{'background-color': tag.color}" />
+					<span class="tag-group__label"
+						:style="{color: tag.color}">{{ tag.displayName }} </span>
+				</div>
+				<NewMessageModal v-if="showNewMessage"
+					:template-message-id="data.databaseId"
+					@close="showNewMessage = false" />
+			</template>
+		</ListItem>
+		<MoveModal v-if="showMoveModal"
+			:account="account"
+			:envelopes="[data]"
+			:move-thread="true"
+			@move="onMove"
+			@close="onCloseMoveModal" />
+		<EventModal v-if="showEventModal"
+			:envelope="data"
+			@close="showEventModal = false" />
+		<TagModal
+			v-if="showTagModal"
+			:account="account"
+			:envelope="data"
+			@close="onCloseTagModal" />
+	</div>
 </template>
 <script>
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
@@ -402,7 +400,7 @@ export default {
 	position: absolute;
 	left: 0px;
 	width: 2px;
-	height: 69px;
+	height: 100%;
 	z-index: 1;
 }
 
@@ -441,7 +439,9 @@ export default {
 	top: 35px;
 	z-index: 50; // same as icon-starred
 }
-
+.list-item-style {
+	margin-left: 4px;
+}
 .list-item-style:not(.seen) {
 	font-weight: bold;
 }
@@ -546,6 +546,9 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 .app-content-list-item-star.icon-starred {
 	display: block;
+}
+.app-content-list-item-icon {
+	display: flex;
 }
 ::v-deep.icon-important.app-content-list-item-star {
 	position: absolute;
