@@ -71,7 +71,7 @@ class Manager {
 								ProvisioningMapper $provisioningMapper,
 								MailAccountMapper $mailAccountMapper,
 								ICrypto $crypto,
-								ILDAPProviderFactory $ldapProviderFactory,
+								// ILDAPProviderFactory $ldapProviderFactory,
 								AliasMapper $aliasMapper,
 								LoggerInterface $logger,
 								TagMapper $tagMapper) {
