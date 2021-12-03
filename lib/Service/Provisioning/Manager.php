@@ -71,8 +71,8 @@ class Manager {
 								// ProvisioningMapper $provisioningMapper,
 								// MailAccountMapper $mailAccountMapper,
 								// ICrypto $crypto,
-								ILDAPProviderFactory $ldapProviderFactory,
-								AliasMapper $aliasMapper,
+								// ILDAPProviderFactory $ldapProviderFactory,
+								// AliasMapper $aliasMapper,
 								LoggerInterface $logger,
 								TagMapper $tagMapper) {
 		$this->userManager = $userManager;
