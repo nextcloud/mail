@@ -67,14 +67,15 @@ class Manager {
 	/** @var TagMapper */
 	private $tagMapper;
 
-	public function __construct(IUserManager $userManager,
-								ProvisioningMapper $provisioningMapper,
-								MailAccountMapper $mailAccountMapper,
-								ICrypto $crypto,
+	public function __construct(// IUserManager $userManager,
+								// ProvisioningMapper $provisioningMapper,
+								// MailAccountMapper $mailAccountMapper,
+								// ICrypto $crypto,
 								// ILDAPProviderFactory $ldapProviderFactory,
-								AliasMapper $aliasMapper,
-								LoggerInterface $logger,
-								TagMapper $tagMapper) {
+								// AliasMapper $aliasMapper,
+								// LoggerInterface $logger,
+								// TagMapper $tagMapper) {
+	) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
