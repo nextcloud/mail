@@ -72,7 +72,7 @@ class Manager {
 								// MailAccountMapper $mailAccountMapper,
 								// ICrypto $crypto,
 								// ILDAPProviderFactory $ldapProviderFactory,
-								// AliasMapper $aliasMapper,
+								AliasMapper $aliasMapper,
 								LoggerInterface $logger,
 								TagMapper $tagMapper) {
 		$this->userManager = $userManager;
