@@ -44,6 +44,30 @@ Turn off TLS verfication for IMAP/SMTP. This happens globally for all accounts a
 'app.mail.verify-tls-peer' => false
 ```
 
+### Anti-abuse alerts
+
+The app can write alerts to the logs when users send messages to a high number of recipients or sends a high number of messages for a short period of time. These events might indicate that the account is abused for sending spam messages.
+
+To enable anti-abuse alerts, you'll have to set a few configuration options [via occ](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/occ_command.html).
+
+```bash
+# Turn alerts on
+occ config:app:set mail abuse_detection --value=on
+# Turn alerts off
+occ config:app:set mail abuse_detection --value=off
+
+# Alert when 50 or more recipients are used for one single message
+occ config:app:set mail abuse_number_of_recipients_per_message_threshold --value=50
+
+# Alerts can be configured for three intervals: 15m, 1h and 1d
+# Alert when more than 10 messages are sent in 15 minutes
+occ config:app:set mail abuse_number_of_messages_per_15m --value=10
+# Alert when more than 30 messages are sent in one hour
+occ config:app:set mail abuse_number_of_messages_per_1h --value=30
+# Alert when more than 100 messages are sent in one day
+occ config:app:set mail abuse_number_of_messages_per_1d --value=100
+```
+
 ## Troubleshooting
 
 ### Logging
