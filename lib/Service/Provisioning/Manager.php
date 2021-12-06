@@ -34,14 +34,12 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCP\IServerContainer;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\LDAP\ILDAPProvider;
 use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
-use Throwable;
 
 class Manager {
 
@@ -57,8 +55,8 @@ class Manager {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var IServerContainer */
-	private $serverContainer;
+	/** @var ILDAPProviderFactory */
+	private $ldapProviderFactory;
 
 	/** @var AliasMapper */
 	private $aliasMapper;
@@ -73,7 +71,7 @@ class Manager {
 								ProvisioningMapper $provisioningMapper,
 								MailAccountMapper $mailAccountMapper,
 								ICrypto $crypto,
-								IServerContainer $appContainer,
+								ILDAPProviderFactory $ldapProviderFactory,
 								AliasMapper $aliasMapper,
 								LoggerInterface $logger,
 								TagMapper $tagMapper) {
@@ -81,7 +79,7 @@ class Manager {
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->crypto = $crypto;
-		$this->serverContainer = $appContainer;
+		$this->ldapProviderFactory = $ldapProviderFactory;
 		$this->aliasMapper = $aliasMapper;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
@@ -162,21 +160,15 @@ class Manager {
 			return $provisioning;
 		}
 
-		try {
-			$ldapProviderFactory = $this->serverContainer->get(ILDAPProviderFactory::class);
-			/** @psalm-suppress UndefinedInterfaceMethod */
-			if ($ldapProviderFactory->isAvailable() === false) {
-				$this->logger->debug('Request to provision mail aliases but LDAP not available');
-				return $provisioning;
-			}
-			$ldapProvider = $ldapProviderFactory->getLDAPProvider();
-			/** @psalm-suppress UndefinedInterfaceMethod */
-			$provisioning->setAliases($ldapProvider->getMultiValueUserAttribute($user->getUID(), $provisioning->getLdapAliasesAttribute()));
-		} catch (Throwable $e) {
-			$this->logger->debug('Request to provision mail aliases but LDAP erros: ' . $e->getMessage(), [
-				'exception' => $e,
-			]);
+		/** @psalm-suppress UndefinedInterfaceMethod */
+		if ($this->ldapProviderFactory->isAvailable() === false) {
+			$this->logger->debug('Request to provision mail aliases but LDAP not available');
+			return $provisioning;
 		}
+
+		$ldapProvider = $this->ldapProviderFactory->getLDAPProvider();
+		/** @psalm-suppress UndefinedInterfaceMethod */
+		$provisioning->setAliases($ldapProvider->getMultiValueUserAttribute($user->getUID(), $provisioning->getLdapAliasesAttribute()));
 
 		return $provisioning;
 	}
