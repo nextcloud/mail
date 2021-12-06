@@ -311,6 +311,13 @@
       <code>SaveDraftEvent</code>
     </MissingDependency>
   </file>
+  <file src="lib/Service/Provisioning/Manager.php">
+    <MissingDependency occurrences="3">
+      <code>$this-&gt;serverContainer</code>
+      <code>IServerContainer</code>
+      <code>IServerContainer</code>
+    </MissingDependency>
+  </file>
   <file src="lib/Service/Sync/ImapToDbSynchronizer.php">
     <MissingDependency occurrences="4">
       <code>NewMessagesSynchronized</code>
