@@ -138,7 +138,7 @@ export default {
 	display: inline-block;
 	margin: 16px;
 	background-position: 16px center;
-  padding: 12px 12px 12px 44px;
+  padding: 12px 12px 12px 37px !important;
 }
 .oc-dialog {
 	z-index: 10000000;
