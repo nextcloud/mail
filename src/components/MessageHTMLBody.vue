@@ -134,7 +134,7 @@ export default {
 		async onShowBlockedContentForDomain() {
 			this.displayIframe()
 			// TODO: there might be more than one @ in an email address
-			await trustSender(this.getDomain(), 'domain', true)
+			await trustSender(this.domain, 'domain', true)
 		},
 	},
 }
