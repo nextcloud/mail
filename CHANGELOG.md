@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.1 – 2021-12-09
+### Fixed
+- Upgrades with Nextcloud 20
+- Initial sync runs into infinite loop
+- Initial sync stops too early
+- Save all attachments button
+- Database column types for message queries
+- Missing debug logs
+
 ## 1.11.0 - 2021-11-29
 ### Added
 - Nextcloud 23 support
