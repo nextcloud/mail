@@ -46,6 +46,7 @@ use function iterator_to_array;
 use function max;
 use function min;
 use function reset;
+use function sort;
 use function sprintf;
 
 class MessageMapper {
@@ -178,6 +179,8 @@ class MessageMapper {
 				return $uid > $highestKnownUid;
 			}
 		);
+		// We don't know if the server already sorted the UIDs
+		sort($uidCandidates);
 		$uidsToFetch = array_slice(
 			$uidCandidates,
 			0,
