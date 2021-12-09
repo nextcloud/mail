@@ -209,9 +209,20 @@ class MessageMapper {
 			]
 		);
 
+		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
 		$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
 			'ids' => new Horde_Imap_Client_Ids($ids),
 		]), false);
+
+		if (empty($fetchResults)) {
+			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
+		} else {
+			$minRequested = $ids[0];
+			$maxRequested = $ids[count($ids) - 1];
+			$minFetched = $fetchResults[0]->getUid();
+			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
+			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($minRequested:$maxRequested) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
+		}
 
 		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody) {
 			if ($loadBody) {
