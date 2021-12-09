@@ -100,7 +100,9 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	}
 
 	/**
-	 * Initialization tasks.
+	 * 	 * Initialization tasks.
+	 *
+	 * @return void
 	 */
 	protected function _initOb() {
 		$this->_cache = $this->_params['cacheob'];

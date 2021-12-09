@@ -252,6 +252,9 @@ class Message extends Entity implements JsonSerializable {
 		$this->bcc = $bcc;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function setFlag(string $flag, bool $value = true) {
 		if (!in_array($flag, self::MUTABLE_FLAGS, true)) {
 			// Ignore
