@@ -16,6 +16,7 @@ DROP TABLE oc_mail_classifiers;
 DROP TABLE oc_mail_trusted_senders;
 DROP TABLE oc_mail_tags;
 DROP TABLE oc_mail_message_tags;
+DROP TABLE oc_mail_provisionings;
 ```
 
 ## Enable CKEditor Inspector
