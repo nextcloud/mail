@@ -33,6 +33,33 @@ describe('text', () => {
 			expect(actual).to.deep.equal(expected)
 		})
 
+		it('removes leading line breaks', () => {
+			const source = html('<br><br><br>hello world')
+			const expected = plain('hello world')
+
+			const actual = toPlain(source)
+
+			expect(actual).to.deep.equal(expected)
+		})
+
+		it('removes trailing line breaks', () => {
+			const source = html('hello world<br><br><br>')
+			const expected = plain('hello world')
+
+			const actual = toPlain(source)
+
+			expect(actual).to.deep.equal(expected)
+		})
+
+		it('removes trailing spaces of each line', () => {
+			const source = html('line1   <br>line2 <br>line3')
+			const expected = plain('line1\nline2\nline3')
+
+			const actual = toPlain(source)
+
+			expect(actual).to.deep.equal(expected)
+		})
+
 		it('breaks on divs', () => {
 			const source = html('<div>one</div><div>two</div>')
 
@@ -41,9 +68,18 @@ describe('text', () => {
 			expect(actual).to.deep.equal(plain('one\ntwo'))
 		})
 
+		it('merges spaces at the beginning of a line', () => {
+			const source = html('<div>   <div>  line1</div></div>')
+			const expected = plain(' line1')
+
+			const actual = toPlain(source)
+
+			expect(actual).to.deep.equal(expected)
+		})
+
 		it('produces a line break for each ending div element', () => {
-			const source = html('<div>' + '    <div>' + '        line1' + '    </div>' + '</div>' + '<div>line2</div>')
-			const expected = plain(' line1\n\nline2')
+			const source = html('<div><div>line1</div></div><div>line3</div>')
+			const expected = plain('line1\n\nline3')
 
 			const actual = toPlain(source)
 
@@ -68,11 +104,49 @@ describe('text', () => {
 			expect(actual).to.deep.equal(expected)
 		})
 
-		it('converts paragraphs to text', () => {
+		it('produces a single line break between paragraphs', () => {
 			const source = html('<p>hello</p><p>world</p>')
 			const expected = plain('hello\nworld')
 
 			const actual = toPlain(source)
+
+			expect(actual).to.deep.equal(expected)
+		})
+
+		it('produces a single line break between a div and a paragraph', () => {
+			const source = html('<div>hello</div><p>world</p>')
+			const expected = plain('hello\nworld')
+
+			const actual = toPlain(source)
+
+			expect(actual).to.deep.equal(expected)
+		})
+
+		it('produces a single line break after each block element', () => {
+			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+			const source = html(
+				selectors
+					.map(tag => `<${tag}>foobar</${tag}>`)
+					.join('')
+			)
+			const expected = plain(selectors.map(tag => 'foobar').join('\n'))
+
+			const actual = toPlain(source)
+
+			expect(actual).to.deep.equal(expected)
+		})
+
+		it('produces exactly one line break for each closing block element', () => {
+			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+			const source = html(
+				selectors
+					.map(tag => `<${tag}><${tag}>foobar</${tag}></${tag}>`)
+					.join('')
+			)
+			const expected = plain(selectors.map(tag => 'foobar').join('\n\n'))
+
+			const actual = toPlain(source)
+
 
 			expect(actual).to.deep.equal(expected)
 		})
