@@ -42,6 +42,9 @@ class ProvisionAccounts implements IRepairStep {
 		return 'Create or update provisioned Mail accounts';
 	}
 
+	/**
+	 * @return void
+	 */
 	public function run(IOutput $output) {
 		$cnt = $this->provisioningManager->provision();
 		$output->info("$cnt accounts provisioned");

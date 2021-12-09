@@ -76,7 +76,7 @@ class CollectedAddressMapper extends QBMapper {
 		return count($this->findEntities($dbQuery)) > 0;
 	}
 
-	public function getTotal() {
+	public function getTotal(): int {
 		/* @var $qb IQueryBuilder */
 		$qb = $this->db->getQueryBuilder();
 		$qb->select($qb->func()->count())
@@ -90,8 +90,12 @@ class CollectedAddressMapper extends QBMapper {
 
 	/**
 	 * @param int|null $minId
+	 *
+	 * @return CollectedAddress[]
+	 *
+	 * @psalm-return array<CollectedAddress>
 	 */
-	public function getChunk($minId = null) {
+	public function getChunk($minId = null): array {
 		/* @var $qb IQueryBuilder */
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb->select('*')

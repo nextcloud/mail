@@ -63,6 +63,9 @@ class TrainImportanceClassifierJob extends TimedJob {
 		$this->setInterval(3600);
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function run($argument) {
 		$accountId = (int)$argument['accountId'];
 

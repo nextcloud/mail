@@ -62,7 +62,10 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
 	 * @TrapError
+	 *
+	 * @return never
 	 */
 	public function show() {
 		throw new NotImplemented();

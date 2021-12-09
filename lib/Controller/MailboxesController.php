@@ -231,7 +231,10 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
 	 * @TrapError
+	 *
+	 * @return never
 	 */
 	public function show() {
 		throw new NotImplemented();
@@ -239,7 +242,10 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
 	 * @TrapError
+	 *
+	 * @return never
 	 */
 	public function update() {
 		throw new NotImplemented();
@@ -247,12 +253,15 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
 	 * @TrapError
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
+	 *
+	 * @return JSONResponse
 	 */
-	public function create(int $accountId, string $name) {
+	public function create(int $accountId, string $name): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		return new JSONResponse($this->mailManager->createMailbox($account, $name));

@@ -43,6 +43,9 @@ class FixCollectedAddresses implements IRepairStep {
 		return 'Purify and migrate collected mail addresses';
 	}
 
+	/**
+	 * @return void
+	 */
 	public function run(IOutput $output) {
 		$nrOfAddresses = $this->mapper->getTotal();
 		$output->startProgress($nrOfAddresses);
@@ -62,6 +65,9 @@ class FixCollectedAddresses implements IRepairStep {
 		$output->finishProgress();
 	}
 
+	/**
+	 * @return void
+	 */
 	private function fixAddress(CollectedAddress $address, IOutput $output) {
 		if (!is_null($address->getDisplayName())) {
 			// Nothing to fix
