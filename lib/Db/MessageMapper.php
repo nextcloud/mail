@@ -110,7 +110,7 @@ class MessageMapper extends QBMapper {
 
 		$query->select($query->func()->max('uid'))
 			->from($this->getTableName())
-			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
+			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
 
 		$result = $query->execute();
 		$max = (int)$result->fetchColumn();
