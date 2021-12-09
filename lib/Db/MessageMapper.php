@@ -1136,7 +1136,7 @@ class MessageMapper extends QBMapper {
 		}
 	}
 
-	public function getIdForUid(Mailbox $mailbox, $uid): ?int {
+	public function getIdForUid(Mailbox $mailbox, int $uid): ?int {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb
