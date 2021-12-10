@@ -165,18 +165,4 @@ class BimiSource implements IAvatarSource {
 
 		return $tags['l'];
 	}
-
-	/**
-	 * @param string $mime_type MIME type
-	 * @return boolean true if SVG, otherwise false
-	 */
-	private function isSvg($mime_type): bool {
-		return in_array(
-	  $mime_type,
-	  array(
-	  	'image/svg+xml',
-	  	'text/plain',
-	  )
-	);
-	}
 }
