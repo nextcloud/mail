@@ -1,15 +1,16 @@
-const path = require('path');
-const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
-const {styles} = require('@ckeditor/ckeditor5-dev-utils');
-const { VueLoaderPlugin } = require('vue-loader');
+const path = require('path')
+const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
+const { styles } = require('@ckeditor/ckeditor5-dev-utils')
+const { VueLoaderPlugin } = require('vue-loader')
+const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 
 const plugins = [
 	// CKEditor needs its own plugin to be built using webpack.
 	new CKEditorWebpackPlugin({
 		// See https://ckeditor.com/docs/ckeditor5/latest/features/ui-language.html
-		language: 'en'
+		language: 'en',
 	}),
-	new VueLoaderPlugin()
+	new VueLoaderPlugin(),
 ]
 
 module.exports = {
@@ -26,46 +27,49 @@ module.exports = {
 		publicPath: '/js/',
 	},
 	node: {
-		fs: 'empty'
+		fs: 'empty',
 	},
 	module: {
 		rules: [
 			{
 				test: /\.css$/,
-				use: ['style-loader', 'css-loader']
+				use: ['style-loader', 'css-loader'],
 			},
 			{
 				test: /\.scss$/,
-				use: ['style-loader', 'css-loader', 'sass-loader']
+				use: ['style-loader', 'css-loader', 'sass-loader'],
 			},
 			{
 				test: /\.vue$/,
-				loader: 'vue-loader'
+				loader: 'vue-loader',
 			},
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
-				exclude: /node_modules(?!(\/|\\)(@ckeditor|@nextcloud\/calendar-js|js-base64|)(\/|\\))/
+				exclude: BabelLoaderExcludeNodeModulesExcept([
+					'@ckeditor',
+					'js-base64',
+				]),
 			},
 			{
 				test: /\.(png|jpg|gif)$/,
 				loader: 'file-loader',
 				options: {
-					name: '[name].[ext]?[hash]'
-				}
+					name: '[name].[ext]?[hash]',
+				},
 			},
 			{
 				test: /\.(svg)$/i,
 				use: [
 					{
-						loader: 'svg-inline-loader'
-					}
+						loader: 'svg-inline-loader',
+					},
 				],
-				exclude: path.join(__dirname, 'node_modules', '@ckeditor')
+				exclude: path.join(__dirname, 'node_modules', '@ckeditor'),
 			},
 			{
 				test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-				loader: 'raw-loader'
+				loader: 'raw-loader',
 			},
 			{
 				test: /ckeditor5-[^/\\]+[/\\].+\.css$/,
@@ -74,14 +78,14 @@ module.exports = {
 					themeImporter: {
 						themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
 					},
-					minify: true
-				})
-			}
-		]
+					minify: true,
+				}),
+			},
+		],
 	},
-	plugins: plugins,
+	plugins,
 	resolve: {
 		extensions: ['*', '.js', '.vue', '.json'],
-		symlinks: false
-	}
-};
+		symlinks: false,
+	},
+}
