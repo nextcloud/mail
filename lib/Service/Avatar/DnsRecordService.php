@@ -65,21 +65,18 @@ class DnsRecordService {
         $_errfile,
         $_errline,
         $_errcontext
-      ) use ($callback) {
-        $ret = $callback();
-
+      ) {
         restore_error_handler();
 
-        if ( $ret === false ) {
-          list(, $message) = explode(': ', $errstr, 2);
+        // e.g. $errstr = "dns_get_record(): An unexpected server failure occurred."
+        list(, $message) = explode(':', $errstr, 2);
 
-          throw new ServiceException(
-            $message
-          );
-        }
-
-        return $ret;
+        throw new ServiceException(
+          trim( $message )
+        );
       }
     );
+
+    return $callback();
   }
 }
