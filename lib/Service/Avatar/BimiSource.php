@@ -36,12 +36,17 @@ class BimiSource implements IAvatarSource {
 	/** @var IMimeTypeDetector */
 	private $mimeDetector;
 
+	/** @var DnsRecordService */
+	private $dnsRecordService;
+
 	public function __construct(
-	IClientService $clientService,
-	IMimeTypeDetector $mimeDetector
-  ) {
+		IClientService $clientService,
+		IMimeTypeDetector $mimeDetector,
+		DnsRecordService $dnsRecordService
+	) {
 		$this->clientService = $clientService;
 		$this->mimeDetector = $mimeDetector;
+		$this->dnsRecordService = $dnsRecordService;
 	}
 
 	/**
@@ -59,9 +64,9 @@ class BimiSource implements IAvatarSource {
 	 * @return Avatar|null avatar URL if one can be found
 	 */
 	public function fetch(
-	string $email_address,
-	AvatarFactory $factory
-  ): ?Avatar {
+		string $email_address,
+		AvatarFactory $factory
+	): ?Avatar {
 		$horde = new Horde_Mail_Rfc822_Address($email_address);
 		// TODO: add support for other selectors
 		$domain = 'default._bimi.' . $horde->host;
@@ -91,9 +96,9 @@ class BimiSource implements IAvatarSource {
 		$mime = $this->mimeDetector->detectString($body);
 
 		return $factory->createExternal(
-	  $iconUrl,
-	  $mime
-	);
+			$iconUrl,
+			$mime
+		);
 	}
 
 	/**
@@ -101,10 +106,10 @@ class BimiSource implements IAvatarSource {
 	 * @return string|null BIMI record if found
 	 */
 	private function getBimiRecord($domain): ?string {
-		$records = dns_get_record(
-	  $domain,
-	  DNS_TXT
-	);
+		$records = $this->dnsRecordService->getRecords(
+			$domain,
+			DNS_TXT
+		);
 
 		foreach ($records as $record) {
 			if (strpos($record['txt'], 'v=BIMI1;') === 0) {
