@@ -59,15 +59,15 @@ class BimiSource implements IAvatarSource {
 	}
 
 	/**
-	 * @param string $email_address sender email address
+	 * @param string $email sender email address
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
 	public function fetch(
-		string $email_address,
+		string $email,
 		AvatarFactory $factory
 	): ?Avatar {
-		$horde = new Horde_Mail_Rfc822_Address($email_address);
+		$horde = new Horde_Mail_Rfc822_Address($email);
 		// TODO: add support for other selectors
 		$domain = 'default._bimi.' . $horde->host;
 

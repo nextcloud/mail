@@ -29,7 +29,7 @@ use Exception;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\BimiSource;
-use OCA\Mail\Service\Avatar\DnsRecordSource;
+use OCA\Mail\Service\Avatar\DnsRecordService;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
