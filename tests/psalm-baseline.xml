@@ -66,6 +66,11 @@
       <code>Command</code>
     </UndefinedClass>
   </file>
+  <file src="lib/Command/RepairMailTheads.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
   <file src="lib/Command/SyncAccount.php">
     <UndefinedClass occurrences="1">
       <code>Command</code>
@@ -124,6 +129,12 @@
       <code>$select-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$select-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>
+    <InvalidReturnStatement occurrences="1">
+      <code>$update-&gt;execute()</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>int</code>
+    </InvalidReturnType>
   </file>
   <file src="lib/Db/StatisticsDao.php">
     <ImplicitToStringCast occurrences="7">

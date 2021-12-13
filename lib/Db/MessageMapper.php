@@ -1168,4 +1168,15 @@ class MessageMapper extends QBMapper {
 
 		return $this->findEntities($select);
 	}
+
+	public function resetInReplyTo(): int {
+		$qb = $this->db->getQueryBuilder();
+
+		$update = $qb->update($this->tableName)
+			->set('in_reply_to', $qb->createNamedParameter('NULL', IQueryBuilder::PARAM_NULL))
+			->where(
+				$qb->expr()->like('in_reply_to', $qb->createNamedParameter("<>", IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
+			);
+		return $update->execute();
+	}
 }
