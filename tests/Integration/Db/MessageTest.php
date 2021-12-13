@@ -86,4 +86,28 @@ class MessageTest extends TestCase {
 		$this->assertEquals($expected, $message->getMessageId());
 		$this->assertNull($message->getThreadRootId());
 	}
+
+	public function testThreadrootIdEmptyString(): void {
+		$expected = '<abc@123.com>';
+		$message = new Message();
+
+		$message->setMessageId($expected);
+		$message->setThreadRootId('');
+
+		$this->assertEquals($expected, $message->getMessageId());
+		$this->assertNull($message->getThreadRootId());
+	}
+
+	public function testSetInReplyToEmpty(): void {
+		$expected = '<abc@123.com>';
+		$message = new Message();
+
+		$message->setMessageId($expected);
+		$message->setThreadRootId('');
+		$message->setInReplyTo('');
+
+		$this->assertEquals($expected, $message->getMessageId());
+		$this->assertNull($message->getThreadRootId());
+		$this->assertNull($message->getInReplyTo());
+	}
 }
