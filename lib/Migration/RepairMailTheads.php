@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Db\MessageMapper;
+use OCP\Migration\IOutput;
+use OCP\Migration\IRepairStep;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
-class RepairMailTheads extends Command {
+class RepairMailTheads implements IRepairStep {
 
 	/** @var MessageMapper */
 	private $mapper;
@@ -39,25 +38,17 @@ class RepairMailTheads extends Command {
 
 	public function __construct(MessageMapper $mapper,
 								LoggerInterface $logger) {
-		parent::__construct();
-
 		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure(): void {
-		$this->setName('mail:repair:threads');
-		$this->setDescription('Repair Broken Threads for all mail accounts');
+	public function getName(): string {
+		return 'Repair Broken Threads for all mail accounts';
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output): int {
+	public function run(IOutput $output): void {
 		$count = $this->mapper->resetInReplyTo();
 		$this->logger->info('Repairing Mail Threading, ' . $count . ' messages updated');
-		$output->writeln('');
-		$output->writeln('Repaired threads, ' . $count . ' messages updated');
-		return 0;
+		$output->info(sprintf('Repaired threads, %s messages updated', $count));
 	}
 }

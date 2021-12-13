@@ -47,6 +47,7 @@
 			<step>OCA\Mail\Migration\FixBackgroundJobs</step>
 			<step>OCA\Mail\Migration\MakeItineraryExtractorExecutable</step>
 			<step>OCA\Mail\Migration\ProvisionAccounts</step>
+			<step>OCA\Mail\Command\RepairMailTheads</step>
 		</post-migration>
 	</repair-steps>
 	<commands>
@@ -61,7 +62,6 @@
 		<command>OCA\Mail\Command\SyncAccount</command>
 		<command>OCA\Mail\Command\TrainAccount</command>
 		<command>OCA\Mail\Command\Thread</command>
-		<command>OCA\Mail\Command\RepairMailTheads</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>
