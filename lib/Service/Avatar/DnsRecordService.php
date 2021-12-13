@@ -61,12 +61,9 @@ class DnsRecordService {
   private function catchError(Closure $callback) {
     set_error_handler(
       function (
-        $_errno,
-        $errstr,
-        $_errfile,
-        $_errline,
-        $_errcontext
-      ) {
+        int $_errno,
+        string $errstr
+      ): ?bool {
         restore_error_handler();
 
         // e.g. $errstr = "dns_get_record(): An unexpected server failure occurred."
