@@ -47,7 +47,7 @@
 				:close-after-click="true"
 				@click.prevent="onToggleJunk">
 				{{
-					envelope.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
 			<ActionButton
