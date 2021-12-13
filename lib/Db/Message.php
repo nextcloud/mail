@@ -177,7 +177,7 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	private function setMessageIdFieldIfNotEmpty(string $field, ?string $id): void {
-		$id = ($id !== null) ? '<' . rtrim(ltrim($id, '<'), '>') . '>' : null;
+		$id = (!empty($id)) ? '<' . rtrim(ltrim($id, '<'), '>') . '>' : null;
 		$parsed = new Horde_Mail_Rfc822_Identification($id);
 		$this->setter($field, [$parsed->ids[0] ?? null]);
 	}
