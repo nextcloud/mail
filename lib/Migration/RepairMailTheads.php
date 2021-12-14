@@ -21,7 +21,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Command;
+namespace OCA\Mail\Migration;
 
 use OCA\Mail\Db\MessageMapper;
 use OCP\Migration\IOutput;
