@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.2 – 2021-12-14
+### Fixed
+- Invalid message cache message_id and in_reply_to values
+
 ## 1.11.1 – 2021-12-09
 ### Fixed
 - Upgrades with Nextcloud 20
