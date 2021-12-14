@@ -21,7 +21,7 @@
 
 import isString from 'lodash/fp/isString'
 import { curry } from 'ramda'
-import { fromString } from 'html-to-text'
+import { convert } from 'html-to-text'
 
 /**
  * @type {Text}
@@ -114,30 +114,79 @@ export const toPlain = (text) => {
 	if (text.format === 'plain') {
 		return text
 	}
-	const withBlockBreaks = text.value.replace(/<\/div>/gi, '</div><br>')
 
-	const converted = fromString(withBlockBreaks, {
-		noLinkBrackets: true,
-		ignoreHref: true,
-		ignoreImage: true,
+	// Build shared options for all block tags
+	const blockTags = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+	const blockSelectors = blockTags.map(tag => ({
+		selector: tag,
+		format: 'customBlock',
+		options: {
+			preserveLeadingWhitespace: true,
+		},
+	}))
+
+	const converted = convert(text.value, {
 		wordwrap: false,
-		format: {
-			blockquote(element, fn, options) {
-				return fn(element.children, options)
-					.replace(/\n\n\n/g, '\n\n') // remove triple line breaks
-					.replace(/^/gm, '> ') // add > quotation to each line
+		formatters: {
+			customBlock(elem, walk, builder, formatOptions) {
+				builder.openBlock({
+					isPre: formatOptions.preserveLeadingWhitespace,
+					leadingLineBreaks: 0,
+				})
+				walk(elem.children, builder)
+				builder.closeBlock({
+					trailingLineBreaks: 0,
+					blockTransform: text => text
+						.replace(/^ {2,}/gm, ' '), // merge leading spaces
+				})
+				// Don't rely on the built-in leading/trailing line break feature.
+				// Instead, we add a forced line break here because otherwise multiple
+				// line breaks might be merged. But we want exactly one line break for
+				// each closing tag.
+				builder.addLineBreak()
 			},
-			paragraph(element, fn, options) {
-				return fn(element.children, options) + '\n'
+			customBlockQuote(elem, walk, builder, formatOptions) {
+				builder.openBlock({
+					leadingLineBreaks: formatOptions.leadingLineBreaks,
+				})
+				walk(elem.children, builder)
+				builder.closeBlock({
+					trailingLineBreaks: formatOptions.trailingLineBreaks,
+					blockTransform: text => text
+						.replace(/\n{3,}/g, '\n\n') // merge 3 or more line breaks
+						.replace(/^/gm, '> '), // add quote marker at the start of each line
+				})
 			},
 		},
+		selectors: [
+			{
+				selector: 'img',
+				format: 'skip',
+			},
+			{
+				selector: 'a',
+				options: {
+					linkBrackets: false,
+					ignoreHref: true,
+				},
+			},
+			{
+				selector: 'blockquote',
+				format: 'customBlockQuote',
+				options: {
+					leadingLineBreaks: 0,
+					trailingLineBreaks: 1,
+				},
+			},
+			...blockSelectors,
+		],
 	})
 
 	return plain(
 		converted
-			.replace(/\n\n\n/g, '\n\n') // remove triple line breaks
-			.replace(/^[\n\r]+/g, '') // trim line breaks at beginning and end
-			.replace(/ $/gm, '') // trim white space at end of each line
+			.replace(/^\n+/, '') // trim leading line breaks
+			.replace(/\n+$/, '') // trim trailing line breaks
+			.replace(/ +$/gm, '') // trim trailing spaces of each line
 			.replace(/^--$/gm, '-- ') // hack to create the correct email signature separator
 	)
 }

@@ -51,6 +51,14 @@ module.exports = {
 					'js-base64',
 				]),
 			},
+			// Fix html-to-text and its dependencies
+			// https://github.com/html-to-text/node-html-to-text/issues/229#issuecomment-945215065
+			{
+				type: 'javascript/auto',
+				test: /\.[cm]?js$/,
+				loader: 'babel-loader',
+				include: /node_modules[/\\](@?selderee|parseley)/,
+			},
 			{
 				test: /\.(png|jpg|gif)$/,
 				loader: 'file-loader',
