@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Support and Help
+      url: https://help.nextcloud.com/c/apps/mail/35
+      about: Ask a question or seek for help
+    - name: Security issue
+      url: https://hackerone.com/nextcloud
+      about: Report a security issue
