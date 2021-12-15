@@ -24,10 +24,10 @@
 		:error="t('mail', 'Could not open mailbox')"
 		message=""
 		role="alert" />
-	<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages')" role="alert" />
+	<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages …')" role="alert" />
 	<Loading
 		v-else-if="loadingCacheInitialization"
-		:hint="t('mail', 'Loading messages')"
+		:hint="t('mail', 'Loading messages …')"
 		:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')" />
 	<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 	<EmptyMailbox v-else-if="!hasMessages" key="empty" />
