@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.4 – 2021-12-15
+### Fixed
+- Erroneous repair step during app store upgrade
+
 ## 1.11.2 – 2021-12-14
 ### Fixed
 - Invalid message cache message_id and in_reply_to values
