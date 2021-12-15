@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.4 – 2021-12-15
+### Fixed
+- Erroneous repair step during app store upgrade
+
 ## 1.11.3 – 2021-12-15
 ### Fixed
 - Fix message_id repair step
