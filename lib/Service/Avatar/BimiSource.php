@@ -30,7 +30,7 @@ use OCP\Http\Client\IClientService;
 
 class BimiSource implements IAvatarSource {
 
-  /** @var IClientService */
+	/** @var IClientService */
 	private $clientService;
 
 	/** @var IMimeTypeDetector */

@@ -25,7 +25,6 @@
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Exception;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\BimiSource;
@@ -38,104 +37,104 @@ use PHPUnit_Framework_MockObject_MockObject;
 
 class BimiSourceTest extends TestCase {
 
-  /** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
-  private $clientService;
+	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
+	private $clientService;
 
-  /** @var BimiSource */
-  private $source;
+	/** @var BimiSource */
+	private $source;
 
-  /** @var IMimeTypeDetector|MockObject */
-  private $mimeDetector;
+	/** @var IMimeTypeDetector|MockObject */
+	private $mimeDetector;
 
-  protected function setUp(): void {
-    parent::setUp();
+	protected function setUp(): void {
+		parent::setUp();
 
-    $this->clientService = $this->createMock(IClientService::class);
+		$this->clientService = $this->createMock(IClientService::class);
 
-    $this->mimeDetector = $this->createMock(IMimeTypeDetector::class);
+		$this->mimeDetector = $this->createMock(IMimeTypeDetector::class);
 
-    $this->source = new BimiSource(
-      $this->clientService,
-      $this->mimeDetector,
-      $this->getDnsRecordServiceMock()
-    );
-  }
+		$this->source = new BimiSource(
+			$this->clientService,
+			$this->mimeDetector,
+			$this->getDnsRecordServiceMock()
+		);
+	}
 
-  public function testFetchExisting() {
-    $this->mimeDetector
-      ->expects($this->once())
-      ->method('detectString')
-      ->with('data')
-      ->willReturn('image/svg+xml');
+	public function testFetchExisting() {
+		$this->mimeDetector
+			->expects($this->once())
+			->method('detectString')
+			->with('data')
+			->willReturn('image/svg+xml');
 
-    $response = $this->createMock(IResponse::class);
-    $response
-      ->expects($this->once())
-      ->method('getBody')
-      ->willReturn('data');
+		$response = $this->createMock(IResponse::class);
+		$response
+			->expects($this->once())
+			->method('getBody')
+			->willReturn('data');
 
-    $client = $this->createMock(IClient::class);
-    $client
-      ->expects($this->once())
-      ->method('get')
-      ->with('https://example.org/bimi.svg')
-      ->willReturn($response);
+		$client = $this->createMock(IClient::class);
+		$client
+			->expects($this->once())
+			->method('get')
+			->with('https://example.org/bimi.svg')
+			->willReturn($response);
 
-    $this->clientService
-      ->expects($this->once())
-      ->method('newClient')
-      ->willReturn($client);
+		$this->clientService
+			->expects($this->once())
+			->method('newClient')
+			->willReturn($client);
 
-    $avatar = new Avatar('https://example.org/bimi.svg');
+		$avatar = new Avatar('https://example.org/bimi.svg');
 
-    $avatarFactory = $this->createMock(AvatarFactory::class);
-    $avatarFactory
-      ->expects($this->once())
-      ->method('createExternal')
-      ->with(
-        'https://example.org/bimi.svg',
-        'image/svg+xml'
-      )
-      ->willReturn($avatar);
+		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatarFactory
+			->expects($this->once())
+			->method('createExternal')
+			->with(
+				'https://example.org/bimi.svg',
+				'image/svg+xml'
+			)
+			->willReturn($avatar);
 
-    $email = 'foo@example.org';
+		$email = 'foo@example.org';
 
-    $actualAvatar = $this->source->fetch(
-      $email,
-      $avatarFactory
-    );
+		$actualAvatar = $this->source->fetch(
+			$email,
+			$avatarFactory
+		);
 
-    $this->assertEquals(
-      $avatar,
-      $actualAvatar
-    );
-  }
+		$this->assertEquals(
+			$avatar,
+			$actualAvatar
+		);
+	}
 
-  protected function getDnsRecordServiceMock() {
-    $mock = $this->createMock(
-      DnsRecordService::class
-    );
+	protected function getDnsRecordServiceMock() {
+		$mock = $this->createMock(
+			DnsRecordService::class
+		);
 
-    $mock
-      ->expects($this->once())
-      ->method('getRecords')
-      ->with(
-        'default._bimi.example.org',
-        DNS_TXT
-      )
-      ->willReturn([
-        [
-          'host' => 'default._bimi.example.org',
-          'class' => 'IN',
-          'ttl' => 1337,
-          'type' => 'TXT',
-          'txt' => 'v=BIMI1; l=https://example.org/bimi.svg',
-          'entries' => [
-            'v=BIMI1; l=https://example.org/bimi.svg',
-          ],
-        ]
-      ]);
+		$mock
+			->expects($this->once())
+			->method('getRecords')
+			->with(
+				'default._bimi.example.org',
+				DNS_TXT
+			)
+			->willReturn([
+				[
+					'host' => 'default._bimi.example.org',
+					'class' => 'IN',
+					'ttl' => 1337,
+					'type' => 'TXT',
+					'txt' => 'v=BIMI1; l=https://example.org/bimi.svg',
+					'entries' => [
+						'v=BIMI1; l=https://example.org/bimi.svg',
+					],
+				]
+			]);
 
-    return $mock;
-  }
+		return $mock;
+	}
 }

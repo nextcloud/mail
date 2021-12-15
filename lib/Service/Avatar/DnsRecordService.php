@@ -27,54 +27,54 @@ use Closure;
 use OCA\Mail\Exception\ServiceException;
 
 class DnsRecordService {
-  /**
-   * @param string $hostname
-   * @param int $type (optional)
-   * 
-   * @return array
-   * 
-   * @throws \OCA\Mail\Exception\ServiceException
-   */
-  public function getRecords(
-    string $hostname,
-    int $type = DNS_ANY
-  ): array {
-    return $this->catchError(
-      function () use ($hostname, $type) {
-        return (
-          dns_get_record(
-            $hostname,
-            $type
-          )
-        );
-      }
-    );
-  }
+	/**
+	 * @param string $hostname
+	 * @param int $type (optional)
+	 *
+	 * @return array
+	 *
+	 * @throws \OCA\Mail\Exception\ServiceException
+	 */
+	public function getRecords(
+		string $hostname,
+		int $type = DNS_ANY
+	): array {
+		return $this->catchError(
+			function () use ($hostname, $type) {
+				return (
+					dns_get_record(
+						$hostname,
+						$type
+					)
+				);
+			}
+		);
+	}
 
-  /**
-   * @param \Closure $callback
-   * 
-   * @return mixed
-   * 
-   * @throws \OCA\Mail\Exception\ServiceException
-   */
-  private function catchError(Closure $callback) {
-    set_error_handler(
-      function (
-        int $_errno,
-        string $errstr
-      ): ?bool {
-        restore_error_handler();
+	/**
+	 * @param \Closure $callback
+	 *
+	 * @return mixed
+	 *
+	 * @throws \OCA\Mail\Exception\ServiceException
+	 */
+	private function catchError(Closure $callback) {
+		set_error_handler(
+			function (
+				int $_errno,
+				string $errstr
+			): ?bool {
+				restore_error_handler();
 
-        // e.g. $errstr = "dns_get_record(): An unexpected server failure occurred."
-        list(, $message) = explode(':', $errstr, 2);
+				// e.g. $errstr = "dns_get_record(): An unexpected server failure occurred."
+				list(, $message) = explode(':', $errstr, 2);
 
-        throw new ServiceException(
-          trim( $message )
-        );
-      }
-    );
+				throw new ServiceException(
+					trim($message)
+				);
+			}
+		);
 
-    return $callback();
-  }
+		return $callback();
+	}
 }
