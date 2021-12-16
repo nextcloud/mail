@@ -75,6 +75,14 @@ class DnsRecordService {
 			}
 		);
 
-		return $callback();
+		try {
+			$ret = $callback();
+		} catch (Exception $ex) {
+			restore_error_handler();
+
+			throw $ex;
+		}
+
+		return $ret;
 	}
 }
