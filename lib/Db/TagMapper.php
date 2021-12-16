@@ -271,9 +271,10 @@ class TagMapper extends QBMapper {
 		}, $rows));
 
 		$deleteQB = $this->db->getQueryBuilder();
+		$deleteQB->delete('mail_message_tags')
+			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
-			$deleteQB->delete('mail_message_tags')
-				->where($deleteQB->expr()->in('id', $deleteQB->createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
+			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$deleteQB->execute();
 		}
 	}
@@ -294,9 +295,10 @@ class TagMapper extends QBMapper {
 		}, $rows);
 
 		$deleteQB = $this->db->getQueryBuilder();
+		$deleteQB->delete('mail_message_tags')
+			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
-			$deleteQB->delete('mail_message_tags')
-				->where($deleteQB->expr()->in('id', $deleteQB->createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
+			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$deleteQB->execute();
 		}
 	}
