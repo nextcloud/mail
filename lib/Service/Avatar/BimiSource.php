@@ -77,7 +77,6 @@ class BimiSource implements IAvatarSource {
 			return null;
 		}
 
-		/** @var string $iconUrl */
 		$client = $this->clientService->newClient();
 
 		try {

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2021 Gregor Mitzka <gregor.mitzka@gmail.com>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Gregor Mitzka <gregor.mitzka@gmail.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
