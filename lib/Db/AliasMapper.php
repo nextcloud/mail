@@ -145,11 +145,13 @@ class AliasMapper extends QBMapper {
 		$result->closeCursor();
 
 		$qb2 = $this->db->getQueryBuilder();
+		$qb2->delete($this->getTableName())
+			->where(
+				$qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)
+			);
 		foreach (array_chunk($ids, 1000) as $chunk) {
-			$query = $qb2
-				->delete($this->getTableName())
-				->where($qb2->expr()->in('id', $qb2->createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
-			$query->execute();
+			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$qb2->execute();
 		}
 	}
 }
