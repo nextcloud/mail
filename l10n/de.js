@@ -148,7 +148,7 @@ OC.L10N.register(
     "_Unselect {number}_::_Unselect {number}_" : ["{number} nicht auswählen","{number} nicht auswählen"],
     "_Move {number} thread_::_Move {number} threads_" : ["{number} Unterhaltung verschieben","{number} Unterhaltungen verschieben"],
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Weiterleiten {number} als Anhang","Weiterleiten {number} als Anhang"],
-    "_Delete {number} thread_::_Delete {number} threads_" : ["{number} Unterhaltung gelöscht","{number} Unterhaltungen löschen"],
+    "_Delete {number} thread_::_Delete {number} threads_" : ["{number} Unterhaltung löschen","{number} Unterhaltungen löschen"],
     "Report this bug" : "Diesen Bug melden",
     "All day" : "Ganztägig",
     "Create" : "Erstellen",
