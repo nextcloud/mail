@@ -64,7 +64,7 @@ class DnsRecordService {
 			function (
 				int $_errno,
 				string $errstr
-			): ?bool {
+			): bool {
 				restore_error_handler();
 
 				// e.g. $errstr = "dns_get_record(): An unexpected server failure occurred."
