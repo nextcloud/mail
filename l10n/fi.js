@@ -126,7 +126,6 @@ OC.L10N.register(
     "Event created" : "Tapahtuma luotu",
     "Could not create event" : "Tapahtumaa ei voitu luoda",
     "Could not open mailbox" : "Postilaatikkoa ei voitu avata",
-    "Loading messages" : "Ladataan viestejä",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Viestejäsi indeksoidaan. Tämä saattaa kestää hetken varsinkin suurikokoisissa postilaatikoissa.",
     "Choose" : "Valitse",
     "Important and unread" : "Tärkeät ja ei luetut",

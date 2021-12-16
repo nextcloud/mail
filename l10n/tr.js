@@ -155,7 +155,6 @@ OC.L10N.register(
     "Event created" : "Etkinlik eklendi",
     "Could not create event" : "Etkinlik oluşturulamadı",
     "Could not open mailbox" : "Posta kutusu açılamadı",
-    "Loading messages" : "İletiler yükleniyor",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "İletileriniz dizine ekleniyor. Çok sayıda ileti bulunan posta kutularında bu işlem biraz zaman alabilir.",
     "Choose target mailbox" : "Hedef e-posta kutusunu seçin",
     "No more submailboxes in here" : "Burada başka alt e-posta kutusu yok",

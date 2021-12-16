@@ -155,7 +155,6 @@ OC.L10N.register(
     "Event created" : "Evento criado",
     "Could not create event" : "Não foi possível criar o evento",
     "Could not open mailbox" : "Não foi possível abrir a caixa postal",
-    "Loading messages" : "Carregando mensagens",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexando suas mensagens. Isso pode demorar um pouco mais para caixas de correio grandes.",
     "Choose target mailbox" : "Escolha a caixa de correio de destino",
     "No more submailboxes in here" : "Não há mais subcaixas de correio aqui",

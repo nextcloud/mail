@@ -98,7 +98,6 @@ OC.L10N.register(
     "Report this bug" : "Пријави ову грешку",
     "Could not create event" : "Не могу да креирам догађај",
     "Could not open mailbox" : "Не могу да отворим сандуче",
-    "Loading messages" : "Учитавам поруке",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Индексирам Ваше поруке. Ово може потрајати на већим сандучетима.",
     "Choose" : "Изаберите",
     "Important info" : "Важна информација",

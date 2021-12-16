@@ -36,7 +36,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
     "No message found yet" : "Pas cap de messatge trobat",
     "Select" : "Select",
-    "Loading messages" : "Cargament dels messatges",
     "Choose" : "Causir",
     "Favorites" : "Favorits",
     "Other" : "Autre",

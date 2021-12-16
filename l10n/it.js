@@ -144,7 +144,6 @@ OC.L10N.register(
     "Report this bug" : "Segnala questo bug",
     "Could not create event" : "Impossibile creare l'evento",
     "Could not open mailbox" : "Impossibile aprire la casella di posta",
-    "Loading messages" : "Caricamento messaggi",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indicizzazione dei tuoi messaggi. Può richiedere più tempo per le caselle di posta più grandi.",
     "Choose target mailbox" : "Scegli la casella di posta di destinazione",
     "No more submailboxes in here" : "Qui non ci sono altre sotto-caselle di posta",

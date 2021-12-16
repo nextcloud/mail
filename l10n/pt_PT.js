@@ -100,7 +100,6 @@ OC.L10N.register(
     "Could not delete message" : "Não foi possível apagar a mensagem",
     "Load more" : "Carregar mais",
     "Could not create event" : "Não foi possível criar o evento",
-    "Loading messages" : "A carregar mensagens",
     "Choose" : "Escolher",
     "Important and unread" : "Importantes e por ler",
     "Important info" : "Informação importante",

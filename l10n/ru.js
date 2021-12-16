@@ -151,7 +151,6 @@ OC.L10N.register(
     "Event created" : "Событие создано",
     "Could not create event" : "Не удалось создать событие",
     "Could not open mailbox" : "Невозможно открыть папку",
-    "Loading messages" : "Загрузка сообщений",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Выполняется индексация сообщений, это займёт некоторое время.",
     "Choose target mailbox" : "Выберите папку",
     "No more submailboxes in here" : "Вложенные папки отсутствуют",

@@ -145,7 +145,6 @@ OC.L10N.register(
     "Report this bug" : "Signala cust'errore",
     "Could not create event" : "No at fatu a creare s'eventu",
     "Could not open mailbox" : "No at fatu a abèrrere sa casella de posta",
-    "Loading messages" : "Carrighende messàgios",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Inditzizende is messàgios. S'at a pòdere istentare unu pagu de prus cun casellas de posta prus mannas.",
     "Choose target mailbox" : "Sèbera casella de posta de destinatzione",
     "No more submailboxes in here" : "Non b'at àteras suta-cartellas inoghe",

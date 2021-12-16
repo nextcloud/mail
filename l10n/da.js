@@ -113,7 +113,6 @@ OC.L10N.register(
     "Mark read" : "Marker som læst",
     "Unselect" : "Fravælg",
     "Select" : "Vælg",
-    "Loading messages" : "Henter beskedder",
     "Choose" : "Vælg",
     "Favorites" : "Favoritter",
     "Other" : "Andet",

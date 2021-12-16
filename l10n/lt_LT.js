@@ -107,7 +107,6 @@ OC.L10N.register(
     "Report this bug" : "Pranešti apie šią klaidą",
     "Could not create event" : "Nepavyko sukurti įvykio",
     "Could not open mailbox" : "Nepavyko atverti pašto dėžutės",
-    "Loading messages" : "Įkeliami laiškai",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksuojami jūsų laiškai. Didelėse pašto dėžutėse tai gali užtrukti šiek tiek ilgiau.",
     "Choose" : "Pasirinkite",
     "Important and unread" : "Svarbūs ir neskaityti",

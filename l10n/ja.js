@@ -120,7 +120,6 @@ OC.L10N.register(
     "Create" : "作成",
     "Could not create event" : "イベントを作成できませんでした。",
     "Could not open mailbox" : "メールボックスを開けませんでした",
-    "Loading messages" : "メッセージの読み込み中",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "メールをインデックスしています。大きいメールボックスの場合はしばらくお待ちください。",
     "Choose" : "選択",
     "Important and unread" : "重要な未読",

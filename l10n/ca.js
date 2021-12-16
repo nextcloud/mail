@@ -98,7 +98,6 @@ OC.L10N.register(
     "Report this bug" : "Informa d'aquest error",
     "Could not create event" : "No s’ha pogut crear l'esdeveniment",
     "Could not open mailbox" : "No es pot obrir la bústia de correu",
-    "Loading messages" : "S'estan carregant missatges",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexant els vostres missatges. Això pot prendre una mica més temps per a les bústies de correu més grans.",
     "Choose" : "Escolliu",
     "Important info" : "Informació important",

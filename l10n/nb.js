@@ -53,7 +53,6 @@ OC.L10N.register(
     "Unselect" : "Velg bort",
     "Select" : "Velg",
     "Report this bug" : "Rapporter denne feilen",
-    "Loading messages" : "Henter meldinger",
     "Choose" : "Velg",
     "Favorites" : "Favoritter",
     "Other" : "Annet",

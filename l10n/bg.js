@@ -151,7 +151,6 @@ OC.L10N.register(
     "Event created" : "Събитието е създадено",
     "Could not create event" : "Несупешно създаване на събитие",
     "Could not open mailbox" : "Пощенската кутия не можа да се отвори",
-    "Loading messages" : "Зареждане на съобщенията",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Индексиране на вашите съобщения. Това може да отнеме малко повече време за по-големи пощенски кутии.",
     "Choose target mailbox" : "Избор на целева пощенска кутия ",
     "No more submailboxes in here" : "Тук няма повече допълнителни пощенски кутии",

@@ -153,7 +153,6 @@
     "Event created" : "Udalosť bola vytvorená",
     "Could not create event" : "Udalosť sa nepodarilo vytvoriť",
     "Could not open mailbox" : "Poštovú schránku sa nepodarilo otvoriť",
-    "Loading messages" : "Načítavam správy",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexovanie správ. U väčších poštových schránok to môže chvíľu trvať.",
     "Choose target mailbox" : "Vyberte cieľovú schránku",
     "No more submailboxes in here" : "Žadne ďaľšie podschránky",

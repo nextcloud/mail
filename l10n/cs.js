@@ -155,7 +155,6 @@ OC.L10N.register(
     "Event created" : "Událost vytvořena",
     "Could not create event" : "Událost se nedaří vytvořit",
     "Could not open mailbox" : "Nedaří se otevřít e-mailovou schránku",
-    "Loading messages" : "Načítání zpráv",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Vytváření rejstříku vašich zpráv. V případě rozsáhlejších e-mailových schránek toto může trvat poněkud déle.",
     "Choose target mailbox" : "Zvolte cílovou schránku",
     "No more submailboxes in here" : "Nejsou zde žádné další dílčí schránky",

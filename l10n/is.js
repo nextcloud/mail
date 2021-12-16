@@ -101,7 +101,6 @@ OC.L10N.register(
     "Report this bug" : "Tilkynna þessa villu",
     "Could not create event" : "Tókst ekki að útbúa atburð",
     "Could not open mailbox" : "Tókst ekki að opna pósthólf",
-    "Loading messages" : "Hleð inn skilaboðum",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Geri atriðaskrá yfir skilaboðin þín. Þetta getur tekið drjúga stund fyrir stór pósthólf.",
     "Choose" : "Velja",
     "Important info" : "Mikilvægar upplýsingar",

@@ -52,7 +52,6 @@ OC.L10N.register(
     "Mark read" : "Marcio wedi'i ddarllen",
     "Select" : "Select",
     "Report this bug" : "Cofnodi'r gwall",
-    "Loading messages" : "Llwytho negeseuon",
     "Choose" : "Dewisa",
     "Favorites" : "Ffefrynnau",
     "Other" : "Arall",

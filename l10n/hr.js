@@ -151,7 +151,6 @@ OC.L10N.register(
     "Event created" : "Događaj je stvoren",
     "Could not create event" : "Nije moguće stvoriti događaj",
     "Could not open mailbox" : "Nije moguće otvoriti sandučić",
-    "Loading messages" : "Učitavanje poruka",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksiranje poruka u tijeku. Ova radnja može potrajati za veće sandučiće.",
     "Choose target mailbox" : "Odaberi ciljni sandučić",
     "No more submailboxes in here" : "Ovdje više nema podsandučića",

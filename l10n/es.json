@@ -153,7 +153,6 @@
     "Event created" : "Evento creado",
     "Could not create event" : "No se ha podido crear el evento",
     "Could not open mailbox" : "No se pudo abrir la bandeja de entrada",
-    "Loading messages" : "Cargando mensajes",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexando sus mensajes. Esto puede tardar un poco más en buzones grandes.",
     "Choose target mailbox" : "Elegir bandeja de destino",
     "No more submailboxes in here" : "No hay más sub-bandejas aquí",

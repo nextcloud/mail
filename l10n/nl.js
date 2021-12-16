@@ -155,7 +155,6 @@ OC.L10N.register(
     "Event created" : "Afspraak aangemaakt",
     "Could not create event" : "Kon afspraak niet creëren",
     "Could not open mailbox" : "Kon postbus niet openen",
-    "Loading messages" : "Berichten aan het laden",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexeren van je berichten. Dit kan wat tijd kosten voor grote brievenbussen.",
     "Choose target mailbox" : "Kies doel postbus",
     "No more submailboxes in here" : "Niet meer subpostbussen hier",
