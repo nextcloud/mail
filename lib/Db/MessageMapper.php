@@ -961,19 +961,28 @@ class MessageMapper extends QBMapper {
 	private function findRecipients(array $messages): array {
 		/** @var Message[] $indexedMessages */
 		$indexedMessages = array_combine(
-			array_map(function (Message $msg) {
+			array_map(static function (Message $msg) {
 				return $msg->getId();
 			}, $messages),
 			$messages
 		);
+
 		$qb2 = $this->db->getQueryBuilder();
 		$qb2->select('label', 'email', 'type', 'message_id')
 			->from('mail_recipients')
-			->where(
-				$qb2->expr()->in('message_id', $qb2->createNamedParameter(array_keys($indexedMessages), IQueryBuilder::PARAM_INT_ARRAY))
-			);
-		$recipientsResult = $qb2->execute();
-		foreach ($recipientsResult->fetchAll() as $recipient) {
+			->where($qb2->expr()->in('message_id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
+
+		$recipientsResults = [];
+		foreach (array_chunk(array_keys($indexedMessages), 1000) as $chunk) {
+			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$result = $qb2->execute();
+			$recipientsResults[] = $result->fetchAll();
+			$result->closeCursor();
+		}
+
+		$recipientsResults = array_merge(...$recipientsResults);
+
+		foreach ($recipientsResults as $recipient) {
 			$message = $indexedMessages[(int)$recipient['message_id']];
 			switch ($recipient['type']) {
 				case Address::TYPE_FROM:
@@ -998,7 +1007,6 @@ class MessageMapper extends QBMapper {
 					break;
 			}
 		}
-		$recipientsResult->closeCursor();
 
 		return $messages;
 	}

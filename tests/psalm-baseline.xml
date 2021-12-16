@@ -117,7 +117,7 @@
       <code>$qb-&gt;createParameter('ids')</code>
       <code>$qb-&gt;createParameter('uids')</code>
       <code>$qb-&gt;createParameter('uids')</code>
-      <code>$qb2-&gt;createNamedParameter(array_keys($indexedMessages), IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
       <code>$qb2-&gt;createParameter('ids')</code>
       <code>$qb4-&gt;createParameter('ids')</code>
       <code>$query-&gt;createParameter('ids')</code>
