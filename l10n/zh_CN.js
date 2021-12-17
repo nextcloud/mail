@@ -155,6 +155,7 @@ OC.L10N.register(
     "Event created" : "已创建事件",
     "Could not create event" : "无法建立事件",
     "Could not open mailbox" : "无法打开邮箱",
+    "Loading messages …" : "正在加载邮件…",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "正在为您的消息建立索引。 对于较大的邮箱，这可能需要更长的时间。",
     "Choose target mailbox" : "选择目标邮箱",
     "No more submailboxes in here" : "这里已经没有更多子邮箱",

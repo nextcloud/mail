@@ -155,6 +155,7 @@ OC.L10N.register(
     "Event created" : "Termin wurde erstellt",
     "Could not create event" : "Termin konnte nicht erstellt werden",
     "Could not open mailbox" : "E-Mail-Postfach konnte nicht geöffnet werden",
+    "Loading messages …" : "Lade Nachrichten …",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Ihre Nachrichten werden indiziert. Dies kann bei größeren E-Mail-Postfächern etwas länger dauern.",
     "Choose target mailbox" : "Zielpostfach auswählen",
     "No more submailboxes in here" : "Keine Unter-Postfächer vorhanden",
