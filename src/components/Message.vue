@@ -2,6 +2,7 @@
   - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -23,8 +24,8 @@
 	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail','Message body')">
-		<div v-if="message.itineraries.length > 0" class="message-itinerary">
-			<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
+		<div v-if="itineraries.length > 0" class="message-itinerary">
+			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
 		<MessageHTMLBody v-if="message.hasHtmlBody"
 			:url="htmlUrl"
@@ -89,6 +90,9 @@ export default {
 		},
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
+		},
+		itineraries() {
+			return this.message.itineraries ?? []
 		},
 	},
 }

@@ -185,6 +185,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#getItineraries',
+			'url' => '/api/messages/{id}/itineraries',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#getSource',
 			'url' => '/api/messages/{id}/source',
 			'verb' => 'GET'
