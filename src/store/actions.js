@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -63,6 +64,7 @@ import {
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
+	fetchMessageItineraries,
 	fetchThread,
 	moveMessage,
 	removeEnvelopeTag,
@@ -750,6 +752,14 @@ export default {
 			})
 		}
 		return message
+	},
+	async fetchItineraries({ commit }, id) {
+		const itineraries = await fetchMessageItineraries(id)
+		commit('addMessageItineraries', {
+			id,
+			itineraries,
+		})
+		return itineraries
 	},
 	async deleteMessage({ getters, commit }, { id }) {
 		commit('removeEnvelope', { id })

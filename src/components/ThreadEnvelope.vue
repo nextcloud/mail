@@ -2,6 +2,7 @@
   - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -255,8 +256,8 @@ export default {
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
 			try {
-				const message = this.message = await this.$store.dispatch('fetchMessage', this.envelope.databaseId)
-				logger.debug(`message ${this.envelope.databaseId} fetched`, { message })
+				this.message = await this.$store.dispatch('fetchMessage', this.envelope.databaseId)
+				logger.debug(`message ${this.envelope.databaseId} fetched`, { message: this.message })
 
 				if (!this.envelope.flags.seen) {
 					logger.info('Starting timer to mark message as seen/read')
@@ -269,6 +270,26 @@ export default {
 				this.loading = false
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
+			}
+
+			// Fetch itineraries if they haven't been included in the message data
+			if (this.message && !this.message.itineraries) {
+				await this.fetchItineraries()
+			}
+		},
+		async fetchItineraries() {
+			// Sanity check before actually making the request
+			if (!this.message.hasHtmlBody && this.message.attachments.length === 0) {
+				return
+			}
+
+			logger.debug(`Fetching itineraries for message ${this.envelope.databaseId}`)
+
+			try {
+				const itineraries = await this.$store.dispatch('fetchItineraries', this.envelope.databaseId)
+				logger.debug(`Itineraries of message ${this.envelope.databaseId} fetched`, { itineraries })
+			} catch (error) {
+				logger.error(`Could not fetch itineraries of message ${this.envelope.databaseId}`, { error })
 			}
 		},
 		scrollToCurrentEnvelope() {

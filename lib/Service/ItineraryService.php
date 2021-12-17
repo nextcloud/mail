@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -27,7 +28,7 @@ namespace OCA\Mail\Service;
 
 use ChristophWurst\KItinerary\Itinerary;
 use OCA\Mail\Account;
-use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
@@ -43,9 +44,6 @@ class ItineraryService {
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
 	/** @var MessageMapper */
 	private $messageMapper;
 
@@ -59,25 +57,32 @@ class ItineraryService {
 	private $logger;
 
 	public function __construct(IMAPClientFactory $clientFactory,
-								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								ItineraryExtractor $extractor,
 								ICacheFactory $cacheFactory,
 								LoggerInterface $logger) {
 		$this->clientFactory = $clientFactory;
-		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
 		$this->cache = $cacheFactory->createLocal();
 		$this->logger = $logger;
 	}
 
-	public function extract(Account $account, string $mailbox, int $id): Itinerary {
-		$mailbox = $this->mailboxMapper->find($account, $mailbox);
+	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
+		return 'mail_itinerary_' . $account->getId() . '_' . $mailbox->getName() . '_' . $id;
+	}
 
-		$cacheKey = 'mail_itinerary_' . $account->getId() . '_' . $mailbox->getName() . '_' . $id;
-		if ($cached = ($this->cache->get($cacheKey))) {
+	public function getCached(Account $account, Mailbox $mailbox, int $id): ?Itinerary {
+		if ($cached = ($this->cache->get($this->buildCacheKey($account, $mailbox, $id)))) {
 			return Itinerary::fromJson($cached);
+		}
+
+		return null;
+	}
+
+	public function extract(Account $account, Mailbox $mailbox, int $id): Itinerary {
+		if ($cached = ($this->getCached($account, $mailbox, $id))) {
+			return $cached;
 		}
 
 		$client = $this->clientFactory->getClient($account);
@@ -104,7 +109,8 @@ class ItineraryService {
 		$final = $this->extractor->extract(json_encode($itinerary));
 		$this->logger->debug('Reduced ' . count($itinerary) . ' itinerary entries to ' . count($final) . ' entries');
 
-		$this->cache->set($cacheKey, json_encode($final));
+		$cache_key = $this->buildCacheKey($account, $mailbox, $id);
+		$this->cache->set($cache_key, json_encode($final));
 
 		return $final;
 	}
