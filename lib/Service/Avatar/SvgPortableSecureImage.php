@@ -32,7 +32,7 @@ use Imagick;
 use ImagickPixel;
 use SimpleXMLElement;
 use Throwable;
-//use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\ServiceException;
 
 /**
  * @see <a href="https://github.com/authindicators/svg-ps-converters/blob/master/illustrator-script/SaveAsSVGTinyPS_v0.1.jsx" />
