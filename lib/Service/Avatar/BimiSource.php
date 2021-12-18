@@ -94,6 +94,19 @@ class BimiSource implements IAvatarSource {
 
 		$mime = $this->mimeDetector->detectString($body);
 
+		if ($this->isSvg($mime)) {
+			$svg = new SvgPortableSecureImage($body);
+
+			if (!$svg->isValid()) {
+				return null;
+			}
+
+			return $factory->createExternal(
+				$svg->toPngImageDataUrl(),
+				'image/png'
+			);
+		}
+
 		return $factory->createExternal(
 			$iconUrl,
 			$mime
@@ -163,5 +176,20 @@ class BimiSource implements IAvatarSource {
 		}
 
 		return $tags['l'];
+	}
+
+	/**
+	 * @param string $mime_type MIME type
+	 *
+	 * @return boolean true if SVG, otherwise false
+	 */
+	private function isSvg($mime_type): bool {
+		return in_array(
+			$mime_type,
+			array(
+				'image/svg+xml',
+				'text/plain',
+			)
+		);
 	}
 }
