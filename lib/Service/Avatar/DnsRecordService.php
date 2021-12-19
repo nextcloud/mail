@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 /**
+ * @copyright 2021 Gregor Mitzka <gregor.mitzka@gmail.com>
+ *
  * @author Gregor Mitzka <gregor.mitzka@gmail.com>
  *
  * Mail
