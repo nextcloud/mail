@@ -31,126 +31,126 @@ use OCA\Mail\Exception\ServiceException;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class SvgPortableSecureImageTest extends TestCase {
-  public function testValidFile() {
-    return $this->assertTrue(
-      $this->getValidSvgImage()->isValid()
-    );
-  }
+	public function testValidFile() {
+		return $this->assertTrue(
+			$this->getValidSvgImage()->isValid()
+		);
+	}
 
-  public function testInvalidFile() {
-    return $this->assertFalse(
-      $this->getInvalidSvgImage()->isValid()
-    );
-  }
+	public function testInvalidFile() {
+		return $this->assertFalse(
+			$this->getInvalidSvgImage()->isValid()
+		);
+	}
 
-  public function testToPngSuccess() {
-    $svg = $this->getValidSvgImage();
+	public function testToPngSuccess() {
+		$svg = $this->getValidSvgImage();
 
-    $image = $svg->toPngImage();
+		$image = $svg->toPngImage();
 
-    $blob1 = $image->getImageBlob();
-    $blob2 = $this->getValidPngImage();
+		$blob1 = $image->getImageBlob();
+		$blob2 = $this->getValidPngImage();
 
-    $image->clear();
+		$image->clear();
 
-    $this->assertEquals(
-      $blob1,
-      $blob2
-    );
-  }
+		$this->assertEquals(
+			$blob1,
+			$blob2
+		);
+	}
 
-  public function testToPngFailed() {
-    $svg = $this->getInvalidSvgImage();
-    $exception = null;
+	public function testToPngFailed() {
+		$svg = $this->getInvalidSvgImage();
+		$exception = null;
 
-    try {
-      $image = $svg->toPngImage();
-    } catch (Throwable $ex) {
-      $exception = $ex;
-    }
+		try {
+			$image = $svg->toPngImage();
+		} catch (Throwable $ex) {
+			$exception = $ex;
+		}
 
-    $this->assertNotNull(
-      $expection
-    );
+		$this->assertNotNull(
+			$expection
+		);
 
-    $this->assertTrue(
-      $expection instanceof ServiceException
-    );
-  }
+		$this->assertTrue(
+			$expection instanceof ServiceException
+		);
+	}
 
-  public function testToPngImageDataUrlSuccess() {
-    $svg = $this->getValidSvgImage();
+	public function testToPngImageDataUrlSuccess() {
+		$svg = $this->getValidSvgImage();
 
-    $url1 = $svg->toPngImageDataUrl();
-    $blob = $this->getValidPngImage();
+		$url1 = $svg->toPngImageDataUrl();
+		$blob = $this->getValidPngImage();
 
-    $url2 = base64_encode($blob);
+		$url2 = base64_encode($blob);
 
-    $this->assertEquals(
-      $url1,
-      $url2
-    );
-  }
+		$this->assertEquals(
+			$url1,
+			$url2
+		);
+	}
 
-  public function testToPngImageDataUrlFailed() {
-    $svg = $this->getInvalidSvgImage();
-    $exception = null;
+	public function testToPngImageDataUrlFailed() {
+		$svg = $this->getInvalidSvgImage();
+		$exception = null;
 
-    try {
-      $image = $svg->toPngImageDataUrl();
-    } catch (Throwable $ex) {
-      $exception = $ex;
-    }
+		try {
+			$image = $svg->toPngImageDataUrl();
+		} catch (Throwable $ex) {
+			$exception = $ex;
+		}
 
-    $this->assertNotNull(
-      $expection
-    );
+		$this->assertNotNull(
+			$expection
+		);
 
-    $this->assertTrue(
-      $expection instanceof ServiceException
-    );
-  }
+		$this->assertTrue(
+			$expection instanceof ServiceException
+		);
+	}
 
-  private function getValidPngImage(): string {
-    $ret = file_get_contents(
-      sprintf(
-        '%s/valid-svg-ps.png',
-        __DIR__
-      )
-    );
+	private function getValidPngImage(): string {
+		$ret = file_get_contents(
+			sprintf(
+				'%s/valid-svg-ps.png',
+				__DIR__
+			)
+		);
 
-    if ($ret === false) {
-      throw ServiceException(
-        'could not open png image for comparison'
-      );
-    }
+		if ($ret === false) {
+			throw ServiceException(
+				'could not open png image for comparison'
+			);
+		}
 
-    return $ret;
-  }
+		return $ret;
+	}
 
-  private function getValidSvgImage(): SvgPortableSecureImage {
-    $contents = file_get_contents(
-      sprintf(
-        '%s/valid-svg-ps.svg',
-        __DIR__
-      )
-    );
+	private function getValidSvgImage(): SvgPortableSecureImage {
+		$contents = file_get_contents(
+			sprintf(
+				'%s/valid-svg-ps.svg',
+				__DIR__
+			)
+		);
 
-    return new SvgPortableSecureImage(
-      $contents
-    );
-  }
+		return new SvgPortableSecureImage(
+			$contents
+		);
+	}
 
-  private function getInvalidSvgImage(): SvgPortableSecureImage {
-    $contents = file_get_contents(
-      sprintf(
-        '%s/invalid-svg-ps.svg',
-        __DIR__
-      )
-    );
+	private function getInvalidSvgImage(): SvgPortableSecureImage {
+		$contents = file_get_contents(
+			sprintf(
+				'%s/invalid-svg-ps.svg',
+				__DIR__
+			)
+		);
 
-    return new SvgPortableSecureImage(
-      $contents
-    );
-  }
+		return new SvgPortableSecureImage(
+			$contents
+		);
+	}
 }
