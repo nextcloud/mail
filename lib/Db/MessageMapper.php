@@ -992,8 +992,8 @@ class MessageMapper extends QBMapper {
 					);
 					break;
 				case Address::TYPE_BCC:
-					$message->setFrom(
-						$message->getFrom()->merge(AddressList::fromRow($recipient))
+					$message->setBcc(
+						$message->getBcc()->merge(AddressList::fromRow($recipient))
 					);
 					break;
 			}
