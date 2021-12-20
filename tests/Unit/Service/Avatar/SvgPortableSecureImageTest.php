@@ -45,11 +45,10 @@ class SvgPortableSecureImageTest extends TestCase {
 		$svg = $this->getValidSvgImage();
 
 		$image = $svg->toPngImage();
-
 		$blob1 = $image->getImageBlob();
-		$blob2 = $this->getValidPngImage();
-
 		$image->clear();
+
+		$blob2 = $this->getValidPngImageAsBlob();
 
 		$this->assertEquals(
 			$blob1,
@@ -59,30 +58,25 @@ class SvgPortableSecureImageTest extends TestCase {
 
 	public function testToPngFailed() {
 		$svg = $this->getInvalidSvgImage();
-		$exception = null;
 
-		try {
-			$image = $svg->toPngImage();
-		} catch (Throwable $ex) {
-			$exception = $ex;
-		}
-
-		$this->assertNotNull(
-			$expection
+		$this->expectException(
+			ServiceException::class
 		);
 
-		$this->assertTrue(
-			$expection instanceof ServiceException
-		);
+		$svg->toPngImage();
 	}
 
 	public function testToPngImageDataUrlSuccess() {
 		$svg = $this->getValidSvgImage();
 
 		$url1 = $svg->toPngImageDataUrl();
-		$blob = $this->getValidPngImage();
 
-		$url2 = base64_encode($blob);
+		$blob = $this->getValidPngImageAsBlob();
+
+		$url2 = sprintf(
+			'data:image/png;base64,%s',
+			base64_encode($blob)
+		);
 
 		$this->assertEquals(
 			$url1,
@@ -92,38 +86,33 @@ class SvgPortableSecureImageTest extends TestCase {
 
 	public function testToPngImageDataUrlFailed() {
 		$svg = $this->getInvalidSvgImage();
-		$exception = null;
 
-		try {
-			$image = $svg->toPngImageDataUrl();
-		} catch (Throwable $ex) {
-			$exception = $ex;
-		}
-
-		$this->assertNotNull(
-			$expection
+		$this->expectException(
+			ServiceException::class
 		);
 
-		$this->assertTrue(
-			$expection instanceof ServiceException
-		);
+		$svg->toPngImageDataUrl();
 	}
 
-	private function getValidPngImage(): string {
-		$ret = file_get_contents(
+	private function getValidPngImageAsBlob(): string {
+		$image = new Imagick();
+		$ret = $image->readImage(
 			sprintf(
 				'%s/valid-svg-ps.png',
 				__DIR__
 			)
 		);
 
-		if ($ret === false) {
+		if ($ret !== true) {
 			throw ServiceException(
 				'could not open png image for comparison'
 			);
 		}
 
-		return $ret;
+		$blob = $image->getImageBlob();
+		$image->clear();
+
+		return $blob;
 	}
 
 	private function getValidSvgImage(): SvgPortableSecureImage {
