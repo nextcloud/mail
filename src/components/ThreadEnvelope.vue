@@ -39,6 +39,11 @@
 				class="app-content-list-item-star icon-starred"
 				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 				@click.prevent="onToggleFlagged" />
+			<div
+				v-if="envelope.flags.$junk"
+				class="app-content-list-item-star icon-junk"
+				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
+				@click.prevent="onToggleJunk" />
 			<router-link
 				:to="route"
 				event=""
@@ -279,6 +284,9 @@ export default {
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
 		},
+		onToggleJunk() {
+			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
+		},
 	},
 }
 </script>
@@ -391,6 +399,14 @@ export default {
 		margin-top: -2px;
 		margin-left: 27px;
 		cursor: pointer;
+	}
+	.app-content-list-item-star.icon-junk {
+		display: inline-block;
+		position: absolute;
+		margin-top: -2px;
+		margin-left: 27px;
+		cursor: pointer;
+		opacity: .2;
 	}
 	.left:not(.seen) {
 		font-weight: bold;

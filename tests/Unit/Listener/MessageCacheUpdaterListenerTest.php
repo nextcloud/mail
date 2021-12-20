@@ -88,7 +88,7 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 			$account,
 			$mailbox,
 			123,
-			'junk',
+			'$junk',
 			true
 		);
 		$message = new Message();
