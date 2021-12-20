@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Avatar;
 
 use Closure;
-use Exception;
 use OCA\Mail\Exception\ServiceException;
 
 class DnsRecordService {
