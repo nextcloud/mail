@@ -652,7 +652,7 @@ export default {
 	},
 	toggleEnvelopeJunk({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
-		const oldState = envelope.flags.junk
+		const oldState = envelope.flags.$junk
 		commit('flagEnvelope', {
 			envelope,
 			flag: '$junk',

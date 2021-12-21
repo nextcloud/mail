@@ -30,9 +30,9 @@
 				@click.prevent="onToggleImportant"
 				v-html="importantSvg" />
 			<div
-				v-if="data.flags.junk"
+				v-if="data.flags.$junk"
 				class="app-content-list-item-star icon-junk"
-				:data-starred="data.flags.junk ? 'true' : 'false'"
+				:data-starred="data.flags.$junk ? 'true' : 'false'"
 				@click.prevent="onToggleJunk" />
 			<div class="app-content-list-item-icon">
 				<Avatar :display-name="addresses" :email="avatarEmail" />
@@ -82,7 +82,7 @@
 				:close-after-click="true"
 				@click.prevent="onToggleJunk">
 				{{
-					data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-checkmark"
