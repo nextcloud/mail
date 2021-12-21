@@ -1451,16 +1451,16 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Stream_Wrapper",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Stream_Wrapper-2.1.4.tgz"
+                "url": "https://pear.horde.org/get/Horde_Stream_Wrapper-2.1.5.tgz"
             },
             "require": {
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_stream_wrapper": "== 2.1.4.0"
+                "pear-horde/horde_stream_wrapper": "== 2.1.5.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -1474,7 +1474,7 @@
             "license": [
                 "BSD-2-Clause"
             ],
-            "description": "A collection of stream wrappers."
+            "description": "A library of stream wrappers."
         },
         {
             "name": "pear-pear.horde.org/Horde_Stringprep",
@@ -1507,10 +1507,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Support",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Support-2.2.0.tgz"
+                "url": "https://pear.horde.org/get/Horde_Support-2.2.1.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
@@ -1519,7 +1519,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_support": "== 2.2.0.0"
+                "pear-horde/horde_support": "== 2.2.1.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -1533,7 +1533,7 @@
             "license": [
                 "BSD-2-Clause"
             ],
-            "description": "Support classes not tied to Horde but is used by it. These classes can be used outside of Horde as well."
+            "description": "Support library not tied to Horde but used by it."
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Filter",
