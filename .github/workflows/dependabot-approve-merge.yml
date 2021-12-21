@@ -8,7 +8,7 @@ name: Dependabot
 on:
   pull_request_target:
      branches:
-      - master
+      - main
       - stable*
 
 jobs:
