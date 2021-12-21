@@ -95,21 +95,29 @@ class SvgPortableSecureImageTest extends TestCase {
 		$svg->toPngImageDataUrl();
 	}
 
-	private function getValidPngImageAsBlob(): string {
+	private function getValidPngImage(): Imagick {
 		$image = new Imagick();
-		$ret = $image->readImage(
-			sprintf(
-				'%s/valid-svg-ps.png',
-				__DIR__
-			)
+
+		$image->readImageBlob(
+			$this->getValidSvgImage()->toXml()
+		);
+		$image->setImageBackgroundColor(
+			new ImagickPixel('transparent')
 		);
 
-		if ($ret !== true) {
-			throw ServiceException(
-				'could not open png image for comparison'
-			);
-		}
+		$image->setImageFormat('png24');
+		$image->resizeImage(
+			$size, // x
+			$size, // y
+			Imagick::FILTER_LANCZOS,
+			1 // no blur
+		);
 
+		return $image;
+	}
+
+	private function getValidPngImageAsBlob(): string {
+		$image = $this->getValidPngImage();
 		$blob = $image->getImageBlob();
 		$image->clear();
 

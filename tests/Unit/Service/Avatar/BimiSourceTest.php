@@ -61,24 +61,24 @@ class BimiSourceTest extends TestCase {
 	}
 
 	public function testFetchExisting() {
+		$svgContent = file_get_contents(
+			sprintf(
+				'%s/valid-svg-ps.svg',
+				__DIR__
+			)
+		);
+
 		$this->mimeDetector
 			->expects($this->once())
 			->method('detectString')
-			->with('data')
+			->with($svgContent)
 			->willReturn('image/svg+xml');
 
 		$response = $this->createMock(IResponse::class);
 		$response
 			->expects($this->once())
 			->method('getBody')
-			->willReturn(
-				file_get_contents(
-					sprintf(
-						'%s/valid-svg-ps.svg',
-						__DIR__
-					)
-				)
-			);
+			->willReturn($svgContent);
 
 		$client = $this->createMock(IClient::class);
 		$client

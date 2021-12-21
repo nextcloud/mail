@@ -990,6 +990,15 @@ class SvgPortableSecureImage {
 	private $data;
 
 	/**
+	 * @var string|bool|null
+	 *
+	 * - null if data is not validated yet
+	 * - false if data is validated, but failed
+	 * - a string if data is validated and succeeded
+	 */
+	private $validated_data = null;
+
+	/**
 	 * @param string $data
 	 */
 	public function __construct(string $data) {
@@ -1003,33 +1012,38 @@ class SvgPortableSecureImage {
 	 * @return bool
 	 */
 	public function isValid(): bool {
-		return $this->suppressLibXmlErrors(function () {
-			$doc = new SimpleXMLElement($this->data);
-			$elements = $doc->xpath('descendant-or-self::*');
+		return (
+			$this->toXml() !== null
+		);
+	}
 
-			foreach ($elements as $element) {
-				$element_name = $element->getName();
+	/**
+	 * Returns the SVG image as string if it conforms
+	 * to SVG Portable/Secure format, otherwise null.
+	 * Also caches the result for any later access.
+	 *
+	 * @return string|null
+	 */
+	public function toXml(): ?string {
+		if ($this->validated_data !== null) {
+			return (
+				$this->validated_data !== false
+					? $this->validated_data
+					: null
+			);
+		}
 
-				if (!$this->isAllowedElementName($element_name)) {
-					return false;
-				}
+		$validated = $this->validateData();
 
-				foreach ($element->getNamespaces() as $ns) {
-					foreach ($element->attributes($ns) as $attr) {
-						$attr_allowed = $this->isAllowedAttributeName(
-							$attr->getName(),
-							$element_name
-						);
+		if ($validated === null) {
+			$this->validated_data = false;
 
-						if (!$attr_allowed) {
-							return false;
-						}
-					}
-				}
-			}
+			return null;
+		}
 
-			return true;
-		});
+		return (
+			$this->validated_data = $validated
+		);
 	}
 
 	/**
@@ -1059,7 +1073,7 @@ class SvgPortableSecureImage {
 
 		$image = new Imagick();
 
-		$image->readImageBlob($this->data);
+		$image->readImageBlob($this->toXml());
 		$image->setImageBackgroundColor(
 			new ImagickPixel('transparent')
 		);
@@ -1091,6 +1105,42 @@ class SvgPortableSecureImage {
 			'data:image/png;base64,%s',
 			base64_encode($blob)
 		);
+	}
+
+	/**
+	 * Returns the SVG image as string if it conforms
+	 * to SVG Portable/Secure format, otherwise null.
+	 *
+	 * @return string|null
+	 */
+	private function validateData(): ?string {
+		return $this->suppressLibXmlErrors(function () {
+			$doc = new SimpleXMLElement($this->data);
+			$elements = $doc->xpath('descendant-or-self::*');
+
+			foreach ($elements as $element) {
+				$element_name = $element->getName();
+
+				if (!$this->isAllowedElementName($element_name)) {
+					return;
+				}
+
+				foreach ($element->getNamespaces() as $ns) {
+					foreach ($element->attributes($ns) as $attr) {
+						$attr_allowed = $this->isAllowedAttributeName(
+							$attr->getName(),
+							$element_name
+						);
+
+						if (!$attr_allowed) {
+							return;
+						}
+					}
+				}
+			}
+
+			return $doc->asXml();
+		});
 	}
 
 	/**
@@ -1134,7 +1184,7 @@ class SvgPortableSecureImage {
 	 *
 	 * @param \Closure $callback
 	 *
-	 * @return bool
+	 * @return mixed|null
 	 */
 	private function suppressLibXmlErrors(Closure $callback) {
 		$prev_use_errors = libxml_use_internal_errors(true);
@@ -1146,7 +1196,7 @@ class SvgPortableSecureImage {
 				throw $ex;
 			}
 
-			return false;
+			return null;
 		} finally {
 			libxml_use_internal_errors(
 				$prev_use_errors
