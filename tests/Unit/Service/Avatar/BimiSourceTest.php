@@ -71,7 +71,14 @@ class BimiSourceTest extends TestCase {
 		$response
 			->expects($this->once())
 			->method('getBody')
-			->willReturn('data');
+			->willReturn(
+				file_get_contents(
+					sprintf(
+						'%s/valid-svg-ps.svg',
+						__DIR__
+					)
+				)
+			);
 
 		$client = $this->createMock(IClient::class);
 		$client
