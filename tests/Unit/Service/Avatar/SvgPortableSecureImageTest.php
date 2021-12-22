@@ -25,6 +25,7 @@
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
 use Imagick;
+use ImagickPixel;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Avatar\SvgPortableSecureImage;
 use OCA\Mail\Exception\ServiceException;

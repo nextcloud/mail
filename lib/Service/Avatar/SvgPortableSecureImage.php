@@ -990,7 +990,7 @@ class SvgPortableSecureImage {
 	private $data;
 
 	/**
-	 * @var string|bool|null
+	 * @var string|false|null
 	 *
 	 * - null if data is not validated yet
 	 * - false if data is validated, but failed

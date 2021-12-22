@@ -29,6 +29,7 @@ use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\BimiSource;
 use OCA\Mail\Service\Avatar\DnsRecordService;
+use OCA\Mail\Service\Avatar\SvgPortableSecureImage;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
@@ -61,10 +62,12 @@ class BimiSourceTest extends TestCase {
 	}
 
 	public function testFetchExisting() {
-		$svgContent = file_get_contents(
-			sprintf(
-				'%s/valid-svg-ps.svg',
-				__DIR__
+		$svgImage = new SvgPortableSecureImage(
+			file_get_contents(
+				sprintf(
+					'%s/valid-svg-ps.svg',
+					__DIR__
+				)
 			)
 		);
 
@@ -78,7 +81,7 @@ class BimiSourceTest extends TestCase {
 		$response
 			->expects($this->once())
 			->method('getBody')
-			->willReturn($svgContent);
+			->willReturn($svgImage->toXml());
 
 		$client = $this->createMock(IClient::class);
 		$client
@@ -99,8 +102,8 @@ class BimiSourceTest extends TestCase {
 			->expects($this->once())
 			->method('createExternal')
 			->with(
-				'https://example.org/bimi.svg',
-				'image/svg+xml'
+				$svgImage->toPngImageDataUrl(),
+				'image/png'
 			)
 			->willReturn($avatar);
 
