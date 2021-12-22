@@ -74,7 +74,7 @@ class BimiSourceTest extends TestCase {
 		$this->mimeDetector
 			->expects($this->once())
 			->method('detectString')
-			->with($svgContent)
+			->with($svgImage->toXml())
 			->willReturn('image/svg+xml');
 
 		$response = $this->createMock(IResponse::class);
@@ -107,10 +107,10 @@ class BimiSourceTest extends TestCase {
 			)
 			->willReturn($avatar);
 
-		$email = 'foo@example.org';
+		$emailAddress = 'foo@example.org';
 
 		$actualAvatar = $this->source->fetch(
-			$email,
+			$emailAddress,
 			$avatarFactory
 		);
 

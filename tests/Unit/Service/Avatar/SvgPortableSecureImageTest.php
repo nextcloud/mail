@@ -98,6 +98,7 @@ class SvgPortableSecureImageTest extends TestCase {
 
 	private function getValidPngImage(): Imagick {
 		$image = new Imagick();
+		$size = 128;
 
 		$image->readImageBlob(
 			$this->getValidSvgImage()->toXml()
