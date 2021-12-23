@@ -52,15 +52,15 @@ class CompositeAvatarSourceTest extends TestCase {
 		parent::setUp();
 
 		$this->addressbookSource = $this->createMock(AddressbookSource::class);
-		$this->gravatarSource = $this->createMock(GravatarSource::class);
-		$this->faviconSource = $this->createMock(FaviconSource::class);
 		$this->bimiSource = $this->createMock(BimiSource::class);
+		$this->faviconSource = $this->createMock(FaviconSource::class);
+		$this->gravatarSource = $this->createMock(GravatarSource::class);
 
 		$this->source = new CompositeAvatarSource(
 			$this->addressbookSource,
+			$this->bimiSource,
 			$this->faviconSource,
-			$this->gravatarSource,
-			$this->bimiSource
+			$this->gravatarSource
 		);
 	}
 
