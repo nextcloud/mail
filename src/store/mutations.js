@@ -59,12 +59,15 @@ const addMailboxToState = curry((state, account, mailbox) => {
 	}
 
 	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
-	const parent = Object.values(state.mailboxes).find(mb => mb.name === mailbox.path)
+	const parent = Object.values(state.mailboxes)
+		.filter(mb => mb.accountId === account.id)
+		.find(mb => mb.name === mailbox.path)
 	if (mailbox.path === '' || !parent) {
 		account.mailboxes.push(mailbox.databaseId)
 	} else {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
+
 })
 
 const sortAccounts = (accounts) => {
