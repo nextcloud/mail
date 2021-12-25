@@ -25,7 +25,7 @@
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
 		"christophwurst/kitinerary-sys": "^0.1.0",
-		"ezyang/htmlpurifier": "4.13.0",
+		"ezyang/htmlpurifier": "4.14.0",
 		"gravatarphp/gravatar": "^2.0",
 		"pear-pear.horde.org/horde_date": "^2.4.1@stable",
 		"pear-pear.horde.org/horde_exception": "^2.0.8@stable",
