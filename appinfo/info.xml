@@ -14,12 +14,8 @@
 	]]></description>
 	<version>1.12.0-alpha.2</version>
 	<licence>agpl</licence>
-	<author>Christoph Wurst</author>
 	<author>Greta Doçi</author>
-	<author>Julius Härtl</author>
-	<author>Cyrille Bollu</author>
-	<author>Holger Dehnhardt</author>
-	<author>Jan-Christoph Borchardt</author>
+	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>
 	<namespace>Mail</namespace>
 	<documentation>
 		<user>https://github.com/nextcloud/mail/blob/main/doc/user.md</user>
