@@ -22,6 +22,12 @@
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template chooser](https://github.com/nextcloud/mail/issues/new/choose) so we get the info needed to debug and fix the problem. Thanks!
 
+## Installation
+
+The app is distributed through the [app store](https://apps.nextcloud.com/apps/mail) and you can install it [right from your Nextcloud installation](https://docs.nextcloud.com/server/stable/admin_manual/apps_management.html).
+
+Release tarballs are hosted at https://github.com/nextcloud-releases/mail/releases.
+
 ## Get on board
 For new contributors, please check out [ContributingToNextcloudIntroductoryWorkshop](https://github.com/sleepypioneer/ContributingToNextcloudIntroductoryWorkshop)
 
@@ -42,9 +48,3 @@ Need help? Check out our documentation. It's split into three parts.
 * [Admin documentation](doc/admin.md) (installation, configuration, troubleshooting)
 * [Developer documentation](doc/developer.md) (developer setup, nightly builds)
 * [User documentation](doc/user.md) (usage, keyboard shortcuts)
-
-## Maintainers
-
-[Christoph Wurst](https://github.com/ChristophWurst), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/nextcloud/mail/graphs/contributors)
-
-If you’d like to join, just run through the [issue list](https://github.com/nextcloud/mail/issues) and fix some. :)

@@ -3,7 +3,7 @@
 ## Installation
 
 In your Nextcloud, simply navigate to »Apps«, choose the category »Social & Communication«, find the Mail app and enable it.
-Then open the Mail app from the app menu. Put in your mail account credentials and off you go!
+Then open the Mail app from the app menu.
 
 ## Configuration
 
