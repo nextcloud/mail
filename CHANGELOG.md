@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.5 – 2021-12-28
+### Fixed
+- Use Parameters instead of Named Parameters for chunked queries
+- Mailbox showing at the wrong account
+- Column for account name that is too narrow
+- Mark as spam action
+- Chunk the recipients query
+
 ## 1.11.4 – 2021-12-15
 ### Fixed
 - Erroneous repair step during app store upgrade
