@@ -155,6 +155,7 @@ OC.L10N.register(
     "Event created" : "Événement créé",
     "Could not create event" : "Impossible de créer l'évènement",
     "Could not open mailbox" : "Impossible d'ouvrir la boite de réception",
+    "Loading messages …" : "Chargement des messages ...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "L'indexation des messages est en cours. Cette opération peut être un peu longue pour les grosses boites aux lettres.",
     "Choose target mailbox" : "Sélectionnez le dossier cible",
     "No more submailboxes in here" : "Plus aucun sous-dossier ici",
