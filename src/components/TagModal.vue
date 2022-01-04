@@ -33,7 +33,7 @@
 					}">
 					{{ tag.displayName }}
 				</button>
-				<Actions v-if="!tag.isDefaultTag" :force-menu="true">
+				<Actions :force-menu="true">
 					<ActionButton v-if="renameTagLabel"
 						icon="icon-rename"
 						@click="openEditTag">
