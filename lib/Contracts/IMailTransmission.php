@@ -25,6 +25,7 @@ namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\LocalMailboxMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
@@ -50,6 +51,15 @@ interface IMailTransmission {
 								RepliedMessageData $replyData = null,
 								Alias $alias = null,
 								Message $draft = null): void;
+
+	/**
+	 * @param Account $account
+	 * @param LocalMailboxMessage $message
+	 * @param array $recipients
+	 * @param array $attachments
+	 * @return void
+	 */
+	public function sendLocalMessage(Account $account, LocalMailboxMessage $message, array $recipients, array $attachments = []): void;
 
 	/**
 	 * Save a message draft

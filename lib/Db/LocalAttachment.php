@@ -46,13 +46,15 @@ class LocalAttachment extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $mimeType;
 
-	/** @var mixed */
+	/** @var int */
 	protected $createdAt;
 
 	public function jsonSerialize() {
 		return [
 			'id' => $this->id,
-			'fileName' => $this->fileName,
+			'fileName' => $this->getFileName(),
+			'mimeType' => $this->getMimeType(),
+			'createdAt' => $this->getCreatedAt()
 		];
 	}
 }

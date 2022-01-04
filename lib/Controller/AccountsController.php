@@ -367,7 +367,7 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $id
+	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
 	 * @param string $to
@@ -385,20 +385,20 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function send(int $id,
+	public function send(int    $accountId,
 						 string $subject,
 						 string $body,
 						 string $to,
 						 string $cc,
 						 string $bcc,
-						 bool $isHtml = true,
-						 bool $requestMdn = false,
-						 int $draftId = null,
-						 int $messageId = null,
-						 array $attachments = [],
+						 bool   $isHtml = true,
+						 bool   $requestMdn = false,
+						 int    $draftId = null,
+						 int    $messageId = null,
+						 array  $attachments = [],
 						 int $aliasId = null,
 						 bool $force = false): JSONResponse {
-		$account = $this->accountService->find($this->currentUserId, $id);
+		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
 		$expandedTo = $this->groupsIntegration->expand($to);

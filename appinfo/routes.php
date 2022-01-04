@@ -308,7 +308,32 @@ return [
 			'name' => 'thread#move',
 			'url' => '/api/thread/{id}',
 			'verb' => 'POST'
-		]
+		],
+		[
+			'name' => 'outbox#index',
+			'url' => '/api/outbox',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'outbox#get',
+			'url' => '/api/outbox/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'outbox#send',
+			'url' => '/api/outbox/{id}',
+			'verb' => 'PATCH'
+		],
+		[
+			'name' => 'outbox#save',
+			'url' => '/api/outbox',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'outbox#delete',
+			'url' => '/api/outbox/{id}',
+			'verb' => 'DELETE'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

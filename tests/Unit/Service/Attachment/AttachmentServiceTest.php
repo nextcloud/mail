@@ -28,6 +28,7 @@ use OCA\Mail\Exception\UploadException;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AttachmentServiceTest extends TestCase {
@@ -46,8 +47,9 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper = $this->createMock(LocalAttachmentMapper::class);
 		$this->storage = $this->createMock(AttachmentStorage::class);
+		$this->time = $this->createMock(ITimeFactory::class);
 
-		$this->service = new AttachmentService($this->mapper, $this->storage);
+		$this->service = new AttachmentService($this->mapper, $this->storage, $this->time);
 	}
 
 	public function testAddFileWithUploadException() {
@@ -59,12 +61,17 @@ class AttachmentServiceTest extends TestCase {
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
+			'createdAt' => $this->time->getTime()
+
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
+			'createdAt' => $this->time->getTime()
 		]);
+		$this->time->expects($this->once())
+			->method('getTime');
 		$this->mapper->expects($this->once())
 			->method('insert')
 			->with($this->equalTo($attachment))
@@ -90,12 +97,17 @@ class AttachmentServiceTest extends TestCase {
 		$attachment = LocalAttachment::fromParams([
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
+			'createdAt' => $this->time->getTime()
+
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
 			'id' => 123,
 			'userId' => $userId,
 			'fileName' => 'cat.jpg',
+			'createdAt' => $this->time->getTime()
 		]);
+		$this->time->expects($this->once())
+			->method('getTime');
 		$this->mapper->expects($this->once())
 			->method('insert')
 			->with($this->equalTo($attachment))

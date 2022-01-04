@@ -30,6 +30,7 @@ use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 
 class AttachmentService implements IAttachmentService {
 
@@ -38,11 +39,15 @@ class AttachmentService implements IAttachmentService {
 
 	/** @var AttachmentStorage */
 	private $storage;
+	/** @var ITimeFactory */
+	private $timeFactory;
 
 	public function __construct(LocalAttachmentMapper $mapper,
-								AttachmentStorage $storage) {
+								AttachmentStorage $storage,
+								ITimeFactory $timeFactory) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
+		$this->timeFactory = $timeFactory;
 	}
 
 	/**
@@ -56,6 +61,7 @@ class AttachmentService implements IAttachmentService {
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
 		$attachment->setMimeType($file->getMimeType());
+		$attachment->setCreatedAt($this->timeFactory->getTime());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {

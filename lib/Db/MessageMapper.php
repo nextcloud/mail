@@ -201,8 +201,10 @@ class MessageMapper extends QBMapper {
 			->where($mailboxesQuery->expr()->eq('account_id', $messagesQuery->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
 		$messagesQuery->select('id', 'subject', 'message_id', 'in_reply_to', 'references', 'thread_root_id')
 			->from($this->getTableName())
-			->where($messagesQuery->expr()->in('mailbox_id', $messagesQuery->createFunction($mailboxesQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY))
-			->andWhere($messagesQuery->expr()->isNotNull('message_id'));
+			->where(
+				$messagesQuery->expr()->in('mailbox_id', $messagesQuery->createFunction($mailboxesQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
+				$messagesQuery->expr()->isNotNull('message_id')
+			);
 
 		$result = $messagesQuery->execute();
 		$messages = array_map(function (array $row) {
@@ -552,7 +554,8 @@ class MessageMapper extends QBMapper {
 		$query = $this->db->getQueryBuilder();
 
 		$query->delete($this->getTableName())
-			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
+			->where($query->expr()->eq('mailbox_type', $query->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT)))
+			->andWhere($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
 
 		$query->execute();
 	}
@@ -571,7 +574,8 @@ class MessageMapper extends QBMapper {
 			);
 
 		$deleteRecipientsQuery->delete('mail_recipients')
-			->where($deleteRecipientsQuery->expr()->in('message_id', $deleteRecipientsQuery->createParameter('messageIds')));
+			->where($deleteRecipientsQuery->expr()->eq('mailbox_type', $deleteRecipientsQuery->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT)))
+			->andWhere($deleteRecipientsQuery->expr()->in('message_id', $deleteRecipientsQuery->createParameter('messageIds')));
 
 		$deleteMessagesQuery->delete($this->getTableName())
 			->where($deleteMessagesQuery->expr()->in('id', $deleteMessagesQuery->createParameter('messageIds')));
@@ -654,22 +658,26 @@ class MessageMapper extends QBMapper {
 
 		if (!empty($query->getFrom())) {
 			$select->andWhere(
-				$qb->expr()->in('r0.email', $qb->createNamedParameter($query->getFrom(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r0.email', $qb->createNamedParameter($query->getFrom(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r0.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 		if (!empty($query->getTo())) {
 			$select->andWhere(
-				$qb->expr()->in('r1.email', $qb->createNamedParameter($query->getTo(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r1.email', $qb->createNamedParameter($query->getTo(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r1.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 		if (!empty($query->getCc())) {
 			$select->andWhere(
-				$qb->expr()->in('r2.email', $qb->createNamedParameter($query->getCc(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r2.email', $qb->createNamedParameter($query->getCc(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r2.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 		if (!empty($query->getBcc())) {
 			$select->andWhere(
-				$qb->expr()->in('r3.email', $qb->createNamedParameter($query->getBcc(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r3.email', $qb->createNamedParameter($query->getBcc(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r3.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 
@@ -767,22 +775,26 @@ class MessageMapper extends QBMapper {
 
 		if (!empty($query->getFrom())) {
 			$select->andWhere(
-				$qb->expr()->in('r0.email', $qb->createNamedParameter($query->getFrom(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r0.email', $qb->createNamedParameter($query->getFrom(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r0.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 		if (!empty($query->getTo())) {
 			$select->andWhere(
-				$qb->expr()->in('r1.email', $qb->createNamedParameter($query->getTo(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r1.email', $qb->createNamedParameter($query->getTo(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r1.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 		if (!empty($query->getCc())) {
 			$select->andWhere(
-				$qb->expr()->in('r2.email', $qb->createNamedParameter($query->getCc(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r2.email', $qb->createNamedParameter($query->getCc(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r2.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 		if (!empty($query->getBcc())) {
 			$select->andWhere(
-				$qb->expr()->in('r3.email', $qb->createNamedParameter($query->getBcc(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->in('r3.email', $qb->createNamedParameter($query->getBcc(), IQueryBuilder::PARAM_STR_ARRAY)),
+				$qb->expr()->eq('r3.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
 			);
 		}
 
@@ -970,7 +982,10 @@ class MessageMapper extends QBMapper {
 		$qb2 = $this->db->getQueryBuilder();
 		$qb2->select('label', 'email', 'type', 'message_id')
 			->from('mail_recipients')
-			->where($qb2->expr()->in('message_id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
+			->where(
+				$qb2->expr()->in('message_id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb2->expr()->eq('mailbox_type', $qb2->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
+			);
 
 		$recipientsResults = [];
 		foreach (array_chunk(array_keys($indexedMessages), 1000) as $chunk) {
@@ -1097,7 +1112,8 @@ class MessageMapper extends QBMapper {
 			->join('m', 'mail_recipients', 'r', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
 			->where(
 				$qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
-				$qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+				$qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb->expr()->eq('m.mailbox_type', $qb->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			)
 			->orderBy('sent_at', 'desc')
 			->setMaxResults($limit);
@@ -1139,7 +1155,10 @@ class MessageMapper extends QBMapper {
 		$qb4 = $this->db->getQueryBuilder();
 		$recipientsQuery = $qb4
 			->delete('mail_recipients')
-			->where($qb4->expr()->in('id', $qb4->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
+			->where(
+				$qb4->expr()->in('id', $qb4->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb4->expr()->eq('mailbox_type', $qb4->createNamedParameter(Recipient::TYPE_INBOX, IQueryBuilder::PARAM_INT))
+			);
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$recipientsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$recipientsQuery->execute();

@@ -135,7 +135,6 @@ class MessagesController extends Controller {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
-		$this->mailManager = $mailManager;
 		$this->mailSearch = $mailSearch;
 		$this->itineraryService = $itineraryService;
 		$this->currentUserId = $UserId;

@@ -27,16 +27,24 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport;
 use OC\Files\Node\File;
+use OC\Files\View;
 use OCA\Mail\Account;
+use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Db\LocalMailboxMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox as DbMailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message as DbMessage;
+use OCA\Mail\Db\Recipient;
+use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -46,6 +54,8 @@ use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
+use OCP\Files\SimpleFS\ISimpleFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -137,9 +147,234 @@ class MailTransmissionTest extends TestCase {
 		$this->transmission->sendMessage($messageData, null);
 	}
 
+	public function testSendLocalMessageWithCloudAttachment() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('lewis');
+		$mailAccount->setSentMailboxId(123);
+		/** @var Message|MockObject $message */
+		$dbMessage = $this->createMock(IMessage::class);
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Lewis');
+		$account->method('getEMailAddress')->willReturn('tent-living@stardewvalley.com');
+		$account->method('newMessage')->willReturn($dbMessage);
+		$dbMessage->method('getFrom')->willReturn(AddressList::fromRow(['label' => $account->getName(), 'email' => $account->getEMailAddress()]));
+		$message = new LocalMailboxMessage();
+		$message->setAccountId(1);
+		$message->setSendAt(1643105500);
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setMdn(false);
+		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
+		$recipients = [
+			[
+				'type' => Recipient::TYPE_TO,
+				'label' => 'Gunther',
+				'email' => 'museum@startdewvalley.com'
+			]
+		];
+		// cloud attachment
+		$attachments = [
+			[
+				'fileName' => 'SlimesInTheMines.png',
+				'mimeType' => 'image/png',
+				'createdAt' => 1643105500
+			]
+		];
+
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->willReturn(true);
+		$this->userFolder->expects($this->once())
+			->method('get')
+			->willReturn(new File($this->createMock(IRootFolder::class), $this->createMock(View::class), ''));
+		$this->smtpClientFactory->expects($this->once())
+			->method('create')
+			->willReturn($this->createMock(Horde_Mail_Transport::class));
+		$this->transmission->sendLocalMessage($account, $message, $recipients, $attachments);
+	}
+
+	public function testSendLocalMessageWithLocalAttachment() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('lewis');
+		$mailAccount->setSentMailboxId(123);
+		/** @var Message|MockObject $message */
+		$dbMessage = $this->createMock(IMessage::class);
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Lewis');
+		$account->method('getEMailAddress')->willReturn('tent-living@stardewvalley.com');
+		$account->method('newMessage')->willReturn($dbMessage);
+		$dbMessage->method('getFrom')->willReturn(AddressList::fromRow(['label' => $account->getName(), 'email' => $account->getEMailAddress()]));
+		$message = new LocalMailboxMessage();
+		$message->setAccountId(1);
+		$message->setSendAt(1643105500);
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setMdn(false);
+		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
+		$recipients = [
+			[
+				'type' => Recipient::TYPE_TO,
+				'label' => 'Gunther',
+				'email' => 'museum@startdewvalley.com'
+			]
+		];
+		// local attachment
+		$attachments = [
+			[
+				'id' => 1,
+				'type' => 'local',
+				'fileName' => 'SlimesInTheMines.png',
+				'mimeType' => 'image/png',
+				'createdAt' => 1643105500
+			]
+		];
+
+		$this->attachmentService->expects($this->once())
+			->method('getAttachment')
+			->with($account->getMailAccount()->getUserId(), $attachments[0]['id'])
+			->willReturn([$this->createMock(LocalAttachment::class), $this->createMock(ISimpleFile::class) ]);
+		$this->transmission->sendLocalMessage($account, $message, $recipients, $attachments);
+	}
+
+	public function testSendLocalMessageLocalAttachmentNotFound() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('lewis');
+		$mailAccount->setSentMailboxId(123);
+		/** @var Message|MockObject $message */
+		$dbMessage = $this->createMock(IMessage::class);
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Lewis');
+		$account->method('getEMailAddress')->willReturn('tent-living@stardewvalley.com');
+		$account->method('newMessage')->willReturn($dbMessage);
+		$dbMessage->method('getFrom')->willReturn(AddressList::fromRow(['label' => $account->getName(), 'email' => $account->getEMailAddress()]));
+		$message = new LocalMailboxMessage();
+		$message->setAccountId(1);
+		$message->setSendAt(1643105500);
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setMdn(false);
+		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
+		$recipients = [
+			[
+				'type' => Recipient::TYPE_TO,
+				'label' => 'Gunther',
+				'email' => 'museum@startdewvalley.com'
+			]
+		];
+		// local attachment
+		$attachments = [
+			[
+				'id' => 1,
+				'type' => 'local',
+				'fileName' => 'SlimesInTheMines.png',
+				'mimeType' => 'image/png',
+				'createdAt' => 1643105500
+			]
+		];
+
+		$this->attachmentService->expects($this->once())
+			->method('getAttachment')
+			->with($account->getMailAccount()->getUserId(), $attachments[0]['id'])
+			->willThrowException(new AttachmentNotFoundException());
+		$this->transmission->sendLocalMessage($account, $message, $recipients, $attachments);
+	}
+
+	public function testSendLocalMessageCloudAttachmentNotFound() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('lewis');
+		$mailAccount->setSentMailboxId(123);
+		/** @var Message|MockObject $message */
+		$dbMessage = $this->createMock(IMessage::class);
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Lewis');
+		$account->method('getEMailAddress')->willReturn('tent-living@stardewvalley.com');
+		$account->method('newMessage')->willReturn($dbMessage);
+		$dbMessage->method('getFrom')->willReturn(AddressList::fromRow(['label' => $account->getName(), 'email' => $account->getEMailAddress()]));
+		$message = new LocalMailboxMessage();
+		$message->setAccountId(1);
+		$message->setSendAt(1643105500);
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setMdn(false);
+		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
+		$recipients = [
+			[
+				'type' => Recipient::TYPE_TO,
+				'label' => 'Gunther',
+				'email' => 'museum@startdewvalley.com'
+			]
+		];
+		$attachments = [
+			[
+				'fileName' => 'SlimesInTheMines.png',
+				'mimeType' => 'image/png',
+				'createdAt' => 1643105500
+			]
+		];
+
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->willReturn(false);
+		$this->userFolder->expects($this->never())
+			->method('get');
+		$this->transmission->sendLocalMessage($account, $message, $recipients, $attachments);
+	}
+
+	public function testSendLocalMessageMdn() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('lewis');
+		$mailAccount->setSentMailboxId(123);
+		/** @var Message|MockObject $message */
+		$dbMessage = $this->createMock(IMessage::class);
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Lewis');
+		$account->method('getEMailAddress')->willReturn('tent-living@stardewvalley.com');
+		$account->method('newMessage')->willReturn($dbMessage);
+		$dbMessage->method('getFrom')->willReturn(AddressList::fromRow(['label' => $account->getName(), 'email' => $account->getEMailAddress()]));
+		$message = new LocalMailboxMessage();
+		$message->setAccountId(1);
+		$message->setSendAt(1643105500);
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setMdn(true);
+		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
+		$recipients = [
+			[
+				'type' => Recipient::TYPE_TO,
+				'label' => 'Gunther',
+				'email' => 'museum@startdewvalley.com'
+			]
+		];
+		$attachments = [
+			[
+				'fileName' => 'SlimesInTheMines.png',
+				'mimeType' => 'image/png',
+				'createdAt' => 1643105500
+			]
+		];
+
+		$this->expectException(ServiceException::class);
+		$this->transmission->sendLocalMessage($account, $message, $recipients, $attachments);
+	}
+
 	public function testSendMessageFromAlias() {
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('testuser');
+		$mailAccount->setUserId('lewis');
 		$mailAccount->setSentMailboxId(123);
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
