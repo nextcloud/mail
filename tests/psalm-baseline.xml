@@ -66,11 +66,6 @@
       <code>Command</code>
     </UndefinedClass>
   </file>
-  <file src="lib/Command/RepairMailTheads.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
   <file src="lib/Command/SyncAccount.php">
     <UndefinedClass occurrences="1">
       <code>Command</code>
@@ -88,7 +83,7 @@
   </file>
   <file src="lib/Db/AliasMapper.php">
     <ImplicitToStringCast occurrences="1">
-      <code>$qb2-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
   </file>
   <file src="lib/Db/CollectedAddressMapper.php">
@@ -98,7 +93,7 @@
   </file>
   <file src="lib/Db/MailboxMapper.php">
     <ImplicitToStringCast occurrences="1">
-      <code>$qb2-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
   </file>
   <file src="lib/Db/MessageMapper.php">
@@ -122,12 +117,12 @@
       <code>$qb-&gt;createParameter('ids')</code>
       <code>$qb-&gt;createParameter('uids')</code>
       <code>$qb-&gt;createParameter('uids')</code>
-      <code>$qb2-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$qb2-&gt;createNamedParameter(array_keys($indexedMessages), IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$qb4-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
+      <code>$qb4-&gt;createParameter('ids')</code>
       <code>$query-&gt;createParameter('ids')</code>
-      <code>$select-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$select-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$select-&gt;createParameter('ids')</code>
+      <code>$select-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
     <InvalidReturnStatement occurrences="1">
       <code>$update-&gt;execute()</code>
@@ -149,8 +144,8 @@
   </file>
   <file src="lib/Db/TagMapper.php">
     <ImplicitToStringCast occurrences="4">
-      <code>$deleteQB-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$deleteQB-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$deleteQB-&gt;createParameter('ids')</code>
+      <code>$deleteQB-&gt;createParameter('ids')</code>
       <code>$qb-&gt;createParameter('ids')</code>
       <code>$qb-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
@@ -290,6 +285,18 @@
       <code>$qb-&gt;createNamedParameter($accountIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>
   </file>
+  <file src="lib/Migration/Version1116Date20220110153658.php">
+    <UndefinedClass occurrences="1">
+      <code>PostgreSQL94Platform</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="2">
+		<code>Exception</code>
+		<code>\Doctrine\DBAL\Platforms\AbstractPlatform</code>
+    </UndefinedDocblockClass>
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>getDatabasePlatform</code>
+    </UndefinedInterfaceMethod>
+  </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">
     <InvalidScalarArgument occurrences="1">
       <code>$predictedValidationLabel</code>
@@ -321,6 +328,14 @@
       <code>SaveDraftEvent</code>
       <code>SaveDraftEvent</code>
     </MissingDependency>
+  </file>
+  <file src="lib/Service/Provisioning/Manager.php">
+    <UndefinedDocblockClass occurrences="4">
+      <code>\OCP\DB\Exception</code>
+      <code>\OCP\DB\Exception</code>
+      <code>\OCP\DB\Exception</code>
+      <code>\OCP\DB\Exception</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="lib/Service/Sync/ImapToDbSynchronizer.php">
     <MissingDependency occurrences="4">
