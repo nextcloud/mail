@@ -126,6 +126,18 @@ class MessageMapper {
 			];
 		}
 
+		// No max result returned. This can be a problem because the
+		// calculations below will leave us in a state where lower is higher than upper
+		// so fetch the UIDNEXT from IMAP and use that instead as MAX value
+		// we're also forcing this in case the server does not want to provide it
+		if( $max === 0) {
+			$uidnext = $client->status(
+				$mailbox,
+				Horde_Imap_Client::STATUS_UIDNEXT_FORCE
+			);
+			$max = (int)$uidnext['uidnext'];
+		}
+
 		// The inclusive range of UIDs
 		$totalRange = $max - $min + 1;
 		// Here we assume somewhat equally distributed UIDs
@@ -142,16 +154,16 @@ class MessageMapper {
 			$max,
 			$lower + $estimatedPageSize
 		);
+
+		if( $lower > $upper) {
+			$upper = $lower;
+		}
 		$this->logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
 
-		$query = new Horde_Imap_Client_Fetch_Query();
-		$query->uid();
-		$fetchResult = $client->fetch(
+		$fetchResult = $this->findByIds(
+			$client,
 			$mailbox,
-			$query,
-			[
-				'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
-			]
+	        [ 'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper) ]
 		);
 		if (count($fetchResult) === 0) {
 			/*
@@ -165,45 +177,24 @@ class MessageMapper {
 			$this->logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
 			return $this->findAll($client, $mailbox, $maxResults, $upper);
 		}
-		$uidCandidates = array_filter(
-			array_map(
-				function (Horde_Imap_Client_Data_Fetch $data) {
-					return $data->getUid();
-				},
-				iterator_to_array($fetchResult)
-			),
 
-			function (int $uid) use ($highestKnownUid) {
-				// Don't load the ones we already know
-				return $uid > $highestKnownUid;
-			}
-		);
-		$uidsToFetch = array_slice(
-			$uidCandidates,
-			0,
-			$maxResults
-		);
-		$highestUidToFetch = $uidsToFetch[count($uidsToFetch) - 1];
-		$this->logger->debug(sprintf("Range for findAll min=$min max=$max found %d messages, %d left after filtering. Highest UID to fetch is %d", count($uidCandidates), count($uidsToFetch), $highestUidToFetch));
+		$highestUidToFetch = $upper;
+		$this->logger->debug(sprintf("Range for findAll min=$min max=$max. Highest UID to fetch is %d", $highestUidToFetch));
 		if ($highestUidToFetch === $max) {
 			$this->logger->debug("All messages of mailbox $mailbox have been fetched");
 		} else {
 			$this->logger->debug("Mailbox $mailbox has more messages to fetch");
 		}
 		return [
-			'messages' => $this->findByIds(
-				$client,
-				$mailbox,
-				$uidsToFetch
-			),
-			'all' => $highestUidToFetch === $max,
+			'messages' => $fetchResult,
+			'all' => $highestUidToFetch >= $max ,
 			'total' => $total,
 		];
 	}
 
 	/**
 	 * @return IMAPMessage[]
-	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception|DoesNotExistException
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
 							  string $mailbox,
@@ -223,17 +214,15 @@ class MessageMapper {
 
 		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
 		$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
-			'ids' => new Horde_Imap_Client_Ids($ids),
+			$ids
 		]), false);
 
 		if (empty($fetchResults)) {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
 		} else {
-			$minRequested = $ids[0];
-			$maxRequested = $ids[count($ids) - 1];
 			$minFetched = $fetchResults[0]->getUid();
 			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($minRequested:$maxRequested) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
+			$this->logger->debug("findByIds in $mailbox: " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
 		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody) {
@@ -245,14 +234,14 @@ class MessageMapper {
 					null,
 					$loadBody
 				);
-			} else {
-				return new IMAPMessage(
-					$client,
-					$mailbox,
-					$fetchResult->getUid(),
-					$fetchResult
-				);
 			}
+
+			return new IMAPMessage(
+				$client,
+				$mailbox,
+				$fetchResult->getUid(),
+				$fetchResult
+			);
 		}, $fetchResults);
 	}
 
