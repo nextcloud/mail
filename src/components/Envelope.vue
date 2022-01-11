@@ -447,7 +447,6 @@ export default {
 }
 .list-item-style.selected {
 	background-color: var(--color-background-dark);
-	font-weight: bold;
 }
 .icon-junk {
 	opacity: .2;
