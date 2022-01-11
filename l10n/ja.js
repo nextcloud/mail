@@ -201,6 +201,7 @@ OC.L10N.register(
     "Signature …" : "署名…",
     "Save signature" : "署名を保存",
     "Delete" : "削除",
+    "Rename tag" : "タグ名を変更",
     "Add tag" : "タグを追加",
     "An error occurred, unable to create the tag." : "エラー:タグを作成できませんでした",
     "An error occurred, unable to rename the tag." : "エラー:タグの名前を変更できませんでした",
