@@ -20,7 +20,7 @@
 		"php": ">=7.3",
 		"arthurhoaro/favicon": "^1.2",
 		"bamarni/composer-bin-plugin": "^1.4",
-		"cerdic/css-tidy": "v1.7.3",
+		"cerdic/css-tidy": "v2.0.0",
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
