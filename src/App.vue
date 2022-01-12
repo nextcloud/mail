@@ -33,6 +33,21 @@ export default {
 	name: 'App',
 	mounted() {
 		this.sync()
+		const account = this.$store.getters.accounts[0]
+		const mailbox = ({
+			id: 'OUTBOX',
+			databaseId: 121232,
+			accountId: account.id,
+			attributes: ['\\subscribed'],
+			path: '',
+			specialUse: [],
+			specialRole: 0,
+			unread: 0,
+			mailboxes: [],
+			envelopeLists: {},
+			name: 'Outbox',
+		})
+		this.$store.commit('addMailbox', { account, mailbox })
 	},
 	methods: {
 		sync() {
