@@ -70,9 +70,15 @@ class ProvisioningMiddleware extends Middleware {
 		}
 		try {
 			$this->provisioningManager->provisionSingleUser($configs, $user);
+			$password = $this->credentialStore->getLoginCredentials()->getPassword();
+			if ($password === null) {
+				// Nothing to update, might be passwordless signin
+				$this->logger->debug('No password set for ' . $user->getUID());
+				return;
+			}
 			$this->provisioningManager->updatePassword(
 				$user,
-				$this->credentialStore->getLoginCredentials()->getPassword()
+				$password
 			);
 		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
 			// Nothing to update
