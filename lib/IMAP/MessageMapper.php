@@ -190,7 +190,6 @@ class MessageMapper {
 		} else {
 			$this->logger->debug("Mailbox $mailbox has more messages to fetch");
 		}
-		$this->logger->debug('all:' . ($highestUidToFetch === $max));
 		return [
 			'messages' => $this->findByIds(
 				$client,
