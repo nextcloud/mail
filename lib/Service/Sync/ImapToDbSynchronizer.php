@@ -298,12 +298,17 @@ class ImapToDbSynchronizer {
 			throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
 		}
 
+		$count = count($imapMessages['messages']) ?? 0;
+		$perf->step('persisting ' . $count . ' messages in database');
+		$i = 1;
 		foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
+			$perf->step('inserting chunk ' . $i);
+			$i++;
 			$this->dbMapper->insertBulk($account, ...array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 				return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 			}, $chunk));
 		}
-		$perf->step('persist messages in database');
+		$perf->step('persisted messages in database');
 
 		if (!$imapMessages['all']) {
 			// We might need more attempts to fill the cache

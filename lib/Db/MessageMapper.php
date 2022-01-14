@@ -259,6 +259,10 @@ class MessageMapper extends QBMapper {
 	 * @return void
 	 */
 	public function insertBulk(Account $account, Message ...$messages): void {
+		$perf = $this->performanceLogger->start(
+			'initial sync ' . $account->getId() . ':' . $account->getName()
+		);
+
 		$this->db->beginTransaction();
 
 		try {
@@ -351,6 +355,8 @@ class MessageMapper extends QBMapper {
 
 			throw $e;
 		}
+
+		$perf->end();
 	}
 
 	/**
