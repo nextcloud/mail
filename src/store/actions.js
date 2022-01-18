@@ -81,6 +81,7 @@ import { wait } from '../util/wait'
 import { updateAccount as updateSieveAccount } from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
+import { getPrioritySearchQueries } from '../util/priorityInbox'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -461,22 +462,26 @@ export default {
 			)
 		} else if (mailbox.isPriorityInbox && query === undefined) {
 			return Promise.all(
-				getters.accounts
-					.filter((account) => !account.isUnified)
-					.map((account) =>
-						Promise.all(
-							getters
-								.getMailboxes(account.id)
-								.filter((mb) => mb.specialRole === mailbox.specialRole)
-								.map((mailbox) =>
-									dispatch('syncEnvelopes', {
-										mailboxId: mailbox.databaseId,
-										query,
-										init,
-									})
+				getPrioritySearchQueries().map((query) => {
+					return Promise.all(
+						getters.accounts
+							.filter((account) => !account.isUnified)
+							.map((account) =>
+								Promise.all(
+									getters
+										.getMailboxes(account.id)
+										.filter((mb) => mb.specialRole === mailbox.specialRole)
+										.map((mailbox) =>
+											dispatch('syncEnvelopes', {
+												mailboxId: mailbox.databaseId,
+												query,
+												init,
+											})
+										)
 								)
-						)
+							)
 					)
+				})
 			)
 		}
 
