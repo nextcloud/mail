@@ -1057,13 +1057,13 @@ class MessageMapper extends QBMapper {
 			)
 			->orderBy('m.sent_at', 'desc');
 
-		$result = [];
+		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$select->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			array_merge($this->findIds($select), $result);
+			$results[] = $this->findIds($select);
 		}
 
-		return $result;
+		return array_merge([], ...$results);
 	}
 
 	/**
