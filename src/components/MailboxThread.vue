@@ -31,7 +31,7 @@
 						class="nameimportant"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:pi-important')"
+						:search-query="appendToSearch(priorityImportantQuery)"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
@@ -42,7 +42,7 @@
 						class="namestarred"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:pi-starred')"
+						:search-query="appendToSearch(priorityStarredQuery)"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
@@ -53,7 +53,7 @@
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
 						:open-first="false"
-						:search-query="appendToSearch('is:pi-other')"
+						:search-query="appendToSearch(priorityOtherQuery)"
 						:is-priority-inbox="true"
 						:bus="bus" />
 				</template>
@@ -84,6 +84,11 @@ import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 import NewMessageModal from './NewMessageModal'
+import {
+	priorityImportantQuery,
+	priorityOtherQuery,
+	priorityStarredQuery,
+} from '../util/priorityInbox'
 
 export default {
 	name: 'MailboxThread',
@@ -127,6 +132,9 @@ export default {
 				unseen: ['u'],
 			},
 			showComposer: false,
+			priorityImportantQuery,
+			priorityStarredQuery,
+			priorityOtherQuery,
 		}
 	},
 	computed: {
