@@ -72,6 +72,11 @@ class Html {
 		$linker = new UrlLinker([
 			'allowFtpAddresses' => true,
 			'allowUpperCaseUrlSchemes' => false,
+			'htmlLinkCreator' => function ($url, $content) {
+				// Render full url for the link description. Otherwise, potentially malicious query
+				// params might be hidden.
+				return sprintf('<a href="%1$s">%1$s</a>', htmlspecialchars($url));
+			},
 		]);
 		$data = $linker->linkUrlsAndEscapeHtml($data);
 
