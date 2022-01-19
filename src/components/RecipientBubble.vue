@@ -46,6 +46,9 @@
 				<a class="icon-add" @click="selection = ContactSelectionStateEnum.new">
 					<span class="action-label">{{ t('mail', 'New Contact') }}</span>
 				</a>
+				<a class="icon-clippy" @click="onClickCopyToClipboard">
+					<span class="action-label">{{ t('mail', 'Copy to clipboard') }}</span>
+				</a>
 			</div>
 			<div v-else class="contact-input-wrapper">
 				<Multiselect
@@ -167,6 +170,9 @@ export default {
 		this.newContactName = this.label
 	},
 	methods: {
+		onClickCopyToClipboard() {
+			this.$copyText(this.email)
+		},
 		onClickReply() {
 			this.$router.push({
 				name: 'message',
@@ -241,6 +247,7 @@ export default {
 		width: 100%;
 	}
 }
+.icon-clippy,
 .icon-user,
 .icon-reply,
 .icon-checkmark,
@@ -252,6 +259,7 @@ export default {
 	padding: 9px 18px 10px 32px;
 }
 @media only screen and (min-width: 600px) {
+	.icon-clippy,
 	.icon-user,
 	.icon-reply,
 	.icon-checkmark,
