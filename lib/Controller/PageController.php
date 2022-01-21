@@ -222,6 +222,26 @@ class PageController extends Controller {
 	 *
 	 * @return TemplateResponse
 	 */
+	public function outbox(): TemplateResponse {
+		return $this->index();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @return TemplateResponse
+	 */
+	public function outboxMessage(int $messageId): TemplateResponse {
+		return $this->index();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @return TemplateResponse
+	 */
 	public function draft(int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
 	}

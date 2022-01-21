@@ -60,6 +60,16 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'page#outbox',
+			'url' => '/outbox',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#outboxMessage',
+			'url' => '/outbox/{messageId}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'page#compose',
 			'url' => '/compose',
 			'verb' => 'GET'
