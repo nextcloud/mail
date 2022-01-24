@@ -153,6 +153,7 @@
     "Event created" : "Esemény létrehozása",
     "Could not create event" : "Az esemény létrehozása nem sikerült",
     "Could not open mailbox" : "A postaláda nem nyitható meg",
+    "Loading messages …" : "Üzenetek betöltése…",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Üzenetek indexelése folyamatban. Ez a folyamat tovább tarthat a nagyobb méretű postafiókok esetén.",
     "Choose target mailbox" : "Válasszon cél postafiókot",
     "No more submailboxes in here" : "Nem találhatók további alpostafiókok",
