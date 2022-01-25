@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.6 - 2022-01-25
+### Fixed
+- Priority Inbox Sync
+- New Messages not loaded
+- Full links in plain text mails
+- Bold font for selected envelope(s) removed
+- BCC for email recipients query
+
 ## 1.11.5 – 2021-12-28
 ### Fixed
 - Use Parameters instead of Named Parameters for chunked queries
