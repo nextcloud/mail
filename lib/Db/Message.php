@@ -174,7 +174,9 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	public function setThreadRootId(?string $messageId): void {
-		$this->setMessageIdFieldIfNotEmpty('threadRootId', $messageId);
+		$threadRootId = (!empty($messageId)) ? '<' . rtrim(ltrim($messageId, '<'), '>') . '>' : $this->getMessageId();
+		$parsed = new Horde_Mail_Rfc822_Identification($threadRootId);
+		$this->setter('threadRootId', [$parsed->ids[0] ?? $this->getMessageId()]);
 	}
 
 	private function setMessageIdFieldIfNotEmpty(string $field, ?string $id): void {
