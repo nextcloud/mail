@@ -151,6 +151,7 @@ OC.L10N.register(
     "Event created" : "Sortu da gertaera",
     "Could not create event" : "Ezin izan da gertaera sortu",
     "Could not open mailbox" : "Ezin izan da postontzia ireki",
+    "Loading messages …" : "Mezuak kargatzen ...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Zure mezuak indexatzen. Honek denbora dezente har dezake postontzi handietan.",
     "Choose target mailbox" : "Aukeratu helburuko postontzia",
     "No more submailboxes in here" : "Azpipostontzi gehiagorik ez hemen",
