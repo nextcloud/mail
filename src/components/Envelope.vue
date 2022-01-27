@@ -427,9 +427,6 @@ export default {
 	fill: #ffcc00;
 	stroke: var(--color-main-background);
 	}
-	.list-item {
-		border-radius: 0!important;
-	}
 	.list-item:hover &,
 	.list-item:focus &,
 	.list-item.active & {
@@ -486,6 +483,11 @@ list-item-style.draft .app-content-list-item-line-two {
 .list-item-style.active {
 	background-color: var(--color-primary-light);
 	border-radius: 0;
+}
+.list-item-style {
+	.list-item {
+		border-radius: 0;
+	}
 }
 
 .icon-reply,
