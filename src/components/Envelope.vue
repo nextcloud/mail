@@ -482,7 +482,7 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 .list-item-style.active {
 	background-color: var(--color-primary-light);
-	border-radius: 16px;
+	border-radius: 0;
 }
 
 .icon-reply,

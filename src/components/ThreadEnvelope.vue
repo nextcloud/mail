@@ -384,10 +384,12 @@ export default {
 	.envelope {
 		display: flex;
 		flex-direction: column;
+    	border-radius: 0;
 		margin-left: 10px;
 		margin-right: 10px;
 		background-color: var(--color-main-background);
 		padding-bottom: 20px;
+		border: 1px solid #e5e5e5;
 
 		& + .envelope {
 			margin-top: -20px;
@@ -403,9 +405,11 @@ export default {
 		position: relative;
 		display: flex;
 		padding: 10px;
+		border-radius: 0;
 
 		&:hover {
 			background-color: var(--color-background-hover);
+			border-radius: 0;
 		}
 	}
 	.left {
