@@ -384,8 +384,6 @@ export default {
 	.envelope {
 		display: flex;
 		flex-direction: column;
-		box-shadow: 0 0 10px var(--color-box-shadow);
-		border-radius: 16px;
 		margin-left: 10px;
 		margin-right: 10px;
 		background-color: var(--color-main-background);
@@ -405,11 +403,9 @@ export default {
 		position: relative;
 		display: flex;
 		padding: 10px;
-		border-radius: var(--border-radius);
 
 		&:hover {
 			background-color: var(--color-background-hover);
-			border-radius: 16px;
 		}
 	}
 	.left {
