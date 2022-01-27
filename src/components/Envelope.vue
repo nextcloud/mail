@@ -427,6 +427,9 @@ export default {
 	fill: #ffcc00;
 	stroke: var(--color-main-background);
 	}
+	.list-item {
+		border-radius: 0!important;
+	}
 	.list-item:hover &,
 	.list-item:focus &,
 	.list-item.active & {
