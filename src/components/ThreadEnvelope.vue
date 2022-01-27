@@ -481,6 +481,6 @@ export default {
 		left: 4px;
 	}
 	.envelope--header.list-item-style {
-		border-radius: 16px;
+		border-radius: 0;
 	}
 </style>
