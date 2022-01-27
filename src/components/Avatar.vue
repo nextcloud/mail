@@ -2,6 +2,7 @@
   - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -33,8 +34,8 @@
 
 <script>
 import BaseAvatar from '@nextcloud/vue/dist/Components/Avatar'
-
 import { fetchAvatarUrlMemoized } from '../service/AvatarService'
+import logger from '../logger'
 
 export default {
 	name: 'Avatar',
@@ -70,11 +71,16 @@ export default {
 			return this.avatarUrl !== undefined
 		},
 	},
-	mounted() {
-		fetchAvatarUrlMemoized(this.email).then((url) => {
-			this.avatarUrl = url
-			this.loading = false
-		})
+	async mounted() {
+		if (this.email !== '') {
+			try {
+				this.avatarUrl = await fetchAvatarUrlMemoized(this.email)
+			} catch {
+				logger.debug('Could not fetch avatar', { email: this.email })
+			}
+		}
+
+		this.loading = false
 	},
 }
 </script>

@@ -307,7 +307,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		return new JSONResponse($this->mailManager->getThread($account, $id));
+		return new JSONResponse($this->mailManager->getThread($account, $message->getThreadRootId()));
 	}
 
 	/**

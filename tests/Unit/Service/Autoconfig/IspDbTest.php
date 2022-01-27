@@ -25,25 +25,33 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Service\AutoConfig\IspDb;
+use OCP\Http\Client\IClient;
+use OCP\Http\Client\IClientService;
+use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class IspDbTest extends TestCase {
 
-	/** @var MockObject|LoggerInterface */
+	/** @var IClientService|MockObject */
+	private $clientService;
+
+	/** @var IClient|MockObject */
+	private $client;
+
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	protected function setUp(): void {
 		parent::setUp();
 
+		$this->clientService = $this->createMock(IClientService::class);
+		$this->client = $this->createMock(IClient::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-	}
 
-	public function queryData() {
-		return [
-			['gmail.com', 'user@gmail.com',],
-			['outlook.com', 'user@outlook.com',],
-		];
+		$this->clientService->method('newClient')
+			->willReturn($this->client);
 	}
 
 	public function fakeAutoconfigData() {
@@ -53,42 +61,72 @@ class IspDbTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @dataProvider fakeAutoconfigData
-	 */
-	public function testQueryFakeAutoconfig(string $domain, string $email, bool $shouldSucceed) {
-		$urls = [
-			dirname(__FILE__) . '/../../../resources/autoconfig-freenet.xml',
-		];
-		$ispDb = $this->getIspDbMock($urls);
+	public function testQueryGmx(): void {
+		$this->client->method('get')
+			->willReturnCallback(function ($url) {
+				switch ($url) {
+					case 'https://autoconfig.gmx.com/mail/config-v1.1.xml?emailaddress=test@gmx.com':
+					case 'http://autoconfig.gmx.com/mail/config-v1.1.xml?emailaddress=test@gmx.com':
+						throw new \Exception('cURL error 6: Could not resolve host: autoconfig.gmx.com');
+					case 'https://gmx.com/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=test@gmx.com':
+					case 'http://gmx.com/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=test@gmx.com':
+						throw new \Exception('Client error: `GET https://gmx.com/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=test@gmx.com` resulted in a `404 Not Found` response');
+					case 'https://autoconfig.thunderbird.net/v1.1/gmx.com':
+						$response = $this->createMock(IResponse::class);
+						$response->method('getBody')->willReturn(file_get_contents(__DIR__ . '/../../../resources/autoconfig-gmx.xml'));
+						return $response;
+				}
+			});
 
-		$result = $ispDb->query($domain, $email);
+		$ispDb = new IspDb($this->clientService, $this->logger);
 
-		if ($shouldSucceed) {
-			$this->assertContainsIspData($result);
-		} else {
-			$this->assertEmpty($result);
-		}
+		$providers = $ispDb->query('gmx.com', 'test@gmx.com');
+
+		$this->assertEquals('GMX Freemail', $providers['displayName']);
+		$this->assertCount(2, $providers['imap']);
+		$this->assertCount(2, $providers['smtp']);
 	}
 
-	private function getIspDbMock($urls) {
-		$mock = $this->getMockBuilder('\OCA\Mail\Service\AutoConfig\IspDb')
-			->setMethods(['getUrls'])
-			->setConstructorArgs([$this->logger])
-			->getMock();
-		$mock->expects($this->once())
-			->method('getUrls')
-			->will($this->returnValue($urls));
-		return $mock;
+	public function testQueryOutlook(): void {
+		$this->client->method('get')
+			->willReturnCallback(function ($url) {
+				switch ($url) {
+					case 'https://autoconfig.outlook.com/mail/config-v1.1.xml?emailaddress=test@outlook.com':
+					case 'http://autoconfig.outlook.com/mail/config-v1.1.xml?emailaddress=test@outlook.com':
+						throw new \Exception('cURL error 6: Could not resolve host: autoconfig.outlook.com');
+					case 'https://outlook.com/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=test@outlook.com':
+					case 'http://outlook.com/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=test@outlook.com':
+						throw new \Exception('Client error: `GET https://outlook.com/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=test@outlook.com` resulted in a `404 Not Found` response');
+					case 'https://autoconfig.thunderbird.net/v1.1/outlook.com':
+						$response = $this->createMock(IResponse::class);
+						$response->method('getBody')->willReturn(file_get_contents(__DIR__ . '/../../../resources/autoconfig-outlook.xml'));
+						return $response;
+				}
+			});
+
+		$ispDb = new IspDb($this->clientService, $this->logger);
+
+		$providers = $ispDb->query('outlook.com', 'test@outlook.com');
+
+		$this->assertEquals('Microsoft', $providers['displayName']);
+		$this->assertCount(1, $providers['imap']);
+		$this->assertCount(1, $providers['smtp']);
 	}
 
-	/**
-	 * @todo check actual values
-	 */
-	private function assertContainsIspData($data) {
-		$this->assertArrayHasKey('imap', $data);
-		$this->assertTrue(count($data['imap']) >= 1, 'no isp imap data returned');
-		$this->assertArrayHasKey('smtp', $data);
-		$this->assertTrue(count($data['smtp']) >= 1, 'no isp smtp data returned');
+	public function testQueryPosteo(): void {
+		$this->client->method('get')
+			->willReturnCallback(function () {
+				$response = $this->createMock(IResponse::class);
+				$response->method('getBody')->willReturn(file_get_contents(__DIR__ . '/../../../resources/autoconfig-posteo.xml'));
+				return $response;
+			});
+
+		$ispDb = new IspDb($this->clientService, $this->logger);
+
+		$providers = $ispDb->query('posteo.org', 'test@postdeo.org');
+
+		$this->assertEquals('Posteo', $providers['displayName']);
+		$this->assertCount(1, $providers['imap']);
+		$this->assertCount(1, $providers['smtp']);
 	}
 }

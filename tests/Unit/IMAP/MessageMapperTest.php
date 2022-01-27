@@ -35,6 +35,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use function range;
 
 class MessageMapperTest extends TestCase {
 
@@ -54,7 +55,7 @@ class MessageMapperTest extends TestCase {
 		);
 	}
 
-	public function testGetByIds() {
+	public function testGetByIds(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
@@ -63,16 +64,14 @@ class MessageMapperTest extends TestCase {
 		$fetchResults = new Horde_Imap_Client_Fetch_Results();
 		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
 		$fetchResult2 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
-		$imapClient->expects($this->once())
+		$imapClient->expects(self::once())
 			->method('fetch')
 			->willReturn($fetchResults);
 		$fetchResults[0] = $fetchResult1;
 		$fetchResults[1] = $fetchResult2;
-		$fetchResult1->expects($this->once())
-			->method('getUid')
+		$fetchResult1->method('getUid')
 			->willReturn(1);
-		$fetchResult2->expects($this->once())
-			->method('getUid')
+		$fetchResult2->method('getUid')
 			->willReturn(3);
 		$message1 = new IMAPMessage($imapClient, $mailbox, 1, $fetchResult1);
 		$message2 = new IMAPMessage($imapClient, $mailbox, 3, $fetchResult2);
@@ -132,7 +131,7 @@ class MessageMapperTest extends TestCase {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects($this->once())
+		$client->expects(self::once())
 			->method('search')
 			->with(
 				$mailbox,
@@ -153,8 +152,13 @@ class MessageMapperTest extends TestCase {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
+		foreach (range(123, 321) as $i) {
+			$uid = new Horde_Imap_Client_Data_Fetch();
+			$uid->setUid($i);
+			$uidResults[$i] = $uid;
+		}
 		$bodyResults = new Horde_Imap_Client_Fetch_Results();
-		$client->expects($this->exactly(2))
+		$client->expects(self::exactly(2))
 			->method('fetch')
 			->withConsecutive(
 				[
@@ -166,8 +170,8 @@ class MessageMapperTest extends TestCase {
 				],
 				[
 					$mailbox,
-					$this->anything(),
-					$this->anything()
+					self::anything(),
+					self::anything()
 				]
 			)
 			->willReturnOnConsecutiveCalls(
@@ -175,19 +179,21 @@ class MessageMapperTest extends TestCase {
 				$bodyResults
 			);
 
-		$this->mapper->findAll(
+		$result = $this->mapper->findAll(
 			$client,
 			$mailbox,
 			5000,
 			0
 		);
+
+		self::assertTrue($result['all']);
 	}
 
 	public function testFindAllWithKnownUid(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
-		$client->expects($this->once())
+		$client->expects(self::once())
 			->method('search')
 			->with(
 				$mailbox,
@@ -208,8 +214,13 @@ class MessageMapperTest extends TestCase {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
+		foreach (range(123, 321) as $i) {
+			$uid = new Horde_Imap_Client_Data_Fetch();
+			$uid->setUid($i);
+			$uidResults[$i] = $uid;
+		}
 		$bodyResults = new Horde_Imap_Client_Fetch_Results();
-		$client->expects($this->exactly(2))
+		$client->expects(self::exactly(2))
 			->method('fetch')
 			->withConsecutive(
 				[
@@ -221,8 +232,8 @@ class MessageMapperTest extends TestCase {
 				],
 				[
 					$mailbox,
-					$this->anything(),
-					$this->anything()
+					self::anything(),
+					self::anything()
 				]
 			)
 			->willReturnOnConsecutiveCalls(
@@ -230,12 +241,85 @@ class MessageMapperTest extends TestCase {
 				$bodyResults
 			);
 
-		$this->mapper->findAll(
+		$result = $this->mapper->findAll(
 			$client,
 			$mailbox,
 			5000,
 			300
 		);
+
+		self::assertTrue($result['all']);
+	}
+
+	/**
+	 * Assume we have a large mailbox with many messages spread across a wide
+	 * range of UIDs. This inbox is fetched in chunks and the chunks might be
+	 * fragmented in many way. One edge case is that the last estimated chunk
+	 * already reached the upper UID but there are too many messages to fetch,
+	 * so the process will stop before that.
+	 */
+	public function testFindAllPackedLastChunk(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $client */
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$client->expects(self::once())
+			->method('search')
+			->with(
+				$mailbox,
+				null,
+				[
+					'results' => [
+						Horde_Imap_Client::SEARCH_RESULTS_MIN,
+						Horde_Imap_Client::SEARCH_RESULTS_MAX,
+						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+					]
+				]
+			)
+			->willReturn([
+				'min' => 10000,
+				'max' => 99999,
+				'count' => 50000,
+			]);
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
+		$uidResults = new Horde_Imap_Client_Fetch_Results();
+		foreach (range(92000, 98000) as $i) {
+			$uid = new Horde_Imap_Client_Data_Fetch();
+			$uid->setUid($i);
+			$uidResults[$i] = $uid;
+		}
+		$bodyResults = new Horde_Imap_Client_Fetch_Results();
+		$client->expects(self::exactly(2))
+			->method('fetch')
+			->withConsecutive(
+				[
+					$mailbox,
+					$query,
+					[
+						'ids' => new Horde_Imap_Client_Ids('92001:99999'),
+					]
+				],
+				[
+					$mailbox,
+					self::anything(),
+					self::anything()
+				]
+			)
+			->willReturnOnConsecutiveCalls(
+				$uidResults,
+				$bodyResults
+			);
+
+		$result = $this->mapper->findAll(
+			$client,
+			$mailbox,
+			5000,
+			92000
+		);
+
+		// This chunk returns 8k messages, when we only expected 5k. So the process
+		// isn't done and the client has to fetch again.
+		self::assertFalse($result['all']);
 	}
 
 	public function testGetFlagged() {

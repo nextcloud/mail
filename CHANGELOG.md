@@ -1,6 +1,140 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.6 - 2022-01-25
+### Fixed
+- Priority Inbox Sync
+- New Messages not loaded
+- Full links in plain text mails
+- Bold font for selected envelope(s) removed
+- BCC for email recipients query
+
+## 1.11.5 – 2021-12-28
+### Fixed
+- Use Parameters instead of Named Parameters for chunked queries
+- Mailbox showing at the wrong account
+- Column for account name that is too narrow
+- Mark as spam action
+- Chunk the recipients query
+
+## 1.11.4 – 2021-12-15
+### Fixed
+- Erroneous repair step during app store upgrade
+
+## 1.11.3 – 2021-12-15
+### Fixed
+- Fix message_id repair step
+
+## 1.11.2 – 2021-12-14
+### Fixed
+- Invalid message cache message_id and in_reply_to values
+
+## 1.11.1 – 2021-12-09
+### Fixed
+- Upgrades with Nextcloud 20
+- Initial sync runs into infinite loop
+- Initial sync stops too early
+- Save all attachments button
+- Database column types for message queries
+- Missing debug logs
+
+## 1.11.0 - 2021-11-29
+### Added
+- Nextcloud 23 support
+- Mark as important/unimportant for multiple messages
+- Provision aliases from an LDAP attribute
+- Anti spam reporting
+- Renaming of tag labels
+### Changed
+- Thread design overhaul
+- Show attachments inline
+- Spacing between accounts in sidebar
+- Width handling of some HTML messages
+- Show thread subject only once if unchanged
+- Improved auto config
+- Removed unread counter from trash mailbox
+### Fixed
+- IFrame sizing after print
+- Text quotes in plain text messages
+- Non-translatable strings
+- Missing unified inboxes colors
+
+## 1.10.5 – 2021-09-28
+### Fixed
+- Wrong iframe height
+- Missing tags for provisioned accounts
+- Catch all errors of faulty accounts
+- Itinerary timestamp handling
+- Deletion of provisioned accounts
+- Hide delete button for provisioned accounts
+
+## 1.10.4 – 2021-09-15
+### Fixed
+- External image handling when URL schema is missing
+- Reply settings loading spinner
+
+## 1.10.3 – 2021-08-17
+### Changed
+- Remove link proxy for external links
+### Fixed
+- Reply in quote block
+- Handling of invalid IMAP message IDs
+- Catch Guzzle error in proxy
+- Transaction handling after errors
+- Faulty HTML tidying
+- Unrecoverable bug during new message sync
+- Missing background clean-up job
+
+## 1.10.2 – 2021–07-29
+### Fixed
+- Junk and nonjunk flagging
+- Calendar ics attachment import
+- Missing HTML headers inside the HTML message iframe
+- Missing slash in shared file URL
+- Signature indentation
+
+## 1.10.1 – 2021-07-12
+### Changed
+- Updated and new translations
+### Fixed
+- Upgrade error due to missing method in cached application code
+
+## 1.10.0 – 2021-07-05
+### Added
+- Message tagging – stores tags both locally as well as on IMAP (if supported), interoperable with other email clients
+- Threaded message list – messages of the same thread are now only shown once in the message list
+- Option to show images of a sender just temporarily
+- Multi account provisioning – admins can now provide not just one configuration, and the user email will determine what config to use
+- Refresh button to sync the currently open mailbox
+- Unread counter for mailboxes in the sidebar
+- Option to put the reply of a message underneath the quoted text
+- Signatures for aliases
+- Resizable message list column
+### Changed
+- Automatic message importance classification is now optional and can be turned off
+- Reload mailbox when it's already open and clicked again in the sidebar
+- Warn when a message is sent to many people in cc/bcc (e.g. when using groups)
+- Handling of text/calendar attachments
+- Updated and new translations
+- Dependency updates
+### Fixed
+- Handling of missing IMAP message IDs
+- Handling of inline message forwards
+- Drafts handling
+- Oracle compatibility
+- Stop background sync for disabled users
+
+## 1.9.6 – 2021-06-30
+### Changed
+- Reload mailbox when current mailbox is clicked in sidebar
+- Dependency updates
+### Fixed
+- Don't run background syncs for disabled users
+- Sanitize CSS style sheets
+- Missing routes
+- Multibyte string truncation
+- Oracle compatibility with boolean columns
+
 ## 1.9.5 – 2021-04-08
 ### Fixed
 - Handling of some inline attachments

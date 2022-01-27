@@ -8,13 +8,15 @@
 					@click="displayIframe">
 					{{ t('mail', 'Show images temporarily') }}
 				</ActionButton>
-				<ActionButton icon="icon-toggle"
+				<ActionButton v-if="sender"
+					icon="icon-toggle"
 					@click="onShowBlockedContent">
-					{{ t('mail', 'Always show images from {sender}', {sender: message.from[0].email}) }}
+					{{ t('mail', 'Always show images from {sender}', { sender }) }}
 				</ActionButton>
-				<ActionButton icon="icon-toggle"
+				<ActionButton v-if="domain"
+					icon="icon-toggle"
 					@click="onShowBlockedContentForDomain">
-					{{ t('mail', 'Always show images from {domain}', {domain: getDomain()}) }}
+					{{ t('mail', 'Always show images from {domain}', { domain }) }}
 				</ActionButton>
 			</Actions>
 		</div>
@@ -70,16 +72,22 @@ export default {
 			isSenderTrusted: this.message.isSenderTrusted,
 		}
 	},
+	computed: {
+		sender() {
+			return this.message.from[0]?.email
+		},
+		domain() {
+			return this.sender?.split('@').pop()
+		},
+	},
 	beforeMount() {
 		scout.on('beforeprint', this.onBeforePrint)
-		scout.on('afterprint', this.onAfterPrint)
 	},
 	mounted() {
-		iframeResizer({}, this.$refs.iframe)
+		iframeResizer({ log: false, heightCalculationMethod: 'taggedElement' }, this.$refs.iframe)
 	},
 	beforeDestroy() {
 		scout.off('beforeprint', this.onBeforePrint)
-		scout.off('afterprint', this.onAfterPrint)
 		this.$refs.iframe.iFrameResizer.close()
 	},
 	methods: {
@@ -92,14 +100,12 @@ export default {
 			this.hasBlockedContent
 				= iframeDoc.querySelectorAll('[data-original-src]').length > 0
 				|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
+				|| iframeDoc.querySelectorAll('style[data-original-content]').length > 0
 
 			this.loading = false
 			if (this.isSenderTrusted) {
 				this.displayIframe()
 			}
-		},
-		onAfterPrint() {
-			this.$refs.iframe.style.setProperty('height', '')
 		},
 		onBeforePrint() {
 			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
@@ -114,19 +120,21 @@ export default {
 			iframeDoc
 				.querySelectorAll('[data-original-style]')
 				.forEach((node) => node.setAttribute('style', node.getAttribute('data-original-style')))
+			iframeDoc
+				.querySelectorAll('style[data-original-content]')
+				.forEach((node) => {
+					node.innerHTML = node.getAttribute('data-original-content')
+				})
 			this.hasBlockedContent = false
 		},
 		async onShowBlockedContent() {
 			this.displayIframe()
 			await trustSender(this.message.from[0].email, 'individual', true)
 		},
-		getDomain() {
-			return this.message.from[0].email.split('@').pop()
-		},
 		async onShowBlockedContentForDomain() {
 			this.displayIframe()
 			// TODO: there might be more than one @ in an email address
-			await trustSender(this.getDomain(), 'domain', true)
+			await trustSender(this.domain, 'domain', true)
 		},
 	},
 }

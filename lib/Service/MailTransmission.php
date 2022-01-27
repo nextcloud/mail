@@ -38,6 +38,7 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
+use Horde_Text_Filter;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -178,7 +179,8 @@ class MailTransmission implements IMailTransmission {
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 		if ($messageData->isHtml()) {
-			$mail->setHtmlBody($message->getContent());
+			$mail->setHtmlBody($message->getContent(), null, false);
+			$mail->setBody(Horde_Text_Filter::filter($message->getContent(), 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]));
 		} else {
 			$mail->setBody($message->getContent());
 		}
@@ -203,6 +205,25 @@ class MailTransmission implements IMailTransmission {
 			MessageSentEvent::class,
 			new MessageSentEvent($account, $messageData, $replyData, $draft, $message, $mail)
 		);
+	}
+
+	/**
+	 * A callback for Horde_Text_Filter.
+	 *
+	 * The purpose of this callback is to overwrite the default behaviour
+	 * of html2text filter to convert <p>Hello</p> => Hello\n\n with
+	 * <p>Hello</p> => Hello\n.
+	 *
+	 * @param \DOMDocument $doc
+	 * @param \DOMNode $node
+	 * @return string|null non-null, add this text to the output and skip further processing of the node.
+	 */
+	public function htmlToTextCallback(\DOMDocument $doc, \DOMNode $node) {
+		if ($node instanceof \DOMElement && strtolower($node->tagName) === 'p') {
+			return $node->textContent . "\n";
+		}
+
+		return null;
 	}
 
 	/**
@@ -327,6 +348,9 @@ class MailTransmission implements IMailTransmission {
 			} elseif (isset($attachment['type']) && $attachment['type'] === 'message') {
 				// Adds another message as attachment
 				$this->handleForwardedMessageAttachment($account, $attachment, $message);
+			} elseif (isset($attachment['type']) && $attachment['type'] === 'message/rfc822') {
+				// Adds another message as attachment with mime type 'message/rfc822
+				$this->handleEmbeddedMessageAttachments($account, $attachment, $message);
 			} elseif (isset($attachment['type']) && $attachment['type'] === 'message-attachment') {
 				// Adds an attachment from another email (use case is, eg., a mail forward)
 				$this->handleForwardedAttachment($account, $attachment, $message);
@@ -386,6 +410,32 @@ class MailTransmission implements IMailTransmission {
 			$fullText
 		);
 	}
+
+	/**
+	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
+	 *
+	 * @param Account $account
+	 * @param mixed[] $attachment
+	 * @param IMessage $message
+	 */
+	private function handleEmbeddedMessageAttachments(Account $account, array $attachment, IMessage $message): void {
+		// Gets original of other message
+		$userId = $account->getMailAccount()->getUserId();
+		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
+		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
+
+		$fullText = $this->messageMapper->getFullText(
+			$this->imapClientFactory->getClient($account),
+			$mailbox->getName(),
+			$attachmentMessage->getUid()
+		);
+
+		$message->addEmbeddedMessageAttachment(
+			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
+			$fullText
+		);
+	}
+
 
 	/**
 	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)

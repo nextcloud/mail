@@ -36,7 +36,7 @@ use function json_encode;
 /**
  * @method void setUid(int $uid)
  * @method int getUid()
- * @method string getMessageId()
+ * @method string|null getMessageId()
  * @method void setReferences(string $references)
  * @method string|null getReferences()
  * @method string|null getInReplyTo()
@@ -84,8 +84,8 @@ class Message extends Entity implements JsonSerializable {
 		'flagged',
 		'seen',
 		'forwarded',
-		'junk',
-		'notjunk',
+		'$junk',
+		'$notjunk',
 		'mdnsent',
 		Tag::LABEL_IMPORTANT,
 		'$important' // @todo remove this when we have removed all references on IMAP to $important @link https://github.com/nextcloud/mail/issues/25
@@ -153,6 +153,12 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('updatedAt', 'integer');
 	}
 
+	/**
+	 * @param string|null $messageId
+	 *
+	 * Parses the message ID to see if it is a valid Horde_Mail_Rfc822_Identification
+	 * before setting it, or sets null if it is not valid.
+	 */
 	public function setMessageId(?string $messageId): void {
 		$this->setMessageIdFieldIfNotEmpty('messageId', $messageId);
 	}
@@ -171,6 +177,7 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	private function setMessageIdFieldIfNotEmpty(string $field, ?string $id): void {
+		$id = (!empty($id)) ? '<' . rtrim(ltrim($id, '<'), '>') . '>' : null;
 		$parsed = new Horde_Mail_Rfc822_Identification($id);
 		$this->setter($field, [$parsed->ids[0] ?? null]);
 	}
@@ -252,6 +259,10 @@ class Message extends Entity implements JsonSerializable {
 		}
 		if ($flag === Tag::LABEL_IMPORTANT) {
 			$this->setFlagImportant($value);
+		} elseif ($flag === '$junk') {
+			$this->setFlagJunk($value);
+		} elseif ($flag === '$notjunk') {
+			$this->setFlagNotjunk($value);
 		} else {
 			$this->setter(
 				$this->columnToProperty("flag_$flag"),
@@ -284,7 +295,8 @@ class Message extends Entity implements JsonSerializable {
 				'forwarded' => ($this->getFlagForwarded() === true),
 				'hasAttachments' => ($this->getFlagAttachments() ?? false),
 				'important' => ($this->getFlagImportant() === true),
-				'junk' => ($this->getFlagJunk() === true),
+				'$junk' => ($this->getFlagJunk() === true),
+				'$notjunk' => ($this->getFlagNotjunk() === true),
 				'mdnsent' => ($this->getFlagMdnsent() === true),
 			],
 			'tags' => $indexed,

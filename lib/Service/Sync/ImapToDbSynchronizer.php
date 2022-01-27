@@ -28,6 +28,7 @@ namespace OCA\Mail\Service\Sync;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
@@ -50,6 +51,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function array_chunk;
+use function array_filter;
 use function array_map;
 
 class ImapToDbSynchronizer {
@@ -84,6 +86,9 @@ class ImapToDbSynchronizer {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var IMailManager */
+	private $mailManager;
+
 	public function __construct(DatabaseMessageMapper $dbMapper,
 								IMAPClientFactory $clientFactory,
 								ImapMessageMapper $imapMapper,
@@ -92,7 +97,8 @@ class ImapToDbSynchronizer {
 								Synchronizer $synchronizer,
 								IEventDispatcher $dispatcher,
 								PerformanceLogger $performanceLogger,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								IMailManager $mailManager) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -102,6 +108,7 @@ class ImapToDbSynchronizer {
 		$this->dispatcher = $dispatcher;
 		$this->performanceLogger = $performanceLogger;
 		$this->logger = $logger;
+		$this->mailManager = $mailManager;
 	}
 
 	/**
@@ -348,18 +355,31 @@ class ImapToDbSynchronizer {
 			);
 			$perf->step('get new messages via Horde');
 
-			foreach (array_chunk($response->getNewMessages(), 500) as $chunk) {
+			$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
+			if ($highestKnownUid === null) {
+				// Everything is relevant
+				$newMessages = $response->getNewMessages();
+			} else {
+				// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
+				// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
+				// will be seen as *new* and therefore cause conflicts.
+				$newMessages = array_filter($response->getNewMessages(), function (IMAPMessage $imapMessage) use ($highestKnownUid) {
+					return $imapMessage->getUid() > $highestKnownUid;
+				});
+			}
+
+			foreach (array_chunk($newMessages, 500) as $chunk) {
 				$dbMessages = array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk);
+
+				$this->dbMapper->insertBulk($account, ...$dbMessages);
 
 				$this->dispatcher->dispatch(
 					NewMessagesSynchronized::class,
 					new NewMessagesSynchronized($account, $mailbox, $dbMessages)
 				);
 				$perf->step('classified a chunk of new messages');
-
-				$this->dbMapper->insertBulk($account, ...$dbMessages);
 			}
 			$perf->step('persist new messages');
 
@@ -377,8 +397,10 @@ class ImapToDbSynchronizer {
 			);
 			$perf->step('get changed messages via Horde');
 
+			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($account, $mailbox->getName());
+
 			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
-				$this->dbMapper->updateBulk($account, ...array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk));
 			}

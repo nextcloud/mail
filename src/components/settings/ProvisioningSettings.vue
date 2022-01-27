@@ -281,6 +281,36 @@
 						</div>
 					</div>
 				</div>
+				<div v-if="ldapAliasesIntegration" class="settings-group">
+					<div class="group-title">
+						{{ t('mail', 'LDAP aliases integration') }}
+					</div>
+					<div class="group-inputs">
+						<div>
+							<input
+								:id="'mail-provision-ldap-aliases-provisioning' + setting.id"
+								v-model="ldapAliasesProvisioning"
+								type="checkbox"
+								class="checkbox">
+							<label :for="'mail-provision-ldap-aliases-provisioning' + setting.id">
+								{{ t('mail', 'Enable LDAP aliases integration') }}
+							</label>
+							<p>{{ t('mail', 'The LDAP aliases integration reads an attribute from the configured LDAP directory to provision email aliases.') }}</p>
+						</div>
+						<div>
+							<label :for="'mail-provision-ldap-aliases-attribute' + setting.id">
+								{{ t('mail', 'LDAP attribute for aliases') }}*
+								<br>
+								<input :id="'mail-provision-ldap-aliases-attribute' + setting.id"
+									v-model="ldapAliasesAttribute"
+									:disabled="loading"
+									:required="ldapAliasesProvisioning"
+									type="text">
+							</label>
+							<p>{{ t('mail', 'A multi value attribute to provision email aliases. For each value an alias is created. Aliases existing in Nextcloud which are not in the LDAP directory are deleted.') }}</p>
+						</div>
+					</div>
+				</div>
 				<div class="settings-group">
 					<div class="group-title" />
 					<div class="group-inputs">
@@ -298,7 +328,7 @@
 							@click="disableConfig()">
 						<br>
 						<small>{{
-							t('mail', "* %USERID% and %EMAIL% will be replaced with the user's UID and email")
+							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email')
 						}}</small>
 					</div>
 				</div>
@@ -321,6 +351,9 @@
 <script>
 import logger from '../../logger'
 import ProvisionPreview from './ProvisionPreview'
+import { loadState } from '@nextcloud/initial-state'
+
+const ldapAliasesIntegration = loadState('mail', 'ldap_aliases_integration', false)
 
 export default {
 	name: 'ProvisioningSettings',
@@ -373,6 +406,9 @@ export default {
 				uid: 'user321',
 				email: 'user@domain.com',
 			},
+			ldapAliasesIntegration,
+			ldapAliasesProvisioning: this.setting.ldapAliasesProvisioning || false,
+			ldapAliasesAttribute: this.setting.ldapAliasesAttribute || '',
 			loading: false,
 		}
 	},
@@ -394,6 +430,8 @@ export default {
 				sieveHost: this.sieveHost,
 				sievePort: this.sievePort,
 				sieveSslMode: this.sieveSslMode,
+				ldapAliasesProvisioning: this.ldapAliasesProvisioning,
+				ldapAliasesAttribute: this.ldapAliasesAttribute,
 			}
 		},
 	},
@@ -423,6 +461,8 @@ export default {
 					sieveHost: this.sieveHost,
 					sievePort: this.sievePort,
 					sieveSslMode: this.sieveSslMode,
+					ldapAliasesProvisioning: this.ldapAliasesProvisioning,
+					ldapAliasesAttribute: this.ldapAliasesAttribute,
 				})
 
 				logger.info('provisioning setting updated')
@@ -462,6 +502,7 @@ export default {
 
 	.group-title {
 		min-width: 100px;
+		max-width: 100px;
 		text-align: right;
 		margin: 10px;
 		font-weight: bold;

@@ -4,7 +4,7 @@
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
 			envelopeId: data.databaseId,
-			draggableLabel: `${data.subject} (${data.from[0].label})`,
+			draggableLabel,
 			selectedEnvelopes,
 		}"
 		class="list-item-style"
@@ -30,9 +30,9 @@
 				@click.prevent="onToggleImportant"
 				v-html="importantSvg" />
 			<div
-				v-if="data.flags.junk"
+				v-if="data.flags.$junk"
 				class="app-content-list-item-star icon-junk"
-				:data-starred="data.flags.junk ? 'true' : 'false'"
+				:data-starred="data.flags.$junk ? 'true' : 'false'"
 				@click.prevent="onToggleJunk" />
 			<div class="app-content-list-item-icon">
 				<Avatar :display-name="addresses" :email="avatarEmail" />
@@ -49,6 +49,7 @@
 			</div>
 		</template>
 		<template #subtitle>
+			<span v-if="data.flags.answered" class="icon-reply" />
 			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">
 				<em>{{ t('mail', 'Draft: ') }}</em>
@@ -95,7 +96,7 @@
 				:close-after-click="true"
 				@click.prevent="onToggleJunk">
 				{{
-					data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-checkmark"
@@ -109,12 +110,17 @@
 				icon="icon-tag"
 				:close-after-click="true"
 				@click.prevent="onOpenTagModal">
-				{{ t('mail', 'Add tags') }}
+				{{ t('mail', 'Edit tags') }}
 			</ActionButton>
 			<ActionButton icon="icon-external"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move') }}
+				{{ t('mail', 'Move thread') }}
+			</ActionButton>
+			<ActionButton icon="icon-calendar-dark"
+				:close-after-click="true"
+				@click.prevent="showEventModal = true">
+				{{ t('mail', 'Create event') }}
 			</ActionButton>
 			<ActionRouter icon="icon-add"
 				:to="{
@@ -133,7 +139,7 @@
 			<ActionButton icon="icon-delete"
 				:close-after-click="true"
 				@click.prevent="onDelete">
-				{{ t('mail', 'Delete') }}
+				{{ t('mail', 'Delete thread') }}
 			</ActionButton>
 		</template>
 		<template #extra>
@@ -152,8 +158,12 @@
 			<MoveModal v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
+				:move-thread="true"
 				@move="onMove"
 				@close="onCloseMoveModal" />
+			<EventModal v-if="showEventModal"
+				:envelope="data"
+				@close="showEventModal = false" />
 			<TagModal
 				v-if="showTagModal"
 				:account="account"
@@ -179,10 +189,12 @@ import logger from '../logger'
 import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import TagModal from './TagModal'
+import EventModal from './EventModal'
 
 export default {
 	name: 'Envelope',
 	components: {
+		EventModal,
 		ListItem,
 		Avatar,
 		ActionButton,
@@ -226,6 +238,7 @@ export default {
 		return {
 			importantSvg,
 			showMoveModal: false,
+			showEventModal: false,
 			showTagModal: false,
 		}
 	},
@@ -289,7 +302,7 @@ export default {
 				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'Blind copy recipients only')
 			}
 			// Show sender label/address in other mailbox types
-			return this.data.from.length === 0 ? '?' : this.data.from[0].label || this.data.from[0].email
+			return this.data.from[0]?.label ?? this.data.from[0]?.email ?? '?'
 		},
 		avatarEmail() {
 			// Show first recipients' avatar in a sent mailbox (or undefined when sent to Bcc only)
@@ -297,14 +310,14 @@ export default {
 				const recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.email
 				})
-				return recipients.length > 0 ? recipients[0] : undefined
+				return recipients.length > 0 ? recipients[0] : ''
 			}
 
 			// Show sender avatar in other mailbox types
 			if (this.data.from.length > 0) {
 				return this.data.from[0].email
 			} else {
-				return undefined
+				return ''
 			}
 		},
 		isImportant() {
@@ -313,7 +326,15 @@ export default {
 				.some((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel !== '$label1')
+			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1')
+		},
+		draggableLabel() {
+			let label = this.data.subject
+			const sender = this.data.from[0]?.label ?? this.data.from[0]?.email
+			if (sender) {
+				label += ` (${sender})`
+			}
+			return label
 		},
 	},
 	methods: {
@@ -352,10 +373,11 @@ export default {
 			// Remove from selection first
 			this.setSelected(false)
 			// Delete
-			this.$emit('delete')
+			this.$emit('delete', this.data.databaseId)
+
 			try {
-				await this.$store.dispatch('deleteMessage', {
-					id: this.data.databaseId,
+				await this.$store.dispatch('deleteThread', {
+					envelope: this.data,
 				})
 			} catch (error) {
 				showError(await matchError(error, {
@@ -371,6 +393,9 @@ export default {
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true
+		},
+		onOpenEventModal() {
+			this.showEventModal = true
 		},
 		onMove() {
 			this.$emit('move')
@@ -438,7 +463,6 @@ export default {
 }
 .list-item-style.selected {
 	background-color: var(--color-background-dark);
-	font-weight: bold;
 }
 .icon-junk {
 	opacity: .2;
@@ -458,6 +482,7 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 .list-item-style.active {
 	background-color: var(--color-primary-light);
+	border-radius: 16px;
 }
 
 .icon-reply,
@@ -469,9 +494,8 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 
 .icon-reply {
-	background-image: url('../../img/reply.svg');
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)';
-	opacity: 0.5;
+	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
+	opacity: 0.25;
 }
 
 .icon-attachment {

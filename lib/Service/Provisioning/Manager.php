@@ -24,17 +24,24 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Provisioning;
 
 use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Provisioning;
 use OCA\Mail\Db\ProvisioningMapper;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\IServerContainer;
 use OCP\IUser;
 use OCP\IUserManager;
+use OCP\LDAP\ILDAPProvider;
+use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class Manager {
 
@@ -50,19 +57,34 @@ class Manager {
 	/** @var ICrypto */
 	private $crypto;
 
+	/** @var IServerContainer */
+	private $serverContainer;
+
+	/** @var AliasMapper */
+	private $aliasMapper;
+
 	/** @var LoggerInterface */
 	private $logger;
+
+	/** @var TagMapper */
+	private $tagMapper;
 
 	public function __construct(IUserManager $userManager,
 								ProvisioningMapper $provisioningMapper,
 								MailAccountMapper $mailAccountMapper,
 								ICrypto $crypto,
-								LoggerInterface $logger) {
+								IServerContainer $appContainer,
+								AliasMapper $aliasMapper,
+								LoggerInterface $logger,
+								TagMapper $tagMapper) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->crypto = $crypto;
+		$this->serverContainer = $appContainer;
+		$this->aliasMapper = $aliasMapper;
 		$this->logger = $logger;
+		$this->tagMapper = $tagMapper;
 	}
 
 	public function getConfigById(int $provisioningId): ?Provisioning {
@@ -85,6 +107,81 @@ class Manager {
 	}
 
 	/**
+	 * Delete orphaned aliases for the given account.
+	 *
+	 * A alias is orphaned if not listed in newAliases anymore
+	 * (=> the provisioning configuration does contain it anymore)
+	 *
+	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
+	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
+	 *
+	 * @TODO: Change throws to \OCP\DB\Exception once Mail requires Nextcloud 21 or above
+	 *
+	 * @throws \Exception
+	 */
+	private function deleteOrphanedAliases(string $userId, int $accountId, array $newAliases): void {
+		$existingAliases = $this->aliasMapper->findAll($accountId, $userId);
+		foreach ($existingAliases as $existingAlias) {
+			if (!in_array($existingAlias->getAlias(), $newAliases, true)) {
+				$this->aliasMapper->delete($existingAlias);
+			}
+		}
+	}
+
+	/**
+	 * Create new aliases for the given account.
+	 *
+	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
+	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
+	 *
+	 * @TODO: Change throws to \OCP\DB\Exception once Mail requires Nextcloud 21 or above
+	 *
+	 * @throws \Exception
+	 */
+	private function createNewAliases(string $userId, int $accountId, array $newAliases, string $displayName): void {
+		foreach ($newAliases as $newAlias) {
+			try {
+				$this->aliasMapper->findByAlias($newAlias, $userId);
+			} catch (DoesNotExistException $e) {
+				$alias = new Alias();
+				$alias->setAccountId($accountId);
+				$alias->setName($displayName);
+				$alias->setAlias($newAlias);
+				$this->aliasMapper->insert($alias);
+			}
+		}
+	}
+
+	/**
+	 * @throws \Exception if user id was not found in LDAP
+	 *
+	 * @TODO: Remove psalm-suppress once Mail requires Nextcloud 22 or above
+	 */
+	public function ldapAliasesIntegration(Provisioning $provisioning, IUser $user): Provisioning {
+		if ($user->getBackendClassName() !== 'LDAP' || $provisioning->getLdapAliasesProvisioning() === false || empty($provisioning->getLdapAliasesAttribute())) {
+			return $provisioning;
+		}
+
+		try {
+			$ldapProviderFactory = $this->serverContainer->get(ILDAPProviderFactory::class);
+			/** @psalm-suppress UndefinedInterfaceMethod */
+			if ($ldapProviderFactory->isAvailable() === false) {
+				$this->logger->debug('Request to provision mail aliases but LDAP not available');
+				return $provisioning;
+			}
+			$ldapProvider = $ldapProviderFactory->getLDAPProvider();
+			/** @psalm-suppress UndefinedInterfaceMethod */
+			$provisioning->setAliases($ldapProvider->getMultiValueUserAttribute($user->getUID(), $provisioning->getLdapAliasesAttribute()));
+		} catch (Throwable $e) {
+			$this->logger->debug('Request to provision mail aliases but LDAP erros: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+		}
+
+		return $provisioning;
+	}
+
+	/**
 	 * @param Provisioning[] $provisionings
 	 */
 	public function provisionSingleUser(array $provisionings, IUser $user): bool {
@@ -96,57 +193,71 @@ class Manager {
 
 		try {
 			// TODO: match by UID only, catch multiple objects returned below and delete all those accounts
-			$existing = $this->mailAccountMapper->findProvisionedAccount($user);
+			$mailAccount = $this->mailAccountMapper->findProvisionedAccount($user);
 
-			$this->mailAccountMapper->update(
-				$this->updateAccount($user, $existing, $provisioning)
+			$mailAccount = $this->mailAccountMapper->update(
+				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
-			return true;
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			if ($e instanceof MultipleObjectsReturnedException) {
+				// This is unlikely to happen but not impossible.
+				// Let's wipe any existing accounts and start fresh
+				$this->aliasMapper->deleteProvisionedAliasesByUid($user->getUID());
+				$this->mailAccountMapper->deleteProvisionedAccountsByUid($user->getUID());
+			}
+
 			// Fine, then we create a new one
-			$new = new MailAccount();
-			$new->setUserId($user->getUID());
+			$mailAccount = new MailAccount();
+			$mailAccount->setUserId($user->getUID());
 
-			$this->mailAccountMapper->insert(
-				$this->updateAccount($user, $new, $provisioning)
+			$mailAccount = $this->mailAccountMapper->insert(
+				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
-			return true;
-		} catch (MultipleObjectsReturnedException $e) {
-			// This is unlikely to happen but not impossible.
-			// Let's wipe any existing accounts and start fresh
-			$this->mailAccountMapper->deleteProvisionedAccountsByUid($user->getUID());
 
-			$new = new MailAccount();
-			$new->setUserId($user->getUID());
-
-			$this->mailAccountMapper->insert(
-				$this->updateAccount($user, $new, $provisioning)
-			);
-			return true;
+			$this->tagMapper->createDefaultTags($mailAccount);
 		}
-		return false;
+
+		// @TODO: Remove method_exists once Mail requires Nextcloud 22 or above
+		if (method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute')) {
+			try {
+				$provisioning = $this->ldapAliasesIntegration($provisioning, $user);
+			} catch (\Throwable $e) {
+				$this->logger->warning('Request to provision mail aliases failed', ['exception' => $e]);
+				// return here to avoid provisioning of aliases.
+				return true;
+			}
+
+			try {
+				$this->deleteOrphanedAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases());
+			} catch (\Throwable $e) {
+				$this->logger->warning('Deleting orphaned aliases failed', ['exception' => $e]);
+			}
+
+			try {
+				$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $user->getDisplayName());
+			} catch (\Throwable $e) {
+				$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
+			}
+		}
+
+		return true;
 	}
 
+	/**
+	 * @throws ValidationException
+	 * @throws \Exception
+	 */
 	public function newProvisioning(array $data): void {
-		try {
-			$provisioning = $this->provisioningMapper->validate(
-				$data
-			);
-		} catch (ValidationException $e) {
-			throw $e;
-		}
+		$provisioning = $this->provisioningMapper->validate($data);
 		$this->provisioningMapper->insert($provisioning);
 	}
 
+	/**
+	 * @throws ValidationException
+	 * @throws \Exception
+	 */
 	public function updateProvisioning(array $data): void {
-		try {
-			$provisioning = $this->provisioningMapper->validate(
-				$data
-			);
-		} catch (ValidationException $e) {
-			throw $e;
-		}
-
+		$provisioning = $this->provisioningMapper->validate($data);
 		$this->provisioningMapper->update($provisioning);
 	}
 

@@ -55,7 +55,7 @@
 				{{ t('mail', 'Mark all messages of this mailbox as read') }}
 			</ActionButton>
 			<ActionButton
-				v-if="!editing && top && !account.isUnified && mailbox.specialRole !== 'flagged'"
+				v-if="!editing && top && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged'"
 				icon="icon-folder"
 				@click="openCreateMailbox">
 				{{ t('mail', 'Add submailbox') }}
@@ -75,7 +75,7 @@
 			<ActionText v-if="showSaving" icon="icon-loading-small">
 				{{ t('mail', 'Saving') }}
 			</ActionText>
-			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes"
+			<ActionButton v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes"
 				:id="genId(mailbox)"
 				icon="icon-external"
 				:close-after-click="true"
@@ -111,7 +111,7 @@
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
 		</template>
-		<AppNavigationCounter v-if="showUnreadCounter" slot="counter">
+		<AppNavigationCounter v-if="showUnreadCounter && mailbox.specialRole !== 'trash'" slot="counter">
 			{{ mailbox.unread }}
 		</AppNavigationCounter>
 		<template slot="extra">
@@ -197,6 +197,7 @@ export default {
 			renameInput: false,
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
+			hasDelimiter: !!this.mailbox.delimiter,
 		}
 	},
 	computed: {

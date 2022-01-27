@@ -60,11 +60,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'page#index',
-			'url' => '/',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'page#compose',
 			'url' => '/compose',
 			'verb' => 'GET'
@@ -265,6 +260,16 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'settings#setAntiSpamEmail',
+			'url' => '/api/settings/antispam',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'settings#deleteAntiSpamEmail',
+			'url' => '/api/settings/antispam',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'
@@ -293,6 +298,16 @@ return [
 			'name' => 'sieve#updateActiveScript',
 			'url' => '/api/sieve/active/{id}',
 			'verb' => 'PUT'
+		],
+		[
+			'name' => 'thread#delete',
+			'url' => '/api/thread/{id}',
+			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'thread#move',
+			'url' => '/api/thread/{id}',
+			'verb' => 'POST'
 		]
 	],
 	'resources' => [

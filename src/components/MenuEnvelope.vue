@@ -62,14 +62,14 @@
 				v-if="accountHasSpamFolder"
 				@click.prevent="onToggleJunk">
 				{{
-					envelope.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
 			<ActionButton
 				icon="icon-tag"
 				:close-after-click="true"
 				@click.prevent="onOpenTagModal">
-				{{ t('mail', 'Add tags') }}
+				{{ t('mail', 'Edit tags') }}
 			</ActionButton>
 			<ActionButton v-if="withSelect"
 				icon="icon-checkmark"
@@ -82,7 +82,12 @@
 			<ActionButton icon="icon-external"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move') }}
+				{{ t('mail', 'Move message') }}
+			</ActionButton>
+			<ActionButton icon="icon-calendar-dark"
+				:close-after-click="true"
+				@click.prevent="showEventModal = true">
+				{{ t('mail', 'Create event') }}
 			</ActionButton>
 			<ActionButton v-if="withShowSource"
 				:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
@@ -101,7 +106,7 @@
 			<ActionButton icon="icon-delete"
 				:close-after-click="true"
 				@click.prevent="onDelete">
-				{{ t('mail', 'Delete') }}
+				{{ t('mail', 'Delete message') }}
 			</ActionButton>
 		</Actions>
 		<Modal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
@@ -117,6 +122,9 @@
 			:envelopes="[envelope]"
 			@move="onMove"
 			@close="onCloseMoveModal" />
+		<EventModal v-if="showEventModal"
+			:envelope="envelope"
+			@close="showEventModal = false" />
 		<TagModal
 			v-if="showTagModal"
 			:account="account"
@@ -133,6 +141,7 @@ import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import { Base64 } from 'js-base64'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
+import EventModal from './EventModal'
 import { generateUrl } from '@nextcloud/router'
 import logger from '../logger'
 import { matchError } from '../errors/match'
@@ -149,6 +158,7 @@ export default {
 		ActionButton,
 		ActionLink,
 		ActionRouter,
+		EventModal,
 		Modal,
 		MoveModal,
 		TagModal,
@@ -194,6 +204,7 @@ export default {
 			sourceLoading: false,
 			showSourceModal: false,
 			showMoveModal: false,
+			showEventModal: false,
 			showTagModal: false,
 		}
 	},
@@ -301,6 +312,9 @@ export default {
 
 			// Delete
 			this.$emit('delete', this.envelope.databaseId)
+
+			logger.info(`deleting message ${this.envelope.databaseId}`)
+
 			try {
 				await this.$store.dispatch('deleteMessage', {
 					id: this.envelope.databaseId,
@@ -344,6 +358,9 @@ export default {
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+		onOpenEventModal() {
+			this.showEventModal = true
 		},
 		onOpenTagModal() {
 			this.showTagModal = true

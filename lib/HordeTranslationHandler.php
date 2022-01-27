@@ -27,7 +27,7 @@ class HordeTranslationHandler implements Horde_Translation_Handler {
 	/**
 	 * Returns the translation of a message.
 	 *
-	 * @var string $message  The string to translate.
+	 * @param string $message  The string to translate.
 	 *
 	 * @return string  The string translation, or the original string if no
 	 *                 translation exists.

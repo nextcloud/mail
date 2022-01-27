@@ -80,25 +80,25 @@ export default {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.departureTime['@value']).format('LT')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('LT')
 		},
 		departureDate() {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.departureTime['@value']).format('L')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('L')
 		},
 		arrivalTime() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.arrivalTime['@value']).format('LT')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('LT')
 		},
 		arrivalDate() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.arrivalTime['@value']).format('L')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('L')
 		},
 		flightNumber() {
 			return this.data.reservationFor.airline.iataCode + this.data.reservationFor.flightNumber
@@ -125,10 +125,8 @@ export default {
 				})
 			)
 
-			const depart = moment(this.data.reservationFor.departureTime['@value']).format()
-			event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(depart))
-			const arrive = moment(this.data.reservationFor.arrivalTime['@value']).format()
-			event.updatePropertyWithValue('DTEND', ical.Time.fromDateTimeString(arrive))
+			CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.departureTime, 'DTSTART')
+			CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.arrivalTime, 'DTEND')
 
 			// TODO: read version from package.json
 			event.updatePropertyWithValue('PRODID', 'Nextcloud Mail')

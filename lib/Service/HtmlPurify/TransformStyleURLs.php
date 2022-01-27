@@ -31,9 +31,9 @@ use HTMLPurifier_Context;
 use OCP\IURLGenerator;
 
 /**
- * Adds copies src to data-src on all img tags.
+ * Blocks urls in style attributes and backups original styles for restoring them later.
  */
-class TransformCSSBackground extends HTMLPurifier_AttrTransform {
+class TransformStyleURLs extends HTMLPurifier_AttrTransform {
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -49,8 +49,7 @@ class TransformCSSBackground extends HTMLPurifier_AttrTransform {
 	 * @return array
 	 */
 	public function transform($attr, $config, $context) {
-		if (!isset($attr['style']) ||
-			strpos($attr['style'], 'background') === false) {
+		if (!isset($attr['style']) || strpos($attr['style'], 'url(') === false) {
 			return $attr;
 		}
 
@@ -64,10 +63,9 @@ class TransformCSSBackground extends HTMLPurifier_AttrTransform {
 			}
 
 			[$name, $value] = explode(':', $cssAttribute, 2);
-			if (strpos($name, 'background') !== false &&
-				strpos($value, 'url(') !== false) {
+			if (strpos($value, 'url(') !== false) {
 				// Replace image URL
-				$value = preg_replace('/url\("?http.*\)/i',
+				$value = preg_replace('/url\(("|\')?http.*\)/i',
 					'url(' . $this->urlGenerator->imagePath('mail', 'blocked-image.png') . ')',
 					$value);
 				return $name . ':' . $value;

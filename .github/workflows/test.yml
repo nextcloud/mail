@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'stable21', 'master']
+        nextcloud-versions: ['stable20', 'stable21', 'stable22', 'master']
         include:
             - php: 8.0
               nextcloud-version: master
@@ -47,7 +47,7 @@ jobs:
       env:
         XDEBUG_MODE: coverage
     - name: Report coverage
-      uses: codecov/codecov-action@v1.5.0
+      uses: codecov/codecov-action@v2.1.0
       if: ${{ always() && matrix.nextcloud-versions == 'master' }}
       with:
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
@@ -75,7 +75,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mysql-service:
-              image: mariadb:10
+              image: mariadb:10.5
               env:
                   MYSQL_ROOT_PASSWORD: my-secret-pw
                   MYSQL_DATABASE: nextcloud
@@ -138,7 +138,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@v1.5.0
+            uses: codecov/codecov-action@v2.1.0
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
@@ -150,7 +150,7 @@ jobs:
       steps:
           - uses: actions/checkout@master
           - name: Set up Node
-            uses: actions/setup-node@v2.1.5
+            uses: actions/setup-node@v2.4.1
             with:
                 node-version: 12.x
           - name: npm install

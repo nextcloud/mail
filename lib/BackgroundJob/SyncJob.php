@@ -105,14 +105,15 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
-			$this->mailboxSync->sync($account, $this->logger,true);
+			$this->mailboxSync->sync($account, $this->logger, true);
 			$this->syncService->syncAccount($account, $this->logger);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [
 				'exception' => $e,
 			]);
 		} catch (Throwable $e) {
-			$this->logger->error('Cron mail sync failed: ' . $e->getMessage(), [
+			$this->logger->error('Cron mail sync failed for account {accountId}', [
+				'accountId' => $accountId,
 				'exception' => $e,
 			]);
 		}

@@ -1,6 +1,6 @@
 <template>
-	<AppContent>
-		<div id="app-content-wrapper">
+	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
+		<template slot="list">
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -34,7 +34,7 @@
 						class="nameimportant"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:pi-important')"
+						:search-query="appendToSearch(priorityImportantQuery)"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
@@ -47,7 +47,7 @@
 						class="namestarred"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:pi-starred')"
+						:search-query="appendToSearch(priorityStarredQuery)"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
@@ -60,15 +60,15 @@
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
 						:open-first="false"
-						:search-query="appendToSearch('is:pi-other')"
+						:search-query="appendToSearch(priorityOtherQuery)"
 						:is-priority-inbox="true"
 						:bus="bus" />
 				</template>
 			</AppContentList>
-			<NewMessageDetail v-if="newMessage" />
-			<Thread v-else-if="showThread" @delete="deleteMessage" />
-			<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
-		</div>
+		</template>
+		<NewMessageDetail v-if="newMessage" />
+		<Thread v-else-if="showThread" @delete="deleteMessage" />
+		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
 
@@ -76,11 +76,11 @@
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
-import infiniteScroll from 'vue-infinite-scroll'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import Vue from 'vue'
 
+import infiniteScroll from '../directives/infinite-scroll'
 import logger from '../logger'
 import Mailbox from './Mailbox'
 import NewMessageDetail from './NewMessageDetail'
@@ -88,6 +88,11 @@ import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
+import {
+	priorityImportantQuery,
+	priorityOtherQuery,
+	priorityStarredQuery,
+} from '../util/priorityInbox'
 
 export default {
 	name: 'MailboxThread',
@@ -129,6 +134,9 @@ export default {
 				refresh: ['r'],
 				unseen: ['u'],
 			},
+			priorityImportantQuery,
+			priorityStarredQuery,
+			priorityOtherQuery,
 		}
 	},
 	computed: {
@@ -161,6 +169,9 @@ export default {
 				|| this.$route.params.threadId === 'asNew'
 			)
 		},
+		isThreadShown() {
+			return !!this.$route.params.threadId
+		},
 	},
 	methods: {
 		deleteMessage(id) {
@@ -191,6 +202,15 @@ export default {
 				default:
 					return translated
 			}
+		},
+		hideMessage() {
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					filter: this.$route.params?.filter,
+				},
+			})
 		},
 	},
 }

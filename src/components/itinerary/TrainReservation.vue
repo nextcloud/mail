@@ -69,11 +69,11 @@ export default {
 			if (!('departureTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.departureTime).format('LT')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('LT')
 		},
 		departureDate() {
 			if ('departureTime' in this.data.reservationFor) {
-				return moment(this.data.reservationFor.departureTime).format('L')
+				return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.departureTime)).format('L')
 			}
 			if ('departureDay' in this.data.reservationFor) {
 				return moment(this.data.reservationFor.departureDay).format('L')
@@ -84,13 +84,13 @@ export default {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.arrivalTime).format('LT')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('LT')
 		},
 		arrivalDate() {
 			if (!('arrivalTime' in this.data.reservationFor)) {
 				return
 			}
-			return moment(this.data.reservationFor.arrivalTime).format('L')
+			return moment(CalendarImport.itineraryDateTime(this.data.reservationFor.arrivalTime)).format('L')
 		},
 		trainNumber() {
 			return this.data.reservationFor.trainNumber
@@ -125,10 +125,8 @@ export default {
 			}
 
 			if ('departureTime' in this.data.reservationFor && 'arrivalTime' in this.data.reservationFor) {
-				const depart = moment(this.data.reservationFor.departureTime).format()
-				event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(depart))
-				const arrive = moment(this.data.reservationFor.arrivalTime).format()
-				event.updatePropertyWithValue('DTEND', ical.Time.fromDateTimeString(arrive))
+				CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.departureTime, 'DTSTART')
+				CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.arrivalTime, 'DTEND')
 			} else if ('departureDay' in this.data.reservationFor) {
 				const date = moment(this.data.reservationFor.departureDay).format()
 				event.updatePropertyWithValue('DTSTART', ical.Time.fromDateTimeString(date))

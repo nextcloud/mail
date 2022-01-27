@@ -21,7 +21,8 @@
 
 <template>
 	<div class="envelope">
-		<div class="envelope--header">
+		<div class="envelope--header"
+			:class="{'list-item-style' : expanded }">
 			<Avatar v-if="envelope.from && envelope.from[0]"
 				:email="envelope.from[0].email"
 				:display-name="envelope.from[0].label"
@@ -38,17 +39,24 @@
 				class="app-content-list-item-star icon-starred"
 				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 				@click.prevent="onToggleFlagged" />
+			<div
+				v-if="envelope.flags.$junk"
+				class="app-content-list-item-star icon-junk"
+				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
+				@click.prevent="onToggleJunk" />
 			<router-link
 				:to="route"
 				event=""
 				class="left"
 				:class="{seen: envelope.flags.seen}"
 				@click.native.prevent="$emit('toggleExpand', $event)">
-				<span class="sender">{{ envelope.from && envelope.from[0] ? `${envelope.from[0].label} <${envelope.from[0].email}>` : '' }}</span>
-				<div class="subject">
+				<div class="sender">
+					{{ envelope.from && envelope.from[0] ? `${envelope.from[0].label} <${envelope.from[0].email}>` : '' }}
+				</div>
+				<div v-if="hasChangedSubject" class="subject">
 					<span class="preview">
 						<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
-						{{ envelope.subject }}
+						{{ cleanSubject }}
 					</span>
 				</div>
 				<div class="recipients" v-if="expanded">
@@ -58,6 +66,14 @@
 							:key="`cc-${ccRec.email}`"
 							class="cc-recipient">{{ ccRec.label !== ccRec.email ? `${ccRec.label} <${ccRec.email}>` : ccRec.email }}</span>
 					</span>
+				</div>
+				<div v-for="tag in tags"
+					:key="tag.id"
+					class="tag-group">
+					<div class="tag-group__bg"
+						:style="{'background-color': tag.color}" />
+					<span class="tag-group__label"
+						:style="{color: tag.color}">{{ tag.displayName }} </span>
 				</div>
 			</router-link>
 			<div class="right">
@@ -125,6 +141,10 @@ export default {
 				Number,
 			],
 			default: undefined,
+		},
+		threadSubject: {
+			required: true,
+			type: String,
 		},
 		expanded: {
 			required: false,
@@ -202,6 +222,15 @@ export default {
 				.getEnvelopeTags(this.envelope.databaseId)
 				.find((tag) => tag.imapLabel === '$label1')
 		},
+		tags() {
+			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter((tag) => tag.imapLabel !== '$label1')
+		},
+		hasChangedSubject() {
+			return this.cleanSubject !== this.threadSubject
+		},
+		cleanSubject() {
+			return this.envelope.subject.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
+		},
 	},
 	watch: {
 		expanded(expanded) {
@@ -263,6 +292,9 @@ export default {
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
 		},
+		onToggleJunk() {
+			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
+		},
 	},
 }
 </script>
@@ -314,7 +346,6 @@ export default {
 		align-items: center;
 		justify-content: flex-end;
 		margin-left: 10px;
-		margin-right: 22px;
 		height: 44px;
 
 		.app-content-list-item-menu {
@@ -353,16 +384,32 @@ export default {
 	.envelope {
 		display: flex;
 		flex-direction: column;
+		box-shadow: 0 0 10px var(--color-box-shadow);
+		border-radius: 16px;
+		margin-left: 10px;
+		margin-right: 10px;
+		background-color: var(--color-main-background);
+		padding-bottom: 20px;
+
+		& + .envelope {
+			margin-top: -20px;
+		}
+
+		&:last-of-type {
+			margin-bottom: 10px;
+			padding-bottom: 0;
+		}
 	}
 
 	.envelope--header {
+		position: relative;
 		display: flex;
 		padding: 10px;
-		margin-bottom: 3px;
 		border-radius: var(--border-radius);
 
 		&:hover {
 			background-color: var(--color-background-hover);
+			border-radius: 16px;
 		}
 	}
 	.left {
@@ -397,8 +444,43 @@ export default {
 		margin-left: 27px;
 		cursor: pointer;
 	}
+	.app-content-list-item-star.icon-junk {
+		display: inline-block;
+		position: absolute;
+		margin-top: -2px;
+		margin-left: 27px;
+		cursor: pointer;
+		opacity: .2;
+	}
 	.left:not(.seen) {
 		font-weight: bold;
 	}
-
+	.tag-group__label {
+		margin: 0 7px;
+		z-index: 2;
+		font-size: calc(var(--default-font-size) * 0.8);
+		font-weight: bold;
+		padding-left: 2px;
+		padding-right: 2px;
+	}
+	.tag-group__bg {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		opacity: 15%;
+	}
+	.tag-group {
+		display: inline-block;
+		border: 1px solid transparent;
+		border-radius: var(--border-radius-pill);
+		position: relative;
+		margin: 0 1px;
+		overflow: hidden;
+		left: 4px;
+	}
+	.envelope--header.list-item-style {
+		border-radius: 16px;
+	}
 </style>

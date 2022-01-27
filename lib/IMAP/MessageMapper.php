@@ -40,9 +40,13 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
+use function count;
 use function in_array;
 use function iterator_to_array;
+use function max;
+use function min;
 use function reset;
+use function sprintf;
 
 class MessageMapper {
 
@@ -107,11 +111,11 @@ class MessageMapper {
 			]
 		);
 		/** @var int $min */
-		$min = $metaResults['min'];
+		$min = (int) $metaResults['min'];
 		/** @var int $max */
-		$max = $metaResults['max'];
+		$max = (int) $metaResults['max'];
 		/** @var int $total */
-		$total = $metaResults['count'];
+		$total = (int) $metaResults['count'];
 
 		if ($total === 0) {
 			// Nothing to fetch for this mailbox
@@ -149,10 +153,10 @@ class MessageMapper {
 				'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
 			]
 		);
-		if (count($fetchResult) === 0 && $upper < $max) {
+		if (count($fetchResult) === 0) {
 			/*
-			 * There were no messages in this range, but we've not reached the
-			 * latest message. This means we should try again until there is a
+			 * There were no messages in this range.
+			 * This means we should try again until there is a
 			 * page that actually returns at least one message
 			 *
 			 * We take $upper as the lowest known UID as we just found out that
@@ -161,30 +165,38 @@ class MessageMapper {
 			$this->logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
 			return $this->findAll($client, $mailbox, $maxResults, $upper);
 		}
-		$uidsToFetch = array_slice(
-			array_filter(
-				array_map(
-					function (Horde_Imap_Client_Data_Fetch $data) {
-						return $data->getUid();
-					},
-					iterator_to_array($fetchResult)
-				),
-
-				function (int $uid) use ($highestKnownUid) {
-					// Don't load the ones we already know
-					return $uid > $highestKnownUid;
-				}
+		$uidCandidates = array_filter(
+			array_map(
+				function (Horde_Imap_Client_Data_Fetch $data) {
+					return $data->getUid();
+				},
+				iterator_to_array($fetchResult)
 			),
+
+			function (int $uid) use ($highestKnownUid) {
+				// Don't load the ones we already know
+				return $uid > $highestKnownUid;
+			}
+		);
+		$uidsToFetch = array_slice(
+			$uidCandidates,
 			0,
 			$maxResults
 		);
+		$highestUidToFetch = $uidsToFetch[count($uidsToFetch) - 1];
+		$this->logger->debug(sprintf("Range for findAll min=$min max=$max found %d messages, %d left after filtering. Highest UID to fetch is %d", count($uidCandidates), count($uidsToFetch), $highestUidToFetch));
+		if ($highestUidToFetch === $max) {
+			$this->logger->debug("All messages of mailbox $mailbox have been fetched");
+		} else {
+			$this->logger->debug("Mailbox $mailbox has more messages to fetch");
+		}
 		return [
 			'messages' => $this->findByIds(
 				$client,
 				$mailbox,
 				$uidsToFetch
 			),
-			'all' => $upper === $max,
+			'all' => $highestUidToFetch === $max,
 			'total' => $total,
 		];
 	}
@@ -209,9 +221,20 @@ class MessageMapper {
 			]
 		);
 
+		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
 		$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
 			'ids' => new Horde_Imap_Client_Ids($ids),
 		]), false);
+
+		if (empty($fetchResults)) {
+			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
+		} else {
+			$minRequested = $ids[0];
+			$maxRequested = $ids[count($ids) - 1];
+			$minFetched = $fetchResults[0]->getUid();
+			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
+			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($minRequested:$maxRequested) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
+		}
 
 		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody) {
 			if ($loadBody) {
@@ -433,21 +456,7 @@ class MessageMapper {
 			// No HTML part
 			return null;
 		}
-		$partsQuery = new Horde_Imap_Client_Fetch_Query();
-		$partsQuery->fullText();
-		foreach ($structure->partIterator() as $structurePart) {
-			/** @var Horde_Mime_Part $structurePart */
-			$partsQuery->bodyPart($structurePart->getMimeId(), [
-				'decode' => true,
-				'peek' => true,
-			]);
-			$partsQuery->bodyPartSize($structurePart->getMimeId());
-			if ($structurePart->getMimeId() === $htmlPartId) {
-				$partsQuery->mimeHeader($structurePart->getMimeId(), [
-					'peek' => true
-				]);
-			}
-		}
+		$partsQuery = $this->buildAttachmentsPartsQuery($structure, [$htmlPartId]);
 
 		$parts = $client->fetch($mailbox, $partsQuery, [
 			'ids' => new Horde_Imap_Client_Ids([$uid]),

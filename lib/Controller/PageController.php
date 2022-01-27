@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Exception;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\TagMapper;
@@ -42,6 +41,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use function json_decode;
 
 class PageController extends Controller {
@@ -128,7 +128,7 @@ class PageController extends Controller {
 			try {
 				$mailboxes = $this->mailManager->getMailboxes($mailAccount);
 				$json['mailboxes'] = $mailboxes;
-			} catch (Exception $ex) {
+			} catch (Throwable $ex) {
 				$this->logger->critical('Could not load account mailboxes: ' . $ex->getMessage(), [
 					'exception' => $ex,
 				]);
@@ -143,7 +143,7 @@ class PageController extends Controller {
 		);
 		$this->initialStateService->provideInitialState(
 			'account-settings',
-			json_decode($this->preferences->getPreference('account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
+			json_decode($this->preferences->getPreference($this->currentUserId, 'account-settings', '[]'), true, 512, JSON_THROW_ON_ERROR) ?? []
 		);
 		$this->initialStateService->provideInitialState(
 			'tags',
@@ -155,9 +155,10 @@ class PageController extends Controller {
 			[
 				'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
 				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
-				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
-				'reply-mode' => $this->preferences->getPreference('reply-mode', 'top'),
-				'collect-data' => $this->preferences->getPreference('collect-data', 'true'),
+				'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
+				'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
+				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
+				'tag-classified-messages' => $this->preferences->getPreference($this->currentUserId, 'tag-classified-messages', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',

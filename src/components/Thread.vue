@@ -37,6 +37,7 @@
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
+				:thread-subject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
 				@delete="$emit('delete', env.databaseId)"
@@ -90,7 +91,25 @@ export default {
 			return parseInt(this.$route.params.threadId, 10)
 		},
 		thread() {
-			return this.$store.getters.getEnvelopeThread(this.threadId)
+			const envelopes = this.$store.getters.getEnvelopeThread(this.threadId)
+			const envelope = envelopes.find(envelope => envelope.databaseId === this.threadId)
+
+			if (envelope === undefined) {
+				return []
+			}
+
+			const currentMailbox = this.$store.getters.getMailbox(envelope.mailboxId)
+			const trashMailbox = this.$store.getters.getMailboxes(currentMailbox.accountId).find(mailbox => mailbox.specialRole === 'trash')
+
+			if (trashMailbox === undefined) {
+				return envelopes
+			}
+
+			if (currentMailbox.databaseId === trashMailbox.databaseId) {
+				return envelopes.filter(envelope => envelope.mailboxId === trashMailbox.databaseId)
+			} else {
+				return envelopes.filter(envelope => envelope.mailboxId !== trashMailbox.databaseId)
+			}
 		},
 		threadParticipants() {
 			const recipients = this.thread.flatMap(envelope => {
@@ -237,6 +256,12 @@ export default {
 <style lang="scss">
 #mail-message {
 	flex-grow: 1;
+
+	.icon-loading {
+		&:only-child:after {
+			margin-top: 20px;
+		}
+	}
 }
 
 .mail-message-body {
@@ -262,7 +287,7 @@ export default {
 	position: fixed; // ie fallback
 	position: -webkit-sticky; // ios/safari fallback
 	position: sticky;
-	top: var(--header-height);
+	top: 0;
 	background: -webkit-linear-gradient(var(--color-main-background), var(--color-main-background) 80%, rgba(255,255,255,0));
 	background: -o-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
 	background: -moz-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
@@ -302,12 +327,8 @@ export default {
 	text-align: left;
 }
 
-#mail-content, .mail-signature {
-	margin: 10px 38px 50px 60px;
-
-	.mail-message-body-html & {
-		margin-bottom: -44px; // accounting for the sticky attachment button
-	}
+#mail-content {
+	margin: 10px 38px 0 60px;
 }
 
 #mail-content iframe {
@@ -330,8 +351,8 @@ export default {
 .icon-reply-all-white {
 	height: 44px;
 	min-width: 44px;
-	margin: 0;
-	padding: 9px 18px 10px 32px;
+	margin: 0 !important;
+	padding: 9px 18px 10px 32px !important;
 }
 
 /* Show action button label and move icon to the left
@@ -352,7 +373,11 @@ export default {
 	#mail-thread-header-fields {
 		position: relative;
 	}
-
+	.app-content-details,
+	.splitpanes__pane-details {
+		max-width: unset !important;
+		width: 100% !important;
+	}
 	#header,
 	.app-navigation,
 	#reply-composer,
@@ -360,6 +385,7 @@ export default {
 	#mail-message-has-blocked-content,
 	.app-content-list,
 	.message-composer,
+	.splitpanes__pane-list,
 	.mail-message-attachments {
 		display: none !important;
 	}

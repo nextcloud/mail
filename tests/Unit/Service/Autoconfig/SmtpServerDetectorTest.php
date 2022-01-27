@@ -70,11 +70,15 @@ class SmtpServerDetectorTest extends TestCase {
 		$this->mxRecord->expects($this->once())
 			->method('query')
 			->with($this->equalTo('domain.tld'))
-			->willReturn(['mx.domain.tld']);
-		$this->smtpConnectivityTester->expects($this->once())
-			->method('test')
-			->with($this->equalTo($account), $this->equalTo('mx.domain.tld'), $this->equalTo(['user', 'user@domain.tld']))
-			->willReturn(true);
+			->willReturn(['domain.tld']);
+		$this->mxRecord->expects($this->once())
+			->method('getSanitizedRecords')
+			->with(['domain.tld'])
+			->willReturn(['domain.tld']);
+		$this->smtpConnectivityTester
+				->method('test')
+				->with($this->equalTo($account), $this->equalTo('domain.tld'), $this->equalTo(['user', 'user@domain.tld']))
+				->willReturn(true);
 
 		$result = $this->detector->detect($account, $email, $password);
 
@@ -92,6 +96,8 @@ class SmtpServerDetectorTest extends TestCase {
 			->method('query')
 			->with($this->equalTo('domain.tld'))
 			->willReturn(false);
+		$this->mxRecord->expects($this->never())
+			->method('getSanitizedRecords');
 		$this->smtpConnectivityTester->expects($this->once())
 			->method('test')
 			->with($this->equalTo($account), $this->equalTo('domain.tld'), $this->equalTo(['user', 'user@domain.tld']))
@@ -113,6 +119,8 @@ class SmtpServerDetectorTest extends TestCase {
 			->method('query')
 			->with($this->equalTo('domain.tld'))
 			->willReturn(false);
+		$this->mxRecord->expects($this->never())
+			->method('getSanitizedRecords');
 		$this->smtpConnectivityTester->expects($this->once())
 			->method('test')
 			->with($this->equalTo($account), $this->equalTo('domain.tld'), $this->equalTo(['user', 'user@domain.tld']))

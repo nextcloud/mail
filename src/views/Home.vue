@@ -1,15 +1,16 @@
 <template>
-	<Content v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
-		<AppDetailsToggle v-if="isMobile && isThreadShown"
-			@close="hideMessage" />
+	<Content v-shortkey.once="['c']"
+		app-name="mail"
+		@shortkey.native="onNewMessage">
 		<Navigation />
-		<MailboxThread v-if="activeAccount" :account="activeAccount" :mailbox="activeMailbox" />
+		<MailboxThread v-if="activeAccount"
+			:account="activeAccount"
+			:mailbox="activeMailbox" />
 	</Content>
 </template>
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
-import AppDetailsToggle from '../components/AppDetailsToggle'
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import logger from '../logger'
@@ -22,7 +23,6 @@ export default {
 		Content,
 		MailboxThread,
 		Navigation,
-		AppDetailsToggle,
 	},
 	mixins: [isMobile],
 	computed: {
@@ -34,9 +34,6 @@ export default {
 		},
 		menu() {
 			return this.buildMenu()
-		},
-		isThreadShown() {
-			return this.$route.params.threadId
 		},
 	},
 	created() {
@@ -116,7 +113,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .app-content #app-content-wrapper .app-content-details {
+::v-deep .app-content-details {
 	margin: 0 auto;
 	max-width: 900px;
 	display: flex;

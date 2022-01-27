@@ -52,7 +52,7 @@ class SynchronizerTest extends TestCase {
 		$this->synchronizer = new Synchronizer($this->mapper);
 	}
 
-	public function testSync() {
+	public function testSync(): void {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
 		$request = $this->createMock(Request::class);
 		$request->expects($this->any())
@@ -87,7 +87,7 @@ class SynchronizerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSyncChunked() {
+	public function testSyncChunked(): void {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
 		$request = $this->createMock(Request::class);
 		$request->method('getMailbox')
@@ -97,7 +97,7 @@ class SynchronizerTest extends TestCase {
 		$request->method('getUids')
 			->willReturn(range(1, 30000, 1));
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
-		$imapClient->expects($this->exactly(2))
+		$imapClient->expects($this->exactly(3))
 			->method('sync')
 			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
 			->willReturn($hordeSync);

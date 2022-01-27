@@ -17,6 +17,7 @@
  *
  */
 
+import curry from 'lodash/fp/curry'
 import ical from 'ical.js'
 import { getClient } from '../dav/client'
 import Axios from '@nextcloud/axios'
@@ -24,12 +25,17 @@ import Axios from '@nextcloud/axios'
 import Logger from '../logger'
 import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
+import { uidToHexColor } from '../util/calendarColor'
 
 const canWrite = (properties) => {
-	const acls = properties?.acl?.ace
+	let acls = properties?.acl?.ace
 
 	if (!acls) {
 		return false
+	}
+	// There might only be one ACL, not a list
+	if (!Array.isArray(acls)) {
+		acls = [acls]
 	}
 
 	for (const acl of acls) {
@@ -50,6 +56,8 @@ const getCalendarData = (calendar) => {
 		},
 		writable: canWrite(calendar.props),
 		url: generateRemoteUrl(`dav/calendars/${getCurrentUser().uid}${calendar.filename}/`),
+		color: calendar.props['calendar-color'] ?? uidToHexColor(calendar.props.displayname ?? ''),
+
 	}
 }
 
@@ -66,6 +74,7 @@ export const getUserCalendars = async() => {
     <c:calendar-description />
     <c:calendar-timezone />
     <aapl:calendar-order />
+    <aapl:calendar-color />
     <c:supported-calendar-component-set />
     <oc:calendar-enabled />
     <d:acl />
@@ -144,7 +153,7 @@ const splitCalendar = (data) => {
  * @param {Object} data the data
  * @returns {Promise}
  */
-export const importCalendarEvent = (url) => (data) => {
+export const importCalendarEvent = curry((url, data) => {
 	Logger.debug('importing events into calendar', {
 		url,
 		data,
@@ -170,4 +179,4 @@ export const importCalendarEvent = (url) => (data) => {
 	})
 
 	return Promise.all(promises)
-}
+})

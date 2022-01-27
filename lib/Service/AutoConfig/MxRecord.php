@@ -56,4 +56,17 @@ class MxRecord {
 		// TODO: sort by weight
 		return $mxRecords;
 	}
+
+	private function stripSubdomain(string $domain): string {
+		$labels = explode('.', $domain);
+
+		$top = count($labels) >= 2 ? array_pop($labels) : '';
+		$second = array_pop($labels);
+
+		return $second . '.' . $top;
+	}
+
+	public function getSanitizedRecords(array $mxHosts): array {
+		return array_unique(array_merge($mxHosts, array_map([$this, 'stripSubdomain'], $mxHosts)));
+	}
 }

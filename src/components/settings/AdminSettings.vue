@@ -31,8 +31,15 @@
 				)
 			}}
 		</p>
-		<div class="ap-description">
-			<h3>Account provisioning</h3>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
+						'Account provisioning'
+					)
+				}}
+			</h3>
 			<article>
 				<p>
 					{{
@@ -85,13 +92,20 @@
 					{{
 						t(
 							'mail',
-							"This setting only makes most sense if you use the same user back-end for your organization's Nextcloud and mail server."
+							'This setting only makes most sense if you use the same user back-end for your Nextcloud and mail server of your organization.'
 						)
 					}}
 				</p>
 			</article>
 		</div>
-		<h3>Provisioning Configurations</h3>
+		<h3>
+			{{
+				t(
+					'mail',
+					'Provisioning Configurations'
+				)
+			}}
+		</h3>
 		<p>
 			<button class="config-button icon-add" @click="addNew=true">
 				{{ t('mail', 'Add new config') }}
@@ -111,6 +125,34 @@
 				:submit="saveSettings"
 				:disable="deleteProvisioning" />
 		</p>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
+						'Anti Spam Service'
+					)
+				}}
+			</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'You can set up an anti spam service email address here.'
+						)
+					}}
+					<br>
+					{{
+						t(
+							'mail',
+							'Any email that is marked as spam will be sent to the anti spam service.'
+						)
+					}}
+				</p>
+			</article>
+			<AntiSpamSettings />
+		</div>
 	</SettingsSection>
 </template>
 
@@ -118,6 +160,7 @@
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import ProvisioningSettings from './ProvisioningSettings'
+import AntiSpamSettings from './AntiSpamSettings'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import {
 	disableProvisioning,
@@ -129,6 +172,7 @@ import {
 export default {
 	name: 'AdminSettings',
 	components: {
+		AntiSpamSettings,
 		ProvisioningSettings,
 		SettingsSection,
 	},
@@ -195,7 +239,7 @@ export default {
 		async provisionAll() {
 			try {
 				const count = await provisionAll()
-				showSuccess(t('mail', 'Successfully provisioned {count} accounts.', { count: count.count }))
+				showSuccess(n('mail', 'Successfully provisioned {count} account.', 'Successfully provisioned {count} accounts.', count.count, { count: count.count }))
 
 			} catch (error) {
 				showError(t('mail', 'There was an error when provisioning accounts.'))
@@ -206,7 +250,7 @@ export default {
 			const deleted = this.configs.find(c => c.id === id)
 			try {
 				await disableProvisioning(id)
-				logger.info('deprovisioned successfully')
+				logger.info('Deprovisioned successfully')
 				this.configs = this.configs.filter(c => c.id !== id)
 				showSuccess(t('mail', 'Successfully deleted and deprovisioned accounts for "{domain}"', { domain: deleted.provisioningDomain }))
 			} catch (error) {
@@ -218,7 +262,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-	.ap-description {
+	.app-description {
 		margin-bottom: 24px;
 	}
 	.config-button {

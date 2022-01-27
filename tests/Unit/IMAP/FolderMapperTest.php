@@ -230,7 +230,10 @@ class FolderMapperTest extends TestCase {
 		$this->mapper->detectFolderSpecialUse($folders);
 	}
 
-	public function testDetectSpecialUseFromFolderName() {
+	/**
+	 * @dataProvider dataDetectSpecialUseFromFolderName
+	 */
+	public function testDetectSpecialUseFromFolderName(?string $delimiter, int $countGetDelimiter): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];
@@ -240,9 +243,9 @@ class FolderMapperTest extends TestCase {
 		$folders[0]->expects($this->once())
 			->method('getSpecialUse')
 			->willReturn([]);
-		$folders[0]->expects($this->once())
+		$folders[0]->expects($this->exactly($countGetDelimiter))
 			->method('getDelimiter')
-			->willReturn('.');
+			->willReturn($delimiter);
 		$folders[0]->expects($this->once())
 			->method('getMailbox')
 			->willReturn('Sent');
@@ -251,5 +254,12 @@ class FolderMapperTest extends TestCase {
 			->with($this->equalTo('sent'));
 
 		$this->mapper->detectFolderSpecialUse($folders);
+	}
+
+	public function dataDetectSpecialUseFromFolderName(): array {
+		return [
+			'delimiter .' => ['.', 2],
+			'delimiter null' => [null, 1],
+		];
 	}
 }

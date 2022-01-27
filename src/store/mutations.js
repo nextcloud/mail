@@ -59,12 +59,15 @@ const addMailboxToState = curry((state, account, mailbox) => {
 	}
 
 	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
-	const parent = Object.values(state.mailboxes).find(mb => mb.name === mailbox.path)
+	const parent = Object.values(state.mailboxes)
+		.filter(mb => mb.accountId === account.id)
+		.find(mb => mb.name === mailbox.path)
 	if (mailbox.path === '' || !parent) {
 		account.mailboxes.push(mailbox.databaseId)
 	} else {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
+
 })
 
 const sortAccounts = (accounts) => {
@@ -170,7 +173,7 @@ export default {
 		}
 		removeRec(account)
 	},
-	addEnvelope(state, { query, envelope }) {
+	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
 		normalizeTags(state, envelope)
 		const mailbox = state.mailboxes[envelope.mailboxId]
 		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
@@ -181,6 +184,9 @@ export default {
 		const orderByDateInt = orderBy(idToDateInt, 'desc')
 		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
 
+		if (!addToUnifiedMailboxes) {
+			return
+		}
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
 		unifiedAccount.mailboxes
 			.map((mbId) => state.mailboxes[mbId])
@@ -221,6 +227,10 @@ export default {
 	},
 	addEnvelopeTag(state, { envelope, tagId }) {
 		Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
+	},
+	updateTag(state, { tag, displayName, color }) {
+		tag.displayName = displayName
+		tag.color = color
 	},
 	removeEnvelopeTag(state, { envelope, tagId }) {
 		Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
@@ -307,12 +317,17 @@ export default {
 	createAlias(state, { account, alias }) {
 		account.aliases.push(alias)
 	},
-	deleteAlias(state, { account, alias }) {
-		account.aliases.splice(account.aliases.indexOf(alias), 1)
+	deleteAlias(state, { account, aliasId }) {
+		const index = account.aliases.findIndex(temp => aliasId === temp.id)
+		if (index !== -1) {
+			account.aliases.splice(index, 1)
+		}
 	},
 	patchAlias(state, { account, aliasId, data }) {
-		const index = account.aliases.findIndex((temp) => aliasId === temp.id)
-		account.aliases[index] = Object.assign({}, account.aliases[index], data)
+		const index = account.aliases.findIndex(temp => aliasId === temp.id)
+		if (index !== -1) {
+			account.aliases[index] = Object.assign({}, account.aliases[index], data)
+		}
 	},
 	setMailboxUnreadCount(state, { id, unread }) {
 		Vue.set(state.mailboxes[id], 'unread', unread ?? 0)

@@ -72,8 +72,8 @@ class AliasesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 */
-	public function update() {
-		throw new NotImplemented();
+	public function update(int $id, string $alias, string $aliasName): JSONResponse {
+		return new JSONResponse($this->aliasService->update($this->currentUserId, $id, $alias, $aliasName));
 	}
 
 	/**
@@ -84,7 +84,7 @@ class AliasesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function destroy(int $id): JSONResponse {
-		return new JSONResponse($this->aliasService->delete($id, $this->currentUserId));
+		return new JSONResponse($this->aliasService->delete($this->currentUserId, $id));
 	}
 
 	/**
@@ -116,7 +116,6 @@ class AliasesController extends Controller {
 	 * @throws DoesNotExistException
 	 */
 	public function updateSignature(int $id, string $signature = null): JSONResponse {
-		$this->aliasService->updateSignature($this->currentUserId, $id, $signature);
-		return new JSONResponse();
+		return new JSONResponse($this->aliasService->updateSignature($this->currentUserId, $id, $signature));
 	}
 }

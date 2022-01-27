@@ -96,7 +96,7 @@ interface IMessage {
 	public function getInReplyTo();
 
 	/**
-	 * @param string $message
+	 * @param string $id
 	 */
 	public function setInReplyTo(string $id);
 
@@ -127,14 +127,22 @@ interface IMessage {
 
 	/**
 	 * @param string $name
-	 * @param string $content
+	 * @param string $content attached with mime type 'application/octet-stream'
 	 */
 	public function addRawAttachment(string $name, string $content): void;
 
 	/**
-	 * @param File $fileName
+	 * @param string $name
+	 * @param string $content attached with mime type 'message/rfc822'
+	 *
+	 * @return void
 	 */
-	public function addAttachmentFromFiles(File $fileName);
+	public function addEmbeddedMessageAttachment(string $name, string $content): void;
+
+	/**
+	 * @param File $file
+	 */
+	public function addAttachmentFromFiles(File $file);
 
 	/**
 	 * @param LocalAttachment $attachment

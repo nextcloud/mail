@@ -28,13 +28,15 @@
 		:show-navigation="true">
 		<AppSettingsSection
 			:title="t('mail', 'Account settings')">
-			<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
-			<a
-				v-if="!account.provisioned"
-				class="button icon-rename"
-				:title="t('mail', 'Change name')"
-				@click="handleClick" />
-			<AliasSettings v-if="!account.provisioned" :account="account" />
+			<div class="alias-item">
+				<p><strong>{{ displayName }}</strong> &lt;{{ email }}&gt;</p>
+				<a
+					v-if="!account.provisioningId"
+					class="button icon-rename"
+					:title="t('mail', 'Change name')"
+					@click="handleClick" />
+			</div>
+			<AliasSettings :account="account" />
 		</AppSettingsSection>
 		<AppSettingsSection :title="t('mail', 'Signature')">
 			<p class="settings-hint">
@@ -56,7 +58,7 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection v-if="showImapSettings && account && !account.provisioned" :title="t('mail', 'Mail server')">
+		<AppSettingsSection v-if="showImapSettings && account && !account.provisioningId" :title="t('mail', 'Mail server')">
 			<div id="mail-settings">
 				<AccountForm
 					:key="account.accountId"
@@ -67,7 +69,7 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioned" :title="t('mail', 'Sieve filter server')">
+		<AppSettingsSection v-if="account && !account.provisioningId" :title="t('mail', 'Sieve filter server')">
 			<div id="sieve-settings">
 				<SieveAccountForm
 					:key="account.accountId"
@@ -188,6 +190,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.alias-item {
+	display: flex;
+	justify-content: space-between;
+}
+
 ::v-deep .modal-container {
 	display: block;
 	overflow: scroll;

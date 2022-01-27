@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import isString from 'lodash/fp/isString'
 import { curry } from 'ramda'
 import { fromString } from 'html-to-text'
 
@@ -70,6 +71,11 @@ export const plain = wrap('plain')
 export const html = wrap('html')
 
 export const detect = (str) => {
+	if (!isString(str)) {
+		// Fall back to a hopefully sane default
+		return plain('')
+	}
+
 	if (!str.includes('>')) {
 		return plain(str)
 	} else {
@@ -122,7 +128,7 @@ export const toPlain = (text) => {
 					.replace(/^/gm, '> ') // add > quotation to each line
 			},
 			paragraph(element, fn, options) {
-				return fn(element.children, options) + '\n\n'
+				return fn(element.children, options) + '\n'
 			},
 		},
 	})

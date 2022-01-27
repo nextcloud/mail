@@ -71,6 +71,11 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	public function filter(&$uri, $config, $context) {
 		/** @var \HTMLPurifier_Context $context */
 		/** @var \HTMLPurifier_Config $config */
+
+		if ($uri->scheme === null) {
+			$uri->scheme = 'https';
+		}
+
 		// Only HTTPS and HTTP urls should get rewritten
 		if ($uri->scheme === 'https' || $uri->scheme === 'http' || $uri->scheme === 'ftp') {
 			$uri = $this->filterHttpFtp($uri, $context);
@@ -123,23 +128,16 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		// If element is of type "href" it is most likely a link that should get redirected
 		// otherwise it's an element that we send through our proxy
 		if ($element === 'href') {
-			$uri = new \HTMLPurifier_URI(
-				$this->request->getServerProtocol(),
-				null,
-				$this->request->getServerHost(),
-				null,
-				$this->urlGenerator->linkToRoute('mail.proxy.redirect'),
-				'src=' . $originalURL,
-				null
-			);
-			return $uri;
-		} else {
-			$uri = new \HTMLPurifier_URI(
-				$this->request->getServerProtocol(), null, $this->request->getServerHost(), null,
-				$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
-				'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
-				null);
 			return $uri;
 		}
+
+		return new \HTMLPurifier_URI(
+			$this->request->getServerProtocol(),
+			null, $this->request->getServerHost(),
+			null,
+			$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
+			'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
+			null
+		);
 	}
 }

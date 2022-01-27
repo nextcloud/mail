@@ -25,6 +25,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
 
@@ -42,15 +43,11 @@ class AliasesServiceTest extends TestCase {
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
 
-	/** @var Alias */
-	private $alias;
-
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->aliasMapper = $this->createMock(AliasMapper::class);
 		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
-		$this->alias = $this->createMock(Alias::class);
 
 		$this->service = new AliasesService(
 			$this->aliasMapper,
@@ -58,36 +55,42 @@ class AliasesServiceTest extends TestCase {
 		);
 	}
 
-	public function testFindAll() {
-		$accountId = 123;
-		$this->aliasMapper->expects($this->once())
+	public function testFindAll(): void {
+		$entity = new Alias();
+		$entity->setAccountId(200);
+		$entity->setAlias('jane@doe.com');
+		$entity->setName('Jane Doe');
+
+		$this->aliasMapper->expects(self::once())
 			->method('findAll')
-			->with($accountId, $this->user)
-			->will($this->returnValue([$this->alias]));
+			->with($entity->getAccountId(), $this->user)
+			->willReturn([$entity]);
 
-		$actual = $this->service->findAll($accountId, $this->user);
+		$aliases = $this->service->findAll($entity->getAccountId(), $this->user);
 
-		$expected = [
-			$this->alias
-		];
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals([$entity], $aliases);
 	}
 
-	public function testFind() {
-		$aliasId = 123;
-		$this->aliasMapper->expects($this->once())
+	public function testFind(): void {
+		$entity = new Alias();
+		$entity->setId(101);
+		$entity->setAccountId(200);
+		$entity->setAlias('jane@doe.com');
+		$entity->setName('Jane Doe');
+
+		$this->aliasMapper->expects(self::once())
 			->method('find')
-			->with($aliasId, $this->user)
-			->will($this->returnValue($this->alias));
+			->with($entity->getId(), $this->user)
+			->willReturn($entity);
 
-		$actual = $this->service->find($aliasId, $this->user);
+		$alias = $this->service->find($entity->getId(), $this->user);
 
-		$expected = $this->alias;
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($entity, $alias);
 	}
 
 	public function testCreate(): void {
 		$entity = new Alias();
+		$entity->setId(101);
 		$entity->setAccountId(200);
 		$entity->setAlias('jane@doe.com');
 		$entity->setName('Jane Doe');
@@ -95,7 +98,7 @@ class AliasesServiceTest extends TestCase {
 		$this->mailAccountMapper->expects($this->once())
 			->method('find');
 
-		$this->aliasMapper->expects($this->once())
+		$this->aliasMapper->expects(self::once())
 			->method('insert')
 			->willReturnCallback(static function (Alias $alias) {
 				$alias->setId(100);
@@ -123,7 +126,7 @@ class AliasesServiceTest extends TestCase {
 		$entity->setAlias('jane@doe.com');
 		$entity->setName('Jane Doe');
 
-		$this->mailAccountMapper->expects($this->once())
+		$this->mailAccountMapper->expects(self::once())
 			->method('find')
 			->willThrowException(new DoesNotExistException('Account does not exist'));
 
@@ -135,38 +138,70 @@ class AliasesServiceTest extends TestCase {
 		);
 	}
 
-	public function testDelete() {
-		$aliasId = 123;
-		$this->aliasMapper->expects($this->once())
-			->method('find')
-			->with($aliasId, $this->user)
-			->will($this->returnValue($this->alias));
-		$this->aliasMapper->expects($this->once())
-			->method('delete')
-			->with($this->alias);
+	public function testDelete(): void {
+		$entity = new Alias();
+		$entity->setId(101);
+		$entity->setAccountId(200);
+		$entity->setName('Jane Doe');
+		$entity->setAlias('jane@doe.com');
 
-		$this->service->delete($aliasId, $this->user);
+		$this->aliasMapper->expects(self::once())
+			->method('find')
+			->with($entity->getId(), $this->user)
+			->willReturn($entity);
+		$this->aliasMapper->expects(self::once())
+			->method('delete')
+			->willReturnArgument(0);
+
+		$alias = $this->service->delete($this->user, $entity->getId());
+
+		$this->assertEquals($entity, $alias);
+	}
+
+	public function testDeleteProvisioned(): void {
+		$this->expectException(ClientException::class);
+		$this->expectExceptionMessage('Deleting a provisioned alias is not allowed.');
+
+		$entity = new Alias();
+		$entity->setId(201);
+		$entity->setAccountId(300);
+		$entity->setName('Jane Doe');
+		$entity->setAlias('jane@doe.com');
+		$entity->setProvisioningId(100);
+
+		$this->aliasMapper->expects(self::once())
+			->method('find')
+			->with($entity->getId(), $this->user)
+			->willReturn($entity);
+
+		$this->service->delete($this->user, $entity->getId());
 	}
 
 	public function testUpdateSignature(): void {
-		$aliasId = 400;
-		$this->aliasMapper->expects($this->once())
-			->method('find')
-			->with($aliasId, $this->user)
-			->willReturn($this->alias);
-		$this->aliasMapper->expects($this->once())
-			->method('update');
+		$entity = new Alias();
+		$entity->setId(101);
+		$entity->setAccountId(200);
+		$entity->setName('Jane Doe');
+		$entity->setAlias('jane@doe.com');
 
-		$this->service->updateSignature($this->user, $aliasId, 'Kind regards<br>Herbert');
+		$this->aliasMapper->expects(self::once())
+			->method('find')
+			->with($entity->getId(), $this->user)
+			->willReturn($entity);
+		$this->aliasMapper->expects(self::once())
+			->method('update')
+			->willReturnArgument(0);
+
+		$this->service->updateSignature($this->user, $entity->getId(), 'Kind regards<br>Herbert');
 	}
 
 	public function testUpateSignatureInvalidAliasId(): void {
 		$this->expectException(DoesNotExistException::class);
 
-		$this->aliasMapper->expects($this->once())
+		$this->aliasMapper->expects(self::once())
 			->method('find')
 			->willThrowException(new DoesNotExistException('Alias does not exist'));
-		$this->aliasMapper->expects($this->never())
+		$this->aliasMapper->expects(self::never())
 			->method('update');
 
 		$this->service->updateSignature($this->user, '999999', 'Kind regards<br>Herbert');

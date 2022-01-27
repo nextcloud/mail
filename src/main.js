@@ -76,6 +76,10 @@ store.commit('savePreference', {
 	key: 'collect-data',
 	value: getPreferenceFromPage('collect-data'),
 })
+store.commit('savePreference', {
+	key: 'tag-classified-messages',
+	value: getPreferenceFromPage('tag-classified-messages'),
+})
 
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])

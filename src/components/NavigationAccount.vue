@@ -63,7 +63,7 @@
 			<ActionButton v-if="!isLast" icon="icon-triangle-s" @click="changeAccountOrderDown">
 				{{ t('mail', 'Move down') }}
 			</ActionButton>
-			<ActionButton v-if="!account.provisioned && !isMainAccount" icon="icon-delete" @click="removeAccount">
+			<ActionButton v-if="!account.provisioningId && !isMainAccount" icon="icon-delete" @click="removeAccount">
 				{{ t('mail', 'Remove account') }}
 			</ActionButton>
 		</template>

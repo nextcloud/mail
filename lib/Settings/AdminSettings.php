@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Settings;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IInitialStateService;
+use OCP\LDAP\ILDAPProvider;
 use OCP\Settings\ISettings;
 
 class AdminSettings implements ISettings {
@@ -39,10 +41,15 @@ class AdminSettings implements ISettings {
 	/** @var ProvisioningManager */
 	private $provisioningManager;
 
+	/** @var AntiSpamService */
+	private $antiSpamService;
+
 	public function __construct(IInitialStateService $initialStateService,
-								ProvisioningManager $provisioningManager) {
+								ProvisioningManager $provisioningManager,
+								AntiSpamService $antiSpamService) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
+		$this->antiSpamService = $antiSpamService;
 	}
 
 	public function getForm() {
@@ -50,6 +57,24 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'provisioning_settings',
 			$this->provisioningManager->getConfigs()
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'antispam_setting',
+			[
+				'spam' => $this->antiSpamService->getSpamEmail(),
+				'ham' => $this->antiSpamService->getHamEmail(),
+			]
+		);
+
+
+		$this->initialStateService->provideLazyInitialState(
+			Application::APP_ID,
+			'ldap_aliases_integration',
+			function () {
+				return method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute');
+			}
 		);
 
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');

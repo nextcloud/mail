@@ -169,6 +169,7 @@ describe('Vuex store actions', () => {
 			.withArgs('fetchEnvelopes', {
 				mailboxId: 21,
 				query: undefined,
+				addToUnifiedMailboxes: false,
 			})
 			.returns([
 				{
@@ -192,6 +193,11 @@ describe('Vuex store actions', () => {
 			},
 		])
 		expect(context.dispatch).to.have.been.calledOnce
+		expect(context.dispatch).to.have.been.calledWith('fetchEnvelopes', {
+			mailboxId: 21,
+			query: undefined,
+			addToUnifiedMailboxes: false,
+		})
 		expect(context.commit).to.have.been.calledWith('addEnvelope', {
 			envelope: {
 				databaseId: 123,

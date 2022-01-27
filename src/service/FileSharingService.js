@@ -37,7 +37,7 @@ import { showError } from '@nextcloud/dialogs'
  */
 const shareFile = async function(path, token) {
 	try {
-		const res = await axios.post(generateOcsUrl('apps/files_sharing/api/v1', 2) + 'shares', {
+		const res = await axios.post(generateOcsUrl('apps/files_sharing/api/v1/', 2) + 'shares', {
 			shareType: 3, // OC.Share.SHARE_TYPE_LINK,
 			path,
 			shareWith: token,

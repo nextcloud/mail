@@ -63,7 +63,7 @@ class ContactsIntegration {
 			}
 
 			$id = $r['UID'];
-			$fn = $r['FN'];
+			$fn = $r['FN'] ?? null;
 			if (!isset($r['EMAIL'])) {
 				continue;
 			}
@@ -78,12 +78,22 @@ class ContactsIntegration {
 				if ($e === '') {
 					continue;
 				}
-				$receivers[] = [
-					'id' => $id,
-					'label' => "$fn ($e)",
-					'email' => $e,
-					'photo' => $photo,
-				];
+				// Show full name if possible or fall back to email
+				if ($fn !== null) {
+					$receivers[] = [
+						'id' => $id,
+						'label' => "$fn ($e)",
+						'email' => $e,
+						'photo' => $photo,
+					];
+				} else {
+					$receivers[] = [
+						'id' => $id,
+						'label' => $e,
+						'email' => $e,
+						'photo' => $photo,
+					];
+				}
 			}
 		}
 
@@ -133,16 +143,16 @@ class ContactsIntegration {
 		}
 
 		$result = $this->contactsManager->search($uid, ['UID'], ['types' => true, 'limit' => 1]);
-		
+
 		if (count($result) !== 1) {
 			return null; // no match
 		}
-		
+
 		$newEntry = [
 			'type' => $type,
 			'value' => $mailAddr
 		];
-		
+
 		$match = $result[0];
 		$email = $match['EMAIL'] ?? [];
 		if (!empty($email) && !is_array($email[0])) {

@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesService {
@@ -81,15 +82,17 @@ class AliasesService {
 	}
 
 	/**
-	 * @param int $aliasId
-	 * @param String $currentUserId
-	 * @return Alias
+	 * @throws ClientException
 	 * @throws DoesNotExistException
 	 */
-	public function delete(int $aliasId, string $currentUserId): Alias {
-		$alias = $this->aliasMapper->find($aliasId, $currentUserId);
-		$this->aliasMapper->delete($alias);
-		return $alias;
+	public function delete(string $userId, int $aliasId): Alias {
+		$entity = $this->aliasMapper->find($aliasId, $userId);
+
+		if ($entity->isProvisioned()) {
+			throw new ClientException('Deleting a provisioned alias is not allowed.');
+		}
+
+		return $this->aliasMapper->delete($entity);
 	}
 
 	/**
@@ -105,16 +108,29 @@ class AliasesService {
 	}
 
 	/**
-	 * Update signature for alias
+	 * Update alias and name
 	 *
-	 * @param string $userId
-	 * @param int $aliasId
-	 * @param string|null $signature
 	 * @throws DoesNotExistException
 	 */
-	public function updateSignature(string $userId, int $aliasId, string $signature = null): void {
-		$alias = $this->find($aliasId, $userId);
-		$alias->setSignature($signature);
-		$this->aliasMapper->update($alias);
+	public function update(string $userId, int $aliasId, string $alias, string $aliasName): Alias {
+		$entity = $this->aliasMapper->find($aliasId, $userId);
+
+		if (!$entity->isProvisioned()) {
+			$entity->setAlias($alias);
+		}
+		$entity->setName($aliasName);
+
+		return $this->aliasMapper->update($entity);
+	}
+
+	/**
+	 * Update signature for alias
+	 *
+	 * @throws DoesNotExistException
+	 */
+	public function updateSignature(string $userId, int $aliasId, string $signature = null): Alias {
+		$entity = $this->find($aliasId, $userId);
+		$entity->setSignature($signature);
+		return $this->aliasMapper->update($entity);
 	}
 }

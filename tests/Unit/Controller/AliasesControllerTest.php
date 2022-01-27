@@ -26,6 +26,7 @@ use OCA\Mail\Controller\AliasesController;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -88,8 +89,54 @@ class AliasesControllerTest extends TestCase {
 	}
 
 	public function testUpdate(): void {
-		$this->expectException(NotImplemented::class);
-		$this->controller->update();
+		$alias = new Alias();
+		$alias->setId(101);
+		$alias->setAccountId(200);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->with($alias->getId(), $this->userId)
+			->willReturn($alias);
+
+		$this->aliasMapper->expects($this->once())
+			->method('update')
+			->willReturnArgument(0);
+
+		$response = $this->controller->update($alias->getId(), 'john@doe.com', 'John Doe');
+		/** @var Alias $data */
+		$data = $response->getData();
+
+		$this->assertInstanceOf(Alias::class, $response->getData());
+		$this->assertEquals('john@doe.com', $data->getAlias());
+		$this->assertEquals('John Doe', $data->getName());
+	}
+
+	public function testUpdateProvisioned(): void {
+		$alias = new Alias();
+		$alias->setId(201);
+		$alias->setAccountId(300);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
+		$alias->setProvisioningId(100);
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->with($alias->getId(), $this->userId)
+			->willReturn($alias);
+
+		$this->aliasMapper->expects($this->once())
+			->method('update')
+			->willReturnArgument(0);
+
+		$response = $this->controller->update($alias->getId(), 'john@doe.com', 'John Doe');
+		/** @var Alias $data */
+		$data = $response->getData();
+
+		$this->assertInstanceOf(Alias::class, $data);
+		$this->assertEquals('jane@doe.com', $data->getAlias());
+		$this->assertEquals('John Doe', $data->getName());
 	}
 
 	public function testDestroy(): void {
@@ -106,12 +153,31 @@ class AliasesControllerTest extends TestCase {
 
 		$this->aliasMapper->expects($this->once())
 			->method('delete')
-			->with($alias);
+			->willReturnArgument(0);
 
 		$expectedResponse = new JSONResponse($alias);
 		$response = $this->controller->destroy($alias->getId());
 
 		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testDestroyProvisioned(): void {
+		$this->expectException(ClientException::class);
+		$this->expectExceptionMessage('Deleting a provisioned alias is not allowed.');
+
+		$alias = new Alias();
+		$alias->setId(201);
+		$alias->setAccountId(300);
+		$alias->setName('Jane Doe');
+		$alias->setAlias('jane@doe.com');
+		$alias->setProvisioningId(100);
+
+		$this->aliasMapper->expects($this->once())
+			->method('find')
+			->with($alias->getId(), $this->userId)
+			->willReturn($alias);
+
+		$this->controller->destroy($alias->getId());
 	}
 
 	public function testCreate(): void {
@@ -172,10 +238,11 @@ class AliasesControllerTest extends TestCase {
 			->method('find')
 			->willReturn($alias);
 		$this->aliasMapper->expects($this->once())
-			->method('update');
+			->method('update')
+			->willReturnArgument(0);
 
 		$expectedResponse = new JSONResponse(
-			[],
+			$alias,
 			Http::STATUS_OK
 		);
 		$response = $this->controller->updateSignature(

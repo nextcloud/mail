@@ -68,7 +68,7 @@ import {
 	removeEnvelopeTag,
 	setEnvelopeFlag,
 	setEnvelopeTag,
-	syncEnvelopes,
+	syncEnvelopes, updateEnvelopeTag,
 } from '../service/MessageService'
 import * as AliasService from '../service/AliasService'
 import logger from '../logger'
@@ -79,7 +79,9 @@ import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import { wait } from '../util/wait'
 import { updateAccount as updateSieveAccount } from '../service/SieveService'
-import { UNIFIED_INBOX_ID, PAGE_SIZE } from './constants'
+import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
+import * as ThreadService from '../service/ThreadService'
+import { getPrioritySearchQueries } from '../util/priorityInbox'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -269,7 +271,7 @@ export default {
 		// Always use the object from the store
 		return getters.getEnvelope(id)
 	},
-	fetchEnvelopes({ state, commit, getters, dispatch }, { mailboxId, query }) {
+	fetchEnvelopes({ state, commit, getters, dispatch }, { mailboxId, query, addToUnifiedMailboxes = true }) {
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -278,6 +280,7 @@ export default {
 					dispatch('fetchEnvelopes', {
 						mailboxId: mb.databaseId,
 						query,
+						addToUnifiedMailboxes: false,
 					})
 				),
 				Promise.all.bind(Promise),
@@ -311,11 +314,12 @@ export default {
 						commit('addEnvelope', {
 							query,
 							envelope,
+							addToUnifiedMailboxes,
 						})
 					)
 				)
 			)
-		)(mailboxId, query, undefined, PAGE_SIZE)
+		)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE)
 	},
 	async fetchNextEnvelopePage({ commit, getters, dispatch }, { mailboxId, query }) {
 		const envelopes = await dispatch('fetchNextEnvelopes', {
@@ -325,7 +329,7 @@ export default {
 		})
 		return envelopes
 	},
-	async fetchNextEnvelopes({ commit, getters, dispatch }, { mailboxId, query, quantity, rec = true }) {
+	async fetchNextEnvelopes({ commit, getters, dispatch }, { mailboxId, query, quantity, rec = true, addToUnifiedMailboxes = true }) {
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -353,9 +357,9 @@ export default {
 			// We have to fetch individual envelopes only if it ends in the known
 			// next fetch. If it ended before, there is no data to fetch anyway. If
 			// it ends after, we have all the relevant data already
-			const needsFetch = curry((query, nextEnvelopes, f) => {
-				const c = individualCursor(query, f)
-				return nextEnvelopes.length < quantity || (c <= head(nextEnvelopes).dateInt && c >= last(nextEnvelopes).dateInt)
+			const needsFetch = curry((query, nextEnvelopes, mb) => {
+				const c = individualCursor(query, mb)
+				return nextEnvelopes.length < quantity || c >= head(nextEnvelopes).dateInt || c <= last(nextEnvelopes).dateInt
 			})
 
 			const mailboxesToFetch = (accounts) =>
@@ -366,12 +370,16 @@ export default {
 			const mbs = mailboxesToFetch(getters.accounts)
 
 			if (rec && mbs.length) {
+				logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
+					mailboxes: mbs.map(mb => mb.databaseId),
+				})
 				return pipe(
 					map((mb) =>
 						dispatch('fetchNextEnvelopes', {
 							mailboxId: mb.databaseId,
 							query,
 							quantity,
+							addToUnifiedMailboxes: false,
 						})
 					),
 					Promise.all.bind(Promise),
@@ -381,12 +389,14 @@ export default {
 							query,
 							quantity,
 							rec: false,
+							addToUnifiedMailboxes: false,
 						})
 					)
 				)(mbs)
 			}
 
 			const envelopes = nextLocalUnifiedEnvelopes(getters.accounts)
+			logger.debug('next unified page can be built locally and consists of ' + envelopes.length + ' envelopes', { addToUnifiedMailboxes })
 			envelopes.map((envelope) =>
 				commit('addEnvelope', {
 					query,
@@ -411,14 +421,16 @@ export default {
 			return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 		}
 
-		return fetchEnvelopes(mailboxId, query, lastEnvelope.dateInt, quantity).then((envelopes) => {
+		return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity).then((envelopes) => {
 			logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 				envelopes,
+				addToUnifiedMailboxes,
 			})
 			envelopes.forEach((envelope) =>
 				commit('addEnvelope', {
 					query,
 					envelope,
+					addToUnifiedMailboxes,
 				})
 			)
 			return envelopes
@@ -450,22 +462,26 @@ export default {
 			)
 		} else if (mailbox.isPriorityInbox && query === undefined) {
 			return Promise.all(
-				getters.accounts
-					.filter((account) => !account.isUnified)
-					.map((account) =>
-						Promise.all(
-							getters
-								.getMailboxes(account.id)
-								.filter((mb) => mb.specialRole === mailbox.specialRole)
-								.map((mailbox) =>
-									dispatch('syncEnvelopes', {
-										mailboxId: mailbox.databaseId,
-										query,
-										init,
-									})
+				getPrioritySearchQueries().map((query) => {
+					return Promise.all(
+						getters.accounts
+							.filter((account) => !account.isUnified)
+							.map((account) =>
+								Promise.all(
+									getters
+										.getMailboxes(account.id)
+										.filter((mb) => mb.specialRole === mailbox.specialRole)
+										.map((mailbox) =>
+											dispatch('syncEnvelopes', {
+												mailboxId: mailbox.databaseId,
+												query,
+												init,
+											})
+										)
 								)
-						)
+							)
 					)
+				})
 			)
 		}
 
@@ -639,46 +655,43 @@ export default {
 			})
 		})
 	},
-	toggleTagImportant({ commit, getters }, envelope) {
-		// Change immediately and switch back on error
-		// check if the prop exist and if yes, save it
-		const oldState = envelope.tags
-		commit('tagEnvelope', {
-			envelope,
-			tag: '$label1',
-			// exists? Yes? So unset - (untag) the message
-			// if it doesn't, add /tag) the message,
-			value: !oldState,
-		})
-
-		setEnvelopeTag(envelope.databaseId, '$label1', !oldState).catch((e) => {
-			console.error('could not toggle message important state', e)
-
-			// Revert change
-			commit('tagEnvelope', {
-				envelope,
-				tag: '$label1',
-				value: oldState,
-			})
-		})
-	},
 	toggleEnvelopeJunk({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
-		const oldState = envelope.flags.junk
+		const oldState = envelope.flags.$junk
 		commit('flagEnvelope', {
 			envelope,
-			flag: 'junk',
+			flag: '$junk',
 			value: !oldState,
 		})
+		commit('flagEnvelope', {
+			envelope,
+			flag: '$notjunk',
+			value: oldState,
+		})
 
-		setEnvelopeFlag(envelope.databaseId, 'junk', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.databaseId, '$junk', !oldState).catch((e) => {
 			console.error('could not toggle message junk state', e)
 
 			// Revert change
 			commit('flagEnvelope', {
 				envelope,
-				flag: 'junk',
+				flag: '$junk',
 				value: oldState,
+			})
+			commit('flagEnvelope', {
+				envelope,
+				flag: '$notjunk',
+				value: !oldState,
+			})
+		})
+		setEnvelopeFlag(envelope.databaseId, '$notjunk', oldState).catch((e) => {
+			console.error('could not toggle message junk state', e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				envelope,
+				flag: '$notjunk',
+				value: !oldState,
 			})
 		})
 	},
@@ -702,6 +715,24 @@ export default {
 			})
 		})
 	},
+	async markEnvelopeImportantOrUnimportant({ dispatch, getters }, { envelope, addTag }) {
+		const importantLabel = '$label1'
+		const hasTag = getters
+			.getEnvelopeTags(envelope.databaseId)
+			.some((tag) => tag.imapLabel === importantLabel)
+		if (hasTag && !addTag) {
+			await dispatch('removeEnvelopeTag', {
+				envelope,
+				imapLabel: importantLabel,
+			})
+		} else if (!hasTag && addTag) {
+			await dispatch('addEnvelopeTag', {
+				envelope,
+				imapLabel: importantLabel,
+			})
+		}
+	},
+
 	async fetchThread({ getters, commit }, id) {
 		const thread = await fetchThread(id)
 		commit('addEnvelopeThread', {
@@ -738,17 +769,36 @@ export default {
 			throw err
 		}
 	},
-	async createAlias({ commit }, { account, aliasToAdd }) {
-		const alias = await AliasService.createAlias(account, aliasToAdd)
-		commit('createAlias', { account, alias })
+	async createAlias({ commit }, { account, alias, name }) {
+		const entity = await AliasService.createAlias(account.id, alias, name)
+		commit('createAlias', {
+			account,
+			alias: entity,
+		})
 	},
-	async deleteAlias({ commit }, { account, aliasToDelete }) {
-		await AliasService.deleteAlias(account, aliasToDelete)
-		commit('deleteAlias', { account, alias: aliasToDelete })
+	async deleteAlias({ commit }, { account, aliasId }) {
+		const entity = await AliasService.deleteAlias(account.id, aliasId)
+		commit('deleteAlias', {
+			account,
+			aliasId: entity.id,
+		})
+	},
+	async updateAlias({ commit }, { account, aliasId, alias, name }) {
+		const entity = await AliasService.updateAlias(account.id, aliasId, alias, name)
+		commit('patchAlias', {
+			account,
+			aliasId: entity.id,
+			data: { alias: entity.alias, name: entity.name },
+		})
+		commit('editAccount', account)
 	},
 	async updateAliasSignature({ commit }, { account, aliasId, signature }) {
-		await AliasService.updateSignature(account.id, aliasId, signature)
-		commit('patchAlias', { account, aliasId, data: { signature } })
+		const entity = await AliasService.updateSignature(account.id, aliasId, signature)
+		commit('patchAlias', {
+			account,
+			aliasId: entity.id,
+			data: { signature: entity.signature },
+		})
 		commit('editAccount', account)
 	},
 	async renameMailbox({ commit }, { account, mailbox, newName }) {
@@ -798,5 +848,34 @@ export default {
 			envelope,
 			tagId: tag.id,
 		})
+	},
+	async updateTag({ commit }, { tag, displayName, color }) {
+		 await updateEnvelopeTag(tag.id, displayName, color)
+		commit('updateTag', { tag, displayName, color })
+		logger.debug('tag updated', { tag, displayName, color })
+	},
+	async deleteThread({ getters, commit }, { envelope }) {
+		commit('removeEnvelope', { id: envelope.databaseId })
+
+		try {
+			await ThreadService.deleteThread(envelope.databaseId)
+			console.debug('thread removed')
+		} catch (e) {
+			commit('addEnvelope', envelope)
+			console.error('could not delete thread', e)
+			throw e
+		}
+	},
+	async moveThread({ getters, commit }, { envelope, destMailboxId }) {
+		commit('removeEnvelope', { id: envelope.databaseId })
+
+		try {
+			await ThreadService.moveThread(envelope.databaseId, destMailboxId)
+			console.debug('thread removed')
+		} catch (e) {
+			commit('addEnvelope', envelope)
+			console.error('could not move thread', e)
+			throw e
+		}
 	},
 }

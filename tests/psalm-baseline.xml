@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.x-dev@">
   <file src="lib/AppInfo/Application.php">
-    <MissingDependency occurrences="12">
+    <MissingDependency occurrences="14">
       <code>DraftSavedEvent</code>
       <code>MailboxesSynchronizedEvent</code>
       <code>MessageDeletedEvent</code>
+      <code>MessageFlaggedEvent</code>
+      <code>MessageFlaggedEvent</code>
       <code>MessageFlaggedEvent</code>
       <code>MessageSentEvent</code>
       <code>MessageSentEvent</code>
@@ -19,19 +21,15 @@
       <code>ContainerInterface</code>
     </UndefinedClass>
   </file>
-  <file src="lib/Attachment.php">
-    <MissingDocblockType occurrences="1">
-      <code>$fetch</code>
-    </MissingDocblockType>
-  </file>
   <file src="lib/Cache/Cache.php">
     <InvalidScalarArgument occurrences="1">
       <code>$slice</code>
     </InvalidScalarArgument>
-    <TooManyArguments occurrences="2">
-      <code>get</code>
-      <code>get</code>
-    </TooManyArguments>
+  </file>
+  <file src="lib/Command/AddMissingTags.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
   </file>
   <file src="lib/Command/CleanUp.php">
     <UndefinedClass occurrences="1">
@@ -39,6 +37,11 @@
     </UndefinedClass>
   </file>
   <file src="lib/Command/CreateAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Command/CreateTagMigrationJobEntry.php">
     <UndefinedClass occurrences="1">
       <code>Command</code>
     </UndefinedClass>
@@ -80,7 +83,7 @@
   </file>
   <file src="lib/Db/AliasMapper.php">
     <ImplicitToStringCast occurrences="1">
-      <code>$qb2-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
   </file>
   <file src="lib/Db/CollectedAddressMapper.php">
@@ -90,18 +93,16 @@
   </file>
   <file src="lib/Db/MailboxMapper.php">
     <ImplicitToStringCast occurrences="1">
-      <code>$qb2-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
   </file>
   <file src="lib/Db/MessageMapper.php">
-    <ImplicitToStringCast occurrences="26">
+    <ImplicitToStringCast occurrences="25">
       <code>$deleteMessagesQuery-&gt;createParameter('messageIds')</code>
       <code>$deleteRecipientsQuery-&gt;createParameter('ids')</code>
       <code>$deleteRecipientsQuery-&gt;createParameter('messageIds')</code>
       <code>$messageIdQuery-&gt;createParameter('uids')</code>
       <code>$messagesQuery-&gt;createFunction($mailboxesQuery-&gt;getSQL())</code>
-      <code>$qb-&gt;createFunction($mailboxIdsQuery-&gt;getSQL())</code>
-      <code>$qb-&gt;createFunction($mailboxIdsQuery-&gt;getSQL())</code>
       <code>$qb-&gt;createFunction($selectMailboxIds-&gt;getSQL())</code>
       <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$qb-&gt;createNamedParameter($query-&gt;getBcc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
@@ -114,14 +115,21 @@
       <code>$qb-&gt;createNamedParameter($query-&gt;getTo(), IQueryBuilder::PARAM_STR_ARRAY)</code>
       <code>$qb-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
       <code>$qb-&gt;createParameter('ids')</code>
-      <code>$qb-&gt;createParameter('ids')</code>
       <code>$qb-&gt;createParameter('uids')</code>
       <code>$qb-&gt;createParameter('uids')</code>
-      <code>$qb2-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$qb2-&gt;createNamedParameter(array_keys($indexedMessages), IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$qb4-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
+      <code>$qb2-&gt;createParameter('ids')</code>
+      <code>$qb4-&gt;createParameter('ids')</code>
       <code>$query-&gt;createParameter('ids')</code>
+      <code>$select-&gt;createParameter('ids')</code>
+      <code>$select-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
+    <InvalidReturnStatement occurrences="1">
+      <code>$update-&gt;execute()</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>int</code>
+    </InvalidReturnType>
   </file>
   <file src="lib/Db/StatisticsDao.php">
     <ImplicitToStringCast occurrences="7">
@@ -135,9 +143,10 @@
     </ImplicitToStringCast>
   </file>
   <file src="lib/Db/TagMapper.php">
-    <ImplicitToStringCast occurrences="3">
-      <code>$deleteQB-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
-      <code>$deleteQB-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    <ImplicitToStringCast occurrences="4">
+      <code>$deleteQB-&gt;createParameter('ids')</code>
+      <code>$deleteQB-&gt;createParameter('ids')</code>
+      <code>$qb-&gt;createParameter('ids')</code>
       <code>$qb-&gt;createParameter('ids')</code>
     </ImplicitToStringCast>
     <InvalidArgument occurrences="1"/>
@@ -223,6 +232,12 @@
       <code>MessageSentEvent</code>
     </MissingDependency>
   </file>
+  <file src="lib/Listener/HamReportListener.php">
+    <MissingDependency occurrences="2">
+      <code>HamReportListener</code>
+      <code>MessageFlaggedEvent</code>
+    </MissingDependency>
+  </file>
   <file src="lib/Listener/InteractionListener.php">
     <MissingDependency occurrences="2">
       <code>InteractionListener</code>
@@ -253,11 +268,22 @@
       <code>SaveSentMessageListener</code>
     </MissingDependency>
   </file>
+  <file src="lib/Listener/SpamReportListener.php">
+    <MissingDependency occurrences="2">
+      <code>MessageFlaggedEvent</code>
+      <code>SpamReportListener</code>
+    </MissingDependency>
+  </file>
   <file src="lib/Listener/UserDeletedListener.php">
     <MissingDependency occurrences="2">
       <code>UserDeletedEvent</code>
       <code>UserDeletedListener</code>
     </MissingDependency>
+  </file>
+  <file src="lib/Migration/Version1105Date20210922104324.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$qb-&gt;createNamedParameter($accountIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    </ImplicitToStringCast>
   </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">
     <InvalidScalarArgument occurrences="1">
@@ -268,13 +294,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>$this-&gt;contactsManager-&gt;getUserAddressBooks()</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
-    <NullArgument occurrences="3">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-    </NullArgument>
   </file>
   <file src="lib/Service/MailManager.php">
     <MissingDependency occurrences="8">
@@ -296,6 +315,13 @@
       <code>MessageSentEvent</code>
       <code>SaveDraftEvent</code>
       <code>SaveDraftEvent</code>
+    </MissingDependency>
+  </file>
+  <file src="lib/Service/Provisioning/Manager.php">
+    <MissingDependency occurrences="3">
+      <code>$this-&gt;serverContainer</code>
+      <code>IServerContainer</code>
+      <code>IServerContainer</code>
     </MissingDependency>
   </file>
   <file src="lib/Service/Sync/ImapToDbSynchronizer.php">

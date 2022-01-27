@@ -436,9 +436,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			return;
 		}
 
-		// TEXT
 		if ($p->getType() === 'text/calendar') {
-			// TODO: skip inline ics for now
+			$this->attachments[] = [
+				'id' => $p->getMimeId(),
+				'messageId' => $this->messageId,
+				'fileName' => $p->getName() ?? 'calendar.ics',
+				'mime' => $p->getType(),
+				'size' => $p->getBytes(),
+				'cid' => $p->getContentId(),
+				'disposition' => $p->getDisposition()
+			];
 			return;
 		}
 
@@ -470,14 +477,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
 			$data['body'] = $this->getHtmlBody($id);
+			$data['attachments'] = $this->attachments;
 		} else {
 			$mailBody = $this->htmlService->convertLinks($mailBody);
 			[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
 			$data['body'] = $mailBody;
 			$data['signature'] = $signature;
+			$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
 		}
-
-		$data['attachments'] = $this->attachments;
 
 		return $data;
 	}
@@ -645,6 +652,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
+	 * @param string $name
+	 * @param string $content
+	 *
+	 * @return void
+	 */
+	public function addEmbeddedMessageAttachment(string $name, string $content): void {
+		throw new Exception('IMAP message is immutable');
+	}
+
+	/**
 	 * @param File $file
 	 *
 	 * @return void
@@ -671,11 +688,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @param string $message
+	 * @param string $id
 	 *
 	 * @return void
 	 */
-	public function setInReplyTo(string $message) {
+	public function setInReplyTo(string $id) {
 		throw new Exception('not implemented');
 	}
 
@@ -689,13 +706,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg = new Message();
 
 		$messageId = $this->getMessageId();
-		if (empty(trim($messageId))) {
-			// Sometimes the message ID is missing. Then we create one.
+		$msg->setMessageId($messageId);
+
+		// Sometimes the message ID is missing or invalid and therefore not set.
+		// Then we create one and set it.
+		if ($msg->getMessageId() === null || trim($msg->getMessageId()) === '') {
 			$messageId = self::generateMessageId();
+			$msg->setMessageId($messageId);
 		}
 
 		$msg->setUid($this->getUid());
-		$msg->setMessageId($messageId);
 		$msg->setRawReferences($this->getRawReferences());
 		$msg->setThreadRootId($messageId);
 		$msg->setInReplyTo($this->getRawInReplyTo());
@@ -720,7 +740,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		);
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true) || in_array('nonjunk', $flags, true));// While this is not a standard IMAP Flag, Thunderbird uses it to mark "not junk"
 		// @todo remove this as soon as possible @link https://github.com/nextcloud/mail/issues/25
-		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
+		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
 
@@ -758,6 +778,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * display_name like 'xxx'
 	 *
 	 * @link https://github.com/nextcloud/mail/issues/25
+	 * @link https://github.com/nextcloud/mail/issues/5150
 	 *
 	 * @param string[] $tags
 	 * @return Tag[]
@@ -765,12 +786,23 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private function generateTagEntites(array $tags, string $userId): array {
 		$t = [];
 		foreach ($tags as $keyword) {
-			// Map the old $important to $label1 until we have caught them all
-			if ($keyword === '$important') {
+			if ($keyword === '$important' || $keyword === 'important' || $keyword === '$labelimportant') {
 				$keyword = Tag::LABEL_IMPORTANT;
 			}
+			if ($keyword === '$labelwork') {
+				$keyword = Tag::LABEL_WORK;
+			}
+			if ($keyword === '$labelpersonal') {
+				$keyword = Tag::LABEL_PERSONAL;
+			}
+			if ($keyword === '$labeltodo') {
+				$keyword = Tag::LABEL_TODO;
+			}
+			if ($keyword === '$labellater') {
+				$keyword = Tag::LABEL_LATER;
+			}
 
-			$displayName = str_replace('_', ' ', $keyword);
+			$displayName = str_replace(['_', '$'], [' ', ''], $keyword);
 			$displayName = strtoupper($displayName);
 			$displayName = mb_convert_encoding($displayName, 'UTF-8', 'UTF7-IMAP');
 			$displayName = strtolower($displayName);

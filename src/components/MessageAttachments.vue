@@ -124,7 +124,9 @@ export default {
 
 <style lang="scss">
 .attachments {
-	width: 300px;
+	width: 230px;
+  position: relative;
+  display: flex;
 }
 
 /* show icon + text for Download all button
@@ -136,10 +138,13 @@ export default {
 	display: inline-block;
 	margin: 16px;
 	background-position: 16px center;
-	padding: 12px;
-	padding-left: 44px;
+  padding: 12px 12px 12px 37px !important;
 }
 .oc-dialog {
 	z-index: 10000000;
+}
+.mail-message-attachments {
+	overflow-x: auto;
+	overflow-y: auto;
 }
 </style>

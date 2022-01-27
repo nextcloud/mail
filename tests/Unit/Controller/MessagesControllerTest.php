@@ -705,7 +705,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('getTagByImapLabel')
-			->with($imapLabel,$this->userId)
+			->with($imapLabel, $this->userId)
 			->willThrowException(new ClientException('Computer says no'));
 		$this->mailManager->expects($this->never())
 			->method('tagMessage');
@@ -740,7 +740,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('getTagByImapLabel')
-			->with($tag->getImapLabel(),$this->userId)
+			->with($tag->getImapLabel(), $this->userId)
 			->willReturn($tag);
 		$this->mailManager->expects($this->once())
 			->method('tagMessage')
@@ -806,7 +806,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('getTagByImapLabel')
-			->with($imapLabel,$this->userId)
+			->with($imapLabel, $this->userId)
 			->willThrowException(new ClientException('Computer says no'));
 		$this->mailManager->expects($this->never())
 			->method('tagMessage');
@@ -841,7 +841,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('getTagByImapLabel')
-			->with($tag->getImapLabel(),$this->userId)
+			->with($tag->getImapLabel(), $this->userId)
 			->willReturn($tag);
 		$this->mailManager->expects($this->once())
 			->method('tagMessage')

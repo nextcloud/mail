@@ -72,16 +72,12 @@ class Attachment {
 		if (!isset($headers[$this->messageUid])) {
 			throw new DoesNotExistException('Unable to load the attachment.');
 		}
-		/** @var $fetch Horde_Imap_Client_Data_Fetch */
+		/** @var Horde_Imap_Client_Data_Fetch $fetch */
 		$fetch = $headers[$this->messageUid];
 		/** @var \Horde_Mime_Headers $mimeHeaders */
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 
 		$this->mimePart = new \Horde_Mime_Part();
-
-		// To prevent potential problems with the SOP we serve all files with the
-		// MIME type "application/octet-stream"
-		$this->mimePart->setType('application/octet-stream');
 
 		// Serve all files with a content-disposition of "attachment" to prevent Cross-Site Scripting
 		$this->mimePart->setDisposition('attachment');
@@ -100,6 +96,18 @@ class Attachment {
 		/* Content transfer encoding. */
 		if ($tmp = $mimeHeaders->getValue('content-transfer-encoding')) {
 			$this->mimePart->setTransferEncoding($tmp);
+		}
+
+		/* Content type */
+		if (strstr($mimeHeaders->getValue('content-type'), 'text/calendar')) {
+			$this->mimePart->setType('text/calendar');
+			if ($this->mimePart->getContentTypeParameter('name') === null) {
+				$this->mimePart->setContentTypeParameter('name', 'calendar.ics');
+			}
+		} else {
+			// To prevent potential problems with the SOP we serve all files but calendar entries with the
+			// MIME type "application/octet-stream"
+			$this->mimePart->setType('application/octet-stream');
 		}
 
 		$body = $fetch->getBodyPart($this->attachmentId);
