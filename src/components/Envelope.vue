@@ -484,10 +484,8 @@ list-item-style.draft .app-content-list-item-line-two {
 	background-color: var(--color-primary-light);
 	border-radius: 0;
 }
-.list-item-style {
-	.list-item {
-		border-radius: 0;
-	}
+::v-deep .list-item {
+	border-radius: 0!important;
 }
 
 .icon-reply,
