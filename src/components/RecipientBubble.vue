@@ -36,7 +36,7 @@
 					{{ contactsWithEmailComputed }}
 				</span>
 			</div>
-			<div v-if="selection === ContactSelectionStateEnum.select">
+			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
 				<a class="icon-reply" @click="onClickReply">
 					<span class="action-label">{{ t('mail', 'Reply') }}</span>
 				</a>
@@ -225,6 +225,10 @@ export default {
 	margin: 10px;
 }
 
+.contact-menu {
+	display: flex;
+	flex-wrap: wrap;
+}
 .contact-popover {
 	display: inline-block;
 }
@@ -253,6 +257,8 @@ export default {
 .icon-checkmark,
 .icon-close,
 .icon-add {
+	display: flex;
+	align-items: center;
 	height: 44px;
 	min-width: 44px;
 	margin: 0;
@@ -268,10 +274,7 @@ export default {
 		background-position: 12px center;
 	}
 }
-.icon-add {
-	display: revert;
-    vertical-align: revert;
-}
+
 .contact-existing {
 	margin-bottom: 10px;
 	font-size: small;
