@@ -65,6 +65,7 @@
     "vue": "^2.6.14",
     "vue-autosize": "^1.0.2",
     "vue-click-outside": "^1.1.0",
+    "vue-clipboard2": "^0.3.3",
     "vue-material-design-icons": "^5.0.0",
     "vue-on-click-outside": "^1.0.3",
     "vue-router": "^3.5.3",
