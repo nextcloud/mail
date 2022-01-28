@@ -546,6 +546,7 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 ::v-deep .list-item__extra {
 	margin-left: 41px !important;
+	display: none;
 }
 .tag-group__label {
 	margin: 0 7px;
