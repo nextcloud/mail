@@ -239,6 +239,7 @@ OC.L10N.register(
     "Contacts with this address" : "Névjegyek ezzel a címmel",
     "Add to Contact" : "Hozzáadás a Névjegyekhez",
     "New Contact" : "Új névjegy",
+    "Copy to clipboard" : "Másolás a vágólapra",
     "Contact name …" : "Névjegyhez tartozó név…",
     "Add" : "Hozzáadás",
     "Disabled" : "Letiltva",

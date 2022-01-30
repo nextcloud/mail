@@ -239,6 +239,7 @@ OC.L10N.register(
     "Contacts with this address" : "Kontakty z adresem",
     "Add to Contact" : "Dodaj do kontaktu",
     "New Contact" : "Nowy kontakt",
+    "Copy to clipboard" : "Kopiuj do schowka",
     "Contact name …" : "Nazwa kontaktu…",
     "Add" : "Dodaj",
     "Disabled" : "Wyłączone",
