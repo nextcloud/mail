@@ -81,7 +81,7 @@ class ItineraryExtractor {
 			$this->adapter = $this->findAvailableAdapter() ?? false;
 		}
 		if ($this->adapter === false) {
-			$this->logger->warning('KItinerary binary adapter is not available, can\'t extract information');
+			$this->logger->info('KItinerary binary adapter is not available, can\'t extract information');
 
 			return new Itinerary();
 		}
