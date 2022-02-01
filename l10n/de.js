@@ -239,6 +239,7 @@ OC.L10N.register(
     "Contacts with this address" : "Kontakte mit dieser E-Mail Adresse",
     "Add to Contact" : "Zu Kontakt hinzufügen",
     "New Contact" : "Neuer Kontakt",
+    "Copy to clipboard" : "In die Zwischenablage kopieren",
     "Contact name …" : "Kontakt-Name …",
     "Add" : "Hinzufügen",
     "Disabled" : "Deaktiviert",
