@@ -239,6 +239,7 @@ OC.L10N.register(
     "Contacts with this address" : "Bu adresi kullanan kişiler",
     "Add to Contact" : "Kişiye ekle",
     "New Contact" : "Yeni kişi",
+    "Copy to clipboard" : "Panoya kopyala",
     "Contact name …" : "Kişi adı …",
     "Add" : "Ekle",
     "Disabled" : "Devre dışı",
