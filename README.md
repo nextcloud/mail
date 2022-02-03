@@ -33,7 +33,8 @@ For new contributors, please check out [ContributingToNextcloudIntroductoryWorks
 
 ## Development setup
 
-Just clone this repo into your apps directory ([Nextcloud server](https://github.com/nextcloud/server#running-master-checkouts) installation needed). Additionally, [npm](https://www.npmjs.com/) to fetch [Node.js](https://nodejs.org/en/download/package-manager/) is needed for installing JavaScript dependencies.
+Just clone this repo into your apps directory ([Nextcloud server](https://github.com/nextcloud/server#running-master-checkouts) installation needed). Additionally, [npm](https://www.npmjs.com/) to fetch [Node.js](https://nodejs.org/en/download/package-manager/) is needed for installing JavaScript dependencies
+and [Composer](https://getcomposer.org/download/): "version 1" is needed for dependency management in PHP.
 
 Once npm and Node.js are installed, PHP and JavaScript dependencies can be installed by running:
 ```bash
