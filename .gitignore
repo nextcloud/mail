@@ -38,3 +38,6 @@ tests/.phpunit.result.cache
 
 # VSCode / VSCodium
 .vscode/
+
+# PhpStorm
+.idea
