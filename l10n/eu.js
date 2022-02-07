@@ -235,6 +235,7 @@ OC.L10N.register(
     "Contacts with this address" : "Kontaktuak helbidearekin",
     "Add to Contact" : "Gehitun kontaktuetara",
     "New Contact" : "Kontaktu berria",
+    "Copy to clipboard" : "Kopiatu arbelera",
     "Contact name …" : "Kontaktu izena ...",
     "Add" : "Gehitu",
     "Disabled" : "Desgaituta",

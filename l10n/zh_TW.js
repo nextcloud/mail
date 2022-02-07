@@ -239,6 +239,7 @@ OC.L10N.register(
     "Contacts with this address" : "有此地址的聯絡人",
     "Add to Contact" : "新增至聯絡人",
     "New Contact" : "新聯絡人",
+    "Copy to clipboard" : "複製到剪貼簿",
     "Contact name …" : "聯絡人名稱……",
     "Add" : "新增",
     "Disabled" : "已停用",
