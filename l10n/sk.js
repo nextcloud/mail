@@ -239,6 +239,7 @@ OC.L10N.register(
     "Contacts with this address" : "Kontakty s touto adresou",
     "Add to Contact" : "Pridať ku Kontaktu",
     "New Contact" : "Nový kontakt",
+    "Copy to clipboard" : "Skopírovať do schránky",
     "Contact name …" : "Názov kontaktu ...",
     "Add" : "Pridať",
     "Disabled" : "Vypnuté",
