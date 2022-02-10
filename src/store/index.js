@@ -43,6 +43,7 @@ export default new Vuex.Store({
 				accountId: UNIFIED_ACCOUNT_ID,
 				isUnified: true,
 				mailboxes: [PRIORITY_INBOX_ID, UNIFIED_INBOX_ID],
+				aliases: [],
 				collapsed: false,
 				emailAddress: '',
 				name: '',
