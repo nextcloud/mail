@@ -29,16 +29,19 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -115,14 +118,9 @@ class MailTransmissionIntegrationTest extends TestCase {
 			OC::$server->query(MailboxMapper::class),
 			OC::$server->query(MessageMapper::class),
 			OC::$server->query(LoggerInterface::class),
-			OC::$server->query(PerformanceLogger::class)
+			OC::$server->query(PerformanceLogger::class),
+			OC::$server->get(AliasesService::class)
 		);
-	}
-
-	protected function tearDown(): void {
-		if ($this->client !== null) {
-			$this->client->logout();
-		}
 	}
 
 	public function testSendMail() {
@@ -185,8 +183,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$messageInReply->setMailboxId($inbox->getId());
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$reply = new RepliedMessageData($this->account, $messageInReply);
-		$this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage($message, $messageInReply->getMessageId());
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -212,7 +209,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $messageInReply);
-		$this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage($message, $messageInReply->getMessageId());
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -238,7 +235,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'Re: reply test', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $messageInReply);
-		$this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage($message, $messageInReply->getMessageId());
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -264,5 +261,24 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->transmission->saveDraft($message2, $previous);
 
 		$this->assertMessageCount(1, 'Drafts');
+	}
+
+	public function testSendLocalMessage(): void {
+		$localMessage = new LocalMessage();
+		$to = new Recipient();
+		$to->setLabel('Penny');
+		$to->setEmail('library@stardewvalley.edu');
+		$to->setType(Recipient::TYPE_TO);
+		$localMessage->setType(LocalMessage::TYPE_OUTGOING);
+		$localMessage->setSubject('hello');
+		$localMessage->setBody('This is a test');
+		$localMessage->setHtml(false);
+		$localMessage->setRecipients([$to]);
+		$localMessage->setAttachments([]);
+
+		$this->transmission->sendLocalMessage($this->account, $localMessage);
+
+		$this->assertMailboxExists('Sent');
+		$this->assertMessageCount(1, 'Sent');
 	}
 }

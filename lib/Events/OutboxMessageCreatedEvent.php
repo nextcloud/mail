@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2022 Anna Larch <anna.larch@gmx.net>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Anna Larch <anna.larch@gmx.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -25,72 +25,33 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use Horde_Mime_Mail;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Model\IMessage;
-use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
 /**
  * @psalm-immutable
  */
-class MessageSentEvent extends Event {
+class OutboxMessageCreatedEvent extends Event {
 
 	/** @var Account */
 	private $account;
 
-	/** @var NewMessageData */
-	private $newMessageData;
-
-	/** @var null|string */
-	private $repliedToMessageId;
-
-	/** @var Message|null */
+	/** @var Message */
 	private $draft;
 
-	/** @var IMessage */
-	private $message;
-
-	/** @var Horde_Mime_Mail */
-	private $mail;
-
 	public function __construct(Account $account,
-								NewMessageData $newMessageData,
-								?string $repliedToMessageId,
-								?Message $draft,
-								IMessage $message,
-								Horde_Mime_Mail $mail) {
+								Message $draft) {
 		parent::__construct();
 		$this->account = $account;
-		$this->newMessageData = $newMessageData;
-		$this->repliedToMessageId = $repliedToMessageId;
 		$this->draft = $draft;
-		$this->message = $message;
-		$this->mail = $mail;
 	}
 
 	public function getAccount(): Account {
 		return $this->account;
 	}
 
-	public function getNewMessageData(): NewMessageData {
-		return $this->newMessageData;
-	}
-
-	public function getRepliedToMessageId(): ?string {
-		return $this->repliedToMessageId;
-	}
-
 	public function getDraft(): ?Message {
 		return $this->draft;
-	}
-
-	public function getMessage(): IMessage {
-		return $this->message;
-	}
-
-	public function getMail(): Horde_Mime_Mail {
-		return $this->mail;
 	}
 }

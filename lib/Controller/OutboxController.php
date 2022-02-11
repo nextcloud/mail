@@ -26,62 +26,44 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 class OutboxController extends Controller {
-	public function __construct(string $appName,
-								IRequest $request) {
-		parent::__construct($appName, $request);
-	}
 
-	private function stubbedMessage(int $id): array {
-		return [
-			'id' => $id,
-			'type' => 0,
-			'accountId' => $id,
-			'aliasId' => null,
-			'sendAt' => null,
-			'subject' => 'I am a stub',
-			'text' => 'bonjour',
-			'html' => false,
-			'inReplyToId' => null,
-			'draftId' => null,
-			'attachments' => [],
-			'to' => [
-				[
-					'id' => 1001,
-					'messageId' => $id,
-					'type' => 1,
-					'label' => 'Reci Pient One',
-					'email' => 'rep1@domain.tld',
-				],
-				[
-					'id' => 1002,
-					'messageId' => $id,
-					'type' => 1,
-					'label' => 'Recipient Two',
-					'email' => 'rep2@domain.tld',
-				],
-			],
-			'cc' => [],
-			'bcc' => [],
-		];
+	/** @var OutboxService */
+	private $service;
+
+	/** @var string */
+	private $userId;
+
+	/** @var AccountService */
+	private $accountService;
+
+	public function __construct(string $appName,
+								$UserId,
+								IRequest $request,
+								OutboxService $service,
+								AccountService $accountService) {
+		parent::__construct($appName, $request);
+		$this->userId = $UserId;
+		$this->service = $service;
+		$this->accountService = $accountService;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @TrapError
+	 *
+	 * @return JsonResponse
 	 */
-	public function index(): JSONResponse {
-		return JsonResponse::success([
-			'messages' => [
-				$this->stubbedMessage(101),
-				$this->stubbedMessage(102),
-			],
-		]);
+	public function index(): JsonResponse {
+		return JsonResponse::success(['messages' => $this->service->getMessages($this->userId)]);
 	}
 
 	/**
@@ -89,13 +71,12 @@ class OutboxController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
+	 * @return JsonResponse
 	 */
-	public function show(int $id): JSONResponse {
-		if ($id === 101) {
-			return JsonResponse::success($this->stubbedMessage(101));
-		}
-
-		return JsonResponse::fail(null, Http::STATUS_NOT_FOUND);
+	public function show(int $id): JsonResponse {
+		$message = $this->service->getMessage($id, $this->userId);
+		$this->accountService->find($this->userId, $message->getAccountId());
+		return JsonResponse::success($message);
 	}
 
 	/**
@@ -106,36 +87,46 @@ class OutboxController extends Controller {
 	 * @param string $subject
 	 * @param string $body
 	 * @param bool $isHtml
-	 * @param array $to i. e. [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
+	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array $cc
 	 * @param array $bcc
-	 * @param array $attachmentIds
-	 * @param int|null $aliasId
-	 * @param int|null $inReplyToId
+	 * @param array $attachments
 	 * @param int|null $draftId
+	 * @param int|null $aliasId
+	 * @param string|null $inReplyToMessageId
+	 * @return JsonResponse
 	 */
 	public function create(
-		int $accountId,
-		string $subject,
-		string $body,
-		bool $isHtml,
-		array $to = [],
-		array $cc = [],
-		array $bcc = [],
-		array $attachmentIds = [],
-		?int $aliasId = null,
-		?int $inReplyToId = null,
-		?int $draftId = null
-	): JSONResponse {
-		if ($subject === 'error') {
-			return JsonResponse::error('the server errored');
+		int     $accountId,
+		string  $subject,
+		string  $body,
+		bool    $isHtml,
+		array   $to = [],
+		array   $cc = [],
+		array   $bcc = [],
+		array   $attachments = [],
+		?int    $draftId = null,
+		?int    $aliasId = null,
+		?string $inReplyToMessageId = null
+	): JsonResponse {
+		$account = $this->accountService->find($this->userId, $accountId);
+
+		if ($draftId !== null) {
+			$this->service->handleDraft($account, $draftId);
 		}
 
-		if ($subject === 'invalid') {
-			return JsonResponse::fail('invalid message', Http::STATUS_UNPROCESSABLE_ENTITY);
-		}
+		$message = new LocalMessage();
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setAccountId($accountId);
+		$message->setAliasId($aliasId);
+		$message->setSubject($subject);
+		$message->setBody($body);
+		$message->setHtml($isHtml);
+		$message->setInReplyToMessageId($inReplyToMessageId);
 
-		return JsonResponse::success($this->stubbedMessage(103), Http::STATUS_CREATED);
+		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
+
+		return JsonResponse::success($message, Http::STATUS_CREATED);
 	}
 
 	/**
@@ -143,24 +134,42 @@ class OutboxController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
+	 * @param int $accountId
+	 * @param string $subject
+	 * @param string $body
+	 * @param bool $isHtml
+	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
+	 * @param array $cc
+	 * @param array $bcc
+	 * @param array $attachments
+	 * @param int|null $aliasId
+	 * @param string|null $inReplyToMessageId
+	 * @return JsonResponse
 	 */
-	public function update(int $id,
-							int $accountId,
-							string $subject,
-							string $body,
-							bool $isHtml,
-							array $to = [],
-							array $cc = [],
-							array $bcc = [],
-							array $attachmentIds = [],
-							?int $aliasId = null,
-							?int $inReplyToId = null,
-							?int $draftId = null): JSONResponse {
-		if ($id === 101) {
-			return JsonResponse::success($this->stubbedMessage($id));
-		}
+	public function update(int     $id,
+						   int     $accountId,
+						   string  $subject,
+						   string  $body,
+						   bool    $isHtml,
+						   array   $to = [],
+						   array   $cc = [],
+						   array   $bcc = [],
+						   array   $attachments = [],
+						   ?int    $aliasId = null,
+						   ?string $inReplyToMessageId = null): JsonResponse {
+		$message = $this->service->getMessage($id, $this->userId);
+		$account = $this->accountService->find($this->userId, $accountId);
 
-		return JsonResponse::fail('message not found', Http::STATUS_NOT_FOUND);
+		$message->setAccountId($accountId);
+		$message->setSubject($subject);
+		$message->setBody($body);
+		$message->setHtml($isHtml);
+		$message->setAliasId($aliasId);
+		$message->setInReplyToMessageId($inReplyToMessageId);
+
+		$message = $this->service->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
+
+		return JsonResponse::success($message, Http::STATUS_ACCEPTED);
 	}
 
 	/**
@@ -168,13 +177,16 @@ class OutboxController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
+	 * @return JsonResponse
 	 */
-	public function send(int $id): JSONResponse {
-		if ($id === 102) {
-			return JsonResponse::error('could not send message');
-		}
+	public function send(int $id): JsonResponse {
+		$message = $this->service->getMessage($id, $this->userId);
+		$account = $this->accountService->find($this->userId, $message->getAccountId());
 
-		return JsonResponse::success($this->stubbedMessage($id));
+		$this->service->sendMessage($message, $account);
+		return  JsonResponse::success(
+			'Message sent', Http::STATUS_ACCEPTED
+		);
 	}
 
 	/**
@@ -182,12 +194,11 @@ class OutboxController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
+	 * @return JsonResponse
 	 */
-	public function destroy(int $id): JSONResponse {
-		if ($id === 101) {
-			return JsonResponse::success($this->stubbedMessage($id));
-		}
-
-		return JsonResponse::fail('message not found', Http::STATUS_NOT_FOUND);
+	public function destroy(int $id): JsonResponse {
+		$message = $this->service->getMessage($id, $this->userId);
+		$this->service->deleteMessage($this->userId, $message);
+		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
 	}
 }

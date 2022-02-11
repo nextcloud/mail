@@ -58,8 +58,9 @@ export default {
 
 		try {
 			await OutboxService.sendMessage(id)
+			logger.debug(`Outbox message ${id} sent`)
 		} catch (error) {
-			logger.error(`Failed to send message ${id} from outbox`)
+			logger.error(`Failed to send message ${id} from outbox`, { error })
 			return
 		}
 

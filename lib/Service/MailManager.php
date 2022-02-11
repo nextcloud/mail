@@ -746,4 +746,11 @@ class MailManager implements IMailManager {
 			);
 		}
 	}
+
+	/**
+	 * @return Message[]
+	 */
+	public function getByMessageId(Account $account, string $messageId): array {
+		return $this->dbMessageMapper->findByMessageId($account, $messageId);
+	}
 }

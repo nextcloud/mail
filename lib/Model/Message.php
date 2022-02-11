@@ -227,13 +227,7 @@ class Message implements IMessage {
 			}
 		}
 
-		$part = new Horde_Mime_Part();
-		$part->setCharset('us-ascii');
-		$part->setDisposition('attachment');
-		$part->setName($name);
-		$part->setContents($content);
-		$part->setType($mime);
-		$this->attachments[] = $part;
+		$this->createAttachmentDetails($name, $content, $mime);
 	}
 
 	/**
@@ -243,14 +237,7 @@ class Message implements IMessage {
 	 * @return void
 	 */
 	public function addEmbeddedMessageAttachment(string $name, string $content): void {
-		$mime = 'message/rfc822';
-		$part = new Horde_Mime_Part();
-		$part->setCharset('us-ascii');
-		$part->setDisposition('attachment');
-		$part->setName($name);
-		$part->setContents($content);
-		$part->setType($mime);
-		$this->attachments[] = $part;
+		$this->createAttachmentDetails($name, $content, 'message/rfc822');
 	}
 
 	/**
@@ -258,14 +245,8 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function addAttachmentFromFiles(File $file) {
-		$part = new Horde_Mime_Part();
-		$part->setCharset('us-ascii');
-		$part->setDisposition('attachment');
-		$part->setName($file->getName());
-		$part->setContents($file->getContent());
-		$part->setType($file->getMimeType());
-		$this->attachments[] = $part;
+	public function addAttachmentFromFiles(File $file): void {
+		$this->createAttachmentDetails($file->getName(), $file->getContent(), $file->getMimeType());
 	}
 
 	/**
@@ -274,13 +255,23 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file) {
+	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file): void {
+		$this->createAttachmentDetails($attachment->getFileName(), $file->getContent(), $attachment->getMimeType());
+	}
+
+	/**
+	 * @param string $name
+	 * @param string $content
+	 * @param string $mime
+	 * @return void
+	 */
+	private function createAttachmentDetails(string $name, string $content, string $mime): void {
 		$part = new Horde_Mime_Part();
 		$part->setCharset('us-ascii');
 		$part->setDisposition('attachment');
-		$part->setName($attachment->getFileName());
-		$part->setContents($file->getContent());
-		$part->setType($attachment->getMimeType());
+		$part->setName($name);
+		$part->setContents($content);
+		$part->setType($mime);
 		$this->attachments[] = $part;
 	}
 }

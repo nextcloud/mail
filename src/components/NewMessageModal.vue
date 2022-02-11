@@ -95,7 +95,7 @@ export default {
 					to: data.to,
 					cc: data.cc,
 					bcc: data.bcc,
-					attachmentIds: [],
+					attachments: data.attachments,
 				}
 				// TODO: update the message instead of enqueing another time
 				const message = await this.$store.dispatch('outbox/enqueueMessage', {
@@ -116,7 +116,7 @@ export default {
 					to: data.to,
 					cc: data.cc,
 					bcc: data.bcc,
-					attachmentIds: [],
+					attachments: data.attachments,
 				}
 				const message = await this.$store.dispatch('outbox/enqueueMessage', {
 					message: dataForServer,
