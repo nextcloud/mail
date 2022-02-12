@@ -119,7 +119,7 @@
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",
     "url-loader": "^4.1.1",
-    "vue-loader": "^15.9.7",
+    "vue-loader": "^17.0.0",
     "vue-server-renderer": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^4.46.0",
