@@ -60,7 +60,7 @@
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "postcss-loader": "^3.0.0",
     "printscout": "2.0.3",
-    "ramda": "^0.27.2",
+    "ramda": "^0.28.0",
     "raw-loader": "^4.0.2",
     "stylelint": "^14.2.0",
     "v-tooltip": "^2.1.3",
