@@ -36,9 +36,10 @@
 				:show-no-options="false"
 				:preserve-search="true"
 				:hide-selected="true"
+				:loading="loadingIndicatorTo"
 				@keyup="onInputChanged"
 				@tag="onNewToAddr"
-				@search-change="onAutocomplete" />
+				@search-change="onAutocomplete($event, 'to')" />
 			<a v-if="!showCC"
 				class="copy-toggle"
 				href="#"
@@ -62,9 +63,10 @@
 				:clear-on-select="false"
 				:show-no-options="false"
 				:preserve-search="true"
+				:loading="loadingIndicatorCc"
 				@keyup="onInputChanged"
 				@tag="onNewCcAddr"
-				@search-change="onAutocomplete">
+				@search-change="onAutocomplete($event, 'cc')">
 				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
 			</Multiselect>
 		</div>
@@ -83,9 +85,10 @@
 				:placeholder="t('mail', '')"
 				:show-no-options="false"
 				:preserve-search="true"
+				:loading="loadingIndicatorBcc"
 				@keyup="onInputChanged"
 				@tag="onNewBccAddr"
-				@search-change="onAutocomplete">
+				@search-change="onAutocomplete($event, 'bcc')">
 				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
 			</Multiselect>
 		</div>
@@ -389,6 +392,9 @@ export default {
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
 			appendSignature: true,
+			loadingIndicatorTo: false,
+			loadingIndicatorCc: false,
+			loadingIndicatorBcc: false,
 		}
 	},
 	computed: {
@@ -690,11 +696,21 @@ export default {
 		onAddCloudAttachmentLink() {
 			this.bus.$emit('onAddCloudAttachmentLink')
 		},
-		onAutocomplete(term) {
+		onAutocomplete(term, loadingIndicator) {
 			if (term === undefined || term === '') {
 				return
 			}
+			this.loadingIndicatorTo = loadingIndicator === 'to'
+			this.loadingIndicatorCc = loadingIndicator === 'cc'
+			this.loadingIndicatorBcc = loadingIndicator === 'bcc'
 			debouncedSearch(term).then((results) => {
+				if (loadingIndicator === 'to') {
+					this.loadingIndicatorTo = false
+				} else if (loadingIndicator === 'cc') {
+					this.loadingIndicatorCc = false
+				} else if (loadingIndicator === 'bcc') {
+					this.loadingIndicatorBcc = false
+				}
 				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
 		},
