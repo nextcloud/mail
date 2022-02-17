@@ -312,6 +312,8 @@ OC.L10N.register(
     "Add the email address of your anti spam report service here." : "Füge hier die E-Mail-Adresse Deines Anti-Spam-Dienstes hinzu.",
     "When using this setting, a report email will be sent to the SPAM report server when a user clicks \"Mark as spam\"." : "Bei Verwendung dieser Einstellung wird eine Berichts-E-Mail an den SPAM-Berichtsserver gesendet, sobald ein Benutzer auf \"Als Spam markieren\" klickt.",
     "The original message will be attached as a \"message/rfc822\" attachment." : "Die Originalnachricht wird als \"message/rfc822\"-Anhang angehängt.",
+    "\"Mark as Spam\" Email Address" : "\"Als Spam markieren\" E-Mail-Adresse",
+    "\"Mark Not Junk\" Email Address" : "\"Nicht als Junk markieren\" E-Mail-Adresse",
     "Reset" : "Zurücksetzen",
     "Successfully set up anti spam email addresses" : "Erfolgreich Anti-Spam-E-Mail-Adressen eingerichtet",
     "Error saving anti spam email addresses" : "Fehler beim Speichern der Anti-Spam-E-Mail-Adressen",
