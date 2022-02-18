@@ -33,6 +33,7 @@ use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function method_exists;
 
 class TrainImportanceClassifierJob extends TimedJob {
 
@@ -60,7 +61,13 @@ class TrainImportanceClassifierJob extends TimedJob {
 		$this->jobList = $jobList;
 		$this->logger = $logger;
 
-		$this->setInterval(3600);
+		$this->setInterval(24 * 60 * 60);
+		/**
+		 * @todo remove check with 24+
+		 */
+		if (method_exists($this, 'setTimeSensitivity')) {
+			$this->setTimeSensitivity(self::TIME_INSENSITIVE);
+		}
 	}
 
 	/**
