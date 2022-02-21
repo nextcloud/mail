@@ -128,6 +128,12 @@ jobs:
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
                 php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type bool --value false
+          - name: Enable slow mysql query logs
+            if: ${{ matrix.db == 'mysql' }}
+            run: |
+              echo "SET GLOBAL log_queries_not_using_indexes = 1;" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
+              echo "SET GLOBAL slow_query_log=1;" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
+              echo "SET GLOBAL log_output = 'table';" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Run tests
             working-directory: nextcloud/apps/mail
             run: |
@@ -136,6 +142,9 @@ jobs:
                 composer run test:integration
             env:
                 XDEBUG_MODE: coverage
+          - name: Read slow queries
+            if: ${{ always() }}
+            run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Print debug logs
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
