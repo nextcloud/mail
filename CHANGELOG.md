@@ -1,5 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## 1.11.7 - 2022-02-21
+### Added
+- Loading indicator for recipient suggestions
+### Fixed
+- Move KItinerary warning message to info
 
 ## 1.11.6 - 2022-01-25
 ### Fixed
