@@ -41,6 +41,7 @@ describe('Vuex store mutations', () => {
 			accountId: 13,
 			id: 13,
 			mailboxes: [],
+			aliases: [],
 		})
 
 		expect(state).to.deep.equal({
@@ -50,6 +51,7 @@ describe('Vuex store mutations', () => {
 					accountId: 13,
 					id: 13,
 					mailboxes: [],
+					aliases: [],
 					collapsed: true,
 				},
 			},
@@ -80,6 +82,7 @@ describe('Vuex store mutations', () => {
 					delimiter: '.',
 				},
 			],
+			aliases: []
 		})
 
 		expect(state).to.deep.equal({
@@ -91,6 +94,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [
 						345,
 					],
+					aliases: [],
 					collapsed: true,
 				},
 			},
@@ -141,6 +145,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'sent',
 				},
 			],
+			aliases: [],
 			personalNamespace: 'INBOX.',
 		})
 
@@ -154,6 +159,7 @@ describe('Vuex store mutations', () => {
 						345,
 						346,
 					],
+					aliases: [],
 					collapsed: true,
 					personalNamespace: 'INBOX.',
 				},
@@ -219,6 +225,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
+			aliases: []
 		})
 
 		expect(state).to.deep.equal({
@@ -230,6 +237,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [
 						345,
 					],
+					aliases: [],
 					collapsed: true,
 				},
 			},
@@ -303,6 +311,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
+			aliases: []
 		})
 
 		expect(state).to.deep.equal({
@@ -314,6 +323,7 @@ describe('Vuex store mutations', () => {
 					mailboxes: [
 						345,
 					],
+					aliases: [],
 					collapsed: true,
 				},
 			},
