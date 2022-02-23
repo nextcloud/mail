@@ -950,7 +950,7 @@ class MessageMapper extends QBMapper {
 			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$results[] = $this->findRelatedData($this->findEntities($qb), $userId);
 		}
-		return array_merge(...$results);
+		return array_merge([], ...$results);
 	}
 
 	/**
@@ -980,7 +980,7 @@ class MessageMapper extends QBMapper {
 			$result->closeCursor();
 		}
 
-		$recipientsResults = array_merge(...$recipientsResults);
+		$recipientsResults = array_merge([], ...$recipientsResults);
 
 		foreach ($recipientsResults as $recipient) {
 			$message = $indexedMessages[(int)$recipient['message_id']];
