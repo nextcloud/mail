@@ -147,6 +147,8 @@ OC.L10N.register(
     "Could not load your draft" : "No s’ha pogut carregar el vostre esborrany",
     "Could not load original message" : "No s'ha pogut carregar el missatge original",
     "No message selected" : "No s'ha seleccionat cap missatge",
+    "Disabled" : "Inhabilitat",
+    "Enabled" : "Habilitat",
     "Signature …" : "Signatura …",
     "Save signature" : "Desa la signatura",
     "Delete" : "Suprimeix",
