@@ -208,7 +208,7 @@ class AccountsController extends Controller {
 			if ($autoDetect) {
 				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
+				$account = $this->setup->createNewAccount($accountName, $emailAddress, trim($imapHost), $imapPort, $imapSslMode, $imapUser, $imapPassword, trim($smtpHost), $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
 			}
 		} catch (Exception $ex) {
 			$errorMessage = $ex->getMessage();
@@ -343,7 +343,7 @@ class AccountsController extends Controller {
 			if ($autoDetect) {
 				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
+				$account = $this->setup->createNewAccount($accountName, $emailAddress, trim($imapHost), $imapPort, $imapSslMode, $imapUser, $imapPassword, trim($smtpHost), $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
 			}
 		} catch (CouldNotConnectException $e) {
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), [
