@@ -35,6 +35,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
@@ -339,28 +340,37 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 */
 	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
-		$account = null;
-		$errorMessage = null;
 		try {
 			if ($autoDetect) {
 				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
 				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
 			}
-		} catch (Exception $ex) {
-			$errorMessage = $ex->getMessage();
+		} catch (CouldNotConnectException $e) {
+			$this->logger->info('Creating account failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return \OCA\Mail\Http\JsonResponse::fail([
+				'error' => $e->getReason(),
+				'service' => $e->getService(),
+				'host' => $e->getHost(),
+				'port' => $e->getPort(),
+			]);
+		} catch (ServiceException $e) {
+			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return \OCA\Mail\Http\JsonResponse::error('Could not create account');
 		}
 
 		if (is_null($account)) {
-			if ($autoDetect) {
-				throw new ClientException($this->l10n->t('Auto detect failed. Please use manual mode.'));
-			} else {
-				$this->logger->error('Creating account failed: ' . $errorMessage);
-				throw new ClientException($this->l10n->t('Creating account failed: ') . $errorMessage);
-			}
+			return \OCA\Mail\Http\JsonResponse::fail([
+				'error' => 'AUTOCONFIG_FAILED',
+				'message' => $this->l10n->t('Auto detect failed. Please use manual mode.'),
+			]);
 		}
 
-		return new JSONResponse($account, Http::STATUS_CREATED);
+		return \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 	}
 
 	/**
