@@ -244,7 +244,7 @@ export default {
 			return this.data.flags.draft
 		},
 		account() {
-			const accountId = this.data.accountId ?? this.data.accountId
+			const accountId = this.data.accountId
 			return this.$store.getters.getAccount(accountId)
 		},
 		link() {
