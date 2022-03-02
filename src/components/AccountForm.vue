@@ -386,9 +386,14 @@ export default {
 					...this.autoConfig,
 				})
 			} else {
+				// Removing additional whitespaces from manual configuration hosts
+				// In order to avoid issues when copy pasting imap & smtp hosts from providers documentations,
+				// which may have whitespaces.
 				return this.save({
 					autoDetect: false,
 					...this.manualConfig,
+					imapHost: this.manualConfig.imapHost.trim(),
+					smtpHost: this.manualConfig.smtpHost.trim(),
 				})
 			}
 		},
