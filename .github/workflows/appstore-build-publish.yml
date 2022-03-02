@@ -27,7 +27,7 @@ jobs:
           echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ${{ env.APP_NAME }}
 
@@ -107,7 +107,7 @@ jobs:
           unzip latest-$NCVERSION.zip
 
       - name: Checkout server master fallback
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         if: ${{ steps.server-checkout.outcome != 'success' }}
         with:
           repository: nextcloud/server
