@@ -5,99 +5,122 @@
 			menu-align="right"
 			event=""
 			@click.native.prevent>
-			<ActionRouter v-if="withReply"
-				:icon="hasMultipleRecipients ? 'icon-reply-all' : 'icon-reply'"
-				:close-after-click="true"
-				:to="hasMultipleRecipients ? replyAllLink : replyOneLink">
-				{{ t('mail', 'Reply') }}
-			</ActionRouter>
-			<ActionRouter v-if="hasMultipleRecipients"
-				icon="icon-reply"
-				:close-after-click="true"
-				:to="replyOneLink">
-				{{ t('mail', 'Reply to sender only') }}
-			</ActionRouter>
-			<ActionRouter icon="icon-forward"
-				:close-after-click="true"
-				:to="forwardLink">
-				{{ t('mail', 'Forward') }}
-			</ActionRouter>
-			<ActionButton icon="icon-important"
-				:close-after-click="true"
-				@click.prevent="onToggleImportant">
-				{{
-					isImportant ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-				}}
-			</ActionButton>
-			<ActionButton :icon="iconFavorite"
-				:close-after-click="true"
-				@click.prevent="onToggleFlagged">
-				{{
-					envelope.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-mail"
-				:close-after-click="true"
-				@click.prevent="onToggleSeen">
-				{{
-					envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-junk"
-				:close-after-click="true"
-				@click.prevent="onToggleJunk">
-				{{
-					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
-				}}
-			</ActionButton>
-			<ActionButton
-				icon="icon-tag"
-				:close-after-click="true"
-				@click.prevent="onOpenTagModal">
-				{{ t('mail', 'Edit tags') }}
-			</ActionButton>
-			<ActionButton v-if="withSelect"
-				icon="icon-checkmark"
-				:close-after-click="true"
-				@click.prevent="toggleSelected">
-				{{
-					isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-external"
-				:close-after-click="true"
-				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move message') }}
-			</ActionButton>
-			<ActionButton icon="icon-calendar-dark"
-				:close-after-click="true"
-				@click.prevent="showEventModal = true">
-				{{ t('mail', 'Create event') }}
-			</ActionButton>
-			<ActionButton icon="icon-add"
-				:close-after-click="true"
-				@click="onOpenEditAsNew">
-				{{ t('mail', 'Edit as new message') }}
-			</ActionButton>
-			<ActionButton v-if="withShowSource"
-				:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
-				:disabled="sourceLoading"
-				:close-after-click="true"
-				@click.prevent="onShowSourceModal">
-				{{ t('mail', 'View source') }}
-			</ActionButton>
-			<ActionLink v-if="debug"
-				icon="icon-download"
-				:download="threadingFileName"
-				:href="threadingFile"
-				:close-after-click="true">
-				{{ t('mail', 'Download thread data for debugging') }}
-			</ActionLink>
-			<ActionButton icon="icon-delete"
-				:close-after-click="true"
-				@click.prevent="onDelete">
-				{{ t('mail', 'Delete message') }}
-			</ActionButton>
+			<template v-if="!moreActionsOpen">
+				<EnvelopePrimaryActions>
+					<ActionButton :icon="iconFavorite"
+						class="action--primary"
+						:close-after-click="true"
+						@click.prevent="onToggleFlagged">
+						{{
+							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+						}}
+					</ActionButton>
+					<ActionButton icon="icon-mail"
+						class="action--primary"
+						:close-after-click="true"
+						@click.prevent="onToggleSeen">
+						{{
+							envelope.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
+						}}
+					</ActionButton>
+					<ActionButton icon="icon-important"
+						class="action--primary"
+						:close-after-click="true"
+						@click.prevent="onToggleImportant">
+						{{
+							isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
+						}}
+					</ActionButton>
+				</EnvelopePrimaryActions>
+				<ActionRouter v-if="withReply"
+					:icon="hasMultipleRecipients ? 'icon-reply-all' : 'icon-reply'"
+					:close-after-click="true"
+					:to="hasMultipleRecipients ? replyAllLink : replyOneLink">
+					{{ t('mail', 'Reply') }}
+				</ActionRouter>
+				<ActionRouter v-if="hasMultipleRecipients"
+					icon="icon-reply"
+					:close-after-click="true"
+					:to="replyOneLink">
+					{{ t('mail', 'Reply to sender only') }}
+				</ActionRouter>
+				<ActionRouter icon="icon-forward"
+					:close-after-click="true"
+					:to="forwardLink">
+					{{ t('mail', 'Forward') }}
+				</ActionRouter>
+				<ActionButton icon="icon-junk"
+					:close-after-click="true"
+					@click.prevent="onToggleJunk">
+					{{
+						envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					}}
+				</ActionButton>
+				<ActionButton
+					icon="icon-tag"
+					:close-after-click="true"
+					@click.prevent="onOpenTagModal">
+					{{ t('mail', 'Edit tags') }}
+				</ActionButton>
+				<ActionButton v-if="withSelect"
+					icon="icon-checkmark"
+					:close-after-click="true"
+					@click.prevent="toggleSelected">
+					{{
+						isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-external"
+					:close-after-click="true"
+					@click.prevent="onOpenMoveModal">
+					{{ t('mail', 'Move message') }}
+				</ActionButton>
+				<ActionButton icon="icon-more"
+					:close-after-click="false"
+					@click="moreActionsOpen=true">
+					{{ t('mail', 'More actions') }}
+				</ActionButton>
+				<ActionButton icon="icon-delete"
+					:close-after-click="true"
+					@click.prevent="onDelete">
+					{{ t('mail', 'Delete message') }}
+				</ActionButton>
+			</template>
+			<template v-if="moreActionsOpen">
+				<ActionButton :close-after-click="false"
+					@click="moreActionsOpen=false">
+					<template #icon>
+						<ChevronLeft
+							:title="t('mail', 'More actions')"
+							:size="20" />
+						{{ t('mail', 'More actions') }}
+					</template>
+				</ActionButton>
+				<ActionButton icon="icon-add"
+					:close-after-click="true"
+					@click="onOpenEditAsNew">
+					{{ t('mail', 'Edit as new message') }}
+				</ActionButton>
+				<ActionButton icon="icon-calendar-dark"
+					:close-after-click="true"
+					@click.prevent="showEventModal = true">
+					{{ t('mail', 'Create event') }}
+				</ActionButton>
+				<ActionButton v-if="withShowSource"
+					:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
+					:disabled="sourceLoading"
+					:close-after-click="true"
+					@click.prevent="onShowSourceModal">
+					{{ t('mail', 'View source') }}
+				</ActionButton>
+				<ActionLink v-if="debug"
+					icon="icon-download"
+					:download="threadingFileName"
+					:href="threadingFile"
+					:close-after-click="true">
+					{{ t('mail', 'Download thread data for debugging') }}
+				</ActionLink>
+			</template>
 		</Actions>
 		<Modal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
 			<div class="source-modal-content">
@@ -133,8 +156,10 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import { Base64 } from 'js-base64'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import EventModal from './EventModal'
+import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { generateUrl } from '@nextcloud/router'
 import logger from '../logger'
 import { matchError } from '../errors/match'
@@ -152,11 +177,13 @@ export default {
 		ActionButton,
 		ActionLink,
 		ActionRouter,
+		ChevronLeft,
 		EventModal,
 		Modal,
 		MoveModal,
 		TagModal,
 		NewMessageModal,
+		EnvelopePrimaryActions,
 	},
 	props: {
 		envelope: {
@@ -202,6 +229,7 @@ export default {
 			showEventModal: false,
 			showTagModal: false,
 			showNewMessage: false,
+			moreActionsOpen: false,
 		}
 	},
 	computed: {
@@ -379,4 +407,5 @@ export default {
 			overflow-y: scroll !important;
 		}
 	}
+
 </style>

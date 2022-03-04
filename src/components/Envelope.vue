@@ -57,67 +57,90 @@
 			{{ data.subject }}
 		</template>
 		<template #actions>
-			<ActionButton icon="icon-important"
-				:close-after-click="true"
-				@click.prevent="onToggleImportant">
-				{{
-					isImportant ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-starred"
-				:close-after-click="true"
-				@click.prevent="onToggleFlagged">
-				{{
-					data.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-mail"
-				:close-after-click="true"
-				@click.prevent="onToggleSeen">
-				{{
-					data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-junk"
-				:close-after-click="true"
-				@click.prevent="onToggleJunk">
-				{{
-					data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-checkmark"
-				:close-after-click="true"
-				@click.prevent="toggleSelected">
-				{{
-					selected ? t('mail', 'Unselect') : t('mail', 'Select')
-				}}
-			</ActionButton>
-			<ActionButton
-				icon="icon-tag"
-				:close-after-click="true"
-				@click.prevent="onOpenTagModal">
-				{{ t('mail', 'Edit tags') }}
-			</ActionButton>
-			<ActionButton icon="icon-external"
-				:close-after-click="true"
-				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move thread') }}
-			</ActionButton>
-			<ActionButton icon="icon-calendar-dark"
-				:close-after-click="true"
-				@click.prevent="showEventModal = true">
-				{{ t('mail', 'Create event') }}
-			</ActionButton>
-			<ActionButton icon="icon-add"
-				:close-after-click="true"
-				@click.prevent="onOpenEditAsNew">
-				{{ t('mail', 'Edit as new message') }}
-			</ActionButton>
-			<ActionButton icon="icon-delete"
-				:close-after-click="true"
-				@click.prevent="onDelete">
-				{{ t('mail', 'Delete thread') }}
-			</ActionButton>
+			<EnvelopePrimaryActions v-if="!moreActionsOpen">
+				<ActionButton icon="icon-starred"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onToggleFlagged">
+					{{
+						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-mail"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onToggleSeen">
+					{{
+						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-important"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onToggleImportant">
+					{{
+						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
+					}}
+				</ActionButton>
+			</EnvelopePrimaryActions>
+			<template v-if="!moreActionsOpen">
+				<ActionButton icon="icon-junk"
+					:close-after-click="true"
+					@click.prevent="onToggleJunk">
+					{{
+						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-checkmark"
+					:close-after-click="true"
+					@click.prevent="toggleSelected">
+					{{
+						selected ? t('mail', 'Unselect') : t('mail', 'Select')
+					}}
+				</ActionButton>
+				<ActionButton
+					icon="icon-tag"
+					:close-after-click="true"
+					@click.prevent="onOpenTagModal">
+					{{ t('mail', 'Edit tags') }}
+				</ActionButton>
+				<ActionButton icon="icon-external"
+					:close-after-click="true"
+					@click.prevent="onOpenMoveModal">
+					{{ t('mail', 'Move thread') }}
+				</ActionButton>
+				<ActionButton icon="icon-more"
+					:close-after-click="false"
+					@click="moreActionsOpen=true">
+					{{ t('mail', 'More actions') }}
+				</ActionButton>
+				<ActionButton icon="icon-delete"
+					:close-after-click="true"
+					@click.prevent="onDelete">
+					{{ t('mail', 'Delete thread') }}
+				</ActionButton>
+			</template>
+			<template v-if="moreActionsOpen">
+				<ActionButton :close-after-click="false"
+					@click="moreActionsOpen=false">
+					<template #icon>
+						<ChevronLeft
+							:title="t('mail', 'More actions')"
+							:size="20" />
+						{{ t('mail', 'More actions') }}
+					</template>
+				</ActionButton>
+				<ActionButton icon="icon-add"
+					:close-after-click="true"
+					@click.prevent="onOpenEditAsNew">
+					{{ t('mail', 'Edit as new message') }}
+				</ActionButton>
+				<ActionButton icon="icon-calendar-dark"
+					:close-after-click="true"
+					@click.prevent="showEventModal = true">
+					{{ t('mail', 'Create event') }}
+				</ActionButton>
+			</template>
 		</template>
 		<template #extra>
 			<div
@@ -157,6 +180,7 @@ import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import moment from '@nextcloud/moment'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
@@ -169,15 +193,18 @@ import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
+import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'Envelope',
 	components: {
+		EnvelopePrimaryActions,
 		EventModal,
 		ListItem,
 		Avatar,
 		ActionButton,
+		ChevronLeft,
 		MoveModal,
 		TagModal,
 		NewMessageModal,
@@ -221,6 +248,7 @@ export default {
 			showEventModal: false,
 			showTagModal: false,
 			showNewMessage: false,
+			moreActionsOpen: false,
 		}
 	},
 	computed: {
