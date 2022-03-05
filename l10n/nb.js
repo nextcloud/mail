@@ -48,8 +48,6 @@ OC.L10N.register(
     "Send" : "Send",
     "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
     "Draft: " : "Kladd:",
-    "Mark unread" : "Marker som ulest",
-    "Mark read" : "Marker som lest",
     "Unselect" : "Velg bort",
     "Select" : "Velg",
     "Report this bug" : "Rapporter denne feilen",
