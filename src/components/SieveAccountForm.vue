@@ -39,6 +39,7 @@
 				<input
 					id="sieve-sec-none"
 					v-model="sieveConfig.sieveSslMode"
+					:disabled="sieveConfigLocked"
 					type="radio"
 					name="sieve-sec"
 					value="none">
@@ -51,6 +52,7 @@
 				<input
 					id="sieve-sec-ssl"
 					v-model="sieveConfig.sieveSslMode"
+					:disabled="sieveConfigLocked"
 					type="radio"
 					name="sieve-sec"
 					value="ssl">
@@ -63,6 +65,7 @@
 				<input
 					id="sieve-sec-tls"
 					v-model="sieveConfig.sieveSslMode"
+					:disabled="sieveConfigLocked"
 					type="radio"
 					name="sieve-sec"
 					value="tls">
@@ -97,6 +100,7 @@
 				<input
 					id="sieve-credentials-custom"
 					v-model="useImapCredentials"
+					:disabled="sieveConfigLocked"
 					type="radio"
 					class="radio"
 					:value="false">
