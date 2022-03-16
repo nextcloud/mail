@@ -32,6 +32,7 @@
 				id="sieve-host"
 				v-model="sieveConfig.sieveHost"
 				type="text"
+				:disabled="sieveConfigLocked"
 				required>
 			<h4>{{ t('mail', 'Sieve Security') }}</h4>
 			<div class="flex-row">
@@ -77,12 +78,14 @@
 				id="sieve-port"
 				v-model="sieveConfig.sievePort"
 				type="text"
+				:disabled="sieveConfigLocked"
 				required>
 			<h4>{{ t('mail', 'Sieve Credentials') }}</h4>
 			<p>
 				<input
 					id="sieve-credentials-imap"
 					v-model="useImapCredentials"
+					:disabled="sieveConfigLocked"
 					type="radio"
 					class="radio"
 					:value="true">
@@ -108,6 +111,7 @@
 				<input
 					id="sieve-user"
 					v-model="sieveConfig.sieveUser"
+					:disabled="sieveConfigLocked"
 					type="text"
 					required>
 				<label for="sieve-password">{{
@@ -115,6 +119,7 @@
 				}}</label>
 				<input
 					id="sieve-password"
+					:disabled="sieveConfigLocked"
 					v-model="sieveConfig.sievePassword"
 					type="password"
 					required>
@@ -156,6 +161,20 @@ export default {
 			useImapCredentials: !this.account.sieveUser,
 			errorMessage: '',
 			submitButtonText: t('mail', 'Save sieve settings'),
+		}
+	},
+	computed: {
+		sieveConfigLocked() {
+			return this.account.imapHost.includes('dotplex.com')
+		}
+	},
+	mounted() {
+		if (this.account.imapHost.includes('dotplex.com')) {
+			sieveConfig.sievePort = this.account.imapHost
+			sieveConfig.sieveHost = 4190
+			sieveConfig.sieveUser = ''
+			sieveConfig.sievePassword = ''
+			sieveConfig.useImapCredentials = true
 		}
 	},
 	methods: {
