@@ -31,6 +31,7 @@ use Horde_Mail_Rfc822_Address;
 use Horde_Mail_Rfc822_List;
 use Horde_Mail_Rfc822_Object;
 use JsonSerializable;
+use ReturnTypeWillChange;
 
 /**
  * @psalm-immutable
@@ -95,9 +96,7 @@ class AddressList implements Countable, JsonSerializable {
 		return $this->addresses[0];
 	}
 
-	/**
-	 * @return array
-	 */
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return array_map(function (Address $address) {
 			return $address->jsonSerialize();

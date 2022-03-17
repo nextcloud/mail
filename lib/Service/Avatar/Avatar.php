@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Avatar;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 
 /**
  * @psalm-immutable
@@ -76,10 +77,8 @@ class Avatar implements JsonSerializable {
 		return $this->isExternal;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'isExternal' => $this->isExternal,
 			'mime' => $this->mime,

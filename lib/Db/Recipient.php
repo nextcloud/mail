@@ -28,6 +28,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 
 /**
  * @method int|null getMessageId()
@@ -72,7 +73,8 @@ class Recipient extends Entity implements JsonSerializable {
 		$this->addType('mailboxType', 'integer');
 	}
 
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),
 			'messageId' => $this->getMessageId(),

@@ -29,6 +29,7 @@ use Horde_Mail_Rfc822_Identification;
 use JsonSerializable;
 use OCA\Mail\AddressList;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 use function in_array;
 use function json_decode;
 use function json_encode;
@@ -274,6 +275,7 @@ class Message extends Entity implements JsonSerializable {
 		}
 	}
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$tags = $this->getTags();
 		$indexed = array_combine(

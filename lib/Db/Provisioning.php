@@ -28,6 +28,7 @@ namespace OCA\Mail\Db;
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
 use OCP\IUser;
+use ReturnTypeWillChange;
 
 /**
  * @method string getProvisioningDomain()
@@ -97,9 +98,7 @@ class Provisioning extends Entity implements JsonSerializable {
 		$this->addType('ldapAliasesProvisioning', 'boolean');
 	}
 
-	/**
-	 * @return array
-	 */
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),

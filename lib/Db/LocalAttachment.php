@@ -26,6 +26,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 
 /**
  * @method string getUserId()
@@ -56,6 +57,7 @@ class LocalAttachment extends Entity implements JsonSerializable {
 	/** @var int|null */
 	protected $localMessageId;
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->id,
