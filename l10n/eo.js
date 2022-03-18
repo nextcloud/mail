@@ -67,8 +67,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",
     "Plain text" : "Ebenaĵa teksto",
     "Draft: " : "Malneto:",
-    "Mark unread" : "Marki kiel nelegita",
-    "Mark read" : "Marki kiel legita",
     "Unselect" : "Malelekti",
     "Select" : "Elekti",
     "Blind copy recipients only" : "Nur blindkopiaj ricevontoj",

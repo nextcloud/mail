@@ -35,7 +35,6 @@ OC.L10N.register(
     "Message sent!" : "¡Mensaje enviado!",
     "Send" : "Enviar",
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
-    "Mark read" : "Marcar como leído",
     "Select" : "Seleccionar",
     "Choose" : "Seleccionar",
     "Favorites" : "Favoritos",
