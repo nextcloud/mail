@@ -48,8 +48,6 @@ OC.L10N.register(
     "Uploading {percent}% …" : "Llwytho {percent}% ...",
     "Choose a file to add as attachment" : "Dewiswch ffeil i'w hychwanegu fel atodiad",
     "Draft: " : "Drafft:",
-    "Mark unread" : "Nodi heb ei ddarllen",
-    "Mark read" : "Marcio wedi'i ddarllen",
     "Select" : "Select",
     "Report this bug" : "Cofnodi'r gwall",
     "Choose" : "Dewisa",

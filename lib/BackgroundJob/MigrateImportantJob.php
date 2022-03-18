@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright 2021 Anna Larch <anna.larch@nextcloud.com>
  *

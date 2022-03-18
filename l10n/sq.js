@@ -33,7 +33,6 @@ OC.L10N.register(
     "Message sent!" : "Mesazhi u dërgua!",
     "Send" : "Dërgo",
     "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje",
-    "Mark read" : "Shëno të lexuar",
     "Select" : "Zgjidhni",
     "Choose" : "Zgjidhni",
     "Favorites" : "Favorites",

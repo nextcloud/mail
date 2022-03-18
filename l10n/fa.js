@@ -69,8 +69,6 @@ OC.L10N.register(
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",
     "Draft: " : "پیش نویس:",
-    "Mark unread" : "علامت گذاری به عنوان خوانده نشده",
-    "Mark read" : "علامت گذاری به عنوان خوانده شده",
     "Unselect" : "لغو انتخاب",
     "Select" : "انتخاب",
     "Blind copy recipients only" : "فقط گیرندگان کپی کور",
