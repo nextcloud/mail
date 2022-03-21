@@ -17,7 +17,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-alignment": "~32.0.0",
     "@ckeditor/ckeditor5-basic-styles": "~32.0.0",
-    "@ckeditor/ckeditor5-block-quote": "~32.0.0",
+    "@ckeditor/ckeditor5-block-quote": "~33.0.0",
     "@ckeditor/ckeditor5-build-balloon": "~32.0.0",
     "@ckeditor/ckeditor5-core": "~32.0.0",
     "@ckeditor/ckeditor5-dev-utils": "~28.1.1",
@@ -87,7 +87,7 @@
     "npm": ">=7.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.12",
+    "@babel/core": "^7.17.8",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.16.11",
