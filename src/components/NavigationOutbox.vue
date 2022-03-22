@@ -46,14 +46,13 @@ export default {
 		CounterBubble,
 	},
 	computed: {
+		count() {
+			return this.$store.getters['outbox/getAllMessages'].length
+		},
 		to() {
 			return {
 				name: 'outbox',
 			}
-		},
-		count() {
-			// TODO: fix outbox initial state that doesnt happen when the page loads.
-			return Object.keys(this.$store.getters['outbox/getAllMessages']).length
 		},
 	},
 }

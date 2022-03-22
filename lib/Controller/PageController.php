@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @author Lukas Reschke <lukas@owncloud.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Timo Witte <timo.witte@gmail.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -28,6 +29,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
@@ -79,6 +81,9 @@ class PageController extends Controller {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var LocalMessageMapper */
+	private $localMessageMapper;
+
 	public function __construct(string $appName,
 								IRequest $request,
 								IURLGenerator $urlGenerator,
@@ -91,7 +96,8 @@ class PageController extends Controller {
 								IMailManager $mailManager,
 								TagMapper $tagMapper,
 								IInitialState $initialStateService,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								LocalMessageMapper $localMessageMapper) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -105,6 +111,7 @@ class PageController extends Controller {
 		$this->tagMapper = $tagMapper;
 		$this->initialStateService = $initialStateService;
 		$this->logger = $logger;
+		$this->localMessageMapper = $localMessageMapper;
 	}
 
 	/**
@@ -167,6 +174,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'prefill_email',
 			$this->config->getUserValue($user->getUID(), 'settings', 'email', '')
+		);
+
+		$this->initialStateService->provideInitialState(
+			'outbox-messages',
+			$this->localMessageMapper->getAllForUser($user->getUID())
 		);
 
 		$csp = new ContentSecurityPolicy();

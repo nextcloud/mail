@@ -86,6 +86,7 @@ store.commit('savePreference', {
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
 const tags = loadState('mail', 'tags', [])
+const outboxMessages = loadState('mail', 'outbox-messages');
 
 accounts.map(fixAccountId).forEach((account) => {
 	const settings = accountSettings.find(settings => settings.accountId === account.id)
@@ -103,6 +104,8 @@ accounts.map(fixAccountId).forEach((account) => {
 })
 
 tags.forEach(tag => store.commit('addTag', { tag }))
+
+outboxMessages.forEach(message => store.commit('outbox/addMessage', { message }))
 
 export default new Vue({
 	el: '#content',

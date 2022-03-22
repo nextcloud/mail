@@ -42,6 +42,7 @@ export default {
 		commit('addMessage', { message })
 		return message
 	},
+
 	async updateMessage({ commit }, { message, id }) {
 		const updatedMessage = await OutboxService.updateMessage(message, id)
 		commit('updateMessage', { message: updatedMessage })
