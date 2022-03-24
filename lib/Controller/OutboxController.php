@@ -41,7 +41,7 @@ class OutboxController extends Controller {
 		return [
 			'id' => $id,
 			'type' => 0,
-			'accountId' => 123,
+			'accountId' => $id,
 			'aliasId' => null,
 			'sendAt' => null,
 			'subject' => 'I am a stub',
