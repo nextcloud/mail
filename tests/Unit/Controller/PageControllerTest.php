@@ -27,6 +27,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
+use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
@@ -82,11 +83,14 @@ class PageControllerTest extends TestCase {
 	/** @var IInitialState|MockObject */
 	private $initialState;
 
-	/** @var PageController */
-	private $controller;
-
 	/** @var LoggerInterface|MockObject */
 	private $logger;
+
+	/** @var LocalMessageMapper|MockObject */
+	private $localMessageMapper;
+
+	/** @var PageController */
+	private $controller;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -104,6 +108,7 @@ class PageControllerTest extends TestCase {
 		$this->tagMapper = $this->createMock(TagMapper::class);
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->localMessageMapper = $this->createMock(LocalMessageMapper::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -118,7 +123,8 @@ class PageControllerTest extends TestCase {
 			$this->mailManager,
 			$this->tagMapper,
 			$this->initialState,
-			$this->logger
+			$this->logger,
+			$this->localMessageMapper
 		);
 	}
 
@@ -212,15 +218,14 @@ class PageControllerTest extends TestCase {
 		$user->expects($this->once())
 			->method('getDisplayName')
 			->will($this->returnValue('Jane Doe'));
-		$user->expects($this->once())
-			->method('getUID')
+		$user->method('getUID')
 			->will($this->returnValue('jane'));
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(6))
+		$this->initialState->expects($this->exactly(7))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -228,7 +233,8 @@ class PageControllerTest extends TestCase {
 				['account-settings', []],
 				['tags', []],
 				['prefill_displayName', 'Jane Doe'],
-				['prefill_email', 'jane@doe.cz']
+				['prefill_email', 'jane@doe.cz'],
+				['outbox-messages', []]
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index',
