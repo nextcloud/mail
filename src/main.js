@@ -86,7 +86,7 @@ store.commit('savePreference', {
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
 const tags = loadState('mail', 'tags', [])
-const outboxMessages = loadState('mail', 'outbox-messages');
+const outboxMessages = loadState('mail', 'outbox-messages')
 
 accounts.map(fixAccountId).forEach((account) => {
 	const settings = accountSettings.find(settings => settings.accountId === account.id)

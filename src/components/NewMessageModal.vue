@@ -19,7 +19,7 @@
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import logger from '../logger'
 import { detect, html, plain, toPlain } from '../util/text'
-import { saveDraft, sendMessage } from '../service/MessageService'
+import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
 import { showWarning } from '@nextcloud/dialogs'
 import Axios from '@nextcloud/axios'
