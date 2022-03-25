@@ -36,6 +36,7 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\OutboxService;
@@ -43,6 +44,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class OutboxServiceTest extends TestCase {
 
@@ -71,6 +73,15 @@ class OutboxServiceTest extends TestCase {
 	/** @var IMailManager|MockObject */
 	private $mailManager;
 
+	/** @var AccountService|MockObject */
+	private $accountService;
+
+	/** @var ITimeFactory|MockObject */
+	private $timeFactory;
+
+	/** @var MockObject|LoggerInterface */
+	private $logger;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -79,13 +90,19 @@ class OutboxServiceTest extends TestCase {
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->accountService = $this->createMock(AccountService::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->outboxService = new OutboxService(
 			$this->transmission,
 			$this->mapper,
 			$this->attachmentService,
 			$this->createMock(EventDispatcher::class),
 			$this->clientFactory,
-			$this->mailManager
+			$this->mailManager,
+			$this->accountService,
+			$this->timeFactory,
+			$this->logger,
 		);
 		$this->userId = 'linus';
 		$this->time = $this->createMock(ITimeFactory::class);
