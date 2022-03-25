@@ -49,6 +49,7 @@ use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
@@ -189,6 +190,10 @@ class MailTransmission implements IMailTransmission {
 		foreach ($message->getAttachments() as $attachment) {
 			$mail->addMimePart($attachment);
 		}
+
+		$this->eventDispatcher->dispatchTyped(
+			new BeforeMessageSentEvent($account, $messageData, $replyData, $draft, $message, $mail)
+		);
 
 		// Send the message
 		try {

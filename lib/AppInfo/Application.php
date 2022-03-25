@@ -34,6 +34,7 @@ use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\ImportantMailWidget;
 use OCA\Mail\Dashboard\UnreadMailWidget;
+use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
@@ -45,6 +46,7 @@ use OCA\Mail\HordeTranslationHandler;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
+use OCA\Mail\Listener\AntiAbuseListener;
 use OCA\Mail\Listener\HamReportListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCA\Mail\Listener\DeleteDraftListener;
@@ -100,6 +102,7 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(ITrustedSenderService::class, TrustedSenderService::class);
 		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceService::class);
 
+		$context->registerEventListener(BeforeMessageSentEvent::class, AntiAbuseListener::class);
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MailboxesSynchronizedEvent::class, MailboxesSynchronizedSpecialMailboxesUpdater::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
