@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.x-dev@">
   <file src="lib/AppInfo/Application.php">
-    <MissingDependency occurrences="14">
+    <MissingDependency occurrences="15">
+      <code>BeforeMessageSentEvent</code>
       <code>DraftSavedEvent</code>
       <code>MailboxesSynchronizedEvent</code>
       <code>MessageDeletedEvent</code>
@@ -161,6 +162,11 @@
       <code>Event</code>
     </MissingDependency>
   </file>
+  <file src="lib/Events/BeforeMessageSentEvent.php">
+    <MissingDependency occurrences="1">
+      <code>Event</code>
+    </MissingDependency>
+  </file>
   <file src="lib/Events/DraftSavedEvent.php">
     <MissingDependency occurrences="1">
       <code>Event</code>
@@ -216,6 +222,12 @@
     <MissingDependency occurrences="2">
       <code>AddressCollectionListener</code>
       <code>MessageSentEvent</code>
+    </MissingDependency>
+  </file>
+  <file src="lib/Listener/AntiAbuseListener.php">
+    <MissingDependency occurrences="2">
+      <code>AntiAbuseListener</code>
+      <code>BeforeMessageSentEvent</code>
     </MissingDependency>
   </file>
   <file src="lib/Listener/DashboardPanelListener.php">
@@ -313,7 +325,8 @@
     </MissingDependency>
   </file>
   <file src="lib/Service/MailTransmission.php">
-    <MissingDependency occurrences="6">
+    <MissingDependency occurrences="7">
+      <code>BeforeMessageSentEvent</code>
       <code>DraftSavedEvent</code>
       <code>DraftSavedEvent</code>
       <code>MessageSentEvent</code>
