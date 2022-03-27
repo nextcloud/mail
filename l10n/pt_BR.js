@@ -233,6 +233,7 @@ OC.L10N.register(
     "Contacts with this address" : "Contatos com este endereço",
     "Add to Contact" : "Adicionar ao Contato",
     "New Contact" : "Novo Contato",
+    "Copy to clipboard" : "Copiar para área de transferência",
     "Contact name …" : "Nome de contato ...",
     "Add" : "Adicionar",
     "Disabled" : "Desativado",
