@@ -37,7 +37,7 @@ jobs:
       working-directory: nextcloud/3rdparty
       run: composer require nikic/php-parser:4.10
     - name: Checkout Mail
-      uses: actions/checkout@master
+      uses: actions/checkout@v3
       with:
         path: nextcloud/apps/mail
     - name: Install dependencies
@@ -116,7 +116,7 @@ jobs:
           - name: Install Nextcloud
             run: php -f nextcloud/occ maintenance:install --database-host 127.0.0.1 --database-name nextcloud --database-user nextcloud --database-pass nextcloud --admin-user admin --admin-pass admin --database ${{ matrix.db }}
           - name: Checkout Mail
-            uses: actions/checkout@master
+            uses: actions/checkout@v3
             with:
                 path: nextcloud/apps/mail
           - name: Install dependencies
@@ -128,6 +128,12 @@ jobs:
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
                 php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type bool --value false
+          - name: Enable slow mysql query logs
+            if: ${{ matrix.db == 'mysql' }}
+            run: |
+              echo "SET GLOBAL log_queries_not_using_indexes = 1;" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
+              echo "SET GLOBAL slow_query_log=1;" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
+              echo "SET GLOBAL log_output = 'table';" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Run tests
             working-directory: nextcloud/apps/mail
             run: |
@@ -136,6 +142,9 @@ jobs:
                 composer run test:integration
             env:
                 XDEBUG_MODE: coverage
+          - name: Read slow queries
+            if: ${{ always() }}
+            run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Print debug logs
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
@@ -150,9 +159,9 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@master
+          - uses: actions/checkout@v3
           - name: Set up Node
-            uses: actions/setup-node@v2.5.0
+            uses: actions/setup-node@v3
             with:
                 node-version: 12.x
           - name: npm install

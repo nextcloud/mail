@@ -44,6 +44,30 @@ Turn off TLS verfication for IMAP/SMTP. This happens globally for all accounts a
 'app.mail.verify-tls-peer' => false
 ```
 
+### Anti-abuse alerts
+
+The app can write alerts to the logs when users send messages to a high number of recipients or sends a high number of messages for a short period of time. These events might indicate that the account is abused for sending spam messages.
+
+To enable anti-abuse alerts, you'll have to set a few configuration options [via occ](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/occ_command.html).
+
+```bash
+# Turn alerts on
+occ config:app:set mail abuse_detection --value=on
+# Turn alerts off
+occ config:app:set mail abuse_detection --value=off
+
+# Alert when 50 or more recipients are used for one single message
+occ config:app:set mail abuse_number_of_recipients_per_message_threshold --value=50
+
+# Alerts can be configured for three intervals: 15m, 1h and 1d
+# Alert when more than 10 messages are sent in 15 minutes
+occ config:app:set mail abuse_number_of_messages_per_15m --value=10
+# Alert when more than 30 messages are sent in one hour
+occ config:app:set mail abuse_number_of_messages_per_1h --value=30
+# Alert when more than 100 messages are sent in one day
+occ config:app:set mail abuse_number_of_messages_per_1d --value=100
+```
+
 ## Troubleshooting
 
 ### Logging
@@ -57,6 +81,32 @@ Make sure to remove any sensitive data before posting it publicly. Reset log lev
 ### Database insert problems on MySQL
 
 If Mail fails to insert new rows for messages (`oc_mail_messages`), recipients (`oc_mail_recipients`) or similar tables, you are possibly not using the 4 byte support. See [the Nextcloud Admin Manual](https://docs.nextcloud.com/server/stable/admin_manual/configuration_database/mysql_4byte_support.html) on how to update your database configuration.
+
+### Timeout and other connectivity issues
+
+You can use OpenSSL to test and benchmark the connection from your Nextcloud host to the IMAP/SMTP host.
+
+```bash
+openssl s_time -connect imap.domain.tld:993
+```
+
+The output should look similar to this:
+
+```
+Collecting connection statistics for 30 seconds
+***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+483 connections in 0.94s; 513.83 connections/user sec, bytes read 0
+483 connections in 31 real seconds, 0 bytes read per connection
+
+
+Now timing with session id reuse.
+starting
+*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+497 connections in 0.97s; 512.37 connections/user sec, bytes read 0
+497 connections in 31 real seconds, 0 bytes read per connection
+```
 
 ### Get account IDs
 

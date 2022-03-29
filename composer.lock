@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "644a61f389e95e8416af0e7f7badda5b",
+    "content-hash": "1d7e95275c7b85c9ba465ce894cb6f61",
     "packages": [
         {
             "name": "amphp/amp",
-            "version": "v2.6.1",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "c5fc66a78ee38d7ac9195a37bacaf940eb3f65ae"
+                "reference": "9d5100cebffa729aaffecd3ad25dc5aeea4f13bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/c5fc66a78ee38d7ac9195a37bacaf940eb3f65ae",
-                "reference": "c5fc66a78ee38d7ac9195a37bacaf940eb3f65ae",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/9d5100cebffa729aaffecd3ad25dc5aeea4f13bb",
+                "reference": "9d5100cebffa729aaffecd3ad25dc5aeea4f13bb",
                 "shasum": ""
             },
             "require": {
@@ -39,13 +39,13 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Amp\\": "lib"
-                },
                 "files": [
                     "lib/functions.php",
                     "lib/Internal/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Amp\\": "lib"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -70,7 +70,7 @@
                 }
             ],
             "description": "A non-blocking concurrency framework for PHP applications.",
-            "homepage": "http://amphp.org/amp",
+            "homepage": "https://amphp.org/amp",
             "keywords": [
                 "async",
                 "asynchronous",
@@ -88,7 +88,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-23T18:43:08+00:00"
+            "time": "2022-02-20T17:52:18+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -123,12 +123,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Amp\\ByteStream\\": "lib"
-                },
                 "files": [
                     "lib/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Amp\\ByteStream\\": "lib"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -192,14 +192,14 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Amp\\Parallel\\": "lib"
-                },
                 "files": [
                     "lib/Context/functions.php",
                     "lib/Sync/functions.php",
                     "lib/Worker/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Amp\\Parallel\\": "lib"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -309,12 +309,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Amp\\Process\\": "lib"
-                },
                 "files": [
                     "lib/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Amp\\Process\\": "lib"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -367,12 +367,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Amp\\Serialization\\": "src"
-                },
                 "files": [
                     "src/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Amp\\Serialization\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -423,13 +423,13 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Amp\\Sync\\": "src"
-                },
                 "files": [
                     "src/functions.php",
                     "src/ConcurrentIterator/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Amp\\Sync\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -517,16 +517,16 @@
         },
         {
             "name": "bamarni/composer-bin-plugin",
-            "version": "1.4.1",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bamarni/composer-bin-plugin.git",
-                "reference": "9329fb0fbe29e0e1b2db8f4639a193e4f5406225"
+                "reference": "49934ffea764864788334c1485fbb08a4b852031"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/9329fb0fbe29e0e1b2db8f4639a193e4f5406225",
-                "reference": "9329fb0fbe29e0e1b2db8f4639a193e4f5406225",
+                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/49934ffea764864788334c1485fbb08a4b852031",
+                "reference": "49934ffea764864788334c1485fbb08a4b852031",
                 "shasum": ""
             },
             "require": {
@@ -559,20 +559,20 @@
                 "isolation",
                 "tool"
             ],
-            "time": "2020-05-03T08:27:20+00:00"
+            "time": "2022-02-22T21:01:25+00:00"
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "3eaaedd862563bbaa8f85606cfda65c8f6ad513b"
+                "reference": "9efced88f9fc31ecbd52c798b6c01283966c0e48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/3eaaedd862563bbaa8f85606cfda65c8f6ad513b",
-                "reference": "3eaaedd862563bbaa8f85606cfda65c8f6ad513b",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/9efced88f9fc31ecbd52c798b6c01283966c0e48",
+                "reference": "9efced88f9fc31ecbd52c798b6c01283966c0e48",
                 "shasum": ""
             },
             "require": {
@@ -604,7 +604,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2022-01-10T15:58:08+00:00"
+            "time": "2022-02-21T15:33:09+00:00"
         },
         {
             "name": "christophwurst/kitinerary",
@@ -776,12 +776,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "HTMLPurifier": "library/"
-                },
                 "files": [
                     "library/HTMLPurifier.composer.php"
                 ],
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
                 "exclude-from-classmap": [
                     "/library/HTMLPurifier/Language/"
                 ]
@@ -1695,16 +1695,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.4.1",
+            "version": "0.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "d34f8aedce1228a8c9eccc52075a06430e2de92b"
+                "reference": "51f6f02f3d719b8f1c8641ff10accd9339fe691e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/d34f8aedce1228a8c9eccc52075a06430e2de92b",
-                "reference": "d34f8aedce1228a8c9eccc52075a06430e2de92b",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/51f6f02f3d719b8f1c8641ff10accd9339fe691e",
+                "reference": "51f6f02f3d719b8f1c8641ff10accd9339fe691e",
                 "shasum": ""
             },
             "require": {
@@ -1738,13 +1738,13 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Rubix\\ML\\": "src/"
-                },
                 "files": [
                     "src/constants.php",
                     "src/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Rubix\\ML\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1753,8 +1753,9 @@
             "authors": [
                 {
                     "name": "Andrew DalPino",
+                    "email": "support@andrewdalpino.com",
                     "homepage": "https://github.com/andrewdalpino",
-                    "role": "Lead Engineer"
+                    "role": "Project Lead"
                 },
                 {
                     "name": "Contributors",
@@ -1849,7 +1850,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-28T01:48:47+00:00"
+            "time": "2022-02-12T00:57:06+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -1879,14 +1880,14 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Tensor\\": "src/",
-                    "JAMA\\": "lib/JAMA",
-                    "Zephir\\Optimizers\\FunctionCall\\": "optimizers/"
-                },
                 "files": [
                     "src/constants.php"
-                ]
+                ],
+                "psr-4": {
+                    "JAMA\\": "lib/JAMA",
+                    "Tensor\\": "src/",
+                    "Zephir\\Optimizers\\FunctionCall\\": "optimizers/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2004,7 +2005,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -2036,12 +2037,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2084,7 +2085,7 @@
         },
         {
             "name": "symfony/polyfill-php73",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php73.git",
@@ -2110,12 +2111,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php73\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php73\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -2160,16 +2161,16 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9"
+                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/57b712b08eddb97c762a8caa32c84e037892d2e9",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/4407588e0d3f1f52efb65fbe92babe41f37fe50c",
+                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c",
                 "shasum": ""
             },
             "require": {
@@ -2186,12 +2187,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php80\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -2236,7 +2237,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-13T13:58:33+00:00"
+            "time": "2022-03-04T08:16:47+00:00"
         },
         {
             "name": "youthweb/urllinker",

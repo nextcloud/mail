@@ -28,6 +28,8 @@ namespace OCA\Mail\BackgroundJob;
 use OCA\Mail\Service\CleanupService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
+use function defined;
+use function method_exists;
 
 class CleanupJob extends TimedJob {
 
@@ -40,6 +42,12 @@ class CleanupJob extends TimedJob {
 		$this->cleanupService = $cleanupService;
 
 		$this->setInterval(24 * 60 * 60);
+		/**
+		 * @todo remove checks with 24+
+		 */
+		if (defined('\OCP\BackgroundJob\IJob::TIME_INSENSITIVE') && method_exists($this, 'setTimeSensitivity')) {
+			$this->setTimeSensitivity(self::TIME_INSENSITIVE);
+		}
 	}
 
 	protected function run($argument): void {

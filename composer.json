@@ -20,7 +20,7 @@
 		"php": ">=7.3",
 		"arthurhoaro/favicon": "^1.2",
 		"bamarni/composer-bin-plugin": "^1.4",
-		"cerdic/css-tidy": "v2.0.0",
+		"cerdic/css-tidy": "v2.0.1",
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
@@ -42,7 +42,7 @@
 		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"psr/log": "^1",
-		"rubix/ml": "0.4.1",
+		"rubix/ml": "0.4.2",
 		"sabberworm/php-css-parser": "^8.3",
 		"youthweb/urllinker": "^1.3"
 	},
