@@ -1,15 +1,15 @@
 <template>
 	<Modal
 		size="normal"
-		:title="t('mail', 'New message')"
+		:title="t('mail', 'Outbox draft')"
 		@close="$emit('close')">
-		<Composer v-if="!fetchingTemplateMessage"
-			:from-account="composerData.accountId"
-			:to="composerData.to"
-			:cc="composerData.cc"
-			:bcc="composerData.bcc"
-			:subject="composerData.subject"
-			:body="composerData.body"
+		<Composer
+			:from-account="message.accountId"
+			:to="message.to"
+			:cc="message.cc"
+			:bcc="message.bcc"
+			:subject="message.subject"
+			:body="outboxBody"
 			:draft="saveDraft"
 			:send="sendMessage"
 			:forwarded-messages="forwardedMessages" />
@@ -18,21 +18,23 @@
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import logger from '../logger'
-import { detect, html, plain, toPlain } from '../util/text'
-import { saveDraft } from '../service/MessageService'
+import { html, plain, toPlain } from '../util/text'
 import Composer from './Composer'
-import { showWarning } from '@nextcloud/dialogs'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { translate as t } from '@nextcloud/l10n'
 
 export default {
-	name: 'NewMessageModal',
+	name: 'OutboxComposer',
 	components: {
 		Modal,
 		Composer,
 	},
 	props: {
+		message: {
+			type: Object,
+			required: true,
+		},
 		forwardedMessages: {
 			type: Array,
 			required: false,
@@ -52,38 +54,11 @@ export default {
 		}
 	},
 	computed: {
-		composerData() {
-			logger.debug('composing a new message or handling a mailto link', {
-				threadId: this.$route.params.threadId,
-			})
-
-			let accountId
-			// Only preselect an account when we're not in a unified mailbox
-			if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
-				accountId = parseInt(this.$route.params.accountId, 10)
+		outboxBody() {
+			if (this.message.html) {
+				return html(this.message.text)
 			}
-			if (this.templateMessageId !== undefined) {
-				if (this.original.attachments.length) {
-					showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
-				}
-
-				return {
-					accountId: this.original.accountId,
-					to: this.original.to,
-					cc: this.original.cc,
-					subject: this.original.subject,
-					body: this.originalBody,
-					originalBody: this.originalBody,
-				}
-			}
-
-			return {
-				accountId,
-				to: this.stringToRecipients(this.$route.query.to),
-				cc: this.stringToRecipients(this.$route.query.cc),
-				subject: this.$route.query.subject || '',
-				body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
-			}
+			return plain(this.message.text)
 		},
 	},
 	created() {
@@ -113,21 +88,9 @@ export default {
 			}
 			const dataForServer = {
 				...data,
-				to: data.to.map(this.recipientToRfc822).join(', '),
-				cc: data.cc.map(this.recipientToRfc822).join(', '),
-				bcc: data.bcc.map(this.recipientToRfc822).join(', '),
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 			}
-			const { id } = await saveDraft(data.account, dataForServer)
-
-			// Remove old draft envelope
-			this.$store.commit('removeEnvelope', { id: data.draftId })
-			this.$store.commit('removeMessage', { id: data.draftId })
-
-			// Fetch new draft envelope
-			await this.$store.dispatch('fetchEnvelope', id)
-
-			return id
+			await this.$store.dispatch('outbox/updateMessage', { message: dataForServer, id: this.message.id })
 		},
 		async sendMessage(data) {
 			logger.debug('sending message', { data })
@@ -194,21 +157,6 @@ export default {
 				this.loading = false
 			}
 			this.fetchingTemplateMessage = false
-		},
-		recipientToRfc822(recipient) {
-			if (recipient.email === recipient.label) {
-				// From mailto or sender without proper label
-				return recipient.email
-			} else if (recipient.label === '') {
-				// Invalid label
-				return recipient.email
-			} else if (recipient.email.search(/^[a-zA-Z]+:/) === 0) {
-				// Group integration
-				return recipient.email
-			} else {
-				// Proper layout with label
-				return `"${recipient.label}" <${recipient.email}>`
-			}
 		},
 	},
 }

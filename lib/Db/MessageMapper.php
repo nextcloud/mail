@@ -1129,7 +1129,10 @@ class MessageMapper extends QBMapper {
 		$recipientIdsQuery = $qb3->selectDistinct('r.id')
 			->from('mail_recipients', 'r')
 			->leftJoin('r', 'mail_messages', 'm', $qb3->expr()->eq('r.message_id', 'm.id'))
-			->where($qb3->expr()->isNull('m.id'));
+			->where(
+				$qb3->expr()->isNull('m.id'),
+				$qb3->expr()->isNull('r.local_message_id')
+			);
 		$result = $recipientIdsQuery->execute();
 		$ids = array_map(function (array $row) {
 			return (int)$row['id'];
