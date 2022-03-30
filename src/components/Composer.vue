@@ -253,8 +253,13 @@
 			{{ t('mail', 'Send anyway') }}
 		</button>
 	</div>
-	<EmptyContent v-else icon="icon-checkmark">
+	<EmptyContent v-else
+		icon="icon-checkmark">
 		<h2>{{ t('mail', 'Message sent!') }}</h2>
+		<button class="undo-button"
+			@click="undoSend">
+			{{ t('mail', 'Undo message') }}
+		</button>
 	</EmptyContent>
 </template>
 
@@ -753,7 +758,7 @@ export default {
 				.then(() => this.draftsPromise)
 				.then(this.getMessageData)
 				.then((data) => this.send({ ...data, force }))
-				.then(() => logger.info('message sent'))
+				.then(() => logger.info('message sentttt'))
 				.then(() => (this.state = STATES.FINISHED))
 				.catch(async(error) => {
 					logger.error('could not send message', { error });
@@ -786,6 +791,11 @@ export default {
 		},
 		async onForceSend() {
 			await this.onSend(null, true)
+		},
+		undoSend() {
+			this.state = STATES.EDITING
+			// call backend to cancel send
+
 		},
 		reset() {
 			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
@@ -970,6 +980,11 @@ export default {
 .button {
 	background-color: transparent;
 	border: none;
+}
+.undo-button {
+background-color: var(--color-background-dark);
+color: var(--color-main-text);
+border: 1px solid var(--color-border-dark)
 }
 .emptycontent {
 	margin-top: 250px;
