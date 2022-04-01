@@ -1,14 +1,17 @@
 <template>
 	<Content app-name="mail">
 		<Navigation v-if="hasAccounts" />
-		<div id="emptycontent">
-			<div class="icon-mail" />
-			<h2>{{ t('mail', 'Connect your mail account') }}</h2>
-			<AccountForm :display-name="displayName" :email="email" :save="onSave">
-				<template v-if="error" #feedback class="warning">
-					{{ error }}
+		<div class="mail-empty-content">
+			<EmptyContent icon="icon-mail">
+				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
+				<template #desc>
+					<AccountForm :display-name="displayName" :email="email" :save="onSave">
+						<template v-if="error" #feedback class="warning">
+							{{ error }}
+						</template>
+					</AccountForm>
 				</template>
-			</AccountForm>
+			</EmptyContent>
 		</div>
 	</Content>
 </template>
@@ -19,6 +22,7 @@ import { loadState } from '@nextcloud/initial-state'
 import { translate as t } from '@nextcloud/l10n'
 
 import AccountForm from '../components/AccountForm'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import Navigation from '../components/Navigation'
 import logger from '../logger'
 
@@ -27,6 +31,7 @@ export default {
 	components: {
 		AccountForm,
 		Content,
+		EmptyContent,
 		Navigation,
 	},
 	data() {
@@ -58,10 +63,22 @@ export default {
 				.catch((error) => {
 					logger.error('Could not create account', { error })
 
-					if (error?.data?.message) {
-						this.error = error.data.message
+					if (error.data?.error === 'AUTOCONFIG_FAILED') {
+						this.error = t('mail', 'Auto detect failed. Please try manual mode.')
+					} else if (error.data?.error === 'CONNECTION_ERROR') {
+						if (error.data.service === 'IMAP') {
+							this.error = t('mail', 'Manual config failed. IMAP server is not reachable.')
+						} else if (error.data.service === 'SMTP') {
+							this.error = t('mail', 'Manual config failed. SMTP server is not reachable.')
+						}
+					} else if (error.data?.error === 'AUTHENTICATION') {
+						if (error.data.service === 'IMAP') {
+							this.error = t('mail', 'Manual config failed. IMAP username or password is wrong.')
+						} else if (error.data.service === 'SMTP') {
+							this.error = t('mail', 'Manual config failed. SMTP username or password is wrong.')
+						}
 					} else {
-						this.error = t('mail', 'Unexpected error during account creation')
+						this.error = t('mail', 'There was an error while setting up your account. Please try again.')
 					}
 				})
 		},
@@ -70,7 +87,7 @@ export default {
 </script>
 
 <style>
-#emptycontent {
-	margin-top: 10vh;
+.mail-empty-content {
+	margin: 0 auto;
 }
 </style>
