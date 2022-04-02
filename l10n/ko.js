@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "자동 감지가 실패했습니다. 수동 모드를 사용하십시오.",
     "Updating account failed: " : "계정 업데이트 실패:",
-    "Creating account failed: " : "계정 생성 실패: ",
     "Important mail" : "중요 메일",
     "Unread mail" : "읽지 않은 메일",
     "Mails" : "메일",
@@ -11,7 +10,6 @@ OC.L10N.register(
     "💌 A mail app for Nextcloud" : "Nextcloud 메일 앱",
     "Auto" : "자동",
     "Name" : "이름",
-    "Mail Address" : "메일 주소",
     "Password" : "암호",
     "Manual" : "수동",
     "IMAP Settings" : "IMAP 설정",

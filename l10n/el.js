@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
     "Updating account failed: " : "Αποτυχία ενημέρωσης λογαριασμού:",
-    "Creating account failed: " : "Αποτυχία δημιουργίας λογαριασμού:",
     "Embedded message %s" : "Ενσωματωμένο μήνυμα %s",
     "Important mail" : "Σημαντική αλληλογραφία",
     "Unread mail" : "Μη αναγνωσμένη αλληλογραφία",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Τα διαγραμμένα μηνύματα μετακινούνται σε:",
     "Auto" : "Αυτόματα",
     "Name" : "Όνομα",
-    "Mail Address" : "Διεύθυνση αλληλογραφίας",
     "Password" : "Συνθηματικό",
     "Manual" : "Χειροκίνητα",
     "IMAP Settings" : "Ρυθμίσεις IMAP ",
@@ -293,7 +291,6 @@ OC.L10N.register(
     "Search" : "Αναζήτηση",
     "Refresh" : "Ανανέωση",
     "Connect your mail account" : "Συνδέστε το λογαριασμό αλληλογραφίας σας",
-    "Unexpected error during account creation" : "Απροσδόκητο σφάλμα κατά την δημιουργία λογαριασμού",
     "Itinerary for {type} is not supported yet" : "Η διαδρομή για {type} δεν υποστηρίζεται ακόμα",
     "All" : "'Ολα",
     "Archive" : "Αρχειοθετημένα",

@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Не удалось автоматически определить настройки. Воспользуйтесь ручным режимом.",
     "Updating account failed: " : "Ошибка обновления учётной записи:",
-    "Creating account failed: " : "Ошибка создания учетной записи:",
     "Embedded message %s" : "Встроенное сообщение %s",
     "Important mail" : "Важная почта",
     "Unread mail" : "Непрочитанная почта",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Папка для удалённых писем:",
     "Auto" : "Автоматически",
     "Name" : "Имя",
-    "Mail Address" : "E-mail адрес",
     "Password" : "Пароль",
     "Manual" : "Вручную",
     "IMAP Settings" : "Параметры IMAP",
@@ -348,7 +346,6 @@ OC.L10N.register(
     "Search" : "Поиск",
     "Refresh" : "Обновить",
     "Connect your mail account" : "Настройка учётной записи электронной почты",
-    "Unexpected error during account creation" : "Неожиданная ошибка при создании учётной записи",
     "Itinerary for {type} is not supported yet" : "Маршруты типа {type} пока не поддерживаются",
     "All" : "Все",
     "Archive" : "Переместить в архив",

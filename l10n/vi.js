@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Tự động phát hiện không thành công. Vui lòng sử dụng chế độ thủ công.",
     "Updating account failed: " : "Cập nhật tài khoản không thành công:",
-    "Creating account failed: " : "Tạo tài khoản không thành công:",
     "Embedded message %s" : "Đã đính kèm tin nhắn %s",
     "Important mail" : "Thư quan trọng",
     "Unread mail" : "Thư chưa đọc",
@@ -20,7 +19,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Tin nhẵn đã xóa được chuyển tới:",
     "Auto" : "Tự động",
     "Name" : "Tên",
-    "Mail Address" : "Địa chỉ thư",
     "Password" : "Mật khẩu",
     "Manual" : "Thủ công",
     "IMAP Settings" : "Cài đặt IMAP",
@@ -246,7 +244,6 @@ OC.L10N.register(
     "Search" : "Tìm",
     "Refresh" : "Làm mới",
     "Connect your mail account" : "Kết nối tài khoản thư của bạn",
-    "Unexpected error during account creation" : "Lỗi không mong muốn trong quá trình tạo tài khoản",
     "Itinerary for {type} is not supported yet" : "Hành trình cho {type} chưa được hỗ trợ",
     "All" : "Tất cả",
     "Archive" : "Lưu trữ",

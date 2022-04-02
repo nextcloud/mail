@@ -2,10 +2,8 @@ OC.L10N.register(
     "mail",
     {
     "Auto detect failed. Please use manual mode." : "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
-    "Creating account failed: " : "Konto loomine ebaõnnestus:",
     "Mail" : "Kirjad",
     "Name" : "Nimi",
-    "Mail Address" : "E-posti aadress",
     "Password" : "Parool",
     "IMAP Host" : "IMAP server",
     "None" : "Pole",

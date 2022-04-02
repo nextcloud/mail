@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a kézi módot.",
     "Updating account failed: " : "Fiók frissítése sikertelen: ",
-    "Creating account failed: " : "Fiók létrehozása sikertelen: ",
     "Embedded message %s" : "Beágyazott üzenet %s",
     "Important mail" : "Fontos levelek",
     "Unread mail" : "Olvasatlan levelek",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Törölt üzenetek áthelyezése ide:",
     "Auto" : "Automatikus",
     "Name" : "Név",
-    "Mail Address" : "E-mail-cím",
     "Password" : "Jelszó",
     "Manual" : "Kézi",
     "IMAP Settings" : "IMAP beállítások",
@@ -355,7 +353,6 @@ OC.L10N.register(
     "Search" : "Keresés",
     "Refresh" : "Frissítés",
     "Connect your mail account" : "Kapcsolódás az e-mail-fiókjához",
-    "Unexpected error during account creation" : "Váratlan hiba a fiók létrehozása során",
     "Itinerary for {type} is not supported yet" : "A(z) {type} útiterve még nem támogatott",
     "All" : "Összes",
     "Archive" : "Archívum",

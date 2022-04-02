@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Automatická detekcia zlyhala. Prosím, použite manuálny režim.",
     "Updating account failed: " : "Aktualizácia účtu zlyhala:",
-    "Creating account failed: " : "Vytvorenie účtu zlyhalo:",
     "Embedded message %s" : "Vnorená správa %s",
     "Important mail" : "Dôležitý e-mail",
     "Unread mail" : "Neprečítaná pošta",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Odstránené správy sa presúvajú do:",
     "Auto" : "Automaticky",
     "Name" : "Názov",
-    "Mail Address" : "E-mailová adresa",
     "Password" : "Heslo",
     "Manual" : "Ručné nastavenia",
     "IMAP Settings" : "Nastavenie IMAP",
@@ -355,7 +353,6 @@ OC.L10N.register(
     "Search" : "Hľadať",
     "Refresh" : "Obnoviť",
     "Connect your mail account" : "Pripojiť Váš mailový účet",
-    "Unexpected error during account creation" : "Neočakávaná chyba počas vytvárania účtu",
     "Itinerary for {type} is not supported yet" : "Itinerár pre {type} zatiaľ nie je podporovaný",
     "All" : "Všetko",
     "Archive" : "Archivovať",

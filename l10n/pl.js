@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Automatyczne wykrywanie nie powiodło się. Użyj trybu ręcznego.",
     "Updating account failed: " : "Aktualizacja konta nie powiodła się: ",
-    "Creating account failed: " : "Utworzenie konta nie powiodło się: ",
     "Embedded message %s" : "Osadzona wiadomość %s",
     "Important mail" : "Ważna poczta",
     "Unread mail" : "Nieprzeczytana wiadomość",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Usunięte wiadomości są przenoszone do:",
     "Auto" : "Automatycznie",
     "Name" : "Nazwa",
-    "Mail Address" : "Adres e-mail",
     "Password" : "Hasło",
     "Manual" : "Ręcznie",
     "IMAP Settings" : "Ustawienia IMAP",
@@ -355,7 +353,6 @@ OC.L10N.register(
     "Search" : "Szukaj",
     "Refresh" : "Odśwież",
     "Connect your mail account" : "Podłącz konto pocztowe",
-    "Unexpected error during account creation" : "Nieoczekiwany błąd podczas tworzenia konta",
     "Itinerary for {type} is not supported yet" : "Trasa dla {type} nie jest jeszcze obsługiwana",
     "All" : "Wszystko",
     "Archive" : "Archiwizuj",

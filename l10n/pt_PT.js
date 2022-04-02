@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "A deteção automática falhou. Por favor, utilize o modo manual.",
     "Updating account failed: " : "A actualização da conta falhou:",
-    "Creating account failed: " : "Não foi possível criar a conta:",
     "Embedded message %s" : "Mensagem embebida %s",
     "Important mail" : "Mensagem importante",
     "Unread mail" : "Mensagem por ler",
@@ -20,7 +19,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Deleted messages are moved in:",
     "Auto" : "Auto",
     "Name" : "Nome",
-    "Mail Address" : "Endereço de Correio",
     "Password" : "Palavra-passe",
     "Manual" : "Manual",
     "IMAP Settings" : "Definições IMAP",

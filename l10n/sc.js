@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "No at fatu a fàghere su rilevamentu automàticu. Imprea sa modalidade manuale.",
     "Updating account failed: " : "No at fatu a agiornare su contu:",
-    "Creating account failed: " : "No at fatu a creare su contu:",
     "Embedded message %s" : "Messàgiu incorporadu %s",
     "Important mail" : "Messàgiu de posta importante",
     "Unread mail" : "Posta no lèghida",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Is messàgios cantzellados sunt tramudados in:",
     "Auto" : "Auto",
     "Name" : "Nùmene",
-    "Mail Address" : "Indiritzu de posta eletrònica",
     "Password" : "Crae",
     "Manual" : "Manuale",
     "IMAP Settings" : "Impostatziones IMAP ",
@@ -313,7 +311,6 @@ OC.L10N.register(
     "Search" : "Chirca",
     "Refresh" : "Agiorna",
     "Connect your mail account" : "Connete·ti a su contu de posta tuo",
-    "Unexpected error during account creation" : "Errore non prevìdidu in sa creatzione de su contu",
     "Itinerary for {type} is not supported yet" : "S'itineràriu pro {type} no est ancora suportadu",
     "All" : "Totu",
     "Archive" : "Cartella",

@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Detekzio automatikoak huts egin du. Erabili eskuzko modua",
     "Updating account failed: " : "Huts egin du kontua eguneratzerakoan:",
-    "Creating account failed: " : "Huts egin du kontua sortzerakoan:",
     "Embedded message %s" : "Txertatutako mezua %s",
     "Important mail" : "Posta garrantzitsua",
     "Unread mail" : "Irakurri gabeko posta",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Ezabatutako mezuak hona mugitzen dira:",
     "Auto" : "Auto",
     "Name" : "Izena",
-    "Mail Address" : "Helbide elektronikoa",
     "Password" : "Pasahitza",
     "Manual" : "Eskuz",
     "IMAP Settings" : "IMAP ezarpenak",
@@ -353,7 +351,6 @@ OC.L10N.register(
     "Search" : "Bilatu",
     "Refresh" : "Freskatu",
     "Connect your mail account" : "Konektatu zure posta kontua",
-    "Unexpected error during account creation" : "Espero ez zen errore bat gertatu da kontua sortzerakoan",
     "Itinerary for {type} is not supported yet" : "{type} motarentzako ibilbidea ez da onartzen oraindik",
     "All" : "Denak",
     "Archive" : "Artxibatu",

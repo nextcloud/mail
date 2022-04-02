@@ -2,7 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Auto detect failed. Please use manual mode." : "ตรวจจับอัตโนมัติล้มเหลว กรุณาใช้โหมดควบคุมด้วยตนเอง",
-    "Creating account failed: " : "สร้างบัญชีล้มเหลว:",
     "Mail" : "จดหมาย",
     "Name" : "ชื่อ",
     "Password" : "รหัสผ่าน",

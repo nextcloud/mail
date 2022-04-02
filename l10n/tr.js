@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Otomatik olarak algılanamadı. Lütfen el ile kipini kullanın.",
     "Updating account failed: " : "Hesap güncellenemedi:",
-    "Creating account failed: " : "Hesap oluşturulamadı:",
     "Embedded message %s" : "Gömülü ileti %s",
     "Important mail" : "Önemli e-posta",
     "Unread mail" : "Okunmamış e-posta",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Silinmiş iletilerin kaydedileceği yer:",
     "Auto" : "Otomatik",
     "Name" : "Ad",
-    "Mail Address" : "E-posta adresi",
     "Password" : "Parola",
     "Manual" : "El ile",
     "IMAP Settings" : "IMAP ayarları",
@@ -355,7 +353,6 @@ OC.L10N.register(
     "Search" : "Arama",
     "Refresh" : "Yenlle",
     "Connect your mail account" : "E-posta hesabınızı bağlayın",
-    "Unexpected error during account creation" : "Hesap eklenirken bilinmeyen bir sorun çıktı",
     "Itinerary for {type} is not supported yet" : "{type} için yolculuk rehberi henüz desteklenmiyor",
     "All" : "Tümü",
     "Archive" : "Arşivle",
