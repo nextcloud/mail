@@ -14,7 +14,8 @@
 			:draft-id="composerData.draftId"
 			:draft="saveDraft"
 			:send="sendMessage"
-			:forwarded-messages="forwardedMessages" />
+			:forwarded-messages="forwardedMessages"
+			@close="$emit('close')" />
 	</Modal>
 </template>
 <script>
@@ -23,18 +24,16 @@ import logger from '../logger'
 import { toPlain } from '../util/text'
 import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
+import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+
+const UNDO_DELAY = 7 * 1000
 
 export default {
 	name: 'NewMessageModal',
 	components: {
 		Modal,
 		Composer,
-	},
-	data() {
-		return {
-			original: undefined,
-		}
 	},
 	computed: {
 		modalTitle() {
@@ -97,54 +96,67 @@ export default {
 		},
 		async sendMessage(data) {
 			logger.debug('sending message', { data })
+			const now = new Date().getTime()
+			const dataForServer = {
+				accountId: data.account,
+				subject: data.subject,
+				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+				isHtml: data.isHtml,
+				to: data.to,
+				cc: data.cc,
+				bcc: data.bcc,
+				attachments: data.attachments,
+				aliasId: data.aliasId,
+				inReplyToMessageId: null,
+				sendAt: Math.floor((now + UNDO_DELAY) / 1000), // JS timestamp is in milliseconds
+			}
+			let message
 			if (this.composerMessage.type === 'outbox') {
-				const now = new Date().getTime()
-				const dataForServer = {
-					accountId: data.account,
-					subject: data.subject,
-					body: data.isHtml ? data.body.value : toPlain(data.body).value,
-					isHtml: data.isHtml,
-					to: data.to,
-					cc: data.cc,
-					bcc: data.bcc,
-					attachments: data.attachments,
-					aliasId: data.aliasId,
-					inReplyToMessageId: null,
-					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
-				}
-				const message = await this.$store.dispatch('outbox/updateMessage', {
+				message = await this.$store.dispatch('outbox/updateMessage', {
 					message: dataForServer,
 					id: this.composerData.id,
 				})
-
-				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
 			} else {
-				const now = new Date().getTime()
-				const dataForServer = {
-					accountId: data.account,
-					subject: data.subject,
-					body: data.isHtml ? data.body.value : toPlain(data.body).value,
-					isHtml: data.isHtml,
-					to: data.to,
-					cc: data.cc,
-					bcc: data.bcc,
-					attachments: data.attachments,
-					aliasId: data.aliasId,
-					inReplyToMessageId: null,
-					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
-				}
-				const message = await this.$store.dispatch('outbox/enqueueMessage', {
+				message = await this.$store.dispatch('outbox/enqueueMessage', {
 					message: dataForServer,
 				})
-
-				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
-
-				if (data.draftId) {
-					// Remove old draft envelope
-					this.$store.commit('removeEnvelope', { id: data.draftId })
-					this.$store.commit('removeMessage', { id: data.draftId })
-				}
 			}
+
+			showUndo(
+				t('mail', 'Message sent'),
+				async() => {
+					logger.info('Attempting to stop sending message ' + message.id)
+					const stopped = await this.$store.dispatch('outbox/stopMessage', { message })
+					logger.info('Message ' + message.id + ' stopped', { message: stopped })
+					await this.$store.dispatch('showMessageComposer', {
+						type: 'outbox',
+						data: {
+							...message, // For id and other properties
+							...data, // For the correct body values
+						},
+					})
+				}, {
+					timeout: UNDO_DELAY,
+					close: true,
+				}
+			)
+
+			setTimeout(() => {
+				try {
+					this.$store.dispatch('outbox/sendMessage', { id: message.id })
+				} catch (error) {
+					showError(t('mail', 'Could not send message'))
+					logger.error('Could not delay-send message ' + message.id, { message })
+				}
+			}, UNDO_DELAY)
+
+			if (data.draftId) {
+				// Remove old draft envelope
+				this.$store.commit('removeEnvelope', { id: data.draftId })
+				this.$store.commit('removeMessage', { id: data.draftId })
+			}
+
+			this.$emit('close')
 		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {

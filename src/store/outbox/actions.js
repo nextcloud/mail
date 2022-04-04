@@ -57,15 +57,27 @@ export default {
 		return message
 	},
 
+	async stopMessage({ commit }, { message }) {
+		commit('stopMessage', { message })
+		const updatedMessage = await OutboxService.updateMessage({
+			...message,
+			sentAt: undefined,
+		}, message.id)
+		commit('updateMessage', { message: updatedMessage })
+		return updatedMessage
+	},
+
 	async updateMessage({ commit }, { message, id }) {
 		const updatedMessage = await OutboxService.updateMessage(message, id)
 		commit('updateMessage', { message: updatedMessage })
 		return updatedMessage
 	},
 
-	async sendMessage({ commit, getters }, { id }) {
+	async sendMessage({ commit, getters }, { id, force = false }) {
 		// Skip if the message has been deleted/undone in the meantime
-		if (!getters.getMessage(id)) {
+		const message = getters.getMessage(id)
+		logger.debug('Sending message ' + id, { message, force })
+		if (!force && (!message || !message.sendAt)) {
 			logger.debug('Skipped sending message that was undone')
 			return
 		}
