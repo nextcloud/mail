@@ -78,8 +78,8 @@ class FlagRepliedMessageListener implements IEventListener {
 			return;
 		}
 
+		$client = $this->imapClientFactory->getClient($event->getAccount());
 		try {
-			$client = $this->imapClientFactory->getClient($event->getAccount());
 			$this->messageMapper->addFlag(
 				$client,
 				$mailbox,
@@ -90,6 +90,8 @@ class FlagRepliedMessageListener implements IEventListener {
 			$this->logger->warning('Could not flag replied message: ' . $e, [
 				'exception' => $e,
 			]);
+		} finally {
+			$client->logout();
 		}
 	}
 }

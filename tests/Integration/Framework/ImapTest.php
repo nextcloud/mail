@@ -52,7 +52,7 @@ trait ImapTest {
 	/**
 	 * @return Horde_Imap_Client_Socket
 	 */
-	private function getTestClient() {
+	private function getTestClient(): Horde_Imap_Client_Socket {
 		if ($this->client === null) {
 			$this->client = new Horde_Imap_Client_Socket([
 				'username' => 'user@domain.tld',
@@ -134,8 +134,6 @@ trait ImapTest {
 	 * @return int id of the new message
 	 */
 	public function saveMessage(string $mailbox, SimpleMessage $message, MailAccount $account = null) {
-		$client = $this->getClient($account);
-
 		$headers = [
 			'From' => new Horde_Mail_Rfc822_Address($message->getFrom()),
 			'To' => new Horde_Mail_Rfc822_Address($message->getTo()),
@@ -155,32 +153,43 @@ trait ImapTest {
 		$raw = $mail->getRaw();
 		$data = stream_get_contents($raw);
 
-		return $client->append($mailbox, [
-			[
-				'data' => $data,
-			]
-		])->ids[0];
+		$client = $this->getClient($account);
+		try {
+			return $client->append($mailbox, [
+				[
+					'data' => $data,
+				]
+			])->ids[0];
+		} finally {
+			$client->logout();
+		}
 	}
 
 	public function flagMessage($mailbox, $id, MailAccount $account = null) {
 		$client = $this->getClient($account);
-
-		$client->store($mailbox, [
-			'ids' => new Horde_Imap_Client_Ids([$id]),
-			'add' => [
-				Horde_Imap_Client::FLAG_FLAGGED,
-			],
-		]);
+		try {
+			$client->store($mailbox, [
+				'ids' => new Horde_Imap_Client_Ids([$id]),
+				'add' => [
+					Horde_Imap_Client::FLAG_FLAGGED,
+				],
+			]);
+		} finally {
+			$client->logout();
+		}
 	}
 
 	public function deleteMessage($mailbox, $id, MailAccount $account = null) {
 		$client = $this->getClient($account);
-
 		$ids = new Horde_Imap_Client_Ids([$id]);
-		$client->expunge($mailbox, [
-			'ids' => $ids,
-			'delete' => true,
-		]);
+		try {
+			$client->expunge($mailbox, [
+				'ids' => $ids,
+				'delete' => true,
+			]);
+		} finally {
+			$client->logout();
+		}
 	}
 
 	/**
