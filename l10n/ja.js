@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "自動判別に失敗しました。手動モードをご利用ください。",
     "Updating account failed: " : "アカウントの更新に失敗：",
-    "Creating account failed: " : "アカウント作成に失敗:",
     "Important mail" : "重要なメール",
     "Unread mail" : "未読メール",
     "Important" : "重要",
@@ -19,7 +18,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "削除されたメッセージの移動先:",
     "Auto" : "自動",
     "Name" : "名前",
-    "Mail Address" : "メールアドレス",
     "Password" : "パスワード",
     "Manual" : "手動",
     "IMAP Settings" : "IMAP設定",
@@ -243,7 +241,6 @@ OC.L10N.register(
     "Search" : "検索",
     "Refresh" : "同期",
     "Connect your mail account" : "あなたのメールアカウントに接続",
-    "Unexpected error during account creation" : "アカウント作成中に予期しないエラーが発生しました",
     "Itinerary for {type} is not supported yet" : "{type} タイプの旅程はまだサポートされていません",
     "All" : "すべて",
     "Archive" : "アーカイブ",

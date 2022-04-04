@@ -81,18 +81,21 @@ class ItineraryService {
 		}
 
 		$client = $this->clientFactory->getClient($account);
-
-		$itinerary = new Itinerary();
-		$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id);
-		if ($htmlBody !== null) {
-			$itinerary = $itinerary->merge(
-				$this->extractor->extract($htmlBody)
-			);
-			$this->logger->debug('Extracted ' . count($itinerary) . ' itinerary entries from the message HTML body');
-		} else {
-			$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
+		try {
+			$itinerary = new Itinerary();
+			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id);
+			if ($htmlBody !== null) {
+				$itinerary = $itinerary->merge(
+					$this->extractor->extract($htmlBody)
+				);
+				$this->logger->debug('Extracted ' . count($itinerary) . ' itinerary entries from the message HTML body');
+			} else {
+				$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
+			}
+			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id);
+		} finally {
+			$client->logout();
 		}
-		$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id);
 		$itinerary = array_reduce($attachments, function (Itinerary $combined, string $attachment) {
 			$extracted = $this->extractor->extract($attachment);
 			$this->logger->debug('Extracted ' . count($extracted) . ' itinerary entries from an attachment');

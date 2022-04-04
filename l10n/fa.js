@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "شناسایی خودکار با شکست مواجه شد. لطفا از حالت دستی استفاده کنید.",
     "Updating account failed: " : "به روزرسانی حساب انجام نشد:",
-    "Creating account failed: " : "ایجاد حساب کاربری انجام نشد:",
     "Embedded message %s" : "پیام درج شده%s",
     "Important mail" : "ایمیل‌های مهم",
     "Mails" : "ایمیل‌ها",
@@ -11,7 +10,6 @@ OC.L10N.register(
     "💌 A mail app for Nextcloud" : "یک برنامه نامه پستی برای Nextcloud",
     "Auto" : "خودکار",
     "Name" : "نام",
-    "Mail Address" : "آدرس رایانامه",
     "Password" : "گذرواژه",
     "Manual" : "کتابچه راهنمای",
     "IMAP Settings" : "تنظیمات IMAP",
@@ -140,7 +138,6 @@ OC.L10N.register(
     "Search" : "جستجو",
     "Refresh" : "تازه‌سازی",
     "Connect your mail account" : "حساب ایمیل خود را وصل کنید",
-    "Unexpected error during account creation" : "خطای غیر منتظره هنگام ایجاد حساب",
     "Itinerary for {type} is not supported yet" : "برنامه سفر برای {نوع yet هنوز پشتیبانی نمی شود",
     "All" : "همه",
     "Archive" : "آرشیو",

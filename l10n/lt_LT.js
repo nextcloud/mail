@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Automatinis nustatymų aptikimas nepavyko. Įveskite duomenis rankiniu būdu.",
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
-    "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",
     "Embedded message %s" : "Įterptas laiškas %s",
     "Important mail" : "Svarbūs laiškai",
     "Unread mail" : "Neskaitytas paštas",
@@ -16,7 +15,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Ištrinti laiškai yra perkeliami į:",
     "Auto" : "Automatiškai",
     "Name" : "Vardas",
-    "Mail Address" : "Elektroninio pašto adresas",
     "Password" : "Slaptažodis",
     "Manual" : "Rankiniu būdu",
     "IMAP Settings" : "IMAP nustatymai",
@@ -203,7 +201,6 @@ OC.L10N.register(
     "Search" : "Ieškoti",
     "Refresh" : "Įkelti iš naujo",
     "Connect your mail account" : "Priregistruoti elektroninio pašto paskyrą",
-    "Unexpected error during account creation" : "Netikėta klaida kuriant paskyrą",
     "All" : "Visos",
     "Archive" : "Archyvuoti",
     "Drafts" : "Juodraščiai",

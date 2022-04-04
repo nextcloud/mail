@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Mistókst að finna sjálkrafa. Notaðu handvirku leiðina.",
     "Updating account failed: " : "Mistókst að uppfæra notandaaðgang: ",
-    "Creating account failed: " : "Mistókst að búa til notandaaðgang: ",
     "Embedded message %s" : "Ívafin skilaboð %s",
     "Important mail" : "Mikilvægur póstur",
     "Unread mail" : "Ólesinn póstur",
@@ -12,7 +11,6 @@ OC.L10N.register(
     "💌 A mail app for Nextcloud" : "💌 Tölvupóstforrit fyrir Nextcloud",
     "Auto" : "Sjálfvirkt",
     "Name" : "Nafn",
-    "Mail Address" : "Tölvupóstfang",
     "Password" : "Lykilorð",
     "Manual" : "Handvirkt",
     "IMAP Settings" : "IMAP-stillingar",
@@ -179,7 +177,6 @@ OC.L10N.register(
     "Search" : "Leita",
     "Refresh" : "Endurlesa",
     "Connect your mail account" : "Tengdu notandaaðganginn þinn",
-    "Unexpected error during account creation" : "Óvænt villa kom upp við að búa til notandaaðgang",
     "Itinerary for {type} is not supported yet" : "Það er ekki ennþá stuðningur við leið af gerðinni {type}",
     "All" : "Allt",
     "Archive" : "Setja í safnskrá",

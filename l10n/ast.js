@@ -2,10 +2,8 @@ OC.L10N.register(
     "mail",
     {
     "Auto detect failed. Please use manual mode." : "Falló l'autodeteición. Por favor, usa el mou manual.",
-    "Creating account failed: " : "Fallu creando la cuenta:",
     "Mail" : "Corréu",
     "Name" : "Nome",
-    "Mail Address" : "Direición de corréu",
     "Password" : "Contraseña",
     "IMAP Host" : "Agospiu d'IMAP",
     "None" : "Dengún",

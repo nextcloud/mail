@@ -179,7 +179,7 @@ class SieveController extends Controller {
 		try {
 			$this->sieveClientFactory->createClient($sieveHost, $sievePort, $sieveUser, $sievePassword, $sieveSslMode);
 		} catch (ManagesieveException $e) {
-			throw CouldNotConnectException::create($e, 'ManageSieve', $sieveHost, $sievePort);
+			throw new CouldNotConnectException($e, 'ManageSieve', $sieveHost, $sievePort);
 		}
 
 		$mailAccount->setSieveEnabled(true);
@@ -205,13 +205,13 @@ class SieveController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		if (!$account->getMailAccount()->isSieveEnabled()) {
-			throw new CouldNotConnectException('ManageSieve is disabled.');
+			throw new ClientException('ManageSieve is disabled.');
 		}
 
 		try {
 			$sieve = $this->sieveClientFactory->getClient($account);
 		} catch (ManagesieveException $e) {
-			throw CouldNotConnectException::create($e, 'ManageSieve', $account->getMailAccount()->getSieveHost(), $account->getMailAccount()->getSievePort());
+			throw new CouldNotConnectException($e, 'ManageSieve', $account->getMailAccount()->getSieveHost(), $account->getMailAccount()->getSievePort());
 		}
 
 		return $sieve;

@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Неуспешно автоматско детектирање. Ве молиме рачно внесете ги параметрите.",
     "Updating account failed: " : "Неуспешно ажурирање на сметка:",
-    "Creating account failed: " : "Неуспешно креирање на сметка:",
     "Embedded message %s" : "Вметната порака %s",
     "Important mail" : "Важни пораки",
     "Unread mail" : "Непрочитани пораки",
@@ -20,7 +19,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Избришаните пораки се преместени во:",
     "Auto" : "Автоматски",
     "Name" : "Име",
-    "Mail Address" : "Адреса на е-пошта",
     "Password" : "Лозинка",
     "Manual" : "Рачно",
     "IMAP Settings" : "IMAP параметри",
@@ -217,7 +215,6 @@ OC.L10N.register(
     "Search" : "Барај",
     "Refresh" : "Освежи",
     "Connect your mail account" : "Поврзете ја вашата е-пошта сметка",
-    "Unexpected error during account creation" : "Неочекувана грешка при креирање на сметка",
     "Itinerary for {type} is not supported yet" : "Итинерар за {type} сеуште не е поддржан",
     "All" : "Сите",
     "Archive" : "Архива",

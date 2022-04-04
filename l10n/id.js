@@ -2,7 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Auto detect failed. Please use manual mode." : "Deteksi otomatis gagal. Mohon gunakan modus manual.",
-    "Creating account failed: " : "Gagal membuat akun:",
     "Mail" : "Email",
     "Name" : "Nama",
     "Password" : "Kata kunci",

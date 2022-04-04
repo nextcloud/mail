@@ -78,23 +78,6 @@ abstract class AbstractTest extends TestCase {
 	}
 
 	/**
-	 * @param string $name
-	 * @return Mailbox
-	 */
-	public function createMailBox($name) {
-		try {
-			$this->getTestAccount()->getMailbox($name);
-			$this->deleteMailbox($name);
-		} catch (Exception $e) {
-			// Ignore mailbox not found
-		}
-
-		$mailbox = $this->getTestAccount()->createMailbox($name);
-		self::$createdMailboxes[$name] = $mailbox;
-		return $mailbox;
-	}
-
-	/**
 	 * @return Account
 	 */
 	protected function getTestAccount() {

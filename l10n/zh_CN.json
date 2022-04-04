@@ -1,7 +1,6 @@
 { "translations": {
     "Auto detect failed. Please use manual mode." : "自动检测失败，请使用手动模式。",
     "Updating account failed: " : "更新账号失败：",
-    "Creating account failed: " : "创建账号失败：",
     "Embedded message %s" : "嵌入式消息 %s",
     "Important mail" : "重要邮件",
     "Unread mail" : "未读邮件",
@@ -19,7 +18,6 @@
     "Deleted messages are moved in:" : "已删除邮件被移动到：",
     "Auto" : "自动",
     "Name" : "姓名",
-    "Mail Address" : "邮箱",
     "Password" : "密码",
     "Manual" : "手动",
     "IMAP Settings" : "IMAP 设置",
@@ -346,7 +344,6 @@
     "Search" : "搜索",
     "Refresh" : "刷新",
     "Connect your mail account" : "连接您的邮件账号",
-    "Unexpected error during account creation" : "创建账号时发生意外错误",
     "Itinerary for {type} is not supported yet" : "尚不支持 {type} 类型的行程",
     "All" : "全部",
     "Archive" : "归档",

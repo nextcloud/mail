@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
     "Updating account failed: " : "Tilin päivittäminen epäonnistui:",
-    "Creating account failed: " : "Tilin luominen epäonnistui:",
     "Embedded message %s" : "Upotettu viesti %s",
     "Important mail" : "Tärkeä sähköposti",
     "Unread mail" : "Lukematon sähköposti",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Poistetut viestit tallennetaan sijaintiin:",
     "Auto" : "Automaattinen",
     "Name" : "Nimi",
-    "Mail Address" : "Sähköpostiosoite",
     "Password" : "Salasana",
     "Manual" : "Manuaalinen",
     "IMAP Settings" : "IMAP-asetukset",
@@ -279,7 +277,6 @@ OC.L10N.register(
     "Search" : "Etsi",
     "Refresh" : "Päivitä",
     "Connect your mail account" : "Yhdistä sähköpostitilisi",
-    "Unexpected error during account creation" : "Odottamaton virhe tilin luonnin aikanaa",
     "All" : "Kaikki",
     "Archive" : "Arkisto",
     "Drafts" : "Luonnokset",

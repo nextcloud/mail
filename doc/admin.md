@@ -82,6 +82,32 @@ Make sure to remove any sensitive data before posting it publicly. Reset log lev
 
 If Mail fails to insert new rows for messages (`oc_mail_messages`), recipients (`oc_mail_recipients`) or similar tables, you are possibly not using the 4 byte support. See [the Nextcloud Admin Manual](https://docs.nextcloud.com/server/stable/admin_manual/configuration_database/mysql_4byte_support.html) on how to update your database configuration.
 
+### Timeout and other connectivity issues
+
+You can use OpenSSL to test and benchmark the connection from your Nextcloud host to the IMAP/SMTP host.
+
+```bash
+openssl s_time -connect imap.domain.tld:993
+```
+
+The output should look similar to this:
+
+```
+Collecting connection statistics for 30 seconds
+***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+483 connections in 0.94s; 513.83 connections/user sec, bytes read 0
+483 connections in 31 real seconds, 0 bytes read per connection
+
+
+Now timing with session id reuse.
+starting
+*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+497 connections in 0.97s; 512.37 connections/user sec, bytes read 0
+497 connections in 31 real seconds, 0 bytes read per connection
+```
+
 ### Get account IDs
 
 For many troubleshooting instructions you need to know the `id` of a user's account. You can acquire this through the database, but it's also possible to utilize the account export command of [occ](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/occ_command.html) if you know the UID of the user:

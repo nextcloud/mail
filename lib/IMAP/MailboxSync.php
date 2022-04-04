@@ -98,6 +98,8 @@ class MailboxSync {
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
 			$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage());
+		} finally {
+			$client->logout();
 		}
 
 		try {
@@ -137,7 +139,6 @@ class MailboxSync {
 	 */
 	public function syncStats(Account $account, Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
-
 		try {
 			$stats = $this->folderMapper->getFoldersStatusAsObject($client, $mailbox->getName());
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -147,6 +148,8 @@ class MailboxSync {
 				(int)$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
 		}
 
 		$mailbox->setMessages($stats->getTotal());

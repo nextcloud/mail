@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Automatisk detektering misslyckades. Vänligen använd manuellt läge.",
     "Updating account failed: " : "Uppdatering av konto misslyckades:",
-    "Creating account failed: " : "Misslyckades att skapa kontot:",
     "Embedded message %s" : "Inbäddat meddelande %s",
     "Important mail" : "Viktig e-post",
     "Unread mail" : "Oläst e-post",
@@ -20,7 +19,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Raderade meddelanden flyttas till:",
     "Auto" : "Auto",
     "Name" : "Namn",
-    "Mail Address" : "E-postadress",
     "Password" : "Lösenord",
     "Manual" : "Manuellt",
     "IMAP Settings" : "IMAP-inställningar",
@@ -252,7 +250,6 @@ OC.L10N.register(
     "Search" : "Sök",
     "Refresh" : "Uppdatera",
     "Connect your mail account" : "Anslut ditt e-postkonto",
-    "Unexpected error during account creation" : "Oväntat fel under skapande av konto",
     "Itinerary for {type} is not supported yet" : "Resplan för {type} stöds inte än",
     "All" : "Alla",
     "Archive" : "Arkivera",
