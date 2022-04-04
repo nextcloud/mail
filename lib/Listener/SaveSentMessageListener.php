@@ -83,14 +83,17 @@ class SaveSentMessageListener implements IEventListener {
 			return;
 		}
 
+		$client = $this->imapClientFactory->getClient($event->getAccount());
 		try {
 			$this->messageMapper->save(
-				$this->imapClientFactory->getClient($event->getAccount()),
+				$client,
 				$sentMailbox,
 				$event->getMail()
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not save sent message on IMAP', 0, $e);
+		} finally {
+			$client->logout();
 		}
 	}
 }

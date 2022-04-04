@@ -84,7 +84,6 @@ class DiagnoseAccount extends Command {
 			$output->writeln('<error>No IMAP passwort set. The user might have to log into their account to set it.</error>');
 		}
 		$imapClient = $this->clientFactory->getClient($account);
-
 		try {
 			$this->printCapabilitiesStats($output, $imapClient);
 			$this->printMailboxesMessagesStats($output, $imapClient);
@@ -94,6 +93,8 @@ class DiagnoseAccount extends Command {
 			]);
 			$output->writeln("<error>Horde error occurred: " . $e->getMessage() . ". See nextcloud.log for more details.</error>");
 			return 2;
+		} finally {
+			$imapClient->logout();
 		}
 
 		return 0;

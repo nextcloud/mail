@@ -150,9 +150,8 @@ class MailManager implements IMailManager {
 	 */
 	public function createMailbox(Account $account, string $name): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
-
-		$folder = $this->folderMapper->createFolder($client, $account, $name);
 		try {
+			$folder = $this->folderMapper->createFolder($client, $account, $name);
 			$this->folderMapper->getFoldersStatus([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
@@ -161,6 +160,8 @@ class MailManager implements IMailManager {
 				(int)$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
 		}
 		$this->folderMapper->detectFolderSpecialUse([$folder]);
 
@@ -174,7 +175,6 @@ class MailManager implements IMailManager {
 								   int $uid,
 								   bool $loadBody = false): IMAPMessage {
 		$client = $this->imapClientFactory->getClient($account);
-
 		try {
 			return $this->imapMessageMapper->find(
 				$client,
@@ -188,6 +188,8 @@ class MailManager implements IMailManager {
 				(int)$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
 		}
 	}
 
@@ -215,7 +217,6 @@ class MailManager implements IMailManager {
 	 */
 	public function getSource(Account $account, string $mailbox, int $uid): ?string {
 		$client = $this->imapClientFactory->getClient($account);
-
 		try {
 			return $this->imapMessageMapper->getFullText(
 				$client,
@@ -224,6 +225,8 @@ class MailManager implements IMailManager {
 			);
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException("Could not load message", 0, $e);
+		} finally {
+			$client->logout();
 		}
 	}
 
@@ -295,20 +298,25 @@ class MailManager implements IMailManager {
 			throw new ServiceException("No trash folder", 0, $e);
 		}
 
-		if ($mailboxId === $trashMailbox->getName()) {
-			// Delete inside trash -> expunge
-			$this->imapMessageMapper->expunge(
-				$this->imapClientFactory->getClient($account),
-				$sourceMailbox->getName(),
-				$messageId
-			);
-		} else {
-			$this->imapMessageMapper->move(
-				$this->imapClientFactory->getClient($account),
-				$sourceMailbox->getName(),
-				$messageId,
-				$trashMailbox->getName()
-			);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			if ($mailboxId === $trashMailbox->getName()) {
+				// Delete inside trash -> expunge
+				$this->imapMessageMapper->expunge(
+					$client,
+					$sourceMailbox->getName(),
+					$messageId
+				);
+			} else {
+				$this->imapMessageMapper->move(
+					$client,
+					$sourceMailbox->getName(),
+					$messageId,
+					$trashMailbox->getName()
+				);
+			}
+		} finally {
+			$client->logout();
 		}
 
 		$this->eventDispatcher->dispatch(
@@ -332,14 +340,20 @@ class MailManager implements IMailManager {
 											  string $destFolderId,
 											  int $messageId): void {
 		$client = $this->imapClientFactory->getClient($account);
-
-		$this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
+		try {
+			$this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
+		} finally {
+			$client->logout();
+		}
 	}
 
 	public function markFolderAsRead(Account $account, Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
-
-		$this->imapMessageMapper->markAllRead($client, $mailbox->getName());
+		try {
+			$this->imapMessageMapper->markAllRead($client, $mailbox->getName());
+		} finally {
+			$client->logout();
+		}
 	}
 
 	public function updateSubscription(Account $account, Mailbox $mailbox, bool $subscribed): Mailbox {
@@ -355,6 +369,8 @@ class MailManager implements IMailManager {
 				(int)$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
 		}
 
 		/**
@@ -376,16 +392,16 @@ class MailManager implements IMailManager {
 	}
 
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
-		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$mb = $this->mailboxMapper->find($account, $mailbox);
 		} catch (DoesNotExistException $e) {
 			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
 		}
 
-		// Only send system flags to the IMAP server as other flags might not be supported
-		$imapFlags = $this->filterFlags($account, $flag, $mailbox);
+		$client = $this->imapClientFactory->getClient($account);
 		try {
+			// Only send system flags to the IMAP server as other flags might not be supported
+			$imapFlags = $this->filterFlags($account, $flag, $mailbox);
 			foreach ($imapFlags as $imapFlag) {
 				if (empty($imapFlag) === true) {
 					continue;
@@ -402,6 +418,8 @@ class MailManager implements IMailManager {
 				(int)$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
 		}
 
 		$this->eventDispatcher->dispatch(
@@ -433,13 +451,13 @@ class MailManager implements IMailManager {
 	 * @link https://github.com/nextcloud/mail/issues/25
 	 */
 	public function tagMessage(Account $account, string $mailbox, Message $message, Tag $tag, bool $value): void {
-		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$mb = $this->mailboxMapper->find($account, $mailbox);
 		} catch (DoesNotExistException $e) {
 			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
 		}
 		if ($this->isPermflagsEnabled($account, $mailbox) === true) {
+			$client = $this->imapClientFactory->getClient($account);
 			try {
 				if ($value) {
 					// imap keywords and flags work the same way
@@ -453,6 +471,8 @@ class MailManager implements IMailManager {
 					(int)$e->getCode(),
 					$e
 				);
+			} finally {
+				$client->logout();
 			}
 		}
 		if ($value) {
@@ -469,17 +489,19 @@ class MailManager implements IMailManager {
 	 * @see https://tools.ietf.org/html/rfc2087
 	 */
 	public function getQuota(Account $account): ?Quota {
-		$client = $this->imapClientFactory->getClient($account);
 
 		/**
 		 * Get all the quotas roots of the user's mailboxes
 		 */
+		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$quotas = array_map(static function (Folder $mb) use ($client) {
 				return $client->getQuotaRoot($mb->getMailbox());
 			}, $this->folderMapper->getFolders($account, $client));
 		} catch (Horde_Imap_Client_Exception_NoSupportExtension $ex) {
 			return null;
+		} finally {
+			$client->logout();
 		}
 
 		/**
@@ -516,11 +538,16 @@ class MailManager implements IMailManager {
 		/*
 		 * 1. Rename on IMAP
 		 */
-		$this->folderMapper->renameFolder(
-			$this->imapClientFactory->getClient($account),
-			$mailbox->getName(),
-			$name
-		);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$this->folderMapper->renameFolder(
+				$client,
+				$mailbox->getName(),
+				$name
+			);
+		} finally {
+			$client->logout();
+		}
 
 		/**
 		 * 2. Get the IMAP changes into our database cache
@@ -546,7 +573,11 @@ class MailManager implements IMailManager {
 	public function deleteMailbox(Account $account,
 								  Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
-		$this->folderMapper->delete($client, $mailbox->getName());
+		try {
+			$this->folderMapper->delete($client, $mailbox->getName());
+		} finally {
+			$client->logout();
+		}
 		$this->mailboxMapper->delete($mailbox);
 	}
 
@@ -557,7 +588,12 @@ class MailManager implements IMailManager {
 	 * @return array[]
 	 */
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message): array {
-		return $this->imapMessageMapper->getAttachments($this->imapClientFactory->getClient($account), $mailbox->getName(), $message->getUid());
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			return $this->imapMessageMapper->getAttachments($client, $mailbox->getName(), $message->getUid());
+		} finally {
+			$client->logout();
+		}
 	}
 
 	/**
@@ -612,6 +648,8 @@ class MailManager implements IMailManager {
 				(int)$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
 		}
 		return (is_array($capabilities) === true && array_key_exists('permflags', $capabilities) === true && in_array("\*", $capabilities['permflags'], true) === true);
 	}

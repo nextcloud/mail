@@ -65,34 +65,42 @@ class MigrateImportantFromImapAndDb {
 
 	public function migrateImportantOnImap(Account $account, Mailbox $mailbox): void {
 		$client = $this->clientFactory->getClient($account);
-		//get all messages that have an $important label from IMAP
 		try {
-			$uids = $this->messageMapper->getFlagged($client, $mailbox, '$important');
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException("Could not fetch UIDs of important messages: " . $e->getMessage(), 0, $e);
-		}
-		// add $label1 for all that are tagged on IMAP
-		if (!empty($uids)) {
+			//get all messages that have an $important label from IMAP
 			try {
-				$this->messageMapper->addFlag($client, $mailbox, $uids, Tag::LABEL_IMPORTANT);
+				$uids = $this->messageMapper->getFlagged($client, $mailbox, '$important');
 			} catch (Horde_Imap_Client_Exception $e) {
-				$this->logger->debug('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
-				throw new ServiceException($e->getMessage(), 0, $e);
+				throw new ServiceException("Could not fetch UIDs of important messages: " . $e->getMessage(), 0, $e);
 			}
+			// add $label1 for all that are tagged on IMAP
+			if (!empty($uids)) {
+				try {
+					$this->messageMapper->addFlag($client, $mailbox, $uids, Tag::LABEL_IMPORTANT);
+				} catch (Horde_Imap_Client_Exception $e) {
+					$this->logger->debug('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
+					throw new ServiceException($e->getMessage(), 0, $e);
+				}
+			}
+		} finally {
+			$client->logout();
 		}
 	}
 
 	public function migrateImportantFromDb(Account $account, Mailbox $mailbox): void {
 		$client = $this->clientFactory->getClient($account);
-		$uids = $this->mailboxMapper->findFlaggedImportantUids($mailbox->getId());
-		// store our data on imap
-		if (!empty($uids)) {
-			try {
-				$this->messageMapper->addFlag($client, $mailbox, $uids, Tag::LABEL_IMPORTANT);
-			} catch (Horde_Imap_Client_Exception $e) {
-				$this->logger->debug('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
-				throw new ServiceException($e->getMessage(), 0, $e);
+		try {
+			$uids = $this->mailboxMapper->findFlaggedImportantUids($mailbox->getId());
+			// store our data on imap
+			if (!empty($uids)) {
+				try {
+					$this->messageMapper->addFlag($client, $mailbox, $uids, Tag::LABEL_IMPORTANT);
+				} catch (Horde_Imap_Client_Exception $e) {
+					$this->logger->debug('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
+					throw new ServiceException($e->getMessage(), 0, $e);
+				}
 			}
+		} finally {
+			$client->logout();
 		}
 	}
 }

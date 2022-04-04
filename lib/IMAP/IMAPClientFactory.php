@@ -41,8 +41,6 @@ class IMAPClientFactory {
 	/** @var ICacheFactory */
 	private $cacheFactory;
 
-	private $cache = [];
-
 	/**
 	 * @param ICrypto $crypto
 	 * @param IConfig $config
@@ -55,47 +53,49 @@ class IMAPClientFactory {
 	}
 
 	/**
+	 * Get the connection object for the given account
+	 *
+	 * Connections are not closed until destruction, so the caller site is
+	 * responsible to log out as soon as possible to keep the number of open
+	 * (and stale) connections at a minimum.
+	 *
 	 * @param Account $account
 	 * @return Horde_Imap_Client_Socket
 	 */
 	public function getClient(Account $account): Horde_Imap_Client_Socket {
-		if (!isset($this->cache[$account->getId()])) {
-			$host = $account->getMailAccount()->getInboundHost();
-			$user = $account->getMailAccount()->getInboundUser();
-			$password = $account->getMailAccount()->getInboundPassword();
-			$password = $this->crypto->decrypt($password);
-			$port = $account->getMailAccount()->getInboundPort();
-			$sslMode = $account->getMailAccount()->getInboundSslMode();
-			if ($sslMode === 'none') {
-				$sslMode = false;
-			}
-
-			$params = [
-				'username' => $user,
-				'password' => $password,
-				'hostspec' => $host,
-				'port' => $port,
-				'secure' => $sslMode,
-				'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 5),
-				'context' => [
-					'ssl' => [
-						'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-						'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-					],
-				],
-			];
-			if ($this->cacheFactory->isAvailable()) {
-				$params['cache'] = [
-					'backend' => new Cache([
-						'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
-					])];
-			}
-			if ($this->config->getSystemValue('debug', false)) {
-				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
-			}
-			$this->cache[$account->getId()] = new Horde_Imap_Client_Socket($params);
+		$host = $account->getMailAccount()->getInboundHost();
+		$user = $account->getMailAccount()->getInboundUser();
+		$password = $account->getMailAccount()->getInboundPassword();
+		$password = $this->crypto->decrypt($password);
+		$port = $account->getMailAccount()->getInboundPort();
+		$sslMode = $account->getMailAccount()->getInboundSslMode();
+		if ($sslMode === 'none') {
+			$sslMode = false;
 		}
 
-		return $this->cache[$account->getId()];
+		$params = [
+			'username' => $user,
+			'password' => $password,
+			'hostspec' => $host,
+			'port' => $port,
+			'secure' => $sslMode,
+			'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 5),
+			'context' => [
+				'ssl' => [
+					'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+					'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+				],
+			],
+		];
+		if ($this->cacheFactory->isAvailable()) {
+			$params['cache'] = [
+				'backend' => new Cache([
+					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
+				])];
+		}
+		if ($this->config->getSystemValue('debug', false)) {
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+		}
+		return new Horde_Imap_Client_Socket($params);
 	}
 }
