@@ -45,12 +45,12 @@ class MessageMapperTest extends TestCase {
 
 	public function tearDown(): void {
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 	}
 
 	public function testTagging(): void {
 		// First, set up account and retrieve sync token
 		$this->resetImapAccount();
-
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->get(SyncService::class);
