@@ -35,6 +35,9 @@ export default {
 		state.messageList = state.messageList.filter(i => i !== id)
 		Vue.delete(state.messages, id)
 	},
+	stopMessage(state, { message }) {
+		Vue.delete(message, 'sendAt')
+	},
 	updateMessage(state, { message }) {
 		const existing = state.messages[message.id]
 		Vue.set(state.messages, message.id, Object.assign({}, existing, message))
