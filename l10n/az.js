@@ -2,7 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Auto detect failed. Please use manual mode." : "Avtomatik təyinatda səhv baş verdi. Xahiş olunur əl rejimini seçəsiniz.",
-    "Creating account failed: " : "Hesabın yaradılmasında səhv:",
     "Mail" : "Məktub",
     "Name" : "Ad",
     "Password" : "Şifrə",

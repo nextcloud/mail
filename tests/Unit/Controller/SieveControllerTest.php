@@ -28,6 +28,7 @@ use Horde\ManageSieve\Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Controller\SieveController;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Tests\Integration\TestCase;
 
@@ -130,7 +131,7 @@ class SieveControllerTest extends TestCase {
 	}
 
 	public function testGetActiveScriptNoSieve(): void {
-		$this->expectException(CouldNotConnectException::class);
+		$this->expectException(ClientException::class);
 		$this->expectExceptionMessage('ManageSieve is disabled');
 
 		$mailAccount = new MailAccount();

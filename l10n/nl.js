@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Automatisch vaststellen mislukt. Gebruik handmatige modus.",
     "Updating account failed: " : "Bijwerken van account mislukt:",
-    "Creating account failed: " : "Aanmaken account mislukt:",
     "Embedded message %s" : "Ingebed bericht %s",
     "Important mail" : "Belangrijke mail",
     "Unread mail" : "Ongelezen mail",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Verwijderde berichten worden verplaatst naar:",
     "Auto" : "Automatisch",
     "Name" : "Naam",
-    "Mail Address" : "E-mailadres",
     "Password" : "Wachtwoord",
     "Manual" : "Handmatig",
     "IMAP Settings" : "IMAP instellingen",
@@ -348,7 +346,6 @@ OC.L10N.register(
     "Search" : "Zoeken",
     "Refresh" : "Verversen",
     "Connect your mail account" : "Verbind je e-mailaccount",
-    "Unexpected error during account creation" : "Onverwachte fout tijdens het maken van een account",
     "Itinerary for {type} is not supported yet" : "route voor {type} wordt nog niet ondersteund",
     "All" : "Alle",
     "Archive" : "Archiveer",

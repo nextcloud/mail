@@ -2,7 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Name" : "නම",
-    "Mail Address" : "තැපැල් ලිපිනය",
     "Password" : "මුර පදය",
     "Save" : "සුරකින්න",
     "Connect" : "සම්බන්ධ කරන්න",

@@ -81,9 +81,10 @@ class PreviewEnhancer {
 			return $messages;
 		}
 
+		$client = $this->clientFactory->getClient($account);
 		try {
 			$data = $this->imapMapper->getBodyStructureData(
-				$this->clientFactory->getClient($account),
+				$client,
 				$mailbox->getName(),
 				$needAnalyze
 			);
@@ -94,6 +95,8 @@ class PreviewEnhancer {
 			]);
 
 			return $messages;
+		} finally {
+			$client->logout();
 		}
 
 		return $this->mapper->updatePreviewDataBulk(...array_map(function (Message $message) use ($data) {

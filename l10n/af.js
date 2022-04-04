@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Pos",
     "Name" : "Naam",
-    "Mail Address" : "Posadres",
     "Password" : "Wagwoord",
     "IMAP Host" : "IMAP-gasheer",
     "None" : "Geen",

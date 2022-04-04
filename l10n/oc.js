@@ -2,7 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Auto detect failed. Please use manual mode." : "L'autodeteccion a fracassat. Utilizatz lo mòde manual.",
-    "Creating account failed: " : "La creacion del compte a fracassat :",
     "Important mail" : "Mail important",
     "Unread mail" : "Mail pas legit",
     "Important" : "Important",
@@ -11,7 +10,6 @@ OC.L10N.register(
     "Mails" : "Mails",
     "Mail" : "Mail",
     "Name" : "Nom",
-    "Mail Address" : "Adreça mail",
     "Password" : "Senhal",
     "IMAP Settings" : "Paramètres IMAP",
     "None" : "Pas cap",

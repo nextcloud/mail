@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
     "Updating account failed: " : "Posodobitev računa je spodletela:",
-    "Creating account failed: " : "Ustvarjanje računa je spodletelo:",
     "Embedded message %s" : "Vstavljeno sporočilo %s",
     "Important mail" : "Pomembno sporočilo",
     "Unread mail" : "Neprebrana pošta",
@@ -21,7 +20,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Izbrisana sporočila so premaknjena v:",
     "Auto" : "Samodejno",
     "Name" : "Ime",
-    "Mail Address" : "Elektronski naslov",
     "Password" : "Geslo",
     "Manual" : "Ročno",
     "IMAP Settings" : "Nastavitve IMAP",
@@ -316,7 +314,6 @@ OC.L10N.register(
     "Search" : "Iskanje",
     "Refresh" : "Osveži",
     "Connect your mail account" : "Povežite svoj elektronski račun",
-    "Unexpected error during account creation" : "Prišlo je do nepričakovane napake med ustvarjanjem računa",
     "Itinerary for {type} is not supported yet" : "{type} – vrsta prevoza še ni podprta",
     "All" : "Vse",
     "Archive" : "Arhiv",

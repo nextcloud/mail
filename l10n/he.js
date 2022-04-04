@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "איתור אוטומטי נכשל. יש להשתמש במצב ידני.",
     "Updating account failed: " : "עדכון החשבון נכשל:",
-    "Creating account failed: " : "יצירת חשבון נכשלה:",
     "Embedded message %s" : "הודעה מוטמעת %s",
     "Important mail" : "דוא״ל חשוב",
     "Unread mail" : "דוא״ל שלא נקרא",
@@ -20,7 +19,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "הודעות שנמחקו מועברות אל:",
     "Auto" : "אוטומטי",
     "Name" : "שם",
-    "Mail Address" : "כתובת דוא״ל",
     "Password" : "ססמה",
     "Manual" : "ידני",
     "IMAP Settings" : "הגדרות IMAP",
@@ -218,7 +216,6 @@ OC.L10N.register(
     "Search" : "חיפוש",
     "Refresh" : "רענון",
     "Connect your mail account" : "התחברות לחשבון הדוא״ל שלך",
-    "Unexpected error during account creation" : "שגיאה לא ידועה במהלך יצירת חשבון",
     "Itinerary for {type} is not supported yet" : "פירוט המסלול {type} אינו נתמך עדיין",
     "All" : "הכול",
     "Archive" : "לארכיון",

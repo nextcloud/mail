@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
     "Updating account failed: " : "Kontoen blev ikke opdateret:",
-    "Creating account failed: " : "Oprettelse af konto mislykkedes:",
     "Embedded message %s" : "Indlejret besked %s",
     "Important mail" : "Vigtig mail",
     "Unread mail" : "Ulæst mail",
@@ -20,7 +19,6 @@ OC.L10N.register(
     "Deleted messages are moved in:" : "Slettede meddelelser flyttes ind:",
     "Auto" : "Auto",
     "Name" : "Navn",
-    "Mail Address" : "Email addresse",
     "Password" : "Kodeord",
     "Manual" : "Manuel",
     "IMAP Settings" : "IMAP opsætning",
@@ -162,7 +160,6 @@ OC.L10N.register(
     "Search" : "Søg",
     "Refresh" : "Opdatér",
     "Connect your mail account" : "Forbind din mail konto",
-    "Unexpected error during account creation" : "Uventet fejl under oprettelse af konto",
     "All" : "Alle",
     "Archive" : "Arkivér",
     "Drafts" : "Udkast",

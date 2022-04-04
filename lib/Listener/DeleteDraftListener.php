@@ -90,6 +90,8 @@ class DeleteDraftListener implements IEventListener {
 		} catch (DoesNotExistException $e) {
 			$this->logger->warning("Account has no draft mailbox set, can't delete the draft");
 			return;
+		} finally {
+			$client->logout();
 		}
 
 		try {

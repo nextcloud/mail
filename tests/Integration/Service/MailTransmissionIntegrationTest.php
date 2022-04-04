@@ -71,6 +71,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		parent::setUp();
 
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 		$this->user = $this->createTestUser();
 
 		/** @var ICrypto $crypo */

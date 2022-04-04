@@ -281,12 +281,12 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('build draft message');
 
 		// 'Send' the message
+		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$transport = new Horde_Mail_Transport_Null();
 			$mail->send($transport, false, false);
 			$perfLogger->step('create IMAP message');
 			// save the message in the drafts folder
-			$client = $this->imapClientFactory->getClient($account);
 			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
 			if ($draftsMailboxId === null) {
 				throw new ClientException("No drafts mailbox configured");
@@ -303,6 +303,8 @@ class MailTransmission implements IMailTransmission {
 			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
 		} catch (Horde_Exception $e) {
 			throw new ServiceException('Could not save draft message', 0, $e);
+		} finally {
+			$client->logout();
 		}
 
 		$this->eventDispatcher->dispatch(
@@ -404,11 +406,16 @@ class MailTransmission implements IMailTransmission {
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
-		$fullText = $this->messageMapper->getFullText(
-			$this->imapClientFactory->getClient($account),
-			$mailbox->getName(),
-			$attachmentMessage->getUid()
-		);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$fullText = $this->messageMapper->getFullText(
+				$client,
+				$mailbox->getName(),
+				$attachmentMessage->getUid()
+			);
+		} finally {
+			$client->logout();
+		}
 
 		$message->addRawAttachment(
 			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
@@ -429,11 +436,16 @@ class MailTransmission implements IMailTransmission {
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
-		$fullText = $this->messageMapper->getFullText(
-			$this->imapClientFactory->getClient($account),
-			$mailbox->getName(),
-			$attachmentMessage->getUid()
-		);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$fullText = $this->messageMapper->getFullText(
+				$client,
+				$mailbox->getName(),
+				$attachmentMessage->getUid()
+			);
+		} finally {
+			$client->logout();
+		}
 
 		$message->addEmbeddedMessageAttachment(
 			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
@@ -454,14 +466,19 @@ class MailTransmission implements IMailTransmission {
 		$userId = $account->getMailAccount()->getUserId();
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['messageId']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
-		$attachments = $this->messageMapper->getRawAttachments(
-			$this->imapClientFactory->getClient($account),
-			$mailbox->getName(),
-			$attachmentMessage->getUid(),
-			[
-				$attachment['id']
-			]
-		);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$attachments = $this->messageMapper->getRawAttachments(
+				$client,
+				$mailbox->getName(),
+				$attachmentMessage->getUid(),
+				[
+					$attachment['id']
+				]
+			);
+		} finally {
+			$client->logout();
+		}
 
 		// Attaches attachment to new message
 		$message->addRawAttachment($attachment['fileName'], $attachments[0]);
@@ -495,8 +512,6 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
-		$imapClient = $this->imapClientFactory->getClient($account);
-
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->flags();
 		$query->uid();
@@ -506,10 +521,15 @@ class MailTransmission implements IMailTransmission {
 			'peek' => true,
 		]);
 
-		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-		$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
-			'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
-		]), false);
+		$imapClient = $this->imapClientFactory->getClient($account);
+		try {
+			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
+			$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
+				'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
+			]), false);
+		} finally {
+			$imapClient->logout();
+		}
 
 		if (count($fetchResults) < 1) {
 			throw new ServiceException('Message "' .$message->getId() . '" not found.');

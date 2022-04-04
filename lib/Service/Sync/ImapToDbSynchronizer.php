@@ -287,37 +287,41 @@ class ImapToDbSynchronizer {
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$imapMessages = $this->imapMapper->findAll(
-				$client,
-				$mailbox->getName(),
-				self::MAX_NEW_MESSAGES,
-				$highestKnownUid ?? 0
-			);
-			$perf->step('fetch all messages from IMAP');
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
+			try {
+				$imapMessages = $this->imapMapper->findAll(
+					$client,
+					$mailbox->getName(),
+					self::MAX_NEW_MESSAGES,
+					$highestKnownUid ?? 0
+				);
+				$perf->step('fetch all messages from IMAP');
+			} catch (Horde_Imap_Client_Exception $e) {
+				throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
+			}
+
+			foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
+				$this->dbMapper->insertBulk($account, ...array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
+				}, $chunk));
+			}
+			$perf->step('persist messages in database');
+
+			if (!$imapMessages['all']) {
+				// We might need more attempts to fill the cache
+				$perf->end();
+
+				$loggingMailboxId = $account->getId() . ':' . $mailbox->getName();
+				$total = $imapMessages['total'];
+				$cached = count($this->messageMapper->findAllUids($mailbox));
+				throw new IncompleteSyncException("Initial sync is not complete for $loggingMailboxId ($cached of $total messages cached).");
+			}
+
+			$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
+			$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
+			$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
+		} finally {
+			$client->logout();
 		}
-
-		foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
-			$this->dbMapper->insertBulk($account, ...array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
-				return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
-			}, $chunk));
-		}
-		$perf->step('persist messages in database');
-
-		if (!$imapMessages['all']) {
-			// We might need more attempts to fill the cache
-			$perf->end();
-
-			$loggingMailboxId = $account->getId() . ':' . $mailbox->getName();
-			$total = $imapMessages['total'];
-			$cached = count($this->messageMapper->findAllUids($mailbox));
-			throw new IncompleteSyncException("Initial sync is not complete for $loggingMailboxId ($cached of $total messages cached).");
-		}
-
-		$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
-		$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
-		$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
 		$this->mailboxMapper->update($mailbox);
 
 		$perf->end();
@@ -340,104 +344,108 @@ class ImapToDbSynchronizer {
 		);
 
 		$client = $this->clientFactory->getClient($account);
-		$uids = $knownUids ?? $this->dbMapper->findAllUids($mailbox);
-		$perf->step('get all known UIDs');
+		try {
+			$uids = $knownUids ?? $this->dbMapper->findAllUids($mailbox);
+			$perf->step('get all known UIDs');
 
-		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
-			$response = $this->synchronizer->sync(
-				$client,
-				new Request(
-					$mailbox->getName(),
-					$mailbox->getSyncNewToken(),
-					$uids
-				),
-				Horde_Imap_Client::SYNC_NEWMSGSUIDS
-			);
-			$perf->step('get new messages via Horde');
-
-			$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
-			if ($highestKnownUid === null) {
-				// Everything is relevant
-				$newMessages = $response->getNewMessages();
-			} else {
-				// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
-				// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
-				// will be seen as *new* and therefore cause conflicts.
-				$newMessages = array_filter($response->getNewMessages(), function (IMAPMessage $imapMessage) use ($highestKnownUid) {
-					return $imapMessage->getUid() > $highestKnownUid;
-				});
-			}
-
-			foreach (array_chunk($newMessages, 500) as $chunk) {
-				$dbMessages = array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
-					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
-				}, $chunk);
-
-				$this->dbMapper->insertBulk($account, ...$dbMessages);
-
-				$this->dispatcher->dispatch(
-					NewMessagesSynchronized::class,
-					new NewMessagesSynchronized($account, $mailbox, $dbMessages)
+			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
+				$response = $this->synchronizer->sync(
+					$client,
+					new Request(
+						$mailbox->getName(),
+						$mailbox->getSyncNewToken(),
+						$uids
+					),
+					Horde_Imap_Client::SYNC_NEWMSGSUIDS
 				);
-				$perf->step('classified a chunk of new messages');
+				$perf->step('get new messages via Horde');
+
+				$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
+				if ($highestKnownUid === null) {
+					// Everything is relevant
+					$newMessages = $response->getNewMessages();
+				} else {
+					// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
+					// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
+					// will be seen as *new* and therefore cause conflicts.
+					$newMessages = array_filter($response->getNewMessages(), function (IMAPMessage $imapMessage) use ($highestKnownUid) {
+						return $imapMessage->getUid() > $highestKnownUid;
+					});
+				}
+
+				foreach (array_chunk($newMessages, 500) as $chunk) {
+					$dbMessages = array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+						return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
+					}, $chunk);
+
+					$this->dbMapper->insertBulk($account, ...$dbMessages);
+
+					$this->dispatcher->dispatch(
+						NewMessagesSynchronized::class,
+						new NewMessagesSynchronized($account, $mailbox, $dbMessages)
+					);
+					$perf->step('classified a chunk of new messages');
+				}
+				$perf->step('persist new messages');
+
+				$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
 			}
-			$perf->step('persist new messages');
+			if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
+				$response = $this->synchronizer->sync(
+					$client,
+					new Request(
+						$mailbox->getName(),
+						$mailbox->getSyncChangedToken(),
+						$uids
+					),
+					Horde_Imap_Client::SYNC_FLAGSUIDS
+				);
+				$perf->step('get changed messages via Horde');
 
-			$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
-		}
-		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
-			$response = $this->synchronizer->sync(
-				$client,
-				new Request(
-					$mailbox->getName(),
-					$mailbox->getSyncChangedToken(),
-					$uids
-				),
-				Horde_Imap_Client::SYNC_FLAGSUIDS
-			);
-			$perf->step('get changed messages via Horde');
+				$permflagsEnabled = $this->mailManager->isPermflagsEnabled($account, $mailbox->getName());
 
-			$permflagsEnabled = $this->mailManager->isPermflagsEnabled($account, $mailbox->getName());
+				foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
+					$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+						return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
+					}, $chunk));
+				}
+				$perf->step('persist changed messages');
 
-			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
-				$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
-					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
-				}, $chunk));
+				// If a list of UIDs was *provided* (as opposed to loaded from the DB,
+				// we can not assume that all changes were detected, hence this is kinda
+				// a silent sync and we don't update the change token until the next full
+				// mailbox sync
+				if ($knownUids === null) {
+					$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
+				}
 			}
-			$perf->step('persist changed messages');
+			if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
+				$response = $this->synchronizer->sync(
+					$client,
+					new Request(
+						$mailbox->getName(),
+						$mailbox->getSyncVanishedToken(),
+						$uids
+					),
+					Horde_Imap_Client::SYNC_VANISHEDUIDS
+				);
+				$perf->step('get vanished messages via Horde');
 
-			// If a list of UIDs was *provided* (as opposed to loaded from the DB,
-			// we can not assume that all changes were detected, hence this is kinda
-			// a silent sync and we don't update the change token until the next full
-			// mailbox sync
-			if ($knownUids === null) {
-				$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
-			}
-		}
-		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
-			$response = $this->synchronizer->sync(
-				$client,
-				new Request(
-					$mailbox->getName(),
-					$mailbox->getSyncVanishedToken(),
-					$uids
-				),
-				Horde_Imap_Client::SYNC_VANISHEDUIDS
-			);
-			$perf->step('get vanished messages via Horde');
+				foreach (array_chunk($response->getVanishedMessageUids(), 500) as $chunk) {
+					$this->dbMapper->deleteByUid($mailbox, ...$chunk);
+				}
+				$perf->step('persist new messages');
 
-			foreach (array_chunk($response->getVanishedMessageUids(), 500) as $chunk) {
-				$this->dbMapper->deleteByUid($mailbox, ...$chunk);
+				// If a list of UIDs was *provided* (as opposed to loaded from the DB,
+				// we can not assume that all changes were detected, hence this is kinda
+				// a silent sync and we don't update the vanish token until the next full
+				// mailbox sync
+				if ($knownUids === null) {
+					$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
+				}
 			}
-			$perf->step('persist new messages');
-
-			// If a list of UIDs was *provided* (as opposed to loaded from the DB,
-			// we can not assume that all changes were detected, hence this is kinda
-			// a silent sync and we don't update the vanish token until the next full
-			// mailbox sync
-			if ($knownUids === null) {
-				$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
-			}
+		} finally {
+			$client->logout();
 		}
 		$this->mailboxMapper->update($mailbox);
 		$perf->end();

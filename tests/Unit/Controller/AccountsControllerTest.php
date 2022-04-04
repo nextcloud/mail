@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Exception;
 use Horde_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
@@ -112,7 +111,7 @@ class AccountsControllerTest extends TestCase {
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
-		$this->groupsIntegration->expects($this->any())
+		$this->groupsIntegration->expects(self::any())
 			->method('expand')
 			->will($this->returnArgument(0));
 		$this->userId = 'manfred';
@@ -144,20 +143,20 @@ class AccountsControllerTest extends TestCase {
 		$this->accountId = 123;
 	}
 
-	public function testIndex() {
-		$this->account->expects($this->once())
+	public function testIndex(): void {
+		$this->account->expects(self::once())
 			->method('jsonSerialize')
-			->will($this->returnValue([
+			->will(self::returnValue([
 				'accountId' => 123,
 			]));
-		$this->accountService->expects($this->once())
+		$this->accountService->expects(self::once())
 			->method('findByUserId')
-			->with($this->equalTo($this->userId))
-			->will($this->returnValue([$this->account]));
-		$this->aliasesService->expects($this->any())
+			->with(self::equalTo($this->userId))
+			->will(self::returnValue([$this->account]));
+		$this->aliasesService->expects(self::any())
 			->method('findAll')
-			->with($this->equalTo($this->accountId), $this->equalTo($this->userId))
-			->will($this->returnValue(['a1', 'a2']));
+			->with(self::equalTo($this->accountId), self::equalTo($this->userId))
+			->will(self::returnValue(['a1', 'a2']));
 
 		$response = $this->controller->index();
 
@@ -170,80 +169,80 @@ class AccountsControllerTest extends TestCase {
 				],
 			]
 		]);
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testShow() {
-		$this->accountService->expects($this->once())
+	public function testShow(): void {
+		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
-			->will($this->returnValue($this->account));
+			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
+			->will(self::returnValue($this->account));
 
 		$response = $this->controller->show($this->accountId);
 
 		$expectedResponse = new JSONResponse($this->account);
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testShowDoesNotExist() {
-		$this->accountService->expects($this->once())
+	public function testShowDoesNotExist(): void {
+		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
-			->will($this->throwException(new DoesNotExistException('test123')));
+			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
+			->will(self::throwException(new DoesNotExistException('test123')));
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->show($this->accountId);
 	}
 
-	public function testUpdateSignature() {
-		$this->accountService->expects($this->once())
+	public function testUpdateSignature(): void {
+		$this->accountService->expects(self::once())
 			->method('updateSignature')
-			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), 'sig');
+			->with(self::equalTo($this->accountId), self::equalTo($this->userId), 'sig');
 
 		$response = $this->controller->updateSignature($this->accountId, 'sig');
 
 		$expectedResponse = new JSONResponse();
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testDeleteSignature() {
-		$this->accountService->expects($this->once())
+	public function testDeleteSignature(): void {
+		$this->accountService->expects(self::once())
 			->method('updateSignature')
-			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), null);
+			->with(self::equalTo($this->accountId), self::equalTo($this->userId), null);
 
 		$response = $this->controller->updateSignature($this->accountId, null);
 
 		$expectedResponse = new JSONResponse();
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testDestroy() {
-		$this->accountService->expects($this->once())
+	public function testDestroy(): void {
+		$this->accountService->expects(self::once())
 			->method('delete')
-			->with($this->equalTo($this->userId), $this->equalTo($this->accountId));
+			->with(self::equalTo($this->userId), self::equalTo($this->accountId));
 
 		$response = $this->controller->destroy($this->accountId);
 
 		$expectedResponse = new JSONResponse();
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testDestroyDoesNotExist() {
-		$this->accountService->expects($this->once())
+	public function testDestroyDoesNotExist(): void {
+		$this->accountService->expects(self::once())
 			->method('delete')
-			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
-			->will($this->throwException(new DoesNotExistException('test')));
+			->with(self::equalTo($this->userId), self::equalTo($this->accountId))
+			->will(self::throwException(new DoesNotExistException('test')));
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->destroy($this->accountId);
 	}
 
-	public function testCreateAutoDetectSuccess() {
+	public function testCreateAutoDetectSuccess(): void {
 		$email = 'john@example.com';
 		$password = '123456';
 		$accountName = 'John Doe';
 		$account = $this->createMock(Account::class);
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
 			->willReturn($account);
@@ -251,31 +250,31 @@ class AccountsControllerTest extends TestCase {
 		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
 
-		$expectedResponse = new JSONResponse($account, Http::STATUS_CREATED);
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testCreateAutoDetectFailure() {
+	public function testCreateAutoDetectFailure(): void {
 		$email = 'john@example.com';
 		$password = '123456';
 		$accountName = 'John Doe';
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
-			->willThrowException(new \Exception());
+			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
 		$this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
 	}
 
-	public function testUpdateAutoDetectSuccess() {
+	public function testUpdateAutoDetectSuccess(): void {
 		$email = 'john@example.com';
 		$password = '123456';
 		$accountName = 'John Doe';
 		$account = $this->createMock(Account::class);
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
 			->willReturn($account);
@@ -283,26 +282,26 @@ class AccountsControllerTest extends TestCase {
 		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
 
-		$expectedResponse = new JSONResponse($account, Http::STATUS_CREATED);
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testUpdateAutoDetectFailure() {
+	public function testUpdateAutoDetectFailure(): void {
 		$email = 'john@example.com';
 		$password = '123456';
 		$accountName = 'John Doe';
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
-			->willThrowException(new Exception());
+			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
 		$this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
 	}
 
-	public function testCreateManualSuccess() {
+	public function testCreateManualSuccess(): void {
 		$autoDetect = false;
 		$email = 'user@domain.tld';
 		$password = 'mypassword';
@@ -318,19 +317,19 @@ class AccountsControllerTest extends TestCase {
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
 		$account = $this->createMock(Account::class);
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
 			->willReturn($account);
 
 		$response = $this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
 
-		$expectedResponse = new JSONResponse($account, Http::STATUS_CREATED);
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testCreateManualFailure() {
+	public function testCreateManualFailure(): void {
 		$autoDetect = false;
 		$email = 'user@domain.tld';
 		$password = 'mypassword';
@@ -345,16 +344,16 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
-			->willThrowException(new Exception());
+			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
 		$this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
 	}
 
-	public function testUpdateManualSuccess() {
+	public function testUpdateManualSuccess(): void {
 		$autoDetect = false;
 		$id = 135;
 		$email = 'user@domain.tld';
@@ -371,7 +370,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
 		$account = $this->createMock(Account::class);
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
 			->willReturn($account);
@@ -380,10 +379,10 @@ class AccountsControllerTest extends TestCase {
 
 		$expectedResponse = new JSONResponse($account);
 
-		$this->assertEquals($expectedResponse, $response);
+		self::assertEquals($expectedResponse, $response);
 	}
 
-	public function testUpdateManualFailure() {
+	public function testUpdateManualFailure(): void {
 		$autoDetect = false;
 		$id = 135;
 		$email = 'user@domain.tld';
@@ -399,38 +398,38 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$this->setupService->expects($this->once())
+		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
-			->willThrowException(new Exception());
+			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
 		$this->controller->update($id, $autoDetect, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 	}
 
-	public function testSendNewMessage() {
+	public function testSendNewMessage(): void {
 		$account = $this->createMock(Account::class);
-		$this->accountService->expects($this->once())
+		$this->accountService->expects(self::once())
 			->method('find')
 			->willReturn($account);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$this->transmission->expects($this->once())
+		$this->transmission->expects(self::once())
 			->method('sendMessage')
 			->with($messageData, null, null, null);
 		$expected = new JSONResponse();
 
 		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
 
-		$this->assertEquals($expected, $resp);
+		self::assertEquals($expected, $resp);
 	}
 
-	public function testSendingError() {
+	public function testSendingError(): void {
 		$account = $this->createMock(Account::class);
-		$this->accountService->expects($this->once())
+		$this->accountService->expects(self::once())
 			->method('find')
 			->willReturn($account);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$this->transmission->expects($this->once())
+		$this->transmission->expects(self::once())
 			->method('sendMessage')
 			->with($messageData, null, null, null)
 			->willThrowException(new Horde_Exception('error'));
@@ -439,7 +438,7 @@ class AccountsControllerTest extends TestCase {
 		$this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
 	}
 
-	public function testSendingManyRecipientsError() {
+	public function testSendingManyRecipientsError(): void {
 		$this->expectException(ManyRecipientsException::class);
 
 		$recipients = [];
@@ -451,7 +450,7 @@ class AccountsControllerTest extends TestCase {
 		$this->controller->send(13, 'sub', 'bod', $recipients, '', '');
 	}
 
-	public function testSendingManyRecipientsCcError() {
+	public function testSendingManyRecipientsCcError(): void {
 		$this->expectException(ManyRecipientsException::class);
 
 		$recipients = [];
@@ -463,20 +462,20 @@ class AccountsControllerTest extends TestCase {
 		$this->controller->send(13, 'sub', 'bod', '', $recipients, '');
 	}
 
-	public function testSendReply() {
+	public function testSendReply(): void {
 		$account = $this->createMock(Account::class);
 		$replyMessage = new Message();
 		$messageId = 1234;
-		$this->accountService->expects($this->once())
+		$this->accountService->expects(self::once())
 			->method('find')
 			->willReturn($account);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects(self::once())
 			->method('getMessage')
 			->with($this->userId, $messageId)
 			->willReturn($replyMessage);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
 		$replyData = new RepliedMessageData($account, $replyMessage);
-		$this->transmission->expects($this->once())
+		$this->transmission->expects(self::once())
 			->method('sendMessage')
 			->with($messageData, $replyData, null, null);
 		$expected = new JSONResponse();
@@ -495,7 +494,7 @@ class AccountsControllerTest extends TestCase {
 			[],
 			null);
 
-		$this->assertEquals($expected, $resp);
+		self::assertEquals($expected, $resp);
 	}
 
 	public function draftDataProvider(): array {
@@ -518,14 +517,14 @@ class AccountsControllerTest extends TestCase {
 		$newUid = 124;
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
-		$this->accountService->expects($this->once())
+		$this->accountService->expects(self::once())
 			->method('find')
 			->with($this->userId, $this->accountId)
-			->will($this->returnValue($this->account));
-		$this->transmission->expects($this->once())
+			->will(self::returnValue($this->account));
+		$this->transmission->expects(self::once())
 			->method('saveDraft')
 			->willReturn([$account, $mailbox, $newUid]);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects(self::once())
 			->method('getMessageIdForUid')
 			->willReturn($newId);
 
@@ -534,6 +533,6 @@ class AccountsControllerTest extends TestCase {
 		$expected = new JSONResponse([
 			'id' => $newId,
 		]);
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 }

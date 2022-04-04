@@ -1,7 +1,6 @@
 { "translations": {
     "Auto detect failed. Please use manual mode." : "Neuspjelo automatsko otkrivanje. Upišite postavke ručno.",
     "Updating account failed: " : "Neuspjelo ažuriranje računa: ",
-    "Creating account failed: " : "Neuspjelo stvaranje računa:",
     "Embedded message %s" : "Ugrađena poruka %s",
     "Important mail" : "Važna pošta",
     "Unread mail" : "Nepročitana pošta",
@@ -19,7 +18,6 @@
     "Deleted messages are moved in:" : "Izbrisane poruke spremaju se u:",
     "Auto" : "Auto",
     "Name" : "Naziv",
-    "Mail Address" : "Adresa e-pošte",
     "Password" : "Zaporka",
     "Manual" : "Ručno",
     "IMAP Settings" : "Postavke IMAP-a",
@@ -341,7 +339,6 @@
     "Search" : "Traži",
     "Refresh" : "Osvježi",
     "Connect your mail account" : "Poveži svoj račun e-pošte",
-    "Unexpected error during account creation" : "Došlo je do neočekivane pogreške tijekom stvaranja računa",
     "Itinerary for {type} is not supported yet" : "Raspored za {type} još uvijek nije podržan",
     "All" : "Sve",
     "Archive" : "Arhiva",

@@ -85,8 +85,12 @@ class ImapConnector {
 
 		$a = new Account($account);
 		$client = $this->clientFactory->getClient($a);
-		$client->login();
-		$this->logger->info("Test-Account-Successful: $this->userId, $host, $port, $user, $encryptionProtocol");
-		return $account;
+		try {
+			$client->login();
+			$this->logger->info("Test-Account-Successful: $this->userId, $host, $port, $user, $encryptionProtocol");
+			return $account;
+		} finally {
+			$client->logout();
+		}
 	}
 }

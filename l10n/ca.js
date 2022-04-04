@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "La detecció automàtica ha fallat. Si us plau, feu servir el mode manual.",
     "Updating account failed: " : "Ha fallat l’actualització del compte: ",
-    "Creating account failed: " : "Ha fallat la creació del compte: ",
     "Embedded message %s" : "Missatge incrustat %s",
     "Important mail" : "Correu important",
     "Mails" : "Correus electrònics",
@@ -11,7 +10,6 @@ OC.L10N.register(
     "💌 A mail app for Nextcloud" : "💌 Una aplicació de correu per a Nextcloud",
     "Auto" : "Automàtic",
     "Name" : "Nom",
-    "Mail Address" : "Adreça de correu",
     "Password" : "Contrasenya",
     "Manual" : "Manual",
     "IMAP Settings" : "Paràmetres IMAP",
@@ -178,7 +176,6 @@ OC.L10N.register(
     "Search" : "Cerca",
     "Refresh" : "Refresca",
     "Connect your mail account" : "Connecteu el vostre compte de correu electrònic",
-    "Unexpected error during account creation" : "Error inesperat durant la creació del compte",
     "Itinerary for {type} is not supported yet" : "Encara no s'admet l'itinerari per a {type}",
     "All" : "Totes",
     "Archive" : "Arxiu",
