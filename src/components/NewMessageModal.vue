@@ -1,5 +1,6 @@
 <template>
 	<Modal
+		v-show="!hideComposer"
 		size="normal"
 		:title="t('mail', 'New message')"
 		@close="$emit('close')">
@@ -12,7 +13,10 @@
 			:body="composerData.body"
 			:draft="saveDraft"
 			:send="sendMessage"
-			:forwarded-messages="forwardedMessages" />
+			:forwarded-messages="forwardedMessages"
+			@hide="hideComposer = true"
+			@show="hideComposer = false"
+			@close="$emit('close')" />
 	</Modal>
 </template>
 <script>
@@ -49,6 +53,7 @@ export default {
 			original: undefined,
 			originalBody: undefined,
 			fetchingTemplateMessage: true,
+			hideComposer: false,
 		}
 	},
 	computed: {

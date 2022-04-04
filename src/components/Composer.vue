@@ -253,9 +253,6 @@
 			{{ t('mail', 'Send anyway') }}
 		</button>
 	</div>
-	<EmptyContent v-else icon="icon-checkmark">
-		<h2>{{ t('mail', 'Message sent!') }}</h2>
-	</EmptyContent>
 </template>
 
 <script>
@@ -271,7 +268,7 @@ import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import { showError } from '@nextcloud/dialogs'
+import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 
@@ -755,6 +752,18 @@ export default {
 				.then((data) => this.send({ ...data, force }))
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
+				.then(() => {
+					showUndo(t('mail', 'Message sent'), this.undoSend, {
+						timeout: 30000,
+						close: true,
+					})
+					// temporarily hide the Modal
+					this.$emit('hide')
+					// finally closing the modal after undo expires
+					setTimeout(() => {
+						this.$emit('close')
+					}, 30000)
+				})
 				.catch(async(error) => {
 					logger.error('could not send message', { error });
 					[this.errorText, this.state] = await matchError(error, {
@@ -786,6 +795,12 @@ export default {
 		},
 		async onForceSend() {
 			await this.onSend(null, true)
+		},
+		undoSend() {
+			console.debug('Undo sending')
+			this.$emit('show')
+			this.state = STATES.EDITING
+			// call backend to cancel send
 		},
 		reset() {
 			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
@@ -970,6 +985,11 @@ export default {
 .button {
 	background-color: transparent;
 	border: none;
+}
+.undo-button {
+	background-color: var(--color-background-dark);
+	color: var(--color-main-text);
+	border: 1px solid var(--color-border-dark)
 }
 .emptycontent {
 	margin-top: 250px;
