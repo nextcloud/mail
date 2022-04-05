@@ -379,4 +379,4 @@ OC.L10N.register(
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner aux <a href=\"%s\">Mails</a>.",
     "Continue to %s" : "Continuer vers %s"
 },
-"nplurals=2; plural=(n > 1);");
+"nplurals=3; plural=(n==0 || n==1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
