@@ -89,6 +89,7 @@ export default new Vuex.Store({
 				},
 				envelopes: {},
 				messages: {},
+				newMessage: undefined,
 				autocompleteEntries: [],
 				tags: {},
 				tagList: [],

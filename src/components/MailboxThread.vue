@@ -62,9 +62,6 @@
 		<NewMessageDetail v-if="newMessage" />
 		<Thread v-else-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
-		<NewMessageModal
-			v-if="showComposer"
-			@close="showComposer = false" />
 	</AppContent>
 </template>
 
@@ -83,7 +80,6 @@ import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
-import NewMessageModal from './NewMessageModal'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
@@ -104,7 +100,6 @@ export default {
 		Popover,
 		SectionTitle,
 		Thread,
-		NewMessageModal,
 	},
 	mixins: [isMobile],
 	props: {
@@ -131,7 +126,6 @@ export default {
 				refresh: ['r'],
 				unseen: ['u'],
 			},
-			showComposer: false,
 			priorityImportantQuery,
 			priorityStarredQuery,
 			priorityOtherQuery,
@@ -207,7 +201,7 @@ export default {
 		},
 		handleMailto() {
 			if (this.$route.name === 'message' && this.$route.params.threadId === 'mailto') {
-				this.showComposer = true
+				this.$store.dispatch('showMessageComposer')
 			}
 		},
 	},

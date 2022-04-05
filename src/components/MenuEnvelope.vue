@@ -143,9 +143,6 @@
 			:account="account"
 			:envelope="envelope"
 			@close="onCloseTagModal" />
-		<NewMessageModal v-if="showNewMessage"
-			:template-message-id="envelope.databaseId"
-			@close="showNewMessage = false" />
 	</div>
 </template>
 
@@ -168,7 +165,6 @@ import TagModal from './TagModal'
 import MoveModal from './MoveModal'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 import { showError } from '@nextcloud/dialogs'
-import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'MenuEnvelope',
@@ -182,7 +178,6 @@ export default {
 		Modal,
 		MoveModal,
 		TagModal,
-		NewMessageModal,
 		EnvelopePrimaryActions,
 	},
 	props: {
@@ -228,7 +223,6 @@ export default {
 			showMoveModal: false,
 			showEventModal: false,
 			showTagModal: false,
-			showNewMessage: false,
 			moreActionsOpen: false,
 		}
 	},
@@ -389,8 +383,10 @@ export default {
 		onCloseTagModal() {
 			this.showTagModal = false
 		},
-		onOpenEditAsNew() {
-			this.showNewMessage = true
+		async onOpenEditAsNew() {
+			await this.$store.dispatch('showMessageComposer', {
+				templateMessageId: this.envelope.databaseId,
+			})
 		},
 	},
 }

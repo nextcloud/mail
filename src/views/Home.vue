@@ -7,6 +7,7 @@
 		<MailboxThread v-else-if="activeAccount"
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
+		<NewMessageModal v-if="$store.getters.showMessageComposer" @close="$store.dispatch('closeMessageComposer')" />
 	</Content>
 </template>
 
@@ -16,6 +17,7 @@ import Content from '@nextcloud/vue/dist/Components/Content'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import logger from '../logger'
 import MailboxThread from '../components/MailboxThread'
+import NewMessageModal from '../components/NewMessageModal'
 import Navigation from '../components/Navigation'
 import Outbox from '../components/Outbox'
 
@@ -25,6 +27,7 @@ export default {
 		Content,
 		MailboxThread,
 		Navigation,
+		NewMessageModal,
 		Outbox,
 	},
 	mixins: [isMobile],

@@ -169,9 +169,6 @@
 				:account="account"
 				:envelope="data"
 				@close="onCloseTagModal" />
-			<NewMessageModal v-if="showNewMessage"
-				:template-message-id="data.databaseId"
-				@close="showNewMessage = false" />
 		</template>
 	</ListItem>
 </template>
@@ -194,7 +191,6 @@ import MoveModal from './MoveModal'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
-import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'Envelope',
@@ -207,7 +203,6 @@ export default {
 		ChevronLeft,
 		MoveModal,
 		TagModal,
-		NewMessageModal,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -247,7 +242,6 @@ export default {
 			showMoveModal: false,
 			showEventModal: false,
 			showTagModal: false,
-			showNewMessage: false,
 			moreActionsOpen: false,
 		}
 	},
@@ -400,8 +394,10 @@ export default {
 				}))
 			}
 		},
-		onOpenEditAsNew() {
-			this.showNewMessage = true
+		async onOpenEditAsNew() {
+			await this.$store.dispatch('showMessageComposer', {
+				templateMessageId: this.data.databaseId,
+			})
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true

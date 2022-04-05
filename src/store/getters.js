@@ -54,6 +54,12 @@ export const getters = {
 				.filter((mailbox) => mailbox.specialRole === specialRole)
 		)
 	},
+	showMessageComposer: (state) => {
+		return state.newMessage !== undefined
+	},
+	messageComposerOptions: (state) => {
+		return state.newMessage?.options
+	},
 	getEnvelope: (state) => (id) => {
 		return state.envelopes[id]
 	},
