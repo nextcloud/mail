@@ -89,10 +89,6 @@ export default {
 			})
 
 			await this.$store.dispatch('outbox/sendMessage', { id: message.id })
-
-			// Remove old draft envelope
-			this.$store.commit('removeEnvelope', { id: data.draftId })
-			this.$store.commit('removeMessage', { id: data.draftId })
 		},
 	},
 }
