@@ -37,9 +37,11 @@
 					v-else-if="loading"
 					:hint="t('mail', 'Loading messages …')" />
 				<EmptyMailbox v-else-if="messages.length === 0" />
-				<OutboxMessageList
+				<OutboxMessageListItem
+					v-for="message in messages"
 					v-else
-					:messages="messages" />
+					:key="message.id"
+					:message="message" />
 			</AppContentList>
 		</template>
 	</AppContent>
@@ -51,7 +53,7 @@ import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import Loading from './Loading'
 import Error from './Error'
 import EmptyMailbox from './EmptyMailbox'
-import OutboxMessageList from './OutboxMessageList'
+import OutboxMessageListItem from './OutboxMessageListItem'
 import logger from '../logger'
 
 export default {
@@ -62,7 +64,7 @@ export default {
 		Error,
 		Loading,
 		EmptyMailbox,
-		OutboxMessageList,
+		OutboxMessageListItem,
 	},
 	data() {
 		return {
