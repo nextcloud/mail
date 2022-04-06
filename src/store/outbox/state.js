@@ -21,5 +21,6 @@
  */
 
 export default {
+	messageList: [],
 	messages: {},
 }

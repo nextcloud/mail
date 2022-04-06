@@ -26,8 +26,13 @@ export default {
 	addMessage(state, { message }) {
 		const existing = state.messages[message.id] ?? {}
 		Vue.set(state.messages, message.id, Object.assign({}, existing, message))
+		// Add the message only if it's new
+		if (state.messageList.indexOf(message.id) === -1) {
+			state.messageList.unshift(message.id)
+		}
 	},
 	deleteMessage(state, { id }) {
+		state.messageList = state.messageList.filter(i => i !== id)
 		Vue.delete(state.messages, id)
 	},
 	updateMessage(state, { message }) {
