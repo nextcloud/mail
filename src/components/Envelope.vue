@@ -397,6 +397,7 @@ export default {
 		async onOpenEditAsNew() {
 			await this.$store.dispatch('showMessageComposer', {
 				templateMessageId: this.data.databaseId,
+				data: this.data,
 			})
 		},
 		onOpenMoveModal() {

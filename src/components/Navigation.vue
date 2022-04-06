@@ -117,7 +117,7 @@ export default {
 	},
 	data() {
 		return {
-			refreshing: false
+			refreshing: false,
 		}
 	},
 	computed: {

@@ -57,7 +57,10 @@ export const getters = {
 	showMessageComposer: (state) => {
 		return state.newMessage !== undefined
 	},
-	messageComposerOptions: (state) => {
+	composerMessage: (state) => {
+		return state.newMessage
+	},
+	composerMessageOptions: (state) => {
 		return state.newMessage?.options
 	},
 	getEnvelope: (state) => (id) => {

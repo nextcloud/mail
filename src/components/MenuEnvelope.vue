@@ -386,6 +386,7 @@ export default {
 		async onOpenEditAsNew() {
 			await this.$store.dispatch('showMessageComposer', {
 				templateMessageId: this.envelope.databaseId,
+				data: this.envelope,
 			})
 		},
 	},
