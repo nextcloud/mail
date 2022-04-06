@@ -23,11 +23,11 @@
 	<AppNavigation>
 		<AppNavigationNew
 			:text="t('mail', 'New message')"
+			:disabled="$store.getters.showMessageComposer"
 			button-id="mail_new_message"
 			button-class="icon-add"
 			role="complementary"
 			@click="onNewMessage" />
-		<NewMessageModal v-if="showNewMessage" @close="showNewMessage = false" />
 		<button v-if="currentMailbox"
 			class="button icon-history"
 			:disabled="refreshing"
@@ -100,7 +100,6 @@ import NavigationMailbox from './NavigationMailbox'
 import NavigationOutbox from './NavigationOutbox'
 
 import AppSettingsMenu from '../components/AppSettingsMenu'
-import NewMessageModal from './NewMessageModal'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants'
 
 export default {
@@ -114,13 +113,11 @@ export default {
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
-		NewMessageModal,
 		NavigationOutbox,
 	},
 	data() {
 		return {
-			refreshing: false,
-			showNewMessage: false,
+			refreshing: false
 		}
 	},
 	computed: {
@@ -172,7 +169,9 @@ export default {
 			return true
 		},
 		onNewMessage() {
-			this.showNewMessage = true
+			this.$store.dispatch('showMessageComposer', {
+
+			})
 		},
 		isFirst(account) {
 			const accounts = this.$store.getters.accounts

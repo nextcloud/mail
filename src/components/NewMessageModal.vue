@@ -32,18 +32,6 @@ export default {
 		Modal,
 		Composer,
 	},
-	props: {
-		forwardedMessages: {
-			type: Array,
-			required: false,
-			default: () => [],
-		},
-		templateMessageId: {
-			type: Number,
-			required: false,
-			default: undefined,
-		},
-	},
 	data() {
 		return {
 			original: undefined,
@@ -52,6 +40,12 @@ export default {
 		}
 	},
 	computed: {
+		forwardedMessages() {
+			return this.$store.getters.messageComposerOptions?.forwardedMessages ?? []
+		},
+		templateMessageId() {
+			return this.$store.getters.messageComposerOptions?.templateMessageId
+		},
 		composerData() {
 			logger.debug('composing a new message or handling a mailto link', {
 				threadId: this.$route.params.threadId,

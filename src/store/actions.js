@@ -253,6 +253,15 @@ export default {
 			updated,
 		})
 	},
+	async showMessageComposer({ commit }, { forwardedMessages = [], templateMessageId = undefined }) {
+		commit('showMessageComposer', {
+			forwardedMessages,
+			templateMessageId,
+		})
+	},
+	async closeMessageComposer({ commit }) {
+		commit('hideMessageComposer')
+	},
 	async fetchEnvelope({ commit, getters }, id) {
 		const cached = getters.getEnvelope(id)
 		if (cached) {

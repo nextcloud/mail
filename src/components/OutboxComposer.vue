@@ -11,8 +11,7 @@
 			:subject="message.subject"
 			:body="outboxBody"
 			:draft="saveDraft"
-			:send="sendMessage"
-			:forwarded-messages="forwardedMessages" />
+			:send="sendMessage" />
 	</Modal>
 </template>
 <script>
@@ -20,9 +19,6 @@ import Modal from '@nextcloud/vue/dist/Components/Modal'
 import logger from '../logger'
 import { html, plain, toPlain } from '../util/text'
 import Composer from './Composer'
-import Axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { translate as t } from '@nextcloud/l10n'
 
 export default {
 	name: 'OutboxComposer',
@@ -35,23 +31,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-		forwardedMessages: {
-			type: Array,
-			required: false,
-			default: () => [],
-		},
-		templateMessageId: {
-			type: Number,
-			required: false,
-			default: undefined,
-		},
-	},
-	data() {
-		return {
-			original: undefined,
-			originalBody: undefined,
-			fetchingTemplateMessage: true,
-		}
 	},
 	computed: {
 		outboxBody() {
@@ -60,9 +39,6 @@ export default {
 			}
 			return plain(this.message.text)
 		},
-	},
-	created() {
-		this.fetchOriginalMessage()
 	},
 	methods: {
 		stringToRecipients(str) {
@@ -117,46 +93,6 @@ export default {
 			// Remove old draft envelope
 			this.$store.commit('removeEnvelope', { id: data.draftId })
 			this.$store.commit('removeMessage', { id: data.draftId })
-		},
-		async fetchOriginalMessage() {
-			if (this.templateMessageId === undefined) {
-				this.fetchingTemplateMessage = false
-				return
-			}
-			this.loading = true
-			this.error = undefined
-			this.errorMessage = ''
-
-			logger.debug(`fetching original message ${this.templateMessageId}`)
-
-			try {
-				const message = await this.$store.dispatch('fetchMessage', this.templateMessageId)
-				logger.debug('original message fetched', { message })
-				this.original = message
-
-				let body = plain(message.body || '')
-				if (message.hasHtmlBody) {
-					logger.debug('original message has HTML body')
-					const resp = await Axios.get(
-						generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
-							Id: this.templateMessageId,
-						})
-					)
-
-					body = html(resp.data)
-				}
-				this.originalBody = body
-			} catch (error) {
-				logger.error('could not load original message ' + this.templateMessageId, { error })
-				if (error.isError) {
-					this.errorMessage = t('mail', 'Could not load original message')
-					this.error = error
-					this.loading = false
-				}
-			} finally {
-				this.loading = false
-			}
-			this.fetchingTemplateMessage = false
 		},
 	},
 }
