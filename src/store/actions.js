@@ -82,6 +82,11 @@ import { updateAccount as updateSieveAccount } from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
 import { getPrioritySearchQueries } from '../util/priorityInbox'
+import { html, plain } from '../util/text'
+import Axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import { showWarning } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -253,8 +258,37 @@ export default {
 			updated,
 		})
 	},
-	async showMessageComposer({ commit }, { forwardedMessages = [], templateMessageId = undefined }) {
+	async showMessageComposer({ commit, dispatch }, { type = 'imap', data = {}, forwardedMessages = [], templateMessageId }) {
+		if (templateMessageId) {
+			const message = await dispatch('fetchMessage', templateMessageId)
+			// Merge the original into any existing data
+			data = {
+				...data,
+				message,
+			}
+
+			// Fetch and transform the body into a rich text object
+			if (message.hasHtmlBody) {
+				const resp = await Axios.get(
+					generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
+						id: templateMessageId,
+					})
+				)
+
+				data.body = html(resp.data)
+			} else {
+				data.body = plain(message.body)
+			}
+
+			// TODO: implement attachments
+			if (message.attachments.length) {
+				showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
+			}
+		}
+
 		commit('showMessageComposer', {
+			type,
+			data,
 			forwardedMessages,
 			templateMessageId,
 		})

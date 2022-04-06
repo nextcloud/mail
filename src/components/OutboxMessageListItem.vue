@@ -49,9 +49,6 @@
 				{{ t('mail', 'Delete message') }}
 			</ActionButton>
 		</template>
-		<template #extra>
-			<OutboxComposer v-if="showOutboxComposer" :message="message" @close="showOutboxComposer = false;" />
-		</template>
 	</ListItem>
 </template>
 
@@ -65,7 +62,7 @@ import logger from '../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match'
 import { translate as t } from '@nextcloud/l10n'
-import OutboxComposer from './OutboxComposer'
+import { html, plain } from '../util/text'
 
 export default {
 	name: 'OutboxMessageListItem',
@@ -73,7 +70,6 @@ export default {
 		ListItem,
 		Avatar,
 		ActionButton,
-		OutboxComposer,
 	},
 	mixins: [
 		OutboxAvatarMixin,
@@ -83,11 +79,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-	},
-	data() {
-		return {
-			showOutboxComposer: false,
-		}
 	},
 	computed: {
 		selected() {
@@ -121,8 +112,14 @@ export default {
 			await this.$store.dispatch('outbox/sendMessage', { id: this.message.id })
 			showSuccess(t('mail', 'Message sent'))
 		},
-		openModal() {
-			this.showOutboxComposer = true
+		async openModal() {
+			await this.$store.dispatch('showMessageComposer', {
+				type: 'outbox',
+				data: {
+					...this.message,
+					body: this.message.html ? html(this.message.text) : plain(this.message.text),
+				},
+			})
 		},
 	},
 }

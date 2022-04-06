@@ -85,6 +85,7 @@ import {
 	priorityOtherQuery,
 	priorityStarredQuery,
 } from '../util/priorityInbox'
+import { detect, html } from '../util/text'
 
 export default {
 	name: 'MailboxThread',
@@ -201,8 +202,33 @@ export default {
 		},
 		handleMailto() {
 			if (this.$route.name === 'message' && this.$route.params.threadId === 'mailto') {
-				this.$store.dispatch('showMessageComposer')
+				let accountId
+				// Only preselect an account when we're not in a unified mailbox
+				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
+					accountId = parseInt(this.$route.params.accountId, 10)
+				}
+				this.$store.dispatch('showMessageComposer', {
+					data: {
+						accountId,
+						to: this.stringToRecipients(this.$route.query.to),
+						cc: this.stringToRecipients(this.$route.query.cc),
+						subject: this.$route.query.subject || '',
+						body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
+					},
+				})
 			}
+		},
+		stringToRecipients(str) {
+			if (str === undefined) {
+				return []
+			}
+
+			return [
+				{
+					label: str,
+					email: str,
+				},
+			]
 		},
 	},
 }
