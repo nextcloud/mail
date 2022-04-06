@@ -72,6 +72,6 @@ export default {
 			return
 		}
 
-		commit('deleteMessage', id)
+		commit('deleteMessage', { id })
 	},
 }
