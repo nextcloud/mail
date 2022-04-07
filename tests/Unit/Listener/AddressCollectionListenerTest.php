@@ -118,7 +118,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			null,
 			$message,
 			$mail

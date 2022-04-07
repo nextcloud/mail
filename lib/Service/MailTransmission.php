@@ -46,9 +46,12 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
@@ -61,7 +64,6 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -69,6 +71,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use Psr\Log\LoggerInterface;
+use function array_map;
 
 class MailTransmission implements IMailTransmission {
 
@@ -105,6 +108,9 @@ class MailTransmission implements IMailTransmission {
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 
+	/** @var AliasesService */
+	private $aliasesService;
+
 	/**
 	 * @param Folder $userFolder
 	 */
@@ -118,7 +124,8 @@ class MailTransmission implements IMailTransmission {
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								LoggerInterface $logger,
-								PerformanceLogger $performanceLogger) {
+								PerformanceLogger $performanceLogger,
+								AliasesService $aliasesService) {
 		$this->accountService = $accountService;
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
@@ -130,10 +137,11 @@ class MailTransmission implements IMailTransmission {
 		$this->messageMapper = $messageMapper;
 		$this->logger = $logger;
 		$this->performanceLogger = $performanceLogger;
+		$this->aliasesService = $aliasesService;
 	}
 
 	public function sendMessage(NewMessageData $messageData,
-								RepliedMessageData $replyData = null,
+								string $repliedToMessageId = null,
 								Alias $alias = null,
 								Message $draft = null): void {
 		$account = $messageData->getAccount();
@@ -141,8 +149,8 @@ class MailTransmission implements IMailTransmission {
 			throw new SentMailboxNotSetException();
 		}
 
-		if ($replyData !== null) {
-			$message = $this->buildReplyMessage($account, $messageData, $replyData);
+		if ($repliedToMessageId !== null) {
+			$message = $this->buildReplyMessage($account, $messageData, $repliedToMessageId);
 		} else {
 			$message = $this->buildNewMessage($account, $messageData);
 		}
@@ -156,7 +164,7 @@ class MailTransmission implements IMailTransmission {
 		$message->setCC($messageData->getCc());
 		$message->setBcc($messageData->getBcc());
 		$message->setContent($messageData->getBody());
-		$this->handleAttachments($account, $messageData, $message);
+		$this->handleAttachments($account, $messageData, $message); // only ever going to be local attachments
 
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
@@ -192,7 +200,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$this->eventDispatcher->dispatchTyped(
-			new BeforeMessageSentEvent($account, $messageData, $replyData, $draft, $message, $mail)
+			new BeforeMessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
 		);
 
 		// Send the message
@@ -208,8 +216,61 @@ class MailTransmission implements IMailTransmission {
 
 		$this->eventDispatcher->dispatch(
 			MessageSentEvent::class,
-			new MessageSentEvent($account, $messageData, $replyData, $draft, $message, $mail)
+			new MessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
 		);
+	}
+
+	public function sendLocalMessage(Account $account, LocalMessage $message): void {
+		$to = new AddressList(
+				array_map(static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				}, array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_TO;
+				})
+			)
+		);
+		$cc = new AddressList(
+			array_map(static function ($recipient) {
+				return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+			}, array_filter($message->getRecipients(), static function (Recipient $recipient) {
+				return $recipient->getType() === Recipient::TYPE_CC;
+			})
+			)
+		);
+		$bcc = new AddressList(
+			array_map(static function ($recipient) {
+				return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+			}, array_filter($message->getRecipients(), static function (Recipient $recipient) {
+				return $recipient->getType() === Recipient::TYPE_BCC;
+			})
+			)
+		);
+		$messageData = new NewMessageData(
+			$account,
+			$to,
+			$cc,
+			$bcc,
+			$message->getSubject(),
+			$message->getBody(),
+			array_map(function (LocalAttachment $attachment) {
+				// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
+				return [
+					'type' => 'local',
+					'id' => $attachment->getId(),
+				];
+			}, $message->getAttachments()),
+			$message->isHtml()
+		);
+
+		if ($message->getAliasId() !== null) {
+			$alias = $this->aliasesService->find($message->getAliasId(), $account->getUserId());
+		}
+
+		try {
+			$this->sendMessage($messageData, $message->getInReplyToMessageId() ?? null, $alias ?? null);
+		} catch (SentMailboxNotSetException $e) {
+			throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
+		}
 	}
 
 	/**
@@ -319,14 +380,12 @@ class MailTransmission implements IMailTransmission {
 
 	private function buildReplyMessage(Account $account,
 									   NewMessageData $messageData,
-									   RepliedMessageData $replyData): IMessage {
+									   string $repliedToMessageId): IMessage {
 		// Reply
 		$message = $account->newMessage();
 		$message->setSubject($messageData->getSubject());
 		$message->setTo($messageData->getTo());
-
-		$rawMessageId = $replyData->getMessage()->getMessageId();
-		$message->setInReplyTo($rawMessageId);
+		$message->setInReplyTo($repliedToMessageId);
 
 		return $message;
 	}
@@ -424,7 +483,7 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	/**
-	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
+	 * Adds an email as attachment
 	 *
 	 * @param Account $account
 	 * @param mixed[] $attachment

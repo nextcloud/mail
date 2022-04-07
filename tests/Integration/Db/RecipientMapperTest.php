@@ -29,6 +29,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Db\RecipientMapper;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
@@ -51,11 +52,11 @@ class RecipientMapperTest extends TestCase {
 	/** @var Recipient */
 	private $inboxRecipient;
 
-	/** @var Recipient */
-	private $outboxRecipient;
-
 	/** @var LocalMessage  */
 	private $message;
+
+	/** @var MailAccount */
+	private $account;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -67,18 +68,18 @@ class RecipientMapperTest extends TestCase {
 		$this->localMessageMapper = new LocalMessageMapper(
 			$this->db,
 			$this->createMock(LocalAttachmentMapper::class),
-			$this->createMock(RecipientMapper::class)
+			$this->mapper
 		);
 
 		$qb = $this->db->getQueryBuilder();
-
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->execute();
 
-		$qb = $this->db->getQueryBuilder();
+		$qb2 = $this->db->getQueryBuilder();
+		$delete2 = $qb2->delete($this->localMessageMapper->getTableName());
+		$delete2->execute();
 
-		$delete = $qb->delete($this->localMessageMapper->getTableName());
-		$delete->execute();
+		$this->account = $this->createTestAccount();
 
 		$message = new LocalMessage();
 		$message->setType(LocalMessage::TYPE_OUTGOING);
@@ -91,12 +92,12 @@ class RecipientMapperTest extends TestCase {
 		$message->setInReplyToMessageId('abcd');
 		$this->message = $this->localMessageMapper->insert($message);
 
-		$this->outboxRecipient = new Recipient();
-		$this->outboxRecipient->setLocalMessageId($this->message->getId());
-		$this->outboxRecipient->setEmail('doc@stardew-clinic.com');
-		$this->outboxRecipient->setType(Recipient::TYPE_TO);
-		$this->outboxRecipient->setLabel('Dr. Harvey');
-		$this->mapper->insert($this->outboxRecipient);
+		$outboxRecipient = new Recipient();
+		$outboxRecipient->setLocalMessageId($this->message->getId());
+		$outboxRecipient->setEmail('doc@stardew-clinic.com');
+		$outboxRecipient->setType(Recipient::TYPE_TO);
+		$outboxRecipient->setLabel('Dr. Harvey');
+		$this->mapper->insert($outboxRecipient);
 
 		$inboxRecipientTwo = new Recipient();
 		$inboxRecipientTwo->setLocalMessageId($this->message->getId());
@@ -131,7 +132,7 @@ class RecipientMapperTest extends TestCase {
 	 * @depends testFindAllRecipientsEmpty
 	 */
 	public function testDeleteForLocalMailbox(): void {
-		$this->mapper->deleteForLocalMailbox($this->message->getId());
+		$this->mapper->deleteForLocalMessage($this->message->getId());
 		$result = $this->mapper->findByLocalMessageId($this->message->getId());
 		$this->assertEmpty($result);
 	}
@@ -154,7 +155,8 @@ class RecipientMapperTest extends TestCase {
 		$recipient = new Recipient();
 		$recipient->setEmail('penny@stardewvalleylibrary.edu');
 		$recipient->setLabel('Penny');
-		$this->mapper->saveRecipients($message->getId(), [$recipient], Recipient::TYPE_FROM);
+		$recipient->setType(Recipient::TYPE_FROM);
+		$this->mapper->saveRecipients($message->getId(), [$recipient]);
 
 		$results = $this->mapper->findByLocalMessageId($message->getId());
 		$this->assertCount(1, $results);
@@ -166,5 +168,40 @@ class RecipientMapperTest extends TestCase {
 		$this->assertEquals(Recipient::TYPE_FROM, $entity->getType());
 		$this->assertEquals('Penny', $entity->getLabel());
 		$this->assertEquals('penny@stardewvalleylibrary.edu', $entity->getEmail());
+	}
+
+	public function testUpdateRecipients(): void {
+		$message = new LocalMessage();
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setAccountId($this->account->getId());
+		$message->setSendAt(123);
+		$message->setSubject('subject');
+		$message->setBody('message');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abcd');
+		$message = $this->localMessageMapper->insert($message);
+
+		$penny = new Recipient();
+		$penny->setEmail('penny@stardewvalleylibrary.edu');
+		$penny->setLabel('Penny');
+		$penny->setType(Recipient::TYPE_TO);
+		$this->mapper->saveRecipients($message->getId(), [$penny], Recipient::TYPE_BCC);
+
+		$results = $this->mapper->findByLocalMessageId($message->getId());
+		$this->assertCount(1, $results);
+
+		$message = $this->localMessageMapper->findById($message->getId(), $this->getTestAccountUserId());
+
+		$pierre = new Recipient();
+		$pierre->setLabel('Pierre');
+		$pierre->setEmail('generalstore@stardewvalley.com');
+		$pierre->setType(Recipient::TYPE_TO);
+		$to = [$penny, $pierre];
+		$cc = [];
+		$bcc = [];
+		$this->mapper->updateRecipients($message->getId(), $message->getRecipients(), $to, $cc, $bcc);
+
+		$results = $this->mapper->findByLocalMessageId($message->getId());
+		$this->assertCount(2, $results);
 	}
 }

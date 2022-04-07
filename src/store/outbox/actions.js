@@ -33,7 +33,15 @@ export default {
 	},
 
 	async deleteMessage({ commit }, { id }) {
-		await OutboxService.deleteMessage(id)
+		try {
+			await OutboxService.deleteMessage(id)
+		} catch (e) {
+			if (e.response?.status === 404) {
+				// This is fine
+			} else {
+				throw e
+			}
+		}
 		commit('deleteMessage', { id })
 	},
 
@@ -58,11 +66,12 @@ export default {
 
 		try {
 			await OutboxService.sendMessage(id)
+			logger.debug(`Outbox message ${id} sent`)
 		} catch (error) {
-			logger.error(`Failed to send message ${id} from outbox`)
+			logger.error(`Failed to send message ${id} from outbox`, { error })
 			return
 		}
 
-		commit('deleteMessage', id)
+		commit('deleteMessage', { id })
 	},
 }

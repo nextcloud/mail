@@ -34,6 +34,7 @@ class TestCase extends Base {
 		if (in_array(ImapTest::class, class_uses($this))) {
 			/** @var ImapTest $this */
 			$this->resetImapAccount();
+			$this->disconnectImapAccount();
 		}
 	}
 

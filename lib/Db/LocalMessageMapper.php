@@ -75,6 +75,10 @@ class LocalMessageMapper extends QBMapper {
 		}
 		$rows->closeCursor();
 
+		if (empty($ids)) {
+			return [];
+		}
+
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
 
@@ -117,25 +121,48 @@ class LocalMessageMapper extends QBMapper {
 	 * @param Recipient[] $cc
 	 * @param Recipient[] $bcc
 	 */
-	public function saveWithRelatedData(LocalMessage $message, array $to, array $cc, array $bcc): void {
+	public function saveWithRecipients(LocalMessage $message, array $to, array $cc, array $bcc): LocalMessage {
 		$this->db->beginTransaction();
 		try {
 			$message = $this->insert($message);
-			$this->recipientMapper->saveRecipients($message->getId(), $to, Recipient::TYPE_TO);
-			$this->recipientMapper->saveRecipients($message->getId(), $cc, Recipient::TYPE_CC);
-			$this->recipientMapper->saveRecipients($message->getId(), $bcc, Recipient::TYPE_BCC);
+			$this->recipientMapper->saveRecipients($message->getId(), $to);
+			$this->recipientMapper->saveRecipients($message->getId(), $cc);
+			$this->recipientMapper->saveRecipients($message->getId(), $bcc);
 			$this->db->commit();
 		} catch (Throwable $e) {
 			$this->db->rollBack();
 			throw $e;
 		}
+		$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
+		$message->setRecipients($recipients);
+		return $message;
 	}
 
-	public function deleteWithRelated(LocalMessage $message): void {
+	/**
+	 * @param Recipient[] $to
+	 * @param Recipient[] $cc
+	 * @param Recipient[] $bcc
+	 */
+	public function updateWithRecipients(LocalMessage $message, array $to, array $cc, array $bcc): LocalMessage {
 		$this->db->beginTransaction();
 		try {
-			$this->attachmentMapper->deleteForLocalMailbox($message->getId());
-			$this->recipientMapper->deleteForLocalMailbox($message->getId());
+			$message = $this->update($message);
+
+			$this->recipientMapper->updateRecipients($message->getId(), $message->getRecipients(), $to, $cc, $bcc);
+			$this->db->commit();
+		} catch (Throwable $e) {
+			$this->db->rollBack();
+			throw $e;
+		}
+		$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
+		$message->setRecipients($recipients);
+		return $message;
+	}
+
+	public function deleteWithRecipients(LocalMessage $message): void {
+		$this->db->beginTransaction();
+		try {
+			$this->recipientMapper->deleteForLocalMessage($message->getId());
 			$this->delete($message);
 			$this->db->commit();
 		} catch (Throwable $e) {

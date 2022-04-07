@@ -17,6 +17,7 @@
       <code>NewMessagesSynchronized</code>
       <code>SynchronizationEvent</code>
       <code>UserDeletedEvent</code>
+      <code>OutboxMessageCreatedEvent</code>
     </MissingDependency>
     <UndefinedClass occurrences="1">
       <code>ContainerInterface</code>
@@ -359,5 +360,16 @@
       <code>$this-&gt;consoleOutput</code>
       <code>OutputInterface</code>
     </UndefinedDocblockClass>
+  </file>
+  <file src="lib/Events/OutboxMessageCreatedEvent.php">
+	<MissingDependency occurrences="1">
+	  <code>Event</code>
+	</MissingDependency>
+  </file>
+  <file src="lib/Service/OutboxService.php">
+	<MissingDependency occurrences="2">
+	  <code>OutboxMessageCreatedEvent</code>
+	  <code>OutboxMessageCreatedEvent</code>
+	</MissingDependency>
   </file>
 </files>

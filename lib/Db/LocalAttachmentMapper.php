@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Luc Calaresu <dev@calaresu.com>
+ * @author Anna Larch <anna.larch@gmx.net>
  *
  * Mail
  *
@@ -82,7 +83,7 @@ class LocalAttachmentMapper extends QBMapper {
 		return $this->findEntity($query);
 	}
 
-	public function deleteForLocalMailbox(int $localMessageId): void {
+	public function deleteForLocalMessage(int $localMessageId): void {
 		$this->db->beginTransaction();
 		try {
 			$qb = $this->db->getQueryBuilder();
@@ -94,5 +95,35 @@ class LocalAttachmentMapper extends QBMapper {
 			$this->db->rollBack();
 			throw $e;
 		}
+	}
+
+	public function saveLocalMessageAttachments(int $localMessageId, array $attachmentIds) {
+		$this->db->beginTransaction();
+		try {
+			$qb = $this->db->getQueryBuilder();
+			$qb->update($this->getTableName())
+				->set('local_message_id', $qb->createNamedParameter($localMessageId, IQueryBuilder::PARAM_INT))
+				->where(
+					$qb->expr()->in('id', $qb->createNamedParameter($attachmentIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+				);
+			$qb->execute();
+			$this->db->commit();
+		} catch (Throwable $e) {
+			$this->db->rollBack();
+			throw $e;
+		}
+	}
+
+	/**
+	 * @return LocalAttachment[]
+	 */
+	public function findByIds(array $attachmentIds): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->in('id', $qb->createNamedParameter($attachmentIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+			);
+		return $this->findEntities($qb);
 	}
 }

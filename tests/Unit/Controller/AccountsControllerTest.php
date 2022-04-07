@@ -35,7 +35,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
@@ -465,6 +464,7 @@ class AccountsControllerTest extends TestCase {
 	public function testSendReply(): void {
 		$account = $this->createMock(Account::class);
 		$replyMessage = new Message();
+		$replyMessage->setMessageId('<abc123@123.com>');
 		$messageId = 1234;
 		$this->accountService->expects(self::once())
 			->method('find')
@@ -474,10 +474,9 @@ class AccountsControllerTest extends TestCase {
 			->with($this->userId, $messageId)
 			->willReturn($replyMessage);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$replyData = new RepliedMessageData($account, $replyMessage);
 		$this->transmission->expects(self::once())
 			->method('sendMessage')
-			->with($messageData, $replyData, null, null);
+			->with($messageData, $replyMessage->getMessageId(), null, null);
 		$expected = new JSONResponse();
 
 		$resp = $this->controller->send(

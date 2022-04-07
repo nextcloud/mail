@@ -34,6 +34,7 @@ class SelfTest extends TestCase {
 		$this->createImapMailbox('folder1');
 		$this->assertCount(5, $this->getMailboxes());
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 		$this->assertCount(4, $this->getMailboxes());
 	}
 

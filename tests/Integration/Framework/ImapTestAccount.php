@@ -42,12 +42,12 @@ trait ImapTestAccount {
 	 *
 	 * @return MailAccount
 	 */
-	public function createTestAccount() {
+	public function createTestAccount(string $userId = null) {
 		/* @var $accountService AccountService */
 		$accountService = OC::$server->query(AccountService::class);
 
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId($this->getTestAccountUserId());
+		$mailAccount->setUserId($userId ?? $this->getTestAccountUserId());
 		$mailAccount->setName('Tester');
 		$mailAccount->setEmail('user@domain.tld');
 		$mailAccount->setInboundHost('127.0.0.1');

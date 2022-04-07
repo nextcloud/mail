@@ -37,6 +37,7 @@ use OCA\Mail\Dashboard\UnreadMailWidget;
 use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
+use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
@@ -104,13 +105,13 @@ class Application extends App implements IBootstrap {
 
 		$context->registerEventListener(BeforeMessageSentEvent::class, AntiAbuseListener::class);
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
+		$context->registerEventListener(OutboxMessageCreatedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MailboxesSynchronizedEvent::class, MailboxesSynchronizedSpecialMailboxesUpdater::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, SpamReportListener::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, HamReportListener::class);
 		$context->registerEventListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageSentEvent::class, AddressCollectionListener::class);
-		$context->registerEventListener(MessageSentEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MessageSentEvent::class, FlagRepliedMessageListener::class);
 		$context->registerEventListener(MessageSentEvent::class, InteractionListener::class);
 		$context->registerEventListener(MessageSentEvent::class, SaveSentMessageListener::class);

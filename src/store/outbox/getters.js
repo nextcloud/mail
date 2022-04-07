@@ -21,6 +21,6 @@
  */
 
 export default {
-	getAllMessages: state => Object.values(state.messages),
+	getAllMessages: state => state.messageList.map(id => state.messages[id]),
 	getMessage: state => id => state.messages[id],
 }

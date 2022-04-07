@@ -40,7 +40,6 @@ use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\GroupsIntegration;
@@ -421,14 +420,13 @@ class AccountsController extends Controller {
 		}
 
 		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml, $requestMdn);
-		$repliedMessageData = null;
 		if ($messageId !== null) {
 			try {
 				$repliedMessage = $this->mailManager->getMessage($this->currentUserId, $messageId);
+				$repliedMessageId = $repliedMessage->getMessageId();
 			} catch (ClientException $e) {
 				$this->logger->info("Message in reply " . $messageId . " could not be loaded: " . $e->getMessage());
 			}
-			$repliedMessageData = new RepliedMessageData($account, $repliedMessage);
 		}
 
 		$draft = null;
@@ -440,7 +438,7 @@ class AccountsController extends Controller {
 			}
 		}
 		try {
-			$this->mailTransmission->sendMessage($messageData, $repliedMessageData, $alias, $draft);
+			$this->mailTransmission->sendMessage($messageData, $repliedMessageId ?? null, $alias, $draft);
 			return new JSONResponse();
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());

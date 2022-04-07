@@ -93,6 +93,24 @@ class AttachmentStorage {
 	}
 
 	/**
+	 * Copy uploaded file content to a app data file
+	 *
+	 * @param string $userId
+	 * @param int $attachmentId
+	 *
+	 * @return void
+	 * @throws NotFoundException|NotPermittedException
+	 */
+	public function saveContent(string $userId, int $attachmentId, string $fileContent): void {
+		$folder = $this->getAttachmentFolder($userId);
+		$file = $folder->newFile((string) $attachmentId);
+		$file->putContent($fileContent);
+	}
+
+
+
+
+	/**
 	 * @param string $userId
 	 * @param int $attachmentId
 	 * @return ISimpleFile
