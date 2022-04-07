@@ -142,6 +142,15 @@ class MessageMapper {
 			$max,
 			$lower + $estimatedPageSize
 		);
+		if ($lower > $upper) {
+			$this->logger->debug("Range for findAll did not find any (not already known) messages and all messages of mailbox $mailbox have been fetched.");
+			return [
+				'messages' => [],
+				'all' => true,
+				'total' => 0,
+			];
+		}
+
 		$this->logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
 
 		$query = new Horde_Imap_Client_Fetch_Query();
