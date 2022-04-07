@@ -25,6 +25,7 @@
 		class="outbox-message"
 		:class="{ selected }"
 		:title="title"
+		:details="sendAt"
 		@click="openModal">
 		<template #icon>
 			<div
@@ -57,11 +58,12 @@ import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
+import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
+import moment from '@nextcloud/moment'
 import logger from '../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match'
-import { translate as t } from '@nextcloud/l10n'
 import { html, plain } from '../util/text'
 
 export default {
@@ -89,7 +91,18 @@ export default {
 			return calculateAccountColor(account?.emailAddress ?? '')
 		},
 		title() {
-			return 'Due in 30 seconds'
+			const recipientToString = recipient => recipient.label
+			const recipients = this.message.to.map(recipientToString)
+				.concat(this.message.cc.map(recipientToString))
+				.concat(this.message.bcc.map(recipientToString))
+			const formatter = new Intl.ListFormat(getLanguage(), { type: 'conjunction' })
+			return formatter.format(recipients)
+		},
+		sendAt() {
+			if (!this.message.sendAt) {
+				return ''
+			}
+			return moment.unix(this.message.sendAt).fromNow()
 		},
 	},
 	methods: {
