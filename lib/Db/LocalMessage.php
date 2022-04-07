@@ -27,6 +27,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use function array_filter;
 
 /**
  * @method int getType()
@@ -106,7 +107,18 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'html' => $this->isHtml(),
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
-			'recipients' => $this->getRecipients()
+			'from' => array_filter($this->getRecipients(), function (Recipient $recipient) {
+				return $recipient->getType() === Recipient::TYPE_FROM;
+			}),
+			'to' => array_filter($this->getRecipients(), function (Recipient $recipient) {
+				return $recipient->getType() === Recipient::TYPE_TO;
+			}),
+			'cc' => array_filter($this->getRecipients(), function (Recipient $recipient) {
+				return $recipient->getType() === Recipient::TYPE_CC;
+			}),
+			'bcc' => array_filter($this->getRecipients(), function (Recipient $recipient) {
+				return $recipient->getType() === Recipient::TYPE_BCC;
+			}),
 		];
 	}
 
