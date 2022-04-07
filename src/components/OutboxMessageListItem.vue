@@ -40,13 +40,13 @@
 				icon="icon-checkmark"
 				:close-after-click="true"
 				@click="sendMessage">
-				{{ t('mail', 'Send message now') }}
+				{{ t('mail', 'Send now') }}
 			</ActionButton>
 			<ActionButton
 				icon="icon-delete"
 				:close-after-click="true"
 				@click="deleteMessage">
-				{{ t('mail', 'Delete message') }}
+				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</template>
 	</ListItem>
@@ -109,8 +109,12 @@ export default {
 		},
 		async sendMessage(data) {
 			logger.debug('sending message', { data })
-			await this.$store.dispatch('outbox/sendMessage', { id: this.message.id })
-			showSuccess(t('mail', 'Message sent'))
+			try {
+				await this.$store.dispatch('outbox/sendMessage', { id: this.message.id })
+				showSuccess(t('mail', 'Message sent'))
+			} catch (error) {
+				showError(t('mail', 'Could not send message'))
+			}
 		},
 		async openModal() {
 			await this.$store.dispatch('showMessageComposer', {
