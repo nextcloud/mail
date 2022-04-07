@@ -54,6 +54,11 @@ export default {
 	},
 	methods: {
 		async saveDraft(data) {
+			if (!this.composerMessage) {
+				logger.info('Ignoring draft because there is no message anymore', { data })
+				return
+			}
+
 			if (this.composerMessage.type === 'outbox') {
 				const dataForServer = {
 					...data,
