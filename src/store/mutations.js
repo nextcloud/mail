@@ -183,6 +183,10 @@ export default {
 			},
 		})
 	},
+	convertComposerMessageToOutbox(state, { message }) {
+		Vue.set(state.newMessage, 'type', 'outbox')
+		Vue.set(state.newMessage.data, 'id', message.id)
+	},
 	hideMessageComposer(state) {
 		Vue.delete(state, 'newMessage')
 	},
