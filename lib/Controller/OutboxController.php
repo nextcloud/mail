@@ -94,6 +94,7 @@ class OutboxController extends Controller {
 	 * @param int|null $draftId
 	 * @param int|null $aliasId
 	 * @param string|null $inReplyToMessageId
+	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
 	public function create(
@@ -107,8 +108,8 @@ class OutboxController extends Controller {
 		array   $attachments = [],
 		?int    $draftId = null,
 		?int    $aliasId = null,
-		?string $inReplyToMessageId = null
-	): JsonResponse {
+		?string $inReplyToMessageId = null,
+		?int $sendAt = null): JsonResponse {
 		$account = $this->accountService->find($this->userId, $accountId);
 
 		if ($draftId !== null) {
@@ -123,6 +124,7 @@ class OutboxController extends Controller {
 		$message->setBody($body);
 		$message->setHtml($isHtml);
 		$message->setInReplyToMessageId($inReplyToMessageId);
+		$message->setSendAt($sendAt);
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 
@@ -144,6 +146,7 @@ class OutboxController extends Controller {
 	 * @param array $attachments
 	 * @param int|null $aliasId
 	 * @param string|null $inReplyToMessageId
+	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
 	public function update(int     $id,
@@ -156,16 +159,18 @@ class OutboxController extends Controller {
 						   array   $bcc = [],
 						   array   $attachments = [],
 						   ?int    $aliasId = null,
-						   ?string $inReplyToMessageId = null): JsonResponse {
+						   ?string $inReplyToMessageId = null,
+						   ?int $sendAt = null): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $accountId);
 
 		$message->setAccountId($accountId);
+		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
 		$message->setBody($body);
 		$message->setHtml($isHtml);
-		$message->setAliasId($aliasId);
 		$message->setInReplyToMessageId($inReplyToMessageId);
+		$message->setSendAt($sendAt);
 
 		$message = $this->service->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 

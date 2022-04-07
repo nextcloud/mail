@@ -86,16 +86,16 @@ export default {
 				const now = new Date().getTime()
 				const dataForServer = {
 					accountId: data.account,
-					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
 					subject: data.subject,
 					body: data.isHtml ? data.body.value : toPlain(data.body).value,
 					isHtml: data.isHtml,
-					isMdn: false,
-					inReplyToMessageId: '',
 					to: data.to,
 					cc: data.cc,
 					bcc: data.bcc,
 					attachments: data.attachments,
+					aliasId: null,
+					inReplyToMessageId: null,
+					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
 				}
 				// TODO: update the message instead of enqueing another time
 				const message = await this.$store.dispatch('outbox/enqueueMessage', {
@@ -107,16 +107,16 @@ export default {
 				const now = new Date().getTime()
 				const dataForServer = {
 					accountId: data.account,
-					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
 					subject: data.subject,
 					body: data.isHtml ? data.body.value : toPlain(data.body).value,
 					isHtml: data.isHtml,
-					isMdn: false,
-					inReplyToMessageId: '',
 					to: data.to,
 					cc: data.cc,
 					bcc: data.bcc,
 					attachments: data.attachments,
+					aliasId: null,
+					inReplyToMessageId: null,
+					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
 				}
 				const message = await this.$store.dispatch('outbox/enqueueMessage', {
 					message: dataForServer,
