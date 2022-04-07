@@ -37,6 +37,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\OutboxService;
@@ -45,11 +46,13 @@ use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\IServerContainer;
 use OCP\IUser;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class OutboxServiceIntegrationTest extends TestCase {
@@ -84,6 +87,12 @@ class OutboxServiceIntegrationTest extends TestCase {
 	/** @var Folder */
 	private $userFolder;
 
+	/** @var  */
+	private $accountService;
+
+	/** @var ITimeFactory */
+	private $timeFactory;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -109,6 +118,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->transmission = OC::$server->get(IMailTransmission::class);
 		$this->eventDispatcher = OC::$server->get(IEventDispatcher::class);
 		$this->clientFactory = OC::$server->get(IMAPClientFactory::class);
+		$this->accountService = OC::$server->get(AccountService::class);
+		$this->timeFactory = OC::$server->get(ITimeFactory::class);
 
 		$this->db = \OC::$server->getDatabaseConnection();
 		$qb = $this->db->getQueryBuilder();
@@ -121,7 +132,10 @@ class OutboxServiceIntegrationTest extends TestCase {
 			$this->attachmentService,
 			$this->eventDispatcher,
 			$this->clientFactory,
-			$mailManager
+			$mailManager,
+			$this->accountService,
+			$this->timeFactory,
+			$this->createMock(LoggerInterface::class)
 		);
 	}
 
@@ -347,5 +361,28 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 		$this->expectException(DoesNotExistException::class);
 		$this->outbox->getMessage($message->getId(), $this->user->getUID());
+	}
+
+	public function testSaveAndFlush(): void {
+		$message = new LocalMessage();
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setAccountId($this->account->getId());
+		$message->setSubject('subject');
+		$message->setBody('message');
+		$message->setHtml(true);
+		$message->setSendAt(100);
+
+		$to = [[
+			'label' => 'Penny',
+			'email' => 'library@stardewvalley.com'
+		]];
+
+		$saved = $this->outbox->saveMessage(new Account($this->account), $message, $to, [], []);
+		$this->assertNotEmpty($saved->getRecipients());
+		$this->assertEmpty($saved->getAttachments());
+
+		$this->outbox->flush();
+		$this->expectException(DoesNotExistException::class);
+		$this->outbox->getMessage($saved->getId(), $this->user->getUID());
 	}
 }

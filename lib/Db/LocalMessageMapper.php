@@ -28,6 +28,7 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\DB\Exception as DBException;
 use Throwable;
+use function array_filter;
 use function array_map;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
@@ -114,6 +115,38 @@ class LocalMessageMapper extends QBMapper {
 		$entity->setAttachments($this->attachmentMapper->findByLocalMessageId($id));
 		$entity->setRecipients($this->recipientMapper->findByLocalMessageId($id));
 		return $entity;
+	}
+
+	/**
+	 * Find all messages that should be sent
+	 *
+	 * @param int $time upper bound send time stamp
+	 *
+	 * @return LocalMessage[]
+	 */
+	public function findDue(int $time): array {
+		$qb = $this->db->getQueryBuilder();
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->isNotNull('send_at'),
+				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+			);
+		$messages = $this->findEntities($select);
+		$ids = array_map(function (LocalMessage $message) {
+			return $message->getId();
+		}, $messages);
+		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
+		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
+		return array_map(static function ($message) use ($attachments, $recipients) {
+			$message->setAttachments(array_filter($attachments, function (LocalAttachment $attachment) use ($message) {
+				return $attachment->getLocalMessageId() === $message->getId();
+			}));
+			$message->setRecipients(array_filter($recipients, function (Recipient $recipient) use ($message) {
+				return $recipient->getLocalMessageId() === $message->getId();
+			}));
+			return $message;
+		}, $messages);
 	}
 
 	/**

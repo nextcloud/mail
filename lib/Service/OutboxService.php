@@ -38,6 +38,9 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\AppFramework\Utility\ITimeFactory;
+use Psr\Log\LoggerInterface;
+use Throwable;
 
 class OutboxService implements ILocalMailboxService {
 
@@ -59,18 +62,33 @@ class OutboxService implements ILocalMailboxService {
 	/** @var IMailManager */
 	private $mailManager;
 
+	/** @var AccountService */
+	private $accountService;
+
+	/** @var ITimeFactory */
+	private $timeFactory;
+
+	/** @var LoggerInterface */
+	private $logger;
+
 	public function __construct(IMailTransmission  $transmission,
 								LocalMessageMapper $mapper,
 								AttachmentService  $attachmentService,
 								IEventDispatcher    $eventDispatcher,
 								IMAPClientFactory $clientFactory,
-								IMailManager $mailManager) {
+								IMailManager $mailManager,
+								AccountService $accountService,
+								ITimeFactory $timeFactory,
+								LoggerInterface $logger) {
 		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->clientFactory = $clientFactory;
 		$this->mailManager = $mailManager;
+		$this->timeFactory = $timeFactory;
+		$this->logger = $logger;
+		$this->accountService = $accountService;
 	}
 
 	/**
@@ -152,5 +170,39 @@ class OutboxService implements ILocalMailboxService {
 			OutboxMessageCreatedEvent::class,
 			new OutboxMessageCreatedEvent($account, $message)
 		);
+	}
+
+	public function flush(): void {
+		$messages = $this->mapper->findDue(
+			$this->timeFactory->getTime()
+		);
+
+		$accountIds = array_unique(array_map(function ($message) {
+			return $message->getAccountId();
+		}, $messages));
+
+		$accounts = array_combine($accountIds, array_map(function ($accountId) {
+			return $this->accountService->findById($accountId);
+		}, $accountIds));
+
+		foreach ($messages as $message) {
+			try {
+				// TODO: memoize accounts
+				$this->sendMessage(
+					$message,
+					$accounts[$message->getAccountId()],
+				);
+				$this->logger->debug('Outbox message {id} sent', [
+					'id' => $message->getId(),
+				]);
+			} catch (Throwable $e) {
+				// Failure of one message should not stop sending other messages
+				// Log and continue
+				$this->logger->warning('Could not send outbox message {id}: ' . $e->getMessage(), [
+					'id' => $message->getId(),
+					'exception' => $e,
+				]);
+			}
+		}
 	}
 }

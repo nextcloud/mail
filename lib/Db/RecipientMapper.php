@@ -57,8 +57,10 @@ class RecipientMapper extends QBMapper {
 	 * @return Recipient[]
 	 */
 	public function findByLocalMessageIds(array $localMessageIds): array {
+		if (empty($localMessageIds)) {
+			return [];
+		}
 		$qb = $this->db->getQueryBuilder();
-
 		$query = $qb->select('*')
 			->from($this->getTableName())
 			->where(
