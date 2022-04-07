@@ -93,7 +93,7 @@ export default {
 					cc: data.cc,
 					bcc: data.bcc,
 					attachments: data.attachments,
-					aliasId: null,
+					aliasId: data.aliasId,
 					inReplyToMessageId: null,
 					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
 				}
@@ -114,7 +114,7 @@ export default {
 					cc: data.cc,
 					bcc: data.bcc,
 					attachments: data.attachments,
-					aliasId: null,
+					aliasId: data.aliasId,
 					inReplyToMessageId: null,
 					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
 				}
