@@ -69,7 +69,7 @@ export default {
 			logger.debug(`Outbox message ${id} sent`)
 		} catch (error) {
 			logger.error(`Failed to send message ${id} from outbox`, { error })
-			return
+			throw error
 		}
 
 		commit('deleteMessage', { id })
