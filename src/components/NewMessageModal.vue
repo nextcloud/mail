@@ -97,9 +97,9 @@ export default {
 					inReplyToMessageId: null,
 					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
 				}
-				// TODO: update the message instead of enqueing another time
-				const message = await this.$store.dispatch('outbox/enqueueMessage', {
+				const message = await this.$store.dispatch('outbox/updateMessage', {
 					message: dataForServer,
+					id: this.composerData.id,
 				})
 
 				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
