@@ -144,15 +144,7 @@ export default {
 				if (typeof first !== 'undefined') {
 					logger.debug('refreshing mailbox')
 					if (this.$route.params.mailboxId === this.account.draftsMailboxId) {
-						this.$router.replace({
-							name: 'message',
-							params: {
-								mailboxId: this.$route.params.mailboxId,
-								filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-								threadId: 'new',
-								draftId: first.databaseId,
-							},
-						})
+						// Don't navigate
 					} else {
 						this.$router.replace({
 							name: 'message',

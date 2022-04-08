@@ -12,7 +12,8 @@
 		:to="link"
 		:data-envelope-id="data.databaseId"
 		:title="addresses"
-		:details="formatted()">
+		:details="formatted()"
+		@click="onClick">
 		<template #icon>
 			<div
 				v-if="mailbox.isUnified"
@@ -271,19 +272,7 @@ export default {
 		},
 		link() {
 			if (this.draft) {
-			// TODO: does not work with a unified drafts mailbox
-			//       the query should also contain the account and mailbox
-			//       id for that to work
-				return {
-					name: 'message',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						threadId: 'new',
-						draftId: this.data.databaseId,
-					},
-					exact: true,
-				}
+				return undefined
 			} else {
 				return {
 					name: 'message',
@@ -356,6 +345,17 @@ export default {
 		},
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
+		},
+		onClick() {
+			if (this.draft) {
+				this.$store.dispatch('showMessageComposer', {
+					data: {
+						...this.data,
+						draftId: this.data.databaseId,
+					},
+					templateMessageId: this.data.databaseId,
+				})
+			}
 		},
 		onSelectMultiple() {
 			this.$emit('select-multiple')

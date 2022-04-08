@@ -87,6 +87,11 @@ import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+import {
+	buildForwardSubject,
+	buildRecipients as buildReplyRecipients,
+	buildReplySubject,
+} from '../ReplyBuilder'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -258,8 +263,72 @@ export default {
 			updated,
 		})
 	},
-	async showMessageComposer({ commit, dispatch }, { type = 'imap', data = {}, forwardedMessages = [], templateMessageId }) {
-		if (templateMessageId) {
+	async showMessageComposer({ commit, dispatch, getters }, { type = 'imap', data = {}, reply, forwardedMessages = [], templateMessageId }) {
+		if (reply) {
+			const original = await dispatch('fetchMessage', reply.data.databaseId)
+
+			// Fetch and transform the body into a rich text object
+			if (original.hasHtmlBody) {
+				const resp = await Axios.get(
+					generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
+						id: original.databaseId,
+					})
+				)
+
+				data.body = html(resp.data)
+			} else {
+				data.body = plain(original.body)
+			}
+
+			if (reply.mode === 'reply') {
+				logger.debug('Show simple reply composer', { reply })
+				commit('showMessageComposer', {
+					data: {
+						accountId: reply.data.accountId,
+						to: reply.data.from,
+						cc: [],
+						subject: buildReplySubject(reply.data.subject),
+						body: data.body,
+						originalBody: data.body,
+						replyTo: reply.data,
+					},
+				})
+				return
+			} else if (reply.mode === 'replyAll') {
+				logger.debug('Show reply all reply composer', { reply })
+				const account = getters.getAccount(reply.data.accountId)
+				const recipients = buildReplyRecipients(reply.data, {
+					email: account.emailAddress,
+					label: account.name,
+				})
+				commit('showMessageComposer', {
+					data: {
+						accountId: reply.data.accountId,
+						to: recipients.to,
+						cc: recipients.cc,
+						subject: buildReplySubject(reply.data.subject),
+						body: data.body,
+						originalBody: data.body,
+						replyTo: reply.data,
+					},
+				})
+				return
+			} else if (reply.mode === 'forward') {
+				logger.debug('Show forward composer', { reply })
+				commit('showMessageComposer', {
+					data: {
+						accountId: reply.data.accountId,
+						to: [],
+						cc: [],
+						subject: buildForwardSubject(reply.data.subject),
+						body: data.body,
+						originalBody: data.body,
+						forwardFrom: reply.data,
+					},
+				})
+				return
+			}
+		} else if (templateMessageId) {
 			const message = await dispatch('fetchMessage', templateMessageId)
 			// Merge the original into any existing data
 			data = {

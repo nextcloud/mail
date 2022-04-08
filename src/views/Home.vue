@@ -1,7 +1,5 @@
 <template>
-	<Content v-shortkey.once="['c']"
-		app-name="mail"
-		@shortkey.native="onNewMessage">
+	<Content app-name="mail">
 		<Navigation />
 		<Outbox v-if="$route.name === 'outbox'" />
 		<MailboxThread v-else-if="activeAccount"
@@ -94,16 +92,6 @@ export default {
 		}
 	},
 	methods: {
-		onNewMessage() {
-			// FIXME: assumes that we're on the 'message' route already
-			this.$router.push({
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'new',
-				},
-			})
-		},
 		hideMessage() {
 			this.$router.replace({
 				name: 'mailbox',
