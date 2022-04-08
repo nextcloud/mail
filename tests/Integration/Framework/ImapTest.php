@@ -94,8 +94,10 @@ trait ImapTest {
 	/**
 	 * @return array<string>
 	 */
-	public function getMailboxes() {
-		$client = $this->getTestClient();
+	public function getMailboxes(Horde_Imap_Client_Socket $client = null) {
+		if ($client === null) {
+			$client = $this->getTestClient();
+		}
 
 		return $this->listMailboxes($client);
 	}
@@ -150,9 +152,7 @@ trait ImapTest {
 		$body->setContents($message->getBody());
 		$mail->setBasePart($body);
 
-		$raw = $mail->getRaw();
-		$data = stream_get_contents($raw);
-
+		$data = $mail->getRaw(false);
 		$client = $this->getClient($account);
 		try {
 			return $client->append($mailbox, [

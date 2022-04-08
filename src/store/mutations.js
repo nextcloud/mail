@@ -174,6 +174,22 @@ export default {
 		}
 		removeRec(account)
 	},
+	showMessageComposer(state, { type, data, forwardedMessages }) {
+		Vue.set(state, 'newMessage', {
+			type,
+			data,
+			options: {
+				forwardedMessages,
+			},
+		})
+	},
+	convertComposerMessageToOutbox(state, { message }) {
+		Vue.set(state.newMessage, 'type', 'outbox')
+		Vue.set(state.newMessage.data, 'id', message.id)
+	},
+	hideMessageComposer(state) {
+		Vue.delete(state, 'newMessage')
+	},
 	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
 		normalizeTags(state, envelope)
 		const mailbox = state.mailboxes[envelope.mailboxId]

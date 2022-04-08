@@ -349,6 +349,10 @@ export default {
 			type: Object,
 			default: () => html(''),
 		},
+		draftId: {
+			type: Number,
+			default: undefined,
+		},
 		draft: {
 			type: Function,
 			required: true,
@@ -389,7 +393,7 @@ export default {
 			bodyVal,
 			attachments: [],
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
-			draftsPromise: Promise.resolve(),
+			draftsPromise: Promise.resolve(this.draftId),
 			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
 			savingDraft: undefined,
@@ -407,7 +411,7 @@ export default {
 				keyRing: undefined,
 				keysMissing: [],
 			},
-			editorMode: 'html',
+			editorMode: (this.body?.format !== 'html') ? 'plaintext' : 'html',
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
 			appendSignature: true,
@@ -562,7 +566,8 @@ export default {
 			} else {
 				this.selectedAlias = this.aliases[0]
 			}
-			if (previous === NO_ALIAS_SET) {
+			// only overwrite editormode if no body provided
+			if (previous === NO_ALIAS_SET && !this.body) {
 				this.editorMode = this.selectedAlias.editorMode
 			}
 		},
@@ -598,28 +603,15 @@ export default {
 			}
 			this.bodyVal = html(body).value
 		},
-		recipientToRfc822(recipient) {
-			if (recipient.email === recipient.label) {
-				// From mailto or sender without proper label
-				return recipient.email
-			} else if (recipient.label === '') {
-				// Invalid label
-				return recipient.email
-			} else if (recipient.email.search(/^[a-zA-Z]+:/) === 0) {
-				// Group integration
-				return recipient.email
-			} else {
-				// Proper layout with label
-				return `"${recipient.label}" <${recipient.email}>`
-			}
-		},
 		getMessageData(id) {
 			return {
+				// TODO: Rename account to accountId
 				account: this.selectedAlias.id,
+				accountId: this.selectedAlias.id,
 				aliasId: this.selectedAlias.aliasId,
-				to: this.selectTo.map(this.recipientToRfc822).join(', '),
-				cc: this.selectCc.map(this.recipientToRfc822).join(', '),
-				bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
+				to: this.selectTo,
+				cc: this.selectCc,
+				bcc: this.selectBcc,
 				draftId: id,
 				subject: this.subjectVal,
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),

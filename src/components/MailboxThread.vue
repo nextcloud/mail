@@ -59,12 +59,8 @@
 				</template>
 			</AppContentList>
 		</template>
-		<NewMessageDetail v-if="newMessage" />
-		<Thread v-else-if="showThread" @delete="deleteMessage" />
+		<Thread v-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
-		<NewMessageModal
-			v-if="showComposer"
-			@close="showComposer = false" />
 	</AppContent>
 </template>
 
@@ -79,16 +75,15 @@ import Vue from 'vue'
 import infiniteScroll from '../directives/infinite-scroll'
 import logger from '../logger'
 import Mailbox from './Mailbox'
-import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
-import NewMessageModal from './NewMessageModal'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
 	priorityStarredQuery,
 } from '../util/priorityInbox'
+import { detect, html } from '../util/text'
 
 export default {
 	name: 'MailboxThread',
@@ -99,12 +94,10 @@ export default {
 		AppContent,
 		AppContentList,
 		Mailbox,
-		NewMessageDetail,
 		NoMessageSelected,
 		Popover,
 		SectionTitle,
 		Thread,
-		NewMessageModal,
 	},
 	mixins: [isMobile],
 	props: {
@@ -131,7 +124,6 @@ export default {
 				refresh: ['r'],
 				unseen: ['u'],
 			},
-			showComposer: false,
 			priorityImportantQuery,
 			priorityStarredQuery,
 			priorityOtherQuery,
@@ -158,13 +150,6 @@ export default {
 				return 'is:starred'
 			}
 			return this.searchQuery
-		},
-		newMessage() {
-			return (
-				this.$route.params.threadId === 'new'
-				|| this.$route.params.threadId === 'reply'
-				|| this.$route.params.threadId === 'replyAll'
-			)
 		},
 		isThreadShown() {
 			return !!this.$route.params.threadId
@@ -207,8 +192,33 @@ export default {
 		},
 		handleMailto() {
 			if (this.$route.name === 'message' && this.$route.params.threadId === 'mailto') {
-				this.showComposer = true
+				let accountId
+				// Only preselect an account when we're not in a unified mailbox
+				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
+					accountId = parseInt(this.$route.params.accountId, 10)
+				}
+				this.$store.dispatch('showMessageComposer', {
+					data: {
+						accountId,
+						to: this.stringToRecipients(this.$route.query.to),
+						cc: this.stringToRecipients(this.$route.query.cc),
+						subject: this.$route.query.subject || '',
+						body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
+					},
+				})
 			}
+		},
+		stringToRecipients(str) {
+			if (str === undefined) {
+				return []
+			}
+
+			return [
+				{
+					label: str,
+					email: str,
+				},
+			]
 		},
 	},
 }

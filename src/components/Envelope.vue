@@ -12,7 +12,8 @@
 		:to="link"
 		:data-envelope-id="data.databaseId"
 		:title="addresses"
-		:details="formatted()">
+		:details="formatted()"
+		@click="onClick">
 		<template #icon>
 			<div
 				v-if="mailbox.isUnified"
@@ -169,9 +170,6 @@
 				:account="account"
 				:envelope="data"
 				@close="onCloseTagModal" />
-			<NewMessageModal v-if="showNewMessage"
-				:template-message-id="data.databaseId"
-				@close="showNewMessage = false" />
 		</template>
 	</ListItem>
 </template>
@@ -194,7 +192,6 @@ import MoveModal from './MoveModal'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
-import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'Envelope',
@@ -207,7 +204,6 @@ export default {
 		ChevronLeft,
 		MoveModal,
 		TagModal,
-		NewMessageModal,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -247,7 +243,6 @@ export default {
 			showMoveModal: false,
 			showEventModal: false,
 			showTagModal: false,
-			showNewMessage: false,
 			moreActionsOpen: false,
 		}
 	},
@@ -277,19 +272,7 @@ export default {
 		},
 		link() {
 			if (this.draft) {
-			// TODO: does not work with a unified drafts mailbox
-			//       the query should also contain the account and mailbox
-			//       id for that to work
-				return {
-					name: 'message',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						threadId: 'new',
-						draftId: this.data.databaseId,
-					},
-					exact: true,
-				}
+				return undefined
 			} else {
 				return {
 					name: 'message',
@@ -363,6 +346,17 @@ export default {
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
 		},
+		onClick() {
+			if (this.draft) {
+				this.$store.dispatch('showMessageComposer', {
+					data: {
+						...this.data,
+						draftId: this.data.databaseId,
+					},
+					templateMessageId: this.data.databaseId,
+				})
+			}
+		},
 		onSelectMultiple() {
 			this.$emit('select-multiple')
 		},
@@ -400,8 +394,11 @@ export default {
 				}))
 			}
 		},
-		onOpenEditAsNew() {
-			this.showNewMessage = true
+		async onOpenEditAsNew() {
+			await this.$store.dispatch('showMessageComposer', {
+				templateMessageId: this.data.databaseId,
+				data: this.data,
+			})
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true

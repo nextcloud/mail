@@ -38,7 +38,6 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -93,8 +92,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -104,7 +101,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail
@@ -125,8 +122,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -136,7 +131,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail
@@ -161,8 +156,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -172,7 +165,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail
@@ -203,8 +196,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -214,7 +205,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail

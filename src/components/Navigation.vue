@@ -23,17 +23,27 @@
 	<AppNavigation>
 		<AppNavigationNew
 			:text="t('mail', 'New message')"
+			:disabled="$store.getters.showMessageComposer"
 			button-id="mail_new_message"
 			button-class="icon-add"
 			role="complementary"
 			@click="onNewMessage" />
-		<NewMessageModal v-if="showNewMessage" @close="showNewMessage = false" />
 		<button v-if="currentMailbox"
 			class="button icon-history"
 			:disabled="refreshing"
 			@click="refreshMailbox" />
 		<template #list>
 			<ul id="accounts-list">
+				<!-- Special mailboxes first -->
+				<NavigationMailbox
+					v-for="mailbox in unifiedMailboxes"
+					:key="'mailbox-' + mailbox.databaseId"
+					:account="unifiedAccount"
+					:mailbox="mailbox" />
+				<NavigationOutbox />
+				<AppNavigationSpacer />
+
+				<!-- All other mailboxes grouped by their account -->
 				<template v-for="group in menu">
 					<NavigationAccount
 						v-if="group.account"
@@ -87,9 +97,10 @@ import logger from '../logger'
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationMailbox from './NavigationMailbox'
+import NavigationOutbox from './NavigationOutbox'
 
 import AppSettingsMenu from '../components/AppSettingsMenu'
-import NewMessageModal from './NewMessageModal'
+import { UNIFIED_ACCOUNT_ID } from '../store/constants'
 
 export default {
 	name: 'Navigation',
@@ -102,36 +113,43 @@ export default {
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
-		NewMessageModal,
+		NavigationOutbox,
 	},
 	data() {
 		return {
 			refreshing: false,
-			showNewMessage: false,
 		}
 	},
 	computed: {
 		menu() {
-			return this.$store.getters.accounts.map((account) => {
-				const mailboxes = this.$store.getters.getMailboxes(account.id)
-				const nonSpecialRoleMailboxes = mailboxes.filter(
-					(mailbox) => this.isCollapsed(account, mailbox)
-				)
-				const isCollapsible = nonSpecialRoleMailboxes.length > 1
+			return this.$store.getters.accounts
+				.filter(account => account.id !== UNIFIED_ACCOUNT_ID)
+				.map(account => {
+					const mailboxes = this.$store.getters.getMailboxes(account.id)
+					const nonSpecialRoleMailboxes = mailboxes.filter(
+						(mailbox) => this.isCollapsed(account, mailbox)
+					)
+					const isCollapsible = nonSpecialRoleMailboxes.length > 1
 
-				return {
-					id: account.id,
-					account,
-					mailboxes,
-					isCollapsible,
-				}
-			})
+					return {
+						id: account.id,
+						account,
+						mailboxes,
+						isCollapsible,
+					}
+				})
 		},
 		currentMailbox() {
 			if (this.$route.name === 'message' || this.$route.name === 'mailbox') {
 				return this.$store.getters.getMailbox(this.$route.params.mailboxId)
 			}
 			return undefined
+		},
+		unifiedAccount() {
+			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
+		},
+		unifiedMailboxes() {
+			return this.$store.getters.getMailboxes(UNIFIED_ACCOUNT_ID)
 		},
 	},
 	methods: {
@@ -151,7 +169,9 @@ export default {
 			return true
 		},
 		onNewMessage() {
-			this.showNewMessage = true
+			this.$store.dispatch('showMessageComposer', {
+
+			})
 		},
 		isFirst(account) {
 			const accounts = this.$store.getters.accounts

@@ -260,7 +260,6 @@ class MessageMapper extends QBMapper {
 	 */
 	public function insertBulk(Account $account, Message ...$messages): void {
 		$this->db->beginTransaction();
-
 		try {
 			$qb1 = $this->db->getQueryBuilder();
 			$qb1->insert($this->getTableName());
@@ -613,6 +612,25 @@ class MessageMapper extends QBMapper {
 			->orderBy('messages.sent_at', 'desc');
 
 		return $this->findRelatedData($this->findEntities($qb), $account->getUserId());
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $messageId
+	 *
+	 * @return Message[]
+	 */
+	public function findByMessageId(Account $account, string $messageId): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('messages.*')
+			->from($this->getTableName(), 'messages')
+			->join('messages', 'mail_mailboxes', 'mailboxes', $qb->expr()->eq('messages.mailbox_id', 'mailboxes.id', IQueryBuilder::PARAM_INT))
+			->where(
+				$qb->expr()->eq('mailboxes.account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->eq('messages.message_id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
+			);
+
+		return $this->findEntities($qb);
 	}
 
 	/**
@@ -1129,7 +1147,10 @@ class MessageMapper extends QBMapper {
 		$recipientIdsQuery = $qb3->selectDistinct('r.id')
 			->from('mail_recipients', 'r')
 			->leftJoin('r', 'mail_messages', 'm', $qb3->expr()->eq('r.message_id', 'm.id'))
-			->where($qb3->expr()->isNull('m.id'));
+			->where(
+				$qb3->expr()->isNull('m.id'),
+				$qb3->expr()->isNull('r.local_message_id')
+			);
 		$result = $recipientIdsQuery->execute();
 		$ids = array_map(function (array $row) {
 			return (int)$row['id'];

@@ -116,7 +116,7 @@
 					<ActionButton
 						icon="icon-forward"
 						:close-after-click="true"
-						@click.prevent="onOpenNewMessageModal">
+						@click.prevent="forwardSelectedAsAttachment">
 						{{ n(
 							'mail',
 							'Forward {number} as attachment',
@@ -149,7 +149,6 @@
 					@close="onCloseMoveModal" />
 			</div>
 		</transition>
-		<NewMessageModal v-if="showNewMessage" :forwarded-messages="forwardedMessages" @close="showNewMessage = false; forwardedMessages = []" />
 		<transition-group name="list">
 			<div id="list-refreshing"
 				key="loading"
@@ -191,7 +190,6 @@ import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 import { differenceWith } from 'ramda'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
-import NewMessageModal from './NewMessageModal'
 
 export default {
 	name: 'EnvelopeList',
@@ -200,7 +198,6 @@ export default {
 		ActionButton,
 		Envelope,
 		MoveModal,
-		NewMessageModal,
 	},
 	props: {
 		account: {
@@ -240,7 +237,6 @@ export default {
 			selection: [],
 			showMoveModal: false,
 			lastToggledIndex: undefined,
-			showNewMessage: false,
 			forwardedMessages: [],
 		}
 	},
@@ -438,11 +434,11 @@ export default {
 		},
 		async forwardSelectedAsAttachment() {
 			this.forwardedMessages = this.selection
-			this.showNewMessage = true
+			await this.$store.dispatch('showMessageComposer', {
+				forwardedMessages: this.forwardedMessages,
+			})
+			this.forwardedMessages = []
 			this.unselectAll()
-		},
-		onOpenNewMessageModal() {
-			this.forwardSelectedAsAttachment()
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false

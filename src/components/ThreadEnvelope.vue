@@ -70,16 +70,16 @@
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
-				<router-link
-					:to="hasMultipleRecipients ? replyAllLink : replyOneLink"
+				<button
 					:class="{
 						'icon-reply-all-white': hasMultipleRecipients,
 						'icon-reply-white': !hasMultipleRecipients,
 						primary: expanded,
 					}"
-					class="button">
+					class="button"
+					@click="onReply">
 					<span class="action-label"> {{ t('mail', 'Reply') }}</span>
-				</router-link>
+				</button>
 				<MenuEnvelope class="app-content-list-item-menu"
 					:envelope="envelope"
 					:with-reply="false"
@@ -174,32 +174,6 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
-		replyOneLink() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'reply',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
-		replyAllLink() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'replyAll',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
 		route() {
 			return {
 				name: 'message',
@@ -277,6 +251,14 @@ export default {
 			const threadHeader = document.querySelector('#mail-thread-header').clientHeight
 			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
 			window.scrollTo({ top })
+		},
+		onReply() {
+			this.$store.dispatch('showMessageComposer', {
+				reply: {
+					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
+					data: this.envelope,
+				},
+			})
 		},
 		onToggleImportant() {
 			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
