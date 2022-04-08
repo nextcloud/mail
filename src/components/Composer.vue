@@ -349,6 +349,10 @@ export default {
 			type: Object,
 			default: () => html(''),
 		},
+		draftId: {
+			type: Number,
+			default: undefined,
+		},
 		draft: {
 			type: Function,
 			required: true,
@@ -389,7 +393,7 @@ export default {
 			bodyVal,
 			attachments: [],
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
-			draftsPromise: Promise.resolve(),
+			draftsPromise: Promise.resolve(this.draftId),
 			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
 			savingDraft: undefined,

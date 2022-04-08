@@ -32,23 +32,23 @@
 						}}
 					</ActionButton>
 				</EnvelopePrimaryActions>
-				<ActionRouter v-if="withReply"
+				<ActionButton v-if="withReply"
 					:icon="hasMultipleRecipients ? 'icon-reply-all' : 'icon-reply'"
 					:close-after-click="true"
-					:to="hasMultipleRecipients ? replyAllLink : replyOneLink">
+					@click="onReply">
 					{{ t('mail', 'Reply') }}
-				</ActionRouter>
-				<ActionRouter v-if="hasMultipleRecipients"
+				</ActionButton>
+				<ActionButton v-if="hasMultipleRecipients"
 					icon="icon-reply"
 					:close-after-click="true"
-					:to="replyOneLink">
+					@click="onReply">
 					{{ t('mail', 'Reply to sender only') }}
-				</ActionRouter>
-				<ActionRouter icon="icon-forward"
+				</ActionButton>
+				<ActionButton icon="icon-forward"
 					:close-after-click="true"
-					:to="forwardLink">
+					@click="onForward">
 					{{ t('mail', 'Forward') }}
-				</ActionRouter>
+				</ActionButton>
 				<ActionButton icon="icon-junk"
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
@@ -151,7 +151,6 @@ import axios from '@nextcloud/axios'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
-import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import { Base64 } from 'js-base64'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
@@ -172,7 +171,6 @@ export default {
 		Actions,
 		ActionButton,
 		ActionLink,
-		ActionRouter,
 		ChevronLeft,
 		EventModal,
 		Modal,
@@ -243,45 +241,6 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
-		replyOneLink() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'reply',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
-		replyAllLink() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'replyAll',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
-		forwardLink() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'new',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
 		threadingFile() {
 			return `data:text/plain;base64,${Base64.encode(JSON.stringify({
 				subject: this.envelope.subject,
@@ -304,6 +263,14 @@ export default {
 		},
 	},
 	methods: {
+		onForward() {
+			this.$store.dispatch('showMessageComposer', {
+				reply: {
+					mode: 'forward',
+					data: this.envelope,
+				},
+			})
+		},
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
 		},
@@ -379,6 +346,14 @@ export default {
 		},
 		onOpenTagModal() {
 			this.showTagModal = true
+		},
+		onReply() {
+			this.$store.dispatch('showMessageComposer', {
+				reply: {
+					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
+					data: this.envelope,
+				},
+			})
 		},
 		onCloseTagModal() {
 			this.showTagModal = false

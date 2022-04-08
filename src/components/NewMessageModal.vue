@@ -10,6 +10,8 @@
 			:bcc="composerData.bcc"
 			:subject="composerData.subject"
 			:body="composerData.body"
+			:reply-to="composerData.replyTo"
+			:draft-id="composerData.draftId"
 			:draft="saveDraft"
 			:send="sendMessage"
 			:forwarded-messages="forwardedMessages" />
@@ -32,13 +34,21 @@ export default {
 	data() {
 		return {
 			original: undefined,
-			originalBody: undefined,
 		}
 	},
 	computed: {
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Outbox draft')
+			}
+			if (this.composerData.draftId !== undefined) {
+				return t('mail', 'Draft')
+			}
+			if (this.composerData.replyTo) {
+				return t('mail', 'Reply')
+			}
+			if (this.composerData.forwardFrom) {
+				return t('mail', 'Forward')
 			}
 			return t('mail', 'New message')
 		},

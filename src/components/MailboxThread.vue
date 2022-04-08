@@ -59,8 +59,7 @@
 				</template>
 			</AppContentList>
 		</template>
-		<NewMessageDetail v-if="newMessage" />
-		<Thread v-else-if="showThread" @delete="deleteMessage" />
+		<Thread v-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
@@ -76,7 +75,6 @@ import Vue from 'vue'
 import infiniteScroll from '../directives/infinite-scroll'
 import logger from '../logger'
 import Mailbox from './Mailbox'
-import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
@@ -96,7 +94,6 @@ export default {
 		AppContent,
 		AppContentList,
 		Mailbox,
-		NewMessageDetail,
 		NoMessageSelected,
 		Popover,
 		SectionTitle,
@@ -153,13 +150,6 @@ export default {
 				return 'is:starred'
 			}
 			return this.searchQuery
-		},
-		newMessage() {
-			return (
-				this.$route.params.threadId === 'new'
-				|| this.$route.params.threadId === 'reply'
-				|| this.$route.params.threadId === 'replyAll'
-			)
 		},
 		isThreadShown() {
 			return !!this.$route.params.threadId
