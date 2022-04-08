@@ -27,12 +27,12 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
-use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -86,8 +86,8 @@ class PageControllerTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
-	/** @var LocalMessageMapper|MockObject */
-	private $localMessageMapper;
+	/** @var OutboxService|MockObject */
+	private $outboxService;
 
 	/** @var PageController */
 	private $controller;
@@ -108,7 +108,7 @@ class PageControllerTest extends TestCase {
 		$this->tagMapper = $this->createMock(TagMapper::class);
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->localMessageMapper = $this->createMock(LocalMessageMapper::class);
+		$this->outboxService = $this->createMock(OutboxService::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -124,7 +124,7 @@ class PageControllerTest extends TestCase {
 			$this->tagMapper,
 			$this->initialState,
 			$this->logger,
-			$this->localMessageMapper
+			$this->outboxService
 		);
 	}
 

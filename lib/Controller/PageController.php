@@ -29,7 +29,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
@@ -81,8 +81,8 @@ class PageController extends Controller {
 	/** @var LoggerInterface */
 	private $logger;
 
-	/** @var LocalMessageMapper */
-	private $localMessageMapper;
+	/** @var OutboxService */
+	private $outboxService;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -97,7 +97,7 @@ class PageController extends Controller {
 								TagMapper $tagMapper,
 								IInitialState $initialStateService,
 								LoggerInterface $logger,
-								LocalMessageMapper $localMessageMapper) {
+								OutboxService $outboxService) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -111,7 +111,7 @@ class PageController extends Controller {
 		$this->tagMapper = $tagMapper;
 		$this->initialStateService = $initialStateService;
 		$this->logger = $logger;
-		$this->localMessageMapper = $localMessageMapper;
+		$this->outboxService = $outboxService;
 	}
 
 	/**
@@ -178,7 +178,7 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'outbox-messages',
-			$this->localMessageMapper->getAllForUser($user->getUID())
+			$this->outboxService->getMessages($user->getUID())
 		);
 
 		$csp = new ContentSecurityPolicy();
