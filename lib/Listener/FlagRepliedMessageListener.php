@@ -97,6 +97,9 @@ class FlagRepliedMessageListener implements IEventListener {
 						'exception' => $e,
 					]);
 				}
+
+				$message->setFlagAnswered(true);
+				$this->dbMessageMapper->update($message);
 			}
 		} finally {
 			$client->logout();
