@@ -42,7 +42,7 @@
     "@nextcloud/logger": "^2.1.0",
     "@nextcloud/moment": "^1.1.1",
     "@nextcloud/router": "^2.0.0",
-    "@nextcloud/vue": "^4.3.0",
+    "@nextcloud/vue": "^5.3.1",
     "@nextcloud/vue-dashboard": "^2",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^5.0.3",
