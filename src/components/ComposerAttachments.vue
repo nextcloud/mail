@@ -25,7 +25,7 @@
 		<ul>
 			<li v-for="attachment in value" :key="attachment.id">
 				<div class="new-message-attachment-name">
-					{{ attachment.displayName }}
+					{{ attachment.displayName ? attachment.displayName : attachment.fileName }}
 				</div>
 				<div class="new-message-attachments-action svg icon-delete" @click="onDelete(attachment)" />
 			</li>

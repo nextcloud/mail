@@ -9,9 +9,11 @@
 			:cc="composerData.cc"
 			:bcc="composerData.bcc"
 			:subject="composerData.subject"
+			:attachments-data="composerData.attachments"
 			:body="composerData.body"
 			:reply-to="composerData.replyTo"
 			:draft-id="composerData.draftId"
+			:send-at="composerData.sendAt * 1000"
 			:draft="saveDraft"
 			:send="sendMessage"
 			:forwarded-messages="forwardedMessages" />
@@ -70,11 +72,7 @@ export default {
 			}
 
 			if (this.composerMessage.type === 'outbox') {
-				const dataForServer = {
-					...data,
-					body: data.isHtml ? data.body.value : toPlain(data.body).value,
-				}
-				await this.$store.dispatch('outbox/updateMessage', { message: dataForServer, id: this.composerData.id })
+				logger.info('skipping autosave', { data })
 			} else {
 				const dataForServer = {
 					...data,
@@ -97,53 +95,50 @@ export default {
 		},
 		async sendMessage(data) {
 			logger.debug('sending message', { data })
-			if (this.composerMessage.type === 'outbox') {
-				const now = new Date().getTime()
-				const dataForServer = {
-					accountId: data.account,
-					subject: data.subject,
-					body: data.isHtml ? data.body.value : toPlain(data.body).value,
-					isHtml: data.isHtml,
-					to: data.to,
-					cc: data.cc,
-					bcc: data.bcc,
-					attachments: data.attachments,
-					aliasId: data.aliasId,
-					inReplyToMessageId: null,
-					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
+			const now = new Date().getTime()
+			for (const attachment of data.attachments) {
+				if (!attachment.type) {
+					// todo move to backend: https://github.com/nextcloud/mail/issues/6227
+					attachment.type = 'local'
 				}
-				const message = await this.$store.dispatch('outbox/updateMessage', {
+			}
+			const dataForServer = {
+				accountId: data.account,
+				subject: data.subject,
+				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+				isHtml: data.isHtml,
+				to: data.to,
+				cc: data.cc,
+				bcc: data.bcc,
+				attachments: data.attachments,
+				aliasId: null,
+				inReplyToMessageId: null,
+				sendAt: data.sendAt ? data.sendAt : Math.floor(now / 1000),
+			}
+			if (dataForServer.sendAt < Math.floor(now / 1000)) {
+				dataForServer.sendAt = Math.floor(now / 1000)
+			}
+
+			let message
+			if (!this.composerData.id) {
+				message = await this.$store.dispatch('outbox/enqueueMessage', {
+					message: dataForServer,
+				})
+			} else {
+				message = await this.$store.dispatch('outbox/updateMessage', {
 					message: dataForServer,
 					id: this.composerData.id,
 				})
+			}
 
+			if (!data.sendAt) {
 				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
-			} else {
-				const now = new Date().getTime()
-				const dataForServer = {
-					accountId: data.account,
-					subject: data.subject,
-					body: data.isHtml ? data.body.value : toPlain(data.body).value,
-					isHtml: data.isHtml,
-					to: data.to,
-					cc: data.cc,
-					bcc: data.bcc,
-					attachments: data.attachments,
-					aliasId: data.aliasId,
-					inReplyToMessageId: null,
-					sendAt: Math.floor(now / 1000), // JS timestamp is in milliseconds
-				}
-				const message = await this.$store.dispatch('outbox/enqueueMessage', {
-					message: dataForServer,
-				})
+			}
 
-				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
-
-				if (data.draftId) {
-					// Remove old draft envelope
-					this.$store.commit('removeEnvelope', { id: data.draftId })
-					this.$store.commit('removeMessage', { id: data.draftId })
-				}
+			if (data.draftId) {
+				// Remove old draft envelope
+				this.$store.commit('removeEnvelope', { id: data.draftId })
+				this.$store.commit('removeMessage', { id: data.draftId })
 			}
 		},
 		recipientToRfc822(recipient) {
