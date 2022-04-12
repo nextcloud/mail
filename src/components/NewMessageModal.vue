@@ -9,13 +9,14 @@
 			:cc="composerData.cc"
 			:bcc="composerData.bcc"
 			:subject="composerData.subject"
+			:attachments-data="composerData.attachments"
 			:body="composerData.body"
 			:reply-to="composerData.replyTo"
 			:draft-id="composerData.draftId"
+			:send-at="composerData.sendAt * 1000"
 			:draft="saveDraft"
 			:send="sendMessage"
-			:forwarded-messages="forwardedMessages"
-			@close="$emit('close')" />
+			:forwarded-messages="forwardedMessages" />
 	</Modal>
 </template>
 <script>
@@ -24,16 +25,18 @@ import logger from '../logger'
 import { toPlain } from '../util/text'
 import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
-import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-
-const UNDO_DELAY = 7 * 1000
 
 export default {
 	name: 'NewMessageModal',
 	components: {
 		Modal,
 		Composer,
+	},
+	data() {
+		return {
+			original: undefined,
+		}
 	},
 	computed: {
 		modalTitle() {
@@ -69,11 +72,7 @@ export default {
 			}
 
 			if (this.composerMessage.type === 'outbox') {
-				const dataForServer = {
-					...data,
-					body: data.isHtml ? data.body.value : toPlain(data.body).value,
-				}
-				await this.$store.dispatch('outbox/updateMessage', { message: dataForServer, id: this.composerData.id })
+				logger.info('skipping autosave', { data })
 			} else {
 				const dataForServer = {
 					...data,
@@ -97,6 +96,12 @@ export default {
 		async sendMessage(data) {
 			logger.debug('sending message', { data })
 			const now = new Date().getTime()
+			for (const attachment of data.attachments) {
+				if (!attachment.type) {
+					// todo move to backend: https://github.com/nextcloud/mail/issues/6227
+					attachment.type = 'local'
+				}
+			}
 			const dataForServer = {
 				accountId: data.account,
 				subject: data.subject,
@@ -106,57 +111,35 @@ export default {
 				cc: data.cc,
 				bcc: data.bcc,
 				attachments: data.attachments,
-				aliasId: data.aliasId,
+				aliasId: null,
 				inReplyToMessageId: null,
-				sendAt: Math.floor((now + UNDO_DELAY) / 1000), // JS timestamp is in milliseconds
+				sendAt: data.sendAt ? data.sendAt : Math.floor(now / 1000),
 			}
+			if (dataForServer.sendAt < Math.floor(now / 1000)) {
+				dataForServer.sendAt = Math.floor(now / 1000)
+			}
+
 			let message
-			if (this.composerMessage.type === 'outbox') {
+			if (!this.composerData.id) {
+				message = await this.$store.dispatch('outbox/enqueueMessage', {
+					message: dataForServer,
+				})
+			} else {
 				message = await this.$store.dispatch('outbox/updateMessage', {
 					message: dataForServer,
 					id: this.composerData.id,
 				})
-			} else {
-				message = await this.$store.dispatch('outbox/enqueueMessage', {
-					message: dataForServer,
-				})
 			}
 
-			showUndo(
-				t('mail', 'Message sent'),
-				async() => {
-					logger.info('Attempting to stop sending message ' + message.id)
-					const stopped = await this.$store.dispatch('outbox/stopMessage', { message })
-					logger.info('Message ' + message.id + ' stopped', { message: stopped })
-					await this.$store.dispatch('showMessageComposer', {
-						type: 'outbox',
-						data: {
-							...message, // For id and other properties
-							...data, // For the correct body values
-						},
-					})
-				}, {
-					timeout: UNDO_DELAY,
-					close: true,
-				}
-			)
-
-			setTimeout(() => {
-				try {
-					this.$store.dispatch('outbox/sendMessage', { id: message.id })
-				} catch (error) {
-					showError(t('mail', 'Could not send message'))
-					logger.error('Could not delay-send message ' + message.id, { message })
-				}
-			}, UNDO_DELAY)
+			if (!data.sendAt) {
+				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
+			}
 
 			if (data.draftId) {
 				// Remove old draft envelope
 				this.$store.commit('removeEnvelope', { id: data.draftId })
 				this.$store.commit('removeMessage', { id: data.draftId })
 			}
-
-			this.$emit('close')
 		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
