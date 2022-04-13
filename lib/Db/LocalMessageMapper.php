@@ -28,7 +28,6 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\DB\Exception as DBException;
 use Throwable;
-use function array_filter;
 use function array_map;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
@@ -133,19 +132,31 @@ class LocalMessageMapper extends QBMapper {
 				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 		$messages = $this->findEntities($select);
+
+		if (empty($messages)) {
+			return [];
+		}
+
 		$ids = array_map(function (LocalMessage $message) {
 			return $message->getId();
 		}, $messages);
+
 		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
 		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
-		return array_map(static function ($message) use ($attachments, $recipients) {
-			$message->setAttachments(array_filter($attachments, function (LocalAttachment $attachment) use ($message) {
-				return $attachment->getLocalMessageId() === $message->getId();
-			}));
-			$message->setRecipients(array_filter($recipients, function (Recipient $recipient) use ($message) {
-				return $recipient->getLocalMessageId() === $message->getId();
-			}));
-			return $message;
+
+		$recipientMap = [];
+		foreach ($recipients as $r) {
+			$recipientMap[$r->getLocalMessageId()][] = $r;
+		}
+		$attachmentMap = [];
+		foreach ($attachments as $a) {
+			$attachmentMap[$a->getLocalMessageId()][] = $a;
+		}
+
+		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
+			$localMessage->setAttachments($attachmentMap[$localMessage->getId()] ?? []);
+			$localMessage->setRecipients($recipientMap[$localMessage->getId()] ?? []);
+			return $localMessage;
 		}, $messages);
 	}
 
