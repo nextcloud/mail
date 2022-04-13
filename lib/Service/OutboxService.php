@@ -177,6 +177,10 @@ class OutboxService implements ILocalMailboxService {
 			$this->timeFactory->getTime()
 		);
 
+		if (empty($messages)) {
+			return;
+		}
+
 		$accountIds = array_unique(array_map(function ($message) {
 			return $message->getAccountId();
 		}, $messages));
@@ -187,7 +191,6 @@ class OutboxService implements ILocalMailboxService {
 
 		foreach ($messages as $message) {
 			try {
-				// TODO: memoize accounts
 				$this->sendMessage(
 					$message,
 					$accounts[$message->getAccountId()],
