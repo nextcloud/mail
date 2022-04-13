@@ -117,10 +117,10 @@ export default {
 				attachments: data.attachments,
 				aliasId: data.aliasId,
 				inReplyToMessageId: null,
-				sendAt: data.sendAt ? data.sendAt : Math.floor(now / 1000),
+				sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
 			}
-			if (dataForServer.sendAt < Math.floor(now / 1000)) {
-				dataForServer.sendAt = Math.floor(now / 1000)
+			if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
+				dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
 			}
 
 			let message
@@ -135,7 +135,7 @@ export default {
 				})
 			}
 
-			if (!data.sendAt) {
+			if (!data.sendAt || data.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 				showUndo(
 					t('mail', 'Message sent'),
 					async() => {
