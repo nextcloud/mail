@@ -165,49 +165,124 @@
 					<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
 				<Actions>
-					<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
-						{{
-							t('mail', 'Upload attachment')
-						}}
-					</ActionButton>
-					<ActionButton icon="icon-folder" @click="onAddCloudAttachment">
-						{{
-							t('mail', 'Add attachment from Files')
-						}}
-					</ActionButton>
-					<ActionButton :disabled="encrypt" icon="icon-public" @click="onAddCloudAttachmentLink">
-						{{
-							addShareLink
-						}}
-					</ActionButton>
-					<ActionCheckbox
-						:checked="!encrypt && !editorPlainText"
-						:disabled="encrypt"
-						@check="editorMode = 'html'"
-						@uncheck="editorMode = 'plaintext'">
-						{{ t('mail', 'Enable formatting') }}
-					</ActionCheckbox>
-					<ActionCheckbox
-						:checked="requestMdn"
-						@check="requestMdn = true"
-						@uncheck="requestMdn = false">
-						{{ t('mail', 'Request a read receipt') }}
-					</ActionCheckbox>
-					<ActionCheckbox
-						v-if="mailvelope.available"
-						:checked="encrypt"
-						@check="encrypt = true"
-						@uncheck="encrypt = false">
-						{{ t('mail', 'Encrypt message with Mailvelope') }}
-					</ActionCheckbox>
-					<ActionLink v-else
-						href="https://www.mailvelope.com/"
-						target="_blank"
-						icon="icon-password">
-						{{
-							t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
-						}}
-					</ActionLink>
+					<template v-if="!isMoreActionsOpen">
+						<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
+							{{
+								t('mail', 'Upload attachment')
+							}}
+						</ActionButton>
+						<ActionButton icon="icon-folder" @click="onAddCloudAttachment">
+							{{
+								t('mail', 'Add attachment from Files')
+							}}
+						</ActionButton>
+						<ActionButton :disabled="encrypt" icon="icon-public" @click="onAddCloudAttachmentLink">
+							{{
+								addShareLink
+							}}
+						</ActionButton>
+						<ActionButton :close-after-click="false" @click="isMoreActionsOpen=true">
+							<template #icon>
+								<SendClock :size="20" :title="t('mail', 'Send later')" />
+							</template>
+							{{
+								t('mail', 'Send later')
+							}}
+						</ActionButton>
+						<ActionCheckbox
+							:checked="!encrypt && !editorPlainText"
+							:disabled="encrypt"
+							@check="editorMode = 'html'"
+							@uncheck="editorMode = 'plaintext'">
+							{{ t('mail', 'Enable formatting') }}
+						</ActionCheckbox>
+						<ActionCheckbox
+							:checked="requestMdn"
+							@check="requestMdn = true"
+							@uncheck="requestMdn = false">
+							{{ t('mail', 'Request a read receipt') }}
+						</ActionCheckbox>
+						<ActionCheckbox
+							v-if="mailvelope.available"
+							:checked="encrypt"
+							@check="encrypt = true"
+							@uncheck="encrypt = false">
+							{{ t('mail', 'Encrypt message with Mailvelope') }}
+						</ActionCheckbox>
+						<ActionLink v-else
+							href="https://www.mailvelope.com/"
+							target="_blank"
+							icon="icon-password">
+							{{
+								t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
+							}}
+						</ActionLink>
+					</template>
+					<template v-if="isMoreActionsOpen">
+						<ActionButton :close-after-click="false"
+							@click="isMoreActionsOpen=false">
+							<template #icon>
+								<ChevronLeft
+									:title="t('mail', 'Send later')"
+									:size="20" />
+								{{ t('mail', 'Send later') }}
+							</template>
+						</ActionButton>
+						<ActionRadio :value="undefined"
+							name="sendLater"
+							:checked="!sendAtVal"
+							class="send-action-radio"
+							@update:checked="sendAtVal = undefined"
+							@change="onChangeSendLater(undefined)">
+							{{ t('mail', 'Send now') }}
+						</ActionRadio>
+						<ActionRadio :value="dateTomorrowMorning"
+							name="sendLater"
+							:checked="Math.floor(dateTomorrowMorning / 1000) === Math.floor(sendAtVal / 1000)"
+							class="send-action-radio send-action-radio--multiline"
+							@update:checked="sendAtVal = dateTomorrowMorning"
+							@change="onChangeSendLater(dateTomorrowMorning)">
+							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
+						</ActionRadio>
+						<ActionRadio :value="dateTomorrowAfternoon"
+							name="sendLater"
+							:checked="Math.floor(dateTomorrowAfternoon / 1000) === Math.floor(sendAtVal / 1000)"
+							class="send-action-radio send-action-radio--multiline"
+							@update:checked="sendAtVal = dateTomorrowAfternoon"
+							@change="onChangeSendLater(dateTomorrowAfternoon)">
+							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
+						</ActionRadio>
+						<ActionRadio :value="dateMondayMorning"
+							name="sendLater"
+							:checked="Math.floor(dateMondayMorning / 1000) === Math.floor(sendAtVal / 1000)"
+							class="send-action-radio send-action-radio--multiline"
+							@update:checked="sendAtVal = dateMondayMorning"
+							@change="onChangeSendLater(dateMondayMorning)">
+							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
+						</ActionRadio>
+						<ActionRadio name="sendLater"
+							class="send-action-radio"
+							:checked="Math.floor(customSendTime / 1000) === Math.floor(sendAtVal / 1000) || isCustomSendTime"
+							:value="customSendTime"
+							@update:checked="sendAtVal = customSendTime"
+							@change="onChangeSendLater(customSendTime)">
+							{{ t('mail', 'Custom date and time') }}
+						</ActionRadio>
+						<ActionInput v-model="selectedDate"
+							type="datetime-local"
+							:first-day-of-week="firstDayDatetimePicker"
+							:use12h="showAmPm"
+							:formatter="formatter"
+							:format="'YYYY-MM-DD HH:mm'"
+							icon=""
+							:minute-step="5"
+							:show-second="false"
+							:disabled-date="disabledDatetimepickerDate"
+							:disabled-time="disabledDatetimepickerTime"
+							@change="onChangeSendLater(customSendTime, true)">
+							{{ t('mail', 'Enter a date') }}
+						</ActionInput>
+					</template>
 				</Actions>
 				<div>
 					<input
@@ -254,7 +329,7 @@
 		</button>
 	</div>
 	<EmptyContent v-else icon="icon-checkmark">
-		<h2>{{ t('mail', 'Message sent!') }}</h2>
+		<h2>{{ sendAtVal ? t('mail', 'Message will be sent at ') + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!') }}</h2>
 	</EmptyContent>
 </template>
 
@@ -268,14 +343,17 @@ import debouncePromise from 'debounce-promise'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
+import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import ActionRadio from '@nextcloud/vue/dist/Components/ActionRadio'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import { showError } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import { translate as t, getCanonicalLocale, getFirstDay, getLocale } from '@nextcloud/l10n'
 import Vue from 'vue'
 
 import ComposerAttachments from './ComposerAttachments'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import { findRecipient } from '../service/AutocompleteService'
 import { detect, html, plain, toHtml, toPlain } from '../util/text'
 import Loading from './Loading'
@@ -292,6 +370,8 @@ import NoDraftsMailboxConfiguredError
 	from '../errors/NoDraftsMailboxConfiguredError'
 import ManyRecipientsError
 	from '../errors/ManyRecipientsError'
+import SendClock from 'vue-material-design-icons/SendClock'
+import moment from '@nextcloud/moment'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -317,12 +397,16 @@ export default {
 		Actions,
 		ActionButton,
 		ActionCheckbox,
+		ActionInput,
 		ActionLink,
+		ActionRadio,
 		ComposerAttachments,
+		ChevronLeft,
 		Loading,
 		Multiselect,
 		TextEditor,
 		EmptyContent,
+		SendClock,
 	},
 	props: {
 		fromAccount: {
@@ -376,6 +460,14 @@ export default {
 			required: false,
 			default: () => [],
 		},
+		sendAt: {
+			type: Number,
+			default: undefined,
+		},
+		attachmentsData: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	data() {
 		let bodyVal = toHtml(this.body).value
@@ -391,7 +483,7 @@ export default {
 			newRecipients: [],
 			subjectVal: this.subject,
 			bodyVal,
-			attachments: [],
+			attachments: this.attachmentsData,
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			draftsPromise: Promise.resolve(this.draftId),
 			attachmentsPromise: Promise.resolve(),
@@ -418,6 +510,19 @@ export default {
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
+			isMoreActionsOpen: false,
+			selectedDate: new Date(),
+			isCustomSendTime: false,
+			sendAtVal: this.sendAt,
+			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
+			formatter: {
+				stringify: (date) => {
+					return date ? moment(date).format('LLL') : ''
+				},
+				parse: (value) => {
+					return value ? moment(value, 'LLL').toDate() : null
+				},
+			},
 		}
 	},
 	computed: {
@@ -478,11 +583,39 @@ export default {
 			return this.editorMode === 'plaintext'
 		},
 		submitButtonTitle() {
+			if (this.sendAtVal) {
+				return t('mail', 'Send later') + ` ${this.convertToLocalDate(this.sendAtVal)}`
+			}
 			if (!this.mailvelope.available) {
 				return t('mail', 'Send')
 			}
 
 			return this.encrypt ? t('mail', 'Encrypt and send') : t('mail', 'Send unencrypted')
+		},
+		dateTomorrowMorning() {
+			const today = new Date()
+			today.setTime(today.getTime() + 24 * 60 * 60 * 1000)
+			return today.setHours(9, 0, 0, 0)
+
+		},
+		dateTomorrowAfternoon() {
+			const today = new Date()
+			today.setTime(today.getTime() + 24 * 60 * 60 * 1000)
+			return today.setHours(14, 0, 0, 0)
+		},
+		dateMondayMorning() {
+			const today = new Date()
+			today.setHours(9, 0, 0, 0)
+			return today.setDate(today.getDate() + (7 - today.getDay()) % 7 + 1)
+		},
+		customSendTime() {
+			return new Date(this.selectedDate).getTime()
+		},
+		showAmPm() {
+			const localeData = moment().locale(getLocale()).localeData()
+			const timeFormat = localeData.longDateFormat('LT').toLowerCase()
+
+			return timeFormat.indexOf('a') !== -1
 		},
 	},
 	watch: {
@@ -619,6 +752,7 @@ export default {
 				messageId: this.replyTo ? this.replyTo.databaseId : undefined,
 				isHtml: !this.editorPlainText,
 				requestMdn: this.requestMdn,
+				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
 			}
 		},
 		saveDraft(data) {
@@ -633,6 +767,7 @@ export default {
 						&& !draftData.cc
 						&& !draftData.bcc
 						&& !draftData.to
+						&& !draftData.sendAt
 					) {
 						// this might happen after a call to reset()
 						// where the text input gets reset as well
@@ -676,6 +811,19 @@ export default {
 				this.bus.$emit('insertSignature', signatureValue, this.selectedAlias.signatureAboveQuote)
 				this.appendSignature = false
 			}
+		},
+		onChangeSendLater(value, isCustomSendTime = false) {
+			this.isCustomSendTime = isCustomSendTime
+			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
+		},
+		convertToLocalDate(timestamp) {
+			const options = {
+				month: 'short',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit',
+			}
+			return new Date(timestamp).toLocaleString(getCanonicalLocale(), options)
 		},
 		onAliasChange(alias) {
 			logger.debug('changed alias', { alias })
@@ -806,6 +954,7 @@ export default {
 			this.requestMdn = false
 			this.appendSignature = true
 			this.savingDraft = undefined
+			this.sendAtVal = undefined
 
 			this.setAlias()
 			this.initBody()
@@ -834,6 +983,32 @@ export default {
 			await this.$store.dispatch('deleteMessage', { id })
 			this.state = STATES.DISCARDED
 			this.$emit('close')
+		},
+		/**
+		 * Whether the date is acceptable
+		 *
+		 * @param {Date} date The date to compare to
+		 * @returns {boolean}
+		 */
+		disabledDatetimepickerDate(date) {
+			const minimumDate = new Date()
+			// Make it one sec before midnight so it shows the next full day as available
+			minimumDate.setHours(0, 0, 0)
+			minimumDate.setSeconds(minimumDate.getSeconds() - 1)
+
+			return date.getTime() <= minimumDate
+		},
+
+		/**
+		 * Whether the time for date is acceptable
+		 *
+		 * @param {Date} date The date to compare to
+		 * @returns {boolean}
+		 */
+		disabledDatetimepickerTime(date) {
+			const now = new Date()
+			const minimumDate = new Date(now.getTime())
+			return date.getTime() <= minimumDate
 		},
 	},
 }
@@ -978,5 +1153,8 @@ export default {
 .emptycontent {
 	margin-top: 250px;
 	height: 120px;
+}
+.send-action-radio {
+	padding: 5px 0 5px 0;
 }
 </style>
