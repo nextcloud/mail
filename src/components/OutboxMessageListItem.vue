@@ -123,7 +123,7 @@ export default {
 		async sendMessage(data) {
 			logger.debug('sending message', { data })
 			try {
-				await this.$store.dispatch('outbox/sendMessage', { id: this.message.id })
+				await this.$store.dispatch('outbox/sendMessage', { id: this.message.id, force: true })
 				showSuccess(t('mail', 'Message sent'))
 			} catch (error) {
 				showError(t('mail', 'Could not send message'))
@@ -134,7 +134,7 @@ export default {
 				type: 'outbox',
 				data: {
 					...this.message,
-					body: this.message.html ? html(this.message.text) : plain(this.message.text),
+					body: this.message.isHtml ? html(this.message.body) : plain(this.message.body),
 				},
 			})
 		},

@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -315,6 +316,13 @@ export default {
 	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
+	},
+	addMessageItineraries(state, { id, itineraries }) {
+		const message = state.messages[id]
+		if (!message) {
+			return
+		}
+		Vue.set(message, 'itineraries', itineraries)
 	},
 	addEnvelopeThread(state, { id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists

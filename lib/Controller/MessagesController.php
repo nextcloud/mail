@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @author Lukas Reschke <lukas@owncloud.com>
  * @author Thomas Imbreckx <zinks@iozero.be>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -248,11 +249,10 @@ class MessagesController extends Controller {
 			$message->getUid(),
 			true
 		)->getFullMessage($id);
-		$json['itineraries'] = $this->itineraryService->extract(
-			$account,
-			$mailbox->getName(),
-			$message->getUid()
-		);
+		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getUid());
+		if ($itineraries) {
+			$json['itineraries'] = $itineraries;
+		}
 		$json['attachments'] = array_map(function ($a) use ($id) {
 			return $this->enrichDownloadUrl(
 				$id,
@@ -270,6 +270,28 @@ class MessagesController extends Controller {
 		$response->cacheFor(60 * 60);
 
 		return $response;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 */
+	public function getItineraries(int $id): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		return new JsonResponse($this->itineraryService->extract($account, $mailbox, $message->getUid()));
 	}
 
 	private function isSenderTrusted(Message $message): bool {

@@ -16,7 +16,8 @@
 			:send-at="composerData.sendAt * 1000"
 			:draft="saveDraft"
 			:send="sendMessage"
-			:forwarded-messages="forwardedMessages" />
+			:forwarded-messages="forwardedMessages"
+			@close="$emit('close')" />
 	</Modal>
 </template>
 <script>
@@ -25,7 +26,10 @@ import logger from '../logger'
 import { toPlain } from '../util/text'
 import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
+import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+
+const UNDO_DELAY = 7 * 1000
 
 export default {
 	name: 'NewMessageModal',
@@ -111,18 +115,14 @@ export default {
 				cc: data.cc,
 				bcc: data.bcc,
 				attachments: data.attachments,
-				aliasId: null,
+				aliasId: data.aliasId,
 				inReplyToMessageId: null,
-				sendAt: data.sendAt ? data.sendAt : Math.floor(now / 1000),
+				sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
 			}
-			if (dataForServer.sendAt < Math.floor(now / 1000)) {
-				dataForServer.sendAt = Math.floor(now / 1000)
-			}
-
 			let message
 			if (!this.composerData.id) {
 				message = await this.$store.dispatch('outbox/enqueueMessage', {
-					message: dataForServer,
+					message: dataForServer
 				})
 			} else {
 				message = await this.$store.dispatch('outbox/updateMessage', {
@@ -130,16 +130,39 @@ export default {
 					id: this.composerData.id,
 				})
 			}
+			showUndo(
+				t('mail', 'Message sent'),
+				async() => {
+					logger.info('Attempting to stop sending message ' + message.id)
+					const stopped = await this.$store.dispatch('outbox/stopMessage', { message })
+					logger.info('Message ' + message.id + ' stopped', { message: stopped })
+					await this.$store.dispatch('showMessageComposer', {
+						type: 'outbox',
+						data: {
+							...message, // For id and other properties
+							...data, // For the correct body values
+						},
+					})
+				}, {
+					timeout: UNDO_DELAY,
+					close: true,
+				}
+			)
 
-			if (!data.sendAt) {
-				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
-			}
-
+			setTimeout(() => {
+				try {
+					this.$store.dispatch('outbox/sendMessage', { id: message.id })
+				} catch (error) {
+					showError(t('mail', 'Could not send message'))
+					logger.error('Could not delay-send message ' + message.id, { message })
+				}
+			}, UNDO_DELAY)
 			if (data.draftId) {
 				// Remove old draft envelope
 				this.$store.commit('removeEnvelope', { id: data.draftId })
 				this.$store.commit('removeMessage', { id: data.draftId })
 			}
+			this.$emit('close')
 		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
