@@ -1,5 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## 1.12.0 - 2022-04-26
+### Added
+- Local Outbox
+- Scheduled Sending
+- Undo Sending
+- Anti abuse detection
+- Time in-/senstive background jobs
+- Clipboard support, copy recipient to clipboard
+- Loading indicator for autosuggestion dropdown
+### Changed
+- General UI improvements and design fixes
+- Account setup error reporting
+- Downgrade KItinerary log line to info
+### Fixed
+- TypeError spamming logs when user not logged in
+- Sync error with empty UID list
+- array_merge needs at least one argument
+- Missing account aliases for new accounts
+
 ## 1.11.7 - 2022-02-21
 ### Added
 - Loading indicator for recipient suggestions
