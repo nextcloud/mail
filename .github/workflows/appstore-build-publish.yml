@@ -84,7 +84,7 @@ jobs:
         if: ${{ steps.versions.outputs.nodeVersion }}
         run: |
           cd ${{ env.APP_NAME }}
-          npm ci
+          npm install --deps
           npm run build
 
       - name: Install Krankerl
