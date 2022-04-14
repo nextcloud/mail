@@ -74,7 +74,7 @@ class MessagesController extends Controller {
 	/** @var ItineraryService */
 	private $itineraryService;
 
-	/** @var string */
+	/** @var ?string */
 	private $currentUserId;
 
 	/** @var LoggerInterface */
@@ -124,7 +124,7 @@ class MessagesController extends Controller {
 								IMailManager $mailManager,
 								IMailSearch $mailSearch,
 								ItineraryService $itineraryService,
-								string $UserId,
+								?string $UserId,
 								$userFolder,
 								LoggerInterface $logger,
 								IL10N $l10n,
@@ -145,7 +145,6 @@ class MessagesController extends Controller {
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
-		$this->mailManager = $mailManager;
 		$this->nonceManager = $nonceManager;
 		$this->trustedSenderService = $trustedSenderService;
 		$this->mailTransmission = $mailTransmission;
