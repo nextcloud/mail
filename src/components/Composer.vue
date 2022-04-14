@@ -329,7 +329,7 @@
 		</button>
 	</div>
 	<EmptyContent v-else icon="icon-checkmark">
-		<h2>{{ sendAtVal ? t('mail', 'Message will be sent at ') + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!') }}</h2>
+		<h2>{{ sendAtVal ? t('mail', 'Message will be sent at') + ' ' + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!') }}</h2>
 	</EmptyContent>
 </template>
 
