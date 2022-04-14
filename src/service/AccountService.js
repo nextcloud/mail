@@ -13,7 +13,7 @@ export const create = (data) => {
 
 	return axios
 		.post(url, data)
-		.then((resp) => resp.data)
+		.then((resp) => resp.data.data)
 		.then(fixAccountId)
 		.catch((e) => {
 			if (e.response && e.response.status === 400) {
