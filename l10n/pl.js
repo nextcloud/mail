@@ -110,6 +110,7 @@ OC.L10N.register(
     "Retry" : "Powtórz",
     "Warning sending your message" : "Ostrzeżenie podczas wysyłania wiadomości",
     "Send anyway" : "Wyślij mimo to",
+    "Message will be sent at" : "Wiadomość zostanie wysłana w",
     "Message sent!" : "Wiadomość wysłana!",
     "Add share link from {productName} Files" : "Dodaj link do udostępnienia z Plików {productName}",
     "Send" : "Wyślij",

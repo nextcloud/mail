@@ -110,6 +110,7 @@ OC.L10N.register(
     "Retry" : "Yeniden dene",
     "Warning sending your message" : "İletiniz gönderilirken bir uyarı verildi",
     "Send anyway" : "Gene de gönder",
+    "Message will be sent at" : "İleti şu zamanda gönderilecek",
     "Message sent!" : "İleti gönderildi!",
     "Add share link from {productName} Files" : "{productName} dosyalarından paylaşım bağlantısı ekle",
     "Send" : "Gönder",

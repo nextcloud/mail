@@ -110,6 +110,7 @@ OC.L10N.register(
     "Retry" : "Újra",
     "Warning sending your message" : "Figyelmeztetés az üzenet elküldésekor",
     "Send anyway" : "Elküldés mindenképpen",
+    "Message will be sent at" : "Az üzenet ekkor lesz elküldve:",
     "Message sent!" : "Üzenet elküldve.",
     "Add share link from {productName} Files" : "Megosztási hivatkozás hozzáadása a {productName} Fájlokból",
     "Send" : "Küldés",
