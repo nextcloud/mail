@@ -110,6 +110,7 @@ OC.L10N.register(
     "Retry" : "重試",
     "Warning sending your message" : "在傳送您的郵件時警告",
     "Send anyway" : "無論無何都要傳送",
+    "Message will be sent at" : "郵件將傳送至",
     "Message sent!" : "信件已寄出",
     "Add share link from {productName} Files" : "從 {productName} 檔案新增分享連結",
     "Send" : "傳送",
