@@ -70,6 +70,7 @@ export default {
 		return {
 			error: false,
 			loading: false,
+			refreshInterval: undefined,
 		}
 	},
 	computed: {
@@ -87,8 +88,17 @@ export default {
 			return this.$store.getters['outbox/getAllMessages']
 		},
 	},
+	created() {
+		// Reload outbox contents every 60 seconds
+		this.refreshInterval = setInterval(async() => {
+			await this.fetchMessages()
+		}, 60000)
+	},
 	async mounted() {
 		await this.fetchMessages()
+	},
+	destroyed() {
+		clearInterval(this.refreshInterval)
 	},
 	methods: {
 		hideMessage() {
