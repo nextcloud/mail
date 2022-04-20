@@ -45,7 +45,7 @@ export default {
 	computed: {
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
-				return t('mail', 'Outbox draft')
+				return t('mail', 'Edit message')
 			}
 			if (this.composerData.draftId !== undefined) {
 				return t('mail', 'Draft')
