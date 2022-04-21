@@ -242,7 +242,6 @@ OC.L10N.register(
     "_{total} message_::_{total} messages_" : ["{total} ileti","{total} ileti"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} / {total} okunmamış","{unread} / {total} okunmamış"],
     "Outbox" : "Giden kutusu",
-    "Outbox draft" : "Giden kutusu taslak",
     "Draft" : "Taslak",
     "Message sent" : "İleti gönderildi",
     "Could not send message" : "İleti gönderilemedi",

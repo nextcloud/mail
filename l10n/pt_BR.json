@@ -240,7 +240,6 @@
     "_{total} message_::_{total} messages_" : ["{total} mensagem","{total} mensagens"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} não lido de {total}","{unread} não lidos de {total}"],
     "Outbox" : "Caixa de saída",
-    "Outbox draft" : "Caixa de rascunho",
     "Draft" : "Rascunho",
     "Message sent" : "Mensagem enviada",
     "Could not send message" : "Não foi possível enviar a mensagem",

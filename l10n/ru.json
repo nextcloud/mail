@@ -240,7 +240,6 @@
     "_{total} message_::_{total} messages_" : ["{total} письмо","{total} письма","{total} писем","{total} письма"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["Непрочитано {unread} из {total}","Непрочитано {unread} из {total}","Непрочитано {unread} из {total}","Непрочитано {unread} из {total}"],
     "Outbox" : "Исходящие",
-    "Outbox draft" : "Исходящий черновик",
     "Draft" : "Черновик",
     "Message sent" : "Сообщение отправлено",
     "Could not send message" : "Не удалось отправить сообщение",

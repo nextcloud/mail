@@ -240,7 +240,6 @@
     "_{total} message_::_{total} messages_" : ["{total} üzenet","{total} üzenet"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} olvasatlan az összesen {total} üzenetből","{unread} olvasatlan az összesen {total} üzenetből"],
     "Outbox" : "Kimenő üzenetek",
-    "Outbox draft" : "Kimenő vázlatok",
     "Draft" : "Vázlat",
     "Message sent" : "Üzenet elküldve",
     "Could not send message" : "Nem sikerült elküldeni az üzenetet",

@@ -240,7 +240,6 @@
     "_{total} message_::_{total} messages_" : ["{total} 封郵件"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{total} 中的 {unread} 未讀"],
     "Outbox" : "發件箱",
-    "Outbox draft" : "發件箱草稿",
     "Draft" : "草稿",
     "Message sent" : "已傳送訊息",
     "Could not send message" : "無法發送消息",

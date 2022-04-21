@@ -242,7 +242,6 @@ OC.L10N.register(
     "_{total} message_::_{total} messages_" : ["{total} zpráva","{total} zprávy","{total} zpráv","{total} zprávy"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} nepřečtený z {total}","{unread} nepřečtené z {total}","{unread} nepřečtených z {total}","{unread} nepřečtené z {total}"],
     "Outbox" : "Odchozí pošta",
-    "Outbox draft" : "Koncepty odchozí pošty",
     "Draft" : "Koncept",
     "Message sent" : "Zpráva odeslána",
     "Could not send message" : "Zprávu se nepodařilo odeslat",

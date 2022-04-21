@@ -242,7 +242,6 @@ OC.L10N.register(
     "_{total} message_::_{total} messages_" : ["{total} 封郵件"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{total} 中的 {unread} 未讀"],
     "Outbox" : "寄件匣",
-    "Outbox draft" : "寄件匣草稿",
     "Draft" : "草稿",
     "Message sent" : "已傳送郵件",
     "Could not send message" : "無法傳送郵件",

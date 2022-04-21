@@ -241,7 +241,6 @@ OC.L10N.register(
     "_{total} message_::_{total} messages_" : ["{total} Nachricht","{total} Nachrichten"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} ungelesene von {total}","{unread} ungelesene von {total}"],
     "Outbox" : "Postausgang",
-    "Outbox draft" : "Postausgang Entwurf",
     "Draft" : "Entwurf",
     "Message sent" : "Nachricht wurde gesendet",
     "Could not send message" : "Nachricht konnte nicht gelöscht werden",

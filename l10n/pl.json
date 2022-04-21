@@ -240,7 +240,6 @@
     "_{total} message_::_{total} messages_" : ["{total} wiadomość","{total} wiadomości","{total} wiadomości","{total} wiadomości"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} nieprzeczytana z {total}","{unread} nieprzeczytane z {total}","{unread} nieprzeczytanych z {total}","{unread} nieprzeczytanych z {total}"],
     "Outbox" : "Skrzynka nadawcza",
-    "Outbox draft" : "Wersje robocze w skrzynce nadawczej",
     "Draft" : "Wersja robocza",
     "Message sent" : "Wiadomość wysłana",
     "Could not send message" : "Nie udało się wysłać wiadomości",
