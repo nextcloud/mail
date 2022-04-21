@@ -476,6 +476,11 @@ export default {
 			// but to append the signature a onInput event is required.
 			bodyVal = '<p></p><p></p>'
 		}
+
+		// Set default custom date time picker value to now + 1 hour
+		const selectedDate = new Date()
+		selectedDate.setHours(selectedDate.getHours() + 1)
+
 		return {
 			showCC: this.cc.length > 0,
 			selectedAlias: NO_ALIAS_SET, // Fixed in `beforeMount`
@@ -511,7 +516,7 @@ export default {
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
 			isMoreActionsOpen: false,
-			selectedDate: new Date(),
+			selectedDate,
 			isCustomSendTime: false,
 			sendAtVal: this.sendAt,
 			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
