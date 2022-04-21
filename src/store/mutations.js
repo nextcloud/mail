@@ -30,11 +30,7 @@ import { sortMailboxes } from '../imap/MailboxSorter'
 import { normalizedEnvelopeListId } from './normalization'
 import { UNIFIED_ACCOUNT_ID } from './constants'
 
-const addMailboxToState = curry((state, account, mailbox) => {
-	mailbox.accountId = account.id
-	mailbox.mailboxes = []
-	Vue.set(mailbox, 'envelopeLists', {})
-
+const transformMailboxName = (account, mailbox) => {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
 	const nameWithoutPrefix = account.personalNamespace
 		? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
@@ -58,6 +54,14 @@ const addMailboxToState = curry((state, account, mailbox) => {
 		mailbox.displayName = nameWithoutPrefix
 		mailbox.path = ''
 	}
+}
+
+const addMailboxToState = curry((state, account, mailbox) => {
+	mailbox.accountId = account.id
+	mailbox.mailboxes = []
+	Vue.set(mailbox, 'envelopeLists', {})
+
+	transformMailboxName(account, mailbox)
 
 	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
 	const parent = Object.values(state.mailboxes)
@@ -155,6 +159,8 @@ export default {
 		addMailboxToState(state, account, mailbox)
 	},
 	updateMailbox(state, { mailbox }) {
+		const account = state.accounts[mailbox.accountId]
+		transformMailboxName(account, mailbox)
 		Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
 	},
 	removeMailbox(state, { id }) {
