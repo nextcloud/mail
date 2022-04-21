@@ -16,6 +16,10 @@ jobs:
         nextcloud-versions: ['stable21', 'stable22', 'stable23']
         include:
             - php-versions: 7.4
+              nextcloud-versions: stable24
+            - php-versions: 8.0
+              nextcloud-versions: stable24
+            - php-versions: 7.4
               nextcloud-versions: master
             - php-versions: 8.0
               nextcloud-versions: master
