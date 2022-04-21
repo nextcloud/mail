@@ -1007,8 +1007,14 @@ export default {
 		 */
 		disabledDatetimepickerTime(date) {
 			const now = new Date()
-			const minimumDate = new Date(now.getTime())
-			return date.getTime() <= minimumDate
+
+			// Only compare minutes and seconds to allow the current hour to be selected
+			now.setSeconds(0)
+			now.setMilliseconds(0)
+			date.setSeconds(0)
+			date.setMilliseconds(0)
+
+			return date < now
 		},
 	},
 }
