@@ -24,11 +24,24 @@ import * as OutboxService from '../../service/OutboxService'
 import logger from '../../logger'
 
 export default {
-	async fetchMessages({ commit }) {
+	async fetchMessages({ getters, commit }) {
+		const existingMessageIds = getters.getAllMessages.map(msg => msg.id)
 		const { messages } = await OutboxService.fetchMessages()
+
 		for (const message of messages) {
-			commit('addMessage', { message })
+			if (existingMessageIds.indexOf(message.id) === -1) {
+				commit('addMessage', { message })
+			} else {
+				commit('updateMessage', { message })
+			}
 		}
+
+		for (const existingMessageId of existingMessageIds) {
+			if (!messages.find(msg => msg.id === existingMessageId)) {
+				commit('deleteMessage', { id: existingMessageId })
+			}
+		}
+
 		return messages
 	},
 
