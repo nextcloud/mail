@@ -42,6 +42,11 @@
 				:close-after-click="true"
 				@click="sendMessage">
 				{{ t('mail', 'Send now') }}
+				<template #icon>
+					<Send
+						:title="t('mail', 'Send now')"
+						:size="20" />
+				</template>
 			</ActionButton>
 			<ActionButton
 				icon="icon-delete"
@@ -65,6 +70,7 @@ import logger from '../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match'
 import { html, plain } from '../util/text'
+import Send from 'vue-material-design-icons/Send'
 
 export default {
 	name: 'OutboxMessageListItem',
@@ -72,6 +78,7 @@ export default {
 		ListItem,
 		Avatar,
 		ActionButton,
+		Send,
 	},
 	mixins: [
 		OutboxAvatarMixin,
