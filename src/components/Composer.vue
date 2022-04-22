@@ -238,7 +238,7 @@
 						</ActionRadio>
 						<ActionRadio :value="dateTomorrowMorning"
 							name="sendLater"
-							:checked="Math.floor(dateTomorrowMorning / 1000) === Math.floor(sendAtVal / 1000)"
+							:checked="isSendAtTomorrowMorning"
 							class="send-action-radio send-action-radio--multiline"
 							@update:checked="sendAtVal = dateTomorrowMorning"
 							@change="onChangeSendLater(dateTomorrowMorning)">
@@ -246,7 +246,7 @@
 						</ActionRadio>
 						<ActionRadio :value="dateTomorrowAfternoon"
 							name="sendLater"
-							:checked="Math.floor(dateTomorrowAfternoon / 1000) === Math.floor(sendAtVal / 1000)"
+							:checked="isSendAtTomorrowAfternoon"
 							class="send-action-radio send-action-radio--multiline"
 							@update:checked="sendAtVal = dateTomorrowAfternoon"
 							@change="onChangeSendLater(dateTomorrowAfternoon)">
@@ -254,7 +254,7 @@
 						</ActionRadio>
 						<ActionRadio :value="dateMondayMorning"
 							name="sendLater"
-							:checked="Math.floor(dateMondayMorning / 1000) === Math.floor(sendAtVal / 1000)"
+							:checked="isSendAtMondayMorning"
 							class="send-action-radio send-action-radio--multiline"
 							@update:checked="sendAtVal = dateMondayMorning"
 							@change="onChangeSendLater(dateMondayMorning)">
@@ -262,7 +262,7 @@
 						</ActionRadio>
 						<ActionRadio name="sendLater"
 							class="send-action-radio"
-							:checked="Math.floor(customSendTime / 1000) === Math.floor(sendAtVal / 1000) || isCustomSendTime"
+							:checked="isSendAtCustom"
 							:value="customSendTime"
 							@update:checked="sendAtVal = customSendTime"
 							@change="onChangeSendLater(customSendTime)">
@@ -279,7 +279,7 @@
 							:show-second="false"
 							:disabled-date="disabledDatetimepickerDate"
 							:disabled-time="disabledDatetimepickerTime"
-							@change="onChangeSendLater(customSendTime, true)">
+							@change="onChangeSendLater(customSendTime)">
 							{{ t('mail', 'Enter a date') }}
 						</ActionInput>
 					</template>
@@ -521,7 +521,6 @@ export default {
 			loadingIndicatorBcc: false,
 			isMoreActionsOpen: false,
 			selectedDate,
-			isCustomSendTime: false,
 			sendAtVal: this.sendAt,
 			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
 			formatter: {
@@ -626,6 +625,24 @@ export default {
 
 			return timeFormat.indexOf('a') !== -1
 		},
+		isSendAtTomorrowMorning() {
+			return this.sendAtVal
+				&& Math.floor(this.dateTomorrowMorning / 1000) === Math.floor(this.sendAtVal / 1000)
+		},
+		isSendAtTomorrowAfternoon() {
+			return this.sendAtVal
+				&& Math.floor(this.dateTomorrowAfternoon / 1000) === Math.floor(this.sendAtVal / 1000)
+		},
+		isSendAtMondayMorning() {
+			return this.sendAtVal
+				&& Math.floor(this.dateMondayMorning / 1000) === Math.floor(this.sendAtVal / 1000)
+		},
+		isSendAtCustom() {
+			return this.sendAtVal
+				&& !this.isSendAtTomorrowMorning
+				&& !this.isSendAtTomorrowAfternoon
+				&& !this.isSendAtMondayMorning
+		},
 	},
 	watch: {
 		'$route.params.threadId'() {
@@ -696,6 +713,11 @@ export default {
 				type: 'message',
 			})
 		})
+
+		// Set custom date and time picker value if initialized with custom send at value
+		if (this.sendAt && this.isSendAtCustom) {
+			this.selectedDate = new Date(this.sendAt)
+		}
 	},
 	beforeDestroy() {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
@@ -821,8 +843,7 @@ export default {
 				this.appendSignature = false
 			}
 		},
-		onChangeSendLater(value, isCustomSendTime = false) {
-			this.isCustomSendTime = isCustomSendTime
+		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
 		},
 		convertToLocalDate(timestamp) {
