@@ -118,6 +118,7 @@ export default {
 				await this.$store.dispatch('outbox/deleteMessage', {
 					id: this.message.id,
 				})
+				showSuccess(t('mail', 'Message deleted'))
 			} catch (error) {
 				showError(await matchError(error, {
 					default(error) {
