@@ -240,6 +240,7 @@
     "_{total} message_::_{total} messages_" : ["{total} съобщения","{total} съобщения"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} непрочетени от {total}","{unread} непрочетени от {total}"],
     "Outbox" : "Изходящи",
+    "Edit message" : "Редактиране на съобщение",
     "Draft" : "Чернова",
     "Message sent" : "Съобщението е изпратено",
     "Could not send message" : "Не можа да се изпрати съобщение",

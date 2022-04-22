@@ -240,6 +240,7 @@
     "_{total} message_::_{total} messages_" : ["{total} Nachricht","{total} Nachrichten"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} ungelesene von {total}","{unread} ungelesene von {total}"],
     "Outbox" : "Postausgang",
+    "Edit message" : "Nachricht bearbeiten",
     "Draft" : "Entwurf",
     "Message sent" : "Nachricht versandt",
     "Could not send message" : "Nachricht kann nicht versandt werden",
