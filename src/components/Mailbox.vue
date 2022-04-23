@@ -60,6 +60,7 @@ import EmptyMailboxSection from './EmptyMailboxSection'
 import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
+import _ from 'lodash'
 
 export default {
 	name: 'Mailbox',
@@ -177,6 +178,7 @@ export default {
 		this.bus.$on('delete', this.onDelete)
 		this.bus.$on('shortcut', this.handleShortcut)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
+		this.loadEnvelopes = _.debounce(this.loadEnvelopes, 1)
 	},
 	async mounted() {
 		this.loadEnvelopes()
