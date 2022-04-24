@@ -249,6 +249,7 @@ OC.L10N.register(
     "No message selected" : "Herhangi bir ileti seçilmemiş",
     "Could not open outbox" : "Giden kutusu açılamadı",
     "Delete" : "Sil",
+    "Message deleted" : "İleti silindi",
     "Contacts with this address" : "Bu adresi kullanan kişiler",
     "Add to Contact" : "Kişiye ekle",
     "New Contact" : "Yeni kişi",

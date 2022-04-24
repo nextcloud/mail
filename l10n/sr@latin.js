@@ -1,6 +1,7 @@
 OC.L10N.register(
     "mail",
     {
+    "Work" : "Posao",
     "Mail" : "Pošta",
     "Name" : "naziv",
     "Password" : "Password",
@@ -10,7 +11,10 @@ OC.L10N.register(
     "Cancel" : "Otkaži",
     "Select account" : "Označite nalog",
     "Send" : "Pošalji",
+    "Favorite" : "Omiljene",
+    "Read" : "Čitaj",
     "Select" : "Obeleži",
+    "Create" : "Napravi",
     "Choose" : "Odaberi",
     "Favorites" : "Omiljene",
     "Other" : "Ostali",
@@ -22,6 +26,9 @@ OC.L10N.register(
     "Mark all as read" : "Označi sve kao pročitano",
     "Clear cache" : "Očisti keš",
     "Delete" : "Delete",
+    "Add" : "Dodaj",
+    "Unset" : "Ukloni",
+    "Remove" : "Ukloni",
     "General" : "Opšte",
     "User" : "User",
     "Search" : "Search",
