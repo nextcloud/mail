@@ -1,6 +1,9 @@
 OC.L10N.register(
     "mail",
     {
+    "Important" : "សំខាន់",
+    "Work" : "ធ្វើការ",
+    "Personal" : "ផ្ទាល់​ខ្លួន",
     "Mail" : "សំបុត្រ",
     "Name" : "ឈ្មោះ",
     "Password" : "ពាក្យសម្ងាត់",
@@ -11,6 +14,7 @@ OC.L10N.register(
     "Sending …" : "កំពុង​ផ្ញើរ...",
     "Send" : "ផ្ញើ",
     "Select" : "Select",
+    "Create" : "បង្កើត",
     "Choose" : "ជ្រើស",
     "Favorites" : "Favorites",
     "Other" : "ផ្សេងៗ",
@@ -18,6 +22,10 @@ OC.L10N.register(
     "Move" : "Move",
     "Settings" : "ការកំណត់",
     "Delete" : "លុប",
+    "Add" : "បញ្ចូល",
+    "Disabled" : "បាន​បិទ",
+    "Enabled" : "បាន​បើក",
+    "Remove" : "ដកចេញ",
     "General" : "ទូទៅ",
     "User" : "User",
     "Host" : "ម៉ាស៊ីន​ផ្ទុក",

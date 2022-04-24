@@ -1,0 +1,27 @@
+OC.L10N.register(
+    "mail",
+    {
+    "Important" : "اہم",
+    "Work" : "کام",
+    "Personal" : "شخصی",
+    "Name" : "اسم",
+    "Password" : "پاسورڈ",
+    "Save" : "حفظ",
+    "Connect" : "منسلک",
+    "Cancel" : "منسوخ کریں",
+    "Send" : "بھجیں",
+    "Select" : "Select",
+    "Edit tags" : "ترمیم ٹیگز",
+    "Choose" : "منتخب کریں",
+    "Favorites" : "Favorites",
+    "Other" : "دیگر",
+    "Reply" : "جواب",
+    "Move" : "Move",
+    "Settings" : "سیٹینگز",
+    "Delete" : "حذف کریں",
+    "Add" : "شامل کریں",
+    "Reset" : "ری سیٹ",
+    "User" : "User",
+    "Search" : "Search"
+},
+"nplurals=2; plural=(n != 1);");

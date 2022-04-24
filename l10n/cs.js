@@ -249,6 +249,7 @@ OC.L10N.register(
     "No message selected" : "Nevybrána žádná zpráva",
     "Could not open outbox" : "Nepodaří se otevřít odchozí poštu",
     "Delete" : "Smazat",
+    "Message deleted" : "Zpráva smazána",
     "Contacts with this address" : "Kontakty s touto adresou",
     "Add to Contact" : "Přidat do kontaktů",
     "New Contact" : "Nový kontakt",

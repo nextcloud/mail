@@ -5,6 +5,10 @@ OC.L10N.register(
     "Updating account failed: " : "به روزرسانی حساب انجام نشد:",
     "Embedded message %s" : "پیام درج شده%s",
     "Important mail" : "ایمیل‌های مهم",
+    "Important" : "مهم",
+    "Work" : "کار",
+    "Personal" : "شخصی",
+    "Later" : "بعدا",
     "Mails" : "ایمیل‌ها",
     "Mail" : "ایمیل",
     "💌 A mail app for Nextcloud" : "یک برنامه نامه پستی برای Nextcloud",
@@ -36,6 +40,7 @@ OC.L10N.register(
     "Writing mode" : "حالت نوشتن",
     "Preferred writing mode for new messages and replies." : "حالت نوشتن برای پیام ها و پاسخ های جدید ترجیح داده شده است.",
     "Mail server" : "سرور پست الکترونیکی",
+    "Email address" : "آدرس ایمیل",
     "Cancel" : "لغو",
     "Add mail account" : "حساب کاربری پست الکترونیکی اضافه کنید",
     "Use Gravatar and favicon avatars" : "از آواتارهای Gravatar و Favicon استفاده کنید",
@@ -55,6 +60,7 @@ OC.L10N.register(
     "Add attachment from Files" : "پیوست را از پرونده ها اضافه کنید",
     "Enable formatting" : "قالب بندی را فعال کنید",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "آیا به دنبال راهی برای رمزگذاری ایمیل های خود هستید؟ افزونه مرورگر Mailvelope را نصب کنید!",
+    "Enter a date" : "تاریخ را وارد کنید",
     "Uploading attachments …" : "درحال بارگذاری پیوستها …",
     "Sending …" : "در حال ارسال ...",
     "Error sending your message" : "خطایی در ارسال پیام شما",
@@ -67,10 +73,17 @@ OC.L10N.register(
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",
     "Draft: " : "پیش نویس:",
+    "Unfavorite" : "ناخوشایند",
+    "Favorite" : "مورد‌ ‌علاقه‌",
+    "Read" : "خواندن",
     "Unselect" : "لغو انتخاب",
     "Select" : "انتخاب",
+    "Edit tags" : "ویرایش تگ ها",
+    "More actions" : "اقدامات بیشتر",
     "Blind copy recipients only" : "فقط گیرندگان کپی کور",
     "Report this bug" : "گزارش این اشکال",
+    "All day" : "تمام روز",
+    "Create" : "ساخت",
     "Could not create event" : "رویداد ایجاد نشد",
     "Could not open mailbox" : "صندوق پستی امکان پذیر نیست",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "نمایه سازی پیام های شما این می تواند کمی برای صندوق های پستی بزرگتر کمی طولانی شود.",
@@ -100,11 +113,20 @@ OC.L10N.register(
     "Mark all as read" : "علامت همه به عنوان خوانده‌شده",
     "Edit name" : "ویرایش نام",
     "Clear cache" : "پاک‌سازی انباره",
+    "Message sent" : "پیام ارسال شد",
     "No message selected" : "پیامی انتخاب نشده است",
     "Delete" : "حذف",
+    "Copy to clipboard" : "کپی کردن به حافظه موقت",
+    "Add" : "افزودن",
+    "Disabled" : "غیرفعال شده",
+    "Enabled" : "فعال شده",
     "Signature …" : "امضا ...",
     "Save signature" : "ذخیره امضا",
+    "Set" : "تنظیم",
+    "Unset" : "تنظیم نشده است",
+    "Add tag" : "برچسب اضافه کنید",
     "Not found" : "پیدا نشد",
+    "Remove" : "حذف",
     "Import into {calendar}" : "{وارد {تقویم",
     "Event imported into {calendar}" : "{رویداد وارد شده به {تقویم",
     "Airplane" : "هواپیما",
@@ -115,6 +137,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "آموزش از {depStation} تا {arrStation} Train",
     "Mail app" : "برنامه پست الکترونیکی",
     "The mail app allows users to read mails on their IMAP accounts." : "برنامه نامه الکترونیکی به کاربران این امکان را می دهد تا نامه ها را در حساب های IMAP خود بخوانند.",
+    "Reset" : "بازنشاندن",
     "Email: {email}" : "ایمیل: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} on {host}: {port} (رمزگذاری {ssl))",
     "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP: {user} on {host}: {port} (رمزگذاری s ssl))",
