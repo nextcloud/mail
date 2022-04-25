@@ -302,10 +302,6 @@
 		:hint="t('mail', 'Sending …')"
 		role="alert"
 		class="sending-hint" />
-	<Loading v-else-if="state === STATES.DISCARDING" :hint="t('mail', 'Discarding …')" class="emptycontent" />
-	<EmptyContent v-else-if="state === STATES.DISCARDED" icon="icon-mail">
-		<h2>{{ t('mail', 'Draft was discarded!') }}</h2>
-	</EmptyContent>
 	<div v-else-if="state === STATES.ERROR" class="emptycontent" role="alert">
 		<h2>{{ t('mail', 'Error sending your message') }}</h2>
 		<p v-if="errorText">
@@ -350,7 +346,7 @@ import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionRadio from '@nextcloud/vue/dist/Components/ActionRadio'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import { showError } from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t, getCanonicalLocale, getFirstDay, getLocale } from '@nextcloud/l10n'
 import Vue from 'vue'
 
@@ -389,8 +385,6 @@ const STATES = Object.seal({
 	ERROR: 3,
 	WARNING: 4,
 	FINISHED: 5,
-	DISCARDING: 6,
-	DISCARDED: 7,
 })
 
 export default {
@@ -1008,10 +1002,9 @@ export default {
 			return `${alias.name} <${alias.emailAddress}>`
 		},
 		async discardDraft() {
-			this.state = STATES.DISCARDING
 			const id = await this.draftsPromise
 			await this.$store.dispatch('deleteMessage', { id })
-			this.state = STATES.DISCARDED
+			showSuccess(t('mail', 'Message discarded'))
 			this.$emit('close')
 		},
 		/**
