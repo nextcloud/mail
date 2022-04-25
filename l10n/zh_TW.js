@@ -249,6 +249,7 @@ OC.L10N.register(
     "No message selected" : "未選取郵件",
     "Could not open outbox" : "無法開啟寄件匣",
     "Delete" : "刪除",
+    "Message deleted" : "郵件已刪除",
     "Contacts with this address" : "有此地址的聯絡人",
     "Add to Contact" : "新增至聯絡人",
     "New Contact" : "新聯絡人",
