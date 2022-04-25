@@ -249,6 +249,7 @@ OC.L10N.register(
     "No message selected" : "Nie wybrano żadnej wiadomości",
     "Could not open outbox" : "Nie udało się otworzyć skrzynki nadawczej",
     "Delete" : "Usuń",
+    "Message deleted" : "Wiadomość usunięta",
     "Contacts with this address" : "Kontakty z adresem",
     "Add to Contact" : "Dodaj do kontaktu",
     "New Contact" : "Nowy kontakt",
