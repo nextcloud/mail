@@ -18,7 +18,7 @@
     "Deleted messages are moved in:" : "已刪除的郵件移動至：",
     "Auto" : "自動",
     "Name" : "姓名",
-    "Mail address" : "郵件地址",
+    "Mail address" : "電郵地址",
     "name@example.org" : "name@example.org",
     "Please enter an email of the format name@example.com" : "請輸入格式為 name@example.com 的電郵地址",
     "Password" : "密碼",
