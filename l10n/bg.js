@@ -249,6 +249,7 @@ OC.L10N.register(
     "No message selected" : "Не е избрано съобщение",
     "Could not open outbox" : "Не можаха да се отворят изходящите",
     "Delete" : "Изтриване",
+    "Message deleted" : "Съобщението е изтрито ",
     "Contacts with this address" : "Контакти с този адрес",
     "Add to Contact" : "Добавяне към контакт",
     "New Contact" : "Нов контакт",
