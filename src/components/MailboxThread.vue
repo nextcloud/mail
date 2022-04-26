@@ -238,6 +238,11 @@ export default {
 	padding: 16px;
 }
 
+.app-content-list {
+	// Required for centering the loading indicator
+	display: flex;
+}
+
 .app-content-list-item:hover {
 	background: transparent;
 }

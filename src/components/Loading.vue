@@ -1,12 +1,14 @@
 <template>
-	<div v-if="hint" class="emptycontent">
-		<a class="icon-loading" />
-		<h2>{{ hint }}</h2>
-		<transition name="fade">
-			<em v-if="slowHint && slow">{{ slowHint }}</em>
-		</transition>
+	<div class="wrapper">
+		<div v-if="hint" class="emptycontent">
+			<a class="icon-loading" />
+			<h2>{{ hint }}</h2>
+			<transition name="fade">
+				<em v-if="slowHint && slow">{{ slowHint }}</em>
+			</transition>
+		</div>
+		<div v-else class="container icon-loading" />
 	</div>
-	<div v-else class="container icon-loading" />
 </template>
 
 <script>
@@ -51,5 +53,12 @@ export default {
 .fade-enter,
 .fade-leave-to {
 	opacity: 0;
+}
+
+.wrapper {
+	display: flex;
+	justify-content: space-around;
+	flex-direction: column;
+	flex: 1 auto;
 }
 </style>
