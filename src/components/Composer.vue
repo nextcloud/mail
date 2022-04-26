@@ -1003,8 +1003,12 @@ export default {
 		},
 		async discardDraft() {
 			const id = await this.draftsPromise
-			await this.$store.dispatch('deleteMessage', { id })
-			showSuccess(t('mail', 'Message discarded'))
+			try {
+				await this.$store.dispatch('deleteMessage', { id })
+				showSuccess(t('mail', 'Message discarded'))
+			} catch (error) {
+				showError(t('mail', 'Could not discard message'))
+			}
 			this.$emit('close')
 		},
 		/**
