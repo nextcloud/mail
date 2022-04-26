@@ -88,4 +88,5 @@ export const getters = {
 	getTags: (state) => {
 		return state.tagList.map(tagId => state.tags[tagId])
 	},
+	isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
 }

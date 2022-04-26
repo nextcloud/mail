@@ -211,10 +211,15 @@ class PageControllerTest extends TestCase {
 				['debug', false, true],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->once())
+		$this->config->expects($this->exactly(2))
 			->method('getAppValue')
-			->with('mail', 'installed_version')
-			->will($this->returnValue('1.2.3'));
+			->withConsecutive(
+				[ 'mail', 'installed_version' ],
+				['core', 'backgroundjobs_mode', 'ajax' ]
+			)->willReturnOnConsecutiveCalls(
+				$this->returnValue('1.2.3'),
+				$this->returnValue('cron')
+			);
 		$user->expects($this->once())
 			->method('getDisplayName')
 			->will($this->returnValue('Jane Doe'));
@@ -225,7 +230,7 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(7))
+		$this->initialState->expects($this->exactly(8))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -234,7 +239,8 @@ class PageControllerTest extends TestCase {
 				['tags', []],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
-				['outbox-messages', []]
+				['outbox-messages', []],
+				['disable-scheduled-send', false]
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index',

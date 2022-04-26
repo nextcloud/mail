@@ -181,7 +181,10 @@
 								addShareLink
 							}}
 						</ActionButton>
-						<ActionButton :close-after-click="false" @click="isMoreActionsOpen=true">
+						<ActionButton
+							v-if="!isScheduledSendingDisabled"
+							:close-after-click="false"
+							@click="isMoreActionsOpen=true">
 							<template #icon>
 								<SendClock :size="20" :title="t('mail', 'Send later')" />
 							</template>
@@ -375,6 +378,7 @@ import ManyRecipientsError
 import Send from 'vue-material-design-icons/Send'
 import SendClock from 'vue-material-design-icons/SendClock'
 import moment from '@nextcloud/moment'
+import { mapGetters } from 'vuex'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -534,6 +538,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters([
+			'isScheduledSendingDisabled',
+		]),
 		aliases() {
 			let cnt = 0
 			const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
