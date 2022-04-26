@@ -181,6 +181,13 @@ class PageController extends Controller {
 			$this->outboxService->getMessages($user->getUID())
 		);
 
+		// Disable scheduled send in frontend if ajax cron is used because it is unreliable
+		$cronMode = $this->config->getAppValue('core', 'backgroundjobs_mode', 'ajax');
+		$this->initialStateService->provideInitialState(
+			'disable-scheduled-send',
+			$cronMode === 'ajax',
+		);
+
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$response->setContentSecurityPolicy($csp);
