@@ -68,7 +68,6 @@ class ManagerTest extends TestCase {
 		$config->setEmailTemplate('%USER%@batman.com');
 		$configs = [$config];
 		$account = new MailAccount();
-		$account->setProvisioningId(2);
 		$this->mock->getParameter('mailAccountMapper')
 			->expects($this->once())
 			->method('findProvisionedAccount')
