@@ -34,6 +34,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\LDAP\ILDAPProvider;
@@ -67,6 +68,9 @@ class Manager {
 	/** @var TagMapper */
 	private $tagMapper;
 
+	/** @var ICacheFactory */
+	private $cacheFactory;
+
 	public function __construct(IUserManager $userManager,
 								ProvisioningMapper $provisioningMapper,
 								MailAccountMapper $mailAccountMapper,
@@ -74,7 +78,8 @@ class Manager {
 								ILDAPProviderFactory $ldapProviderFactory,
 								AliasMapper $aliasMapper,
 								LoggerInterface $logger,
-								TagMapper $tagMapper) {
+								TagMapper $tagMapper,
+								ICacheFactory $cacheFactory) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -83,6 +88,7 @@ class Manager {
 		$this->aliasMapper = $aliasMapper;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
+		$this->cacheFactory = $cacheFactory;
 	}
 
 	public function getConfigById(int $provisioningId): ?Provisioning {
@@ -90,7 +96,21 @@ class Manager {
 	}
 
 	public function getConfigs(): array {
-		return $this->provisioningMapper->getAll();
+		$cache = null;
+		if ($this->cacheFactory->isLocalCacheAvailable()) {
+			$cache = $this->cacheFactory->createLocal('provisionings');
+			$cached = $cache->get('provisionings_all');
+			if ($cached !== null) {
+				return unserialize($cached, ['allowed_classes' => [Provisioning::class]]);
+			}
+		}
+
+		$provisionings = $this->provisioningMapper->getAll();
+		// let's cache the provisionings for 5 minutes
+		if ($this->cacheFactory->isLocalCacheAvailable()) {
+			$cache->set('provisionings_all', serialize($provisionings), 60 * 5);
+		}
+		return $provisionings;
 	}
 
 	public function provision(): int {
