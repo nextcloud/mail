@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d7e95275c7b85c9ba465ce894cb6f61",
+    "content-hash": "4f5c70428498924594eb4e615f2b9388",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1015,36 +1015,6 @@
                 "LGPL-2.1"
             ],
             "description": "A library that provides blowfish encryption/decryption for PHP string data."
-        },
-        {
-            "name": "pear-pear.horde.org/Horde_Date",
-            "version": "2.4.1",
-            "dist": {
-                "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Date-2.4.1.tgz"
-            },
-            "require": {
-                "pear-pear.horde.org/horde_exception": "<3.0.0.0",
-                "pear-pear.horde.org/horde_nls": "<3.0.0.0",
-                "pear-pear.horde.org/horde_translation": "<3.0.0.0",
-                "php": "<8.0.0.0"
-            },
-            "replace": {
-                "pear-horde/horde_date": "== 2.4.1.0"
-            },
-            "type": "pear-library",
-            "autoload": {
-                "classmap": [
-                    ""
-                ]
-            },
-            "include-path": [
-                "/"
-            ],
-            "license": [
-                "LGPL-2.1"
-            ],
-            "description": "Package for creating and manipulating dates."
         },
         {
             "name": "pear-pear.horde.org/Horde_Exception",
@@ -2720,7 +2690,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "pear-pear.horde.org/horde_date": 0,
         "pear-pear.horde.org/horde_exception": 0,
         "pear-pear.horde.org/horde_imap_client": 0,
         "pear-pear.horde.org/horde_mail": 0,
