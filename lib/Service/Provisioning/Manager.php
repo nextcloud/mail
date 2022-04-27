@@ -174,12 +174,12 @@ class Manager {
 		}
 
 		try {
-			// TODO: match by UID only, catch multiple objects returned below and delete all those accounts
 			$mailAccount = $this->mailAccountMapper->findProvisionedAccount($user);
-
-			$mailAccount = $this->mailAccountMapper->update(
-				$this->updateAccount($user, $mailAccount, $provisioning)
-			);
+			if (!$this->isUpToDate($user, $mailAccount, $provisioning)) {
+				$mailAccount = $this->mailAccountMapper->update(
+					$this->updateAccount($user, $mailAccount, $provisioning)
+				);
+			}
 		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
 			if ($e instanceof MultipleObjectsReturnedException) {
 				// This is unlikely to happen but not impossible.
@@ -272,6 +272,21 @@ class Manager {
 		}
 
 		return $account;
+	}
+
+	private function isUpToDate(IUser $user, MailAccount $account, Provisioning $provisioning): bool {
+		return $account->getProvisioningId() === $provisioning->getId()
+			&& $account->getEmail() === $provisioning->buildEmail($user)
+			&& $account->getName() === $user->getDisplayName()
+			&& $account->getInboundUser() === $provisioning->buildImapUser($user)
+			&& $account->getInboundHost() === $provisioning->getImapHost()
+			&& $account->getInboundPort() === $provisioning->getImapPort()
+			&& $account->getInboundSslMode() === $provisioning->getImapSslMode()
+			&& $account->getOutboundUser() === $provisioning->buildSmtpUser($user)
+			&& $account->getOutboundHost() === $provisioning->getSmtpHost()
+			&& $account->getOutboundPort() === $provisioning->getSmtpPort()
+			&& $account->getOutboundSslMode() === $provisioning->getSmtpSslMode()
+			&& $account->isSieveEnabled() === $provisioning->getSieveEnabled();
 	}
 
 	public function deprovision(Provisioning $provisioning): void {
