@@ -26,10 +26,10 @@ jobs:
           - name: Install dependencies
             run: composer i
           - name: Install OCP package
-            if: ${{ matrix.ocp-version != 'dev-master' }}
+            if: ${{ matrix.ocp-version != 'dev-master' && matrix.ocp-version != 'dev-stable24'  }}
             run: composer require --dev christophwurst/nextcloud:${{ matrix.ocp-version }}
           - name: Install OCP package
-            if: ${{ matrix.ocp-version == 'dev-master' }}
+            if: ${{ matrix.ocp-version == 'dev-master' || matrix.ocp-version == 'dev-stable24' }}
             run: composer require --dev christophwurst/nextcloud:${{ matrix.ocp-version }} --ignore-platform-reqs
           - name: Run coding standards check
             run: composer run psalm
