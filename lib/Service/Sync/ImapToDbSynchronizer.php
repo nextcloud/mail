@@ -413,7 +413,7 @@ class ImapToDbSynchronizer {
 				);
 				$perf->step('get changed messages via Horde');
 
-				$permflagsEnabled = $this->mailManager->isPermflagsEnabled($account, $mailbox->getName());
+				$permflagsEnabled = $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
 
 				foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
 					$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
