@@ -29,7 +29,7 @@
 				:email="envelope.from[0].email"
 				:display-name="envelope.from[0].label"
 				:disable-tooltip="true"
-				:size="40" />
+				:size="44" />
 			<div
 				v-if="isImportant"
 				class="app-content-list-item-star icon-important"
@@ -441,6 +441,7 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-left: 8px;
+		font-weight: bold;
 	}
 
 	.right {
@@ -591,7 +592,7 @@ export default {
 		left: 4px;
 	}
 	.envelope--header.list-item-style {
-		border-radius: 16px;
+		border-radius: 16px 16px 0 0;
 	}
 	.junk-favorite-position-with-tag-subline {
 		margin-bottom: 14px !important;
