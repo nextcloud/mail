@@ -298,10 +298,10 @@
       <code>UserDeletedListener</code>
     </MissingDependency>
   </file>
-  <file src="lib/Migration/Version1105Date20210922104324.php">
-    <ImplicitToStringCast occurrences="1">
-      <code>$qb-&gt;createNamedParameter($accountIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
-    </ImplicitToStringCast>
+  <file src="lib/Migration/Version1120Date20220412111833.php">
+    <UndefinedClass occurrences="1">
+      <code>PostgreSQL94Platform</code>
+    </UndefinedClass>
   </file>
   <file src="lib/Service/Classification/ImportanceClassifier.php">
     <InvalidScalarArgument occurrences="1">
