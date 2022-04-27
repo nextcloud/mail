@@ -263,24 +263,24 @@ class MessageMapper extends QBMapper {
 		try {
 			$qb1 = $this->db->getQueryBuilder();
 			$qb1->insert($this->getTableName());
-			$qb1->setValue('uid', $qb1->createParameter('uid'));
-			$qb1->setValue('message_id', $qb1->createParameter('message_id'));
-			$qb1->setValue('references', $qb1->createParameter('references'));
-			$qb1->setValue('in_reply_to', $qb1->createParameter('in_reply_to'));
-			$qb1->setValue('thread_root_id', $qb1->createParameter('thread_root_id'));
-			$qb1->setValue('mailbox_id', $qb1->createParameter('mailbox_id'));
-			$qb1->setValue('subject', $qb1->createParameter('subject'));
-			$qb1->setValue('sent_at', $qb1->createParameter('sent_at'));
-			$qb1->setValue('flag_answered', $qb1->createParameter('flag_answered'));
-			$qb1->setValue('flag_deleted', $qb1->createParameter('flag_deleted'));
-			$qb1->setValue('flag_draft', $qb1->createParameter('flag_draft'));
-			$qb1->setValue('flag_flagged', $qb1->createParameter('flag_flagged'));
-			$qb1->setValue('flag_seen', $qb1->createParameter('flag_seen'));
-			$qb1->setValue('flag_forwarded', $qb1->createParameter('flag_forwarded'));
-			$qb1->setValue('flag_junk', $qb1->createParameter('flag_junk'));
-			$qb1->setValue('flag_notjunk', $qb1->createParameter('flag_notjunk'));
-			$qb1->setValue('flag_important', $qb1->createParameter('flag_important'));
-			$qb1->setValue('flag_mdnsent', $qb1->createParameter('flag_mdnsent'));
+			$qb1->setValue('uid', $qb1->createPositionalParameter(0));
+			$qb1->setValue('message_id', $qb1->createPositionalParameter(1));
+			$qb1->setValue('references', $qb1->createPositionalParameter(2));
+			$qb1->setValue('in_reply_to', $qb1->createPositionalParameter(3));
+			$qb1->setValue('thread_root_id', $qb1->createPositionalParameter(4));
+			$qb1->setValue('mailbox_id', $qb1->createPositionalParameter(5));
+			$qb1->setValue('subject', $qb1->createPositionalParameter(6));
+			$qb1->setValue('sent_at', $qb1->createPositionalParameter(7));
+			$qb1->setValue('flag_answered', $qb1->createPositionalParameter(8));
+			$qb1->setValue('flag_deleted', $qb1->createPositionalParameter(9));
+			$qb1->setValue('flag_draft', $qb1->createPositionalParameter(10));
+			$qb1->setValue('flag_flagged', $qb1->createPositionalParameter(11));
+			$qb1->setValue('flag_seen', $qb1->createPositionalParameter(12));
+			$qb1->setValue('flag_forwarded', $qb1->createPositionalParameter(13));
+			$qb1->setValue('flag_junk', $qb1->createPositionalParameter(14));
+			$qb1->setValue('flag_notjunk', $qb1->createPositionalParameter(15));
+			$qb1->setValue('flag_important', $qb1->createPositionalParameter(16));
+			$qb1->setValue('flag_mdnsent', $qb1->createPositionalParameter(17));
 			$qb2 = $this->db->getQueryBuilder();
 
 			$qb2->insert('mail_recipients')
@@ -290,27 +290,27 @@ class MessageMapper extends QBMapper {
 				->setValue('email', $qb2->createParameter('email'));
 
 			foreach ($messages as $message) {
-				$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
-				$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(0, $message->getUid(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter(1, $message->getMessageId(), IQueryBuilder::PARAM_STR);
 				$inReplyTo = $message->getInReplyTo();
-				$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(3, $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$references = $message->getReferences();
-				$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(2, $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 				$threadRootId = $message->getThreadRootId();
-				$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
-				$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
-				$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
-				$qb1->setParameter('sent_at', $message->getSentAt(), IQueryBuilder::PARAM_INT);
-				$qb1->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
-				$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(4, $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(5, $message->getMailboxId(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter(6, $message->getSubject(), IQueryBuilder::PARAM_STR);
+				$qb1->setParameter(7, $message->getSentAt(), IQueryBuilder::PARAM_INT);
+				$qb1->setParameter(8, $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(9, $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(10, $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(11, $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(12, $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(13, $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(14, $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(15, $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(16, $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter(17, $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
 
 				$qb1->execute();
 
