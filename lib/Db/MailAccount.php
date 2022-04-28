@@ -196,7 +196,7 @@ class MailAccount extends Entity {
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
 		$this->addType('lastMailboxSync', 'integer');
-		$this->addType('provisioning_id', 'integer');
+		$this->addType('provisioningId', 'integer');
 		$this->addType('order', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
 		$this->addType('personalNamespace', 'string');
