@@ -248,6 +248,7 @@ OC.L10N.register(
     "No message selected" : "Nincs kiválasztott üzenet",
     "Could not open outbox" : "Nem sikerült megnyitni a kimenő leveleket",
     "Delete" : "Törlés",
+    "Message deleted" : "Üzenet törölve",
     "Contacts with this address" : "Névjegyek ezzel a címmel",
     "Add to Contact" : "Hozzáadás a Névjegyekhez",
     "New Contact" : "Új névjegy",

@@ -1,0 +1,28 @@
+OC.L10N.register(
+    "mail",
+    {
+    "Mail" : "Tirawt",
+    "Name" : "Nom",
+    "Password" : "Awal uffir",
+    "None" : "Ula d yiwen",
+    "Save" : "Sekles",
+    "Cancel" : "Sefsex",
+    "Send" : "Tuzna",
+    "Favorite" : "Menyif",
+    "Create" : "Snulfu-d",
+    "Choose" : "Fren",
+    "Favorites" : "Imenyafen",
+    "Forward" : "Avancer",
+    "Move" : "Senkez",
+    "Settings" : "Iɣewwaṛen",
+    "Delete" : "Kkes",
+    "Add" : "Rnu",
+    "Unset" : "Non défini",
+    "Remove" : "Kkes",
+    "General" : "Amatu",
+    "User" : "Aseqdac",
+    "Search" : "Nadi",
+    "Refresh" : "Sismeḍ",
+    "Inbox" : "Tanaka"
+},
+"nplurals=2; plural=(n != 1);");
