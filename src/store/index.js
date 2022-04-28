@@ -93,6 +93,7 @@ export default new Vuex.Store({
 				autocompleteEntries: [],
 				tags: {},
 				tagList: [],
+				isScheduledSendingDisabled: false,
 			},
 			getters,
 			mutations,
