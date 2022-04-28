@@ -177,9 +177,11 @@ class Manager {
 			// TODO: match by UID only, catch multiple objects returned below and delete all those accounts
 			$mailAccount = $this->mailAccountMapper->findProvisionedAccount($user);
 
-			$mailAccount = $this->mailAccountMapper->update(
-				$this->updateAccount($user, $mailAccount, $provisioning)
-			);
+			$updatedAccount = $this->updateAccount($user, $mailAccount, $provisioning);
+
+			if (!empty($updatedAccount->getUpdatedFields())) {
+				$mailAccount = $this->mailAccountMapper->update($updatedAccount);
+			}
 		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
 			if ($e instanceof MultipleObjectsReturnedException) {
 				// This is unlikely to happen but not impossible.
