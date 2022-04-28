@@ -17,6 +17,7 @@
 			:draft="saveDraft"
 			:send="sendMessage"
 			:forwarded-messages="forwardedMessages"
+			@discardDraft="discardDraft"
 			@close="$emit('close')" />
 	</Modal>
 </template>
@@ -26,7 +27,7 @@ import logger from '../logger'
 import { toPlain } from '../util/text'
 import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
-import { showError, showUndo } from '@nextcloud/dialogs'
+import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 const UNDO_DELAY = 7 * 1000
@@ -40,6 +41,7 @@ export default {
 	data() {
 		return {
 			original: undefined,
+			draftsPromise: Promise.resolve(this.draftId),
 		}
 	},
 	computed: {
@@ -184,6 +186,21 @@ export default {
 			} else {
 				// Proper layout with label
 				return `"${recipient.label}" <${recipient.email}>`
+			}
+		},
+		async discardDraft() {
+			console.debug('discarding working?')
+			this.$emit('close')
+			const id = await this.draftsPromise
+			try {
+				if (this.composerMessage.type === 'outbox') {
+					await this.$store.dispatch('outbox/deleteMessage', { id })
+				} else {
+					await this.$store.dispatch('deleteMessage', { id })
+				}
+				showSuccess(t('mail', 'Message discarded'))
+			} catch (error) {
+				showError(t('mail', 'Could not discard message'))
 			}
 		},
 	},

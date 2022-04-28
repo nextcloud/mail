@@ -1001,15 +1001,9 @@ export default {
 
 			return `${alias.name} <${alias.emailAddress}>`
 		},
-		async discardDraft() {
-			const id = await this.draftsPromise
-			try {
-				await this.$store.dispatch('deleteMessage', { id })
-				showSuccess(t('mail', 'Message discarded'))
-			} catch (error) {
-				showError(t('mail', 'Could not discard message'))
-			}
-			this.$emit('close')
+		discardDraft() {
+			console.debug('discaaaaard')
+			this.$emit('discardDraft')
 		},
 		/**
 		 * Whether the date is acceptable
