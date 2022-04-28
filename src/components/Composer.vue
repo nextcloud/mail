@@ -1001,9 +1001,10 @@ export default {
 
 			return `${alias.name} <${alias.emailAddress}>`
 		},
-		discardDraft() {
+		async discardDraft() {
 			console.debug('discaaaaard')
-			this.$emit('discardDraft')
+			const id = await this.draftsPromise
+			this.$emit('discardDraft', id)
 		},
 		/**
 		 * Whether the date is acceptable

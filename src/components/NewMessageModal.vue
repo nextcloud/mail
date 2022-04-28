@@ -188,18 +188,19 @@ export default {
 				return `"${recipient.label}" <${recipient.email}>`
 			}
 		},
-		async discardDraft() {
-			console.debug('discarding working?')
+		async discardDraft(id) {
+			console.debug('discarding working?', id)
+			const isOutbox = this.composerMessage.type === 'outbox'
 			this.$emit('close')
-			const id = await this.draftsPromise
 			try {
-				if (this.composerMessage.type === 'outbox') {
+				if (isOutbox) {
 					await this.$store.dispatch('outbox/deleteMessage', { id })
 				} else {
 					await this.$store.dispatch('deleteMessage', { id })
 				}
 				showSuccess(t('mail', 'Message discarded'))
 			} catch (error) {
+				console.error(error)
 				showError(t('mail', 'Could not discard message'))
 			}
 		},
