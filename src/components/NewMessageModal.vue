@@ -28,8 +28,7 @@ import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
 import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-
-const UNDO_DELAY = 7 * 1000
+import { UNDO_DELAY } from '../store/constants'
 
 export default {
 	name: 'NewMessageModal',
