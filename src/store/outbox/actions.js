@@ -22,6 +22,7 @@
 
 import * as OutboxService from '../../service/OutboxService'
 import logger from '../../logger'
+import { UNDO_DELAY } from '../constants'
 
 export default {
 	async fetchMessages({ getters, commit }) {
@@ -92,6 +93,11 @@ export default {
 		logger.debug('Sending message ' + id, { message, force })
 		if (!force && (!message || !message.sendAt)) {
 			logger.debug('Skipped sending message that was undone')
+			return
+		}
+
+		if (message.sendAt * 1000 > new Date().getTime() + UNDO_DELAY) {
+			logger.debug('Skipped sending message that is scheduled for the future')
 			return
 		}
 
