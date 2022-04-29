@@ -77,6 +77,8 @@ export default {
 
 			if (this.composerMessage.type === 'outbox') {
 				logger.info('skipping autosave', { data })
+				// see implementation in https://github.com/nextcloud/mail/issues/6330
+				return new Promise((resolve) => setTimeout(() => resolve(), 2000))
 			} else {
 				const dataForServer = {
 					...data,
