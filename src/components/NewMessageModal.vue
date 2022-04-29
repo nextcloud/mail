@@ -194,7 +194,7 @@ export default {
 			this.$emit('close')
 			try {
 				if (isOutbox) {
-					await this.$store.dispatch('outbox/deleteMessage', { id })
+					await this.$store.dispatch('outbox/deleteMessage', { id: this.composerMessage.data.id })
 				} else {
 					await this.$store.dispatch('deleteMessage', { id })
 				}

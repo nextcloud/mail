@@ -138,6 +138,7 @@ export default {
 			}
 		},
 		async openModal() {
+			console.log('this mesage', this.message)
 			await this.$store.dispatch('showMessageComposer', {
 				type: 'outbox',
 				data: {
