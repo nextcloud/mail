@@ -87,6 +87,7 @@ const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
 const tags = loadState('mail', 'tags', [])
 const outboxMessages = loadState('mail', 'outbox-messages')
+const disableScheduledSend = loadState('mail', 'disable-scheduled-send')
 
 accounts.map(fixAccountId).forEach((account) => {
 	const settings = accountSettings.find(settings => settings.accountId === account.id)
@@ -106,6 +107,8 @@ accounts.map(fixAccountId).forEach((account) => {
 tags.forEach(tag => store.commit('addTag', { tag }))
 
 outboxMessages.forEach(message => store.commit('outbox/addMessage', { message }))
+
+store.commit('setScheduledSendingDisabled', disableScheduledSend)
 
 export default new Vue({
 	el: '#content',

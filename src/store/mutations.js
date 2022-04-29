@@ -363,4 +363,7 @@ export default {
 	setMailboxUnreadCount(state, { id, unread }) {
 		Vue.set(state.mailboxes[id], 'unread', unread ?? 0)
 	},
+	setScheduledSendingDisabled(state, value) {
+		state.isScheduledSendingDisabled = value
+	},
 }
