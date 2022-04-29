@@ -191,10 +191,13 @@ export default {
 		async discardDraft(id) {
 			console.debug('discarding working?', id)
 			const isOutbox = this.composerMessage.type === 'outbox'
+			if (isOutbox) {
+				id = this.composerMessage.data.id
+			}
 			this.$emit('close')
 			try {
 				if (isOutbox) {
-					await this.$store.dispatch('outbox/deleteMessage', { id: this.composerMessage.data.id })
+					await this.$store.dispatch('outbox/deleteMessage', { id })
 				} else {
 					await this.$store.dispatch('deleteMessage', { id })
 				}
