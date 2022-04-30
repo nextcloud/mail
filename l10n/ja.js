@@ -72,8 +72,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "このメッセージは送信専用アドレスから送信されたため、返信しても確認されない恐れがあります。",
     "The following recipients do not have a PGP key: {recipients}." : "次の受信者はPGPキーを持っていません: {recipients}",
     "Write message …" : "メッセージを書く…",
-    "Discard draft" : "下書きを破棄",
-    "Cannot save draft because this account does not have a drafts mailbox configured." : "下書きメールボックスが設定されていないため下書きを保存できません。",
     "Saving draft …" : "下書きを保存しています",
     "Draft saved" : "下書きを保存しました。",
     "Upload attachment" : "添付ファイルをアップロードする",
