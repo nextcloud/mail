@@ -317,10 +317,6 @@
 		:hint="t('mail', 'Sending …')"
 		role="alert"
 		class="sending-hint" />
-	<Loading v-else-if="state === STATES.DISCARDING" :hint="t('mail', 'Discarding …')" class="emptycontent" />
-	<EmptyContent v-else-if="state === STATES.DISCARDED" icon="icon-mail">
-		<h2>{{ t('mail', 'Draft was discarded!') }}</h2>
-	</EmptyContent>
 	<div v-else-if="state === STATES.ERROR" class="emptycontent" role="alert">
 		<h2>{{ t('mail', 'Error sending your message') }}</h2>
 		<p v-if="errorText">
@@ -1041,16 +1037,8 @@ export default {
 			return `${alias.name} <${alias.emailAddress}>`
 		},
 		async discardDraft() {
-			this.state = STATES.DISCARDING
-			let id
-			try {
-				id = await this.draftsPromise
-				await this.$store.dispatch('deleteMessage', { id })
-			} catch (err) {
-				logger.error('Could not delete message with id ' + id)
-			}
-			this.state = STATES.DISCARDED
-			this.$emit('close')
+			const id = await this.draftsPromise
+			this.$emit('discard-draft', id)
 		},
 		/**
 		 * Whether the date is acceptable
