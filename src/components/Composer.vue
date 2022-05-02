@@ -151,7 +151,7 @@
 			:bus="bus"
 			:upload-size-limit="attachmentSizeLimit"
 			@upload="onAttachmentsUploading" />
-		<div class="composer-actions-right">
+		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
 				<p class="composer-actions-draft-status">
 					<span v-if="savingDraft === true" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
@@ -1091,13 +1091,7 @@ export default {
 }
 
 .composer-actions {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
 	position: sticky;
-	bottom: 0;
-	padding: 12px;
 	background: linear-gradient(rgba(255, 255, 255, 0), var(--color-main-background-translucent) 50%);
 }
 
@@ -1155,10 +1149,11 @@ export default {
 }
 
 .draft-status {
-	padding: 5px;
+	padding: 2px;
 	opacity: 0.5;
 	font-size: small;
 	display: block;
+
 }
 
 .from-label,
@@ -1230,7 +1225,7 @@ export default {
 	align-items: center;
 	flex-direction: row;
 	justify-content: space-between;
-	padding-bottom: 10px;
+	bottom: 5px;
 }
 .composer-actions--primary-actions {
 	display: flex;
@@ -1238,20 +1233,20 @@ export default {
 	padding-left: 10px;
 	align-items: center;
 }
-.composer-actions--primary-actions .button {
-	padding: 5px;
-}
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding-right: 15px;
+	padding: 5px;
+}
+.composer-actions--primary-actions .button {
+	padding: 2px;
 }
 .composer-actions--secondary-actions .button{
 	flex-shrink: 0;
 }
 
 .composer-actions-draft-status {
-	padding-left: 15px;
+	padding-left: 10px;
 }
 
 @media only screen and (max-width: 580px) {
