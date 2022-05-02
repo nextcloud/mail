@@ -27,7 +27,7 @@ import logger from '../logger'
 import { toPlain } from '../util/text'
 import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
-import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { UNDO_DELAY } from '../store/constants'
 
@@ -127,46 +127,20 @@ export default {
 				dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
 			}
 
-			let message
 			if (!this.composerData.id) {
-				message = await this.$store.dispatch('outbox/enqueueMessage', {
+				await this.$store.dispatch('outbox/enqueueMessage', {
 					message: dataForServer,
 				})
 			} else {
-				message = await this.$store.dispatch('outbox/updateMessage', {
+				await this.$store.dispatch('outbox/updateMessage', {
 					message: dataForServer,
 					id: this.composerData.id,
 				})
 			}
 
 			if (!data.sendAt || data.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
-				showUndo(
-					t('mail', 'Message sent'),
-					async() => {
-						logger.info('Attempting to stop sending message ' + message.id)
-						const stopped = await this.$store.dispatch('outbox/stopMessage', { message })
-						logger.info('Message ' + message.id + ' stopped', { message: stopped })
-						await this.$store.dispatch('showMessageComposer', {
-							type: 'outbox',
-							data: {
-								...message, // For id and other properties
-								...data, // For the correct body values
-							},
-						})
-					}, {
-						timeout: UNDO_DELAY,
-						close: true,
-					}
-				)
-
-				setTimeout(() => {
-					try {
-						this.$store.dispatch('outbox/sendMessage', { id: message.id })
-					} catch (error) {
-						showError(t('mail', 'Could not send message'))
-						logger.error('Could not delay-send message ' + message.id, { message })
-					}
-				}, UNDO_DELAY)
+				// Awaiting here would keep the modal open for a long time and thus block the user
+				this.$store.dispatch('outbox/sendMessageWithUndo', { id: this.composerData.id })
 			}
 			if (data.draftId) {
 				// Remove old draft envelope
