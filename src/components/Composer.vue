@@ -147,168 +147,170 @@
 				:quoted-text="body"
 				:is-reply-or-forward="isReply || isForward" />
 		</div>
-		<ComposerAttachments v-model="attachments"
-			:bus="bus"
-			:upload-size-limit="attachmentSizeLimit"
-			@upload="onAttachmentsUploading" />
-		<div class="composer-actions-right">
-			<div class="composer-actions--primary-actions">
-				<p class="composer-actions-draft-status">
-					<span v-if="savingDraft === true" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
-					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
-					<span v-else-if="savingDraft === false" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
-				</p>
-				<VButton v-if="!savingDraft && !canSaveDraft"
-					class="button"
-					type="tertiary"
-					@click="onSave">
-					<template #icon>
-						<Download :size="20" :title="t('mail', 'Save draft')" />
-					</template>
-				</VButton>
-				<VButton v-if="savingDraft === false"
-					class="button"
-					type="tertiary"
-					@click="discardDraft">
-					<template #icon>
-						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
-					</template>
-				</VButton>
-			</div>
-			<div class="composer-actions--secondary-actions">
-				<Actions>
-					<template v-if="!isMoreActionsOpen">
-						<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
-							{{
-								t('mail', 'Upload attachment')
-							}}
-						</ActionButton>
-						<ActionButton icon="icon-folder" @click="onAddCloudAttachment">
-							{{
-								t('mail', 'Add attachment from Files')
-							}}
-						</ActionButton>
-						<ActionButton :disabled="encrypt" icon="icon-public" @click="onAddCloudAttachmentLink">
-							{{
-								addShareLink
-							}}
-						</ActionButton>
-						<ActionButton
-							v-if="!isScheduledSendingDisabled"
-							:close-after-click="false"
-							@click="isMoreActionsOpen=true">
-							<template #icon>
-								<SendClock :size="20" :title="t('mail', 'Send later')" />
-							</template>
-							{{
-								t('mail', 'Send later')
-							}}
-						</ActionButton>
-						<ActionCheckbox
-							:checked="!encrypt && !editorPlainText"
-							:disabled="encrypt"
-							@check="editorMode = 'html'"
-							@uncheck="editorMode = 'plaintext'">
-							{{ t('mail', 'Enable formatting') }}
-						</ActionCheckbox>
-						<ActionCheckbox
-							:checked="requestMdn"
-							@check="requestMdn = true"
-							@uncheck="requestMdn = false">
-							{{ t('mail', 'Request a read receipt') }}
-						</ActionCheckbox>
-						<ActionCheckbox
-							v-if="mailvelope.available"
-							:checked="encrypt"
-							@check="encrypt = true"
-							@uncheck="encrypt = false">
-							{{ t('mail', 'Encrypt message with Mailvelope') }}
-						</ActionCheckbox>
-						<ActionLink v-else
-							href="https://www.mailvelope.com/"
-							target="_blank"
-							icon="icon-password">
-							{{
-								t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
-							}}
-						</ActionLink>
-					</template>
-					<template v-if="isMoreActionsOpen">
-						<ActionButton :close-after-click="false"
-							@click="isMoreActionsOpen=false">
-							<template #icon>
-								<ChevronLeft
-									:title="t('mail', 'Send later')"
-									:size="20" />
-								{{ t('mail', 'Send later') }}
-							</template>
-						</ActionButton>
-						<ActionRadio :value="undefined"
-							name="sendLater"
-							:checked="!sendAtVal"
-							class="send-action-radio"
-							@update:checked="sendAtVal = undefined"
-							@change="onChangeSendLater(undefined)">
-							{{ t('mail', 'Send now') }}
-						</ActionRadio>
-						<ActionRadio :value="dateTomorrowMorning"
-							name="sendLater"
-							:checked="isSendAtTomorrowMorning"
-							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateTomorrowMorning"
-							@change="onChangeSendLater(dateTomorrowMorning)">
-							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
-						</ActionRadio>
-						<ActionRadio :value="dateTomorrowAfternoon"
-							name="sendLater"
-							:checked="isSendAtTomorrowAfternoon"
-							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateTomorrowAfternoon"
-							@change="onChangeSendLater(dateTomorrowAfternoon)">
-							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
-						</ActionRadio>
-						<ActionRadio :value="dateMondayMorning"
-							name="sendLater"
-							:checked="isSendAtMondayMorning"
-							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateMondayMorning"
-							@change="onChangeSendLater(dateMondayMorning)">
-							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
-						</ActionRadio>
-						<ActionRadio name="sendLater"
-							class="send-action-radio"
-							:checked="isSendAtCustom"
-							:value="customSendTime"
-							@update:checked="sendAtVal = customSendTime"
-							@change="onChangeSendLater(customSendTime)">
-							{{ t('mail', 'Custom date and time') }}
-						</ActionRadio>
-						<ActionInput v-model="selectedDate"
-							type="datetime-local"
-							:first-day-of-week="firstDayDatetimePicker"
-							:use12h="showAmPm"
-							:formatter="formatter"
-							:format="'YYYY-MM-DD HH:mm'"
-							icon=""
-							:minute-step="5"
-							:show-second="false"
-							:disabled-date="disabledDatetimepickerDate"
-							:disabled-time="disabledDatetimepickerTime"
-							@change="onChangeSendLater(customSendTime)">
-							{{ t('mail', 'Enter a date') }}
-						</ActionInput>
-					</template>
-				</Actions>
+		<div class="composer-actions">
+			<ComposerAttachments v-model="attachments"
+				:bus="bus"
+				:upload-size-limit="attachmentSizeLimit"
+				@upload="onAttachmentsUploading" />
+			<div class="composer-actions-right">
+				<div class="composer-actions--primary-actions">
+					<p class="composer-actions-draft-status">
+						<span v-if="savingDraft === true" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
+						<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
+						<span v-else-if="savingDraft === false" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
+					</p>
+					<VButton v-if="!savingDraft && !canSaveDraft"
+						class="button"
+						type="tertiary"
+						@click="onSave">
+						<template #icon>
+							<Download :size="20" :title="t('mail', 'Save draft')" />
+						</template>
+					</VButton>
+					<VButton v-if="savingDraft === false"
+						class="button"
+						type="tertiary"
+						@click="discardDraft">
+						<template #icon>
+							<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
+						</template>
+					</VButton>
+				</div>
+				<div class="composer-actions--secondary-actions">
+					<Actions>
+						<template v-if="!isMoreActionsOpen">
+							<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
+								{{
+									t('mail', 'Upload attachment')
+								}}
+							</ActionButton>
+							<ActionButton icon="icon-folder" @click="onAddCloudAttachment">
+								{{
+									t('mail', 'Add attachment from Files')
+								}}
+							</ActionButton>
+							<ActionButton :disabled="encrypt" icon="icon-public" @click="onAddCloudAttachmentLink">
+								{{
+									addShareLink
+								}}
+							</ActionButton>
+							<ActionButton
+								v-if="!isScheduledSendingDisabled"
+								:close-after-click="false"
+								@click="isMoreActionsOpen=true">
+								<template #icon>
+									<SendClock :size="20" :title="t('mail', 'Send later')" />
+								</template>
+								{{
+									t('mail', 'Send later')
+								}}
+							</ActionButton>
+							<ActionCheckbox
+								:checked="!encrypt && !editorPlainText"
+								:disabled="encrypt"
+								@check="editorMode = 'html'"
+								@uncheck="editorMode = 'plaintext'">
+								{{ t('mail', 'Enable formatting') }}
+							</ActionCheckbox>
+							<ActionCheckbox
+								:checked="requestMdn"
+								@check="requestMdn = true"
+								@uncheck="requestMdn = false">
+								{{ t('mail', 'Request a read receipt') }}
+							</ActionCheckbox>
+							<ActionCheckbox
+								v-if="mailvelope.available"
+								:checked="encrypt"
+								@check="encrypt = true"
+								@uncheck="encrypt = false">
+								{{ t('mail', 'Encrypt message with Mailvelope') }}
+							</ActionCheckbox>
+							<ActionLink v-else
+								href="https://www.mailvelope.com/"
+								target="_blank"
+								icon="icon-password">
+								{{
+									t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
+								}}
+							</ActionLink>
+						</template>
+						<template v-if="isMoreActionsOpen">
+							<ActionButton :close-after-click="false"
+								@click="isMoreActionsOpen=false">
+								<template #icon>
+									<ChevronLeft
+										:title="t('mail', 'Send later')"
+										:size="20" />
+									{{ t('mail', 'Send later') }}
+								</template>
+							</ActionButton>
+							<ActionRadio :value="undefined"
+								name="sendLater"
+								:checked="!sendAtVal"
+								class="send-action-radio"
+								@update:checked="sendAtVal = undefined"
+								@change="onChangeSendLater(undefined)">
+								{{ t('mail', 'Send now') }}
+							</ActionRadio>
+							<ActionRadio :value="dateTomorrowMorning"
+								name="sendLater"
+								:checked="isSendAtTomorrowMorning"
+								class="send-action-radio send-action-radio--multiline"
+								@update:checked="sendAtVal = dateTomorrowMorning"
+								@change="onChangeSendLater(dateTomorrowMorning)">
+								{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
+							</ActionRadio>
+							<ActionRadio :value="dateTomorrowAfternoon"
+								name="sendLater"
+								:checked="isSendAtTomorrowAfternoon"
+								class="send-action-radio send-action-radio--multiline"
+								@update:checked="sendAtVal = dateTomorrowAfternoon"
+								@change="onChangeSendLater(dateTomorrowAfternoon)">
+								{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
+							</ActionRadio>
+							<ActionRadio :value="dateMondayMorning"
+								name="sendLater"
+								:checked="isSendAtMondayMorning"
+								class="send-action-radio send-action-radio--multiline"
+								@update:checked="sendAtVal = dateMondayMorning"
+								@change="onChangeSendLater(dateMondayMorning)">
+								{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
+							</ActionRadio>
+							<ActionRadio name="sendLater"
+								class="send-action-radio"
+								:checked="isSendAtCustom"
+								:value="customSendTime"
+								@update:checked="sendAtVal = customSendTime"
+								@change="onChangeSendLater(customSendTime)">
+								{{ t('mail', 'Custom date and time') }}
+							</ActionRadio>
+							<ActionInput v-model="selectedDate"
+								type="datetime-local"
+								:first-day-of-week="firstDayDatetimePicker"
+								:use12h="showAmPm"
+								:formatter="formatter"
+								:format="'YYYY-MM-DD HH:mm'"
+								icon=""
+								:minute-step="5"
+								:show-second="false"
+								:disabled-date="disabledDatetimepickerDate"
+								:disabled-time="disabledDatetimepickerTime"
+								@change="onChangeSendLater(customSendTime)">
+								{{ t('mail', 'Enter a date') }}
+							</ActionInput>
+						</template>
+					</Actions>
 
-				<button :disabled="!canSend"
-					class="button primary send-button"
-					type="submit"
-					@click="onSend">
-					<Send
-						:title="submitButtonTitle"
-						:size="20" />
-					{{ submitButtonTitle }}
-				</button>
+					<button :disabled="!canSend"
+						class="button primary send-button"
+						type="submit"
+						@click="onSend">
+						<Send
+							:title="submitButtonTitle"
+							:size="20" />
+						{{ submitButtonTitle }}
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -1089,14 +1091,8 @@ export default {
 }
 
 .composer-actions {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
 	position: sticky;
 	bottom: 0;
-	padding: 12px;
-	background: linear-gradient(rgba(255, 255, 255, 0), var(--color-main-background-translucent) 50%);
 }
 
 .composer-fields {
