@@ -2,7 +2,7 @@
 	<Modal
 		size="normal"
 		:title="modalTitle"
-		@close="$emit('close')">
+		@close="$emit('close', { restoreOriginalSendAt: true })">
 		<Composer
 			:from-account="composerData.accountId"
 			:to="composerData.to"
@@ -17,8 +17,7 @@
 			:draft="saveDraft"
 			:send="sendMessage"
 			:forwarded-messages="forwardedMessages"
-			@discard-draft="discardDraft"
-			@close="$emit('close')" />
+			@discard-draft="discardDraft" />
 	</Modal>
 </template>
 <script>

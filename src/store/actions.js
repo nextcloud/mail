@@ -84,7 +84,7 @@ import { updateAccount as updateSieveAccount } from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
 import { getPrioritySearchQueries } from '../util/priorityInbox'
-import { html, plain } from '../util/text'
+import { html, plain, toPlain } from '../util/text'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { showWarning } from '@nextcloud/dialogs'
@@ -357,14 +357,40 @@ export default {
 			}
 		}
 
+		// Stop schedule when editing outbox messages and backup sendAt timestamp
+		let originalSendAt
+		if (type === 'outbox' && data.id && data.sendAt) {
+			originalSendAt = data.sendAt
+			const message = {
+				...data,
+				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+			}
+			await dispatch('outbox/stopMessage', { message })
+		}
+
 		commit('showMessageComposer', {
 			type,
 			data,
 			forwardedMessages,
 			templateMessageId,
+			originalSendAt,
 		})
 	},
-	async closeMessageComposer({ commit }) {
+	async closeMessageComposer({ commit, dispatch, getters }, { restoreOriginalSendAt }) {
+		// Restore original sendAt timestamp when requested
+		const message = getters.composerMessage
+		if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
+			const body = message.data.body
+			await dispatch('outbox/updateMessage', {
+				id: message.data.id,
+				message: {
+					...message.data,
+					body: message.data.isHtml ? body.value : toPlain(body),
+					sendAt: message.options.originalSendAt,
+				},
+			})
+		}
+
 		commit('hideMessageComposer')
 	},
 	async fetchEnvelope({ commit, getters }, id) {
