@@ -73,7 +73,6 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Denne meddelelse kom fra en svar-ikke adresse. Dit svar vil sansynligvis ikke blive læst. ",
     "The following recipients do not have a PGP key: {recipients}." : "Følgende modtagere har ikke en PGP nøgle: {recipients}.",
     "Write message …" : "Skriv en besked…",
-    "Cannot save draft because this account does not have a drafts mailbox configured." : "Kladden kan ikke gemmes, fordi der ikke er konfigureret en postkasse til udkast til denne konto.",
     "Saving draft …" : "Gemmer kladde…",
     "Draft saved" : "Kladde gemt",
     "Upload attachment" : "Upload vedhæftning",

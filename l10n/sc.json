@@ -77,7 +77,6 @@
     "This message came from a noreply address so your reply will probably not be read." : "Custu messàgiu est arribadu dae unu indiritzu chena resposta, tando est fàtzile chi sa resposta tua no s'at a lèghere.",
     "The following recipients do not have a PGP key: {recipients}." : "Custas persones destinatàrias no tenent una crae PGP: {recipients}.",
     "Write message …" : "Iscrie messàgiu ...",
-    "Cannot save draft because this account does not have a drafts mailbox configured." : "No faghet a sarvare sa brutacòpia ca custu contu no tenet una casella de brutacòpias cunfigurada.",
     "Saving draft …" : "Sarvende sa brutacòpia ...",
     "Draft saved" : "Brutacòpia sarvada",
     "Upload attachment" : "Càrriga alligongiadu",
