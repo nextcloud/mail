@@ -37,7 +37,7 @@
 				:preserve-search="true"
 				:hide-selected="true"
 				:loading="loadingIndicatorTo"
-				@keyup="onInputChanged"
+				@input="callSaveDraft(true, getMessageData)"
 				@tag="onNewToAddr"
 				@search-change="onAutocomplete($event, 'to')" />
 			<a v-if="!showCC"
@@ -64,7 +64,7 @@
 				:show-no-options="false"
 				:preserve-search="true"
 				:loading="loadingIndicatorCc"
-				@keyup="onInputChanged"
+				@input="callSaveDraft(true, getMessageData)"
 				@tag="onNewCcAddr"
 				@search-change="onAutocomplete($event, 'cc')">
 				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
@@ -86,7 +86,7 @@
 				:show-no-options="false"
 				:preserve-search="true"
 				:loading="loadingIndicatorBcc"
-				@keyup="onInputChanged"
+				@input="callSaveDraft(true, getMessageData)"
 				@tag="onNewBccAddr"
 				@search-change="onAutocomplete($event, 'bcc')">
 				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
@@ -104,7 +104,7 @@
 				class="subject"
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
-				@keyup="onInputChanged">
+				@input="callSaveDraft(true, getMessageData)">
 		</div>
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
@@ -127,7 +127,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onInputChanged" />
+				@input="callSaveDraft(true, getMessageData)" />
 			<TextEditor
 				v-else-if="!encrypt && !editorPlainText"
 				key="editor-rich"
@@ -138,7 +138,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onInputChanged" />
+				@input="onEditorRichInputText" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
@@ -554,6 +554,7 @@ export default {
 					return value ? moment(value, 'LLL').toDate() : null
 				},
 			},
+			editorRichInputTextReady: false,
 		}
 	},
 	computed: {
@@ -876,6 +877,15 @@ export default {
 				this.appendSignature = false
 			}
 		},
+		// needs to bypass an input event of the first initialisation, because of:
+		// an empty body (e.g "") does not trigger an onInput event.
+		// but to append the signature a onInput event is required.
+		onEditorRichInputText() {
+			if (this.editorRichInputTextReady) {
+				this.callSaveDraft(true, this.getMessageData)
+			}
+			this.editorRichInputTextReady = true
+		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
 		},
@@ -896,9 +906,11 @@ export default {
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('onAddLocalAttachment')
+			this.callSaveDraft(true, this.getMessageData)
 		},
 		onAddCloudAttachment() {
 			this.bus.$emit('onAddCloudAttachment')
+			this.callSaveDraft(true, this.getMessageData)
 		},
 		onAddCloudAttachmentLink() {
 			this.bus.$emit('onAddCloudAttachmentLink')
@@ -924,6 +936,7 @@ export default {
 		onAttachmentsUploading(uploaded) {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
+				.then(() => this.callSaveDraft(true, this.getMessageData))
 				.catch((error) => logger.error('could not upload attachments', { error }))
 				.then(() => logger.debug('attachments uploaded'))
 		},
@@ -954,6 +967,7 @@ export default {
 			}
 			this.newRecipients.push(res)
 			list.push(res)
+			this.callSaveDraft(true, this.getMessageData)
 		},
 		async onSend(_, force = false) {
 			if (this.encrypt) {
