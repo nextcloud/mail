@@ -75,17 +75,13 @@ export default {
 			}
 
 			if (this.composerMessage.type === 'outbox') {
-				logger.info('skipping autosave', { data })
-				// see implementation in https://github.com/nextcloud/mail/issues/6330
-				return new Promise((resolve) => setTimeout(() => resolve(), 2000))
+				const dataForServer = this.getDataForServer(data)
+				await this.$store.dispatch('outbox/updateMessage', {
+					message: dataForServer,
+					id: this.composerData.id,
+				})
 			} else {
-				const dataForServer = {
-					...data,
-					to: data.to.map(this.recipientToRfc822).join(', '),
-					cc: data.cc.map(this.recipientToRfc822).join(', '),
-					bcc: data.bcc.map(this.recipientToRfc822).join(', '),
-					body: data.isHtml ? data.body.value : toPlain(data.body).value,
-				}
+				const dataForServer = this.getDataForServer(data, true)
 				const { id } = await saveDraft(data.account, dataForServer)
 
 				// Remove old draft envelope
@@ -98,6 +94,21 @@ export default {
 				return id
 			}
 		},
+		getDataForServer(data, serializeRecipients = false) {
+			return {
+				accountId: data.account,
+				subject: data.subject,
+				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+				isHtml: data.isHtml,
+				to: serializeRecipients ? data.to.map(this.recipientToRfc822).join(', ') : data.to,
+				cc: serializeRecipients ? data.cc.map(this.recipientToRfc822).join(', ') : data.cc,
+				bcc: serializeRecipients ? data.bcc.map(this.recipientToRfc822).join(', ') : data.bcc,
+				attachments: data.attachments,
+				aliasId: data.aliasId,
+				inReplyToMessageId: null,
+				sendAt: data.sendAt,
+			}
+		},
 		async sendMessage(data) {
 			logger.debug('sending message', { data })
 			const now = new Date().getTime()
@@ -107,19 +118,10 @@ export default {
 					attachment.type = 'local'
 				}
 			}
-			const dataForServer = {
-				accountId: data.account,
-				subject: data.subject,
-				body: data.isHtml ? data.body.value : toPlain(data.body).value,
-				isHtml: data.isHtml,
-				to: data.to,
-				cc: data.cc,
-				bcc: data.bcc,
-				attachments: data.attachments,
-				aliasId: data.aliasId,
-				inReplyToMessageId: null,
+			const dataForServer = this.getDataForServer({
+				...data,
 				sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
-			}
+			})
 			if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 				dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
 			}
