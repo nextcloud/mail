@@ -22,7 +22,6 @@
     "Move" : "Move",
     "Settings" : "Instillingar",
     "Quota" : "Kvote",
-    "Message sent" : "Melding sendt",
     "Delete" : "Ta bort",
     "Add" : "Legg til",
     "Set" : "Sett",
@@ -34,6 +33,7 @@
     "Search" : "Search",
     "Refresh" : "Last inn på nytt",
     "All" : "Alle",
-    "Sent" : "Sendt"
+    "Sent" : "Sendt",
+    "Message sent" : "Melding sendt"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

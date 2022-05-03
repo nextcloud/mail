@@ -24,7 +24,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Settings" : "Instillingar",
     "Quota" : "Kvote",
-    "Message sent" : "Melding sendt",
     "Delete" : "Ta bort",
     "Add" : "Legg til",
     "Set" : "Sett",
@@ -36,6 +35,7 @@ OC.L10N.register(
     "Search" : "Search",
     "Refresh" : "Last inn på nytt",
     "All" : "Alle",
-    "Sent" : "Sendt"
+    "Sent" : "Sendt",
+    "Message sent" : "Melding sendt"
 },
 "nplurals=2; plural=(n != 1);");

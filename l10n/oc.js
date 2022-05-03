@@ -55,7 +55,6 @@ OC.L10N.register(
     "Edit name" : "Modificar lo nom",
     "Clear cache" : "Voidar l'escondedor",
     "_{total} message_::_{total} messages_" : ["{total} messatge","{total} messatges"],
-    "Message sent" : "Messatge mandat",
     "Delete" : "Suprimir",
     "Add" : "Apondre",
     "Disabled" : "Desactivat",
@@ -81,6 +80,7 @@ OC.L10N.register(
     "Trash" : "Escobilhièr",
     "Error while sharing file" : "Error pendent lo partiment del fichièr",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "Message sent" : "Messatge mandat",
     "Error loading message" : "Error al moment del cargament del messatge",
     "Continue to %s" : "Contunhar cap a %s"
 },

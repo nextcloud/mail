@@ -94,8 +94,6 @@ OC.L10N.register(
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "¿Buscas una forma de cifrar tus correos? Instala la extensión de navegador Mailvelope.",
     "Uploading attachments …" : "Subiendo adjuntos…",
     "Sending …" : "Enviando ...",
-    "Discarding …" : "Descartando …",
-    "Draft was discarded!" : "¡Borrador descartado!",
     "Error sending your message" : "Error al enviar tu mensaje",
     "Go back" : "Regresar",
     "Retry" : "Reintentar",
