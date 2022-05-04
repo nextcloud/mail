@@ -242,6 +242,8 @@ OC.L10N.register(
     "Outbox" : "發件箱",
     "Edit message" : "編輯訊息",
     "Draft" : "草稿",
+    "Message discarded" : "訊息已刪除",
+    "Could not discard message" : "無法掉棄訊息",
     "No message selected" : "未選擇郵件",
     "Could not open outbox" : "無法開啟發件箱",
     "Delete" : "刪除",

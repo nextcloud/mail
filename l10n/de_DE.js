@@ -242,6 +242,8 @@ OC.L10N.register(
     "Outbox" : "Postausgang",
     "Edit message" : "Nachricht bearbeiten",
     "Draft" : "Entwurf",
+    "Message discarded" : "Nachricht verworfen",
+    "Could not discard message" : "Nachricht kann nicht verworfen werden",
     "No message selected" : "Keine Nachricht ausgewählt",
     "Could not open outbox" : "Postausgang konnte nicht geöffnet werden",
     "Delete" : "Löschen",

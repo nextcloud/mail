@@ -240,6 +240,8 @@
     "Outbox" : "寄件匣",
     "Edit message" : "編輯訊息",
     "Draft" : "草稿",
+    "Message discarded" : "郵件已捨棄",
+    "Could not discard message" : "無法捨棄郵件",
     "No message selected" : "未選取郵件",
     "Could not open outbox" : "無法開啟寄件匣",
     "Delete" : "刪除",
