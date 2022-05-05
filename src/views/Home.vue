@@ -6,6 +6,7 @@
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
 		<NewMessageModal v-if="$store.getters.showMessageComposer" @close="$store.dispatch('closeMessageComposer')" />
+		<OutboxMessageContent v-if="$route.name === 'outbox'" />
 	</Content>
 </template>
 
@@ -18,6 +19,7 @@ import MailboxThread from '../components/MailboxThread'
 import NewMessageModal from '../components/NewMessageModal'
 import Navigation from '../components/Navigation'
 import Outbox from '../components/Outbox'
+import OutboxNoSelectedMessage from '../components/OutboxMessageContent'
 
 export default {
 	name: 'Home',
@@ -27,6 +29,7 @@ export default {
 		Navigation,
 		NewMessageModal,
 		Outbox,
+		OutboxMessageContent,
 	},
 	mixins: [isMobile],
 	computed: {
