@@ -753,8 +753,8 @@ export default {
 			} else {
 				this.selectedAlias = this.aliases[0]
 			}
-			// only overwrite editormode if no body provided
-			if (previous === NO_ALIAS_SET && !this.body) {
+			// Only overwrite editormode if body is empty
+			if (previous === NO_ALIAS_SET && (!this.body || this.body.value === '')) {
 				this.editorMode = this.selectedAlias.editorMode
 			}
 		},
