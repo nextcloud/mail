@@ -141,7 +141,7 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	public function sendMessage(NewMessageData $messageData,
-								string $repliedToMessageId = null,
+								?string $repliedToMessageId = null,
 								Alias $alias = null,
 								Message $draft = null): void {
 		$account = $messageData->getAccount();
@@ -214,8 +214,7 @@ class MailTransmission implements IMailTransmission {
 			);
 		}
 
-		$this->eventDispatcher->dispatch(
-			MessageSentEvent::class,
+		$this->eventDispatcher->dispatchTyped(
 			new MessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
 		);
 	}
@@ -268,7 +267,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		try {
-			$this->sendMessage($messageData, $message->getInReplyToMessageId() ?? null, $alias ?? null);
+			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
 		} catch (SentMailboxNotSetException $e) {
 			throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
 		}

@@ -803,7 +803,7 @@ export default {
 				subject: this.subjectVal,
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
-				messageId: this.replyTo ? this.replyTo.databaseId : undefined,
+				inReplyToMessageId: this.replyTo ? this.replyTo.messageId : undefined,
 				isHtml: !this.editorPlainText,
 				requestMdn: this.requestMdn,
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
