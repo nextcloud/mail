@@ -106,7 +106,7 @@ export default {
 				bcc: serializeRecipients ? data.bcc.map(this.recipientToRfc822).join(', ') : data.bcc,
 				attachments: data.attachments,
 				aliasId: data.aliasId,
-				inReplyToMessageId: null,
+				inReplyToMessageId: data.inReplyToMessageId,
 				sendAt: data.sendAt,
 			}
 		},
