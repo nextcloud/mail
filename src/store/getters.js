@@ -68,13 +68,19 @@ export const getters = {
 		)
 	},
 	showMessageComposer: (state) => {
-		return state.newMessage !== undefined
+		return state.showMessageComposer
 	},
 	composerMessage: (state) => {
 		return state.newMessage
 	},
 	composerMessageOptions: (state) => {
 		return state.newMessage?.options
+	},
+	composerMessageIsSaved: (state) => {
+		return state.composerMessageIsSaved
+	},
+	composerSessionId: (state) => {
+		return state.composerSessionId
 	},
 	getEnvelope: (state) => (id) => {
 		return state.envelopes[id]

@@ -206,22 +206,75 @@ export default {
 		}
 		removeRec(account)
 	},
-	showMessageComposer(state, { type, data, forwardedMessages, originalSendAt }) {
-		Vue.set(state, 'newMessage', {
+	/**
+	 * Start a new composer session and open the modal.
+	 *
+	 * @param {object} state Vuex state
+	 * @param {object} payload Data for the new message
+	 * @param payload.type
+	 * @param payload.data
+	 * @param payload.forwardedMessages
+	 * @param payload.originalSendAt
+	 */
+	startComposerSession(state, { type, data, forwardedMessages, originalSendAt }) {
+		state.composerSessionId = state.nextComposerSessionId
+		state.nextComposerSessionId++
+		state.newMessage = {
 			type,
 			data,
 			options: {
 				forwardedMessages,
 				originalSendAt,
 			},
-		})
+			indicatorDisabled: false,
+		}
+		state.composerMessageIsSaved = false
+		state.showMessageComposer = true
+	},
+	/**
+	 * Stop current composer session and close the modal.
+	 * This discards all data from the current message.
+	 *
+	 * @param {object} state Vuex state
+	 */
+	stopComposerSession(state) {
+		state.composerSessionId = undefined
+		state.newMessage = undefined
+		state.showMessageComposer = false
+	},
+	/**
+	 * Show composer modal if there is an ongoing session.
+	 *
+	 * @param {object} state Vuex state
+	 */
+	showMessageComposer(state) {
+		if (state.composerSessionId) {
+			state.showMessageComposer = true
+		}
+	},
+	/**
+	 * Hide composer modal without ending the current session.
+	 *
+	 * @param {object} state Vuex state
+	 */
+	hideMessageComposer(state) {
+		state.showMessageComposer = false
+	},
+	setComposerMessageSaved(state, saved) {
+		state.composerMessageIsSaved = saved
+	},
+	patchComposerData(state, data) {
+		state.newMessage.data = {
+			...state.newMessage.data,
+			...data,
+		}
+	},
+	setComposerIndicatorDisabled(state, disabled) {
+		state.newMessage.indicatorDisabled = disabled
 	},
 	convertComposerMessageToOutbox(state, { message }) {
 		Vue.set(state.newMessage, 'type', 'outbox')
 		Vue.set(state.newMessage.data, 'id', message.id)
-	},
-	hideMessageComposer(state) {
-		Vue.delete(state, 'newMessage')
 	},
 	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
 		normalizeTags(state, envelope)

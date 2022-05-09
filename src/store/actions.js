@@ -320,7 +320,36 @@ export default {
 			})
 		})
 	},
-	async showMessageComposer({ commit, dispatch, getters }, { type = 'imap', data = {}, reply, forwardedMessages = [], templateMessageId }) {
+	async startComposerSession({ dispatch, commit, getters }, {
+		type = 'imap',
+		data = {},
+		reply,
+		forwardedMessages = [],
+		templateMessageId,
+		isBlankMessage = false,
+	}) {
+		// Silently close old session if already saved and show a discard modal otherwise
+		if (getters.composerSessionId && !getters.composerMessageIsSaved) {
+			// TODO: Nice to have: Add button to save current pending message
+			const discard = await new Promise((resolve) => OC.dialogs.confirmDestructive(
+				t('mail', 'There is already a message in progress. All unsaved changes will be lost if you continue!'),
+				t('mail', 'Discard changes'),
+				{
+					type: OC.dialogs.YES_NO_BUTTONS,
+					confirm: t('mail', 'Discard unsaved changes'),
+					confirmClasses: 'error',
+					cancel: t('mail', 'Keep editing message'),
+				},
+				(decision) => {
+					resolve(decision)
+				}
+			))
+			if (!discard) {
+				commit('showMessageComposer')
+				return
+			}
+		}
+
 		return handleHttpAuthErrors(commit, async () => {
 			if (reply) {
 				const original = await dispatch('fetchMessage', reply.data.databaseId)
@@ -344,7 +373,7 @@ export default {
 
 				if (reply.mode === 'reply') {
 					logger.debug('Show simple reply composer', { reply })
-					commit('showMessageComposer', {
+					commit('startComposerSession', {
 						data: {
 							accountId: reply.data.accountId,
 							to: reply.data.from,
@@ -363,7 +392,7 @@ export default {
 						email: account.emailAddress,
 						label: account.name,
 					})
-					commit('showMessageComposer', {
+					commit('startComposerSession', {
 						data: {
 							accountId: reply.data.accountId,
 							to: recipients.to,
@@ -377,7 +406,7 @@ export default {
 					return
 				} else if (reply.mode === 'forward') {
 					logger.debug('Show forward composer', { reply })
-					commit('showMessageComposer', {
+					commit('startComposerSession', {
 						data: {
 							accountId: reply.data.accountId,
 							to: [],
@@ -439,17 +468,23 @@ export default {
 				await dispatch('outbox/stopMessage', { message })
 			}
 
-			commit('showMessageComposer', {
+			commit('startComposerSession', {
 				type,
 				data,
 				forwardedMessages,
 				templateMessageId,
 				originalSendAt,
 			})
+
+			// Blank messages can be safely discarded (without saving a draft) until changes are made
+			if (isBlankMessage) {
+				commit('setComposerMessageSaved', true)
+			}
 		})
 	},
-	async closeMessageComposer({ commit, dispatch, getters }, { restoreOriginalSendAt }) {
+	stopComposerSession({ commit, dispatch, getters }, { restoreOriginalSendAt = false } = {}) {
 		return handleHttpAuthErrors(commit, async () => {
+
 			// Restore original sendAt timestamp when requested
 			const message = getters.composerMessage
 			if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
@@ -464,8 +499,18 @@ export default {
 				})
 			}
 
-			commit('hideMessageComposer')
+			commit('stopComposerSession')
 		})
+	},
+	showMessageComposer({ commit }) {
+		commit('showMessageComposer')
+	},
+	closeMessageComposer({ commit }) {
+		commit('hideMessageComposer')
+	},
+	patchComposerData({ commit }, data) {
+		commit('patchComposerData', data)
+		commit('setComposerMessageSaved', false)
 	},
 	async fetchEnvelope({ commit, getters }, { accountId, id }) {
 		return handleHttpAuthErrors(commit, async () => {

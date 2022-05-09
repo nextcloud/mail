@@ -197,7 +197,7 @@
 				name="body"
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
-				:focus="isReply"
+				:focus="isReply || !isFirstOpen"
 				:bus="bus"
 				@input="onEditorInput"
 				@ready="onEditorReady"
@@ -305,9 +305,9 @@
 							{{ t('mail', 'Disable formatting') }}
 						</ActionButton>
 						<ActionCheckbox
-							:checked="requestMdn"
-							@check="requestMdn = true"
-							@uncheck="requestMdn = false">
+							:checked="requestMdnVal"
+							@check="requestMdnVal = true"
+							@uncheck="requestMdnVal = false">
 							{{ t('mail', 'Request a read receipt') }}
 						</ActionCheckbox>
 						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
@@ -580,6 +580,14 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		isFirstOpen: {
+			type: Boolean,
+			required: true,
+		},
+		requestMdn: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -609,7 +617,7 @@ export default {
 			},
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
-			requestMdn: false,
+			requestMdnVal: this.requestMdn,
 			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
@@ -847,6 +855,36 @@ export default {
 				this.onAliasChange(newAlias)
 			}
 		},
+		selectTo(val) {
+			this.$emit('update:to', val)
+		},
+		selectCc(val) {
+			this.$emit('update:cc', val)
+		},
+		selectBcc(val) {
+			this.$emit('update:bcc', val)
+		},
+		subjectVal(val) {
+			this.$emit('update:subject', val)
+		},
+		bodyVal(val) {
+			this.$emit('update:editor-body', val)
+		},
+		attachments(val) {
+			this.$emit('update:attachments-data', val)
+		},
+		sendAtVal(val) {
+			this.$emit('update:send-at', val)
+		},
+		wantsSmimeSign(val) {
+			this.$emit('update:smime-sign', val)
+		},
+		wantsSmimeEncrypt(val) {
+			this.$emit('update:smime-encrypt', val)
+		},
+		requestMdnVal(val) {
+			this.$emit('update:request-mdn', val)
+		},
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -854,7 +892,7 @@ export default {
 		await this.onMailvelopeLoaded(await getMailvelope())
 	},
 	mounted() {
-		if (!this.isReply) {
+		if (!this.isReply && this.isFirstOpen) {
 			this.$nextTick(() => this.$refs.toLabel.$el.focus())
 		}
 
@@ -944,14 +982,14 @@ export default {
 		initBody() {
 			/** @member {Text} body */
 			let body
-			if (this.replyTo) {
+			if (this.replyTo && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.replyTo.from[0],
 					this.replyTo.dateInt,
 					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
 				).value
-			} else if (this.forwardFrom) {
+			} else if (this.forwardFrom && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.forwardFrom.from[0],
@@ -977,7 +1015,7 @@ export default {
 				attachments: this.attachments,
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.encrypt && !this.editorPlainText,
-				requestMdn: this.requestMdn,
+				requestMdn: this.requestMdnVal,
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
@@ -1047,6 +1085,11 @@ export default {
 			this.selectedAlias = alias
 			this.changeSignature = true
 
+			this.$emit('update:from-account', alias.id)
+			if (alias.aliasId) {
+				this.$emit('update:from-alias', alias.aliasId)
+			}
+
 			if (this.wantsSmimeSign || this.wantsSmimeEncrypt) {
 				if (!this.smimeCertificateForAlias(alias)) {
 					this.wantsSmimeSign = false
@@ -1095,6 +1138,14 @@ export default {
 				} else if (loadingIndicator === 'bcc') {
 					this.loadingIndicatorBcc = false
 				}
+
+				// Search results might not have labels
+				for (const result of results) {
+					if (!result.label) {
+						result.label = result.email
+					}
+				}
+
 				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
 		},
@@ -1119,10 +1170,15 @@ export default {
 			this.onNewAddr(addr, this.selectBcc)
 		},
 		onNewAddr(addr, list) {
-			const res = {
-				label: addr, // TODO: parse if possible
-				email: addr, // TODO: parse if possible
+			// Autocomplete search results are passed as objects
+			let res = addr
+			if (typeof addr === 'string') {
+				res = {
+					label: addr, // TODO: parse if possible
+					email: addr, // TODO: parse if possible
+				}
 			}
+
 			this.newRecipients.push(res)
 			list.push(res)
 			this.saveDraftDebounced()
@@ -1150,18 +1206,12 @@ export default {
 			this.attachments = []
 			this.autocompleteRecipients = []
 			this.newRecipients = []
-			this.requestMdn = false
+			this.requestMdnVal = false
 			this.changeSignature = false
 			this.sendAtVal = undefined
 
 			this.setAlias()
 			this.initBody()
-			Vue.nextTick(() => {
-				// toLabel may not be on the DOM yet
-				// (because "Message sent" is shown)
-				// so we defer the focus call
-				this.$refs.toLabel.$el.focus()
-			})
 		},
 		/**
 		 * Format aliases for the Multiselect
@@ -1335,7 +1385,7 @@ export default {
 	}
 
 	&__from {
-		margin-right: 50px; /* for the modal close button */
+		margin-right: 102px; /* for the modal close and minimize buttons */
 	}
 
 	.multiselect.multiselect--multiple::after {

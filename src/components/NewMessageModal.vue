@@ -1,9 +1,10 @@
 <template>
 	<Modal
+		v-if="showMessageComposer"
 		size="normal"
 		:title="modalTitle"
 		:additional-trap-elements="toolbarElements"
-		@close="$emit('close', { restoreOriginalSendAt: true })">
+		@close="$event.type === 'click' ? onClose() : onMinimize()">
 		<EmptyContent v-if="error"
 			:title="t('mail', 'Error sending your message')"
 			class="centered-content"
@@ -43,31 +44,54 @@
 				{{ t('mail', 'Send anyway') }}
 			</ButtonVue>
 		</EmptyContent>
-		<Composer v-else
-			:from-account="composerData.accountId"
-			:from-alias="composerData.aliasId"
-			:to="composerData.to"
-			:cc="composerData.cc"
-			:bcc="composerData.bcc"
-			:subject="composerData.subject"
-			:attachments-data="composerData.attachments"
-			:body="composerData.body"
-			:editor-body="convertEditorBody(composerData)"
-			:in-reply-to-message-id="composerData.inReplyToMessageId"
-			:reply-to="composerData.replyTo"
-			:forward-from="composerData.forwardFrom"
-			:send-at="composerData.sendAt * 1000"
-			:forwarded-messages="forwardedMessages"
-			:can-save-draft="canSaveDraft"
-			:saving-draft="savingDraft"
-			:draft-saved="draftSaved"
-			:smime-sign="composerData.smimeSign"
-			:smime-encrypt="composerData.smimeEncrypt"
-			@draft="onDraft"
-			@discard-draft="discardDraft"
-			@upload-attachment="onAttachmentUploading"
-			@send="onSend"
-			@show-toolbar="handleShow" />
+		<template v-else>
+			<NcActions class="minimize-button">
+				<NcActionButton @click="onMinimize">
+					<template #icon>
+						<MinimizeIcon :size="20" />
+					</template>
+				</NcActionButton>
+			</NcActions>
+			<Composer ref="composer"
+				:from-account="composerData.accountId"
+				:from-alias="composerData.aliasId"
+				:to="composerData.to"
+				:cc="composerData.cc"
+				:bcc="composerData.bcc"
+				:subject="composerData.subject"
+				:attachments-data="composerData.attachments"
+				:body="composerData.body"
+				:editor-body="convertEditorBody(composerData)"
+				:in-reply-to-message-id="composerData.inReplyToMessageId"
+				:reply-to="composerData.replyTo"
+				:forward-from="composerData.forwardFrom"
+				:send-at="composerData.sendAt * 1000"
+				:forwarded-messages="forwardedMessages"
+				:can-save-draft="canSaveDraft"
+				:saving-draft="savingDraft"
+				:draft-saved="draftSaved"
+				:smime-sign="composerData.smimeSign"
+				:smime-encrypt="composerData.smimeEncrypt"
+				:is-first-open="modalFirstOpen"
+				:request-mdn="composerData.requestMdn"
+				@update:from-account="patchComposerData({ accountId: $event })"
+				@update:from-alias="patchComposerData({ aliasId: $event })"
+				@update:to="patchComposerData({ to: $event })"
+				@update:cc="patchComposerData({ cc: $event })"
+				@update:bcc="patchComposerData({ bcc: $event })"
+				@update:subject="patchComposerData({ subject: $event })"
+				@update:attachments-data="patchComposerData({ attachments: $event })"
+				@update:editor-body="patchComposerData({ editorBody: $event })"
+				@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
+				@update:smime-sign="patchComposerData({ smimeSign: $event })"
+				@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
+				@update:request-mdn="patchComposerData({ requestMdn: $event })"
+				@draft="onDraft"
+				@discard-draft="discardDraft"
+				@upload-attachment="onAttachmentUploading"
+				@send="onSend"
+				@show-toolbar="handleShow" />
+		</template>
 	</Modal>
 </template>
 <script>
@@ -75,6 +99,8 @@ import {
 	NcButton as ButtonVue,
 	NcEmptyContent as EmptyContent,
 	NcModal as Modal,
+	NcActions,
+	NcActionButton,
 } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
@@ -88,6 +114,8 @@ import { matchError } from '../errors/match'
 import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError'
 import ManyRecipientsError from '../errors/ManyRecipientsError'
 import Loading from './Loading'
+import { mapGetters } from 'vuex'
+import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 
 export default {
 	name: 'NewMessageModal',
@@ -97,6 +125,9 @@ export default {
 		EmptyContent,
 		Loading,
 		Modal,
+		NcActions,
+		NcActionButton,
+		MinimizeIcon,
 	},
 	data() {
 		return {
@@ -111,9 +142,12 @@ export default {
 			sending: false,
 			error: undefined,
 			warning: undefined,
+			modalFirstOpen: true,
+			cookedComposerData: undefined,
 		}
 	},
 	computed: {
+		...mapGetters(['showMessageComposer']),
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')
@@ -133,7 +167,7 @@ export default {
 			return this.$store.getters.composerMessage
 		},
 		composerData() {
-			return this.$store.getters.composerMessage?.data
+			return this.$store.getters.composerMessage?.data ?? {}
 		},
 		forwardedMessages() {
 			return this.composerMessage?.options?.forwardedMessages ?? []
@@ -145,13 +179,23 @@ export default {
 			this.draftsPromise = Promise.resolve(draftId)
 		}
 	},
+	async mounted() {
+		await this.$nextTick()
+		this.updateCookedComposerData()
+	},
 	methods: {
 		handleShow(element) {
 			this.toolbarElements = [element]
 		},
 		toHtml,
 		plain,
-		onDraft(data) {
+		/**
+		 * @param data Message data
+		 * @param {object=} opts Options
+		 * @param {boolean=} opts.showToast Show a toast after saving
+		 * @return {Promise<number>} Draft id promise
+		 */
+		onDraft(data, { showToast = false } = {}) {
 			if (!this.composerMessage) {
 				logger.info('Ignoring draft because there is no message anymore', { data })
 				return this.draftsPromise
@@ -162,8 +206,10 @@ export default {
 				this.draftSaved = false
 				data.draftId = id
 				try {
+					let idToReturn
 					if (this.composerMessage.type === 'outbox') {
 						const dataForServer = this.getDataForServer(data)
+						delete dataForServer.sendAt
 						await this.$store.dispatch('outbox/updateMessage', {
 							message: dataForServer,
 							id: this.composerData.id,
@@ -186,11 +232,34 @@ export default {
 							id,
 						})
 
-						return id
+						idToReturn = id
+					}
+
+					this.$store.commit('setComposerMessageSaved', true)
+
+					if (showToast) {
+						if (this.composerMessage.type === 'outbox') {
+							showSuccess(t('mail', 'Message saved'))
+						} else {
+							showSuccess(t('mail', 'Draft saved'))
+						}
+					}
+
+					if (idToReturn !== undefined) {
+						return idToReturn
 					}
 				} catch (error) {
 					logger.error('Could not save draft', { error })
 					this.canSaveDraft = false
+					this.$store.commit('setComposerIndicatorDisabled', false)
+
+					if (showToast) {
+						if (this.composerMessage.type === 'outbox') {
+							showError(t('mail', 'Failed to save message'))
+						} else {
+							showError(t('mail', 'Failed to save draft'))
+						}
+					}
 				} finally {
 					this.savingDraft = false
 				}
@@ -264,6 +333,7 @@ export default {
 					this.$store.commit('removeEnvelope', { id: data.draftId })
 					this.$store.commit('removeMessage', { id: data.draftId })
 				}
+				await this.$store.dispatch('stopComposerSession')
 				this.$emit('close')
 			} catch (error) {
 				logger.error('could not send message', { error })
@@ -317,7 +387,11 @@ export default {
 			if (isOutbox) {
 				id = this.composerMessage.data.id
 			}
-			this.$emit('close')
+
+			// It's safe to stop the session and ultimately destroy this component as only data
+			// local this this function is accessed afterwards
+			await this.$store.dispatch('stopComposerSession')
+
 			try {
 				if (isOutbox) {
 					await this.$store.dispatch('outbox/deleteMessage', { id })
@@ -339,6 +413,40 @@ export default {
 			}
 			return toHtml(composerData.body).value
 		},
+		updateCookedComposerData() {
+			if (!this.$refs.composer) {
+				// Composer is not rendered yet
+				return
+			}
+
+			// Extract data to save drafts while the composer is not rendered.
+			// This is hacky but there is no other way for now.
+			this.cookedComposerData = this.$refs.composer.getMessageData()
+		},
+		async patchComposerData(data) {
+			this.updateCookedComposerData()
+			await this.$store.dispatch('patchComposerData', data)
+		},
+		async onMinimize() {
+			this.modalFirstOpen = false
+
+			await this.$store.dispatch('closeMessageComposer')
+			if (!this.$store.getters.composerMessageIsSaved) {
+				await this.onDraft(this.cookedComposerData, { showToast: true })
+			}
+		},
+		async onClose() {
+			this.$store.commit('setComposerIndicatorDisabled', true)
+			await this.onMinimize()
+
+			// End the session only if all unsaved changes have been saved
+			if (this.canSaveDraft) {
+				logger.debug('Closing composer session due to close button click')
+				await this.$store.dispatch('stopComposerSession', {
+					restoreOriginalSendAt: true,
+				})
+			}
+		},
 	},
 }
 
@@ -357,5 +465,11 @@ export default {
 	height: 90%;
 	// Max editor + modal height
 	max-height: 700px !important;
+}
+
+.minimize-button {
+	position: absolute;
+	right: 49px;
+	top: 4px;
 }
 </style>
