@@ -224,14 +224,6 @@
 							@uncheck="encrypt = false">
 							{{ t('mail', 'Encrypt message with Mailvelope') }}
 						</ActionCheckbox>
-						<ActionLink v-else
-							href="https://www.mailvelope.com/"
-							target="_blank"
-							icon="icon-password">
-							{{
-								t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
-							}}
-						</ActionLink>
 					</template>
 					<template v-if="isMoreActionsOpen">
 						<ActionButton :close-after-click="false"
@@ -357,7 +349,6 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionRadio from '@nextcloud/vue/dist/Components/ActionRadio'
 import Button from '@nextcloud/vue/dist/Components/Button'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
@@ -417,7 +408,6 @@ export default {
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
-		ActionLink,
 		ActionRadio,
 		VButton: Button,
 		ComposerAttachments,
