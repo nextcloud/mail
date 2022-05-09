@@ -242,6 +242,8 @@ OC.L10N.register(
     "Outbox" : "Skrzynka nadawcza",
     "Edit message" : "Edytuj wiadomość",
     "Draft" : "Wersja robocza",
+    "Message discarded" : "Wiadomość odrzucona",
+    "Could not discard message" : "Nie udało się odrzucić wiadomości",
     "No message selected" : "Nie wybrano żadnej wiadomości",
     "Could not open outbox" : "Nie udało się otworzyć skrzynki nadawczej",
     "Delete" : "Usuń",
