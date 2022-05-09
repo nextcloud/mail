@@ -5,7 +5,9 @@
 		<MailboxThread v-else-if="activeAccount"
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
-		<NewMessageModal v-if="$store.getters.showMessageComposer" @close="$store.dispatch('closeMessageComposer')" />
+		<NewMessageModal
+			v-if="$store.getters.showMessageComposer"
+			@close="onCloseModal" />
 	</Content>
 </template>
 
@@ -100,6 +102,9 @@ export default {
 					filter: this.$route.params?.filter,
 				},
 			})
+		},
+		async onCloseModal(opts) {
+			await this.$store.dispatch('closeMessageComposer', opts ?? {})
 		},
 	},
 }
