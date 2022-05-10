@@ -25,6 +25,7 @@
 		pane-config-key="mail"
 		:show-details="isMessageShown"
 		@update:showDetails="hideMessage">
+		<OutboxMessageContent />
 		<!-- List -->
 		<template #list>
 			<AppContentList>
@@ -53,6 +54,7 @@ import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import Loading from './Loading'
 import Error from './Error'
 import EmptyMailbox from './EmptyMailbox'
+import OutboxMessageContent from './OutboxMessageContent'
 import OutboxMessageListItem from './OutboxMessageListItem'
 import logger from '../logger'
 
@@ -65,6 +67,7 @@ export default {
 		Loading,
 		EmptyMailbox,
 		OutboxMessageListItem,
+		OutboxMessageContent,
 	},
 	data() {
 		return {
