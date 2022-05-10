@@ -16,7 +16,7 @@
 		@click="onClick">
 		<template #icon>
 			<div
-				v-if="mailbox.isUnified"
+				v-if="mailbox.isUnified && hasMultipleAccounts"
 				class="mail-message-account-color"
 				:style="{'background-color': accountColor}" />
 			<div
@@ -145,7 +145,7 @@
 		</template>
 		<template #extra>
 			<div
-				v-if="mailbox.isUnified"
+				v-if="mailbox.isUnified && hasMultipleAccounts"
 				class="mail-message-account-color"
 				:style="{'background-color': accountColor}" />
 			<div v-for="tag in tags"
@@ -235,6 +235,10 @@ export default {
 			type: Array,
 			required: false,
 			default: () => [],
+		},
+		hasMultipleAccounts: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {

@@ -161,6 +161,7 @@
 				:mailbox="mailbox"
 				:selected="selection.includes(env.databaseId)"
 				:select-mode="selectMode"
+				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, ...$event)"
@@ -271,6 +272,10 @@ export default {
 		},
 		selectedEnvelopes() {
 			return this.envelopes.filter((env) => this.selection.includes(env.databaseId))
+		},
+		hasMultipleAccounts() {
+			const mailboxIds = this.envelopes.map(envelope => envelope.mailboxId)
+			return Array.from(new Set(mailboxIds)).length > 1
 		},
 	},
 	watch: {
