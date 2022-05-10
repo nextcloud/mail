@@ -78,7 +78,6 @@ OC.L10N.register(
     "Enable formatting" : "הפעלת עיצוב",
     "Request a read receipt" : "בקשת אישור קריאה",
     "Encrypt message with Mailvelope" : "הצפנת הודעה עם Mailvelope",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "מעניין אותך להצפין את הודעות הדוא״ל שלך? ניתן להתקין את הרחבת הדפדפן Mailvelope!",
     "Enter a date" : "נא למלא תאריך",
     "Uploading attachments …" : "הקבצים המצורפים מועלים…",
     "Sending …" : "שולח...",

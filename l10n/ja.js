@@ -78,7 +78,6 @@ OC.L10N.register(
     "Add attachment from Files" : "ファイルから添付ファイルの追加",
     "Enable formatting" : "フォーマットを有効にする",
     "Encrypt message with Mailvelope" : "Mailvelopeでメッセージを暗号化",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "メールを暗号化する方法をお探しですか?Mailvelopeブラウザー拡張をインストールしてください。",
     "Enter a date" : "日付を入力してください",
     "Uploading attachments …" : "添付ファイルをアップロード",
     "Sending …" : "送信中 …",

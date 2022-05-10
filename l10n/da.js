@@ -80,7 +80,6 @@ OC.L10N.register(
     "Enable formatting" : "Aktiver formatering",
     "Request a read receipt" : "Anmod om en læsekvittering",
     "Encrypt message with Mailvelope" : "Kryptér meddelelse med Mailvelope",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Leder du efter en måde at kryptere dine e -mails på? Installer Mailvelope -browserudvidelsen!",
     "Uploading attachments …" : "Uploader vedhæftninger",
     "Sending …" : "Sender ...",
     "Error sending your message" : "Fejl ved afsendelse af din besked",

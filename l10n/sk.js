@@ -89,7 +89,6 @@ OC.L10N.register(
     "Enable formatting" : "Povoliť formátovanie",
     "Request a read receipt" : "Vyžiadať si potvrdenie o prečítaní",
     "Encrypt message with Mailvelope" : "Šifrovať správu pomocou Mailvelope",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Hľadáte spôsob, ako šifrovať svoje e-maily? Nainštalujte si rozšírenie prehliadača Mailvelope.",
     "Enter a date" : "Zadajte dátum",
     "Uploading attachments …" : "Nahrávanie príloh...",
     "Sending …" : "Odosiela sa...",

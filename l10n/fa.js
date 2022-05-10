@@ -59,7 +59,6 @@ OC.L10N.register(
     "Upload attachment" : "پیوست را بارگیری کنید",
     "Add attachment from Files" : "پیوست را از پرونده ها اضافه کنید",
     "Enable formatting" : "قالب بندی را فعال کنید",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "آیا به دنبال راهی برای رمزگذاری ایمیل های خود هستید؟ افزونه مرورگر Mailvelope را نصب کنید!",
     "Enter a date" : "تاریخ را وارد کنید",
     "Uploading attachments …" : "درحال بارگذاری پیوستها …",
     "Sending …" : "در حال ارسال ...",

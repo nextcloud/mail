@@ -94,7 +94,6 @@ OC.L10N.register(
     "Enable formatting" : "Formázás engedélyezése",
     "Request a read receipt" : "Tértivevény kérése",
     "Encrypt message with Mailvelope" : "Üzenet titkosítása a Mailvelope-pal",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Megoldást keres a levelei titkosításához? Telepítse a Mailvelope böngészőkiegészítőt.",
     "Send now" : "Küldés most",
     "Tomorrow morning" : "Holnap reggel",
     "Tomorrow afternoon" : "Holnap délutá",

@@ -76,7 +76,6 @@ OC.L10N.register(
     "Send later" : "Siųsti vėliau",
     "Enable formatting" : "Įjungti formatavimą",
     "Encrypt message with Mailvelope" : "Šifruoti laišką naudojant Mailvelope",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Ieškote būdo kaip šifruoti savo el. laiškus? Įsidiekite Mailvelope naršyklės plėtinį!",
     "Send now" : "Siųsti dabar",
     "Enter a date" : "Įveskite datą",
     "Uploading attachments …" : "Įkeliami priedai …",

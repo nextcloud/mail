@@ -94,7 +94,6 @@ OC.L10N.register(
     "Enable formatting" : "啟用格式",
     "Request a read receipt" : "索取讀取回條",
     "Encrypt message with Mailvelope" : "使用 Mailvelope 加密郵件",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "正在尋找加密您電子郵件的方法嗎？安裝 Mailvelope 瀏覽擴充套件！",
     "Send now" : "立刻傳送",
     "Tomorrow morning" : "明天早上",
     "Tomorrow afternoon" : "明天下午",

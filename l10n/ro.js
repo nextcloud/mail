@@ -76,7 +76,6 @@ OC.L10N.register(
     "Send later" : "Trimite mai târziu",
     "Enable formatting" : "Permite formatarea",
     "Encrypt message with Mailvelope" : "Criptează mesajul cu Mailvelope",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Cauți o modalitate de a cripta email-urile? Instalează extensia de browser Mailvelope!",
     "Send now" : "Trimite acum",
     "Tomorrow morning" : "Maine dimineață",
     "Tomorrow afternoon" : "Maine după amiază",

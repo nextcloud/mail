@@ -94,7 +94,6 @@ OC.L10N.register(
     "Enable formatting" : "Formatierung aktivieren",
     "Request a read receipt" : "Lesebestätigung anfordern",
     "Encrypt message with Mailvelope" : "Nachricht mit Mailvelope verschlüsseln",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Sie suchen nach einer Möglichkeit Ihre E-Mails zu verschlüsseln? Installieren Sie hierfür die Mailvelope Browser-Erweiterung!",
     "Send now" : "Jetzt senden",
     "Tomorrow morning" : "Morgen Vormittag",
     "Tomorrow afternoon" : "Morgen Nachmittag",

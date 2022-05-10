@@ -89,7 +89,6 @@ OC.L10N.register(
     "Enable formatting" : "Abilita formattazione",
     "Request a read receipt" : "Richiedi una conferma di lettura",
     "Encrypt message with Mailvelope" : "Cifra il messaggio con Mailvelope",
-    "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Stai cercando un modo per cifrare le tue email? Installa l'estensione per browser Mailvelope!",
     "Enter a date" : "Digita una data",
     "Uploading attachments …" : "Caricamento allegati…",
     "Sending …" : "Invio in corso...",

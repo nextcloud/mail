@@ -17,6 +17,7 @@ OC.L10N.register(
     "Save" : "Simpan",
     "Connect" : "Sambungkan",
     "Signature" : "Tanda",
+    "Email address" : "Alamat email",
     "Cancel" : "Membatalkan",
     "Show keyboard shortcuts" : "Tampilkan pintasan papan kunci",
     "Upload attachment" : "Unggah lampiran",
