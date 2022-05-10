@@ -1179,6 +1179,7 @@ class MessageMapper extends QBMapper {
 			);
 		$result = $select->execute();
 		$rows = $result->fetchAll();
+		$result->closeCursor();
 		if (empty($rows)) {
 			return null;
 		}
