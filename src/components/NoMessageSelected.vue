@@ -21,9 +21,11 @@
 
 <template>
 	<AppContentDetails>
-		<div class="icon icon-mail" />
-		<h2>{{ t('mail', 'No message selected') }}</h2>
-		<p />
+		<div id="emptycontent">
+			<div class="icon icon-mail" />
+			<h2>{{ t('mail', 'No message selected') }}</h2>
+			<p />
+		</div>
 	</AppContentDetails>
 </template>
 
@@ -39,12 +41,6 @@ export default {
 </script>
 
 <style scoped>
-.app-content-details {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-
 .icon {
 	height: 64px;
 	width: 64px;
