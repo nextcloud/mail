@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
@@ -248,7 +249,7 @@ interface IMailManager {
 	 * @param string $mailbox
 	 * @return boolean
 	 */
-	public function isPermflagsEnabled(Account $account, string $mailbox): bool;
+	public function isPermflagsEnabled(Horde_Imap_Client_Socket $client, Account $account, string $mailbox): bool;
 
 	/**
 	 * Create a mail tag

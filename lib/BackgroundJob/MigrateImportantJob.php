@@ -33,6 +33,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -57,12 +58,16 @@ class MigrateImportantJob extends QueuedJob {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var IMAPClientFactory  */
+	private $imapClientFactory;
+
 	public function __construct(MailboxMapper $mailboxMapper,
 								MailAccountMapper $mailAccountMapper,
 								MailManager $mailManager,
 								MigrateImportantFromImapAndDb $migration,
 								LoggerInterface $logger,
-								ITimeFactory $timeFactory
+								ITimeFactory $timeFactory,
+								IMAPClientFactory $imapClientFactory
 								) {
 		parent::__construct($timeFactory);
 		$this->mailboxMapper = $mailboxMapper;
@@ -70,6 +75,7 @@ class MigrateImportantJob extends QueuedJob {
 		$this->mailManager = $mailManager;
 		$this->migration = $migration;
 		$this->logger = $logger;
+		$this->imapClientFactory = $imapClientFactory;
 	}
 
 	/**
@@ -96,21 +102,27 @@ class MigrateImportantJob extends QueuedJob {
 		}
 
 		$account = new Account($mailAccount);
-		if ($this->mailManager->isPermflagsEnabled($account, $mailbox->getName()) === false) {
-			$this->logger->debug('Permflags not enabled for <' . $accountId . '>');
-			return;
-		}
+		$client = $this->imapClientFactory->getClient($account);
 
 		try {
-			$this->migration->migrateImportantOnImap($account, $mailbox);
-		} catch (ServiceException $e) {
-			$this->logger->debug('Could not flag messages on IMAP for mailbox <' . $mailboxId . '>.');
-		}
+			if ($this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName()) === false) {
+				$this->logger->debug('Permflags not enabled for <' . $accountId . '>');
+				return;
+			}
 
-		try {
-			$this->migration->migrateImportantFromDb($account, $mailbox);
-		} catch (ServiceException $e) {
-			$this->logger->debug('Could not flag messages from DB on IMAP for mailbox <' . $mailboxId . '>.');
+			try {
+				$this->migration->migrateImportantOnImap($client, $account, $mailbox);
+			} catch (ServiceException $e) {
+				$this->logger->debug('Could not flag messages on IMAP for mailbox <' . $mailboxId . '>.');
+			}
+
+			try {
+				$this->migration->migrateImportantFromDb($client, $account, $mailbox);
+			} catch (ServiceException $e) {
+				$this->logger->debug('Could not flag messages from DB on IMAP for mailbox <' . $mailboxId . '>.');
+			}
+		} finally {
+			$client->logout();
 		}
 	}
 }

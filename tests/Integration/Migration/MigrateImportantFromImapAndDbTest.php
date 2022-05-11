@@ -38,10 +38,6 @@ use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDbTest extends TestCase {
-
-	/** @var MockObject */
-	private $clientFactory;
-
 	/** @var MockObject */
 	private $client;
 
@@ -64,7 +60,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->migration = new MigrateImportantFromImapAndDb(
-			$this->clientFactory,
 			$this->messageMapper,
 			$this->mailboxMapper,
 			$this->logger
@@ -77,10 +72,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$mailbox = $this->createMock(Mailbox::class);
 		$uids = [1,2,3];
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->messageMapper->expects($this->once())
 			->method('getFlagged')
 			->with($this->client, $mailbox, '$important')
@@ -91,7 +82,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantOnImap($account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
 	public function testMigrateImportantOnImapNoUids() {
@@ -99,10 +90,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$mailbox = $this->createMock(Mailbox::class);
 		$uids = [];
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->messageMapper->expects($this->once())
 			->method('getFlagged')
 			->with($this->client, $mailbox, '$important')
@@ -112,7 +99,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantOnImap($account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
 	public function testMigrateImportantOnImapExceptionGetFlagged() {
@@ -120,10 +107,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$mailbox = $this->createMock(Mailbox::class);
 		$e = new Horde_Imap_Client_Exception('');
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->messageMapper->expects($this->once())
 			->method('getFlagged')
 			->with($this->client, $mailbox, '$important')
@@ -134,7 +117,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 			->method('debug');
 		$this->expectException(ServiceException::class);
 
-		$this->migration->migrateImportantOnImap($account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
 	public function testMigrateImportantOnImapExceptionOnFlag() {
@@ -144,10 +127,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$e = new Horde_Imap_Client_Exception('');
 		$uids = [1,2,3,4];
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->messageMapper->expects($this->once())
 			->method('getFlagged')
 			->with($this->client, $mailbox, '$important')
@@ -161,7 +140,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 			->with('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
 		$this->expectException(ServiceException::class);
 
-		$this->migration->migrateImportantOnImap($account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
 	}
 
 	public function migrateImportantFromDb() {
@@ -170,10 +149,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$mailbox->setId(1);
 		$uids = [1,2,3];
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->mailboxMapper->expects($this->once())
 			->method('findFlaggedImportantUids')
 			->with($mailbox->getId())
@@ -184,7 +159,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantFromDb($account, $mailbox);
+		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
 	public function testMigrateImportantFromDbNoUids() {
@@ -193,10 +168,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$mailbox->setId(1);
 		$uids = [];
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->mailboxMapper->expects($this->once())
 			->method('findFlaggedImportantUids')
 			->with($mailbox->getId())
@@ -206,7 +177,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantFromDb($account, $mailbox);
+		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 
 	public function testMigrateImportantFromDbExceptionOnFlag() {
@@ -217,10 +188,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$e = new Horde_Imap_Client_Exception('');
 		$uids = [1,2,3];
 
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($this->client);
 		$this->mailboxMapper->expects($this->once())
 			->method('findFlaggedImportantUids')
 			->with($mailbox->getId())
@@ -234,6 +201,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 			->with('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
 		$this->expectException(ServiceException::class);
 
-		$this->migration->migrateImportantFromDb($account, $mailbox);
+		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
 	}
 }
