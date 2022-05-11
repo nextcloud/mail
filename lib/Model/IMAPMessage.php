@@ -52,6 +52,7 @@ use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
+use function fclose;
 use function in_array;
 use function mb_convert_encoding;
 use function mb_strcut;
@@ -179,13 +180,15 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	private function getRawReferences(): string {
-		/** @var Horde_Mime_Headers $headers */
-		$headers = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-		$header = $headers->getHeader('references');
-		if ($header === null) {
+		/** @var resource $headersStream */
+		$headersStream = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
+		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
+		fclose($headersStream);
+		$references = $parsedHeaders->getHeader('references');
+		if ($references === null) {
 			return '';
 		}
-		return $header->value_single;
+		return $references->value_single;
 	}
 
 	private function getRawInReplyTo(): string {
@@ -193,9 +196,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	public function getDispositionNotificationTo(): string {
-		/** @var Horde_Mime_Headers $headers */
-		$headers = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-		$header = $headers->getHeader('disposition-notification-to');
+		/** @var resource $headersStream */
+		$headersStream = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
+		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
+		fclose($headersStream);
+		$header = $parsedHeaders->getHeader('disposition-notification-to');
 		if ($header === null) {
 			return '';
 		}
