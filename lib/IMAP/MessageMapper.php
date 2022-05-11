@@ -41,6 +41,7 @@ use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
 use function count;
+use function fclose;
 use function in_array;
 use function iterator_to_array;
 use function max;
@@ -529,6 +530,7 @@ class MessageMapper {
 				'usestream' => true,
 			]);
 			$decoded = $part->getContents();
+			fclose($stream);
 
 			$attachments[] = $decoded;
 		}
@@ -590,6 +592,7 @@ class MessageMapper {
 				'name' => $part->getName(),
 				'size' => $part->getSize()
 			];
+			fclose($stream);
 		}
 		return $attachments;
 	}
