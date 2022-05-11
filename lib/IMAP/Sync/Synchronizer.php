@@ -134,18 +134,12 @@ class Synchronizer {
 
 		// Without QRESYNC we need to specify the known ids and in oder to avoid
 		// overly long IMAP commands they have to be chunked.
-		return array_merge(
-			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
-			...array_map(
-				static function (array $uids) use ($imapClient, $mailbox, $request) {
-					return $imapClient->sync($mailbox, $request->getToken(), [
-						'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
-						'ids' => new Horde_Imap_Client_Ids($uids),
-					])->flagsuids->ids;
-				},
-				array_chunk($request->getUids(), self::UID_CHUNK_SIZE)
-			)
-		);
+		$sorted = $request->getUids();
+		sort($sorted);
+		return $imapClient->sync($mailbox, $request->getToken(), [
+			'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
+			'ids' => new Horde_Imap_Client_Ids(min($sorted) . ':' . max($sorted)),
+		])->flagsuids->ids;
 	}
 
 	/**
@@ -164,18 +158,11 @@ class Synchronizer {
 
 		// Without QRESYNC we need to specify the known ids and in oder to avoid
 		// overly long IMAP commands they have to be chunked.
-		$vanishedUids = array_merge(
-			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
-			...array_map(
-				static function (array $uids) use ($imapClient, $mailbox, $request) {
-					return $imapClient->sync($mailbox, $request->getToken(), [
-						'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
-						'ids' => new Horde_Imap_Client_Ids($uids),
-					])->vanisheduids->ids;
-				},
-				array_chunk($request->getUids(), self::UID_CHUNK_SIZE)
-			)
-		);
-		return $vanishedUids;
+		$sorted = $request->getUids();
+		sort($sorted);
+		return $imapClient->sync($mailbox, $request->getToken(), [
+			'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			'ids' => new Horde_Imap_Client_Ids(min($sorted) . ':' .  max($sorted)),
+		])->vanisheduids->ids;
 	}
 }
