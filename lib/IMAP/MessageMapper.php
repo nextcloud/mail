@@ -36,6 +36,7 @@ use Horde_Mime_Part;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use function array_filter;
@@ -81,6 +82,7 @@ class MessageMapper {
 	 *
 	 * @param int $maxResults
 	 * @param int $highestKnownUid
+	 * @param PerformanceLoggerTask $perf
 	 *
 	 * @return array
 	 * @throws Horde_Imap_Client_Exception
@@ -88,10 +90,12 @@ class MessageMapper {
 	public function findAll(Horde_Imap_Client_Socket $client,
 							string $mailbox,
 							int $maxResults,
-							int $highestKnownUid): array {
+							int $highestKnownUid,
+							LoggerInterface $logger,
+							PerformanceLoggerTask $perf): array {
 		/**
 		 * To prevent memory exhaustion, we don't want to just ask for a list of
-		 * all UIDs and limit them client-side. Instead we can (hopefully
+		 * all UIDs and limit them client-side. Instead, we can (hopefully
 		 * efficiently) query the min and max UID as well as the number of
 		 * messages. Based on that we assume that UIDs are somewhat distributed
 		 * equally and build a page to fetch.
@@ -110,6 +114,7 @@ class MessageMapper {
 				]
 			]
 		);
+		$perf->step('mailbox meta search');
 		/** @var int $min */
 		$min = (int) $metaResults['min'];
 		/** @var int $max */
@@ -143,7 +148,7 @@ class MessageMapper {
 			$lower + $estimatedPageSize
 		);
 		if ($lower > $upper) {
-			$this->logger->debug("Range for findAll did not find any (not already known) messages and all messages of mailbox $mailbox have been fetched.");
+			$logger->debug("Range for findAll did not find any (not already known) messages and all messages of mailbox $mailbox have been fetched.");
 			return [
 				'messages' => [],
 				'all' => true,
@@ -151,7 +156,7 @@ class MessageMapper {
 			];
 		}
 
-		$this->logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
+		$logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
 
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
@@ -162,6 +167,7 @@ class MessageMapper {
 				'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
 			]
 		);
+		$perf->step('fetch UIDs');
 		if (count($fetchResult) === 0) {
 			/*
 			 * There were no messages in this range.
@@ -171,8 +177,8 @@ class MessageMapper {
 			 * We take $upper as the lowest known UID as we just found out that
 			 * there is nothing to fetch in $highestKnownUid:$upper
 			 */
-			$this->logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
-			return $this->findAll($client, $mailbox, $maxResults, $upper);
+			$logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
+			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf);
 		}
 		$uidCandidates = array_filter(
 			array_map(
@@ -192,19 +198,22 @@ class MessageMapper {
 			0,
 			$maxResults
 		);
+		$perf->step('calculate UIDs to fetch');
 		$highestUidToFetch = $uidsToFetch[count($uidsToFetch) - 1];
-		$this->logger->debug(sprintf("Range for findAll min=$min max=$max found %d messages, %d left after filtering. Highest UID to fetch is %d", count($uidCandidates), count($uidsToFetch), $highestUidToFetch));
+		$logger->debug(sprintf("Range for findAll min=$min max=$max found %d messages, %d left after filtering. Highest UID to fetch is %d", count($uidCandidates), count($uidsToFetch), $highestUidToFetch));
 		if ($highestUidToFetch === $max) {
-			$this->logger->debug("All messages of mailbox $mailbox have been fetched");
+			$logger->debug("All messages of mailbox $mailbox have been fetched");
 		} else {
-			$this->logger->debug("Mailbox $mailbox has more messages to fetch");
+			$logger->debug("Mailbox $mailbox has more messages to fetch");
 		}
+		$messages = $this->findByIds(
+			$client,
+			$mailbox,
+			$uidsToFetch
+		);
+		$perf->step('find IMAP messages by UID');
 		return [
-			'messages' => $this->findByIds(
-				$client,
-				$mailbox,
-				$uidsToFetch
-			),
+			'messages' => $messages,
 			'all' => $highestUidToFetch === $max,
 			'total' => $total,
 		];

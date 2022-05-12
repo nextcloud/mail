@@ -33,6 +33,7 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Support\PerformanceLoggerTask;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function range;
@@ -114,7 +115,9 @@ class MessageMapperTest extends TestCase {
 			$client,
 			$mailbox,
 			5000,
-			0
+			0,
+			$this->createMock(LoggerInterface::class),
+			$this->createMock(PerformanceLoggerTask::class)
 		);
 
 		$this->assertSame(
@@ -183,7 +186,9 @@ class MessageMapperTest extends TestCase {
 			$client,
 			$mailbox,
 			5000,
-			0
+			0,
+			$this->createMock(LoggerInterface::class),
+			$this->createMock(PerformanceLoggerTask::class)
 		);
 
 		self::assertTrue($result['all']);
@@ -245,7 +250,9 @@ class MessageMapperTest extends TestCase {
 			$client,
 			$mailbox,
 			5000,
-			300
+			300,
+			$this->createMock(LoggerInterface::class),
+			$this->createMock(PerformanceLoggerTask::class)
 		);
 
 		self::assertTrue($result['all']);
@@ -314,7 +321,9 @@ class MessageMapperTest extends TestCase {
 			$client,
 			$mailbox,
 			5000,
-			92000
+			92000,
+			$this->createMock(LoggerInterface::class),
+			$this->createMock(PerformanceLoggerTask::class)
 		);
 
 		// This chunk returns 8k messages, when we only expected 5k. So the process
@@ -353,7 +362,9 @@ class MessageMapperTest extends TestCase {
 			$client,
 			$mailbox,
 			5000,
-			99999
+			99999,
+			$this->createMock(LoggerInterface::class),
+			$this->createMock(PerformanceLoggerTask::class)
 		);
 
 		self::assertTrue($result['all']);
