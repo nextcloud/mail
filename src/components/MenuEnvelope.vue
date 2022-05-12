@@ -96,6 +96,12 @@
 						{{ t('mail', 'More actions') }}
 					</template>
 				</ActionButton>
+				<ActionButton
+					icon="icon-forward"
+					:close-after-click="true"
+					@click.prevent="forwardSelectedAsAttachment">
+					{{ t('mail', 'Forward message as attachment') }}
+				</ActionButton>
 				<ActionButton icon="icon-add"
 					:close-after-click="true"
 					@click="onOpenEditAsNew">
@@ -222,6 +228,7 @@ export default {
 			showEventModal: false,
 			showTagModal: false,
 			moreActionsOpen: false,
+			forwardMessages: this.envelope.databaseId,
 		}
 	},
 	computed: {
@@ -312,6 +319,12 @@ export default {
 					},
 				}))
 			}
+		},
+		async forwardSelectedAsAttachment() {
+			this.forwardedMessages = [this.envelope.databaseId]
+			await this.$store.dispatch('showMessageComposer', {
+				forwardedMessages: this.forwardedMessages,
+			})
 		},
 		async onShowSourceModal() {
 			this.sourceLoading = true
