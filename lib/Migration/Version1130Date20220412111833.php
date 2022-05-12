@@ -28,8 +28,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
+use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\DBAL\Types\Type;
 use OCP\DB\ISchemaWrapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\DB\Types;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -86,6 +89,9 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
+		// bigint and primary key with autoincrement is not possible on sqlite: https://github.com/nextcloud/server/commit/f57e334f8395e3b5c046b6d28480d798453e4866
+		$isSqlite = $this->connection->getDatabasePlatform() instanceof SqlitePlatform;
+
 		// Remove old unnamed attachments FK
 		$attachmentsTable = $schema->getTable('mail_attachments');
 		$fks = $attachmentsTable->getForeignKeys();
@@ -99,20 +105,27 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 			$recipientsTable->removeForeignKey($fk->getName());
 		}
 
-		// Change primary column to bigint
-		$recipientsTable->changeColumn('id', [
-			'length' => 20,
-		]);
+		if (!$isSqlite) {
+			// Change primary column to bigint
+			$recipientsTable->changeColumn('id', [
+				'type' => Type::getType(Types::BIGINT),
+				'length' => 20,
+			]);
+		}
 
 		// Add new named FKs to attachments and recipients
 		$recipientsTable->addForeignKeyConstraint($schema->getTable('mail_local_messages'), ['local_message_id'], ['id'], ['onDelete' => 'CASCADE'], 'recipient_local_message');
 		$attachmentsTable->addForeignKeyConstraint($schema->getTable('mail_local_messages'), ['local_message_id'], ['id'], ['onDelete' => 'CASCADE'], 'attachment_local_message');
 
-		// Change primary column to bigint
 		$messagesTable = $schema->getTable('mail_messages');
-		$messagesTable->changeColumn('id', [
-			'length' => 20,
-		]);
+
+		if (!$isSqlite) {
+			// Change primary column to bigint
+			$messagesTable->changeColumn('id', [
+				'type' => Type::getType(Types::BIGINT),
+				'length' => 20,
+			]);
+		}
 
 		// Since we have instances where these indices were set manually, remove them first if they exist
 		$indices = $messagesTable->getIndexes();
