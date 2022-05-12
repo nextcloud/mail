@@ -245,6 +245,7 @@
     "Could not discard message" : "İleti iptal edilemedi",
     "No message selected" : "Herhangi bir ileti seçilmemiş",
     "Could not open outbox" : "Giden kutusu açılamadı",
+    "Pending or not sent messages will show up here" : "Bekleyen ya da gönderilmemiş iletiler burada görüntülenir",
     "Delete" : "Sil",
     "Message deleted" : "İleti silindi",
     "Contacts with this address" : "Bu adresi kullanan kişiler",

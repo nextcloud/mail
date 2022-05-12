@@ -247,6 +247,7 @@ OC.L10N.register(
     "Could not discard message" : "Nachricht kann nicht verworfen werden",
     "No message selected" : "Keine Nachricht ausgewählt",
     "Could not open outbox" : "Postausgang konnte nicht geöffnet werden",
+    "Pending or not sent messages will show up here" : "Noch ausstehende oder nicht gesendete Nachrichten werden hier angezeigt",
     "Delete" : "Löschen",
     "Message deleted" : "Nachricht gelöscht",
     "Contacts with this address" : "Kontakte mit dieser Adresse",

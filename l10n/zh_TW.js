@@ -247,6 +247,7 @@ OC.L10N.register(
     "Could not discard message" : "無法捨棄郵件",
     "No message selected" : "未選取郵件",
     "Could not open outbox" : "無法開啟寄件匣",
+    "Pending or not sent messages will show up here" : "待處理或未傳送的郵件將會在此處顯示",
     "Delete" : "刪除",
     "Message deleted" : "郵件已刪除",
     "Contacts with this address" : "有此地址的聯絡人",
