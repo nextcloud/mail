@@ -12,12 +12,12 @@
 	],
 	"config": {
 		"platform": {
-			"php": "7.3"
+			"php": "7.4"
 		},
 		"sort-packages": true
 	},
 	"require": {
-		"php": ">=7.3",
+		"php": ">=7.4",
 		"arthurhoaro/favicon": "^1.2",
 		"bamarni/composer-bin-plugin": "^1.4",
 		"cerdic/css-tidy": "v2.0.1",
