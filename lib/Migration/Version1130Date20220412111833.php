@@ -50,7 +50,8 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		// Truncate all tables that will get a new index later
 		$qb = $this->connection->getQueryBuilder();
-		$qb->delete('mail_recipients');
+		$qb->delete('mail_recipients')
+			->where($qb->expr()->isNull('local_message_id'));
 		$qb->execute();
 
 		// Truncate and change primary key type for messages table
