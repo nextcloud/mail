@@ -345,10 +345,10 @@
     </MissingDependency>
   </file>
   <file src="lib/Support/ConsoleLoggerDecorator.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedClass occurrences="2">
       <code>OutputInterface</code>
     </UndefinedClass>
-    <UndefinedDocblockClass occurrences="10">
+    <UndefinedDocblockClass occurrences="11">
       <code>$this-&gt;consoleOutput</code>
       <code>$this-&gt;consoleOutput</code>
       <code>$this-&gt;consoleOutput</code>
