@@ -40,6 +40,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
+use function memory_get_usage;
 
 class SyncAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
@@ -113,7 +114,8 @@ class SyncAccount extends Command {
 				throw $e;
 			}
 
-			$output->writeln("Batch of new messages sync'ed");
+			$mbs = (int)(memory_get_usage() / 1024 / 1024);
+			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . "MB of memory in use</info>");
 			$this->sync($account, $force, $output);
 		}
 	}
