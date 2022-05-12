@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.4]
-        nextcloud-versions: ['stable21', 'stable22', 'stable23']
+        nextcloud-versions: ['stable22', 'stable23']
         include:
             - php-versions: 7.4
               nextcloud-versions: stable24
