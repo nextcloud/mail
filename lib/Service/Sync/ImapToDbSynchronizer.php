@@ -294,7 +294,7 @@ class ImapToDbSynchronizer {
 		);
 
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
-		$client = $this->clientFactory->getClient($account);
+		$client = $this->clientFactory->getClient($account, false);
 		try {
 			try {
 				$imapMessages = $this->imapMapper->findAll(
