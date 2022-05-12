@@ -135,7 +135,7 @@ In this example, `1393` is the *account ID*.
 To troubleshoot synchronization or threading problems it's helpful to run the sync from the command line while the user does not use the web interface (reduces chances of a conflict):
 
 ```bash
-php -f occ mail:account:sync 1393
+php -f occ mail:account:sync -vvv 1393
 ```
 
 1393 represents the [account ID](#get-account-ids).
