@@ -85,6 +85,10 @@ class ConsoleLoggerDecorator implements LoggerInterface {
 	}
 
 	public function debug($message, array $context = []) {
+		if ($this->consoleOutput->getVerbosity() < OutputInterface::VERBOSITY_DEBUG) {
+			return;
+		}
+
 		$this->consoleOutput->writeln("[debug] $message");
 
 		$this->inner->debug($message, $context);
