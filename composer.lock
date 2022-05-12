@@ -2613,23 +2613,23 @@
         },
         {
             "name": "youthweb/urllinker",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/youthweb/urllinker.git",
-                "reference": "b583abc45d70fee67104798bb73193de34cee5df"
+                "reference": "093f392ef35fea4bd1d3b4ad931d5d3af9a4b5bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/youthweb/urllinker/zipball/b583abc45d70fee67104798bb73193de34cee5df",
-                "reference": "b583abc45d70fee67104798bb73193de34cee5df",
+                "url": "https://api.github.com/repos/youthweb/urllinker/zipball/093f392ef35fea4bd1d3b4ad931d5d3af9a4b5bc",
+                "reference": "093f392ef35fea4bd1d3b4ad931d5d3af9a4b5bc",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6 || ^7 || ^8"
+                "phpunit/phpunit": "^9"
             },
             "type": "library",
             "autoload": {
@@ -2654,7 +2654,11 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "https://github.com/youthweb",
-            "time": "2019-10-01T12:10:40+00:00"
+            "support": {
+                "issues": "https://github.com/youthweb/urllinker/issues",
+                "source": "https://github.com/youthweb/urllinker/tree/1.4.0"
+            },
+            "time": "2021-03-05T09:22:19+00:00"
         }
     ],
     "packages-dev": [
