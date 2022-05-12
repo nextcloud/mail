@@ -495,7 +495,11 @@ class MessageMapper extends QBMapper {
 				$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
 				$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 				$query->setParameter('flag_attachments', $message->getFlagAttachments(), $message->getFlagAttachments() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_BOOL);
-				$query->setParameter('preview_text', $message->getPreviewText(), $message->getPreviewText() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+				$query->setParameter(
+					'preview_text',
+					$message->getPreviewText() === null ? null : mb_strcut($message->getPreviewText(), 0, 255),
+					$message->getPreviewText() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
+				);
 
 				$query->execute();
 			}
