@@ -64,7 +64,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          tools: composer:v1
           coverage: none
 
       - name: Check composer.json
