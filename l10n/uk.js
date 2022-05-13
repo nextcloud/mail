@@ -180,6 +180,7 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n нове повідомлення\nвід {from}","%n нові повідомлення\nвід {from}","%n нових повідомлень\nвід {from}","%n нових повідомлень\nвід {from}"],
     "Nextcloud Mail" : "Пошта Nextcloud",
+    "Message sent" : "Повідомлення відправлено",
     "Could not load your message" : "Неможливо завантажити повідомлення",
     "Could not load the desired message" : "Неможливо завантажити обране повідомлення",
     "Could not load the message" : "Неможливо завантажити повідомлення",
