@@ -183,6 +183,7 @@ OC.L10N.register(
     "Forward" : "Weiterleiten",
     "Move message" : "Nachricht verschieben",
     "Delete message" : "Nachricht löschen",
+    "Forward message as attachment" : "Nachricht als Anhang weiterleiten",
     "View source" : "Quelle ansehen",
     "Download thread data for debugging" : "Thread-Daten zum Debuggen herunterladen",
     "Message source" : "Nachrichtenquelle",

@@ -183,6 +183,7 @@ OC.L10N.register(
     "Forward" : "Přeposlat",
     "Move message" : "Přesunout zprávu",
     "Delete message" : "Smazat zprávu",
+    "Forward message as attachment" : "Přeposlat zprávu jako přílohu",
     "View source" : "Zobrazit zdroj",
     "Download thread data for debugging" : "Stáhnout si data vlákna pro účely ladění",
     "Message source" : "Zdrojový kód správy",

@@ -183,6 +183,7 @@ OC.L10N.register(
     "Forward" : "Továbbítás",
     "Move message" : "Üzenet áthelyezése",
     "Delete message" : "Üzenet törlése",
+    "Forward message as attachment" : "Üzenet továbbítása mellékletként",
     "View source" : "Forrás megtekintése",
     "Download thread data for debugging" : "Szálak adatainak letöltése hibakeresés céljából",
     "Message source" : "Üzenet forrása",

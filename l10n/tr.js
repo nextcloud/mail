@@ -183,6 +183,7 @@ OC.L10N.register(
     "Forward" : "İlet",
     "Move message" : "İletiyi taşı",
     "Delete message" : "İletiyi sil",
+    "Forward message as attachment" : "İletiyi ek dosya olarak ilet",
     "View source" : "Kaynağı görüntüle",
     "Download thread data for debugging" : "Hata ayıklama için görüşme verilerini indir",
     "Message source" : "İleti kaynağı",

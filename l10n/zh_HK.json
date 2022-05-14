@@ -181,6 +181,7 @@
     "Forward" : "轉寄",
     "Move message" : "移動訊息",
     "Delete message" : "刪除訊息",
+    "Forward message as attachment" : "將訊息作為附件轉發",
     "View source" : "檢視原始碼",
     "Download thread data for debugging" : "下載郵件串的資料以供除錯",
     "Message source" : "郵件原始碼",
