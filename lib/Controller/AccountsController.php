@@ -410,16 +410,12 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $id);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
-		$expandedTo = $this->groupsIntegration->expand($to);
-		$expandedCc = $this->groupsIntegration->expand($cc);
-		$expandedBcc = $this->groupsIntegration->expand($bcc);
-
-		$count = substr_count($expandedTo, ',') + substr_count($expandedCc, ',') + 1;
+		$count = substr_count($to, ',') + substr_count($cc, ',') + 1;
 		if (!$force && $count >= 10) {
 			throw new ManyRecipientsException();
 		}
 
-		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml, $requestMdn);
+		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments, $isHtml, $requestMdn);
 		if ($messageId !== null) {
 			try {
 				$repliedMessage = $this->mailManager->getMessage($this->currentUserId, $messageId);
