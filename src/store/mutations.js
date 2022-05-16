@@ -122,7 +122,7 @@ export default {
 		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 		const mailboxes = sortMailboxes(account.mailboxes || [])
 		Vue.set(account, 'mailboxes', [])
-		Vue.set(account, 'aliases', [])
+		Vue.set(account, 'aliases', account.aliases ?? [])
 		mailboxes.map(addMailboxToState(state, account))
 	},
 	editAccount(state, account) {
