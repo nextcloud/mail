@@ -36,13 +36,11 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
-use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
@@ -56,9 +54,6 @@ class AccountsController extends Controller {
 
 	/** @var AccountService */
 	private $accountService;
-
-	/** @var GroupsIntegration */
-	private $groupsIntegration;
 
 	/** @var string */
 	private $currentUserId;
@@ -84,26 +79,9 @@ class AccountsController extends Controller {
 	/** @var SyncService */
 	private $syncService;
 
-	/**
-	 * AccountsController constructor.
-	 *
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AccountService $accountService
-	 * @param GroupsIntegration $groupsIntegration
-	 * @param $UserId
-	 * @param LoggerInterface $logger
-	 * @param IL10N $l10n
-	 * @param AliasesService $aliasesService
-	 * @param IMailTransmission $mailTransmission
-	 * @param SetupService $setup
-	 * @param IMailManager $mailManager
-	 * @param SyncService $syncService
-	 */
 	public function __construct(string $appName,
 								   IRequest $request,
 								   AccountService $accountService,
-								   GroupsIntegration $groupsIntegration,
 								   $UserId,
 								   LoggerInterface $logger,
 								   IL10N $l10n,
@@ -115,7 +93,6 @@ class AccountsController extends Controller {
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
-		$this->groupsIntegration = $groupsIntegration;
 		$this->currentUserId = $UserId;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
@@ -369,76 +346,6 @@ class AccountsController extends Controller {
 		}
 
 		return \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @TrapError
-	 *
-	 * @param int $id
-	 * @param string $subject
-	 * @param string $body
-	 * @param string $to
-	 * @param string $cc
-	 * @param string $bcc
-	 * @param bool $isHtml
-	 * @param bool $requestMdn
-	 * @param int|null $draftId
-	 * @param int|null $messageId
-	 * @param mixed $attachments
-	 * @param int|null $aliasId
-	 *
-	 * @return JSONResponse
-	 *
-	 * @throws ClientException
-	 * @throws ServiceException
-	 */
-	public function send(int $id,
-						 string $subject,
-						 string $body,
-						 string $to,
-						 string $cc,
-						 string $bcc,
-						 bool $isHtml = true,
-						 bool $requestMdn = false,
-						 int $draftId = null,
-						 int $messageId = null,
-						 array $attachments = [],
-						 int $aliasId = null,
-						 bool $force = false): JSONResponse {
-		$account = $this->accountService->find($this->currentUserId, $id);
-		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
-
-		$count = substr_count($to, ',') + substr_count($cc, ',') + 1;
-		if (!$force && $count >= 10) {
-			throw new ManyRecipientsException();
-		}
-
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments, $isHtml, $requestMdn);
-		if ($messageId !== null) {
-			try {
-				$repliedMessage = $this->mailManager->getMessage($this->currentUserId, $messageId);
-				$repliedMessageId = $repliedMessage->getMessageId();
-			} catch (ClientException $e) {
-				$this->logger->info("Message in reply " . $messageId . " could not be loaded: " . $e->getMessage());
-			}
-		}
-
-		$draft = null;
-		if ($draftId !== null) {
-			try {
-				$draft = $this->mailManager->getMessage($this->currentUserId, $draftId);
-			} catch (ClientException $e) {
-				$this->logger->info("Draft " . $draftId . " could not be loaded: " . $e->getMessage());
-			}
-		}
-		try {
-			$this->mailTransmission->sendMessage($messageData, $repliedMessageId ?? null, $alias, $draft);
-			return new JSONResponse();
-		} catch (ServiceException $ex) {
-			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
-			throw $ex;
-		}
 	}
 
 	/**

@@ -25,28 +25,21 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\ManyRecipientsException;
-use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\SetupService;
-use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
-use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -61,23 +54,14 @@ class AccountsControllerTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var GroupsIntegration|MockObject */
-	private $groupsIntegration;
-
 	/** @var string */
 	private $userId;
-
-	/** @var AutoConfig|MockObject */
-	private $autoConfig;
 
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IL10N|MockObject */
 	private $l10n;
-
-	/** @var ICrypto|MockObject */
-	private $crypto;
 
 	/** @var AccountsController */
 	private $controller;
@@ -109,15 +93,9 @@ class AccountsControllerTest extends TestCase {
 		$this->appName = 'mail';
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
-		$this->groupsIntegration->expects(self::any())
-			->method('expand')
-			->will($this->returnArgument(0));
 		$this->userId = 'manfred';
-		$this->autoConfig = $this->createMock(AutoConfig::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->l10n = $this->createMock(IL10N::class);
-		$this->crypto = $this->createMock(ICrypto::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->setupService = $this->createMock(SetupService::class);
@@ -128,7 +106,6 @@ class AccountsControllerTest extends TestCase {
 			$this->appName,
 			$this->request,
 			$this->accountService,
-			$this->groupsIntegration,
 			$this->userId,
 			$this->logger,
 			$this->l10n,
@@ -404,96 +381,6 @@ class AccountsControllerTest extends TestCase {
 		$this->expectException(ClientException::class);
 
 		$this->controller->update($id, $autoDetect, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
-	}
-
-	public function testSendNewMessage(): void {
-		$account = $this->createMock(Account::class);
-		$this->accountService->expects(self::once())
-			->method('find')
-			->willReturn($account);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$this->transmission->expects(self::once())
-			->method('sendMessage')
-			->with($messageData, null, null, null);
-		$expected = new JSONResponse();
-
-		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
-
-		self::assertEquals($expected, $resp);
-	}
-
-	public function testSendingError(): void {
-		$account = $this->createMock(Account::class);
-		$this->accountService->expects(self::once())
-			->method('find')
-			->willReturn($account);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$this->transmission->expects(self::once())
-			->method('sendMessage')
-			->with($messageData, null, null, null)
-			->willThrowException(new Horde_Exception('error'));
-		$this->expectException(Horde_Exception::class);
-
-		$this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
-	}
-
-	public function testSendingManyRecipientsError(): void {
-		$this->expectException(ManyRecipientsException::class);
-
-		$recipients = [];
-		for ($i = 0; $i <= 10; $i++) {
-			$recipients[] = "$i@x.com";
-		}
-		$recipients = implode(',', $recipients);
-
-		$this->controller->send(13, 'sub', 'bod', $recipients, '', '');
-	}
-
-	public function testSendingManyRecipientsCcError(): void {
-		$this->expectException(ManyRecipientsException::class);
-
-		$recipients = [];
-		for ($i = 0; $i <= 10; $i++) {
-			$recipients[] = "$i@x.com";
-		}
-		$recipients = implode(',', $recipients);
-
-		$this->controller->send(13, 'sub', 'bod', '', $recipients, '');
-	}
-
-	public function testSendReply(): void {
-		$account = $this->createMock(Account::class);
-		$replyMessage = new Message();
-		$replyMessage->setMessageId('<abc123@123.com>');
-		$messageId = 1234;
-		$this->accountService->expects(self::once())
-			->method('find')
-			->willReturn($account);
-		$this->mailManager->expects(self::once())
-			->method('getMessage')
-			->with($this->userId, $messageId)
-			->willReturn($replyMessage);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$this->transmission->expects(self::once())
-			->method('sendMessage')
-			->with($messageData, $replyMessage->getMessageId(), null, null);
-		$expected = new JSONResponse();
-
-		$resp = $this->controller->send(
-			13,
-			'sub',
-			'bod',
-			'to@d.com',
-			'',
-			'',
-			true,
-			false,
-			null,
-			$messageId,
-			[],
-			null);
-
-		self::assertEquals($expected, $resp);
 	}
 
 	public function draftDataProvider(): array {
