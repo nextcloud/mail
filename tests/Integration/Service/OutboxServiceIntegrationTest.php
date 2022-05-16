@@ -160,9 +160,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->assertNotEmpty($message->getRecipients());
 		$this->assertEmpty($message->getAttachments());
 
-		$retrieved->resetUpdatedFields();
-		$saved->resetUpdatedFields();
-		$this->assertEquals($saved, $retrieved); // Assure both operations are identical
+		self::assertCount(1, $retrieved->getRecipients());
 	}
 
 	public function testSaveAndGetMessages(): void {
