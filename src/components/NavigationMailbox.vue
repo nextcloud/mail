@@ -275,7 +275,7 @@ export default {
 			].includes(this.mailbox.databaseId)
 		},
 		isActive() {
-			return this.$route.params.mailboxId === this.mailbox.databaseId
+			return this.$route.params.mailboxId === this.mailbox.databaseId && (this.$route.params.filter ?? '') === this.filter
 		},
 		isValidDropTarget() {
 			if (this.isActive) {
