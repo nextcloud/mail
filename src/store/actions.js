@@ -385,7 +385,7 @@ export default {
 				id: message.data.id,
 				message: {
 					...message.data,
-					body: message.data.isHtml ? body.value : toPlain(body),
+					body: message.data.isHtml ? body.value : toPlain(body).value,
 					sendAt: message.options.originalSendAt,
 				},
 			})
