@@ -34,15 +34,23 @@ use OCP\DB\ISchemaWrapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\Types;
 use OCP\IDBConnection;
+use OCP\ITempManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
+use Psr\Log\LoggerInterface;
 
 class Version1130Date20220412111833 extends SimpleMigrationStep {
-	/** @var IDBConnection $connection */
-	private $connection;
+	private IDBConnection $connection;
+	private LoggerInterface $logger;
+	private array $recipients = [];
+	private string $backupPath;
 
-	public function __construct(IDBConnection $connection) {
+	public function __construct(IDBConnection $connection, LoggerInterface $logger, ITempManager $tempManager) {
 		$this->connection = $connection;
+		$this->logger = $logger;
+
+		$tempBaseDir = $tempManager->getTempBaseDir();
+		$this->backupPath = tempnam($tempBaseDir, 'mail_recipients_backup');
 	}
 
 	/**
@@ -51,32 +59,53 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	 * @param array $options
 	 */
 	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
-		// Truncate all tables that will get a new index later
-		$qb = $this->connection->getQueryBuilder();
-		$qb->delete('mail_recipients')
-			->where($qb->expr()->isNull('local_message_id'));
-		$qb->execute();
+		// Keep recipients backup
+		$qb1 = $this->connection->getQueryBuilder();
+		$qb1->select('local_message_id', 'message_id', 'type', 'label', 'email')
+			->from('mail_recipients')
+			->where($qb1->expr()->isNotNull('local_message_id'));
+
+		$result = $qb1->executeQuery();
+		$this->recipients = $result->fetchAll();
+		$result->closeCursor();
+
+		$backupFile = fopen($this->backupPath, 'rb+');
+		if (is_resource($backupFile)) {
+			$this->logger->warning(
+				'Migration Version1130Date20220412111833 is going to truncate the mail_recipients table. '
+				. 'We made a backup of the outbox recipients and try to restore them later. When the migration fails restore the data manually. '
+				. 'Path to backup file: ' . $this->backupPath
+			);
+
+			fputcsv($backupFile, ['local_message_id', 'message_id', 'type', 'label', 'email']);
+			foreach ($this->recipients as $recipient) {
+				fputcsv($backupFile, array_values($recipient));
+			}
+			fclose($backupFile);
+		}
+
+		// Truncate recipients table
+		$sql1 = $this->connection->getDatabasePlatform()->getTruncateTableSQL('`*PREFIX*mail_recipients`', false);
+		$this->connection->executeStatement($sql1);
 
 		// Truncate and change primary key type for messages table
-		$qb1 = $this->connection->getQueryBuilder();
-		$qb1->delete('mail_messages');
-		$qb1->execute();
+		$sql2 = $this->connection->getDatabasePlatform()->getTruncateTableSQL('`*PREFIX*mail_messages`', false);
+		$this->connection->executeStatement($sql2);
 
 		// Truncate message_tags table
-		$qb2 = $this->connection->getQueryBuilder();
-		$qb2->delete('mail_message_tags');
-		$qb2->execute();
+		$sql3 = $this->connection->getDatabasePlatform()->getTruncateTableSQL('`*PREFIX*mail_message_tags`', false);
+		$this->connection->executeStatement($sql3);
 
 		// unset all locks for the mailboxes table
-		$qb3 = $this->connection->getQueryBuilder();
-		$qb3->update('mail_mailboxes')
-			->set('sync_new_lock', $qb3->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
-			->set('sync_changed_lock', $qb3->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
-			->set('sync_vanished_lock', $qb3->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
-			->set('sync_new_token', $qb3->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
-			->set('sync_changed_token', $qb3->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
-			->set('sync_vanished_token', $qb3->createNamedParameter(null, IQueryBuilder::PARAM_NULL));
-		$qb3->execute();
+		$qb2 = $this->connection->getQueryBuilder();
+		$qb2->update('mail_mailboxes')
+			->set('sync_new_lock', $qb2->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->set('sync_changed_lock', $qb2->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->set('sync_vanished_lock', $qb2->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->set('sync_new_token', $qb2->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->set('sync_changed_token', $qb2->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->set('sync_vanished_token', $qb2->createNamedParameter(null, IQueryBuilder::PARAM_NULL));
+		$qb2->executeStatement();
 	}
 
 	/**
@@ -90,7 +119,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		// bigint and primary key with autoincrement is not possible on sqlite: https://github.com/nextcloud/server/commit/f57e334f8395e3b5c046b6d28480d798453e4866
-		$isSqlite = $this->connection->getDatabasePlatform() instanceof SqlitePlatform;
+		$isSqlite = $schema->getDatabasePlatform() instanceof SqlitePlatform;
 
 		// Remove old unnamed attachments FK
 		$attachmentsTable = $schema->getTable('mail_attachments');
@@ -148,5 +177,32 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		$messagesTable->addIndex(['mailbox_id', 'thread_root_id', 'sent_at'], 'mail_msg_thrd_root_snt_idx', [], ['lengths' => [null, 64, null]]);
 
 		return $schema;
+	}
+
+	/**
+	 * @param IOutput $output
+	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
+	 * @param array $options
+	 */
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+		$qb1 = $this->connection->getQueryBuilder();
+		$qb1->insert('mail_recipients')
+			->values([
+				'local_message_id' => $qb1->createParameter('local_message_id'),
+				'message_id' => $qb1->createParameter('message_id'),
+				'type' => $qb1->createParameter('type'),
+				'label' => $qb1->createParameter('label'),
+				'email' => $qb1->createParameter('email'),
+			]);
+
+		foreach ($this->recipients as $recipient) {
+			$qb1->setParameters($recipient);
+			$qb1->executeStatement();
+		}
+
+		if (is_file($this->backupPath)) {
+			$this->logger->warning('Migration Version1130Date20220412111833 completed. Going to delete backup file: ' . $this->backupPath);
+			@unlink($this->backupPath);
+		}
 	}
 }
