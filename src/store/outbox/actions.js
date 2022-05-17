@@ -24,8 +24,8 @@ import * as OutboxService from '../../service/OutboxService'
 import logger from '../../logger'
 import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-import { UNDO_DELAY } from '../constants'
 import { html, plain } from '../../util/text'
+import { UNDO_DELAY } from '../constants'
 
 export default {
 	async fetchMessages({ getters, commit }) {
