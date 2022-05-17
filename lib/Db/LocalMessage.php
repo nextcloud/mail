@@ -107,18 +107,26 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'isHtml' => $this->isHtml(),
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
-			'from' => array_filter($this->getRecipients(), function (Recipient $recipient) {
-				return $recipient->getType() === Recipient::TYPE_FROM;
-			}),
-			'to' => array_filter($this->getRecipients(), function (Recipient $recipient) {
-				return $recipient->getType() === Recipient::TYPE_TO;
-			}),
-			'cc' => array_filter($this->getRecipients(), function (Recipient $recipient) {
-				return $recipient->getType() === Recipient::TYPE_CC;
-			}),
-			'bcc' => array_filter($this->getRecipients(), function (Recipient $recipient) {
-				return $recipient->getType() === Recipient::TYPE_BCC;
-			}),
+			'from' => array_values(
+				array_filter($this->getRecipients(), function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_FROM;
+				})
+			),
+			'to' => array_values(
+				array_filter($this->getRecipients(), function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_TO;
+				})
+			),
+			'cc' => array_values(
+				array_filter($this->getRecipients(), function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_CC;
+				})
+			),
+			'bcc' => array_values(
+				array_filter($this->getRecipients(), function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_BCC;
+				})
+			),
 		];
 	}
 
