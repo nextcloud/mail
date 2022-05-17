@@ -7,29 +7,45 @@
 			@click.native.prevent>
 			<template v-if="!moreActionsOpen">
 				<EnvelopePrimaryActions>
-					<ActionButton :icon="iconFavorite"
-						class="action--primary"
+					<ActionButton class="action--primary"
 						:close-after-click="true"
 						@click.prevent="onToggleFlagged">
-						{{
-							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
-						}}
+						<template #icon>
+							<StarIcon v-if="envelope.flags.flagged"
+								:title="t('mail', 'Unfavorite')"
+								:size="20" />
+							<StarOutlineIcon v-else
+								:title="t('mail', 'Favorite')"
+								:size="20" />
+							{{
+								envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+							}}
+						</template>
 					</ActionButton>
-					<ActionButton icon="icon-mail"
-						class="action--primary"
+					<ActionButton class="action--primary"
 						:close-after-click="true"
 						@click.prevent="onToggleSeen">
-						{{
-							envelope.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
-						}}
+						<template #icon>
+							<MailIcon
+								:title="envelope.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')"
+								:size="20" />
+							{{
+								envelope.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
+							}}
+						</template>
 					</ActionButton>
 					<ActionButton icon="icon-important"
 						class="action--primary"
 						:close-after-click="true"
 						@click.prevent="onToggleImportant">
-						{{
-							isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
-						}}
+						<template #icon>
+							<ImportantIcon
+								:title="isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')"
+								:size="20" />
+							{{
+								isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
+							}}
+						</template>
 					</ActionButton>
 				</EnvelopePrimaryActions>
 				<ActionButton v-if="withReply"
@@ -163,9 +179,13 @@ import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { generateUrl } from '@nextcloud/router'
+import ImportantIcon from 'vue-material-design-icons/Label'
 import logger from '../logger'
+import MailIcon from 'vue-material-design-icons/Email'
 import { matchError } from '../errors/match'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+import StarIcon from 'vue-material-design-icons/Star'
+import StarOutlineIcon from 'vue-material-design-icons/StarOutline'
 import TagModal from './TagModal'
 import MoveModal from './MoveModal'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
@@ -179,8 +199,12 @@ export default {
 		ActionLink,
 		ChevronLeft,
 		EventModal,
+		ImportantIcon,
+		MailIcon,
 		Modal,
 		MoveModal,
+		StarIcon,
+		StarOutlineIcon,
 		TagModal,
 		EnvelopePrimaryActions,
 	},
@@ -259,9 +283,6 @@ export default {
 		},
 		threadingFileName() {
 			return `${this.envelope.databaseId}.json`
-		},
-		iconFavorite() {
-			return this.envelope.flags.flagged ? 'icon-favorite' : 'icon-starred'
 		},
 		isImportant() {
 			return this.$store.getters
@@ -381,6 +402,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+	.action--primary {
+		border-radius: 10px;
+		margin: 5px;
+
+		.material-design-icon {
+			margin-bottom: -10px;
+		}
+	}
+
 	.source-modal {
 		::v-deep .modal-container {
 			height: 800px;
