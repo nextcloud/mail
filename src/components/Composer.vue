@@ -116,7 +116,7 @@
 				})
 			}}
 		</div>
-		<div class="composer-fields">
+		<div class="composer-fields message-editor">
 			<!--@keypress="onBodyKeyPress"-->
 			<TextEditor
 				v-if="!encrypt && editorPlainText"
@@ -1078,6 +1078,10 @@ export default {
 .message-composer {
 	margin: 0;
 	z-index: 100;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	max-height: 100%;
 }
 
 .composer-actions {
@@ -1126,8 +1130,14 @@ export default {
 	border-radius: 0;
 }
 
+// Make composer editor expand
+.message-editor {
+	flex: 1 1 100%;
+	min-height: 0;
+}
+
 .message-body {
-	min-height: 570px;
+	height: 100%;
 	width: 100%;
 	margin: 0;
 	border: none !important;

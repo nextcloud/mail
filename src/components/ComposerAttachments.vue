@@ -228,9 +228,19 @@ export default {
 }
 </script>
 
-<style scoped>
-.new-message-attachments li {
-	padding: 10px;
+<style scoped lang="scss">
+
+.new-message-attachments {
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		// 2 and a half attachment height
+		max-height: 140px;
+		overflow: auto;
+	}
+	li {
+		padding: 10px;
+	}
 }
 
 .new-message-attachments-action {
