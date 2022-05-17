@@ -358,9 +358,7 @@ export default {
 		}
 
 		// Stop schedule when editing outbox messages and backup sendAt timestamp
-		let originalSendAt
 		if (type === 'outbox' && data.id && data.sendAt) {
-			originalSendAt = data.sendAt
 			const message = {
 				...data,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
@@ -373,24 +371,9 @@ export default {
 			data,
 			forwardedMessages,
 			templateMessageId,
-			originalSendAt,
 		})
 	},
-	async closeMessageComposer({ commit, dispatch, getters }, { restoreOriginalSendAt }) {
-		// Restore original sendAt timestamp when requested
-		const message = getters.composerMessage
-		if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
-			const body = message.data.body
-			await dispatch('outbox/updateMessage', {
-				id: message.data.id,
-				message: {
-					...message.data,
-					body: message.data.isHtml ? body.value : toPlain(body).value,
-					sendAt: message.options.originalSendAt,
-				},
-			})
-		}
-
+	closeMessageComposer({ commit }) {
 		commit('hideMessageComposer')
 	},
 	async fetchEnvelope({ commit, getters }, id) {

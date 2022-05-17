@@ -829,11 +829,13 @@ export default {
 					return uid
 				})
 				.catch(async(error) => {
+					logger.debug('Failed to save draft', { error })
 					await matchError(error, {
 						[NoDraftsMailboxConfiguredError.getName()]() {
 							return false
 						},
 						default() {
+							showError(t('mail', 'Error saving draft'))
 							return true
 						},
 					})
@@ -852,8 +854,8 @@ export default {
 				return this.saveDraft(...args)
 			}
 		},
-		onSave() {
-			this.callSaveDraft(false, this.getMessageData)
+		async onSave() {
+			await this.callSaveDraft(false, this.getMessageData)
 		},
 		onInputChanged() {
 			this.callSaveDraft(true, this.getMessageData)
@@ -980,6 +982,7 @@ export default {
 							return [t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.'), STATES.WARNING]
 						},
 						default(error) {
+							showError(t('mail', 'Error sending your message'))
 							if (error && error.toString) {
 								return [error.toString(), STATES.ERROR]
 							}

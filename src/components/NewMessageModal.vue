@@ -2,8 +2,9 @@
 	<Modal
 		size="normal"
 		:title="modalTitle"
-		@close="$emit('close', { restoreOriginalSendAt: true })">
+		@close="onClose">
 		<Composer
+			ref="composer"
 			:from-account="composerData.accountId"
 			:to="composerData.to"
 			:cc="composerData.cc"
@@ -179,6 +180,22 @@ export default {
 			} catch (error) {
 				console.error(error)
 				showError(t('mail', 'Could not discard message'))
+			}
+		},
+		async onClose() {
+			// Warning: Ultra hacky! At the moment, there is no other way because the message state
+			// is managed by the Composer component. Otherwise, we could just do something like
+			// this.sendMessage(this.data) or this.saveDraft(this.data).
+			try {
+				if (this.composerMessage.type === 'outbox') {
+					await this.$refs.composer.onSend()
+				} else {
+					await this.$refs.composer.onSave()
+				}
+			} finally {
+				// Error is already logged and displayed in both methods so we just have to make
+				// sure to close the modal here.
+				this.$emit('close')
 			}
 		},
 	},

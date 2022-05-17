@@ -7,7 +7,7 @@
 			:mailbox="activeMailbox" />
 		<NewMessageModal
 			v-if="$store.getters.showMessageComposer"
-			@close="onCloseModal" />
+			@close="$store.dispatch('closeMessageComposer')" />
 	</Content>
 </template>
 
@@ -102,9 +102,6 @@ export default {
 					filter: this.$route.params?.filter,
 				},
 			})
-		},
-		async onCloseModal(opts) {
-			await this.$store.dispatch('closeMessageComposer', opts ?? {})
 		},
 	},
 }
