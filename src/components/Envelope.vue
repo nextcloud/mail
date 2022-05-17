@@ -350,8 +350,8 @@ export default {
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
 		},
-		onClick() {
-			if (this.draft) {
+		onClick(event) {
+			if (this.draft && !event.defaultPrevented) {
 				this.$store.dispatch('showMessageComposer', {
 					data: {
 						...this.data,
