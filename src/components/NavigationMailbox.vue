@@ -41,53 +41,88 @@
 		<template slot="actions">
 			<ActionText
 				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
-				icon="icon-info"
 				:title="mailbox.name">
+				<template #icon>
+					<IconInfo
+						:title="statsText"
+						:size="20" />
+				</template>
 				{{ statsText }}
 			</ActionText>
 
 			<ActionButton
 				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified"
-				icon="icon-mail"
 				:title="t('mail', 'Mark all as read')"
 				:disabled="loadingMarkAsRead"
 				@click="markAsRead">
+				<template #icon>
+					<IconEmailCheck
+						:title="t('mail', 'Mark all messages of this mailbox as read')"
+						:size="20" />
+				</template>
 				{{ t('mail', 'Mark all messages of this mailbox as read') }}
 			</ActionButton>
 			<ActionButton
 				v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged'"
-				icon="icon-folder"
 				@click="openCreateMailbox">
+				<template #icon>
+					<IconFolderAdd
+						:title="t('mail', 'Add submailbox')"
+						:size="20" />
+				</template>
 				{{ t('mail', 'Add submailbox') }}
 			</ActionButton>
-			<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createMailbox" />
+			<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
+				<template #icon>
+					<IconFolderAdd
+						:title="t('mail', 'Add submailbox')"
+						:size="20" />
+				</template>
+			</ActionInput>
 			<ActionButton
 				v-if="renameLabel && !hasSubMailboxes && !account.isUnified"
-				icon="icon-rename"
 				@click.prevent.stop="openRenameInput">
+				<template #icon>
+					<IconFolderRename
+						:title="t('mail', 'Edit name')"
+						:size="20" />
+				</template>
 				{{ t('mail', 'Edit name') }}
 			</ActionButton>
 			<ActionInput
 				v-if="renameInput"
-				icon="icon-rename"
 				:value.sync="mailboxName"
-				@submit.prevent.stop="renameMailbox" />
+				@submit.prevent.stop="renameMailbox">
+				<template #icon>
+					<IconFolderRename
+						:title="t('mail', 'Edit name')"
+						:size="20" />
+				</template>
+			</ActionInput>
 			<ActionText v-if="showSaving" icon="icon-loading-small">
 				{{ t('mail', 'Saving') }}
 			</ActionText>
 			<ActionButton v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes"
 				:id="genId(mailbox)"
-				icon="icon-external"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
+				<template #icon>
+					<IconExternal
+						:title="t('mail', 'Move')"
+						:size="20" />
+				</template>
 				{{ t('mail', 'Move') }}
 			</ActionButton>
 			<ActionButton
 				v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
-				icon="icon-settings"
 				:title="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
 				@click="clearCache">
+				<template #icon>
+					<IconFolderSync
+						:title="t('mail', 'Clear locally cached data, in case there are issues with synchronization.')"
+						:size="20" />
+				</template>
 				{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
 			</ActionButton>
 
@@ -107,7 +142,12 @@
 				{{ t('mail', 'Sync in background') }}
 			</ActionCheckbox>
 
-			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" icon="icon-delete" @click="deleteMailbox">
+			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" @click="deleteMailbox">
+				<template #icon>
+					<IconDelete
+						:title="t('mail', 'Delete mailbox')"
+						:size="20" />
+				</template>
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
 		</template>
@@ -136,6 +176,13 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+import IconEmailCheck from 'vue-material-design-icons/EmailCheck'
+import IconExternal from 'vue-material-design-icons/OpenInNew'
+import IconFolderAdd from 'vue-material-design-icons/FolderMultiple'
+import IconFolderRename from 'vue-material-design-icons/FolderEdit'
+import IconFolderSync from 'vue-material-design-icons/FolderSync'
+import IconDelete from 'vue-material-design-icons/Delete'
+import IconInfo from 'vue-material-design-icons/InformationOutline'
 import MoveMailboxModal from './MoveMailboxModal'
 
 import { clearCache } from '../service/MessageService'
@@ -156,6 +203,13 @@ export default {
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
+		IconEmailCheck,
+		IconExternal,
+		IconFolderAdd,
+		IconFolderRename,
+		IconFolderSync,
+		IconDelete,
+		IconInfo,
 		MoveMailboxModal,
 	},
 	directives: {
