@@ -336,7 +336,6 @@ class AccountsController extends Controller {
 	 * @param bool $autoDetect
 	 *
 	 * @return JSONResponse
-	 * @throws ClientException
 	 */
 	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
 		try {
@@ -346,15 +345,15 @@ class AccountsController extends Controller {
 				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
 			}
 		} catch (CouldNotConnectException $e) {
-			$this->logger->info('Creating account failed: ' . $e->getMessage(), [
-				'exception' => $e,
-			]);
-			return \OCA\Mail\Http\JsonResponse::fail([
+			$data = [
 				'error' => $e->getReason(),
 				'service' => $e->getService(),
 				'host' => $e->getHost(),
 				'port' => $e->getPort(),
-			]);
+			];
+
+			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
+			return \OCA\Mail\Http\JsonResponse::fail($data);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
