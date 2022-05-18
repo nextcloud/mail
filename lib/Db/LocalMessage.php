@@ -104,7 +104,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'sendAt' => $this->getSendAt(),
 			'subject' => $this->getSubject(),
 			'body' => $this->getBody(),
-			'isHtml' => $this->isHtml(),
+			'isHtml' => ($this->isHtml() === true),
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(
