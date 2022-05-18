@@ -654,8 +654,14 @@ class MessageMapper extends QBMapper {
 			$select = $qb->select(['m.id', 'm.sent_at']);
 		}
 
+		$selfJoin = $select->expr()->andX(
+			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
+			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
+			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+		);
+
 		$select->from($this->getTableName(), 'm')
-			->leftJoin('m', $this->getTableName(), 'm2', 'm.mailbox_id = m2.mailbox_id and m.thread_root_id = m2.thread_root_id and m.sent_at < m2.sent_at');
+			->leftJoin('m', $this->getTableName(), 'm2', $selfJoin);
 
 		if (!empty($query->getFrom())) {
 			$select->innerJoin('m', 'mail_recipients', 'r0', 'm.id = r0.message_id');
@@ -763,8 +769,14 @@ class MessageMapper extends QBMapper {
 			$select = $qb->select(['m.id', 'm.sent_at']);
 		}
 
+		$selfJoin = $select->expr()->andX(
+			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
+			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
+			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+		);
+
 		$select->from($this->getTableName(), 'm')
-			->leftJoin('m', $this->getTableName(), 'm2', 'm.mailbox_id = m2.mailbox_id and m.thread_root_id = m2.thread_root_id and m.sent_at < m2.sent_at');
+			->leftJoin('m', $this->getTableName(), 'm2', $selfJoin);
 
 		if (!empty($query->getFrom())) {
 			$select->innerJoin('m', 'mail_recipients', 'r0', 'm.id = r0.message_id');
@@ -1067,10 +1079,16 @@ class MessageMapper extends QBMapper {
 				)
 			);
 
+		$selfJoin = $select->expr()->andX(
+			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
+			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
+			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+		);
+
 		$select
 			->select('m.id')
 			->from($this->getTableName(), 'm')
-			->leftJoin('m', $this->getTableName(), 'm2', 'm.mailbox_id = m2.mailbox_id and m.thread_root_id = m2.thread_root_id and m.sent_at < m2.sent_at')
+			->leftJoin('m', $this->getTableName(), 'm2', $selfJoin)
 			->where(
 				$select->expr()->eq('m.mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 				$select->expr()->andX($subSelect->expr()->notIn('m.id', $select->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)),
