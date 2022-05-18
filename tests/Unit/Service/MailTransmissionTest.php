@@ -41,8 +41,8 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
@@ -55,9 +55,6 @@ class MailTransmissionTest extends TestCase {
 
 	/** @var Folder|MockObject */
 	private $userFolder;
-
-	/** @var AccountService|MockObject */
-	private $accountService;
 
 	/** @var IAttachmentService|MockObject */
 	private $attachmentService;
@@ -89,11 +86,13 @@ class MailTransmissionTest extends TestCase {
 	/** @var AliasesService|MockObject */
 	private $aliasService;
 
+	/** @var GroupsIntegration|MockObject */
+	private $groupsIntegration;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userFolder = $this->createMock(Folder::class);
-		$this->accountService = $this->createMock(AccountService::class);
 		$this->attachmentService = $this->createMock(IAttachmentService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
@@ -104,10 +103,10 @@ class MailTransmissionTest extends TestCase {
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->aliasService = $this->createMock(AliasesService::class);
+		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
 
 		$this->transmission = new MailTransmission(
 			$this->userFolder,
-			$this->accountService,
 			$this->attachmentService,
 			$this->mailManager,
 			$this->imapClientFactory,
@@ -117,7 +116,8 @@ class MailTransmissionTest extends TestCase {
 			$this->messageMapper,
 			$this->logger,
 			$this->performanceLogger,
-			$this->aliasService
+			$this->aliasService,
+			$this->groupsIntegration,
 		);
 	}
 
@@ -416,7 +416,7 @@ class MailTransmissionTest extends TestCase {
 		$this->assertEquals(13, $newId);
 	}
 
-	public function testSendLocalMessage() {
+	public function testSendLocalMessage(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(10);
 		$mailAccount->setUserId('testuser');

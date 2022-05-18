@@ -71,12 +71,10 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use Psr\Log\LoggerInterface;
+use function array_filter;
 use function array_map;
 
 class MailTransmission implements IMailTransmission {
-
-	/** @var AccountService */
-	private $accountService;
 
 	/** @var Folder */
 	private $userFolder;
@@ -111,11 +109,13 @@ class MailTransmission implements IMailTransmission {
 	/** @var AliasesService */
 	private $aliasesService;
 
+	/** @var GroupsIntegration */
+	private $groupsIntegration;
+
 	/**
 	 * @param Folder $userFolder
 	 */
 	public function __construct($userFolder,
-								AccountService $accountService,
 								IAttachmentService $attachmentService,
 								IMailManager $mailManager,
 								IMAPClientFactory $imapClientFactory,
@@ -125,8 +125,8 @@ class MailTransmission implements IMailTransmission {
 								MessageMapper $messageMapper,
 								LoggerInterface $logger,
 								PerformanceLogger $performanceLogger,
-								AliasesService $aliasesService) {
-		$this->accountService = $accountService;
+								AliasesService $aliasesService,
+								GroupsIntegration $groupsIntegration) {
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
 		$this->mailManager = $mailManager;
@@ -138,6 +138,7 @@ class MailTransmission implements IMailTransmission {
 		$this->logger = $logger;
 		$this->performanceLogger = $performanceLogger;
 		$this->aliasesService = $aliasesService;
+		$this->groupsIntegration = $groupsIntegration;
 	}
 
 	public function sendMessage(NewMessageData $messageData,
@@ -221,27 +222,33 @@ class MailTransmission implements IMailTransmission {
 
 	public function sendLocalMessage(Account $account, LocalMessage $message): void {
 		$to = new AddressList(
-				array_map(static function ($recipient) {
+			array_map(
+				static function ($recipient) {
 					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				}, array_filter($message->getRecipients(), static function (Recipient $recipient) {
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_TO;
-				})
+				}))
 			)
 		);
 		$cc = new AddressList(
-			array_map(static function ($recipient) {
-				return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-			}, array_filter($message->getRecipients(), static function (Recipient $recipient) {
-				return $recipient->getType() === Recipient::TYPE_CC;
-			})
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_CC;
+				}))
 			)
 		);
 		$bcc = new AddressList(
-			array_map(static function ($recipient) {
-				return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-			}, array_filter($message->getRecipients(), static function (Recipient $recipient) {
-				return $recipient->getType() === Recipient::TYPE_BCC;
-			})
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_BCC;
+				}))
 			)
 		);
 		$attachments = array_map(function (LocalAttachment $attachment) {

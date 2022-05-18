@@ -40,9 +40,9 @@ use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
-use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
@@ -109,7 +109,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->transmission = new MailTransmission(
 			$userFolder,
-			OC::$server->query(AccountService::class),
 			$this->attachmentService,
 			OC::$server->query(IMailManager::class),
 			OC::$server->query(IMAPClientFactory::class),
@@ -119,7 +118,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 			OC::$server->query(MessageMapper::class),
 			OC::$server->query(LoggerInterface::class),
 			OC::$server->query(PerformanceLogger::class),
-			OC::$server->get(AliasesService::class)
+			OC::$server->get(AliasesService::class),
+			OC::$server->get(GroupsIntegration::class)
 		);
 	}
 
