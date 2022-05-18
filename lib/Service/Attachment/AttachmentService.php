@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Attachment;
 
 use finfo;
+use InvalidArgumentException;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
@@ -241,7 +242,7 @@ class AttachmentService implements IAttachmentService {
 
 		foreach ($attachments as $attachment) {
 			if (!isset($attachment['type'])) {
-				continue;
+				throw new InvalidArgumentException('Attachment does not have a type');
 			}
 
 			if ($attachment['type'] === 'local' && isset($attachment['id'])) {
