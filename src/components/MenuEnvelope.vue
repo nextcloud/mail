@@ -33,56 +33,94 @@
 					</ActionButton>
 				</EnvelopePrimaryActions>
 				<ActionButton v-if="withReply"
-					:icon="hasMultipleRecipients ? 'icon-reply-all' : 'icon-reply'"
 					:close-after-click="true"
 					@click="onReply">
+					<template #icon>
+						<ReplyAllIcon v-if="hasMultipleRecipients"
+							:title="t('mail', 'Reply')"
+							:size="20" />
+						<ReplyIcon v-else
+							:title="t('mail', 'Reply')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Reply') }}
 				</ActionButton>
 				<ActionButton v-if="hasMultipleRecipients"
-					icon="icon-reply"
 					:close-after-click="true"
 					@click="onReply">
+					<template #icon>
+						<ReplyIcon
+							:title="t('mail', 'Reply to sender only')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Reply to sender only') }}
 				</ActionButton>
-				<ActionButton icon="icon-forward"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click="onForward">
+					<template #icon>
+						<ShareIcon
+							:title="t('mail', 'Forward')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Forward') }}
 				</ActionButton>
-				<ActionButton icon="icon-junk"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onToggleJunk">
+					<template #icon>
+						<AlertOctagonIcon
+							:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+							:size="20" />
+					</template>
 					{{
 						envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</ActionButton>
-				<ActionButton
-					icon="icon-tag"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenTagModal">
+					<template #icon>
+						<TagIcon
+							:title="t('mail', 'Edit tags')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
 				<ActionButton v-if="withSelect"
-					icon="icon-checkmark"
 					:close-after-click="true"
 					@click.prevent="toggleSelected">
+					<template #icon>
+						<CheckIcon
+							:title="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
+							:size="20" />
+					</template>
 					{{
 						isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
 					}}
 				</ActionButton>
-				<ActionButton icon="icon-external"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenMoveModal">
+					<template #icon>
+						<OpenInNewIcon
+							:title="t('mail', 'Move message')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Move message') }}
 				</ActionButton>
-				<ActionButton icon="icon-more"
-					:close-after-click="false"
+				<ActionButton :close-after-click="false"
 					@click="moreActionsOpen=true">
+					<template #icon>
+						<DotsHorizontalIcon
+							:title="t('mail', 'More actions')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
-				<ActionButton icon="icon-delete"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onDelete">
+					<template #icon>
+						<DeleteIcon
+							:title="t('mail', 'Delete message')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Delete message') }}
 				</ActionButton>
 			</template>
@@ -96,34 +134,52 @@
 						{{ t('mail', 'More actions') }}
 					</template>
 				</ActionButton>
-				<ActionButton
-					icon="icon-forward"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="forwardSelectedAsAttachment">
+					<template #icon>
+						<ShareIcon
+							:title="t('mail', 'Forward message as attachment')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Forward message as attachment') }}
 				</ActionButton>
-				<ActionButton icon="icon-add"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click="onOpenEditAsNew">
+					<template #icon>
+						<PlusIcon
+							:title="t('mail', 'Edit as new message')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Edit as new message') }}
 				</ActionButton>
-				<ActionButton icon="icon-calendar-dark"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
+					<template #icon>
+						<CalendarBlankIcon
+							:title="t('mail', 'Create event')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
 				<ActionButton v-if="withShowSource"
-					:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
-					:disabled="sourceLoading"
 					:close-after-click="true"
 					@click.prevent="onShowSourceModal">
+					<template #icon>
+						<InformationIcon
+							:title="t('mail', 'View source')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'View source') }}
 				</ActionButton>
 				<ActionLink v-if="debug"
-					icon="icon-download"
 					:download="threadingFileName"
 					:href="threadingFile"
 					:close-after-click="true">
+					<template #icon>
+						<DownloadIcon
+							:title="t('mail', 'Download thread data for debugging')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Download thread data for debugging') }}
 				</ActionLink>
 			</template>
@@ -157,17 +213,30 @@ import axios from '@nextcloud/axios'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import { Base64 } from 'js-base64'
-import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
+import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlank'
+import CheckIcon from 'vue-material-design-icons/Check'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
+import DeleteIcon from 'vue-material-design-icons/Delete'
+import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
+import DownloadIcon from 'vue-material-design-icons/Download'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { generateUrl } from '@nextcloud/router'
+import InformationIcon from 'vue-material-design-icons/Information'
 import logger from '../logger'
 import { matchError } from '../errors/match'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
-import TagModal from './TagModal'
 import MoveModal from './MoveModal'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
+import PlusIcon from 'vue-material-design-icons/Plus'
+import ReplyIcon from 'vue-material-design-icons/Reply'
+import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
+import ShareIcon from 'vue-material-design-icons/Share'
+import TagIcon from 'vue-material-design-icons/Tag'
+import TagModal from './TagModal'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 import { showError } from '@nextcloud/dialogs'
 
@@ -177,12 +246,25 @@ export default {
 		Actions,
 		ActionButton,
 		ActionLink,
+		AlertOctagonIcon,
+		CalendarBlankIcon,
 		ChevronLeft,
+		CheckIcon,
+		DeleteIcon,
+		DotsHorizontalIcon,
+		DownloadIcon,
+		EnvelopePrimaryActions,
 		EventModal,
+		InformationIcon,
 		Modal,
 		MoveModal,
+		OpenInNewIcon,
+		PlusIcon,
+		ReplyIcon,
+		ReplyAllIcon,
+		ShareIcon,
+		TagIcon,
 		TagModal,
-		EnvelopePrimaryActions,
 	},
 	props: {
 		envelope: {
@@ -222,7 +304,6 @@ export default {
 		return {
 			debug: window?.OC?.debug || false,
 			rawMessage: '', // Will hold the raw source of the message when requested
-			sourceLoading: false,
 			showSourceModal: false,
 			showMoveModal: false,
 			showEventModal: false,
@@ -327,20 +408,14 @@ export default {
 			})
 		},
 		async onShowSourceModal() {
-			this.sourceLoading = true
+			const resp = await axios.get(
+				generateUrl('/apps/mail/api/messages/{id}/source', {
+					id: this.envelope.databaseId,
+				})
+			)
 
-			try {
-				const resp = await axios.get(
-					generateUrl('/apps/mail/api/messages/{id}/source', {
-						id: this.envelope.databaseId,
-					})
-				)
-
-				this.rawMessage = resp.data.source
-				this.showSourceModal = true
-			} finally {
-				this.sourceLoading = false
-			}
+			this.rawMessage = resp.data.source
+			this.showSourceModal = true
 		},
 		onCloseSourceModal() {
 			this.showSourceModal = false
