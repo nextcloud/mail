@@ -59,6 +59,7 @@ class LocalAttachment extends Entity implements JsonSerializable {
 	public function jsonSerialize() {
 		return [
 			'id' => $this->id,
+			'type' => 'local',
 			'fileName' => $this->fileName,
 			'mimeType' => $this->mimeType,
 			'createdAt' => $this->createdAt,
