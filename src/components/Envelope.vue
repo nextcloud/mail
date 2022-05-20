@@ -85,39 +85,62 @@
 				</ActionButton>
 			</EnvelopePrimaryActions>
 			<template v-if="!moreActionsOpen">
-				<ActionButton icon="icon-junk"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onToggleJunk">
+					<template #icon>
+						<AlertOctagonIcon
+							:title="data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+							:size="20" />
+					</template>
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</ActionButton>
-				<ActionButton icon="icon-checkmark"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="toggleSelected">
+					<template #icon>
+						<CheckIcon
+							:title="selected ? t('mail', 'Unselect') : t('mail', 'Select')"
+							:size="20" />
+					</template>
 					{{
 						selected ? t('mail', 'Unselect') : t('mail', 'Select')
 					}}
 				</ActionButton>
-				<ActionButton
-					icon="icon-tag"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenTagModal">
+					<template #icon>
+						<TagIcon
+							:title="t('mail', 'Edit tags')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
-				<ActionButton icon="icon-external"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenMoveModal">
+					<template #icon>
+						<OpenInNewIcon
+							:title="t('mail', 'Move')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
-				<ActionButton icon="icon-more"
-					:close-after-click="false"
+				<ActionButton :close-after-click="false"
 					@click="moreActionsOpen=true">
+					<template #icon>
+						<DotsHorizontalIcon
+							:title="t('mail', 'More actions')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
-				<ActionButton icon="icon-delete"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onDelete">
+					<template #icon>
+						<DeleteIcon
+							:title="t('mail', 'Delete thread')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Delete thread') }}
 				</ActionButton>
 			</template>
@@ -128,17 +151,25 @@
 						<ChevronLeft
 							:title="t('mail', 'More actions')"
 							:size="20" />
-						{{ t('mail', 'More actions') }}
 					</template>
+					{{ t('mail', 'More actions') }}
 				</ActionButton>
-				<ActionButton icon="icon-add"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenEditAsNew">
+					<template #icon>
+						<PlusIcon
+							:title="t('mail', 'Edit as new message')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Edit as new message') }}
 				</ActionButton>
-				<ActionButton icon="icon-calendar-dark"
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
+					<template #icon>
+						<CalendarBlankIcon
+							:title="t('mail', 'Create event')"
+							:size="20" />
+					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
 			</template>
@@ -176,9 +207,14 @@
 <script>
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
+import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlank'
+import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
+import DeleteIcon from 'vue-material-design-icons/Delete'
+import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import moment from '@nextcloud/moment'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
@@ -189,6 +225,9 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger'
 import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
+import PlusIcon from 'vue-material-design-icons/Plus'
+import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
@@ -196,13 +235,21 @@ import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 export default {
 	name: 'Envelope',
 	components: {
+		AlertOctagonIcon,
+		CalendarBlankIcon,
+		CheckIcon,
+		ChevronLeft,
+		DeleteIcon,
+		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
 		ListItem,
 		Avatar,
 		ActionButton,
-		ChevronLeft,
 		MoveModal,
+		OpenInNewIcon,
+		PlusIcon,
+		TagIcon,
 		TagModal,
 	},
 	directives: {
