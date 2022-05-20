@@ -77,8 +77,7 @@ class Version0156Date20190828140357 extends SimpleMigrationStep {
 			'length' => 4,
 		]);
 		$mailboxTable->addColumn('selectable', 'boolean', [
-			'notnull' => true,
-			'length' => 1,
+			'notnull' => false,
 			'default' => true,
 		]);
 		// We allow each mailbox name just once
