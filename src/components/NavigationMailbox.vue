@@ -206,7 +206,7 @@ export default {
 			return this.mailbox.name.toLowerCase() !== 'inbox'
 		},
 		notVirtual() {
-			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged'
+			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged' && !this.filter
 		},
 		title() {
 			if (this.filter === 'starred') {
