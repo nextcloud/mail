@@ -81,7 +81,7 @@ class MessageMapperTest extends TestCase {
 			$message2,
 		];
 
-		$result = $this->mapper->findByIds($imapClient, $mailbox, $ids);
+		$result = $this->mapper->findByIds($imapClient, $mailbox, new Horde_Imap_Client_Ids($ids));
 
 		$this->assertEquals($expected, $result);
 	}
