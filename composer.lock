@@ -1086,16 +1086,16 @@
         },
         {
             "name": "bytestream/horde-stream-filter",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Stream_Filter.git",
-                "reference": "8a3561cd40a6896318c8ab8e1cb7b145ef07cc0d"
+                "reference": "ce3663e2baa11cd6bb927968fcb7cd90813f5355"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Stream_Filter/zipball/8a3561cd40a6896318c8ab8e1cb7b145ef07cc0d",
-                "reference": "8a3561cd40a6896318c8ab8e1cb7b145ef07cc0d",
+                "url": "https://api.github.com/repos/bytestream/Stream_Filter/zipball/ce3663e2baa11cd6bb927968fcb7cd90813f5355",
+                "reference": "ce3663e2baa11cd6bb927968fcb7cd90813f5355",
                 "shasum": ""
             },
             "require": {
@@ -1129,9 +1129,9 @@
             "description": "Horde PHP stream filters library",
             "homepage": "https://www.horde.org/libraries/Horde_Stream_Filter",
             "support": {
-                "source": "https://github.com/bytestream/Stream_Filter/tree/v2.1.0"
+                "source": "https://github.com/bytestream/Stream_Filter/tree/v2.1.1"
             },
-            "time": "2021-12-20T22:48:47+00:00"
+            "time": "2022-05-23T14:46:54+00:00"
         },
         {
             "name": "bytestream/horde-stream-wrapper",
