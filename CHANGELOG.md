@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.12.1 - 2022-05-24
+### Fixed
+- Prevent causal read for outbox message and recipient inserts
+- Hide subscribed / unsubscribed checkbox for "Favourites" folder
+- Fix attachment loss during outbox message update
+- Fix sending messages to groups
+- Fix composer not to open when we select envelope
+- Change the timeout value to fit the dialogs
+- Fix text format when closing the composer modal
+- Do not override existing aliases
+- Stop message from sending while editing
+- Fix html editor being always selected
+- Fix flagging replied messages
+- Fix modal size in different size of the screen
+- Show account color indicator only if several accounts are present
+- Consider passwordless signings when provisioning
+
 ## 1.12.0 - 2022-05-03
 ### Added
 - Local Outbox
