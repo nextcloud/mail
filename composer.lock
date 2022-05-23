@@ -823,16 +823,16 @@
         },
         {
             "name": "bytestream/horde-mail",
-            "version": "v2.7.0",
+            "version": "v2.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mail.git",
-                "reference": "09c03310b063e2d9f03c863e365256a2fc459354"
+                "reference": "73f5798734caaf7c6aa3e7348ddc9e0d0b6a768e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mail/zipball/09c03310b063e2d9f03c863e365256a2fc459354",
-                "reference": "09c03310b063e2d9f03c863e365256a2fc459354",
+                "url": "https://api.github.com/repos/bytestream/Mail/zipball/73f5798734caaf7c6aa3e7348ddc9e0d0b6a768e",
+                "reference": "73f5798734caaf7c6aa3e7348ddc9e0d0b6a768e",
                 "shasum": ""
             },
             "require": {
@@ -872,9 +872,9 @@
             "description": "Horde mail library",
             "homepage": "https://www.horde.org/libraries/Horde_Mail",
             "support": {
-                "source": "https://github.com/bytestream/Mail/tree/v2.7.0"
+                "source": "https://github.com/bytestream/Mail/tree/v2.7.1"
             },
-            "time": "2021-12-21T16:41:50+00:00"
+            "time": "2022-05-23T09:07:13+00:00"
         },
         {
             "name": "bytestream/horde-mime",
