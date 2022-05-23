@@ -1227,16 +1227,16 @@
         },
         {
             "name": "bytestream/horde-support",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Support.git",
-                "reference": "90bedc0298a40b308d98b23e0b17e59eb4e1cdde"
+                "reference": "06e6634d56a6216adc6d5fbab00f099856646f29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Support/zipball/90bedc0298a40b308d98b23e0b17e59eb4e1cdde",
-                "reference": "90bedc0298a40b308d98b23e0b17e59eb4e1cdde",
+                "url": "https://api.github.com/repos/bytestream/Support/zipball/06e6634d56a6216adc6d5fbab00f099856646f29",
+                "reference": "06e6634d56a6216adc6d5fbab00f099856646f29",
                 "shasum": ""
             },
             "require": {
@@ -1278,9 +1278,9 @@
             "description": "Horde Supporting library",
             "homepage": "https://www.horde.org/libraries/Horde_Support",
             "support": {
-                "source": "https://github.com/bytestream/Support/tree/v2.3.0"
+                "source": "https://github.com/bytestream/Support/tree/v2.3.1"
             },
-            "time": "2021-12-21T13:26:56+00:00"
+            "time": "2022-05-23T13:26:20+00:00"
         },
         {
             "name": "bytestream/horde-text-filter",
