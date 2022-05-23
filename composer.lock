@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1c307444d66ee5ad260eb0d712b61dc",
+    "content-hash": "bf60d7f2e2448119556c1841143408d3",
     "packages": [
         {
             "name": "amphp/amp",
@@ -367,12 +367,12 @@
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/functions.php"
-                ],
                 "psr-4": {
                     "Amp\\Serialization\\": "src"
-                }
+                },
+                "files": [
+                    "src/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3101,7 +3101,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4"
+        "php": ">=7.4 <=8.1"
     },
     "platform-dev": [],
     "platform-overrides": {

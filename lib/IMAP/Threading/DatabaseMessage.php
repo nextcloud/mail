@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Threading;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 use function array_map;
 use function array_merge;
 use function json_decode;
@@ -104,7 +105,8 @@ class DatabaseMessage extends Message implements JsonSerializable {
 		);
 	}
 
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return array_merge(
 			parent::jsonSerialize(),
 			[
