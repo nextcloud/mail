@@ -32,6 +32,7 @@ use function array_map;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use function array_merge;
 
 /**
  * @template-extends QBMapper<LocalMessage>
@@ -177,8 +178,11 @@ class LocalMessageMapper extends QBMapper {
 			$this->db->rollBack();
 			throw $e;
 		}
-		$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
-		$message->setRecipients($recipients);
+		$message->setRecipients(array_merge(
+			$to,
+			$cc,
+			$bcc,
+		));
 		return $message;
 	}
 
