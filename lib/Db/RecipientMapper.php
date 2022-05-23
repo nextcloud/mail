@@ -84,9 +84,6 @@ class RecipientMapper extends QBMapper {
 	 * @param Recipient[] $recipients
 	 */
 	public function saveRecipients(int $localMessageId, array $recipients): void {
-		if (empty($recipients)) {
-			return;
-		}
 		foreach ($recipients as $recipient) {
 			$recipient->setLocalMessageId($localMessageId);
 			$this->insert($recipient);
