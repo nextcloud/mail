@@ -195,5 +195,9 @@ export default {
 ::v-deep .modal-wrapper .modal-container {
 	overflow-y: auto !important;
 	overflow-x: auto !important;
+	// from original Modal max-height
+	height: 90%;
+	// Max editor + modal height
+	max-height: 700px !important;
 }
 </style>
