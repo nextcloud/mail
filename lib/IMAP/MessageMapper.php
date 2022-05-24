@@ -530,6 +530,11 @@ class MessageMapper {
 				continue;
 			}
 
+			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
+				// We are looking for specific parts only and this is not one of them
+				continue;
+			}
+
 			$stream = $messageData->getBodyPart($key, true);
 			$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 			if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
@@ -588,6 +593,11 @@ class MessageMapper {
 				continue;
 			}
 
+			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
+				// We are looking for specific parts only and this is not one of them
+				continue;
+			}
+
 			$stream = $messageData->getBodyPart($key, true);
 			$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 			if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
@@ -622,7 +632,8 @@ class MessageMapper {
 				// Ignore message header
 				continue;
 			}
-			if (!empty($attachmentIds) && !in_array($part->getMIMEId(), $attachmentIds, true)) {
+
+			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
 				// We are looking for specific parts only and this is not one of them
 				continue;
 			}
