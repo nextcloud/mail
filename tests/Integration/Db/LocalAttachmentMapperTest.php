@@ -54,6 +54,11 @@ class LocalAttachmentMapperTest extends TestCase {
 	/** @var array */
 	private $attachments;
 
+	/** @var string */
+	private $user1 = 'user45678';
+	/** @var string  */
+	private $user2 = 'dontFindMe';
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -72,32 +77,39 @@ class LocalAttachmentMapperTest extends TestCase {
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->execute();
 
-		$attachment = LocalAttachment::fromParams([
+		$attachment1 = LocalAttachment::fromParams([
 			'fileName' => 'slimes_in_the_mines.jpeg',
 			'mimeType' => 'image/jpeg',
-			'userId' => 'user45678',
+			'userId' => $this->user1,
 			'createdAt' => $this->timeFactory->getTime()
 		]);
 		$attachment2 = LocalAttachment::fromParams([
 			'fileName' => 'prismatic_shard.png',
 			'mimeType' => 'image/png',
-			'userId' => 'dontFindMe',
+			'userId' => $this->user2,
 			'createdAt' => $this->timeFactory->getTime()
 		]);
-		$attachment = $this->mapper->insert($attachment);
+		$attachment3 = LocalAttachment::fromParams([
+			'fileName' => 'slimes_in_the_shard.png',
+			'mimeType' => 'image/png',
+			'userId' => $this->user1,
+			'createdAt' => $this->timeFactory->getTime()
+		]);
+		$attachment1 = $this->mapper->insert($attachment1);
 		$attachment2 = $this->mapper->insert($attachment2);
-		$this->attachmentIds = [$attachment->getId(), $attachment2->getId()];
+		$attachment3 = $this->mapper->insert($attachment3);
+		$this->attachmentIds = [$attachment1->getId(), $attachment2->getId(), $attachment3->getId()];
 
-		$message = new LocalMessage();
-		$message->setType(LocalMessage::TYPE_OUTGOING);
-		$message->setAccountId(1);
-		$message->setAliasId(3);
-		$message->setSendAt(3);
-		$message->setSubject('testSaveLocalAttachments');
-		$message->setBody('message');
-		$message->setHtml(true);
-		$message->setInReplyToMessageId('abcdefg');
-		$message = $this->localMessageMapper->insert($message);
+		$message1 = new LocalMessage();
+		$message1->setType(LocalMessage::TYPE_OUTGOING);
+		$message1->setAccountId(1);
+		$message1->setAliasId(3);
+		$message1->setSendAt(3);
+		$message1->setSubject('testSaveLocalAttachments');
+		$message1->setBody('message');
+		$message1->setHtml(true);
+		$message1->setInReplyToMessageId('abcdefg');
+		$message1 = $this->localMessageMapper->insert($message1);
 		$message2 = new LocalMessage();
 		$message2->setType(LocalMessage::TYPE_OUTGOING);
 		$message2->setAccountId(1);
@@ -108,44 +120,44 @@ class LocalAttachmentMapperTest extends TestCase {
 		$message2->setHtml(true);
 		$message2->setInReplyToMessageId('abcdefg');
 		$message2 = $this->localMessageMapper->insert($message2);
-		$this->localMessageIds = [$message->getId(), $message2->getId()];
+		$this->localMessageIds = [$message1->getId(), $message2->getId()];
 	}
 
 	public function testSaveAndFindLocalAttachments(): void {
-		$this->mapper->saveLocalMessageAttachments($this->localMessageIds[0], $this->attachmentIds);
-		$foundAttachments = $this->mapper->findByLocalMessageId($this->localMessageIds[0]);
+		$this->mapper->saveLocalMessageAttachments($this->user1, $this->localMessageIds[0], $this->attachmentIds);
+		$foundAttachments = $this->mapper->findByLocalMessageId($this->user1, $this->localMessageIds[0]);
 
 		$this->assertCount(2, $foundAttachments);
 	}
 
 	public function testDeleteForLocalMessage(): void {
-		$this->mapper->saveLocalMessageAttachments($this->localMessageIds[0], $this->attachmentIds);
-		$foundAttachments = $this->mapper->findByLocalMessageId($this->localMessageIds[0]);
+		$this->mapper->saveLocalMessageAttachments($this->user1, $this->localMessageIds[0], $this->attachmentIds);
+		$foundAttachments = $this->mapper->findByLocalMessageId($this->user1, $this->localMessageIds[0]);
 
 		$this->assertCount(2, $foundAttachments);
 
-		$this->mapper->deleteForLocalMessage($this->localMessageIds[0]);
+		$this->mapper->deleteForLocalMessage($this->user1, $this->localMessageIds[0]);
 
-		$result = $this->mapper->findByLocalMessageId($this->localMessageIds[0]);
+		$result = $this->mapper->findByLocalMessageId($this->user1, $this->localMessageIds[0]);
 		$this->assertEmpty($result);
 	}
 
 	public function testFind(): void {
-		$this->mapper->saveLocalMessageAttachments($this->localMessageIds[0], $this->attachmentIds);
-		$foundAttachment = $this->mapper->find('user45678', $this->attachmentIds[0]);
+		$this->mapper->saveLocalMessageAttachments($this->user1, $this->localMessageIds[0], $this->attachmentIds);
+		$foundAttachment = $this->mapper->find($this->user1, $this->attachmentIds[0]);
 
 		$this->assertEquals('slimes_in_the_mines.jpeg', $foundAttachment->getFileName());
 		$this->assertEquals('image/jpeg', $foundAttachment->getMimeType());
 		$this->assertEquals($this->localMessageIds[0], $foundAttachment->getLocalMessageId());
-		$this->assertEquals('user45678', $foundAttachment->getUserId());
+		$this->assertEquals($this->user1, $foundAttachment->getUserId());
 
 		$this->expectException(DoesNotExistException::class);
-		$this->mapper->find('user45678', $this->attachmentIds[1]);
+		$this->mapper->find($this->user1, $this->attachmentIds[1]);
 	}
 
 	public function testFindByLocalMessageIds(): void {
-		$this->mapper->saveLocalMessageAttachments($this->localMessageIds[0], [$this->attachmentIds[0]]);
-		$this->mapper->saveLocalMessageAttachments($this->localMessageIds[1], [$this->attachmentIds[1]]);
+		$this->mapper->saveLocalMessageAttachments($this->user1, $this->localMessageIds[0], [$this->attachmentIds[0]]);
+		$this->mapper->saveLocalMessageAttachments($this->user2, $this->localMessageIds[1], [$this->attachmentIds[1]]);
 
 		$foundAttachments = $this->mapper->findByLocalMessageIds($this->localMessageIds);
 		$this->assertCount(2, $foundAttachments);
