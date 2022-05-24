@@ -46,11 +46,12 @@ class LocalAttachmentMapper extends QBMapper {
 	/**
 	 * @return LocalAttachment[]
 	 */
-	public function findByLocalMessageId(int $localMessageId): array {
+	public function findByLocalMessageId(string $userId, int $localMessageId): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
-			->where(
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere(
 				$qb->expr()->eq('local_message_id', $qb->createNamedParameter($localMessageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 		return $this->findEntities($qb);
@@ -86,12 +87,17 @@ class LocalAttachmentMapper extends QBMapper {
 		return $this->findEntity($query);
 	}
 
-	public function deleteForLocalMessage(int $localMessageId): void {
+	/**
+	 * @throws Throwable
+	 * @throws \OCP\DB\Exception
+	 */
+	public function deleteForLocalMessage(string $userId, int $localMessageId): void {
 		$this->db->beginTransaction();
 		try {
 			$qb = $this->db->getQueryBuilder();
 			$qb->delete($this->getTableName())
-				->where($qb->expr()->eq('local_message_id', $qb->createNamedParameter($localMessageId), IQueryBuilder::PARAM_INT));
+				->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+				->andWhere($qb->expr()->eq('local_message_id', $qb->createNamedParameter($localMessageId), IQueryBuilder::PARAM_INT));
 			$qb->execute();
 			$this->db->commit();
 		} catch (Throwable $e) {
@@ -100,13 +106,18 @@ class LocalAttachmentMapper extends QBMapper {
 		}
 	}
 
-	public function saveLocalMessageAttachments(int $localMessageId, array $attachmentIds) {
+	/**
+	 * @throws Throwable
+	 * @throws \OCP\DB\Exception
+	 */
+	public function saveLocalMessageAttachments(string $userId, int $localMessageId, array $attachmentIds): void {
 		$this->db->beginTransaction();
 		try {
 			$qb = $this->db->getQueryBuilder();
 			$qb->update($this->getTableName())
 				->set('local_message_id', $qb->createNamedParameter($localMessageId, IQueryBuilder::PARAM_INT))
-				->where(
+				->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+				->andWhere(
 					$qb->expr()->in('id', $qb->createNamedParameter($attachmentIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 				);
 			$qb->execute();
@@ -119,12 +130,14 @@ class LocalAttachmentMapper extends QBMapper {
 
 	/**
 	 * @return LocalAttachment[]
+	 * @throws \OCP\DB\Exception
 	 */
-	public function findByIds(array $attachmentIds): array {
+	public function findByIds(string $userId, array $attachmentIds): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
-			->where(
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere(
 				$qb->expr()->in('id', $qb->createNamedParameter($attachmentIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 			);
 		return $this->findEntities($qb);
