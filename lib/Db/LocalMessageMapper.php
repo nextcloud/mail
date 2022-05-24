@@ -112,7 +112,7 @@ class LocalMessageMapper extends QBMapper {
 				$qb->expr()->eq('m.id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 		$entity = $this->findEntity($qb);
-		$entity->setAttachments($this->attachmentMapper->findByLocalMessageId($id));
+		$entity->setAttachments($this->attachmentMapper->findByLocalMessageId($userId, $id));
 		$entity->setRecipients($this->recipientMapper->findByLocalMessageId($id));
 		return $entity;
 	}
