@@ -70,7 +70,8 @@ import {
 	removeEnvelopeTag,
 	setEnvelopeFlag,
 	setEnvelopeTag,
-	syncEnvelopes, updateEnvelopeTag,
+	syncEnvelopes,
+	updateEnvelopeTag,
 } from '../service/MessageService'
 import * as AliasService from '../service/AliasService'
 import logger from '../logger'
@@ -331,6 +332,13 @@ export default {
 						body: data.body,
 						originalBody: data.body,
 						forwardFrom: reply.data,
+						attachments: original.attachments.map(attachment => ({
+							...attachment,
+							mailboxId: original.mailboxId,
+							// messageId for attachments is actually the uid
+							uid: attachment.messageId,
+							type: 'message-attachment',
+						})),
 					},
 				})
 				return
