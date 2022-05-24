@@ -356,31 +356,27 @@ class AttachmentServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
 		]);
-		$message = new Message();
-		$message->setUid(123);
-		$message->setMailboxId(1);
+
 		$mailbox = new Mailbox();
+		$mailbox->setId(9);
 		$mailbox->setName('INBOX');
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$attachments = [
 			'type' => 'message-attachment',
-			'messageId' => 999,
+			'mailboxId' => $mailbox->getId(),
+			'uid' => 999,
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
 		];
 		$imapAttachment = ['sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'];
 
 		$this->mailManager->expects(self::once())
-			->method('getMessage')
-			->with($account->getUserId(), 999)
-			->willReturn($message);
-		$this->mailManager->expects(self::once())
 			->method('getMailbox')
-			->with($account->getUserId())
+			->with($account->getUserId(), $mailbox->getId())
 			->willReturn($mailbox);
 		$this->messageMapper->expects(self::once())
 			->method('getRawAttachments')
-			->with($client, $mailbox->getName(), $message->getUid())
+			->with($client, $mailbox->getName(), 999)
 			->willReturn($imapAttachment);
 		$this->mapper->expects($this->once())
 			->method('insert')
