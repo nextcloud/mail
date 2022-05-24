@@ -19,7 +19,9 @@ OC.L10N.register(
     "Signature" : "Tanda",
     "Email address" : "Alamat email",
     "Cancel" : "Membatalkan",
+    "Add mail account" : "Tambahkan akun email",
     "Show keyboard shortcuts" : "Tampilkan pintasan papan kunci",
+    "Subject" : "Subjek",
     "Upload attachment" : "Unggah lampiran",
     "Sending …" : "Mengirim ...",
     "Go back" : "Kembali",
@@ -40,7 +42,9 @@ OC.L10N.register(
     "Favorites" : "Disukai",
     "Other" : "Lainnya",
     "Reply" : "Balas",
+    "Download attachment" : "Unduh lampiran",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
+    "New message" : "Pesan baru",
     "Settings" : "Setelan",
     "Quota" : "Kuota",
     "Saving" : "Menyimpan",
@@ -62,6 +66,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Pintasan keyboard",
     "Search" : "Cari",
     "Refresh" : "Segarkan",
+    "Connect your mail account" : "Hubungkan akun email Anda",
     "All" : "Semua",
     "Archive" : "Arsip",
     "Drafts" : "Konsep",
@@ -71,6 +76,9 @@ OC.L10N.register(
     "Sent" : "Kirim",
     "Trash" : "Tempat sampah",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "Error loading message" : "Terjadi kesalahan saat memuat pesan"
+    "Error loading message" : "Terjadi kesalahan saat memuat pesan",
+    "Forwarding to %s" : "Teruskan ke %s",
+    "Redirect" : "Mengalihkan",
+    "Continue to %s" : "Lanjutkan ke %s"
 },
 "nplurals=1; plural=0;");

@@ -211,4 +211,4 @@ OC.L10N.register(
     "The link leads to %s" : "A ligação aponta para %s",
     "Continue to %s" : "Continuar para %s"
 },
-"nplurals=2; plural=(n != 1);");
+"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -103,7 +103,7 @@ OC.L10N.register(
     "Sent" : "Enviado",
     "Trash" : "Basura",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n mensaje nuevo \nde {from}","%n mensajes nuevos \nde {from}"],
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n mensaje nuevo \nde {from}","%n mensajes nuevos \nde {from}","%n mensajes nuevos \nde {from}"],
     "Nextcloud Mail" : "Correo Nextcloud",
     "Could not load {tag}{name}{endtag}" : "No fue posible cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Se presentó un problema al cargar  {tag}{name}{endtag}",
@@ -118,4 +118,4 @@ OC.L10N.register(
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quieres visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s"
 },
-"nplurals=2; plural=(n != 1);");
+"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
