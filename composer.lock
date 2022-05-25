@@ -1432,16 +1432,16 @@
         },
         {
             "name": "bytestream/horde-util",
-            "version": "v2.6.1",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Util.git",
-                "reference": "14720033eb787c7cf1e47b49da86aa1f66c87793"
+                "reference": "7f8e83ba8c56fd405f7f15252659a216bdebf4cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Util/zipball/14720033eb787c7cf1e47b49da86aa1f66c87793",
-                "reference": "14720033eb787c7cf1e47b49da86aa1f66c87793",
+                "url": "https://api.github.com/repos/bytestream/Util/zipball/7f8e83ba8c56fd405f7f15252659a216bdebf4cb",
+                "reference": "7f8e83ba8c56fd405f7f15252659a216bdebf4cb",
                 "shasum": ""
             },
             "require": {
@@ -1481,9 +1481,9 @@
             "description": "Horde utility library",
             "homepage": "https://www.horde.org/libraries/Horde_Util",
             "support": {
-                "source": "https://github.com/bytestream/Util/tree/v2.6.1"
+                "source": "https://github.com/bytestream/Util/tree/v2.6.2"
             },
-            "time": "2021-12-21T17:30:42+00:00"
+            "time": "2022-05-25T11:33:55+00:00"
         },
         {
             "name": "cerdic/css-tidy",
