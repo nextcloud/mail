@@ -50,6 +50,11 @@
 			</div>
 		</template>
 		<template #subtitle>
+			<span v-if="isEncrypted"
+				class="icon-encrypted"
+				:title="t('mail','Message encrypted.')">
+				<LockCheckOutline :size="20" fill-color="#98b379" />
+			</span>
 			<span v-if="data.flags.answered" class="icon-reply" />
 			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">
@@ -228,6 +233,7 @@ import MoveModal from './MoveModal'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
+import LockCheckOutline from 'vue-material-design-icons/LockCheckOutline'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
@@ -250,6 +256,7 @@ export default {
 		OpenInNewIcon,
 		PlusIcon,
 		TagIcon,
+		LockCheckOutline,
 		TagModal,
 	},
 	directives: {
@@ -368,8 +375,13 @@ export default {
 				.getEnvelopeTags(this.data.databaseId)
 				.some((tag) => tag.imapLabel === '$label1')
 		},
+		isEncrypted() {
+			return this.$store.getters
+				.getEnvelopeTags(this.data.databaseId)
+				.some((tag) => tag.imapLabel === 'encrypted')
+		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1')
+			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => (tag.imapLabel && tag.imapLabel !== '$label1' && tag.imapLabel && tag.imapLabel !== 'encrypted'))
 		},
 		draggableLabel() {
 			let label = this.data.subject
@@ -546,7 +558,8 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 
 .icon-reply,
-.icon-attachment {
+.icon-attachment,
+.icon-encrypted {
 	display: inline-block;
 	vertical-align: text-top;
 }

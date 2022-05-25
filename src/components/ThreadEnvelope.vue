@@ -70,6 +70,11 @@
 				</div>
 			</router-link>
 			<div class="right">
+				<span v-if="isEncrypted"
+					class="label-encrypted"
+					:title="t('mail','Message encrypted.')">
+					<LockCheckOutline :size="20" fill-color="#98b379" />
+				</span>
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<button
 					:class="{
@@ -110,6 +115,7 @@ import MenuEnvelope from './MenuEnvelope'
 import Moment from './Moment'
 import Avatar from './Avatar'
 import importantSvg from '../../img/important.svg'
+import LockCheckOutline from 'vue-material-design-icons/LockCheckOutline'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 
 export default {
@@ -121,6 +127,7 @@ export default {
 		Moment,
 		Message,
 		Avatar,
+		LockCheckOutline,
 	},
 	props: {
 		envelope: {
@@ -189,8 +196,13 @@ export default {
 				.getEnvelopeTags(this.envelope.databaseId)
 				.find((tag) => tag.imapLabel === '$label1')
 		},
+		isEncrypted() {
+			return this.$store.getters
+				.getEnvelopeTags(this.envelope.databaseId)
+				.find((tag) => tag.imapLabel === 'encrypted')
+		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter((tag) => tag.imapLabel !== '$label1')
+			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter((tag) => (tag.imapLabel !== '$label1' && tag.imapLabel !== 'encrypted'))
 		},
 		hasChangedSubject() {
 			return this.cleanSubject !== this.threadSubject
@@ -441,5 +453,9 @@ export default {
 	}
 	.envelope--header.list-item-style {
 		border-radius: 16px;
+	}
+	.label-encrypted {
+		display: inline-block;
+		margin-right: 4px;
 	}
 </style>
