@@ -1040,16 +1040,16 @@
         },
         {
             "name": "bytestream/horde-stream",
-            "version": "v1.7.0",
+            "version": "v1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Stream.git",
-                "reference": "f4fd1eed7d953771292d8f565c7f13ca4984c284"
+                "reference": "5b3a75eb2118d16af43b9ec59bab7b1b5d1d2289"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Stream/zipball/f4fd1eed7d953771292d8f565c7f13ca4984c284",
-                "reference": "f4fd1eed7d953771292d8f565c7f13ca4984c284",
+                "url": "https://api.github.com/repos/bytestream/Stream/zipball/5b3a75eb2118d16af43b9ec59bab7b1b5d1d2289",
+                "reference": "5b3a75eb2118d16af43b9ec59bab7b1b5d1d2289",
                 "shasum": ""
             },
             "require": {
@@ -1080,9 +1080,9 @@
             "description": "Horde PHP streams library",
             "homepage": "https://www.horde.org/libraries/Horde_Stream",
             "support": {
-                "source": "https://github.com/bytestream/Stream/tree/v1.7.0"
+                "source": "https://github.com/bytestream/Stream/tree/v1.7.1"
             },
-            "time": "2021-12-21T12:45:59+00:00"
+            "time": "2022-05-25T11:46:14+00:00"
         },
         {
             "name": "bytestream/horde-stream-filter",
