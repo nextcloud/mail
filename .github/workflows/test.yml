@@ -19,6 +19,8 @@ jobs:
               nextcloud-versions: stable24
             - php-versions: 8.1
               nextcloud-versions: master
+            - php-versions: 8.2
+              nextcloud-versions: master
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
@@ -29,6 +31,9 @@ jobs:
         coverage: xdebug
     - name: Checkout Nextcloud
       run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+    - name: Patch version check for nightly PHP
+      if: ${{ matrix.php-versions == '8.2' }}
+      run: echo "<?php" > nextcloud/lib/versioncheck.php
     - name: Install Nextcloud
       run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
     - name: Fix php-parser on stable20 incompatibility with phpunit 9.3+
@@ -79,6 +84,9 @@ jobs:
                 - php-versions: 8.1
                   nextcloud-versions: stable24
                   db: 'pgsql'
+                - php-versions: 8.2
+                  nextcloud-versions: master
+                  db: 'sqlite'
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
           mail-service:
@@ -128,6 +136,9 @@ jobs:
                 coverage: xdebug
           - name: Checkout Nextcloud
             run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+          - name: Patch version check for nightly PHP
+            if: ${{ matrix.php-versions == '8.2' }}
+            run: echo "<?php" > nextcloud/lib/versioncheck.php
           - name: Install Nextcloud
             run: php -f nextcloud/occ maintenance:install --database-host 127.0.0.1 --database-name nextcloud --database-user nextcloud --database-pass nextcloud --admin-user admin --admin-pass admin --database ${{ matrix.db }}
           - name: Checkout Mail
@@ -137,6 +148,9 @@ jobs:
           - name: Install dependencies
             working-directory: nextcloud/apps/mail
             run: composer install
+          - name: Patch version check for nightly PHP
+            if: ${{ matrix.php-versions == '8.2' }}
+            run: sed -i 's/max-version="8.1"/max-version="8.2"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
             run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
