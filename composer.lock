@@ -1432,16 +1432,16 @@
         },
         {
             "name": "bytestream/horde-util",
-            "version": "v2.6.1",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Util.git",
-                "reference": "14720033eb787c7cf1e47b49da86aa1f66c87793"
+                "reference": "7f8e83ba8c56fd405f7f15252659a216bdebf4cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Util/zipball/14720033eb787c7cf1e47b49da86aa1f66c87793",
-                "reference": "14720033eb787c7cf1e47b49da86aa1f66c87793",
+                "url": "https://api.github.com/repos/bytestream/Util/zipball/7f8e83ba8c56fd405f7f15252659a216bdebf4cb",
+                "reference": "7f8e83ba8c56fd405f7f15252659a216bdebf4cb",
                 "shasum": ""
             },
             "require": {
@@ -1481,9 +1481,9 @@
             "description": "Horde utility library",
             "homepage": "https://www.horde.org/libraries/Horde_Util",
             "support": {
-                "source": "https://github.com/bytestream/Util/tree/v2.6.1"
+                "source": "https://github.com/bytestream/Util/tree/v2.6.2"
             },
-            "time": "2021-12-21T17:30:42+00:00"
+            "time": "2022-05-25T11:33:55+00:00"
         },
         {
             "name": "cerdic/css-tidy",
@@ -1965,16 +1965,16 @@
         },
         {
             "name": "nextcloud/horde-smtp",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud/horde-smtp.git",
-                "reference": "8b6cae75c328d7aee19957123d23b69eb98c52a1"
+                "reference": "6449ee9e8894876bb796dd9b1d6d995ebe86617d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/horde-smtp/zipball/8b6cae75c328d7aee19957123d23b69eb98c52a1",
-                "reference": "8b6cae75c328d7aee19957123d23b69eb98c52a1",
+                "url": "https://api.github.com/repos/nextcloud/horde-smtp/zipball/6449ee9e8894876bb796dd9b1d6d995ebe86617d",
+                "reference": "6449ee9e8894876bb796dd9b1d6d995ebe86617d",
                 "shasum": ""
             },
             "require": {
@@ -2014,9 +2014,9 @@
             "description": "Horde SMTP client",
             "homepage": "https://www.horde.org",
             "support": {
-                "source": "https://github.com/nextcloud/horde-smtp/tree/v1.0.0"
+                "source": "https://github.com/nextcloud/horde-smtp/tree/v1.0.1"
             },
-            "time": "2022-04-27T17:09:33+00:00"
+            "time": "2022-05-25T07:41:40+00:00"
         },
         {
             "name": "psr/log",
