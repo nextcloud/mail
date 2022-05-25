@@ -508,4 +508,9 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		$this->save();
 		return parent::serialize();
 	}
+
+	public function __serialize(): array {
+		$this->save();
+		return parent::__serialize();
+	}
 }
