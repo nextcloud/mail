@@ -173,7 +173,10 @@ export default {
 		async createTag(event) {
 			this.editing = true
 			const displayName = event.target.querySelector('input[type=text]').value
-
+			if (this.$store.getters.getTags.some(tag => tag.displayName === displayName)) {
+				showError(this.t('mail', 'Tag already exists'))
+				return
+			}
 			try {
 				await this.$store.dispatch('createTag', {
 					displayName,
