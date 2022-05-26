@@ -15,7 +15,6 @@ OC.L10N.register(
     "Connect" : "Kenstagañ",
     "Change name" : "Cheñch env",
     "Cancel" : "Arrest",
-    "+ Cc/Bcc" : "+ Cc/Bcc",
     "Retry" : "Klaskit en dro",
     "Send" : "Kas",
     "Set up an account" : "Staliañ ur c'hont",
