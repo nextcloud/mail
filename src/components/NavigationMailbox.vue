@@ -37,6 +37,10 @@
 		:to="to"
 		:open.sync="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
+		<template #icon>
+			<ImportantIcon v-if="mailbox.isPriorityInbox"
+				:size="20" />
+		</template>
 		<!-- actions -->
 		<template slot="actions">
 			<ActionText
@@ -193,6 +197,7 @@ import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 import { showInfo } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
+import ImportantIcon from '../components/Icons/ImportantIcon'
 
 export default {
 	name: 'NavigationMailbox',
@@ -211,6 +216,7 @@ export default {
 		IconDelete,
 		IconInfo,
 		MoveMailboxModal,
+		ImportantIcon,
 	},
 	directives: {
 		droppableMailbox,
@@ -275,10 +281,9 @@ export default {
 		icon() {
 			if (this.filter === 'starred') {
 				return 'icon-flagged'
-			} else if (this.mailbox.isPriorityInbox) {
-				return 'icon-important'
+			} else {
+				return this.mailbox.specialRole ? 'icon-' + this.mailbox.specialRole : 'icon-folder'
 			}
-			return this.mailbox.specialRole ? 'icon-' + this.mailbox.specialRole : 'icon-folder'
 		},
 		to() {
 			return {
