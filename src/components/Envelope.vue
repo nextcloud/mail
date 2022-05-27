@@ -59,26 +59,47 @@
 		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
-				<ActionButton icon="icon-starred"
+				<ActionButton
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleFlagged">
+					<template #icon>
+						<Star v-if="iconFavorite"
+							:title="t('mail', 'Favorite')"
+							:size="20" />
+						<StarOutline v-else
+							:title="t('mail', 'Unfavorite')"
+							:size="20" />
+					</template>
 					{{
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 					}}
 				</ActionButton>
-				<ActionButton icon="icon-mail"
+				<ActionButton
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleSeen">
+					<template #icon>
+						<Email v-if="iconImportant"
+							:title="t('mail', 'Unread')"
+							:size="20" />
+						<EmailOutline v-else
+							:title="t('mail', 'Read')"
+							:size="20" />
+					</template>
 					{{
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
 					}}
 				</ActionButton>
-				<ActionButton icon="icon-important"
+				<ActionButton
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleImportant">
+					<template #icon>
+						<ImportantIcon
+							:title="isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')"
+							:size="20" />
+					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 					}}
@@ -226,6 +247,11 @@ import logger from '../logger'
 import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
+import StarOutline from 'vue-material-design-icons/StarOutline'
+import Star from 'vue-material-design-icons/Star'
+import EmailOutline from 'vue-material-design-icons/EmailOutline'
+import Email from 'vue-material-design-icons/Email'
+import ImportantIcon from '../components/Icons/ImportantIcon'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
@@ -251,6 +277,11 @@ export default {
 		PlusIcon,
 		TagIcon,
 		TagModal,
+		Star,
+		StarOutline,
+		EmailOutline,
+		Email,
+		ImportantIcon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -362,6 +393,12 @@ export default {
 			} else {
 				return ''
 			}
+		},
+		iconFavorite() {
+			return this.data.flags.flagged
+		},
+		iconImportant() {
+			return this.data.flags.seen
 		},
 		isImportant() {
 			return this.$store.getters
