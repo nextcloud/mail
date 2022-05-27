@@ -34,7 +34,7 @@
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
 		<template #subtitle>
-			{{ message.subject }}
+			{{ subjectForSubtitle }}
 		</template>
 		<template slot="actions">
 			<ActionButton
@@ -111,6 +111,15 @@ export default {
 				return ''
 			}
 			return moment.unix(this.message.sendAt).fromNow()
+		},
+		/**
+		 * Subject of message or "No Subject".
+		 * @returns {string}
+		 */
+		subjectForSubtitle() {
+			// We have to use || here (instead of ??) because the subject might be '', null
+			// or undefined.
+			return this.message.subject || this.t('mail', 'No subject')
 		},
 	},
 	methods: {
