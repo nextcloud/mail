@@ -7,26 +7,47 @@
 			@click.native.prevent>
 			<template v-if="!moreActionsOpen">
 				<EnvelopePrimaryActions>
-					<ActionButton :icon="iconFavorite"
+					<ActionButton
 						class="action--primary"
 						:close-after-click="true"
 						@click.prevent="onToggleFlagged">
+						<template #icon>
+							<Star v-if="iconFavorite"
+								:title="t('mail', 'Unfavorite')"
+								:size="20" />
+							<StarOutline v-else
+								:title="t('mail', 'Favorite')"
+								:size="20" />
+						</template>
 						{{
 							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 						}}
 					</ActionButton>
-					<ActionButton icon="icon-mail"
+					<ActionButton
 						class="action--primary"
 						:close-after-click="true"
 						@click.prevent="onToggleSeen">
+						<template #icon>
+							<Email v-if="iconImportant"
+								:title="t('mail', 'Read')"
+								:size="20" />
+							<EmailOutline v-else
+								:title="t('mail', 'Unread')"
+								:size="20" />
+						</template>
 						{{
 							envelope.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
 						}}
 					</ActionButton>
-					<ActionButton icon="icon-important"
+					<ActionButton
 						class="action--primary"
 						:close-after-click="true"
 						@click.prevent="onToggleImportant">
+						<template #icon>
+							<ImportantIcon
+								:title="isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')"
+								:size="20" />
+						</template>
 						{{
 							isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 						}}
@@ -222,10 +243,13 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import DownloadIcon from 'vue-material-design-icons/Download'
+import EmailOutline from 'vue-material-design-icons/EmailOutline'
+import Email from 'vue-material-design-icons/Email'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information'
+import ImportantIcon from '../components/Icons/ImportantIcon'
 import logger from '../logger'
 import { matchError } from '../errors/match'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
@@ -235,6 +259,9 @@ import PlusIcon from 'vue-material-design-icons/Plus'
 import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import ShareIcon from 'vue-material-design-icons/Share'
+import Star from 'vue-material-design-icons/Star'
+import StarOutline from 'vue-material-design-icons/StarOutline'
+
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
@@ -265,6 +292,11 @@ export default {
 		ShareIcon,
 		TagIcon,
 		TagModal,
+		Star,
+		StarOutline,
+		Email,
+		EmailOutline,
+		ImportantIcon,
 	},
 	props: {
 		envelope: {
@@ -342,7 +374,10 @@ export default {
 			return `${this.envelope.databaseId}.json`
 		},
 		iconFavorite() {
-			return this.envelope.flags.flagged ? 'icon-favorite' : 'icon-starred'
+			return this.envelope.flags.flagged
+		},
+		iconImportant() {
+			return this.envelope.flags.seen
 		},
 		isImportant() {
 			return this.$store.getters
