@@ -748,8 +748,10 @@ export default {
 	},
 	async beforeMount() {
 		this.setAlias()
-		this.initBody()
-
+		// there's a race condition on the ckeditor initialization and we need to delay it for the initBody to work
+		this.$nextTick(() => {
+			this.initBody()
+		})
 		await this.onMailvelopeLoaded(await getMailvelope())
 	},
 	mounted() {
