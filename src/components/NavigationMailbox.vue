@@ -37,6 +37,10 @@
 		:to="to"
 		:open.sync="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
+		<template #icon>
+			<ImportantIcon v-if="mailbox.isPriorityInbox"
+				:size="20" />
+		</template>
 		<!-- actions -->
 		<template slot="actions">
 			<ActionText
@@ -184,6 +188,7 @@ import IconFolderSync from 'vue-material-design-icons/FolderSync'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconInfo from 'vue-material-design-icons/InformationOutline'
 import MoveMailboxModal from './MoveMailboxModal'
+import ImportantIcon from '../components/Icons/ImportantIcon'
 
 import { clearCache } from '../service/MessageService'
 import { getMailboxStatus } from '../service/MailboxService'
@@ -211,6 +216,7 @@ export default {
 		IconDelete,
 		IconInfo,
 		MoveMailboxModal,
+		ImportantIcon,
 	},
 	directives: {
 		droppableMailbox,
@@ -275,8 +281,6 @@ export default {
 		icon() {
 			if (this.filter === 'starred') {
 				return 'icon-flagged'
-			} else if (this.mailbox.isPriorityInbox) {
-				return 'icon-important'
 			}
 			return this.mailbox.specialRole ? 'icon-' + this.mailbox.specialRole : 'icon-folder'
 		},
