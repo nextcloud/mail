@@ -76,6 +76,7 @@ OC.L10N.register(
     "Select account" : "Wybierz konto",
     "To" : "Do",
     "Contact or email address …" : "Kontakt lub adres e-mail…",
+    "Toggle recipients list mode" : "Przełącz tryb listy odbiorców",
     "Cc" : "DW",
     "Bcc" : "UDW",
     "No contacts found." : "Nie znaleziono kontaktów.",

@@ -76,6 +76,7 @@ OC.L10N.register(
     "Select account" : "Hesap seçin",
     "To" : "Kime",
     "Contact or email address …" : "Kişi ya da e-posta adresi …",
+    "Toggle recipients list mode" : "Alıcı listesi kipini değiştir",
     "Cc" : "Kopya",
     "Bcc" : "Gizli kopya",
     "No contacts found." : "Herhangi bir kişi bulunamadı.",

@@ -76,6 +76,7 @@ OC.L10N.register(
     "Select account" : "Vybrat účet",
     "To" : "Pro",
     "Contact or email address …" : "Kontakt nebo e-mailová adresa…",
+    "Toggle recipients list mode" : "Přepnout režim seznamu příjemců",
     "Cc" : "Kopie",
     "Bcc" : "Skrytá kopie",
     "No contacts found." : "Nenalezeny žádné kontakty.",
