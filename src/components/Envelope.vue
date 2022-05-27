@@ -55,7 +55,7 @@
 			<span v-if="draft" class="draft">
 				<em>{{ t('mail', 'Draft: ') }}</em>
 			</span>
-			{{ data.subject }}
+			{{ subjectForSubtitle }}
 		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
@@ -378,6 +378,15 @@ export default {
 				label += ` (${sender})`
 			}
 			return label
+		},
+		/**
+		 * Subject of envelope or "No Subject".
+		 * @returns {string}
+		 */
+		subjectForSubtitle() {
+			// We have to use || here (instead of ??) because the subject might be '', null
+			// or undefined.
+			return this.data.subject || this.t('mail', 'No subject')
 		},
 	},
 	methods: {
