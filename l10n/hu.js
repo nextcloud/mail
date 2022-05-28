@@ -76,6 +76,7 @@ OC.L10N.register(
     "Select account" : "Fiók kiválasztása",
     "To" : "Címzett",
     "Contact or email address …" : "Címzett vagy e-mail-cím…",
+    "Toggle recipients list mode" : "Címzettlista módjának átváltása",
     "Cc" : "Másolat",
     "Bcc" : "Rejtett másolat",
     "No contacts found." : "Nem találhatók névjegyek.",
