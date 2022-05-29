@@ -255,6 +255,7 @@ OC.L10N.register(
     "Unset" : "Rimuovi",
     "Add tag" : "Aggiungi etichetta",
     "Saving tag …" : "Salvataggio etichetta …",
+    "Tag already exists" : "L'etichetta esiste già",
     "An error occurred, unable to create the tag." : "Si è verificato un errore, impossibile creare l'etichetta.",
     "An error occurred, unable to rename the tag." : "Si è verificato un errore, impossibile rinominare l'etichetta.",
     "Could not load your message thread" : "Impossibile caricare la tua discussione",

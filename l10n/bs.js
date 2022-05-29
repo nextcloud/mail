@@ -26,6 +26,7 @@ OC.L10N.register(
     "Add" : "Dodaj",
     "Disabled" : "Onemogućeno",
     "Enabled" : "Aktivirano",
+    "Tag already exists" : "Oznaka već postoji",
     "User" : "User",
     "Port" : "Priključak",
     "Keyboard shortcuts" : "Tipkovni prečaci",

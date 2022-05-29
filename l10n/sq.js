@@ -73,6 +73,7 @@ OC.L10N.register(
     "Custom" : "E përshtatur",
     "Unset" : "E pavendosur",
     "Add tag" : "Shto etiketim",
+    "Tag already exists" : "Etiketa ekziston",
     "Remove" : "Hiq",
     "Reset" : "Rivendos",
     "General" : "Të përgjithshme",

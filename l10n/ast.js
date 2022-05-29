@@ -63,6 +63,7 @@ OC.L10N.register(
     "Disabled" : "Deshabilitáu",
     "Enabled" : "Habilitar",
     "Custom" : "Personalizáu",
+    "Tag already exists" : "Yá esiste la etiqueta",
     "Remove" : "Desaniciar",
     "General" : "Xeneral",
     "User" : "Usuariu",

@@ -181,6 +181,7 @@ OC.L10N.register(
     "Set" : "Nustatyti",
     "Unset" : "Nenustatyta",
     "Add tag" : "Pridėti žymę",
+    "Tag already exists" : "Žymė jau yra",
     "Not found" : "Nerasta",
     "Remove" : "Šalinti",
     "No senders are trusted at the moment." : "Šiuo metu nėra patikimų siuntėjų.",

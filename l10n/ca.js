@@ -161,6 +161,7 @@ OC.L10N.register(
     "Set" : "Estableix",
     "Unset" : "No definit",
     "Add tag" : "Afegeix etiqueta",
+    "Tag already exists" : "L'etiqueta ja existeix",
     "Could not load your message thread" : "No s’ha pogut carregar el vostre fil de missatge",
     "Not found" : "No s'ha trobat",
     "Remove" : "Elimina",

@@ -77,6 +77,7 @@ OC.L10N.register(
     "Custom" : "Custom",
     "Unset" : "Unset",
     "Add tag" : "Add tag",
+    "Tag already exists" : "Tag already exists",
     "Not found" : "Not found",
     "Remove" : "Remove",
     "Reset" : "Reset",

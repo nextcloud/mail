@@ -165,6 +165,7 @@ OC.L10N.register(
     "Save signature" : "Guardar assinatura",
     "Set" : "Definir",
     "Unset" : "Retirar",
+    "Tag already exists" : "A etiqueta já existe",
     "Not found" : "Não foi encontrado",
     "Remove" : "Remover",
     "individual" : "individual",

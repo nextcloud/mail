@@ -49,6 +49,7 @@ OC.L10N.register(
     "Disabled" : "ปิดการใช้งาน",
     "Enabled" : "เปิดการใช้งาน",
     "Custom" : "กำหนดเอง",
+    "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Remove" : "ลบออก",
     "Reset" : "ตั้งค่าใหม่",
     "General" : "ทั่วไป",

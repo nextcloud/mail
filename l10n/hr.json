@@ -251,6 +251,7 @@
     "Unset" : "Ukloni",
     "Add tag" : "Dodaj oznaku",
     "Saving tag …" : "Spremanje oznake...",
+    "Tag already exists" : "Oznaka već postoji",
     "An error occurred, unable to create the tag." : "Došlo je do pogreške, nije moguće stvoriti oznaku.",
     "An error occurred, unable to rename the tag." : "Došlo je do pogreške, nije moguće promijeniti naziv oznake.",
     "Could not load your message thread" : "Učitavanje vaše dretve poruka nije uspjelo",

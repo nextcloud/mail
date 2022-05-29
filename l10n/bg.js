@@ -271,6 +271,7 @@ OC.L10N.register(
     "Unset" : "Да не се задава",
     "Add tag" : "Добавяне на етикет",
     "Saving tag …" : "Записване на етикет ...",
+    "Tag already exists" : "Етикетът вече съществува",
     "An error occurred, unable to create the tag." : "Възникна грешка, не може да се създаде етикет.",
     "An error occurred, unable to rename the tag." : "Възникна грешка, не може да се преименува етикет.",
     "Could not load your message thread" : " Нишката на вашето съобщение не можа да се зареди",

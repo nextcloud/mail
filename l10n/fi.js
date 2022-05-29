@@ -239,6 +239,7 @@ OC.L10N.register(
     "Set" : "Aseta",
     "Unset" : "Poista",
     "Add tag" : "Lisää tunniste",
+    "Tag already exists" : "Tunniste on jo olemassa",
     "Could not load your message thread" : "Viestiketjua ei voitu ladata",
     "Not found" : "Ei löytynyt",
     "Remove" : "Poista",

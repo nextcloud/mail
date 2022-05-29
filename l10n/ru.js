@@ -279,6 +279,7 @@ OC.L10N.register(
     "Unset" : "Снять",
     "Add tag" : "Добавить метку",
     "Saving tag …" : "Сохранение метки…",
+    "Tag already exists" : "Метка уже существует",
     "An error occurred, unable to create the tag." : "Не удалось создать метку.",
     "An error occurred, unable to rename the tag." : "Не удалось переименовать метку.",
     "Could not load your message thread" : "Ошибка загрузки ветки переписки",

@@ -280,6 +280,7 @@ OC.L10N.register(
     "Unset" : "Kikapcsolás",
     "Add tag" : "Címke hozzáadása",
     "Saving tag …" : "Címke mentése…",
+    "Tag already exists" : "A címke már létezik",
     "An error occurred, unable to create the tag." : "HIba történt, a címke nem hozható létre.",
     "An error occurred, unable to rename the tag." : "Hiba történt, a címke nem nevezhető át",
     "Could not load your message thread" : "Nem sikerült betölteni az üzenetszálat",

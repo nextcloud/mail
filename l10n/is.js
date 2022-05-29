@@ -163,6 +163,7 @@ OC.L10N.register(
     "Set" : "Setja",
     "Unset" : "Endurstilla",
     "Add tag" : "Bæta við merki",
+    "Tag already exists" : "Merki er þegar til",
     "Could not load your message thread" : "Gat ekki hlaðið inn skilaboðaþræðinum þínum",
     "Not found" : "Fannst ekki",
     "Remove" : "Fjarlægja",

@@ -149,6 +149,7 @@ OC.L10N.register(
     "Custom" : "Valgfrit",
     "Unset" : "Fjern indstilling",
     "Add tag" : "Tilføj Tag",
+    "Tag already exists" : "Mærket eksisterer allerede",
     "Not found" : "Ikke fundet",
     "Remove" : "Fjern",
     "Airplane" : "Fly",

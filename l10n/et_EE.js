@@ -62,6 +62,7 @@ OC.L10N.register(
     "Disabled" : "Keelatud",
     "Enabled" : "Lubatud",
     "Custom" : "Kohandatud",
+    "Tag already exists" : "Silt on juba olemas",
     "Remove" : "Eemalda",
     "Reset" : "Lähtesta",
     "General" : "Üldine",

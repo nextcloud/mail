@@ -77,6 +77,7 @@ OC.L10N.register(
     "Set" : "Establecer",
     "Unset" : "Desestablecer",
     "Add tag" : "Agregar etiqueta",
+    "Tag already exists" : "La etiqueta ya existe",
     "Remove" : "Eliminar",
     "Reset" : "Reiniciar",
     "General" : "General",

@@ -140,6 +140,7 @@ OC.L10N.register(
     "Set" : "Встановити",
     "Unset" : "Зняти",
     "Add tag" : "Додати позначку",
+    "Tag already exists" : "Мітка вже існує",
     "Not found" : "Не знайдено",
     "Remove" : "Вилучити",
     "Import into {calendar}" : "Імпортувати до {calendar}",

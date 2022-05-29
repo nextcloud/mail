@@ -277,6 +277,7 @@
     "Unset" : "Entfernt",
     "Add tag" : "Schlagwort hinzufügen",
     "Saving tag …" : "Speichere Schlagwort …",
+    "Tag already exists" : "Schlagwort ist bereits vorhanden",
     "An error occurred, unable to create the tag." : "Ein Fehler ist aufgetreten. Das Schlagwort konnte nicht erstellt werden.",
     "An error occurred, unable to rename the tag." : "Ein Fehler ist aufgetreten. Das Schlagwort konnte nicht umbenannt werden.",
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",

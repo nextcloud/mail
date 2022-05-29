@@ -136,6 +136,7 @@
     "Set" : "설정",
     "Unset" : "설정 해제",
     "Add tag" : "태그 추가",
+    "Tag already exists" : "태그가 이미 존재합니다",
     "Not found" : "찾을 수 없음",
     "Remove" : "삭제",
     "Airplane" : "여객기",

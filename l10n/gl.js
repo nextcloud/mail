@@ -226,6 +226,7 @@ OC.L10N.register(
     "Set" : "Estabelecer",
     "Unset" : "Sen estabelecer",
     "Add tag" : "Engadir unha etiqueta",
+    "Tag already exists" : "Xa existe a etiqueta",
     "Could not load your message thread" : "Non foi posíbel cargar o fío da mensaxe",
     "Not found" : "Non atopado",
     "Remove" : "Retirar",

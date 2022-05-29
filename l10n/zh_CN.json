@@ -253,6 +253,7 @@
     "Unset" : "取消设置",
     "Add tag" : "添加标签",
     "Saving tag …" : "正在保存标签 …",
+    "Tag already exists" : "标签已存在",
     "An error occurred, unable to create the tag." : "发生了一个错误，无法创建标签",
     "An error occurred, unable to rename the tag." : "发生错误，无法重命名标签",
     "Could not load your message thread" : "无法加载您的消息线线程",

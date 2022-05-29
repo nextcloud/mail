@@ -124,6 +124,7 @@ OC.L10N.register(
     "Custom" : "Particularizat",
     "Unset" : "Desetează",
     "Add tag" : "Adaugă etichetă",
+    "Tag already exists" : "Eticheta deja există",
     "Remove" : "Elimină",
     "Reset" : "Resetare",
     "General" : "General",

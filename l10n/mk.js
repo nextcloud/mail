@@ -184,6 +184,7 @@ OC.L10N.register(
     "Unset" : "Непоставено",
     "Add tag" : "Додади ознака",
     "Saving tag …" : "Зачувување ознака …",
+    "Tag already exists" : "Тагот веќе постои",
     "Could not load your message thread" : "Неможат да се преземат информации за пораката",
     "Not found" : "Не е пронајдено",
     "Remove" : "Отстрани ",

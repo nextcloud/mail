@@ -255,6 +255,7 @@ OC.L10N.register(
     "Unset" : "Schakel uit",
     "Add tag" : "Toevoegen tag",
     "Saving tag …" : "Opslaan tag ...",
+    "Tag already exists" : "Markering bestaat al",
     "An error occurred, unable to create the tag." : "Er trad een fout op, tag kon niet worden gecreëerd.",
     "An error occurred, unable to rename the tag." : "Er is een fout opgetreden, kan tag niet hernoemen",
     "Could not load your message thread" : "Kon je berichtendraad niet laden",

@@ -95,6 +95,7 @@
     "Set" : "Sett",
     "Unset" : "Ikke satt",
     "Add tag" : "Legg til merkelapp",
+    "Tag already exists" : "Merkelappen finnes allerede",
     "Not found" : "Ikke funnet",
     "Remove" : "Fjern",
     "Reset" : "Tilbakestill",

@@ -123,6 +123,7 @@ OC.L10N.register(
     "Set" : "تنظیم",
     "Unset" : "تنظیم نشده است",
     "Add tag" : "برچسب اضافه کنید",
+    "Tag already exists" : "تگ از قبل وجود دارد",
     "Not found" : "پیدا نشد",
     "Remove" : "حذف",
     "Import into {calendar}" : "{وارد {تقویم",

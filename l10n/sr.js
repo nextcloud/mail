@@ -164,6 +164,7 @@ OC.L10N.register(
     "Set" : "Постави",
     "Unset" : "Уклони",
     "Add tag" : "Додајте ознаку",
+    "Tag already exists" : "Ознака већ постоји",
     "Could not load your message thread" : "Не могу да учитам ток дискусије поруке",
     "Not found" : "Није нађено",
     "Remove" : "Уклони",

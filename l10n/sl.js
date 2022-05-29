@@ -253,6 +253,7 @@ OC.L10N.register(
     "Unset" : "Odstrani izbor",
     "Add tag" : "Dodaj oznako",
     "Saving tag …" : "Poteka shranjevanje ozake ...",
+    "Tag already exists" : "Oznaka že obstaja",
     "An error occurred, unable to create the tag." : "Prišlo je do napake, oznake ni mogoče ustvariti.",
     "An error occurred, unable to rename the tag." : "Prišlo je do napake, oznake ni mogoče preimenovati.",
     "Could not load your message thread" : "Ni mogoče naložiti niti sporočil",

@@ -56,6 +56,7 @@ OC.L10N.register(
     "Add" : "Masukkan",
     "Disabled" : "Dinonaktifkan",
     "Enabled" : "Diaktifkan",
+    "Tag already exists" : "Tag sudah ada",
     "Remove" : "Buang",
     "Reset" : "Setel ulang",
     "General" : "Umum",
