@@ -59,26 +59,43 @@
 		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
-				<ActionButton icon="icon-starred"
+				<ActionButton
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleFlagged">
+					<template #icon>
+						<StarOutline v-if="showFavoriteIconVariant"
+							:size="20" />
+						<Star v-else
+							:size="20"
+							fill-color="#f9cf3d" />
+					</template>
 					{{
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 					}}
 				</ActionButton>
-				<ActionButton icon="icon-mail"
+				<ActionButton
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleSeen">
+					<template #icon>
+						<Email v-if="showImportantIconVariant"
+							:size="20" />
+						<EmailOutline v-else
+							:size="20" />
+					</template>
 					{{
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
 					}}
 				</ActionButton>
-				<ActionButton icon="icon-important"
+				<ActionButton
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleImportant">
+					<template #icon>
+						<ImportantIcon
+							:size="20" />
+					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 					}}
@@ -226,6 +243,11 @@ import logger from '../logger'
 import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
+import StarOutline from 'vue-material-design-icons/StarOutline'
+import Star from 'vue-material-design-icons/Star'
+import EmailOutline from 'vue-material-design-icons/EmailOutline'
+import Email from 'vue-material-design-icons/Email'
+import ImportantIcon from './icons/ImportantIcon'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
@@ -251,6 +273,11 @@ export default {
 		PlusIcon,
 		TagIcon,
 		TagModal,
+		Star,
+		StarOutline,
+		EmailOutline,
+		Email,
+		ImportantIcon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -362,6 +389,12 @@ export default {
 			} else {
 				return ''
 			}
+		},
+		showFavoriteIconVariant() {
+			return this.data.flags.flagged
+		},
+		showImportantIconVariant() {
+			return this.data.flags.seen
 		},
 		isImportant() {
 			return this.$store.getters

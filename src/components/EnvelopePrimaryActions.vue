@@ -32,6 +32,7 @@ export default {
 
 .list-item-content__actions--primary .action--primary .action-button__text {
 	font-size: 14px;
+	margin-top: -8px;
 }
 
 .list-item-content__actions--primary .action--primary .action-button__text,
