@@ -37,7 +37,7 @@
 					@click="onReply">
 					<template #icon>
 						<ReplyAllIcon v-if="hasMultipleRecipients"
-							:title="t('mail', 'Reply')"
+							:title="t('mail', 'Reply all')"
 							:size="20" />
 						<ReplyIcon v-else
 							:title="t('mail', 'Reply')"
@@ -47,7 +47,7 @@
 				</ActionButton>
 				<ActionButton v-if="hasMultipleRecipients"
 					:close-after-click="true"
-					@click="onReply">
+					@click="onReply(true)">
 					<template #icon>
 						<ReplyIcon
 							:title="t('mail', 'Reply to sender only')"
@@ -435,10 +435,10 @@ export default {
 		onOpenTagModal() {
 			this.showTagModal = true
 		},
-		onReply() {
+		onReply(onlySender = false) {
 			this.$store.dispatch('showMessageComposer', {
 				reply: {
-					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
+					mode: onlySender ? 'reply' : 'replyAll',
 					data: this.envelope,
 				},
 			})

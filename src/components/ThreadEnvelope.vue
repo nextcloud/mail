@@ -79,7 +79,7 @@
 					}"
 					class="button"
 					@click="onReply">
-					<span class="action-label"> {{ t('mail', 'Reply') }}</span>
+					<span class="action-label"> {{ hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply') }}</span>
 				</button>
 				<MenuEnvelope class="app-content-list-item-menu"
 					:envelope="envelope"
