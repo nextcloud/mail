@@ -146,6 +146,7 @@ OC.L10N.register(
     "Edit as new message" : "Edytuj jako nową wiadomość",
     "Create event" : "Utwórz wydarzenie",
     "Blind copy recipients only" : "Tylko dla niewidocznych kopii",
+    "No subject" : "Brak tematu",
     "No trash mailbox configured" : "Nie skonfigurowano skrzynki pocztowej dla kosza",
     "Could not delete message" : "Nie udało się usunąć wiadomości",
     "Load more" : "Wczytaj więcej",

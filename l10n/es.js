@@ -281,6 +281,7 @@ OC.L10N.register(
     "Unset" : "Desconfigurar",
     "Add tag" : "Añadir etiqueta",
     "Saving tag …" : "Guardando etiqueta …",
+    "Tag already exists" : "La etiqueta ya existe",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no fue posible crear la etiqueta.",
     "An error occurred, unable to rename the tag." : "Se ha producido un error y no se ha podido renombrar la etiqueta.",
     "Could not load your message thread" : "No se ha podido cargar tu hilo de mensajes",

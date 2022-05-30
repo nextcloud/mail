@@ -281,7 +281,7 @@ OC.L10N.register(
     "Unset" : "Zrušit nastavení",
     "Add tag" : "Přidat štítek",
     "Saving tag …" : "Ukládání štítku…",
-    "Tag already exists" : "Štítek již existuje",
+    "Tag already exists" : "Štítek už existuje",
     "An error occurred, unable to create the tag." : "Došlo k chybě, štíte se nepodařilo vytvořit.",
     "An error occurred, unable to rename the tag." : "Došlo k chybě, štítek se nedaří přejmenovat.",
     "Could not load your message thread" : "Nepodařilo se načíst vlákno s danou zprávou",

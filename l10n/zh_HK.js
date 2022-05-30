@@ -281,6 +281,7 @@ OC.L10N.register(
     "Unset" : "解除設置",
     "Add tag" : "添加標籤",
     "Saving tag …" : "標籤儲存中 ...",
+    "Tag already exists" : "標籤已經存在",
     "An error occurred, unable to create the tag." : "發生錯誤，無法建立標籤。",
     "An error occurred, unable to rename the tag." : "發生錯誤，無法重新命名標籤。",
     "Could not load your message thread" : "無法載入您的郵件串",

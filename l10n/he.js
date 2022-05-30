@@ -185,6 +185,7 @@ OC.L10N.register(
     "Unset" : "ביטול הגדרה",
     "Add tag" : "הוספת תגית",
     "Saving tag …" : "התגית נשמרת…",
+    "Tag already exists" : "תגית כבר קיימת",
     "An error occurred, unable to create the tag." : "אירעה שגיאה, לא ניתן ליצור את התגית.",
     "Could not load your message thread" : "לא ניתן לטעון את שרשור ההודעות שלך",
     "Not found" : "לא נמצא",
