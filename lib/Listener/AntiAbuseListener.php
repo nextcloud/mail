@@ -62,6 +62,7 @@ class AntiAbuseListener implements IEventListener {
 				'user' => $event->getAccount()->getUserId(),
 				'id' => $event->getAccount()->getId(),
 			]);
+			return;
 		}
 
 		$this->service->onBeforeMessageSent(
