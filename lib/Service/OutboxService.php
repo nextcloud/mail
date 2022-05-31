@@ -186,14 +186,25 @@ class OutboxService implements ILocalMailboxService {
 		}, $messages));
 
 		$accounts = array_combine($accountIds, array_map(function ($accountId) {
-			return $this->accountService->findById($accountId);
+			try {
+				return $this->accountService->findById($accountId);
+			} catch (DoesNotExistException $e) {
+				// The message belongs to a deleted account
+
+				return null;
+			}
 		}, $accountIds));
 
 		foreach ($messages as $message) {
 			try {
+				$account = $accounts[$message->getAccountId()];
+				if ($account === null) {
+					// Ignore message of non-existent account
+					continue;
+				}
 				$this->sendMessage(
 					$message,
-					$accounts[$message->getAccountId()],
+					$account,
 				);
 				$this->logger->debug('Outbox message {id} sent', [
 					'id' => $message->getId(),
