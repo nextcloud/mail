@@ -26,10 +26,6 @@
 		key="navigation-outbox"
 		:title="t('mail', 'Outbox')"
 		:to="to">
-		<template #icon>
-			<Email
-				:size="20" />
-		</template>
 		<template #counter>
 			<CounterBubble v-if="count">
 				{{ count }}
