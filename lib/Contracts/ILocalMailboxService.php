@@ -29,6 +29,7 @@ namespace OCA\Mail\Contracts;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Recipient;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 
 interface ILocalMailboxService {
@@ -78,6 +79,8 @@ interface ILocalMailboxService {
 	/**
 	 * @param LocalMessage $message
 	 * @param Account $account
+	 * @throws ClientException
+	 * @throws ServiceException
 	 * @return void
 	 */
 	public function sendMessage(LocalMessage $message, Account $account): void;

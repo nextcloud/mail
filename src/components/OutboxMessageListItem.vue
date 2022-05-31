@@ -25,7 +25,7 @@
 		class="outbox-message"
 		:class="{ selected }"
 		:title="title"
-		:details="sendAt"
+		:details="details"
 		@click="openModal">
 		<template #icon>
 			<div
@@ -106,7 +106,10 @@ export default {
 			const formatter = new Intl.ListFormat(getLanguage(), { type: 'conjunction' })
 			return formatter.format(recipients)
 		},
-		sendAt() {
+		details() {
+			if (this.message.failed) {
+				return this.t('mail', 'Message could not be sent')
+			}
 			if (!this.message.sendAt) {
 				return ''
 			}
@@ -141,6 +144,7 @@ export default {
 		async sendMessageNow() {
 			const message = {
 				...this.message,
+				failed: false,
 				sendAt: (new Date().getTime() + UNDO_DELAY) / 1000,
 			}
 			await this.$store.dispatch('outbox/updateMessage', { message, id: message.id })

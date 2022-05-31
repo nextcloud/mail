@@ -54,6 +54,8 @@ interface IMailTransmission {
 	/**
 	 * @param Account $account
 	 * @param LocalMessage $message
+	 * @throws ClientException
+	 * @throws ServiceException
 	 * @return void
 	 */
 	public function sendLocalMessage(Account $account, LocalMessage $message): void;
