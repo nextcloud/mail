@@ -68,7 +68,7 @@ class AddressCollectionListener implements IEventListener {
 				->merge($message->getCC())
 				->merge($message->getBCC());
 
-			$this->collector->addAddresses($addresses);
+			$this->collector->addAddresses($event->getAccount()->getUserId(), $addresses);
 		} catch (Throwable $e) {
 			$this->logger->warning('Error while collecting mail addresses: ' . $e, [
 				'exception' => $e,

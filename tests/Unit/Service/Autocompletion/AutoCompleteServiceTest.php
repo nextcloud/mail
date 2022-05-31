@@ -70,17 +70,20 @@ class AutoCompleteServiceTest extends TestCase {
 		$this->contactsIntegration->expects($this->once())
 			->method('getMatchingRecipient')
 			->with($term)
-			->will($this->returnValue($contactsResult));
+			->willReturn($contactsResult);
 		$this->groupsIntegration->expects($this->once())
 			->method('getMatchingGroups')
 			->with($term)
-			->will($this->returnValue($groupsResult));
+			->willReturn($groupsResult);
 		$this->addressCollector->expects($this->once())
 			->method('searchAddress')
-			->with($term)
-			->will($this->returnValue($collectedResult));
+			->with(
+				'testuser',
+				$term
+			)
+			->willReturn($collectedResult);
 
-		$response = $this->service->findMatches($term);
+		$response = $this->service->findMatches('testuser', $term);
 
 		$expected = [
 			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'email' => 'john@doe.cz'],
