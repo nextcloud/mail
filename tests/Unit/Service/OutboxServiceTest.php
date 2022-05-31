@@ -226,7 +226,9 @@ class OutboxServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setId(10);
-		$account = $this->createMock(Account::class);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
@@ -243,7 +245,7 @@ class OutboxServiceTest extends TestCase {
 			->willReturn($attachmentIds);
 		$this->attachmentService->expects(self::once())
 			->method('saveLocalMessageAttachments')
-			->with(10, $attachmentIds);
+			->with($this->userId, 10, $attachmentIds);
 
 		$this->outboxService->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 	}
@@ -282,7 +284,7 @@ class OutboxServiceTest extends TestCase {
 		$message2 = $message;
 		$message2->setRecipients([$rTo]);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => 'linus'
+			'getUserId' => $this->userId
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
@@ -330,7 +332,9 @@ class OutboxServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setId(10);
-		$account = $this->createMock(Account::class);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
 
 		$this->mapper->expects(self::once())
 			->method('saveWithRecipients')
@@ -338,7 +342,7 @@ class OutboxServiceTest extends TestCase {
 			->willReturn($message2);
 		$this->attachmentService->expects(self::once())
 			->method('saveLocalMessageAttachments')
-			->with(10, []);
+			->with($this->userId, 10, []);
 
 		$this->outboxService->saveMessage($account, $message, $to, $cc, $bcc);
 	}
