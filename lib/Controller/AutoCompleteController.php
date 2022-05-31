@@ -33,12 +33,17 @@ class AutoCompleteController extends Controller {
 	/** @var AutoCompleteService */
 	private $service;
 
+	/** @var string|null */
+	private $userId;
+
 	public function __construct(string $appName,
 								IRequest $request,
-								AutoCompleteService $service) {
+								AutoCompleteService $service,
+								?string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
+		$this->userId = $userId;
 	}
 
 	/**
@@ -49,6 +54,10 @@ class AutoCompleteController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function index(string $term): JSONResponse {
-		return new JSONResponse($this->service->findMatches($term));
+		if ($this->userId === null) {
+			return new JSONResponse([]);
+		}
+
+		return new JSONResponse($this->service->findMatches($this->userId, $term));
 	}
 }
