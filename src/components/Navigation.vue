@@ -25,13 +25,22 @@
 			:text="t('mail', 'New message')"
 			:disabled="$store.getters.showMessageComposer"
 			button-id="mail_new_message"
-			button-class="icon-add"
 			role="complementary"
-			@click="onNewMessage" />
-		<button v-if="currentMailbox"
-			class="button icon-history"
+			@click="onNewMessage">
+			<template #icon>
+				<Plus
+					:size="20" />
+			</template>
+		</AppNavigationNew>
+		<ActionButton v-if="currentMailbox"
+			class="button"
 			:disabled="refreshing"
-			@click="refreshMailbox" />
+			@click="refreshMailbox">
+			<template #icon>
+				<Refresh
+					:size="24" />
+			</template>
+		</ActionButton>
 		<template #list>
 			<ul id="accounts-list">
 				<!-- Special mailboxes first -->
@@ -87,6 +96,7 @@
 
 <script>
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
 import AppNavigationSettings
 	from '@nextcloud/vue/dist/Components/AppNavigationSettings'
@@ -101,6 +111,8 @@ import NavigationOutbox from './NavigationOutbox'
 
 import AppSettingsMenu from '../components/AppSettingsMenu'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants'
+import Plus from 'vue-material-design-icons/Plus'
+import Refresh from 'vue-material-design-icons/Refresh'
 
 export default {
 	name: 'Navigation',
@@ -114,6 +126,9 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		Plus,
+		Refresh,
+		ActionButton,
 	},
 	data() {
 		return {
@@ -202,19 +217,16 @@ export default {
 
 <style lang="scss" scoped>
 .button {
-	width: 44px;
-	height: 44px;
-	background-color: var(--color-main-background);
+	background-color: transparent;
 	border: none;
 	display: inline-block;
 	position: absolute;
-	margin-left: 254px;
-	margin-top: 13px;
+	margin-left: 234px;
+	margin-top: 5px;
 	opacity: .7;
 	&:hover,
 	&:focus {
 		opacity: 1;
-		background-color:var(--color-background-hover);
 	}
 	&:disabled {
 		cursor: not-allowed;

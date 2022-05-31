@@ -40,6 +40,8 @@
 		<template #icon>
 			<ImportantIcon v-if="mailbox.isPriorityInbox"
 				:size="20" />
+			<Home v-if="mailbox.isUnified"
+				:size="20" />
 		</template>
 		<!-- actions -->
 		<template slot="actions">
@@ -197,7 +199,8 @@ import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 import { showInfo } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
-import ImportantIcon from '../components/Icons/ImportantIcon'
+import ImportantIcon from './icons/ImportantIcon'
+import Home from 'vue-material-design-icons/Home'
 
 export default {
 	name: 'NavigationMailbox',
@@ -217,6 +220,7 @@ export default {
 		IconInfo,
 		MoveMailboxModal,
 		ImportantIcon,
+		Home,
 	},
 	directives: {
 		droppableMailbox,
