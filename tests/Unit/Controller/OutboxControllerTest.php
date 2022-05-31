@@ -384,6 +384,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setFailed(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -408,6 +409,7 @@ class OutboxControllerTest extends TestCase {
 			$message->getSubject(),
 			$message->getBody(),
 			$message->isHtml(),
+			false,
 			$to,
 			$cc,
 			[],
@@ -429,6 +431,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setFailed(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -448,6 +451,7 @@ class OutboxControllerTest extends TestCase {
 			$message->getSubject(),
 			$message->getBody(),
 			$message->isHtml(),
+			false,
 			$to,
 			$cc,
 			[],
@@ -469,6 +473,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setFailed(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -493,6 +498,7 @@ class OutboxControllerTest extends TestCase {
 			$message->getSubject(),
 			$message->getBody(),
 			$message->isHtml(),
+			false,
 			$to,
 			$cc,
 			[],
