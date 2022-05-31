@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.13.0 – unreleased
+### Added
+- PHP8.1 support
+- Many performance improvements
+### Changed
+- New material icons
+- Dropped Nextcloud 21 support (EOL)
+- Dropped PHP7.3 support (EOL)
+### Fixed
+- Leaking database cursor
+- Memory leaks
+- Causal read during outbox message/recipient insert
+- OCI compatibility
+- Forwarding attachments
+- Creating duplicate tags
+
 ## 1.12.0 - 2022-04-26
 ### Added
 - Local Outbox
