@@ -129,7 +129,7 @@ OC.L10N.register(
     "Mark all as read" : "Всі прочитані",
     "Edit name" : "Редагувати назву",
     "Clear cache" : "Очистити кеш",
-    "_{total} message_::_{total} messages_" : ["{total] повідомлення","{total] повідомлення","{total] повідомлень","{total} повідомлень"],
+    "_{total} message_::_{total} messages_" : ["{total} повідомлення","{total} повідомлення","{total} повідомлень","{total} повідомлень"],
     "No message selected" : "Жодне повідомлення не вибрано",
     "Delete" : "Вилучити",
     "Add" : "Додати",

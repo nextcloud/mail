@@ -281,7 +281,7 @@ OC.L10N.register(
     "Unset" : "Entfernt",
     "Add tag" : "Schlagwort hinzufügen",
     "Saving tag …" : "Speichere Schlagwort …",
-    "Tag already exists" : "Schlagwort ist bereits vorhanden",
+    "Tag already exists" : "Schlagwort existiert bereits",
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten, das Schlagwort kann nicht erstellt werden.",
     "An error occurred, unable to rename the tag." : "Es ist ein Fehler aufgetreten. Das Schlagwort konnte nicht umbenannt werden.",
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
