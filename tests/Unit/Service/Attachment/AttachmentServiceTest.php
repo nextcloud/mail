@@ -235,11 +235,11 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper->expects(self::once())
 			->method('findByLocalMessageId')
-			->with('10')
+			->with($userId, '10')
 			->willReturn($attachments);
 		$this->mapper->expects(self::once())
 			->method('deleteForLocalMessage')
-			->with('10');
+			->with($userId, '10');
 		$this->storage->expects(self::once())
 			->method('delete')
 			->with($userId, $attachment->getId());
@@ -248,21 +248,23 @@ class AttachmentServiceTest extends TestCase {
 	}
 
 	public function testSaveLocalMessageAttachment(): void {
+		$userId = 'linus';
 		$attachmentIds = [1,2,3];
 		$messageId = 100;
 
 		$this->mapper->expects(self::once())
 			->method('saveLocalMessageAttachments')
-			->with($messageId, $attachmentIds);
+			->with($userId, $messageId, $attachmentIds);
 		$this->mapper->expects(self::once())
 			->method('findByLocalMessageId')
-			->with($messageId)
+			->with($userId, $messageId)
 			->willReturn([$this->createMock(LocalAttachment::class)]);
 
-		$this->service->saveLocalMessageAttachments($messageId, $attachmentIds);
+		$this->service->saveLocalMessageAttachments($userId, $messageId, $attachmentIds);
 	}
 
 	public function testSaveLocalMessageAttachmentNoAttachmentIds(): void {
+		$userId = 'linus';
 		$attachmentIds = [];
 		$messageId = 100;
 
@@ -271,7 +273,7 @@ class AttachmentServiceTest extends TestCase {
 		$this->mapper->expects(self::never())
 			->method('findByLocalMessageId');
 
-		$this->service->saveLocalMessageAttachments($messageId, $attachmentIds);
+		$this->service->saveLocalMessageAttachments($userId, $messageId, $attachmentIds);
 	}
 
 	public function testhandleLocalMessageAttachment(): void {
@@ -450,10 +452,10 @@ class AttachmentServiceTest extends TestCase {
 		$attachmentIds = [4,5];
 		$this->mapper->expects(self::once())
 			->method('saveLocalMessageAttachments')
-			->with($message->getId(), $attachmentIds);
+			->with($userId, $message->getId(), $attachmentIds);
 		$this->mapper->expects(self::once())
 			->method('findByLocalMessageId')
-			->with($message->getId())
+			->with($userId, $message->getId())
 			->willReturn([$a1, $a2]);
 		$this->service->updateLocalMessageAttachments($userId, $message, $attachmentIds);
 	}
@@ -471,11 +473,11 @@ class AttachmentServiceTest extends TestCase {
 		]);
 		$this->mapper->expects(self::once())
 			->method('findByLocalMessageId')
-			->with($message->getId())
+			->with($userId, $message->getId())
 			->willReturn([$attachment]);
 		$this->mapper->expects(self::once())
 			->method('deleteForLocalMessage')
-			->with($message->getId());
+			->with($userId, $message->getId());
 		$this->storage->expects(self::once())
 			->method('delete')
 			->with($userId, 5678);
@@ -503,10 +505,10 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mapper->expects(self::once())
 			->method('saveLocalMessageAttachments')
-			->with($message->getId(), [ 1 => 4]);
+			->with($userId, $message->getId(), [ 1 => 4]);
 		$this->mapper->expects(self::once())
 			->method('findByIds')
-			->with([2])
+			->with($userId, [2])
 			->willReturn([$a1]);
 		$this->mapper->expects(self::once())
 			->method('delete')
