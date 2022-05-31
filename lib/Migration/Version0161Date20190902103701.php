@@ -85,8 +85,7 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 			'length' => 4,
 		]);
 		$mailboxTable->addColumn('selectable', 'boolean', [
-			'notnull' => true,
-			'length' => 1,
+			'notnull' => false,
 			'default' => true,
 		]);
 		$mailboxTable->setPrimaryKey(['id']);
