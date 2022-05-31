@@ -24,6 +24,7 @@
 	<AppNavigationItem
 		id="navigation-outbox"
 		key="navigation-outbox"
+		icon="icon-mail"
 		:title="t('mail', 'Outbox')"
 		:to="to">
 		<template #counter>
@@ -37,14 +38,12 @@
 <script>
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import CounterBubble from '@nextcloud/vue/dist/Components/CounterBubble'
-import Email from 'vue-material-design-icons/Email'
 
 export default {
 	name: 'NavigationOutbox',
 	components: {
 		AppNavigationItem,
 		CounterBubble,
-		Email,
 	},
 	computed: {
 		count() {

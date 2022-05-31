@@ -275,9 +275,10 @@ export default {
 		icon() {
 			if (this.filter === 'starred') {
 				return 'icon-flagged'
-			} else {
-				return this.mailbox.specialRole ? 'icon-' + this.mailbox.specialRole : 'icon-folder'
+			} else if (this.mailbox.isPriorityInbox) {
+				return 'icon-important'
 			}
+			return this.mailbox.specialRole ? 'icon-' + this.mailbox.specialRole : 'icon-folder'
 		},
 		to() {
 			return {
