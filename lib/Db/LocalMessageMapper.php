@@ -131,7 +131,8 @@ class LocalMessageMapper extends QBMapper {
 			->where(
 				$qb->expr()->isNotNull('send_at'),
 				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
-			);
+			)
+			->orderBy('send_at', 'asc');
 		$messages = $this->findEntities($select);
 
 		if (empty($messages)) {
