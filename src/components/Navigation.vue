@@ -26,13 +26,8 @@
 			:disabled="$store.getters.showMessageComposer"
 			button-id="mail_new_message"
 			role="complementary"
-			@click="onNewMessage">
-			<template #icon>
-				<Plus
-					:size="20" />
-			</template>
-		</AppNavigationNew>
-		<ActionButton v-if="currentMailbox"
+			@click="onNewMessage" />
+		<Button v-if="currentMailbox"
 			class="button"
 			:disabled="refreshing"
 			@click="refreshMailbox">
@@ -40,7 +35,7 @@
 				<Refresh
 					:size="24" />
 			</template>
-		</ActionButton>
+		</Button>
 		<template #list>
 			<ul id="accounts-list">
 				<!-- Special mailboxes first -->
@@ -96,7 +91,7 @@
 
 <script>
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Button from '@nextcloud/vue/dist/Components/Button'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
 import AppNavigationSettings
 	from '@nextcloud/vue/dist/Components/AppNavigationSettings'
@@ -128,7 +123,7 @@ export default {
 		NavigationOutbox,
 		Plus,
 		Refresh,
-		ActionButton,
+		Button,
 	},
 	data() {
 		return {
@@ -221,9 +216,10 @@ export default {
 	border: none;
 	display: inline-block;
 	position: absolute;
-	margin-left: 234px;
-	margin-top: 5px;
+	margin-left: 250px;
+	margin-top: 11px;
 	opacity: .7;
+	box-shadow: none;
 	&:hover,
 	&:focus {
 		opacity: 1;
