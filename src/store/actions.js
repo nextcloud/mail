@@ -83,7 +83,12 @@ import { wait } from '../util/wait'
 import { updateAccount as updateSieveAccount } from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
-import { getPrioritySearchQueries } from '../util/priorityInbox'
+import {
+	getPrioritySearchQueries,
+	priorityImportantQuery,
+	priorityOtherQuery,
+	priorityStarredQuery,
+} from '../util/priorityInbox'
 import { html, plain, toPlain } from '../util/text'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
@@ -717,7 +722,7 @@ export default {
 		try {
 			// Make sure the priority inbox is updated as well
 			logger.info('updating priority inbox')
-			for (const query of ['is:important not:starred', 'is:starred not:important', 'not:starred not:important']) {
+			for (const query of [priorityImportantQuery, priorityStarredQuery, priorityOtherQuery]) {
 				logger.info("sync'ing priority inbox section", { query })
 				const mailbox = getters.getMailbox(UNIFIED_INBOX_ID)
 				const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]
