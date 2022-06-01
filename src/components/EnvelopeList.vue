@@ -28,9 +28,12 @@
 				<Actions class="app-content-list-item-menu" menu-align="right">
 					<ActionButton
 						v-if="isAtLeastOneSelectedUnimportant"
-						icon="icon-important"
 						:close-after-click="true"
 						@click.prevent="markSelectionImportant">
+						<template #icon>
+							<ImportantIcon
+								:size="20" />
+						</template>
 						{{
 							n(
 								'mail',
@@ -45,9 +48,12 @@
 					</ActionButton>
 					<ActionButton
 						v-if="isAtLeastOneSelectedImportant"
-						icon="icon-important"
 						:close-after-click="true"
 						@click.prevent="markSelectionUnimportant">
+						<template #icon>
+							<ImportantIcon
+								:size="20" />
+						</template>
 						{{
 							n(
 								'mail',
@@ -60,9 +66,14 @@
 							)
 						}}
 					</ActionButton>
-					<ActionButton icon="icon-starred"
+					<ActionButton
 						:close-after-click="true"
 						@click.prevent="favoriteOrUnfavoriteAll">
+						<template #icon>
+							<IconFavorite
+								:size="20"
+								fill-color="#f9cf3d" />
+						</template>
 						{{
 							areAllSelectedFavorite
 								? n(
@@ -85,9 +96,13 @@
 								)
 						}}
 					</ActionButton>
-					<ActionButton icon="icon-close"
+					<ActionButton
 						:close-after-click="true"
 						@click.prevent="unselectAll">
+						<template #icon>
+							<IconSelect
+								:size="20" />
+						</template>
 						{{ n(
 							'mail',
 							'Unselect {number}',
@@ -100,9 +115,12 @@
 					</ActionButton>
 					<ActionButton
 						v-if="!account.isUnified"
-						icon="icon-external"
 						:close-after-click="true"
 						@click.prevent="onOpenMoveModal">
+						<template #icon>
+							<OpenInNewIcon
+								:size="20" />
+						</template>
 						{{ n(
 							'mail',
 							'Move {number} thread',
@@ -114,9 +132,13 @@
 						) }}
 					</ActionButton>
 					<ActionButton
-						icon="icon-forward"
 						:close-after-click="true"
 						@click.prevent="forwardSelectedAsAttachment">
+						<template #icon>
+							<ShareIcon
+								:title="t('mail', 'Forward')"
+								:size="20" />
+						</template>
 						{{ n(
 							'mail',
 							'Forward {number} as attachment',
@@ -127,18 +149,25 @@
 							}
 						) }}
 					</ActionButton>
-					<ActionButton icon="icon-delete"
+					<ActionButton
 						:close-after-click="true"
 						@click.prevent="deleteAllSelected">
-						{{ n(
-							'mail',
-							'Delete {number} thread',
-							'Delete {number} threads',
-							selection.length,
-							{
-								number: selection.length,
-							}
-						) }}
+						<template #icon>
+							<IconDelete
+								:size="20" />
+						</template>
+						{{
+							n(
+								'mail',
+								'Delete {number} thread',
+								'Delete {number} threads',
+								selection.length,
+								{
+									number:
+										selection.length,
+								}
+							)
+						}}
 					</ActionButton>
 				</Actions>
 				<MoveModal
@@ -182,8 +211,11 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import { showError } from '@nextcloud/dialogs'
-
 import Envelope from './Envelope'
+import IconDelete from 'vue-material-design-icons/Delete'
+import ImportantIcon from './icons/ImportantIcon'
+import IconSelect from 'vue-material-design-icons/CloseThick'
+import IconFavorite from 'vue-material-design-icons/Star'
 import logger from '../logger'
 import MoveModal from './MoveModal'
 import { matchError } from '../errors/match'
@@ -191,6 +223,8 @@ import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 import { differenceWith } from 'ramda'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
+import ShareIcon from 'vue-material-design-icons/Share'
 
 export default {
 	name: 'EnvelopeList',
@@ -198,7 +232,13 @@ export default {
 		Actions,
 		ActionButton,
 		Envelope,
+		IconDelete,
+		ImportantIcon,
+		IconFavorite,
+		IconSelect,
 		MoveModal,
+		OpenInNewIcon,
+		ShareIcon,
 	},
 	props: {
 		account: {
