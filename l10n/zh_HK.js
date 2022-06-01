@@ -180,6 +180,7 @@ OC.L10N.register(
     "Notify the sender" : "通知寄件人",
     "You sent a read confirmation to the sender of this message." : "你已將讀取回條傳送給此郵件的寄件人。",
     "Could not send mdn" : "無法傳送 mdn",
+    "Reply all" : "回覆全部",
     "Reply" : "回覆",
     "Reply to sender only" : "僅回覆寄件人",
     "Forward" : "轉寄",

@@ -180,6 +180,7 @@ OC.L10N.register(
     "Notify the sender" : "Powiadom nadawcę",
     "You sent a read confirmation to the sender of this message." : "Wysłałeś potwierdzenie do nadawcy o przeczytaniu tej wiadomości.",
     "Could not send mdn" : "Nie można wysłać mdn",
+    "Reply all" : "Odpowiedz wszystkim",
     "Reply" : "Odpowiedz",
     "Reply to sender only" : "Odpowiedz tylko nadawcy",
     "Forward" : "Przekaż dalej",
