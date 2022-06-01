@@ -4,6 +4,13 @@ const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 
+function getPostCssConfig(ckEditorOpts) {
+	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
+	// Adapted from https://github.com/ckeditor/ckeditor5/issues/8112#issuecomment-960579351
+	const { plugins, ...rest } = styles.getPostCssConfig(ckEditorOpts);
+	return { postcssOptions: { plugins }, ...rest };
+};
+
 const plugins = [
 	// CKEditor needs its own plugin to be built using webpack.
 	new CKEditorWebpackPlugin({
@@ -82,7 +89,7 @@ module.exports = {
 			{
 				test: /ckeditor5-[^/\\]+[/\\].+\.css$/,
 				loader: 'postcss-loader',
-				options: styles.getPostCssConfig({
+				options: getPostCssConfig({
 					themeImporter: {
 						themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
 					},

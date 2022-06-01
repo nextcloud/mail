@@ -106,6 +106,27 @@ const normalizeTags = (state, envelope) => {
 	Vue.set(envelope, 'tags', tags)
 }
 
+/**
+ * Append or replace an envelope id for an existing message list
+ *
+ * If the given thread root id exist the message is replaced
+ * otherwise appended
+ *
+ * @param {Object} state vuex state
+ * @param {Array} existing list of envelope ids for a message list
+ * @param {Object} envelope envelope with tag objects
+ * @returns {Array} list of envelope ids
+ */
+const appendOrReplaceEnvelopeId = (state, existing, envelope) => {
+	const index = existing.findIndex((id) => state.envelopes[id].threadRootId === envelope.threadRootId)
+	if (index === -1) {
+		existing.push(envelope.databaseId)
+	} else {
+		existing[index] = envelope.databaseId
+	}
+	return existing
+}
+
 export default {
 	savePreference(state, { key, value }) {
 		Vue.set(state.preferences, key, value)
@@ -203,11 +224,13 @@ export default {
 		const mailbox = state.mailboxes[envelope.mailboxId]
 		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
 		Vue.set(envelope, 'accountId', mailbox.accountId)
-		const listId = normalizedEnvelopeListId(query)
-		const existing = mailbox.envelopeLists[listId] || []
+
 		const idToDateInt = (id) => state.envelopes[id].dateInt
 		const orderByDateInt = orderBy(idToDateInt, 'desc')
-		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
+
+		const listId = normalizedEnvelopeListId(query)
+		const existing = mailbox.envelopeLists[listId] || []
+		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(appendOrReplaceEnvelopeId(state, existing, envelope))))
 
 		if (!addToUnifiedMailboxes) {
 			return
@@ -221,7 +244,7 @@ export default {
 				Vue.set(
 					mailbox.envelopeLists,
 					listId,
-					uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+					uniq(orderByDateInt(appendOrReplaceEnvelopeId(state, existing, envelope)))
 				)
 			})
 	},

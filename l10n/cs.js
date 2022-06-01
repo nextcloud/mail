@@ -180,6 +180,7 @@ OC.L10N.register(
     "Notify the sender" : "Odeslat potvrzení",
     "You sent a read confirmation to the sender of this message." : "Odesilateli jste poslali potvrzení o přečtení této zprávy.",
     "Could not send mdn" : "Mdn se nepodařilo odeslat",
+    "Reply all" : "Odpovědět všem",
     "Reply" : "Odpovědět",
     "Reply to sender only" : "Odpovědět pouze odesílateli",
     "Forward" : "Přeposlat",

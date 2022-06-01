@@ -180,6 +180,7 @@ OC.L10N.register(
     "Notify the sender" : "Göndericiyi bilgilendir",
     "You sent a read confirmation to the sender of this message." : "Bu iletinin göndericisine okundu bildirimi gönderdiniz.",
     "Could not send mdn" : "İletildi bilgisi gönderilemedi",
+    "Reply all" : "Tümünü yanıtla",
     "Reply" : "Yanıtla",
     "Reply to sender only" : "Yalnızca gönderene yanıtla",
     "Forward" : "İlet",

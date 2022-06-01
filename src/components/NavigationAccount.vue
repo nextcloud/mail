@@ -35,13 +35,21 @@
 
 		<!-- Actions -->
 		<template #actions>
-			<ActionText v-if="!account.isUnified" icon="icon-info" :title="t('mail', 'Quota')">
+			<ActionText v-if="!account.isUnified" :title="t('mail', 'Quota')">
+				<template #icon>
+					<IconInfo
+						:size="20" />
+				</template>
 				{{ quotaText }}
 			</ActionText>
-			<ActionButton icon="icon-settings"
+			<ActionButton
 				:close-after-click="true"
 				@click="showAccountSettings"
 				@shortkey="toggleAccountSettings">
+				<template #icon>
+					<IconSettings
+						:size="20" />
+				</template>
 				{{ t('mail', 'Account settings') }}
 			</ActionButton>
 			<ActionCheckbox
@@ -50,20 +58,41 @@
 				@update:checked="changeShowSubscribedOnly">
 				{{ t('mail', 'Show only subscribed mailboxes') }}
 			</ActionCheckbox>
-			<ActionButton v-if="!editing" icon="icon-folder" @click="openCreateMailbox">
+			<ActionButton v-if="!editing" @click="openCreateMailbox">
+				<template #icon>
+					<IconFolderAdd
+						:size="20" />
+				</template>
 				{{ t('mail', 'Add mailbox') }}
 			</ActionButton>
-			<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createMailbox" />
+			<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
+				<template #icon>
+					<Folder
+						:size="20" />
+				</template>
+			</ActionInput>
 			<ActionText v-if="showSaving" icon="icon-loading-small">
 				{{ t('mail', 'Saving') }}
 			</ActionText>
-			<ActionButton v-if="!isFirst" icon="icon-triangle-n" @click="changeAccountOrderUp">
+			<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
+				<template #icon>
+					<MenuUp
+						:size="20" />
+				</template>
 				{{ t('mail', 'Move up') }}
 			</ActionButton>
-			<ActionButton v-if="!isLast" icon="icon-triangle-s" @click="changeAccountOrderDown">
+			<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
+				<template #icon>
+					<MenuDown
+						:size="20" />
+				</template>
 				{{ t('mail', 'Move down') }}
 			</ActionButton>
-			<ActionButton v-if="!account.provisioningId" icon="icon-delete" @click="removeAccount">
+			<ActionButton v-if="!account.provisioningId" @click="removeAccount">
+				<template #icon>
+					<IconDelete
+						:size="20" />
+				</template>
 				{{ t('mail', 'Remove account') }}
 			</ActionButton>
 		</template>
@@ -87,6 +116,12 @@ import { calculateAccountColor } from '../util/AccountColor'
 import logger from '../logger'
 import { fetchQuota } from '../service/AccountService'
 import AccountSettings from './AccountSettings'
+import IconInfo from 'vue-material-design-icons/InformationOutline'
+import IconSettings from 'vue-material-design-icons/CogOutline'
+import IconFolderAdd from 'vue-material-design-icons/Folder'
+import MenuDown from 'vue-material-design-icons/MenuDown'
+import MenuUp from 'vue-material-design-icons/MenuUp'
+import IconDelete from 'vue-material-design-icons/Delete'
 
 export default {
 	name: 'NavigationAccount',
@@ -98,6 +133,12 @@ export default {
 		ActionInput,
 		ActionText,
 		AccountSettings,
+		IconInfo,
+		IconSettings,
+		IconFolderAdd,
+		MenuDown,
+		MenuUp,
+		IconDelete,
 	},
 	props: {
 		account: {

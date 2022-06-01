@@ -91,10 +91,13 @@ export default {
 			return parseInt(this.$route.params.threadId, 10)
 		},
 		thread() {
-			const envelopes = this.$store.getters.getEnvelopeThread(this.threadId)
-			const envelope = envelopes.find(envelope => envelope.databaseId === this.threadId)
-
+			const envelope = this.$store.getters.getEnvelope(this.threadId)
 			if (envelope === undefined) {
+				return []
+			}
+
+			const envelopes = this.$store.getters.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
+			if (envelopes.length === 0) {
 				return []
 			}
 
