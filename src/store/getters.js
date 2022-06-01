@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defaultTo, head, sortBy, prop } from 'ramda'
+import { defaultTo, head, prop, sortBy } from 'ramda'
 
 import { UNIFIED_ACCOUNT_ID } from './constants'
 import { normalizedEnvelopeListId } from './normalization'
@@ -69,6 +69,12 @@ export const getters = {
 	getEnvelopes: (state, getters) => (mailboxId, query) => {
 		const list = getters.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
 		return list.map((msgId) => state.envelopes[msgId])
+	},
+	getEnvelopesByThreadRootId: (state) => (accountId, threadRootId) => {
+		return sortBy(
+			prop('dateInt'),
+			Object.values(state.envelopes).filter(envelope => envelope.accountId === accountId && envelope.threadRootId === threadRootId)
+		)
 	},
 	getMessage: (state) => (id) => {
 		return state.messages[id]

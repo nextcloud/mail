@@ -189,7 +189,7 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {},
 					path: 'INBOX.',
 					mailboxes: [],
-				}
+				},
 			},
 			tagList: [],
 			tags: {},
@@ -402,7 +402,7 @@ describe('Vuex store mutations', () => {
 					specialUse: ['archive'],
 					specialRole: 'archive',
 					mailboxes: [],
-				}
+				},
 			},
 			tagList: [],
 			tags: {},
@@ -418,7 +418,7 @@ describe('Vuex store mutations', () => {
 					delimiter: '.',
 					specialUse: ['archive'],
 					specialRole: 'archive',
-				}
+				},
 			})
 
 		expect(state).to.deep.equal({
@@ -493,7 +493,7 @@ describe('Vuex store mutations', () => {
 					specialUse: ['archive'],
 					specialRole: 'archive',
 					mailboxes: [],
-				}
+				},
 			},
 			tagList: [],
 			tags: {},
@@ -509,7 +509,7 @@ describe('Vuex store mutations', () => {
 					delimiter: '.',
 					specialUse: ['archive'],
 					specialRole: 'archive',
-				}
+				},
 			})
 
 		expect(state).to.deep.equal({
@@ -742,6 +742,7 @@ describe('Vuex store mutations', () => {
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
+				threadRootId: '123-456-789',
 			},
 		})
 		mutations.addEnvelope(state, {
@@ -752,6 +753,7 @@ describe('Vuex store mutations', () => {
 				id: 124,
 				subject: 'henlo 2',
 				uid: 322,
+				threadRootId: '234-567-890',
 			},
 		})
 
@@ -771,6 +773,7 @@ describe('Vuex store mutations', () => {
 					id: 123,
 					subject: 'henlo',
 					tags: [],
+					threadRootId: '123-456-789',
 				},
 				12346: {
 					mailboxId: 27,
@@ -779,6 +782,7 @@ describe('Vuex store mutations', () => {
 					subject: 'henlo 2',
 					uid: 322,
 					tags: [],
+					threadRootId: '234-567-890',
 				},
 			},
 			mailboxes: {
@@ -1009,7 +1013,7 @@ describe('Vuex store mutations', () => {
 					databaseId: 124,
 					mailboxId: 27,
 					uid: 12346,
-				}
+				},
 			],
 		})
 
@@ -1431,5 +1435,55 @@ describe('Vuex store mutations', () => {
 				},
 			},
 		})
+	})
+
+	it('replace envelope for existing thread root id', () => {
+		const state = {
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					mailboxes: [],
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				27: {
+					name: 'INBOX',
+					accountId: 13,
+					envelopeLists: {},
+				},
+			},
+			tagList: [],
+			tags: {},
+		}
+
+		mutations.addEnvelope(state, {
+			query: undefined,
+			envelope: {
+				mailboxId: 27,
+				databaseId: 12345,
+				id: 123,
+				subject: 'henlo',
+				uid: 321,
+				threadRootId: '123-456-789',
+			},
+		})
+
+		expect(state.mailboxes[27].envelopeLists['']).to.be.length(1)
+
+		mutations.addEnvelope(state, {
+			query: undefined,
+			envelope: {
+				mailboxId: 27,
+				databaseId: 12347,
+				id: 234,
+				subject: 'henlo',
+				uid: 432,
+				threadRootId: '123-456-789',
+			},
+		})
+
+		expect(state.mailboxes[27].envelopeLists['']).to.be.length(1)
 	})
 })
