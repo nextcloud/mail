@@ -21,7 +21,11 @@
 					<div class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important and unread')" />
 						<Popover trigger="hover focus">
-							<button slot="trigger" :aria-label="t('mail', 'Important info')" class="button icon-info" />
+							<Button slot="trigger" :aria-label="t('mail', 'Important info')" class="button">
+								<template #icon>
+									<IconInfo :size="20" />
+								</template>
+							</Button>
 							<p class="important-info">
 								{{ importantInfo }}
 							</p>
@@ -67,12 +71,14 @@
 <script>
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
+import Button from '@nextcloud/vue/dist/Components/Button'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import Vue from 'vue'
 
 import infiniteScroll from '../directives/infinite-scroll'
+import IconInfo from 'vue-material-design-icons/InformationOutline'
 import logger from '../logger'
 import Mailbox from './Mailbox'
 import NoMessageSelected from './NoMessageSelected'
@@ -93,6 +99,8 @@ export default {
 	components: {
 		AppContent,
 		AppContentList,
+		Button,
+		IconInfo,
 		Mailbox,
 		NoMessageSelected,
 		Popover,
@@ -249,10 +257,8 @@ export default {
 
 .button {
 	background-color: var(--color-main-background);
-	width: 44px;
-	height: 44px;
-	border: 0;
-	margin-bottom: 17px;
+	margin-bottom: 12px;
+	right: 2px:
 
 	&:hover,
 	&:focus {
@@ -262,5 +268,8 @@ export default {
 
 #app-content-wrapper {
 	display: flex;
+}
+::v-deep .button-vue--vue-secondary {
+	box-shadow: none;
 }
 </style>
