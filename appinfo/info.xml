@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-	<id>dotplex_mail</id>
+	<id>mail</id>
 	<name>dotplex Mail</name>
 	<summary>A mail app for Nextcloud - modified by dotplex</summary>
 	<description><![CDATA[**💌 A mail app for Nextcloud**
