@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright 2021 Anna Larch <anna.larch@nextcloud.com>
  *
@@ -71,6 +74,8 @@ class MigrateImportantJob extends QueuedJob {
 
 	/**
 	 * @param array $argument
+	 *
+	 * @return void
 	 */
 	public function run($argument) {
 		$mailboxId = (int)$argument['mailboxId'];

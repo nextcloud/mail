@@ -24,10 +24,10 @@
 		:error="t('mail', 'Could not open mailbox')"
 		message=""
 		role="alert" />
-	<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages')" role="alert" />
+	<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages …')" role="alert" />
 	<Loading
 		v-else-if="loadingCacheInitialization"
-		:hint="t('mail', 'Loading messages')"
+		:hint="t('mail', 'Loading messages …')"
 		:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')" />
 	<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 	<EmptyMailbox v-else-if="!hasMessages" key="empty" />
@@ -144,15 +144,7 @@ export default {
 				if (typeof first !== 'undefined') {
 					logger.debug('refreshing mailbox')
 					if (this.$route.params.mailboxId === this.account.draftsMailboxId) {
-						this.$router.replace({
-							name: 'message',
-							params: {
-								mailboxId: this.$route.params.mailboxId,
-								filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-								threadId: 'new',
-								draftId: first.databaseId,
-							},
-						})
+						// Don't navigate
 					} else {
 						this.$router.replace({
 							name: 'message',
@@ -449,7 +441,7 @@ export default {
 				return
 			}
 
-			const next = this.envelopes[idx === 0 ? idx : idx - 1]
+			const next = this.envelopes[idx === 0 ? 1 : idx - 1]
 			if (!next) {
 				logger.debug('no next/previous envelope, not navigating')
 				return

@@ -112,12 +112,7 @@ class Manager {
 	 * A alias is orphaned if not listed in newAliases anymore
 	 * (=> the provisioning configuration does contain it anymore)
 	 *
-	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
-	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
-	 *
-	 * @TODO: Change throws to \OCP\DB\Exception once Mail requires Nextcloud 21 or above
-	 *
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
 	private function deleteOrphanedAliases(string $userId, int $accountId, array $newAliases): void {
 		$existingAliases = $this->aliasMapper->findAll($accountId, $userId);
@@ -131,12 +126,7 @@ class Manager {
 	/**
 	 * Create new aliases for the given account.
 	 *
-	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
-	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
-	 *
-	 * @TODO: Change throws to \OCP\DB\Exception once Mail requires Nextcloud 21 or above
-	 *
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
 	private function createNewAliases(string $userId, int $accountId, array $newAliases, string $displayName): void {
 		foreach ($newAliases as $newAlias) {
@@ -245,7 +235,7 @@ class Manager {
 
 	/**
 	 * @throws ValidationException
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
 	public function newProvisioning(array $data): void {
 		$provisioning = $this->provisioningMapper->validate($data);
@@ -254,7 +244,7 @@ class Manager {
 
 	/**
 	 * @throws ValidationException
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
 	public function updateProvisioning(array $data): void {
 		$provisioning = $this->provisioningMapper->validate($data);

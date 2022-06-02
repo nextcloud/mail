@@ -31,16 +31,18 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox as DbMailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message as DbMessage;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
-use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
@@ -53,9 +55,6 @@ class MailTransmissionTest extends TestCase {
 
 	/** @var Folder|MockObject */
 	private $userFolder;
-
-	/** @var AccountService|MockObject */
-	private $accountService;
 
 	/** @var IAttachmentService|MockObject */
 	private $attachmentService;
@@ -84,11 +83,16 @@ class MailTransmissionTest extends TestCase {
 	/** @var MailTransmission */
 	private $transmission;
 
+	/** @var AliasesService|MockObject */
+	private $aliasService;
+
+	/** @var GroupsIntegration|MockObject */
+	private $groupsIntegration;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userFolder = $this->createMock(Folder::class);
-		$this->accountService = $this->createMock(AccountService::class);
 		$this->attachmentService = $this->createMock(IAttachmentService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
@@ -98,10 +102,11 @@ class MailTransmissionTest extends TestCase {
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
+		$this->aliasService = $this->createMock(AliasesService::class);
+		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
 
 		$this->transmission = new MailTransmission(
 			$this->userFolder,
-			$this->accountService,
 			$this->attachmentService,
 			$this->mailManager,
 			$this->imapClientFactory,
@@ -110,7 +115,9 @@ class MailTransmissionTest extends TestCase {
 			$this->mailboxMapper,
 			$this->messageMapper,
 			$this->logger,
-			$this->performanceLogger
+			$this->performanceLogger,
+			$this->aliasService,
+			$this->groupsIntegration,
 		);
 	}
 
@@ -223,6 +230,7 @@ class MailTransmissionTest extends TestCase {
 			->willReturn($mailbox);
 
 		$source = 'da message';
+
 		$this->messageMapper->expects($this->once())
 			->method('getFullText')
 			->with(
@@ -333,7 +341,11 @@ class MailTransmissionTest extends TestCase {
 				['cat.jpg', true],
 				['dog.jpg', false],
 			]);
-		$node = $this->createMock(File::class);
+		$node = $this->createConfiguredMock(File::class, [
+			'getName' => 'cat.jpg',
+			'getContent' => 'jhsjdshfjdsh',
+			'getMimeType' => 'image/jpeg'
+		]);
 		$this->userFolder->expects($this->once())
 			->method('get')
 			->with('cat.jpg')
@@ -354,10 +366,9 @@ class MailTransmissionTest extends TestCase {
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$folderId = 'INBOX';
 		$repliedMessageUid = 321;
-		$messageInReply = new \OCA\Mail\Db\Message();
+		$messageInReply = new DbMessage();
 		$messageInReply->setUid($repliedMessageUid);
 		$messageInReply->setMessageId('message@server');
-		$replyData = new RepliedMessageData($account, $messageInReply);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
@@ -368,7 +379,7 @@ class MailTransmissionTest extends TestCase {
 			->with($account)
 			->willReturn($transport);
 
-		$this->transmission->sendMessage($messageData, $replyData);
+		$this->transmission->sendMessage($messageData, $messageInReply->getMessageId());
 	}
 
 	public function testSaveDraft() {
@@ -390,7 +401,7 @@ class MailTransmissionTest extends TestCase {
 			->method('getClient')
 			->with($account)
 			->willReturn($client);
-		$draftsMailbox = new \OCA\Mail\Db\Mailbox();
+		$draftsMailbox = new DbMailbox();
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
@@ -403,5 +414,45 @@ class MailTransmissionTest extends TestCase {
 		[,,$newId] = $this->transmission->saveDraft($messageData);
 
 		$this->assertEquals(13, $newId);
+	}
+
+	public function testSendLocalMessage(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(10);
+		$mailAccount->setUserId('testuser');
+		$mailAccount->setSentMailboxId(123);
+		$mailAccount->setName('Emily');
+		$message = new LocalMessage();
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setAccountId($mailAccount->getId());
+		$message->setAliasId(2);
+		$message->setSendAt(123);
+		$message->setSubject('subject');
+		$message->setBody('message');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abc');
+		$message->setAttachments([]);
+		$to = Recipient::fromParams([
+			'email' => 'emily@stardewvalleypub.com',
+			'label' => 'Emily',
+			'type' => Recipient::TYPE_TO
+		]);
+		$message->setRecipients([$to]);
+
+		$alias = Alias::fromParams([
+			'id' => 1,
+			'accountId' => 10,
+			'name' => 'Emily',
+			'alias' => 'Emmerlie'
+		]);
+		$this->aliasService->expects(self::once())
+			->method('find')
+			->with($message->getAliasId(), $mailAccount->getUserId())
+			->willReturn($alias);
+
+		$replyMessage = new DbMessage();
+		$replyMessage->setMessageId('abc');
+
+		$this->transmission->sendLocalMessage(new Account($mailAccount), $message);
 	}
 }

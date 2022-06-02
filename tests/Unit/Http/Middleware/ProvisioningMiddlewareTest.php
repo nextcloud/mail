@@ -140,6 +140,36 @@ class ProvisioningMiddlewareTest extends TestCase {
 		);
 	}
 
+	public function testBeforeControllerPasswordlessSignin() {
+		$user = $this->createConfiguredMock(IUser::class, [
+			'getEmailAddress' => 'bruce.wayne@batman.com'
+		]);
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->willReturn($user);
+		$configs = [new Provisioning()];
+		$this->provisioningManager->expects($this->once())
+			->method('getConfigs')
+			->willReturn($configs);
+		$this->provisioningManager->expects($this->once())
+			->method('provisionSingleUser')
+			->with($configs, $user);
+		$credentials = $this->createMock(ICredentials::class);
+		$this->credentialStore->expects($this->once())
+			->method('getLoginCredentials')
+			->willReturn($credentials);
+		$credentials->expects($this->once())
+			->method('getPassword')
+			->willReturn(null);
+		$this->provisioningManager->expects($this->never())
+			->method('updatePassword');
+
+		$this->middleware->beforeController(
+			$this->createMock(PageController::class),
+			'index'
+		);
+	}
+
 	public function testBeforeControllerNoConfigAvailable() {
 		$user = $this->createConfiguredMock(IUser::class, [
 			'getEmailAddress' => 'bruce.wayne@batman.com'

@@ -36,7 +36,7 @@
 					{{ contactsWithEmailComputed }}
 				</span>
 			</div>
-			<div v-if="selection === ContactSelectionStateEnum.select">
+			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
 				<a class="icon-reply" @click="onClickReply">
 					<span class="action-label">{{ t('mail', 'Reply') }}</span>
 				</a>
@@ -45,6 +45,9 @@
 				</a>
 				<a class="icon-add" @click="selection = ContactSelectionStateEnum.new">
 					<span class="action-label">{{ t('mail', 'New Contact') }}</span>
+				</a>
+				<a class="icon-clippy" @click="onClickCopyToClipboard">
+					<span class="action-label">{{ t('mail', 'Copy to clipboard') }}</span>
 				</a>
 			</div>
 			<div v-else class="contact-input-wrapper">
@@ -167,12 +170,15 @@ export default {
 		this.newContactName = this.label
 	},
 	methods: {
+		onClickCopyToClipboard() {
+			this.$copyText(this.email)
+		},
 		onClickReply() {
 			this.$router.push({
 				name: 'message',
 				params: {
-					mailboxId: 'priority', // TODO: figure out current mailbox
-					threadId: 'new',
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'mailto',
 				},
 				query: {
 					to: this.email,
@@ -219,6 +225,10 @@ export default {
 	margin: 10px;
 }
 
+.contact-menu {
+	display: flex;
+	flex-wrap: wrap;
+}
 .contact-popover {
 	display: inline-block;
 }
@@ -241,17 +251,21 @@ export default {
 		width: 100%;
 	}
 }
+.icon-clippy,
 .icon-user,
 .icon-reply,
 .icon-checkmark,
 .icon-close,
 .icon-add {
+	display: flex;
+	align-items: center;
 	height: 44px;
 	min-width: 44px;
 	margin: 0;
 	padding: 9px 18px 10px 32px;
 }
 @media only screen and (min-width: 600px) {
+	.icon-clippy,
 	.icon-user,
 	.icon-reply,
 	.icon-checkmark,
@@ -260,10 +274,7 @@ export default {
 		background-position: 12px center;
 	}
 }
-.icon-add {
-	display: revert;
-    vertical-align: revert;
-}
+
 .contact-existing {
 	margin-bottom: 10px;
 	font-size: small;

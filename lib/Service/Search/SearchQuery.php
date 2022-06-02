@@ -88,7 +88,7 @@ class SearchQuery {
 		return $this->flagExpressions;
 	}
 
-	public function addFlagExpression(FlagExpression $expression) {
+	public function addFlagExpression(FlagExpression $expression): void {
 		$this->flagExpressions[] = $expression;
 	}
 

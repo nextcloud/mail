@@ -43,6 +43,96 @@ All notable changes to this project will be documented in this file.
 - Database column types for message queries
 - Missing debug logs
 
+## 1.12.2 – 2022-06-02
+### Fixed
+- Modal width
+- Attachment forwarding
+- Reply/forward editor body
+- Sending messages of deleted accounts
+- OCI compatibility
+- Collecting recipient addresses in background
+- Priority inbox synchronization
+
+## 1.12.1 - 2022-05-24
+### Fixed
+- Prevent causal read for outbox message and recipient inserts
+- Hide subscribed / unsubscribed checkbox for "Favourites" folder
+- Fix attachment loss during outbox message update
+- Fix sending messages to groups
+- Fix composer not to open when we select envelope
+- Change the timeout value to fit the dialogs
+- Fix text format when closing the composer modal
+- Do not override existing aliases
+- Stop message from sending while editing
+- Fix html editor being always selected
+- Fix flagging replied messages
+- Fix modal size in different size of the screen
+- Show account color indicator only if several accounts are present
+- Consider passwordless signings when provisioning
+
+## 1.12.0 - 2022-05-03
+### Added
+- Local Outbox
+- Scheduled Sending
+- Undo Sending
+- Anti abuse detection
+- Time in-/sensitive background jobs
+- Clipboard support, copy recipient to clipboard
+- Loading indicator for autosuggestion dropdown
+### Changed
+- General UI improvements and design fixes
+- Account setup error reporting
+- Downgrade KItinerary log line to info
+### Fixed
+- Discard drafts on outbox and imap messages
+- TypeError spamming logs when user not logged in
+- Sync error with empty UID list
+- array_merge needs at least one argument
+- Missing account aliases for new accounts
+
+## 1.11.7 - 2022-02-21
+### Added
+- Loading indicator for recipient suggestions
+### Fixed
+- Move KItinerary warning message to info
+
+## 1.11.6 - 2022-01-25
+### Fixed
+- Priority Inbox Sync
+- New Messages not loaded
+- Full links in plain text mails
+- Bold font for selected envelope(s) removed
+- BCC for email recipients query
+
+## 1.11.5 – 2021-12-28
+### Fixed
+- Use Parameters instead of Named Parameters for chunked queries
+- Mailbox showing at the wrong account
+- Column for account name that is too narrow
+- Mark as spam action
+- Chunk the recipients query
+
+## 1.11.4 – 2021-12-15
+### Fixed
+- Erroneous repair step during app store upgrade
+
+## 1.11.3 – 2021-12-15
+### Fixed
+- Fix message_id repair step
+
+## 1.11.2 – 2021-12-14
+### Fixed
+- Invalid message cache message_id and in_reply_to values
+
+## 1.11.1 – 2021-12-09
+### Fixed
+- Upgrades with Nextcloud 20
+- Initial sync runs into infinite loop
+- Initial sync stops too early
+- Save all attachments button
+- Database column types for message queries
+- Missing debug logs
+
 ## 1.11.0 - 2021-11-29
 ### Added
 - Nextcloud 23 support

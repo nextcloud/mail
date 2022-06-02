@@ -55,7 +55,7 @@
 				{{ t('mail', 'Mark all messages of this mailbox as read') }}
 			</ActionButton>
 			<ActionButton
-				v-if="!editing && top && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged'"
+				v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged'"
 				icon="icon-folder"
 				@click="openCreateMailbox">
 				{{ t('mail', 'Add submailbox') }}
@@ -125,8 +125,7 @@
 			v-for="subMailbox in subMailboxes"
 			:key="genId(subMailbox)"
 			:account="account"
-			:mailbox="subMailbox"
-			:top="false" />
+			:mailbox="subMailbox" />
 	</AppNavigationItem>
 </template>
 
@@ -171,10 +170,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-		top: {
-			type: Boolean,
-			default: true,
-		},
 		filter: {
 			type: String,
 			default: '',
@@ -211,7 +206,7 @@ export default {
 			return this.mailbox.name.toLowerCase() !== 'inbox'
 		},
 		notVirtual() {
-			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged'
+			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged' && !this.filter
 		},
 		title() {
 			if (this.filter === 'starred') {

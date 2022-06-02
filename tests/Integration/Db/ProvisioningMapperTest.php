@@ -61,6 +61,7 @@ class ProvisioningMapperTest extends TestCase {
 		$this->db = OC::$server->getDatabaseConnection();
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->mapper = new ProvisioningMapper($this->db, $this->logger);
+
 		$this->data['provisioningDomain'] = 'heart-of-gold.com' ;
 		$this->data['emailTemplate'] = '%USERID%@heart-of-gold.com';
 		$this->data['imapUser'] = 'marvin@heart-of-gold.com';
@@ -122,7 +123,7 @@ class ProvisioningMapperTest extends TestCase {
 	 */
 	public function testUpdate() {
 		$provisioning = new Provisioning();
-		$provisioning->setProvisioningDomain($this->data['provisioningDomain']);
+		$provisioning->setProvisioningDomain('somebody-elses-problem.com');
 		$provisioning->setEmailTemplate($this->data['emailTemplate']);
 		$provisioning->setImapUser($this->data['imapUser']);
 		$provisioning->setImapHost($this->data['imapHost']);
@@ -183,7 +184,7 @@ class ProvisioningMapperTest extends TestCase {
 		$provisioning->setSieveEnabled($this->data['sieveEnabled']);
 		$provisioning = $this->mapper->insert($provisioning);
 
-		$db = $this->mapper->get($provisioning->id);
+		$db = $this->mapper->get($provisioning->getId());
 
 		$this->assertInstanceOf(Provisioning::class, $db);
 		foreach ($this->data as $key => $value) {

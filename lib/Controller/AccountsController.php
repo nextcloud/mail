@@ -35,11 +35,11 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\GroupsIntegration;
@@ -336,31 +336,39 @@ class AccountsController extends Controller {
 	 * @param bool $autoDetect
 	 *
 	 * @return JSONResponse
-	 * @throws ClientException
 	 */
 	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
-		$account = null;
-		$errorMessage = null;
 		try {
 			if ($autoDetect) {
 				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
 				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
 			}
-		} catch (Exception $ex) {
-			$errorMessage = $ex->getMessage();
+		} catch (CouldNotConnectException $e) {
+			$data = [
+				'error' => $e->getReason(),
+				'service' => $e->getService(),
+				'host' => $e->getHost(),
+				'port' => $e->getPort(),
+			];
+
+			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
+			return \OCA\Mail\Http\JsonResponse::fail($data);
+		} catch (ServiceException $e) {
+			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return \OCA\Mail\Http\JsonResponse::error('Could not create account');
 		}
 
 		if (is_null($account)) {
-			if ($autoDetect) {
-				throw new ClientException($this->l10n->t('Auto detect failed. Please use manual mode.'));
-			} else {
-				$this->logger->error('Creating account failed: ' . $errorMessage);
-				throw new ClientException($this->l10n->t('Creating account failed: ') . $errorMessage);
-			}
+			return \OCA\Mail\Http\JsonResponse::fail([
+				'error' => 'AUTOCONFIG_FAILED',
+				'message' => $this->l10n->t('Auto detect failed. Please use manual mode.'),
+			]);
 		}
 
-		return new JSONResponse($account, Http::STATUS_CREATED);
+		return \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 	}
 
 	/**
@@ -401,24 +409,19 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $id);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
-		$expandedTo = $this->groupsIntegration->expand($to);
-		$expandedCc = $this->groupsIntegration->expand($cc);
-		$expandedBcc = $this->groupsIntegration->expand($bcc);
-
-		$count = substr_count($expandedTo, ',') + substr_count($expandedCc, ',') + 1;
+		$count = substr_count($to, ',') + substr_count($cc, ',') + 1;
 		if (!$force && $count >= 10) {
 			throw new ManyRecipientsException();
 		}
 
-		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml, $requestMdn);
-		$repliedMessageData = null;
+		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments, $isHtml, $requestMdn);
 		if ($messageId !== null) {
 			try {
 				$repliedMessage = $this->mailManager->getMessage($this->currentUserId, $messageId);
+				$repliedMessageId = $repliedMessage->getMessageId();
 			} catch (ClientException $e) {
 				$this->logger->info("Message in reply " . $messageId . " could not be loaded: " . $e->getMessage());
 			}
-			$repliedMessageData = new RepliedMessageData($account, $repliedMessage);
 		}
 
 		$draft = null;
@@ -430,7 +433,7 @@ class AccountsController extends Controller {
 			}
 		}
 		try {
-			$this->mailTransmission->sendMessage($messageData, $repliedMessageData, $alias, $draft);
+			$this->mailTransmission->sendMessage($messageData, $repliedMessageId ?? null, $alias, $draft);
 			return new JSONResponse();
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());

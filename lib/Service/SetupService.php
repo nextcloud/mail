@@ -117,11 +117,12 @@ class SetupService {
 	 * @param string $uid
 	 * @param int|null $accountId
 	 *
+	 * @throws CouldNotConnectException
 	 * @throws ServiceException
 	 *
-	 * @return Account|null
+	 * @return Account
 	 */
-	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, ?int $accountId = null): ?Account {
+	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, ?int $accountId = null): Account {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
@@ -165,7 +166,9 @@ class SetupService {
 		try {
 			$imapClient->login();
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw CouldNotConnectException::create($e, 'IMAP', $mailAccount->getInboundHost(), $mailAccount->getInboundPort());
+			throw new CouldNotConnectException($e, 'IMAP', $mailAccount->getInboundHost(), $mailAccount->getInboundPort());
+		} finally {
+			$imapClient->logout();
 		}
 
 		$transport = $this->smtpClientFactory->create($account);
@@ -173,7 +176,7 @@ class SetupService {
 			try {
 				$transport->getSMTPObject();
 			} catch (Horde_Mail_Exception $e) {
-				throw CouldNotConnectException::create($e, 'SMTP', $mailAccount->getOutboundHost(), $mailAccount->getOutboundPort());
+				throw new CouldNotConnectException($e, 'SMTP', $mailAccount->getOutboundHost(), $mailAccount->getOutboundPort());
 			}
 		}
 	}

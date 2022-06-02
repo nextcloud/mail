@@ -46,9 +46,13 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\Recipient;
+use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
@@ -60,7 +64,6 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -68,11 +71,10 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use Psr\Log\LoggerInterface;
+use function array_filter;
+use function array_map;
 
 class MailTransmission implements IMailTransmission {
-
-	/** @var AccountService */
-	private $accountService;
 
 	/** @var Folder */
 	private $userFolder;
@@ -104,11 +106,16 @@ class MailTransmission implements IMailTransmission {
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 
+	/** @var AliasesService */
+	private $aliasesService;
+
+	/** @var GroupsIntegration */
+	private $groupsIntegration;
+
 	/**
 	 * @param Folder $userFolder
 	 */
 	public function __construct($userFolder,
-								AccountService $accountService,
 								IAttachmentService $attachmentService,
 								IMailManager $mailManager,
 								IMAPClientFactory $imapClientFactory,
@@ -117,8 +124,9 @@ class MailTransmission implements IMailTransmission {
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								LoggerInterface $logger,
-								PerformanceLogger $performanceLogger) {
-		$this->accountService = $accountService;
+								PerformanceLogger $performanceLogger,
+								AliasesService $aliasesService,
+								GroupsIntegration $groupsIntegration) {
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
 		$this->mailManager = $mailManager;
@@ -129,10 +137,12 @@ class MailTransmission implements IMailTransmission {
 		$this->messageMapper = $messageMapper;
 		$this->logger = $logger;
 		$this->performanceLogger = $performanceLogger;
+		$this->aliasesService = $aliasesService;
+		$this->groupsIntegration = $groupsIntegration;
 	}
 
 	public function sendMessage(NewMessageData $messageData,
-								RepliedMessageData $replyData = null,
+								?string $repliedToMessageId = null,
 								Alias $alias = null,
 								Message $draft = null): void {
 		$account = $messageData->getAccount();
@@ -140,8 +150,8 @@ class MailTransmission implements IMailTransmission {
 			throw new SentMailboxNotSetException();
 		}
 
-		if ($replyData !== null) {
-			$message = $this->buildReplyMessage($account, $messageData, $replyData);
+		if ($repliedToMessageId !== null) {
+			$message = $this->buildReplyMessage($account, $messageData, $repliedToMessageId);
 		} else {
 			$message = $this->buildNewMessage($account, $messageData);
 		}
@@ -155,7 +165,7 @@ class MailTransmission implements IMailTransmission {
 		$message->setCC($messageData->getCc());
 		$message->setBcc($messageData->getBcc());
 		$message->setContent($messageData->getBody());
-		$this->handleAttachments($account, $messageData, $message);
+		$this->handleAttachments($account, $messageData, $message); // only ever going to be local attachments
 
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
@@ -190,6 +200,10 @@ class MailTransmission implements IMailTransmission {
 			$mail->addMimePart($attachment);
 		}
 
+		$this->eventDispatcher->dispatchTyped(
+			new BeforeMessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
+		);
+
 		// Send the message
 		try {
 			$mail->send($transport, false, false);
@@ -201,10 +215,69 @@ class MailTransmission implements IMailTransmission {
 			);
 		}
 
-		$this->eventDispatcher->dispatch(
-			MessageSentEvent::class,
-			new MessageSentEvent($account, $messageData, $replyData, $draft, $message, $mail)
+		$this->eventDispatcher->dispatchTyped(
+			new MessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
 		);
+	}
+
+	public function sendLocalMessage(Account $account, LocalMessage $message): void {
+		$to = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_TO;
+				}))
+			)
+		);
+		$cc = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_CC;
+				}))
+			)
+		);
+		$bcc = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_BCC;
+				}))
+			)
+		);
+		$attachments = array_map(function (LocalAttachment $attachment) {
+			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
+			return [
+				'type' => 'local',
+				'id' => $attachment->getId(),
+			];
+		}, $message->getAttachments());
+		$messageData = new NewMessageData(
+			$account,
+			$to,
+			$cc,
+			$bcc,
+			$message->getSubject(),
+			$message->getBody(),
+			$attachments,
+			$message->isHtml()
+		);
+
+		if ($message->getAliasId() !== null) {
+			$alias = $this->aliasesService->find($message->getAliasId(), $account->getUserId());
+		}
+
+		try {
+			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
+		} catch (SentMailboxNotSetException $e) {
+			throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
+		}
 	}
 
 	/**
@@ -276,12 +349,12 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('build draft message');
 
 		// 'Send' the message
+		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$transport = new Horde_Mail_Transport_Null();
 			$mail->send($transport, false, false);
 			$perfLogger->step('create IMAP message');
 			// save the message in the drafts folder
-			$client = $this->imapClientFactory->getClient($account);
 			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
 			if ($draftsMailboxId === null) {
 				throw new ClientException("No drafts mailbox configured");
@@ -298,6 +371,8 @@ class MailTransmission implements IMailTransmission {
 			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
 		} catch (Horde_Exception $e) {
 			throw new ServiceException('Could not save draft message', 0, $e);
+		} finally {
+			$client->logout();
 		}
 
 		$this->eventDispatcher->dispatch(
@@ -312,14 +387,12 @@ class MailTransmission implements IMailTransmission {
 
 	private function buildReplyMessage(Account $account,
 									   NewMessageData $messageData,
-									   RepliedMessageData $replyData): IMessage {
+									   string $repliedToMessageId): IMessage {
 		// Reply
 		$message = $account->newMessage();
 		$message->setSubject($messageData->getSubject());
 		$message->setTo($messageData->getTo());
-
-		$rawMessageId = $replyData->getMessage()->getMessageId();
-		$message->setInReplyTo($rawMessageId);
+		$message->setInReplyTo($repliedToMessageId);
 
 		return $message;
 	}
@@ -399,11 +472,16 @@ class MailTransmission implements IMailTransmission {
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
-		$fullText = $this->messageMapper->getFullText(
-			$this->imapClientFactory->getClient($account),
-			$mailbox->getName(),
-			$attachmentMessage->getUid()
-		);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$fullText = $this->messageMapper->getFullText(
+				$client,
+				$mailbox->getName(),
+				$attachmentMessage->getUid()
+			);
+		} finally {
+			$client->logout();
+		}
 
 		$message->addRawAttachment(
 			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
@@ -412,7 +490,7 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	/**
-	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
+	 * Adds an email as attachment
 	 *
 	 * @param Account $account
 	 * @param mixed[] $attachment
@@ -424,11 +502,16 @@ class MailTransmission implements IMailTransmission {
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
-		$fullText = $this->messageMapper->getFullText(
-			$this->imapClientFactory->getClient($account),
-			$mailbox->getName(),
-			$attachmentMessage->getUid()
-		);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$fullText = $this->messageMapper->getFullText(
+				$client,
+				$mailbox->getName(),
+				$attachmentMessage->getUid()
+			);
+		} finally {
+			$client->logout();
+		}
 
 		$message->addEmbeddedMessageAttachment(
 			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
@@ -449,14 +532,19 @@ class MailTransmission implements IMailTransmission {
 		$userId = $account->getMailAccount()->getUserId();
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['messageId']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
-		$attachments = $this->messageMapper->getRawAttachments(
-			$this->imapClientFactory->getClient($account),
-			$mailbox->getName(),
-			$attachmentMessage->getUid(),
-			[
-				$attachment['id']
-			]
-		);
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$attachments = $this->messageMapper->getRawAttachments(
+				$client,
+				$mailbox->getName(),
+				$attachmentMessage->getUid(),
+				[
+					$attachment['id']
+				]
+			);
+		} finally {
+			$client->logout();
+		}
 
 		// Attaches attachment to new message
 		$message->addRawAttachment($attachment['fileName'], $attachments[0]);
@@ -490,8 +578,6 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
-		$imapClient = $this->imapClientFactory->getClient($account);
-
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->flags();
 		$query->uid();
@@ -501,10 +587,15 @@ class MailTransmission implements IMailTransmission {
 			'peek' => true,
 		]);
 
-		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-		$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
-			'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
-		]), false);
+		$imapClient = $this->imapClientFactory->getClient($account);
+		try {
+			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
+			$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
+				'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
+			]), false);
+		} finally {
+			$imapClient->logout();
+		}
 
 		if (count($fetchResults) < 1) {
 			throw new ServiceException('Message "' .$message->getId() . '" not found.');

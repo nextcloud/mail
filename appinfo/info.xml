@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-	<id>mail</id>
-	<name>Mail</name>
-	<summary>💌 A mail app for Nextcloud</summary>
+	<id>dotplex_mail</id>
+	<name>dotplex Mail</name>
+	<summary>A mail app for Nextcloud - modified by dotplex</summary>
 	<description><![CDATA[**💌 A mail app for Nextcloud**
 
 - **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
@@ -12,19 +12,15 @@
 - **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.
 - **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 	]]></description>
-	<version>1.11.7</version>
+	<version>1.12.2</version>
 	<licence>agpl</licence>
-	<author>Christoph Wurst</author>
 	<author>Greta Doçi</author>
-	<author>Julius Härtl</author>
-	<author>Cyrille Bollu</author>
-	<author>Holger Dehnhardt</author>
-	<author>Jan-Christoph Borchardt</author>
+	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>
 	<namespace>Mail</namespace>
 	<documentation>
-		<user>https://github.com/nextcloud/mail/blob/master/doc/user.md</user>
-		<admin>https://github.com/nextcloud/mail/blob/master/doc/admin.md</admin>
-		<developer>https://github.com/nextcloud/mail/blob/master/doc/developer.md</developer>
+		<user>https://github.com/nextcloud/mail/blob/main/doc/user.md</user>
+		<admin>https://github.com/nextcloud/mail/blob/main/doc/admin.md</admin>
+		<developer>https://github.com/nextcloud/mail/blob/main/doc/developer.md</developer>
 	</documentation>
 	<category>social</category>
 	<category>office</category>
@@ -34,10 +30,11 @@
 	<screenshot>https://user-images.githubusercontent.com/1374172/79554966-278e1600-809f-11ea-82ea-7a0d72a2704f.png</screenshot>
 	<dependencies>
 		<php min-version="7.3" max-version="8.0" />
-		<nextcloud min-version="20" max-version="24" />
+		<nextcloud min-version="21" max-version="24" />
 	</dependencies>
 	<background-jobs>
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
+		<job>OCA\Mail\BackgroundJob\OutboxWorkerJob</job>
 	</background-jobs>
 	<repair-steps>
 		<post-migration>

@@ -52,6 +52,9 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 		return 'Make Mail itinerary extractor executable';
 	}
 
+	/**
+	 * @return void
+	 */
 	public function run(IOutput $output) {
 		if (!is_file($this->file)) {
 			$this->logger->warning('itinerary file doesn\'t exist');

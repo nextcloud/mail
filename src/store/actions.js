@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -63,6 +64,7 @@ import {
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
+	fetchMessageItineraries,
 	fetchThread,
 	moveMessage,
 	removeEnvelopeTag,
@@ -81,7 +83,22 @@ import { wait } from '../util/wait'
 import { updateAccount as updateSieveAccount } from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
-import { getPrioritySearchQueries } from '../util/priorityInbox'
+import {
+	getPrioritySearchQueries,
+	priorityImportantQuery,
+	priorityOtherQuery,
+	priorityStarredQuery,
+} from '../util/priorityInbox'
+import { html, plain, toPlain } from '../util/text'
+import Axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import { showWarning } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+import {
+	buildForwardSubject,
+	buildRecipients as buildReplyRecipients,
+	buildReplySubject,
+} from '../ReplyBuilder'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -252,6 +269,134 @@ export default {
 			mailbox,
 			updated,
 		})
+	},
+	async showMessageComposer({ commit, dispatch, getters }, { type = 'imap', data = {}, reply, forwardedMessages = [], templateMessageId }) {
+		if (reply) {
+			const original = await dispatch('fetchMessage', reply.data.databaseId)
+
+			// Fetch and transform the body into a rich text object
+			if (original.hasHtmlBody) {
+				const resp = await Axios.get(
+					generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
+						id: original.databaseId,
+					})
+				)
+
+				data.body = html(resp.data)
+			} else {
+				data.body = plain(original.body)
+			}
+
+			if (reply.mode === 'reply') {
+				logger.debug('Show simple reply composer', { reply })
+				commit('showMessageComposer', {
+					data: {
+						accountId: reply.data.accountId,
+						to: reply.data.from,
+						cc: [],
+						subject: buildReplySubject(reply.data.subject),
+						body: data.body,
+						originalBody: data.body,
+						replyTo: reply.data,
+					},
+				})
+				return
+			} else if (reply.mode === 'replyAll') {
+				logger.debug('Show reply all reply composer', { reply })
+				const account = getters.getAccount(reply.data.accountId)
+				const recipients = buildReplyRecipients(reply.data, {
+					email: account.emailAddress,
+					label: account.name,
+				})
+				commit('showMessageComposer', {
+					data: {
+						accountId: reply.data.accountId,
+						to: recipients.to,
+						cc: recipients.cc,
+						subject: buildReplySubject(reply.data.subject),
+						body: data.body,
+						originalBody: data.body,
+						replyTo: reply.data,
+					},
+				})
+				return
+			} else if (reply.mode === 'forward') {
+				logger.debug('Show forward composer', { reply })
+				commit('showMessageComposer', {
+					data: {
+						accountId: reply.data.accountId,
+						to: [],
+						cc: [],
+						subject: buildForwardSubject(reply.data.subject),
+						body: data.body,
+						originalBody: data.body,
+						forwardFrom: reply.data,
+					},
+				})
+				return
+			}
+		} else if (templateMessageId) {
+			const message = await dispatch('fetchMessage', templateMessageId)
+			// Merge the original into any existing data
+			data = {
+				...data,
+				message,
+			}
+
+			// Fetch and transform the body into a rich text object
+			if (message.hasHtmlBody) {
+				const resp = await Axios.get(
+					generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
+						id: templateMessageId,
+					})
+				)
+
+				data.body = html(resp.data)
+			} else {
+				data.body = plain(message.body)
+			}
+
+			// TODO: implement attachments
+			if (message.attachments.length) {
+				showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
+			}
+		}
+
+		// Stop schedule when editing outbox messages and backup sendAt timestamp
+		let originalSendAt
+		if (type === 'outbox' && data.id && data.sendAt) {
+			originalSendAt = data.sendAt
+			const message = {
+				...data,
+				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+			}
+			await dispatch('outbox/stopMessage', { message })
+		}
+
+		commit('showMessageComposer', {
+			type,
+			data,
+			forwardedMessages,
+			templateMessageId,
+			originalSendAt,
+		})
+	},
+	async closeMessageComposer({ commit, dispatch, getters }, { restoreOriginalSendAt }) {
+		// Restore original sendAt timestamp when requested
+		const message = getters.composerMessage
+		if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
+			const body = message.data.body
+			await dispatch('outbox/updateMessage', {
+				id: message.data.id,
+				message: {
+					...message.data,
+					body: message.data.isHtml ? body.value : toPlain(body).value,
+					sendAt: message.options.originalSendAt,
+				},
+			})
+		}
+
+		commit('hideMessageComposer')
 	},
 	async fetchEnvelope({ commit, getters }, id) {
 		const cached = getters.getEnvelope(id)
@@ -577,7 +722,7 @@ export default {
 		try {
 			// Make sure the priority inbox is updated as well
 			logger.info('updating priority inbox')
-			for (const query of ['is:important not:starred', 'is:starred not:important', 'not:starred not:important']) {
+			for (const query of [priorityImportantQuery, priorityStarredQuery, priorityOtherQuery]) {
 				logger.info("sync'ing priority inbox section", { query })
 				const mailbox = getters.getMailbox(UNIFIED_INBOX_ID)
 				const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]
@@ -750,6 +895,14 @@ export default {
 			})
 		}
 		return message
+	},
+	async fetchItineraries({ commit }, id) {
+		const itineraries = await fetchMessageItineraries(id)
+		commit('addMessageItineraries', {
+			id,
+			itineraries,
+		})
+		return itineraries
 	},
 	async deleteMessage({ getters, commit }, { id }) {
 		commit('removeEnvelope', { id })

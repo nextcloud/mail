@@ -36,12 +36,15 @@ import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
+import FontPlugin from '@ckeditor/ckeditor5-font/src/font'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
+import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin'
+import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin'
 
 import { getLanguage } from '@nextcloud/l10n'
@@ -81,8 +84,8 @@ export default {
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
-			plugins.push(...[HeadingPlugin, AlignmentPlugin, BoldPlugin, ItalicPlugin, BlockQuotePlugin, LinkPlugin, ListStyle])
-			toolbar.unshift(...['heading', 'alignment', 'bold', 'italic', 'bulletedList', 'numberedList', 'blockquote', 'link'])
+			plugins.push(...[HeadingPlugin, AlignmentPlugin, BoldPlugin, ItalicPlugin, BlockQuotePlugin, LinkPlugin, ListStyle, FontPlugin, RemoveFormat, StrikethroughPlugin])
+			toolbar.unshift(...['heading', 'fontFamily', 'fontSize', 'bold', 'italic', 'fontColor', 'alignment', 'bulletedList', 'numberedList', 'blockquote', 'fontBackgroundColor', 'strikethrough', 'link', 'removeFormat'])
 		}
 
 		return {

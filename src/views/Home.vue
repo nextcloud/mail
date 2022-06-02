@@ -1,11 +1,13 @@
 <template>
-	<Content v-shortkey.once="['c']"
-		app-name="mail"
-		@shortkey.native="onNewMessage">
+	<Content app-name="mail">
 		<Navigation />
-		<MailboxThread v-if="activeAccount"
+		<Outbox v-if="$route.name === 'outbox'" />
+		<MailboxThread v-else-if="activeAccount"
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
+		<NewMessageModal
+			v-if="$store.getters.showMessageComposer"
+			@close="onCloseModal" />
 	</Content>
 </template>
 
@@ -15,7 +17,9 @@ import Content from '@nextcloud/vue/dist/Components/Content'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import logger from '../logger'
 import MailboxThread from '../components/MailboxThread'
+import NewMessageModal from '../components/NewMessageModal'
 import Navigation from '../components/Navigation'
+import Outbox from '../components/Outbox'
 
 export default {
 	name: 'Home',
@@ -23,6 +27,8 @@ export default {
 		Content,
 		MailboxThread,
 		Navigation,
+		NewMessageModal,
+		Outbox,
 	},
 	mixins: [isMobile],
 	computed: {
@@ -75,7 +81,7 @@ export default {
 				name: 'message',
 				params: {
 					mailboxId: firstMailbox.databaseId,
-					threadId: 'new',
+					threadId: 'mailto',
 				},
 				query: {
 					to: this.$route.query.to,
@@ -88,16 +94,6 @@ export default {
 		}
 	},
 	methods: {
-		onNewMessage() {
-			// FIXME: assumes that we're on the 'message' route already
-			this.$router.push({
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'new',
-				},
-			})
-		},
 		hideMessage() {
 			this.$router.replace({
 				name: 'mailbox',
@@ -106,6 +102,9 @@ export default {
 					filter: this.$route.params?.filter,
 				},
 			})
+		},
+		async onCloseModal(opts) {
+			await this.$store.dispatch('closeMessageComposer', opts ?? {})
 		},
 	},
 }

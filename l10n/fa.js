@@ -3,15 +3,17 @@ OC.L10N.register(
     {
     "Auto detect failed. Please use manual mode." : "شناسایی خودکار با شکست مواجه شد. لطفا از حالت دستی استفاده کنید.",
     "Updating account failed: " : "به روزرسانی حساب انجام نشد:",
-    "Creating account failed: " : "ایجاد حساب کاربری انجام نشد:",
     "Embedded message %s" : "پیام درج شده%s",
     "Important mail" : "ایمیل‌های مهم",
+    "Important" : "مهم",
+    "Work" : "کار",
+    "Personal" : "شخصی",
+    "Later" : "بعدا",
     "Mails" : "ایمیل‌ها",
     "Mail" : "ایمیل",
     "💌 A mail app for Nextcloud" : "یک برنامه نامه پستی برای Nextcloud",
     "Auto" : "خودکار",
     "Name" : "نام",
-    "Mail Address" : "آدرس رایانامه",
     "Password" : "گذرواژه",
     "Manual" : "کتابچه راهنمای",
     "IMAP Settings" : "تنظیمات IMAP",
@@ -38,6 +40,7 @@ OC.L10N.register(
     "Writing mode" : "حالت نوشتن",
     "Preferred writing mode for new messages and replies." : "حالت نوشتن برای پیام ها و پاسخ های جدید ترجیح داده شده است.",
     "Mail server" : "سرور پست الکترونیکی",
+    "Email address" : "آدرس ایمیل",
     "Cancel" : "لغو",
     "Add mail account" : "حساب کاربری پست الکترونیکی اضافه کنید",
     "Use Gravatar and favicon avatars" : "از آواتارهای Gravatar و Favicon استفاده کنید",
@@ -57,28 +60,32 @@ OC.L10N.register(
     "Add attachment from Files" : "پیوست را از پرونده ها اضافه کنید",
     "Enable formatting" : "قالب بندی را فعال کنید",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "آیا به دنبال راهی برای رمزگذاری ایمیل های خود هستید؟ افزونه مرورگر Mailvelope را نصب کنید!",
+    "Enter a date" : "تاریخ را وارد کنید",
     "Uploading attachments …" : "درحال بارگذاری پیوستها …",
     "Sending …" : "در حال ارسال ...",
     "Error sending your message" : "خطایی در ارسال پیام شما",
     "Go back" : "برگرد",
     "Retry" : "تلاش دوباره",
     "Message sent!" : "پیام ارسال شد!",
-    "Write another message" : "پیام دیگری بنویسید",
     "Send" : "ارسال",
     "Uploading {percent}% …" : "در حال بارگیری {درصد… ...",
     "Choose a file to add as attachment" : "پرونده ای را برای اضافه کردن به عنوان پیوست انتخاب کنید",
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",
     "Draft: " : "پیش نویس:",
-    "Mark unread" : "علامت گذاری به عنوان خوانده نشده",
-    "Mark read" : "علامت گذاری به عنوان خوانده شده",
+    "Unfavorite" : "ناخوشایند",
+    "Favorite" : "مورد‌ ‌علاقه‌",
+    "Read" : "خواندن",
     "Unselect" : "لغو انتخاب",
     "Select" : "انتخاب",
+    "Edit tags" : "ویرایش تگ ها",
+    "More actions" : "اقدامات بیشتر",
     "Blind copy recipients only" : "فقط گیرندگان کپی کور",
     "Report this bug" : "گزارش این اشکال",
+    "All day" : "تمام روز",
+    "Create" : "ساخت",
     "Could not create event" : "رویداد ایجاد نشد",
     "Could not open mailbox" : "صندوق پستی امکان پذیر نیست",
-    "Loading messages" : "بارگیری پیام ها",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "نمایه سازی پیام های شما این می تواند کمی برای صندوق های پستی بزرگتر کمی طولانی شود.",
     "Choose" : "انتخاب کنید",
     "Favorites" : "علاقه مندی ها",
@@ -106,13 +113,20 @@ OC.L10N.register(
     "Mark all as read" : "علامت همه به عنوان خوانده‌شده",
     "Edit name" : "ویرایش نام",
     "Clear cache" : "پاک‌سازی انباره",
-    "Not found" : "پیدا نشد",
-    "Could not load your draft" : "پیش نویس شما بارگیری نمی شود",
-    "Could not load original message" : "پیام اصلی بارگیری نشد",
+    "Message sent" : "پیام ارسال شد",
     "No message selected" : "پیامی انتخاب نشده است",
+    "Delete" : "حذف",
+    "Copy to clipboard" : "کپی کردن به حافظه موقت",
+    "Add" : "افزودن",
+    "Disabled" : "غیرفعال شده",
+    "Enabled" : "فعال شده",
     "Signature …" : "امضا ...",
     "Save signature" : "ذخیره امضا",
-    "Delete" : "حذف",
+    "Set" : "تنظیم",
+    "Unset" : "تنظیم نشده است",
+    "Add tag" : "برچسب اضافه کنید",
+    "Not found" : "پیدا نشد",
+    "Remove" : "حذف",
     "Import into {calendar}" : "{وارد {تقویم",
     "Event imported into {calendar}" : "{رویداد وارد شده به {تقویم",
     "Airplane" : "هواپیما",
@@ -123,6 +137,7 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "آموزش از {depStation} تا {arrStation} Train",
     "Mail app" : "برنامه پست الکترونیکی",
     "The mail app allows users to read mails on their IMAP accounts." : "برنامه نامه الکترونیکی به کاربران این امکان را می دهد تا نامه ها را در حساب های IMAP خود بخوانند.",
+    "Reset" : "بازنشاندن",
     "Email: {email}" : "ایمیل: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} on {host}: {port} (رمزگذاری {ssl))",
     "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP: {user} on {host}: {port} (رمزگذاری s ssl))",
@@ -144,7 +159,6 @@ OC.L10N.register(
     "Search" : "جستجو",
     "Refresh" : "تازه‌سازی",
     "Connect your mail account" : "حساب ایمیل خود را وصل کنید",
-    "Unexpected error during account creation" : "خطای غیر منتظره هنگام ایجاد حساب",
     "Itinerary for {type} is not supported yet" : "برنامه سفر برای {نوع yet هنوز پشتیبانی نمی شود",
     "All" : "همه",
     "Archive" : "آرشیو",

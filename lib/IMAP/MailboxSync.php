@@ -90,41 +90,45 @@ class MailboxSync {
 
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$namespaces = $client->getNamespaces([], [
-				'ob_return' => true,
-			]);
-			$account->getMailAccount()->setPersonalNamespace(
-				$this->getPersonalNamespace($namespaces)
+			try {
+				$namespaces = $client->getNamespaces([], [
+					'ob_return' => true,
+				]);
+				$account->getMailAccount()->setPersonalNamespace(
+					$this->getPersonalNamespace($namespaces)
+				);
+			} catch (Horde_Imap_Client_Exception $e) {
+				$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage());
+			}
+
+			try {
+				$folders = $this->folderMapper->getFolders($account, $client);
+				$this->folderMapper->getFoldersStatus($folders, $client);
+			} catch (Horde_Imap_Client_Exception $e) {
+				throw new ServiceException(
+					sprintf("IMAP error synchronizing account %d: %s", $account->getId(), $e->getMessage()),
+					(int)$e->getCode(),
+					$e
+				);
+			}
+			$this->folderMapper->detectFolderSpecialUse($folders);
+
+			$old = $this->mailboxMapper->findAll($account);
+			$indexedOld = array_combine(
+				array_map(function (Mailbox $mb) {
+					return $mb->getName();
+				}, $old),
+				$old
 			);
-		} catch (Horde_Imap_Client_Exception $e) {
-			$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage());
-		}
 
-		try {
-			$folders = $this->folderMapper->getFolders($account, $client);
-			$this->folderMapper->getFoldersStatus($folders, $client);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException(
-				sprintf("IMAP error synchronizing account %d: %s", $account->getId(), $e->getMessage()),
-				(int)$e->getCode(),
-				$e
+			$this->persist($account, $folders, $indexedOld);
+
+			$this->dispatcher->dispatchTyped(
+				new MailboxesSynchronizedEvent($account)
 			);
+		} finally {
+			$client->logout();
 		}
-		$this->folderMapper->detectFolderSpecialUse($folders);
-
-		$old = $this->mailboxMapper->findAll($account);
-		$indexedOld = array_combine(
-			array_map(function (Mailbox $mb) {
-				return $mb->getName();
-			}, $old),
-			$old
-		);
-
-		$this->persist($account, $folders, $indexedOld);
-
-		$this->dispatcher->dispatchTyped(
-			new MailboxesSynchronizedEvent($account)
-		);
 	}
 
 	/**
@@ -137,7 +141,6 @@ class MailboxSync {
 	 */
 	public function syncStats(Account $account, Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
-
 		try {
 			$stats = $this->folderMapper->getFoldersStatusAsObject($client, $mailbox->getName());
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -147,6 +150,8 @@ class MailboxSync {
 				(int)$e->getCode(),
 				$e
 			);
+		} finally {
+			$client->logout();
 		}
 
 		$mailbox->setMessages($stats->getTotal());

@@ -13,15 +13,19 @@
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading"
 					autofocus>
-				<label for="auto-address">{{ t('mail', 'Mail Address') }}</label>
+				<label for="auto-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
 				<input
 					id="auto-address"
-					v-model="autoConfig.emailAddress"
+					v-model.lazy="autoConfig.emailAddress"
 					type="email"
-					:placeholder="t('mail', 'Mail Address')"
+					:placeholder="t('mail', 'name@example.org')"
 					:disabled="loading"
-					required>
-				<label for="auto-password">{{ t('mail', 'Password') }}</label>
+					required
+					@blur="isValidEmail(autoConfig.emailAddress)">
+				<p v-if="!isValidEmail(autoConfig.emailAddress)" class="account-form--error">
+					{{ t('mail', 'Please enter an email of the format name@example.com') }}
+				</p>
+				<label for="auto-password" class="account-form__label--required">{{ t('mail', 'Password') }}</label>
 				<input
 					id="auto-password"
 					v-model="autoConfig.password"
@@ -38,17 +42,21 @@
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading">
-				<label for="man-address">{{ t('mail', 'Mail Address') }}</label>
+				<label for="man-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
 				<input
 					id="man-address"
-					v-model="manualConfig.emailAddress"
+					v-model.lazy="manualConfig.emailAddress"
 					type="email"
-					:placeholder="t('mail', 'Mail Address')"
+					:placeholder="t('mail', 'name@example.org')"
 					:disabled="loading"
-					required>
+					required
+					@blur="isValidEmail(manualConfig.emailAddress)">
+				<p v-if="!isValidEmail(manualConfig.emailAddress)" class="account-form--error">
+					{{ t('mail', 'Please enter an email of the format name@example.com') }}
+				</p>
 
 				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
-				<label for="man-imap-host">{{ t('mail', 'IMAP Host') }}</label>
+				<label for="man-imap-host" class="account-form__label--required">{{ t('mail', 'IMAP Host') }}</label>
 				<input
 					id="man-imap-host"
 					v-model="manualConfig.imapHost"
@@ -56,7 +64,9 @@
 					:placeholder="t('mail', 'IMAP Host')"
 					:disabled="loading"
 					required>
-				<h4>{{ t('mail', 'IMAP Security') }}</h4>
+				<h4 class="account-form__heading--required">
+					{{ t('mail', 'IMAP Security') }}
+				</h4>
 				<div class="flex-row">
 					<input
 						id="man-imap-sec-none"
@@ -95,7 +105,7 @@
 						for="man-imap-sec-tls"
 						:class="{primary: manualConfig.imapSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 				</div>
-				<label for="man-imap-port">{{ t('mail', 'IMAP Port') }}</label>
+				<label for="man-imap-port" class="account-form__label--required">{{ t('mail', 'IMAP Port') }}</label>
 				<input
 					id="man-imap-port"
 					v-model="manualConfig.imapPort"
@@ -103,7 +113,7 @@
 					:placeholder="t('mail', 'IMAP Port')"
 					:disabled="loading"
 					required>
-				<label for="man-imap-user">{{ t('mail', 'IMAP User') }}</label>
+				<label for="man-imap-user" class="account-form__label--required">{{ t('mail', 'IMAP User') }}</label>
 				<input
 					id="man-imap-user"
 					v-model="manualConfig.imapUser"
@@ -111,7 +121,7 @@
 					:placeholder="t('mail', 'IMAP User')"
 					:disabled="loading"
 					required>
-				<label for="man-imap-password">{{ t('mail', 'IMAP Password') }}</label>
+				<label for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
 				<input
 					id="man-imap-password"
 					v-model="manualConfig.imapPassword"
@@ -121,7 +131,7 @@
 					required>
 
 				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
-				<label for="man-smtp-host">{{ t('mail', 'SMTP Host') }}</label>
+				<label for="man-smtp-host" class="account-form__label--required">{{ t('mail', 'SMTP Host') }}</label>
 				<input
 					id="man-smtp-host"
 					ref="smtpHost"
@@ -131,7 +141,9 @@
 					:placeholder="t('mail', 'SMTP Host')"
 					:disabled="loading"
 					required>
-				<h4>{{ t('mail', 'SMTP Security') }}</h4>
+				<h4 class="account-form__heading--required">
+					{{ t('mail', 'SMTP Security') }}
+				</h4>
 				<div class="flex-row">
 					<input
 						id="man-smtp-sec-none"
@@ -170,7 +182,7 @@
 						for="man-smtp-sec-tls"
 						:class="{primary: manualConfig.smtpSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 				</div>
-				<label for="man-smtp-port">{{ t('mail', 'SMTP Port') }}</label>
+				<label for="man-smtp-port" class="account-form__label--required">{{ t('mail', 'SMTP Port') }}</label>
 				<input
 					id="man-smtp-port"
 					v-model="manualConfig.smtpPort"
@@ -178,7 +190,7 @@
 					:placeholder="t('mail', 'SMTP Port')"
 					:disabled="loading"
 					required>
-				<label for="man-smtp-user">{{ t('mail', 'SMTP User') }}</label>
+				<label for="man-smtp-user" class="account-form__label--required">{{ t('mail', 'SMTP User') }}</label>
 				<input
 					id="man-smtp-user"
 					v-model="manualConfig.smtpUser"
@@ -186,7 +198,7 @@
 					:placeholder="t('mail', 'SMTP User')"
 					:disabled="loading"
 					required>
-				<label for="man-smtp-password">{{ t('mail', 'SMTP Password') }}</label>
+				<label for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
 				<input
 					id="man-smtp-password"
 					v-model="manualConfig.smtpPassword"
@@ -196,12 +208,28 @@
 					required>
 			</Tab>
 		</Tabs>
-		<slot name="feedback" />
-		<input type="submit"
-			class="primary"
-			:disabled="loading"
-			:value="submitButtonText"
-			@click.prevent="onSubmit">
+		<div class="account-form__submit-buttons">
+			<button v-if="mode === 'auto'"
+				class="primary account-form__submit-button"
+				type="submit"
+				:disabled="isDisabledAuto"
+				@click.prevent="onSubmit">
+				<span v-if="loading" class="icon-loading-small account-form__submit-button__spinner" />
+				{{ submitButtonText }}
+			</button>
+
+			<button v-else-if="mode === 'manual'"
+				class="primary account-form__submit-button"
+				type="submit"
+				:disabled="isDisabledManual"
+				@click.prevent="onSubmit">
+				<span v-if="loading" class="icon-loading-small account-form__submit-button__spinner" />
+				{{ submitButtonText }}
+			</button>
+		</div>
+		<div class="account-form--feedback">
+			<slot name="feedback" />
+		</div>
 	</form>
 </template>
 
@@ -266,12 +294,38 @@ export default {
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
 			},
-			submitButtonText: this.account ? t('mail', 'Save') : t('mail', 'Connect'),
 		}
 	},
 	computed: {
 		settingsPage() {
 			return this.account !== undefined
+		},
+
+		isDisabledAuto() {
+			switch (this.mode === 'auto') {
+			case !this.autoConfig.emailAddress || !this.isValidEmail(this.autoConfig.emailAddress) || !this.autoConfig.password :
+				return true
+			}
+			return this.loading
+		},
+
+		isDisabledManual() {
+			switch (this.mode === 'manual') {
+			case !this.manualConfig.emailAddress || !this.isValidEmail(this.manualConfig.emailAddress)
+			|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
+			|| !this.manualConfig.imapUser || !this.manualConfig.imapPassword
+			|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
+			|| !this.manualConfig.smtpUser || !this.manualConfig.smtpPassword:
+				return true
+			}
+			return this.loading
+		},
+
+		submitButtonText() {
+			if (this.loading) {
+				return t('mail', 'Connecting')
+			}
+			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
 		},
 	},
 	methods: {
@@ -332,20 +386,29 @@ export default {
 					...this.autoConfig,
 				})
 			} else {
+				// Removing additional whitespaces from manual configuration hosts
+				// In order to avoid issues when copy pasting imap & smtp hosts from providers documentations,
+				// which may have whitespaces.
 				return this.save({
 					autoDetect: false,
 					...this.manualConfig,
+					imapHost: this.manualConfig.imapHost.trim(),
+					smtpHost: this.manualConfig.smtpHost.trim(),
 				})
 			}
 		},
 		onSubmit(event) {
-			console.debug('account form submitted', { event })
-
-			this.loading = true
-
-			this.saveChanges()
-				.catch((error) => logger.error('could not save account details', { error }))
-				.then(() => (this.loading = false))
+			if (!this.isDisabledManual || !this.isDisabledAuto) {
+				console.debug('account form submitted', { event })
+				this.loading = true
+				this.saveChanges()
+					.catch((error) => logger.error('could not save account details', { error }))
+					.then(() => (this.loading = false))
+			}
+		},
+		isValidEmail(email) {
+			const regExpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			return regExpEmail.test(email)
 		},
 	},
 }
@@ -412,5 +475,34 @@ input[type='radio'] {
 input[type='radio'][disabled] + label {
 	cursor: default;
 	opacity: 0.5;
+}
+.account-form__label--required:after {
+	content:" *";
+}
+.account-form__heading--required:after {
+	content:" *";
+}
+.account-form__submit-buttons {
+	display: flex;
+	justify-content: center;
+	margin-top: 5px;
+}
+.account-form__submit-button {
+	display: flex;
+	align-items: center;
+}
+.account-form__submit-button__spinner {
+	margin: 0 10px 0 0;
+	height: auto;
+	width: auto;
+}
+.account-form--feedback {
+	color: var(--color-text-maxcontrast);
+	margin-top: 5px;
+	text-align: center;
+}
+.account-form--error {
+	text-align: left;
+	font-size: 14px;
 }
 </style>

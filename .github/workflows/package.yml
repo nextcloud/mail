@@ -4,7 +4,7 @@ on:
     pull_request:
     push:
         branches:
-            - master
+            - main
             - stable*
 
 jobs:
@@ -13,11 +13,13 @@ jobs:
     name: Build release tarball
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Set up Node
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v3
         with:
           node-version: 14.x
+      - name: Set up npm
+        run: npm install -g npm@7
       - name: Set up php$
         uses: shivammathur/setup-php@master
         with:
@@ -31,7 +33,7 @@ jobs:
           sudo dpkg -i krankerl_0.13.0_amd64.deb
       - name: Package app
         run: krankerl package
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           path: build/artifacts/mail.tar.gz
           if-no-files-found: error

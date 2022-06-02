@@ -2,6 +2,7 @@
   - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -78,16 +79,16 @@
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
-				<router-link
-					:to="hasMultipleRecipients ? replyAllLink : replyOneLink"
+				<button
 					:class="{
 						'icon-reply-all-white': hasMultipleRecipients,
 						'icon-reply-white': !hasMultipleRecipients,
 						primary: expanded,
 					}"
-					class="button">
+					class="button"
+					@click="onReply">
 					<span class="action-label"> {{ t('mail', 'Reply') }}</span>
-				</router-link>
+				</button>
 				<MenuEnvelope class="app-content-list-item-menu"
 					:envelope="envelope"
 					:with-reply="false"
@@ -182,32 +183,6 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
-		replyOneLink() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'reply',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
-		replyAllLink() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'replyAll',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
 		route() {
 			return {
 				name: 'message',
@@ -263,8 +238,8 @@ export default {
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
 			try {
-				const message = this.message = await this.$store.dispatch('fetchMessage', this.envelope.databaseId)
-				logger.debug(`message ${this.envelope.databaseId} fetched`, { message })
+				this.message = await this.$store.dispatch('fetchMessage', this.envelope.databaseId)
+				logger.debug(`message ${this.envelope.databaseId} fetched`, { message: this.message })
 
 				if (!this.envelope.flags.seen) {
 					logger.info('Starting timer to mark message as seen/read')
@@ -278,6 +253,26 @@ export default {
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
 			}
+
+			// Fetch itineraries if they haven't been included in the message data
+			if (this.message && !this.message.itineraries) {
+				await this.fetchItineraries()
+			}
+		},
+		async fetchItineraries() {
+			// Sanity check before actually making the request
+			if (!this.message.hasHtmlBody && this.message.attachments.length === 0) {
+				return
+			}
+
+			logger.debug(`Fetching itineraries for message ${this.envelope.databaseId}`)
+
+			try {
+				const itineraries = await this.$store.dispatch('fetchItineraries', this.envelope.databaseId)
+				logger.debug(`Itineraries of message ${this.envelope.databaseId} fetched`, { itineraries })
+			} catch (error) {
+				logger.error(`Could not fetch itineraries of message ${this.envelope.databaseId}`, { error })
+			}
 		},
 		scrollToCurrentEnvelope() {
 			// Account for global navigation bar and thread header
@@ -285,6 +280,14 @@ export default {
 			const threadHeader = document.querySelector('#mail-thread-header').clientHeight
 			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
 			window.scrollTo({ top })
+		},
+		onReply() {
+			this.$store.dispatch('showMessageComposer', {
+				reply: {
+					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
+					data: this.envelope,
+				},
+			})
 		},
 		onToggleImportant() {
 			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)

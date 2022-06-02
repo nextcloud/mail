@@ -49,6 +49,9 @@ class FixBackgroundJobs implements IRepairStep {
 		return 'Insert background jobs for all accounts';
 	}
 
+	/**
+	 * @return void
+	 */
 	public function run(IOutput $output) {
 		/** @var MailAccount[] $accounts */
 		$accounts = $this->mapper->getAllAccounts();

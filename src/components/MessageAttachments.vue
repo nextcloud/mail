@@ -32,7 +32,11 @@
 				:is-image="attachment.isImage"
 				:is-calendar-event="attachment.isCalendarEvent"
 				:mime="attachment.mime"
-				:mime-url="attachment.mimeUrl" />
+				:mime-url="attachment.mimeUrl"
+				@click="showViewer(attachment)" />
+			<AttachmentImageViewer v-if="attachmentImageURL && showPreview"
+				:url="attachmentImageURL"
+				@close="showPreview = false" />
 		</div>
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
 			<button
@@ -58,10 +62,12 @@ import { saveAttachmentsToFiles } from '../service/AttachmentService'
 
 import MessageAttachment from './MessageAttachment'
 import Logger from '../logger'
+import AttachmentImageViewer from './AttachmentImageViewer'
 
 export default {
 	name: 'MessageAttachments',
 	components: {
+		AttachmentImageViewer,
 		MessageAttachment,
 	},
 	props: {
@@ -77,6 +83,8 @@ export default {
 	data() {
 		return {
 			savingToCloud: false,
+			showPreview: false,
+			attachmentImageURL: '',
 		}
 	},
 	computed: {
@@ -117,6 +125,12 @@ export default {
 		},
 		downloadZip() {
 			window.location = this.zipUrl
+		},
+		showViewer(attachment) {
+			if (attachment.isImage) {
+				this.showPreview = true
+				this.attachmentImageURL = attachment.downloadUrl
+			}
 		},
 	},
 }

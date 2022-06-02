@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
       - stable*
 
 jobs:
@@ -12,11 +12,11 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              ocp-version: [ 'dev-master', 'dev-stable23', 'dev-stable22', 'v20.0.4' ]
+              ocp-version: [ 'dev-master', 'dev-stable24', 'dev-stable23', 'dev-stable22', 'dev-stable21' ]
       name: Nextcloud ${{ matrix.ocp-version }}
       steps:
           - name: Checkout
-            uses: actions/checkout@master
+            uses: actions/checkout@v3
           - name: Set up php
             uses: shivammathur/setup-php@master
             with:
@@ -25,7 +25,11 @@ jobs:
                 coverage: none
           - name: Install dependencies
             run: composer i
-          - name: Install dependencies
+          - name: Install OCP package
+            if: ${{ matrix.ocp-version != 'dev-master' && matrix.ocp-version != 'dev-stable24'  }}
             run: composer require --dev christophwurst/nextcloud:${{ matrix.ocp-version }}
+          - name: Install OCP package
+            if: ${{ matrix.ocp-version == 'dev-master' || matrix.ocp-version == 'dev-stable24' }}
+            run: composer require --dev christophwurst/nextcloud:${{ matrix.ocp-version }} --ignore-platform-reqs
           - name: Run coding standards check
             run: composer run psalm

@@ -41,6 +41,7 @@ use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
 use function count;
+use function fclose;
 use function in_array;
 use function iterator_to_array;
 use function max;
@@ -142,6 +143,15 @@ class MessageMapper {
 			$max,
 			$lower + $estimatedPageSize
 		);
+		if ($lower > $upper) {
+			$this->logger->debug("Range for findAll did not find any (not already known) messages and all messages of mailbox $mailbox have been fetched.");
+			return [
+				'messages' => [],
+				'all' => true,
+				'total' => 0,
+			];
+		}
+
 		$this->logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
 
 		$query = new Horde_Imap_Client_Fetch_Query();
@@ -511,6 +521,11 @@ class MessageMapper {
 				continue;
 			}
 
+			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
+				// We are looking for specific parts only and this is not one of them
+				continue;
+			}
+
 			$stream = $messageData->getBodyPart($key, true);
 			$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 			if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
@@ -520,6 +535,7 @@ class MessageMapper {
 				'usestream' => true,
 			]);
 			$decoded = $part->getContents();
+			fclose($stream);
 
 			$attachments[] = $decoded;
 		}
@@ -568,6 +584,11 @@ class MessageMapper {
 				continue;
 			}
 
+			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
+				// We are looking for specific parts only and this is not one of them
+				continue;
+			}
+
 			$stream = $messageData->getBodyPart($key, true);
 			$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 			if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
@@ -581,6 +602,7 @@ class MessageMapper {
 				'name' => $part->getName(),
 				'size' => $part->getSize()
 			];
+			fclose($stream);
 		}
 		return $attachments;
 	}
@@ -592,7 +614,7 @@ class MessageMapper {
 	 * @param array $attachmentIds
 	 * @return Horde_Imap_Client_Fetch_Query
 	 */
-	private function buildAttachmentsPartsQuery($structure, array $attachmentIds) : Horde_Imap_Client_Fetch_Query {
+	private function buildAttachmentsPartsQuery(Horde_Mime_Part $structure, array $attachmentIds) : Horde_Imap_Client_Fetch_Query {
 		$partsQuery = new Horde_Imap_Client_Fetch_Query();
 		$partsQuery->fullText();
 		foreach ($structure->partIterator() as $part) {
@@ -601,7 +623,8 @@ class MessageMapper {
 				// Ignore message header
 				continue;
 			}
-			if (!empty($attachmentIds) && !in_array($part->getMIMEId(), $attachmentIds, true)) {
+
+			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
 				// We are looking for specific parts only and this is not one of them
 				continue;
 			}

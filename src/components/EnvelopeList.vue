@@ -164,6 +164,7 @@
 				:mailbox="mailbox"
 				:selected="selection.includes(env.databaseId)"
 				:select-mode="selectMode"
+				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, ...$event)"
@@ -243,6 +244,7 @@ export default {
 			selection: [],
 			showMoveModal: false,
 			lastToggledIndex: undefined,
+			forwardedMessages: [],
 		}
 	},
 	computed: {
@@ -289,6 +291,10 @@ export default {
 				default:
 					return translated
 			}
+		},
+		hasMultipleAccounts() {
+			const mailboxIds = this.envelopes.map(envelope => envelope.mailboxId)
+			return Array.from(new Set(mailboxIds)).length > 1
 		},
 	},
 	watch: {
@@ -355,54 +361,63 @@ export default {
 			this.unselectAll()
 		},
 		async deleteAllSelected() {
-			for (const envelope of this.selectedEnvelopes) {
-				// Navigate if the message being deleted is the one currently viewed
-				// Shouldn't we simply use $emit here?
-				// Would be better to navigate after all messages have been deleted
-				if (envelope.databaseId === this.$route.params.threadId) {
-					const index = this.envelopes.indexOf(envelope)
-					let next
-					if (index === 0) {
-						next = this.envelopes[index + 1]
-					} else {
-						next = this.envelopes[index - 1]
-					}
+			let nextEnvelopeToNavigate
+			let isAllSelected
 
-					if (next) {
-						this.$router.push({
-							name: 'message',
-							params: {
-								mailboxId: this.$route.params.mailboxId,
-								threadId: next.databaseId,
-							},
-						})
-					}
-				}
-				logger.info(`deleting thread ${envelope.threadRootId}`)
-				try {
-					await this.$store.dispatch('deleteThread', {
-						envelope,
-					})
-				} catch (error) {
-					showError(await matchError(error, {
-						[NoTrashMailboxConfiguredError.getName()]() {
-							return t('mail', 'No trash mailbox configured')
-						},
-						default(error) {
-							logger.error('could not delete message', error)
-							return t('mail', 'Could not delete message')
-						},
-					}))
+			if (this.selectedEnvelopes.length === this.envelopes.length) {
+				isAllSelected = true
+			} else {
+				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) =>
+					selectedEnvelope.databaseId === this.$route.params.threadId)
+
+				// one of threads is selected
+				if (indexSelectedEnvelope !== -1) {
+					const lastSelectedEnvelope = this.selectedEnvelopes[this.selectedEnvelopes.length - 1]
+					const diff = this.envelopes.filter(envelope => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
+					const lastIndex = diff.indexOf(lastSelectedEnvelope)
+					nextEnvelopeToNavigate = diff[lastIndex === 0 ? 1 : lastIndex - 1]
 				}
 			}
 
-			// Get new messages
-			this.$store.dispatch('fetchNextEnvelopes', {
-				mailboxId: this.mailbox.databaseId,
-				query: this.searchQuery,
-				quantity: this.selectedEnvelopes.length,
+			await Promise.all(this.selectedEnvelopes.map(async(envelope) => {
+				logger.info(`deleting thread ${envelope.threadRootId}`)
+				await this.$store.dispatch('deleteThread', {
+					envelope,
+				})
+			})).catch(async error => {
+				showError(await matchError(error, {
+					[NoTrashMailboxConfiguredError.getName()]() {
+						return t('mail', 'No trash mailbox configured')
+					},
+					default(error) {
+						logger.error('could not delete message', error)
+						return t('mail', 'Could not delete message')
+					},
+				}))
 			})
+			if (nextEnvelopeToNavigate) {
+				await this.$router.push({
+					name: 'message',
+					params: {
+						mailboxId: this.$route.params.mailboxId,
+						threadId: nextEnvelopeToNavigate.databaseId,
+					},
+				})
 
+				// Get new messages
+				await this.$store.dispatch('fetchNextEnvelopes', {
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery,
+					quantity: this.selectedEnvelopes.length,
+				})
+			} else if (isAllSelected) {
+				await this.$router.push({
+					name: 'mailbox',
+					params: {
+						mailboxId: this.$route.params.mailboxId,
+					},
+				})
+			}
 			this.unselectAll()
 		},
 		setEnvelopeSelected(envelope, selected) {
@@ -442,17 +457,11 @@ export default {
 			this.showMoveModal = true
 		},
 		async forwardSelectedAsAttachment() {
-			const selected = this.selection
-			this.$router.push({
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'new',
-				},
-				query: {
-					forwardedMessages: selected,
-				},
+			this.forwardedMessages = this.selection
+			await this.$store.dispatch('showMessageComposer', {
+				forwardedMessages: this.forwardedMessages,
 			})
+			this.forwardedMessages = []
 			this.unselectAll()
 		},
 		onCloseMoveModal() {

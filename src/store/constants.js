@@ -19,7 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { TOAST_UNDO_TIMEOUT } from '@nextcloud/dialogs'
+
 export const UNIFIED_ACCOUNT_ID = 0
 export const UNIFIED_INBOX_ID = 'unified'
 export const PRIORITY_INBOX_ID = 'priority'
 export const PAGE_SIZE = 20
+export const UNDO_DELAY = TOAST_UNDO_TIMEOUT

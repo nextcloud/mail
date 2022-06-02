@@ -23,10 +23,16 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Service\Group\ContactsGroupService;
 use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
+use function array_map;
+use function mb_strlen;
+use function mb_strpos;
+use function mb_substr;
+use function OCA\Mail\array_flat_map;
 
 class GroupsIntegration {
 
@@ -82,34 +88,38 @@ class GroupsIntegration {
 	}
 
 	/**
-	 * Expands a string of group names to its members email addresses.
+	 * Expands group names to its members
 	 *
-	 * @param string $recipients
+	 * @param Recipient[] $recipients
 	 *
-	 * @return null|string
+	 * @return Recipient[]
 	 */
-	public function expand(string $recipients): ?string {
-		return array_reduce($this->groupServices,
-			function ($carry, $service) {
-				return preg_replace_callback(
-					'/' . preg_quote($this->servicePrefix($service)) . '([^,]+)(,?)/',
-					function ($matches) use ($service) {
-						if (empty($matches[1])) {
-							return '';
-						}
-						$members = $service->getUsers($matches[1]);
-						if (empty($members)) {
-							throw new ServiceException($matches[1] . " ({$service->getNamespace()}) has no members");
-						}
-						$addresses = [];
-						foreach ($members as $m) {
-							if (!empty($m['email'])) {
-								$addresses[] = $m['email'];
-							}
-						}
-						return implode(',', $addresses)
-							. (!empty($matches[2]) && !empty($addresses) ? ',' : '');
-					}, $carry);
-			}, $recipients);
+	public function expand(array $recipients): array {
+		return array_flat_map(function (Recipient $recipient) {
+			foreach ($this->groupServices as $service) {
+				if (mb_strpos($recipient->getEmail(), $this->servicePrefix($service)) !== false) {
+					$groupId = mb_substr(
+						$recipient->getEmail(),
+						mb_strlen($this->servicePrefix($service))
+					);
+					$members = array_filter($service->getUsers($groupId), function (array $member) {
+						return !empty($member['email']);
+					});
+					if (empty($members)) {
+						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
+					}
+					return array_map(function (array $member) use ($recipient) {
+						return Recipient::fromParams([
+							'messageId' => $recipient->getMessageId(),
+							'type' => $recipient->getType(),
+							'label' => $member['name'] ?? $member['email'],
+							'email' => $member['email'],
+						]);
+					}, $members);
+				}
+			}
+
+			return [$recipient];
+		}, $recipients);
 	}
 }

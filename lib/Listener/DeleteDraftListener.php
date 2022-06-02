@@ -33,7 +33,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
-use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -72,9 +72,7 @@ class DeleteDraftListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if ($event instanceof DraftSavedEvent && $event->getDraft() !== null) {
-			$this->deleteDraft($event->getAccount(), $event->getDraft());
-		} elseif ($event instanceof MessageSentEvent && $event->getDraft() !== null) {
+		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent) && $event->getDraft() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraft());
 		}
 	}
@@ -90,6 +88,8 @@ class DeleteDraftListener implements IEventListener {
 		} catch (DoesNotExistException $e) {
 			$this->logger->warning("Account has no draft mailbox set, can't delete the draft");
 			return;
+		} finally {
+			$client->logout();
 		}
 
 		try {

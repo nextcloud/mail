@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\IncompleteSyncException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
@@ -36,6 +38,8 @@ use OCP\BackgroundJob\TimedJob;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function defined;
+use function method_exists;
 use function sprintf;
 
 class SyncJob extends TimedJob {
@@ -75,8 +79,17 @@ class SyncJob extends TimedJob {
 		$this->jobList = $jobList;
 
 		$this->setInterval(3600);
+		/**
+		 * @todo remove checks with 24+
+		 */
+		if (defined('\OCP\BackgroundJob\IJob::TIME_SENSITIVE') && method_exists($this, 'setTimeSensitivity')) {
+			$this->setTimeSensitivity(self::TIME_SENSITIVE);
+		}
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function run($argument) {
 		$accountId = (int)$argument['accountId'];
 
@@ -112,10 +125,19 @@ class SyncJob extends TimedJob {
 				'exception' => $e,
 			]);
 		} catch (Throwable $e) {
-			$this->logger->error('Cron mail sync failed for account {accountId}', [
-				'accountId' => $accountId,
-				'exception' => $e,
-			]);
+			if ($e instanceof ServiceException
+				&& $e->getPrevious() instanceof Horde_Imap_Client_Exception
+				&& $e->getPrevious()->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED) {
+				$this->logger->info('Cron mail sync authentication failed for account {accountId}', [
+					'accountId' => $accountId,
+					'exception' => $e,
+				]);
+			} else {
+				$this->logger->error('Cron mail sync failed for account {accountId}', [
+					'accountId' => $accountId,
+					'exception' => $e,
+				]);
+			}
 		}
 	}
 }

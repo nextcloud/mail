@@ -12,10 +12,11 @@
 		:to="link"
 		:data-envelope-id="data.databaseId"
 		:title="addresses"
-		:details="formatted()">
+		:details="formatted()"
+		@click="onClick">
 		<template #icon>
 			<div
-				v-if="mailbox.isUnified"
+				v-if="mailbox.isUnified && hasMultipleAccounts"
 				class="mail-message-account-color"
 				:style="{'background-color': accountColor}" />
 			<div
@@ -71,80 +72,94 @@
 				{{ data.subject }}
 		</template> -->
 		<template #actions>
-			<ActionButton icon="icon-important"
-				:close-after-click="true"
-				@click.prevent="onToggleImportant">
-				{{
-					isImportant ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-starred"
-				:close-after-click="true"
-				@click.prevent="onToggleFlagged">
-				{{
-					data.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-mail"
-				:close-after-click="true"
-				@click.prevent="onToggleSeen">
-				{{
-					data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-junk"
-				:close-after-click="true"
-				@click.prevent="onToggleJunk">
-				{{
-					data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
-				}}
-			</ActionButton>
-			<ActionButton icon="icon-checkmark"
-				:close-after-click="true"
-				@click.prevent="toggleSelected">
-				{{
-					selected ? t('mail', 'Unselect') : t('mail', 'Select')
-				}}
-			</ActionButton>
-			<ActionButton
-				icon="icon-tag"
-				:close-after-click="true"
-				@click.prevent="onOpenTagModal">
-				{{ t('mail', 'Edit tags') }}
-			</ActionButton>
-			<ActionButton icon="icon-external"
-				:close-after-click="true"
-				@click.prevent="onOpenMoveModal">
-				{{ t('mail', 'Move thread') }}
-			</ActionButton>
-			<ActionButton icon="icon-calendar-dark"
-				:close-after-click="true"
-				@click.prevent="showEventModal = true">
-				{{ t('mail', 'Create event') }}
-			</ActionButton>
-			<ActionRouter icon="icon-add"
-				:to="{
-					name: 'message',
-					params: {
-						mailboxId: $route.params.mailboxId,
-						threadId: 'asNew',
-						filter: $route.params.filter,
-					},
-					query: {
-						messageId: data.databaseId,
-					},
-				}">
-				{{ t('mail', 'Edit as new message') }}
-			</ActionRouter>
-			<ActionButton icon="icon-delete"
-				:close-after-click="true"
-				@click.prevent="onDelete">
-				{{ t('mail', 'Delete thread') }}
-			</ActionButton>
+			<EnvelopePrimaryActions v-if="!moreActionsOpen">
+				<ActionButton icon="icon-starred"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onToggleFlagged">
+					{{
+						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-mail"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onToggleSeen">
+					{{
+						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-important"
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onToggleImportant">
+					{{
+						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
+					}}
+				</ActionButton>
+			</EnvelopePrimaryActions>
+			<template v-if="!moreActionsOpen">
+				<ActionButton icon="icon-junk"
+					:close-after-click="true"
+					@click.prevent="onToggleJunk">
+					{{
+						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+					}}
+				</ActionButton>
+				<ActionButton icon="icon-checkmark"
+					:close-after-click="true"
+					@click.prevent="toggleSelected">
+					{{
+						selected ? t('mail', 'Unselect') : t('mail', 'Select')
+					}}
+				</ActionButton>
+				<ActionButton
+					icon="icon-tag"
+					:close-after-click="true"
+					@click.prevent="onOpenTagModal">
+					{{ t('mail', 'Edit tags') }}
+				</ActionButton>
+				<ActionButton icon="icon-external"
+					:close-after-click="true"
+					@click.prevent="onOpenMoveModal">
+					{{ t('mail', 'Move thread') }}
+				</ActionButton>
+				<ActionButton icon="icon-more"
+					:close-after-click="false"
+					@click="moreActionsOpen=true">
+					{{ t('mail', 'More actions') }}
+				</ActionButton>
+				<ActionButton icon="icon-delete"
+					:close-after-click="true"
+					@click.prevent="onDelete">
+					{{ t('mail', 'Delete thread') }}
+				</ActionButton>
+			</template>
+			<template v-if="moreActionsOpen">
+				<ActionButton :close-after-click="false"
+					@click="moreActionsOpen=false">
+					<template #icon>
+						<ChevronLeft
+							:title="t('mail', 'More actions')"
+							:size="20" />
+						{{ t('mail', 'More actions') }}
+					</template>
+				</ActionButton>
+				<ActionButton icon="icon-add"
+					:close-after-click="true"
+					@click.prevent="onOpenEditAsNew">
+					{{ t('mail', 'Edit as new message') }}
+				</ActionButton>
+				<ActionButton icon="icon-calendar-dark"
+					:close-after-click="true"
+					@click.prevent="showEventModal = true">
+					{{ t('mail', 'Create event') }}
+				</ActionButton>
+			</template>
 		</template>
 		<template #extra>
 			<div
-				v-if="mailbox.isUnified"
+				v-if="mailbox.isUnified && hasMultipleAccounts"
 				class="mail-message-account-color"
 				:style="{'background-color': accountColor}" />
 			<div v-for="tag in tags"
@@ -175,9 +190,9 @@
 <script>
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import moment from '@nextcloud/moment'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
@@ -190,15 +205,17 @@ import { matchError } from '../errors/match'
 import MoveModal from './MoveModal'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
+import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 
 export default {
 	name: 'Envelope',
 	components: {
+		EnvelopePrimaryActions,
 		EventModal,
 		ListItem,
 		Avatar,
 		ActionButton,
-		ActionRouter,
+		ChevronLeft,
 		MoveModal,
 		TagModal,
 	},
@@ -233,6 +250,10 @@ export default {
 			required: false,
 			default: () => [],
 		},
+		hasMultipleAccounts: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -240,6 +261,7 @@ export default {
 			showMoveModal: false,
 			showEventModal: false,
 			showTagModal: false,
+			moreActionsOpen: false,
 		}
 	},
 	computed: {
@@ -263,24 +285,12 @@ export default {
 			return this.data.flags.draft
 		},
 		account() {
-			const accountId = this.data.accountId ?? this.data.accountId
+			const accountId = this.data.accountId
 			return this.$store.getters.getAccount(accountId)
 		},
 		link() {
 			if (this.draft) {
-			// TODO: does not work with a unified drafts mailbox
-			//       the query should also contain the account and mailbox
-			//       id for that to work
-				return {
-					name: 'message',
-					params: {
-						mailboxId: this.$route.params.mailboxId,
-						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						threadId: 'new',
-						draftId: this.data.databaseId,
-					},
-					exact: true,
-				}
+				return undefined
 			} else {
 				return {
 					name: 'message',
@@ -354,6 +364,17 @@ export default {
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
 		},
+		onClick(event) {
+			if (this.draft && !event.defaultPrevented) {
+				this.$store.dispatch('showMessageComposer', {
+					data: {
+						...this.data,
+						draftId: this.data.databaseId,
+					},
+					templateMessageId: this.data.databaseId,
+				})
+			}
+		},
 		onSelectMultiple() {
 			this.$emit('select-multiple')
 		},
@@ -390,6 +411,12 @@ export default {
 					},
 				}))
 			}
+		},
+		async onOpenEditAsNew() {
+			await this.$store.dispatch('showMessageComposer', {
+				templateMessageId: this.data.databaseId,
+				data: this.data,
+			})
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true

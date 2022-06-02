@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -29,11 +30,7 @@ import { sortMailboxes } from '../imap/MailboxSorter'
 import { normalizedEnvelopeListId } from './normalization'
 import { UNIFIED_ACCOUNT_ID } from './constants'
 
-const addMailboxToState = curry((state, account, mailbox) => {
-	mailbox.accountId = account.id
-	mailbox.mailboxes = []
-	Vue.set(mailbox, 'envelopeLists', {})
-
+const transformMailboxName = (account, mailbox) => {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
 	const nameWithoutPrefix = account.personalNamespace
 		? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
@@ -57,6 +54,14 @@ const addMailboxToState = curry((state, account, mailbox) => {
 		mailbox.displayName = nameWithoutPrefix
 		mailbox.path = ''
 	}
+}
+
+const addMailboxToState = curry((state, account, mailbox) => {
+	mailbox.accountId = account.id
+	mailbox.mailboxes = []
+	Vue.set(mailbox, 'envelopeLists', {})
+
+	transformMailboxName(account, mailbox)
 
 	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
 	const parent = Object.values(state.mailboxes)
@@ -117,7 +122,7 @@ export default {
 		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 		const mailboxes = sortMailboxes(account.mailboxes || [])
 		Vue.set(account, 'mailboxes', [])
-		Vue.set(account, 'aliases', [])
+		Vue.set(account, 'aliases', account.aliases ?? [])
 		mailboxes.map(addMailboxToState(state, account))
 	},
 	editAccount(state, account) {
@@ -154,6 +159,8 @@ export default {
 		addMailboxToState(state, account, mailbox)
 	},
 	updateMailbox(state, { mailbox }) {
+		const account = state.accounts[mailbox.accountId]
+		transformMailboxName(account, mailbox)
 		Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
 	},
 	removeMailbox(state, { id }) {
@@ -173,6 +180,23 @@ export default {
 			parent.mailboxes.map(mbid => removeRec(state.mailboxes[mbid]))
 		}
 		removeRec(account)
+	},
+	showMessageComposer(state, { type, data, forwardedMessages, originalSendAt }) {
+		Vue.set(state, 'newMessage', {
+			type,
+			data,
+			options: {
+				forwardedMessages,
+				originalSendAt,
+			},
+		})
+	},
+	convertComposerMessageToOutbox(state, { message }) {
+		Vue.set(state.newMessage, 'type', 'outbox')
+		Vue.set(state.newMessage.data, 'id', message.id)
+	},
+	hideMessageComposer(state) {
+		Vue.delete(state, 'newMessage')
 	},
 	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
 		normalizeTags(state, envelope)
@@ -300,6 +324,13 @@ export default {
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
 	},
+	addMessageItineraries(state, { id, itineraries }) {
+		const message = state.messages[id]
+		if (!message) {
+			return
+		}
+		Vue.set(message, 'itineraries', itineraries)
+	},
 	addEnvelopeThread(state, { id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists
 		thread.forEach(e => {
@@ -332,5 +363,8 @@ export default {
 	},
 	setMailboxUnreadCount(state, { id, unread }) {
 		Vue.set(state.mailboxes[id], 'unread', unread ?? 0)
+	},
+	setScheduledSendingDisabled(state, value) {
+		state.isScheduledSendingDisabled = value
 	},
 }

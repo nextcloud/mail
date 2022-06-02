@@ -322,6 +322,44 @@ class MessageMapperTest extends TestCase {
 		self::assertFalse($result['all']);
 	}
 
+	public function testFindAllNoUidCandidates(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $client */
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$client->expects(self::once())
+			->method('search')
+			->with(
+				$mailbox,
+				null,
+				[
+					'results' => [
+						Horde_Imap_Client::SEARCH_RESULTS_MIN,
+						Horde_Imap_Client::SEARCH_RESULTS_MAX,
+						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+					]
+				]
+			)
+			->willReturn([
+				'min' => 1,
+				'max' => 35791,
+				'count' => 32122,
+			]);
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
+		$client->expects(self::never())
+			->method('fetch');
+
+		$result = $this->mapper->findAll(
+			$client,
+			$mailbox,
+			5000,
+			99999
+		);
+
+		self::assertTrue($result['all']);
+		self::assertEmpty($result['messages']);
+	}
+
 	public function testGetFlagged() {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);

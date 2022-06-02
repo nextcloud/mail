@@ -33,7 +33,7 @@
 					}">
 					{{ tag.displayName }}
 				</button>
-				<Actions v-if="!tag.isDefaultTag" :force-menu="true">
+				<Actions :force-menu="true">
 					<ActionButton v-if="renameTagLabel"
 						icon="icon-rename"
 						@click="openEditTag">
@@ -236,12 +236,12 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .modal-content {
-	padding-left: 20px;
-	padding-right: 20px;
-	// modal jumps on the right when text is changed to 'remove'
-	width: 250px;
+	padding: 0 20px 20px 20px;
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
+}
+::v-deep .modal-container {
+	width: auto !important;
 }
 .tag-title {
 	margin-top: 20px;
@@ -312,5 +312,11 @@ export default {
 }
 .create-tag {
 	list-style: none;
+}
+@media only screen and (max-width: 512px) {
+	::v-deep .modal-container {
+	top: 100px !important;
+	max-height: calc(100vh - 170px) !important
+	}
 }
 </style>

@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
       - stable*
 
 jobs:
@@ -13,10 +13,16 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'stable21', 'stable22', 'master']
+        nextcloud-versions: ['stable21', 'stable22', 'stable23']
         include:
-            - php: 8.0
-              nextcloud-version: master
+            - php-versions: 7.4
+              nextcloud-versions: stable24
+            - php-versions: 8.0
+              nextcloud-versions: stable24
+            - php-versions: 7.4
+              nextcloud-versions: master
+            - php-versions: 8.0
+              nextcloud-versions: master
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
@@ -35,7 +41,7 @@ jobs:
       working-directory: nextcloud/3rdparty
       run: composer require nikic/php-parser:4.10
     - name: Checkout Mail
-      uses: actions/checkout@master
+      uses: actions/checkout@v3
       with:
         path: nextcloud/apps/mail
     - name: Install dependencies
@@ -47,7 +53,7 @@ jobs:
       env:
         XDEBUG_MODE: coverage
     - name: Report coverage
-      uses: codecov/codecov-action@v2.1.0
+      uses: codecov/codecov-action@v3.0.0
       if: ${{ always() && matrix.nextcloud-versions == 'master' }}
       with:
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
@@ -59,7 +65,7 @@ jobs:
       strategy:
           matrix:
               php-versions: [7.4, 8.0]
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable24']
               db: ['sqlite', 'mysql', 'pgsql']
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
@@ -114,7 +120,7 @@ jobs:
           - name: Install Nextcloud
             run: php -f nextcloud/occ maintenance:install --database-host 127.0.0.1 --database-name nextcloud --database-user nextcloud --database-pass nextcloud --admin-user admin --admin-pass admin --database ${{ matrix.db }}
           - name: Checkout Mail
-            uses: actions/checkout@master
+            uses: actions/checkout@v3
             with:
                 path: nextcloud/apps/mail
           - name: Install dependencies
@@ -126,6 +132,12 @@ jobs:
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
                 php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type bool --value false
+          - name: Enable slow mysql query logs
+            if: ${{ matrix.db == 'mysql' }}
+            run: |
+              echo "SET GLOBAL log_queries_not_using_indexes = 1;" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
+              echo "SET GLOBAL slow_query_log=1;" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
+              echo "SET GLOBAL log_output = 'table';" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Run tests
             working-directory: nextcloud/apps/mail
             run: |
@@ -134,11 +146,14 @@ jobs:
                 composer run test:integration
             env:
                 XDEBUG_MODE: coverage
+          - name: Read slow queries
+            if: ${{ always() }}
+            run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Print debug logs
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@v2.1.0
+            uses: codecov/codecov-action@v3.0.0
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
@@ -148,9 +163,9 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@master
+          - uses: actions/checkout@v3
           - name: Set up Node
-            uses: actions/setup-node@v2.4.1
+            uses: actions/setup-node@v3
             with:
                 node-version: 12.x
           - name: npm install

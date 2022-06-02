@@ -25,7 +25,7 @@
 		<ul>
 			<li v-for="attachment in value" :key="attachment.id">
 				<div class="new-message-attachment-name">
-					{{ attachment.displayName }}
+					{{ attachment.displayName ? attachment.displayName : attachment.fileName }}
 				</div>
 				<div class="new-message-attachments-action svg icon-delete" @click="onDelete(attachment)" />
 			</li>
@@ -228,15 +228,25 @@ export default {
 }
 </script>
 
-<style scoped>
-.new-message-attachments li {
-	padding: 10px;
+<style scoped lang="scss">
+
+.new-message-attachments {
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		// 2 and a half attachment height
+		max-height: 140px;
+		overflow: auto;
+	}
+	li {
+		padding: 10px;
+	}
 }
 
 .new-message-attachments-action {
 	display: inline-block;
 	vertical-align: middle;
-	padding: 22px;
+	padding: 10px;
 	opacity: 0.5;
 }
 

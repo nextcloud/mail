@@ -195,7 +195,10 @@ class ContactsIntegration {
 		return $createdContact;
 	}
 
-	private function doSearch($term, $fields): array {
+	/**
+	 * @param string[] $fields
+	 */
+	private function doSearch(string $term, array $fields): array {
 		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
 
 		$result = $this->contactsManager->search($term, $fields);
@@ -230,7 +233,7 @@ class ContactsIntegration {
 	 * @param string $mailAddr
 	 * @return array
 	 */
-	public function getContactsWithName($name) {
+	public function getContactsWithName(string $name) {
 		return $this->doSearch($name, ['FN']);
 	}
 }

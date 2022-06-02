@@ -20,7 +20,8 @@
   -->
 
 <template>
-	<div class="attachment">
+	<div class="attachment"
+		@click="$emit('click', $event)">
 		<img v-if="isImage" class="mail-attached-image" :src="url">
 		<img class="attachment-icon" :src="mimeUrl">
 		<span class="attachment-name"

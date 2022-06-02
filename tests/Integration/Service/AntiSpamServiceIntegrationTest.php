@@ -52,12 +52,14 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 
 	public function tearDown(): void {
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 		$this->service->deleteConfig();
 	}
 
 	public function testFlagJunkWithSpamReportActive(): void {
 		// First, set up account and retrieve sync token
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 		$account = $this->createTestAccount();
 
 		/** @var SyncService $syncService */
