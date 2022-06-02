@@ -11,6 +11,7 @@
 			:subject="composerData.subject"
 			:attachments-data="composerData.attachments"
 			:body="composerData.body"
+			:in-reply-to-message-id="composerData.inReplyToMessageId"
 			:reply-to="composerData.replyTo"
 			:draft-id="composerData.draftId"
 			:send-at="composerData.sendAt * 1000"
