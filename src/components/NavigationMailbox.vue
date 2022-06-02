@@ -32,11 +32,29 @@
 		:allow-collapse="true"
 		:menu-open.sync="menuOpen"
 		:force-menu="true"
-		:icon="icon"
 		:title="title"
 		:to="to"
 		:open.sync="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
+		<template #icon>
+			<ImportantIcon v-if="mailbox.isPriorityInbox"
+				:size="20" />
+			<IconInbox
+				v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
+				:size="20" />
+			<IconFavorite v-else-if="filter === 'starred'"
+				:size="20" />
+			<IconDraft v-else-if="mailbox.specialRole === 'drafts'"
+				:size="20" />
+			<CheckIcon v-else-if="mailbox.specialRole === 'sent'"
+				:size="20" />
+			<IconArchive v-else-if="mailbox.specialRole === 'archive'"
+				:size="20" />
+			<IconDelete v-else-if="mailbox.specialRole === 'trash'"
+				:size="20" />
+			<IconFolder v-else
+				:size="20" />
+		</template>
 		<!-- actions -->
 		<template slot="actions">
 			<ActionText
@@ -176,13 +194,20 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+import CheckIcon from 'vue-material-design-icons/Check'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheck'
 import IconExternal from 'vue-material-design-icons/OpenInNew'
+import IconFolder from 'vue-material-design-icons/Folder'
 import IconFolderAdd from 'vue-material-design-icons/FolderMultiple'
+import IconFavorite from 'vue-material-design-icons/Star'
 import IconFolderRename from 'vue-material-design-icons/FolderEdit'
 import IconFolderSync from 'vue-material-design-icons/FolderSync'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconInfo from 'vue-material-design-icons/InformationOutline'
+import IconDraft from 'vue-material-design-icons/LeadPencil'
+import IconArchive from 'vue-material-design-icons/TrayFull'
+import IconInbox from 'vue-material-design-icons/Home'
+import ImportantIcon from './icons/ImportantIcon'
 import MoveMailboxModal from './MoveMailboxModal'
 
 import { clearCache } from '../service/MessageService'
@@ -203,13 +228,20 @@ export default {
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
+		CheckIcon,
+		IconDelete,
 		IconEmailCheck,
 		IconExternal,
 		IconFolderAdd,
 		IconFolderRename,
 		IconFolderSync,
-		IconDelete,
 		IconInfo,
+		IconFavorite,
+		IconFolder,
+		IconDraft,
+		IconArchive,
+		IconInbox,
+		ImportantIcon,
 		MoveMailboxModal,
 	},
 	directives: {
@@ -271,14 +303,6 @@ export default {
 				})
 			}
 			return translateMailboxName(this.mailbox)
-		},
-		icon() {
-			if (this.filter === 'starred') {
-				return 'icon-flagged'
-			} else if (this.mailbox.isPriorityInbox) {
-				return 'icon-important'
-			}
-			return this.mailbox.specialRole ? 'icon-' + this.mailbox.specialRole : 'icon-folder'
 		},
 		to() {
 			return {
