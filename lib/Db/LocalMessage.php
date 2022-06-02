@@ -41,7 +41,9 @@ use function array_filter;
  * @method string getSubject()
  * @method void setSubject(string $subject)
  * @method string getBody()
- * @method void setBody(string $body)
+ * @method void setBody(?string $body)
+ * @method string|null getEditorBody()
+ * @method void setEditorBody(string $body)
  * @method bool isHtml()
  * @method void setHtml(bool $html)
  * @method bool|null isFailed()
@@ -73,6 +75,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	/** @var string */
 	protected $body;
+
+	/** @var string|null */
+	protected $editorBody;
 
 	/** @var bool */
 	protected $html;
@@ -110,6 +115,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'sendAt' => $this->getSendAt(),
 			'subject' => $this->getSubject(),
 			'body' => $this->getBody(),
+			'editorBody' => $this->getEditorBody(),
 			'isHtml' => ($this->isHtml() === true),
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),

@@ -127,7 +127,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="callSaveDraft(true, getMessageData)" />
+				@input="onEditorInputText" />
 			<TextEditor
 				v-else-if="!encrypt && !editorPlainText"
 				key="editor-rich"
@@ -138,7 +138,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onEditorRichInputText" />
+				@input="onEditorInputText" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
@@ -456,6 +456,10 @@ export default {
 			type: Object,
 			default: () => html(''),
 		},
+		editorBody: {
+			type: String,
+			default: '',
+		},
 		draftId: {
 			type: Number,
 			default: undefined,
@@ -497,7 +501,7 @@ export default {
 		},
 	},
 	data() {
-		let bodyVal = toHtml(this.body).value
+		let bodyVal = this.editorBody
 		if (bodyVal.length === 0) {
 			// an empty body (e.g "") does not trigger an onInput event.
 			// but to append the signature a onInput event is required.
@@ -693,6 +697,15 @@ export default {
 				this.onAliasChange(newAlias)
 			}
 		},
+		editorMode() {
+			this.appendSignature = true
+		},
+		bodyVal() {
+			if (this.body.value === '') {
+				this.appendSignature = true
+			}
+			this.handleAppendSignature()
+		},
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -871,8 +884,7 @@ export default {
 		onSave() {
 			this.callSaveDraft(false, this.getMessageData)
 		},
-		onInputChanged() {
-			this.callSaveDraft(true, this.getMessageData)
+		handleAppendSignature() {
 			if (this.appendSignature) {
 				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
 				this.bus.$emit('insertSignature', signatureValue, this.selectedAlias.signatureAboveQuote)
@@ -882,11 +894,11 @@ export default {
 		// needs to bypass an input event of the first initialisation, because of:
 		// an empty body (e.g "") does not trigger an onInput event.
 		// but to append the signature a onInput event is required.
-		onEditorRichInputText() {
-			if (this.editorRichInputTextReady) {
+		onEditorInputText() {
+			if (this.editorInputTextReady) {
 				this.callSaveDraft(true, this.getMessageData)
 			}
-			this.editorRichInputTextReady = true
+			this.editorInputTextReady = true
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
@@ -904,7 +916,7 @@ export default {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
 			this.appendSignature = true
-			this.onInputChanged()
+			this.handleAppendSignature()
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('onAddLocalAttachment')
