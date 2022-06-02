@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.13.0 – unreleased
+## 1.13.0 – 2022-06-02
 ### Added
 - PHP8.1 support
 - Many performance improvements
@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - OCI compatibility
 - Forwarding attachments
 - Creating duplicate tags
+- Collecting recipient addresses in background
+- Priority inbox synchronization
 
 ## 1.12.0 - 2022-04-26
 ### Added
