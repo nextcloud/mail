@@ -56,6 +56,7 @@ OC.L10N.register(
     "Clear cache" : "Voidar l'escondedor",
     "_{total} message_::_{total} messages_" : ["{total} messatge","{total} messatges"],
     "Delete" : "Suprimir",
+    "Copy to clipboard" : "Copiar dins lo quichapapièrs",
     "Add" : "Apondre",
     "Disabled" : "Desactivat",
     "Enabled" : "Activada",
