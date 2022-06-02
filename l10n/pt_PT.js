@@ -59,10 +59,9 @@ OC.L10N.register(
     "Select account" : "Seleccionar uma conta",
     "To" : "Para",
     "Contact or email address …" : "Contacto ou endereço de email",
-    "+ Cc/Bcc" : "+ Cc/Bcc",
     "Cc" : "Cc",
-    "No contacts found." : "Não foram encontrados contactos",
     "Bcc" : "Bcc",
+    "No contacts found." : "Não foram encontrados contactos",
     "Subject" : "Assunto",
     "Subject …" : "Assunto...",
     "Write message …" : "Nova mensagem...",
@@ -96,6 +95,7 @@ OC.L10N.register(
     "Unselect" : "Não selecionar",
     "Select" : "Seleccionar",
     "Edit tags" : "Editar etiquetas",
+    "Move" : "Mover",
     "More actions" : "Mais acções",
     "Edit as new message" : "Editar como nova mensagem",
     "Create event" : "Criar evento",
@@ -130,7 +130,6 @@ OC.L10N.register(
     "Show images temporarily" : "Mostrar imagens temporariamente",
     "Always show images from {sender}" : "Mostrar sempre as imagem de {sender}",
     "Always show images from {domain}" : "Mostrar sempre as imagem de {domain}",
-    "Move" : "Mover",
     "Moving" : "A mover",
     "New message" : "Nova mensagem",
     "Settings" : "Definições",
@@ -166,6 +165,7 @@ OC.L10N.register(
     "Save signature" : "Guardar assinatura",
     "Set" : "Definir",
     "Unset" : "Retirar",
+    "Tag already exists" : "A etiqueta já existe",
     "Not found" : "Não foi encontrado",
     "Remove" : "Remover",
     "individual" : "individual",
@@ -211,4 +211,4 @@ OC.L10N.register(
     "The link leads to %s" : "A ligação aponta para %s",
     "Continue to %s" : "Continuar para %s"
 },
-"nplurals=2; plural=(n != 1);");
+"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

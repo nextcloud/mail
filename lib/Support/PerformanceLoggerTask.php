@@ -27,6 +27,11 @@ namespace OCA\Mail\Support;
 
 use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
+use function function_exists;
+use function memory_get_peak_usage;
+use function memory_get_usage;
+use function round;
+use function sprintf;
 
 class PerformanceLoggerTask {
 
@@ -59,7 +64,18 @@ class PerformanceLoggerTask {
 		$now = $this->timeFactory->getTime();
 		$passed = $now - $this->rel;
 
-		$this->logger->debug($this->task . " - $description took ${passed}s");
+		$message = $this->task . " - $description took ${passed}s.";
+		if (function_exists('memory_get_usage') && function_exists('memory_get_peak_usage')) {
+			$this->logger->debug(
+				sprintf(
+					$message . " %d/%dMB memory used",
+					round(memory_get_usage() / 1024 / 1024),
+					round(memory_get_peak_usage() / 1024 / 1024)
+				)
+			);
+		} else {
+			$this->logger->debug($message);
+		}
 
 		$this->rel = $now;
 	}

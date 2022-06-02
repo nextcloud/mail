@@ -37,12 +37,17 @@ class SynchronizationEvent extends Event {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var bool */
+	private $rebuildThreads;
+
 	public function __construct(Account $account,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								bool $rebuildThreads) {
 		parent::__construct();
 
 		$this->account = $account;
 		$this->logger = $logger;
+		$this->rebuildThreads = $rebuildThreads;
 	}
 
 	public function getAccount(): Account {
@@ -51,5 +56,9 @@ class SynchronizationEvent extends Event {
 
 	public function getLogger(): LoggerInterface {
 		return $this->logger;
+	}
+
+	public function isRebuildThreads(): bool {
+		return $this->rebuildThreads;
 	}
 }

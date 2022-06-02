@@ -42,6 +42,7 @@ OC.L10N.register(
     "Read" : "Leer",
     "Select" : "Seleccionar",
     "Edit tags" : "Editar etiquetas",
+    "Move" : "Mover",
     "All day" : "Todo el día",
     "Create" : "Crear",
     "Choose" : "Elige",
@@ -56,7 +57,6 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Selecccione la carpeta en la cual almacenar el adjunto",
     "Save all to Files" : "Guardar todos a Archivos",
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger su privacidad. ",
-    "Move" : "Mover",
     "New message" : "Mensaje nuevo",
     "Settings" : "Configuraciones ",
     "Quota" : "Cuota",
@@ -72,6 +72,7 @@ OC.L10N.register(
     "Enabled" : "Habilitado",
     "Custom" : "Personalizado",
     "Unset" : "Desconectado",
+    "Tag already exists" : "La etiqueta ya existe",
     "Remove" : "Borrar",
     "Reset" : "Restablecer",
     "General" : "General",
@@ -110,4 +111,4 @@ OC.L10N.register(
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no desea visitar esa página, puede regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s"
 },
-"nplurals=2; plural=(n != 1);");
+"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

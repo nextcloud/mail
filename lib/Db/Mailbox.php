@@ -28,6 +28,7 @@ namespace OCA\Mail\Db;
 use JsonSerializable;
 use OCA\Mail\IMAP\MailboxStats;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 use function base64_encode;
 use function in_array;
 use function json_decode;
@@ -146,6 +147,7 @@ class Mailbox extends Entity implements JsonSerializable {
 		return new MailboxStats($this->getMessages(), $this->getUnseen());
 	}
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$specialUse = $this->getSpecialUseParsed();
 		return [

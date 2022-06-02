@@ -16,15 +16,14 @@ OC.L10N.register(
     "Send" : "Send",
     "Favorite" : "Favoritt",
     "Select" : "Vel",
+    "Move" : "Move",
     "Create" : "Lag",
     "Choose" : "Vel",
     "Favorites" : "Favorit",
     "Other" : "Anna",
     "Reply" : "Svare",
-    "Move" : "Move",
     "Settings" : "Instillingar",
     "Quota" : "Kvote",
-    "Message sent" : "Melding sendt",
     "Delete" : "Ta bort",
     "Add" : "Legg til",
     "Set" : "Sett",
@@ -36,6 +35,7 @@ OC.L10N.register(
     "Search" : "Search",
     "Refresh" : "Last inn på nytt",
     "All" : "Alle",
-    "Sent" : "Sendt"
+    "Sent" : "Sendt",
+    "Message sent" : "Melding sendt"
 },
 "nplurals=2; plural=(n != 1);");

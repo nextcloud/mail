@@ -24,7 +24,6 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: 7.4
-          tools: composer:v1
           extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
           coverage: none
       - name: Install Krankerl

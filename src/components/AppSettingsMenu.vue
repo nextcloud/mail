@@ -73,6 +73,18 @@
 			{{ t('mail', 'Show keyboard shortcuts') }}
 		</button>
 		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
+
+		<p class="mailvelope-section">
+			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
+
+			<a
+				class="icon-password button app-settings-button"
+				href="https://www.mailvelope.com/"
+				target="_blank"
+				rel="noopener noreferrer">
+				{{ t('mail', 'Install Mailvelope browser extension') }}
+			</a>
+		</p>
 	</div>
 </template>
 
@@ -207,7 +219,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 p.app-settings span.icon-loading-small {
 	display: inline-block;
 	vertical-align: middle;
@@ -228,5 +240,15 @@ p.app-settings {
 }
 .app-settings-link {
 	text-decoration: underline;
+}
+.mailvelope-section {
+	padding-top: 15px;
+
+	a.button {
+		display: flex;
+		align-items: center;
+		line-height: normal;
+		min-height: 34px;
+	}
 }
 </style>

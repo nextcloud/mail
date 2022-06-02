@@ -244,7 +244,6 @@ export default {
 			selection: [],
 			showMoveModal: false,
 			lastToggledIndex: undefined,
-			forwardedMessages: [],
 		}
 	},
 	computed: {
@@ -457,11 +456,9 @@ export default {
 			this.showMoveModal = true
 		},
 		async forwardSelectedAsAttachment() {
-			this.forwardedMessages = this.selection
 			await this.$store.dispatch('showMessageComposer', {
-				forwardedMessages: this.forwardedMessages,
+				forwardedMessages: this.selection,
 			})
-			this.forwardedMessages = []
 			this.unselectAll()
 		},
 		onCloseMoveModal() {

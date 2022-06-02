@@ -52,6 +52,7 @@ use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
+use ReturnTypeWillChange;
 use function fclose;
 use function in_array;
 use function mb_convert_encoding;
@@ -494,10 +495,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $data;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'uid' => $this->getUid(),
 			'messageId' => $this->getMessageId(),

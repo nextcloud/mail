@@ -27,6 +27,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 use function array_filter;
 
 /**
@@ -92,9 +93,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('html', 'boolean');
 	}
 
-	/**
-	 * @return array
-	 */
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),

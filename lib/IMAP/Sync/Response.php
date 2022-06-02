@@ -25,6 +25,7 @@ namespace OCA\Mail\IMAP\Sync;
 
 use JsonSerializable;
 use OCA\Mail\IMAP\MailboxStats;
+use ReturnTypeWillChange;
 
 /**
  * @psalm-template T
@@ -87,7 +88,8 @@ class Response implements JsonSerializable {
 		return $this->stats;
 	}
 
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'newMessages' => $this->newMessages,
 			'changedMessages' => $this->changedMessages,

@@ -50,6 +50,7 @@ use OCA\Mail\Model\Message;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
+use ReturnTypeWillChange;
 
 class Account implements JsonSerializable {
 
@@ -189,9 +190,7 @@ class Account implements JsonSerializable {
 		);
 	}
 
-	/**
-	 * @return array
-	 */
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->account->toJson();
 	}

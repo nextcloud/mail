@@ -12,16 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable21', 'stable22', 'stable23']
+        php-versions: ['8.0']
+        nextcloud-versions: ['stable22', 'stable23']
         include:
             - php-versions: 7.4
               nextcloud-versions: stable24
-            - php-versions: 8.0
-              nextcloud-versions: stable24
-            - php-versions: 7.4
-              nextcloud-versions: master
-            - php-versions: 8.0
+            - php-versions: 8.1
               nextcloud-versions: master
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
@@ -29,7 +25,6 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: ${{ matrix.php-versions }}
-        tools: composer:v1
         extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
         coverage: xdebug
     - name: Checkout Nextcloud
@@ -50,11 +45,18 @@ jobs:
     - name: Run tests
       working-directory: nextcloud/apps/mail
       run: composer run test:unit
+      if: ${{ matrix.php-versions == '8.0' }}
       env:
         XDEBUG_MODE: coverage
+    - name: Run tests
+      working-directory: nextcloud/apps/mail
+      run: composer run test:unit
+      if: ${{ matrix.php-versions != '8.0' }}
+      env:
+        XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@v3.0.0
-      if: ${{ always() && matrix.nextcloud-versions == 'master' }}
+      uses: codecov/codecov-action@v3.1.0
+      if: ${{ always() && matrix.php-versions == '8.0' }}
       with:
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
         flags: unittests
@@ -64,9 +66,19 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              php-versions: [7.4, 8.0]
-              nextcloud-versions: ['stable24']
+              php-versions: ['8.0']
+              nextcloud-versions: ['master']
               db: ['sqlite', 'mysql', 'pgsql']
+              include:
+                - php-versions: 7.4
+                  nextcloud-versions: stable22
+                  db: 'mysql'
+                - php-versions: 8.0
+                  nextcloud-versions: stable23
+                  db: 'mysql'
+                - php-versions: 8.1
+                  nextcloud-versions: stable24
+                  db: 'pgsql'
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
           mail-service:
@@ -112,7 +124,6 @@ jobs:
             uses: shivammathur/setup-php@master
             with:
                 php-version: ${{ matrix.php-versions }}
-                tools: composer:v1
                 extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
                 coverage: xdebug
           - name: Checkout Nextcloud
@@ -140,12 +151,16 @@ jobs:
               echo "SET GLOBAL log_output = 'table';" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
           - name: Run tests
             working-directory: nextcloud/apps/mail
-            run: |
-                ss -tunlp
-                true | openssl s_client -crlf -connect 127.0.0.1:993
-                composer run test:integration
+            if: ${{ matrix.db == 'mysql' }}
+            run: composer run test:integration
             env:
                 XDEBUG_MODE: coverage
+          - name: Run tests
+            working-directory: nextcloud/apps/mail
+            if: ${{ matrix.db != 'mysql' }}
+            run: composer run test:integration
+            env:
+                XDEBUG_MODE: off
           - name: Read slow queries
             if: ${{ always() }}
             run: echo "SELECT * FROM mysql.slow_log WHERE sql_text LIKE '%oc_mail%' AND sql_text NOT LIKE '%information_schema%'" | mysql -h 127.0.0.1 -u root -pmy-secret-pw
@@ -153,7 +168,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@v3.0.0
+            uses: codecov/codecov-action@v3.1.0
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               file: ./nextcloud/apps/mail/tests/clover.integration.xml

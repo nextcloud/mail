@@ -60,9 +60,10 @@ class IMAPClientFactory {
 	 * (and stale) connections at a minimum.
 	 *
 	 * @param Account $account
+	 * @param bool $useCache
 	 * @return Horde_Imap_Client_Socket
 	 */
-	public function getClient(Account $account): Horde_Imap_Client_Socket {
+	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
 		$host = $account->getMailAccount()->getInboundHost();
 		$user = $account->getMailAccount()->getInboundUser();
 		$password = $account->getMailAccount()->getInboundPassword();
@@ -87,7 +88,7 @@ class IMAPClientFactory {
 				],
 			],
 		];
-		if ($this->cacheFactory->isAvailable()) {
+		if ($useCache && $this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
 				'backend' => new Cache([
 					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),

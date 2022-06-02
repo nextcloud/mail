@@ -25,6 +25,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 
 /**
  * @method void setAccountId(int $accountId)
@@ -66,7 +67,8 @@ class Alias extends Entity implements JsonSerializable {
 		return $this->getProvisioningId() !== null;
 	}
 
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),
 			'name' => $this->getName(),

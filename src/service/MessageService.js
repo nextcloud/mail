@@ -195,19 +195,6 @@ export async function saveDraft(accountId, data) {
 	}
 }
 
-export async function sendMessage(accountId, data) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/send', {
-		accountId,
-	})
-
-	try {
-		const resp = await axios.post(url, data)
-		return resp.data
-	} catch (e) {
-		throw convertAxiosError(e)
-	}
-}
-
 export async function deleteMessage(id) {
 	const url = generateUrl('/apps/mail/api/messages/{id}', {
 		id,

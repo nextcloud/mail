@@ -466,19 +466,6 @@ class MessageMapper extends QBMapper {
 		$perf->step("Untagged messages");
 	}
 
-	public function getTags(Message $message) : array {
-		$mqb = $this->db->getQueryBuilder();
-		$mqb->select('tag_id')
-			->from('mail_message_tags')
-			->where($mqb->expr()->eq('imap_message_id', $mqb->createNamedParameter($message->getMessageId())));
-		$result = $mqb->execute();
-		$ids = array_map(function (array $row) {
-			return (int)$row['tag_id'];
-		}, $result->fetchAll());
-
-		return $ids;
-	}
-
 	/**
 	 * @param Message ...$messages
 	 *

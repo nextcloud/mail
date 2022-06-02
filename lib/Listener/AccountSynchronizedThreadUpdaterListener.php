@@ -56,9 +56,13 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 			// Unrelated
 			return;
 		}
+		$logger = $event->getLogger();
+		if (!$event->isRebuildThreads()) {
+			$event->getLogger()->debug('Skipping threading as there were no significant changes');
+			return;
+		}
 
 		$accountId = $event->getAccount()->getId();
-		$logger = $event->getLogger();
 		$messages = $this->mapper->findThreadingData($event->getAccount());
 		$logger->debug("Account $accountId has " . count($messages) . " messages for threading");
 		$threads = $this->builder->build($messages, $logger);

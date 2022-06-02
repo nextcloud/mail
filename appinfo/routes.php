@@ -80,11 +80,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'accounts#send',
-			'url' => '/api/accounts/{id}/send',
-			'verb' => 'POST'
-		],
-		[
 			'name' => 'accounts#draft',
 			'url' => '/api/accounts/{id}/draft',
 			'verb' => 'POST'

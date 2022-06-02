@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [7.3, 7.4, 8.0]
+        php-versions: ['7.4', '8.0', '8.1']
     name: php${{ matrix.php-versions }} lint
     steps:
     - name: Checkout
@@ -28,7 +28,6 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: ${{ matrix.php-versions }}
-        tools: composer:v1
         coverage: none
     - name: Lint
       run: composer run lint
@@ -42,8 +41,7 @@ jobs:
     - name: Set up php
       uses: shivammathur/setup-php@master
       with:
-        php-version: 7.4
-        tools: composer:v1
+        php-version: '8.0'
         coverage: none
     - name: Install dependencies
       run: composer i

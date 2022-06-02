@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 
 class MailboxStats implements JsonSerializable {
 
@@ -55,6 +56,7 @@ class MailboxStats implements JsonSerializable {
 		return $this->unread;
 	}
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'total' => $this->total,
