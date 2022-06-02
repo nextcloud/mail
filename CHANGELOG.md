@@ -1,6 +1,51 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.13.0 – 2022-06-02
+### Added
+- PHP8.1 support
+- Many performance improvements
+### Changed
+- New material icons
+- Dropped Nextcloud 21 support (EOL)
+- Dropped PHP7.3 support (EOL)
+### Fixed
+- Leaking database cursor
+- Memory leaks
+- Causal read during outbox message/recipient insert
+- OCI compatibility
+- Forwarding attachments
+- Creating duplicate tags
+- Collecting recipient addresses in background
+- Priority inbox synchronization
+
+## 1.12.2 – 2022-06-02
+### Fixed
+- Modal width
+- Attachment forwarding
+- Reply/forward editor body
+- Sending messages of deleted accounts
+- OCI compatibility
+- Collecting recipient addresses in background
+- Priority inbox synchronization
+
+## 1.12.1 - 2022-05-24
+### Fixed
+- Prevent causal read for outbox message and recipient inserts
+- Hide subscribed / unsubscribed checkbox for "Favourites" folder
+- Fix attachment loss during outbox message update
+- Fix sending messages to groups
+- Fix composer not to open when we select envelope
+- Change the timeout value to fit the dialogs
+- Fix text format when closing the composer modal
+- Do not override existing aliases
+- Stop message from sending while editing
+- Fix html editor being always selected
+- Fix flagging replied messages
+- Fix modal size in different size of the screen
+- Show account color indicator only if several accounts are present
+- Consider passwordless signings when provisioning
+
 ## 1.12.0 - 2022-04-26
 ### Added
 - Local Outbox
