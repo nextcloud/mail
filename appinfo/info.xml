@@ -2,8 +2,8 @@
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>mail</id>
-	<name>dotplex Mail</name>
-	<summary>A mail app for Nextcloud - modified by dotplex</summary>
+	<name>Mail</name>
+	<summary>💌 A mail app for Nextcloud</summary>
 	<description><![CDATA[**💌 A mail app for Nextcloud**
 
 - **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
