@@ -15,8 +15,7 @@
 							<StarOutline v-if="showFavoriteIconVariant"
 								:size="20" />
 							<Star v-else
-								:size="20"
-								fill-color="#f9cf3d" />
+								:size="20" />
 						</template>
 						{{
 							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')

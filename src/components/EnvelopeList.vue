@@ -71,8 +71,7 @@
 						@click.prevent="favoriteOrUnfavoriteAll">
 						<template #icon>
 							<IconFavorite
-								:size="20"
-								fill-color="#f9cf3d" />
+								:size="20" />
 						</template>
 						{{
 							areAllSelectedFavorite
