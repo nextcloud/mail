@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.12.2 – 2022-06-02
+### Fixed
+- Modal width
+- Attachment forwarding
+- Reply/forward editor body
+- Sending messages of deleted accounts
+- OCI compatibility
+- Collecting recipient addresses in background
+- Priority inbox synchronization
+
 ## 1.12.1 - 2022-05-24
 ### Fixed
 - Prevent causal read for outbox message and recipient inserts
