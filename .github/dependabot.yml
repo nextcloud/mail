@@ -1,5 +1,7 @@
 version: 2
 updates:
+
+# Main
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
@@ -80,3 +82,17 @@ updates:
       - php
   allow:
       - dependency-type: direct
+
+# Stable1.12
+- package-ecosystem: npm
+  target-branch: stable1.12
+  directory: "/"
+  schedule:
+      interval: "daily"
+  open-pull-requests-limit: 0
+- package-ecosystem: composer
+  target-branch: stable1.12
+  directory: "/"
+  schedule:
+      interval: "daily"
+  open-pull-requests-limit: 0
