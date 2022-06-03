@@ -20,11 +20,7 @@
  */
 
 require('jsdom-global')()
-const chai = require('chai')
-const sinonChai = require('sinon-chai')
 
-chai.use(sinonChai)
-global.expect = chai.expect
 // https://github.com/vuejs/vue-test-utils/issues/936
 // better fix for "TypeError: Super expression must either be null or
 // a function" than pinning an old version of prettier.

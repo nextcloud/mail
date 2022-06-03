@@ -33,7 +33,7 @@ describe('mailvelope', () => {
 
 		const mailvelope = await getMailvelope()
 
-		expect(mailvelope).to.deep.equal(window.mailvelope)
+		expect(mailvelope).toEqual(window.mailvelope)
 	})
 
 	it('loads dynamically', async() => {
@@ -44,6 +44,6 @@ describe('mailvelope', () => {
 		window.dispatchEvent(new Event('mailvelope'))
 
 		const mailvelope = await p
-		expect(mailvelope).to.deep.equal(window.mailvelope)
+		expect(mailvelope).toEqual(window.mailvelope)
 	})
 })

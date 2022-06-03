@@ -196,10 +196,10 @@ jobs:
           - name: Set up Node
             uses: actions/setup-node@v3
             with:
-                node-version: 12.x
+                node-version: 14.x
           - name: npm install
             run: npm install
           - name: run tests
-            run: npm run test
+            run: npm run test:unit
       env:
           CI: true

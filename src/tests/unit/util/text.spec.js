@@ -30,7 +30,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('removes leading line breaks', () => {
@@ -39,7 +39,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('removes trailing line breaks', () => {
@@ -48,7 +48,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('removes trailing spaces of each line', () => {
@@ -57,7 +57,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('breaks on divs', () => {
@@ -65,7 +65,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(plain('one\ntwo'))
+			expect(actual).toEqual(plain('one\ntwo'))
 		})
 
 		it('merges spaces at the beginning of a line', () => {
@@ -74,7 +74,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('produces a line break for each ending div element', () => {
@@ -83,7 +83,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts blocks to text', () => {
@@ -92,7 +92,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts paragraph to text', () => {
@@ -101,7 +101,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('produces a single line break between paragraphs', () => {
@@ -110,7 +110,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('produces a single line break between a div and a paragraph', () => {
@@ -119,7 +119,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('produces a single line break after each block element', () => {
@@ -133,7 +133,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('produces exactly one line break for each closing block element', () => {
@@ -148,7 +148,7 @@ describe('text', () => {
 			const actual = toPlain(source)
 
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts lists to text', () => {
@@ -157,7 +157,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts deeply nested elements to text', () => {
@@ -170,7 +170,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('does not leak internal redirection URLs', () => {
@@ -179,7 +179,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('preserves quotes', () => {
@@ -205,7 +205,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 	})
 
@@ -215,7 +215,7 @@ describe('text', () => {
 
 			const detected = detect(text)
 
-			expect(detected).to.deep.equal(plain(text))
+			expect(detected).toEqual(plain(text))
 		})
 
 		it('detects html', () => {
@@ -223,7 +223,7 @@ describe('text', () => {
 
 			const detected = detect(text)
 
-			expect(detected).to.deep.equal(html(text))
+			expect(detected).toEqual(html(text))
 		})
 	})
 })

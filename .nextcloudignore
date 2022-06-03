@@ -13,6 +13,7 @@ codecov.yml
 .gitignore
 .hg
 /issue_template.md
+/jest.config.js
 /.jscsrc
 /.jshintignore
 /.jshintrc

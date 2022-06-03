@@ -35,7 +35,7 @@ describe('match', () => {
 		const error = new Error('henlo')
 
 		matchError(error, map).then((result) => {
-			expect(expect(result).to.equal(3))
+			expect(expect(result).toEqual(3))
 			done()
 		})
 	})
@@ -49,7 +49,7 @@ describe('match', () => {
 		error.name = 'MyErr'
 
 		matchError(error, map).then((result) => {
-			expect(expect(result).to.equal(2))
+			expect(expect(result).toEqual(2))
 			done()
 		})
 	})

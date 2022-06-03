@@ -1,7 +1,7 @@
 /*
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,29 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { translate } from '../../../i18n/MailboxTranslator'
+import { shallowMount } from '@vue/test-utils'
+import TextEditor from '../../../components/TextEditor'
+import Vue from 'vue'
 
-describe('MailboxTranslator', () => {
-	it('translates the inbox', () => {
-		const mailbox = {
-			name: 'INBOX',
-			specialUse: ['inbox'],
-		}
+describe('TextEditor', () => {
 
-		const name = translate(mailbox)
-
-		expect(name).toEqual('Inbox')
+	it('shallow mounts', async() => {
+		const wrapper = shallowMount(TextEditor, {
+			propsData: {
+				value: 'bonjour',
+				bus: new Vue()
+			}
+		})
 	})
 
-	it('does not translate an arbitrary mailbox', () => {
-		const mailbox = {
-			name: 'Newsletters',
-			displayName: 'Newsletters',
-			specialUse: [],
-		}
-
-		const name = translate(mailbox)
-
-		expect(name).toEqual('Newsletters')
-	})
 })
