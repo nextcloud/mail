@@ -468,6 +468,10 @@ export default {
 			type: Function,
 			required: true,
 		},
+		inReplyToMessageId: {
+			type: String,
+			default: undefined,
+		},
 		replyTo: {
 			type: Object,
 			required: false,
@@ -805,7 +809,7 @@ export default {
 				subject: this.subjectVal,
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
-				inReplyToMessageId: this.replyTo ? this.replyTo.messageId : undefined,
+				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
 				isHtml: !this.editorPlainText,
 				requestMdn: this.requestMdn,
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
