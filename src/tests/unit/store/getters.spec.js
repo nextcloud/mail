@@ -51,7 +51,7 @@ describe('Vuex store getters', () => {
 
 		const accounts = getters.accounts
 
-		expect(accounts).to.deep.equal([
+		expect(accounts).toEqual([
 			{
 				accountId: 13,
 			},
@@ -66,7 +66,7 @@ describe('Vuex store getters', () => {
 
 		const accounts = getters.getAccount(13)
 
-		expect(accounts).to.deep.equal({
+		expect(accounts).toEqual({
 			accountId: 13,
 		})
 	})
@@ -80,7 +80,7 @@ describe('Vuex store getters', () => {
 
 		const thread = getters.getEnvelopeThread(1)
 
-		expect(thread).to.be.empty
+		expect(thread.length).toEqual(0)
 	})
 	it('returns an envelope\'s empty thread', () => {
 		state.envelopes[1] = {
@@ -107,8 +107,8 @@ describe('Vuex store getters', () => {
 
 		const thread = getters.getEnvelopeThread(1)
 
-		expect(thread).to.not.be.empty
-		expect(thread).to.deep.equal([
+		expect(thread.length).toBeGreaterThanOrEqual(1)
+		expect(thread).toEqual([
 			{
 				databaseId: 1,
 				uid: 101,
@@ -171,8 +171,8 @@ describe('Vuex store getters', () => {
 		const getters = bindGetters()
 
 		const envelopesA = getters.getEnvelopesByThreadRootId(1, '123-456-789')
-		expect(envelopesA).to.be.length(2)
-		expect(envelopesA).to.deep.equal([
+		expect(envelopesA.length).toEqual(2)
+		expect(envelopesA).toEqual([
 			{
 				accountId: 1,
 				databaseId: 1,
@@ -190,6 +190,6 @@ describe('Vuex store getters', () => {
 		])
 
 		const envelopesB = getters.getEnvelopesByThreadRootId('345-678-901')
-		expect(envelopesB).to.be.empty
+		expect(envelopesB.length).toEqual(0)
 	})
 })

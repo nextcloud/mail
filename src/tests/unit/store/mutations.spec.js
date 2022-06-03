@@ -44,7 +44,7 @@ describe('Vuex store mutations', () => {
 			aliases: [],
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accountList: [13],
 			accounts: {
 				13: {
@@ -85,7 +85,7 @@ describe('Vuex store mutations', () => {
 			aliases: []
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accountList: [13],
 			accounts: {
 				13: {
@@ -149,7 +149,7 @@ describe('Vuex store mutations', () => {
 			personalNamespace: 'INBOX.',
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accountList: [13],
 			accounts: {
 				13: {
@@ -228,7 +228,7 @@ describe('Vuex store mutations', () => {
 			aliases: []
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accountList: [13],
 			accounts: {
 				13: {
@@ -314,7 +314,7 @@ describe('Vuex store mutations', () => {
 			aliases: []
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accountList: [13],
 			accounts: {
 				13: {
@@ -421,7 +421,7 @@ describe('Vuex store mutations', () => {
 				},
 			})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accountList: [13],
 			accounts: {
 				13: {
@@ -512,7 +512,7 @@ describe('Vuex store mutations', () => {
 				},
 			})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accountList: [13],
 			accounts: {
 				13: {
@@ -583,7 +583,7 @@ describe('Vuex store mutations', () => {
 			id: 27,
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accounts: {
 				13: {
 					accountId: 13,
@@ -628,7 +628,7 @@ describe('Vuex store mutations', () => {
 			id: 28,
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accounts: {
 				13: {
 					accountId: 13,
@@ -681,7 +681,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accounts: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
@@ -757,7 +757,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accounts: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
@@ -836,7 +836,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accounts: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
@@ -930,7 +930,7 @@ describe('Vuex store mutations', () => {
 			id: 12345,
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accounts: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
@@ -1017,7 +1017,7 @@ describe('Vuex store mutations', () => {
 			],
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1099,7 +1099,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			accounts: {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
@@ -1193,7 +1193,7 @@ describe('Vuex store mutations', () => {
 			],
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1274,7 +1274,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			mailboxes: {
 				27: {
 					databaseId: 27,
@@ -1338,7 +1338,7 @@ describe('Vuex store mutations', () => {
 			tagId: tag.id,
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			envelopes: {
 				12345: {
 					mailboxId: 27,
@@ -1386,7 +1386,7 @@ describe('Vuex store mutations', () => {
 			tagId: tag.id,
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			envelopes: {
 				12345: {
 					mailboxId: 27,
@@ -1420,7 +1420,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state).to.deep.equal({
+		expect(state).toEqual({
 			tagList: [
 				1,
 			],
@@ -1470,7 +1470,7 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state.mailboxes[27].envelopeLists['']).to.be.length(1)
+		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)
 
 		mutations.addEnvelope(state, {
 			query: undefined,
@@ -1484,6 +1484,6 @@ describe('Vuex store mutations', () => {
 			},
 		})
 
-		expect(state.mailboxes[27].envelopeLists['']).to.be.length(1)
+		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)
 	})
 })

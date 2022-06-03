@@ -35,7 +35,7 @@ describe('mailboxSorter', () => {
 
 		const sorted = sortMailboxes(mailboxes)
 
-		expect(sorted).to.deep.equal([mb1, mb2])
+		expect(sorted).toEqual([mb1, mb2])
 	})
 
 	it('lists special mailboxes first', () => {
@@ -51,7 +51,7 @@ describe('mailboxSorter', () => {
 
 		const sorted = sortMailboxes(mailboxes)
 
-		expect(sorted).to.deep.equal([mb2, mb1])
+		expect(sorted).toEqual([mb2, mb1])
 	})
 
 	it('sorts equally special mailboxes', () => {
@@ -67,7 +67,7 @@ describe('mailboxSorter', () => {
 
 		const sorted = sortMailboxes(mailboxes)
 
-		expect(sorted).to.deep.equal([mb1, mb2])
+		expect(sorted).toEqual([mb1, mb2])
 	})
 
 	it('sorts real-world mailboxes', () => {
@@ -99,6 +99,6 @@ describe('mailboxSorter', () => {
 
 		const sorted = sortMailboxes(mailboxes)
 
-		expect(sorted).to.deep.equal([mb2, mb1, mb5, mb6, mb4, mb3])
+		expect(sorted).toEqual([mb2, mb1, mb5, mb6, mb4, mb3])
 	})
 })

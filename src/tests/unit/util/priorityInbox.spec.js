@@ -29,13 +29,13 @@ import {
 
 describe('priorityInbox', () => {
 	it('has correct query constants', () => {
-		expect(priorityImportantQuery).to.equal('is:pi-important')
-		expect(priorityStarredQuery).to.equal('is:pi-starred')
-		expect(priorityOtherQuery).to.equal('is:pi-other')
+		expect(priorityImportantQuery).toEqual('is:pi-important')
+		expect(priorityStarredQuery).toEqual('is:pi-starred')
+		expect(priorityOtherQuery).toEqual('is:pi-other')
 	})
 
 	it('returns all queries', () => {
-		expect(getPrioritySearchQueries()).to.deep.equal([
+		expect(getPrioritySearchQueries()).toEqual([
 			'is:pi-important',
 			'is:pi-starred',
 			'is:pi-other',

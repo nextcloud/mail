@@ -28,7 +28,7 @@ describe('pgp', () => {
 
 		const isPgp = isPgpgMessage(messages)
 
-		expect(isPgp).to.equal(false)
+		expect(isPgp).toEqual(false)
 	})
 
 	it('detects non-pgp HTML messages', () => {
@@ -36,7 +36,7 @@ describe('pgp', () => {
 
 		const isPgp = isPgpgMessage(messages)
 
-		expect(isPgp).to.equal(false)
+		expect(isPgp).toEqual(false)
 	})
 
 	it('detects a pgp message', () => {
@@ -44,6 +44,6 @@ describe('pgp', () => {
 
 		const isPgp = isPgpgMessage(message)
 
-		expect(isPgp).to.equal(true)
+		expect(isPgp).toEqual(true)
 	})
 })

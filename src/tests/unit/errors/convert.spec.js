@@ -27,8 +27,8 @@ describe('convert error', () => {
 
 		const result = convertAxiosError(error)
 
-		expect(result).to.not.be.an.instanceof(Error)
-		expect(result).to.equal(error)
+		expect(result instanceof Error).toEqual(false)
+		expect(result).toEqual(error)
 	})
 
 	it('ignores errors it does not know', () => {
@@ -42,8 +42,8 @@ describe('convert error', () => {
 
 		const result = convertAxiosError(error)
 
-		expect(result).to.not.be.an.instanceof(Error)
-		expect(result).to.equal(error)
+		expect(result instanceof Error).toEqual(false)
+		expect(result).toEqual(error)
 	})
 
 	it('converts known exceptions to errors', () => {
@@ -64,6 +64,6 @@ describe('convert error', () => {
 
 		const result = convertAxiosError(error)
 
-		expect(result).to.be.an.instanceof(Error)
+		expect(result instanceof Error).toEqual(true)
 	})
 })
