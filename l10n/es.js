@@ -181,6 +181,7 @@ OC.L10N.register(
     "Notify the sender" : "Notificar al remitente",
     "You sent a read confirmation to the sender of this message." : "Ha enviado la confirmación de lectura al remitente de este mensaje.",
     "Could not send mdn" : "No se ha podido enviar el acuse de recibo (Message Disposition Notification)",
+    "Reply all" : "Contestar a todos",
     "Reply" : "Responder",
     "Reply to sender only" : "Responder sólo al remitente",
     "Move message" : "Mover mensaje",
