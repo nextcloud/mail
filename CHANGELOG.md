@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 - PHP8.1 support
 - Many performance improvements
 ### Changed
+
+## 1.12.3 – 2022-06-07
+### Fixed
+- Missing reply flagging and headers for edited outbox messages
+
 - New material icons
 - Dropped Nextcloud 21 support (EOL)
 - Dropped PHP7.3 support (EOL)
