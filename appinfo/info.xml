@@ -10,7 +10,7 @@
 - **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.
 - **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 - **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.
-- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
+- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 	]]></description>
 	<version>1.14.0-alpha.2</version>
 	<licence>agpl</licence>
