@@ -1,33 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.13.1 – 2022-06-07
+## 1.12.4 – 2022-06-07
 ### Fixed
-- Upgrade error on Nextcloud <22.2
-- Missing reply flagging and headers for edited outbox messages
-
-## 1.13.0 – 2022-06-02
-### Added
-- PHP8.1 support
-- Many performance improvements
-### Changed
+- Quoting forwarded messages
+- Sending erroneous message repeatedly
 
 ## 1.12.3 – 2022-06-07
 ### Fixed
 - Missing reply flagging and headers for edited outbox messages
-
-- New material icons
-- Dropped Nextcloud 21 support (EOL)
-- Dropped PHP7.3 support (EOL)
-### Fixed
-- Leaking database cursor
-- Memory leaks
-- Causal read during outbox message/recipient insert
-- OCI compatibility
-- Forwarding attachments
-- Creating duplicate tags
-- Collecting recipient addresses in background
-- Priority inbox synchronization
 
 ## 1.12.2 – 2022-06-02
 ### Fixed
@@ -56,13 +37,13 @@ All notable changes to this project will be documented in this file.
 - Show account color indicator only if several accounts are present
 - Consider passwordless signings when provisioning
 
-## 1.12.0 - 2022-04-26
+## 1.12.0 - 2022-05-03
 ### Added
 - Local Outbox
 - Scheduled Sending
 - Undo Sending
 - Anti abuse detection
-- Time in-/senstive background jobs
+- Time in-/sensitive background jobs
 - Clipboard support, copy recipient to clipboard
 - Loading indicator for autosuggestion dropdown
 ### Changed
@@ -70,6 +51,7 @@ All notable changes to this project will be documented in this file.
 - Account setup error reporting
 - Downgrade KItinerary log line to info
 ### Fixed
+- Discard drafts on outbox and imap messages
 - TypeError spamming logs when user not logged in
 - Sync error with empty UID list
 - array_merge needs at least one argument
