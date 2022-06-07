@@ -130,7 +130,11 @@ class LocalMessageMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->isNotNull('send_at'),
-				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->orX(
+					$qb->expr()->isNull('failed'),
+					$qb->expr()->eq('failed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				)
 			);
 		$messages = $this->findEntities($select);
 
