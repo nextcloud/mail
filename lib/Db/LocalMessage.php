@@ -44,6 +44,8 @@ use function array_filter;
  * @method void setBody(string $body)
  * @method bool isHtml()
  * @method void setHtml(bool $html)
+ * @method bool|null isFailed()
+ * @method void setFailed(bool $failed)
  * @method string|null getInReplyToMessageId()
  * @method void setInReplyToMessageId(?string $inReplyToId)
  */
@@ -84,12 +86,16 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var array|null */
 	protected $recipients;
 
+	/** @var bool|null */
+	protected $failed;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
 		$this->addType('aliasId', 'integer');
 		$this->addType('sendAt', 'integer');
 		$this->addType('html', 'boolean');
+		$this->addType('failed', 'boolean');
 	}
 
 	/**
@@ -127,6 +133,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 					return $recipient->getType() === Recipient::TYPE_BCC;
 				})
 			),
+			'failed' => $this->isFailed() === true,
 		];
 	}
 
