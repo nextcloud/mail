@@ -40,7 +40,7 @@ style('mail', 'redirect');
 	<div class="update">
 		<h2><?php p($l->t('Redirect')); ?></h2>
 		<p><?php p($l->t('The link leads to %s', [$_['urlHost']])); ?></p>
-		<p class="infogroup"><?php print_unescaped($l->t('If you don’t want to visit that page, you can return to <a href="%s">Mail</a>.',
+		<p class="infogroup"><?php print_unescaped($l->t('If you do not want to visit that page, you can return to <a href="%s">Mail</a>.',
 			[$_['mailURL']]));
 	?></p>
 
