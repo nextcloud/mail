@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.12.4 – 2022-06-07
+### Fixed
+- Quoting forwarded messages
+- Sending erroneous message repeatedly
+
 ## 1.12.3 – 2022-06-07
 ### Fixed
 - Missing reply flagging and headers for edited outbox messages
