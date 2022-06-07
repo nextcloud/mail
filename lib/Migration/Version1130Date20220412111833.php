@@ -170,7 +170,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		$messagesTable->addIndex(['mailbox_id'], 'mail_messages_mailbox_id');
 
 		// Postgres doesn't allow for shortened indices, so let's skip the last index.
-		if ($schema->getDatabasePlatform() instanceof PostgreSQL94Platform) {
+		if ($this->connection->getDatabasePlatform() instanceof PostgreSQL94Platform) {
 			return $schema;
 		}
 
