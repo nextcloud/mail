@@ -752,6 +752,7 @@ export default {
 	},
 	async beforeMount() {
 		this.setAlias()
+		this.initBody()
 		await this.onMailvelopeLoaded(await getMailvelope())
 	},
 	mounted() {
