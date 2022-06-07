@@ -34,6 +34,8 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -126,7 +128,14 @@ class OutboxService implements ILocalMailboxService {
 	}
 
 	public function sendMessage(LocalMessage $message, Account $account): void {
-		$this->transmission->sendLocalMessage($account, $message);
+		try {
+			$this->transmission->sendLocalMessage($account, $message);
+		} catch (ClientException|ServiceException $e) {
+			// Mark as failed so the message is not sent repeatedly in background
+			$message->setFailed(true);
+			$this->mapper->update($message);
+			throw $e;
+		}
 		$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
