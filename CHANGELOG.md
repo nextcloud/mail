@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.13.2 - 2022-06-07
+### Fixed
+- Quoting forwarded messages
+- Sending erroneous message repeatedly
+- Database platform check with Nextcloud <22.2
+- Missing Composer.vue::initBody call after mount
+
 ## 1.13.1 – 2022-06-07
 ### Fixed
 - Upgrade error on Nextcloud <22.2
