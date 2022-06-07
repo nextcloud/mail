@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.13.1 – 2022-06-07
+### Fixed
+- Upgrade error on Nextcloud <22.2
+- Missing reply flagging and headers for edited outbox messages
+
 ## 1.13.0 – 2022-06-02
 ### Added
 - PHP8.1 support
