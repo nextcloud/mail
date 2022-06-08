@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -47,6 +48,9 @@ class TrainImportanceClassifierJob extends TimedJob {
 	/** @var IJobList */
 	private $jobList;
 
+	/** @var IUserPreferences */
+	private $preferences;
+
 	/** @var LoggerInterface */
 	private $logger;
 
@@ -54,6 +58,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 								AccountService $accountService,
 								ImportanceClassifier $classifier,
 								IJobList $jobList,
+								IUserPreferences $preferences,
 								LoggerInterface $logger) {
 		parent::__construct($time);
 
@@ -69,6 +74,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 		if (defined('\OCP\BackgroundJob\IJob::TIME_INSENSITIVE') && method_exists($this, 'setTimeSensitivity')) {
 			$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 		}
+		$this->preferences = $preferences;
 	}
 
 	/**
@@ -88,6 +94,10 @@ class TrainImportanceClassifierJob extends TimedJob {
 		$dbAccount = $account->getMailAccount();
 		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
 			$this->logger->info("Ignoring cron training for provisioned account that has no password set yet");
+			return;
+		}
+		if ($this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
+			$this->logger->debug("classification is turned off for account $accountId");
 			return;
 		}
 
