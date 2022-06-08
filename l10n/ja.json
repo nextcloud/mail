@@ -268,7 +268,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "数秒以内に自動的にリダイレクトされない場合は、ここをクリックしてください。",
     "Redirect" : "リダイレクト",
     "The link leads to %s" : "リンクが %s につながります",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページを開きたくない場合は、<a href=\"%s\">メール</a> に戻ることができます。",
     "Continue to %s" : "%s にリダイレクトする"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

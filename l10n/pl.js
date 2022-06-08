@@ -14,7 +14,6 @@ OC.L10N.register(
     "Mails" : "E-maile",
     "Mail" : "Poczta",
     "💌 A mail app for Nextcloud" : "💌 Aplikacja poczty dla Nextcloud",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Aplikacja poczty dla Nextcloud **\n\n- **🚀 Integracja z innymi aplikacjami Nextcloud!** Obecnie kontakty, kalendarz i pliki - więcej w przyszłości.\n- **📥 Wiele kont pocztowych!** Konto osobiste i firmowe? Bez problemu. Dodatkowo ładna zunifikowana skrzynka odbiorcza. Połącz dowolne konto IMAP.\n- **🔒 Wysyłaj i odbieraj zaszyfrowane maile!** Korzystając ze wspaniałego rozszerzenia przeglądarki [Mailvelope](https://mailvelope.com).\n- **🙈 Nie wynajdujemy koła na nowo!** Na podstawie wspaniałych bibliotek [Horde](https://horde.org) \n- **📬 Chcesz hostować własny serwer pocztowy?** Nie musimy ponownie go wdrażać, ponieważ możesz skonfigurować [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Wersje robocze są zapisywane w:",
     "Sent messages are saved in:" : "Wysłane wiadomości są zapisywane w:",
     "Deleted messages are moved in:" : "Usunięte wiadomości są przenoszone do:",
@@ -406,7 +405,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknij tutaj, jeśli nie zostaniesz automatycznie przekierowany w ciągu kilku sekund.",
     "Redirect" : "Przekieruj",
     "The link leads to %s" : "Link prowadzi do %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
     "Continue to %s" : "Kontynuuj do %s"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

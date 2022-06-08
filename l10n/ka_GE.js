@@ -113,7 +113,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "იმ შემთხვევაში, თუ რამდენიმე წამის განმავლობაში არ მოხდება ავტომატური გადამისამართება დააწკაპუნეთ აქ.",
     "Redirect" : "გადამისამართება",
     "The link leads to %s" : "ბმულს მიყევხართ %s-ისკენ",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "თუ არ გსურთ ესტუმროთ იმ გვერდს, შეგიძლიათ დაუბრუნდეთ <a href=\"%s\">ფოსტას</a>.",
     "Continue to %s" : "%s-ისკენ გაგრძელება"
 },
 "nplurals=2; plural=(n!=1);");

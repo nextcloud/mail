@@ -12,7 +12,6 @@
     "Mails" : "Sähköpostit",
     "Mail" : "Sähköposti",
     "💌 A mail app for Nextcloud" : "💌 Sähköpostisovellus Nextcloudille",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Sähköpostisovellus Nextcloudiin**\n\n- **🚀 Yhteensopivuus muiden Nextcloud-sovellusten kanssa!** Toimii muun muassa Yhteystiedot, Kalenteri ja Tiedostot-sovelluksen kanssa ja lisää tulossa.\n- **📥 Useampi sähköpostitili!** Oma ja yrityksen sähköposti käytössä? Ei ongelmaa ja toimii sulavasti yhdessä. Yhdistä mikä tahansa IMAP-tili.\n- **🔒 Lähetä ja vastaanota salattuja viestejä!** Käyttämällä tehokasta [Mailvelope](https://mailvelope.com) -selainlaajennusta.\n- **🙈 Emme keksi pyörää uudelleen!** Perustuu luotettavaan [Horde](https://horde.org) -ohjelmakirjastoon.\n- **📬 Haluatko ylläpitää omaa sähköpostipalvelinta?** Suosittelemme tutustumaan [Mail-in-a-Box](https://mailinabox.email) -kokonaisuuteen!",
     "Drafts are saved in:" : "Luonnokset tallennetaan sijaintiin:",
     "Sent messages are saved in:" : "Lähetetyt viestit tallennetaan sijaintiin:",
     "Deleted messages are moved in:" : "Poistetut viestit tallennetaan sijaintiin:",
@@ -322,7 +321,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jos et halua vierailla kyseisellä sivulla, voit palata <a href=\"%s\">sähköpostiin</a>.",
     "Continue to %s" : "Jatka sivulle %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

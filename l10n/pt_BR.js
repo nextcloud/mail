@@ -14,7 +14,6 @@ OC.L10N.register(
     "Mails" : "E-mails",
     "Mail" : "E-mail",
     "💌 A mail app for Nextcloud" : "💌 Um aplicativo de e-mail para Nextcloud",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Um aplicativo de e-mail para Nextcloud **\n\n- **🚀 Integração com outros aplicativos Nextcloud! ** Atualmente Contatos, Calendário e Arquivos - mais por vir. \n- **📥 Várias contas de e-mail! ** Conta pessoal e empresarial? Sem problemas, e uma bela caixa de entrada unificada. Conecte qualquer conta IMAP. \n- **🔒 Envie e receba emails criptografados! ** Usando a grande extensão do navegador [Mailvelope] (https://mailvelope.com). \n- **🙈 Não estamos reinventando a roda! ** Com base nas ótimas bibliotecas [Horde] (https://horde.org). \n- **📬 Quer hospedar seu próprio servidor de e-mail? ** Não precisamos reimplementar isso, pois você pode configurar o [Mail-in-a-Box] (https://mailinabox.email)! ",
     "Drafts are saved in:" : "Rascunhos são salvos em:",
     "Sent messages are saved in:" : "Mensagens enviadas são salvas em:",
     "Deleted messages are moved in:" : "Mensagens excluídas são movidas para:",
@@ -406,7 +405,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se você não for redirecionado automaticamente em alguns segundos",
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "O link leva a %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se você não quiser visitar essa página, você pode retornar ao <a href=\"%s\">e-mail</a>.",
     "Continue to %s" : "Continue para %s"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

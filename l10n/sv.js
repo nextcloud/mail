@@ -314,7 +314,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klicka här om du inte blir omdirigerad inom några sekunder.",
     "Redirect" : "Omdirigera",
     "The link leads to %s" : "Länken pekar mot %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Om du inte vill besöka denna sidan så kan du gå tillbaka till <a href=\"%s\">E-post</a>",
     "Continue to %s" : "Fortsätt till %s"
 },
 "nplurals=2; plural=(n != 1);");

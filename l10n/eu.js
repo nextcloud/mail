@@ -14,7 +14,6 @@ OC.L10N.register(
     "Mails" : "Posta",
     "Mail" : "Posta",
     "💌 A mail app for Nextcloud" : "💌 Posta elektroniko zerbitzu bat Nextcloudekin",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Posta elektroniko zerbitzu bat Nextcloudentzat**\n\n- **🚀 Bateragarria beste Nextcloud aplikazioekin!** Kontaktuak, Egutegia, Fitxategiak – eta etorriko dena!\n- **📥 Posta elektroniko kontu askorekin batera erabiltzeko aukera!** Posta helbide pertsonal bat eta laneko beste bat? Arazorik ez eta buzoi bateratu ederra. Konektatu edozein IMAP posta kontu.\n- **🔒 Bidali eta jaso zifratutako mezuak!** [Mailvelope] zoragarri hori erabiliz! (https://mailvelope.com) nabigatzailearen gehigarri hori.\n- **🙈 Ez gara gurpila berrasmatzen ari!** [Horde](http://horde.org) liburutegi sisteman oinarritu gara.\n- **📬 Zure posta elektronikoaren ostatua zeuk sortu nahi duzu?** Ez dugu ezer berririk sortu behar, hortxe duzu [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Zirriborroak hemen gordetzen dira:",
     "Sent messages are saved in:" : "Bidalitako mezuak hemen gordetzen dira:",
     "Deleted messages are moved in:" : "Ezabatutako mezuak hona mugitzen dira:",
@@ -406,7 +405,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Egin klik hemen hurrengo segundoetan automatikoki birbideratzen ez bada.",
     "Redirect" : "Birbideratu",
     "The link leads to %s" : "Estekak hona bideratzen du: %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ez baduzu webgune horretara joan nahi, <a href=\"%s\">Posta</a> aplikaziora itzul zaitezke",
     "Continue to %s" : "Jarraitu hona: %s"
 },
 "nplurals=2; plural=(n != 1);");

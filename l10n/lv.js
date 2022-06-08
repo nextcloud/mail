@@ -109,7 +109,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Noklikšķiniet šeit, ja netiekat pārvirzīts automātiski dažu sekunžu laikā.",
     "Redirect" : "Novirzīt",
     "The link leads to %s" : "Saite, kas ved uz %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ja nevēlaties apmeklēt šo lapu, varat atgriezties pie <a href=\"%s\">e-pasta</a>.",
     "Continue to %s" : "Turpināt %s"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

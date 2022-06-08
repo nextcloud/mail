@@ -242,7 +242,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Jeigu per artimiausias kelias sekundes nesate automatiškai nukreipiami, spustelėkite čia.",
     "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeigu jūs nenorite lankytis tame puslapyje, galite grįžti į <a href=\"%s\">Paštą</a>.",
     "Continue to %s" : "Tęsti į %s"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

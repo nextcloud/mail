@@ -221,7 +221,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Premeu aquí si no se us redirigeix automàticament d'aquí pocs segons.",
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continua a %s"
 },
 "nplurals=2; plural=(n != 1);");

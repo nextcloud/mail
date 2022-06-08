@@ -117,7 +117,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Click here if you are not automatically redirected within the next few seconds.",
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s"
 },
 "nplurals=2; plural=(n != 1);");

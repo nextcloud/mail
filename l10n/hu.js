@@ -14,7 +14,6 @@ OC.L10N.register(
     "Mails" : "Levelek",
     "Mail" : "Levelezés",
     "💌 A mail app for Nextcloud" : "E-mail alkalmazás a Nextcloudhoz",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Egy e-mail alkalmazás a Nextcloudhoz**\n\n- **🚀 Integráció más nextcloudos alkalmazásokkal!** Jelenleg a Névjegyekkel, Naptárral és a Fájlokkal – továbbiak várhatóak.\n- **📥 Több postafiók kezelése!** Személyes és céges fiók? Nem probléma, és szép egyesített bejövő üzenetek mappát kap. Csatlakoztasson bármilyen IMAP-fiókot.\n- **🔒 Titkosított levelek fogadása és küldése!** A nagyszerű [Mailvelope](https://mailvelope.com) böngészőkiegészítő használatával.\n- **🙈 Nem találjuk fel újra a kereket!** A nagyszerű [Horde](https://horde.org) programkönyvtárakra építünk.\n- **📬 Szeretné a saját levelezőkiszolgálóját használni?** Ezt nem kell újra megvalósítanunk, használhatja a [Mail-in-a-Boxot](https://mailinabox.email)!",
     "Drafts are saved in:" : "Vázlatok mentése ide:",
     "Sent messages are saved in:" : "Elküldött üzenetek mentése ide:",
     "Deleted messages are moved in:" : "Törölt üzenetek áthelyezése ide:",
@@ -406,7 +405,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Kattintson ide, ha a következő néhány másodpercben nem lenne automatikusan átirányítva.",
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
     "Continue to %s" : "Folytatás ide: %s"
 },
 "nplurals=2; plural=(n != 1);");

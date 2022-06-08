@@ -12,7 +12,6 @@
     "Mails" : "Pošta",
     "Mail" : "Pošta",
     "💌 A mail app for Nextcloud" : "💌 Aplikacija za upravljanje e-poštom za Nextcloud",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Aplikacija za upravljanje e-poštom za Nextcloud**\n\n- **🚀 Integracija s drugim aplikacijama za Nextcloud!** Trenutno su podržane aplikacije Contacts, Calendar i Files – dodatne aplikacije uskoro.\n- **📥 Višestruki računi e-pošte!** Imate osobni i poslovni račun e-pošte? Nikakav problem za objedinjeni sandučić. Povežite se s bilo kojim IMAP računom.\n- **🔒 Šaljite i primajte šifrirane poruke e-pošte!** Korištenje odličnog dodatka za preglednik [Mailvelope](https://mailvelope.com).\n- **🙈 Ne otkrivamo toplu vodu!** Temeljeno na vrhunskim bibliotekama [Horde](https://horde.org).\n- **📬 Želite postaviti vlastiti poslužitelj e-pošte?** Dovoljno je da postavite [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Skice se spremaju u:",
     "Sent messages are saved in:" : "Poslane poruke spremaju se u:",
     "Deleted messages are moved in:" : "Izbrisane poruke spremaju se u:",
@@ -368,7 +367,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknite ovdje ako niste preusmjereni automatski unutar sljedećih nekoliko sekundi.",
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ako ne želite posjetiti tu stranicu, možete se vratiti na <a href=\"%s\">Poštu</a>.",
     "Continue to %s" : "Idi do %s"
 },"pluralForm" :"nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
 }

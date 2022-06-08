@@ -180,7 +180,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "اگر چند ثانیه دیگر به طور خودکار هدایت نشود ، اینجا را کلیک کنید.",
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "اگر مایل به بازدید از آن صفحه نیستید ، می توانید به <a href=\"%s\">ایمیل</a> برگردید.",
     "Continue to %s" : "ادامه دهید%s"
 },
 "nplurals=2; plural=(n > 1);");

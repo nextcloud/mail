@@ -107,7 +107,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikoni këtu nëse nuk ridrejtoheni automatikisht brenda disa sekondave",
     "Redirect" : "Ridrejtoje",
     "The link leads to %s" : "Lidhja shpie te %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Nëse s’doni ta vizitoni atë faqe, mund të ktheheni te <a href=\"%s\">Posta</a>.",
     "Continue to %s" : "Vazhdo te %s"
 },
 "nplurals=2; plural=(n != 1);");

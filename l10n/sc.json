@@ -12,7 +12,6 @@
     "Mails" : "Messàgios de posta",
     "Mail" : "Posta ",
     "💌 A mail app for Nextcloud" : "💌 Un'aplicatzione de posta pro Nextcloud",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Un'aplicatzione de posta pro Nextcloud**\n\n- **🚀 Integratzione cun àteras aplicatziones de Nextcloud!** Pro immoe Cuntatos, Calendàriu e Archìvios - àteras ant a arribare.\n- **📥 Contos de posta mùltiplos!** Contu personale e de s'impresa? Perunu problema, e una safata de posta unificada e geniosa. Cunnete ogni contu IMAP.\n- **🔒 Imbia e retzi messàgios tzifrados!** Impreende s'estensione bella pro su navigadore [Mailvelope](https://mailvelope.com).\n- **🙈 No semus torrende a inventare sa roda** Basadu subra is librerias ispantosas [Horde](https://horde.org).\n- **📬 Boles retzire su serbidore de posta tuo?** No depemus torrare a impostare, ca ddu podes fàghere tue [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Is brutacòpias sunt sarvadas in:",
     "Sent messages are saved in:" : "Is messàgios imbiados sunt sarvados in:",
     "Deleted messages are moved in:" : "Is messàgios cantzellados sunt tramudados in:",
@@ -341,7 +340,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Chi no boles visitare custa pàgina, podes torrare a  <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Sighi in %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -12,7 +12,6 @@
     "Mails" : "Ηλ.Αλληλογραφία",
     "Mail" : "Αλληλογραφία",
     "💌 A mail app for Nextcloud" : "Εφαρμογή ηλ.ταχυδρομείου για το Nextcloud",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Εφαρμογή ηλ.ταχυδρομείου για το Nextcloud **\n\n- **🚀 Συνεργασία με άλλες εφαρμογές Nextcloud!** Για την ώρα με Επαφές, Ημερολόγιο & Αρχεία - προσεχώς και άλλες.\n- **📥 Πολλαπλοί λογαριασμοί email!** Συνδυάστε προσωπικούς και επαγγελματικούς λογαριασμούς χωρίς πρόβλημα και σε ένα όμορφο περιβάλλον. Συνδέστε οποιονδήποτε λογαριασμό IMAP.\n- **🔒 Αποστολή & λήψη κρυπτογραφημένων μηνυμάτων!** Χρησιμοποιώντας το υπέροχο [Mailvelope](https://mailvelope.com) πρόσθετο φυλλομετρητή.\n- **🙈 Δεν ανακαλύπτουμε τον τροχό!** Βασισμένο στις εξαιρετικές βιβλιοθήκες του [Horde](http://horde.org).\n- **📬 Χρειάζεστε τον δικό σας διακομιστή email?** Δε χρειάζεται να εγκαταστήσετε άλλον, υπάρχει διαθέσιμος ο [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Τα πρόχειρα αποθηκεύονται σε:",
     "Sent messages are saved in:" : "Τα απεσταλμένα μηνύματα αποθηκεύονται σε:",
     "Deleted messages are moved in:" : "Τα διαγραμμένα μηνύματα μετακινούνται σε:",
@@ -319,7 +318,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Κάντε κλικ εδώ εάν δεν ανακατευθυνθείτε αυτόματα μέσα σε λίγα δευτερόλεπτα.",
     "Redirect" : "Ανακατεύθυνση",
     "The link leads to %s" : "Αυτός ο σύνδεσμος οδηγεί στο %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Εάν δεν θέλετε να επισκεφθείτε την σελίδα, μπορείτε να επιστρέψετε στην <a href=\"%s\">Αλληλογραφία</a>.",
     "Continue to %s" : "Συνέχεια στο %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

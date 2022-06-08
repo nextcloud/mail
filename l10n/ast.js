@@ -91,7 +91,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Primi equí si nun se te redirixe de mou automáticu en próximos segundos.",
     "Redirect" : "Redirixir",
     "The link leads to %s" : "L'enllace conduz a %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si nun quies dir a esta páxina, pues volver a <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continúa a %s"
 },
 "nplurals=2; plural=(n != 1);");

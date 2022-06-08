@@ -12,7 +12,6 @@
     "Mails" : "Messaggi di posta",
     "Mail" : "Posta",
     "💌 A mail app for Nextcloud" : "💌 Un'applicazione di posta per Nextcloud",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Un'applicazione di posta elettronica per Nextcloud**\n\n- **🚀 Integrazione con altre applicazioni Nextcloud!** Attualmente Contatti, Calendario e File – altri sono in arrivo.\n- **📥 Account di posta elettronica multipli!** Account personale e aziendale? Nessun problema e una bella casella di posta elettronica unificata. Collega qualsiasi account IMAP.\n- **🔒 Invia e ricevi e-mail crittografate!** Usa la fantastica estensione del browser [Mailvelope](https://mailvelope.com).\n- **🙈 Non stiamo reinventando la ruota!** Basato sulle fantastiche librerie di [Horde](https://horde.org).\n- **📬 Vuoi ospitare il tuo server di posta?** Non è necessario reimplementarlo poiché potresti configurare [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Le bozze sono salvate in:",
     "Sent messages are saved in:" : "I messaggi inviati sono salvati in:",
     "Deleted messages are moved in:" : "I messaggi eliminati sono spostati in:",
@@ -370,7 +369,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non vuoi visitare tale pagina, puoi tornare all'<a href=\"%s\">applicazione di posta</a>.",
     "Continue to %s" : "Continua su %s"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

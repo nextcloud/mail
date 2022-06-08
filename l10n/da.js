@@ -199,7 +199,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke ønsker at besøge denne side, kan du vende tilbage til <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Videre til %s"
 },
 "nplurals=2; plural=(n != 1);");

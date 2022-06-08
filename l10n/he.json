@@ -252,7 +252,6 @@
     "Click here if you are not automatically redirected within the next few seconds." : "יש ללחוץ כאן אם לא הועברת אוטומטית בשניות הקרובות.",
     "Redirect" : "הפנייה",
     "The link leads to %s" : "הקישור מוביל אל %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "אם אינך רוצה לבקר בדף זה, ניתן לחזור אל <a href=\"%s\">הדואר</a>.",
     "Continue to %s" : "ממשיך אל %s"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;"
 }

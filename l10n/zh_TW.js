@@ -14,7 +14,6 @@ OC.L10N.register(
     "Mails" : "郵件",
     "Mail" : "電子郵件",
     "💌 A mail app for Nextcloud" : "Nextcloud 的郵件應用程式",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Nextcloud 的郵件應用程式**\n\n- **🚀 與其他 Nextcloud 應用程式整合！** 目前有聯絡人、日曆與檔案 – 還會有更多。\n- **📥 多組郵件帳號！** 私人與公司帳號？沒問題，而且有很好的統一收件匣。可連線到任何 IMAP 帳號。\n- **🔒 傳送與接收加密電子郵件！** 使用超棒的 [Mailvelope](https://mailvelope.com) 瀏覽器擴充套件。\n- **🙈 我們並未重新發明輪子！** 以超棒的 [Horde](https://horde.org) 函式庫為基礎。\n- **📬 想要自架郵件伺服器嗎？** 我們不用重新實作此動作，因為您可以設定 [Mail-in-a-Box](https://mailinabox.email)！",
     "Drafts are saved in:" : "草稿儲存於：",
     "Sent messages are saved in:" : "已傳送的郵件儲存於：",
     "Deleted messages are moved in:" : "已刪除的郵件移動至：",
@@ -406,7 +405,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "如果未在幾秒內重新導向，請點擊此處。",
     "Redirect" : "重新導向",
     "The link leads to %s" : "該連結導向至 %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">郵件</a>。",
     "Continue to %s" : "前往 %s"
 },
 "nplurals=1; plural=0;");

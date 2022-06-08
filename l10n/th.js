@@ -72,7 +72,6 @@ OC.L10N.register(
     "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงค์ที่จะนำไปยัง %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "หากคุณไม่ต้องการเข้าชมหน้านั้นคุณสามารถกลับไปที่หน้า <a href=\"%s\">จดหมาย</a>",
     "Continue to %s" : "ดำเนินการต่อไปที่ %s"
 },
 "nplurals=1; plural=0;");

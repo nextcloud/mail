@@ -224,7 +224,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Smelltu hér ef þér er ekki beint áfram innan nokkurra sekúndna.",
     "Redirect" : "Endurbeina",
     "The link leads to %s" : "Tengillinn leiðir til %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

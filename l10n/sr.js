@@ -226,7 +226,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Кликните овде ако нисте аутоматски преусмерени у наредних неколико секунди.",
     "Redirect" : "Преусмеравање",
     "The link leads to %s" : "Веза води на %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страну, можете се вратити на <a href=\"%s\">Пошту</a>.",
     "Continue to %s" : "Настави на %s"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

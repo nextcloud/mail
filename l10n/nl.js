@@ -14,7 +14,6 @@ OC.L10N.register(
     "Mails" : "Mails",
     "Mail" : "E-mail",
     "💌 A mail app for Nextcloud" : "💌 Een e-mail app voor Nextcloud",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Een e-mail app voor Nextcloud**\n\n- **🚀 Integratie met andere Nextcloud apps!** Momenteel Contactpersonen, Agenda & Bestanden – later meer.\n- **📥 Meerdere e-mail accounts!** Persoonlijk en zakelijk account? Geen probleem, en een mooie geïntegreerde inbakje. Verbind elke mogelijke IMAP account.\n- **🔒 Verstuur & ontvang versleutelde e-mails!** Maak gebruik van de fantastische [Mailvelope](https://mailvelope.com) browserextensie.\n- **🙈 We vinden het wiel niet opnieuw uit!** Gebaseerd op de grootse [Horde](http://horde.org) libraries.\n- **📬 Will je je eigen e-mailserver draaien?** Dat hoeven we niet opnieuw in te richten, gebruik gewoon [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Concepten worden opgeslagen in:",
     "Sent messages are saved in:" : "Verzonden berichten worden opgeslagen in:",
     "Deleted messages are moved in:" : "Verwijderde berichten worden verplaatst naar:",
@@ -372,7 +371,6 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Als je die pagina niet wilt bezoeken, kun je teruggaan naar <a href=\"%s\">E-mail</a>.",
     "Continue to %s" : "Verder naar %s"
 },
 "nplurals=2; plural=(n != 1);");
