@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
@@ -45,17 +46,22 @@ class TrainAccount extends Command {
 	/** @var ImportanceClassifier */
 	private $classifier;
 
+	/** @var IUserPreferences */
+	private $preferences;
+
 	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(AccountService $service,
 								ImportanceClassifier $classifier,
+								IUserPreferences $preferences,
 								LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
 		$this->classifier = $classifier;
 		$this->logger = $logger;
+		$this->preferences = $preferences;
 	}
 
 	/**
@@ -79,6 +85,11 @@ class TrainAccount extends Command {
 			$output->writeln("<error>account $accountId does not exist</error>");
 			return 1;
 		}
+		if ($this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
+			$output->writeln("<info>classification is turned off for account $accountId</info>");
+			return 2;
+		}
+
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
 			$output
