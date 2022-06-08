@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.13.3 - 2022-06-08
+### Fixed
+- Editing of outbox messages
+
 ## 1.13.2 - 2022-06-07
 ### Fixed
 - Quoting forwarded messages
