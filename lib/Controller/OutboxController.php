@@ -155,7 +155,7 @@ class OutboxController extends Controller {
 						   string  $subject,
 						   string  $body,
 						   bool    $isHtml,
-						   bool    $failed,
+						   bool    $failed = false,
 						   array   $to = [],
 						   array   $cc = [],
 						   array   $bcc = [],
