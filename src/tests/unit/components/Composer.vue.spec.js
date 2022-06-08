@@ -19,28 +19,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-import Vue from 'vue'
+import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vuex from 'vuex'
 
+import Composer from '../../../components/Composer'
 import Nextcloud from '../../../mixins/Nextcloud'
-import TextEditor from '../../../components/TextEditor'
 
 const localVue = createLocalVue()
 
 localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
-describe('TextEditor', () => {
+describe('Composer', () => {
 
-	it('shallow mounts', async() => {
-		const wrapper = shallowMount(TextEditor, {
-			localVue,
-			propsData: {
-				value: 'bonjour',
-				bus: new Vue()
-			},
+	let actions
+	let getters
+	let store
+
+	beforeEach(() => {
+		actions = {}
+		getters = {
+			accounts: () => [
+				{
+					id: 123,
+					editorMode: 'plaintext',
+					isUnified: false,
+					aliases: [],
+				},
+			],
+			getPreference: () => (key, fallback) => fallback,
+			getAccount: () => ({}),
+			isScheduledSendingDisabled: () => false,
+		}
+		store = new Vuex.Store({
+			actions,
+			getters,
 		})
+	})
+
+	it('does not drop the reply message ID', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				inReplyToMessageId: 'abc123',
+				draft: jest.fn(),
+				send: jest.fn(),
+			},
+			store,
+			localVue,
+		})
+
+		const composerData = view.vm.getMessageData()
+
+		expect(composerData.inReplyToMessageId).toEqual('abc123')
 	})
 
 })
