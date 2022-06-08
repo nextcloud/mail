@@ -126,7 +126,7 @@ export default {
 				console.warn('thread is empty')
 				return ''
 			}
-			return thread[0].subject
+			return thread[0].subject || this.t('mail', 'No subject')
 		},
 	},
 	watch: {
