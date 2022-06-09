@@ -14,6 +14,7 @@ OC.L10N.register(
     "Mails" : "E-maily",
     "Mail" : "E-mail",
     "💌 A mail app for Nextcloud" : "💌 E-mailová aplikace pro Nextcloud",
+    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 E-mailová aplikace pro Nextcloud**\n\n- **🚀 Napojení na ostatní Nextcloud aplikace!** V tuto chvíli Kontakty, Kalendář a Soubory – další v přípravě.\n- **📥 Vícero e-mailových účtů!** Soukromý a pracovní účet? Žádný problém a hezká, sjednocená schránka pro příchozí poštu. Připojte libovolný IMAP účet.\n- **🔒 Posílání a příjem zašifrovaných e-mailů!** Pomocí skvělého rozšíření [Mailvelope](https://mailvelope.com) pro webový prohlížeč.\n- **🙈 Nevynalézáme znovu kolo!** Založeno na skvělých softwarových knihovnách [Horde](https://horde.org).\n- **📬 Chcete hostovat svůj vlastní e-mailový server?** Toto nemusíme reimplementovat, protože si můžete vytvořit [Mail-in-a-Box](https://mailinabox.email)!",
     "Drafts are saved in:" : "Koncepty jsou ukládány do:",
     "Sent messages are saved in:" : "Odeslané zprávy jsou ukládány do:",
     "Deleted messages are moved in:" : "Smazané zprávy jsou přesouvány do:",
@@ -251,6 +252,7 @@ OC.L10N.register(
     "Could not open outbox" : "Nepodaří se otevřít odchozí poštu",
     "Pending or not sent messages will show up here" : "Zprávy čekájící na odeslání a ty neodeslané se zobrazí zde",
     "Delete" : "Smazat",
+    "Message could not be sent" : "Zprávu se nepodařilo odeslat",
     "Message deleted" : "Zpráva smazána",
     "Contacts with this address" : "Kontakty s touto adresou",
     "Add to Contact" : "Přidat do kontaktů",
@@ -405,6 +407,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Pokud nebudete v následujících několika sekundách přesměrováni, klikněte sem.",
     "Redirect" : "Přesměrovat",
     "The link leads to %s" : "Odkaz vede na %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
     "Continue to %s" : "Pokračovat na %s"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");
