@@ -11,6 +11,7 @@
 			:subject="composerData.subject"
 			:attachments-data="composerData.attachments"
 			:body="composerData.body"
+			:editor-body="convertEditorBody(composerData)"
 			:in-reply-to-message-id="composerData.inReplyToMessageId"
 			:reply-to="composerData.replyTo"
 			:forward-from="composerData.forwardFrom"
@@ -25,7 +26,7 @@
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import logger from '../logger'
-import { toPlain } from '../util/text'
+import { toPlain, toHtml, plain } from '../util/text'
 import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -70,6 +71,8 @@ export default {
 		},
 	},
 	methods: {
+		toHtml,
+		plain,
 		async saveDraft(data) {
 			if (!this.composerMessage) {
 				logger.info('Ignoring draft because there is no message anymore', { data })
@@ -101,6 +104,7 @@ export default {
 				accountId: data.account,
 				subject: data.subject,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+				editorBody: data.body.value,
 				isHtml: data.isHtml,
 				to: serializeRecipients ? data.to.map(this.recipientToRfc822).join(', ') : data.to,
 				cc: serializeRecipients ? data.cc.map(this.recipientToRfc822).join(', ') : data.cc,
@@ -182,6 +186,15 @@ export default {
 				console.error(error)
 				showError(t('mail', 'Could not discard message'))
 			}
+		},
+		convertEditorBody(composerData) {
+			if (composerData.editorBody !== null) {
+				return composerData.editorBody
+			}
+			if (composerData.body === null) {
+				return ''
+			}
+			return toHtml(composerData.body).value
 		},
 	},
 }
