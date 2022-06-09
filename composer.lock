@@ -714,16 +714,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.31.1",
+            "version": "v2.31.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "75f941c5bc2195b21e56593e382caf45d21c107e"
+                "reference": "44e29dbf9ce0404614b62037b1ac8a0c256d9195"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/75f941c5bc2195b21e56593e382caf45d21c107e",
-                "reference": "75f941c5bc2195b21e56593e382caf45d21c107e",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/44e29dbf9ce0404614b62037b1ac8a0c256d9195",
+                "reference": "44e29dbf9ce0404614b62037b1ac8a0c256d9195",
                 "shasum": ""
             },
             "require": {
@@ -765,9 +765,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.31.1"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.31.2"
             },
-            "time": "2022-05-11T12:14:59+00:00"
+            "time": "2022-06-09T13:59:18+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -1432,16 +1432,16 @@
         },
         {
             "name": "bytestream/horde-util",
-            "version": "v2.6.3",
+            "version": "v2.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Util.git",
-                "reference": "a8e464eb29330a0fb4dce8dc9391f982f7a5e8d0"
+                "reference": "a678724f07ec5933e2192e4e6d9d84c033b358be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Util/zipball/a8e464eb29330a0fb4dce8dc9391f982f7a5e8d0",
-                "reference": "a8e464eb29330a0fb4dce8dc9391f982f7a5e8d0",
+                "url": "https://api.github.com/repos/bytestream/Util/zipball/a678724f07ec5933e2192e4e6d9d84c033b358be",
+                "reference": "a678724f07ec5933e2192e4e6d9d84c033b358be",
                 "shasum": ""
             },
             "require": {
@@ -1481,9 +1481,9 @@
             "description": "Horde utility library",
             "homepage": "https://www.horde.org/libraries/Horde_Util",
             "support": {
-                "source": "https://github.com/bytestream/Util/tree/v2.6.3"
+                "source": "https://github.com/bytestream/Util/tree/v2.6.4"
             },
-            "time": "2022-05-25T13:39:33+00:00"
+            "time": "2022-06-06T10:55:29+00:00"
         },
         {
             "name": "cerdic/css-tidy",
