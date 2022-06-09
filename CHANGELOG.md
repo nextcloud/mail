@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# 1.12.6 - 2022-06-08
+### Fixed
+- Better signature detection
+- Forwarding more than one attachment
+
 # 1.12.5 - 2022-06-08
 ### Fixed
 - Editing of outbox messages
