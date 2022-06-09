@@ -86,6 +86,7 @@ class OutboxController extends Controller {
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
+	 * @param string $editorBody
 	 * @param bool $isHtml
 	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array $cc
@@ -101,6 +102,7 @@ class OutboxController extends Controller {
 		int     $accountId,
 		string  $subject,
 		string  $body,
+		string  $editorBody,
 		bool    $isHtml,
 		array   $to = [],
 		array   $cc = [],
@@ -122,6 +124,7 @@ class OutboxController extends Controller {
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
 		$message->setBody($body);
+		$message->setEditorBody($editorBody);
 		$message->setHtml($isHtml);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
@@ -139,6 +142,7 @@ class OutboxController extends Controller {
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
+	 * @param string $editorBody
 	 * @param bool $isHtml
 	 * @param bool $failed
 	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
@@ -154,6 +158,7 @@ class OutboxController extends Controller {
 						   int     $accountId,
 						   string  $subject,
 						   string  $body,
+						   string  $editorBody,
 						   bool    $isHtml,
 						   bool    $failed = false,
 						   array   $to = [],
@@ -170,6 +175,7 @@ class OutboxController extends Controller {
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
 		$message->setBody($body);
+		$message->setEditorBody($editorBody);
 		$message->setHtml($isHtml);
 		$message->setFailed($failed);
 		$message->setInReplyToMessageId($inReplyToMessageId);
