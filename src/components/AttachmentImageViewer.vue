@@ -49,4 +49,7 @@ export default {
 		display: flex !important;
 	}
 }
+::v-deep .modal-container {
+	width: auto !important;
+}
 </style>
