@@ -251,6 +251,7 @@ OC.L10N.register(
     "Could not open outbox" : "Ezin izan da irteera-postontzia ireki",
     "Pending or not sent messages will show up here" : "Bidali gabe dauden edo bidali gabeko mezuak hemen agertuko dira",
     "Delete" : "Ezabatu",
+    "Message could not be sent" : "Ezin izan da mezua bidali",
     "Message deleted" : "Mezua ezabatu da",
     "Contacts with this address" : "Kontaktuak helbidearekin",
     "Add to Contact" : "Gehitun kontaktuetara",
