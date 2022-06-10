@@ -1,6 +1,6 @@
 <template>
 	<Modal
-		size="normal"
+		size="large"
 		:title="modalTitle"
 		@close="$emit('close', { restoreOriginalSendAt: true })">
 		<Composer
