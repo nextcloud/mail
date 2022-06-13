@@ -63,6 +63,8 @@ class AvatarServiceIntegrationTest extends TestCase {
 
 	public function testChristophsFavicon() {
 		$avatar = $this->service->getAvatar('christoph@winzerhof-wurst.at', 'jan');
-		$this->assertNull($avatar); // There is none
+		$this->assertNotNull($avatar); // There is an icon now - the favicon
+		$this->assertEquals('https://www.winzerhof-wurst.at/wp-includes/images/w-logo-blue-white-bg.png', $avatar->getUrl());
+		$this->assertEquals('image/png', $avatar->getMime());
 	}
 }
