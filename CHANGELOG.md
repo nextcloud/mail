@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-# 1.12.6 - 2022-06-08
+# 1.12.6 - 2022-06-13
 ### Fixed
 - Better signature detection
 - Forwarding more than one attachment
