@@ -60,9 +60,4 @@ class AvatarServiceIntegrationTest extends TestCase {
 		$image = $this->service->getAvatarImage('hey@jancborchardt.net', 'john');
 		$this->assertNotNull($image);
 	}
-
-	public function testChristophsFavicon() {
-		$avatar = $this->service->getAvatar('christoph@winzerhof-wurst.at', 'jan');
-		$this->assertNull($avatar); // There is none
-	}
 }
