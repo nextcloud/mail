@@ -36,6 +36,7 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\DB\QueryBuilder\IQueryFunction;
 use OCP\IDBConnection;
 use function array_map;
 
@@ -216,9 +217,9 @@ class MailboxMapper extends QBMapper {
 	 * @param IQueryBuilder $query
 	 * @param int|null $value
 	 *
-	 * @return string
+	 * @return string|IQueryFunction
 	 */
-	private function eqOrNull(IQueryBuilder $query, string $column, ?int $value, int $type): string {
+	private function eqOrNull(IQueryBuilder $query, string $column, ?int $value, int $type) {
 		if ($value === null) {
 			return $query->expr()->isNull($column);
 		}
