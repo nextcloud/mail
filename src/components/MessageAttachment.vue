@@ -20,9 +20,11 @@
   -->
 
 <template>
-	<div class="attachment"
-		@click="$emit('click', $event)">
-		<img v-if="isImage" class="mail-attached-image" :src="url">
+	<div class="attachment">
+		<img v-if="isImage"
+			class="mail-attached-image"
+			:src="url"
+			@click="$emit('click', $event)">
 		<img class="attachment-icon" :src="mimeUrl">
 		<span class="attachment-name"
 			:title="label">{{ name }}
