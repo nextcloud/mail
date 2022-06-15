@@ -1,6 +1,9 @@
 name: Lint
 on: pull_request
 
+permissions:
+  contents: read
+
 jobs:
   xml-linters:
     runs-on: ubuntu-latest
