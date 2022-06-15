@@ -72,16 +72,18 @@
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
-				<button
-					:class="{
-						'icon-reply-all-white': hasMultipleRecipients,
-						'icon-reply-white': !hasMultipleRecipients,
-						primary: expanded,
-					}"
-					class="button"
+				<Button
+					:class="{ primary: expanded}"
+					type="primary"
 					@click="onReply">
+					<template #icon>
+						<ReplyAllIcon v-if="hasMultipleRecipients"
+							:size="20" />
+						<ReplyIcon v-else
+							:size="20" />
+					</template>
 					<span class="action-label"> {{ hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply') }}</span>
-				</button>
+				</Button>
 				<MenuEnvelope class="app-content-list-item-menu"
 					:envelope="envelope"
 					:with-reply="false"
@@ -103,25 +105,32 @@
 	</div>
 </template>
 <script>
+import Avatar from './Avatar'
+import Button from '@nextcloud/vue/dist/Components/Button'
 import Error from './Error'
+import importantSvg from '../../img/important.svg'
 import Loading from './Loading'
 import logger from '../logger'
 import Message from './Message'
 import MenuEnvelope from './MenuEnvelope'
 import Moment from './Moment'
-import Avatar from './Avatar'
-import importantSvg from '../../img/important.svg'
+import ReplyIcon from 'vue-material-design-icons/Reply'
+import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		Avatar,
+		Button,
 		Error,
 		Loading,
 		MenuEnvelope,
 		Moment,
 		Message,
-		Avatar,
+		ReplyIcon,
+		ReplyAllIcon,
+
 	},
 	props: {
 		envelope: {
