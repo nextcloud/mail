@@ -978,4 +978,95 @@ class MessagesControllerTest extends TestCase {
 
 		$this->controller->destroy($id);
 	}
+
+	public function testGetThread(): void {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setThreadRootId('<marlon@slimehunter.com>');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willReturn($this->account);
+		$this->mailManager->expects($this->once())
+			->method('getThread')
+			->with($this->account, $message->getThreadRootId());
+
+		$this->controller->getThread($id);
+	}
+
+	public function testGetThreadNoThreadRootId(): void {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willReturn($this->account);
+		$this->mailManager->expects($this->never())
+			->method('getThread');
+
+		$this->controller->getThread($id);
+	}
+
+	public function testGetThreadThreadRootIdEmptyString(): void {
+		$accountId = 17;
+		$mailboxId = 987;
+		$id = 123;
+		$message = new \OCA\Mail\Db\Message();
+		$message->setUid(444);
+		$message->setMailboxId($mailboxId);
+		$message->setMessageId('<123@cde.com>');
+		$message->setThreadRootId('');
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setName('INBOX');
+		$mailbox->setAccountId($accountId);
+
+		$this->mailManager->expects($this->once())
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willReturn($this->account);
+		$this->mailManager->expects($this->once())
+			->method('getThread');
+
+		$this->controller->getThread($id);
+	}
 }
