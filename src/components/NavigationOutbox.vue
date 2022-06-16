@@ -28,6 +28,7 @@
 		:to="to">
 		<template #icon>
 			<IconOutbox
+				class="outbox-opacity-icon"
 				:size="20" />
 		</template>
 		<template #counter>
@@ -66,5 +67,12 @@ export default {
 <style lang="scss" scoped>
 ::v-deep .counter-bubble__counter {
 	margin-right: 43px;
+}
+.outbox-opacity-icon {
+	opacity: .7;
+
+	&:hover {
+		opacity: 1;
+	}
 }
 </style>
