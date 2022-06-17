@@ -160,6 +160,16 @@
 				{{ t('mail', 'Sync in background') }}
 			</ActionCheckbox>
 
+			<ActionButton
+				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified"
+				:close-after-click="true"
+				@click="clearMailbox">
+				<template #icon>
+					<EraserVariant :size="20" />
+				</template>
+				{{ t('mail', 'Clear mailbox') }}
+			</ActionButton>
+
 			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" @click="deleteMailbox">
 				<template #icon>
 					<IconDelete
@@ -218,6 +228,7 @@ import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 import { showInfo } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
+import EraserVariant from 'vue-material-design-icons/EraserVariant'
 
 export default {
 	name: 'NavigationMailbox',
@@ -243,6 +254,7 @@ export default {
 		IconInbox,
 		ImportantIcon,
 		MoveMailboxModal,
+		EraserVariant,
 	},
 	directives: {
 		droppableMailbox,
@@ -369,6 +381,9 @@ export default {
 		},
 		showUnreadCounter() {
 			return this.mailbox.unread > 0 && this.filter !== 'starred'
+		},
+		colorPrimaryElement() {
+			return getComputedStyle(document.body).getPropertyValue('--color-primary-element').trim()
 		},
 	},
 	mounted() {
@@ -525,6 +540,29 @@ export default {
 								logger.info(`mailbox ${id} deleted`)
 							})
 							.catch((error) => logger.error('could not delete mailbox', { error }))
+					}
+				}
+			)
+		},
+		clearMailbox() {
+			const id = this.mailbox.databaseId
+			OC.dialogs.confirmDestructive(
+				t('mail', 'All messages in folder will be deleted permanently.'),
+				t('mail', 'Clear mailbox {name}', { name: this.mailbox.displayName }),
+				{
+					type: OC.dialogs.YES_NO_BUTTONS,
+					confirm: t('mail', 'Clear mailbox'),
+					confirmClasses: 'error',
+					cancel: t('mail', 'Cancel'),
+				},
+				(result) => {
+					if (result) {
+						return this.$store
+							.dispatch('clearMailbox', { mailbox: this.mailbox })
+							.then(() => {
+								logger.info(`mailbox ${id} cleared`)
+							})
+							.catch((error) => logger.error('could not clear mailbox', { error }))
 					}
 				}
 			)

@@ -284,4 +284,22 @@ class MailboxesController extends Controller {
 		$this->mailManager->deleteMailbox($account, $mailbox);
 		return new JSONResponse();
 	}
+	
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function clearMailbox(int $id): JSONResponse {
+		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+
+		$this->mailManager->clearMailbox($account, $mailbox);
+		return new JSONResponse();
+	}
 }
