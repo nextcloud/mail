@@ -97,6 +97,7 @@ OC.L10N.register(
     "Uploading {percent}% …" : "Uploader {percent}%…",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
     "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
+    "No message found yet" : "Ingen beskeder",
     "Set up an account" : "Opret en konto",
     "Plain text" : "Klartekst",
     "Rich text" : "Formateret tekst",
