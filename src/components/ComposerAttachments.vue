@@ -22,17 +22,22 @@
 
 <template>
 	<div class="new-message-attachments">
-		<ul>
-			<li v-for="attachment in value" :key="attachment.id">
-				<div class="new-message-attachment-name">
-					{{ attachment.displayName ? attachment.displayName : attachment.fileName }}
-				</div>
-				<div class="new-message-attachments-action svg icon-delete" @click="onDelete(attachment)" />
-			</li>
-			<li v-if="uploading" class="attachments-upload-progress">
-				<div :class="{'icon-loading-small': uploading}" />
-				<div>{{ uploading ? t('mail', 'Uploading {percent}% …', {percent: uploadProgress}) : '' }}</div>
-			</li>
+		<div v-if="hasNextLine" class="message-attachments-count" @click="isToggle = !isToggle">
+			<span>
+				{{ n('mail', '{count} attachment', '{count} attachments', attachments.length, { count: attachments.length }) }} ({{ formatBytes(totalSizeOfUpload()) }})
+			</span>
+			<ChevronUp v-if="isToggle" :size="24" />
+			<ChevronDown v-if="!isToggle" :size="24" />
+		</div>
+		<ul class="new-message-attachments--list" :class="isToggle ? 'hide' : (hasNextLine ? 'active' : '')">
+			<ComposerAttachment
+				v-for="attachment in attachments"
+				ref="attachments"
+				:key="attachment.id"
+				:bus="bus"
+				:attachment="attachment"
+				:uploading="uploading"
+				@on-delete-attachment="onDelete(attachment)" />
 		</ul>
 
 		<input ref="localAttachments"
@@ -50,19 +55,36 @@ import { getRequestToken } from '@nextcloud/auth'
 import { formatFileSize } from '@nextcloud/files'
 import prop from 'lodash/fp/prop'
 import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
-import sum from 'lodash/fp/sum'
 import sumBy from 'lodash/fp/sumBy'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
 import Vue from 'vue'
 
 import logger from '../logger'
-import { getFileSize } from '../service/FileService'
+import { getFileData } from '../service/FileService'
 import { shareFile } from '../service/FileSharingService'
 import { uploadLocalAttachment } from '../service/AttachmentService'
 
+import ComposerAttachment from './ComposerAttachment.vue'
+
+import ChevronDown from 'vue-material-design-icons/ChevronDown'
+import ChevronUp from 'vue-material-design-icons/ChevronUp'
+
+const mimes = [
+	'image/gif',
+	'image/jpeg',
+	'image/pjpeg',
+	'image/png',
+	'image/webp',
+]
+
 export default {
 	name: 'ComposerAttachments',
+	components: {
+		ComposerAttachment,
+		ChevronDown,
+		ChevronUp,
+	},
 	props: {
 		value: {
 			type: Array,
@@ -81,6 +103,10 @@ export default {
 		return {
 			uploading: false,
 			uploads: {},
+			// this need if we want to pass in value only corrected uploaded files
+			attachments: [],
+			isToggle: false,
+			hasNextLine: false,
 		}
 	},
 	computed: {
@@ -93,11 +119,55 @@ export default {
 			}
 			return ((uploaded / total) * 100).toFixed(1)
 		},
+		total() {
+			let total = 0
+			for (const id in this.uploads) {
+				total += this.uploads[id].total
+			}
+			return total
+		},
+	},
+	watch: {
+		attachments() {
+			this.$nextTick(function() {
+				let prevTop = null
+				this.$refs.attachments.some((attachment, i) => {
+					const top = attachment.$el.getBoundingClientRect().top
+					if (prevTop !== null && prevTop !== top) {
+						if (!this.hasNextLine) {
+							this.isToggle = true
+							this.hasNextLine = true
+						}
+						return true
+					} else {
+						prevTop = top
+						if (this.$refs.attachments.length === i + 1) {
+							this.hasNextLine = false
+							this.isToggle = false
+							return true
+						}
+					}
+					return false
+				})
+			})
+		},
 	},
 	created() {
 		this.bus.$on('onAddLocalAttachment', this.onAddLocalAttachment)
 		this.bus.$on('onAddCloudAttachment', this.onAddCloudAttachment)
 		this.bus.$on('onAddCloudAttachmentLink', this.onAddCloudAttachmentLink)
+		this.value.map(attachment => {
+			this.attachments.push({
+				id: attachment.id,
+				fileName: attachment.fileName,
+				displayName: trimStart('/', attachment.fileName),
+				total: attachment.size,
+				finished: true,
+				sizeString: this.formatBytes(attachment.size),
+				imageBlobURL: attachment.isImage ? attachment.downloadUrl : attachment.mimeUrl,
+			})
+			return attachment
+		})
 	},
 	methods: {
 		onAddLocalAttachment() {
@@ -118,7 +188,7 @@ export default {
 		},
 		onLocalAttachmentSelected(e) {
 			this.uploading = true
-
+			// BUG - if choose again - progress lost/ move to complete()
 			Vue.set(this, 'uploads', {})
 
 			const toUpload = sumBy(prop('size'), Object.values(e.target.files))
@@ -131,32 +201,75 @@ export default {
 			})
 			if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
 				this.showAttachmentFileSizeWarning(e.target.files.length)
-
 				this.uploading = false
 				return
 			}
 
 			const progress = (id) => (prog, uploaded) => {
 				this.uploads[id].uploaded = uploaded
-			}
+				this.attachments.map((item, i) => {
+					if (item.displayName === id) {
+						this.attachments[i].progress = uploaded
+						this.changeProgress(item, uploaded)
+					}
+					return item
+				})
 
+			}
+			// TODO bug: cancel axios on close or delete attachment
 			const promises = map((file) => {
+				const controller = new AbortController()
+				this.attachments.push({
+					fileName: file.name,
+					fileType: file.type,
+					imageBlobURL: this.generatePreview(file),
+					displayName: trimStart('/', file.name),
+					progress: null,
+					percent: 0,
+					total: file.size,
+					finished: false,
+					error: false,
+					hasPreview: false,
+					controller,
+				})
+
 				Vue.set(this.uploads, file.name, {
 					total: file.size,
 					uploaded: 0,
 				})
+				try {
+					return uploadLocalAttachment(file, progress(file.name), controller)
+						.catch(() => {
+							this.attachments.some(attachment => {
+								if (attachment.displayName === file.name && !attachment.error) {
+									this.$set(attachment, 'error', true)
+									return true
+								}
+								return false
+							})
+						})
+						.then(({ file, id }) => {
+							logger.info('uploaded')
+							this.attachments.some((attachment, i) => {
+								if (attachment.displayName === file.name) {
+									this.attachments[i].id = id
+									this.attachments[i].finished = true
+									return true
+								}
+								return false
+							})
 
-				return uploadLocalAttachment(file, progress(file.name)).then(({ file, id }) => {
-					logger.info('uploaded')
-					this.emitNewAttachments([{
-						fileName: file.name,
-						displayName: trimStart('/', file.name),
-						id,
-						size: file.size,
-						type: 'local',
-					}])
-				})
+							this.emitNewAttachments([{
+								fileName: file.name,
+								displayName: trimStart('/', file.name),
+								id,
+								size: file.size,
+								type: 'local',
+							}])
+						})
+				} catch (error) {
 
+				}
 			}, e.target.files)
 
 			const done = Promise.all(promises)
@@ -172,8 +285,14 @@ export default {
 
 			try {
 				const paths = await picker.pick(t('mail', 'Choose a file to add as attachment'))
-				const fileSizes = await Promise.all(paths.map(getFileSize))
-				const newTotal = sum(fileSizes) + this.totalSizeOfUpload()
+				// maybe fiiled front with placeholder loader...?
+				const filesFromCloud = await Promise.all(paths.map(getFileData))
+
+				const sum = filesFromCloud.reduce((sum, item) => {
+					return sum + item.size
+				}, 0)
+
+				const newTotal = sum + this.totalSizeOfUpload()
 
 				if (this.uploadSizeLimit && newTotal > this.uploadSizeLimit) {
 					this.showAttachmentFileSizeWarning(paths.length)
@@ -181,12 +300,28 @@ export default {
 					return
 				}
 
-				this.emitNewAttachments(paths.map(function(name) {
-					return {
+				this.emitNewAttachments(paths.map((name, i) => {
+					const _cloudFile = {
 						fileName: name,
 						displayName: trimStart('/', name),
 						type: 'cloud',
+						size: filesFromCloud[i].size,
+
 					}
+					const _toAttachmentData = {
+						finished: true,
+						imageBlobURL: this.generatePreview(_cloudFile),
+						total: filesFromCloud[i].size,
+						sizeString: this.formatBytes(filesFromCloud[i].size),
+						hasPreview: filesFromCloud[i]['has-preview'],
+						// dont know, may be it will be conflict if cloud & local has equal IDs?
+						id: filesFromCloud[i].fileid,
+						uploaded: 0,
+					}
+
+					this.attachments.push(Object.assign(_toAttachmentData, _cloudFile))
+
+					return _cloudFile
 				}))
 			} catch (error) {
 				logger.error('could not choose a file as attachment', { error })
@@ -216,13 +351,69 @@ export default {
 			))
 		},
 		onDelete(attachment) {
+			if (!attachment.finished) {
+				attachment.controller.abort()
+			}
+			const val = {
+				fileName: attachment.fileName,
+				displayName: attachment.displayName,
+				id: attachment.id,
+				size: attachment.total,
+				type: attachment.type,
+			}
+			const _att = this.attachments.filter((a) => {
+				return a !== attachment
+			})
+			this.attachments = _att
+
 			this.$emit(
 				'input',
-				this.value.filter((a) => a !== attachment)
+				this.value.filter((a) => {
+					if (val.type === 'cloud') {
+						return a.fileName !== val.fileName
+					} else {
+						return a.id !== val.id
+					}
+
+				})
 			)
 		},
 		appendToBodyAtCursor(toAppend) {
 			this.bus.$emit('appendToBodyAtCursor', toAppend)
+		},
+		formatBytes(bytes, decimals = 2) {
+			if (bytes === 0) return '0 B'
+			const k = 1024
+			const dm = decimals < 0 ? 0 : decimals
+			const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+			const i = Math.floor(Math.log(bytes) / Math.log(k))
+			return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+		},
+		changeProgress(item, progress) {
+			this.attachments.map((attachment, i) => {
+				if (item.fileName === attachment.fileName) {
+					if (!attachment.finished) {
+						const _progress = progress <= attachment.total ? progress : attachment.total
+						this.$set(attachment, 'progress', _progress)
+						this.$set(attachment, 'sizeString', this.formatBytes(_progress))
+						this.$set(attachment, 'percent', (_progress / attachment.total) * 100).toFixed(1)
+						if (item.total <= _progress) {
+							this.$set(attachment, 'finished', true)
+						}
+					}
+				}
+				return attachment
+			})
+		},
+		generatePreview(file) {
+			if (this.isImage(file)) {
+				return URL.createObjectURL(file)
+			} else {
+				return false
+			}
+		},
+		isImage(file) {
+			return file.type && mimes.indexOf(file.type) !== -1
 		},
 	},
 }
@@ -231,51 +422,32 @@ export default {
 <style scoped lang="scss">
 
 .new-message-attachments {
-	ul {
+	ul.new-message-attachments--list {
 		display: flex;
 		flex-wrap: wrap;
 		// 2 and a half attachment height
-		max-height: 140px;
 		overflow: auto;
+		transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+		padding: 0 10px;
+
+		&.hide {
+			overflow: hidden;
+			max-height:0;
+			transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+		}
+
+		&.active {
+			overflow: auto;
+			max-height: 287px;
+		}
 	}
-	li {
-		padding: 10px;
+
+	.message-attachments-count {
+		color: var(--color-text-maxcontrast);
+		padding: 10px 20px;
+		cursor:pointer;
+		display:flex;
+		align-items: center;
 	}
-}
-
-.new-message-attachments-action {
-	display: inline-block;
-	vertical-align: middle;
-	padding: 10px;
-	opacity: 0.5;
-}
-
-/* attachment filenames */
-.new-message-attachment-name {
-	display: inline-block;
-}
-
-/* Colour the filename with a different color during attachment upload */
-.new-message-attachment-name.upload-ongoing {
-	color: #0082c9;
-}
-
-/* Colour the filename in red if the attachment upload failed */
-.new-message-attachment-name.upload-warning {
-	color: #d2322d;
-}
-
-/* Red ProgressBar for failed attachment uploads */
-.new-message-attachment-name.upload-warning .ui-progressbar-value {
-	border: 1px solid #e9322d;
-	background: #e9322d;
-}
-
-.attachments-upload-progress {
-	display: flex;
-}
-
-.attachments-upload-progress > div {
-	padding-left: 3px;
 }
 </style>

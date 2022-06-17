@@ -45,11 +45,14 @@ export function downloadAttachment(url) {
 	return Axios.get(url).then((res) => res.data)
 }
 
-export const uploadLocalAttachment = (file, progress) => {
+export const uploadLocalAttachment = (file, progress, controller) => {
 	const url = generateUrl('/apps/mail/api/attachments')
 	const data = new FormData()
 	const opts = {
 		onUploadProgress: (prog) => progress(prog, prog.loaded, prog.total),
+	}
+	if (controller) {
+		opts.signal = controller.signal
 	}
 	data.append('attachment', file)
 
