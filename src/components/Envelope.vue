@@ -19,9 +19,11 @@
 				v-if="mailbox.isUnified && hasMultipleAccounts"
 				class="mail-message-account-color"
 				:style="{'background-color': accountColor}" />
-			<div
+			<Star
 				v-if="data.flags.flagged"
-				class="app-content-list-item-star icon-starred"
+				fill-color="#f9cf3d"
+				:size="18"
+				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
 				@click.prevent="onToggleFlagged" />
 			<div
@@ -30,9 +32,10 @@
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="onToggleImportant"
 				v-html="importantSvg" />
-			<div
+			<JunkIcon
 				v-if="data.flags.$junk"
-				class="app-content-list-item-star icon-junk"
+				:size="18"
+				class="app-content-list-item-star junk-icon-style"
 				:data-starred="data.flags.$junk ? 'true' : 'false'"
 				@click.prevent="onToggleJunk" />
 			<div class="app-content-list-item-icon">
@@ -255,6 +258,7 @@ import EmailOutline from 'vue-material-design-icons/EmailOutline'
 import Email from 'vue-material-design-icons/Email'
 import IconAttachment from 'vue-material-design-icons/Paperclip'
 import ImportantIcon from './icons/ImportantIcon'
+import JunkIcon from './icons/JunkIcon'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
@@ -265,6 +269,7 @@ export default {
 	name: 'Envelope',
 	components: {
 		AlertOctagonIcon,
+		Avatar,
 		CalendarBlankIcon,
 		CheckIcon,
 		ChevronLeft,
@@ -273,7 +278,8 @@ export default {
 		EnvelopePrimaryActions,
 		EventModal,
 		ListItem,
-		Avatar,
+		ImportantIcon,
+		JunkIcon,
 		ActionButton,
 		MoveModal,
 		OpenInNewIcon,
@@ -284,7 +290,6 @@ export default {
 		StarOutline,
 		EmailOutline,
 		Email,
-		ImportantIcon,
 		IconAttachment,
 		Reply,
 	},
@@ -575,7 +580,7 @@ export default {
 .list-item-style.selected {
 	background-color: var(--color-background-dark);
 }
-.icon-junk {
+.junk-icon-style {
 	opacity: .2;
 	display: flex;
 	top: 6px;
@@ -587,6 +592,9 @@ export default {
 	padding: 0;
 	position: absolute;
 	z-index: 2;
+	&:hover {
+		opacity: .1;
+	}
 }
 list-item-style.draft .app-content-list-item-line-two {
 	font-style: italic;
@@ -670,7 +678,7 @@ list-item-style.draft .app-content-list-item-line-two {
 ::v-deep.list-item__wrapper {
 	list-style: none;
 }
-.app-content-list-item-star.icon-starred {
+.app-content-list-item-star.favorite-icon-style {
 	display: block;
 }
 ::v-deep.icon-important.app-content-list-item-star {
@@ -678,13 +686,16 @@ list-item-style.draft .app-content-list-item-line-two {
 	top: 7px;
 	z-index: 1;
 }
-.app-content-list-item-star.icon-starred {
+.app-content-list-item-star.favorite-icon-style {
 	display: inline-block;
 	position: absolute;
-	margin-bottom: 32px;
+	margin-bottom: 28px;
 	margin-left: 28px;
 	cursor: pointer;
 	z-index: 1;
+	&:hover {
+		opacity: .4;
+	}
 }
 ::v-deep .svg svg{
 	height: 16px;
