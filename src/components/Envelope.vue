@@ -50,12 +50,18 @@
 			</div>
 		</template>
 		<template #subtitle>
-			<span v-if="data.flags.answered" class="icon-reply" />
-			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
-			<span v-if="draft" class="draft">
-				<em>{{ t('mail', 'Draft: ') }}</em>
-			</span>
-			{{ subjectForSubtitle }}
+			<div class="subtitle">
+				<Reply v-if="data.flags.answered"
+					class="seen-icon-style"
+					:size="18" />
+				<IconAttachment v-if="data.flags.hasAttachments === true"
+					class="attachment-icon-style"
+					:size="18" />
+				<span v-else-if="draft" class="draft">
+					<em>{{ t('mail', 'Draft: ') }}</em>
+				</span>
+				{{ subjectForSubtitle }}
+			</div>
 		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
@@ -244,8 +250,10 @@ import MoveModal from './MoveModal'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import StarOutline from 'vue-material-design-icons/StarOutline'
 import Star from 'vue-material-design-icons/Star'
+import Reply from 'vue-material-design-icons/Reply'
 import EmailOutline from 'vue-material-design-icons/EmailOutline'
 import Email from 'vue-material-design-icons/Email'
+import IconAttachment from 'vue-material-design-icons/Paperclip'
 import ImportantIcon from './icons/ImportantIcon'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
@@ -277,6 +285,8 @@ export default {
 		EmailOutline,
 		Email,
 		ImportantIcon,
+		IconAttachment,
+		Reply,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -679,5 +689,15 @@ list-item-style.draft .app-content-list-item-line-two {
 ::v-deep .svg svg{
 	height: 16px;
 	width: 16px;
+}
+.subtitle {
+	display: flex;
+	gap: 4px;
+}
+.seen-icon-style {
+	opacity: .6;
+}
+.attachment-icon-style {
+	opacity: .6;
 }
 </style>
