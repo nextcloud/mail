@@ -109,7 +109,6 @@
     "Message {id} could not be found" : "Sporočila {id} ni mogoče najti.",
     "No sent mailbox configured. Please pick one in the account settings." : "Ni določenega predala za pošiljanje. Izberite ga med nastavitvami računa.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Poskušate poslati prevelikemu številu naslovnikov in prejemnikov kopije sporočila. Razmislite o uporabi skrite kopije za izbrane naslove.",
-    "Uploading {percent}% …" : "Poteka nalaganje {percent}% …",
     "Choose a file to add as attachment" : "Izbor datoteke za prilogo",
     "Choose a file to share as a link" : "Izberite datoteko, ki jo želite dati v skupno rabo kot povezavo",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Velikost priloge presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave."],

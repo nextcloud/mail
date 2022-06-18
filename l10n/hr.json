@@ -100,7 +100,6 @@
     "Message {id} could not be found" : "Poruka {id} nije pronađena",
     "No sent mailbox configured. Please pick one in the account settings." : "Nije konfiguriran sandučić za poslanu poštu. Odaberite ga u postavkama računa.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Pokušavate poslati poruku velikom broju primatelja koji su navedeni u poljima Za i/ili Cc. Razmislite o korištenju polja Bcc kako adrese primatelja ne bi bile vidljive.",
-    "Uploading {percent}% …" : "Otpremanje {percent} %…",
     "Choose a file to add as attachment" : "Izaberi datoteku kao privitak",
     "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Privitak prekoračuje dopuštenu veličinu privitaka od {size}. Dijelite datoteku putem poveznice.","Privici prekoračuju dopuštenu veličinu privitaka od {size}. Dijelite datoteke putem poveznice.","Privici prekoračuju dopuštenu veličinu privitaka od {size}. Dijelite datoteke putem poveznice."],

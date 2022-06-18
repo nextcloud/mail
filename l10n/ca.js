@@ -78,7 +78,6 @@ OC.L10N.register(
     "Send" : "Envia",
     "Encrypt and send" : "Encripta i enviï",
     "Send unencrypted" : "Envia sense encriptar",
-    "Uploading {percent}% …" : "S'està carregant {percent}% …",
     "Choose a file to add as attachment" : "Trieu un fitxer per afegir als adjunts",
     "Choose a file to share as a link" : "Tria un fitxer per compartir-lo com a enllaç",
     "No message found yet" : "Encara no s'ha trobat cap missatge",

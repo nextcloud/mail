@@ -118,7 +118,6 @@ OC.L10N.register(
     "Message {id} could not be found" : "A mensagem {id} não foi encontrada",
     "No sent mailbox configured. Please pick one in the account settings." : "Não há uma caixa de saída configurada. Escolha uma caixa de saída nas configurações da conta.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Você está tentando enviar para vários destinatários em Para e/ou Cc. Considere o uso de Cco para ocultar endereços de destinatários.",
-    "Uploading {percent}% …" : "Enviando {percent}%…",
     "Choose a file to add as attachment" : "Escolha um arquivo para adicionar como anexo",
     "Choose a file to share as a link" : "Escolher um arquivo para compartilhar como link",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["O anexo excedeu o tamanho permitido {size}. Compartilhe os arquivos através de links.","Os anexos excederam o tamanho permitido {size}. Compartilhe os arquivos através de links.","Os anexos excederam o tamanho permitido {size}. Compartilhe os arquivos através de links."],

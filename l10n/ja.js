@@ -88,7 +88,6 @@ OC.L10N.register(
     "Encrypt and send" : "暗号化して送信",
     "Send unencrypted" : "暗号化せずに送信",
     "Message {id} could not be found" : "メッセージ {id} が見つかりません",
-    "Uploading {percent}% …" : "アップロード中 {percent}% …",
     "Choose a file to add as attachment" : "添付として追加するファイルを選択",
     "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
     "No message found yet" : "メッセージはまだありません",

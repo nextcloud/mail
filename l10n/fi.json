@@ -110,7 +110,6 @@
     "Send unencrypted" : "Lähetä salaamattomana",
     "Message {id} could not be found" : "Viestiä {id} ei löytynyt",
     "No sent mailbox configured. Please pick one in the account settings." : "Ei postilaatikkoa lähetetyille määritetty. Valitse se tilin asetuksista.",
-    "Uploading {percent}% …" : "Lähetetään {percent}% …",
     "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
     "Choose a file to share as a link" : "Valitse tiedosto, joka jaetaan linkkinä",
     "No message found yet" : "Viestiä ei ole vielä löytynyt",

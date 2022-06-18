@@ -109,7 +109,6 @@ OC.L10N.register(
     "Encrypt and send" : "Kryptera och skicka",
     "Send unencrypted" : "Skicka okrypterat",
     "Message {id} could not be found" : "Meddelandet {id} hittades inte",
-    "Uploading {percent}% …" : "Laddar upp {percent}% …",
     "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
     "Choose a file to share as a link" : "Välj en fil att dela som länk",
     "No message found yet" : "Inget meddelande har ännu hittats",

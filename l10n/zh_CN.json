@@ -101,7 +101,6 @@
     "Message {id} could not be found" : "消息 {id} 未找到",
     "No sent mailbox configured. Please pick one in the account settings." : "没有配置发送邮箱。请在账号设置中选择一个。",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "你在To 和/或 Cc 中正尝试发送给许多收件人。考虑使用 Bcc 来隐藏收件人地址。",
-    "Uploading {percent}% …" : "正在上传 {percent}% …",
     "Choose a file to add as attachment" : "选择文件添加为附件",
     "Choose a file to share as a link" : "选择要共享的文件作为链接",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["附件超出了允许的附件最大大小 {size}。请通过链接共享文件。"],

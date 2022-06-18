@@ -101,7 +101,6 @@
     "Message {id} could not be found" : "Δεν ήταν δυνατή η εύρεση του μηνύματος {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "Δεν έχει διαμορφωθεί γραμματοκιβώτιο για τα απεσταλμένα μηνύματα. Επιλέξτε ένα από τις ρυθμίσεις λογαριασμού.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Προσπαθείτε να στείλετε σε πολλούς παραλήπτες σε Προς και/ή Κοιν. Εξετάστε το ενδεχόμενο να χρησιμοποιήσετε Κρυφή κοιν. για να αποκρύψετε τις διευθύνσεις παραληπτών.",
-    "Uploading {percent}% …" : "Μεταφόρτωση {percent}% …",
     "Choose a file to add as attachment" : "Επιλέξτε ένα αρχείο για να προσθέσετε ως συνημμένο",
     "Choose a file to share as a link" : "Επιλέξτε ένα αρχείο για κοινή χρήση ως σύνδεσμο",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Το συνημμένο υπερβαίνει το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε το αρχείο μέσω συνδέσμου.","Τα συνημμένα υπερβαίνουν το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε τα αρχεία μέσω συνδέσμου."],

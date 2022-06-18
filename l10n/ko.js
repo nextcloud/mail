@@ -75,7 +75,6 @@ OC.L10N.register(
     "Send" : "보내기",
     "Encrypt and send" : "암호화해서 보내기",
     "Send unencrypted" : "비암호화 발송",
-    "Uploading {percent}% …" : "{percent}% 업로드 중...",
     "Choose a file to add as attachment" : "첨부할 파일을 선택하십시오",
     "Choose a file to share as a link" : "공유할 링크 파일을 선택하십시오",
     "Set up an account" : "계정 설정",

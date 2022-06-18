@@ -118,7 +118,6 @@ OC.L10N.register(
     "Message {id} could not be found" : "Nachricht {id} konnte nicht gefunden werden",
     "No sent mailbox configured. Please pick one in the account settings." : "Keine Postfach für gesendete Nachrichten konfiguriert. Bitte wählen Sie eines in den Kontoeinstellungen aus.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Sie versuchen an viele Empfänger in An und/oder Cc zu senden. Erwägen Sie die Verwendung von Bcc, um Empfängeradressen zu verbergen.",
-    "Uploading {percent}% …" : "Lade hoch ({percent}%)…",
     "Choose a file to add as attachment" : "Wählen Sie eine Datei, die als Anhang angefügt werden soll",
     "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Datei stattdessen über einen Link.","Die Anhänge überschreiten die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Dateien stattdessen über einen Link."],

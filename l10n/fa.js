@@ -67,7 +67,6 @@ OC.L10N.register(
     "Retry" : "تلاش دوباره",
     "Message sent!" : "پیام ارسال شد!",
     "Send" : "ارسال",
-    "Uploading {percent}% …" : "در حال بارگیری {درصد… ...",
     "Choose a file to add as attachment" : "پرونده ای را برای اضافه کردن به عنوان پیوست انتخاب کنید",
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",

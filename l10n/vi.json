@@ -82,7 +82,6 @@
     "Send unencrypted" : "Gửi không mã hóa",
     "Message {id} could not be found" : "Không tìm thấy tin nhắn {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "Không có hộp thư đã gửi nào được định cấu hình. Vui lòng chọn một trong cài đặt tài khoản.",
-    "Uploading {percent}% …" : "Đang tải lên {percent}% …",
     "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
     "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Các tệp đính kèm vượt quá kích thước được cho phép là {size}. Thay vào đó, hãy chia sẻ các tệp qua liên kết."],

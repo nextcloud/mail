@@ -33,7 +33,6 @@ OC.L10N.register(
     "Retry" : "Tornar ensajar",
     "Message sent!" : "Messatge mandat !",
     "Send" : "Mandar",
-    "Uploading {percent}% …" : "Cargament {percent}% …",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
     "No message found yet" : "Pas cap de messatge trobat",
     "Favorite" : "Favorit",

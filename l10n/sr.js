@@ -78,7 +78,6 @@ OC.L10N.register(
     "Send" : "Пошаљи",
     "Encrypt and send" : "Шифруј и пошаљи",
     "Send unencrypted" : "Пошаљи нешифровано",
-    "Uploading {percent}% …" : "Отпремам {percent}% …",
     "Choose a file to add as attachment" : "Изаберите фајл за прилог",
     "Choose a file to share as a link" : "Одаберите фајл који желите да поделите као везу",
     "No message found yet" : "Још нема порука",

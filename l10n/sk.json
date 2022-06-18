@@ -113,7 +113,6 @@
     "Message {id} could not be found" : "Správu {id} sa nepodarilo nájsť",
     "No sent mailbox configured. Please pick one in the account settings." : "Nie je nastavený priečinok pre odchádzajúce správy. Vyberte jeden v nastaveniach účtu.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "V kolónkach Pre resp. Kópia sa nachádza príliš veľa príjemcov. Zvážte použitie kolónky Skrytej kópie, pomocou ktorej skryjete e-mailové adresy všetkých príjemcov.",
-    "Uploading {percent}% …" : "Nahrávanie {percent}%…",
     "Choose a file to add as attachment" : "Vyberte súbor, ktorý chcete pridať ako prílohu.",
     "Choose a file to share as a link" : "Vyberte súbor, ktorý chcete sprístupniť pomocou odkazu",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Príloha prekračuje povolenú veľlkosť {size}. Daný súbor môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu."],

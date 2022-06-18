@@ -118,7 +118,6 @@ OC.L10N.register(
     "Message {id} could not be found" : "A(z) {id} üzenet nem található",
     "No sent mailbox configured. Please pick one in the account settings." : "Nincs beállítva mappa az elküldött üzenetek számára. Állítson be egyet a fiókbeállításokban.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Sok címzettnek próbál küldeni a Címzett vagy a Másolat mezőben. Fontolja meg a Rejtett másolat használatát a címzettek elrejtéséhez.",
-    "Uploading {percent}% …" : "Feltöltés {percent}%…",
     "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
     "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással.","A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással."],

@@ -77,7 +77,6 @@ OC.L10N.register(
     "Send" : "Senda",
     "Encrypt and send" : "Dulrita og senda",
     "Send unencrypted" : "Senda ódulritað",
-    "Uploading {percent}% …" : "Sendi inn {percent}% …",
     "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
     "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli",
     "No message found yet" : "Engin skilaboð hafa ennþá fundist",

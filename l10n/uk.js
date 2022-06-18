@@ -72,7 +72,6 @@ OC.L10N.register(
     "Send" : "Надіслати",
     "Encrypt and send" : "Зашифрувати та надіслати",
     "Send unencrypted" : "Надіслати без шифрування",
-    "Uploading {percent}% …" : "Завантаження {percent}%...",
     "Choose a file to add as attachment" : "Виберіть файл для вкладення",
     "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
     "Plain text" : "Простий текст",

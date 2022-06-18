@@ -103,7 +103,6 @@ OC.L10N.register(
     "Message {id} could not be found" : "Bericht {id} kon niet worden gevonden",
     "No sent mailbox configured. Please pick one in the account settings." : "Er is geen map voor verzonden berichten ingesteld. Kies er een in de accountinstellingen.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Je probeert een e-mail te versturen met veel ontvangers in Aan en /of Cc. Overweeg om Bcc te gebruiken om de adressen van de ontvangers voor elkaar te verbergen.",
-    "Uploading {percent}% …" : "Uploaden {percent}% …",
     "Choose a file to add as attachment" : "Kies een bestand om als bijlage toe te voegen",
     "Choose a file to share as a link" : "Kies een bestand om als link te delen",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["De bijlage overschrijdt de toegestane omvang van {size}. Deel de bestanden in plaats daarvan via een link.","De bijlagen overschrijden de toegestane omvang van {size}. Deel de bestanden in plaats daarvan via een link."],

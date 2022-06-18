@@ -115,7 +115,6 @@
     "Message {id} could not be found" : "Не удалось найти сообщение {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "Не настроена папка исходящих сообщений. Выберите ее в параметрах учётной записи.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Вы пытаетесь отправить письмо очень большому количеству получателей, указанных в полях «Кому» или «Коп». Для сокрытия адреса эл. почты получателя, укажите его в поле «Скр. коп.».",
-    "Uploading {percent}% …" : "Передано {percent}% …",
     "Choose a file to add as attachment" : "Выбрать файл для вложения",
     "Choose a file to share as a link" : "Выберите файл для публикации ссылкой",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Размер этого вложения превышает установленный лимит. Опубликуйте этот файл с доступом по ссылке и перешлите ссылку, вместо отправки файла.","Размер этих вложений превышает установленный лимит. Опубликуйте эти файы с доступом по ссылке и перешлите ссылку, вместо отправки файла.","Размер этих вложений превышает установленный лимит. Опубликуйте эти файы с доступом по ссылке и перешлите ссылку, вместо отправки файла.","Размер этих вложений превышает установленный лимит. Опубликуйте эти файы с доступом по ссылке и перешлите ссылку, вместо отправки файла."],

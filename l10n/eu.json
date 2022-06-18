@@ -116,7 +116,6 @@
     "Message {id} could not be found" : "Ezin izan da {id} mezua aurkitu",
     "No sent mailbox configured. Please pick one in the account settings." : "Ez dago bidalitakoen postontzirik konfiguratuta. Aukeratu baten bat kontuaren ezarpenetan, mesedez.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "To eta / edo Cc-n hartzaile askori bidaltzen saiatzen ari zara. Hartzaileen helbideak ezkutatzeko Bcc erabili dezakezu.",
-    "Uploading {percent}% …" : "Kargatzen {percent}% …",
     "Choose a file to add as attachment" : "Aukeratu fitxategia eranskin gisa gehitzeko",
     "Choose a file to share as a link" : "Aukeratu fitxategi bat esteka bezala partekatzeko",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Eranskinek baimendutako {size} -ko eranskin tamaina gainditzen du. Partekatu fitxategia esteka bidez horren ordez.","Eranskinek baimendutako {size} -ko eranskin tamaina gainditzen du. Partekatu fitxategia esteka bidez horren ordez."],

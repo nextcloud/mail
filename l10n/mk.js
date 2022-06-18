@@ -85,7 +85,6 @@ OC.L10N.register(
     "Encrypt and send" : "Шифрирај и испрати",
     "Send unencrypted" : "Испрати нешифрирана",
     "No sent mailbox configured. Please pick one in the account settings." : "Нема сандаче за испратени пораки. Изберете сандаче во параметрите на сметката.",
-    "Uploading {percent}% …" : "Прикачување {percent}% …",
     "Choose a file to add as attachment" : "Избери датотека за да додадете прилог",
     "Choose a file to share as a link" : "Избери датотека за да се сподели како линк",
     "No message found yet" : "Не се пронајдени пораки",

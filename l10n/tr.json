@@ -116,7 +116,6 @@
     "Message {id} could not be found" : "{id} iletisi bulunamadı",
     "No sent mailbox configured. Please pick one in the account settings." : "Gönderilmiş iletiler kutusu yapılandırılmamış. Lütfen hesap ayarlarından bir kutu seçin.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Kime ya da Kopya alanında çok sayıda alıcı bulunan bir ileti göndermeye çalışıyorsunuz. Alıcıların birbirinin adreslerini görmesini engellemek için Gizli Kopya alanını kullanmak isteyebilirsiniz.",
-    "Uploading {percent}% …" : "Yükleniyor %{percent} …",
     "Choose a file to add as attachment" : "Eklenecek ek dosyasını seçin",
     "Choose a file to share as a link" : "Bağlantı olarak paylaşılacak bir dosya seçin",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Ek dosya izin verilen {size} ek dosya boyutunu aşıyor. Lütfen dosyayı bağlantı ile paylaşın.","Ek dosyalar izin verilen {size} ek dosya boyutunu aşıyor. Lütfen dosyaları bağlantı ile paylaşın."],

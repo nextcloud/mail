@@ -67,7 +67,6 @@ OC.L10N.register(
     "Retry" : "Reprovi",
     "Message sent!" : "Mesaĝo sendiĝis!",
     "Send" : "Sendi",
-    "Uploading {percent}% …" : "Alŝutas {percent} %…",
     "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",
     "Plain text" : "Ebenaĵa teksto",
     "Draft: " : "Malneto:",

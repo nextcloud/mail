@@ -89,7 +89,6 @@ OC.L10N.register(
     "Encrypt and send" : "להצפין ולשלוח",
     "Send unencrypted" : "לשלוח ללא הצפנה",
     "Message {id} could not be found" : "לא ניתן למצוא את הודעה {id}",
-    "Uploading {percent}% …" : "העלאה {percent}%…",
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
     "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור",
     "No message found yet" : "לא נמצאו הודעות עדיין",

@@ -114,7 +114,6 @@ OC.L10N.register(
     "Message {id} could not be found" : "Impossible de trouver le message {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "Aucune boîte aux lettres envoyée configurée. Veuillez en choisir une dans les paramètres du compte.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Vous essayez d'envoyer à plusieurs destinataires dans les champs To et/ou Cc. Envisagez d'utiliser Bcc pour masquer les adresses des destinataires.",
-    "Uploading {percent}% …" : "Envoi {percent}% …",
     "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",
     "Choose a file to share as a link" : "Sélectionnez un fichier à partager par lien",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["La pièce jointe dépasse la taille autorisée de {size}. Veuillez plutôt partager le fichier par le biais d'un lien.","Les pièces jointes dépassent la taille autorisée de {size}. Veuillez plutôt partager les fichiers par le biais d’un lien.","Les pièces jointes dépassent la taille autorisée de {size}. Veuillez plutôt partager les fichiers par le biais d’un lien."],

@@ -92,7 +92,6 @@ OC.L10N.register(
     "Send unencrypted" : "Enviar sen cifrar",
     "Message {id} could not be found" : "Non foi posíbel atopar a mensaxe {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "Non foi configurada ningunha caixa de correo enviado. Escolla unha nos axustes da conta.",
-    "Uploading {percent}% …" : "Enviando {percent}%…",
     "Choose a file to add as attachment" : "Escolla un ficheiro para engadir como anexo",
     "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["O anexo supera o tamaño permitido de {size}. No canto diso lugar, comparta o ficheiro mediante ligazón.","Os anexos superan o tamaño permitido de {size}. No canto diso lugar, comparta os ficheiros mediante ligazón."],

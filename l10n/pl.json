@@ -116,7 +116,6 @@
     "Message {id} could not be found" : "Nie można znaleźć wiadomości {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "Nie skonfigurowano żadnej skrzynki pocztowej dla wysyłanych wiadomości. Wybierz którąś w ustawieniach konta.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Próbujesz wysłać do wielu odbiorców w Do i/lub DW. Rozważ użycie UDW, aby ukryć adresy odbiorców.",
-    "Uploading {percent}% …" : "Wysłane {percent}%…",
     "Choose a file to add as attachment" : "Wybierz plik, aby dodać jako załącznik",
     "Choose a file to share as a link" : "Wybierz plik do udostępnienia przez link",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Załącznik przekracza dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij plik za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku."],

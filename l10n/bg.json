@@ -110,7 +110,6 @@
     "Message {id} could not be found" : "Съобщението {id} не можа да бъде намерено",
     "No sent mailbox configured. Please pick one in the account settings." : "Конфигурирана е No sent /не изпраща поща, а само получава/ пощенска кутия. Моля, изберете една от настройките на профила.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Опитвате се да изпратите до много получатели в полето До и/или Копие. Помислете за използването на Bcc, за да скриете адресите на получателите.",
-    "Uploading {percent}% …" : "Качване {percent}% …",
     "Choose a file to add as attachment" : "Избери файл за прикачване",
     "Choose a file to share as a link" : "Изберете файл, който да споделите като връзка",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Прикачените файлове надвишават разрешения размер на прикачени файлове от {size}. Моля, вместо това да споделите файловете чрез връзка.","Прикачените файлове надвишават разрешения размер на прикачени файлове от {size}. Моля, вместо това да споделите файловете чрез връзка."],

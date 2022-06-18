@@ -118,7 +118,6 @@ OC.L10N.register(
     "Message {id} could not be found" : "No se ha podido encontrar el mensaje {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "No hay configurada una bandeja de enviados. Por favor, elija una en la configuración de la cuenta.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Está intentando enviar a muchos destinatarios en Para y/o CC. Considera usar CCO para ocultar las direcciones de los destinatarios.",
-    "Uploading {percent}% …" : "Subiendo {percent}% …",
     "Choose a file to add as attachment" : "Escoja un archivo para adjuntar",
     "Choose a file to share as a link" : "Escoge un archivo para compartir como enlace",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["El archivo adjunto supera el tamaño permitido de {size}. Envía el archivo mediante un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Envía los archivos mediante un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Envía los archivos mediante un enlace."],

@@ -92,7 +92,6 @@
     "Message {id} could not be found" : "Beskeden {id} kunne ikke findes",
     "No sent mailbox configured. Please pick one in the account settings." : "Ingen sendt postkasse konfigureret. Vælg en i kontoindstillingerne.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Du prøver at sende til mange modtagere i Til og/eller Cc. Overvej at bruge Bcc til at skjule modtageradresser.",
-    "Uploading {percent}% …" : "Uploader {percent}%…",
     "Choose a file to add as attachment" : "Vælg en fil, der skal tilføjes som vedhæftning",
     "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
     "No message found yet" : "Ingen beskeder",

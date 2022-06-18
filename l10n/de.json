@@ -114,7 +114,6 @@
     "Message {id} could not be found" : "Nachricht {id} konnte nicht gefunden werden",
     "No sent mailbox configured. Please pick one in the account settings." : "Keine Postfach für gesendete Nachrichten konfiguriert. Bitte wähle eines in den Kontoeinstellungen aus.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Du bist im Begriff, an viele Empfänger in den Feldern \"An\" und/oder \"Cc\" zu schreiben. Benutze das Feld \"Bcc\", um die Empfängeradressen zu verbergen.",
-    "Uploading {percent}% …" : "Lade hoch ({percent}%)…",
     "Choose a file to add as attachment" : "Wähle eine Datei, die als Anhang angefügt werden soll",
     "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Dateien stattdessen über einen Link.","Die Anhänge überschreiten die zulässige Anhangsgröße von {size}. Bitte teile die Dateien stattdessen über einen Link."],

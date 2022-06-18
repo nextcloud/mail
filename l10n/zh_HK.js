@@ -118,7 +118,6 @@ OC.L10N.register(
     "Message {id} could not be found" : "找不到郵件 {id}",
     "No sent mailbox configured. Please pick one in the account settings." : "未設定寄件備份信箱。請在賬號設定中選取。",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "您正在嘗試發送給“收件人”和/或“抄送”中的許多收件人。考慮使用密件抄送（Bcc）隱藏收件人地址。",
-    "Uploading {percent}% …" : "正在上傳 {percent}%……",
     "Choose a file to add as attachment" : "選擇要作為附件的檔案",
     "Choose a file to share as a link" : "選擇要作為連結分享的檔案",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["附件超過了允許的附件大小 {size}。請透過連結分享檔案。"],
