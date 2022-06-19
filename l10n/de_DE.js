@@ -120,6 +120,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Sie versuchen an viele Empfänger in An und/oder Cc zu senden. Erwägen Sie die Verwendung von Bcc, um Empfängeradressen zu verbergen.",
     "Choose a file to add as attachment" : "Wählen Sie eine Datei, die als Anhang angefügt werden soll",
     "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
+    "_{count} attachment_::_{count} attachments_" : ["{count} Anhang","{count} Anhänge"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Datei stattdessen über einen Link.","Die Anhänge überschreiten die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Dateien stattdessen über einen Link."],
     "No message found yet" : "Keine Nachrichten gefunden",
     "Set up an account" : "Konto einrichten",

@@ -120,6 +120,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Sok címzettnek próbál küldeni a Címzett vagy a Másolat mezőben. Fontolja meg a Rejtett másolat használatát a címzettek elrejtéséhez.",
     "Choose a file to add as attachment" : "Válasszon mellékletként hozzáadandó fájlt",
     "Choose a file to share as a link" : "Válasszon fájlt a hivatkozással történő megosztáshoz",
+    "_{count} attachment_::_{count} attachments_" : ["{count} melléklet","{count} melléklet"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással.","A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással."],
     "No message found yet" : "Nem található üzenet",
     "Set up an account" : "Állítson be egy fiókot",

@@ -120,6 +120,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "您正在嘗試發送給“收件人”和/或“抄送”中的許多收件人。考慮使用密件抄送（Bcc）隱藏收件人地址。",
     "Choose a file to add as attachment" : "選擇要作為附件的檔案",
     "Choose a file to share as a link" : "選擇要作為連結分享的檔案",
+    "_{count} attachment_::_{count} attachments_" : ["{count} 個附件"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["附件超過了允許的附件大小 {size}。請透過連結分享檔案。"],
     "No message found yet" : "找不到訊息",
     "Set up an account" : "設定賬號",

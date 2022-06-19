@@ -401,6 +401,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klicke hier, wenn Du nicht automatisch innerhalb der nächsten Sekunden weitergeleitet wirst.",
     "Redirect" : "Weiterleiten",
     "The link leads to %s" : "Der Link führt nach %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn Du diese Seite nicht besuchen möchtest, kannst Du zu <a href=\"%s\">Mail</a> zurückkehren",
     "Continue to %s" : "Weiter nach %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

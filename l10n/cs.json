@@ -118,6 +118,7 @@
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "V kolonkách Pro a Skrytá kopie se snažíte poslat opravdu mnoha příjemcům. Zvažte použití Skryté kopie a nesdělování tak adres příjemců všem.",
     "Choose a file to add as attachment" : "Vyberte soubor k přiložení",
     "Choose a file to share as a link" : "Zvolte soubor, který sdílet jako odkaz",
+    "_{count} attachment_::_{count} attachments_" : ["{count} příloha","{count} přílohy","{count} příloh","{count} přílohy"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte soubor prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte soubory prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte souborů prostřednictvím odkazu.","Přílohy překračují povolenou velikost příloh {size}. Místo toho prosím sdílejte soubory prostřednictvím odkazu."],
     "No message found yet" : "Zatím nenalezeny žádné zprávy",
     "Set up an account" : "Nastavit si účet",
