@@ -586,6 +586,27 @@ class MailManager implements IMailManager {
 	}
 
 	/**
+	 * Clear messages in folder
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 *
+	 * @throws ServiceException
+	 */
+	public function clearMailbox(Account $account,
+								  Mailbox $mailbox): void {
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$client->expunge($mailbox->getName(), [
+				'delete' => true
+			]);
+		} finally {
+			$client->logout();
+		}
+		//delete all messages in this mailbox folder
+		$this->dbMessageMapper->deleteAll($mailbox);
+	}
+
+	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param Message $message

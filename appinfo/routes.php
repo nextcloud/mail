@@ -160,6 +160,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'mailboxes#clearMailbox',
+			'url' => '/api/mailboxes/{id}/clear',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#downloadAttachment',
 			'url' => '/api/messages/{id}/attachment/{attachmentId}',
 			'verb' => 'GET'

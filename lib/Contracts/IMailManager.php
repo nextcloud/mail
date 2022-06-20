@@ -205,6 +205,14 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
+	 *
+	 * @throws ServiceException
+	 */
+	public function clearMailbox(Account $account, Mailbox $mailbox): void;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
 	 * @param bool $subscribed
 	 *
 	 * @return Mailbox

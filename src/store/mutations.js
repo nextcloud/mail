@@ -344,6 +344,9 @@ export default {
 
 		Vue.delete(state.envelopes, id)
 	},
+	removeEnvelopes(state, { id }) {
+		Vue.set(state.mailboxes[id], 'envelopeLists', [])
+	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
 	},
