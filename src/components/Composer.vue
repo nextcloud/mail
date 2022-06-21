@@ -1174,6 +1174,11 @@ export default {
 	padding-top: 12px;
 	padding-bottom: 12px;
 	padding-left: 20px;
+
+	// Fix contenteditable not becoming focused upon clichint within it's
+	// boundaries in safari
+	-webkit-user-select: text;
+	user-select: text;
 }
 
 .draft-status {
