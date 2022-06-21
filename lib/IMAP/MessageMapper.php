@@ -609,7 +609,7 @@ class MessageMapper {
 			$attachments[] = [
 				'content' => $part->getContents(),
 				'name' => $part->getName(),
-				'size' => $part->getSize()
+				'size' => $part->getBytes()
 			];
 			fclose($stream);
 		}
