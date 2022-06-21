@@ -118,6 +118,7 @@
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Próbujesz wysłać do wielu odbiorców w Do i/lub DW. Rozważ użycie UDW, aby ukryć adresy odbiorców.",
     "Choose a file to add as attachment" : "Wybierz plik, aby dodać jako załącznik",
     "Choose a file to share as a link" : "Wybierz plik do udostępnienia przez link",
+    "_{count} attachment_::_{count} attachments_" : ["{count} załącznik","{count} załączniki","{count} załączników","{count} załączników"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Załącznik przekracza dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij plik za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku."],
     "No message found yet" : "Nie znaleziono jeszcze wiadomości",
     "Set up an account" : "Załóż konto",
