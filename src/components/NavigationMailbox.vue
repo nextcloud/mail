@@ -37,23 +37,25 @@
 		:open.sync="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
 		<template #icon>
-			<ImportantIcon v-if="mailbox.isPriorityInbox"
-				:size="20" />
-			<IconInbox
-				v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
-				:size="20" />
-			<IconFavorite v-else-if="filter === 'starred'"
-				:size="20" />
-			<IconDraft v-else-if="mailbox.specialRole === 'drafts'"
-				:size="20" />
-			<CheckIcon v-else-if="mailbox.specialRole === 'sent'"
-				:size="20" />
-			<IconArchive v-else-if="mailbox.specialRole === 'archive'"
-				:size="20" />
-			<IconDelete v-else-if="mailbox.specialRole === 'trash'"
-				:size="20" />
-			<IconFolder v-else
-				:size="20" />
+			<div class="sidebar-opacity-icon">
+				<ImportantIcon v-if="mailbox.isPriorityInbox"
+					:size="20" />
+				<IconInbox
+					v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
+					:size="20" />
+				<IconFavorite v-else-if="filter === 'starred'"
+					:size="20" />
+				<IconDraft v-else-if="mailbox.specialRole === 'drafts'"
+					:size="20" />
+				<CheckIcon v-else-if="mailbox.specialRole === 'sent'"
+					:size="20" />
+				<IconArchive v-else-if="mailbox.specialRole === 'archive'"
+					:size="20" />
+				<IconDelete v-else-if="mailbox.specialRole === 'trash'"
+					:size="20" />
+				<IconFolder v-else
+					:size="20" />
+			</div>
 		</template>
 		<!-- actions -->
 		<template slot="actions">
@@ -635,3 +637,11 @@ export default {
 	},
 }
 </script>
+<style lang="scss" scoped>
+.sidebar-opacity-icon {
+	opacity: .7;
+	&:hover {
+	opacity: 1;
+	}
+}
+</style>
