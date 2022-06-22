@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# 1.12.7 - 2022-06-22
+- Make sender to be centered with the avatar and timestamp
+- Restore ability to write mails in safari
+
 # 1.12.6 - 2022-06-13
 ### Fixed
 - Better signature detection
