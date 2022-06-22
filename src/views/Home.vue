@@ -120,4 +120,8 @@ export default {
 	flex: 1 1 100%;
 	min-width: 0;
 }
+// Align the appNavigation toggle with the apps header toolbar
+::v-deep button.app-navigation-toggle {
+	top: 8px;
+}
 </style>
