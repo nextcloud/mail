@@ -34,4 +34,5 @@ codecov.yml
 .travis.yml
 /vendor/bin
 /vendor-bin
+/vendor/cerdic/css-tidy/css_optimiser.php
 /webpack.*
