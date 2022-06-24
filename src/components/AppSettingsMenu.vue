@@ -61,27 +61,34 @@
 		</p>
 
 		<p>
-			<button class="icon-mail app-settings-button" @click="registerProtocolHandler">
+			<Button class="app-settings-button" @click="registerProtocolHandler">
+				<template #icon>
+					<IconEmail :size="20" />
+				</template>
 				{{ t('mail', 'Register as application for mail links') }}
-			</button>
+			</Button>
 		</p>
 
-		<button
-			class="icon-details app-settings-button"
+		<Button
+			class="app-settings-button"
 			@click.prevent.stop="showKeyboardShortcuts"
 			@shortkey="toggleKeyboardShortcuts">
+			<template #icon>
+				<IconInfo :size="20" />
+			</template>
 			{{ t('mail', 'Show keyboard shortcuts') }}
-		</button>
+		</Button>
 		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
 
 		<p class="mailvelope-section">
 			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
 
 			<a
-				class="icon-password button app-settings-button"
+				class="button app-settings-button"
 				href="https://www.mailvelope.com/"
 				target="_blank"
 				rel="noopener noreferrer">
+				<Lock :size="20" />
 				{{ t('mail', 'Install Mailvelope browser extension') }}
 			</a>
 		</p>
@@ -91,14 +98,22 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
+import Button from '@nextcloud/vue/dist/Components/Button'
 
+import IconInfo from 'vue-material-design-icons/InformationOutline'
+import IconEmail from 'vue-material-design-icons/Email'
+import Lock from 'vue-material-design-icons/Lock'
 import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'
 
 export default {
 	name: 'AppSettingsMenu',
 	components: {
+		Button,
 		KeyboardShortcuts,
+		IconInfo,
+		IconEmail,
+		Lock,
 	},
 	data() {
 		return {
@@ -231,12 +246,14 @@ p.app-settings {
 .app-settings-button {
 	display: block;
 
-	padding-left: 34px;
 	background-position: 10px center;
 	text-align: left;
+	margin-top: 6px;
 }
 .app-settings-button.button.primary.new-button {
 	color: var(--color-main-background);
+	//this style will be removed after we migrate also the  'add mail account' to material design
+	padding-left: 34px;
 }
 .app-settings-link {
 	text-decoration: underline;
@@ -248,7 +265,11 @@ p.app-settings {
 		display: flex;
 		align-items: center;
 		line-height: normal;
-		min-height: 34px;
+		min-height: 44px;
+		font-size: unset;
 	}
+}
+.material-design-icon.lock-icon {
+	margin-right: 10px;
 }
 </style>
