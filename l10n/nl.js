@@ -165,7 +165,7 @@ OC.L10N.register(
     "Reply" : "Antwoord",
     "Reply to sender only" : "Antwoord alleen op afzender",
     "Move message" : "Verplaats bericht",
-    "Delete message" : "Verwijderen bericht",
+    "Delete message" : "Bericht verwijderen",
     "View source" : "Bekijk bron",
     "Download thread data for debugging" : "Download draadgegevens voor debuggen",
     "Message source" : "Bericht brontekst",
