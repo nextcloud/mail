@@ -1,6 +1,6 @@
 <template>
 	<Modal
-		:size="isMobile ? 'full' : 'large'"
+		size="large"
 		@close="$emit('close')">
 		<img
 			:src="url"
@@ -10,13 +10,11 @@
 
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 export default {
 	name: 'AttachmentImageViewer',
 	components: {
 		Modal,
 	},
-	mixins: [isMobile],
 	props: {
 		url: {
 			type: String,
@@ -28,25 +26,19 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .modal-wrapper {
-	&--large {
-		.modal-container,
-		.modal__attachment {
-			max-width: 85vw !important;
-			max-height: 90vh !important;
-		}
-	}
-
-	&--full {
-		.modal-container,
-		.modal__attachment {
-			max-width: 95vw !important;
-			max-height: 95vh !important;
-		}
+	.modal-container {
+		background-color: unset !important;
+		box-shadow: none !important;
+		height: auto !important;
+		top: unset !important;
 	}
 
 	.modal__attachment {
-		box-shadow: none !important;
-		display: flex !important;
+		display: flex;
+		margin: 0 auto;
+		max-width: min(850px, 85vw);
+		max-height: 85vh;
+		background-color: var(--color-main-background);
 	}
 }
 </style>
