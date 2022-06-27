@@ -188,10 +188,10 @@ export default {
 			}
 		},
 		convertEditorBody(composerData) {
-			if (composerData.editorBody !== null) {
+			if (composerData.editorBody) {
 				return composerData.editorBody
 			}
-			if (composerData.body === null) {
+			if (!composerData.body) {
 				return ''
 			}
 			return toHtml(composerData.body).value
