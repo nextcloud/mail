@@ -67,6 +67,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Saving" : "Saving",
     "Remove account" : "Remove account",
+    "Loading …" : "Loading …",
     "Mark all as read" : "Mark all as read",
     "Clear cache" : "Clear cache",
     "Delete" : "Delete",
