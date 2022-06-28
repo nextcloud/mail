@@ -295,7 +295,6 @@
 							name="sendLater"
 							:checked="!sendAtVal"
 							class="send-action-radio"
-							@update:checked="sendAtVal = undefined"
 							@change="onChangeSendLater(undefined)">
 							{{ t('mail', 'Send now') }}
 						</ActionRadio>
@@ -303,7 +302,6 @@
 							name="sendLater"
 							:checked="isSendAtTomorrowMorning"
 							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateTomorrowMorning"
 							@change="onChangeSendLater(dateTomorrowMorning)">
 							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
 						</ActionRadio>
@@ -311,7 +309,6 @@
 							name="sendLater"
 							:checked="isSendAtTomorrowAfternoon"
 							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateTomorrowAfternoon"
 							@change="onChangeSendLater(dateTomorrowAfternoon)">
 							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
 						</ActionRadio>
@@ -319,7 +316,6 @@
 							name="sendLater"
 							:checked="isSendAtMondayMorning"
 							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateMondayMorning"
 							@change="onChangeSendLater(dateMondayMorning)">
 							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
 						</ActionRadio>
@@ -327,7 +323,6 @@
 							class="send-action-radio"
 							:checked="isSendAtCustom"
 							:value="customSendTime"
-							@update:checked="sendAtVal = customSendTime"
 							@change="onChangeSendLater(customSendTime)">
 							{{ t('mail', 'Custom date and time') }}
 						</ActionRadio>
@@ -713,22 +708,32 @@ export default {
 			return timeFormat.indexOf('a') !== -1
 		},
 		isSendAtTomorrowMorning() {
-			return this.sendAtVal
-				&& Math.floor(this.dateTomorrowMorning / 1000) === Math.floor(this.sendAtVal / 1000)
+			if (this.sendAtVal && Math.floor(this.dateTomorrowMorning / 1000) === Math.floor(this.sendAtVal / 1000)) {
+				return true
+			} else {
+				return false
+			}
 		},
 		isSendAtTomorrowAfternoon() {
-			return this.sendAtVal
-				&& Math.floor(this.dateTomorrowAfternoon / 1000) === Math.floor(this.sendAtVal / 1000)
+			if (this.sendAtVal && Math.floor(this.dateTomorrowAfternoon / 1000) === Math.floor(this.sendAtVal / 1000)) {
+				return true
+			} else {
+				return false
+			}
 		},
 		isSendAtMondayMorning() {
-			return this.sendAtVal
-				&& Math.floor(this.dateMondayMorning / 1000) === Math.floor(this.sendAtVal / 1000)
+			if (this.sendAtVal && Math.floor(this.dateMondayMorning / 1000) === Math.floor(this.sendAtVal / 1000)) {
+				return true
+			} else {
+				return false
+			}
 		},
 		isSendAtCustom() {
-			return this.sendAtVal
-				&& !this.isSendAtTomorrowMorning
-				&& !this.isSendAtTomorrowAfternoon
-				&& !this.isSendAtMondayMorning
+			if (this.sendAtVal && !this.isSendAtTomorrowMorning && !this.isSendAtTomorrowAfternoon && !this.isSendAtMondayMorning) {
+				return true
+			} else {
+				return false
+			}
 		},
 	},
 	watch: {
