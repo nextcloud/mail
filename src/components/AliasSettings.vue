@@ -38,23 +38,28 @@
 		</ul>
 
 		<div v-if="!account.provisioningId">
-			<button v-if="!showForm" class="primary icon-add" @click="showForm = true">
+			<Button v-if="!showForm" type="primary" @click="showForm = true">
+				<template #icon>
+					<IconAdd :size="20" />
+				</template>
 				{{ t('mail', 'Add alias') }}
-			</button>
+			</Button>
 
-			<button v-if="showForm"
-				class="primary"
-				:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
-				type="submit"
+			<Button v-if="showForm"
+				type="primary submit"
 				form="createAliasForm"
 				:disabled="loading">
+				<template #icon>
+					<LoadingIcon v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
+				</template>
 				{{ t('mail', 'Create alias') }}
-			</button>
-			<button v-if="showForm"
+			</Button>
+			<Button v-if="showForm"
 				class="button-text"
 				@click="resetCreate">
 				{{ t("mail", "Cancel") }}
-			</button>
+			</Button>
 		</div>
 	</div>
 </template>
@@ -62,10 +67,18 @@
 <script>
 import logger from '../logger'
 import AliasForm from './AliasForm'
+import Button from '@nextcloud/vue/dist/Components/Button'
+import IconAdd from 'vue-material-design-icons/Plus'
+import IconCheck from 'vue-material-design-icons/Check'
 
 export default {
 	name: 'AliasSettings',
-	components: { AliasForm },
+	components: {
+		AliasForm,
+		Button,
+		IconAdd,
+		IconCheck,
+	},
 	props: {
 		account: {
 			type: Object,

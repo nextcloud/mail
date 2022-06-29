@@ -45,21 +45,31 @@
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus" />
-		<button
-			class="primary"
-			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
-			:disabled="loading"
-			@click="saveSignature">
-			{{ t("mail", "Save signature") }}
-		</button>
-		<button v-if="signature" class="button-text" @click="deleteSignature">
-			{{ t("mail", "Delete") }}
-		</button>
+		<div class="signature-buttons">
+			<Button
+				type="primary"
+				:disabled="loading"
+				@click="saveSignature">
+				<template #icon>
+					<LoadingIcon v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
+				</template>
+				{{ t("mail", "Save signature") }}
+			</Button>
+			<Button v-if="signature"
+				type="tertiary-no-background"
+				class="button-text"
+				@click="deleteSignature">
+				{{ t("mail", "Delete") }}
+			</Button>
+		</div>
 	</div>
 </template>
 
 <script>
 import logger from '../logger'
+import Button from '@nextcloud/vue/dist/Components/Button'
+import IconCheck from 'vue-material-design-icons/Check'
 import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
@@ -68,6 +78,8 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 export default {
 	name: 'SignatureSettings',
 	components: {
+		Button,
+		IconCheck,
 		TextEditor,
 		Multiselect,
 	},
@@ -203,6 +215,9 @@ export default {
 }
 .multiselect--single {
   width: 100%;
+}
+.signature-buttons {
+	display: flex;
 }
 </style>
 <style>
