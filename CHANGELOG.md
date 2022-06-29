@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.13.6 - 2022-06-29
+### Fixed
+- Editing draft
+- Image attachment viewer
+
 ## 1.13.5 - 2022-06-22
 - Make sender to be centered with the avatar and timestamp
 - Restore ability to write mails in safari
