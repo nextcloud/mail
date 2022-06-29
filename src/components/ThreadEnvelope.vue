@@ -35,14 +35,19 @@
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="onToggleImportant"
 				v-html="importantSvg" />
-			<div
+			<IconFavorite
 				v-if="envelope.flags.flagged"
-				class="app-content-list-item-star icon-starred"
+				fill-color="#f9cf3d"
+				:size="18"
+				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subject': junkFavoritePositionWithTagSubject }"
+				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 				@click.prevent="onToggleFlagged" />
-			<div
+			<JunkIcon
 				v-if="envelope.flags.$junk"
-				class="app-content-list-item-star icon-junk"
+				:size="18"
+				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subject': junkFavoritePositionWithTagSubject }"
+				class="app-content-list-item-star junk-icon-style"
 				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 				@click.prevent="onToggleJunk" />
 			<router-link
@@ -109,6 +114,8 @@ import Avatar from './Avatar'
 import Button from '@nextcloud/vue/dist/Components/Button'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
+import IconFavorite from 'vue-material-design-icons/Star'
+import JunkIcon from './icons/JunkIcon'
 import Loading from './Loading'
 import logger from '../logger'
 import Message from './Message'
@@ -124,6 +131,8 @@ export default {
 		Avatar,
 		Button,
 		Error,
+		IconFavorite,
+		JunkIcon,
 		Loading,
 		MenuEnvelope,
 		Moment,
@@ -210,6 +219,12 @@ export default {
 		},
 		centeredSender() {
 			  return (!this.hasChangedSubject || this.cleanSubject.length === 0) && this.tags.length === 0
+		},
+		junkFavoritePosition() {
+			return (this.message?.subject > 0 || this.cleanSubject.length > 0) && this.tags.length > 0
+		},
+		junkFavoritePositionWithTagSubject() {
+			return (!this.hasChangedSubject || this.cleanSubject.length === 0) && this.tags.length > 0
 		},
 	},
 	watch: {
@@ -412,20 +427,26 @@ export default {
 			}
 		}
 	}
-	.app-content-list-item-star.icon-starred {
+	.app-content-list-item-star.favorite-icon-style {
 		display: inline-block;
 		position: absolute;
-		margin-top: -2px;
-		margin-left: 27px;
+		top: 8px;
+		left: 40px;
 		cursor: pointer;
+		&:hover {
+			opacity: .5;
+		}
 	}
-	.app-content-list-item-star.icon-junk {
+	.app-content-list-item-star.junk-icon-style {
 		display: inline-block;
 		position: absolute;
-		margin-top: -2px;
-		margin-left: 27px;
+		top: 8px;
+		left: 40px;
 		cursor: pointer;
 		opacity: .2;
+		&:hover {
+			opacity: .1;
+		}
 	}
 	.left:not(.seen) {
 		font-weight: bold;
@@ -457,6 +478,12 @@ export default {
 	}
 	.envelope--header.list-item-style {
 		border-radius: 16px;
+	}
+	.junk-favorite-position-with-tag-subject {
+		margin-bottom: 14px !important;
+	}
+	.junk-favorite-position {
+		margin-bottom: 36px !important;
 	}
 
 </style>
