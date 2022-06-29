@@ -1,16 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-# 1.12.7 - 2022-06-22
+## 1.12.8 - 2022-06-29
+### Fixed
+- Editing draft
+- Image attachment viewer
+
+## 1.12.7 - 2022-06-22
+### Fixed
 - Make sender to be centered with the avatar and timestamp
 - Restore ability to write mails in safari
 
-# 1.12.6 - 2022-06-13
+## 1.12.6 - 2022-06-13
 ### Fixed
 - Better signature detection
 - Forwarding more than one attachment
 
-# 1.12.5 - 2022-06-08
+## 1.12.5 - 2022-06-08
 ### Fixed
 - Editing of outbox messages
 
