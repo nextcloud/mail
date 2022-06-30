@@ -35,6 +35,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\QueryBuilder\IQueryFunction;
 use OCP\IDBConnection;
@@ -127,6 +128,23 @@ class MailboxMapper extends QBMapper {
 			throw new ServiceException("The impossible has happened", 42, $e);
 		}
 	}
+
+	/**
+	 * @return Mailbox[]
+	 *
+	 * @throws Exception
+	 */
+	public function findByIds(array $ids): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->in('id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+			);
+		return $this->findEntities($select);
+	}
+
 
 	/**
 	 * @param int $id

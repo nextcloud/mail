@@ -109,6 +109,7 @@ class PreviewEnhancer {
 			$message->setFlagAttachments($structureData->hasAttachments());
 			$message->setPreviewText($structureData->getPreviewText());
 			$message->setStructureAnalyzed(true);
+			$message->setImipMessage($structureData->isImipMessage());
 
 			return $message;
 		}, $messages));

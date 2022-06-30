@@ -665,6 +665,10 @@ class MessageMapper {
 										 array $uids): array {
 		$structureQuery = new Horde_Imap_Client_Fetch_Query();
 		$structureQuery->structure();
+		$structureQuery->headerText([
+			'cache' => true,
+			'peek' => true,
+		]);
 
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
@@ -673,19 +677,28 @@ class MessageMapper {
 		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
 			$hasAttachments = false;
 			$text = '';
+			$isImipMessage = false;
 
 			$structure = $fetchData->getStructure();
-			foreach ($structure as $part) {
-				if ($part instanceof Horde_Mime_Part && $part->isAttachment()) {
+			/** @var Horde_Mime_Part $part */
+			foreach ($structure->getParts() as $part) {
+				if ($part->isAttachment()) {
 					$hasAttachments = true;
-					break;
+				}
+				$bodyParts = $part->getParts();
+				/** @var Horde_Mime_Part $bodyPart */
+				foreach ($bodyParts as $bodyPart) {
+					$contentParameters = $bodyPart->getAllContentTypeParameters();
+					if ($bodyPart->getType() === 'text/calendar' && isset($contentParameters['method'])) {
+						$isImipMessage = true;
+					}
 				}
 			}
 
 			$textBodyId = $structure->findBody() ?? $structure->findBody('text');
 			$htmlBodyId = $structure->findBody('html');
 			if ($textBodyId === null && $htmlBodyId === null) {
-				return new MessageStructureData($hasAttachments, $text);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage);
 			}
 			if ($htmlBodyId !== null) {
 				$partsQuery = new Horde_Imap_Client_Fetch_Query();
@@ -720,7 +733,7 @@ class MessageMapper {
 				}
 				$structure->setContents($htmlBody);
 				$html = new Html2Text($structure->getContents());
-				return new MessageStructureData($hasAttachments, trim($html->getText()));
+				return new MessageStructureData($hasAttachments, trim($html->getText()), $isImipMessage);
 			}
 			$textBody = $part->getBodyPart($textBodyId);
 			if (!empty($textBody)) {
@@ -728,12 +741,12 @@ class MessageMapper {
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
 					$structure->setTransferEncoding($enc);
 					$structure->setContents($textBody);
-					return new MessageStructureData($hasAttachments, $structure->getContents());
+					return new MessageStructureData($hasAttachments, $structure->getContents(), $isImipMessage);
 				}
-				return new MessageStructureData($hasAttachments, $textBody);
+				return new MessageStructureData($hasAttachments, $textBody, $isImipMessage);
 			}
 
-			return new MessageStructureData($hasAttachments, $text);
+			return new MessageStructureData($hasAttachments, $text, $isImipMessage);
 		}, iterator_to_array($structures->getIterator()));
 	}
 }

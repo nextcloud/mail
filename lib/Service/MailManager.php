@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
+use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
@@ -185,6 +186,35 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException(
 				"Could not load message",
+				(int)$e->getCode(),
+				$e
+			);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param int[] $uids
+	 * @return IMAPMessage[]
+	 * @throws ServiceException
+	 */
+	public function getImapMessagesForScheduleProcessing(Account $account,
+		Mailbox $mailbox,
+		array $uids): array {
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			return $this->imapMessageMapper->findByIds(
+				$client,
+				$mailbox->getName(),
+				new Horde_Imap_Client_Ids($uids),
+				true
+			);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Could not load messages: ' . $e->getMessage(),
 				(int)$e->getCode(),
 				$e
 			);
