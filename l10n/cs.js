@@ -278,7 +278,7 @@ OC.L10N.register(
     "Save signature" : "Uložit podpis",
     "Add default tags" : "Přidat výchozí štítky",
     "Rename tag" : "Přejmenovat štítek",
-    "Saving new tag name …" : "Ukládání nového názvu štítku",
+    "Saving new tag name …" : "Ukládání nového názvu štítku…",
     "Set" : "Nastavit",
     "Unset" : "Zrušit nastavení",
     "Add tag" : "Přidat štítek",
