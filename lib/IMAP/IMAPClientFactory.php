@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\Cache;
@@ -66,8 +67,7 @@ class IMAPClientFactory {
 	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
 		$host = $account->getMailAccount()->getInboundHost();
 		$user = $account->getMailAccount()->getInboundUser();
-		$password = $account->getMailAccount()->getInboundPassword();
-		$password = $this->crypto->decrypt($password);
+		$decryptedPassword = $this->crypto->decrypt($account->getMailAccount()->getInboundPassword());
 		$port = $account->getMailAccount()->getInboundPort();
 		$sslMode = $account->getMailAccount()->getInboundSslMode();
 		if ($sslMode === 'none') {
@@ -76,7 +76,7 @@ class IMAPClientFactory {
 
 		$params = [
 			'username' => $user,
-			'password' => $password,
+			'password' => $decryptedPassword,
 			'hostspec' => $host,
 			'port' => $port,
 			'secure' => $sslMode,
@@ -88,6 +88,12 @@ class IMAPClientFactory {
 				],
 			],
 		];
+		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
+			$params['xoauth2_token'] = new Horde_Imap_Client_Password_Xoauth2(
+				$account->getEmail(),
+				$decryptedPassword,
+			);
+		}
 		if ($useCache && $this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
 				'backend' => new Cache([
