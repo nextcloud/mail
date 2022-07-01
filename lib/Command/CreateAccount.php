@@ -36,6 +36,7 @@ class CreateAccount extends Command {
 	public const ARGUMENT_USER_ID = 'user-id';
 	public const ARGUMENT_NAME = 'name';
 	public const ARGUMENT_EMAIL = 'email';
+	public const ARGUMENT_AUTH_METHOD = 'auth-method';
 	public const ARGUMENT_IMAP_HOST = 'imap-host';
 	public const ARGUMENT_IMAP_PORT = 'imap-port';
 	public const ARGUMENT_IMAP_SSL_MODE = 'imap-ssl-mode';
@@ -87,12 +88,15 @@ class CreateAccount extends Command {
 		$this->addArgument(self::ARGUMENT_SMTP_SSL_MODE, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_SMTP_USER, InputArgument::REQUIRED);
 		$this->addArgument(self::ARGUMENT_SMTP_PASSWORD, InputArgument::REQUIRED);
+
+		$this->addArgument(self::ARGUMENT_AUTH_METHOD, InputArgument::OPTIONAL, 'password or xoauth2', 'password');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$userId = $input->getArgument(self::ARGUMENT_USER_ID);
 		$name = $input->getArgument(self::ARGUMENT_NAME);
 		$email = $input->getArgument(self::ARGUMENT_EMAIL);
+		$authMethod = $input->getArgument(self::ARGUMENT_AUTH_METHOD);
 
 		$imapHost = $input->getArgument(self::ARGUMENT_IMAP_HOST);
 		$imapPort = $input->getArgument(self::ARGUMENT_IMAP_PORT);
@@ -115,6 +119,7 @@ class CreateAccount extends Command {
 		$account->setUserId($userId);
 		$account->setName($name);
 		$account->setEmail($email);
+		$account->setAuthMethod($authMethod);
 
 		$account->setInboundHost($imapHost);
 		$account->setInboundPort((int) $imapPort);

@@ -91,6 +91,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSievePassword(?string $sievePassword)
  * @method bool|null isSignatureAboveQuote()
  * @method void setSignatureAboveQuote(bool $signatureAboveQuote)
+ * @method string getAuthMethod()
+ * @method void setAuthMethod(string $method)
  */
 class MailAccount extends Entity {
 	protected $userId;
@@ -112,6 +114,7 @@ class MailAccount extends Entity {
 	protected $order;
 	protected $showSubscribedOnly;
 	protected $personalNamespace;
+	protected $authMethod;
 
 	/** @var int|null */
 	protected $draftsMailboxId;
