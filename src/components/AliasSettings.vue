@@ -47,12 +47,9 @@
 
 			<Button v-if="showForm"
 				type="primary submit"
+				:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
 				form="createAliasForm"
 				:disabled="loading">
-				<template #icon>
-					<LoadingIcon v-if="loading" :size="20" />
-					<IconCheck v-else :size="20" />
-				</template>
 				{{ t('mail', 'Create alias') }}
 			</Button>
 			<Button v-if="showForm"
@@ -68,16 +65,12 @@
 import logger from '../logger'
 import AliasForm from './AliasForm'
 import Button from '@nextcloud/vue/dist/Components/Button'
-import IconAdd from 'vue-material-design-icons/Plus'
-import IconCheck from 'vue-material-design-icons/Check'
 
 export default {
 	name: 'AliasSettings',
 	components: {
 		AliasForm,
 		Button,
-		IconAdd,
-		IconCheck,
 	},
 	props: {
 		account: {

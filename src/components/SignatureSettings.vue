@@ -28,7 +28,7 @@
 				type="checkbox"
 				class="checkbox">
 			<label for="signature-above-quote-toggle">
-				{{ t("mail", "Place signature above quoted text") }}
+				{{ t('mail', 'Place signature above quoted text') }}
 			</label>
 		</div>
 		<Multiselect
@@ -54,13 +54,13 @@
 					<LoadingIcon v-if="loading" :size="20" />
 					<IconCheck v-else :size="20" />
 				</template>
-				{{ t("mail", "Save signature") }}
+				{{ t('mail', 'Save signature') }}
 			</Button>
 			<Button v-if="signature"
 				type="tertiary-no-background"
 				class="button-text"
 				@click="deleteSignature">
-				{{ t("mail", "Delete") }}
+				{{ t('mail', 'Delete') }}
 			</Button>
 		</div>
 	</div>
