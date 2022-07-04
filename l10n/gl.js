@@ -201,6 +201,7 @@ OC.L10N.register(
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["Sen ler {unread} de {total}","Sen ler {unread} de {total}"],
     "No message selected" : "Non seleccionou ningunha mensaxe",
     "Delete" : "Eliminar",
+    "Message deleted" : "Mensaxe eliminada",
     "Contacts with this address" : "Contactos con este enderezo",
     "Add to Contact" : "Engadir ao contacto",
     "New Contact" : "Novo contacto",
