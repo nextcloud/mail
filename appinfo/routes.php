@@ -324,6 +324,11 @@ return [
 			'url' => '/api/outbox/{id}',
 			'verb' => 'POST'
 		],
+		[
+			'name' => 'googleIntegration#oauthRedirect',
+			'url' => '/integration/google-auth',
+			'verb' => 'GET',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

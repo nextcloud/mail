@@ -41,7 +41,7 @@ import {
 	where,
 } from 'ramda'
 
-import { savePreference } from '../service/PreferenceService'
+import {savePreference} from '../service/PreferenceService'
 import {
 	create as createAccount,
 	deleteAccount,
@@ -75,14 +75,14 @@ import {
 } from '../service/MessageService'
 import * as AliasService from '../service/AliasService'
 import logger from '../logger'
-import { normalizedEnvelopeListId } from './normalization'
-import { showNewMessagesNotification } from '../service/NotificationService'
-import { matchError } from '../errors/match'
+import {normalizedEnvelopeListId} from './normalization'
+import {showNewMessagesNotification} from '../service/NotificationService'
+import {matchError} from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
-import { wait } from '../util/wait'
-import { updateAccount as updateSieveAccount } from '../service/SieveService'
-import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
+import {wait} from '../util/wait'
+import {updateAccount as updateSieveAccount} from '../service/SieveService'
+import {PAGE_SIZE, UNIFIED_INBOX_ID} from './constants'
 import * as ThreadService from '../service/ThreadService'
 import {
 	getPrioritySearchQueries,
@@ -90,11 +90,11 @@ import {
 	priorityOtherQuery,
 	priorityStarredQuery,
 } from '../util/priorityInbox'
-import { html, plain, toPlain } from '../util/text'
+import {html, plain, toPlain} from '../util/text'
 import Axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { showWarning } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
+import {generateUrl} from '@nextcloud/router'
+import {showWarning} from '@nextcloud/dialogs'
+import {translate as t} from '@nextcloud/l10n'
 import {
 	buildForwardSubject,
 	buildRecipients as buildReplyRecipients,
@@ -136,21 +136,21 @@ export default {
 			return account
 		})
 	},
-	createAccount({ commit }, config) {
-		return createAccount(config).then((account) => {
-			logger.debug(`account ${account.id} created, fetching mailboxes …`, account)
-			return fetchAllMailboxes(account.id)
-				.then((mailboxes) => {
-					account.mailboxes = mailboxes
-					commit('addAccount', account)
-				})
-				.then(() => console.info("new account's mailboxes fetched"))
-				.then(() => account)
-		})
+	async startAccountSetup({ commit }, config) {
+		const account = await createAccount(config)
+		logger.debug(`account ${account.id} created`, { account })
+		return account
+	},
+	async finishAccountSetup({ commit }, { account }) {
+		logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
+		account.mailboxes = await fetchAllMailboxes(account.id)
+		commit('addAccount', account)
+		logger.debug('New account mailboxes fetched', { account, mailboxes: account.mailboxes })
+		return account
 	},
 	updateAccount({ commit }, config) {
 		return updateAccount(config).then((account) => {
-			console.debug('account updated', account)
+			logger.debug('account updated', account)
 			commit('editAccount', account)
 			return account
 		})

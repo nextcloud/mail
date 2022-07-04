@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\OutboxService;
@@ -44,6 +45,7 @@ use OCP\IURLGenerator;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function http_build_query;
 use function json_decode;
 
 class PageController extends Controller {
@@ -180,6 +182,21 @@ class PageController extends Controller {
 			'outbox-messages',
 			$this->outboxService->getMessages($user->getUID())
 		);
+		$clientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
+		if (!empty($clientId)) {
+			$this->initialStateService->provideInitialState(
+				'google-oauth-url',
+				'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query([
+					'client_id' => $clientId,
+					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.googleIntegration.oauthRedirect'),
+					'response_type' => 'code',
+					'prompt' => 'consent',
+					'state' => 'accountId', // Replaced by frontend
+					'scope' => 'https://mail.google.com/',
+					'access_type' => 'offline',
+				]),
+			);
+		}
 
 		// Disable scheduled send in frontend if ajax cron is used because it is unreliable
 		$cronMode = $this->config->getAppValue('core', 'backgroundjobs_mode', 'ajax');

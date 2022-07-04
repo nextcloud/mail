@@ -390,4 +390,7 @@ export default {
 	setScheduledSendingDisabled(state, value) {
 		state.isScheduledSendingDisabled = value
 	},
+	setGoogleOauthUrl(state, url) {
+		state.googleOauthUrl = url
+	},
 }

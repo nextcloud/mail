@@ -95,4 +95,5 @@ export const getters = {
 		return state.tagList.map(tagId => state.tags[tagId])
 	},
 	isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
+	googleOauthUrl: (state) => state.googleOauthUrl,
 }

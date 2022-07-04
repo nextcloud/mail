@@ -25,8 +25,10 @@
 				<p v-if="!isValidEmail(autoConfig.emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
-				<label for="auto-password" class="account-form__label--required">{{ t('mail', 'Password') }}</label>
+				<label v-if="!useGoogleSso"
+					for="auto-password" class="account-form__label--required">{{ t('mail', 'Password') }}</label>
 				<input
+					v-if="!useGoogleSso"
 					id="auto-password"
 					v-model="autoConfig.password"
 					type="password"
@@ -208,20 +210,13 @@
 					required>
 			</Tab>
 		</Tabs>
+		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
+			{{ t('mail', 'For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password.') }}
+		</div>
 		<div class="account-form__submit-buttons">
-			<button v-if="mode === 'auto'"
-				class="primary account-form__submit-button"
+			<button class="primary account-form__submit-button"
 				type="submit"
-				:disabled="isDisabledAuto"
-				@click.prevent="onSubmit">
-				<span v-if="loading" class="icon-loading-small account-form__submit-button__spinner" />
-				{{ submitButtonText }}
-			</button>
-
-			<button v-else-if="mode === 'manual'"
-				class="primary account-form__submit-button"
-				type="submit"
-				:disabled="isDisabledManual"
+				:disabled="mode === 'auto' ? isDisabledAuto : isDisabledManual"
 				@click.prevent="onSubmit">
 				<span v-if="loading" class="icon-loading-small account-form__submit-button__spinner" />
 				{{ submitButtonText }}
@@ -235,6 +230,7 @@
 
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
+import { mapGetters } from 'vuex'
 
 import logger from '../logger'
 
@@ -297,6 +293,10 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters([
+			'googleOauthUrl',
+		]),
+
 		settingsPage() {
 			return this.account !== undefined
 		},
@@ -321,9 +321,25 @@ export default {
 			return this.loading
 		},
 
+		isGoogleAccount() {
+			if (this.mode === 'auto') {
+				return this.autoConfig.emailAddress.endsWith('@gmail.com')
+			} else {
+				return this.manualConfig.imapHost === 'imap.gmail.com'
+					|| this.manualConfig.smtpHost === 'smtp.gmail.com'
+			}
+		},
+
+		useGoogleSso() {
+			return this.isGoogleAccount && this.googleOauthUrl
+		},
+
 		submitButtonText() {
 			if (this.loading) {
 				return t('mail', 'Connecting')
+			}
+			if (this.useGoogleSso) {
+				return t('mail', 'Sign in with Google')
 			}
 			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
 		},
@@ -381,29 +397,72 @@ export default {
 		},
 		saveChanges() {
 			if (this.mode === 'auto') {
-				return this.save({
-					autoDetect: true,
-					...this.autoConfig,
-				})
+				if (this.useGoogleSso) {
+					return this.save({
+						autoDetect: false,
+						...this.autoConfig,
+						authMethod: 'xoauth2',
+						imapHost: 'imap.gmail.com',
+						imapPort: 993,
+						imapSslMode: 'ssl',
+						imapUser: this.autoConfig.emailAddress,
+						imapPassword: null,
+						smtpHost: 'smtp.gmail.com',
+						smtpPort: 587,
+						smtpSslMode: 'tls',
+						smtpUser: this.autoConfig.emailAddress,
+						smtpPassword: null,
+					})
+				} else {
+					return this.save({
+						autoDetect: true,
+						...this.autoConfig,
+					})
+				}
+
 			} else {
 				// Removing additional whitespaces from manual configuration hosts
 				// In order to avoid issues when copy pasting imap & smtp hosts from providers documentations,
 				// which may have whitespaces.
-				return this.save({
+				const config = {
 					autoDetect: false,
 					...this.manualConfig,
 					imapHost: this.manualConfig.imapHost.trim(),
 					smtpHost: this.manualConfig.smtpHost.trim(),
-				})
+				}
+				return this.save(config)
 			}
 		},
-		onSubmit(event) {
-			if (!this.isDisabledManual || !this.isDisabledAuto) {
-				console.debug('account form submitted', { event })
-				this.loading = true
-				this.saveChanges()
-					.catch((error) => logger.error('could not save account details', { error }))
-					.then(() => (this.loading = false))
+		async onSubmit(event) {
+			if (this.isDisabledManual || this.isDisabledAuto) {
+				return
+			}
+			console.debug('account form submitted', { event })
+			this.loading = true
+
+			if (this.useGoogleSso) {
+				try {
+					const account = await this.saveChanges()
+					const url = this.googleOauthUrl.replace('accountId', account.id)
+					logger.debug('Starting Google SSO', { url })
+					const ssoWindow = window.open(
+						url,
+						t('mail', 'Sign in with Google'),
+						'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
+					)
+					ssoWindow.focus()
+				} finally {
+					this.loading = true
+				}
+
+			} else {
+				try {
+					await this.saveChanges()
+				} catch (error) {
+					logger.error('could not save account details', {error})
+				} finally {
+					this.loading = false
+				}
 			}
 		},
 		isValidEmail(email) {

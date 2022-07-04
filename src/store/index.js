@@ -94,6 +94,7 @@ export default new Vuex.Store({
 				tags: {},
 				tagList: [],
 				isScheduledSendingDisabled: false,
+				googleOauthUrl: null,
 			},
 			getters,
 			mutations,

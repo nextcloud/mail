@@ -47,40 +47,39 @@ export default {
 		},
 	},
 	methods: {
-		onSave(data) {
+		async onSave(data) {
 			this.error = null
 
-			return this.$store
-				.dispatch('createAccount', data)
-				.then((account) => {
-					logger.info('account successfully created, redirecting …')
-					this.$router.push({
-						name: 'home',
-					})
+			try {
+				const account = this.$store.dispatch('startAccountSetup', data)
+				logger.info('account successfully created, redirecting …')
+				/*await this.$store.dispatch('finishAccountSetup', { account })
+				await this.$router.push({
+					name: 'home',
+				})*/
 
-					return account
-				})
-				.catch((error) => {
-					logger.error('Could not create account', { error })
+				return account
+			} catch (error) {
+				logger.error('Could not create account', { error })
 
-					if (error.data?.error === 'AUTOCONFIG_FAILED') {
-						this.error = t('mail', 'Auto detect failed. Please try manual mode.')
-					} else if (error.data?.error === 'CONNECTION_ERROR') {
-						if (error.data.service === 'IMAP') {
-							this.error = t('mail', 'Manual config failed. IMAP server is not reachable.')
-						} else if (error.data.service === 'SMTP') {
-							this.error = t('mail', 'Manual config failed. SMTP server is not reachable.')
-						}
-					} else if (error.data?.error === 'AUTHENTICATION') {
-						if (error.data.service === 'IMAP') {
-							this.error = t('mail', 'Manual config failed. IMAP username or password is wrong.')
-						} else if (error.data.service === 'SMTP') {
-							this.error = t('mail', 'Manual config failed. SMTP username or password is wrong.')
-						}
-					} else {
-						this.error = t('mail', 'There was an error while setting up your account. Please try again.')
+				if (error.data?.error === 'AUTOCONFIG_FAILED') {
+					this.error = t('mail', 'Auto detect failed. Please try manual mode.')
+				} else if (error.data?.error === 'CONNECTION_ERROR') {
+					if (error.data.service === 'IMAP') {
+						this.error = t('mail', 'Manual config failed. IMAP server is not reachable.')
+					} else if (error.data.service === 'SMTP') {
+						this.error = t('mail', 'Manual config failed. SMTP server is not reachable.')
 					}
-				})
+				} else if (error.data?.error === 'AUTHENTICATION') {
+					if (error.data.service === 'IMAP') {
+						this.error = t('mail', 'Manual config failed. IMAP username or password is wrong.')
+					} else if (error.data.service === 'SMTP') {
+						this.error = t('mail', 'Manual config failed. SMTP username or password is wrong.')
+					}
+				} else {
+					this.error = t('mail', 'There was an error while setting up your account. Please try again.')
+				}
+			}
 		},
 	},
 }

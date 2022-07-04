@@ -153,10 +153,32 @@
 			</article>
 			<AntiSpamSettings />
 		</div>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
+						'Gmail integration'
+					)
+				}}
+			</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords.'
+						)
+					}}
+				</p>
+			</article>
+			<GmailAdminOauthSettings />
+		</div>
 	</SettingsSection>
 </template>
 
 <script>
+import GmailAdminOauthSettings from './GmailAdminOauthSettings'
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import ProvisioningSettings from './ProvisioningSettings'
@@ -169,9 +191,11 @@ import {
 	provisionAll,
 
 } from '../../service/SettingsService'
+
 export default {
 	name: 'AdminSettings',
 	components: {
+		GmailAdminOauthSettings,
 		AntiSpamSettings,
 		ProvisioningSettings,
 		SettingsSection,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Alexander Weidinger <alexwegoo@gmail.com>
  * @author Christian Nöding <christian@noeding-online.de>

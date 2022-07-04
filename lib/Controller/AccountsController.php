@@ -153,6 +153,7 @@ class AccountsController extends Controller {
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
 	 * @param bool $autoDetect
+	 * @param string $authMethod
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
@@ -171,7 +172,8 @@ class AccountsController extends Controller {
 						   int $smtpPort = null,
 						   string $smtpSslMode = null,
 						   string $smtpUser = null,
-						   string $smtpPassword = null): JSONResponse {
+						   string $smtpPassword = null,
+						   string $authMethod = 'password'): JSONResponse {
 		try {
 			// Make sure the account actually exists
 			$this->accountService->find($this->currentUserId, $id);
@@ -185,7 +187,23 @@ class AccountsController extends Controller {
 			if ($autoDetect) {
 				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
+				$account = $this->setup->createNewAccount(
+					$accountName,
+					$emailAddress,
+					$imapHost,
+					$imapPort,
+					$imapSslMode,
+					$imapUser,
+					$imapPassword,
+					$smtpHost,
+					$smtpPort,
+					$smtpSslMode,
+					$smtpUser,
+					$smtpPassword,
+					$this->currentUserId,
+					$authMethod,
+					$id
+				);
 			}
 		} catch (Exception $ex) {
 			$errorMessage = $ex->getMessage();
@@ -299,27 +317,57 @@ class AccountsController extends Controller {
 	 *
 	 * @param string $accountName
 	 * @param string $emailAddress
-	 * @param string $password
+	 * @param string|null $password
 	 * @param string $imapHost
 	 * @param int $imapPort
 	 * @param string $imapSslMode
 	 * @param string $imapUser
-	 * @param string $imapPassword
+	 * @param string|null $imapPassword
 	 * @param string $smtpHost
 	 * @param int $smtpPort
 	 * @param string $smtpSslMode
 	 * @param string $smtpUser
-	 * @param string $smtpPassword
+	 * @param string|null $smtpPassword
+	 * @param string $authMethod
 	 * @param bool $autoDetect
 	 *
 	 * @return JSONResponse
 	 */
-	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
+	public function create(string $accountName,
+		string $emailAddress,
+		?string $password = null,
+		string $imapHost = null,
+		int $imapPort = null,
+		string $imapSslMode = null,
+		string $imapUser = null,
+		?string $imapPassword = null,
+		string $smtpHost = null,
+		int $smtpPort = null,
+		string $smtpSslMode = null,
+		string $smtpUser = null,
+		?string $smtpPassword = null,
+		bool $autoDetect = true,
+		string $authMethod = 'password'): JSONResponse {
 		try {
 			if ($autoDetect) {
 				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
+				$account = $this->setup->createNewAccount(
+					$accountName,
+					$emailAddress,
+					$imapHost,
+					$imapPort,
+					$imapSslMode,
+					$imapUser,
+					$imapPassword,
+					$smtpHost,
+					$smtpPort,
+					$smtpSslMode,
+					$smtpUser,
+					$smtpPassword,
+					$this->currentUserId,
+					$authMethod,
+				);
 			}
 		} catch (CouldNotConnectException $e) {
 			$data = [

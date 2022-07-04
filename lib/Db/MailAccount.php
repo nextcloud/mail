@@ -46,7 +46,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getInboundUser()
  * @method void setInboundUser(string $inboundUser)
  * @method string|null getInboundPassword()
- * @method void setInboundPassword(string $inboundPassword)
+ * @method void setInboundPassword(?string $inboundPassword)
  * @method string getOutboundHost()
  * @method void setOutboundHost(string $outboundHost)
  * @method integer getOutboundPort()
@@ -56,7 +56,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getOutboundUser()
  * @method void setOutboundUser(string $outboundUser)
  * @method string|null getOutboundPassword()
- * @method void setOutboundPassword(string $outboundPassword)
+ * @method void setOutboundPassword(?string $outboundPassword)
  * @method string|null getSignature()
  * @method void setSignature(string|null $signature)
  * @method int getLastMailboxSync()
@@ -93,6 +93,10 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSignatureAboveQuote(bool $signatureAboveQuote)
  * @method string getAuthMethod()
  * @method void setAuthMethod(string $method)
+ * @method string getOauthRefreshToken()
+ * @method void setOauthRefreshToken(string $token)
+ * @method int|null getOauthTokenTtl()
+ * @method void setOauthTokenTtl(int $ttl)
  */
 class MailAccount extends Entity {
 	protected $userId;
@@ -115,6 +119,8 @@ class MailAccount extends Entity {
 	protected $showSubscribedOnly;
 	protected $personalNamespace;
 	protected $authMethod;
+	protected $oauthRefreshToken;
+	protected $oauthTokenTtl;
 
 	/** @var int|null */
 	protected $draftsMailboxId;
