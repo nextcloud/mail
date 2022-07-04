@@ -8,7 +8,7 @@
 				<label for="auto-name">{{ t('mail', 'Name') }}</label>
 				<input
 					id="auto-name"
-					v-model="autoConfig.accountName"
+					v-model="accountName"
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading"
@@ -16,42 +16,45 @@
 				<label for="auto-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
 				<input
 					id="auto-address"
-					v-model.lazy="autoConfig.emailAddress"
-					type="email"
-					:placeholder="t('mail', 'name@example.org')"
+					v-model.lazy="emailAddress"
 					:disabled="loading"
+					:placeholder="t('mail', 'name@example.org')"
 					required
-					@blur="isValidEmail(autoConfig.emailAddress)">
-				<p v-if="!isValidEmail(autoConfig.emailAddress)" class="account-form--error">
+					type="email"
+					@blur="isValidEmail(emailAddress)"
+					@change="clearFeedback">
+				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
 				<label for="auto-password" class="account-form__label--required">{{ t('mail', 'Password') }}</label>
 				<input
 					id="auto-password"
 					v-model="autoConfig.password"
-					type="password"
-					:placeholder="t('mail', 'Password')"
 					:disabled="loading"
-					required>
+					:placeholder="t('mail', 'Password')"
+					required
+					type="password"
+					@change="clearFeedback">
 			</Tab>
 			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
 				<label for="man-name">{{ t('mail', 'Name') }}</label>
 				<input
 					id="man-name"
-					v-model="manualConfig.accountName"
+					v-model="accountName"
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading">
 				<label for="man-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
 				<input
 					id="man-address"
-					v-model.lazy="manualConfig.emailAddress"
+					v-model.lazy="emailAddress"
 					type="email"
 					:placeholder="t('mail', 'name@example.org')"
 					:disabled="loading"
 					required
-					@blur="isValidEmail(manualConfig.emailAddress)">
-				<p v-if="!isValidEmail(manualConfig.emailAddress)" class="account-form--error">
+					@blur="isValidEmail(emailAddress)"
+					@change="clearFeedback">
+				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
 
@@ -63,7 +66,8 @@
 					type="text"
 					:placeholder="t('mail', 'IMAP Host')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'IMAP Security') }}
 				</h4>
@@ -112,7 +116,8 @@
 					type="number"
 					:placeholder="t('mail', 'IMAP Port')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 				<label for="man-imap-user" class="account-form__label--required">{{ t('mail', 'IMAP User') }}</label>
 				<input
 					id="man-imap-user"
@@ -120,7 +125,8 @@
 					type="text"
 					:placeholder="t('mail', 'IMAP User')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 				<label for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
 				<input
 					id="man-imap-password"
@@ -128,7 +134,8 @@
 					type="password"
 					:placeholder="t('mail', 'IMAP Password')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 
 				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
 				<label for="man-smtp-host" class="account-form__label--required">{{ t('mail', 'SMTP Host') }}</label>
@@ -140,7 +147,8 @@
 					name="smtp-host"
 					:placeholder="t('mail', 'SMTP Host')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'SMTP Security') }}
 				</h4>
@@ -189,7 +197,8 @@
 					type="number"
 					:placeholder="t('mail', 'SMTP Port')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 				<label for="man-smtp-user" class="account-form__label--required">{{ t('mail', 'SMTP User') }}</label>
 				<input
 					id="man-smtp-user"
@@ -197,7 +206,8 @@
 					type="text"
 					:placeholder="t('mail', 'SMTP User')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 				<label for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
 				<input
 					id="man-smtp-password"
@@ -205,7 +215,8 @@
 					type="password"
 					:placeholder="t('mail', 'SMTP Password')"
 					:disabled="loading"
-					required>
+					required
+					@change="clearFeedback">
 			</Tab>
 		</Tabs>
 		<div class="account-form__submit-buttons">
@@ -227,16 +238,18 @@
 				{{ submitButtonText }}
 			</button>
 		</div>
-		<div class="account-form--feedback">
-			<slot name="feedback" />
+		<div v-if="feedback" class="account-form--feedback">
+			{{ feedback }}
 		</div>
 	</form>
 </template>
 
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
+import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
+import { testConnectivity, queryIspdb, queryMx } from '../service/AutoConfigService'
 
 export default {
 	name: 'AccountForm',
@@ -252,10 +265,6 @@ export default {
 		email: {
 			type: String,
 			default: '',
-		},
-		save: {
-			type: Function,
-			required: true,
 		},
 		account: {
 			type: Object,
@@ -274,15 +283,14 @@ export default {
 
 		return {
 			loading: false,
+			loadingMessage: undefined,
 			mode: 'auto',
+			accountName: this.displayName,
+			emailAddress: this.email,
 			autoConfig: {
-				accountName: this.displayName,
-				emailAddress: this.email,
 				password: '',
 			},
 			manualConfig: {
-				accountName: '',
-				emailAddress: '',
 				imapHost: fromAccountOr('imapHost', ''),
 				imapPort: fromAccountOr('imapPort', 993),
 				imapSslMode: fromAccountOr('imapSslMode', 'ssl'),
@@ -294,6 +302,7 @@ export default {
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
 			},
+			feedback: null,
 		}
 	},
 	computed: {
@@ -302,28 +311,29 @@ export default {
 		},
 
 		isDisabledAuto() {
-			switch (this.mode === 'auto') {
-			case !this.autoConfig.emailAddress || !this.isValidEmail(this.autoConfig.emailAddress) || !this.autoConfig.password :
-				return true
+			if (this.mode !== 'auto') {
+				return this.loading
 			}
-			return this.loading
+
+			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
+				|| !this.autoConfig.password
 		},
 
 		isDisabledManual() {
-			switch (this.mode === 'manual') {
-			case !this.manualConfig.emailAddress || !this.isValidEmail(this.manualConfig.emailAddress)
-			|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
-			|| !this.manualConfig.imapUser || !this.manualConfig.imapPassword
-			|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
-			|| !this.manualConfig.smtpUser || !this.manualConfig.smtpPassword:
-				return true
+			if (this.mode !== 'manual') {
+				return this.loading
 			}
-			return this.loading
+
+			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
+				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
+				|| !this.manualConfig.imapUser || !this.manualConfig.imapPassword
+				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
+				|| !this.manualConfig.smtpUser || !this.manualConfig.smtpPassword
 		},
 
 		submitButtonText() {
 			if (this.loading) {
-				return t('mail', 'Connecting')
+				return this.loadingMessage ?? t('mail', 'Connecting')
 			}
 			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
 		},
@@ -333,16 +343,9 @@ export default {
 			this.mode = e.tab.id
 
 			if (this.mode === 'manual') {
-				if (this.manualConfig.accountName === '') {
-					this.manualConfig.accountName = this.autoConfig.accountName
-				}
-				if (this.manualConfig.emailAddress === '') {
-					this.manualConfig.emailAddress = this.autoConfig.emailAddress
-				}
-
 				// IMAP
 				if (this.manualConfig.imapUser === '') {
-					this.manualConfig.imapUser = this.autoConfig.emailAddress
+					this.manualConfig.imapUser = this.emailAddress
 				}
 				if (this.manualConfig.imapPassword === '') {
 					this.manualConfig.imapPassword = this.autoConfig.password
@@ -350,7 +353,7 @@ export default {
 
 				// SMTP
 				if (this.manualConfig.smtpUser === '') {
-					this.manualConfig.smtpUser = this.autoConfig.emailAddress
+					this.manualConfig.smtpUser = this.emailAddress
 				}
 				if (this.manualConfig.smtpPassword === '') {
 					this.manualConfig.smtpPassword = this.autoConfig.password
@@ -358,6 +361,8 @@ export default {
 			}
 		},
 		onImapSslModeChange() {
+			this.clearFeedback()
+
 			switch (this.manualConfig.imapSslMode) {
 			case 'none':
 			case 'tls':
@@ -369,6 +374,8 @@ export default {
 			}
 		},
 		onSmtpSslModeChange() {
+			this.clearFeedback()
+
 			switch (this.manualConfig.smtpSslMode) {
 			case 'none':
 			case 'tls':
@@ -379,31 +386,143 @@ export default {
 				break
 			}
 		},
-		saveChanges() {
-			if (this.mode === 'auto') {
-				return this.save({
-					autoDetect: true,
-					...this.autoConfig,
-				})
+		clearFeedback() {
+			this.feedback = null
+		},
+		applyAutoConfig(config) {
+			if (!config) {
+				return false
+			}
+			if (config?.imapConfig) {
+				this.manualConfig.imapUser = config.imapConfig.username
+				this.manualConfig.imapHost = config.imapConfig.host
+				this.manualConfig.imapPort = config.imapConfig.port
+				this.manualConfig.imapSslMode = config.imapConfig.security
+				this.manualConfig.imapPassword = this.autoConfig.password
+			}
+			if (config?.smtpConfig) {
+				this.manualConfig.smtpUser = config.smtpConfig.username
+				this.manualConfig.smtpHost = config.smtpConfig.host
+				this.manualConfig.smtpPort = config.smtpConfig.port
+				this.manualConfig.smtpSslMode = config.smtpConfig.security
+				this.manualConfig.smtpPassword = this.autoConfig.password
+			}
+			return true
+		},
+		async detectConfig() {
+			this.loadingMessage = t('mail', 'Looking up configuration')
+			const config = await queryIspdb(this.emailAddress)
+			logger.debug('fetched auto config', { config })
+			// Apply settings to manual mode before submitting so the user
+			// can make modifications if the config fails
+			if (this.applyAutoConfig(config)) {
+				logger.debug('ISP DB config applied')
+				return true
 			} else {
-				// Removing additional whitespaces from manual configuration hosts
-				// In order to avoid issues when copy pasting imap & smtp hosts from providers documentations,
-				// which may have whitespaces.
-				return this.save({
-					autoDetect: false,
-					...this.manualConfig,
-					imapHost: this.manualConfig.imapHost.trim(),
-					smtpHost: this.manualConfig.smtpHost.trim(),
+				this.loadingMessage = t('mail', 'Checking mail host connectivity')
+				const mxHosts = await queryMx(this.emailAddress)
+				logger.debug('MX hosts fetched', { mxHosts })
+				const imapAndSmtpHosts = mxHosts.flatMap(host => {
+					return [993, 143, 465, 587].map(port => ({
+						host,
+						port,
+					}))
 				})
+				const results = await Promise.all(imapAndSmtpHosts.map(async({ host, port }) => {
+					return {
+						host,
+						port,
+						canConnect: await testConnectivity(host, port),
+					}
+				}))
+				const firstImapHost = results.filter(({ canConnect, port }) => canConnect && port === 993)[0]
+				const firstSmtpHost = results.filter(({ canConnect, port }) => canConnect && [465, 587].includes(port))[0]
+				logger.debug('MX connectivity tested', { firstImapHost, firstSmtpHost })
+				if (firstImapHost && firstSmtpHost) {
+					this.applyAutoConfig({
+						imapConfig: {
+							username: this.emailAddress, // Assumption
+							host: firstImapHost.host,
+							port: firstImapHost.port,
+							security: firstImapHost.port === 993 ? 'ssl' : 'tls',
+						},
+						smtpConfig: {
+							username: this.emailAddress, // Assumption
+							host: firstSmtpHost.host,
+							port: firstSmtpHost.port,
+							security: firstSmtpHost.port === 465 ? 'ssl' : 'tls',
+						},
+					})
+					return true
+				} else {
+					this.feedback = t('mail', 'Configuration discovery failed. Please use the manual settings')
+				}
+				return false
 			}
 		},
-		onSubmit(event) {
-			if (!this.isDisabledManual || !this.isDisabledAuto) {
-				console.debug('account form submitted', { event })
-				this.loading = true
-				this.saveChanges()
-					.catch((error) => logger.error('could not save account details', { error }))
-					.then(() => (this.loading = false))
+		async onSubmit(event) {
+			logger.debug('account form submitted', { event })
+			if (this.isDisabledManual || this.isDisabledAuto) {
+				logger.warn('submit is disabled')
+				return
+			}
+			this.clearFeedback()
+			this.loading = true
+			try {
+				if (this.mode === 'auto') {
+					if (!await this.detectConfig()) {
+						logger.warn('Auto mode failed')
+						return
+					}
+				}
+				this.loadingMessage = t('mail', 'Testing authentication')
+				const data = {
+					...this.manualConfig,
+					accountName: this.accountName,
+					emailAddress: this.emailAddress,
+					imapHost: this.manualConfig.imapHost.trim(),
+					smtpHost: this.manualConfig.smtpHost.trim(),
+				}
+				if (!this.account) {
+					const account = await this.$store.dispatch('createAccount', data)
+					this.feedback = t('mail', 'Account created')
+					this.$emit('accountCreated', account)
+				} else {
+					const account = await this.$store.dispatch('updateAccount', {
+						...data,
+						accountId: this.account.id,
+					})
+					this.feedback = t('mail', 'Account updated')
+					this.$emit('accountUpdated', account)
+				}
+				this.feedback = t('mail', 'Changes saved')
+			} catch (error) {
+				logger.error('could not save account details', { error })
+
+				if (error.data?.error === 'CONNECTION_ERROR') {
+					if (error.data.service === 'IMAP') {
+						this.feedback = t('mail', 'IMAP server is not reachable')
+					} else if (error.data.service === 'SMTP') {
+						this.feedback = t('mail', 'SMTP server is not reachable')
+					}
+				} else if (error.data?.error === 'AUTHENTICATION') {
+					if (error.data.service === 'IMAP') {
+						this.feedback = t('mail', 'IMAP username or password is wrong')
+					} else if (error.data.service === 'SMTP') {
+						this.feedback = t('mail', 'SMTP username or password is wrong')
+					}
+				} else {
+					if (error.data?.service === 'IMAP') {
+						this.feedback = t('mail', 'IMAP connection failed')
+					} else if (error.data?.service === 'SMTP') {
+						this.feedback = t('mail', 'SMTP connection failed')
+					} else {
+						this.feedback = t('mail', 'There was an error while setting up your account')
+					}
+				}
+			} finally {
+				this.loading = false
+				this.loadingMessage = undefined
 			}
 		},
 		isValidEmail(email) {

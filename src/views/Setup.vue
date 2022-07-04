@@ -5,11 +5,10 @@
 			<EmptyContent icon="icon-mail">
 				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
 				<template #desc>
-					<AccountForm :display-name="displayName" :email="email" :save="onSave">
-						<template v-if="error" #feedback class="warning">
-							{{ error }}
-						</template>
-					</AccountForm>
+					<AccountForm :display-name="displayName"
+						:email="email"
+						:error.sync="error"
+						@accountCreated="onAccountCreated" />
 				</template>
 			</EmptyContent>
 		</div>
@@ -19,7 +18,6 @@
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
 import { loadState } from '@nextcloud/initial-state'
-import { translate as t } from '@nextcloud/l10n'
 
 import AccountForm from '../components/AccountForm'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
@@ -47,40 +45,11 @@ export default {
 		},
 	},
 	methods: {
-		onSave(data) {
-			this.error = null
-
-			return this.$store
-				.dispatch('createAccount', data)
-				.then((account) => {
-					logger.info('account successfully created, redirecting …')
-					this.$router.push({
-						name: 'home',
-					})
-
-					return account
-				})
-				.catch((error) => {
-					logger.error('Could not create account', { error })
-
-					if (error.data?.error === 'AUTOCONFIG_FAILED') {
-						this.error = t('mail', 'Auto detect failed. Please try manual mode.')
-					} else if (error.data?.error === 'CONNECTION_ERROR') {
-						if (error.data.service === 'IMAP') {
-							this.error = t('mail', 'Manual config failed. IMAP server is not reachable.')
-						} else if (error.data.service === 'SMTP') {
-							this.error = t('mail', 'Manual config failed. SMTP server is not reachable.')
-						}
-					} else if (error.data?.error === 'AUTHENTICATION') {
-						if (error.data.service === 'IMAP') {
-							this.error = t('mail', 'Manual config failed. IMAP username or password is wrong.')
-						} else if (error.data.service === 'SMTP') {
-							this.error = t('mail', 'Manual config failed. SMTP username or password is wrong.')
-						}
-					} else {
-						this.error = t('mail', 'There was an error while setting up your account. Please try again.')
-					}
-				})
+		onAccountCreated() {
+			logger.info('account successfully created, redirecting …')
+			this.$router.push({
+				name: 'home',
+			})
 		},
 	},
 }
