@@ -505,4 +505,16 @@ input[type='radio'][disabled] + label {
 	text-align: left;
 	font-size: 14px;
 }
+#account-form {
+	z-index: 1001;
+	width: 250px;
+	top: 15%;
+	padding-bottom: 50px;
+	margin: 0 auto;
+	padding-top: 30px;
+}
+#account-form input {
+	width: 100%;
+	box-sizing: border-box;
+}
 </style>
