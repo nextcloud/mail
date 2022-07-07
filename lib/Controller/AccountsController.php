@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Exception;
 use Horde_Imap_Client;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -141,7 +140,6 @@ class AccountsController extends Controller {
 	 * @param int $id
 	 * @param string $accountName
 	 * @param string $emailAddress
-	 * @param string $password
 	 * @param string $imapHost
 	 * @param int $imapPort
 	 * @param string $imapSslMode
@@ -152,16 +150,13 @@ class AccountsController extends Controller {
 	 * @param string $smtpSslMode
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
-	 * @param bool $autoDetect
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	public function update(int $id,
-						   bool $autoDetect,
 						   string $accountName,
 						   string $emailAddress,
-						   string $password = null,
 						   string $imapHost = null,
 						   int $imapPort = null,
 						   string $imapSslMode = null,
@@ -179,28 +174,26 @@ class AccountsController extends Controller {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		$account = null;
-		$errorMessage = null;
 		try {
-			if ($autoDetect) {
-				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
-			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
-			}
-		} catch (Exception $ex) {
-			$errorMessage = $ex->getMessage();
-		}
+			return \OCA\Mail\Http\JsonResponse::success(
+				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id)
+			);
+		} catch (CouldNotConnectException $e) {
+			$data = [
+				'error' => $e->getReason(),
+				'service' => $e->getService(),
+				'host' => $e->getHost(),
+				'port' => $e->getPort(),
+			];
 
-		if (is_null($account)) {
-			if ($autoDetect) {
-				throw new ClientException($this->l10n->t('Auto detect failed. Please use manual mode.'));
-			} else {
-				$this->logger->error('Updating account failed: ' . $errorMessage);
-				throw new ClientException($this->l10n->t('Updating account failed: ') . $errorMessage);
-			}
+			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
+			return \OCA\Mail\Http\JsonResponse::fail($data);
+		} catch (ServiceException $e) {
+			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return \OCA\Mail\Http\JsonResponse::error('Could not create account');
 		}
-
-		return new JSONResponse($account);
 	}
 
 	/**
@@ -299,7 +292,6 @@ class AccountsController extends Controller {
 	 *
 	 * @param string $accountName
 	 * @param string $emailAddress
-	 * @param string $password
 	 * @param string $imapHost
 	 * @param int $imapPort
 	 * @param string $imapSslMode
@@ -310,17 +302,14 @@ class AccountsController extends Controller {
 	 * @param string $smtpSslMode
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
-	 * @param bool $autoDetect
 	 *
 	 * @return JSONResponse
 	 */
-	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
+	public function create(string $accountName, string $emailAddress, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null): JSONResponse {
 		try {
-			if ($autoDetect) {
-				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
-			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
-			}
+			return \OCA\Mail\Http\JsonResponse::success(
+				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId), Http::STATUS_CREATED
+			);
 		} catch (CouldNotConnectException $e) {
 			$data = [
 				'error' => $e->getReason(),
@@ -337,15 +326,6 @@ class AccountsController extends Controller {
 			]);
 			return \OCA\Mail\Http\JsonResponse::error('Could not create account');
 		}
-
-		if (is_null($account)) {
-			return \OCA\Mail\Http\JsonResponse::fail([
-				'error' => 'AUTOCONFIG_FAILED',
-				'message' => $this->l10n->t('Auto detect failed. Please use manual mode.'),
-			]);
-		}
-
-		return \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 	}
 
 	/**
