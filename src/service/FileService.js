@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -39,9 +39,9 @@ export async function getFileSize(path) {
 export async function getFileData(path) {
 	const response = await getClient('files').stat(path, {
 		data: `<?xml version="1.0"?>
-			<d:propfind  
+			<d:propfind
 			xmlns:d="DAV:"
-			xmlns:oc="http://owncloud.org/ns" 
+			xmlns:oc="http://owncloud.org/ns"
 			xmlns:nc="http://nextcloud.org/ns">
 				<d:prop>
 					<oc:size />
