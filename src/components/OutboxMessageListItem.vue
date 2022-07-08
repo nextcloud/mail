@@ -117,7 +117,8 @@ export default {
 		},
 		/**
 		 * Subject of message or "No Subject".
-		 * @returns {string}
+		 *
+		 * @return {string}
 		 */
 		subjectForSubtitle() {
 			// We have to use || here (instead of ??) because the subject might be '', null

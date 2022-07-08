@@ -1,8 +1,10 @@
 /**
  * @copyright Copyright (c) 2019 Marco Ambrosini <marcoambrosini@pm.me>
+ *
  * @copyright Copyright (c) 2020 Gary Kim <gary@garykim.dev>
  *
  * @author Marco Ambrosini <marcoambrosini@pm.me>
+ *
  * @author Gary Kim <gary@garykim.dev>
  *
  * @license AGPL-3.0-or-later
@@ -31,9 +33,10 @@ import { showError } from '@nextcloud/dialogs'
 
 /**
  * Makes a share link for a given file or directory.
+ *
  * @param {string} path The file path from the user's root directory. e.g. `/myfile.txt`
  * @param {string} token The conversation's token
- * @returns {string} url share link
+ * @return {string} url share link
  */
 const shareFile = async function(path, token) {
 	try {

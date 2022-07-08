@@ -36,7 +36,7 @@ export default {
 	},
 	methods: {
 		sync() {
-			setTimeout(async() => {
+			setTimeout(async () => {
 				try {
 					await this.$store.dispatch('syncInboxes')
 

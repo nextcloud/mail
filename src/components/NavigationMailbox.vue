@@ -386,8 +386,9 @@ export default {
 	methods: {
 		/**
 		 * Generate unique key id for a specific mailbox
-		 * @param {Object} mailbox the mailbox to gen id for
-		 * @returns {string}
+		 *
+		 * @param {object} mailbox the mailbox to gen id for
+		 * @return {string}
 		 */
 		genId(mailbox) {
 			return 'mailbox-' + mailbox.databaseId
@@ -395,6 +396,7 @@ export default {
 
 		/**
 		 * On menu toggle, fetch stats
+		 *
 		 * @param {boolean} open menu opened state
 		 */
 		onMenuToggle(open) {

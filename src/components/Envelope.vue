@@ -428,7 +428,8 @@ export default {
 		},
 		/**
 		 * Subject of envelope or "No Subject".
-		 * @returns {string}
+		 *
+		 * @return {string}
 		 */
 		subjectForSubtitle() {
 			// We have to use || here (instead of ??) because the subject might be '', null

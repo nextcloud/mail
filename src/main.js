@@ -27,7 +27,7 @@ import { generateFilePath } from '@nextcloud/router'
 import '@nextcloud/dialogs/styles/toast.scss'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
 import VueShortKey from 'vue-shortkey'
-import VTooltip from 'v-tooltip'
+import vToolTip from 'v-tooltip'
 import VueClipboard from 'vue-clipboard2'
 
 import App from './App'
@@ -47,7 +47,7 @@ sync(store, router)
 Vue.mixin(Nextcloud)
 
 Vue.use(VueShortKey, { prevent: ['input', 'div'] })
-Vue.use(VTooltip)
+Vue.use(vToolTip)
 Vue.use(VueClipboard)
 
 const getPreferenceFromPage = (key) => {

@@ -428,7 +428,7 @@ export default {
 						port,
 					}))
 				})
-				const results = await Promise.all(imapAndSmtpHosts.map(async({ host, port }) => {
+				const results = await Promise.all(imapAndSmtpHosts.map(async ({ host, port }) => {
 					return {
 						host,
 						port,

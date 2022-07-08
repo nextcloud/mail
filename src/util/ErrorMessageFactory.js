@@ -26,8 +26,8 @@ const getRandomSmiley = () => {
 }
 
 /**
- * @param {Folder} folder a folder
- * @returns {string}
+ * @param {object} folder a folder
+ * @return {string}
  */
 export const getRandomFolderErrorMessage = (folder) => {
 	const folderName = folder.get('name')
@@ -48,7 +48,7 @@ export const getRandomFolderErrorMessage = (folder) => {
 }
 
 /**
- * @returns {string}
+ * @return {string}
  */
 export const getRandomMessageErrorMessage = () => {
 	const texts = [

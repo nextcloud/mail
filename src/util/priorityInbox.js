@@ -32,7 +32,7 @@ export const priorityOtherQuery = 'is:pi-other'
 /**
  * Return an array of all search queries inside the priority inbox
  *
- * @returns {(string)[]}
+ * @return {(string)[]}
  */
 export function getPrioritySearchQueries() {
 	return [

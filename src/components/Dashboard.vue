@@ -103,7 +103,7 @@ export default {
 		},
 	},
 	async mounted() {
-		const accountInboxes = await Promise.all(this.accounts.map(async(account) => {
+		const accountInboxes = await Promise.all(this.accounts.map(async (account) => {
 			logger.debug('account', {
 				account,
 			})
@@ -122,7 +122,7 @@ export default {
 			inboxes,
 		})
 
-		await Promise.all(inboxes.map(async(mailbox) => {
+		await Promise.all(inboxes.map(async (mailbox) => {
 			const messages = await fetchEnvelopes(mailbox.accountId, mailbox.databaseId, this.query, undefined, 10)
 			this.messages = this.messages !== null ? [...this.messages, ...messages] : messages
 			this.fetchedAccounts++

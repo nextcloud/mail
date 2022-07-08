@@ -250,14 +250,14 @@ export default {
 				}
 			} catch (error) {
 				await matchError(error, {
-					[MailboxLockedError.getName()]: async(error) => {
+					[MailboxLockedError.getName()]: async (error) => {
 						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
 
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
-					[MailboxNotCachedError.getName()]: async(error) => {
+					[MailboxNotCachedError.getName()]: async (error) => {
 						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization`, { error })
 						this.loadingEnvelopes = false
 

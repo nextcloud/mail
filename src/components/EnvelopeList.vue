@@ -398,7 +398,7 @@ export default {
 				}
 			}
 
-			await Promise.all(this.selectedEnvelopes.map(async(envelope) => {
+			await Promise.all(this.selectedEnvelopes.map(async (envelope) => {
 				logger.info(`deleting thread ${envelope.threadRootId}`)
 				await this.$store.dispatch('deleteThread', {
 					envelope,
