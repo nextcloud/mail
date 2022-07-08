@@ -4,6 +4,7 @@
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
+				class="envelope-list"
 				infinite-scroll-immediate-check="false"
 				:show-details="showThread"
 				:infinite-scroll-disabled="false"
@@ -262,5 +263,10 @@ export default {
 
 #app-content-wrapper {
 	display: flex;
+}
+
+.envelope-list {
+	max-height: calc(100vh - var(--header-height));
+	overflow-y: auto;
 }
 </style>
