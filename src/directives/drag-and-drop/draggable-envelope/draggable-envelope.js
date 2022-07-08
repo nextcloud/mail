@@ -55,7 +55,7 @@ export class DraggableEnvelope {
 		event.dataTransfer.setData('text/plain', JSON.stringify(envelopes))
 		this.attachGhost({ event, envelopes })
 
-		dragEventBus.$emit('dragStart', {
+		dragEventBus.$emit('drag-start', {
 			accountId,
 			mailboxId,
 			itemCount: envelopes.length,
@@ -63,7 +63,7 @@ export class DraggableEnvelope {
 	}
 
 	onDragEnd(event) {
-		dragEventBus.$emit('dragEnd', { accountId: this.options.accountId })
+		dragEventBus.$emit('drag-end', { accountId: this.options.accountId })
 	}
 
 	attachGhost({ event, envelopes }) {

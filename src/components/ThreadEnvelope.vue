@@ -55,7 +55,7 @@
 				event=""
 				class="left"
 				:class="{seen: envelope.flags.seen}"
-				@click.native.prevent="$emit('toggleExpand', $event)">
+				@click.native.prevent="$emit('toggle-expand', $event)">
 				<div class="sender"
 					:class="{ 'centered-sender': centeredSender }">
 					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}

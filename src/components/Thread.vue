@@ -42,7 +42,7 @@
 				:full-height="thread.length === 1"
 				@delete="$emit('delete', env.databaseId)"
 				@move="onMove(env.databaseId)"
-				@toggleExpand="toggleExpand(env.databaseId)" />
+				@toggle-expand="toggleExpand(env.databaseId)" />
 		</template>
 	</AppContentDetails>
 </template>

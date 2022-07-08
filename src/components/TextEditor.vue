@@ -193,8 +193,8 @@ export default {
 
 			logger.debug(`setting TextEditor contents to <${this.text}>`)
 
-			this.bus.$on('appendToBodyAtCursor', this.appendToBodyAtCursor)
-			this.bus.$on('insertSignature', this.onInsertSignature)
+			this.bus.$on('append-to-body-at-cursor', this.appendToBodyAtCursor)
+			this.bus.$on('insert-signature', this.onInsertSignature)
 		},
 		onInput() {
 			logger.debug(`TextEditor input changed to <${this.text}>`)

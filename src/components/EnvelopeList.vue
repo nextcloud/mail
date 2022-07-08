@@ -198,7 +198,7 @@
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
-				@click="$emit('loadMore')">
+				@click="$emit('load-more')">
 				{{ t('mail', 'Load more') }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
@@ -328,10 +328,10 @@ export default {
 		},
 	},
 	mounted() {
-		dragEventBus.$on('envelopesDropped', this.unselectAll)
+		dragEventBus.$on('envelopes-dropped', this.unselectAll)
 	},
 	beforeDestroy() {
-		dragEventBus.$off('envelopesDropped', this.unselectAll)
+		dragEventBus.$off('envelopes-dropped', this.unselectAll)
 	},
 	methods: {
 		isEnvelopeSelected(idx) {

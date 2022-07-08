@@ -179,7 +179,7 @@ export default {
 		onScroll(event) {
 			logger.debug('scroll', { event })
 
-			this.bus.$emit('loadMore')
+			this.bus.$emit('load-more')
 		},
 		onShortcut(e) {
 			this.bus.$emit('shortcut', e)
