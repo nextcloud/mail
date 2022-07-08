@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Aŭtomata rekono malsukcesis. Bv. uzi permanan reĝimon.",
-    "Updating account failed: " : "Ĝisdatigo de konto malsukcesis:",
     "Embedded message %s" : "Enkorpiga mesaĝo %s",
     "Important" : "Grava",
     "Work" : "Laboro",

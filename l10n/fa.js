@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "شناسایی خودکار با شکست مواجه شد. لطفا از حالت دستی استفاده کنید.",
-    "Updating account failed: " : "به روزرسانی حساب انجام نشد:",
     "Embedded message %s" : "پیام درج شده%s",
     "Important mail" : "ایمیل‌های مهم",
     "Important" : "مهم",

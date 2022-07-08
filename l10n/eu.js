@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Detekzio automatikoak huts egin du. Erabili eskuzko modua",
-    "Updating account failed: " : "Huts egin du kontua eguneratzerakoan:",
     "Embedded message %s" : "Txertatutako mezua %s",
     "Important mail" : "Posta garrantzitsua",
     "Unread mail" : "Irakurri gabeko posta",
@@ -374,12 +372,6 @@ OC.L10N.register(
     "Search" : "Bilatu",
     "Refresh" : "Freskatu",
     "Connect your mail account" : "Konektatu zure posta kontua",
-    "Auto detect failed. Please try manual mode." : "Huts egin du automatikoki detektatzeko. Mesedez, saiatu eskuzko moduan.",
-    "Manual config failed. IMAP server is not reachable." : "Eskuzko konfigurazioa huts egin du. IMAP zerbitzaria ezin da iritsi.",
-    "Manual config failed. SMTP server is not reachable." : "Eskuzko konfigurazioak huts egin du. SMTP zerbitzaria ezin da iritsi.",
-    "Manual config failed. IMAP username or password is wrong." : "Eskuzko konfigurazioak huts egin du. IMAP erabiltzaile-izena edo pasahitza okerra da.",
-    "Manual config failed. SMTP username or password is wrong." : "Eskuzko konfigurazioak huts egin du. SMTP erabiltzaile-izena edo pasahitza okerra da.",
-    "There was an error while setting up your account. Please try again." : "Errore bat gertatu da kontua konfiguratzean. Saiatu berriro mesedez.",
     "Itinerary for {type} is not supported yet" : "{type} motarentzako ibilbidea ez da onartzen oraindik",
     "All" : "Denak",
     "Archive" : "Artxibatu",

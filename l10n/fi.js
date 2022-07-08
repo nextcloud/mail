@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
-    "Updating account failed: " : "Tilin päivittäminen epäonnistui:",
     "Embedded message %s" : "Upotettu viesti %s",
     "Important mail" : "Tärkeä sähköposti",
     "Unread mail" : "Lukematon sähköposti",
@@ -303,7 +301,6 @@ OC.L10N.register(
     "Search" : "Etsi",
     "Refresh" : "Päivitä",
     "Connect your mail account" : "Yhdistä sähköpostitilisi",
-    "There was an error while setting up your account. Please try again." : "Tiliä määrittäessä ilmeni virhe. Yritä uudelleen.",
     "All" : "Kaikki",
     "Archive" : "Arkisto",
     "Drafts" : "Luonnokset",

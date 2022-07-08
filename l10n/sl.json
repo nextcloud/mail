@@ -1,6 +1,4 @@
 { "translations": {
-    "Auto detect failed. Please use manual mode." : "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
-    "Updating account failed: " : "Posodobitev računa je spodletela:",
     "Embedded message %s" : "Vstavljeno sporočilo %s",
     "Important mail" : "Pomembno sporočilo",
     "Unread mail" : "Neprebrana pošta",

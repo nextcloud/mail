@@ -1,7 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Falló l'autodeteición. Por favor, usa el mou manual.",
     "Important" : "Importante",
     "Work" : "Trabayu",
     "Personal" : "Personal",

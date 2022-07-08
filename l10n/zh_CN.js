@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "自动检测失败，请使用手动模式。",
-    "Updating account failed: " : "更新账号失败：",
     "Embedded message %s" : "嵌入式消息 %s",
     "Important mail" : "重要邮件",
     "Unread mail" : "未读邮件",

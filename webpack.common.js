@@ -25,6 +25,7 @@ module.exports = {
 		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
 		dashboard: path.join(__dirname, 'src/main-dashboard.js'),
 		mail: path.join(__dirname, 'src/main.js'),
+		googleoauthpopup: path.join(__dirname, 'src/main-google-oauth-popup.js'),
 		settings: path.join(__dirname, 'src/main-settings'),
 		htmlresponse: path.join(__dirname, 'src/html-response.js'),
 	},

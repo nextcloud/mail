@@ -6,7 +6,7 @@
   - @author 2020 Greta Doci <gretadoci@gmail.com>
   -
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -65,8 +65,8 @@
 					ref="accountForm"
 					:display-name="displayName"
 					:email="email"
-					:save="onSave"
-					:account="account" />
+					:account="account"
+					@accountUpdated="onAccountUpdated" />
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId" :title="t('mail', 'Sieve filter server')">
@@ -95,7 +95,6 @@
 import AccountForm from '../components/AccountForm'
 import EditorSettings from '../components/EditorSettings'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings'
-import Logger from '../logger'
 import SignatureSettings from '../components/SignatureSettings'
 import AliasSettings from '../components/AliasSettings'
 import AppSettingsDialog from '@nextcloud/vue/dist/Components/AppSettingsDialog'
@@ -156,19 +155,6 @@ export default {
 		},
 	},
 	methods: {
-		onSave(data) {
-			Logger.log('saving data', { data })
-			return this.$store
-				.dispatch('updateAccount', {
-					...data,
-					accountId: this.account.id,
-				})
-				.then((account) => account)
-				.catch((error) => {
-					Logger.error('account update failed:', { error })
-					throw error
-				})
-		},
 		handleClick() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',

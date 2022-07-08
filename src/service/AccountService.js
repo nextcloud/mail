@@ -44,6 +44,13 @@ export const update = (data) => {
 		.put(url, data)
 		.then((resp) => resp.data)
 		.then(fixAccountId)
+		.catch((e) => {
+			if (e.response && e.response.status === 400) {
+				throw e.response.data
+			}
+
+			throw e
+		})
 }
 
 export const updateSignature = (account, signature) => {

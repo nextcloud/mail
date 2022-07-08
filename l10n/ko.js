@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "자동 감지가 실패했습니다. 수동 모드를 사용하십시오.",
-    "Updating account failed: " : "계정 업데이트 실패:",
     "Embedded message %s" : "포함된 메시지 %s",
     "Important mail" : "중요 메일",
     "Unread mail" : "읽지 않은 메일",

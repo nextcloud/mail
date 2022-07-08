@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Se presentó una falla en la auto detección. Favor de usar el modo manual.",
-    "Updating account failed: " : "Error al actualizar la cuenta:",
     "Important" : "Importante",
     "Work" : "Trabajo",
     "Personal" : "Personal",

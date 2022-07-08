@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automatinis nustatymų aptikimas nepavyko. Įveskite duomenis rankiniu būdu.",
-    "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Embedded message %s" : "Įterptas laiškas %s",
     "Important mail" : "Svarbūs laiškai",
     "Unread mail" : "Neskaitytas paštas",

@@ -1,6 +1,4 @@
 { "translations": {
-    "Auto detect failed. Please use manual mode." : "Automatisch vaststellen mislukt. Gebruik handmatige modus.",
-    "Updating account failed: " : "Bijwerken van account mislukt:",
     "Embedded message %s" : "Ingebed bericht %s",
     "Important mail" : "Belangrijke mail",
     "Unread mail" : "Ongelezen mail",

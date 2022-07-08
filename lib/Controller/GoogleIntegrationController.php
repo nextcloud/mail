@@ -31,6 +31,7 @@ use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 use function filter_var;
@@ -69,19 +70,34 @@ class GoogleIntegrationController extends Controller {
 	public function oauthRedirect(?string $code, ?string $state, ?string $scope, ?string $error): Response {
 		if ($this->userId === null) {
 			// TODO: redirect to main nextcloud page
-			return null;
+			return new StandaloneTemplateResponse(
+				Application::APP_ID,
+				'google_oauth_done',
+				[],
+				'guest',
+			);
 		}
 
 		if (!isset($code, $state, $scope)) {
 			// TODO: handle error
-			return null;
+			return new StandaloneTemplateResponse(
+				Application::APP_ID,
+				'google_oauth_done',
+				[],
+				'guest',
+			);
 		}
 		if (!filter_var($state, FILTER_VALIDATE_INT)) {
 			$this->logger->warning('Can not link Google account due to invalid state/account id {state}', [
 				'state' => $state,
 			]);
 			// TODO: redirect to main nextcloud page
-			return null;
+			return new StandaloneTemplateResponse(
+				Application::APP_ID,
+				'google_oauth_done',
+				[],
+				'guest',
+			);
 		}
 
 		try {
@@ -94,7 +110,12 @@ class GoogleIntegrationController extends Controller {
 				'exception' => $e,
 			]);
 			// TODO: redirect to main nextcloud page
-			return null;
+			return new StandaloneTemplateResponse(
+				Application::APP_ID,
+				'google_oauth_done',
+				[],
+				'guest',
+			);
 		}
 
 		$updated = $this->googleIntegration->finishConnect(
@@ -102,5 +123,12 @@ class GoogleIntegrationController extends Controller {
 			$code,
 		);
 		$this->accountService->update($updated->getMailAccount());
+
+		return new StandaloneTemplateResponse(
+			Application::APP_ID,
+			'google_oauth_done',
+			[],
+			'guest',
+		);
 	}
 }

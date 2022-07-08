@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Otomatik olarak algılanamadı. Lütfen el ile kipini kullanın.",
-    "Updating account failed: " : "Hesap güncellenemedi:",
     "Embedded message %s" : "Gömülü ileti %s",
     "Important mail" : "Önemli e-posta",
     "Unread mail" : "Okunmamış e-posta",
@@ -374,12 +372,6 @@ OC.L10N.register(
     "Search" : "Arama",
     "Refresh" : "Yenlle",
     "Connect your mail account" : "E-posta hesabınızı bağlayın",
-    "Auto detect failed. Please try manual mode." : "Otomatik olarak algılanamadı. Lütfen el ile kipini deneyin.",
-    "Manual config failed. IMAP server is not reachable." : "El ile yapılandırma tamamlanamadı. IMAP sunucusuna erişilemedi.",
-    "Manual config failed. SMTP server is not reachable." : "El ile yapılandırma tamamlanamadı. SMTP sunucusuna erişilemedi.",
-    "Manual config failed. IMAP username or password is wrong." : "El ile yapılandırma tamamlanamadı. IMAP sunucusunun kullanıcı adı ya da parolası yanlış.",
-    "Manual config failed. SMTP username or password is wrong." : "El ile yapılandırma tamamlanamadı. SMTP sunucusunun kullanıcı adı ya da parolası yanlış.",
-    "There was an error while setting up your account. Please try again." : "Hesabınız kurulurken bir sorun çıktı. Lütfen yeniden deneyin.",
     "Itinerary for {type} is not supported yet" : "{type} için yolculuk rehberi henüz desteklenmiyor",
     "All" : "Tümü",
     "Archive" : "Arşivle",

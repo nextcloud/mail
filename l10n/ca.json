@@ -1,6 +1,4 @@
 { "translations": {
-    "Auto detect failed. Please use manual mode." : "La detecció automàtica ha fallat. Si us plau, feu servir el mode manual.",
-    "Updating account failed: " : "Ha fallat l’actualització del compte: ",
     "Embedded message %s" : "Missatge incrustat %s",
     "Important mail" : "Correu important",
     "Important" : "Importants",

@@ -1,7 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
     "Important" : "Tähtis",
     "Work" : "Töö",
     "Personal" : "Isiklik",
