@@ -31,6 +31,7 @@ import VTooltip from 'v-tooltip'
 import VueClipboard from 'vue-clipboard2'
 
 import App from './App'
+import axios from '@nextcloud/axios'
 import Nextcloud from './mixins/Nextcloud'
 import router from './router'
 import store from './store'
@@ -41,6 +42,15 @@ import { loadState } from '@nextcloud/initial-state'
 __webpack_nonce__ = btoa(getRequestToken())
 // eslint-disable-next-line camelcase
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
+
+axios.interceptors.response.use(function(config) {
+	return config
+}, function(error) {
+	if (error.request) {
+		window.OC._processAjaxError(error.request)
+	}
+	return Promise.reject(error)
+})
 
 sync(store, router)
 
