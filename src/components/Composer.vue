@@ -945,7 +945,7 @@ export default {
 		handleAppendSignature() {
 			if (this.appendSignature) {
 				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
-				this.bus.$emit('insertSignature', signatureValue, this.selectedAlias.signatureAboveQuote)
+				this.bus.$emit('insert-signature', signatureValue, this.selectedAlias.signatureAboveQuote)
 				this.appendSignature = false
 			}
 		},
@@ -977,15 +977,15 @@ export default {
 			this.handleAppendSignature()
 		},
 		onAddLocalAttachment() {
-			this.bus.$emit('onAddLocalAttachment')
+			this.bus.$emit('on-add-local-attachment')
 			this.callSaveDraft(true, this.getMessageData)
 		},
 		onAddCloudAttachment() {
-			this.bus.$emit('onAddCloudAttachment')
+			this.bus.$emit('on-add-cloud-attachment')
 			this.callSaveDraft(true, this.getMessageData)
 		},
 		onAddCloudAttachmentLink() {
-			this.bus.$emit('onAddCloudAttachmentLink')
+			this.bus.$emit('on-add-cloud-attachment-link')
 		},
 		onAutocomplete(term, loadingIndicator) {
 			if (term === undefined || term === '') {

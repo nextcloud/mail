@@ -8,7 +8,7 @@
 					<AccountForm :display-name="displayName"
 						:email="email"
 						:error.sync="error"
-						@accountCreated="onAccountCreated" />
+						@account-created="onAccountCreated" />
 				</template>
 			</EmptyContent>
 		</div>

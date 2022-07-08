@@ -66,7 +66,7 @@
 					:display-name="displayName"
 					:email="email"
 					:account="account"
-					@accountUpdated="onAccountUpdated" />
+					@account-updated="onAccountUpdated" />
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId" :title="t('mail', 'Sieve filter server')">

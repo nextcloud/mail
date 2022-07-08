@@ -486,14 +486,14 @@ export default {
 				if (!this.account) {
 					const account = await this.$store.dispatch('createAccount', data)
 					this.feedback = t('mail', 'Account created')
-					this.$emit('accountCreated', account)
+					this.$emit('account-created', account)
 				} else {
 					const account = await this.$store.dispatch('updateAccount', {
 						...data,
 						accountId: this.account.id,
 					})
 					this.feedback = t('mail', 'Account updated')
-					this.$emit('accountUpdated', account)
+					this.$emit('account-updated', account)
 				}
 				this.feedback = t('mail', 'Changes saved')
 			} catch (error) {
