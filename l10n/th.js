@@ -1,7 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "ตรวจจับอัตโนมัติล้มเหลว กรุณาใช้โหมดควบคุมด้วยตนเอง",
     "Important" : "สำคัญ",
     "Work" : "ที่ทำงาน",
     "Personal" : "ส่วนตัว",

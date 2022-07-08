@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Ауто-откривање није успело. Покушајте ручно.",
-    "Updating account failed: " : "Ажурирање налога неуспешно:",
     "Embedded message %s" : "Уграђена порука %s",
     "Important mail" : "Важна пошта",
     "Important" : "Важно",

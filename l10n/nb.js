@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automatisk påvisning mislyktes. Bruk manuelt oppsett.",
-    "Updating account failed: " : "Oppdatering av konto mislyktes:",
     "Important" : "Viktig",
     "Work" : "Arbeid",
     "Personal" : "Personlig",

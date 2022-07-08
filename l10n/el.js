@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
-    "Updating account failed: " : "Αποτυχία ενημέρωσης λογαριασμού:",
     "Embedded message %s" : "Ενσωματωμένο μήνυμα %s",
     "Important mail" : "Σημαντική αλληλογραφία",
     "Unread mail" : "Μη αναγνωσμένη αλληλογραφία",

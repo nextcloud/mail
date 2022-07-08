@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a kézi módot.",
-    "Updating account failed: " : "Fiók frissítése sikertelen: ",
     "Embedded message %s" : "Beágyazott üzenet %s",
     "Important mail" : "Fontos levelek",
     "Unread mail" : "Olvasatlan levelek",
@@ -374,12 +372,6 @@ OC.L10N.register(
     "Search" : "Keresés",
     "Refresh" : "Frissítés",
     "Connect your mail account" : "Kapcsolódás az e-mail-fiókjához",
-    "Auto detect failed. Please try manual mode." : "Automatikus észlelés sikertelen. Próbálja ki a kézi módot.",
-    "Manual config failed. IMAP server is not reachable." : "A kézi beállítás sikertelen. Az IMAP-kiszolgáló nem érhető el.",
-    "Manual config failed. SMTP server is not reachable." : "A kézi beállítás sikertelen. Az SMTP-kiszolgáló nem érhető el.",
-    "Manual config failed. IMAP username or password is wrong." : "A kézi beállítás sikertelen. Az IMAP felhasználónév vagy jelszó hibás.",
-    "Manual config failed. SMTP username or password is wrong." : "A kézi beállítás sikertelen. Az SMTP felhasználónév vagy jelszó hibás.",
-    "There was an error while setting up your account. Please try again." : "Hiba történt a fiók beállítása során. Próbálja újra.",
     "Itinerary for {type} is not supported yet" : "A(z) {type} útiterve még nem támogatott",
     "All" : "Összes",
     "Archive" : "Archívum",

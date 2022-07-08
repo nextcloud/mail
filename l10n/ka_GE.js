@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "ავტო-აღმოჩენა ვერ მოხერხდა. გთხოვთ სცადოთ ხელით.",
-    "Updating account failed: " : "ანგარიშის განახლება ვერ მოხერხდა:",
     "Important" : "აუცილებელი",
     "Work" : "სამსახური",
     "Personal" : "პირადი",

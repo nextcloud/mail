@@ -100,6 +100,21 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'autoConfig#queryIspdb',
+			'url' => '/api/autoconfig/ispdb/{email}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'autoConfig#queryMx',
+			'url' => '/api/autoconfig/mx/{email}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'autoConfig#testConnectivity',
+			'url' => '/api/autoconfig/test',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'tags#create',
 			'url' => '/api/tags',
 			'verb' => 'POST'

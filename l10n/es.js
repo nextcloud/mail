@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "La autodetección ha fallado. Usa el modo manual.",
-    "Updating account failed: " : "Fallo al actualizar la cuenta:",
     "Embedded message %s" : "Mensaje incrustado %s",
     "Important mail" : "Correo importante",
     "Unread mail" : "Correo sin leer",
@@ -374,12 +372,6 @@ OC.L10N.register(
     "Search" : "Buscar",
     "Refresh" : "Recargar",
     "Connect your mail account" : "Conecte su cuenta de correo electrónico",
-    "Auto detect failed. Please try manual mode." : "La autodetección ha fallado. Usa el modo manual.",
-    "Manual config failed. IMAP server is not reachable." : "Configuración manual fallida. El servidor IMAP no es alcanzable.",
-    "Manual config failed. SMTP server is not reachable." : "Configuración manual fallida. El servidor SMTP no es alcanzable.",
-    "Manual config failed. IMAP username or password is wrong." : "Configuración manual fallida. El nombre de usuario o la contraseña IMAP son incorrectas",
-    "Manual config failed. SMTP username or password is wrong." : "Configuración manual fallida. El nombre de usuario o la contraseña STMP son incorrectas",
-    "There was an error while setting up your account. Please try again." : "Se produjo un error intentando configurar tu cuenta. Por favor vuelve a intentarlo",
     "Itinerary for {type} is not supported yet" : "El itinerario para {type} no está soportado aún",
     "All" : "Todo",
     "Archive" : "Archivar",

@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Methodd awtoganfod. Defnyddiwch y modd llaw.",
-    "Updating account failed: " : "Methodd diweddaru'r cyfrif :",
     "Work" : "Gwaith",
     "Personal" : "Personol",
     "Mail" : "E-bost",

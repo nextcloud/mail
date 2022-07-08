@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
-    "Updating account failed: " : "Kontoen blev ikke opdateret:",
     "Embedded message %s" : "Indlejret besked %s",
     "Important mail" : "Vigtig mail",
     "Unread mail" : "Ulæst mail",

@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Neuspjelo automatsko otkrivanje. Upišite postavke ručno.",
-    "Updating account failed: " : "Neuspjelo ažuriranje računa: ",
     "Embedded message %s" : "Ugrađena poruka %s",
     "Important mail" : "Važna pošta",
     "Unread mail" : "Nepročitana pošta",

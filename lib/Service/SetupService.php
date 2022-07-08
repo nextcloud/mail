@@ -35,15 +35,11 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
 class SetupService {
-
-	/** @var AutoConfig */
-	private $autoConfig;
 
 	/** @var AccountService */
 	private $accountService;
@@ -63,42 +59,18 @@ class SetupService {
 	/** @var TagMapper */
 	private $tagMapper;
 
-	public function __construct(AutoConfig $autoConfig,
-								AccountService $accountService,
+	public function __construct(AccountService $accountService,
 								ICrypto $crypto,
 								SmtpClientFactory $smtpClientFactory,
 								IMAPClientFactory $imapClientFactory,
 								LoggerInterface $logger,
 								TagMapper $tagMapper) {
-		$this->autoConfig = $autoConfig;
 		$this->accountService = $accountService;
 		$this->crypto = $crypto;
 		$this->smtpClientFactory = $smtpClientFactory;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
-	}
-
-	/**
-	 * @param string $accountName
-	 * @param string $emailAddress
-	 * @param string $password
-	 * @return Account|null
-	 *
-	 * @link https://github.com/nextcloud/mail/issues/25
-	 */
-	public function createNewAutoConfiguredAccount($accountName, $emailAddress, $password) {
-		$this->logger->info('setting up auto detected account');
-		$mailAccount = $this->autoConfig->createAutoDetected($emailAddress, $password, $accountName);
-		if (is_null($mailAccount)) {
-			return null;
-		}
-
-		$this->accountService->save($mailAccount);
-
-		$this->tagMapper->createDefaultTags($mailAccount);
-
-		return new Account($mailAccount);
 	}
 
 	/**

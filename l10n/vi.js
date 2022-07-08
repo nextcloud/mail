@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Tự động phát hiện không thành công. Vui lòng sử dụng chế độ thủ công.",
-    "Updating account failed: " : "Cập nhật tài khoản không thành công:",
     "Embedded message %s" : "Đã đính kèm tin nhắn %s",
     "Important mail" : "Thư quan trọng",
     "Unread mail" : "Thư chưa đọc",

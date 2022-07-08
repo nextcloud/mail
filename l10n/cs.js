@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automatické zjištění se nezdařilo. Použijte ruční režim.",
-    "Updating account failed: " : "Aktualizace účtu se nezdařila:",
     "Embedded message %s" : "Zapouzdřená zpráva %s",
     "Important mail" : "Důležité e-maily",
     "Unread mail" : "Nepřečtené e-maily",
@@ -374,12 +372,6 @@ OC.L10N.register(
     "Search" : "Hledat",
     "Refresh" : "Načíst znovu",
     "Connect your mail account" : "Připojit e-mailový účet",
-    "Auto detect failed. Please try manual mode." : "Automatické zjištění se nezdařilo. Vyzkoušejte ruční režim.",
-    "Manual config failed. IMAP server is not reachable." : "Ruční nastavení se nezdařilo. IMAP server není dostupný.",
-    "Manual config failed. SMTP server is not reachable." : "Ruční nastavení se nezdařilo. SMTP server není dostupný.",
-    "Manual config failed. IMAP username or password is wrong." : "Ruční nastavení se nezdařilo. IMAP uživatelské jméno nebo heslo není správně.",
-    "Manual config failed. SMTP username or password is wrong." : "Ruční nastavení se nezdařilo. SMTP uživatelské jméno nebo heslo není správně.",
-    "There was an error while setting up your account. Please try again." : "Došlo k chybě při natavování vašeho účtu. Prosím zkuste to znovu.",
     "Itinerary for {type} is not supported yet" : "Itinerář {type} zatím ještě není podporován",
     "All" : "Vše",
     "Archive" : "Archiv",

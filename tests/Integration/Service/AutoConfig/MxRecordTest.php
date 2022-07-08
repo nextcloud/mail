@@ -1,4 +1,24 @@
 <?php
+/*
+ * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 declare(strict_types=1);
 
@@ -21,7 +41,7 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
+namespace OCA\Mail\Tests\Integration\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\MxRecord;
@@ -50,26 +70,13 @@ class MxRecordTest extends TestCase {
 	public function testQueryNoRecord(): void {
 		$records = $this->record->query('example.com');
 
-		$this->assertFalse($records);
+		$this->assertEmpty($records);
 	}
 
-	public function testGetSanitizedRecords(): void {
-		$records = ['mx.google.com',
-			'testing.google.com',
-			'try.again.de',
-			'eins.zwei.drei.de'
-		];
+	public function testGetSanitizedGoogleRecords(): void {
+		$records = $this->record->query('google.com');
 
-		$mxRecords = $this->record->getSanitizedRecords($records);
-		$this->assertContains('google.com', $mxRecords);
-		$this->assertContains('again.de', $mxRecords);
-		$this->assertContains('mx.google.com', $mxRecords);
-		$this->assertContains('testing.google.com', $mxRecords);
-		$this->assertContains('try.again.de', $mxRecords);
-		$this->assertContains('drei.de', $mxRecords);
-		$this->assertContains('eins.zwei.drei.de', $mxRecords);
-
-		$this->assertNotContains('', $mxRecords);
-		$this->assertNotContains('gaga.uh.lala', $mxRecords);
+		self::assertNotEmpty($records);
+		self::assertEquals(['smtp.google.com', 'google.com'], $records);
 	}
 }

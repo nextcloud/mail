@@ -1,7 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "L'autodeteccion a fracassat. Utilizatz lo mòde manual.",
     "Important mail" : "Mail important",
     "Unread mail" : "Mail pas legit",
     "Important" : "Important",
@@ -28,6 +27,7 @@ OC.L10N.register(
     "Cancel" : "Anullar",
     "From" : "De",
     "Write message …" : "Escriure un messatge…",
+    "Monday morning" : "Diluns matin",
     "Sending …" : "Mandadís…",
     "Go back" : "Revenir en arrière",
     "Retry" : "Tornar ensajar",

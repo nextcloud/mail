@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Detectarea automată a eșuat. Folosește modul manual.",
-    "Updating account failed: " : "Actualizarea contului a eșuat:",
     "Embedded message %s" : "Mesaj atașat %s",
     "Important mail" : "Mail important",
     "Unread mail" : "Mail necitit",

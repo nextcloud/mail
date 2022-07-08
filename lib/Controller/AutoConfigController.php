@@ -1,0 +1,89 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\Mail\Controller;
+
+use Horde_Mail_Rfc822_Address;
+use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Service\AutoConfig\ConnectivityTester;
+use OCA\Mail\Service\AutoConfig\IspDb;
+use OCA\Mail\Service\AutoConfig\MxRecord;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\IRequest;
+use function in_array;
+
+class AutoConfigController extends Controller {
+	private IspDb $ispDb;
+	private MxRecord $mxRecord;
+	private ConnectivityTester $connectivityTester;
+
+	public function __construct(IRequest $request,
+								IspDb $ispDb,
+								MxRecord $mxRecord,
+								ConnectivityTester $connectivityTester) {
+		parent::__construct(Application::APP_ID, $request);
+		$this->ispDb = $ispDb;
+		$this->mxRecord = $mxRecord;
+		$this->connectivityTester = $connectivityTester;
+	}
+
+	/**
+	 * @param string $email
+	 *
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @return JsonResponse
+	 */
+	public function queryIspdb(string $email): JsonResponse {
+		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
+		if (!$rfc822Address->valid) {
+			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+		$config = $this->ispDb->query($rfc822Address->host, $rfc822Address);
+		return JsonResponse::success($config);
+	}
+
+	public function queryMx(string $email): JsonResponse {
+		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
+		if (!$rfc822Address->valid) {
+			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+		return JsonResponse::success(
+			$this->mxRecord->query($rfc822Address->host),
+		);
+	}
+
+	public function testConnectivity(string $host, int $port): JsonResponse {
+		if (!in_array($port, [143, 993, 465, 587])) {
+			return JsonResponse::fail('Port not allowed');
+		}
+		return JsonResponse::success(
+			$this->connectivityTester->canConnect($host, $port),
+		);
+	}
+}
