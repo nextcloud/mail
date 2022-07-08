@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automatisk detektering misslyckades. Vänligen använd manuellt läge.",
-    "Updating account failed: " : "Uppdatering av konto misslyckades:",
     "Embedded message %s" : "Inbäddat meddelande %s",
     "Important mail" : "Viktig e-post",
     "Unread mail" : "Oläst e-post",

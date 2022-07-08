@@ -1,7 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Avtomatik təyinatda səhv baş verdi. Xahiş olunur əl rejimini seçəsiniz.",
     "Important" : "Vacib",
     "Work" : "İş",
     "Personal" : "Şəxsi",

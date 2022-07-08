@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Автоматичне виявлення не спрацювало. Будь ласка, скористайтесь ручним режимом.",
-    "Updating account failed: " : "Оновлення облікового запису не вдалося:",
     "Embedded message %s" : "Вбудоване повідомлення %s",
     "Important" : "Важливі",
     "Work" : "Робочий",

@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automatická detekcia zlyhala. Prosím, použite manuálny režim.",
-    "Updating account failed: " : "Aktualizácia účtu zlyhala:",
     "Embedded message %s" : "Vnorená správa %s",
     "Important mail" : "Dôležitý e-mail",
     "Unread mail" : "Neprečítaná pošta",

@@ -1,6 +1,4 @@
 { "translations": {
-    "Auto detect failed. Please use manual mode." : "Mistókst að finna sjálkrafa. Notaðu handvirku leiðina.",
-    "Updating account failed: " : "Mistókst að uppfæra notandaaðgang: ",
     "Embedded message %s" : "Ívafin skilaboð %s",
     "Important mail" : "Mikilvægur póstur",
     "Unread mail" : "Ólesinn póstur",

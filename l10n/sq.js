@@ -1,7 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Vetëzbulimi dështoi. Ju lutemi, përdorni metodën dorazi.",
     "Important" : "E rëndësishme",
     "Work" : "Punë",
     "Personal" : "Personale",

@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "自動判別に失敗しました。手動モードをご利用ください。",
-    "Updating account failed: " : "アカウントの更新に失敗：",
     "Important mail" : "重要なメール",
     "Unread mail" : "未読メール",
     "Important" : "重要",

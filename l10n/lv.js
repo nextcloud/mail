@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Automātiski noteikt neizdevās. Lūdzu, izmantojiet manuālo režīmu.",
-    "Updating account failed: " : "Neizdevās labot konts",
     "Embedded message %s" : "Iegultais ziņojums%s",
     "Important" : "Svarīgi",
     "Work" : "Darbs",

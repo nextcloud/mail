@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "Не удалось автоматически определить настройки. Воспользуйтесь ручным режимом.",
-    "Updating account failed: " : "Ошибка обновления учётной записи:",
     "Embedded message %s" : "Встроенное сообщение %s",
     "Important mail" : "Важная почта",
     "Unread mail" : "Непрочитанная почта",
@@ -374,12 +372,6 @@ OC.L10N.register(
     "Search" : "Поиск",
     "Refresh" : "Обновить",
     "Connect your mail account" : "Настройка учётной записи электронной почты",
-    "Auto detect failed. Please try manual mode." : "Автоматическая настройка не удалась. Пожалуйста, попытайтесь указать параметры вручную.",
-    "Manual config failed. IMAP server is not reachable." : "Настройка конфигурации не удалась. Сервер IMAP не доступен.",
-    "Manual config failed. SMTP server is not reachable." : "Настройка конфигурации не удалась. Сервер SMTP не доступен.",
-    "Manual config failed. IMAP username or password is wrong." : "Ошибка применения конфигурации. Имя пользователя или пароль IMAP  указаны неверно.",
-    "Manual config failed. SMTP username or password is wrong." : "Ошибка применения конфигурации. Имя пользователя или пароль SMTP указаны неверно.",
-    "There was an error while setting up your account. Please try again." : "Произошла ошибка во время настройки аккаунта. Пожалуйста, попробуйте еще раз.",
     "Itinerary for {type} is not supported yet" : "Маршруты типа {type} пока не поддерживаются",
     "All" : "Все",
     "Archive" : "Переместить в архив",

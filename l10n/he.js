@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "איתור אוטומטי נכשל. יש להשתמש במצב ידני.",
-    "Updating account failed: " : "עדכון החשבון נכשל:",
     "Embedded message %s" : "הודעה מוטמעת %s",
     "Important mail" : "דוא״ל חשוב",
     "Unread mail" : "דוא״ל שלא נקרא",

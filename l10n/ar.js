@@ -1,8 +1,6 @@
 OC.L10N.register(
     "mail",
     {
-    "Auto detect failed. Please use manual mode." : "فشل في عملية التحقق الآلي. الرجاء استخدام نمط الدليل.",
-    "Updating account failed: " : "فشلت عملية تحديث الحساب :",
     "Important mail" : "البريد الهام",
     "Unread mail" : "البريد غير المقروء",
     "Important" : "مهم",
