@@ -374,14 +374,14 @@ export default {
 		},
 	},
 	mounted() {
-		dragEventBus.$on('dragStart', this.onDragStart)
-		dragEventBus.$on('dragEnd', this.onDragEnd)
-		dragEventBus.$on('envelopesMoved', this.onEnvelopesMoved)
+		dragEventBus.$on('drag-start', this.onDragStart)
+		dragEventBus.$on('drag-end', this.onDragEnd)
+		dragEventBus.$on('envelopes-moved', this.onEnvelopesMoved)
 	},
 	beforeDestroy() {
-		dragEventBus.$off('dragStart', this.onDragStart)
-		dragEventBus.$off('dragEnd', this.onDragEnd)
-		dragEventBus.$off('envelopesMoved', this.onEnvelopesMoved)
+		dragEventBus.$off('drag-start', this.onDragStart)
+		dragEventBus.$off('drag-end', this.onDragEnd)
+		dragEventBus.$off('envelopes-moved', this.onEnvelopesMoved)
 	},
 	methods: {
 		/**
