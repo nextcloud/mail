@@ -1,9 +1,9 @@
 /*
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license AGPL-3.0-or-later
+ * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,20 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { translate as t } from '@nextcloud/l10n'
+
 import logger from '../logger'
 
-//logger.setLogLevel(3)
+export async function getUserConsent(redirectUrl) {
+	const ssoWindow = window.open(
+		redirectUrl,
+		t('mail', 'Sign in with Google'),
+		'toolbar=no, menubar=no, width=600, height=700'
+	)
+	ssoWindow.focus()
+	await new Promise((res) => {
+		window.addEventListener('message', (event) => {
+			const { data } = event
+			logger.debug('Child window message received', { event })
 
-global.OC = {
-	getLocale: () => 'en',
-	getLanguage: () => 'en_US',
-	L10N: {
-		translate: (app, string) => {
-			if (app !== 'mail') {
-				throw new Error('tried to translate a string for an app other than Mail')
+			if (data === 'DONE') {
+				logger.info('Google user consent given')
+				res()
 			}
-			return string
-		},
-	},
-	isUserAdmin: () => false,
+		})
+	})
 }

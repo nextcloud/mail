@@ -240,12 +240,17 @@
 </template>
 
 <script>
-import { Tab, Tabs } from 'vue-tabs-component'
-import { mapGetters } from 'vuex'
-import { translate as t } from '@nextcloud/l10n'
+import {Tab, Tabs} from 'vue-tabs-component'
+import {mapGetters} from 'vuex'
+import {translate as t} from '@nextcloud/l10n'
 
 import logger from '../logger'
-import { testConnectivity, queryIspdb, queryMx } from '../service/AutoConfigService'
+import {
+	queryIspdb,
+	queryMx,
+	testConnectivity
+} from '../service/AutoConfigService'
+import {getUserConsent} from "../integration/google";
 
 export default {
 	name: 'AccountForm',
@@ -320,7 +325,7 @@ export default {
 			}
 
 			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| !this.autoConfig.password
+				|| (!this.isGoogleAccount && !this.autoConfig.password)
 		},
 
 		isDisabledManual() {
@@ -512,24 +517,8 @@ export default {
 					const account = await this.$store.dispatch('startAccountSetup', data)
 					if (this.useGoogleSso) {
 						this.feedback = t('mail', 'Account created. Please follow the popup instructions to link your Google account')
-						const url = this.googleOauthUrl.replace('accountId', account.id)
-						logger.debug('Starting Google SSO', { url })
-						const ssoWindow = window.open(
-							url,
-							t('mail', 'Sign in with Google'),
-							'toolbar=no, menubar=no, width=600, height=700, top=100, left=100'
-						)
-						ssoWindow.focus()
-						await new Promise((res) => {
-							window.addEventListener('message', (event) => {
-								console.info('MESSAGE', event, {
-									origin: event.origin,
-									source: event.data?.source,
-								})
-
-								res()
-							})
-						})
+						await getUserConsent(this.googleOauthUrl.replace('accountId', account.id))
+						this.clearFeedback()
 					}
 					this.loadingMessage = t('mail', 'Loading account')
 					await this.$store.dispatch('finishAccountSetup', { account })

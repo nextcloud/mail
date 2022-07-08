@@ -20,8 +20,6 @@
  */
 
 if (window.opener) {
-	// send them to the opening window
-	window.opener.postMessage('it\'s done')
-	// close the popup
+	window.opener.postMessage('DONE')
 	window.close()
 }
