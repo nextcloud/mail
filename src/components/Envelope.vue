@@ -447,7 +447,7 @@ export default {
 		},
 		unselect() {
 			if (this.selected) {
-				this.$emit('updated:selected', false)
+				this.$emit('update:selected', false)
 			}
 		},
 		toggleSelected() {
