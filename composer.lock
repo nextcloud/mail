@@ -684,16 +684,16 @@
         },
         {
             "name": "bytestream/horde-idna",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Idna.git",
-                "reference": "2493578c390afa8f3a4623855646102b2cfd0488"
+                "reference": "e625a869cd73c92d891dd63cf9558104d4d2e9d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Idna/zipball/2493578c390afa8f3a4623855646102b2cfd0488",
-                "reference": "2493578c390afa8f3a4623855646102b2cfd0488",
+                "url": "https://api.github.com/repos/bytestream/Idna/zipball/e625a869cd73c92d891dd63cf9558104d4d2e9d4",
+                "reference": "e625a869cd73c92d891dd63cf9558104d4d2e9d4",
                 "shasum": ""
             },
             "require": {
@@ -727,9 +727,9 @@
             "description": "Horde IDNA normalization library",
             "homepage": "https://www.horde.org",
             "support": {
-                "source": "https://github.com/bytestream/Idna/tree/v1.2.0"
+                "source": "https://github.com/bytestream/Idna/tree/v1.2.1"
             },
-            "time": "2021-12-21T12:51:22+00:00"
+            "time": "2022-07-07T11:36:13+00:00"
         },
         {
             "name": "bytestream/horde-imap-client",
