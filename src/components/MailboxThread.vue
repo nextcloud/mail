@@ -57,7 +57,6 @@
 						class="nameother"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
-						:open-first="false"
 						:search-query="appendToSearch(priorityOtherQuery)"
 						:is-priority-inbox="true"
 						:bus="bus" />
