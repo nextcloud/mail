@@ -23,6 +23,8 @@ import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
 
+export const CONSENT_ABORTED = 'GOOGLE_CONSENT_ABORTED'
+
 export async function getUserConsent(redirectUrl) {
 	const ssoWindow = window.open(
 		redirectUrl,
@@ -30,15 +32,21 @@ export async function getUserConsent(redirectUrl) {
 		'toolbar=no, menubar=no, width=600, height=700'
 	)
 	ssoWindow.focus()
-	await new Promise((res) => {
+	await new Promise((resolve, reject) => {
 		window.addEventListener('message', (event) => {
 			const { data } = event
 			logger.debug('Child window message received', { event })
 
 			if (data === 'DONE') {
 				logger.info('Google user consent given')
-				res()
+				resolve()
 			}
 		})
+		const windowClosedTimer = setInterval(() => {
+			if (ssoWindow.closed) {
+				clearInterval(windowClosedTimer)
+				reject(new Error(CONSENT_ABORTED))
+			}
+		}, 200)
 	})
 }

@@ -27,7 +27,8 @@
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
 				<label v-if="!useGoogleSso"
-					for="auto-password" class="account-form__label--required">{{ t('mail', 'Password') }}</label>
+					for="auto-password"
+					class="account-form__label--required">{{ t('mail', 'Password') }}</label>
 				<input
 					v-if="!useGoogleSso"
 					id="auto-password"
@@ -240,17 +241,17 @@
 </template>
 
 <script>
-import {Tab, Tabs} from 'vue-tabs-component'
-import {mapGetters} from 'vuex'
-import {translate as t} from '@nextcloud/l10n'
+import { Tab, Tabs } from 'vue-tabs-component'
+import { mapGetters } from 'vuex'
+import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
 import {
 	queryIspdb,
 	queryMx,
-	testConnectivity
+	testConnectivity,
 } from '../service/AutoConfigService'
-import {getUserConsent} from "../integration/google";
+import { CONSENT_ABORTED, getUserConsent } from '../integration/google'
 
 export default {
 	name: 'AccountForm',
@@ -456,7 +457,7 @@ export default {
 						host,
 						port,
 					}))
-					})
+				})
 				const results = await Promise.all(imapAndSmtpHosts.map(async({ host, port }) => {
 					return {
 						host,
@@ -552,6 +553,8 @@ export default {
 						this.feedback = t('mail', 'IMAP connection failed')
 					} else if (error.data?.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP connection failed')
+					} else if (error.message === CONSENT_ABORTED) {
+						this.feedback = t('mail', 'Google authorization popup closed')
 					} else {
 						this.feedback = t('mail', 'There was an error while setting up your account')
 					}
