@@ -79,6 +79,9 @@
 		</template>
 		<template #footer>
 			<AppNavigationSettings :title="t('mail', 'Mail settings')">
+				<template #icon>
+					<IconSetting :size="20" />
+				</template>
 				<AppSettingsMenu />
 			</AppNavigationSettings>
 		</template>
@@ -98,7 +101,7 @@ import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationMailbox from './NavigationMailbox'
 import NavigationOutbox from './NavigationOutbox'
-
+import IconSetting from 'vue-material-design-icons/Cog'
 import AppSettingsMenu from '../components/AppSettingsMenu'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants'
 
@@ -114,6 +117,7 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		IconSetting,
 	},
 	data() {
 		return {
@@ -236,5 +240,9 @@ to {
 }
 .app-navigation-spacer {
 	order: 0 !important;
+}
+::v-deep .settings-button {
+	opacity: .7 !important;
+	font-weight: bold !important;
 }
 </style>

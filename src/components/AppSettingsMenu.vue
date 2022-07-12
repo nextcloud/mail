@@ -82,16 +82,13 @@
 
 		<p class="mailvelope-section">
 			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
-
-			<a
-				class="button app-settings-button"
-				href="https://www.mailvelope.com/"
-				target="_blank"
-				rel="noopener noreferrer">
-				<Lock :size="20" />
-				{{ t('mail', 'Install Mailvelope browser extension') }}
-			</a>
 		</p>
+		<a
+			href="https://www.mailvelope.com/"
+			target="_blank"
+			rel="noopener noreferrer">
+			{{ t('mail', 'Install Mailvelope browser extension here') }}
+		</a>
 	</div>
 </template>
 
@@ -102,7 +99,6 @@ import Button from '@nextcloud/vue/dist/Components/Button'
 
 import IconInfo from 'vue-material-design-icons/Information'
 import IconEmail from 'vue-material-design-icons/Email'
-import Lock from 'vue-material-design-icons/Lock'
 import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'
 
@@ -113,7 +109,6 @@ export default {
 		KeyboardShortcuts,
 		IconInfo,
 		IconEmail,
-		Lock,
 	},
 	data() {
 		return {
@@ -245,7 +240,7 @@ p.app-settings {
 }
 .app-settings-button {
 	display: block;
-
+width: 100%;
 	background-position: 10px center;
 	text-align: left;
 	margin-top: 6px;
@@ -267,9 +262,18 @@ p.app-settings {
 		line-height: normal;
 		min-height: 44px;
 		font-size: unset;
+
+		&:focus-visible,
+		&:hover {
+			box-shadow: 0 0 0 1px var(--color-primary-element);
+		}
 	}
 }
-.material-design-icon.lock-icon {
-	margin-right: 10px;
+.material-design-icon {
+	opacity: .7;
+	&.lock-icon {
+		margin-right: 10px;
+	}
+
 }
 </style>
