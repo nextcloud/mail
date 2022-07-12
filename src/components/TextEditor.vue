@@ -30,27 +30,32 @@
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue2'
-import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
-import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
-import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
-import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
-import FontPlugin from '@ckeditor/ckeditor5-font/src/font'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
-import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
-import SignaturePlugin from '../ckeditor/signature/SignaturePlugin'
-import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough'
-import QuotePlugin from '../ckeditor/quote/QuotePlugin'
+import CKEditor from '@ckeditor/ckeditor5-vue2';
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
+import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor';
+import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
+import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote';
+import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
+import FontPlugin from '@ckeditor/ckeditor5-font/src/font';
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
+import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
+import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle';
+import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
+import SignaturePlugin from '../ckeditor/signature/SignaturePlugin';
+import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
+import QuotePlugin from '../ckeditor/quote/QuotePlugin';
+import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
+import Image from '@ckeditor/ckeditor5-image/src/image';
+import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
+import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize';
+import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
 
-import { getLanguage } from '@nextcloud/l10n'
-import DOMPurify from 'dompurify'
+import {getLanguage} from '@nextcloud/l10n';
+import DOMPurify from 'dompurify';
 
-import logger from '../logger'
+import logger from '../logger';
 
 export default {
 	name: 'TextEditor',
@@ -84,8 +89,40 @@ export default {
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
-			plugins.push(...[HeadingPlugin, AlignmentPlugin, BoldPlugin, ItalicPlugin, BlockQuotePlugin, LinkPlugin, ListStyle, FontPlugin, RemoveFormat, StrikethroughPlugin])
-			toolbar.unshift(...['heading', 'fontFamily', 'fontSize', 'bold', 'italic', 'fontColor', 'alignment', 'bulletedList', 'numberedList', 'blockquote', 'fontBackgroundColor', 'strikethrough', 'link', 'removeFormat'])
+			plugins.push(...[
+				HeadingPlugin,
+				AlignmentPlugin,
+				BoldPlugin,
+				ItalicPlugin,
+				BlockQuotePlugin,
+				LinkPlugin,
+				ListStyle,
+				FontPlugin,
+				RemoveFormat,
+				StrikethroughPlugin,
+				ImagePlugin,
+				ImageUploadPlugin,
+				Base64UploadAdapter,
+				Image,
+				ImageResize,
+			]);
+			toolbar.unshift(...[
+				'heading',
+				'fontFamily',
+				'fontSize',
+				'bold',
+				'italic',
+				'fontColor',
+				'alignment',
+				'bulletedList',
+				'numberedList',
+				'blockquote',
+				'fontBackgroundColor',
+				'strikethrough',
+				'link',
+				'removeFormat',
+				'imageUpload',
+			]);
 		}
 
 		return {
