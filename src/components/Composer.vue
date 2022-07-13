@@ -234,17 +234,26 @@
 			<div class="composer-actions--secondary-actions">
 				<Actions @close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
-						<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
+						<ActionButton @click="onAddLocalAttachment">
+							<template #icon>
+								<IconUpload :size="20" />
+							</template>
 							{{
 								t('mail', 'Upload attachment')
 							}}
 						</ActionButton>
-						<ActionButton icon="icon-folder" @click="onAddCloudAttachment">
+						<ActionButton @click="onAddCloudAttachment">
+							<template #icon>
+								<IconFolder :sizse="20" />
+							</template>
 							{{
 								t('mail', 'Add attachment from Files')
 							}}
 						</ActionButton>
-						<ActionButton :disabled="encrypt" icon="icon-public" @click="onAddCloudAttachmentLink">
+						<ActionButton :disabled="encrypt" @click="onAddCloudAttachmentLink">
+							<template #icon>
+								<IconPublic :size="20" />
+							</template>
 							{{
 								addShareLink
 							}}
@@ -343,7 +352,7 @@
 					</template>
 				</Actions>
 
-				<button :disabled="!canSend"
+				<Button :disabled="!canSend"
 					class="button primary send-button"
 					type="submit"
 					@click="onSend">
@@ -351,7 +360,7 @@
 						:title="submitButtonTitle"
 						:size="20" />
 					{{ submitButtonTitle }}
-				</button>
+				</Button>
 			</div>
 		</div>
 	</div>
@@ -365,26 +374,29 @@
 		<p v-if="errorText">
 			{{ errorText }}
 		</p>
-		<button class="button" @click="state = STATES.EDITING">
+		<Button @click="state = STATES.EDITING">
 			{{ t('mail', 'Go back') }}
-		</button>
-		<button class="button primary" @click="onSend">
+		</Button>
+		<Button @click="onSend">
 			{{ t('mail', 'Retry') }}
-		</button>
+		</Button>
 	</EmptyContent>
 	<div v-else-if="state === STATES.WARNING" class="emptycontent" role="alert">
 		<h2>{{ t('mail', 'Warning sending your message') }}</h2>
 		<p v-if="errorText">
 			{{ errorText }}
 		</p>
-		<button class="button primary" @click="state = STATES.EDITING">
+		<Button @click="state = STATES.EDITING">
 			{{ t('mail', 'Go back') }}
-		</button>
-		<button class="button" @click="onForceSend">
+		</Button>
+		<Button @click="onForceSend">
 			{{ t('mail', 'Send anyway') }}
-		</button>
+		</Button>
 	</div>
-	<EmptyContent v-else icon="icon-checkmark">
+	<EmptyContent v-else>
+		<template #icon>
+			<IconCheck :size="20" />
+		</template>
 		<h2>{{ sendAtVal ? t('mail', 'Message will be sent at') + ' ' + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!') }}</h2>
 	</EmptyContent>
 </template>
@@ -407,6 +419,10 @@ import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments'
 import Download from 'vue-material-design-icons/Download'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import IconUpload from 'vue-material-design-icons/Upload'
+import IconFolder from 'vue-material-design-icons/Folder'
+import IconPublic from 'vue-material-design-icons/Link'
+import IconCheck from 'vue-material-design-icons/Check'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import ListItemIcon from '@nextcloud/vue/dist/Components/ListItemIcon'
 import RecipientListItem from './RecipientListItem'
@@ -469,6 +485,10 @@ export default {
 		ChevronLeft,
 		Delete,
 		Download,
+		IconUpload,
+		IconFolder,
+		IconPublic,
+		IconCheck,
 		Loading,
 		Multiselect,
 		TextEditor,
