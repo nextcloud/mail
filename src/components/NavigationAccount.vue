@@ -24,12 +24,14 @@
 		v-if="visible"
 		:id="id"
 		:key="id"
-		:icon="iconError"
 		:menu-open.sync="menuOpen"
 		:title="account.emailAddress"
 		:to="firstMailboxRoute"
 		:exact="true"
 		@update:menuOpen="onMenuToggle">
+		<template #icon>
+			<IconError v-if="account.error" :size="20" />
+		</template>
 		<!-- Color dot -->
 		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
 
@@ -122,6 +124,7 @@ import IconFolderAdd from 'vue-material-design-icons/Folder'
 import MenuDown from 'vue-material-design-icons/MenuDown'
 import MenuUp from 'vue-material-design-icons/MenuUp'
 import IconDelete from 'vue-material-design-icons/Delete'
+import IconError from 'vue-material-design-icons/AlertCircle'
 
 export default {
 	name: 'NavigationAccount',
@@ -139,6 +142,7 @@ export default {
 		MenuDown,
 		MenuUp,
 		IconDelete,
+		IconError,
 	},
 	props: {
 		account: {
@@ -194,7 +198,7 @@ export default {
 			return this.account.error ? undefined : calculateAccountColor(this.account.emailAddress)
 		},
 		iconError() {
-			return this.account.error ? 'icon-error' : undefined
+			return this.account.error
 		},
 		quotaText() {
 			if (this.quota === undefined) {

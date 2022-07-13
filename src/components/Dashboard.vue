@@ -42,7 +42,10 @@
 			</DashboardWidgetItem>
 		</template>
 		<template #empty-content>
-			<EmptyContent id="mail--empty-content" icon="icon-checkmark">
+			<EmptyContent id="mail--empty-content">
+				<template #icon>
+					<IconCheck :size="65" />
+				</template>
 				<template #desc>
 					{{ t('mail', 'No message found yet') }}
 					<div class="no-account">
@@ -61,6 +64,7 @@ import { DashboardWidget, DashboardWidgetItem } from '@nextcloud/vue-dashboard'
 import orderBy from 'lodash/fp/orderBy'
 import prop from 'lodash/fp/prop'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import IconCheck from 'vue-material-design-icons/Check'
 
 import Avatar from '../components/Avatar'
 import { fetchEnvelopes } from '../service/MessageService'
@@ -77,6 +81,7 @@ export default {
 		DashboardWidget,
 		DashboardWidgetItem,
 		EmptyContent,
+		IconCheck,
 	},
 	props: {
 		query: {
