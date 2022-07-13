@@ -340,6 +340,16 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'googleIntegration#configure',
+			'url' => '/api/integration/google',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'googleIntegration#unlink',
+			'url' => '/api/integration/google',
+			'verb' => 'DELETE',
+		],
+		[
 			'name' => 'googleIntegration#oauthRedirect',
 			'url' => '/integration/google-auth',
 			'verb' => 'GET',

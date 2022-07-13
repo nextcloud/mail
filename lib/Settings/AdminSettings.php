@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Settings;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -44,12 +45,16 @@ class AdminSettings implements ISettings {
 	/** @var AntiSpamService */
 	private $antiSpamService;
 
+	private GoogleIntegration $googleIntegration;
+
 	public function __construct(IInitialStateService $initialStateService,
 								ProvisioningManager $provisioningManager,
-								AntiSpamService $antiSpamService) {
+								AntiSpamService $antiSpamService,
+								GoogleIntegration $googleIntegration) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
+		$this->googleIntegration = $googleIntegration;
 	}
 
 	public function getForm() {
@@ -68,13 +73,18 @@ class AdminSettings implements ISettings {
 			]
 		);
 
-
 		$this->initialStateService->provideLazyInitialState(
 			Application::APP_ID,
 			'ldap_aliases_integration',
 			function () {
 				return method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute');
 			}
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'google_oauth_client_id',
+			$this->googleIntegration->getClientId(),
 		);
 
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');

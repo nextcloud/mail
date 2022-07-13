@@ -172,13 +172,14 @@
 					}}
 				</p>
 			</article>
-			<GmailAdminOauthSettings />
+			<GmailAdminOauthSettings :client-id="googleOauthClientId" />
 		</div>
 	</SettingsSection>
 </template>
 
 <script>
 import GmailAdminOauthSettings from './GmailAdminOauthSettings'
+import { loadState } from '@nextcloud/initial-state'
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import ProvisioningSettings from './ProvisioningSettings'
@@ -191,6 +192,8 @@ import {
 	provisionAll,
 
 } from '../../service/SettingsService'
+
+const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
 
 export default {
 	name: 'AdminSettings',
@@ -211,6 +214,7 @@ export default {
 			addNew: false,
 			formKey: Math.random(),
 			configs: this.provisioningSettings,
+			googleOauthClientId,
 			preview: {
 				provisioningDomain: '',
 				emailTemplate: '',

@@ -56,6 +56,38 @@ class GoogleIntegration {
 		$this->logger = $logger;
 	}
 
+	public function configure(string $clientId, string $clientSecret): void {
+		$this->config->setAppValue(
+			Application::APP_ID,
+			'google_oauth_client_id',
+			$clientId
+		);
+		$this->config->setAppValue(
+			Application::APP_ID,
+			'google_oauth_client_secret',
+			$this->crypto->encrypt($clientSecret),
+		);
+	}
+
+	public function unlink() {
+		$this->config->deleteAppValue(
+			Application::APP_ID,
+			'google_oauth_client_id',
+		);
+		$this->config->deleteAppValue(
+			Application::APP_ID,
+			'google_oauth_client_secret',
+		);
+	}
+
+	public function getClientId(): ?string {
+		$value = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
+		if ($value === '') {
+			return null;
+		}
+		return $value;
+	}
+
 	public function isGoogleOauthAccount(Account $account): bool {
 		return $account->getMailAccount()->getInboundHost() === 'imap.gmail.com'
 			&& $account->getMailAccount()->getAuthMethod() === 'xoauth2';
