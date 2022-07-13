@@ -133,9 +133,9 @@ class CreateAccount extends Command {
 		$account->setOutboundUser($smtpUser);
 		$account->setOutboundPassword($this->crypto->encrypt($smtpPassword));
 
-		$this->accountService->save($account);
+		$account = $this->accountService->save($account);
 
-		$output->writeln("<info>Account $email created</info>");
+		$output->writeln("<info>Account " . $account->getId() . " for $email created</info>");
 
 		return 0;
 	}
