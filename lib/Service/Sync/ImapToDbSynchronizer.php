@@ -452,7 +452,7 @@ class ImapToDbSynchronizer {
 				foreach (array_chunk($response->getVanishedMessageUids(), 500) as $chunk) {
 					$this->dbMapper->deleteByUid($mailbox, ...$chunk);
 				}
-				$perf->step('persist new messages');
+				$perf->step('delete vanished messages');
 
 				// If a list of UIDs was *provided* (as opposed to loaded from the DB,
 				// we can not assume that all changes were detected, hence this is kinda
