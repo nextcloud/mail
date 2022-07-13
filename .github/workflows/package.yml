@@ -24,7 +24,7 @@ jobs:
       - name: Set up npm
         run: npm install -g npm@7
       - name: Set up php$
-        uses: shivammathur/setup-php@master
+        uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
           extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
