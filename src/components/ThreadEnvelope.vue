@@ -3,6 +3,7 @@
   -
   - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
   - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
+  - @author 2022 Jonas Sulzer <jonas@violoncello.ch>
   -
   - @license AGPL-3.0-or-later
   -
@@ -124,6 +125,7 @@ import Moment from './Moment'
 import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
+import { hiddenTags } from './tags.js'
 
 export default {
 	name: 'ThreadEnvelope',
@@ -209,7 +211,9 @@ export default {
 				.find((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter((tag) => tag.imapLabel !== '$label1')
+			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter(
+				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
+			)
 		},
 		hasChangedSubject() {
 			return this.cleanSubject !== this.threadSubject
