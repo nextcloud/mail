@@ -191,7 +191,7 @@
 				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
-						<CalendarBlankIcon
+						<IconCreateEvent
 							:title="t('mail', 'Create event')"
 							:size="20" />
 					</template>
@@ -235,7 +235,7 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
-import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlank'
+import IconCreateEvent from 'vue-material-design-icons/Calendar'
 import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
@@ -271,7 +271,7 @@ export default {
 	components: {
 		AlertOctagonIcon,
 		Avatar,
-		CalendarBlankIcon,
+		IconCreateEvent,
 		CheckIcon,
 		ChevronLeft,
 		DeleteIcon,

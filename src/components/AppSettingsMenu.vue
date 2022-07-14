@@ -100,7 +100,7 @@ import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import Button from '@nextcloud/vue/dist/Components/Button'
 
-import IconInfo from 'vue-material-design-icons/InformationOutline'
+import IconInfo from 'vue-material-design-icons/Information'
 import IconEmail from 'vue-material-design-icons/Email'
 import Lock from 'vue-material-design-icons/Lock'
 import Logger from '../logger'

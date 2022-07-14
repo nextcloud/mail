@@ -40,6 +40,9 @@
 			<div class="sidebar-opacity-icon">
 				<ImportantIcon v-if="mailbox.isPriorityInbox"
 					:size="20" />
+				<IconAllInboxes
+					v-else-if="mailbox.id === UNIFIED_INBOX_ID"
+					:size="20" />
 				<IconInbox
 					v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
 					:size="20" />
@@ -47,7 +50,7 @@
 					:size="20" />
 				<IconDraft v-else-if="mailbox.specialRole === 'drafts'"
 					:size="20" />
-				<CheckIcon v-else-if="mailbox.specialRole === 'sent'"
+				<IconSend v-else-if="mailbox.specialRole === 'sent'"
 					:size="20" />
 				<IconArchive v-else-if="mailbox.specialRole === 'archive'"
 					:size="20" />
@@ -196,7 +199,6 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
-import CheckIcon from 'vue-material-design-icons/Check'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheck'
 import IconExternal from 'vue-material-design-icons/OpenInNew'
 import IconFolder from 'vue-material-design-icons/Folder'
@@ -205,12 +207,15 @@ import IconFavorite from 'vue-material-design-icons/Star'
 import IconFolderRename from 'vue-material-design-icons/FolderEdit'
 import IconFolderSync from 'vue-material-design-icons/FolderSync'
 import IconDelete from 'vue-material-design-icons/Delete'
-import IconInfo from 'vue-material-design-icons/InformationOutline'
-import IconDraft from 'vue-material-design-icons/LeadPencil'
-import IconArchive from 'vue-material-design-icons/TrayFull'
+import IconInfo from 'vue-material-design-icons/Information'
+import IconDraft from 'vue-material-design-icons/Pencil'
+import IconArchive from 'vue-material-design-icons/Archive'
 import IconInbox from 'vue-material-design-icons/Home'
+import IconAllInboxes from 'vue-material-design-icons/InboxMultiple'
 import ImportantIcon from './icons/ImportantIcon'
+import IconSend from 'vue-material-design-icons/Send'
 import MoveMailboxModal from './MoveMailboxModal'
+import { UNIFIED_INBOX_ID } from '../store/constants'
 
 import { clearCache } from '../service/MessageService'
 import { getMailboxStatus } from '../service/MailboxService'
@@ -230,7 +235,7 @@ export default {
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
-		CheckIcon,
+		IconSend,
 		IconDelete,
 		IconEmailCheck,
 		IconExternal,
@@ -238,6 +243,7 @@ export default {
 		IconFolderRename,
 		IconFolderSync,
 		IconInfo,
+		IconAllInboxes,
 		IconFavorite,
 		IconFolder,
 		IconDraft,
@@ -281,6 +287,7 @@ export default {
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
 			hasDelimiter: !!this.mailbox.delimiter,
+			UNIFIED_INBOX_ID,
 		}
 	},
 	computed: {

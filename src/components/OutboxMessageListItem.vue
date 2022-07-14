@@ -38,7 +38,6 @@
 		</template>
 		<template slot="actions">
 			<ActionButton
-				icon="icon-checkmark"
 				:close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
@@ -49,9 +48,11 @@
 				</template>
 			</ActionButton>
 			<ActionButton
-				icon="icon-delete"
 				:close-after-click="true"
 				@click="deleteMessage">
+				<template #icon>
+					<IconDelete :size="20" />
+				</template>
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</template>
@@ -62,6 +63,7 @@
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Avatar from './Avatar'
+import IconDelete from 'vue-material-design-icons/Delete'
 import { calculateAccountColor } from '../util/AccountColor'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
@@ -79,6 +81,7 @@ export default {
 		ListItem,
 		Avatar,
 		ActionButton,
+		IconDelete,
 		Send,
 	},
 	mixins: [
