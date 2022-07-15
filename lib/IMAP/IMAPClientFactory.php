@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use Horde_Imap_Client_Cache_Backend_Null;
 use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
@@ -99,6 +100,15 @@ class IMAPClientFactory {
 				'backend' => new Cache([
 					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
 				])];
+		} else {
+			/**
+			 * If we don't use a cache we use a null cache to trick Horde into
+			 * using QRESYNC/CONDSTORE if they are available
+			 * @see \Horde_Imap_Client_Socket::_loginTasks
+			 */
+			$params['cache'] = [
+				'backend' => new Horde_Imap_Client_Cache_Backend_Null(),
+			];
 		}
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
