@@ -264,6 +264,7 @@ import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
+import { hiddenTags } from './tags.js'
 
 export default {
 	name: 'Envelope',
@@ -416,7 +417,9 @@ export default {
 				.some((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1')
+			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter(
+				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
+			)
 		},
 		draggableLabel() {
 			let label = this.data.subject
