@@ -18,6 +18,8 @@ OC.L10N.register(
     "Read" : "කියවීම",
     "Select" : "තෝරන්න",
     "Create" : "සාදන්න",
+    "Accept" : "පිළිගන්න",
+    "Decline" : "ප්‍රතික්ෂේප",
     "Choose" : "තෝරන්න",
     "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",

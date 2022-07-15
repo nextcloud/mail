@@ -35,6 +35,7 @@ OC.L10N.register(
     "Move" : "Зөөх",
     "Forward" : "дамжих",
     "Create" : "Үүсгэх",
+    "Decline" : "Зөвшөөрөхгүй",
     "Choose" : "Сонгох",
     "Favorites" : "Онцолсон",
     "Other" : "Бусад",

@@ -61,6 +61,7 @@ OC.L10N.register(
     "Enabled" : "Activada",
     "Custom" : "Personalizats",
     "Remove" : "Suprimir",
+    "Untitled event" : "Eveniment sens títol",
     "Reset" : "Reïnicializar",
     "General" : "Generals",
     "User" : "User",

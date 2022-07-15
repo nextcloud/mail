@@ -41,6 +41,8 @@ OC.L10N.register(
     "Forward" : "Edasi",
     "All day" : "Kogu päev",
     "Create" : "Loo",
+    "Accept" : "Nõustu",
+    "Decline" : "Keeldu",
     "Choose" : "Vali",
     "Favorites" : "Lemmikud",
     "Other" : "Muu",
