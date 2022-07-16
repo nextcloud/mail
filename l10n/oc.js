@@ -42,6 +42,7 @@ OC.L10N.register(
     "More actions" : "Mai d’accions",
     "All day" : "Tota la jornada",
     "Create" : "Crear",
+    "Accept" : "Acceptar",
     "Choose" : "Causir",
     "Favorites" : "Favorits",
     "Other" : "Autre",
