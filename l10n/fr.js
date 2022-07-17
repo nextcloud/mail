@@ -84,7 +84,7 @@ OC.L10N.register(
     "Draft saved" : "Brouillon sauvegardé",
     "Save draft" : "Sauvegarder le brouillon",
     "Discard & close draft" : "Fermer et supprimer le brouillon",
-    "Upload attachment" : "Téléverser les pièces jointes",
+    "Upload attachment" : "Téléverser des pièces jointes",
     "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
     "Send later" : "Envoyer ultérieurement",
     "Enable formatting" : "Activer le formatage",

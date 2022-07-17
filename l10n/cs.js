@@ -302,6 +302,7 @@ OC.L10N.register(
     "Unset" : "Zrušit nastavení",
     "Add tag" : "Přidat štítek",
     "Saving tag …" : "Ukládání štítku…",
+    "Tag name is a hidden system tag" : "Takto nazvaný štítek už existuje v podobě skrytého systémového štítku",
     "Tag already exists" : "Štítek už existuje",
     "An error occurred, unable to create the tag." : "Došlo k chybě, štíte se nepodařilo vytvořit.",
     "An error occurred, unable to rename the tag." : "Došlo k chybě, štítek se nedaří přejmenovat.",
