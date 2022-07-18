@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.13.7 - 2022-07-20
+### Fixed
+- Memory footprint of thread data
+- Chunking of changed / vanished UIDs
+- Missing HIGHESTMODSEQ on sync
+- Verbosity of performance logging
+- Infinite scrolling on mobile
+
 ## 1.13.6 - 2022-06-29
 ### Fixed
 - Editing draft
