@@ -300,6 +300,7 @@
     "Unset" : "Ayarı kaldır",
     "Add tag" : "Etiket ekle",
     "Saving tag …" : "Etiket kaydediliyor …",
+    "Tag name is a hidden system tag" : "Etiket adı sistem tarafından kullanılan bir gizli ad",
     "Tag already exists" : "Etiket zaten var",
     "An error occurred, unable to create the tag." : "Etiket eklenirken bir sorun çıktı.",
     "An error occurred, unable to rename the tag." : "Etiket yeniden adlandırılırken bir sorun çıktı.",
