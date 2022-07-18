@@ -205,8 +205,9 @@ class MessageMapper extends QBMapper {
 			->andWhere($messagesQuery->expr()->isNotNull('message_id'));
 
 		$result = $messagesQuery->execute();
-		$messages = array_map(function (array $row) {
-			return DatabaseMessage::fromRowData(
+		$messages = [];
+		while (($row = $result->fetch())) {
+			$messages[] = DatabaseMessage::fromRowData(
 				(int)$row['id'],
 				$row['subject'],
 				$row['message_id'],
@@ -214,7 +215,7 @@ class MessageMapper extends QBMapper {
 				$row['in_reply_to'],
 				$row['thread_root_id']
 			);
-		}, $result->fetchAll());
+		}
 		$result->closeCursor();
 
 		return $messages;
