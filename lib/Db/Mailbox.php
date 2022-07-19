@@ -36,8 +36,6 @@ use function ltrim;
 use function strtolower;
 
 /**
- * @method string getName()
- * @method void setName(string $name)
  * @method int getAccountId()
  * @method void setAccountId(int $accountId)
  * @method string|null getSyncNewToken()
@@ -145,6 +143,14 @@ class Mailbox extends Entity implements JsonSerializable {
 	 */
 	public function getStats(): MailboxStats {
 		return new MailboxStats($this->getMessages(), $this->getUnseen());
+	}
+
+	public function getName(): string {
+		return trim($this->name);
+	}
+
+	public function setName(string $name): void {
+		$this->name = trim($name);
 	}
 
 	#[ReturnTypeWillChange]

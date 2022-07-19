@@ -58,7 +58,7 @@ class Folder {
 	 * @return string
 	 */
 	public function getMailbox() {
-		return $this->mailbox->utf8;
+		return trim($this->mailbox->utf8);
 	}
 
 	public function getDelimiter(): ?string {
