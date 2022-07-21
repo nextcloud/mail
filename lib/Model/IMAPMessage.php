@@ -111,6 +111,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public $plainMessage = '';
 	public $attachments = [];
 	public $inlineAttachments = [];
+	public $scheduling = [];
 	private $loadHtmlMessage = false;
 	private $hasHtmlMessage = false;
 
@@ -398,6 +399,44 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return void
 	 */
 	private function getPart(Horde_Mime_Part $p, $partNo): void {
+		// iMIP messages
+		// Handle text/calendar parts first because they might be attachments at the same time.
+		// Otherwise, some of the following if-conditions might break the handling and treat iMIP
+		// data like regular attachments.
+		$allContentTypeParameters = $p->getAllContentTypeParameters();
+		if ($p->getType() === 'text/calendar') {
+			// Handle event data like a regular attachment
+			// Outlook doesn't set a content disposition
+			// We work around this by checking for the name only
+			if ($p->getName() !== null) {
+				$this->attachments[] = [
+					'id' => $p->getMimeId(),
+					'messageId' => $this->messageId,
+					'fileName' => $p->getName(),
+					'mime' => $p->getType(),
+					'size' => $p->getBytes(),
+					'cid' => $p->getContentId(),
+					'disposition' => $p->getDisposition()
+				];
+			}
+
+			// return if this is an event attachment only
+			// the method parameter determines if this is a iMIP message
+			if (!isset($allContentTypeParameters['method'])) {
+				return;
+			}
+
+			if (in_array(strtoupper($allContentTypeParameters['method']), ['REQUEST', 'REPLY', 'CANCEL'])) {
+				$this->scheduling[] = [
+					'id' => $p->getMimeId(),
+					'messageId' => $this->messageId,
+					'method' => strtoupper($allContentTypeParameters['method']),
+					'contents' => $this->loadBodyData($p, $partNo),
+				];
+				return;
+			}
+		}
+
 		// Regular attachments
 		if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
 			$this->attachments[] = [
@@ -442,19 +481,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			return;
 		}
 
-		if ($p->getType() === 'text/calendar') {
-			$this->attachments[] = [
-				'id' => $p->getMimeId(),
-				'messageId' => $this->messageId,
-				'fileName' => $p->getName() ?? 'calendar.ics',
-				'mime' => $p->getType(),
-				'size' => $p->getBytes(),
-				'cid' => $p->getContentId(),
-				'disposition' => $p->getDisposition()
-			];
-			return;
-		}
-
 		if ($p->getType() === 'text/html') {
 			$this->handleHtmlMessage($p, $partNo);
 			return;
@@ -478,7 +504,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	public function getFullMessage(int $id): array {
 		$mailBody = $this->plainMessage;
-
 		$data = $this->jsonSerialize();
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
@@ -509,6 +534,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'flags' => $this->getFlags(),
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
+			'scheduling' => $this->scheduling,
 		];
 	}
 

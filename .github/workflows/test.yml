@@ -27,7 +27,7 @@ jobs:
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@master
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
@@ -132,7 +132,7 @@ jobs:
                   --health-retries 5
       steps:
           - name: Set up php${{ matrix.php-versions }}
-            uses: shivammathur/setup-php@master
+            uses: shivammathur/setup-php@v2
             with:
                 php-version: ${{ matrix.php-versions }}
                 extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
@@ -196,10 +196,18 @@ jobs:
       name: Front-end unit tests
       steps:
           - uses: actions/checkout@v3
-          - name: Set up Node
-            uses: actions/setup-node@v3
+          - name: Read package.json node and npm engines version
+            uses: skjnldsv/read-package-engines-version-actions@v1.1
+            id: versions
             with:
-                node-version: 14.x
+              fallbackNode: '^14'
+              fallbackNpm: '^7'
+          - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
+            uses: actions/setup-node@v2
+            with:
+              node-version: ${{ steps.versions.outputs.nodeVersion }}
+          - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
+            run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
           - name: npm install
             run: npm install
           - name: run tests

@@ -232,7 +232,7 @@
 				</VButton>
 			</div>
 			<div class="composer-actions--secondary-actions">
-				<Actions>
+				<Actions @close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
 						<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
 							{{

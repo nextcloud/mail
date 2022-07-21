@@ -122,6 +122,8 @@ OC.L10N.register(
     "Forward" : "Adelante",
     "All day" : "Todo el día",
     "Create" : "Crear",
+    "Accept" : "Aceptar",
+    "Decline" : "Declinar",
     "Choose" : "Seleccionar",
     "Favorites" : "Favoritos",
     "Other" : "Otro",

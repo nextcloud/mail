@@ -25,6 +25,7 @@ OC.L10N.register(
     "Move" : "Diplasañ",
     "Forward" : "War-raok",
     "Create" : "Krouiñ",
+    "Accept" : "Asantiñ",
     "Choose" : "Dibab",
     "Important info" : "Titouroù pouezus",
     "Favorites" : "Pennrolloù",

@@ -1,6 +1,40 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.0-alpha4 - 2022-07-15
+### Added
+- Hide system tags from UI
+- Users can clear their mailboxes
+- Improve the image attachment viewer
+- Send oldest outbox message first
+- 'No subject' on thread when there is none
+- Migrate all icons to material design icons
+- Support for XOAUTH2
+### Fixed
+- Performance logger message for vanished messages
+- Two-way binding for envelope unselect after delete
+- Split auto config and account creation
+- Account form styling
+- Edit drafts
+- Download all as zip
+- Restore ability to write mails in safari
+- Improve the way attachment look
+- Change the opacity of leftside icons to fit the rest of the icons
+- Infinite scrolling on mobile
+- Image preview when the menu is clicked
+- Make sender to be centered with the avatar and timestamps
+- Work around breaking server change and QB expressions
+- Better signature detection: always store the HTML version for the CKeditor body.
+- Quoting forwarded messages
+- l10n: Delete apostrophe
+- l10n: Delete a shortcut
+- Sending erroneous message repeatedly
+- Remove color from flagged message star
+- PI sync problems
+- Sending outbox message of deleted user accounts
+- Collecting addresses in the background
+
+
 ## 1.13.6 - 2022-06-29
 ### Fixed
 - Editing draft

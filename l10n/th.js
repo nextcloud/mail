@@ -29,6 +29,8 @@ OC.L10N.register(
     "Edit tags" : "แก้ไขแท็ก",
     "Move" : "ย้าย",
     "Create" : "สร้าง",
+    "Accept" : "ยอมรับ",
+    "Decline" : "ปฏิเสธ",
     "Choose" : "เลือก",
     "Favorites" : "รายการโปรด",
     "Other" : "อื่นๆ",

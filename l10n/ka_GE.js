@@ -47,6 +47,8 @@ OC.L10N.register(
     "Forward" : "წინ",
     "All day" : "მთელი დღე",
     "Create" : "შექმნა",
+    "Accept" : "მიღება",
+    "Decline" : "ურაყოფა",
     "Choose" : "აირჩიეთ",
     "Favorites" : "რჩეულები",
     "Other" : "სხვა",

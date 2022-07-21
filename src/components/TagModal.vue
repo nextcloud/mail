@@ -2,6 +2,7 @@
   - @copyright 2021 Greta Doci <gretadoci@gmail.com>
   -
   - @author 2021 Greta Doci <gretadoci@gmail.com>
+  - @author 2022 Jonas Sulzer <jonas@violoncello.ch>
   -
   - @license AGPL-3.0-or-later
   -
@@ -87,6 +88,7 @@ import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import { showError, showInfo } from '@nextcloud/dialogs'
+import { hiddenTags } from './tags.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -125,7 +127,7 @@ export default {
 	},
 	computed: {
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1').sort((a, b) => {
+			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -173,6 +175,10 @@ export default {
 		async createTag(event) {
 			this.editing = true
 			const displayName = event.target.querySelector('input[type=text]').value
+			if (displayName.toLowerCase() in hiddenTags) {
+				showError(this.t('mail', 'Tag name is a hidden system tag'))
+				return
+			}
 			if (this.$store.getters.getTags.some(tag => tag.displayName === displayName)) {
 				showError(this.t('mail', 'Tag already exists'))
 				return
