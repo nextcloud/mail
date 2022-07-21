@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.13.7 - 2022-07-20
+## 1.13.7 - 2022-07-21
 ### Fixed
 - Memory footprint of thread data
 - Chunking of changed / vanished UIDs
