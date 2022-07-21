@@ -60,6 +60,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 14.x
+    - name: Set up npm
+      run: npm install -g npm@7
     - name: npm install
       run: npm ci
     - name: eslint
