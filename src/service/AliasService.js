@@ -2,21 +2,21 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 /**
- * @typedef {Object} Alias
- * @property {number} id
- * @property {string} alias
- * @property {string} name
- * @property {string} signature
- * @property {boolean} provisioned
+ * @typedef {object} Alias
+ * @property {number} id the id
+ * @property {string} alias alias address
+ * @property {string} name alias display name
+ * @property {string} signature alias signature
+ * @property {boolean} provisioned whether the alias comes from LDAP
  */
 
 /**
  * @param {number} accountId id of account
  * @param {string} alias new alias
  * @param {string} aliasName new alias name
- * @returns {Promise<Alias>}
+ * @return {Promise<Alias>}
  */
-export const createAlias = async(accountId, alias, aliasName) => {
+export const createAlias = async (accountId, alias, aliasName) => {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases', {
 		id: accountId,
 	})
@@ -27,9 +27,9 @@ export const createAlias = async(accountId, alias, aliasName) => {
 /**
  * @param {number} accountId id of account
  * @param {number} aliasId if of alias
- * @returns {Promise<Alias>}
+ * @return {Promise<Alias>}
  */
-export const deleteAlias = async(accountId, aliasId) => {
+export const deleteAlias = async (accountId, aliasId) => {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
 		id: accountId,
 		aliasId,
@@ -43,9 +43,9 @@ export const deleteAlias = async(accountId, aliasId) => {
  * @param {number} aliasId if of alias
  * @param {string} alias new alias
  * @param {string} aliasName new alias name
- * @returns {Promise<Alias>}
+ * @return {Promise<Alias>}
  */
-export const updateAlias = async(accountId, aliasId, alias, aliasName) => {
+export const updateAlias = async (accountId, aliasId, alias, aliasName) => {
 	const url = generateUrl(
 		'/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
 			id: accountId,
@@ -59,9 +59,9 @@ export const updateAlias = async(accountId, aliasId, alias, aliasName) => {
  * @param {number} accountId id of account
  * @param {number} aliasId id of alias
  * @param {string} signature new signature
- * @returns {Promise<Alias>}
+ * @return {Promise<Alias>}
  */
-export const updateSignature = async(accountId, aliasId, signature) => {
+export const updateSignature = async (accountId, aliasId, signature) => {
 	const url = generateUrl(
 		'/apps/mail/api/accounts/{id}/aliases/{aliasId}/signature', {
 			id: accountId,

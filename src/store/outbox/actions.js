@@ -94,12 +94,12 @@ export default {
 	 * Send an outbox message right now.
 	 *
 	 * @param {object} store Vuex destructuring object
-	 * @param {function} store.commit Vuex commit object
+	 * @param {Function} store.commit Vuex commit object
 	 * @param {object} store.getters Vuex getters object
 	 * @param {object} data Action data
 	 * @param {number} data.id Id of outbox message to send
 	 * @param {boolean} data.force Force sending a message even if it has no sendAt timestamp
-	 * @returns {Promise<boolean>} Resolves to false if sending was skipped
+	 * @return {Promise<boolean>} Resolves to false if sending was skipped
 	 */
 	async sendMessage({ commit, getters }, { id, force = false }) {
 		// Skip if the message has been deleted/undone in the meantime
@@ -131,11 +131,11 @@ export default {
 	 * Wait for UNDO_DELAY before sending the message and show a toast with an undo action.
 	 *
 	 * @param {object} store Vuex destructuring object
-	 * @param {function} store.dispatch Vuex dispatch object
+	 * @param {Function} store.dispatch Vuex dispatch object
 	 * @param {object} store.getters Vuex getters object
 	 * @param {object} data Action data
 	 * @param {number} data.id Id of outbox message to send
-	 * @returns {Promise<boolean>} Resolves to false if sending was skipped. Resolves after UNDO_DELAY has elapsed and the message dispatch was triggered. Warning: This might take a long time, depending on UNDO_DELAY.
+	 * @return {Promise<boolean>} Resolves to false if sending was skipped. Resolves after UNDO_DELAY has elapsed and the message dispatch was triggered. Warning: This might take a long time, depending on UNDO_DELAY.
 	 */
 	async sendMessageWithUndo({ getters, dispatch }, { id }) {
 		return new Promise((resolve, reject) => {
@@ -143,7 +143,7 @@ export default {
 
 			showUndo(
 				t('mail', 'Message sent'),
-				async() => {
+				async () => {
 					logger.info('Attempting to stop sending message ' + message.id)
 					const stopped = await dispatch('stopMessage', { message })
 					logger.info('Message ' + message.id + ' stopped', { message: stopped })
@@ -161,7 +161,7 @@ export default {
 				}
 			)
 
-			setTimeout(async() => {
+			setTimeout(async () => {
 				try {
 					const wasSent = await dispatch('sendMessage', { id: message.id })
 					resolve(wasSent)

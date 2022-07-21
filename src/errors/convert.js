@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import MailboxLockedError from './MailboxLockedError'
@@ -40,8 +41,8 @@ const map = {
 }
 
 /**
- * @param {Object} axiosError the axios Error
- * @returns {Error}
+ * @param {object} axiosError the axios Error
+ * @return {Error}
  */
 export const convertAxiosError = (axiosError) => {
 	if (!('response' in axiosError)) {

@@ -93,7 +93,7 @@ export default {
 	},
 	created() {
 		// Reload outbox contents every 60 seconds
-		this.refreshInterval = setInterval(async() => {
+		this.refreshInterval = setInterval(async () => {
 			await this.fetchMessages()
 		}, 60000)
 	},

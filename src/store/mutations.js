@@ -82,8 +82,9 @@ const sortAccounts = (accounts) => {
 
 /**
  * Convert envelope tag objects to references and add new tags to global list.
- * @param {Object} state vuex state
- * @param {Object} envelope envelope with tag objects
+ *
+ * @param {object} state vuex state
+ * @param {object} envelope envelope with tag objects
  */
 const normalizeTags = (state, envelope) => {
 	if (Array.isArray(envelope.tags)) {
@@ -112,10 +113,10 @@ const normalizeTags = (state, envelope) => {
  * If the given thread root id exist the message is replaced
  * otherwise appended
  *
- * @param {Object} state vuex state
+ * @param {object} state vuex state
  * @param {Array} existing list of envelope ids for a message list
- * @param {Object} envelope envelope with tag objects
- * @returns {Array} list of envelope ids
+ * @param {object} envelope envelope with tag objects
+ * @return {Array} list of envelope ids
  */
 const appendOrReplaceEnvelopeId = (state, existing, envelope) => {
 	const index = existing.findIndex((id) => state.envelopes[id].threadRootId === envelope.threadRootId)

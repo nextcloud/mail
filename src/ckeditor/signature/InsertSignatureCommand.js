@@ -77,7 +77,7 @@ export default class InsertSignatureCommand extends Command {
 	 *
 	 * @param {*} editor the editor instance
 	 * @param {*} writer the writer instance
-	 * @returns {*} the position above the quoted text; position 1 if no quote found
+	 * @return {*} the position above the quoted text; position 1 if no quote found
 	 */
 	findPositionAboveQuote(editor, writer) {
 		// Create a range spanning over the entire root content:

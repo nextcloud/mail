@@ -846,7 +846,7 @@ export default {
 			this.mailvelope.keysMissing = recipients.filter((r) => keysValid[r] === false)
 		},
 		initBody() {
-			/** @var {Text} body **/
+			/** @member {Text} body */
 			let body
 			if (this.replyTo) {
 				body = buildReplyBody(
@@ -915,7 +915,7 @@ export default {
 
 					return uid
 				})
-				.catch(async(error) => {
+				.catch(async (error) => {
 					await matchError(error, {
 						[NoDraftsMailboxConfiguredError.getName()]() {
 							return false
@@ -1056,7 +1056,7 @@ export default {
 				.then((data) => this.send({ ...data, force }))
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
-				.catch(async(error) => {
+				.catch(async (error) => {
 					logger.error('could not send message', { error });
 					[this.errorText, this.state] = await matchError(error, {
 						[NoSentMailboxConfiguredError.getName()]() {
@@ -1116,8 +1116,9 @@ export default {
 		},
 		/**
 		 * Format aliases for the Multiselect
-		 * @param {Object} alias the alias to format
-		 * @returns {string}
+		 *
+		 * @param {object} alias the alias to format
+		 * @return {string}
 		 */
 		formatAliases(alias) {
 			if (!alias.name) {
@@ -1134,7 +1135,7 @@ export default {
 		 * Whether the date is acceptable
 		 *
 		 * @param {Date} date The date to compare to
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		disabledDatetimepickerDate(date) {
 			const minimumDate = new Date()
@@ -1149,7 +1150,7 @@ export default {
 		 * Whether the time for date is acceptable
 		 *
 		 * @param {Date} date The date to compare to
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		disabledDatetimepickerTime(date) {
 			const now = new Date()

@@ -39,7 +39,7 @@ export function markMailboxRead(id) {
 	return axios.post(url).then((resp) => resp.data)
 }
 
-export const deleteMailbox = async(id) => {
+export const deleteMailbox = async (id) => {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}', {
 		id,
 	})

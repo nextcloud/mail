@@ -28,9 +28,9 @@ import { html } from './util/text'
 /**
  * @param {Text} original original
  * @param {object} from from
- * @param {Number} date date
+ * @param {number} date date
  * @param {boolean} replyOnTop put reply on top?
- * @returns {Text}
+ * @return {Text}
  */
 export const buildReplyBody = (original, from, date, replyOnTop = true) => {
 	const startEnd = '<p></p><p></p>'

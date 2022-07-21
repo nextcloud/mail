@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
  * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
@@ -18,6 +19,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import flatMapDeep from 'lodash/fp/flatMapDeep'
@@ -703,7 +705,7 @@ export default {
 				.filter((a) => !a.isUnified)
 				.map((account) => {
 					return Promise.all(
-						getters.getMailboxes(account.id).map(async(mailbox) => {
+						getters.getMailboxes(account.id).map(async (mailbox) => {
 							if (mailbox.specialRole !== 'inbox') {
 								return
 							}

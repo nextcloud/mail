@@ -62,9 +62,9 @@ const getCalendarData = (calendar) => {
 }
 
 /**
- * @returns {Promise}
+ * @return {Promise}
  */
-export const getUserCalendars = async() => {
+export const getUserCalendars = async () => {
 	const response = await getClient('calendars')
 		.getDirectoryContents('/', {
 			data: `<?xml version="1.0"?>
@@ -149,9 +149,9 @@ const splitCalendar = (data) => {
 }
 
 /**
- * @param {String} url the url
- * @param {Object} data the data
- * @returns {Promise}
+ * @param {string} url the url
+ * @param {object} data the data
+ * @return {Promise}
  */
 export const importCalendarEvent = curry((url, data) => {
 	Logger.debug('importing events into calendar', {

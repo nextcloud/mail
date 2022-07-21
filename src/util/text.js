@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import isString from 'lodash/fp/isString'
@@ -35,7 +36,7 @@ class Text {
 
 	/**
 	 * @param {Text} other other
-	 * @returns {Text}
+	 * @return {Text}
 	 */
 	append(other) {
 		if (this.format !== other.format) {
@@ -50,7 +51,6 @@ class Text {
 /**
  * @param {string} format
  * @param {string} value
- *
  * @return {object}
  */
 const wrap = curry((format, value) => {
@@ -95,20 +95,20 @@ const isFormat = curry((format, text) => {
 /**
  * @function
  * @param {Text} text
- * @return {bool}
+ * @return bool
  */
 export const isPlain = isFormat('plain')
 
 /**
  * @function
  * @param {Text} text
- * @return {bool}
+ * @return bool
  */
 export const isHtml = isFormat('html')
 
 /**
  * @param {Text} text text
- * @returns {Text}
+ * @return {Text}
  */
 export const toPlain = (text) => {
 	if (text.format === 'plain') {
@@ -193,7 +193,7 @@ export const toPlain = (text) => {
 
 /**
  * @param {Text} text text
- * @returns {Text}
+ * @return {Text}
  */
 export const toHtml = (text) => {
 	if (text.format === 'html') {

@@ -20,7 +20,7 @@
  */
 
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 
 import {
 	UNIFIED_ACCOUNT_ID,
@@ -34,7 +34,7 @@ import outbox from './outbox'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+export default new Store({
 	strict: process.env.NODE_ENV !== 'production',
 	modules: {
 		root: {
