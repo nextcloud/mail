@@ -179,7 +179,7 @@ OC.L10N.register(
     "Could not create event" : "Termin konnte nicht erstellt werden",
     "Accept" : "Annehmen",
     "Decline" : "Ablehnen",
-    "More options" : "Benötigt keine Übersetzung. Für iOS wird nur die formelle Übersetzung verwendet (de_DE).",
+    "More options" : "Weitere Optionen",
     "Could not open mailbox" : "E-Mail-Postfach konnte nicht geöffnet werden",
     "Loading messages …" : "Lade Nachrichten …",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Deine Nachrichten werden indiziert. Dies kann bei größeren E-Mail-Postfächern etwas länger dauern.",
