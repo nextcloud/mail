@@ -79,7 +79,7 @@ import SectionTitle from './SectionTitle'
 import Vue from 'vue'
 
 import infiniteScroll from '../directives/infinite-scroll'
-import IconInfo from 'vue-material-design-icons/InformationOutline'
+import IconInfo from 'vue-material-design-icons/Information'
 import logger from '../logger'
 import Mailbox from './Mailbox'
 import NoMessageSelected from './NoMessageSelected'
@@ -276,5 +276,10 @@ export default {
 .envelope-list {
 	max-height: calc(100vh - var(--header-height));
 	overflow-y: auto;
+}
+.information-icon {
+	opacity: .7;
+	margin-bottom: 3px;
+	margin-right: 9px;
 }
 </style>

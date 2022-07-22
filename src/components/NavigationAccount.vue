@@ -67,7 +67,7 @@
 			</ActionButton>
 			<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
 				<template #icon>
-					<Folder
+					<IconFolderAdd
 						:size="20" />
 				</template>
 			</ActionInput>
@@ -116,11 +116,11 @@ import { calculateAccountColor } from '../util/AccountColor'
 import logger from '../logger'
 import { fetchQuota } from '../service/AccountService'
 import AccountSettings from './AccountSettings'
-import IconInfo from 'vue-material-design-icons/InformationOutline'
-import IconSettings from 'vue-material-design-icons/CogOutline'
+import IconInfo from 'vue-material-design-icons/Information'
+import IconSettings from 'vue-material-design-icons/Cog'
 import IconFolderAdd from 'vue-material-design-icons/Folder'
-import MenuDown from 'vue-material-design-icons/MenuDown'
-import MenuUp from 'vue-material-design-icons/MenuUp'
+import MenuDown from 'vue-material-design-icons/ChevronDown'
+import MenuUp from 'vue-material-design-icons/ChevronUp'
 import IconDelete from 'vue-material-design-icons/Delete'
 
 export default {
