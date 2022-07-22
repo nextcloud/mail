@@ -2,7 +2,10 @@
 	<Content app-name="mail">
 		<Navigation v-if="hasAccounts" />
 		<div class="mail-empty-content">
-			<EmptyContent icon="icon-mail">
+			<EmptyContent>
+				<template #icon>
+					<IconMail :size="65" />
+				</template>
 				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
 				<template #desc>
 					<AccountForm :display-name="displayName"
@@ -21,6 +24,7 @@ import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import IconMail from 'vue-material-design-icons/Email'
 import Navigation from '../components/Navigation'
 import logger from '../logger'
 
@@ -30,6 +34,7 @@ export default {
 		AccountForm,
 		Content,
 		EmptyContent,
+		IconMail,
 		Navigation,
 	},
 	data() {
