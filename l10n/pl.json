@@ -300,6 +300,7 @@
     "Unset" : "Usuń z ustawienia",
     "Add tag" : "Dodaj etykietę",
     "Saving tag …" : "Zapisywanie etykiety…",
+    "Tag name is a hidden system tag" : "Nazwa etykiety jest ukrytej etykiety systemowej",
     "Tag already exists" : "Tag już istnieje",
     "An error occurred, unable to create the tag." : "Wystąpił błąd, nie można utworzyć etykiety.",
     "An error occurred, unable to rename the tag." : "Wystąpił błąd, nie można zmienić nazwy etykiety.",

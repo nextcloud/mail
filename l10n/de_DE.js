@@ -302,7 +302,7 @@ OC.L10N.register(
     "Unset" : "Entfernt",
     "Add tag" : "Schlagwort hinzufügen",
     "Saving tag …" : "Speichere Schlagwort …",
-    "Tag name is a hidden system tag" : "Tag-Name ist ein versteckter System-Tag",
+    "Tag name is a hidden system tag" : "Schlagwortname ist ein verstecktes System-Schlagwort",
     "Tag already exists" : "Schlagwort existiert bereits",
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten, das Schlagwort kann nicht erstellt werden.",
     "An error occurred, unable to rename the tag." : "Es ist ein Fehler aufgetreten. Das Schlagwort konnte nicht umbenannt werden.",

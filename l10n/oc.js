@@ -43,6 +43,7 @@ OC.L10N.register(
     "All day" : "Tota la jornada",
     "Create" : "Crear",
     "Accept" : "Acceptar",
+    "Decline" : "Declinar",
     "Choose" : "Causir",
     "Favorites" : "Favorits",
     "Other" : "Autre",
