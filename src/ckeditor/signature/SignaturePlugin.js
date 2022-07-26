@@ -36,9 +36,7 @@ export default class Signature extends Plugin {
 		const schema = this.editor.model.schema
 
 		schema.register('signature', {
-			allowIn: '$root',
-			isLimit: true,
-			allowContentOf: '$block',
+			inheritAllFrom: '$container',
 		})
 	}
 
