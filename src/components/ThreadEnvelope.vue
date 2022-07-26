@@ -348,7 +348,7 @@ export default {
 
 		.timestamp {
 			margin-right: 10px;
-			font-size: small;
+			color: var(--color-text-maxcontrast);
 			white-space: nowrap;
 			margin-bottom: 0;
 		}
@@ -372,6 +372,7 @@ export default {
 	}
 	.subject {
 		margin-left: 8px;
+		color: var(--color-text-maxcontrast);
 		cursor: default;
 	}
 
