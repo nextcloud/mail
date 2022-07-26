@@ -97,6 +97,22 @@ class MailAccountMapper extends QBMapper {
 
 		return $this->findEntities($query);
 	}
+	/**
+	 * Finds an mail account by user id and email address
+	 *
+	 * @return MailAccount
+	 * @throws DoesNotExistException
+	 */
+	public function findByUserIdAndEmail(string $userId, string $email): MailAccount {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR))
+			->andWhere($qb->expr()->eq('email', $qb->createNamedParameter($email, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR));
+
+		return $this->findEntity($query);
+	}
 
 	/**
 	 * @throws DoesNotExistException
