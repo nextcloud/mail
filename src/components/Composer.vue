@@ -176,32 +176,37 @@
 			<!--@keypress="onBodyKeyPress"-->
 			<TextEditor
 				v-if="!encrypt && editorPlainText"
+				ref="editor"
 				key="editor-plain"
-				v-model="bodyVal"
+				:value="bodyVal"
 				name="body"
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onEditorInputText" />
+				@input="onEditorInput"
+				@ready="onEditorReady" />
 			<TextEditor
 				v-else-if="!encrypt && !editorPlainText"
+				ref="editor"
 				key="editor-rich"
-				v-model="bodyVal"
+				:value="bodyVal"
 				:html="true"
 				name="body"
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onEditorInputText" />
+				@input="onEditorInput"
+				@ready="onEditorReady" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
-				v-model="bodyVal"
+				:value="bodyVal"
 				:recipients="allRecipients"
 				:quoted-text="body"
-				:is-reply-or-forward="isReply || isForward" />
+				:is-reply-or-forward="isReply || isForward"
+				@input="onEditorInput" />
 		</div>
 		<ComposerAttachments v-model="attachments"
 			:bus="bus"
@@ -459,6 +464,7 @@ import Send from 'vue-material-design-icons/Send'
 import SendClock from 'vue-material-design-icons/SendClock'
 import moment from '@nextcloud/moment'
 import { mapGetters } from 'vuex'
+import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -576,13 +582,6 @@ export default {
 		},
 	},
 	data() {
-		let bodyVal = this.editorBody
-		if (bodyVal.length === 0) {
-			// an empty body (e.g "") does not trigger an onInput event.
-			// but to append the signature a onInput event is required.
-			bodyVal = '<p></p><p></p>'
-		}
-
 		// Set default custom date time picker value to now + 1 hour
 		const selectedDate = new Date()
 		selectedDate.setHours(selectedDate.getHours() + 1)
@@ -594,7 +593,7 @@ export default {
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal,
+			bodyVal: this.editorBody,
 			attachments: this.attachmentsData,
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			draftsPromise: Promise.resolve(this.draftId),
@@ -784,15 +783,15 @@ export default {
 				this.onAliasChange(newAlias)
 			}
 		},
-		editorMode() {
-			this.appendSignature = true
-		},
-		bodyVal() {
-			if (this.body.value === '') {
-				this.appendSignature = true
-			}
-			this.handleAppendSignature()
-		},
+		// editorMode() {
+		// 	this.appendSignature = true
+		// },
+		// bodyVal() {
+		// 	if (this.body.value === '') {
+		// 		this.appendSignature = true
+		// 	}
+		// 	this.handleAppendSignature()
+		// },
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -968,21 +967,22 @@ export default {
 		onSave() {
 			this.callSaveDraft(false, this.getMessageData)
 		},
-		handleAppendSignature() {
+		handleAppendSignature(trigger) {
 			if (this.appendSignature) {
-				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
-				this.bus.$emit('insert-signature', signatureValue, this.selectedAlias.signatureAboveQuote)
-				this.appendSignature = false
+				this.$refs.editor.editorExecute('insertSignature',
+					trigger,
+					toHtml(detect(this.selectedAlias.signature)).value,
+					this.selectedAlias.signatureAboveQuote
+				)
 			}
+			this.appendSignature = false
 		},
-		// needs to bypass an input event of the first initialisation, because of:
-		// an empty body (e.g "") does not trigger an onInput event.
-		// but to append the signature a onInput event is required.
-		onEditorInputText() {
-			if (this.editorInputTextReady) {
-				this.callSaveDraft(true, this.getMessageData)
-			}
-			this.editorInputTextReady = true
+		onEditorInput(text) {
+			this.bodyVal = text
+			this.callSaveDraft(true, this.getMessageData)
+		},
+		onEditorReady() {
+			this.handleAppendSignature(TRIGGER_EDITOR_READY)
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
@@ -999,8 +999,9 @@ export default {
 		onAliasChange(alias) {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
+			this.editorMode = alias.editorMode
 			this.appendSignature = true
-			this.handleAppendSignature()
+			this.handleAppendSignature(TRIGGER_CHANGE_ALIAS)
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('on-add-local-attachment')

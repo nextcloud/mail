@@ -22,40 +22,39 @@
 <template>
 	<ckeditor
 		v-if="ready"
-		v-model="text"
+		:value="sanitizedValue"
 		:config="config"
 		:editor="editor"
-		@input="onInput"
+		@input="onEditorInput"
 		@ready="onEditorReady" />
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue2';
-import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
-import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor';
-import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
-import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote';
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import FontPlugin from '@ckeditor/ckeditor5-font/src/font';
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
-import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle';
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
-import SignaturePlugin from '../ckeditor/signature/SignaturePlugin';
-import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
-import QuotePlugin from '../ckeditor/quote/QuotePlugin';
-import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
-import Image from '@ckeditor/ckeditor5-image/src/image';
-import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
-import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize';
-import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
+import CKEditor from '@ckeditor/ckeditor5-vue2'
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
+import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
+import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
+import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
+import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
+import FontPlugin from '@ckeditor/ckeditor5-font/src/font'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
+import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
+import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
+import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
+import SignaturePlugin from '../ckeditor/signature/SignaturePlugin'
+import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough'
+import QuotePlugin from '../ckeditor/quote/QuotePlugin'
+import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter'
+import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
+import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize'
+import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
 
-import {getLanguage} from '@nextcloud/l10n';
-import DOMPurify from 'dompurify';
+import { getLanguage } from '@nextcloud/l10n'
+import DOMPurify from 'dompurify'
 
-import logger from '../logger';
+import logger from '../logger'
 
 export default {
 	name: 'TextEditor',
@@ -103,9 +102,8 @@ export default {
 				ImagePlugin,
 				ImageUploadPlugin,
 				Base64UploadAdapter,
-				Image,
-				ImageResize,
-			]);
+				ImageResizePlugin,
+			])
 			toolbar.unshift(...[
 				'heading',
 				'fontFamily',
@@ -122,11 +120,10 @@ export default {
 				'link',
 				'removeFormat',
 				'imageUpload',
-			]);
+			])
 		}
 
 		return {
-			text: '',
 			ready: false,
 			editor: Editor,
 			config: {
@@ -144,12 +141,6 @@ export default {
 			return DOMPurify.sanitize(this.value, {
 				FORBID_TAGS: ['style'],
 			})
-		},
-	},
-	watch: {
-		sanitizedValue(newVal) {
-			// needed for reset in composer
-			this.text = newVal
 		},
 	},
 	beforeMount() {
@@ -182,6 +173,9 @@ export default {
 
 			this.ready = true
 		},
+		/**
+		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
+		 */
 		onEditorReady(editor) {
 			const schema = editor.model.schema
 
@@ -224,18 +218,14 @@ export default {
 				editor.editing.view.focus()
 			}
 
-			// Set value as late as possible, so the custom schema listener is used
-			// for the initial editor model
-			this.text = this.sanitizedValue
-
 			logger.debug(`setting TextEditor contents to <${this.text}>`)
 
 			this.bus.$on('append-to-body-at-cursor', this.appendToBodyAtCursor)
-			this.bus.$on('insert-signature', this.onInsertSignature)
+			this.$emit('ready')
 		},
-		onInput() {
-			logger.debug(`TextEditor input changed to <${this.text}>`)
-			this.$emit('input', this.text)
+		onEditorInput(text) {
+			logger.debug(`TextEditor input changed to <${text}>`)
+			this.$emit('input', text)
 		},
 		appendToBodyAtCursor(toAppend) {
 			// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/faq.html#where-are-the-editorinserthtml-and-editorinserttext-methods-how-to-insert-some-content
@@ -243,11 +233,12 @@ export default {
 			const modelFragment = this.editorInstance.data.toModel(viewFragment)
 			this.editorInstance.model.insertContent(modelFragment)
 		},
-		onInsertSignature(signatureParam, signatureAboveQuoteParam) {
-			this.editorInstance.execute('insertSignature', {
-				signature: signatureParam,
-				signatureAboveQuote: signatureAboveQuoteParam,
-			})
+		editorExecute(commandName, ...args) {
+			if (this.editorInstance) {
+				this.editorInstance.execute(commandName, ...args)
+			} else {
+				throw new Error('Impossible to execute a command before editor is ready.')
+			}
 		},
 	},
 }
