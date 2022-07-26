@@ -78,7 +78,7 @@
 			</ul>
 		</template>
 		<template #footer>
-			<AppNavigationSettings :title="t('mail', 'Settings')">
+			<AppNavigationSettings :title="t('mail', 'Mail settings')">
 				<AppSettingsMenu />
 			</AppNavigationSettings>
 		</template>
