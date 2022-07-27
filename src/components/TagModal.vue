@@ -36,14 +36,19 @@
 				</button>
 				<Actions :force-menu="true">
 					<ActionButton v-if="renameTagLabel"
-						icon="icon-rename"
 						@click="openEditTag">
+						<template #icon>
+							<IconRename :size="17" />
+						</template>
 						{{ t('mail','Rename tag') }}
 					</ActionButton>
 					<ActionInput v-if="renameTagInput"
-						icon="icon-tag"
 						:value="tag.displayName"
-						@submit="renameTag(tag, $event)" />
+						@submit="renameTag(tag, $event)">
+						<template #icon>
+							<IconTag :size="20" />
+						</template>
+					</ActionInput>
 					<ActionText
 						v-if="showSaving"
 						icon="icon-loading-small">
@@ -70,7 +75,9 @@
 					@click="addTagInput">
 					{{ t('mail', 'Add tag') }}
 				</button>
-				<ActionInput v-if="editing" icon="icon-tag" @submit="createTag" />
+				<ActionInput v-if="editing" @submit="createTag">
+					<IconTag :size="20" />
+				</ActionInput>
 				<ActionText
 					v-if="showSaving"
 					icon="icon-loading-small">
@@ -87,6 +94,8 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import IconRename from 'vue-material-design-icons/Pencil'
+import IconTag from 'vue-material-design-icons/Tag'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
 
@@ -105,6 +114,8 @@ export default {
 		ActionText,
 		ActionInput,
 		ActionButton,
+		IconRename,
+		IconTag,
 	},
 	props: {
 		envelope: {
@@ -309,12 +320,7 @@ export default {
 	display: inline-block;
 	margin-left: 10px;
 }
-::v-deep .action-input {
-	margin-left: -31px;
-}
-::v-deep .icon-tag {
-	background-image: none;
-}
+
 .action-item {
 	right: 8px;
 	float: right;
