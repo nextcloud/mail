@@ -231,7 +231,6 @@ OC.L10N.register(
     "Moving thread" : "Movendo tópico",
     "Moving message" : "Mover mensagem",
     "New message" : "Nova mensagem",
-    "Settings" : "Configurações",
     "Quota" : "Quota",
     "Show only subscribed mailboxes" : "Mostrar apenas as caixas de correio assinadas",
     "Add mailbox" : "Adicionar caixa de correio",

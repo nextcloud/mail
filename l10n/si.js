@@ -24,7 +24,6 @@ OC.L10N.register(
     "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Reply" : "පිළිතුර",
-    "Settings" : "සැකසුම්",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Loading …" : "පූරණය වෙමින් …",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",

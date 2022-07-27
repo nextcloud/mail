@@ -20,7 +20,6 @@ OC.L10N.register(
     "Favorites" : "Favorites",
     "Other" : "ផ្សេងៗ",
     "Reply" : "ឆ្លើយតប",
-    "Settings" : "ការកំណត់",
     "Delete" : "លុប",
     "Add" : "បញ្ចូល",
     "Disabled" : "បាន​បិទ",

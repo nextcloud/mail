@@ -32,7 +32,6 @@ OC.L10N.register(
     "Reply" : "Responder",
     "Unnamed" : "Non nominate",
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",
-    "Settings" : "Configurationes",
     "Quota" : "Quota",
     "Saving" : "Salveguardante",
     "Remove account" : "Remover conto",

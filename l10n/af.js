@@ -45,7 +45,6 @@ OC.L10N.register(
     "Download attachment" : "Laai aanhangsel af",
     "Unnamed" : "Naamloos",
     "New message" : "Nuwe boodskap",
-    "Settings" : "Instellings",
     "Quota" : "Kwota",
     "Saving" : "Stoor tans",
     "Remove account" : "Verwyder rekening",

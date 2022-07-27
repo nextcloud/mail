@@ -14,7 +14,6 @@ OC.L10N.register(
     "Create" : "Dörediň",
     "Choose" : "saýlamak",
     "Favorites" : "Halanýanlar",
-    "Settings" : "Sazlamalar",
     "Remove account" : "Hasaby aýyryň",
     "Delete" : "Pozmak",
     "Unset" : "Gurnalmady",

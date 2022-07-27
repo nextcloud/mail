@@ -152,7 +152,6 @@ OC.L10N.register(
     "Show images temporarily" : "画像を一時的に表示",
     "Moving" : "移動中",
     "New message" : "新規メッセージ",
-    "Settings" : "設定",
     "Quota" : "クオータ",
     "Show only subscribed mailboxes" : "購読したメールボックスのみ表示",
     "Add mailbox" : "メールボックスを追加",

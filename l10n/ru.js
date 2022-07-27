@@ -213,7 +213,6 @@ OC.L10N.register(
     "Moving thread" : "Перемещение ветки",
     "Moving message" : "Сообщение перемещается",
     "New message" : "Создать сообщение",
-    "Settings" : "Настройки",
     "Quota" : "Квота",
     "Show only subscribed mailboxes" : "Показать только папки из подписки",
     "Add mailbox" : "Добавить папку",

@@ -51,7 +51,6 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Escueyi una carpeta pa guardar l'axuntu",
     "The images have been blocked to protect your privacy." : "Bloquiáronse les imáxenes pa protexer la to privacidá.",
     "New message" : "Mensaxe nuevu",
-    "Settings" : "Axustes",
     "Quota" : "Cuota",
     "Saving" : "Guardando",
     "Remove account" : "Desaniciar cuenta",

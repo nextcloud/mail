@@ -101,7 +101,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Elektu dosierujon en kiu konservi la kunsendaĵojn",
     "The images have been blocked to protect your privacy." : "Bildoj ne montriĝis por protekti vian privatecon.",
     "New message" : "Nova mesaĝo",
-    "Settings" : "Agordoj",
     "Quota" : "Kvoto",
     "Saving" : "Konservado",
     "Move down" : "Movi malsupren",

@@ -195,7 +195,6 @@ OC.L10N.register(
     "Moving" : "Преместува",
     "Moving message" : "Преместување порака",
     "New message" : "Нова порака",
-    "Settings" : "Параметри",
     "Quota" : "Квота",
     "Show only subscribed mailboxes" : "Прикажи само претплатени сандачиња",
     "Add mailbox" : "Додади сандаче",

@@ -195,7 +195,6 @@ OC.L10N.register(
     "Moving thread" : "Flyttar tråd",
     "Moving message" : "Flyttar meddelande",
     "New message" : "Nytt meddelande",
-    "Settings" : "Inställningar",
     "Quota" : "Kvot",
     "Add mailbox" : "Lägg till brevlåda",
     "Saving" : "Sparar",

@@ -70,7 +70,6 @@ OC.L10N.register(
     "Save all to Files" : "Saglabāt visu uz Datnes",
     "The images have been blocked to protect your privacy." : "Attēli tiek bloķēti, lai aizsargātu jūsu konfidencialitāti.",
     "New message" : "Jauna ziņa",
-    "Settings" : "Iestatījumi",
     "Quota" : "Kvota",
     "Saving" : "Saglabā",
     "Remove account" : "Noņemt kontu",

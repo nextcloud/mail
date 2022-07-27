@@ -18,7 +18,6 @@ OC.L10N.register(
     "Favorites" : "يىغقۇچ",
     "Other" : "باشقا",
     "Reply" : "جاۋاب قايتۇر",
-    "Settings" : "تەڭشەكلەر",
     "Delete" : "ئۆچۈر",
     "Add" : "قوش",
     "Remove" : "چىقىرىۋەت",

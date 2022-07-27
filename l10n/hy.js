@@ -16,7 +16,6 @@ OC.L10N.register(
     "Choose" : "Ընտրել",
     "Favorites" : "Favorites",
     "Other" : "Այլ",
-    "Settings" : "կարգավորումներ",
     "Delete" : "հեռացնել",
     "Add" : "Ավելացնել",
     "General" : "Ընդհանուր",

@@ -231,7 +231,6 @@ OC.L10N.register(
     "Moving thread" : "Нишката се премества",
     "Moving message" : "Съобщението се премества",
     "New message" : "Ново съобщение",
-    "Settings" : "Настройки",
     "Quota" : "Квота",
     "Show only subscribed mailboxes" : "Показване само на абонирани пощенски кутии",
     "Add mailbox" : "Добавяне на пощенски кутии",

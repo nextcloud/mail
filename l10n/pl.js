@@ -231,7 +231,6 @@ OC.L10N.register(
     "Moving thread" : "Przenoszenie wątku",
     "Moving message" : "Przenoszenie wiadomości",
     "New message" : "Nowa wiadomość",
-    "Settings" : "Ustawienia",
     "Quota" : "Limit",
     "Show only subscribed mailboxes" : "Pokaż tylko subskrybowane skrzynki pocztowe",
     "Add mailbox" : "Dodaj skrzynkę pocztową",

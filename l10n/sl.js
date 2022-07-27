@@ -198,7 +198,6 @@ OC.L10N.register(
     "Moving thread" : "Poteka premikanje niti ...",
     "Moving message" : "Poteka premikanje sporočila ...",
     "New message" : "Novo sporočilo",
-    "Settings" : "Nastavitve",
     "Quota" : "Količinska omejitev",
     "Show only subscribed mailboxes" : "Pokaži le naročene poštne predale",
     "Add mailbox" : "Dodaj poštni predal",

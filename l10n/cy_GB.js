@@ -66,7 +66,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Dewiswch ffolder i gadw'r atodiadau ynddi",
     "The images have been blocked to protect your privacy." : "Mae'r delweddau wedi'u rhwystro i ddiogelu eich preifatrwydd.",
     "New message" : "Neges newydd",
-    "Settings" : "Gosodiadau",
     "Remove account" : "Dileu cyfrif",
     "Loading …" : "Yn llwytho …",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",

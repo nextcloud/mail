@@ -17,7 +17,6 @@ OC.L10N.register(
     "Choose" : "தெரிவுசெய்க ",
     "Favorites" : "விருப்பங்கள்",
     "Other" : "மற்றவை",
-    "Settings" : "அமைப்புகள்",
     "Quota" : "பங்கு",
     "Saving" : "Saving",
     "Delete" : "நீக்குக",

@@ -195,7 +195,6 @@ OC.L10N.register(
     "Moving thread" : "Siirretään ketjua",
     "Moving message" : "Siirretään viestiä",
     "New message" : "Uusi viesti",
-    "Settings" : "Asetukset",
     "Quota" : "Kiintiö",
     "Show only subscribed mailboxes" : "Näytä vain tilatut postilaatikot",
     "Add mailbox" : "Lisää postilaatikko",

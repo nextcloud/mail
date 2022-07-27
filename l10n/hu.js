@@ -231,7 +231,6 @@ OC.L10N.register(
     "Moving thread" : "Szál áthelyezése",
     "Moving message" : "Üzenet áthelyezése",
     "New message" : "Új üzenet",
-    "Settings" : "Beállítások",
     "Quota" : "Kvóta",
     "Show only subscribed mailboxes" : "Csak a feliratkozott postafiókok megjelenítése",
     "Add mailbox" : "Postaláda hozzáadása",

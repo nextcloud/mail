@@ -49,7 +49,6 @@ OC.L10N.register(
     "Other" : "Autre",
     "Reply" : "Respondre",
     "Choose a folder to store the attachment in" : "Causissètz lo dorsièr dins lo qual enregistrar la pèça junta",
-    "Settings" : "Paramètres",
     "Quota" : "Quota",
     "Loading …" : "Cargament…",
     "Mark all as read" : "Marcar totes coma legits",

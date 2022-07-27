@@ -22,7 +22,6 @@ OC.L10N.register(
     "Choose" : "Izaberite",
     "Favorites" : "Favoriti",
     "Other" : "Ostali",
-    "Settings" : "Podešavanje",
     "Quota" : "Kvota",
     "Delete" : "Obriši",
     "Add" : "Dodaj",

@@ -115,7 +115,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Виберіть теку для збереження вкладень",
     "The images have been blocked to protect your privacy." : "Зображення не показуються з міркувань безпеки.",
     "New message" : "Нове повідомлення",
-    "Settings" : "Налаштування",
     "Quota" : "Обмеження",
     "Saving" : "Збереження",
     "Move down" : "Пересунути вниз",

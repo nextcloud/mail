@@ -17,7 +17,6 @@ OC.L10N.register(
     "Favorites" : "Favorites",
     "Other" : "دیگر",
     "Reply" : "جواب",
-    "Settings" : "سیٹینگز",
     "Delete" : "حذف کریں",
     "Add" : "شامل کریں",
     "Reset" : "ری سیٹ",

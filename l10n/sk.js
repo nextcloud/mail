@@ -208,7 +208,6 @@ OC.L10N.register(
     "Moving thread" : "Presunúť konverzáciu",
     "Moving message" : "Presúvam správu",
     "New message" : "Nová správa",
-    "Settings" : "Nastavenia",
     "Quota" : "Kvóta",
     "Show only subscribed mailboxes" : "Zobraziť iba prihlásené poštové schránky",
     "Add mailbox" : "Pridať schránku",

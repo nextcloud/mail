@@ -50,7 +50,6 @@ OC.L10N.register(
     "Unnamed" : "Nimeta",
     "Choose a folder to store the attachment in" : "Vali kaust, kuhu manus salvestada",
     "New message" : "Uus sõnum",
-    "Settings" : "Seaded",
     "Quota" : "Kvoot",
     "Saving" : "Salvestamine",
     "Remove account" : "Eemalda konto",

@@ -14,7 +14,6 @@ OC.L10N.register(
     "Create" : "Snulfu-d",
     "Choose" : "Fren",
     "Favorites" : "Imenyafen",
-    "Settings" : "Iɣewwaṛen",
     "Delete" : "Kkes",
     "Add" : "Rnu",
     "Unset" : "Non défini",

@@ -132,7 +132,6 @@ OC.L10N.register(
     "Always show images from {domain}" : "Mostrar sempre as imagem de {domain}",
     "Moving" : "A mover",
     "New message" : "Nova mensagem",
-    "Settings" : "Definições",
     "Quota" : "Quota",
     "Add mailbox" : "Adicionar caixa de",
     "Saving" : "A guardar",

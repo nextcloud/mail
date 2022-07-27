@@ -169,7 +169,6 @@ OC.L10N.register(
     "Quoted text" : "Texto citado",
     "Moving" : "Movendo",
     "New message" : "Nova mensaxe",
-    "Settings" : "Axustes",
     "Quota" : "Cota",
     "Show only subscribed mailboxes" : "Amosar só as caixas de correo subscritas",
     "Add mailbox" : "Engadir caixas de correo",

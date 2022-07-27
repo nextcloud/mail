@@ -58,7 +58,6 @@ OC.L10N.register(
     "Save all to Files" : "Guardar todos a Archivos",
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger su privacidad. ",
     "New message" : "Mensaje nuevo",
-    "Settings" : "Configuraciones ",
     "Quota" : "Cuota",
     "Saving" : "Guardando",
     "Remove account" : "Eliminar cuenta",

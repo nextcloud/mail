@@ -80,7 +80,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Velg en mappe å lagre vedleggene i",
     "The images have been blocked to protect your privacy." : "Bildene har blitt blokkert for å beskytte privatlivet.",
     "New message" : "Ny melding",
-    "Settings" : "Innstillinger",
     "Quota" : "Kvote",
     "Saving" : "Lagrer",
     "Remove account" : "Fjern konto",

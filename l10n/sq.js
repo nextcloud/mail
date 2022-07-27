@@ -60,7 +60,6 @@ OC.L10N.register(
     "Save all to Files" : "Ruaji të gjitha te Dosjet",
     "The images have been blocked to protect your privacy." : "Imazhet janë bllokuar për të mbrojtur privatësinë tuaj.",
     "New message" : "Mesazh i ri",
-    "Settings" : "Konfigurimet",
     "Quota" : "Kuotë",
     "Saving" : "Duke u ruajtur!",
     "Remove account" : "Fshij llogarinë",

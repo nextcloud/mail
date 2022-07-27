@@ -128,7 +128,6 @@ OC.L10N.register(
     "Message frame" : "Marc de missatges",
     "Quoted text" : "Text citat",
     "New message" : "Escriu un missatge",
-    "Settings" : "Paràmetres",
     "Quota" : "Quota",
     "Saving" : "S'està desant",
     "Move up" : "Mou cap amunt",

@@ -21,7 +21,6 @@ OC.L10N.register(
     "Favorites" : "Omiljene",
     "Other" : "Ostali",
     "Reply" : "Odgovori",
-    "Settings" : "Postavke",
     "Remove account" : "Ukloni nalog",
     "Mark all as read" : "Označi sve kao pročitano",
     "Clear cache" : "Očisti keš",

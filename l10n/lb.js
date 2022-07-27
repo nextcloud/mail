@@ -24,7 +24,6 @@ OC.L10N.register(
     "Other" : "Aner",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
-    "Settings" : "Astellungen",
     "Quota" : "Quota",
     "Saving" : "Speicheren...",
     "Remove account" : "De Kont läschen",

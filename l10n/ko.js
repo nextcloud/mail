@@ -139,7 +139,6 @@ OC.L10N.register(
     "Save all to Files" : "모두 저장",
     "The images have been blocked to protect your privacy." : "개인 정보를 보호하기 위해 사진을 차단했습니다.",
     "New message" : "새로운 메시지",
-    "Settings" : "설정",
     "Quota" : "할당량",
     "Saving" : "저장 중",
     "Move up" : "위로 이동",

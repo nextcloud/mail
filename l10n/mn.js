@@ -47,7 +47,6 @@ OC.L10N.register(
     "Save all to Files" : "бүх файлыг хадгалах",
     "The images have been blocked to protect your privacy." : " таны хувийн нууцыг хамгаалахын тулд дүрсийг хаасан байна.",
     "New message" : "шинэ зурвас",
-    "Settings" : "тохиргоо",
     "Quota" : " хувь хэмжээ",
     "Saving" : "хадгаламж",
     "Remove account" : "Аккаунт устгах",

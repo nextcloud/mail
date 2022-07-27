@@ -231,7 +231,6 @@ OC.L10N.register(
     "Moving thread" : "Přesouvá se vlákno",
     "Moving message" : "Přesouvá se zpráva",
     "New message" : "Nová zpráva",
-    "Settings" : "Nastavení",
     "Quota" : "Kvóta",
     "Show only subscribed mailboxes" : "Zobrazit pouze přihlášené poštovní schránky",
     "Add mailbox" : "Přidat schránku",

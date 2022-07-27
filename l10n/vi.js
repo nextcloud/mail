@@ -156,7 +156,6 @@ OC.L10N.register(
     "Quoted text" : "Văn bản được trích dẫn",
     "Moving" : "Di chuyển",
     "New message" : "Tin nhắn mới",
-    "Settings" : "Thiết lập",
     "Quota" : "Hạn ngạch",
     "Show only subscribed mailboxes" : "Chỉ hiển thị các hộp thư đã đăng ký",
     "Add mailbox" : "Thêm hộp thư",

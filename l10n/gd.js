@@ -14,7 +14,6 @@ OC.L10N.register(
     "Create" : "Cruthaich",
     "Choose" : "Tagh",
     "Favorites" : "Annsachdan",
-    "Settings" : "Roghainnean",
     "Remove account" : "Thoir air falbh an cunntas",
     "Delete" : "Sguab às",
     "Unset" : "Neo-shuidhich",

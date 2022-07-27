@@ -132,7 +132,6 @@ OC.L10N.register(
     "Quoted text" : "Цитирани текст",
     "Moving" : "Померам",
     "New message" : "Нова порука",
-    "Settings" : "Подешавања",
     "Quota" : "Квота",
     "Saving" : "Чувам",
     "Move up" : "Помери нагоре",

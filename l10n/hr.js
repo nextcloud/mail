@@ -190,7 +190,6 @@ OC.L10N.register(
     "Moving thread" : "Premještanje dretve",
     "Moving message" : "Premještanje poruke",
     "New message" : "Nova poruka",
-    "Settings" : "Postavke",
     "Quota" : "Kvota",
     "Show only subscribed mailboxes" : "Prikaži samo pretplaćene sandučiće",
     "Add mailbox" : "Dodaj sandučić",

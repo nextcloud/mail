@@ -18,7 +18,6 @@ OC.L10N.register(
     "Choose" : "﻿ಆಯ್ಕೆ",
     "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Other" : "﻿ಇತರೆ",
-    "Settings" : "ಆಯ್ಕೆ",
     "Quota" : "ಪಾಲು",
     "Delete" : "﻿ಅಳಿಸಿ",
     "Add" : "﻿ಸೇರಿಸಿ",

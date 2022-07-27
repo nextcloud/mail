@@ -46,7 +46,6 @@ OC.L10N.register(
     "Download attachment" : "Unduh lampiran",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "New message" : "Pesan baru",
-    "Settings" : "Setelan",
     "Quota" : "Kuota",
     "Saving" : "Menyimpan",
     "Remove account" : "Hapus akun",

@@ -231,7 +231,6 @@ OC.L10N.register(
     "Moving thread" : "Moviendo hilo",
     "Moving message" : "Moviendo mensaje",
     "New message" : "Nuevo mensaje",
-    "Settings" : "Ajustes",
     "Quota" : "Espacio asignado",
     "Show only subscribed mailboxes" : "Mostrar solo las bandejas suscritas",
     "Add mailbox" : "Añadir bandeja",

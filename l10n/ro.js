@@ -108,7 +108,6 @@ OC.L10N.register(
     "Reply" : "Răspunde",
     "Unnamed" : "Fără nume",
     "Choose a folder to store the attachment in" : "Alege un dosar în care să stochez atașamentul",
-    "Settings" : "Setări",
     "Quota" : "Procent",
     "Saving" : "Se salvează",
     "Remove account" : "Sterge contul",

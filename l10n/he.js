@@ -144,7 +144,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "התמונות נחסמו כדי להגן על הפרטיות שלך",
     "Message frame" : "מסגרת הודעה",
     "New message" : "הודעה חדשה",
-    "Settings" : "הגדרות",
     "Quota" : "מכיסה",
     "Add mailbox" : "הוספת תיבת דוא״ל",
     "Saving" : "שמירה",

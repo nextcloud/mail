@@ -231,7 +231,6 @@ OC.L10N.register(
     "Moving thread" : "Konu taşınıyor",
     "Moving message" : "İleti taşınıyor",
     "New message" : "Yeni ileti",
-    "Settings" : "Ayarlar",
     "Quota" : "Kota",
     "Show only subscribed mailboxes" : "Yalnızca abone olunmuş e-posta kutuları görüntülensin",
     "Add mailbox" : "E-posta kutusu ekle",

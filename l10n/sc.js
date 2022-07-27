@@ -185,7 +185,6 @@ OC.L10N.register(
     "Moving thread" : "Tramudende sa dibata",
     "Moving message" : "Tramudende su messàgiu",
     "New message" : "Messàgiu nou",
-    "Settings" : "Impostatziones",
     "Quota" : "Cuota",
     "Show only subscribed mailboxes" : "Mustra isceti casellas de posta sutascritas",
     "Add mailbox" : "Agiunghe casella de posta",

@@ -192,7 +192,6 @@ OC.L10N.register(
     "Moving thread" : "Verplaatsen draadje",
     "Moving message" : "Verplaatsen bericht",
     "New message" : "Nieuw bericht",
-    "Settings" : "Instellingen",
     "Quota" : "Quota",
     "Show only subscribed mailboxes" : "Toon alleen geabonneerde postbussen",
     "Add mailbox" : "Toevoegen postbus",

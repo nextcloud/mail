@@ -130,7 +130,6 @@ OC.L10N.register(
     "Quoted text" : "Tilvitnaður texti",
     "Moving" : "Færi",
     "New message" : "Ný skilaboð",
-    "Settings" : "Stillingar",
     "Quota" : "Kvóti",
     "Saving" : "Vista",
     "Move up" : "Færa upp",

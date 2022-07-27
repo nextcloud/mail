@@ -22,7 +22,6 @@ OC.L10N.register(
     "Favorites" : "Favorit",
     "Other" : "Anna",
     "Reply" : "Svare",
-    "Settings" : "Instillingar",
     "Quota" : "Kvote",
     "Saving" : "Lagrar",
     "Delete" : "Ta bort",

@@ -25,7 +25,6 @@ OC.L10N.register(
     "Other" : "Digər",
     "Reply" : "Cavab",
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",
-    "Settings" : "Quraşdırmalar",
     "Quota" : "Norma",
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",
     "Clear cache" : "Keşi təmizlə",

@@ -194,7 +194,6 @@ OC.L10N.register(
     "Moving thread" : "Spostamento conversazione",
     "Moving message" : "Spostamento messaggio",
     "New message" : "Nuovo messaggio",
-    "Settings" : "Impostazioni",
     "Quota" : "Quote",
     "Show only subscribed mailboxes" : "Mostra solo le caselle di posta sottoscritte",
     "Add mailbox" : "Aggiungi casella di posta",

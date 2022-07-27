@@ -61,7 +61,6 @@ OC.L10N.register(
     "Save all to Files" : "ყველაფრის ფაილებში შენახვა",
     "The images have been blocked to protect your privacy." : "სურათები თქვენი კონფიდენციალურობის დასაცავად დაიბლოკა",
     "New message" : "ახალი წერილი",
-    "Settings" : "პარამეტრები",
     "Quota" : "კვოტა",
     "Saving" : "მიმდინარეობს შენახვა",
     "Remove account" : "ანგარიშის გაუქმება",

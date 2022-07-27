@@ -147,7 +147,6 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Vælg den mappe, hvor vedhæftningerne skal gemmes i",
     "The images have been blocked to protect your privacy." : "Dette billede er blevet blokeret for at beskytte din privat liv",
     "New message" : "Ny besked",
-    "Settings" : "Indstillinger",
     "Quota" : "Kvote",
     "Saving" : "Gemmer",
     "Move down" : "Flyt ned",

@@ -205,7 +205,6 @@ OC.L10N.register(
     "Moving thread" : "Μετακίνηση νήματος",
     "Moving message" : "Μετακίνηση μηνύματος",
     "New message" : "Νέο μήνυμα",
-    "Settings" : "Ρυθμίσεις",
     "Quota" : "Σύνολο χώρου",
     "Show only subscribed mailboxes" : "Εμφάνιση μόνο εγγεγραμμένων γραμματοκιβωτίων",
     "Add mailbox" : "Προσθήκη γραμματοκιβωτίου",

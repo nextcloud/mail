@@ -205,7 +205,6 @@ OC.L10N.register(
     "Moving thread" : "Déplacement du fil de messages en cours",
     "Moving message" : "Déplacement du message",
     "New message" : "Nouveau message",
-    "Settings" : "Paramètres",
     "Quota" : "Quota",
     "Show only subscribed mailboxes" : "Afficher uniquement les dossiers abonnés",
     "Add mailbox" : "Créer un dossier",

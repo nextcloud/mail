@@ -17,7 +17,6 @@ OC.L10N.register(
     "Create" : "ສ້າງ",
     "Choose" : "ເລືອກ",
     "Favorites" : "ລາຍການທີ່ມັກ",
-    "Settings" : "ການຕັ້ງຄ່າ",
     "Quota" : "ການໃຊ້ຮ່ວມກັນໄດ້",
     "Remove account" : "ຍ້າຍບັນຊີ",
     "Loading …" : "ກຳລັງໂຫຼດ",

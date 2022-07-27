@@ -15,7 +15,6 @@ OC.L10N.register(
     "Create" : "Buat",
     "Favorites" : "Favorites",
     "Other" : "Lain",
-    "Settings" : "Tetapan",
     "Quota" : "Kuota",
     "Delete" : "Padam",
     "Add" : "Tambah",

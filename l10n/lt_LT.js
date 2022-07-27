@@ -139,7 +139,6 @@ OC.L10N.register(
     "Always show images from {sender}" : "Visada rodyti paveikslus nuo {sender}",
     "Always show images from {domain}" : "Visada rodyti paveikslus iš {domain}",
     "New message" : "Naujas laiškas",
-    "Settings" : "Nustatymai",
     "Quota" : "Leidžiamas duomenų kiekis",
     "Add mailbox" : "Pridėti pašto dėžutę",
     "Saving" : "Įrašoma",
