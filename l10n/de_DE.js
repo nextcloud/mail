@@ -231,6 +231,7 @@ OC.L10N.register(
     "Moving thread" : "Verschiebe Unterhaltung",
     "Moving message" : "Verschiebe Nachricht",
     "New message" : "Neue Nachricht",
+    "Mail settings" : "E-Mail-Einstellungen",
     "Quota" : "Kontingent",
     "Show only subscribed mailboxes" : "Nur abonnierte Postfächer anzeigen",
     "Add mailbox" : "Postfach hinzufügen",

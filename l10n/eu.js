@@ -231,6 +231,7 @@ OC.L10N.register(
     "Moving thread" : "Haria mugitzen",
     "Moving message" : "Mezua mugitzen",
     "New message" : "Mezu berria",
+    "Mail settings" : "Posta ezarpenak",
     "Quota" : "Kuota",
     "Show only subscribed mailboxes" : "Erakutsi harpidetutako postontziak soilik",
     "Add mailbox" : "Gehitu postontzia",

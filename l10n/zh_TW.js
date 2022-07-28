@@ -231,6 +231,7 @@ OC.L10N.register(
     "Moving thread" : "正在移動討論串",
     "Moving message" : "正在移動訊息",
     "New message" : "新郵件",
+    "Mail settings" : "電子郵件設定",
     "Quota" : "用量",
     "Show only subscribed mailboxes" : "僅顯示已訂閱的信箱",
     "Add mailbox" : "新增信箱",
