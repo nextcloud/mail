@@ -184,9 +184,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	private function getRawReferences(): string {
 		/** @var resource $headersStream */
-		$headersStream = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
-		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
-		fclose($headersStream);
+		$parsedHeaders = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 		$references = $parsedHeaders->getHeader('references');
 		if ($references === null) {
 			return '';
