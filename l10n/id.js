@@ -43,6 +43,7 @@ OC.L10N.register(
     "Favorites" : "Disukai",
     "Other" : "Lainnya",
     "Reply" : "Balas",
+    "Import into calendar" : "Impor ke kalender",
     "Download attachment" : "Unduh lampiran",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "New message" : "Pesan baru",
