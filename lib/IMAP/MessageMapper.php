@@ -246,6 +246,10 @@ class MessageMapper {
 			'ids' => $ids,
 		]), false);
 
+		$fetchResults = array_values(array_filter($fetchResults, static function (Horde_Imap_Client_Data_Fetch $fetchResult) {
+			return $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE);
+		}));
+
 		if (empty($fetchResults)) {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
 		} else {
