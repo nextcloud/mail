@@ -49,7 +49,7 @@
 		<div class="event-data__row event-data__row--participants">
 			<AccountMultipleIcon class="event-data__row__icon" :size="20" />
 			<ul>
-				<li v-for="{ name, isOrganizer } in attendees" :key="name">
+				<li v-for="{ name, isOrganizer, key } in attendees" :key="key">
 					{{ name }}
 					<span v-if="isOrganizer" class="muted">{{ t('mail', '(organizer)') }}</span>
 				</li>
@@ -176,7 +176,7 @@ export default {
 		},
 
 		/**
-		 * @return {{name: string, isOrganizer: boolean}[]}
+		 * @return {{name: string, isOrganizer: boolean, key: string}[]}
 		 */
 		attendees() {
 			const attendees = []
@@ -184,12 +184,11 @@ export default {
 				...this.event.getPropertyIterator('ORGANIZER'),
 				...this.event.getAttendeeIterator(),
 			]) {
-				const attendeeData = {
-					name: attendee.commonName ?? removeMailtoPrefix(attendee.email),
-					isOrganizer: attendee.isOrganizer(),
-				}
+				const name = attendee.commonName ?? removeMailtoPrefix(attendee.email)
+				const isOrganizer = attendee.isOrganizer()
+				const key = (isOrganizer ? 'organizer_' : 'attendee_') + name
 
-				attendees.push(attendeeData)
+				attendees.push({ name, isOrganizer, key })
 			}
 			return attendees
 		},
