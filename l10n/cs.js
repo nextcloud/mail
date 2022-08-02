@@ -79,7 +79,6 @@ OC.L10N.register(
     "Register as application for mail links" : "Zaregistrovat jako aplikaci pro obsluhu e-mailových odkazů",
     "Show keyboard shortcuts" : "Zobrazit klávesové zkratky",
     "Looking for a way to encrypt your emails?" : "Hledáte způsob jak šifrovat své e-maily?",
-    "Install Mailvelope browser extension" : "Nainstalovat Mailvelope – rozšíření pro webový prohlížeč",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Povolit aplikaci shromažďovat data o vaší interakci s ní. Na základě těchto dat se aplikace přizpůsobí vašim preferencím. Data budou ukládána pouze lokálně.",
     "Put my text to the bottom of a reply instead of on top of it." : "Můj text umístit na konec odpovědi namísto na její začátek.",
     "Automatically classify importance of new email" : "Automaticky klasifikovat důležitost nového e-mailu",

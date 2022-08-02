@@ -79,7 +79,6 @@ OC.L10N.register(
     "Register as application for mail links" : "Als Anwendung für Mail-Links registrieren",
     "Show keyboard shortcuts" : "Tastaturkürzel anzeigen",
     "Looking for a way to encrypt your emails?" : "Suchst Du nach einer Möglichkeit, Deine E-Mails zu verschlüsseln?",
-    "Install Mailvelope browser extension" : "Installiere die Mailvelope-Browsererweiterung",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Erlaube der App, Daten über Deine Interaktionen zu sammeln. Basierend auf diesen Daten passt sich die App an Deine Vorlieben an. Die Daten werden nur lokal gespeichert.",
     "Put my text to the bottom of a reply instead of on top of it." : "Füge meinen Text am Ende einer Antwort anstatt darüber. ",
     "Automatically classify importance of new email" : "Automatisches Einordnen der Wichtigkeit neuer E-Mails",

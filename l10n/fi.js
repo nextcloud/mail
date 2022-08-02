@@ -63,7 +63,6 @@ OC.L10N.register(
     "Register as application for mail links" : "Rekisteröi sovellukseksi mail-linkeille",
     "Show keyboard shortcuts" : "Näytä pikanäppäimet",
     "Looking for a way to encrypt your emails?" : "Etsitkö tapaa salata sähköpostisi?",
-    "Install Mailvelope browser extension" : "Asenna Mailvelope-selainlaajennus",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Salli sovelluksen kerätä tietoa vuorovaikutuksestasi. Tämän tiedon perusteella sovellus sopeutuu mieltymyksiisi. Nämä tiedot talletetaan vain paikallisesti.",
     "Put my text to the bottom of a reply instead of on top of it." : "Aseta tekstini vastauksen alaosaan yläosan sijaan",
     "Automatically classify importance of new email" : "Merkitse sähköpostin tärkeys automaattisesti",

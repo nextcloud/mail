@@ -56,7 +56,6 @@ OC.L10N.register(
     "Register as application for mail links" : "메일 링크를 어플리케이션으로 등록",
     "Show keyboard shortcuts" : "키보드 단축키 표시",
     "Looking for a way to encrypt your emails?" : "이메일을 암호화하는 방법을 찾고 계십니까?",
-    "Install Mailvelope browser extension" : "Mailvelope 브라우저 확장 설치",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "앱이 상호 작용에 대한 데이터를 수집하도록 허용합니다. 이 데이터를 기반으로 앱이 사용자의 기본 설정에 맞게 조정됩니다. 데이터는 로컬에만 저장됩니다.",
     "Put my text to the bottom of a reply instead of on top of it." : "내 텍스트를 답장 위가 아니라 답장 맨 아래에 놓기",
     "Automatically classify importance of new email" : "새 이메일의 중요도 자동 분류",

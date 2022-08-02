@@ -79,7 +79,6 @@ OC.L10N.register(
     "Register as application for mail links" : "Alkalmazás beállítása a levélhivatkozásokhoz",
     "Show keyboard shortcuts" : "Billentyűparancsok megjelenítése",
     "Looking for a way to encrypt your emails?" : "Azt keresi, hogyan titkosíthatná a leveleit?",
-    "Install Mailvelope browser extension" : "Telepítse a Mailvelope böngészőkiegészítőt",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Engedélyezés az alkalmazásnak, hogy az adatokat gyűjtsön az interakcióiról. Az adatok alapján az alkalmazás alkalmazkodni fog a használati szokásaihoz. Az adatok helyben lesznek tárolva.",
     "Put my text to the bottom of a reply instead of on top of it." : "A szöveg a válasz aljára helyezése a teteje helyett.",
     "Automatically classify importance of new email" : "Az új levelek fontosságának automatikus osztályozása",
