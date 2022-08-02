@@ -16,7 +16,8 @@
 		:title="addresses"
 		:details="formatted()"
 		@click="onClick"
-		@click.ctrl="toggleSelected">
+		@click.ctrl="toggleSelected"
+		@update:menuOpen="moreActionsOpen=false">
 		<template #icon>
 			<Star
 				v-if="data.flags.flagged"
