@@ -205,6 +205,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#export',
+			'url' => '/api/messages/{id}/export',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#getHtmlBody',
 			'url' => '/api/messages/{id}/html',
 			'verb' => 'GET'

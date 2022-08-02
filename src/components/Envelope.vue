@@ -197,6 +197,14 @@
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
+				<ActionLink
+					:close-after-click="true"
+					:href="exportMessageLink">
+					<template #icon>
+						<DownloadIcon :size="20" />
+					</template>
+					{{ t('mail', 'Download message') }}
+				</ActionLink>
 			</template>
 		</template>
 		<template #extra>
@@ -265,6 +273,9 @@ import TagModal from './TagModal'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { hiddenTags } from './tags.js'
+import { generateUrl } from '@nextcloud/router'
+import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import DownloadIcon from 'vue-material-design-icons/Download'
 
 export default {
 	name: 'Envelope',
@@ -293,6 +304,8 @@ export default {
 		Email,
 		IconAttachment,
 		Reply,
+		ActionLink,
+		DownloadIcon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -438,6 +451,16 @@ export default {
 			// We have to use || here (instead of ??) because the subject might be '', null
 			// or undefined.
 			return this.data.subject || this.t('mail', 'No subject')
+		},
+		/**
+		 * Link to download the whole message (.eml).
+		 *
+		 * @return {string}
+		 */
+		exportMessageLink() {
+			return generateUrl('/apps/mail/api/messages/{id}/export', {
+				id: this.data.databaseId,
+			})
 		},
 	},
 	methods: {

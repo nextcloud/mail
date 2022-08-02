@@ -187,6 +187,14 @@
 					</template>
 					{{ t('mail', 'View source') }}
 				</ActionButton>
+				<ActionLink
+					:close-after-click="true"
+					:href="exportMessageLink">
+					<template #icon>
+						<DownloadIcon :size="20" />
+					</template>
+					{{ t('mail', 'Download message') }}
+				</ActionLink>
 				<ActionLink v-if="debug"
 					:download="threadingFileName"
 					:href="threadingFile"
@@ -378,6 +386,16 @@ export default {
 			return this.$store.getters
 				.getEnvelopeTags(this.envelope.databaseId)
 				.some((tag) => tag.imapLabel === '$label1')
+		},
+		/**
+		 * Link to download the whole message (.eml).
+		 *
+		 * @return {string}
+		 */
+		exportMessageLink() {
+			return generateUrl('/apps/mail/api/messages/{id}/export', {
+				id: this.envelope.databaseId,
+			})
 		},
 	},
 	methods: {
