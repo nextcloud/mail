@@ -209,7 +209,7 @@ import IconFolderSync from 'vue-material-design-icons/FolderSync'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconInfo from 'vue-material-design-icons/Information'
 import IconDraft from 'vue-material-design-icons/Pencil'
-import IconArchive from 'vue-material-design-icons/Archive'
+import IconArchive from 'vue-material-design-icons/PackageDown'
 import IconInbox from 'vue-material-design-icons/Home'
 import IconAllInboxes from 'vue-material-design-icons/InboxMultiple'
 import ImportantIcon from './icons/ImportantIcon'
@@ -395,7 +395,7 @@ export default {
 		 * Generate unique key id for a specific mailbox
 		 *
 		 * @param {object} mailbox the mailbox to gen id for
-		 * @return {string}
+		 * @returns {string}
 		 */
 		genId(mailbox) {
 			return 'mailbox-' + mailbox.databaseId

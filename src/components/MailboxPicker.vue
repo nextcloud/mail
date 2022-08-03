@@ -5,13 +5,14 @@
 				{{ t('mail', 'Choose target mailbox') }}
 			</h2>
 			<span class="crumbs">
-				<div class="level icon-breadcrumb">
-					<a class="icon-home" @click.prevent="onClickHome" />
+				<div @click.prevent="onClickHome">
+					<IconInbox :size="20" />
 				</div>
 				<div
 					v-for="(box, index) in mailboxCrumbs"
 					:key="box.databaseId"
-					class="level icon-breadcrumb">
+					class="level">
+					<IconBreadcrumb :size="20" />
 					<a @click.prevent="onClickCrumb(index)">
 						{{ getMailboxTitle(box) }}
 					</a>
@@ -23,16 +24,29 @@
 						v-for="box in filteredMailboxes "
 						:key="box.databaseId"
 						@click.prevent="onClickMailbox(box)">
-						<div :class="['mailbox-icon', getMailboxIcon(box)]" />
+						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
+						<IconDraft
+							v-else-if="box.specialRole === 'drafts'"
+							:size="20" />
+						<IconSent
+							v-else-if="box.specialRole === 'sent'"
+							:size="20" />
+						<IconArchive
+							v-else-if="box.specialRole === 'archive'"
+							:size="20" />
+						<IconTrash
+							v-else-if="box.specialRole === 'trash'"
+							:size="20" />
+						<IconFolder v-else
+							:size="20" />
 						<div class="mailbox-title">
 							{{ getMailboxTitle(box) }}
 						</div>
 					</li>
 				</ul>
-				<div v-else class="empty">
-					<div class="empty-icon icon-folder" />
-					<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
-				</div>
+				<IconFolder v-else :size="65" />
+				<div class="empty-icon empty" />
+				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 			</div>
 			<div class="buttons">
 				<button class="primary" :disabled="loading || (!allowRoot && !selectedMailboxId)" @click="onSelect">
@@ -45,6 +59,13 @@
 </template>
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+import IconBreadcrumb from 'vue-material-design-icons/ChevronRight'
+import IconInbox from 'vue-material-design-icons/Home'
+import IconDraft from 'vue-material-design-icons/Pencil'
+import IconSent from 'vue-material-design-icons/Send'
+import IconArchive from 'vue-material-design-icons/PackageDown'
+import IconTrash from 'vue-material-design-icons/Delete'
+import IconFolder from 'vue-material-design-icons/Folder'
 
 import { translate as t } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
@@ -53,6 +74,13 @@ export default {
 	name: 'MailboxPicker',
 	components: {
 		Modal,
+		IconInbox,
+		IconDraft,
+		IconSent,
+		IconArchive,
+		IconTrash,
+		IconFolder,
+		IconBreadcrumb,
 	},
 	props: {
 		account: {
@@ -159,7 +187,6 @@ export default {
 
 .crumbs {
 	display: inline-flex;
-	padding-left: 12px;
 	padding-right: 0px;
 	flex-wrap: wrap;
 
@@ -172,6 +199,7 @@ export default {
 		padding-right: 7px;
 		background-position: right center;
 		background-size: auto 24px;
+		margin-top: -10px;
 	}
 
 	a {
@@ -216,19 +244,14 @@ export default {
 		}
 	}
 
-	.empty {
+	h2 {
 		width: 100%;
 		color: var(--color-text-maxcontrast);
 		text-align: center;
 		margin-top: 80px;
-	}
-
-	.empty-icon {
 		opacity: 0.4;
 		background-size: 64px;
 		height: 64px;
-		width: 64px;
-		margin: 0 auto 15px;
 	}
 
 	.mailbox-icon {
@@ -256,5 +279,9 @@ export default {
 	.spinner {
 		margin-right: 5px;
 	}
+}
+.material-design-icon {
+	opacity: .7;
+	margin-right: 6px;
 }
 </style>
