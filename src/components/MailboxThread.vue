@@ -238,10 +238,6 @@ export default {
 	z-index: 1;
 }
 
-.icon-info {
-	background-image: var(--icon-info-000);
-}
-
 .important-info {
 	max-width: 230px;
 	padding: 16px;
@@ -279,7 +275,5 @@ export default {
 }
 .information-icon {
 	opacity: .7;
-	margin-bottom: 3px;
-	margin-right: 9px;
 }
 </style>
