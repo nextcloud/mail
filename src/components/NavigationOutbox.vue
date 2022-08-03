@@ -42,7 +42,7 @@
 <script>
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import CounterBubble from '@nextcloud/vue/dist/Components/CounterBubble'
-import IconOutbox from 'vue-material-design-icons/Email'
+import IconOutbox from 'vue-material-design-icons/InboxArrowUp'
 
 export default {
 	name: 'NavigationOutbox',

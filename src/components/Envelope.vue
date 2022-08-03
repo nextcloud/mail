@@ -87,9 +87,9 @@
 					:close-after-click="true"
 					@click.prevent="onToggleSeen">
 					<template #icon>
-						<Email v-if="showImportantIconVariant"
+						<EmailUnread v-if="showImportantIconVariant"
 							:size="20" />
-						<EmailOutline v-else
+						<EmailRead v-else
 							:size="20" />
 					</template>
 					{{
@@ -254,8 +254,8 @@ import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import StarOutline from 'vue-material-design-icons/StarOutline'
 import Star from 'vue-material-design-icons/Star'
 import Reply from 'vue-material-design-icons/Reply'
-import EmailOutline from 'vue-material-design-icons/EmailOutline'
-import Email from 'vue-material-design-icons/Email'
+import EmailRead from 'vue-material-design-icons/EmailOpen'
+import EmailUnread from 'vue-material-design-icons/Email'
 import IconAttachment from 'vue-material-design-icons/Paperclip'
 import ImportantIcon from './icons/ImportantIcon'
 import JunkIcon from './icons/JunkIcon'
@@ -289,8 +289,8 @@ export default {
 		TagModal,
 		Star,
 		StarOutline,
-		EmailOutline,
-		Email,
+		EmailRead,
+		EmailUnread,
 		IconAttachment,
 		Reply,
 	},
@@ -432,7 +432,7 @@ export default {
 		/**
 		 * Subject of envelope or "No Subject".
 		 *
-		 * @return {string}
+		 * @returns {string}
 		 */
 		subjectForSubtitle() {
 			// We have to use || here (instead of ??) because the subject might be '', null
