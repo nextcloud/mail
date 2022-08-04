@@ -79,6 +79,7 @@ OC.L10N.register(
     "Register as application for mail links" : "E-posta bağlantıları uygulaması olarak ata",
     "Show keyboard shortcuts" : "Kısayol tuşlarını görüntüle",
     "Looking for a way to encrypt your emails?" : "E-postalarınızı şifreleyecek bir yöntem mi arıyorsunuz?",
+    "Install Mailvelope browser extension here" : "Buradan Mailvelope tarayıcı uzantısını kurun",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Uygulamanın etkileşimleriniz ile ilgili veri toplamasına izin verin. Uygulama bu verilere göre ayarlarınızı değiştirir. Veriler yalnızca yerel olarak saklanır ve başka bir yere aktarılmaz.",
     "Put my text to the bottom of a reply instead of on top of it." : "Yanıtlarken yazacağım metin en üst yerine en alta eklensin.",
     "Automatically classify importance of new email" : "Yeni e-postaların önem düzeyi otomatik olarak belirlensin",

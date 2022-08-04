@@ -63,6 +63,7 @@ OC.L10N.register(
     "Custom" : "Personalizats",
     "Remove" : "Suprimir",
     "Untitled event" : "Eveniment sens títol",
+    "Train" : "Tren",
     "Reset" : "Reïnicializar",
     "General" : "Generals",
     "User" : "User",
