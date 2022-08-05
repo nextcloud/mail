@@ -38,6 +38,7 @@ describe('Vuex store getters', () => {
 			messages: {},
 			tagList: [],
 			tags: {},
+			calendars: [],
 		}
 		bindGetters = () => mapObjIndexed(bindGetterToState(getters, state), getters)
 	})

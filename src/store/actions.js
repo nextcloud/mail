@@ -106,6 +106,11 @@ import {
 	buildReplySubject,
 } from '../ReplyBuilder'
 import DOMPurify from 'dompurify'
+import {
+	getCurrentUserPrincipal,
+	initializeClientForUserView,
+	findAll,
+} from '../service/caldavService'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -1059,6 +1064,31 @@ export default {
 			commit('addEnvelope', envelope)
 			console.error('could not move thread', e)
 			throw e
+		}
+	},
+
+	/**
+	 * Retrieve and commit the principal of the current user.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 */
+	async fetchCurrentUserPrincipal({ commit }) {
+		await initializeClientForUserView()
+		commit('setCurrentUserPrincipal', { currentUserPrincipal: getCurrentUserPrincipal() })
+	},
+
+	/**
+	 * Retrieve and commit calendars.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 * @return {Promise<void>}
+	 */
+	async loadCollections({ commit }) {
+		const { calendars } = await findAll()
+		for (const calendar of calendars) {
+			commit('addCalendar', { calendar })
 		}
 	},
 }

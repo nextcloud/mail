@@ -2,6 +2,7 @@
  - @copyright Copyright (c) 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  -
  - @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ - @author Richard Steinmetz <richard@steinmetz.cloud>
  -
  - @license AGPL-3.0-or-later
  -
@@ -31,8 +32,10 @@ import MailboxLockedError from './errors/MailboxLockedError'
 
 export default {
 	name: 'App',
-	mounted() {
+	async mounted() {
 		this.sync()
+		await this.$store.dispatch('fetchCurrentUserPrincipal')
+		await this.$store.dispatch('loadCollections')
 	},
 	methods: {
 		sync() {
