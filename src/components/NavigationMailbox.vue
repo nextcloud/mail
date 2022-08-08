@@ -174,7 +174,10 @@
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
 		</template>
-		<AppNavigationCounter v-if="showUnreadCounter && mailbox.specialRole !== 'trash'" slot="counter">
+		<AppNavigationCounter v-if="showUnreadCounter && subCounter" slot="counter">
+			{{ mailbox.unread }}&nbsp;({{ subCounter }})
+		</AppNavigationCounter>
+		<AppNavigationCounter v-else-if="showUnreadCounter" slot="counter">
 			{{ mailbox.unread }}
 		</AppNavigationCounter>
 		<template slot="extra">
@@ -377,7 +380,13 @@ export default {
 			return this.mailbox.specialUse.includes('inbox') && this.$store.getters.accounts.length > 2
 		},
 		showUnreadCounter() {
-			return this.mailbox.unread > 0 && this.filter !== 'starred'
+			if (this.filter === 'starred' || this.mailbox.specialRole === 'trash') {
+				return false
+			}
+			return this.mailbox.unread > 0 || this.subCounter > 0
+		},
+		subCounter() {
+			return this.subMailboxes.reduce((carry, mb) => carry + mb.unread, 0)
 		},
 	},
 	mounted() {
@@ -614,5 +623,8 @@ export default {
 	&:hover {
 	opacity: 1;
 	}
+}
+.app-navigation-entry__counter {
+	max-width: initial;
 }
 </style>
