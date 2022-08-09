@@ -516,6 +516,13 @@ class MessageMapper extends QBMapper {
 		return $messages;
 	}
 
+	public function resetPreviewDataFlag(): void {
+		$qb = $this->db->getQueryBuilder();
+		$update = $qb->update($this->getTableName())
+			->set('structure_analyzed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL));
+		$update->executeStatement();
+	}
+
 	public function deleteAll(Mailbox $mailbox): void {
 		$messageIdQuery = $this->db->getQueryBuilder();
 		$messageIdQuery->select('id')
