@@ -7,7 +7,7 @@
 			draggableLabel,
 			selectedEnvelopes,
 		}"
-		class="list-item-style"
+		class="list-item-style envelope"
 		:class="{seen: data.flags.seen, draft, selected: selected}"
 		:to="link"
 		:data-envelope-id="data.databaseId"
@@ -53,7 +53,7 @@
 			</div>
 		</template>
 		<template #subtitle>
-			<div class="subtitle">
+			<div class="envelope__subtitle">
 				<Reply v-if="data.flags.answered"
 					class="seen-icon-style"
 					:size="18" />
@@ -63,7 +63,13 @@
 				<span v-else-if="draft" class="draft">
 					<em>{{ t('mail', 'Draft: ') }}</em>
 				</span>
-				{{ subjectForSubtitle }}
+				<span class="envelope__subtitle__subject">
+					{{ subjectForSubtitle }}
+				</span>
+			</div>
+			<div v-if="data.previewText"
+				class="envelope__preview-text">
+				{{ data.previewText }}
 			</div>
 		</template>
 		<template #actions>
@@ -445,7 +451,7 @@ export default {
 		/**
 		 * Subject of envelope or "No Subject".
 		 *
-		 * @returns {string}
+		 * @return {string}
 		 */
 		subjectForSubtitle() {
 			// We have to use || here (instead of ??) because the subject might be '', null
@@ -565,6 +571,29 @@ export default {
 	z-index: 1;
 }
 
+.envelope {
+	.app-content-list-item-icon {
+		height: 40px; // To prevent some unexpected spacing below the avatar
+	}
+
+	&__subtitle {
+		display: flex;
+		gap: 4px;
+
+		&__subject {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	&__preview-text {
+		color: var(--color-text-lighter);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-weight: initial;
+	}
+}
+
 .icon-important {
 	::v-deep path {
 	fill: #ffcc00;
@@ -610,7 +639,7 @@ export default {
 .junk-icon-style {
 	opacity: .2;
 	display: flex;
-	top: 6px;
+	top: 17px;
 	left: 34px;
 	background-size: 16px;
 	height: 20px;
@@ -710,7 +739,7 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 ::v-deep.icon-important.app-content-list-item-star {
 	position: absolute;
-	top: 7px;
+	top: 17px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {
@@ -727,10 +756,6 @@ list-item-style.draft .app-content-list-item-line-two {
 ::v-deep .svg svg{
 	height: 16px;
 	width: 16px;
-}
-.subtitle {
-	display: flex;
-	gap: 4px;
 }
 .seen-icon-style {
 	opacity: .6;

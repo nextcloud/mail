@@ -98,35 +98,35 @@ export default {
 	},
 	computed: {
 		/**
-		 * @returns {string}
+		 * @return {string}
 		 */
 		method() {
 			return this.scheduling.method
 		},
 
 		/**
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		isRequest() {
 			return this.method === REQUEST
 		},
 
 		/**
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		isReply() {
 			return this.method === REPLY
 		},
 
 		/**
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		isCancel() {
 			return this.method === CANCEL
 		},
 
 		/**
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		wasUpdated() {
 			// TODO: ask backend whether invitation is new or was updated
@@ -134,7 +134,7 @@ export default {
 		},
 
 		/**
-		 * @returns {EventComponent|undefined}
+		 * @return {EventComponent|undefined}
 		 */
 		parsedEvent() {
 			const parserManager = getParserManager()
@@ -151,7 +151,7 @@ export default {
 		},
 
 		/**
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		eventIsInFuture() {
 			return this.parsedEvent.startDate.jsDate.getTime() > new Date().getTime()
