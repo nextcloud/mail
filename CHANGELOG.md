@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.13.8 - 2022-08-05
+## 1.13.8 - 2022-08-09
 ### Fixed
 - Filter UID list for expunged messages
 
