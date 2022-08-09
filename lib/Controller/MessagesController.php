@@ -438,6 +438,39 @@ class MessagesController extends Controller {
 	}
 
 	/**
+	 * Export a whole message as an .eml file.
+	 *
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 * @return Response
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function export(int $id): Response {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$source = $this->mailManager->getSource(
+			$account,
+			$mailbox->getName(),
+			$message->getUid()
+		);
+		return new AttachmentDownloadResponse(
+			$source,
+			$message->getSubject() . '.eml',
+			'message/rfc822',
+		);
+	}
+
+	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 * @TrapError
