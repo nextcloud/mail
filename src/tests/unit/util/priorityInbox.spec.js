@@ -24,20 +24,17 @@ import {
 	getPrioritySearchQueries,
 	priorityImportantQuery,
 	priorityOtherQuery,
-	priorityStarredQuery,
 } from '../../../util/priorityInbox'
 
 describe('priorityInbox', () => {
 	it('has correct query constants', () => {
 		expect(priorityImportantQuery).toEqual('is:pi-important')
-		expect(priorityStarredQuery).toEqual('is:pi-starred')
 		expect(priorityOtherQuery).toEqual('is:pi-other')
 	})
 
 	it('returns all queries', () => {
 		expect(getPrioritySearchQueries()).toEqual([
 			'is:pi-important',
-			'is:pi-starred',
 			'is:pi-other',
 		])
 	})

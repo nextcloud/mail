@@ -54,7 +54,6 @@ class FilterStringParser {
 		$flagMap = [
 			'answered' => Flag::is(Flag::ANSWERED),
 			'read' => Flag::is(Flag::SEEN),
-			'starred' => Flag::is(Flag::FLAGGED),
 			'unread' => Flag::not(Flag::SEEN),
 			'important' => Flag::is(Flag::IMPORTANT),
 		];
@@ -74,25 +73,6 @@ class FilterStringParser {
 					$query->addFlagExpression(
 						FlagExpression::and(
 							Flag::is(Flag::IMPORTANT),
-							Flag::not(Flag::SEEN)
-						)
-					);
-
-					return true;
-				}
-				if ($param === 'pi-starred') {
-					// We assume this is about 'is' and not 'not'
-					// fav /\ (~imp \/ (imp /\ read))
-					$query->addFlagExpression(
-						FlagExpression::and(
-							Flag::is(Flag::FLAGGED),
-							FlagExpression::or(
-								Flag::not(Flag::IMPORTANT),
-								FlagExpression::and(
-									Flag::is(Flag::IMPORTANT),
-									Flag::is(Flag::SEEN)
-								)
-							)
 						)
 					);
 

@@ -1,6 +1,6 @@
 <template>
 	<div id="emptycontent">
-		<slot> {{ t('mail', 'No messages') }}</slot>
+		<slot> {{ t('mail', 'Messages marked as important will show up here') }} </slot>
 	</div>
 </template>
 
@@ -12,5 +12,9 @@ export default {
 <style scoped lang="scss">
 #emptycontent {
 	margin-top: 10px;
+	color: var(--color-border-darker);
+	font-size: inherit;
+	text-align: left;
+	padding-left: 16px;
 }
 </style>

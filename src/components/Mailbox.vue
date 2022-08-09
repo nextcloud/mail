@@ -125,7 +125,7 @@ export default {
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
-				return this.envelopes.slice(0, 5)
+				return this.envelopes.slice(0, 8)
 			}
 			return this.envelopes
 		},
@@ -488,8 +488,7 @@ export default {
 
 <style lang="scss" scoped>
 // Fix vertical space between sections in priority inbox
-.nameimportant,
-.namestarred {
+.nameimportant {
 	::v-deep #load-more-mail-messages {
 		margin-top: 0;
 		margin-bottom: 8px;

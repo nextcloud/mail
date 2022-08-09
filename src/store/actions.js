@@ -90,7 +90,6 @@ import {
 	getPrioritySearchQueries,
 	priorityImportantQuery,
 	priorityOtherQuery,
-	priorityStarredQuery,
 } from '../util/priorityInbox'
 import { html, plain, toPlain } from '../util/text'
 import Axios from '@nextcloud/axios'
@@ -732,7 +731,7 @@ export default {
 		try {
 			// Make sure the priority inbox is updated as well
 			logger.info('updating priority inbox')
-			for (const query of [priorityImportantQuery, priorityStarredQuery, priorityOtherQuery]) {
+			for (const query of [priorityImportantQuery, priorityOtherQuery]) {
 				logger.info("sync'ing priority inbox section", { query })
 				const mailbox = getters.getMailbox(UNIFIED_INBOX_ID)
 				const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]

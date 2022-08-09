@@ -22,7 +22,7 @@
 					:bus="bus" />
 				<template v-else>
 					<div class="app-content-list-item">
-						<SectionTitle class="important" :name="t('mail', 'Important and unread')" />
+						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
 							<Button slot="trigger" :aria-label="t('mail', 'Important info')" class="button">
 								<template #icon>
@@ -41,18 +41,8 @@
 						:search-query="appendToSearch(priorityImportantQuery)"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
-						:initial-page-size="5"
+						:initial-page-size="8"
 						:collapsible="true"
-						:bus="bus" />
-					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
-					<Mailbox
-						class="namestarred"
-						:account="unifiedAccount"
-						:mailbox="unifiedInbox"
-						:search-query="appendToSearch(priorityStarredQuery)"
-						:paginate="'manual'"
-						:is-priority-inbox="true"
-						:initial-page-size="5"
 						:bus="bus" />
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
 					<Mailbox
@@ -91,7 +81,6 @@ import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
-	priorityStarredQuery,
 } from '../util/priorityInbox'
 import { detect, html } from '../util/text'
 
@@ -138,7 +127,6 @@ export default {
 				unseen: ['u'],
 			},
 			priorityImportantQuery,
-			priorityStarredQuery,
 			priorityOtherQuery,
 		}
 	},
