@@ -490,5 +490,4 @@ export default {
 	.junk-favorite-position {
 		margin-bottom: 36px !important;
 	}
-
 </style>

@@ -1,6 +1,8 @@
 <template>
 	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
-		<template slot="list">
+		<div slot="list"
+			:class="{ header__button: !showThread || !isMobile }">
+			<NewMessageButtonHeader v-if="!showThread || !isMobile" />
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -63,7 +65,7 @@
 						:bus="bus" />
 				</template>
 			</AppContentList>
-		</template>
+		</div>
 		<Thread v-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
@@ -76,6 +78,7 @@ import Button from '@nextcloud/vue/dist/Components/Button'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
+import NewMessageButtonHeader from './NewMessageButtonHeader'
 import Vue from 'vue'
 
 import infiniteScroll from '../directives/infinite-scroll'
@@ -105,6 +108,7 @@ export default {
 		Mailbox,
 		NoMessageSelected,
 		Popover,
+		NewMessageButtonHeader,
 		SectionTitle,
 		Thread,
 	},
@@ -270,10 +274,15 @@ export default {
 	box-shadow: none;
 }
 .envelope-list {
-	max-height: calc(100vh - var(--header-height));
 	overflow-y: auto;
 }
 .information-icon {
 	opacity: .7;
+}
+.header__button {
+	display: flex;
+	flex: 1 0 0;
+	flex-direction: column;
+	height: calc(100vh - var(--header-height));
 }
 </style>

@@ -21,17 +21,6 @@
 
 <template>
 	<AppNavigation>
-		<AppNavigationNew
-			:text="t('mail', 'New message')"
-			:disabled="$store.getters.showMessageComposer"
-			button-id="mail_new_message"
-			button-class="icon-add"
-			role="complementary"
-			@click="onNewMessage" />
-		<button v-if="currentMailbox"
-			class="button icon-history"
-			:disabled="refreshing"
-			@click="refreshMailbox" />
 		<template #list>
 			<ul id="accounts-list">
 				<!-- Special mailboxes first -->
@@ -90,13 +79,11 @@
 
 <script>
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
 import AppNavigationSettings
 	from '@nextcloud/vue/dist/Components/AppNavigationSettings'
 import AppNavigationSpacer
 	from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
 
-import logger from '../logger'
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationMailbox from './NavigationMailbox'
@@ -109,7 +96,6 @@ export default {
 	name: 'Navigation',
 	components: {
 		AppNavigation,
-		AppNavigationNew,
 		AppNavigationSettings,
 		AppNavigationSpacer,
 		AppSettingsMenu,
@@ -143,12 +129,6 @@ export default {
 					}
 				})
 		},
-		currentMailbox() {
-			if (this.$route.name === 'message' || this.$route.name === 'mailbox') {
-				return this.$store.getters.getMailbox(this.$route.params.mailboxId)
-			}
-			return undefined
-		},
 		unifiedAccount() {
 			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
 		},
@@ -172,11 +152,6 @@ export default {
 
 			return true
 		},
-		onNewMessage() {
-			this.$store.dispatch('showMessageComposer', {
-
-			})
-		},
 		isFirst(account) {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[1]
@@ -184,21 +159,6 @@ export default {
 		isLast(account) {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[accounts.length - 1]
-		},
-		async refreshMailbox() {
-			if (this.refreshing === true) {
-				logger.debug('already sync\'ing mailbox.. aborting')
-				return
-			}
-			this.refreshing = true
-			try {
-				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.currentMailbox.databaseId })
-				logger.debug('Current mailbox is sync\'ing ')
-			} catch (error) {
-				logger.error('could not sync current mailbox', { error })
-			} finally {
-				this.refreshing = false
-			}
 		},
 	},
 }
