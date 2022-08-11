@@ -38,6 +38,7 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
+use Horde_Mime_Part;
 use Horde_Text_Filter;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
@@ -58,12 +59,14 @@ use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\InvalidDataUriException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -189,8 +192,50 @@ class MailTransmission implements IMailTransmission {
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 		if ($messageData->isHtml()) {
-			$mail->setHtmlBody($message->getContent(), null, false);
-			$mail->setBody(Horde_Text_Filter::filter($message->getContent(), 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]));
+			$doc = new \DOMDocument();
+			$doc->loadHTML($message->getContent(), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+
+			$uriParser = new DataUriParser();
+
+			$images = $doc->getElementsByTagName('img');
+			for ($i = 0; $i < $images->count(); $i++) {
+				$image = $images->item($i);
+				if ($image === null) {
+					continue;
+				}
+
+				$src = $image->getAttribute('src');
+				if ($src === '') {
+					continue;
+				}
+
+				try {
+					$dataUri = $uriParser->parse($src);
+				} catch (InvalidDataUriException $e) {
+					continue;
+				}
+
+				$part = new Horde_Mime_Part();
+				$part->setCharset($dataUri->getParameters()['charset']);
+				$part->setDisposition('inline');
+				$part->setName('embedded_image_' . $i);
+				$part->setContents($dataUri->getData());
+				$part->setType($dataUri->getMediaType());
+				if ($dataUri->isBase64()) {
+					$part->setTransferEncoding('base64');
+				}
+
+				$cid = $part->setContentId();
+				$mail->addMimePart($part);
+
+				$image->setAttribute('src', 'cid:' . $cid);
+			}
+
+			$htmlContent = $doc->saveHTML();
+
+			$mail->setHtmlBody($htmlContent, null, false);
+			$mail->setBody(Horde_Text_Filter::filter($htmlContent, 'Html2text',
+				['callback' => [$this, 'htmlToTextCallback']]));
 		} else {
 			$mail->setBody($message->getContent());
 		}
