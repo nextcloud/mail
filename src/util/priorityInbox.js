@@ -23,9 +23,6 @@
 /** Search query for important and unread messages inside priority inbox */
 export const priorityImportantQuery = 'is:pi-important'
 
-/** Search query for starred messages inside priority inbox */
-export const priorityStarredQuery = 'is:pi-starred'
-
 /** Search query for other messages inside priority inbox */
 export const priorityOtherQuery = 'is:pi-other'
 
@@ -37,7 +34,6 @@ export const priorityOtherQuery = 'is:pi-other'
 export function getPrioritySearchQueries() {
 	return [
 		priorityImportantQuery,
-		priorityStarredQuery,
 		priorityOtherQuery,
 	]
 }
