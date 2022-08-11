@@ -1,7 +1,8 @@
 <template>
 	<div class="header">
 		<Button
-			class="app-navigation-new"
+			type="primary"
+			class="new-message-button"
 			:disabled="$store.getters.showMessageComposer"
 			button-id="mail_new_message"
 			role="complementary"
@@ -86,5 +87,8 @@ export default {
 }
 .refresh__button {
 	background-color: transparent;
+}
+.new-message-button {
+	background-image: var(--gradient-primary-background);
 }
 </style>
