@@ -31,10 +31,10 @@
 		@update:menuOpen="onMenuToggle">
 		<template #icon>
 			<IconError v-if="account.error" :size="20" />
-		</template>
-		<!-- Color dot -->
-		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
 
+			<!-- Color dot -->
+			<IconBullet v-if="bulletColor" :size="16" :fill-color="bulletColor" />
+		</template>
 		<!-- Actions -->
 		<template #actions>
 			<ActionText v-if="!account.isUnified" :title="t('mail', 'Quota')">
@@ -106,7 +106,6 @@
 
 <script>
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
@@ -125,12 +124,12 @@ import MenuDown from 'vue-material-design-icons/ChevronDown'
 import MenuUp from 'vue-material-design-icons/ChevronUp'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconError from 'vue-material-design-icons/AlertCircle'
+import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle'
 
 export default {
 	name: 'NavigationAccount',
 	components: {
 		AppNavigationItem,
-		AppNavigationIconBullet,
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
@@ -143,6 +142,7 @@ export default {
 		MenuUp,
 		IconDelete,
 		IconError,
+		IconBullet,
 	},
 	props: {
 		account: {
