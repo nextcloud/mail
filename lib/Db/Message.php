@@ -316,6 +316,7 @@ class Message extends Entity implements JsonSerializable {
 			'inReplyTo' => $this->getInReplyTo(),
 			'references' => empty($this->getReferences()) ? null: json_decode($this->getReferences(), true),
 			'threadRootId' => $this->getThreadRootId(),
+			'previewText' => $this->getPreviewText(),
 		];
 	}
 }

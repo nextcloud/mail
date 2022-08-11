@@ -71,7 +71,7 @@ import { removeMailtoPrefix } from '../../util/eventAttendee'
  *
  * @param {Date} a Date a
  * @param {Date} b Date b
- * @returns {boolean} True if both dates a and b are on the same day, month and year.
+ * @return {boolean} True if both dates a and b are on the same day, month and year.
  */
 function isSameDay(a, b) {
 	return a.getFullYear() === b.getFullYear()
@@ -84,7 +84,7 @@ function isSameDay(a, b) {
  * If timezone is floating, undefined will be returned.
  *
  * @param {DateTimeValue} date Date
- * @returns {string|undefined} Human readable timezone name or undefined
+ * @return {string|undefined} Human readable timezone name or undefined
  */
 function getTimezoneFromDate(date) {
 	const timezoneId = date.timezoneId
@@ -110,7 +110,7 @@ export default {
 	},
 	computed: {
 		/**
-		 * @returns {string}
+		 * @return {string}
 		 */
 		title() {
 			// Use || here to handle empty strings as well
@@ -118,7 +118,7 @@ export default {
 		},
 
 		/**
-		 * @returns {string}
+		 * @return {string}
 		 */
 		startDate() {
 			if (this.event.isAllDay()) {
@@ -129,7 +129,7 @@ export default {
 		},
 
 		/**
-		 * @returns {string|undefined}
+		 * @return {string|undefined}
 		 */
 		endDate() {
 			const start = this.event.startDate.jsDate
@@ -155,28 +155,28 @@ export default {
 		},
 
 		/**
-		 * @returns {string|undefined}
+		 * @return {string|undefined}
 		 */
 		startTimezone() {
 			return getTimezoneFromDate(this.event.startDate)
 		},
 
 		/**
-		 * @returns {string|undefined}
+		 * @return {string|undefined}
 		 */
 		endTimezone() {
 			return getTimezoneFromDate(this.event.endDate)
 		},
 
 		/**
-		 * @returns {string|undefined|null}
+		 * @return {string|undefined|null}
 		 */
 		location() {
 			return this.event.location
 		},
 
 		/**
-		 * @returns {{name: string, isOrganizer: boolean}[]}
+		 * @return {{name: string, isOrganizer: boolean}[]}
 		 */
 		attendees() {
 			const attendees = []

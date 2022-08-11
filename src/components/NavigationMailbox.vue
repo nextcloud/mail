@@ -395,7 +395,7 @@ export default {
 		 * Generate unique key id for a specific mailbox
 		 *
 		 * @param {object} mailbox the mailbox to gen id for
-		 * @returns {string}
+		 * @return {string}
 		 */
 		genId(mailbox) {
 			return 'mailbox-' + mailbox.databaseId
