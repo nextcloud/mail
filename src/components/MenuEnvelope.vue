@@ -6,48 +6,18 @@
 			event=""
 			@click.native.prevent>
 			<template v-if="!moreActionsOpen">
-				<EnvelopePrimaryActions>
-					<ActionButton
-						class="action--primary"
-						:close-after-click="true"
-						@click.prevent="onToggleFlagged">
-						<template #icon>
-							<StarOutline v-if="showFavoriteIconVariant"
-								:size="20" />
-							<Star v-else
-								:size="20" />
-						</template>
-						{{
-							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
-						}}
-					</ActionButton>
-					<ActionButton
-						class="action--primary"
-						:close-after-click="true"
-						@click.prevent="onToggleSeen">
-						<template #icon>
-							<Email v-if="showImportantIconVariant"
-								:size="20" />
-							<EmailOutline v-else
-								:size="20" />
-						</template>
-						{{
-							envelope.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
-						}}
-					</ActionButton>
-					<ActionButton
-						class="action--primary"
-						:close-after-click="true"
-						@click.prevent="onToggleImportant">
-						<template #icon>
-							<ImportantIcon
-								:size="20" />
-						</template>
-						{{
-							isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
-						}}
-					</ActionButton>
-				</EnvelopePrimaryActions>
+				<ActionButton
+					class="action--primary"
+					:close-after-click="true"
+					@click.prevent="onToggleImportant">
+					<template #icon>
+						<ImportantIcon
+							:size="20" />
+					</template>
+					{{
+						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
+					}}
+				</ActionButton>
 				<ActionButton v-if="withReply"
 					:close-after-click="true"
 					@click="onReply">
@@ -129,15 +99,6 @@
 							:size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
-				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click.prevent="onDelete">
-					<template #icon>
-						<DeleteIcon
-							:title="t('mail', 'Delete message')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Delete message') }}
 				</ActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
@@ -243,18 +204,12 @@ import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlank'
 import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
-import DeleteIcon from 'vue-material-design-icons/Delete'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import DownloadIcon from 'vue-material-design-icons/Download'
-import EmailOutline from 'vue-material-design-icons/EmailOutline'
-import Email from 'vue-material-design-icons/Email'
 import EventModal from './EventModal'
-import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information'
 import ImportantIcon from './icons/ImportantIcon'
-import logger from '../logger'
-import { matchError } from '../errors/match'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import MoveModal from './MoveModal'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
@@ -262,13 +217,9 @@ import PlusIcon from 'vue-material-design-icons/Plus'
 import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import ShareIcon from 'vue-material-design-icons/Share'
-import Star from 'vue-material-design-icons/Star'
-import StarOutline from 'vue-material-design-icons/StarOutline'
 
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
-import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
-import { showError } from '@nextcloud/dialogs'
 
 export default {
 	name: 'MenuEnvelope',
@@ -280,10 +231,8 @@ export default {
 		CalendarBlankIcon,
 		ChevronLeft,
 		CheckIcon,
-		DeleteIcon,
 		DotsHorizontalIcon,
 		DownloadIcon,
-		EnvelopePrimaryActions,
 		EventModal,
 		InformationIcon,
 		Modal,
@@ -295,10 +244,6 @@ export default {
 		ShareIcon,
 		TagIcon,
 		TagModal,
-		Star,
-		StarOutline,
-		Email,
-		EmailOutline,
 		ImportantIcon,
 	},
 	props: {
@@ -421,33 +366,6 @@ export default {
 		},
 		toggleSelected() {
 			this.$emit('update:selected')
-		},
-		async onDelete() {
-			// Remove from selection first
-			if (this.withSelect) {
-				this.$emit('unselect')
-			}
-
-			// Delete
-			this.$emit('delete', this.envelope.databaseId)
-
-			logger.info(`deleting message ${this.envelope.databaseId}`)
-
-			try {
-				await this.$store.dispatch('deleteMessage', {
-					id: this.envelope.databaseId,
-				})
-			} catch (error) {
-				showError(await matchError(error, {
-					[NoTrashMailboxConfiguredError.getName()]() {
-						return t('mail', 'No trash mailbox configured')
-					},
-					default(error) {
-						logger.error('could not delete message', error)
-						return t('mail', 'Could not delete message')
-					},
-				}))
-			}
 		},
 		async forwardSelectedAsAttachment() {
 			this.forwardedMessages = [this.envelope.databaseId]
