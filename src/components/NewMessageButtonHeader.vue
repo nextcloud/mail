@@ -13,6 +13,7 @@
 			{{ t('mail', 'New message') }}
 		</Button>
 		<Button v-if="currentMailbox"
+			class="refresh__button"
 			:disabled="refreshing"
 			@click="refreshMailbox">
 			<template #icon>
@@ -75,16 +76,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-navigation-new {
-	flex-grow: 1;
-}
 .header {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
 	padding: 8px 8px 8px 48px;
 	gap: 4px;
 	height: 61px;
 	border-right: 1px solid var(--color-border)
+}
+.refresh__button {
+	background-color: transparent;
 }
 </style>
