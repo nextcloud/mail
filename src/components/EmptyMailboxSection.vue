@@ -12,7 +12,7 @@ export default {
 <style scoped lang="scss">
 #emptycontent {
 	margin-top: 10px;
-	color: var(--color-border-darker);
+	color: var(--color-text-maxcontrast);
 	font-size: inherit;
 	text-align: left;
 	padding-left: 16px;
