@@ -80,7 +80,8 @@
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<Button
 					:class="{ primary: expanded}"
-					type="primary"
+					:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
+					type="tertiary-no-background"
 					@click="onReply">
 					<template #icon>
 						<ReplyAllIcon v-if="hasMultipleRecipients"
@@ -88,7 +89,41 @@
 						<ReplyIcon v-else
 							:size="20" />
 					</template>
-					<span class="action-label"> {{ hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply') }}</span>
+				</Button>
+				<Button
+					type="tertiary-no-background"
+					class="action--primary"
+					:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
+					:close-after-click="true"
+					@click.prevent="onToggleFlagged">
+					<template #icon>
+						<StarOutline v-if="showFavoriteIconVariant"
+							:size="20" />
+						<IconFavorite v-else
+							:size="20" />
+					</template>
+				</Button>
+				<Button
+					type="tertiary-no-background"
+					class="action--primary"
+					:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
+					:close-after-click="true"
+					@click.prevent="onToggleSeen">
+					<template #icon>
+						<EmailRead v-if="showImportantIconVariant"
+							:size="20" />
+						<EmailUnread v-else
+							:size="20" />
+					</template>
+				</Button>
+				<Button :close-after-click="true"
+					type="tertiary-no-background"
+					@click.prevent="onDelete">
+					<template #icon>
+						<DeleteIcon
+							:title="t('mail', 'Delete message')"
+							:size="20" />
+					</template>
 				</Button>
 				<MenuEnvelope class="app-content-list-item-menu"
 					:envelope="envelope"
@@ -124,8 +159,15 @@ import MenuEnvelope from './MenuEnvelope'
 import Moment from './Moment'
 import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
+import StarOutline from 'vue-material-design-icons/StarOutline'
+import DeleteIcon from 'vue-material-design-icons/Delete'
+import EmailUnread from 'vue-material-design-icons/Email'
+import EmailRead from 'vue-material-design-icons/EmailOpen'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { hiddenTags } from './tags.js'
+import { showError } from '@nextcloud/dialogs'
+import { matchError } from '../errors/match'
+import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 
 export default {
 	name: 'ThreadEnvelope',
@@ -141,6 +183,10 @@ export default {
 		Message,
 		ReplyIcon,
 		ReplyAllIcon,
+		StarOutline,
+		EmailRead,
+		EmailUnread,
+		DeleteIcon,
 
 	},
 	props: {
@@ -169,6 +215,11 @@ export default {
 			required: false,
 			type: Boolean,
 			default: false,
+		},
+		withSelect: {
+			// "Select" action should only appear in envelopes from the envelope list
+			type: Boolean,
+			default: true,
 		},
 	},
 	data() {
@@ -229,6 +280,12 @@ export default {
 		},
 		junkFavoritePositionWithTagSubject() {
 			return (!this.hasChangedSubject || this.cleanSubject.length === 0) && this.tags.length > 0
+		},
+		showFavoriteIconVariant() {
+			return this.envelope.flags.flagged
+		},
+		showImportantIconVariant() {
+			return this.envelope.flags.seen
 		},
 	},
 	watch: {
@@ -322,6 +379,36 @@ export default {
 		onToggleJunk() {
 			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
 		},
+		onToggleSeen() {
+			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+		},
+		async onDelete() {
+			// Remove from selection first
+			if (this.withSelect) {
+				this.$emit('unselect')
+			}
+
+			// Delete
+			this.$emit('delete', this.envelope.databaseId)
+
+			logger.info(`deleting message ${this.envelope.databaseId}`)
+
+			try {
+				await this.$store.dispatch('deleteMessage', {
+					id: this.envelope.databaseId,
+				})
+			} catch (error) {
+				showError(await matchError(error, {
+					[NoTrashMailboxConfiguredError.getName()]() {
+						return t('mail', 'No trash mailbox configured')
+					},
+					default(error) {
+						logger.error('could not delete message', error)
+						return t('mail', 'Could not delete message')
+					},
+				}))
+			}
+		},
 	},
 }
 </script>
@@ -401,11 +488,6 @@ export default {
 		display: flex;
 		padding: 10px;
 		border-radius: var(--border-radius);
-
-		&:hover {
-			background-color: var(--color-background-hover);
-			border-radius: 16px;
-		}
 	}
 	.left {
 		flex-grow: 1;
