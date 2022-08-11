@@ -246,7 +246,7 @@ export default {
 
 .button {
 	background-color: var(--color-main-background);
-	margin-bottom: 12px;
+	margin-bottom: 3px;
 	right: 2px;
 
 	&:hover,
