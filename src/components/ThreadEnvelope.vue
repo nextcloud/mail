@@ -78,7 +78,7 @@
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<template v-if="expanded">
-					<Button
+					<ButtonVue
 						:class="{ primary: expanded}"
 						:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
 						type="tertiary-no-background"
@@ -89,8 +89,8 @@
 							<ReplyIcon v-else
 								:size="20" />
 						</template>
-					</Button>
-					<Button
+					</ButtonVue>
+					<ButtonVue
 						type="tertiary-no-background"
 						class="action--primary"
 						:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
@@ -102,8 +102,8 @@
 							<IconFavorite v-else
 								:size="20" />
 						</template>
-					</Button>
-					<Button
+					</ButtonVue>
+					<ButtonVue
 						type="tertiary-no-background"
 						class="action--primary"
 						:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
@@ -115,8 +115,8 @@
 							<EmailUnread v-else
 								:size="20" />
 						</template>
-					</Button>
-					<Button :close-after-click="true"
+					</ButtonVue>
+					<ButtonVue :close-after-click="true"
 						type="tertiary-no-background"
 						@click.prevent="onDelete">
 						<template #icon>
@@ -124,7 +124,7 @@
 								:title="t('mail', 'Delete message')"
 								:size="20" />
 						</template>
-					</Button>
+					</ButtonVue>
 					<MenuEnvelope class="app-content-list-item-menu"
 						:envelope="envelope"
 						:with-reply="false"
@@ -148,7 +148,7 @@
 </template>
 <script>
 import Avatar from './Avatar'
-import Button from '@nextcloud/vue/dist/Components/NcButton'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
 import IconFavorite from 'vue-material-design-icons/Star'
@@ -174,7 +174,7 @@ export default {
 	name: 'ThreadEnvelope',
 	components: {
 		Avatar,
-		Button,
+		ButtonVue,
 		Error,
 		IconFavorite,
 		JunkIcon,

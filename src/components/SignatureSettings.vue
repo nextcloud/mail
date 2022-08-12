@@ -45,16 +45,22 @@
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus" />
-		<button
-			class="primary"
-			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
+		<ButtonVue
+			type="primary"
 			:disabled="loading"
 			@click="saveSignature">
-			{{ t("mail", "Save signature") }}
-		</button>
-		<button v-if="signature" class="button-text" @click="deleteSignature">
-			{{ t("mail", "Delete") }}
-		</button>
+			<template #icon>
+				<IconLoading v-if="loading" :size="20" fill-color="white" />
+				<IconCheck v-else :size="20" />
+			</template>
+			{{ t('mail', 'Save signature') }}
+		</ButtonVue>
+		<ButtonVue v-if="signature"
+			type="tertiary-no-background"
+			class="button-text"
+			@click="deleteSignature">
+			{{ t('mail', 'Delete') }}
+		</ButtonVue>
 	</div>
 </template>
 
@@ -63,13 +69,20 @@ import logger from '../logger'
 import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
+
 import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import IconCheck from 'vue-material-design-icons/Check'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
 		Multiselect,
+		ButtonVue,
+		IconLoading,
+		IconCheck,
 	},
 	props: {
 		account: {
@@ -204,9 +217,11 @@ export default {
 .multiselect--single {
   width: 100%;
 }
-</style>
-<style>
 .ck-balloon-panel {
-  z-index: 10000 !important;
+	 z-index: 10000 !important;
+ }
+::v-deep.button-vue {
+	display: inline-block !important;
+	margin-top: 4px !important;
 }
 </style>

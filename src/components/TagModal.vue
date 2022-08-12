@@ -50,8 +50,10 @@
 						</template>
 					</ActionInput>
 					<ActionText
-						v-if="showSaving"
-						icon="icon-loading-small">
+						v-if="showSaving">
+						<template #icon>
+							<IconLoading :size="20" />
+						</template>
 						{{ t('mail', 'Saving new tag name …') }}
 					</ActionText>
 				</Actions>
@@ -79,8 +81,10 @@
 					<IconTag :size="20" />
 				</ActionInput>
 				<ActionText
-					v-if="showSaving"
-					icon="icon-loading-small">
+					v-if="showSaving">
+					<template #icon>
+						<IconLoading :size="20" />
+					</template>
 					{{ t('mail', 'Saving tag …') }}
 				</ActionText>
 			</div>
@@ -96,6 +100,7 @@ import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
 import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconTag from 'vue-material-design-icons/Tag'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
 
@@ -116,6 +121,7 @@ export default {
 		ActionButton,
 		IconRename,
 		IconTag,
+		IconLoading,
 	},
 	props: {
 		envelope: {

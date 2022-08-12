@@ -111,6 +111,7 @@ import TrustedSenders from './TrustedSenders'
 import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
 import Logger from '../logger'
+
 export default {
 	name: 'AccountSettings',
 	components: {

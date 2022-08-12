@@ -73,7 +73,10 @@
 						:size="20" />
 				</template>
 			</ActionInput>
-			<ActionText v-if="showSaving" icon="icon-loading-small">
+			<ActionText v-if="showSaving">
+				<template #icon>
+					<IconLoading :size="20" />
+				</template>
 				{{ t('mail', 'Saving') }}
 			</ActionText>
 			<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
@@ -105,11 +108,13 @@
 </template>
 
 <script>
+
 import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
 import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 
@@ -143,6 +148,7 @@ export default {
 		IconDelete,
 		IconError,
 		IconBullet,
+		IconLoading,
 	},
 	props: {
 		account: {

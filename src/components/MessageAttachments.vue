@@ -39,23 +39,34 @@
 				@close="showPreview = false" />
 		</div>
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
-			<button
+			<ButtonVue
+				type="secondary"
 				class="attachments-save-to-cloud"
-				:class="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
 				:disabled="savingToCloud"
 				@click="saveAll">
+				<template #icon>
+					<IconLoading v-if="savingToCloud" :size="20" />
+					<IconFolder v-else-if="!savingToCloud" :size="20" />
+				</template>
 				{{ t('mail', 'Save all to Files') }}
-			</button>
-			<button
-				class="attachments-save-to-cloud icon-folder"
+			</ButtonVue>
+			<ButtonVue
+				type="secondary"
+				class="attachments-save-to-cloud"
 				@click="downloadZip">
+				<template #icon>
+					<IconFolder :size="20" />
+				</template>
 				{{ t('mail', 'Download Zip') }}
-			</button>
+			</ButtonVue>
 		</p>
 	</div>
 </template>
 
 <script>
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import IconFolder from 'vue-material-design-icons/Folder'
 import { generateUrl } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { saveAttachmentsToFiles } from '../service/AttachmentService'
@@ -69,6 +80,9 @@ export default {
 	components: {
 		AttachmentImageViewer,
 		MessageAttachment,
+		ButtonVue,
+		IconLoading,
+		IconFolder,
 	},
 	props: {
 		envelope: {
@@ -139,20 +153,16 @@ export default {
 <style lang="scss">
 .attachments {
 	width: 230px;
-  position: relative;
-  display: flex;
+	position: relative;
+	display: flex;
 }
 
 /* show icon + text for Download all button
 		as well as when there is only one attachment */
 .attachments-button-wrapper {
-	text-align: center;
-}
-.attachments-save-to-cloud {
-	display: inline-block;
-	margin: 16px;
-	background-position: 16px center;
-  padding: 12px 12px 12px 37px !important;
+	gap: 4px;
+	display: flex;
+	justify-content: center;
 }
 .oc-dialog {
 	z-index: 10000000;
