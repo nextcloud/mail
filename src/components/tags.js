@@ -23,6 +23,7 @@
 export const hiddenTags = {
 	forwarded: '',
 	hasattachment: '',
+	has_cal: '',
 	hasnoattachment: '',
 	loadremoteimages: '',
 	'unsubscribe newsletter': '',
