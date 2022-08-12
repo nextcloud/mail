@@ -763,4 +763,10 @@ list-item-style.draft .app-content-list-item-line-two {
 .attachment-icon-style {
 	opacity: .6;
 }
+::v-deep .list-item-content__wrapper {
+	margin-top: 6px;
+}
+::v-deep .list-item__extra {
+	margin-top: 9px;
+}
 </style>
