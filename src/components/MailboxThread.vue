@@ -24,7 +24,10 @@
 					<div class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
-							<Button slot="trigger" :aria-label="t('mail', 'Important info')" class="button">
+							<Button slot="trigger"
+								type="tertiary-no-background"
+								:aria-label="t('mail', 'Important info')"
+								class="button">
 								<template #icon>
 									<IconInfo :size="20" />
 								</template>

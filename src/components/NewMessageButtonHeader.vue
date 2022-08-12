@@ -14,6 +14,7 @@
 			{{ t('mail', 'New message') }}
 		</Button>
 		<Button v-if="currentMailbox"
+			type="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"
 			@click="refreshMailbox">
