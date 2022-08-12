@@ -17,7 +17,6 @@
     "Move" : "Move",
     "Create" : "Lag",
     "Choose" : "Vel",
-    "Favorites" : "Favorit",
     "Other" : "Anna",
     "Reply" : "Svare",
     "Quota" : "Kvote",
@@ -35,6 +34,7 @@
     "Search" : "Search",
     "Refresh" : "Last inn på nytt",
     "All" : "Alle",
+    "Favorites" : "Favorit",
     "Sent" : "Sendt",
     "Message sent" : "Melding sendt"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

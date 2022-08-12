@@ -15,7 +15,6 @@ OC.L10N.register(
     "Select" : "Select",
     "Move" : "Move",
     "Create" : "قۇر",
-    "Favorites" : "يىغقۇچ",
     "Other" : "باشقا",
     "Reply" : "جاۋاب قايتۇر",
     "Delete" : "ئۆچۈر",
@@ -27,6 +26,7 @@ OC.L10N.register(
     "Port" : "ئېغىز",
     "Search" : "Search",
     "Refresh" : "يېڭىلا",
-    "All" : "ھەممىسى"
+    "All" : "ھەممىسى",
+    "Favorites" : "يىغقۇچ"
 },
 "nplurals=2; plural=(n != 1);");

@@ -27,7 +27,6 @@ OC.L10N.register(
     "Create" : "Crear",
     "Accept" : "Acceptar",
     "Decline" : "Refusar",
-    "Favorites" : "Favoritos",
     "Other" : "Altere",
     "Reply" : "Responder",
     "Unnamed" : "Non nominate",
@@ -49,6 +48,7 @@ OC.L10N.register(
     "Search" : "Cercar",
     "Refresh" : "Refrescar",
     "All" : "Tote",
+    "Favorites" : "Favoritos",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"

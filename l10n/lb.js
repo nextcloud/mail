@@ -20,7 +20,6 @@ OC.L10N.register(
     "Move" : "Verschieben",
     "Create" : "Erstellen",
     "Choose" : "Auswielen",
-    "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
@@ -40,6 +39,7 @@ OC.L10N.register(
     "Port" : "Port",
     "Search" : "Search",
     "Refresh" : "Opfrëschen",
-    "All" : "All"
+    "All" : "All",
+    "Favorites" : "Favoriten"
 },
 "nplurals=2; plural=(n != 1);");

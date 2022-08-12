@@ -22,7 +22,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Create" : "তৈরী কর",
     "Choose" : "বেছে নিন",
-    "Favorites" : "প্রিয়জন",
     "Other" : "অন্যান্য",
     "Reply" : "জবাব",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",
@@ -42,6 +41,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Search" : "Search",
     "Refresh" : "নবোদ্যম",
-    "All" : "সবাই"
+    "All" : "সবাই",
+    "Favorites" : "প্রিয়জন"
 },
 "nplurals=2; plural=(n != 1);");

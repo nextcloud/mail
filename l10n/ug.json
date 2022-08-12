@@ -13,7 +13,6 @@
     "Select" : "Select",
     "Move" : "Move",
     "Create" : "قۇر",
-    "Favorites" : "يىغقۇچ",
     "Other" : "باشقا",
     "Reply" : "جاۋاب قايتۇر",
     "Delete" : "ئۆچۈر",
@@ -25,6 +24,7 @@
     "Port" : "ئېغىز",
     "Search" : "Search",
     "Refresh" : "يېڭىلا",
-    "All" : "ھەممىسى"
+    "All" : "ھەممىسى",
+    "Favorites" : "يىغقۇچ"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

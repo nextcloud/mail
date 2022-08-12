@@ -19,7 +19,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Create" : "Lag",
     "Choose" : "Vel",
-    "Favorites" : "Favorit",
     "Other" : "Anna",
     "Reply" : "Svare",
     "Quota" : "Kvote",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "Search" : "Search",
     "Refresh" : "Last inn på nytt",
     "All" : "Alle",
+    "Favorites" : "Favorit",
     "Sent" : "Sendt",
     "Message sent" : "Melding sendt"
 },

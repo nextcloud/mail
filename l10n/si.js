@@ -21,7 +21,6 @@ OC.L10N.register(
     "Accept" : "පිළිගන්න",
     "Decline" : "ප්‍රතික්ෂේප",
     "Choose" : "තෝරන්න",
-    "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Reply" : "පිළිතුර",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "Host" : " ධාරකය",
     "Search" : "සොයන්න",
     "All" : "සියල්ල",
-    "Archive" : "සංරක්ෂණය"
+    "Archive" : "සංරක්ෂණය",
+    "Favorites" : "ප්‍රියතම"
 },
 "nplurals=2; plural=(n != 1);");

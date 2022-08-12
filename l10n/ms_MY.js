@@ -13,7 +13,6 @@ OC.L10N.register(
     "Select" : "Select",
     "Move" : "Move",
     "Create" : "Buat",
-    "Favorites" : "Favorites",
     "Other" : "Lain",
     "Quota" : "Kuota",
     "Delete" : "Padam",
@@ -22,6 +21,7 @@ OC.L10N.register(
     "General" : "Umum",
     "User" : "User",
     "Search" : "Search",
-    "Refresh" : "Refresh"
+    "Refresh" : "Refresh",
+    "Favorites" : "Favorites"
 },
 "nplurals=1; plural=0;");

@@ -18,7 +18,6 @@ OC.L10N.register(
     "Forward" : "Prosledi",
     "Create" : "Napravi",
     "Choose" : "Odaberi",
-    "Favorites" : "Omiljene",
     "Other" : "Ostali",
     "Reply" : "Odgovori",
     "Remove account" : "Ukloni nalog",
@@ -31,6 +30,7 @@ OC.L10N.register(
     "General" : "Opšte",
     "User" : "User",
     "Search" : "Search",
-    "Refresh" : "Osveži"
+    "Refresh" : "Osveži",
+    "Favorites" : "Omiljene"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

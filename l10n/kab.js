@@ -13,7 +13,6 @@ OC.L10N.register(
     "Forward" : "Avancer",
     "Create" : "Snulfu-d",
     "Choose" : "Fren",
-    "Favorites" : "Imenyafen",
     "Delete" : "Kkes",
     "Add" : "Rnu",
     "Unset" : "Non défini",
@@ -22,6 +21,7 @@ OC.L10N.register(
     "User" : "Aseqdac",
     "Search" : "Nadi",
     "Refresh" : "Sismeḍ",
+    "Favorites" : "Imenyafen",
     "Inbox" : "Tanaka"
 },
 "nplurals=2; plural=(n != 1);");

@@ -18,7 +18,6 @@
     "Move" : "Verschieben",
     "Create" : "Erstellen",
     "Choose" : "Auswielen",
-    "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
@@ -38,6 +37,7 @@
     "Port" : "Port",
     "Search" : "Search",
     "Refresh" : "Opfrëschen",
-    "All" : "All"
+    "All" : "All",
+    "Favorites" : "Favoriten"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
