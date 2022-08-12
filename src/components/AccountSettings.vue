@@ -24,9 +24,11 @@
 
 <template>
 	<AppSettingsDialog
+		id="app-settings-dialong"
 		:open.sync="showSettings"
 		:show-navigation="true">
 		<AppSettingsSection
+			id="account-settings"
 			:title="t('mail', 'Account settings')">
 			<div class="alias-item">
 				<p><strong>{{ displayName }}</strong> &lt;{{ email }}&gt;</p>
@@ -38,19 +40,19 @@
 			</div>
 			<AliasSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Signature')">
+		<AppSettingsSection id="signature" :title="t('mail', 'Signature')">
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 			</p>
 			<SignatureSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Writing mode')">
+		<AppSettingsSection id="writing-mode" :title="t('mail', 'Writing mode')">
 			<p class="settings-hint">
 				{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
 			</p>
 			<EditorSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title=" t('mail', 'Default folders')">
+		<AppSettingsSection id="default-folders" :title=" t('mail', 'Default folders')">
 			<p class="settings-hint">
 				{{
 					t('mail', 'The folders to use for drafts, sent messages and deleted messages.')
@@ -58,7 +60,9 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioningId" :title="t('mail', 'Mail server')">
+		<AppSettingsSection v-if="account && !account.provisioningId"
+			id="mail-server"
+			:title="t('mail', 'Mail server')">
 			<div id="mail-settings">
 				<AccountForm
 					:key="account.accountId"
@@ -69,7 +73,9 @@
 					@account-updated="onAccountUpdated" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioningId" :title="t('mail', 'Sieve filter server')">
+		<AppSettingsSection v-if="account && !account.provisioningId"
+			id="sieve-settings"
+			:title="t('mail', 'Sieve filter server')">
 			<div id="sieve-settings">
 				<SieveAccountForm
 					:key="account.accountId"
@@ -77,7 +83,9 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && account.sieveEnabled" :title="t('mail', 'Sieve filter rules')">
+		<AppSettingsSection v-if="account && account.sieveEnabled"
+			id="sieve-filter"
+			:title="t('mail', 'Sieve filter rules')">
 			<div id="sieve-filter">
 				<SieveFilterForm
 					:key="account.accountId"
@@ -85,7 +93,7 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Trusted senders')">
+		<AppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
 			<TrustedSenders />
 		</AppSettingsSection>
 	</AppSettingsDialog>
