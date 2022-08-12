@@ -45,7 +45,7 @@
     "@nextcloud/vue": "^5.4.0",
     "@nextcloud/vue-dashboard": "^2",
     "@riophae/vue-treeselect": "^0.4.0",
-    "@vue/babel-preset-app": "^5.0.6",
+    "@vue/babel-preset-app": "^5.0.8",
     "buffer": "^6.0.3",
     "color-convert": "^2.0.1",
     "core-js": "^3.23.3",
