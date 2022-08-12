@@ -24,7 +24,7 @@
 
 <template>
 	<AppSettingsDialog
-		id="app-settings-dialong"
+		id="app-settings-dialog"
 		:open.sync="showSettings"
 		:show-navigation="true">
 		<AppSettingsSection
@@ -110,6 +110,7 @@ import AppSettingsSection from '@nextcloud/vue/dist/Components/AppSettingsSectio
 import TrustedSenders from './TrustedSenders'
 import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
+import Logger from '../logger'
 export default {
 	name: 'AccountSettings',
 	components: {
@@ -163,6 +164,19 @@ export default {
 		},
 	},
 	methods: {
+		onAccountUpdated(data) {
+			Logger.log('saving data', { data })
+			return this.$store
+				.dispatch('updateAccount', {
+					...data,
+					accountId: this.account.id,
+				})
+				.then((account) => account)
+				.catch((error) => {
+					Logger.error('account update failed:', { error })
+					throw error
+				})
+		},
 		handleClick() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
