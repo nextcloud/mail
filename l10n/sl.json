@@ -257,6 +257,8 @@
     "An error occurred, unable to create the tag." : "Prišlo je do napake, oznake ni mogoče ustvariti.",
     "An error occurred, unable to rename the tag." : "Prišlo je do napake, oznake ni mogoče preimenovati.",
     "Could not load your message thread" : "Ni mogoče naložiti niti sporočil",
+    "Mark as unread" : "Označi kot neprebrano",
+    "Mark as read" : "Označi kot prebrano",
     "Delete message" : "Izbriši sporočilo",
     "Not found" : "Ni mogoče najti",
     "Remove" : "Odstrani",
