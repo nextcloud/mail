@@ -254,10 +254,10 @@ import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
-import moment from '@nextcloud/moment'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
+import { shortRelativeDatetime } from '../util/shortRelativeDatetime'
 import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
@@ -476,7 +476,7 @@ export default {
 			}
 		},
 		formatted() {
-			return moment.unix(this.data.dateInt).fromNow()
+			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
 		},
 		unselect() {
 			if (this.selected) {
