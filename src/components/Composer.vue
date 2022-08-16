@@ -783,15 +783,6 @@ export default {
 				this.onAliasChange(newAlias)
 			}
 		},
-		// editorMode() {
-		// 	this.appendSignature = true
-		// },
-		// bodyVal() {
-		// 	if (this.body.value === '') {
-		// 		this.appendSignature = true
-		// 	}
-		// 	this.handleAppendSignature()
-		// },
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -999,7 +990,9 @@ export default {
 		onAliasChange(alias) {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
-			this.editorMode = alias.editorMode
+			if (this.editorMode === EDITOR_MODE_TEXT && alias.editorMode === EDITOR_MODE_HTML) {
+				this.editorMode = alias.editorMode
+			}
 			this.appendSignature = true
 			this.handleAppendSignature(TRIGGER_CHANGE_ALIAS)
 		},
@@ -1235,7 +1228,6 @@ export default {
 				},
 				(decision) => {
 					if (decision) {
-						this.bodyVal = toPlain(html(this.bodyVal)).value
 						this.editorMode = EDITOR_MODE_TEXT
 					}
 				},

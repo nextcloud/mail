@@ -218,7 +218,7 @@ export default {
 				editor.editing.view.focus()
 			}
 
-			logger.debug(`setting TextEditor contents to <${this.text}>`)
+			logger.debug(`setting TextEditor contents to <${this.sanitizedValue}>`)
 
 			this.bus.$on('append-to-body-at-cursor', this.appendToBodyAtCursor)
 			this.$emit('ready')
