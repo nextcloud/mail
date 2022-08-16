@@ -46,7 +46,7 @@ sync(store, router)
 
 Vue.mixin(Nextcloud)
 
-Vue.use(VueShortKey, { prevent: ['input', 'div'] })
+Vue.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
 Vue.use(vToolTip)
 Vue.use(VueClipboard)
 
