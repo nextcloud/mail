@@ -29,6 +29,7 @@
 			<div
 				v-if="isImportant"
 				class="app-content-list-item-star svg icon-important"
+				:class="{ 'important-position-subject': importantIconPosition, 'important-position-nosubject' : importantIconPositionNoSubject }"
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="onToggleImportant"
 				v-html="importantSvg" />
@@ -359,6 +360,13 @@ export default {
 		}
 	},
 	computed: {
+		importantIconPosition() {
+			return this.data.previewText && this.subjectForSubtitle
+		},
+		importantIconPositionNoSubject() {
+			return !this.data.previewText
+		},
+
 		hasMultipleRecipients() {
 			if (!this.account) {
 				console.error('account is undefined', {
@@ -739,7 +747,7 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 ::v-deep.icon-important.app-content-list-item-star {
 	position: absolute;
-	top: 17px;
+	top: 11px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {
@@ -768,5 +776,11 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 ::v-deep .list-item__extra {
 	margin-top: 9px;
+}
+.important-position {
+	top: 26px;
+}
+.important-position-nosubject {
+	top: 18px;
 }
 </style>
