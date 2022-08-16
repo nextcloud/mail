@@ -277,8 +277,8 @@
 						<ActionCheckbox
 							:checked="!encrypt && !editorPlainText"
 							:disabled="encrypt"
-							@check="editorMode = 'html'"
-							@uncheck="editorMode = 'plaintext'">
+							@check="setEditorModeHtml"
+							@uncheck="setEditorModeText">
 							{{ t('mail', 'Enable formatting') }}
 						</ActionCheckbox>
 						<ActionCheckbox
@@ -440,7 +440,7 @@ import RecipientListItem from './RecipientListItem'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
 import { showError } from '@nextcloud/dialogs'
-import { translate as t, getCanonicalLocale, getFirstDay, getLocale } from '@nextcloud/l10n'
+import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 
 import { findRecipient } from '../service/AutocompleteService'
@@ -453,12 +453,9 @@ import MailvelopeEditor from './MailvelopeEditor'
 import { getMailvelope } from '../crypto/mailvelope'
 import { isPgpgMessage } from '../crypto/pgp'
 import { matchError } from '../errors/match'
-import NoSentMailboxConfiguredError
-	from '../errors/NoSentMailboxConfiguredError'
-import NoDraftsMailboxConfiguredError
-	from '../errors/NoDraftsMailboxConfiguredError'
-import ManyRecipientsError
-	from '../errors/ManyRecipientsError'
+import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError'
+import NoDraftsMailboxConfiguredError from '../errors/NoDraftsMailboxConfiguredError'
+import ManyRecipientsError from '../errors/ManyRecipientsError'
 
 import Send from 'vue-material-design-icons/Send'
 import SendClock from 'vue-material-design-icons/SendClock'
@@ -482,6 +479,9 @@ const STATES = Object.seal({
 	DISCARDING: 6,
 	DISCARDED: 7,
 })
+
+const EDITOR_MODE_HTML = 'html'
+const EDITOR_MODE_TEXT = 'plaintext'
 
 export default {
 	name: 'Composer',
@@ -614,7 +614,7 @@ export default {
 				keyRing: undefined,
 				keysMissing: [],
 			},
-			editorMode: (this.body?.format !== 'html') ? 'plaintext' : 'html',
+			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
 			appendSignature: true,
@@ -695,7 +695,7 @@ export default {
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
 		},
 		editorPlainText() {
-			return this.editorMode === 'plaintext'
+			return this.editorMode === EDITOR_MODE_TEXT
 		},
 		submitButtonTitle() {
 			if (this.sendAtVal) {
@@ -1219,6 +1219,27 @@ export default {
 			this.autoLimit = !this.autoLimit
 			this.showCC = !(this.showCC && this.selectCc.length === 0 && this.autoLimit)
 			this.showBCC = !(this.showBCC && this.selectBcc.length === 0 && this.autoLimit)
+		},
+		setEditorModeHtml() {
+			this.editorMode = EDITOR_MODE_HTML
+		},
+		setEditorModeText() {
+			OC.dialogs.confirmDestructive(
+				t('mail', 'Any existing formatting (for example bold, italic, underline or inline images) will be removed.'),
+				t('mail', 'Turn off formatting'),
+				{
+					type: OC.dialogs.YES_NO_BUTTONS,
+					confirm: t('mail', 'Turn off and remove formatting'),
+					confirmClasses: 'error',
+					cancel: t('mail', 'Keep formatting'),
+				},
+				(decision) => {
+					if (decision) {
+						this.bodyVal = toPlain(html(this.bodyVal)).value
+						this.editorMode = EDITOR_MODE_TEXT
+					}
+				},
+			)
 		},
 	},
 }
