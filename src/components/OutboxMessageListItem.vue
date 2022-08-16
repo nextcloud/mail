@@ -28,9 +28,6 @@
 		:details="details"
 		@click="openModal">
 		<template #icon>
-			<div
-				class="account-color"
-				:style="{'background-color': accountColor}" />
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
 		<template #subtitle>
@@ -64,7 +61,6 @@ import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Avatar from './Avatar'
 import IconDelete from 'vue-material-design-icons/Delete'
-import { calculateAccountColor } from '../util/AccountColor'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
 import moment from '@nextcloud/moment'
@@ -96,10 +92,6 @@ export default {
 	computed: {
 		selected() {
 			return this.$route.params.messageId === this.message.id
-		},
-		accountColor() {
-			const account = this.$store.getters.getAccount(this.message.accountId)
-			return calculateAccountColor(account?.emailAddress ?? '')
 		},
 		title() {
 			const recipientToString = recipient => recipient.label

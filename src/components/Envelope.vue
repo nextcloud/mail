@@ -15,10 +15,6 @@
 		:details="formatted()"
 		@click="onClick">
 		<template #icon>
-			<div
-				v-if="mailbox.isUnified && hasMultipleAccounts"
-				class="mail-message-account-color"
-				:style="{'background-color': accountColor}" />
 			<Star
 				v-if="data.flags.flagged"
 				fill-color="#f9cf3d"
@@ -214,10 +210,6 @@
 			</template>
 		</template>
 		<template #extra>
-			<div
-				v-if="mailbox.isUnified && hasMultipleAccounts"
-				class="mail-message-account-color"
-				:style="{'background-color': accountColor}" />
 			<div v-for="tag in tags"
 				:key="tag.id"
 				class="tag-group">
