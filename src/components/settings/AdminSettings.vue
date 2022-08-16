@@ -107,12 +107,18 @@
 			}}
 		</h3>
 		<p>
-			<button class="config-button icon-add" @click="addNew=true">
+			<Button class="config-button" @click="addNew=true">
+				<template #icon>
+					<IconAdd :size="20" />
+				</template>
 				{{ t('mail', 'Add new config') }}
-			</button>
-			<button class="config-button icon-settings" @click="provisionAll">
+			</Button>
+			<Button class="config-button" @click="provisionAll">
+				<template #icon>
+					<IconSettings :size="20" />
+				</template>
 				{{ t('mail', 'Provision all accounts') }}
-			</button>
+			</Button>
 			<ProvisioningSettings v-if="addNew"
 				:key="formKey"
 				:setting="preview"
@@ -157,10 +163,13 @@
 </template>
 
 <script>
+import Button from '@nextcloud/vue/dist/Components/Button'
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import ProvisioningSettings from './ProvisioningSettings'
 import AntiSpamSettings from './AntiSpamSettings'
+import IconAdd from 'vue-material-design-icons/Plus'
+import IconSettings from 'vue-material-design-icons/Cog'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import {
 	disableProvisioning,
@@ -175,6 +184,9 @@ export default {
 		AntiSpamSettings,
 		ProvisioningSettings,
 		SettingsSection,
+		Button,
+		IconAdd,
+		IconSettings,
 	},
 	props: {
 		provisioningSettings: {
@@ -262,14 +274,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-	.app-description {
+.app-description {
 		margin-bottom: 24px;
 	}
-	.config-button {
-		line-height: 24px;
-		padding-left: 48px;
-		padding-top: 6px;
-		padding-bottom: 6px;
-		background-position: 24px;
-	}
+.config-button {
+	display: inline-block;
+	margin-inline: 4px;
+}
 </style>

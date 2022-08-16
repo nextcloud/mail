@@ -314,18 +314,26 @@
 				<div class="settings-group">
 					<div class="group-title" />
 					<div class="group-inputs">
-						<input
-							class="button config-button icon-upload"
-							type="submit"
-							:disabled="loading"
-							:value="t('mail', 'Save Config')">
-						<input
+						<Button
+							class="config-button save-config"
+							type="secondary submit"
+							:disabled="loading">
+							<template #icon>
+								<IconUpload :size="20" />
+							</template>
+							{{ t('mail', 'Save Config') }}
+						</Button>
+						<Button
 							v-if="deleteButton"
-							type="button"
-							class="button config-button icon-delete"
+							type="secondary"
+							class="config-button"
 							:disabled="loading"
-							:value="t('mail', 'Unprovision & Delete Config')"
 							@click="disableConfig()">
+							<template #icon>
+								<IconDelete :size="20" />
+							</template>
+							{{ t('mail', 'Unprovision & Delete Config') }}
+						</Button>
 						<br>
 						<small>{{
 							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email')
@@ -352,13 +360,20 @@
 import logger from '../../logger'
 import ProvisionPreview from './ProvisionPreview'
 import { loadState } from '@nextcloud/initial-state'
+import Button from '@nextcloud/vue/dist/Components/Button'
+
+import IconUpload from 'vue-material-design-icons/Upload'
+import IconDelete from 'vue-material-design-icons/Delete'
 
 const ldapAliasesIntegration = loadState('mail', 'ldap_aliases_integration', false)
 
 export default {
 	name: 'ProvisioningSettings',
 	components: {
+		Button,
 		ProvisionPreview,
+		IconUpload,
+		IconDelete,
 	},
 	props: {
 		setting: {
@@ -515,11 +530,7 @@ export default {
 			min-width: 200px;
 		}
 		.config-button {
-			line-height: 24px;
-			padding-left: 48px;
-			padding-top: 6px;
-			padding-bottom: 6px;
-			background-position: 24px;
+			display: inline-block;
 		}
 	}
 }
@@ -551,5 +562,8 @@ form {
 	label {
 		color: var(--color-text-maxcontrast);
 	}
+}
+.save-config {
+	margin-right: 6px;
 }
 </style>

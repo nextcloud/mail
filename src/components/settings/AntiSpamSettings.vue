@@ -51,17 +51,25 @@
 							name="ham"
 							type="email">
 						<br>
-						<input
+						<Button
+							type="secondary submit"
 							:disabled="loading"
-							:value="t('mail', 'Save')"
-							class="button config-button icon-upload"
-							type="submit">
-						<input
+							class="config-button">
+							<template #icon>
+								<IconUpload :size="20" />
+							</template>
+							{{ t('mail', 'Save') }}
+						</Button>
+						<Button
 							:disabled="loading"
-							:value="t('mail', 'Reset')"
-							class="button config-button icon-delete"
-							type="button"
+							class="config-button"
+							type="secondary"
 							@click="resetForm()">
+							<template #icon>
+								<IconDelete :size="20" />
+							</template>
+							{{ t('mail', 'Reset') }}
+						</Button>
 					</div>
 				</div>
 			</form>
@@ -73,11 +81,19 @@ import logger from '../../logger'
 import { loadState } from '@nextcloud/initial-state'
 import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import Button from '@nextcloud/vue/dist/Components/Button'
+import IconUpload from 'vue-material-design-icons/Upload'
+import IconDelete from 'vue-material-design-icons/Delete'
 
 const email = loadState('mail', 'antispam_setting', '[]')
 
 export default {
 	name: 'AntiSpamSettings',
+	components: {
+		Button,
+		IconUpload,
+		IconDelete,
+	},
 	data() {
 		return {
 			email,
@@ -141,16 +157,10 @@ export default {
 	.group-inputs {
 		margin: 10px;
 		flex-grow: 1;
-
-		input[type='text'] {
-			min-width: 200px;
-		}
 		.config-button {
-			line-height: 24px;
-			padding-left: 48px;
-			padding-top: 6px;
-			padding-bottom: 6px;
-			background-position: 24px;
+			display: inline-block;
+			margin-top: 10px;
+			margin-inline: 4px;
 		}
 	}
 }
