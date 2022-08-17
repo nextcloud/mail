@@ -78,59 +78,61 @@
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
-				<Button
-					:class="{ primary: expanded}"
-					:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
-					type="tertiary-no-background"
-					@click="onReply">
-					<template #icon>
-						<ReplyAllIcon v-if="hasMultipleRecipients"
-							:size="20" />
-						<ReplyIcon v-else
-							:size="20" />
-					</template>
-				</Button>
-				<Button
-					type="tertiary-no-background"
-					class="action--primary"
-					:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-					:close-after-click="true"
-					@click.prevent="onToggleFlagged">
-					<template #icon>
-						<StarOutline v-if="showFavoriteIconVariant"
-							:size="20" />
-						<IconFavorite v-else
-							:size="20" />
-					</template>
-				</Button>
-				<Button
-					type="tertiary-no-background"
-					class="action--primary"
-					:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-					:close-after-click="true"
-					@click.prevent="onToggleSeen">
-					<template #icon>
-						<EmailRead v-if="showImportantIconVariant"
-							:size="20" />
-						<EmailUnread v-else
-							:size="20" />
-					</template>
-				</Button>
-				<Button :close-after-click="true"
-					type="tertiary-no-background"
-					@click.prevent="onDelete">
-					<template #icon>
-						<DeleteIcon
-							:title="t('mail', 'Delete message')"
-							:size="20" />
-					</template>
-				</Button>
-				<MenuEnvelope class="app-content-list-item-menu"
-					:envelope="envelope"
-					:with-reply="false"
-					:with-select="false"
-					:with-show-source="true"
-					@delete="$emit('delete',envelope.databaseId)" />
+				<template v-if="expanded">
+					<Button
+						:class="{ primary: expanded}"
+						:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
+						type="tertiary-no-background"
+						@click="onReply">
+						<template #icon>
+							<ReplyAllIcon v-if="hasMultipleRecipients"
+								:size="20" />
+							<ReplyIcon v-else
+								:size="20" />
+						</template>
+					</Button>
+					<Button
+						type="tertiary-no-background"
+						class="action--primary"
+						:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
+						:close-after-click="true"
+						@click.prevent="onToggleFlagged">
+						<template #icon>
+							<StarOutline v-if="showFavoriteIconVariant"
+								:size="20" />
+							<IconFavorite v-else
+								:size="20" />
+						</template>
+					</Button>
+					<Button
+						type="tertiary-no-background"
+						class="action--primary"
+						:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
+						:close-after-click="true"
+						@click.prevent="onToggleSeen">
+						<template #icon>
+							<EmailRead v-if="showImportantIconVariant"
+								:size="20" />
+							<EmailUnread v-else
+								:size="20" />
+						</template>
+					</Button>
+					<Button :close-after-click="true"
+						type="tertiary-no-background"
+						@click.prevent="onDelete">
+						<template #icon>
+							<DeleteIcon
+								:title="t('mail', 'Delete message')"
+								:size="20" />
+						</template>
+					</Button>
+					<MenuEnvelope class="app-content-list-item-menu"
+						:envelope="envelope"
+						:with-reply="false"
+						:with-select="false"
+						:with-show-source="true"
+						@delete="$emit('delete',envelope.databaseId)" />
+				</template>
 			</div>
 		</div>
 		<Loading v-if="loading" />
