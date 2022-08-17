@@ -29,7 +29,7 @@
     "@ckeditor/ckeditor5-link": "~34.2.0",
     "@ckeditor/ckeditor5-list": "~34.2.0",
     "@ckeditor/ckeditor5-paragraph": "~34.2.0",
-    "@ckeditor/ckeditor5-remove-format": "~34.2.0",
+    "@ckeditor/ckeditor5-remove-format": "~35.0.1",
     "@ckeditor/ckeditor5-theme-lark": "~34.2.0",
     "@ckeditor/ckeditor5-vue2": "3.0.0",
     "@nextcloud/auth": "^2.0.0",
