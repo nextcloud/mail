@@ -120,7 +120,7 @@
     "jest-watch-typeahead": "^1.1.0",
     "postcss": "^8.4.14",
     "postcss-loader": "^4.3.0",
-    "sass": "^1.53.0",
+    "sass": "^1.54.4",
     "sass-loader": "^10.1.1",
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",
