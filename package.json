@@ -34,7 +34,7 @@
     "@ckeditor/ckeditor5-vue2": "3.0.0",
     "@nextcloud/auth": "^2.0.0",
     "@nextcloud/axios": "^2.0.0",
-    "@nextcloud/calendar-js": "^3.0.0",
+    "@nextcloud/calendar-js": "^3.1.0",
     "@nextcloud/dialogs": "^3.1.2",
     "@nextcloud/files": "^2.1.0",
     "@nextcloud/initial-state": "^1.2.1",
