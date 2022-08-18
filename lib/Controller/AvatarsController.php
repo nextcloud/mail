@@ -82,7 +82,7 @@ class AvatarsController extends Controller {
 		$response = new JSONResponse($avatar);
 
 		// Let the browser cache this for a week
-		$response->cacheFor(7 * 24 * 60 * 60);
+		$response->cacheFor(7 * 24 * 60 * 60, false, true);
 
 		return $response;
 	}
@@ -112,7 +112,7 @@ class AvatarsController extends Controller {
 		$resp->addHeader('Content-Type', $avatar->getMime());
 
 		// Let the browser cache this for a week
-		$resp->cacheFor(7 * 24 * 60 * 60);
+		$resp->cacheFor(7 * 24 * 60 * 60, false, true);
 
 		return $resp;
 	}
