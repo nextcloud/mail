@@ -83,7 +83,7 @@ class AvatarControllerTest extends TestCase {
 		$resp = $this->controller->url($email);
 
 		$expected = new JSONResponse($avatar);
-		$expected->cacheFor(7 * 24 * 60 * 60);
+		$expected->cacheFor(7 * 24 * 60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}
 
@@ -112,7 +112,7 @@ class AvatarControllerTest extends TestCase {
 
 		$expected = new AvatarDownloadResponse('data');
 		$expected->addHeader('Content-Type', 'image/jpeg');
-		$expected->cacheFor(7 * 24 * 60 * 60);
+		$expected->cacheFor(7 * 24 * 60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}
 
