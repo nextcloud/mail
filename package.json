@@ -117,7 +117,7 @@
     "jest-environment-jsdom": "^28.1.3",
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
-    "jest-watch-typeahead": "^1.1.0",
+    "jest-watch-typeahead": "^2.0.0",
     "postcss": "^8.4.14",
     "postcss-loader": "^7.0.1",
     "sass": "^1.54.4",
