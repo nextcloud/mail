@@ -40,14 +40,14 @@
 				v-if="envelope.flags.flagged"
 				fill-color="#f9cf3d"
 				:size="18"
-				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subject': junkFavoritePositionWithTagSubject }"
+				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 				@click.prevent="onToggleFlagged" />
 			<JunkIcon
 				v-if="envelope.flags.$junk"
 				:size="18"
-				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subject': junkFavoritePositionWithTagSubject }"
+				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 				@click.prevent="onToggleJunk" />
@@ -61,10 +61,9 @@
 					:class="{ 'centered-sender': centeredSender }">
 					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
 				</div>
-				<div v-if="hasChangedSubject" class="subject">
+				<div v-if="showSubline" class="subline">
 					<span class="preview">
-						<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
-						{{ cleanSubject }}
+						{{ envelope.previewText }}
 					</span>
 				</div>
 				<div v-for="tag in tags"
@@ -204,10 +203,6 @@ export default {
 			],
 			default: undefined,
 		},
-		threadSubject: {
-			required: true,
-			type: String,
-		},
 		expanded: {
 			required: false,
 			type: Boolean,
@@ -268,20 +263,17 @@ export default {
 				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
 			)
 		},
-		hasChangedSubject() {
-			return this.cleanSubject !== this.threadSubject
-		},
-		cleanSubject() {
-			return this.envelope.subject.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
+		showSubline() {
+			return !this.expanded && !!this.envelope.previewText
 		},
 		centeredSender() {
-			  return (!this.hasChangedSubject || this.cleanSubject.length === 0) && this.tags.length === 0
+			  return !this.showSubline && this.tags.length === 0
 		},
 		junkFavoritePosition() {
-			return (this.message?.subject > 0 || this.cleanSubject.length > 0) && this.tags.length > 0
+			return this.showSubline && this.tags.length > 0
 		},
-		junkFavoritePositionWithTagSubject() {
-			return (!this.hasChangedSubject || this.cleanSubject.length === 0) && this.tags.length > 0
+		junkFavoritePositionWithTagSubline() {
+			return !this.showSubline && this.tags.length > 0
 		},
 		showFavoriteIconVariant() {
 			return this.envelope.flags.flagged
@@ -459,10 +451,13 @@ export default {
 		display: inline-block;
 		margin-bottom: -23px;
 	}
-	.subject {
+	.subline {
 		margin-left: 8px;
 		color: var(--color-text-maxcontrast);
 		cursor: default;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	.envelope {
@@ -493,6 +488,7 @@ export default {
 	}
 	.left {
 		flex-grow: 1;
+		min-width: 0; /* https://css-tricks.com/flexbox-truncated-text/ */
 	}
 	.icon-important {
 		::v-deep path {
@@ -568,7 +564,7 @@ export default {
 	.envelope--header.list-item-style {
 		border-radius: 16px;
 	}
-	.junk-favorite-position-with-tag-subject {
+	.junk-favorite-position-with-tag-subline {
 		margin-bottom: 14px !important;
 	}
 	.junk-favorite-position {
