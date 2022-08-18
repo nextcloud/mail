@@ -334,6 +334,20 @@ export default {
 				await this.fetchItineraries()
 			}
 		},
+		async fetchPartialThread() {
+			this.loading = true
+
+			logger.debug(`fetching partial thread messages ${this.envelope.databaseId}`)
+
+			try {
+				this.messages = await this.$store.dispatch('fetchPartialThread', this.envelope.databaseId)
+				logger.debug(`first and second to last messages in thread for ${this.envelope.databaseId} fetched`, { message: this.message })
+
+				this.loading = false
+			} catch (error) {
+				logger.error('Could not fetch message', { error })
+			}
+		},
 		async fetchItineraries() {
 			// Sanity check before actually making the request
 			if (!this.message.hasHtmlBody && this.message.attachments.length === 0) {

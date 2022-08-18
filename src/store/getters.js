@@ -76,6 +76,13 @@ export const getters = {
 			Object.values(state.envelopes).filter(envelope => envelope.accountId === accountId && envelope.threadRootId === threadRootId)
 		)
 	},
+	getThreadEnvelopesByMessageId: (state) => (id) => {
+		const envelope = state.envelopes[id]
+		return sortBy(
+			prop('dateInt'),
+			Object.values(state.envelopes).filter(x => x.accountId === envelope.accountId && x.threadRootId === envelope.threadRootId)
+		)
+	},
 	getMessage: (state) => (id) => {
 		return state.messages[id]
 	},

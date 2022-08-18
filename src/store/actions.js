@@ -896,11 +896,43 @@ export default {
 		return thread
 	},
 	async fetchMessage({ getters, commit }, id) {
-		const message = await fetchMessage(id)
-		// Only commit if not undefined (not found)
-		if (message) {
+		let message = getters.getMessage(id)
+		if(!message) {
+			message = await fetchMessage(id)
+			// Only commit if not undefined (not found)
+			if (message) {
+				commit('addMessage', {
+					message,
+				})
+			}
+		}
+
+		const messages = getters.getThreadEnvelopesByMessageId(id)
+		const index = messages.findIndex(x => x.databaseId === id)
+		const isLast = (messages.length - 1) === index
+		if(isLast) {
+			let firstMessage = getters.getMessage(messages[0].databaseId) ?? await fetchMessage(messages[0].databaseId)
+			console.log(firstMessage)
 			commit('addMessage', {
-				message,
+				message: firstMessage,
+			})
+			if(messages.length > 2) {
+				let secondToLast = getters.getMessage(messages[messages.length - 2].databaseId) ?? await fetchMessage(messages[messages.length - 2].databaseId)
+				console.log(secondToLast)
+				commit('addMessage', {
+					message: secondToLast,
+				})
+			}
+		} else {
+			if((index - 1) <= 0) {
+				let firstMessage = getters.getMessage(messages[index -1].databaseId) ?? await fetchMessage(messages[index -1].databaseId)
+				commit('addMessage', {
+					message: firstMessage,
+				})
+			}
+			const secondMessage = getters.getMessage(messages[index + 1].databaseId) ?? await fetchMessage(messages[index + 1].databaseId)
+			commit('addMessage', {
+				message: secondMessage,
 			})
 		}
 		return message

@@ -61,6 +61,22 @@ export const fetchThread = async (id) => {
 	return resp.data
 }
 
+export const fetchPartialThread = async (id) => {
+	const url = generateUrl('apps/mail/api/messages/{id}/partialthread', {
+		id,
+	})
+	const resp = await axios.get(url)
+	return resp.data
+}
+
+export const fetchThreadSiblings = async (id) => {
+	const url = generateUrl('apps/mail/api/messages/{id}/threadsiblings', {
+		id,
+	})
+	const resp = await axios.get(url)
+	return resp.data
+}
+
 export async function syncEnvelopes(accountId, id, ids, query, init = false) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync', {
 		id,
