@@ -51,8 +51,8 @@
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
+import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
+import AppContentList from '@nextcloud/vue/dist/Components/NcAppContentList'
 import Loading from './Loading'
 import Error from './Error'
 import EmptyMailbox from './EmptyMailbox'

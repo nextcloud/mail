@@ -67,9 +67,9 @@ import { formatFileSize } from '@nextcloud/files'
 import { translate as t } from '@nextcloud/l10n'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { mixin as onClickOutside } from 'vue-on-click-outside'
-import PopoverMenu from '@nextcloud/vue/dist/Components/PopoverMenu'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import PopoverMenu from '@nextcloud/vue/dist/Components/NcPopoverMenu'
+import Actions from '@nextcloud/vue/dist/Components/NcActions'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 
 import Logger from '../logger'
 

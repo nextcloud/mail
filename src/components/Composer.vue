@@ -408,23 +408,23 @@ import isArray from 'lodash/fp/isArray'
 import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionRadio from '@nextcloud/vue/dist/Components/ActionRadio'
-import Button from '@nextcloud/vue/dist/Components/Button'
+import Actions from '@nextcloud/vue/dist/Components/NcActions'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
+import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
+import ActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio'
+import Button from '@nextcloud/vue/dist/Components/NcButton'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments'
 import Download from 'vue-material-design-icons/Download'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 import IconUpload from 'vue-material-design-icons/Upload'
 import IconFolder from 'vue-material-design-icons/Folder'
 import IconPublic from 'vue-material-design-icons/Link'
 import IconCheck from 'vue-material-design-icons/Check'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import ListItemIcon from '@nextcloud/vue/dist/Components/ListItemIcon'
+import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import ListItemIcon from '@nextcloud/vue/dist/Components/NcListItemIcon'
 import RecipientListItem from './RecipientListItem'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
@@ -1395,9 +1395,6 @@ export default {
 .button {
 	background-color: transparent;
 	border: none;
-}
-.send-action-radio {
-	padding: 5px 0 5px 0;
 }
 .send-button {
 	display: flex;

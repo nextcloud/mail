@@ -63,7 +63,7 @@ import { generateUrl, imagePath } from '@nextcloud/router'
 import { DashboardWidget, DashboardWidgetItem } from '@nextcloud/vue-dashboard'
 import orderBy from 'lodash/fp/orderBy'
 import prop from 'lodash/fp/prop'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 import IconCheck from 'vue-material-design-icons/Check'
 
 import Avatar from '../components/Avatar'

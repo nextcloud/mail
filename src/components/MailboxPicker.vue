@@ -58,7 +58,7 @@
 	</Modal>
 </template>
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
+import Modal from '@nextcloud/vue/dist/Components/NcModal'
 import IconBreadcrumb from 'vue-material-design-icons/ChevronRight'
 import IconInbox from 'vue-material-design-icons/Home'
 import IconDraft from 'vue-material-design-icons/Pencil'

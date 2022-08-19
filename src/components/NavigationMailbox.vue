@@ -196,12 +196,12 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import AppNavigationCounter from '@nextcloud/vue/dist/Components/AppNavigationCounter'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
+import AppNavigationCounter from '@nextcloud/vue/dist/Components/NcAppNavigationCounter'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
+import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
+import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheck'
 import IconExternal from 'vue-material-design-icons/OpenInNew'
 import IconFolder from 'vue-material-design-icons/Folder'

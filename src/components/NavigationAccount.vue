@@ -105,11 +105,11 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
+import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
+import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 

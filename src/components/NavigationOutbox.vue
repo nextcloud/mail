@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import CounterBubble from '@nextcloud/vue/dist/Components/CounterBubble'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
+import CounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp'
 
 export default {

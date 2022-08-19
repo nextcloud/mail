@@ -95,7 +95,7 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
-import Button from '@nextcloud/vue/dist/Components/Button'
+import Button from '@nextcloud/vue/dist/Components/NcButton'
 
 import IconInfo from 'vue-material-design-icons/Information'
 import IconEmail from 'vue-material-design-icons/Email'
