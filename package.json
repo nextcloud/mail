@@ -31,7 +31,7 @@
     "@ckeditor/ckeditor5-paragraph": "~35.0.1",
     "@ckeditor/ckeditor5-remove-format": "~35.0.1",
     "@ckeditor/ckeditor5-theme-lark": "~35.0.1",
-    "@ckeditor/ckeditor5-vue2": "3.0.0",
+    "@ckeditor/ckeditor5-vue2": "3.0.1",
     "@nextcloud/auth": "^2.0.0",
     "@nextcloud/axios": "^2.0.0",
     "@nextcloud/calendar-js": "^3.1.0",
