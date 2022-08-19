@@ -21,7 +21,7 @@
     "@ckeditor/ckeditor5-build-balloon": "~35.0.1",
     "@ckeditor/ckeditor5-core": "~35.0.1",
     "@ckeditor/ckeditor5-dev-utils": "~30.3.4",
-    "@ckeditor/ckeditor5-dev-webpack-plugin": "~30.3.1",
+    "@ckeditor/ckeditor5-dev-webpack-plugin": "~30.4.0",
     "@ckeditor/ckeditor5-editor-balloon": "~35.0.1",
     "@ckeditor/ckeditor5-essentials": "~35.0.1",
     "@ckeditor/ckeditor5-font": "~35.0.1",
