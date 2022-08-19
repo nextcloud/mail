@@ -178,12 +178,12 @@
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
 		</template>
-		<AppNavigationCounter v-if="showUnreadCounter && subCounter" slot="counter">
+		<CounterBubble v-if="showUnreadCounter && subCounter" slot="counter">
 			{{ mailbox.unread }}&nbsp;({{ subCounter }})
-		</AppNavigationCounter>
-		<AppNavigationCounter v-else-if="showUnreadCounter" slot="counter">
+		</CounterBubble>
+		<CounterBubble v-else-if="showUnreadCounter" slot="counter">
 			{{ mailbox.unread }}
-		</AppNavigationCounter>
+		</CounterBubble>
 		<template slot="extra">
 			<MoveMailboxModal v-if="showMoveModal"
 				:account="account"
@@ -200,8 +200,9 @@
 </template>
 
 <script>
+
 import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
-import AppNavigationCounter from '@nextcloud/vue/dist/Components/NcAppNavigationCounter'
+import CounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble'
 import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
@@ -238,7 +239,7 @@ export default {
 	name: 'NavigationMailbox',
 	components: {
 		AppNavigationItem,
-		AppNavigationCounter,
+		CounterBubble,
 		ActionText,
 		ActionButton,
 		ActionCheckbox,
@@ -630,7 +631,7 @@ export default {
 	opacity: 1;
 	}
 }
-.app-navigation-entry__counter {
+.counter-bubble__counter {
 	max-width: initial;
 }
 </style>
