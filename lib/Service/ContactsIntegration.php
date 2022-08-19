@@ -107,11 +107,13 @@ class ContactsIntegration {
 	 */
 	public function getPhoto(string $email) {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
-		if (count($result) > 0) {
-			if (isset($result[0]['PHOTO'])) {
-				return $this->getPhotoUri($result[0]['PHOTO']);
+		foreach ($result as $contact) {
+			if (!isset($contact['PHOTO']) || empty($contact['PHOTO'])) {
+				continue;
 			}
+			return $this->getPhotoUri($contact['PHOTO']);
 		}
+
 		return null;
 	}
 
