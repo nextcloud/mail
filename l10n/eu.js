@@ -219,7 +219,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Aukeratu karpeta bat erantsitako fitxategiak gordetzeko",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : " \nMezu hau PGP bidez enkriptatu da. Instalatu Mailvelope desenkriptatzeko.",
     "The images have been blocked to protect your privacy." : "Irudiak blokeatu dira zure pribatutasuna babesteko.",
-    "Show" : "Erakutsi",
+    "Show images" : "Erakutsi irudiak",
     "Show images temporarily" : "Erakutsi irudiak aldi baterako",
     "Always show images from {sender}" : "Erakutsi beti {sender} erabiltzailearen irudiak",
     "Always show images from {domain}" : "Erakutsi beti {domain} domeinuko irudiak",

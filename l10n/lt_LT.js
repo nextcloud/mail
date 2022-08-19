@@ -146,7 +146,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Pasirinkite aplanką, kuriame laikyti priedus",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Šis laiškas yra šifruotas naudojant PGP. Norėdami jį iššifruoti, įsidiekite Mailvelope.",
     "The images have been blocked to protect your privacy." : "Tam, kad būtų apsaugotas jūsų privatumas, paveikslai buvo užblokuoti.",
-    "Show" : "Rodyti",
+    "Show images" : "Rodyti paveikslus",
     "Show images temporarily" : "Laikinai rodyti paveikslus",
     "Always show images from {sender}" : "Visada rodyti paveikslus nuo {sender}",
     "Always show images from {domain}" : "Visada rodyti paveikslus iš {domain}",

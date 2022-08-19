@@ -215,7 +215,7 @@
     "Choose a folder to store the attachments in" : "Válasszon egy mappát a mellékletek tárolásához",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Ez az üzenet PGP-vel van titkosítva. A visszafejtéshez telepítse a Mailvelope kiegészítőt.",
     "The images have been blocked to protect your privacy." : "Az adatvédelme érdekében a képek le lettek tiltva.",
-    "Show" : "Megjelenítés",
+    "Show images" : "Képek megjelenítése",
     "Show images temporarily" : "Képek ideiglenes megjelenítése",
     "Always show images from {sender}" : "Mindig jelenítse meg a képeket a következőtől: {sender}",
     "Always show images from {domain}" : "Mindig jelenítse meg a képeket a(z) {domain} domainről",

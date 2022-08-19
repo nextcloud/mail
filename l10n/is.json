@@ -122,6 +122,7 @@
     "Choose a folder to store the attachments in" : "Veldu möppu þar sem á að geyma viðhengin",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Þetta skeyti er dulritað með PGP. Settu upp Mailvelope til að afkóða það.",
     "The images have been blocked to protect your privacy." : "Lokað hefur verið á myndir til að vernda einkalíf þitt.",
+    "Show images" : "Sýna myndir",
     "Message frame" : "Rammi skilaboða",
     "Quoted text" : "Tilvitnaður texti",
     "Moving" : "Færi",

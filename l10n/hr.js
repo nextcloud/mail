@@ -176,7 +176,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Izaberi mapu za spremanje privitaka",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Ova je poruka šifrirana PGP-om. Instalirajte Mailvelope kako biste je dešifrirali.",
     "The images have been blocked to protect your privacy." : "Slike su blokirane u svrhu zaštite privatnosti.",
-    "Show" : "Prikaži",
+    "Show images" : "Prikaži slike",
     "Show images temporarily" : "Privremeno prikaži slike",
     "Always show images from {sender}" : "Uvijek prikaži slike od {sender}",
     "Always show images from {domain}" : "Uvijek prikaži slike s {domain}",

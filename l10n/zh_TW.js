@@ -219,7 +219,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "選擇一個資料夾來存放附件",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "此郵件使用 PGP 加密。安裝 Mailvelope 來解密。",
     "The images have been blocked to protect your privacy." : "為維護您的隱私，圖片將不會被載入。",
-    "Show" : "顯示",
+    "Show images" : "顯示圖片",
     "Show images temporarily" : "暫時顯示圖片",
     "Always show images from {sender}" : "一律顯示來自 {sender} 的圖片",
     "Always show images from {domain}" : "一律顯示來自 {domain} 的圖片",

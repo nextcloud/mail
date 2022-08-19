@@ -158,7 +158,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Escolla un cartafol no que gardar o anexo",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Esta mensaxe está cifrada con PGP. Instale Mailvelope para descifralo.",
     "The images have been blocked to protect your privacy." : "As imaxes foron bloqueadas para protexer a súa intimidade.",
-    "Show" : "Amosar",
+    "Show images" : "Amosar as imaxes",
     "Show images temporarily" : "Amosar as imaxes temporalmente",
     "Always show images from {sender}" : "Amosar sempre as imaxes de {sender}",
     "Always show images from {domain}" : "Amosar sempre as imaxes de {domain}",

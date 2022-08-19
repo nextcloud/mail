@@ -169,7 +169,7 @@
     "Choose a folder to store the attachments in" : "Sèbera una cartella in ue allogare is alligongiados",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Custu messàgiu est tzifradu cun PGP. Installa Mailvelope pro ddu detzifrare.",
     "The images have been blocked to protect your privacy." : "Is imàgines sunt istadas blocadas pro amparare sa privadesa tua.",
-    "Show" : "Mustra",
+    "Show images" : "Mustra imàgines",
     "Show images temporarily" : "Mustra imàgines in manera temporale",
     "Always show images from {sender}" : "Mustra semper imàgines dae {sender}",
     "Always show images from {domain}" : "Mustra semper imàgines dae {domain}",

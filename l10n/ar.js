@@ -76,6 +76,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "اختر مجلد لتخزين المرفقات ",
     "Save all to Files" : "حفظ الجميع لـ الملفات",
     "The images have been blocked to protect your privacy." : "تم حجب هذه الصورة لحماية خصوصيتك",
+    "Show images" : "عرض الصور",
     "Quota" : "الحصة",
     "Saving" : "جاري الحفظ ...",
     "Remove account" : "حذف حساب",

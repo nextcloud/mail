@@ -30,6 +30,7 @@ OC.L10N.register(
     "Important info" : "Titouroù pouezus",
     "Other" : "All",
     "Reply" : "Respont",
+    "Show images" : "Diskouzh ar skeudennoù",
     "Message frame" : "Fram kemenadenn",
     "Quota" : "Quota",
     "Remove account" : "Lemel ar c'hont",

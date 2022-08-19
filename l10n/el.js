@@ -191,7 +191,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Επιλέξτε ένα φάκελο για να αποθηκεύσετε μέσα τα συνημμένα",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Το μήνυμα είναι κρυπτογραφημένο με PGP. Εγκαταστήστε το Mailvelope για αποκρυπτογράφηση.",
     "The images have been blocked to protect your privacy." : "Οι εικόνες έχουν αποκλειστεί για να προστατευθεί η ιδιωτικότητά σας.",
-    "Show" : "Εμφάνιση",
+    "Show images" : "Εμφάνιση εικόνων",
     "Show images temporarily" : "Εμφάνιση εικόνων προσωρινά",
     "Always show images from {sender}" : "Εμφάνιση πάντα εικόνων από {sender}",
     "Always show images from {domain}" : "Εμφάνιση πάντα εικόνων από {domain}",

@@ -182,7 +182,7 @@
     "Choose a folder to store the attachments in" : "Izbor mape za shranjevanje priloge",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Sporočilo je šifrirano s programom PGP. Za odšifriranje mora biti nameščen program Mailvelope.",
     "The images have been blocked to protect your privacy." : "Za zaščito zasebnosti je prikaz slik onemogočen.",
-    "Show" : "Pokaži",
+    "Show images" : "Pokaži slike",
     "Show images temporarily" : "Pokaži slike začasno",
     "Always show images from {sender}" : "Pokaži slike pošiljatelja {sender}",
     "Always show images from {domain}" : "Pokaži slike z domene {domain}",

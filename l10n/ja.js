@@ -144,7 +144,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "添付ファイルを保存するフォルダーを選択してください",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "PGPで本文が暗号化されています。復号化するためにMailvelopeをインストールしてください。",
     "The images have been blocked to protect your privacy." : "画像はあなたのプライバシーを守るためにブロックされています。",
-    "Show" : "表示",
+    "Show images" : "画像を表示する",
     "Show images temporarily" : "画像を一時的に表示",
     "Moving" : "移動中",
     "Quota" : "クオータ",

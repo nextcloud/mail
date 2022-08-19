@@ -143,7 +143,6 @@
     "Choose a folder to store the attachments in" : "Chọn một thư mục để lưu trữ các tệp đính kèm trong",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Thư này được mã hóa bằng PGP. Cài đặt Mailvelope để giải mã nó",
     "The images have been blocked to protect your privacy." : "Các hình ảnh đã bị chặn để bảo vệ sự riêng tư của bạn.",
-    "Show" : "Hiển thị",
     "Show images temporarily" : "Hiển thị hình ảnh tạm thời",
     "Always show images from {sender}" : "Luôn hiển thị hình ảnh từ {sender}",
     "Always show images from {domain}" : "Luôn hiển thị hình ảnh từ {domain}",

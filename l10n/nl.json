@@ -176,7 +176,7 @@
     "Choose a folder to store the attachments in" : "Selecteer een folder waarin de bijlagen opgeslagen moeten worden",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Dit bericht is versleuteld met PGP. Installeer Mailvelope om het te ontcijferen.",
     "The images have been blocked to protect your privacy." : "De afbeeldingen zijn geblokkeerd om je privacy te beschermen",
-    "Show" : "Toon",
+    "Show images" : "Tonen afbeeldingen",
     "Show images temporarily" : "Tonen afbeeldingen tijdelijk",
     "Always show images from {sender}" : "Afbeeldingen van {sender} altijd tonen",
     "Always show images from {domain}" : "Afbeeldingen van {domain} altijd tonen",

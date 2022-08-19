@@ -178,7 +178,7 @@
     "Choose a folder to store the attachments in" : "Valitse kansio johon liitteet tallennetaan",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Tämä viesti on salattu PGP:llä. Asenna Mailvelope purkaaksesi viestin salauksen.",
     "The images have been blocked to protect your privacy." : "Kuvat estettiin yksityisyytesi suojelemiseksi.",
-    "Show" : "Näytä",
+    "Show images" : "Näytä kuvat",
     "Show images temporarily" : "Näytä kuvat väliaikaisesti",
     "Always show images from {sender}" : "Näytä aina kuvat lähettäjältä {sender}",
     "Always show images from {domain}" : "Näytä aina kuvat verkkotunnuksesta {domain}",

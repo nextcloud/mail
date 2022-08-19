@@ -216,7 +216,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Escoge una carpeta donde guardar los adjuntos",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Este mensaje está cifrado con PGP. Instala Mailvelope para descifrarlo.",
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger tu privacidad.",
-    "Show" : "Mostrar",
+    "Show images" : "Mostrar imágenes",
     "Show images temporarily" : "Mostrar imágenes temporalmente",
     "Always show images from {sender}" : "Mostrar siempre las imágenes de {sender}",
     "Always show images from {domain}" : "Mostrar siempre las imágenes de {domain}",

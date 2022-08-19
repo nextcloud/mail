@@ -217,7 +217,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Velg en mappe å lagre vedleggene i",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Denne meldingen er kryptert med PGP. Installer Mailvelope for å dekryptere den.",
     "The images have been blocked to protect your privacy." : "Bildene har blitt blokkert for å beskytte privatlivet.",
-    "Show" : "Vis",
+    "Show images" : "Vis bilder",
     "Show images temporarily" : "Vis bilder midlertidig",
     "Always show images from {sender}" : "Vis alltid bilder fra {sender}",
     "Always show images from {domain}" : "Vis alltid bilder fra {domain}",

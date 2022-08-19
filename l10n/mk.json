@@ -197,7 +197,6 @@
     "Choose a folder to store the attachments in" : "Избери папка за зачувување на прилозите",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Оваа порака е шифрирана со PGP. Инсталирај Mailvelope за да ја дешифрираш.",
     "The images have been blocked to protect your privacy." : "Сликите се блокирани за да ја заштитите вашата приватност.",
-    "Show" : "Прикажи",
     "Show images temporarily" : "Привремено прикажи слики",
     "Always show images from {sender}" : "Секогаш прикажувај фотографии од {sender}",
     "Always show images from {domain}" : "Секогаш прикажувај фотографии од {domain}",

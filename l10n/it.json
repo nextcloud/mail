@@ -178,7 +178,6 @@
     "Choose a folder to store the attachments in" : "Scegli una cartella in cui salvare gli allegati",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Questo messaggio è cifrato con PGP. Installa Mailvelope per decifrarlo.",
     "The images have been blocked to protect your privacy." : "Le immagini sono state bloccate per proteggere la tua riservatezza.",
-    "Show" : "Mostra",
     "Show images temporarily" : "Mostra temporaneamente le immagini",
     "Always show images from {sender}" : "Mostra sempre le immagini da {sender}",
     "Always show images from {domain}" : "Mostra sempre le immagini da {domain}",
