@@ -33,17 +33,20 @@ use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function class_exists;
 use function json_decode;
 
 class PageController extends Controller {
@@ -83,6 +86,7 @@ class PageController extends Controller {
 
 	/** @var OutboxService */
 	private $outboxService;
+	private IEventDispatcher $dispatcher;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -97,7 +101,8 @@ class PageController extends Controller {
 								TagMapper $tagMapper,
 								IInitialState $initialStateService,
 								LoggerInterface $logger,
-								OutboxService $outboxService) {
+								OutboxService $outboxService,
+								IEventDispatcher $dispatcher) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -112,6 +117,7 @@ class PageController extends Controller {
 		$this->initialStateService = $initialStateService;
 		$this->logger = $logger;
 		$this->outboxService = $outboxService;
+		$this->dispatcher = $dispatcher;
 	}
 
 	/**
@@ -121,6 +127,10 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index(): TemplateResponse {
+		if (class_exists(LoadViewer::class)) {
+			$this->dispatcher->dispatchTyped(new LoadViewer());
+		}
+
 		$this->initialStateService->provideInitialState(
 			'debug',
 			$this->config->getSystemValue('debug', false)

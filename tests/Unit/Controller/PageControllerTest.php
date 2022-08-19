@@ -37,6 +37,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -89,6 +90,9 @@ class PageControllerTest extends TestCase {
 	/** @var OutboxService|MockObject */
 	private $outboxService;
 
+	/** @var IEventDispatcher|MockObject */
+	private $eventDispatcher;
+
 	/** @var PageController */
 	private $controller;
 
@@ -109,6 +113,7 @@ class PageControllerTest extends TestCase {
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->outboxService = $this->createMock(OutboxService::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -124,7 +129,8 @@ class PageControllerTest extends TestCase {
 			$this->tagMapper,
 			$this->initialState,
 			$this->logger,
-			$this->outboxService
+			$this->outboxService,
+			$this->eventDispatcher,
 		);
 	}
 
