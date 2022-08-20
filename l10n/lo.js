@@ -16,6 +16,7 @@ OC.L10N.register(
     "Forward" : "ໄປຂ້າງຫນ້າ",
     "Create" : "ສ້າງ",
     "Choose" : "ເລືອກ",
+    "Show images" : "ສະເເດງຮູບພາບ",
     "Quota" : "ການໃຊ້ຮ່ວມກັນໄດ້",
     "Remove account" : "ຍ້າຍບັນຊີ",
     "Loading …" : "ກຳລັງໂຫຼດ",
