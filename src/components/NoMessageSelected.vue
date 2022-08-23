@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
+import AppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails'
 import IconMail from 'vue-material-design-icons/Email'
 
 export default {

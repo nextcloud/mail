@@ -88,9 +88,9 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import UserBubble from '@nextcloud/vue/dist/Components/UserBubble'
-import Popover from '@nextcloud/vue/dist/Components/Popover'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import UserBubble from '@nextcloud/vue/dist/Components/NcUserBubble'
+import Popover from '@nextcloud/vue/dist/Components/NcPopover'
+import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
 
 import { fetchAvatarUrlMemoized } from '../service/AvatarService'
 import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService'

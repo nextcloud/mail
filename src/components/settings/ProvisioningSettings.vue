@@ -360,7 +360,7 @@
 import logger from '../../logger'
 import ProvisionPreview from './ProvisionPreview'
 import { loadState } from '@nextcloud/initial-state'
-import Button from '@nextcloud/vue/dist/Components/Button'
+import Button from '@nextcloud/vue/dist/Components/NcButton'
 
 import IconUpload from 'vue-material-design-icons/Upload'
 import IconDelete from 'vue-material-design-icons/Delete'

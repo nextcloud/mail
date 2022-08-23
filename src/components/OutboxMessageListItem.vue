@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import Avatar from './Avatar'
 import IconDelete from 'vue-material-design-icons/Delete'
 import { getLanguage, translate as t } from '@nextcloud/l10n'

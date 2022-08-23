@@ -163,14 +163,14 @@
 </template>
 
 <script>
-import Button from '@nextcloud/vue/dist/Components/Button'
+import Button from '@nextcloud/vue/dist/Components/NcButton'
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import ProvisioningSettings from './ProvisioningSettings'
 import AntiSpamSettings from './AntiSpamSettings'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconSettings from 'vue-material-design-icons/Cog'
-import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
+import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
 import {
 	disableProvisioning,
 	createProvisioningSettings,

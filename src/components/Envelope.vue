@@ -236,8 +236,8 @@
 	</ListItem>
 </template>
 <script>
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
@@ -272,7 +272,7 @@ import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
-import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import ActionLink from '@nextcloud/vue/dist/Components/NcActionLink'
 import DownloadIcon from 'vue-material-design-icons/Download'
 
 export default {

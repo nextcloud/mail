@@ -89,11 +89,11 @@
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Modal from '@nextcloud/vue/dist/Components/NcModal'
+import Actions from '@nextcloud/vue/dist/Components/NcActions'
+import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
+import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconTag from 'vue-material-design-icons/Tag'
 import { showError, showInfo } from '@nextcloud/dialogs'

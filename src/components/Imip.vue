@@ -64,8 +64,8 @@
 
 <script>
 import EventData from './imip/EventData'
-// import Button from '@nextcloud/vue/dist/Components/Button'
-// import Actions from '@nextcloud/vue/dist/Components/Actions'
+// import Button from '@nextcloud/vue/dist/Components/NcButton'
+// import Actions from '@nextcloud/vue/dist/Components/NcActions'
 import CloseIcon from 'vue-material-design-icons/Close'
 import CalendarIcon from 'vue-material-design-icons/Calendar'
 import { getParserManager } from '@nextcloud/calendar-js'

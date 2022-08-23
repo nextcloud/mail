@@ -4,27 +4,23 @@
 			:no-margin="true"
 			:title="option.label"
 			:avatar-size="24" />
-		<Actions>
-			<ActionButton @click.prevent="removeRecipient(option)">
-				<template #icon>
-					<Close :size="20" />
-				</template>
-			</ActionButton>
-		</Actions>
+		<Button type="tertiary-no-background" @click.prevent="removeRecipient(option)">
+			<template #icon>
+				<Close :size="20" />
+			</template>
+		</Button>
 	</div>
 </template>
 
 <script>
-import ListItemIcon from '@nextcloud/vue/dist/Components/ListItemIcon'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ListItemIcon from '@nextcloud/vue/dist/Components/NcListItemIcon'
+import Button from '@nextcloud/vue/dist/Components/NcButton'
 import Close from 'vue-material-design-icons/Close'
 export default {
 	name: 'RecipientListItem',
 	components: {
 		ListItemIcon,
-		Actions,
-		ActionButton,
+		Button,
 		Close,
 	},
 	props: {
@@ -46,7 +42,7 @@ export default {
 	.multiselect__tags
 	.multiselect__tags-wrap
 	.multiselect__tag--recipient {
-	padding: 0 25px 0 0;
+	padding: 0;
 	border-radius: 25px;
 	border-color: transparent;
 	background-color: var(--color-background-dark);
@@ -62,5 +58,8 @@ export default {
 .multiselect__tag--recipient .action-item--single .material-design-icon {
 	height: 24px;
 	width: 24px;
+}
+::v-deep .option {
+	margin-left: 10px;
 }
 </style>

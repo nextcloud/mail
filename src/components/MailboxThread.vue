@@ -65,10 +65,10 @@
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
-import Button from '@nextcloud/vue/dist/Components/Button'
-import Popover from '@nextcloud/vue/dist/Components/Popover'
+import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
+import AppContentList from '@nextcloud/vue/dist/Components/NcAppContentList'
+import Button from '@nextcloud/vue/dist/Components/NcButton'
+import Popover from '@nextcloud/vue/dist/Components/NcPopover'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import NewMessageButtonHeader from './NewMessageButtonHeader'

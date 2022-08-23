@@ -24,7 +24,7 @@
 	</Modal>
 </template>
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
+import Modal from '@nextcloud/vue/dist/Components/NcModal'
 import logger from '../logger'
 import { toPlain, toHtml, plain } from '../util/text'
 import { saveDraft } from '../service/MessageService'

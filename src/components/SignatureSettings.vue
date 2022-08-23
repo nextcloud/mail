@@ -63,7 +63,7 @@ import logger from '../logger'
 import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
 
 export default {
 	name: 'SignatureSettings',

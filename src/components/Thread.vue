@@ -47,8 +47,8 @@
 </template>
 
 <script>
-import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
-import Popover from '@nextcloud/vue/dist/Components/Popover'
+import AppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails'
+import Popover from '@nextcloud/vue/dist/Components/NcPopover'
 
 import { prop, uniqBy } from 'ramda'
 import debounce from 'lodash/fp/debounce'

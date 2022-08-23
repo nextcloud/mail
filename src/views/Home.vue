@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Content from '@nextcloud/vue/dist/Components/Content'
+import Content from '@nextcloud/vue/dist/Components/NcContent'
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import logger from '../logger'
