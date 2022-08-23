@@ -238,7 +238,7 @@ export default {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
 		},
- 	},
+	},
 }
 </script>
 
