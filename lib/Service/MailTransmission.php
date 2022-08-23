@@ -38,8 +38,6 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
-use Horde_Mime_Part;
-use Horde_Text_Filter;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -59,7 +57,6 @@ use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\InvalidDataUriException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -191,59 +188,16 @@ class MailTransmission implements IMailTransmission {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		if ($messageData->isHtml()) {
-			$doc = new \DOMDocument();
-			$doc->loadHTML($message->getContent(), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
 
-			$uriParser = new DataUriParser();
+		$mimeMessage = new MimeMessage(
+			new DataUriParser()
+		);
 
-			$images = $doc->getElementsByTagName('img');
-			for ($i = 0; $i < $images->count(); $i++) {
-				$image = $images->item($i);
-				if ($image === null) {
-					continue;
-				}
-
-				$src = $image->getAttribute('src');
-				if ($src === '') {
-					continue;
-				}
-
-				try {
-					$dataUri = $uriParser->parse($src);
-				} catch (InvalidDataUriException $e) {
-					continue;
-				}
-
-				$part = new Horde_Mime_Part();
-				$part->setCharset($dataUri->getParameters()['charset']);
-				$part->setDisposition('inline');
-				$part->setName('embedded_image_' . $i);
-				$part->setContents($dataUri->getData());
-				$part->setType($dataUri->getMediaType());
-				if ($dataUri->isBase64()) {
-					$part->setTransferEncoding('base64');
-				}
-
-				$cid = $part->setContentId();
-				$mail->addMimePart($part);
-
-				$image->setAttribute('src', 'cid:' . $cid);
-			}
-
-			$htmlContent = $doc->saveHTML();
-
-			$mail->setHtmlBody($htmlContent, null, false);
-			$mail->setBody(Horde_Text_Filter::filter($htmlContent, 'Html2text',
-				['callback' => [$this, 'htmlToTextCallback']]));
-		} else {
-			$mail->setBody($message->getContent());
-		}
-
-		// Append local attachments
-		foreach ($message->getAttachments() as $attachment) {
-			$mail->addMimePart($attachment);
-		}
+		$mail->setBasePart($mimeMessage->build(
+			$messageData->isHtml(),
+			$message->getContent(),
+			$message->getAttachments()
+		));
 
 		$this->eventDispatcher->dispatchTyped(
 			new BeforeMessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
@@ -323,25 +277,6 @@ class MailTransmission implements IMailTransmission {
 		} catch (SentMailboxNotSetException $e) {
 			throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
 		}
-	}
-
-	/**
-	 * A callback for Horde_Text_Filter.
-	 *
-	 * The purpose of this callback is to overwrite the default behaviour
-	 * of html2text filter to convert <p>Hello</p> => Hello\n\n with
-	 * <p>Hello</p> => Hello\n.
-	 *
-	 * @param \DOMDocument $doc
-	 * @param \DOMNode $node
-	 * @return string|null non-null, add this text to the output and skip further processing of the node.
-	 */
-	public function htmlToTextCallback(\DOMDocument $doc, \DOMNode $node) {
-		if ($node instanceof \DOMElement && strtolower($node->tagName) === 'p') {
-			return $node->textContent . "\n";
-		}
-
-		return null;
 	}
 
 	/**

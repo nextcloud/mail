@@ -53,8 +53,7 @@ use OCP\Files\Folder;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class MailTransmissionTest extends TestCase
-{
+class MailTransmissionTest extends TestCase {
 
 	/** @var Folder|MockObject */
 	private $userFolder;
@@ -92,8 +91,7 @@ class MailTransmissionTest extends TestCase
 	/** @var GroupsIntegration|MockObject */
 	private $groupsIntegration;
 
-	protected function setUp(): void
-	{
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userFolder = $this->createMock(Folder::class);
@@ -125,8 +123,7 @@ class MailTransmissionTest extends TestCase
 		);
 	}
 
-	public function testSendNewMessage()
-	{
+	public function testSendNewMessage() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -149,8 +146,7 @@ class MailTransmissionTest extends TestCase
 		$this->transmission->sendMessage($messageData, null);
 	}
 
-	public function testSendMessageFromAlias()
-	{
+	public function testSendMessageFromAlias() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -181,8 +177,7 @@ class MailTransmissionTest extends TestCase
 		$this->transmission->sendMessage($messageData, null, $alias);
 	}
 
-	public function testSendNewMessageWithMessageAsAttachment()
-	{
+	public function testSendNewMessageWithMessageAsAttachment() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -250,8 +245,7 @@ class MailTransmissionTest extends TestCase
 		$this->transmission->sendMessage($messageData, null);
 	}
 
-	public function testSendNewMessageWithAttachmentsFromEmail()
-	{
+	public function testSendNewMessageWithAttachmentsFromEmail() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -316,8 +310,7 @@ class MailTransmissionTest extends TestCase
 		$this->transmission->sendMessage($messageData, null);
 	}
 
-	public function testSendNewMessageWithCloudAttachments()
-	{
+	public function testSendNewMessageWithCloudAttachments() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -364,8 +357,7 @@ class MailTransmissionTest extends TestCase
 		$this->transmission->sendMessage($messageData, null);
 	}
 
-	public function testReplyToAnExistingMessage()
-	{
+	public function testReplyToAnExistingMessage() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
@@ -393,8 +385,7 @@ class MailTransmissionTest extends TestCase
 		$this->transmission->sendMessage($messageData, $messageInReply->getMessageId());
 	}
 
-	public function testSaveDraft()
-	{
+	public function testSaveDraft() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setDraftsMailboxId(123);
@@ -428,8 +419,7 @@ class MailTransmissionTest extends TestCase
 		$this->assertEquals(13, $newId);
 	}
 
-	public function testSendLocalMessage(): void
-	{
+	public function testSendLocalMessage(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(10);
 		$mailAccount->setUserId('testuser');
@@ -469,8 +459,7 @@ class MailTransmissionTest extends TestCase
 		$this->transmission->sendLocalMessage(new Account($mailAccount), $message);
 	}
 
-	public function testConvertInlineImageToAttachment()
-	{
+	public function testConvertInlineImageToAttachment() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$mailAccount->setSentMailboxId(100);
@@ -529,6 +518,5 @@ class MailTransmissionTest extends TestCase
 		$this->assertStringContainsString('img src="cid:', $rawMessage);
 		$this->assertStringContainsString('Content-Type: image/png', $rawMessage);
 		$this->assertStringContainsString('Content-Disposition: inline', $rawMessage);
-
 	}
 }
