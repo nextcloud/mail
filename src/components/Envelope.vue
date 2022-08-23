@@ -737,7 +737,7 @@ list-item-style.draft .app-content-list-item-line-two {
 .app-content-list-item-star.favorite-icon-style {
 	display: inline-block;
 	position: absolute;
-	margin-bottom: 28px;
+	margin-bottom: 21px;
 	margin-left: 28px;
 	cursor: pointer;
 	z-index: 1;
