@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.0-beta1 - 2022-08-23
+### Added
+- Preview message content in the thread view
+- Migrate icons to material design icons
+- Show message actions only for expanded messages in thread
+- Show mailbox counter if sub mailbox has unread messages
+- Show message preview in envelope list
+- Envelope action links to download whole message
+
+### Fixes
+- Remove account color
+- Shorten the relative time of envelopes
+- General design improvements
+
 ## 1.14.0-alpha4 - 2022-07-15
 ### Added
 - Hide system tags from UI
@@ -10,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - 'No subject' on thread when there is none
 - Migrate all icons to material design icons
 - Support for XOAUTH2
+
 ### Fixed
 - Performance logger message for vanished messages
 - Two-way binding for envelope unselect after delete
