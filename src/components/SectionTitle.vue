@@ -22,7 +22,7 @@
 <template>
 	<div id="priority">
 		<div class="app-content-list-item">
-			<h3>{{ name }}</h3>
+			<h2>{{ name }}</h2>
 		</div>
 	</div>
 </template>
@@ -44,10 +44,14 @@ export default {
 }
 .app-content-list-item {
 	opacity: .8;
-	font-size: 17px;
 }
 .app-content-list-item:hover {
 	background-color: transparent;
 	opacity: 0.8;
+}
+h2 {
+	font-weight: normal;
+	font-size: 17px;
+	margin-bottom: 2px;
 }
 </style>
