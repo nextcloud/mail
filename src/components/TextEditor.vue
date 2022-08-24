@@ -179,7 +179,7 @@ export default {
 		onEditorReady(editor) {
 			const schema = editor.model.schema
 
-			logger.debug('CKEditor editor is ready', { editor, schema })
+			logger.debug('TextEditor is ready', { editor, schema })
 
 			this.editorInstance = editor
 
@@ -218,10 +218,8 @@ export default {
 				editor.editing.view.focus()
 			}
 
-			logger.debug(`setting TextEditor contents to <${this.sanitizedValue}>`)
-
 			this.bus.$on('append-to-body-at-cursor', this.appendToBodyAtCursor)
-			this.$emit('ready')
+			this.$emit('ready', editor)
 		},
 		onEditorInput(text) {
 			logger.debug(`TextEditor input changed to <${text}>`)
@@ -240,7 +238,7 @@ export default {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
 		},
-	},
+ 	},
 }
 </script>
 

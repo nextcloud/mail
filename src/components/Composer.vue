@@ -175,23 +175,11 @@
 		<div class="composer-fields message-editor">
 			<!--@keypress="onBodyKeyPress"-->
 			<TextEditor
-				v-if="!encrypt && editorPlainText"
+				v-if="!encrypt"
 				ref="editor"
-				key="editor-plain"
+				:key="editorMode"
 				:value="bodyVal"
-				name="body"
-				class="message-body"
-				:placeholder="t('mail', 'Write message …')"
-				:focus="isReply"
-				:bus="bus"
-				@input="onEditorInput"
-				@ready="onEditorReady" />
-			<TextEditor
-				v-else-if="!encrypt && !editorPlainText"
-				ref="editor"
-				key="editor-rich"
-				:value="bodyVal"
-				:html="true"
+				:html="!editorPlainText"
 				name="body"
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
@@ -274,13 +262,22 @@
 								t('mail', 'Send later')
 							}}
 						</ActionButton>
-						<ActionCheckbox
-							:checked="!encrypt && !editorPlainText"
-							:disabled="encrypt"
-							@check="setEditorModeHtml"
-							@uncheck="setEditorModeText">
+						<ActionButton
+							v-if="!encrypt && editorPlainText"
+							@click="setEditorModeHtml()">
+							<template #icon>
+								<IconHtml :size="20" />
+							</template>
 							{{ t('mail', 'Enable formatting') }}
-						</ActionCheckbox>
+						</ActionButton>
+						<ActionButton
+							v-if="!encrypt && !editorPlainText"
+							@click="setEditorModeText()">
+							<template #icon>
+								<IconClose :size="20" />
+							</template>
+							{{ t('mail', 'Disable formatting') }}
+						</ActionButton>
 						<ActionCheckbox
 							:checked="requestMdn"
 							@check="requestMdn = true"
@@ -439,6 +436,8 @@ import ListItemIcon from '@nextcloud/vue/dist/Components/NcListItemIcon'
 import RecipientListItem from './RecipientListItem'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
+import IconHtml from 'vue-material-design-icons/ImageSizeSelectActual'
+import IconClose from 'vue-material-design-icons/Close'
 import { showError } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
@@ -480,7 +479,7 @@ const STATES = Object.seal({
 	DISCARDED: 7,
 })
 
-const EDITOR_MODE_HTML = 'html'
+const EDITOR_MODE_HTML = 'richtext'
 const EDITOR_MODE_TEXT = 'plaintext'
 
 export default {
@@ -511,6 +510,8 @@ export default {
 		SendClock,
 		UnfoldMoreHorizontal,
 		UnfoldLessHorizontal,
+		IconHtml,
+		IconClose,
 	},
 	props: {
 		fromAccount: {
@@ -617,7 +618,7 @@ export default {
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
-			appendSignature: true,
+			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
@@ -634,7 +635,6 @@ export default {
 				},
 			},
 			autoLimit: true,
-			editorInputTextReady: false,
 		}
 	},
 	computed: {
@@ -958,22 +958,30 @@ export default {
 		onSave() {
 			this.callSaveDraft(false, this.getMessageData)
 		},
-		handleAppendSignature(trigger) {
-			if (this.appendSignature) {
-				this.$refs.editor.editorExecute('insertSignature',
-					trigger,
-					toHtml(detect(this.selectedAlias.signature)).value,
-					this.selectedAlias.signatureAboveQuote
-				)
+		insertSignature() {
+			let trigger
+
+			if (this.changeSignature) {
+				trigger = TRIGGER_CHANGE_ALIAS
+			} else {
+				trigger = TRIGGER_EDITOR_READY
 			}
-			this.appendSignature = false
+
+			this.$refs.editor.editorExecute('insertSignature',
+				trigger,
+				toHtml(detect(this.selectedAlias.signature)).value,
+				this.selectedAlias.signatureAboveQuote
+			)
+
+			this.changeSignature = false
 		},
 		onEditorInput(text) {
 			this.bodyVal = text
 			this.callSaveDraft(true, this.getMessageData)
 		},
-		onEditorReady() {
-			this.handleAppendSignature(TRIGGER_EDITOR_READY)
+		onEditorReady(editor) {
+			this.bodyVal = editor.getData()
+			this.insertSignature()
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
@@ -987,14 +995,16 @@ export default {
 			}
 			return new Date(timestamp).toLocaleString(getCanonicalLocale(), options)
 		},
-		onAliasChange(alias) {
+		async onAliasChange(alias) {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
+			this.changeSignature = true
+
 			if (this.editorMode === EDITOR_MODE_TEXT && alias.editorMode === EDITOR_MODE_HTML) {
-				this.editorMode = alias.editorMode
+				this.editorMode = EDITOR_MODE_HTML
+			} else {
+				this.insertSignature()
 			}
-			this.appendSignature = true
-			this.handleAppendSignature(TRIGGER_CHANGE_ALIAS)
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('on-add-local-attachment')
@@ -1121,7 +1131,7 @@ export default {
 			this.autocompleteRecipients = []
 			this.newRecipients = []
 			this.requestMdn = false
-			this.appendSignature = true
+			this.changeSignature = false
 			this.savingDraft = undefined
 			this.sendAtVal = undefined
 
