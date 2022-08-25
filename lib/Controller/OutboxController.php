@@ -75,7 +75,6 @@ class OutboxController extends Controller {
 	 */
 	public function show(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
-		$this->accountService->find($this->userId, $message->getAccountId());
 		return JsonResponse::success($message);
 	}
 
