@@ -139,10 +139,6 @@ export default {
 	}
 }
 
-a.list-item {
-	width:auto !important;
-}
-
 .attachments-upload-progress {
 	display: block;
 	height: 5px;
