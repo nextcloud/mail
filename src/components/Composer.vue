@@ -1035,8 +1035,8 @@ export default {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
 				.then(() => this.callSaveDraft(true, this.getMessageData))
-				.catch((error) => logger.error('could not upload attachments', { error }))
 				.then(() => logger.debug('attachments uploaded'))
+				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
 		async onMailvelopeLoaded(mailvelope) {
 			this.encrypt = isPgpgMessage(this.body)
