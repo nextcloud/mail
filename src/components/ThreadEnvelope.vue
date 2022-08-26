@@ -518,6 +518,8 @@ export default {
 		top: 8px;
 		left: 40px;
 		cursor: pointer;
+		stroke: var(--color-main-background);
+		stroke-width: 2;
 		&:hover {
 			opacity: .5;
 		}
