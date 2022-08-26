@@ -220,23 +220,31 @@
 			</Tab>
 		</Tabs>
 		<div class="account-form__submit-buttons">
-			<button v-if="mode === 'auto'"
-				class="primary account-form__submit-button"
-				type="submit"
+			<ButtonVue v-if="mode === 'auto'"
+				class="account-form__submit-button"
+				type="primary"
+				native-type="submit"
 				:disabled="isDisabledAuto"
 				@click.prevent="onSubmit">
-				<span v-if="loading" class="icon-loading-small account-form__submit-button__spinner" />
+				<template #icon>
+					<IconLoading v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
+				</template>
 				{{ submitButtonText }}
-			</button>
+			</ButtonVue>
 
-			<button v-else-if="mode === 'manual'"
-				class="primary account-form__submit-button"
-				type="submit"
+			<ButtonVue v-else-if="mode === 'manual'"
+				class="account-form__submit-button"
+				type="primary"
+				native-type="submit"
 				:disabled="isDisabledManual"
 				@click.prevent="onSubmit">
-				<span v-if="loading" class="icon-loading-small account-form__submit-button__spinner" />
+				<template #icon>
+					<IconLoading v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
+				</template>
 				{{ submitButtonText }}
-			</button>
+			</ButtonVue>
 		</div>
 		<div v-if="feedback" class="account-form--feedback">
 			{{ feedback }}
@@ -246,6 +254,9 @@
 
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import IconCheck from 'vue-material-design-icons/Check'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
@@ -256,6 +267,9 @@ export default {
 	components: {
 		Tab,
 		Tabs,
+		ButtonVue,
+		IconLoading,
+		IconCheck,
 	},
 	props: {
 		displayName: {
@@ -609,11 +623,6 @@ input[type='radio'][disabled] + label {
 .account-form__submit-button {
 	display: flex;
 	align-items: center;
-}
-.account-form__submit-button__spinner {
-	margin: 0 10px 0 0;
-	height: auto;
-	width: auto;
 }
 .account-form--feedback {
 	color: var(--color-text-maxcontrast);

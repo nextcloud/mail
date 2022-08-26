@@ -122,7 +122,11 @@
 						:size="20" />
 				</template>
 			</ActionInput>
-			<ActionText v-if="showSaving" icon="icon-loading-small">
+			<ActionText v-if="showSaving">
+				<template #icon>
+					<IconLoading
+						:size="20" />
+				</template>
 				{{ t('mail', 'Saving') }}
 			</ActionText>
 			<ActionButton v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes"
@@ -217,6 +221,7 @@ import IconInbox from 'vue-material-design-icons/Home'
 import IconAllInboxes from 'vue-material-design-icons/InboxMultiple'
 import ImportantIcon from './icons/ImportantIcon'
 import IconSend from 'vue-material-design-icons/Send'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import MoveMailboxModal from './MoveMailboxModal'
 import { UNIFIED_INBOX_ID } from '../store/constants'
 
@@ -253,6 +258,7 @@ export default {
 		IconArchive,
 		IconInbox,
 		ImportantIcon,
+		IconLoading,
 		MoveMailboxModal,
 	},
 	directives: {

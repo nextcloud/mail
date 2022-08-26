@@ -10,21 +10,31 @@
 			{{ t('mail', 'Oh Snap!') }}
 			{{ errorMessage }}
 		</p>
-		<button
+		<ButtonVue
 			class="primary"
-			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
 			:disabled="loading"
 			@click="saveActiveScript">
+			<template #icon>
+				<IconLoading v-if="loading" :size="20" />
+				<IconCheck v-else :size="20" />
+			</template>
 			{{ t('mail', 'Save sieve script') }}
-		</button>
+		</ButtonVue>
 	</div>
 </template>
 
 <script>
 import { getActiveScript, updateActiveScript } from '../service/SieveService'
-
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import IconCheck from 'vue-material-design-icons/Check'
 export default {
 	name: 'SieveFilterForm',
+	components: {
+		ButtonVue,
+		IconLoading,
+		IconCheck,
+	},
 	props: {
 		account: {
 			type: Object,

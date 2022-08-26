@@ -258,12 +258,6 @@ export default {
 <style lang="scss">
 #mail-message {
 	flex-grow: 1;
-
-	.icon-loading {
-		&:only-child:after {
-			margin-top: 20px;
-		}
-	}
 }
 
 .mail-message-body {
@@ -347,14 +341,6 @@ export default {
 	border-bottom: 1px dotted #07d;
 	text-decoration: none;
 	word-wrap: break-word;
-}
-
-.icon-reply-white,
-.icon-reply-all-white {
-	height: 44px;
-	min-width: 44px;
-	margin: 0 !important;
-	padding: 9px 18px 10px 32px !important;
 }
 
 /* Show action button label and move icon to the left

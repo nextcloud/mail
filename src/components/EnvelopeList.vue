@@ -178,10 +178,7 @@
 			</div>
 		</transition>
 		<transition-group name="list">
-			<div id="list-refreshing"
-				key="loading"
-				class="icon-loading-small"
-				:class="{refreshing: refreshing}" />
+			<IconLoading v-if="refreshing" key="loading-icon" />
 			<Envelope
 				v-for="(env, index) in envelopes"
 				:key="env.databaseId"
@@ -212,6 +209,7 @@ import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope'
 import IconDelete from 'vue-material-design-icons/Delete'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import ImportantIcon from './icons/ImportantIcon'
 import IconSelect from 'vue-material-design-icons/CloseThick'
 import IconFavorite from 'vue-material-design-icons/Star'
@@ -235,6 +233,7 @@ export default {
 		ImportantIcon,
 		IconFavorite,
 		IconSelect,
+		IconLoading,
 		MoveModal,
 		OpenInNewIcon,
 		ShareIcon,
@@ -522,30 +521,9 @@ div {
 }
 
 /* TODO: put this in core icons.css as general rule for buttons with icons */
-#load-more-mail-messages.icon-loading-small {
+#load-more-mail-messages {
 	padding-left: 32px;
 	background-position: 9px center;
-}
-
-#list-refreshing {
-	position: absolute;
-	left: calc(50% - 8px);
-	overflow: hidden;
-	padding: 12px;
-	background-color: var(--color-main-background);
-	z-index: 1;
-	border-radius: var(--border-radius-pill);
-	border: 1px solid var(--color-border);
-	top: -24px;
-	opacity: 0;
-	transition-property: top, opacity;
-	transition-duration: 0.5s;
-	transition-timing-function: ease-in-out;
-
-	&.refreshing {
-		top: 4px;
-		opacity: 1;
-	}
 }
 
 .multiselect-header-enter-active,

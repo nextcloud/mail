@@ -49,16 +49,20 @@
 				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 			</div>
 			<div class="buttons">
-				<button class="primary" :disabled="loading || (!allowRoot && !selectedMailboxId)" @click="onSelect">
-					<span v-if="loading" class="icon-loading-small spinner" />
+				<ButtonVue type="primary" :disabled="loading || (!allowRoot && !selectedMailboxId)" @click="onSelect">
+					<template #icon>
+						<IconLoading v-if="loading" :size="20" />
+					</template>
 					{{ loading ? labelSelectLoading : labelSelect }}
-				</button>
+				</ButtonVue>
 			</div>
 		</div>
 	</Modal>
 </template>
 <script>
 import Modal from '@nextcloud/vue/dist/Components/NcModal'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
 import IconBreadcrumb from 'vue-material-design-icons/ChevronRight'
 import IconInbox from 'vue-material-design-icons/Home'
 import IconDraft from 'vue-material-design-icons/Pencil'
@@ -73,6 +77,7 @@ import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 export default {
 	name: 'MailboxPicker',
 	components: {
+		ButtonVue,
 		Modal,
 		IconInbox,
 		IconDraft,
@@ -81,6 +86,7 @@ export default {
 		IconTrash,
 		IconFolder,
 		IconBreadcrumb,
+		IconLoading,
 	},
 	props: {
 		account: {

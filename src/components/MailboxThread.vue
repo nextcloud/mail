@@ -24,14 +24,14 @@
 					<div class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
-							<Button slot="trigger"
+							<ButtonVue slot="trigger"
 								type="tertiary-no-background"
 								:aria-label="t('mail', 'Important info')"
 								class="button">
 								<template #icon>
 									<IconInfo :size="20" />
 								</template>
-							</Button>
+							</ButtonVue>
 							<p class="important-info">
 								{{ importantInfo }}
 							</p>
@@ -67,8 +67,9 @@
 <script>
 import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
 import AppContentList from '@nextcloud/vue/dist/Components/NcAppContentList'
-import Button from '@nextcloud/vue/dist/Components/NcButton'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
 import Popover from '@nextcloud/vue/dist/Components/NcPopover'
+
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import NewMessageButtonHeader from './NewMessageButtonHeader'
@@ -95,7 +96,7 @@ export default {
 	components: {
 		AppContent,
 		AppContentList,
-		Button,
+		ButtonVue,
 		IconInfo,
 		Mailbox,
 		NoMessageSelected,

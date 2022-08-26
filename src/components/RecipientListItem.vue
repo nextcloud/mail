@@ -51,9 +51,8 @@ export default {
 	width: auto;
 	min-width: 24px;
 	height: 24px;
-	min-height: 24px;
 	position: absolute;
-	right: 0;
+	right: -7px;
 }
 .multiselect__tag--recipient .action-item--single .material-design-icon {
 	height: 24px;

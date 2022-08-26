@@ -27,7 +27,7 @@
 				</ActionButton>
 			</Actions>
 		</div>
-		<div v-if="loading" class="icon-loading" />
+		<IconLoading v-if="loading" />
 		<div id="message-container" :class="{hidden: loading, scroll: !fullHeight}">
 			<iframe ref="iframe"
 				class="message-frame"
@@ -48,6 +48,7 @@ import Actions from '@nextcloud/vue/dist/Components/NcActions'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual'
 import IconMail from 'vue-material-design-icons/Email'
 import IconDomain from 'vue-material-design-icons/Domain'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 
 import logger from '../logger'
 import MdnRequest from './MdnRequest'
@@ -62,6 +63,7 @@ export default {
 		IconImage,
 		IconMail,
 		IconDomain,
+		IconLoading,
 	},
 	props: {
 		url: {

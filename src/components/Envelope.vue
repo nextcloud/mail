@@ -240,7 +240,6 @@ import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
 import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
-import { calculateAccountColor } from '../util/AccountColor'
 import IconCreateEvent from 'vue-material-design-icons/Calendar'
 import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
@@ -362,10 +361,6 @@ export default {
 				email: this.account.emailAddress,
 			})
 			return recipients.to.concat(recipients.cc).length > 1
-		},
-		accountColor() {
-			const account = this.$store.getters.getAccount(this.data.accountId)
-			return calculateAccountColor(account?.emailAddress ?? '')
 		},
 		draft() {
 			return this.data.flags.draft
@@ -631,7 +626,7 @@ export default {
 .junk-icon-style {
 	opacity: .2;
 	display: flex;
-	top: 17px;
+	top: 14px;
 	left: 34px;
 	background-size: 16px;
 	height: 20px;
@@ -650,17 +645,6 @@ list-item-style.draft .app-content-list-item-line-two {
 .list-item-style.active {
 	background-color: var(--color-primary-light);
 	border-radius: 16px;
-}
-
-.icon-reply,
-.icon-attachment {
-	display: inline-block;
-	vertical-align: text-top;
-}
-
-.icon-reply {
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
-	opacity: 0.25;
 }
 
 .icon-attachment {
@@ -731,7 +715,7 @@ list-item-style.draft .app-content-list-item-line-two {
 }
 ::v-deep.icon-important.app-content-list-item-star {
 	position: absolute;
-	top: 17px;
+	top: 14px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {

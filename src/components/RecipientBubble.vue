@@ -28,27 +28,40 @@
 			<span class="user-bubble-email">{{ email }}</span>
 		</UserBubble>
 		<div class="contact-wrapper">
-			<div v-if="contactsWithEmail && contactsWithEmail.length > 0" class="contact-existing">
-				<span class="icon-details">
-					{{ t('mail', 'Contacts with this address') }}:
-				</span>
+			<ButtonVue v-if="contactsWithEmail && contactsWithEmail.length > 0" type="tertiary-no-background" class="contact-existing">
+				<template #icon>
+					<IconDetails :size="20" />
+				</template>
+				{{ t('mail', 'Contacts with this address') }}:
 				<span>
 					{{ contactsWithEmailComputed }}
 				</span>
-			</div>
+			</ButtonVue>
 			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
-				<a class="icon-reply" @click="onClickReply">
-					<span class="action-label">{{ t('mail', 'Reply') }}</span>
-				</a>
-				<a class="icon-user" @click="selection = ContactSelectionStateEnum.existing">
-					<span class="action-label">{{ t('mail', 'Add to Contact') }}</span>
-				</a>
-				<a class="icon-add" @click="selection = ContactSelectionStateEnum.new">
-					<span class="action-label">{{ t('mail', 'New Contact') }}</span>
-				</a>
-				<a class="icon-clippy" @click="onClickCopyToClipboard">
-					<span class="action-label">{{ t('mail', 'Copy to clipboard') }}</span>
-				</a>
+				<ButtonVue type="tertiary-no-background" @click="onClickReply">
+					<template #icon>
+						<IconReply :size="20" />
+					</template>
+					{{ t('mail', 'Reply') }}
+				</ButtonVue>
+				<ButtonVue type="tertiary-no-background" @click="selection = ContactSelectionStateEnum.existing">
+					<template #icon>
+						<IconUser :size="20" />
+					</template>
+					{{ t('mail', 'Add to Contact') }}
+				</ButtonVue>
+				<ButtonVue type="tertiary-no-background" @click="selection = ContactSelectionStateEnum.new">
+					<template #icon>
+						<IconAdd :size="20" />
+					</template>
+					{{ t('mail', 'New Contact') }}
+				</ButtonVue>
+				<ButtonVue type="tertiary-no-background" @click="onClickCopyToClipboard">
+					<template #icon>
+						<IconClipboard :size="20" />
+					</template>
+					{{ t('mail', 'Copy to clipboard') }}
+				</ButtonVue>
 			</div>
 			<div v-else class="contact-input-wrapper">
 				<Multiselect
@@ -70,17 +83,23 @@
 				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
 			</div>
 			<div v-if="selection !== ContactSelectionStateEnum.select">
-				<a class="icon-close" type="button" @click="selection = ContactSelectionStateEnum.select">
+				<ButtonVue type="tertiary-no-background" @click="selection = ContactSelectionStateEnum.select">
+					<template #icon>
+						<IconClose :size="20" />
+					</template>
 					{{ t('mail', 'Go back') }}
-				</a>
-				<a
+				</ButtonVue>
+
+				<ButtonVue
 					v-close-popover
 					:disabled="addButtonDisabled"
-					class="icon-checkmark"
-					type="button"
+					type="tertiary-no-background"
 					@click="onClickAddToContact">
+					<template #icon>
+						<IconCheck :size="20" />
+					</template>
 					{{ t('mail', 'Add') }}
-				</a>
+				</ButtonVue>
 			</div>
 		</div>
 	</Popover>
@@ -88,10 +107,19 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
+
 import UserBubble from '@nextcloud/vue/dist/Components/NcUserBubble'
 import Popover from '@nextcloud/vue/dist/Components/NcPopover'
 import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
 
+import IconReply from 'vue-material-design-icons/Reply'
+import IconAdd from 'vue-material-design-icons/Plus'
+import IconClose from 'vue-material-design-icons/Close'
+import IconClipboard from 'vue-material-design-icons/ClipboardText'
+import IconDetails from 'vue-material-design-icons/Information'
+import IconCheck from 'vue-material-design-icons/Check'
+import IconUser from 'vue-material-design-icons/Account'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService'
 import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService'
 import uniqBy from 'lodash/fp/uniqBy'
@@ -104,9 +132,17 @@ const ContactSelectionStateEnum = Object.freeze({ new: 1, existing: 2, select: 3
 export default {
 	name: 'RecipientBubble',
 	components: {
+		ButtonVue,
 		UserBubble,
 		Popover,
 		Multiselect,
+		IconReply,
+		IconUser,
+		IconAdd,
+		IconClose,
+		IconClipboard,
+		IconDetails,
+		IconCheck,
 	},
 	props: {
 		email: {
@@ -251,38 +287,11 @@ export default {
 		width: 100%;
 	}
 }
-.icon-clippy,
-.icon-user,
-.icon-reply,
-.icon-checkmark,
-.icon-close,
-.icon-add {
-	display: flex;
-	align-items: center;
-	height: 44px;
-	min-width: 44px;
-	margin: 0;
-	padding: 9px 18px 10px 32px;
-}
-@media only screen and (min-width: 600px) {
-	.icon-clippy,
-	.icon-user,
-	.icon-reply,
-	.icon-checkmark,
-	.icon-close,
-	.icon-add {
-		background-position: 12px center;
-	}
-}
 
 .contact-existing {
-	margin-bottom: 10px;
-	font-size: small;
-	.icon-details {
-		padding-left: 34px;
-		background-position: 10px center;
-		text-align: left;
-	}
+	font-size: small !important;
 }
-
+::v-deep .button-vue__text {
+	font-weight: normal !important;
+}
 </style>

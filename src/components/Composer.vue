@@ -214,22 +214,22 @@
 					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
 					<span v-else-if="savingDraft === false" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
-				<VButton v-if="!savingDraft && !canSaveDraft"
+				<ButtonVue v-if="!savingDraft && !canSaveDraft"
 					class="button"
 					type="tertiary"
 					@click="onSave">
 					<template #icon>
 						<Download :size="20" :title="t('mail', 'Save draft')" />
 					</template>
-				</VButton>
-				<VButton v-if="savingDraft === false"
+				</ButtonVue>
+				<ButtonVue v-if="savingDraft === false"
 					class="button"
 					type="tertiary"
 					@click="discardDraft">
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
-				</VButton>
+				</ButtonVue>
 			</div>
 			<div class="composer-actions--secondary-actions">
 				<Actions @close="isMoreActionsOpen = false">
@@ -352,15 +352,17 @@
 					</template>
 				</Actions>
 
-				<Button :disabled="!canSend"
-					class="button primary send-button"
-					type="submit"
+				<ButtonVue :disabled="!canSend"
+					native-type="submit"
+					type="primary"
 					@click="onSend">
-					<Send
-						:title="submitButtonTitle"
-						:size="20" />
+					<template #icon>
+						<Send
+							:title="submitButtonTitle"
+							:size="20" />
+					</template>
 					{{ submitButtonTitle }}
-				</Button>
+				</ButtonVue>
 			</div>
 		</div>
 	</div>
@@ -374,24 +376,24 @@
 		<p v-if="errorText">
 			{{ errorText }}
 		</p>
-		<Button @click="state = STATES.EDITING">
+		<ButtonVue type="tertiary" @click="state = STATES.EDITING">
 			{{ t('mail', 'Go back') }}
-		</Button>
-		<Button @click="onSend">
+		</ButtonVue>
+		<ButtonVue type="tertiary" @click="onSend">
 			{{ t('mail', 'Retry') }}
-		</Button>
+		</ButtonVue>
 	</EmptyContent>
 	<div v-else-if="state === STATES.WARNING" class="emptycontent" role="alert">
 		<h2>{{ t('mail', 'Warning sending your message') }}</h2>
 		<p v-if="errorText">
 			{{ errorText }}
 		</p>
-		<Button @click="state = STATES.EDITING">
+		<ButtonVue type="tertiary" @click="state = STATES.EDITING">
 			{{ t('mail', 'Go back') }}
-		</Button>
-		<Button @click="onForceSend">
+		</ButtonVue>
+		<ButtonVue type="tertiary" @click="onForceSend">
 			{{ t('mail', 'Send anyway') }}
-		</Button>
+		</ButtonVue>
 	</div>
 	<EmptyContent v-else>
 		<template #icon>
@@ -408,12 +410,13 @@ import isArray from 'lodash/fp/isArray'
 import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
+
 import Actions from '@nextcloud/vue/dist/Components/NcActions'
 import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
 import ActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio'
-import Button from '@nextcloud/vue/dist/Components/NcButton'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments'
@@ -480,7 +483,7 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		ActionRadio,
-		VButton: Button,
+		ButtonVue,
 		ComposerAttachments,
 		ChevronLeft,
 		Delete,

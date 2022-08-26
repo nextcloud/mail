@@ -34,28 +34,41 @@
 			<ActionButton
 				v-if="isCalendarEvent"
 				class="attachment-import calendar"
-				:icon="{'icon-add': !loadingCalendars, 'icon-loading-small': loadingCalendars}"
 				:disabled="loadingCalendars"
 				@click.stop="loadCalendars">
+				<template #icon>
+					<IconAdd v-if="!loadingCalendars" :size="20" />
+					<IconLoading v-else-if="loadingCalendars" :size="20" />
+				</template>
 				{{ t('mail', 'Import into calendar') }}
 			</ActionButton>
-			<ActionButton icon="icon-download"
+			<ActionButton
 				class="attachment-download"
 				@click="download">
+				<template #icon>
+					<IconDownload :size="20" />
+				</template>
 				{{ t('mail', 'Download attachment') }}
 			</ActionButton>
 			<ActionButton
 				class="attachment-save-to-cloud"
-				:icon="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
 				:disabled="savingToCloud"
 				@click.stop="saveToCloud">
+				<template #icon>
+					<IconSave v-if="!savingToCloud" :size="20" />
+					<IconLoading v-else-if="savingToCloud" :size="20" />
+				</template>
 				{{ t('mail', 'Save to Files') }}
 			</ActionButton>
 			<div
 				v-on-click-outside="closeCalendarPopover"
 				class="popovermenu bubble attachment-import-popover hidden"
 				:class="{open: showCalendarPopover}">
-				<PopoverMenu :menu="calendarMenuEntries" />
+				<PopoverMenu :menu="calendarMenuEntries">
+					<template #icon>
+						<IconAdd :size="20" />
+					</template>
+				</PopoverMenu>
 			</div>
 		</Actions>
 	</div>
@@ -67,10 +80,15 @@ import { formatFileSize } from '@nextcloud/files'
 import { translate as t } from '@nextcloud/l10n'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { mixin as onClickOutside } from 'vue-on-click-outside'
+
 import PopoverMenu from '@nextcloud/vue/dist/Components/NcPopoverMenu'
 import Actions from '@nextcloud/vue/dist/Components/NcActions'
 import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import IconAdd from 'vue-material-design-icons/Plus'
+import IconSave from 'vue-material-design-icons/Folder'
+import IconDownload from 'vue-material-design-icons/Download'
 import Logger from '../logger'
 
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService'
@@ -82,6 +100,10 @@ export default {
 		PopoverMenu,
 		Actions,
 		ActionButton,
+		IconAdd,
+		IconLoading,
+		IconSave,
+		IconDownload,
 	},
 	mixins: [onClickOutside],
 	props: {
@@ -143,7 +165,6 @@ export default {
 		calendarMenuEntries() {
 			return this.calendars.map((cal) => {
 				return {
-					icon: 'icon-add',
 					text: cal.displayname,
 					action: this.importCalendar(cal.url),
 				}

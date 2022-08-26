@@ -1,19 +1,23 @@
 <template>
 	<div class="wrapper">
 		<div v-if="hint" class="emptycontent">
-			<a class="icon-loading" />
+			<IconLoading :size="20" />
 			<h2>{{ hint }}</h2>
 			<transition name="fade">
 				<em v-if="slowHint && slow">{{ slowHint }}</em>
 			</transition>
 		</div>
-		<div v-else class="container icon-loading" />
+		<IconLoading v-else class="container" />
 	</div>
 </template>
 
 <script>
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 export default {
 	name: 'Loading',
+	components: {
+		IconLoading,
+	},
 	props: {
 		hint: {
 			type: String,
