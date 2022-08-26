@@ -724,6 +724,8 @@ list-item-style.draft .app-content-list-item-line-two {
 	margin-bottom: 21px;
 	margin-left: 28px;
 	cursor: pointer;
+	stroke: var(--color-main-background);
+	stroke-width: 2;
 	z-index: 1;
 	&:hover {
 		opacity: .4;
