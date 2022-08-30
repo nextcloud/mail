@@ -224,3 +224,13 @@ export default {
 	cursor: text;
 }
 </style>
+
+<style>
+/*
+Overwrite the default z-index for CKEditor
+https://github.com/ckeditor/ckeditor5/issues/1142
+ */
+:root {
+	--ck-z-default: 10000;
+}
+</style>
