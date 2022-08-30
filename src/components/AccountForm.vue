@@ -224,7 +224,7 @@
 				class="account-form__submit-button"
 				type="primary"
 				native-type="submit"
-				:disabled="isDisabledAuto"
+				:disabled="isDisabledAuto || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
 					<IconLoading v-if="loading" :size="20" />
@@ -237,7 +237,7 @@
 				class="account-form__submit-button"
 				type="primary"
 				native-type="submit"
-				:disabled="isDisabledManual"
+				:disabled="isDisabledManual || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
 					<IconLoading v-if="loading" :size="20" />
