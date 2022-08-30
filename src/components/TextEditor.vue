@@ -111,6 +111,7 @@ export default {
 				'bold',
 				'italic',
 				'fontColor',
+				'imageUpload',
 				'alignment',
 				'bulletedList',
 				'numberedList',
@@ -119,7 +120,6 @@ export default {
 				'strikethrough',
 				'link',
 				'removeFormat',
-				'imageUpload',
 			])
 		}
 
