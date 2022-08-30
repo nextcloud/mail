@@ -2,12 +2,11 @@
 	<Content app-name="mail">
 		<Navigation v-if="hasAccounts" />
 		<div class="mail-empty-content">
-			<EmptyContent>
+			<EmptyContent :title="t('mail', 'Connect your mail account')">
 				<template #icon>
 					<IconMail :size="65" />
 				</template>
-				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
-				<template #desc>
+				<template #action>
 					<AccountForm :display-name="displayName"
 						:email="email"
 						:error.sync="error"
