@@ -154,7 +154,12 @@ class Html {
 
 		$uriSchemeRegistry = HTMLPurifier_URISchemeRegistry::instance();
 		$uriSchemeRegistry->register('cid', new CidURIScheme());
-		$uriSchemeRegistry->register('data', new \HTMLPurifier_URIScheme_data());
+
+		$uriSchemaData = new \HTMLPurifier_URIScheme_data();
+		$uriSchemaData->allowed_types['image/bmp'] = true;
+		$uriSchemaData->allowed_types['image/tiff'] = true;
+		$uriSchemaData->allowed_types['image/webp'] = true;
+		$uriSchemeRegistry->register('data', $uriSchemaData);
 
 		$purifier = new HTMLPurifier($config);
 
