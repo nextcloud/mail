@@ -4,6 +4,7 @@
 
 <script>
 import moment from '@nextcloud/moment'
+import { shortRelativeDatetime } from '../util/shortRelativeDatetime'
 
 export default {
 	name: 'Moment',
@@ -22,7 +23,7 @@ export default {
 			return moment.unix(this.timestamp).format(this.format)
 		},
 		formatted() {
-			return moment.unix(this.timestamp).fromNow()
+			return shortRelativeDatetime(new Date(this.timestamp * 1000))
 		},
 	},
 }
