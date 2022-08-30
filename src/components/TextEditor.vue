@@ -138,9 +138,7 @@ export default {
 	},
 	computed: {
 		sanitizedValue() {
-			return DOMPurify.sanitize(this.value, {
-				FORBID_TAGS: ['style'],
-			})
+			return this.sanitizeValue(this.value)
 		},
 	},
 	beforeMount() {
@@ -222,6 +220,7 @@ export default {
 			this.$emit('ready', editor)
 		},
 		onEditorInput(text) {
+			text = this.sanitizeValue(text)
 			logger.debug(`TextEditor input changed to <${text}>`)
 			this.$emit('input', text)
 		},
@@ -237,6 +236,11 @@ export default {
 			} else {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
+		},
+		sanitizeValue(text) {
+			return DOMPurify.sanitize(text, {
+				FORBID_TAGS: ['style'],
+			})
 		},
 	},
 }
