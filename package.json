@@ -37,7 +37,7 @@
     "@nextcloud/calendar-js": "^3.1.0",
     "@nextcloud/dialogs": "^3.2.0",
     "@nextcloud/files": "^2.1.0",
-    "@nextcloud/initial-state": "^1.2.1",
+    "@nextcloud/initial-state": "^2.0.0",
     "@nextcloud/l10n": "^1.6.0",
     "@nextcloud/logger": "^2.3.0",
     "@nextcloud/moment": "^1.2.1",
