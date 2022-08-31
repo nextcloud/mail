@@ -1,6 +1,6 @@
 <template>
 	<div id="emptycontent">
-		<slot> {{ t('mail', 'Messages marked as important will show up here') }} </slot>
+		<slot> {{ t('mail', 'No messages') }} </slot>
 	</div>
 </template>
 
