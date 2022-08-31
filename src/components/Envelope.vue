@@ -68,6 +68,14 @@
 				{{ data.previewText }}
 			</div>
 		</template>
+		<template #indicator>
+			<!-- Color dot -->
+			<IconBullet v-if="!data.flags.seen"
+				:size="16"
+				:aria-hidden="false"
+				:aria-label="t('mail', 'This message is unread')"
+				fill-color="var(--color-primary-element)" />
+		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
 				<ActionButton
@@ -263,6 +271,7 @@ import EmailRead from 'vue-material-design-icons/EmailOpen'
 import EmailUnread from 'vue-material-design-icons/Email'
 import IconAttachment from 'vue-material-design-icons/Paperclip'
 import ImportantIcon from './icons/ImportantIcon'
+import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle'
 import JunkIcon from './icons/JunkIcon'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
@@ -300,6 +309,7 @@ export default {
 		EmailRead,
 		EmailUnread,
 		IconAttachment,
+		IconBullet,
 		Reply,
 		ActionLink,
 		DownloadIcon,
