@@ -371,17 +371,21 @@
 		:hint="t('mail', 'Sending …')"
 		role="alert"
 		class="sending-hint" />
-	<EmptyContent v-else-if="state === STATES.ERROR" class="centered-content" role="alert">
-		<h2>{{ t('mail', 'Error sending your message') }}</h2>
+	<EmptyContent v-else-if="state === STATES.ERROR"
+		:title="t('mail', 'Error sending your message')"
+		class="centered-content"
+		role="alert">
 		<p v-if="errorText">
 			{{ errorText }}
 		</p>
-		<ButtonVue type="tertiary" @click="state = STATES.EDITING">
-			{{ t('mail', 'Go back') }}
-		</ButtonVue>
-		<ButtonVue type="tertiary" @click="onSend">
-			{{ t('mail', 'Retry') }}
-		</ButtonVue>
+		<template #action>
+			<ButtonVue type="tertiary" @click="state = STATES.EDITING">
+				{{ t('mail', 'Go back') }}
+			</ButtonVue>
+			<ButtonVue type="tertiary" @click="onSend">
+				{{ t('mail', 'Retry') }}
+			</ButtonVue>
+		</template>
 	</EmptyContent>
 	<div v-else-if="state === STATES.WARNING" class="emptycontent" role="alert">
 		<h2>{{ t('mail', 'Warning sending your message') }}</h2>
@@ -395,11 +399,10 @@
 			{{ t('mail', 'Send anyway') }}
 		</ButtonVue>
 	</div>
-	<EmptyContent v-else>
+	<EmptyContent v-else :title="sendAtVal ? t('mail', 'Message will be sent at') + ' ' + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!')">
 		<template #icon>
 			<IconCheck :size="20" />
 		</template>
-		<h2>{{ sendAtVal ? t('mail', 'Message will be sent at') + ' ' + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!') }}</h2>
 	</EmptyContent>
 </template>
 

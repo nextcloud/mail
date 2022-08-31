@@ -42,12 +42,11 @@
 			</DashboardWidgetItem>
 		</template>
 		<template #empty-content>
-			<EmptyContent id="mail--empty-content">
+			<EmptyContent id="mail--empty-content" :title="t('mail', 'No message found yet')">
 				<template #icon>
 					<IconCheck :size="65" />
 				</template>
-				<template #desc>
-					{{ t('mail', 'No message found yet') }}
+				<template #action>
 					<div class="no-account">
 						<a v-if="accounts.length === 0" :href="accountSetupUrl" class="button">{{ t('mail', 'Set up an account') }}</a>
 					</div>
