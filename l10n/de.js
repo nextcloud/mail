@@ -314,7 +314,7 @@ OC.L10N.register(
     "individual" : "individuell",
     "domain" : "Domain",
     "(organizer)" : "(Organisator)",
-    "Untitled event" : "Termin ohne Namen",
+    "Untitled event" : "Unbenannter Termin",
     "Import into {calendar}" : "In {calendar} importieren",
     "Event imported into {calendar}" : "Termin importiert in {calendar}",
     "Airplane" : "Flugzeug",
