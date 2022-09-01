@@ -267,6 +267,7 @@ export default {
 }
 .envelope-list {
 	overflow-y: auto;
+	padding: 0 4px;
 }
 .information-icon {
 	opacity: .7;
