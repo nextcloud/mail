@@ -88,6 +88,8 @@ import {
 } from '../util/priorityInbox'
 import { detect, html } from '../util/text'
 
+const START_MAILBOX_DEBOUNCE = 5 * 1000
+
 export default {
 	name: 'MailboxThread',
 	directives: {
@@ -132,6 +134,7 @@ export default {
 			},
 			priorityImportantQuery,
 			priorityOtherQuery,
+			startMailboxTimer: undefined,
 		}
 	},
 	computed: {
@@ -164,9 +167,19 @@ export default {
 		$route() {
 			this.handleMailto()
 		},
+		mailbox() {
+			clearTimeout(this.startMailboxTimer)
+			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+		},
 	},
 	created() {
 		this.handleMailto()
+	},
+	mounted() {
+		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+	},
+	beforeUnmount() {
+		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
 		deleteMessage(id) {
@@ -210,6 +223,26 @@ export default {
 						subject: this.$route.query.subject || '',
 						body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
 					},
+				})
+			}
+		},
+		async saveStartMailbox() {
+			const currentStartMailboxId = this.$store.getters.getPreference('start-mailbox-id')
+			if (currentStartMailboxId === this.mailbox.databaseId) {
+				return
+			}
+			logger.debug(`Saving mailbox ${this.mailbox.databaseId} as start mailbox`)
+
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'start-mailbox-id',
+						value: this.mailbox.databaseId,
+					})
+			} catch (error) {
+				// Catch and log. This is not critical.
+				logger.warn('Could not update start mailbox id', {
+					error,
 				})
 			}
 		},

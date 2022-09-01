@@ -165,6 +165,7 @@ class PageController extends Controller {
 				'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
 				'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
 				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
+				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 				'tag-classified-messages' => $this->preferences->getPreference($this->currentUserId, 'tag-classified-messages', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
