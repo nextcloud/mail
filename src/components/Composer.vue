@@ -337,6 +337,7 @@
 						</ActionRadio>
 						<ActionInput v-model="selectedDate"
 							type="datetime-local"
+							:is-native-picker="true"
 							:first-day-of-week="firstDayDatetimePicker"
 							:use12h="showAmPm"
 							:formatter="formatter"
