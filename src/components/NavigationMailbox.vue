@@ -634,4 +634,7 @@ export default {
 .counter-bubble__counter {
 	max-width: initial;
 }
+::v-deep .app-navigation-entry__utils {
+	width: auto
+}
 </style>
