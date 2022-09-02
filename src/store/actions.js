@@ -83,7 +83,11 @@ import { matchError } from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import { wait } from '../util/wait'
-import { updateAccount as updateSieveAccount } from '../service/SieveService'
+import {
+	getActiveScript,
+	updateAccount as updateSieveAccount,
+	updateActiveScript,
+} from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
 import {
@@ -985,6 +989,14 @@ export default {
 		await moveMessage(id, destMailboxId)
 		commit('removeEnvelope', { id })
 		commit('removeMessage', { id })
+	},
+	async fetchActiveSieveScript({ commit }, { accountId }) {
+		const scriptData = await getActiveScript(accountId)
+		commit('setActiveSieveScript', { accountId, scriptData })
+	},
+	async updateActiveSieveScript({ commit }, { accountId, scriptData }) {
+		await updateActiveScript(accountId, scriptData)
+		commit('setActiveSieveScript', { accountId, scriptData })
 	},
 	async updateSieveAccount({ commit }, { account, data }) {
 		logger.debug(`update sieve settings for account ${account.id}`)

@@ -4,7 +4,7 @@
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   - @author 2020 Greta Doci <gretadoci@gmail.com>
-  -
+  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -60,6 +60,31 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
+		<AppSettingsSection
+			v-if="account"
+			id="out-of-office-replies"
+			:title="t('mail', 'Vacation responder')">
+			<p class="settings-hint">
+				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
+			</p>
+			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
+			<p v-else>
+				{{ t('mail', 'Please connect to a sieve server first.') }}
+			</p>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && account.sieveEnabled"
+			id="sieve-filter"
+			:title="t('mail', 'Sieve filter rules')">
+			<div id="sieve-filter">
+				<SieveFilterForm
+					:key="account.accountId"
+					ref="sieveFilterForm"
+					:account="account" />
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
+			<TrustedSenders />
+		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
 			id="mail-server"
 			:title="t('mail', 'Mail server')">
@@ -83,19 +108,6 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && account.sieveEnabled"
-			id="sieve-filter"
-			:title="t('mail', 'Sieve filter rules')">
-			<div id="sieve-filter">
-				<SieveFilterForm
-					:key="account.accountId"
-					ref="sieveFilterForm"
-					:account="account" />
-			</div>
-		</AppSettingsSection>
-		<AppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
-			<TrustedSenders />
-		</AppSettingsSection>
 	</AppSettingsDialog>
 </template>
 
@@ -111,6 +123,7 @@ import TrustedSenders from './TrustedSenders'
 import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
 import Logger from '../logger'
+import OutOfOfficeForm from './OutOfOfficeForm'
 
 export default {
 	name: 'AccountSettings',
@@ -125,6 +138,7 @@ export default {
 		AppSettingsDialog,
 		AppSettingsSection,
 		AccountDefaultsSettings,
+		OutOfOfficeForm,
 	},
 	props: {
 		account: {
@@ -158,9 +172,9 @@ export default {
 				this.$emit('update:open', value)
 			}
 		},
-		open(value) {
+		async open(value) {
 			if (value) {
-				this.showSettings = true
+				await this.onOpen()
 			}
 		},
 	},
@@ -183,6 +197,12 @@ export default {
 				behavior: 'smooth',
 			})
 
+		},
+		async onOpen() {
+			this.showSettings = true
+			await this.$store.dispatch('fetchActiveSieveScript', {
+				accountId: this.account.id,
+			})
 		},
 	},
 }

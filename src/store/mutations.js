@@ -391,4 +391,7 @@ export default {
 	setScheduledSendingDisabled(state, value) {
 		state.isScheduledSendingDisabled = value
 	},
+	setActiveSieveScript(state, { accountId, scriptData }) {
+		Vue.set(state.sieveScript, accountId, scriptData)
+	},
 }
