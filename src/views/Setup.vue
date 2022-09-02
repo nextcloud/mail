@@ -1,24 +1,27 @@
 <template>
 	<Content app-name="mail">
 		<Navigation v-if="hasAccounts" />
-		<div class="mail-empty-content">
-			<EmptyContent :title="t('mail', 'Connect your mail account')">
-				<template #icon>
-					<IconMail :size="65" />
-				</template>
-				<template #action>
-					<AccountForm :display-name="displayName"
-						:email="email"
-						:error.sync="error"
-						@account-created="onAccountCreated" />
-				</template>
-			</EmptyContent>
-		</div>
+		<AppContent>
+			<div class="mail-empty-content">
+				<EmptyContent :title="t('mail', 'Connect your mail account')">
+					<template #icon>
+						<IconMail :size="65" />
+					</template>
+					<template #action>
+						<AccountForm :display-name="displayName"
+							:email="email"
+							:error.sync="error"
+							@account-created="onAccountCreated" />
+					</template>
+				</EmptyContent>
+			</div>
+		</AppContent>
 	</Content>
 </template>
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/NcContent'
+import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
 import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm'
@@ -30,6 +33,7 @@ import logger from '../logger'
 export default {
 	name: 'Setup',
 	components: {
+		AppContent,
 		AccountForm,
 		Content,
 		EmptyContent,
