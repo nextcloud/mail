@@ -37,11 +37,12 @@
 				<LoadingSkeleton
 					v-else-if="loading" />
 				<EmptyMailbox v-else-if="messages.length === 0" />
-				<OutboxMessageListItem
-					v-for="message in messages"
-					v-else
-					:key="message.id"
-					:message="message" />
+				<div class="outbox-container" v-else>
+					<OutboxMessageListItem
+						v-for="message in messages"
+						:key="message.id"
+						:message="message" />
+				</div>
 			</AppContentList>
 		</template>
 	</AppContent>
@@ -88,6 +89,11 @@ export default {
 		messages() {
 			return this.$store.getters['outbox/getAllMessages']
 		},
+		failedMessages() {
+			return this.messages.map((message) => {
+				return message.failed
+			})
+		}
 	},
 	created() {
 		// Reload outbox contents every 60 seconds

@@ -25,13 +25,18 @@
 		class="outbox-message"
 		:class="{ selected }"
 		:title="title"
-		:details="details"
 		@click="openModal">
 		<template #icon>
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
 		<template #subtitle>
 			{{ subjectForSubtitle }}
+		</template>
+		<template #indicator>
+			<IconAlertCircleOutline v-if="message.failed"
+				:title="details"
+				:size="20"
+				class="error-icon" />
 		</template>
 		<template slot="actions">
 			<ActionButton
@@ -60,6 +65,7 @@
 import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
 import Avatar from './Avatar'
 import IconDelete from 'vue-material-design-icons/Delete'
+import IconAlertCircleOutline from 'vue-material-design-icons/AlertCircleOutline'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
 import moment from '@nextcloud/moment'
@@ -77,6 +83,7 @@ export default {
 		Avatar,
 		ActionButton,
 		IconDelete,
+		IconAlertCircleOutline,
 		Send,
 	},
 	mixins: [
@@ -164,6 +171,19 @@ export default {
 	&.active {
 		background-color: var(--color-background-dark);
 		border-radius: 16px;
+	}
+
+	.error-icon {
+		position: absolute;
+		top:0;
+		bottom:0;
+		right: 20px;
+		display: flex;
+		align-items: center;
+
+		::v-deep svg {
+			fill: var(--color-error);
+		}
 	}
 
 	.account-color {
