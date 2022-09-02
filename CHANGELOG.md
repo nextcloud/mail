@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.0-beta2 - 2022-09-02
+### Added
+- Migrate icons to material design icons
+- Show primary color dot in subject line for unread messages in envelope list
+
+### Fixes
+- css styles of composer recipients
+- Make it clear that not all attachments will be sent
+- Make thread timestamp shorter
+- Disable submit button on account settings when its loading
+- Replace the appnavigatiocounter to counterbubble component
+- Add border to favorite icon
+- Fix sectiontitle font size and favorite postition
+
 ## 1.14.0-beta1 - 2022-08-23
 ### Added
 - Preview message content in the thread view
