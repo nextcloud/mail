@@ -152,7 +152,14 @@ class Html {
 		$uri = $config->getDefinition('URI');
 		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator, $this->request), $config);
 
-		HTMLPurifier_URISchemeRegistry::instance()->register('cid', new CidURIScheme());
+		$uriSchemeRegistry = HTMLPurifier_URISchemeRegistry::instance();
+		$uriSchemeRegistry->register('cid', new CidURIScheme());
+
+		$uriSchemaData = new \HTMLPurifier_URIScheme_data();
+		$uriSchemaData->allowed_types['image/bmp'] = true;
+		$uriSchemaData->allowed_types['image/tiff'] = true;
+		$uriSchemaData->allowed_types['image/webp'] = true;
+		$uriSchemeRegistry->register('data', $uriSchemaData);
 
 		$purifier = new HTMLPurifier($config);
 

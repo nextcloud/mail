@@ -38,7 +38,6 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
-use Horde_Text_Filter;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -64,6 +63,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -188,17 +188,16 @@ class MailTransmission implements IMailTransmission {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		if ($messageData->isHtml()) {
-			$mail->setHtmlBody($message->getContent(), null, false);
-			$mail->setBody(Horde_Text_Filter::filter($message->getContent(), 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]));
-		} else {
-			$mail->setBody($message->getContent());
-		}
 
-		// Append local attachments
-		foreach ($message->getAttachments() as $attachment) {
-			$mail->addMimePart($attachment);
-		}
+		$mimeMessage = new MimeMessage(
+			new DataUriParser()
+		);
+
+		$mail->setBasePart($mimeMessage->build(
+			$messageData->isHtml(),
+			$message->getContent(),
+			$message->getAttachments()
+		));
 
 		$this->eventDispatcher->dispatchTyped(
 			new BeforeMessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
@@ -278,25 +277,6 @@ class MailTransmission implements IMailTransmission {
 		} catch (SentMailboxNotSetException $e) {
 			throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
 		}
-	}
-
-	/**
-	 * A callback for Horde_Text_Filter.
-	 *
-	 * The purpose of this callback is to overwrite the default behaviour
-	 * of html2text filter to convert <p>Hello</p> => Hello\n\n with
-	 * <p>Hello</p> => Hello\n.
-	 *
-	 * @param \DOMDocument $doc
-	 * @param \DOMNode $node
-	 * @return string|null non-null, add this text to the output and skip further processing of the node.
-	 */
-	public function htmlToTextCallback(\DOMDocument $doc, \DOMNode $node) {
-		if ($node instanceof \DOMElement && strtolower($node->tagName) === 'p') {
-			return $node->textContent . "\n";
-		}
-
-		return null;
 	}
 
 	/**

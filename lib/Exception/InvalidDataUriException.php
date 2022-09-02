@@ -1,9 +1,11 @@
-/*
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @author 2022 Daniel Kesselberg <mail@danielkesselberg.de>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * @license AGPL-3.0-or-later
+ * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,12 +21,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TOAST_UNDO_TIMEOUT } from '@nextcloud/dialogs'
+namespace OCA\Mail\Exception;
 
-export const UNIFIED_ACCOUNT_ID = 0
-export const UNIFIED_INBOX_ID = 'unified'
-export const PRIORITY_INBOX_ID = 'priority'
-export const PAGE_SIZE = 20
-export const UNDO_DELAY = TOAST_UNDO_TIMEOUT
-export const EDITOR_MODE_HTML = 'richtext'
-export const EDITOR_MODE_TEXT = 'plaintext'
+use Exception;
+
+class InvalidDataUriException extends Exception {
+	public function __construct() {
+		parent::__construct('Invalid data uri');
+	}
+}

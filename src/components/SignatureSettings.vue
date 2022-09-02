@@ -182,7 +182,8 @@ export default {
 .ck.ck-editor__editable_inline {
   width: 100%;
   max-width: 78vw;
-  height: 100px;
+  height: 100%;
+  min-height: 100px;
   border-radius: var(--border-radius) !important;
   border: 1px solid var(--color-border) !important;
   box-shadow: none !important;

@@ -93,8 +93,13 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSignatureAboveQuote(bool $signatureAboveQuote)
  * @method string getAuthMethod()
  * @method void setAuthMethod(string $method)
+ * @method int getSignatureMode()
+ * @method void setSignatureMode(int $signatureMode)
  */
 class MailAccount extends Entity {
+	public const SIGNATURE_MODE_PLAIN = 0;
+	public const SIGNATURE_MODE_HTML = 1;
+
 	protected $userId;
 	protected $name;
 	protected $email;
@@ -143,6 +148,8 @@ class MailAccount extends Entity {
 	/** @var int|null */
 	protected $provisioningId;
 
+	/** @var int */
+	protected $signatureMode;
 
 	/**
 	 * @param array $params
@@ -209,6 +216,7 @@ class MailAccount extends Entity {
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('signatureAboveQuote', 'boolean');
+		$this->addType('signatureMode', 'int');
 	}
 
 	/**
@@ -235,6 +243,7 @@ class MailAccount extends Entity {
 			'trashMailboxId' => $this->getTrashMailboxId(),
 			'sieveEnabled' => ($this->isSieveEnabled() === true),
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
+			'signatureMode' => $this->getSignatureMode(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {
