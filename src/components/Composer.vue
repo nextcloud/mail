@@ -1277,14 +1277,15 @@ export default {
 		display: flex;
 		align-items: flex-start;
 		flex-wrap: wrap;
-		padding-top:5px;
+		padding-top:2px;
 		width: calc(100% - 120px);
 
 		button {
 			margin-top: 0;
 			background-color: transparent;
 			border:none;
-			opacity: 0.5
+			opacity: 0.5;
+			padding: 10px 16px;
 		}
 
 		button.active,button:active {
@@ -1383,6 +1384,9 @@ export default {
 
 ::v-deep .multiselect .multiselect__tags {
 	border: none !important;
+}
+::v-deep .multiselect .multiselect__input {
+	height: auto !important;
 }
 ::v-deep [data-select="create"] .avatardiv--unknown {
 	background: var(--color-text-maxcontrast) !important;
