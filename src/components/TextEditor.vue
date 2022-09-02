@@ -2,6 +2,7 @@
   - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -25,6 +26,7 @@
 		:value="value"
 		:config="config"
 		:editor="editor"
+		:disabled="disabled"
 		@input="onEditorInput"
 		@ready="onEditorReady" />
 </template>
@@ -80,6 +82,10 @@ export default {
 		bus: {
 			type: Object,
 			required: true,
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {

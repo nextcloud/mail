@@ -94,6 +94,7 @@ export default new Store({
 				tags: {},
 				tagList: [],
 				isScheduledSendingDisabled: false,
+				sieveScript: {},
 			},
 			getters,
 			mutations,
