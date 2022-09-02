@@ -44,8 +44,21 @@ export default {
 	},
 	created() {
 		const accounts = this.$store.getters.accounts
+		let startMailboxId = this.$store.getters.getPreference('start-mailbox-id')
+		if (startMailboxId && !this.$store.getters.getMailbox(startMailboxId)) {
+			// The start ID is set but the mailbox doesn't exist anymore
+			startMailboxId = null
+		}
 
-		if (this.$route.name === 'home' && accounts.length > 1) {
+		if (this.$route.name === 'home' && accounts.length > 1 && startMailboxId) {
+			logger.debug('Loading start mailbox', { id: startMailboxId })
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: startMailboxId,
+				},
+			})
+		} else if (this.$route.name === 'home' && accounts.length > 1) {
 			// Show first account
 			const firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one mailbox

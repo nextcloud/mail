@@ -78,6 +78,11 @@ store.commit('savePreference', {
 	key: 'collect-data',
 	value: getPreferenceFromPage('collect-data'),
 })
+const startMailboxId = getPreferenceFromPage('start-mailbox-id')
+store.commit('savePreference', {
+	key: 'start-mailbox-id',
+	value: startMailboxId ? parseInt(startMailboxId, 10) : null,
+})
 store.commit('savePreference', {
 	key: 'tag-classified-messages',
 	value: getPreferenceFromPage('tag-classified-messages'),

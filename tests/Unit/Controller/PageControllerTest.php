@@ -132,13 +132,14 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(5))
+		$this->preferences->expects($this->exactly(6))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
 				[$this->userId, 'external-avatars', 'true', 'true'],
 				[$this->userId, 'reply-mode', 'top', 'bottom'],
 				[$this->userId, 'collect-data', 'true', 'true'],
+				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'tag-classified-messages', 'true', 'true'],
 			]);
 		$this->accountService->expects($this->once())
@@ -250,6 +251,7 @@ class PageControllerTest extends TestCase {
 				'reply-mode' => 'bottom',
 				'app-version' => '1.2.3',
 				'collect-data' => 'true',
+				'start-mailbox-id' => '123',
 				'tag-classified-messages' => 'true',
 			]);
 		$csp = new ContentSecurityPolicy();
