@@ -23,7 +23,7 @@
 	<div class="mail-message-attachments">
 		<div class="attachments">
 			<MessageAttachment
-				v-for="attachment in attachments"
+				v-for="(attachment, idx) in attachments"
 				:id="attachment.id"
 				:key="attachment.id"
 				:file-name="attachment.fileName"
@@ -33,10 +33,8 @@
 				:is-calendar-event="attachment.isCalendarEvent"
 				:mime="attachment.mime"
 				:mime-url="attachment.mimeUrl"
-				@click="showViewer(attachment)" />
-			<AttachmentImageViewer v-if="attachmentImageURL && showPreview"
-				:url="attachmentImageURL"
-				@close="showPreview = false" />
+				:can-preview="canPreview(fileInfos[idx])"
+				@click="showViewer(fileInfos[idx])" />
 		</div>
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
 			<ButtonVue
@@ -64,6 +62,7 @@
 </template>
 
 <script>
+import { basename } from '@nextcloud/paths'
 import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
 import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import IconFolder from 'vue-material-design-icons/Folder'
@@ -73,12 +72,10 @@ import { saveAttachmentsToFiles } from '../service/AttachmentService'
 
 import MessageAttachment from './MessageAttachment'
 import Logger from '../logger'
-import AttachmentImageViewer from './AttachmentImageViewer'
 
 export default {
 	name: 'MessageAttachments',
 	components: {
-		AttachmentImageViewer,
 		MessageAttachment,
 		ButtonVue,
 		IconLoading,
@@ -98,10 +95,27 @@ export default {
 		return {
 			savingToCloud: false,
 			showPreview: false,
-			attachmentImageURL: '',
 		}
 	},
 	computed: {
+		fileInfos() {
+			return this.attachments.map(attachment => ({
+				filename: attachment.downloadUrl,
+				source: attachment.downloadUrl,
+				basename: basename(attachment.downloadUrl),
+				mime: attachment.mime,
+				etag: 'fixme',
+				hasPreview: false,
+				fileid: parseInt(attachment.id, 10),
+			}))
+		},
+		previewableFileInfos() {
+			return this.fileInfos.filter(fileInfo => (fileInfo.mime.startsWith('image/')
+					|| fileInfo.mime.startsWith('video/')
+					|| fileInfo.mime.startsWith('audio/')
+					|| fileInfo.mime === 'application/pdf')
+				&& OCA.Viewer.mimetypes.includes(fileInfo.mime))
+		},
 		moreThanOne() {
 			return this.attachments.length > 1
 		},
@@ -112,6 +126,9 @@ export default {
 		},
 	},
 	methods: {
+		canPreview(fileInfo) {
+			return this.previewableFileInfos.includes(fileInfo)
+		},
 		saveAll() {
 			const picker = getFilePickerBuilder(t('mail', 'Choose a folder to store the attachments in'))
 				.setMultiSelect(false)
@@ -140,10 +157,16 @@ export default {
 		downloadZip() {
 			window.location = this.zipUrl
 		},
-		showViewer(attachment) {
-			if (attachment.isImage) {
-				this.showPreview = true
-				this.attachmentImageURL = attachment.downloadUrl
+		showViewer(fileInfo) {
+			if (!this.canPreview(fileInfo)) {
+				return
+			}
+
+			if (this.previewableFileInfos.includes(fileInfo)) {
+				OCA.Viewer.open({
+					fileInfo,
+					list: this.previewableFileInfos,
+				})
 			}
 		},
 	},

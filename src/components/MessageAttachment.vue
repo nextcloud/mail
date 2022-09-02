@@ -20,11 +20,10 @@
   -->
 
 <template>
-	<div class="attachment">
+	<div class="attachment" :class="{'message-attachment--can-preview': canPreview }" @click="$emit('click', $event)">
 		<img v-if="isImage"
 			class="mail-attached-image"
-			:src="url"
-			@click="$emit('click', $event)">
+			:src="url">
 		<img class="attachment-icon" :src="mimeUrl">
 		<span class="attachment-name"
 			:title="label">{{ name }}
@@ -140,6 +139,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		canPreview: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -240,14 +243,16 @@ export default {
 .attachment:hover,
 .attachment span:hover {
 	background-color: var(--color-background-hover);
-	cursor: pointer;
+
+	&.message-attachment--can-preview * {
+		cursor: pointer;
+	}
 }
 
 .mail-attached-image {
 	display: block;
 	max-width: 100%;
 	border-radius: var(--border-radius);
-	cursor: pointer;
 }
 .attachment-import-popover {
 	right: 32px;
