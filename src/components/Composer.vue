@@ -461,6 +461,7 @@ import SendClock from 'vue-material-design-icons/SendClock'
 import moment from '@nextcloud/moment'
 import { mapGetters } from 'vuex'
 import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand'
+import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -478,9 +479,6 @@ const STATES = Object.seal({
 	DISCARDING: 6,
 	DISCARDED: 7,
 })
-
-const EDITOR_MODE_HTML = 'richtext'
-const EDITOR_MODE_TEXT = 'plaintext'
 
 export default {
 	name: 'Composer',
@@ -995,11 +993,19 @@ export default {
 			}
 			return new Date(timestamp).toLocaleString(getCanonicalLocale(), options)
 		},
-		async onAliasChange(alias) {
+		onAliasChange(alias) {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
 			this.changeSignature = true
 
+			/**
+			 * Alias change may change the editor mode as well.
+			 *
+			 * As editorMode is the key for the TextEditor component a change will destroy the current instance
+			 * and the signature for the alias is inserted via onEditorReady event.
+			 *
+			 * Otherwise (when editorMode is the same) call insertSignature directly.
+			 */
 			if (this.editorMode === EDITOR_MODE_TEXT && alias.editorMode === EDITOR_MODE_HTML) {
 				this.editorMode = EDITOR_MODE_HTML
 			} else {
