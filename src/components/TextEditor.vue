@@ -22,7 +22,7 @@
 <template>
 	<ckeditor
 		v-if="ready"
-		:value="sanitizedValue"
+		:value="value"
 		:config="config"
 		:editor="editor"
 		@input="onEditorInput"
@@ -52,7 +52,6 @@ import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
 
 import { getLanguage } from '@nextcloud/l10n'
-import DOMPurify from 'dompurify'
 
 import logger from '../logger'
 
@@ -136,11 +135,6 @@ export default {
 			},
 		}
 	},
-	computed: {
-		sanitizedValue() {
-			return this.sanitizeValue(this.value)
-		},
-	},
 	beforeMount() {
 		this.loadEditorTranslations(getLanguage())
 	},
@@ -211,6 +205,7 @@ export default {
 					priority: 'highest',
 				}
 			)
+
 			if (this.focus) {
 				logger.debug('focusing TextEditor')
 				editor.editing.view.focus()
@@ -220,7 +215,6 @@ export default {
 			this.$emit('ready', editor)
 		},
 		onEditorInput(text) {
-			text = this.sanitizeValue(text)
 			logger.debug(`TextEditor input changed to <${text}>`)
 			this.$emit('input', text)
 		},
@@ -236,11 +230,6 @@ export default {
 			} else {
 				throw new Error('Impossible to execute a command before editor is ready.')
 			}
-		},
-		sanitizeValue(text) {
-			return DOMPurify.sanitize(text, {
-				FORBID_TAGS: ['style'],
-			})
 		},
 	},
 }

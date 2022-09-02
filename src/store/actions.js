@@ -101,6 +101,7 @@ import {
 	buildRecipients as buildReplyRecipients,
 	buildReplySubject,
 } from '../ReplyBuilder'
+import DOMPurify from 'dompurify'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -284,6 +285,10 @@ export default {
 					})
 				)
 
+				resp.data = DOMPurify.sanitize(resp.data, {
+					FORBID_TAGS: ['style'],
+				})
+
 				data.body = html(resp.data)
 			} else {
 				data.body = plain(original.body)
@@ -359,6 +364,10 @@ export default {
 						id: templateMessageId,
 					})
 				)
+
+				resp.data = DOMPurify.sanitize(resp.data, {
+					FORBID_TAGS: ['style'],
+				})
 
 				data.body = html(resp.data)
 			} else {
