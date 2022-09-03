@@ -55,7 +55,6 @@ use function array_map;
 use function array_values;
 
 class MailManager implements IMailManager {
-
 	/**
 	 * https://tools.ietf.org/html/rfc3501#section-2.3.2
 	 */
@@ -493,7 +492,6 @@ class MailManager implements IMailManager {
 	 * @see https://tools.ietf.org/html/rfc2087
 	 */
 	public function getQuota(Account $account): ?Quota {
-
 		/**
 		 * Get all the quotas roots of the user's mailboxes
 		 */

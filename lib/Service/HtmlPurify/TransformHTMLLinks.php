@@ -32,7 +32,6 @@ use OCP\IURLGenerator;
  * Adds target="_blank" to all outbound links.
  */
 class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 

@@ -26,7 +26,6 @@ namespace OCA\Mail\Http;
 use OCP\AppFramework\Http\DownloadResponse;
 
 class AvatarDownloadResponse extends DownloadResponse {
-
 	/** @var string */
 	private $content;
 

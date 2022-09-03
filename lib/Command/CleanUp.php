@@ -29,7 +29,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CleanUp extends Command {
-
 	/** @var CleanupService */
 	private $cleanupService;
 

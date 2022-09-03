@@ -28,7 +28,6 @@ namespace OCA\Mail;
 use OCP\IConfig;
 
 class SystemConfig {
-
 	/** @var IConfig */
 	private $config;
 

@@ -35,7 +35,6 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class IMAPClientFactoryTest extends TestCase {
-
 	/** @var ICrypto|MockObject */
 	private $crypto;
 

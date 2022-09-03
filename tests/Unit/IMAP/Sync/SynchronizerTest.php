@@ -38,7 +38,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use function range;
 
 class SynchronizerTest extends TestCase {
-
 	/** @var MessageMapper|MockObject */
 	private $mapper;
 

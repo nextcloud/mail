@@ -28,7 +28,6 @@ use OCP\Contacts\IManager;
 use OCP\IConfig;
 
 class ContactsIntegration {
-
 	/** @var IManager */
 	private $contactsManager;
 

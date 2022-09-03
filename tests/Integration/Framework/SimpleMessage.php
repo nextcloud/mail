@@ -22,7 +22,6 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 class SimpleMessage {
-
 	/** @var string */
 	private $from;
 

@@ -50,7 +50,6 @@ use function class_exists;
 use function json_decode;
 
 class PageController extends Controller {
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 

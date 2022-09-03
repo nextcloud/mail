@@ -36,8 +36,6 @@ use Psr\Log\LoggerInterface;
  * @template-extends QBMapper<Provisioning>
  */
 class ProvisioningMapper extends QBMapper {
-
-
 	/** @var LoggerInterface */
 	private $logger;
 

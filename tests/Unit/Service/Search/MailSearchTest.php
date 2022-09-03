@@ -43,7 +43,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailSearchTest extends TestCase {
-
 	/** @var FilterStringParser|MockObject */
 	private $filterStringParser;
 

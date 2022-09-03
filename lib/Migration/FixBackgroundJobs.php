@@ -34,7 +34,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class FixBackgroundJobs implements IRepairStep {
-
 	/** @var IJobList */
 	private $jobList;
 	/** @var MailAccountMapper */

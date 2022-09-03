@@ -39,7 +39,6 @@ use OCP\Search\SearchResultEntry;
 use function array_map;
 
 class Provider implements IProvider {
-
 	/** @var IMailSearch */
 	private $mailSearch;
 

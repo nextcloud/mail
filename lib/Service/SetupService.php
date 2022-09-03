@@ -40,7 +40,6 @@ use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
 class SetupService {
-
 	/** @var AccountService */
 	private $accountService;
 

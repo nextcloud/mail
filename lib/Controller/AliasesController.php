@@ -32,7 +32,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class AliasesController extends Controller {
-
 	/** @var AliasesService */
 	private $aliasService;
 

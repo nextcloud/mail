@@ -34,7 +34,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
 
 interface IMailSearch {
-
 	/**
 	 * @param Account $account
 	 * @param string $mailboxName

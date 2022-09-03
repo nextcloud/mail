@@ -31,7 +31,6 @@ use function array_key_exists;
 use function count;
 
 class ThreadBuilder {
-
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 

@@ -49,7 +49,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class MailManagerTest extends TestCase {
-
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 

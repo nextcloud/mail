@@ -37,7 +37,6 @@ use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AvatarControllerTest extends TestCase {
-
 	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
 	private $avatarService;
 

@@ -33,7 +33,6 @@ use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 
 class AvatarsController extends Controller {
-
 	/** @var IAvatarService */
 	private $avatarService;
 

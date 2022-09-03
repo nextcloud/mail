@@ -29,7 +29,6 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 
 class AutoCompleteService {
-
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 

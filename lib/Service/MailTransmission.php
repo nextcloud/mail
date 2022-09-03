@@ -75,7 +75,6 @@ use function array_filter;
 use function array_map;
 
 class MailTransmission implements IMailTransmission {
-
 	/** @var Folder */
 	private $userFolder;
 

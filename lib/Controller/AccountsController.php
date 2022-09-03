@@ -50,7 +50,6 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 class AccountsController extends Controller {
-
 	/** @var AccountService */
 	private $accountService;
 

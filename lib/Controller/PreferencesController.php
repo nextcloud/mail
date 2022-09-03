@@ -33,7 +33,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class PreferencesController extends Controller {
-
 	/** @var IUserPreferences */
 	private $userPreference;
 

@@ -43,7 +43,6 @@ use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
 class DeleteDraftListener implements IEventListener {
-
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 

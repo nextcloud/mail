@@ -46,7 +46,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
 class MailboxSyncTest extends TestCase {
-
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 

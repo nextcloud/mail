@@ -35,7 +35,6 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 class ThreadController extends Controller {
-
 	/** @var string */
 	private $currentUserId;
 

@@ -62,7 +62,6 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 
 class MessagesControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 

@@ -29,7 +29,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class AutoCompleteController extends Controller {
-
 	/** @var AutoCompleteService */
 	private $service;
 

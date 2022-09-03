@@ -39,7 +39,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class SyncServiceTest extends TestCase {
-
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 

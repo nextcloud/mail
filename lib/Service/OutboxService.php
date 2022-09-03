@@ -45,7 +45,6 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class OutboxService implements ILocalMailboxService {
-
 	/** @var IMailTransmission */
 	private $transmission;
 

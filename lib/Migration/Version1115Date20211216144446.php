@@ -33,7 +33,6 @@ use OCP\Migration\SimpleMigrationStep;
  * Make the mail_accounts.name column wider
  */
 class Version1115Date20211216144446 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`

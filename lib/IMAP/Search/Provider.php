@@ -35,7 +35,6 @@ use OCA\Mail\Service\Search\SearchQuery;
 use function array_reduce;
 
 class Provider {
-
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 

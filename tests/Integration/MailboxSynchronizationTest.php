@@ -70,7 +70,6 @@ class MailboxSynchronizationTest extends TestCase {
 	}
 
 	public function testSyncEmptyMailbox() {
-
 		/** @var IMailManager $mailManager */
 		$mailManager = OC::$server->get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));

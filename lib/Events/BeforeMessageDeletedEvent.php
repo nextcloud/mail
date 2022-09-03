@@ -29,7 +29,6 @@ use OCA\Mail\Account;
 use OCP\EventDispatcher\Event;
 
 class BeforeMessageDeletedEvent extends Event {
-
 	/** @var Account */
 	private $account;
 

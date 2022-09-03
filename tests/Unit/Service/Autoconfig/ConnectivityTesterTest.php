@@ -29,7 +29,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class ConnectivityTesterTest extends TestCase {
-
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 

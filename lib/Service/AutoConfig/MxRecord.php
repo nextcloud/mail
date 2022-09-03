@@ -26,7 +26,6 @@ namespace OCA\Mail\Service\AutoConfig;
 use Psr\Log\LoggerInterface;
 
 class MxRecord {
-
 	/** @var LoggerInterface */
 	private $logger;
 

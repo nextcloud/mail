@@ -35,7 +35,6 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class SmtpClientFactory {
-
 	/** @var IConfig */
 	private $config;
 

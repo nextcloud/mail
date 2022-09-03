@@ -32,7 +32,6 @@ use function defined;
 use function method_exists;
 
 class OutboxWorkerJob extends TimedJob {
-
 	/** @var OutboxService */
 	private $outboxService;
 

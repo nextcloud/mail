@@ -47,8 +47,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class OutboxServiceTest extends TestCase {
-
-
 	/** @var MailTransmission|MockObject */
 	private $transmission;
 

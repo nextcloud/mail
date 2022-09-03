@@ -32,7 +32,6 @@ use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ManagerTest extends TestCase {
-
 	/** @var ServiceMockObject */
 	private $mock;
 

@@ -29,7 +29,6 @@ use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Db\TrustedSenderMapper;
 
 class TrustedSenderService implements ITrustedSenderService {
-
 	/** @var TrustedSenderMapper */
 	private $mapper;
 

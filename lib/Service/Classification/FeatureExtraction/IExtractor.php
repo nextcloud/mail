@@ -30,7 +30,6 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 
 interface IExtractor {
-
 	/**
 	 * Initialize any data that is used for all messages and return whether the
 	 * extractor is applicable for this account

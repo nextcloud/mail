@@ -26,7 +26,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\ProxyDownloadResponse;
 
 class ProxyDownloadResponseTest extends TestCase {
-
 	/**
 	 * @dataProvider providesResponseData
 	 * @param $content

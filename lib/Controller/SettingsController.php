@@ -36,7 +36,6 @@ use OCP\IRequest;
 use function array_merge;
 
 class SettingsController extends Controller {
-
 	/** @var ProvisioningManager */
 	private $provisioningManager;
 

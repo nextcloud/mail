@@ -29,7 +29,6 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 class Quota implements JsonSerializable {
-
 	/** @var int */
 	private $usage;
 

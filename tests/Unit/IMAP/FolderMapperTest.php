@@ -33,7 +33,6 @@ use OCA\Mail\IMAP\MailboxStats;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 
 class FolderMapperTest extends TestCase {
-
 	/** @var FolderMapper */
 	private $mapper;
 

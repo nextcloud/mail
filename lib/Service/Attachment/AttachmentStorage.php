@@ -33,7 +33,6 @@ use OCP\Files\SimpleFS\ISimpleFolder;
 use Throwable;
 
 class AttachmentStorage {
-
 	/** @var IAppData */
 	private $appData;
 

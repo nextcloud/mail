@@ -42,7 +42,6 @@ use OCP\BackgroundJob\QueuedJob;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantJob extends QueuedJob {
-
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 

@@ -32,7 +32,6 @@ use function defined;
 use function method_exists;
 
 class CleanupJob extends TimedJob {
-
 	/** @var CleanupService */
 	private $cleanupService;
 

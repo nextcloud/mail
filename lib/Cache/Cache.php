@@ -33,7 +33,6 @@ use InvalidArgumentException;
  * This class is inspired by Horde_Imap_Client_Cache_Backend_Cache of the Horde Project
  */
 class Cache extends Horde_Imap_Client_Cache_Backend {
-
 	/** Cache structure version. */
 	public const VERSION = 3;
 

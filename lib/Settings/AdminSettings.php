@@ -34,7 +34,6 @@ use OCP\LDAP\ILDAPProvider;
 use OCP\Settings\ISettings;
 
 class AdminSettings implements ISettings {
-
 	/** @var IInitialStateService */
 	private $initialStateService;
 

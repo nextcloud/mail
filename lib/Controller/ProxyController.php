@@ -38,7 +38,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 class ProxyController extends Controller {
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 

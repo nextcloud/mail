@@ -30,7 +30,6 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 class MailboxStats implements JsonSerializable {
-
 	/** @var int */
 	private $total;
 

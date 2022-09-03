@@ -45,7 +45,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class SaveSentMessageListenerTest extends TestCase {
-
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 

@@ -27,7 +27,6 @@ use OCA\Mail\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class FolderTest extends TestCase {
-
 	/** @var int */
 	private $accountId;
 

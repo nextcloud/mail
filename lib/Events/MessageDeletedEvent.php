@@ -30,7 +30,6 @@ use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
 class MessageDeletedEvent extends Event {
-
 	/** @var Account */
 	private $account;
 

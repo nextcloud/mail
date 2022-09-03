@@ -32,7 +32,6 @@ use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
 class HamReportListener implements IEventListener {
-
 	/** @var LoggerInterface */
 	private $logger;
 
