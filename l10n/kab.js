@@ -13,6 +13,7 @@ OC.L10N.register(
     "Forward" : "Avancer",
     "Create" : "Snulfu-d",
     "Choose" : "Fren",
+    "Message" : "Izen",
     "Delete" : "Kkes",
     "Add" : "Rnu",
     "Unset" : "Non défini",

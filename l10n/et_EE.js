@@ -55,6 +55,7 @@ OC.L10N.register(
     "Edit name" : "Muuda nime",
     "Clear cache" : "Tühjenda puhver",
     "New message" : "Uus sõnum",
+    "Message" : "Sõnum",
     "Delete" : "Kustuta",
     "Copy to clipboard" : "Kopeeri lõikepuhvrisse",
     "Add" : "Lisa",

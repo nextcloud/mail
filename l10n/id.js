@@ -53,6 +53,7 @@ OC.L10N.register(
     "Edit name" : "Edit nama",
     "Clear cache" : "Bersihkan cache",
     "New message" : "Pesan baru",
+    "Message" : "Pesan",
     "Delete" : "Hapus",
     "Add" : "Masukkan",
     "Disabled" : "Dinonaktifkan",

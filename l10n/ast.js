@@ -56,6 +56,7 @@ OC.L10N.register(
     "Mark all as read" : "Conseñar too como lleío",
     "Clear cache" : "Llimpiar caché",
     "New message" : "Mensaxe nuevu",
+    "Message" : "Menxase",
     "Delete" : "Desaniciar",
     "Copy to clipboard" : "Copiar al cartafueyu",
     "Add" : "Amestar",

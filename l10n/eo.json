@@ -107,6 +107,7 @@
     "_{total} message_::_{total} messages_" : ["{total} mesaĝo","{total} mesaĝoj"],
     "New message" : "Nova mesaĝo",
     "No message selected" : "Neniu mesaĝo elektita",
+    "Message" : "Mesaĝo",
     "Delete" : "Forigi",
     "Copy to clipboard" : "Kopii tondejen",
     "Add" : "Aldoni",

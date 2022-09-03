@@ -147,6 +147,7 @@ OC.L10N.register(
     "_{total} message_::_{total} messages_" : ["{total} missatge","{total} missatges"],
     "New message" : "Escriu un missatge",
     "No message selected" : "No s'ha seleccionat cap missatge",
+    "Message" : "Missatge",
     "Delete" : "Suprimeix",
     "Copy to clipboard" : "Copia-ho al porta-papers",
     "Add" : "Afegeix",

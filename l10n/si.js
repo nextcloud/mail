@@ -27,6 +27,7 @@ OC.L10N.register(
     "Loading …" : "පූරණය වෙමින් …",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
     "Edit name" : "නම සංස්කරණය",
+    "Message" : "පණිවිඩය",
     "Add" : "එකතු කරන්න",
     "Disabled" : "අබල කර ඇත",
     "Enabled" : "සබල කර ඇත",

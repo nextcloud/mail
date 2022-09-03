@@ -111,6 +111,7 @@ OC.L10N.register(
     "Clear cache" : "پاک‌سازی انباره",
     "New message" : "پیام جدید",
     "No message selected" : "پیامی انتخاب نشده است",
+    "Message" : "پیام",
     "Delete" : "حذف",
     "Copy to clipboard" : "کپی کردن به حافظه موقت",
     "Add" : "افزودن",

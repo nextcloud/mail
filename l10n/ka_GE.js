@@ -65,6 +65,7 @@ OC.L10N.register(
     "Mark all as read" : "ყველას წაკითხულად მონიშვნა",
     "Clear cache" : "კეშის გასუფთავება",
     "New message" : "ახალი წერილი",
+    "Message" : "წერილი",
     "Delete" : "გაუქმება",
     "Copy to clipboard" : "კოპირება ბუფერში",
     "Add" : "დამატება",

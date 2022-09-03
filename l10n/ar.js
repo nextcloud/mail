@@ -86,6 +86,7 @@ OC.L10N.register(
     "Clear cache" : "مسح ذاكرة التخزين المؤقتة",
     "Delete mailbox" : "حذف صندوق البريد",
     "New message" : "رسالة جديدة",
+    "Message" : "الرسالة",
     "Delete" : "حذف",
     "Copy to clipboard" : "نسخ الرابط",
     "Add" : "إضافة",

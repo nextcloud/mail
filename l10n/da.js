@@ -170,6 +170,7 @@ OC.L10N.register(
     "Outbox" : "Udbakke",
     "New message" : "Ny besked",
     "No message selected" : "Ingen besked valgt",
+    "Message" : "Besked",
     "Could not open outbox" : "Kunne ikke åbne udbakken",
     "Delete" : "Slet",
     "Copy to clipboard" : "Kopier til udklipsholder",

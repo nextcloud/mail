@@ -63,6 +63,7 @@ OC.L10N.register(
     "Edit name" : "Editar nombre",
     "Clear cache" : "Limpiar caché",
     "New message" : "Mensaje nuevo",
+    "Message" : "Mensaje",
     "Delete" : "Borrar",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Añadir",

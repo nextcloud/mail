@@ -72,6 +72,7 @@ OC.L10N.register(
     "Saving" : "Saglabā",
     "Remove account" : "Noņemt kontu",
     "New message" : "Jauna ziņa",
+    "Message" : "Ziņojums",
     "Delete" : "Dzēst",
     "Copy to clipboard" : "Kopēt starpliktuvē",
     "Add" : "Pievienot",

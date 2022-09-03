@@ -65,6 +65,7 @@ OC.L10N.register(
     "Mark all as read" : "Marcar todos como leídos",
     "Clear cache" : "Borrar el caché",
     "New message" : "Mensaje nuevo",
+    "Message" : "Mensaje",
     "Delete" : "Borrar",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Agregar",

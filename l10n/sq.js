@@ -64,6 +64,7 @@ OC.L10N.register(
     "Mark all as read" : "Shënoji krejt si të lexuar",
     "Clear cache" : "Pastroje fshehtinën",
     "New message" : "Mesazh i ri",
+    "Message" : "Mesazh",
     "Delete" : "Fshij",
     "Copy to clipboard" : "Kopjo në dërrasë ",
     "Add" : "Shto",
