@@ -36,7 +36,6 @@ namespace OCA\Mail;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
-use Horde_Mail_Rfc822_List;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
 use JsonSerializable;
@@ -208,10 +207,7 @@ class Account implements JsonSerializable {
 		return $sslMode;
 	}
 
-	/**
-	 * @return string|Horde_Mail_Rfc822_List
-	 */
-	public function getEmail() {
+	public function getEmail(): string {
 		return $this->account->getEmail();
 	}
 
