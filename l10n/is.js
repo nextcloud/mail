@@ -149,6 +149,7 @@ OC.L10N.register(
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} ólesið af {total}","{unread} ólesin af {total}"],
     "New message" : "Ný skilaboð",
     "No message selected" : "Engin skilaboð valin",
+    "Message" : "Skilaboð",
     "Delete" : "Eyða",
     "Copy to clipboard" : "Afrita á klippispjald",
     "Add" : "Bæta við",

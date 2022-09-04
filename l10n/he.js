@@ -167,6 +167,7 @@ OC.L10N.register(
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["אחת לא נקראה מתוך {total}","{unread} לא נקראו מתוך {total}","{unread} לא נקראו מתוך {total}","{unread} לא נקראו מתוך {total}"],
     "New message" : "הודעה חדשה",
     "No message selected" : "לא נבחרה הודעה",
+    "Message" : "הודעה",
     "Oh Snap!" : "שוד ושבר!",
     "Delete" : "מחיקה",
     "Copy to clipboard" : "העתקה ללוח הגזירים",

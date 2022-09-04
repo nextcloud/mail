@@ -153,6 +153,7 @@ OC.L10N.register(
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} непрочитана од {total}","{unread} непрочитане од {total}","{unread} непрочитаних од {total}"],
     "New message" : "Нова порука",
     "No message selected" : "Није одабрана ниједна порука",
+    "Message" : "Порука",
     "Delete" : "Избриши",
     "Copy to clipboard" : "Копирај у оставу",
     "Add" : "Додај",
