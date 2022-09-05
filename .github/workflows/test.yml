@@ -15,15 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0']
-        nextcloud-versions: ['stable22', 'stable23']
-        include:
-            - php-versions: 7.4
-              nextcloud-versions: stable24
-            - php-versions: 8.1
-              nextcloud-versions: master
-            - php-versions: 8.2
-              nextcloud-versions: master
+        php-versions: ['7.4', '8.0', '8.1', '8.2']
+        nextcloud-versions: ['master']
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
@@ -39,10 +32,6 @@ jobs:
       run: echo "<?php" > nextcloud/lib/versioncheck.php
     - name: Install Nextcloud
       run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
-    - name: Fix php-parser on stable20 incompatibility with phpunit 9.3+
-      if: ${{ matrix.nextcloud-versions == 'stable20' }}
-      working-directory: nextcloud/3rdparty
-      run: composer require nikic/php-parser:4.10
     - name: Checkout Mail
       uses: actions/checkout@v3
       with:
@@ -79,13 +68,13 @@ jobs:
               db: ['sqlite', 'mysql', 'pgsql']
               include:
                 - php-versions: 7.4
-                  nextcloud-versions: stable22
+                  nextcloud-versions: master
                   db: 'mysql'
                 - php-versions: 8.0
-                  nextcloud-versions: stable23
+                  nextcloud-versions: master
                   db: 'mysql'
                 - php-versions: 8.1
-                  nextcloud-versions: stable24
+                  nextcloud-versions: master
                   db: 'pgsql'
                 - php-versions: 8.2
                   nextcloud-versions: master
