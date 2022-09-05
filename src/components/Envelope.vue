@@ -652,10 +652,6 @@ export default {
 list-item-style.draft .app-content-list-item-line-two {
 	font-style: italic;
 }
-.list-item-style.active {
-	background-color: var(--color-primary-light);
-	border-radius: 16px;
-}
 
 .icon-attachment {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
