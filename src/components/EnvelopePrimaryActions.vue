@@ -30,11 +30,6 @@ export default {
 	padding: 10px 10px 0 10px;
 }
 
-.list-item-content__actions--primary .action--primary .action-button__text {
-	font-size: 14px;
-	margin-top: -8px;
-}
-
 .list-item-content__actions--primary .action--primary .action-button__text,
 .list-item-content__actions--primary .action--primary .action-button__icon {
 	height: auto;
