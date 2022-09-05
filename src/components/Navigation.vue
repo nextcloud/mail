@@ -204,5 +204,9 @@ to {
 ::v-deep .settings-button {
 	opacity: .7 !important;
 	font-weight: bold !important;
+	border-radius: var(--border-radius-pill) !important;
+}
+::v-deep #app-settings__content {
+background-color: transparent !important;
 }
 </style>
