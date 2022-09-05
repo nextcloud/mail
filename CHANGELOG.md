@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.0.0 – 2022-09-05
+### Added
+- Image support for the message editor and signatures
+- Automatic out-of-office replies (based on Sieve)
+- Preview of images, audio, video and PDF with the Viewer app
+### Changed
+- Adapt to Nextcloud 25 design
+- Remember last used mailbox
+### Removed
+- Nextcloud 22-24 support
+
 ## 1.14.0-beta1 - 2022-08-23
 ### Added
 - Preview message content in the thread view
