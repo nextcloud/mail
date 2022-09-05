@@ -84,7 +84,6 @@ export default {
 	padding: 8px 8px 8px 48px;
 	gap: 4px;
 	height: 61px;
-	border-right: 1px solid var(--color-border)
 }
 .refresh__button {
 	background-color: transparent;
