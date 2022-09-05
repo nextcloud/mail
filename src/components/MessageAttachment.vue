@@ -21,14 +21,18 @@
 
 <template>
 	<div class="attachment" :class="{'message-attachment--can-preview': canPreview }" @click="$emit('click', $event)">
-		<img v-if="isImage"
-			class="mail-attached-image"
-			:src="url">
-		<img class="attachment-icon" :src="mimeUrl">
-		<span class="attachment-name"
-			:title="label">{{ name }}
-			<span class="attachment-size">({{ humanReadable(size) }})</span>
-		</span>
+		<div class="mail-attachment-img--wrapper">
+			<img v-if="isImage"
+				class="mail-attached-image"
+				:src="url">
+			<img v-else class="attachment-icon" :src="mimeUrl">
+		</div>
+		<div class="mail-attached--content">
+			<span class="attachment-name"
+				:title="label">{{ name }}
+			</span>
+			<span class="attachment-size">{{ humanReadable(size) }}</span>
+		</div>
 		<Actions :boundaries-element="boundariesElement">
 			<ActionButton
 				v-if="isCalendarEvent"
@@ -233,11 +237,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .attachment {
-	position: relative;
-	display: inline-block;
-	width: calc(100% - 32px);
-	padding: 16px;
+	height: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: calc(33.3334% - 4px);
+    margin: 2px;
+	padding: 5px;
+    position: relative;
+    align-items: center;
+
+	&:hover {
+		border-radius: 6px;
+	}
 }
 
 .attachment:hover,
@@ -247,6 +261,33 @@ export default {
 	&.message-attachment--can-preview * {
 		cursor: pointer;
 	}
+}
+
+.mail-attachment-img--wrapper {
+	height: 44px;
+	width: 44px;
+	overflow: hidden;
+	display:flex;
+	justify-content: center;
+	position: relative;
+	border-radius: 6px;
+
+	img {
+		transition: 0.3s;
+		opacity: 1;
+		width: 44px;
+		height: 44px;
+	}
+
+	.mail-attached-image {
+		width: 100px;
+	}
+}
+
+.mail-attached--content {
+	width: calc(100% - 100px);
+	display: flex;
+    flex-direction: column;
 }
 
 .mail-attached-image {
@@ -263,18 +304,19 @@ export default {
 }
 .attachment-name {
 	display: inline-block;
-	width: calc(100% - 72px);
+	width: 100%;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	vertical-align: middle;
-	margin-bottom: 20px;
 }
 
 /* show attachment size less prominent */
 .attachment-size {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)';
 	opacity: 0.5;
+	font-size: 12px;
+	line-height: 14px;
 }
 
 .attachment-icon {
@@ -283,8 +325,7 @@ export default {
 	margin-bottom: 20px;
 }
 .action-item {
-	display: inline-block !important;
-	position: relative !important;
+	transition: 0.4s;
 }
 .mail-message-attachments {
 	overflow-x: auto;
