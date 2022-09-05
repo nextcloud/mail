@@ -1,12 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.0-beta3 - 2022-09-05
+### Fixed
+- Css styles of composer recipients
+
 ## 1.14.0-beta2 - 2022-09-02
 ### Added
 - Migrate icons to material design icons
 - Show primary color dot in subject line for unread messages in envelope list
 
-### Fixes
+### Fixed
 - css styles of composer recipients
 - Make it clear that not all attachments will be sent
 - Make thread timestamp shorter
@@ -24,7 +28,7 @@ All notable changes to this project will be documented in this file.
 - Show message preview in envelope list
 - Envelope action links to download whole message
 
-### Fixes
+### Fixed
 - Remove account color
 - Shorten the relative time of envelopes
 - General design improvements
