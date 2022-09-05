@@ -28,7 +28,6 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Service\Attachment\UploadedFile;
 
 interface IAttachmentService {
-
 	/**
 	 * Save an uploaded file
 	 */

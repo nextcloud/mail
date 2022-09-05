@@ -40,7 +40,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class ProvisioningMiddlewareTest extends TestCase {
-
 	/** @var IUserSession|MockObject */
 	private $userSession;
 

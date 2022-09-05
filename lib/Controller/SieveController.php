@@ -37,7 +37,6 @@ use OCP\IRequest;
 use OCP\Security\ICrypto;
 
 class SieveController extends Controller {
-
 	/** @var AccountService */
 	private $accountService;
 

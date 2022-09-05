@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Dashboard;
 
 class ImportantMailWidget extends MailWidget {
-
 	/**
 	 * @inheritDoc
 	 */

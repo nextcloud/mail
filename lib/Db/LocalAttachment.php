@@ -41,7 +41,6 @@ use ReturnTypeWillChange;
  * @method void setLocalMessageId(int $localMessageId)
  */
 class LocalAttachment extends Entity implements JsonSerializable {
-
 	/** @var string */
 	protected $userId;
 

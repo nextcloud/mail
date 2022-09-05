@@ -32,7 +32,6 @@ use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class PreferencesControllerTest extends TestCase {
-
 	/** @var IUserPreferences|PHPUnit_Framework_MockObject_MockObject */
 	private $preferences;
 

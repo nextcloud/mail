@@ -43,7 +43,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class AttachmentServiceTest extends TestCase {
-
 	/** @var LocalAttachmentMapper|MockObject */
 	private $mapper;
 

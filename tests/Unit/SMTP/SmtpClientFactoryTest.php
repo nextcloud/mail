@@ -38,7 +38,6 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SmtpClientFactoryTest extends TestCase {
-
 	/** @var IConfig|MockObject */
 	private $config;
 

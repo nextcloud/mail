@@ -56,7 +56,6 @@ use function OCA\Mail\array_flat_map;
  * @template-extends QBMapper<Message>
  */
 class MessageMapper extends QBMapper {
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 

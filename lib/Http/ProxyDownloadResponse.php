@@ -28,7 +28,6 @@ use DateTime;
 use OCP\AppFramework\Http\DownloadResponse;
 
 class ProxyDownloadResponse extends DownloadResponse {
-
 	/** @var string */
 	private $content;
 

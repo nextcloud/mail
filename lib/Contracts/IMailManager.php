@@ -35,7 +35,6 @@ use OCA\Mail\Service\Quota;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailManager {
-
 	/**
 	 * @param string $uid
 	 * @param int $id

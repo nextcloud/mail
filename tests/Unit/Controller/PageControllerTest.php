@@ -47,7 +47,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class PageControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 

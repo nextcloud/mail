@@ -34,7 +34,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
 
 interface IMailTransmission {
-
 	/**
 	 * Send a new message or reply to an existing one
 	 *

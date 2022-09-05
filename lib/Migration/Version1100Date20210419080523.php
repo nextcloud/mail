@@ -16,7 +16,6 @@ use OCP\Migration\SimpleMigrationStep;
 use Psr\Log\LoggerInterface;
 
 class Version1100Date20210419080523 extends SimpleMigrationStep {
-
 	/** @var IConfig */
 	protected $config;
 

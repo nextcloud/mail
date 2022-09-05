@@ -35,7 +35,6 @@ use function str_replace;
 use function strtolower;
 
 class IspDb {
-
 	/** @var IClient */
 	private $client;
 

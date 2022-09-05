@@ -32,7 +32,6 @@ use OCA\Mail\Exception\ServiceException;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class GroupsIntegrationTest extends TestCase {
-
 	/** @var NextcloudGroupService|MockObject */
 	private $groupService1;
 

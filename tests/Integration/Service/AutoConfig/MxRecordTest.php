@@ -48,7 +48,6 @@ use OCA\Mail\Service\AutoConfig\MxRecord;
 use Psr\Log\LoggerInterface;
 
 class MxRecordTest extends TestCase {
-
 	/** @var MxRecord */
 	private $record;
 

@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP;
 
 class MessageStructureData {
-
 	/** @var bool */
 	private $hasAttachments;
 

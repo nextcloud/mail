@@ -35,7 +35,6 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 class OutboxController extends Controller {
-
 	/** @var OutboxService */
 	private $service;
 

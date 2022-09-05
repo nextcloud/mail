@@ -41,7 +41,6 @@ use function json_decode;
 use function strtolower;
 
 class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
-
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
 

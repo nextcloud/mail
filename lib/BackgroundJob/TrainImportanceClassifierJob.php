@@ -38,7 +38,6 @@ use function defined;
 use function method_exists;
 
 class TrainImportanceClassifierJob extends TimedJob {
-
 	/** @var AccountService */
 	private $accountService;
 

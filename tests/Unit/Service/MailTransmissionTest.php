@@ -54,7 +54,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class MailTransmissionTest extends TestCase {
-
 	/** @var Folder|MockObject */
 	private $userFolder;
 

@@ -29,7 +29,6 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class SieveClientFactory {
-
 	/** @var ICrypto */
 	private $crypto;
 

@@ -30,7 +30,6 @@ use OCP\EventDispatcher\Event;
 use Psr\Log\LoggerInterface;
 
 class SynchronizationEvent extends Event {
-
 	/** @var Account */
 	private $account;
 

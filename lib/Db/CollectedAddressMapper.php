@@ -31,7 +31,6 @@ use function array_map;
  * @template-extends QBMapper<CollectedAddress>
  */
 class CollectedAddressMapper extends QBMapper {
-
 	/**
 	 * @param IDBConnection $db
 	 */

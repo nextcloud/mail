@@ -37,7 +37,6 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Model\IMAPMessage;
 
 class Mailbox {
-
 	/**
 	 * @var Horde_Imap_Client_Socket
 	 */

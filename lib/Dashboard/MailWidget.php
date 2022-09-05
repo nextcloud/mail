@@ -36,7 +36,6 @@ use OCP\IURLGenerator;
 use OCP\Util;
 
 abstract class MailWidget implements IWidget {
-
 	/** @var IL10N */
 	protected $l10n;
 

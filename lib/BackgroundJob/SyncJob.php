@@ -43,7 +43,6 @@ use function method_exists;
 use function sprintf;
 
 class SyncJob extends TimedJob {
-
 	/** @var IUserManager */
 	private $userManager;
 

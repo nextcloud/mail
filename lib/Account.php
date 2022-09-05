@@ -53,7 +53,6 @@ use OCP\Security\ICrypto;
 use ReturnTypeWillChange;
 
 class Account implements JsonSerializable {
-
 	/** @var MailAccount */
 	private $account;
 

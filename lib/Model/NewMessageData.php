@@ -32,7 +32,6 @@ use OCA\Mail\AddressList;
  * @psalm-immutable
  */
 class NewMessageData {
-
 	/** @var Account */
 	private $account;
 

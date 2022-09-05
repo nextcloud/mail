@@ -33,7 +33,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateTagMigrationJobEntry extends Command {
-
 	/** @var JobList */
 	private $jobList;
 

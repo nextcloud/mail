@@ -41,7 +41,6 @@ use OCP\IDBConnection;
 use function array_map;
 
 class MailboxMapper extends QBMapper {
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 

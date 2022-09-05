@@ -30,7 +30,6 @@ use function array_key_exists;
 use function spl_object_id;
 
 class Container {
-
 	/** @var Message|null */
 	private $message;
 

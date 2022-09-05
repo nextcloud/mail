@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Avatar;
 
 class AvatarFactory {
-
 	/**
 	 * Create a new avatar whose URL points to an internal endpoint
 	 *

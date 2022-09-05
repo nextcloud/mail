@@ -30,7 +30,6 @@ use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesService {
-
 	/** @var AliasMapper */
 	private $aliasMapper;
 

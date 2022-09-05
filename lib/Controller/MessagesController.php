@@ -61,7 +61,6 @@ use Psr\Log\LoggerInterface;
 use function array_map;
 
 class MessagesController extends Controller {
-
 	/** @var AccountService */
 	private $accountService;
 

@@ -34,7 +34,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class IspDbTest extends TestCase {
-
 	/** @var IClientService|MockObject */
 	private $clientService;
 

@@ -29,7 +29,6 @@ namespace OCA\Mail\Contracts;
 use OCA\Mail\Service\Avatar\Avatar;
 
 interface IAvatarService {
-
 	/**
 	 * Try to find an avatar for the given email address
 	 *

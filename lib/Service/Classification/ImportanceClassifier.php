@@ -65,7 +65,6 @@ use function json_encode;
  * as important.
  */
 class ImportanceClassifier {
-
 	/**
 	 * Mailbox special uses to exclude from the training
 	 */

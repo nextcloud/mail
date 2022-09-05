@@ -34,7 +34,6 @@ use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SieveClientFactoryTest extends TestCase {
-
 	/** @var ICrypto|MockObject */
 	private $crypto;
 

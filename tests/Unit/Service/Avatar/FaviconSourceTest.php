@@ -38,7 +38,6 @@ use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FaviconSourceTest extends TestCase {
-
 	/** @var IClientService|MockObject */
 	private $clientService;
 

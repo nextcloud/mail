@@ -40,7 +40,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class MailboxesController extends Controller {
-
 	/** @var AccountService */
 	private $accountService;
 

@@ -35,7 +35,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class ThreadBuilderTest extends TestCase {
-
 	/** @var PerformanceLogger|MockObject */
 	private $performanceLogger;
 

@@ -27,7 +27,6 @@ namespace OCA\Mail\Http;
 use OCP\AppFramework\Http\DownloadResponse;
 
 class AttachmentDownloadResponse extends DownloadResponse {
-
 	/** @var string */
 	private $content;
 

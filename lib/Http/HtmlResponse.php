@@ -28,7 +28,6 @@ namespace OCA\Mail\Http;
 use OCP\AppFramework\Http\Response;
 
 class HtmlResponse extends Response {
-
 	/** @var string */
 	private $content;
 

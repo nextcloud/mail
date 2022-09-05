@@ -33,7 +33,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class LocalAttachmentsController extends Controller {
-
 	/** @var IAttachmentService */
 	private $attachmentService;
 

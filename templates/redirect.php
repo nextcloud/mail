@@ -45,9 +45,7 @@ style('mail', 'redirect');
 	?></p>
 
 		<p>
-			<a href="<?php p($_['url']) ?>" class="button primary" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s',
-					[$_['urlHost']]));
-			?></a>
+			<a href="<?php p($_['url']) ?>" class="button primary" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s', [$_['urlHost']])); ?></a>
 		</p>
 	</div>
 <?php endif; ?>

@@ -25,7 +25,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Request;
 
 class RequestTest extends TestCase {
-
 	/** @var string */
 	private $mailbox;
 

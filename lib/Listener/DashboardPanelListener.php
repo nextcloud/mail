@@ -36,7 +36,6 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
 class DashboardPanelListener implements IEventListener {
-
 	/**
 	 * @inheritDoc
 	 */

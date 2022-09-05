@@ -30,7 +30,6 @@ use OCA\Mail\Service\MailManager;
 use OCA\Mail\Tests\Integration\TestCase;
 
 class TagsControllerTest extends TestCase {
-
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

@@ -38,7 +38,6 @@ use function array_merge;
 use function array_reduce;
 
 class PreviewEnhancer {
-
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 

@@ -27,7 +27,6 @@ use Horde_Imap_Client_Exception;
 use Throwable;
 
 class CouldNotConnectException extends ServiceException {
-
 	/** @var string */
 	private $service;
 

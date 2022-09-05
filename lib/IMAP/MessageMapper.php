@@ -52,7 +52,6 @@ use function reset;
 use function sprintf;
 
 class MessageMapper {
-
 	/** @var LoggerInterface */
 	private $logger;
 

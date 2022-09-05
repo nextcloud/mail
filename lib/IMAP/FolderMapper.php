@@ -35,7 +35,6 @@ use function in_array;
 use function reset;
 
 class FolderMapper {
-
 	/**
 	 * This is a temporary workaround for when the sieve folder is a subfolder of
 	 * INBOX. Once "#386 Subfolders and Dovecot" has been resolved, we can go back

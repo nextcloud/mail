@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 interface IUserPreferences {
-
 	/**
 	 * @param string $userId
 	 * @param string $key

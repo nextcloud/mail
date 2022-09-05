@@ -29,7 +29,6 @@ use OCA\Mail\Service\AccountService;
 use Psr\Log\NullLogger;
 
 trait ImapTestAccount {
-
 	/**
 	 * @return string
 	 */

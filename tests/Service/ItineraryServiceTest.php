@@ -39,7 +39,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class ItineraryServiceTest extends TestCase {
-
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 

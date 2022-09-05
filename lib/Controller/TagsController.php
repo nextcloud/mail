@@ -31,7 +31,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class TagsController extends Controller {
-
 	/** @var string */
 	private $currentUserId;
 

@@ -27,7 +27,6 @@ use OCP\Contacts\IManager;
 use OCP\IConfig;
 
 class ContactsIntegrationTest extends TestCase {
-
 	/** @var IManager */
 	private $contactsManager;
 

@@ -43,7 +43,6 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ErrorMiddlewareTest extends TestCase {
-
 	/** @var IConfig|MockObject */
 	private $config;
 

@@ -29,7 +29,6 @@ use OCP\Contacts\IManager;
 use OCP\IConfig;
 
 class ContactsGroupService implements IGroupService {
-
 	/** @var IManager */
 	private $contactsManager;
 

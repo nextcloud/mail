@@ -33,7 +33,6 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 class Avatar implements JsonSerializable {
-
 	/** @var string */
 	private $url;
 

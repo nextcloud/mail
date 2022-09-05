@@ -37,7 +37,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class ProxyControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 

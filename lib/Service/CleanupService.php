@@ -32,7 +32,6 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\TagMapper;
 
 class CleanupService {
-
 	/** @var AliasMapper */
 	private $aliasMapper;
 

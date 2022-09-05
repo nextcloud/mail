@@ -44,7 +44,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use function sprintf;
 
 class MailboxSync {
-
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 

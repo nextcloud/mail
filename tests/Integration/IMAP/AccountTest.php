@@ -28,7 +28,6 @@ namespace OCA\Mail\Tests\Integration\IMAP;
  * @group IMAP
  */
 class AccountTest extends AbstractTest {
-
 	/**
 	 * @dataProvider providesMailBoxNames
 	 * @param $name

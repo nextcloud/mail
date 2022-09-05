@@ -30,7 +30,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class ContactIntegrationController extends Controller {
-
 	/** @var ContactIntegrationService */
 	private $service;
 

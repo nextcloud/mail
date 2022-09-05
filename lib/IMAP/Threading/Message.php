@@ -31,7 +31,6 @@ use function str_replace;
 use function strpos;
 
 class Message implements JsonSerializable {
-
 	/** @var string */
 	private $subject;
 

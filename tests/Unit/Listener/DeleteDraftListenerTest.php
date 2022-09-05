@@ -44,7 +44,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class DeleteDraftListenerTest extends TestCase {
-
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 
