@@ -84,9 +84,9 @@
 					@click.prevent="onToggleFlagged">
 					<template #icon>
 						<StarOutline v-if="showFavoriteIconVariant"
-							:size="20" />
+							:size="24" />
 						<Star v-else
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
@@ -98,9 +98,9 @@
 					@click.prevent="onToggleSeen">
 					<template #icon>
 						<EmailUnread v-if="showImportantIconVariant"
-							:size="20" />
+							:size="24" />
 						<EmailRead v-else
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
@@ -112,7 +112,7 @@
 					@click.prevent="onToggleImportant">
 					<template #icon>
 						<ImportantIcon
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -686,6 +686,11 @@ list-item-style.draft .app-content-list-item-line-two {
 	.app-content-list-item-details {
 		padding-right: 7px;
 		}
+}
+::v-deep .action--primary {
+	.material-design-icon {
+		margin-bottom: -14px;
+	}
 }
 ::v-deep .list-item__extra {
 	margin-left: 41px !important;
