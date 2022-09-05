@@ -578,12 +578,14 @@ export default {
 		gap: 4px;
 
 		&__subject {
+			color: var(--color-main-text);
+			line-height: 130%;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 	}
 	&__preview-text {
-		color: var(--color-text-lighter);
+		color: var(--color-text-maxcontrast);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
