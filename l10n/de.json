@@ -61,6 +61,7 @@
     "Preferred writing mode for new messages and replies." : "Bevorzugter Schreibmodus für neue Nachrichten und Antworten.",
     "Default folders" : "Standardordner",
     "The folders to use for drafts, sent messages and deleted messages." : "Die zu verwendenden Ordner für Entwürfe, gesendete Nachrichten und gelöschte Nachrichten.",
+    "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisierte Antwort auf eingehende Nachrichten. Wenn dir jemand mehrere Nachrichten schickt, wird diese automatische Antwort höchstens einmal alle 4 Tage gesendet.",
     "Sieve filter rules" : "Sieve-Filterregeln",
     "Trusted senders" : "Vertrauenswürdige Absender",
     "Mail server" : "Mail-Server",
