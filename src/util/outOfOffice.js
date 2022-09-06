@@ -132,7 +132,7 @@ export function buildOutOfOfficeSieveScript(sieveScript, {
 	const vacation = [
 		'vacation',
 		':days 4',
-		`:subject "${subject}"`,
+		`:subject "${escapeStringForSieve(subject)}"`,
 	]
 
 	if (allowedRecipients?.length) {
@@ -140,7 +140,7 @@ export function buildOutOfOfficeSieveScript(sieveScript, {
 		vacation.push(`:addresses [${formattedRecipients}]`)
 	}
 
-	vacation.push(`"${message}"`)
+	vacation.push(`"${escapeStringForSieve(message)}"`)
 
 	// Build sieve script
 	const requireSection = [
@@ -175,4 +175,17 @@ export function buildOutOfOfficeSieveScript(sieveScript, {
  */
 export function formatDateForSieve(date) {
 	return date.toISOString().slice(0, 10)
+}
+
+/**
+ * Escape a string for use in a sieve script.
+ * The string has to be surrounded by double quotes (`"`) manually.
+ *
+ * @param {string} string String to escape
+ * @return {string} Escaped string
+ */
+export function escapeStringForSieve(string) {
+	return string
+		.replaceAll(/\\/g, '\\\\')
+		.replaceAll(/"/g, '\\"')
 }

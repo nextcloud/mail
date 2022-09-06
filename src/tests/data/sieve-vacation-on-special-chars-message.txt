@@ -1,0 +1,20 @@
+### Nextcloud Mail: Vacation Responder ### DON'T EDIT ###
+require "date";
+require "relational";
+require "vacation";
+### Nextcloud Mail: Vacation Responder ### DON'T EDIT ###
+
+require "fileinto";
+
+if address "From" "marketing@company.org" {
+    fileinto "INBOX.marketing";
+}
+
+### Nextcloud Mail: Vacation Responder ### DON'T EDIT ###
+# DATA: {"version":1,"enabled":true,"start":"2022-09-02","subject":"On vacation","message":"I'm on vacation.\n\"Hello, World!\"\n\\ escaped backslash"}
+if currentdate :value "ge" "date" "2022-09-02" {
+	vacation :days 4 :subject "On vacation" :addresses ["Test Test <test@test.org>", "Test Alias <alias@test.org>"] "I'm on vacation.
+\"Hello, World!\"
+\\ escaped backslash";
+}
+### Nextcloud Mail: Vacation Responder ### DON'T EDIT ###
