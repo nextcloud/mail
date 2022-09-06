@@ -181,8 +181,7 @@ export default {
 		overflow-y: auto;
 	}
 }
-::v-deep .action-item__menutoggle--with-title {
-	background-color: var(--color-main-background) !important;
+::v-deep .button-vue__text {
 	border: none !important;
 	font-weight: normal !important;
 	padding-left: 14px !important;
@@ -192,7 +191,7 @@ export default {
 .message-frame {
 	width: 100%;
 }
-::v-deep .dots-horizontal-icon {
+::v-deep .button-vue__icon {
 	display: none !important;
 }
 </style>
