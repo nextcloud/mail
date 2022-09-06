@@ -22,49 +22,47 @@
 <template>
 	<AppNavigation>
 		<template #list>
-			<ul id="accounts-list">
-				<!-- Special mailboxes first -->
-				<NavigationMailbox
-					v-for="mailbox in unifiedMailboxes"
-					:key="'mailbox-' + mailbox.databaseId"
-					:account="unifiedAccount"
-					:mailbox="mailbox" />
-				<NavigationOutbox />
-				<AppNavigationSpacer />
+			<!-- Special mailboxes first -->
+			<NavigationMailbox
+				v-for="mailbox in unifiedMailboxes"
+				:key="'mailbox-' + mailbox.databaseId"
+				:account="unifiedAccount"
+				:mailbox="mailbox" />
+			<NavigationOutbox />
+			<AppNavigationSpacer />
 
-				<!-- All other mailboxes grouped by their account -->
-				<template v-for="group in menu">
-					<NavigationAccount
-						v-if="group.account"
-						:key="group.account.id"
+			<!-- All other mailboxes grouped by their account -->
+			<template v-for="group in menu">
+				<NavigationAccount
+					v-if="group.account"
+					:key="group.account.id"
+					:account="group.account"
+					:first-mailbox="group.mailboxes[0]"
+					:is-first="isFirst(group.account)"
+					:is-last="isLast(group.account)" />
+				<template v-for="item in group.mailboxes">
+					<NavigationMailbox
+						v-show="
+							!group.isCollapsible ||
+								!group.account.collapsed ||
+								!isCollapsed(group.account, item)
+						"
+						:key="'mailbox-' + item.databaseId"
 						:account="group.account"
-						:first-mailbox="group.mailboxes[0]"
-						:is-first="isFirst(group.account)"
-						:is-last="isLast(group.account)" />
-					<template v-for="item in group.mailboxes">
-						<NavigationMailbox
-							v-show="
-								!group.isCollapsible ||
-									!group.account.collapsed ||
-									!isCollapsed(group.account, item)
-							"
-							:key="'mailbox-' + item.databaseId"
-							:account="group.account"
-							:mailbox="item" />
-						<NavigationMailbox
-							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-							:key="item.databaseId + '-starred'"
-							:account="group.account"
-							:mailbox="item"
-							filter="starred" />
-					</template>
-					<NavigationAccountExpandCollapse
-						v-if="!group.account.isUnified && group.isCollapsible"
-						:key="'collapse-' + group.account.id"
-						:account="group.account" />
-					<AppNavigationSpacer :key="'spacer-' + group.account.id" />
+						:mailbox="item" />
+					<NavigationMailbox
+						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+						:key="item.databaseId + '-starred'"
+						:account="group.account"
+						:mailbox="item"
+						filter="starred" />
 				</template>
-			</ul>
+				<NavigationAccountExpandCollapse
+					v-if="!group.account.isUnified && group.isCollapsible"
+					:key="'collapse-' + group.account.id"
+					:account="group.account" />
+				<AppNavigationSpacer :key="'spacer-' + group.account.id" />
+			</template>
 		</template>
 		<template #footer>
 			<AppNavigationSettings :title="t('mail', 'Mail settings')">
