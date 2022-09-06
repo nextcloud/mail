@@ -21,7 +21,7 @@
  */
 
 import {
-	buildOutOfOfficeSieveScript,
+	buildOutOfOfficeSieveScript, escapeStringForSieve,
 	formatDateForSieve,
 	parseOutOfOfficeState,
 } from '../../../util/outOfOffice'
@@ -107,6 +107,38 @@ describe('outOfOffice', () => {
 			expect(actual).toEqual(expected)
 		})
 
+		it('should build a correct sieve script when the vacation responder is enabled and the message contains special chars', () => {
+			const script = readTestData('sieve-vacation-cleaned.txt')
+			const expected = readTestData('sieve-vacation-on-special-chars-message.txt')
+			const actual = buildOutOfOfficeSieveScript(script, {
+				enabled: true,
+				start: new Date('2022-09-02'),
+				subject: 'On vacation',
+				message: 'I\'m on vacation.\n"Hello, World!"\n\\ escaped backslash',
+				allowedRecipients: [
+					'Test Test <test@test.org>',
+					'Test Alias <alias@test.org>',
+				]
+			})
+			expect(actual).toEqual(expected)
+		})
+
+		it('should build a correct sieve script when the vacation responder is enabled and the subject contains special chars', () => {
+			const script = readTestData('sieve-vacation-cleaned.txt')
+			const expected = readTestData('sieve-vacation-on-special-chars-subject.txt')
+			const actual = buildOutOfOfficeSieveScript(script, {
+				enabled: true,
+				start: new Date('2022-09-02'),
+				subject: 'On vacation, \"Hello, World!\", \\ escaped backslash',
+				message: 'I\'m on vacation.',
+				allowedRecipients: [
+					'Test Test <test@test.org>',
+					'Test Alias <alias@test.org>',
+				]
+			})
+			expect(actual).toEqual(expected)
+		})
+
 		it('should build a correct sieve script when the vacation responder is disabled', () => {
 			const script = readTestData('sieve-vacation-cleaned.txt')
 			const expected = readTestData('sieve-vacation-off.txt')
@@ -124,6 +156,22 @@ describe('outOfOffice', () => {
 			const date = new Date('2022-09-02T08:58:01+0000')
 			const expected = '2022-09-02'
 			const actual = formatDateForSieve(date)
+			expect(actual).toEqual(expected)
+		})
+	})
+
+	describe('escapeStringForSieve', () => {
+		it('should escape double quotes', () => {
+			const string = 'A string with "quotes"'
+			const expected = 'A string with \\"quotes\\"'
+			const actual = escapeStringForSieve(string)
+			expect(actual).toEqual(expected)
+		})
+
+		it('should escape backslashes', () => {
+			const string = 'A string with \\ backslashes'
+			const expected = 'A string with \\\\ backslashes'
+			const actual = escapeStringForSieve(string)
 			expect(actual).toEqual(expected)
 		})
 	})
