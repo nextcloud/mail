@@ -259,6 +259,7 @@ export default {
 #mail-message {
 	flex-grow: 1;
 	max-height: calc(100vh - 50px);
+	margin-bottom: 30vh;
 
 	.icon-loading {
 		&:only-child:after {
