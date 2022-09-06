@@ -463,15 +463,15 @@ export default {
 	.envelope {
 		display: flex;
 		flex-direction: column;
-		box-shadow: 0 0 10px var(--color-box-shadow);
+		border: 2px solid var(--color-border);
 		border-radius: 16px;
 		margin-left: 10px;
 		margin-right: 10px;
 		background-color: var(--color-main-background);
-		padding-bottom: 20px;
+		padding-bottom: 28px;
 
 		& + .envelope {
-			margin-top: -20px;
+			margin-top: -28px;
 		}
 
 		&:last-of-type {
