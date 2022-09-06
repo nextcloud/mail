@@ -28,22 +28,46 @@
 		<OutboxMessageContent />
 		<!-- List -->
 		<template #list>
-			<AppContentList>
-				<Error
-					v-if="error"
-					:error="t('mail', 'Could not open outbox')"
-					message=""
-					role="alert" />
-				<LoadingSkeleton
-					v-else-if="loading" />
-				<EmptyMailbox v-else-if="messages.length === 0" />
-				<div class="outbox-container" v-else>
-					<OutboxMessageListItem
-						v-for="message in messages"
-						:key="message.id"
-						:message="message" />
+			<div slot="list" class="header__button">
+				<NewMessageButtonHeader />
+				<div class="outbox-retry">
+					<div v-if="!sending" class="outbox-retry--info">
+						{{
+							n('mail', '{count} failed message', '{count} failed messages', failedMessages.length, {count: failedMessages.length})
+						}}
+					</div>
+					<div v-else class="outbox-retry--info">
+						{{
+							n('mail', 'Retrying send message', 'Retrying send {count} messages', failedMessages.length, {count: failedMessages.length})
+						}}
+					</div>
+					<NcButton
+						class="outbox-retry--btn"
+						:title="t('mail', 'Send failed messages')"
+						:disabled="sending"
+						@click="sendFailedMessages">
+						<template #icon>
+							<EmailFastOutlineIcon :size="22" />
+						</template>
+					</NcButton>
 				</div>
-			</AppContentList>
+				<AppContentList>
+					<Error
+						v-if="error"
+						:error="t('mail', 'Could not open outbox')"
+						message=""
+						role="alert" />
+					<LoadingSkeleton
+						v-else-if="loading" />
+					<EmptyMailbox v-else-if="messages.length === 0" />
+					<div v-else class="outbox-container">
+						<OutboxMessageListItem
+							v-for="message in messages"
+							:key="message.id"
+							:message="message" />
+					</div>
+				</AppContentList>
+			</div>
 		</template>
 	</AppContent>
 </template>
@@ -55,6 +79,9 @@ import Error from './Error'
 import EmptyMailbox from './EmptyMailbox'
 import OutboxMessageContent from './OutboxMessageContent'
 import OutboxMessageListItem from './OutboxMessageListItem'
+import NewMessageButtonHeader from './NewMessageButtonHeader'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton'
+import EmailFastOutlineIcon from 'vue-material-design-icons/EmailFastOutline'
 import logger from '../logger'
 
 export default {
@@ -67,12 +94,16 @@ export default {
 		EmptyMailbox,
 		OutboxMessageListItem,
 		OutboxMessageContent,
+		NewMessageButtonHeader,
+		NcButton,
+		EmailFastOutlineIcon,
 	},
 	data() {
 		return {
 			error: false,
 			loading: false,
 			refreshInterval: undefined,
+			sending: false,
 		}
 	},
 	computed: {
@@ -90,14 +121,15 @@ export default {
 			return this.$store.getters['outbox/getAllMessages']
 		},
 		failedMessages() {
-			return this.messages.map((message) => {
+			return this.messages.filter((message) => {
 				return message.failed
 			})
-		}
+		},
 	},
 	created() {
 		// Reload outbox contents every 60 seconds
 		this.refreshInterval = setInterval(async () => {
+			// TODO cancel if sending available?
 			await this.fetchMessages()
 		}, 60000)
 	},
@@ -126,12 +158,61 @@ export default {
 
 			this.loading = false
 		},
+		sendFailedMessages() {
+			this.sending = true
+			const promises = []
+			this.failedMessages.map(async (msg) => {
+				// sending imitation
+				const message = Object.assign({}, msg)
+				message.pending = true
+				this.$store.commit('outbox/updateMessage', { message })
+
+				promises.push(this.$store.dispatch('outbox/sendMessage', { id: message.id })
+					.then(() => {
+						this.$store.commit('outbox/deleteMessage', { message })
+					})
+					.catch(() => {
+						message.pending = false
+						this.$store.commit('outbox/updateMessage', { message })
+					}))
+				return msg
+			})
+			Promise.all(promises).then((res) => {
+				this.sending = false
+			})
+
+		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
-:deep(.button-vue--vue-secondary) {
+::v-deep(.button-vue--vue-secondary) {
 	box-shadow: none;
+}
+.header__button {
+	display: flex;
+	flex: 1px 0 0;
+	flex-direction: column;
+	height: calc(100vh - var(--header-height));
+
+}
+
+.outbox-retry {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-right: 1px solid var(--color-border);
+
+	.outbox-retry--info {
+		margin: 4px;
+		font-weight: bold;
+		color: var(--color-primary-light-text);
+		padding-left: 8px;
+	}
+
+	.outbox-retry--btn {
+		margin-right: 8px;
+	}
 }
 </style>

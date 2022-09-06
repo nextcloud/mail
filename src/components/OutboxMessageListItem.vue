@@ -33,12 +33,22 @@
 			{{ subjectForSubtitle }}
 		</template>
 		<template #indicator>
-			<IconAlertCircleOutline v-if="message.failed"
+			<IconAlertCircleOutline v-if="message.failed && !message.pending"
 				:title="details"
 				:size="20"
-				class="error-icon" />
+				class="failed-icon error" />
+			<LoadingIcon v-else-if="message.failed && message.pending"
+				:title="details"
+				:size="20"
+				class="failed-icon pending" />
+			<div v-else-if="counter > 0 && !message?.aborted" class="failed-icon countdown">
+				<svg>
+					<circle r="12" cx="20" cy="20" />
+				</svg>
+				{{ counter }}
+			</div>
 		</template>
-		<template slot="actions">
+		<template v-if="!message.pending" slot="actions">
 			<ActionButton
 				:close-after-click="true"
 				@click="sendMessageNow">
@@ -66,6 +76,7 @@ import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextclo
 import Avatar from './Avatar'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconAlertCircleOutline from 'vue-material-design-icons/AlertCircleOutline'
+import LoadingIcon from 'vue-material-design-icons/Loading'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
 import moment from '@nextcloud/moment'
@@ -84,6 +95,7 @@ export default {
 		ActionButton,
 		IconDelete,
 		IconAlertCircleOutline,
+		LoadingIcon,
 		Send,
 	},
 	mixins: [
@@ -94,6 +106,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			counter: 0,
+		}
 	},
 	computed: {
 		selected() {
@@ -127,6 +144,24 @@ export default {
 			return this.message.subject || this.t('mail', 'No subject')
 		},
 	},
+	watch: {
+		counter() {
+			if (this.counter > 0 && !this.message?.aborted) {
+				setTimeout(() => {
+					this.counter--
+				}, 1000)
+			} else {
+				this.$store.commit('outbox/updateMessage', {
+					message: {
+						...this.message,
+						failed: true,
+						pending: false,
+					},
+				})
+				this.counter = 0
+			}
+		},
+	},
 	methods: {
 		async deleteMessage() {
 			try {
@@ -146,13 +181,23 @@ export default {
 		async sendMessageNow() {
 			const message = {
 				...this.message,
+				pending: true,
 				failed: false,
 				sendAt: (new Date().getTime() + UNDO_DELAY) / 1000,
 			}
+			this.$store.commit('outbox/updateMessage', { message })
+			this.counter = UNDO_DELAY / 1000
 			await this.$store.dispatch('outbox/updateMessage', { message, id: message.id })
-			await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id })
+			await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id }).catch(() => {
+				message.pending = false
+				message.failed = true
+				this.$store.commit('outbox/updateMessage', { message })
+			})
 		},
 		async openModal() {
+			if (this.message.pending) {
+				return
+			}
 			await this.$store.dispatch('showMessageComposer', {
 				type: 'outbox',
 				data: {
@@ -173,7 +218,7 @@ export default {
 		border-radius: 16px;
 	}
 
-	.error-icon {
+	.failed-icon {
 		position: absolute;
 		top:0;
 		bottom:0;
@@ -181,8 +226,15 @@ export default {
 		display: flex;
 		align-items: center;
 
-		::v-deep svg {
+		&.error::v-deep svg {
 			fill: var(--color-error);
+		}
+
+		&.pending {
+			animation:spin 0.4s linear infinite;
+			::v-deep svg {
+				color: var(--color-primary-element-light)
+			}
 		}
 	}
 
@@ -192,6 +244,48 @@ export default {
 		width: 2px;
 		height: 69px;
 		z-index: 1;
+	}
+
+	.countdown {
+		width: 20px;
+		justify-content: center;
+		color: var(--color-primary-element-light);
+
+		svg {
+			position: absolute;
+			top: 12px;
+			right: -10px;
+			width: 40px;
+			height: 40px;
+			transform: rotateY(-180deg) rotateZ(-90deg);
+		}
+		svg circle {
+			stroke-dasharray: 80px;
+			stroke-dashoffset: 0;
+			stroke-linecap: round;
+			stroke-width: 2px;
+			stroke: var(--color-primary-element-lighter);
+			fill: none;
+			animation: countdown 10s linear infinite forwards;
+		}
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg)
+		}
+		100% {
+			transform: rotate(360deg)
+		}
+	}
+
+	@keyframes countdown {
+		from {
+			stroke-dashoffset: 0px;
+		}
+		to {
+			stroke-dashoffset: 80px;
+		}
 	}
 }
 </style>
