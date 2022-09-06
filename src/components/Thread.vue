@@ -301,7 +301,7 @@ export default {
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 60px;
+	padding-left: 70px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -332,7 +332,7 @@ export default {
 }
 
 #mail-content {
-	margin: 10px 38px 0 60px;
+	margin: 10px 38px 0 59px;
 }
 
 #mail-content iframe {

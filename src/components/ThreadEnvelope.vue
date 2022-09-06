@@ -57,8 +57,7 @@
 				class="left"
 				:class="{seen: envelope.flags.seen}"
 				@click.native.prevent="$emit('toggle-expand', $event)">
-				<div class="sender"
-					:class="{ 'centered-sender': centeredSender }">
+				<div class="sender">
 					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
 				</div>
 				<div v-if="showSubline" class="subline">
@@ -266,9 +265,6 @@ export default {
 		showSubline() {
 			return !this.expanded && !!this.envelope.previewText
 		},
-		centeredSender() {
-			  return !this.showSubline && this.tags.length === 0
-		},
 		junkFavoritePosition() {
 			return this.showSubline && this.tags.length > 0
 		},
@@ -411,9 +407,6 @@ export default {
 	.sender {
 		margin-left: 8px;
 	}
-	.centered-sender {
-		margin-top: 8px;
-	}
 
 	.right {
 		display: flex;
@@ -447,10 +440,6 @@ export default {
 			}
 		}
 	}
-	.avatardiv {
-		display: inline-block;
-		margin-bottom: -23px;
-	}
 	.subline {
 		margin-left: 8px;
 		color: var(--color-text-maxcontrast);
@@ -483,8 +472,10 @@ export default {
 	.envelope--header {
 		position: relative;
 		display: flex;
+		align-items: center;
 		padding: 10px;
 		border-radius: var(--border-radius);
+		min-height: 68px; /* prevents jumping between open/collapsed */
 	}
 	.left {
 		flex-grow: 1;
