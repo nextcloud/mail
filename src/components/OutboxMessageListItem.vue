@@ -249,6 +249,8 @@ export default {
 	.countdown {
 		width: 20px;
 		justify-content: center;
+		font-weight: bold;
+		font-size: 12px;
 		color: var(--color-primary-element-light);
 
 		svg {
