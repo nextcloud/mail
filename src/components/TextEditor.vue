@@ -52,6 +52,7 @@ import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64u
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
+import MailPlugin from '../ckeditor/mail/MailPlugin'
 
 import { getLanguage } from '@nextcloud/l10n'
 
@@ -108,6 +109,7 @@ export default {
 				ImageUploadPlugin,
 				Base64UploadAdapter,
 				ImageResizePlugin,
+				MailPlugin,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -175,42 +177,8 @@ export default {
 		 * @param {module:core/editor/editor~Editor} editor editor the editor instance
 		 */
 		onEditorReady(editor) {
-			const schema = editor.model.schema
-
-			logger.debug('TextEditor is ready', { editor, schema })
-
+			logger.debug('TextEditor is ready', { editor })
 			this.editorInstance = editor
-
-			// Set 0 pixel margin to all <p> elements
-			editor.conversion.for('downcast').add((dispatcher) => {
-				dispatcher.on(
-					'insert:paragraph',
-					(evt, data, conversionApi) => {
-						const viewWriter = conversionApi.writer
-						viewWriter.setStyle('margin', '0', conversionApi.mapper.toViewElement(data.item))
-					},
-					{
-						priority: 'low',
-					}
-				)
-			})
-
-			schema.on(
-				'checkChild',
-				(evt, args) => {
-					const context = args[0]
-
-					if (context.endsWith('blockQuote')) {
-						// Prevent next listeners from being called.
-						evt.stop()
-						// Set the checkChild()'s return value.
-						evt.return = true
-					}
-				},
-				{
-					priority: 'highest',
-				}
-			)
 
 			if (this.focus) {
 				logger.debug('focusing TextEditor')
