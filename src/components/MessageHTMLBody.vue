@@ -158,7 +158,7 @@ export default {
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
 #mail-content {
-	margin-left: 48px;
+	margin-left: 50px;
 	margin-top: 2px;
 	display: flex;
 	flex-direction: column;
@@ -166,7 +166,7 @@ export default {
 	background-color: #FFFFFF;
 }
 #mail-message-has-blocked-content {
-	margin-left: 8px;
+	margin-left: 10px;
 	color: var(--color-text-maxcontrast) !important;
 }
 
