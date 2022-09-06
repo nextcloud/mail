@@ -109,8 +109,8 @@ export default {
 			this.attempts++
 			this.failedMessaged.map(async (message) => {
 				if (!message.pending) {
-					promises.push(this.$store.dispatch('outbox/sendMessage', { id: message.id }).catch((err) => {
-						console.log(err)
+					promises.push(this.$store.dispatch('outbox/sendMessage', { id: message.id }).catch(() => {
+						// TODO write pending state
 					}))
 				}
 				return message
@@ -119,7 +119,6 @@ export default {
 				this.sending = false
 			})
 		},
-
 	},
 }
 </script>
