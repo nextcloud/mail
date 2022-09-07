@@ -76,7 +76,8 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-#mail-content, .mail-signature {
+.message-container,
+.mail-signature {
 	white-space: pre-wrap;
 }
 .mail-signature, .quoted {
