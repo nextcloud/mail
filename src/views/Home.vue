@@ -13,8 +13,11 @@
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/NcContent'
-
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
+
+import '../../css/mail.scss'
+import '../../css/mobile.scss'
+
 import logger from '../logger'
 import MailboxThread from '../components/MailboxThread'
 import NewMessageModal from '../components/NewMessageModal'
