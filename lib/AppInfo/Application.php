@@ -35,6 +35,7 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\ImportantMailWidget;
 use OCA\Mail\Dashboard\UnreadMailWidget;
 use OCA\Mail\Events\BeforeMessageSentEvent;
+use OCA\Mail\Events\DraftMessageDeletedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
@@ -106,6 +107,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(BeforeMessageSentEvent::class, AntiAbuseListener::class);
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(OutboxMessageCreatedEvent::class, DeleteDraftListener::class);
+		$context->registerEventListener(DraftMessageDeletedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(MailboxesSynchronizedEvent::class, MailboxesSynchronizedSpecialMailboxesUpdater::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, SpamReportListener::class);

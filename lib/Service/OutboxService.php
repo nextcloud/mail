@@ -112,14 +112,14 @@ class OutboxService implements ILocalMailboxService {
 	 * @return LocalMessage[]
 	 */
 	public function getMessages(string $userId): array {
-		return $this->mapper->getAllForUser($userId);
+		return $this->mapper->getAllForUser($userId, LocalMessage::TYPE_OUTGOING);
 	}
 
 	/**
 	 * @throws DoesNotExistException
 	 */
 	public function getMessage(int $id, string $userId): LocalMessage {
-		return $this->mapper->findById($id, $userId);
+		return $this->mapper->findById($id, $userId, LocalMessage::TYPE_OUTGOING);
 	}
 
 	public function deleteMessage(string $userId, LocalMessage $message): void {

@@ -57,14 +57,14 @@ class LocalMessageMapper extends QBMapper {
 	 * @return LocalMessage[]
 	 * @throws DBException
 	 */
-	public function getAllForUser(string $userId): array {
+	public function getAllForUser(string $userId, int $type): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('m.*')
 			->from('mail_accounts', 'a')
 			->join('a', $this->getTableName(), 'm', $qb->expr()->eq('m.account_id', 'a.id'))
 			->where(
 				$qb->expr()->eq('a.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR),
-				$qb->expr()->eq('m.type', $qb->createNamedParameter(LocalMessage::TYPE_OUTGOING, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+				$qb->expr()->eq('m.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 		$rows = $qb->execute();
 
@@ -102,14 +102,15 @@ class LocalMessageMapper extends QBMapper {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	public function findById(int $id, string $userId): LocalMessage {
+	public function findById(int $id, string $userId, int $type): LocalMessage {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('m.*')
 			->from('mail_accounts', 'a')
 			->join('a', $this->getTableName(), 'm', $qb->expr()->eq('m.account_id', 'a.id'))
 			->where(
 				$qb->expr()->eq('a.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR),
-				$qb->expr()->eq('m.id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+				$qb->expr()->eq('m.id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->eq('m.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 			);
 		$entity = $this->findEntity($qb);
 		$entity->setAttachments($this->attachmentMapper->findByLocalMessageId($userId, $id));
@@ -134,7 +135,9 @@ class LocalMessageMapper extends QBMapper {
 				$qb->expr()->orX(
 					$qb->expr()->isNull('failed'),
 					$qb->expr()->eq('failed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				)
+				),
+				$qb->expr()->eq('type', $qb->createNamedParameter(LocalMessage::TYPE_OUTGOING, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+
 			)
 			->orderBy('send_at', 'asc');
 		$messages = $this->findEntities($select);

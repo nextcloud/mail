@@ -28,9 +28,12 @@ namespace OCA\Mail\Listener;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Events\DraftMessageDeletedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
@@ -59,20 +62,25 @@ class DeleteDraftListener implements IEventListener {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
+	private LocalMessageMapper $localMessageMapper;
+
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								LoggerInterface $logger,
-								IEventDispatcher $eventDispatcher) {
+								IEventDispatcher $eventDispatcher,
+								LocalMessageMapper $localMessageMapper
+								) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->logger = $logger;
 		$this->eventDispatcher = $eventDispatcher;
+		$this->localMessageMapper = $localMessageMapper;
 	}
 
 	public function handle(Event $event): void {
-		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent) && $event->getDraft() !== null) {
+		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent || $event instanceof DraftMessageDeletedEvent) && $event->getDraft() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraft());
 		}
 	}

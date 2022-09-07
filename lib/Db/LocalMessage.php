@@ -37,8 +37,8 @@ use function array_filter;
  * @method void setAccountId(int $accountId)
  * @method int|null getAliasId()
  * @method void setAliasId(?int $aliasId)
- * @method int getSendAt()
- * @method void setSendAt(int $sendAt)
+ * @method int|null getSendAt()
+ * @method void setSendAt(?int $sendAt)
  * @method string getSubject()
  * @method void setSubject(string $subject)
  * @method string getBody()
@@ -51,6 +51,8 @@ use function array_filter;
  * @method void setFailed(bool $failed)
  * @method string|null getInReplyToMessageId()
  * @method void setInReplyToMessageId(?string $inReplyToId)
+ * @method setUid(?int $uid)
+ * @method int|null getUid()
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -94,6 +96,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 
 	/** @var bool|null */
 	protected $failed;
+
+	/** @var int|null */
+	protected $uid;
 
 	public function __construct() {
 		$this->addType('type', 'integer');
