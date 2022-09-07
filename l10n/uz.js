@@ -1,0 +1,28 @@
+OC.L10N.register(
+    "mail",
+    {
+    "Personal" : "Personal",
+    "Mail" : "Mail",
+    "Name" : "Name",
+    "Password" : "Password",
+    "None" : "None",
+    "Save" : "Save",
+    "Connect" : "Connect",
+    "Cancel" : "Cancel",
+    "Send" : "Send",
+    "Favorite" : "Favorite",
+    "Select" : "Select",
+    "Move" : "Move",
+    "Choose" : "Choose",
+    "Saving" : "Saving",
+    "Delete" : "Delete",
+    "Add" : "Add",
+    "Remove" : "Remove",
+    "General" : "General",
+    "Port" : "Port",
+    "Search" : "Search",
+    "Refresh" : "Refresh",
+    "All" : "All",
+    "Favorites" : "Favorites"
+},
+"nplurals=1; plural=0;");
