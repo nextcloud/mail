@@ -28,7 +28,6 @@ namespace OCA\Mail\Listener;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
-use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;

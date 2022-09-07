@@ -34,15 +34,12 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageDeletedEvent;
-use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
-use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
 class DraftsService implements ILocalMailboxService {
-
 	private LocalMessageMapper $mapper;
 	private LoggerInterface $logger;
 	private IMAPClientFactory $clientFactory;
@@ -82,7 +79,7 @@ class DraftsService implements ILocalMailboxService {
 	 * @return LocalMessage[]
 	 */
 	public function getMessages(string $userId): array {
-		return $this->mapper->getAllForUser($userId,LocalMessage::TYPE_DRAFT);
+		return $this->mapper->getAllForUser($userId, LocalMessage::TYPE_DRAFT);
 	}
 
 	public function getMessage(int $id, string $userId): LocalMessage {
@@ -94,9 +91,8 @@ class DraftsService implements ILocalMailboxService {
 	 */
 	public function deleteMessage(string $userId, LocalMessage $message, Account $account = null): void {
 		// trigger a delete on IMAP
-		if($message->getUid() !== null && $account !== null) {
+		if ($message->getUid() !== null && $account !== null) {
 			$this->eventDispatcher->dispatchTyped(new DraftMessageDeletedEvent($account, $message));
-
 		}
 		$this->attachmentService->deleteLocalMessageAttachments($userId, $message->getId());
 		$this->mapper->deleteWithRecipients($message);
@@ -108,14 +104,13 @@ class DraftsService implements ILocalMailboxService {
 		}
 
 		// We have an IMAP draft
-		if($message->getUid() !== null) {
+		if ($message->getUid() !== null) {
 			$this->eventDispatcher->dispatchTyped(new DraftMessageDeletedEvent($account, $message));
 			$message->setUid(null);
 		}
 
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$this->mapper->update($message);
-
 	}
 
 	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
@@ -125,7 +120,7 @@ class DraftsService implements ILocalMailboxService {
 
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
-		if(empty($attachments)) {
+		if (empty($attachments)) {
 			$message->setAttachments($attachments);
 			return $message;
 		}
@@ -143,7 +138,7 @@ class DraftsService implements ILocalMailboxService {
 
 	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		// Delete the IMAP draft
-		if($message->getUid() !== null) {
+		if ($message->getUid() !== null) {
 			$this->eventDispatcher->dispatchTyped(new DraftMessageDeletedEvent($account, $message));
 			$message->setUid(null);
 		}
@@ -153,7 +148,7 @@ class DraftsService implements ILocalMailboxService {
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
-		if(empty($attachments)) {
+		if (empty($attachments)) {
 			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, $attachments));
 			return $message;
 		}
