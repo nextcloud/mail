@@ -63,7 +63,7 @@
 		<AppSettingsSection
 			v-if="account"
 			id="out-of-office-replies"
-			:title="t('mail', 'Vacation responder')">
+			:title="t('mail', 'Autoresponder')">
 			<p class="settings-hint">
 				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
 			</p>
