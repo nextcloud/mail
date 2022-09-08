@@ -1412,7 +1412,7 @@ export default {
 	min-height: 100px;
 }
 
-::v-deep .multiselect .multiselect__tags {
+::v-deep .multiselect .multiselect__tags, .subject {
 	border: none !important;
 }
 ::v-deep .multiselect .multiselect__input {
