@@ -55,6 +55,7 @@ import {
 } from '../service/AccountService'
 import {
 	create as createMailbox,
+	clearMailbox,
 	deleteMailbox,
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
@@ -194,6 +195,11 @@ export default {
 	async deleteMailbox({ commit }, { mailbox }) {
 		await deleteMailbox(mailbox.databaseId)
 		commit('removeMailbox', { id: mailbox.databaseId })
+	},
+	async clearMailbox({ commit }, { mailbox }) {
+		await clearMailbox(mailbox.databaseId)
+		commit('removeEnvelopes', { id: mailbox.databaseId })
+		commit('setMailboxUnreadCount', { id: mailbox.databaseId })
 	},
 	async createMailbox({ commit }, { account, name }) {
 		const prefixed = (account.personalNamespace && !name.startsWith(account.personalNamespace))

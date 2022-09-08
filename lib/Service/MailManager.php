@@ -584,6 +584,39 @@ class MailManager implements IMailManager {
 	}
 
 	/**
+	 * Clear messages in folder
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws ServiceException
+	 */
+	public function clearMailbox(Account $account,
+								  Mailbox $mailbox): void {
+		$client = $this->imapClientFactory->getClient($account);
+		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+		$currentMailboxId = $mailbox->getId();
+		try {
+			if (($currentMailboxId !== $trashMailboxId) && !is_null($trashMailboxId)) {
+				$trash = $this->mailboxMapper->findById($trashMailboxId);
+				$client->copy($mailbox->getName(), $trash->getName(), [
+					'move' => true
+				]);
+			} else {
+				$client->expunge($mailbox->getName(), [
+					'delete' => true
+				]);
+			}
+			$this->dbMessageMapper->deleteAll($mailbox);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param Message $message
