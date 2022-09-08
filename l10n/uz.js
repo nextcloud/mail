@@ -14,6 +14,7 @@ OC.L10N.register(
     "Select" : "Select",
     "Move" : "Move",
     "Choose" : "Choose",
+    "Quota" : "kvota",
     "Saving" : "Saving",
     "Delete" : "Delete",
     "Add" : "Add",
