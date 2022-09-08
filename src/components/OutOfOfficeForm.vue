@@ -32,7 +32,7 @@
 					name="enabled"
 					:checked="!enabled"
 					@change="enabled = false">
-				<label for="ooo-disabled">{{ t('mail', 'Vacation responder off') }}</label>
+				<label for="ooo-disabled">{{ t('mail', 'Autoresponder off') }}</label>
 			</fieldset>
 
 			<fieldset class="form__fieldset">
@@ -43,7 +43,7 @@
 					name="enabled"
 					:checked="enabled"
 					@change="enabled = true">
-				<label for="ooo-enabled">{{ t('mail', 'Vacation responder on') }}</label>
+				<label for="ooo-enabled">{{ t('mail', 'Autoresponder on') }}</label>
 			</fieldset>
 		</div>
 
@@ -102,7 +102,7 @@
 			<template #icon>
 				<CheckIcon :size="20" />
 			</template>
-			{{ t('mail', 'Save vacation responder') }}
+			{{ t('mail', 'Save autoresponder') }}
 		</Button>
 	</form>
 </template>
