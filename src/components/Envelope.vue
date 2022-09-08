@@ -635,6 +635,15 @@ export default {
 .list-item-style.selected {
 	background-color: var(--color-background-dark);
 }
+.list-item-style {
+	.draft {
+		line-height: 130%;
+
+		em {
+			font-style: italic;
+		}
+	}
+}
 .junk-icon-style {
 	opacity: .2;
 	display: flex;
