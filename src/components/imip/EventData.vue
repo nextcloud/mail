@@ -22,7 +22,7 @@
 
 <template>
 	<div class="event-data">
-		<h2>{{ title }}</h2>
+		<h2 class="event-data__heading">{{ title }}</h2>
 
 		<div class="event-data__row event-data__row--date">
 			<CalendarIcon class="event-data__row__icon" :size="20" />
@@ -202,12 +202,16 @@ export default {
 	flex-direction: column;
 	gap: 5px;
 
+	&__heading {
+		margin-left: 36px;
+	}
+
 	&__row {
 		display: flex;
 
 		&__icon {
 			align-self: start;
-			margin: 0 10px;
+			margin: 0 8px;
 
 			// Fix slight misalignment caused by align-self: start
 			padding-top: 2px;

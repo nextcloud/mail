@@ -171,6 +171,7 @@ export default {
 	&__type {
 		display: flex;
 		gap: 5px;
+		margin-left: 36px;
 	}
 
 	&__actions {
