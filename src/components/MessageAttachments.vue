@@ -36,7 +36,7 @@
 					:mime="attachment.mime"
 					:mime-url="attachment.mimeUrl"
 					:can-preview="canPreview(fileInfos[idx])"
-					@click="showViewer(fileInfos[idx])" />
+					@open="showViewer(fileInfos[idx])" />
 			</div>
 		</div>
 		<div v-if="hasNextLine"

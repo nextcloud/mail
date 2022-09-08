@@ -20,14 +20,14 @@
   -->
 
 <template>
-	<div class="attachment" :class="{'message-attachment--can-preview': canPreview }" @click="$emit('click', $event)">
-		<div class="mail-attachment-img--wrapper">
+	<div class="attachment" :class="{'message-attachment--can-preview': canPreview }">
+		<div class="mail-attachment-img--wrapper" @click="$emit('open', $event)">
 			<img v-if="isImage"
 				class="mail-attached-image"
 				:src="url">
 			<img v-else class="attachment-icon" :src="mimeUrl">
 		</div>
-		<div class="mail-attached--content">
+		<div class="mail-attached--content" @click="$emit('open', $event)">
 			<span class="attachment-name"
 				:title="label">{{ name }}
 			</span>
