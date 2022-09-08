@@ -394,4 +394,10 @@ export default {
 	setActiveSieveScript(state, { accountId, scriptData }) {
 		Vue.set(state.sieveScript, accountId, scriptData)
 	},
+	setCurrentUserPrincipal(state, { currentUserPrincipal }) {
+		state.currentUserPrincipal = currentUserPrincipal
+	},
+	addCalendar(state, { calendar }) {
+		state.calendars = [...state.calendars, calendar]
+	},
 }
