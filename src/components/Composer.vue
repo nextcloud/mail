@@ -1,6 +1,6 @@
 <template>
 	<div v-if="state === STATES.EDITING" class="message-composer">
-		<div class="composer-fields mail-account">
+		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
 			</label>
@@ -1242,6 +1242,10 @@ export default {
 	display: flex;
 	border-top: 1px solid var(--color-border);
 	align-items: flex-start;
+
+	&__from {
+		margin-right: 50px; /* for the modal close button */
+	}
 
 	.multiselect.multiselect--multiple::after {
 		position:absolute;
