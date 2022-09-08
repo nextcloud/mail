@@ -165,6 +165,11 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'mailboxes#clearMailbox',
+			'url' => '/api/mailboxes/{id}/clear',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'mailboxes#markAllAsRead',
 			'url' => '/api/mailboxes/{id}/read',
 			'verb' => 'POST'
