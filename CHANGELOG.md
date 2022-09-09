@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.0-rc.1 - 2022-09-09
+### Fixed
+- Overlapped composer modal close button
+- Element alignment of thread message
+- Unwanted whitespaces in mail content
+- Inclusion of mail.scss and mobile.scss
+- Show-image styling
+- Prevent unwanted live timestamp replacement
+- Important messages showing in PI's *Other* section
+- Font inconsistencies in envelope primary actions menu
+
 ## 1.14.0-beta3 - 2022-09-05
 ### Fixed
 - Css styles of composer recipients
