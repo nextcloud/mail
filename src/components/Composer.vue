@@ -1334,13 +1334,27 @@ export default {
 	.multiselect {
 		margin-right: 12px;
 	}
-}
 
-.subject {
-	font-size: 20px;
-	font-weight: bold;
-	margin: 0;
-	padding: 24px 20px;
+	.subject {
+		font-weight: bold;
+		margin: 3px 0 !important;
+		padding: 0 12px !important;
+	}
+
+	.message-body {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+		padding: 12px;
+
+		// Fix contenteditable not becoming focused upon clichint within it's
+		// boundaries in safari
+		-webkit-user-select: text;
+		user-select: text;
+	}
 }
 
 .warning-box {
@@ -1352,23 +1366,6 @@ export default {
 .message-editor {
 	flex: 1 1 100%;
 	min-height: 0;
-}
-
-.message-body {
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	border: none !important;
-	outline: none !important;
-	box-shadow: none !important;
-	padding-top: 12px;
-	padding-bottom: 12px;
-	padding-left: 20px;
-
-	// Fix contenteditable not becoming focused upon clichint within it's
-	// boundaries in safari
-	-webkit-user-select: text;
-	user-select: text;
 }
 
 .draft-status {
@@ -1468,7 +1465,7 @@ export default {
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding: 5px;
+	padding: 12px;
 }
 .composer-actions--primary-actions .button {
 	padding: 2px;
