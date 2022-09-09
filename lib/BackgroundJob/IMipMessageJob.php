@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-/**
- * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+/*
+ * @copyright 2022 Anna Larch <anna.larch@gmx.net>
  *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Anna Larch <anna.larch@gmx.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,35 +23,25 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\IMAP;
+namespace OCA\Mail\BackgroundJob;
 
-class MessageStructureData {
-	/** @var bool */
-	private $hasAttachments;
+use OCA\Mail\Service\IMipService;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\TimedJob;
 
-	/** @var string */
-	private $previewText;
+class IMipMessageJob extends TimedJob {
+	private IMipService $iMipService;
 
-	/** @var bool */
-	private $isImipMessage;
+	public function __construct(ITimeFactory $time,
+								IMipService $iMipService) {
+		parent::__construct($time);
 
-	public function __construct(bool $hasAttachments,
-								string $previewText,
-								bool $isImipMessage) {
-		$this->hasAttachments = $hasAttachments;
-		$this->previewText = $previewText;
-		$this->isImipMessage = $isImipMessage;
+		// Run once per hour
+		$this->setInterval(60 * 60);
+		$this->iMipService = $iMipService;
 	}
 
-	public function hasAttachments(): bool {
-		return $this->hasAttachments;
-	}
-
-	public function getPreviewText(): string {
-		return $this->previewText;
-	}
-
-	public function isImipMessage(): bool {
-		return $this->isImipMessage;
+	protected function run($argument): void {
+		$this->iMipService->process();
 	}
 }

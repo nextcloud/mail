@@ -35,6 +35,7 @@
 	<background-jobs>
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
 		<job>OCA\Mail\BackgroundJob\OutboxWorkerJob</job>
+		<job>OCA\Mail\BackgroundJob\IMipMessageJob</job>
 	</background-jobs>
 	<repair-steps>
 		<post-migration>
