@@ -40,6 +40,7 @@ OC.L10N.register(
     "More actions" : "Más aiciones",
     "All day" : "Tol día",
     "Create" : "Crear",
+    "Comment" : "Comentariu",
     "Accept" : "Aceutar",
     "Decline" : "Refugar",
     "Choose" : "Escoyer",

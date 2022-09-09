@@ -83,6 +83,7 @@ OC.L10N.register(
     "All day" : "تمام روز",
     "Create" : "ساخت",
     "Could not create event" : "رویداد ایجاد نشد",
+    "Comment" : "نظر",
     "Accept" : "تایید",
     "Decline" : "کاهش می یابد",
     "Could not open mailbox" : "صندوق پستی امکان پذیر نیست",

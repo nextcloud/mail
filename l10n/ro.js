@@ -100,6 +100,7 @@ OC.L10N.register(
     "Forward" : "Înainte",
     "All day" : "Toată ziua",
     "Create" : "Crează",
+    "Comment" : "Comentariu",
     "Accept" : "Accept",
     "Decline" : "Refuză",
     "Choose" : "Alege",

@@ -36,6 +36,7 @@ OC.L10N.register(
     "Forward" : "Stuur aan",
     "All day" : "Heeldag",
     "Create" : "Skep",
+    "Comment" : "Kommentaar",
     "Accept" : "Aanvaar",
     "Choose" : "Kies",
     "Other" : "Ander",

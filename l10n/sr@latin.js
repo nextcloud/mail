@@ -17,6 +17,7 @@ OC.L10N.register(
     "Move" : "Premesti",
     "Forward" : "Prosledi",
     "Create" : "Napravi",
+    "Comment" : "Komentar",
     "Choose" : "Odaberi",
     "Other" : "Ostali",
     "Reply" : "Odgovori",

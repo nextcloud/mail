@@ -103,6 +103,7 @@ OC.L10N.register(
     "All day" : "Heilsdagsviðburður",
     "Create" : "Búa til",
     "Could not create event" : "Tókst ekki að útbúa atburð",
+    "Comment" : "Athugasemd",
     "Accept" : "Samþykkja",
     "Decline" : "Hafna",
     "Could not open mailbox" : "Tókst ekki að opna pósthólf",

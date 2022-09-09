@@ -126,6 +126,7 @@ OC.L10N.register(
     "All day" : "Todo o día",
     "Create" : "Crear",
     "Could not create event" : "Non foi posíbel crear o evento",
+    "Comment" : "Comentario",
     "Accept" : "Aceptar",
     "Decline" : "Declinar",
     "More options" : "Máis opcións",

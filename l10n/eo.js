@@ -82,6 +82,7 @@ OC.L10N.register(
     "All day" : "Tuttage",
     "Create" : "Krei",
     "Could not create event" : "Ne eblis krei okazaĵon",
+    "Comment" : "Komento",
     "Accept" : "Akcepti",
     "Decline" : "Malakcepti",
     "Could not open mailbox" : "Ne eblis malfermi poŝtkesto",

@@ -120,6 +120,7 @@ OC.L10N.register(
     "Report this bug" : "이 오류 보고",
     "All day" : "하루 종일",
     "Create" : "생성",
+    "Comment" : "설명",
     "Accept" : "수락",
     "Decline" : "거절",
     "More options" : "더 많은 옵션",

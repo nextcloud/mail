@@ -103,6 +103,7 @@ OC.L10N.register(
     "All day" : "Цео дан",
     "Create" : "Направи",
     "Could not create event" : "Не могу да креирам догађај",
+    "Comment" : "Коментар",
     "Accept" : "Прихвати",
     "Decline" : "Одбиј",
     "Could not open mailbox" : "Не могу да отворим сандуче",

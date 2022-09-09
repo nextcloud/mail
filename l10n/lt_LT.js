@@ -128,6 +128,7 @@ OC.L10N.register(
     "All day" : "Visą dieną",
     "Create" : "Sukurti",
     "Could not create event" : "Nepavyko sukurti įvykio",
+    "Comment" : "Komentaras",
     "Accept" : "Priimti",
     "Decline" : "Atmesti",
     "More options" : "Daugiau parinkčių",

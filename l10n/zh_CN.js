@@ -144,6 +144,7 @@ OC.L10N.register(
     "Create" : "创建",
     "Event created" : "已创建事件",
     "Could not create event" : "无法建立事件",
+    "Comment" : "评论",
     "Accept" : "接受",
     "Decline" : "拒绝",
     "More options" : "更多选项",

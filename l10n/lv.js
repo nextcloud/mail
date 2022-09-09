@@ -55,6 +55,7 @@ OC.L10N.register(
     "Forward" : "Turpināt",
     "All day" : "Visas dienas",
     "Create" : "Izveidot",
+    "Comment" : "Komentārs",
     "Accept" : "Pieņemt",
     "Decline" : "Noraidīt",
     "Choose" : "Izvēlies",

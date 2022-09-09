@@ -17,6 +17,7 @@ OC.L10N.register(
     "Edit tags" : "Izmjeni oznake",
     "Move" : "Move",
     "Create" : "Ustvari",
+    "Comment" : "Komentar",
     "Accept" : "Prihvati",
     "Decline" : "Odbij",
     "Choose" : "Izaberite",

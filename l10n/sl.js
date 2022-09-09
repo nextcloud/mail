@@ -150,6 +150,7 @@ OC.L10N.register(
     "Create" : "Ustvari",
     "Event created" : "Dogodek je ustvarjen",
     "Could not create event" : "Ni mogoče ustvariti dogodka",
+    "Comment" : "Opomba",
     "Accept" : "Sprejmi",
     "Decline" : "Zavrni",
     "More options" : "Več možnosti",

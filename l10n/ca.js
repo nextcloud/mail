@@ -101,6 +101,7 @@ OC.L10N.register(
     "All day" : "Tot el dia",
     "Create" : "Crea",
     "Could not create event" : "No s’ha pogut crear l'esdeveniment",
+    "Comment" : "Comentari",
     "Accept" : "Accepta",
     "Decline" : "Rebutja",
     "Could not open mailbox" : "No es pot obrir la bústia de correu",

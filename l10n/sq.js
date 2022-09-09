@@ -46,6 +46,7 @@ OC.L10N.register(
     "Forward" : "Përpara",
     "All day" : "Gjithë ditën",
     "Create" : "Krijo",
+    "Comment" : "Koment",
     "Accept" : "Prano",
     "Decline" : "Refuzo",
     "Choose" : "Zgjidhni",

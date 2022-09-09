@@ -155,6 +155,7 @@ OC.L10N.register(
     "Create" : "Δημιουργία",
     "Event created" : "Το συμβάν δημιουργήθηκε",
     "Could not create event" : "Αδυναμία δημιουργίας συμβάντος",
+    "Comment" : "Σχόλιο",
     "Accept" : "Αποδοχή",
     "Decline" : "Απόρριψη",
     "More options" : "Περισσότερες επιλογές",

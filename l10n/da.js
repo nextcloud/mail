@@ -133,6 +133,7 @@ OC.L10N.register(
     "Load more" : "Hent flere",
     "All day" : "Hele dagen",
     "Create" : "Opret",
+    "Comment" : "Kommentér",
     "Accept" : "Accepter",
     "Decline" : "Afvis",
     "Choose" : "Vælg",

@@ -119,6 +119,7 @@ OC.L10N.register(
     "All day" : "כל היום",
     "Create" : "יצירה",
     "Could not create event" : "לא ניתן ליצור אירוע",
+    "Comment" : "הערה",
     "Accept" : "אשר",
     "Decline" : "דחייה",
     "Could not open mailbox" : "לא ניתן לפתוח את תיבת הדואר",

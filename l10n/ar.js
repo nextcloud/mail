@@ -64,6 +64,7 @@ OC.L10N.register(
     "Forward" : "إعادة توجيه ",
     "All day" : "اليوم بأكمله",
     "Create" : "إنشاء",
+    "Comment" : "تعليق",
     "Accept" : "قبول",
     "Decline" : "رفض",
     "More options" : "مزيد من الخيارات",

@@ -146,6 +146,7 @@ OC.L10N.register(
     "Create" : "Crea",
     "Event created" : "Evento creato",
     "Could not create event" : "Impossibile creare l'evento",
+    "Comment" : "Commento",
     "Accept" : "Accetta",
     "Decline" : "Rifiuta",
     "More options" : "Altre opzioni",

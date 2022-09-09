@@ -158,6 +158,7 @@ OC.L10N.register(
     "Create" : "Vytvoriť",
     "Event created" : "Udalosť bola vytvorená",
     "Could not create event" : "Udalosť sa nepodarilo vytvoriť",
+    "Comment" : "Komentár",
     "Accept" : "Prijať",
     "Decline" : "Odmietnuť",
     "More options" : "Ďalšie nastavenia",

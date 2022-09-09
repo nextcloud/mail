@@ -162,6 +162,7 @@ OC.L10N.register(
     "Create" : "Создать",
     "Event created" : "Событие создано",
     "Could not create event" : "Не удалось создать событие",
+    "Comment" : "Комментарий",
     "Accept" : "Принять",
     "Decline" : "Отклонить",
     "More options" : "Дополнительные параметры",

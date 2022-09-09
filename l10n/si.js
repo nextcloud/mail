@@ -18,6 +18,7 @@ OC.L10N.register(
     "Read" : "කියවීම",
     "Select" : "තෝරන්න",
     "Create" : "සාදන්න",
+    "Comment" : "අදහස",
     "Accept" : "පිළිගන්න",
     "Decline" : "ප්‍රතික්ෂේප",
     "Choose" : "තෝරන්න",

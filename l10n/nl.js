@@ -144,6 +144,7 @@ OC.L10N.register(
     "Create" : "Aanmaken",
     "Event created" : "Afspraak aangemaakt",
     "Could not create event" : "Kon afspraak niet creëren",
+    "Comment" : "Notitie",
     "Accept" : "Accepteren",
     "Decline" : "Afwijzen",
     "More options" : "Meer opties",

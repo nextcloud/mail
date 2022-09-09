@@ -138,6 +138,7 @@ OC.L10N.register(
     "All day" : "Totu sa die",
     "Create" : "Crea",
     "Could not create event" : "No at fatu a creare s'eventu",
+    "Comment" : "Cummentu",
     "Accept" : "Atzeta",
     "Decline" : "Refuda",
     "More options" : "Àteras optziones",

@@ -38,6 +38,7 @@ OC.L10N.register(
     "Forward" : "Teruskan",
     "All day" : "Sepanjang hari",
     "Create" : "Buat",
+    "Comment" : "Komentar",
     "Accept" : "Terima",
     "Decline" : "Tolak",
     "Choose" : "Pilih",

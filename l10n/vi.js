@@ -115,6 +115,7 @@ OC.L10N.register(
     "All day" : "Cả ngày",
     "Create" : "‎Tạo‎",
     "Could not create event" : "Không thể tạo sự kiện",
+    "Comment" : "Bình luận",
     "Accept" : "Đồng ý",
     "Could not open mailbox" : "Không thể mở hộp thư",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Lập chỉ mục tin nhắn của bạn. Quá trình này có thể lâu hơn một chút đối với các hộp thư lớn.",

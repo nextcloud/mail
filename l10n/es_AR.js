@@ -44,6 +44,7 @@ OC.L10N.register(
     "Forward" : "Reenviar",
     "All day" : "Todo el día",
     "Create" : "Crear",
+    "Comment" : "Comentario",
     "Accept" : "Aceptar",
     "Decline" : "Declinar",
     "Choose" : "Elige",
