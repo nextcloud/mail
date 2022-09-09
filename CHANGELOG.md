@@ -6,9 +6,14 @@ All notable changes to this project will be documented in this file.
 - Image support for the message editor and signatures
 - Automatic out-of-office replies (based on Sieve)
 - Preview of images, audio, video and PDF with the Viewer app
+- Add imip processing
+- Users can clear their mailboxes
+
 ### Changed
 - Adapt to Nextcloud 25 design
 - Remember last used mailbox
+- Make primary action icons bigger
+
 ### Removed
 - Nextcloud 22-24 support
 
@@ -21,7 +26,7 @@ All notable changes to this project will be documented in this file.
 - Show message preview in envelope list
 - Envelope action links to download whole message
 
-### Fixes
+### Fixed
 - Remove account color
 - Shorten the relative time of envelopes
 - General design improvements
