@@ -150,6 +150,7 @@ OC.L10N.register(
     "Create" : "Skapa",
     "Event created" : "Evenemang skapat",
     "Could not create event" : "Kunde inte skapa händelse",
+    "Comment" : "Kommentar",
     "Accept" : "Acceptera",
     "Decline" : "Avböj",
     "Could not open mailbox" : "Kunde inte öppna brevlådan",

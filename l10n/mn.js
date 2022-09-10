@@ -35,6 +35,7 @@ OC.L10N.register(
     "Move" : "Зөөх",
     "Forward" : "дамжих",
     "Create" : "Үүсгэх",
+    "Comment" : "undefined",
     "Accept" : "Хүлээн зөвшөөрөх",
     "Decline" : "Зөвшөөрөхгүй",
     "Choose" : "Сонгох",

@@ -255,6 +255,7 @@ OC.L10N.register(
     "Sync in background" : "Sinkronizatu atzealdean",
     "Clear mailbox" : "Garbitu postontzia",
     "Delete mailbox" : "Ezabatu postontzia",
+    "Clear mailbox {name}" : "Garbitu {name} postontzia",
     "The mailbox and all messages in it will be deleted." : "Postontzia eta bertan dauden mezu guztiak ezabatuko dira.",
     "Delete mailbox {name}" : "Ezabatu {name} postontzia",
     "An error occurred, unable to rename the mailbox." : "Akatsen bat gertatu da, ezin izan da postontzia berrizendatu.",
