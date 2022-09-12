@@ -70,9 +70,7 @@ import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
 
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
 
 export default {

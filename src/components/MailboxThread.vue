@@ -65,10 +65,7 @@
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
-import AppContentList from '@nextcloud/vue/dist/Components/NcAppContentList'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
-import Popover from '@nextcloud/vue/dist/Components/NcPopover'
+import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'

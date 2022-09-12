@@ -60,9 +60,7 @@
 	</Modal>
 </template>
 <script>
-import Modal from '@nextcloud/vue/dist/Components/NcModal'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcModal as Modal, NcLoadingIcon as IconLoading, NcButton as ButtonVue } from '@nextcloud/vue'
 import IconBreadcrumb from 'vue-material-design-icons/ChevronRight'
 import IconInbox from 'vue-material-design-icons/Home'
 import IconDraft from 'vue-material-design-icons/Pencil'

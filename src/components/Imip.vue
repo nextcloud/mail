@@ -127,7 +127,7 @@
 
 <script>
 import EventData from './imip/EventData'
-import Button from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as Button, NcMultiselect as Multiselect } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close'
 import CalendarIcon from 'vue-material-design-icons/Calendar'
 import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
@@ -136,7 +136,6 @@ import { removeMailtoPrefix } from '../util/eventAttendee'
 import logger from '../logger'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import CalendarPickerOption from './CalendarPickerOption'
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
 import { uidToHexColor } from '../util/calendarColor'
 import { randomId } from '../util/randomId'
 import pLimit from 'p-limit'

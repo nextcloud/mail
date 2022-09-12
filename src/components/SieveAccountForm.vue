@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 export default {
 	name: 'SieveAccountForm',
 	components: {

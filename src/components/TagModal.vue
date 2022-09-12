@@ -93,14 +93,9 @@
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/NcModal'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
-import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcModal as Modal, NcActions as Actions, NcActionText as ActionText, NcActionInput as ActionInput, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconTag from 'vue-material-design-icons/Tag'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
 

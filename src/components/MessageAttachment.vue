@@ -84,11 +84,8 @@ import { translate as t } from '@nextcloud/l10n'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { mixin as onClickOutside } from 'vue-on-click-outside'
 
-import PopoverMenu from '@nextcloud/vue/dist/Components/NcPopoverMenu'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcPopoverMenu as PopoverMenu, NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconSave from 'vue-material-design-icons/Folder'
 import IconDownload from 'vue-material-design-icons/Download'

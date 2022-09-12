@@ -254,8 +254,7 @@
 
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
 import { translate as t } from '@nextcloud/l10n'
 

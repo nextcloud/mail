@@ -70,7 +70,7 @@
 
 <script>
 import { basename } from '@nextcloud/paths'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { generateUrl } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { saveAttachmentsToFiles } from '../service/AttachmentService'

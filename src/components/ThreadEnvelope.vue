@@ -147,7 +147,7 @@
 </template>
 <script>
 import Avatar from './Avatar'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
 import IconFavorite from 'vue-material-design-icons/Star'

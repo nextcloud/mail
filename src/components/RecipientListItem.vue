@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import ListItemIcon from '@nextcloud/vue/dist/Components/NcListItemIcon'
+import { NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import Close from 'vue-material-design-icons/Close'
 export default {
 	name: 'RecipientListItem',

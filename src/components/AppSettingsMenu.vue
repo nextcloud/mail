@@ -98,11 +98,10 @@
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
 import IconInfo from 'vue-material-design-icons/Information'
 import IconAdd from 'vue-material-design-icons/Plus'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import IconEmail from 'vue-material-design-icons/Email'
 import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'

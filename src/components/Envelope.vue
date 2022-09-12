@@ -244,8 +244,7 @@
 	</ListItem>
 </template>
 <script>
-import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcListItem as ListItem, NcActionButton as ActionButton, NcActionLink as ActionLink } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
 import IconCreateEvent from 'vue-material-design-icons/Calendar'
@@ -280,7 +279,6 @@ import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
-import ActionLink from '@nextcloud/vue/dist/Components/NcActionLink'
 import DownloadIcon from 'vue-material-design-icons/Download'
 
 export default {

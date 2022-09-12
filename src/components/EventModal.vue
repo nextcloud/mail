@@ -60,11 +60,9 @@
 
 <script>
 import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
-import DatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker'
+import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcMultiselect as Multiselect } from '@nextcloud/vue'
 import jstz from 'jstz'
-import Modal from '@nextcloud/vue/dist/Components/NcModal'
 
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService'
 import logger from '../logger'
 import CalendarPickerOption from './CalendarPickerOption'

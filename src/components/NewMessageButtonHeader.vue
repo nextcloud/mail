@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import Button from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as Button } from '@nextcloud/vue'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconRefresh from 'vue-material-design-icons/Refresh'
 import logger from '../logger'

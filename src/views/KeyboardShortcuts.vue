@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/NcModal'
+import { NcModal as Modal } from '@nextcloud/vue'
 
 export default {
 	name: 'KeyboardShortcuts',
