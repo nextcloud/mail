@@ -108,9 +108,8 @@
 </template>
 
 <script>
-import DatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker'
+import { NcDatetimePicker as DatetimePicker, NcButton as Button } from '@nextcloud/vue'
 import TextEditor from './TextEditor'
-import Button from '@nextcloud/vue/dist/Components/NcButton'
 import CheckIcon from 'vue-material-design-icons/Check'
 import { buildOutOfOfficeSieveScript, parseOutOfOfficeState } from '../util/outOfOffice'
 import logger from '../logger'

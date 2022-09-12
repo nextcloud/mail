@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
+import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
 import logger from '../logger'
 
 export default {

@@ -109,12 +109,7 @@
 
 <script>
 
-import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
-import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import { NcAppNavigationItem as AppNavigationItem, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 

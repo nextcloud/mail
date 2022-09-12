@@ -20,12 +20,10 @@
 </template>
 
 <script>
-import Content from '@nextcloud/vue/dist/Components/NcContent'
-import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
+import { NcContent as Content, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm'
-import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 import IconMail from 'vue-material-design-icons/Email'
 import Navigation from '../components/Navigation'
 import logger from '../logger'

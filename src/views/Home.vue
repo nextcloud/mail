@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Content from '@nextcloud/vue/dist/Components/NcContent'
+import { NcContent as Content } from '@nextcloud/vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 
 import '../../css/mail.scss'

@@ -7,6 +7,7 @@
 
 <script>
 import IconMail from 'vue-material-design-icons/Email'
+
 export default {
 	name: 'EmptyMailbox',
 	components: {

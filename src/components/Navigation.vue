@@ -76,11 +76,7 @@
 </template>
 
 <script>
-import AppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation'
-import AppNavigationSettings
-	from '@nextcloud/vue/dist/Components/NcAppNavigationSettings'
-import AppNavigationSpacer
-	from '@nextcloud/vue/dist/Components/NcAppNavigationSpacer'
+import { NcAppNavigation as AppNavigation, NcAppNavigationSettings as AppNavigationSettings, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
 
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'

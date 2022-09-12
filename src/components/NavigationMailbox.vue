@@ -211,12 +211,7 @@
 
 <script>
 
-import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
-import CounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
-import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
+import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheck'
 import IconExternal from 'vue-material-design-icons/OpenInNew'
 import IconFolder from 'vue-material-design-icons/Folder'
@@ -233,7 +228,6 @@ import IconAllInboxes from 'vue-material-design-icons/InboxMultiple'
 import EraserVariant from 'vue-material-design-icons/EraserVariant'
 import ImportantIcon from './icons/ImportantIcon'
 import IconSend from 'vue-material-design-icons/Send'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import MoveMailboxModal from './MoveMailboxModal'
 import { UNIFIED_INBOX_ID } from '../store/constants'
 
