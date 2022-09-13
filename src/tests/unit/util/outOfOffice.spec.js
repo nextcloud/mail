@@ -152,8 +152,8 @@ describe('outOfOffice', () => {
 	})
 
 	describe('formatDateForSieve', () => {
-		it('should format js dates according to YYYY-MM-DD', () => {
-			const date = new Date('2022-09-02T08:58:01+0000')
+		it('should format a JS date instance according to YYYY-MM-DD', () => {
+			const date = new Date('2022-09-02')
 			const expected = '2022-09-02'
 			const actual = formatDateForSieve(date)
 			expect(actual).toEqual(expected)
