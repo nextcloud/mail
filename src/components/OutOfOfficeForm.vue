@@ -201,7 +201,7 @@ export default {
 				this.firstDay = state.start ?? new Date()
 				this.lastDay = state.end ?? null
 				this.subject = state.subject ?? ''
-				this.message = toHtml(plain(state.message)).value ?? ''
+				this.message = toHtml(plain(state.message ?? '')).value
 			},
 		},
 		enableLastDay(enableLastDay) {
