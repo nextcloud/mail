@@ -182,6 +182,11 @@ export default {
 					account: this.account,
 					data: this.sieveConfig,
 				})
+				if (this.sieveConfig.sieveEnabled) {
+					await this.$store.dispatch('fetchActiveSieveScript', {
+						accountId: this.account.id,
+					})
+				}
 			} catch (error) {
 				this.errorMessage = error.message
 			}
