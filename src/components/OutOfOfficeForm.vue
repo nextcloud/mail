@@ -200,6 +200,7 @@ export default {
 				this.enabled = !!state.enabled ?? false
 				this.firstDay = state.start ?? new Date()
 				this.lastDay = state.end ?? null
+				this.enableLastDay = !!this.lastDay
 				this.subject = state.subject ?? ''
 				this.message = toHtml(plain(state.message)).value ?? ''
 			},
