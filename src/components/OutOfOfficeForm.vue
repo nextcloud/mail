@@ -113,7 +113,7 @@ import TextEditor from './TextEditor'
 import CheckIcon from 'vue-material-design-icons/Check'
 import { buildOutOfOfficeSieveScript, parseOutOfOfficeState } from '../util/outOfOffice'
 import logger from '../logger'
-import { html, toPlain } from '../util/text'
+import { html, plain, toHtml, toPlain } from '../util/text'
 
 export default {
 	name: 'OutOfOfficeForm',
@@ -201,7 +201,7 @@ export default {
 				this.firstDay = state.start ?? new Date()
 				this.lastDay = state.end ?? null
 				this.subject = state.subject ?? ''
-				this.message = state.message ?? ''
+				this.message = toHtml(plain(state.message)).value ?? ''
 			},
 		},
 		enableLastDay(enableLastDay) {
