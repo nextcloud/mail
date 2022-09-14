@@ -9,6 +9,11 @@ All notable changes to this project will be documented in this file.
 - Add imip processing
 - Users can clear their mailboxes
 
+### Fixed
+- Enable last day checkbox not being parsed correctly
+- Date formatting for sieve autoresponder
+- Missing line breaks when parsing message from sieve script
+
 ### Changed
 - Adapt to Nextcloud 25 design
 - Remember last used mailbox
