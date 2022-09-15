@@ -79,8 +79,10 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-	display: flex;
+	display: absolute;
 	align-items: center;
+	position: inherit;
+	background-color: transparent;
 	padding: 8px 8px 8px 48px;
 	gap: 4px;
 	height: 61px;
