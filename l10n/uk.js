@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add" : "Додати",
     "Disabled" : "Вимкнено",
     "Enabled" : "Увімкнено",
+    "Custom" : "Custom",
     "Signature …" : "Підпис...",
     "Save signature" : "Зберегти підпис",
     "Set" : "Встановити",
