@@ -499,6 +499,8 @@ class MessageMapper extends QBMapper {
 				$previewText = $message->getPreviewText();
 				if ($previewText !== null) {
 					$previewText = mb_strcut(mb_convert_encoding($previewText, 'UTF-8', 'UTF-8'), 0, 255);
+					// Make sure modifications are visible when these objects are used right away
+					$message->setPreviewText($previewText);
 				}
 				$query->setParameter(
 					'preview_text',
