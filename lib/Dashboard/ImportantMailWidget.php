@@ -40,4 +40,11 @@ class ImportantMailWidget extends MailWidget {
 	public function getTitle(): string {
 		return $this->l10n->t('Important mail');
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getSearchFilter(): string {
+		return 'is:important';
+	}
 }
