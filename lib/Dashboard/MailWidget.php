@@ -30,12 +30,15 @@ namespace OCA\Mail\Dashboard;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Dashboard\IIconWidget;
+use OCP\Dashboard\IOptionWidget;
 use OCP\Dashboard\IWidget;
+use OCP\Dashboard\Model\WidgetOptions;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Util;
 
-abstract class MailWidget implements IWidget {
+abstract class MailWidget implements IWidget, IIconWidget, IOptionWidget {
 	/** @var IL10N */
 	protected $l10n;
 
@@ -80,6 +83,15 @@ abstract class MailWidget implements IWidget {
 	/**
 	 * @inheritDoc
 	 */
+	public function getIconUrl(): string {
+		return $this->urlGenerator->getAbsoluteURL(
+			$this->urlGenerator->imagePath(Application::APP_ID, 'mail.svg')
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function getUrl(): ?string {
 		return $this->urlGenerator->getAbsoluteURL($this->urlGenerator->linkToRoute('mail.page.index'));
 	}
@@ -94,5 +106,12 @@ abstract class MailWidget implements IWidget {
 			'mail-accounts',
 			$this->accountService->findByUserId($this->userId)
 		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getWidgetOptions(): WidgetOptions {
+		return new WidgetOptions(true);
 	}
 }
