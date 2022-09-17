@@ -29,7 +29,7 @@
 		"bytestream/horde-text-filter": "^2.4",
 		"bytestream/horde-text-flowed": "^2.1",
 		"bytestream/horde-util": "^2.6",
-		"cerdic/css-tidy": "v2.0.1",
+		"cerdic/css-tidy": "v2.0.3",
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
