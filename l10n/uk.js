@@ -143,6 +143,7 @@ OC.L10N.register(
     "Last day (optional)" : "Останній день (необов'язково)",
     "Message" : "Повідомлення",
     "Delete" : "Вилучити",
+    "Copy to clipboard" : "Скопіювати в буфер обміну ",
     "Add" : "Додати",
     "Disabled" : "Вимкнено",
     "Enabled" : "Увімкнено",
