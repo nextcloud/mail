@@ -27,6 +27,7 @@ import Nextcloud from '../../../mixins/Nextcloud'
 import TextEditor from '../../../components/TextEditor'
 import VirtualTestEditor from '../../virtualtesteditor'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import MailPlugin from '../../../ckeditor/mail/MailPlugin'
 
 const localVue = createLocalVue()
 
@@ -106,7 +107,7 @@ describe('TextEditor', () => {
 
 			const editor = await VirtualTestEditor.create({
 				initialData: '<p>bonjour bonjour</p>',
-				plugins: [ParagraphPlugin],
+				plugins: [ParagraphPlugin, MailPlugin],
 			})
 
 			wrapper.vm.onEditorReady(editor)
