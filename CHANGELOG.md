@@ -1,51 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.14.0-rc.1 - 2022-09-09
-### Fixed
-- Overlapped composer modal close button
-- Element alignment of thread message
-- Unwanted whitespaces in mail content
-- Inclusion of mail.scss and mobile.scss
-- Show-image styling
-- Prevent unwanted live timestamp replacement
-- Important messages showing in PI's *Other* section
-- Font inconsistencies in envelope primary actions menu
+## 1.14.0 - 2022-09-20
 
-## 1.14.0-beta3 - 2022-09-05
-### Fixed
-- Css styles of composer recipients
-
-## 1.14.0-beta2 - 2022-09-02
 ### Added
 - Migrate icons to material design icons
 - Show primary color dot in subject line for unread messages in envelope list
-
-### Fixed
-- css styles of composer recipients
-- Make it clear that not all attachments will be sent
-- Make thread timestamp shorter
-- Disable submit button on account settings when its loading
-- Replace the appnavigatiocounter to counterbubble component
-- Add border to favorite icon
-- Fix sectiontitle font size and favorite postition
-
-## 1.14.0-beta1 - 2022-08-23
-### Added
 - Preview message content in the thread view
 - Migrate icons to material design icons
 - Show message actions only for expanded messages in thread
 - Show mailbox counter if sub mailbox has unread messages
 - Show message preview in envelope list
 - Envelope action links to download whole message
-
-### Fixed
-- Remove account color
-- Shorten the relative time of envelopes
-- General design improvements
-
-## 1.14.0-alpha4 - 2022-07-15
-### Added
 - Hide system tags from UI
 - Users can clear their mailboxes
 - Improve the image attachment viewer
@@ -55,6 +21,25 @@ All notable changes to this project will be documented in this file.
 - Support for XOAUTH2
 
 ### Fixed
+- Overlapped composer modal close button
+- Element alignment of thread message
+- Unwanted whitespaces in mail content
+- Inclusion of mail.scss and mobile.scss
+- Show-image styling
+- Prevent unwanted live timestamp replacement
+- Important messages showing in PI's *Other* section
+- Font inconsistencies in envelope primary actions menu
+- Css styles of composer recipients
+- css styles of composer recipients
+- Make it clear that not all attachments will be sent
+- Make thread timestamp shorter
+- Disable submit button on account settings when its loading
+- Replace the appnavigatiocounter to counterbubble component
+- Add border to favorite icon
+- Fix sectiontitle font size and favorite postition
+- Remove account color
+- Shorten the relative time of envelopes
+- General design improvements
 - Performance logger message for vanished messages
 - Two-way binding for envelope unselect after delete
 - Split auto config and account creation
@@ -77,7 +62,7 @@ All notable changes to this project will be documented in this file.
 - PI sync problems
 - Sending outbox message of deleted user accounts
 - Collecting addresses in the background
-
+- Fix lost modifications of preview text
 
 ## 1.13.6 - 2022-06-29
 ### Fixed
