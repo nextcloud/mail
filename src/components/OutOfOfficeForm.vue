@@ -202,7 +202,7 @@ export default {
 				this.lastDay = state.end ?? null
 				this.enableLastDay = !!this.lastDay
 				this.subject = state.subject ?? ''
-				this.message = toHtml(plain(state.message)).value ?? ''
+				this.message = toHtml(plain(state.message ?? '')).value
 			},
 		},
 		enableLastDay(enableLastDay) {
