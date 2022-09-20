@@ -650,13 +650,17 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$p->setContents($data);
 		$data = $p->getContents();
 
+		if ($data === null) {
+			return '';
+		}
+
 		// Only convert encoding if it is explicitly specified in the header because text/calendar
 		// data is utf-8 by default.
 		$charset = $p->getContentTypeParameter('charset');
 		if ($charset !== null && strtoupper($charset) !== 'UTF-8') {
 			$data = mb_convert_encoding($data, 'UTF-8', $charset);
 		}
-		return $data;
+		return (string)$data;
 	}
 
 	public function getContent(): string {

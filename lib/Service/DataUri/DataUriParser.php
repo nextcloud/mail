@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\DataUri;
 
 use OCA\Mail\Exception\InvalidDataUriException;
+use function str_contains;
 
 class DataUriParser {
 	private const PATTERN = '#^data:(?<media_type>[^,.]*),(?<data>.*)$#';

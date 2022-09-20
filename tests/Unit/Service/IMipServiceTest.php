@@ -289,6 +289,7 @@ class IMipServiceTest extends TestCase {
 		$mailbox->setAccountId(200);
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(200);
+		$mailAccount->setEmail('vincent@stardew-valley.edu');
 		$account = new Account($mailAccount);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$imapMessage->scheduling[] = ['method' => 'REQUEST'];

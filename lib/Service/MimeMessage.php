@@ -41,7 +41,7 @@ class MimeMessage {
 	 * @param bool $isHtml
 	 * @param string $content
 	 * @param Horde_Mime_Part[] $attachments
-	 * @return void
+	 * @return Horde_Mime_Part
 	 */
 	public function build(bool $isHtml, string $content, array $attachments): Horde_Mime_Part {
 		if ($isHtml) {
