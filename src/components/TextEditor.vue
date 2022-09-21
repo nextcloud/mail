@@ -53,6 +53,7 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
 import MailPlugin from '../ckeditor/mail/MailPlugin'
+import HtmlEmbed from '@ckeditor/ckeditor5-html-embed/src/htmlembed'
 
 import { getLanguage } from '@nextcloud/l10n'
 
@@ -110,6 +111,7 @@ export default {
 				Base64UploadAdapter,
 				ImageResizePlugin,
 				MailPlugin,
+				HtmlEmbed,
 			])
 			toolbar.unshift(...[
 				'heading',
@@ -127,6 +129,7 @@ export default {
 				'strikethrough',
 				'link',
 				'removeFormat',
+				'htmlEmbed',
 			])
 		}
 
@@ -138,6 +141,9 @@ export default {
 				plugins,
 				toolbar: {
 					items: toolbar,
+				},
+				htmlEmbed: {
+					showPreviews: true,
 				},
 				language: 'en',
 			},
