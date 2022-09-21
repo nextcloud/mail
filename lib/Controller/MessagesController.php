@@ -264,7 +264,7 @@ class MessagesController extends Controller {
 		$response = new JSONResponse($json);
 
 		// Enable caching
-		$response->cacheFor(60 * 60);
+		$response->cacheFor(60 * 60, false, true);
 
 		return $response;
 	}
@@ -288,7 +288,9 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		return new JsonResponse($this->itineraryService->extract($account, $mailbox, $message->getUid()));
+		$response = new JsonResponse($this->itineraryService->extract($account, $mailbox, $message->getUid()));
+		$response->cacheFor(24 * 60 * 60, false, true);
+		return $response;
 	}
 
 	private function isSenderTrusted(Message $message): bool {
@@ -431,7 +433,7 @@ class MessagesController extends Controller {
 		]);
 
 		// Enable caching
-		$response->cacheFor(60 * 60);
+		$response->cacheFor(60 * 60, false, true);
 
 		return $response;
 	}
@@ -524,7 +526,7 @@ class MessagesController extends Controller {
 			$htmlResponse->setContentSecurityPolicy($policy);
 
 			// Enable caching
-			$htmlResponse->cacheFor(60 * 60);
+			$htmlResponse->cacheFor(60 * 60, false, true);
 
 			return $htmlResponse;
 		} catch (Exception $ex) {

@@ -49,7 +49,7 @@ class ContactIntegrationController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function match(string $mail): JSONResponse {
-		return new JSONResponse($this->service->findMatches($mail));
+		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
@@ -93,6 +93,6 @@ class ContactIntegrationController extends Controller {
 	 */
 	public function autoComplete(string $term): JSONResponse {
 		$res = $this->service->autoComplete($term);
-		return new JSONResponse($res);
+		return (new JSONResponse($res))->cacheFor(60 * 60, false, true);
 	}
 }
