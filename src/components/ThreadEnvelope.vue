@@ -496,6 +496,7 @@ export default {
 			height: 16px;
 			margin-left: -1px;
 			display: flex;
+			top: 12px;
 
 			&:hover,
 			&:focus {
@@ -506,8 +507,8 @@ export default {
 	.app-content-list-item-star.favorite-icon-style {
 		display: inline-block;
 		position: absolute;
-		top: 8px;
-		left: 40px;
+		top: 10px;
+		left: 36px;
 		cursor: pointer;
 		stroke: var(--color-main-background);
 		stroke-width: 2;
@@ -518,8 +519,8 @@ export default {
 	.app-content-list-item-star.junk-icon-style {
 		display: inline-block;
 		position: absolute;
-		top: 8px;
-		left: 40px;
+		top: 10px;
+		left: 36px;
 		cursor: pointer;
 		opacity: .2;
 		&:hover {
