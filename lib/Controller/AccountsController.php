@@ -402,6 +402,6 @@ class AccountsController extends Controller {
 		if ($quota === null) {
 			return MailJsonResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
 		}
-		return MailJsonResponse::success($quota);
+		return MailJsonResponse::success($quota)->cacheFor(5 * 60, false, true);
 	}
 }
