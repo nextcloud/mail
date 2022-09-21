@@ -36,8 +36,9 @@
 					:error="t('mail', 'Could not open outbox')"
 					message=""
 					role="alert" />
-				<LoadingSkeleton
-					v-else-if="loading" />
+				<Loading
+					v-else-if="loading"
+					:hint="t('mail', 'Loading messages …')" />
 				<EmptyMailbox v-else-if="messages.length === 0" />
 				<OutboxMessageListItem
 					v-for="message in messages"
@@ -51,7 +52,7 @@
 
 <script>
 import { NcAppContent as AppContent, NcAppContentList as AppContentList } from '@nextcloud/vue'
-import LoadingSkeleton from './LoadingSkeleton'
+import Loading from './Loading'
 import Error from './Error'
 import EmptyMailbox from './EmptyMailbox'
 import OutboxMessageContent from './OutboxMessageContent'
@@ -65,7 +66,7 @@ export default {
 		AppContent,
 		AppContentList,
 		Error,
-		LoadingSkeleton,
+		Loading,
 		EmptyMailbox,
 		OutboxMessageListItem,
 		OutboxMessageContent,

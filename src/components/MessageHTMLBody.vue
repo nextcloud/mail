@@ -27,7 +27,7 @@
 				</ActionButton>
 			</Actions>
 		</div>
-		<LoadingSkeleton v-if="loading" :with-avatar="false" :number-of-lines="5" />
+		<IconLoading v-if="loading" />
 		<div id="message-container" :class="{hidden: loading, scroll: !fullHeight}">
 			<iframe ref="iframe"
 				class="message-frame"
@@ -43,11 +43,10 @@
 import { iframeResizer } from 'iframe-resizer'
 import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService'
-import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual'
 import IconMail from 'vue-material-design-icons/Email'
 import IconDomain from 'vue-material-design-icons/Domain'
-import LoadingSkeleton from './LoadingSkeleton'
 
 import logger from '../logger'
 import MdnRequest from './MdnRequest'
@@ -62,7 +61,7 @@ export default {
 		IconImage,
 		IconMail,
 		IconDomain,
-		LoadingSkeleton,
+		IconLoading,
 	},
 	props: {
 		url: {
