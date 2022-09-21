@@ -133,7 +133,7 @@
 				</template>
 			</div>
 		</div>
-		<LoadingSkeleton v-if="loading" :with-avatar="false" :number-of-lines="5" />
+		<Loading v-if="loading" />
 		<Message v-else-if="message"
 			:envelope="envelope"
 			:message="message"
@@ -146,12 +146,13 @@
 	</div>
 </template>
 <script>
-import { NcButton as ButtonVue, Avatar } from '@nextcloud/vue'
-import LoadingSkeleton from './LoadingSkeleton'
+import Avatar from './Avatar'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
 import IconFavorite from 'vue-material-design-icons/Star'
 import JunkIcon from './icons/JunkIcon'
+import Loading from './Loading'
 import logger from '../logger'
 import Message from './Message'
 import MenuEnvelope from './MenuEnvelope'
@@ -176,6 +177,7 @@ export default {
 		Error,
 		IconFavorite,
 		JunkIcon,
+		Loading,
 		MenuEnvelope,
 		Moment,
 		Message,
@@ -185,7 +187,6 @@ export default {
 		EmailRead,
 		EmailUnread,
 		DeleteIcon,
-		LoadingSkeleton,
 
 	},
 	props: {

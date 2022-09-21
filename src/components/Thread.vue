@@ -1,6 +1,6 @@
 <template>
 	<AppContentDetails id="mail-message">
-		<LoadingSkeleton v-if="loading" />
+		<Loading v-if="loading" />
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
@@ -48,13 +48,14 @@
 
 <script>
 import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
+
 import { prop, uniqBy } from 'ramda'
 import debounce from 'lodash/fp/debounce'
 
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
+import Loading from './Loading'
 import logger from '../logger'
 import RecipientBubble from './RecipientBubble'
-import LoadingSkeleton from './LoadingSkeleton'
 import ThreadEnvelope from './ThreadEnvelope'
 
 export default {
@@ -62,9 +63,9 @@ export default {
 	components: {
 		RecipientBubble,
 		AppContentDetails,
+		Loading,
 		ThreadEnvelope,
 		Popover,
-		LoadingSkeleton,
 	},
 
 	data() {
