@@ -320,6 +320,7 @@
     "Save sieve settings" : "儲存過濾設定",
     "Save sieve script" : "儲存過濾指令稿",
     "Signature …" : "簽名……",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "您的簽名檔大於 2 MB。這可能會影響編輯器的效能。",
     "Save signature" : "儲存簽名",
     "Place signature above quoted text" : "將簽名置於引用文字上方",
     "Add default tags" : "新增預設標籤",

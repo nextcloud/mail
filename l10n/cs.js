@@ -322,6 +322,7 @@ OC.L10N.register(
     "Save sieve settings" : "Uložit nastavení pro sieve",
     "Save sieve script" : "Uložit sieve skript",
     "Signature …" : "Podpis…",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Váš podpis je větší než 2 MB. To může zpomalovat editor.",
     "Save signature" : "Uložit podpis",
     "Place signature above quoted text" : "Vložit podpis nad citovaný text",
     "Add default tags" : "Přidat výchozí štítky",
