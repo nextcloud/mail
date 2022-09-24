@@ -322,6 +322,7 @@ OC.L10N.register(
     "Save sieve settings" : "Salvar configurações do Sieve",
     "Save sieve script" : "Salvar o script Sieve",
     "Signature …" : "Assinatura...",
+    "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Sua assinatura é maior que 2 MB. Isso pode afetar o desempenho do seu editor.",
     "Save signature" : "Salvar assinatura",
     "Place signature above quoted text" : "Coloque a assinatura acima do texto citado ",
     "Add default tags" : "Adicionar etiquetas padrão",
