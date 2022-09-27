@@ -57,6 +57,7 @@ class AutoCompleteController extends Controller {
 			return new JSONResponse([]);
 		}
 
-		return new JSONResponse($this->service->findMatches($this->userId, $term));
+		return (new JSONResponse($this->service->findMatches($this->userId, $term)))
+			->cacheFor(5 * 60, false, true);
 	}
 }

@@ -73,7 +73,7 @@ class AvatarsController extends Controller {
 
 			// Debounce this a bit
 			// (cache for one day)
-			$response->cacheFor(24 * 60 * 60);
+			$response->cacheFor(24 * 60 * 60, false, true);
 
 			return $response;
 		}
