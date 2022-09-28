@@ -2,9 +2,12 @@ OC.L10N.register(
     "mail",
     {
     "Embedded message %s" : "Вбудоване повідомлення %s",
+    "Important mail" : "Важлива пошта",
+    "Unread mail" : "Непрочитана пошта",
     "Important" : "Важливі",
     "Work" : "Робочий",
     "Personal" : "Особисте",
+    "To Do" : "Зробити",
     "Later" : "Пізніше",
     "Mails" : "Пошта",
     "Mail" : "Пошта",
