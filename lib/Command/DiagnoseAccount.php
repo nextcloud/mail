@@ -109,6 +109,8 @@ class DiagnoseAccount extends Command {
 	private function printCapabilitiesStats(OutputInterface $output,
 											Horde_Imap_Client_Socket $imapClient): void {
 		$output->writeln("IMAP capabilities:");
+		// Once logged in more capabilities are advertised
+		$imapClient->login();
 		$capabilities = array_keys(
 			json_decode(
 				$imapClient->capability->serialize(),
