@@ -19,7 +19,8 @@
 					:account="account"
 					:mailbox="mailbox"
 					:search-query="query"
-					:bus="bus" />
+					:bus="bus"
+					:open-first="mailbox.specialRole !== 'drafts'" />
 				<template v-else>
 					<div class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
