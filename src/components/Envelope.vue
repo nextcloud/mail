@@ -658,42 +658,12 @@ export default {
 		opacity: .1;
 	}
 }
-list-item-style.draft .app-content-list-item-line-two {
-	font-style: italic;
-}
 
 .icon-attachment {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
 	opacity: 0.25;
 }
 
-	// Fix layout of messages in list until we move to component
-
-.app-content-list .list-item {
-	padding-right: 0;
-
-	.app-content-list-item-line-two {
-	padding-right: 0;
-	margin-top: -8px;
-	}
-
-	.app-content-list-item-menu {
-	margin-right: -2px;
-	margin-top: -8px;
-
-	::v-deep .action-item__menu {
-	right: 7px !important;
-
-	.action-item__menu_arrow {
-	right: 6px !important;
-	}
-	}
-	}
-
-	.app-content-list-item-details {
-		padding-right: 7px;
-		}
-}
 ::v-deep .action--primary {
 	.material-design-icon {
 		margin-bottom: -14px;
