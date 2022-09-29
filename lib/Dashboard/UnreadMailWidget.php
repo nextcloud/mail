@@ -40,4 +40,11 @@ class UnreadMailWidget extends MailWidget {
 	public function getTitle(): string {
 		return $this->l10n->t('Unread mail');
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getSearchFilter(): string {
+		return 'is:unread';
+	}
 }
