@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<router-link to="/setup" class="app-settings-button button primary new-button">
+		<router-link v-if="allowNewMailAccounts" to="/setup" class="app-settings-button button primary new-button">
 			<IconAdd :size="20" />
 			{{ t('mail', 'Add mail account') }}
 		</router-link>
@@ -143,6 +143,9 @@ export default {
 		},
 		useAutoTagging() {
 			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
+		},
+		allowNewMailAccounts() {
+			return this.$store.getters.getPreference('allow-new-accounts', 'true') === 'true'
 		},
 	},
 	methods: {

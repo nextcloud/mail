@@ -32,6 +32,7 @@ use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 use OCP\IRequest;
 use function array_merge;
 
@@ -39,12 +40,16 @@ class SettingsController extends Controller {
 	private ProvisioningManager $provisioningManager;
 	private AntiSpamService $antiSpamService;
 
+	private IConfig $config;
+
 	public function __construct(IRequest $request,
 								ProvisioningManager $provisioningManager,
-								AntiSpamService $antiSpamService) {
+								AntiSpamService $antiSpamService,
+								IConfig $config) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
+		$this->config = $config;
 	}
 
 	public function index(): JSONResponse {
@@ -109,5 +114,9 @@ class SettingsController extends Controller {
 	public function deleteAntiSpamEmail(): JSONResponse {
 		$this->antiSpamService->deleteConfig();
 		return new JSONResponse([]);
+	}
+
+	public function setAllowNewMailAccounts(bool $allowed) {
+		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
 	}
 }

@@ -38,6 +38,7 @@ use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -100,6 +101,7 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService = $this->createMock(SetupService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
+		$this->config = $this->createMock(IConfig::class);
 
 		$this->controller = new AccountsController(
 			$this->appName,
@@ -112,7 +114,8 @@ class AccountsControllerTest extends TestCase {
 			$this->transmission,
 			$this->setupService,
 			$this->mailManager,
-			$this->syncService
+			$this->syncService,
+			$this->config
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
@@ -213,6 +216,9 @@ class AccountsControllerTest extends TestCase {
 	}
 
 	public function testCreateManualSuccess(): void {
+		$this->config->expects(self::once())
+			->method('getAppValue')
+			->willReturn('yes');
 		$autoDetect = false;
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
@@ -238,6 +244,35 @@ class AccountsControllerTest extends TestCase {
 
 		self::assertEquals($expectedResponse, $response);
 	}
+
+	public function testCreateManualNotAllowed(): void {
+		$autoDetect = false;
+		$email = 'user@domain.tld';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = 993;
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = 465;
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$this->config->expects(self::once())
+			->method('getAppValue')
+			->willReturn('no');
+		$this->logger->expects(self::once())
+			->method('info');
+		$this->setupService->expects(self::never())
+			->method('createNewAccount');
+
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::error('Could not create account');
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+
+		self::assertEquals($expectedResponse, $response);
+	}
+
 
 	public function testCreateManualFailure(): void {
 		$autoDetect = false;

@@ -132,6 +132,19 @@
 				:disable="deleteProvisioning" />
 		</p>
 		<div class="app-description">
+			<h3>{{ t('mail', 'Allow additional mail accounts') }}</h3>
+			<article>
+				<p>
+					<NcCheckboxRadioSwitch
+						:checked.sync="allowNewMailAccounts"
+						type="switch"
+						@update:checked="updateAllowNewMailAccounts">
+						{{ t('mail','Allow additional Mail accounts from User Settings') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
+		<div class="app-description">
 			<h3>
 				{{
 					t(
@@ -166,16 +179,19 @@
 import Button from '@nextcloud/vue/dist/Components/NcButton'
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { loadState } from '@nextcloud/initial-state'
 import ProvisioningSettings from './ProvisioningSettings'
 import AntiSpamSettings from './AntiSpamSettings'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconSettings from 'vue-material-design-icons/Cog'
 import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
 import {
 	disableProvisioning,
 	createProvisioningSettings,
 	updateProvisioningSettings,
 	provisionAll,
+	updateAllowNewMailAccounts,
 
 } from '../../service/SettingsService'
 export default {
@@ -187,6 +203,7 @@ export default {
 		Button,
 		IconAdd,
 		IconSettings,
+		NcCheckboxRadioSwitch,
 	},
 	props: {
 		provisioningSettings: {
@@ -220,6 +237,7 @@ export default {
 				},
 				loading: false,
 			},
+			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
 		}
 	},
 	methods: {
@@ -243,7 +261,6 @@ export default {
 				showError(t('mail', 'Could not save provisioning setting'))
 				logger.error('Could not save provisioning setting', { error })
 			}
-
 		},
 		resetForm() {
 			this.formKey = Math.random()
@@ -269,6 +286,9 @@ export default {
 				showError(t('mail', 'Error when deleting and deprovisioning accounts for "{domain}"', { domain: deleted.provisioningDomain }))
 				logger.error('Could not delete provisioning config', { error })
 			}
+		},
+		async updateAllowNewMailAccounts(checked) {
+			await updateAllowNewMailAccounts(checked)
 		},
 	},
 }

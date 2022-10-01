@@ -3,7 +3,7 @@
 		<Navigation v-if="hasAccounts" />
 		<AppContent>
 			<div class="mail-empty-content">
-				<EmptyContent :title="t('mail', 'Connect your mail account')">
+				<EmptyContent v-if="allowNewMailAccounts" :title="t('mail', 'Connect your mail account')">
 					<template #icon>
 						<IconMail :size="65" />
 					</template>
@@ -12,6 +12,11 @@
 							:email="email"
 							:error.sync="error"
 							@account-created="onAccountCreated" />
+					</template>
+				</EmptyContent>
+				<EmptyContent v-else :title="t('mail', 'To add a mail account, please contact your administrator.')">
+					<template #icon>
+						<IconMail :size="65" />
 					</template>
 				</EmptyContent>
 			</div>
@@ -42,6 +47,7 @@ export default {
 		return {
 			displayName: loadState('mail', 'prefill_displayName'),
 			email: loadState('mail', 'prefill_email'),
+			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts'),
 			error: null,
 		}
 	},
