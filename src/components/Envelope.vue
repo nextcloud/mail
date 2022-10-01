@@ -160,14 +160,15 @@
 					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
-				<ActionButton :close-after-click="false"
-					@click="moreActionsOpen=true">
+				<ActionButton v-if="showArchiveButton"
+					:close-after-click="true"
+					@click.prevent="onArchive">
 					<template #icon>
-						<DotsHorizontalIcon
-							:title="t('mail', 'More actions')"
+						<ArchiveIcon
+							:title="t('mail', 'Archive thread')"
 							:size="20" />
 					</template>
-					{{ t('mail', 'More actions') }}
+					{{ t('mail', 'Archive thread') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="onDelete">
@@ -177,6 +178,15 @@
 							:size="20" />
 					</template>
 					{{ t('mail', 'Delete thread') }}
+				</ActionButton>
+				<ActionButton :close-after-click="false"
+					@click="moreActionsOpen=true">
+					<template #icon>
+						<DotsHorizontalIcon
+							:title="t('mail', 'More actions')"
+							:size="20" />
+					</template>
+					{{ t('mail', 'More actions') }}
 				</ActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
@@ -251,6 +261,7 @@ import IconCreateEvent from 'vue-material-design-icons/Calendar'
 import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
+import ArchiveIcon from 'vue-material-design-icons/PackageDown'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
@@ -290,6 +301,7 @@ export default {
 		CheckIcon,
 		ChevronLeft,
 		DeleteIcon,
+		ArchiveIcon,
 		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
@@ -419,6 +431,9 @@ export default {
 				return ''
 			}
 		},
+		showArchiveButton() {
+			return this.account.archiveMailboxId !== null
+		},
 		showFavoriteIconVariant() {
 			return this.data.flags.flagged
 		},
@@ -527,6 +542,22 @@ export default {
 						return t('mail', 'Could not delete message')
 					},
 				}))
+			}
+		},
+		async onArchive() {
+			// Remove from selection first
+			this.setSelected(false)
+			// Archive
+			this.$emit('archive', this.data.databaseId)
+
+			try {
+				await this.$store.dispatch('moveThread', {
+					envelope: this.data,
+					destMailboxId: this.account.archiveMailboxId,
+				})
+			} catch (error) {
+				logger.error('could not archive message', error)
+				showError(t('mail', 'Could not archive message'))
 			}
 		},
 		async onOpenEditAsNew() {

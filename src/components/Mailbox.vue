@@ -175,6 +175,7 @@ export default {
 	created() {
 		this.bus.$on('load-more', this.onScroll)
 		this.bus.$on('delete', this.onDelete)
+		this.bus.$on('archive', this.onArchive)
 		this.bus.$on('shortcut', this.handleShortcut)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
@@ -188,6 +189,7 @@ export default {
 	destroyed() {
 		this.bus.$off('load-more', this.onScroll)
 		this.bus.$off('delete', this.onDelete)
+		this.bus.$off('archive', this.onArchive)
 		this.bus.$off('shortcut', this.handleShortcut)
 		this.stopInterval()
 	},
@@ -365,6 +367,24 @@ export default {
 							return t('mail', 'Could not delete message')
 						},
 					}))
+				}
+
+				break
+			case 'arch':
+				logger.debug('archiving', { env })
+				this.onArchive(env.databaseId)
+				try {
+					await this.$store.dispatch('moveThread', {
+						envelope: env,
+						destMailboxId: this.account.archiveMailboxId,
+					})
+				} catch (error) {
+					logger.error('could not archive envelope', {
+						env,
+						error,
+					})
+
+					showError(t('mail', 'Could not archive message'))
 				}
 
 				break

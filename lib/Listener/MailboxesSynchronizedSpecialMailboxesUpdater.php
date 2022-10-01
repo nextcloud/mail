@@ -99,6 +99,16 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$mailAccount->setTrashMailboxId(null);
 			}
 		}
+		if ($mailAccount->getArchiveMailboxId() === null || !array_key_exists($mailAccount->getArchiveMailboxId(), $mailboxes)) {
+			try {
+				$archiveMailbox = $this->findSpecial($mailboxes, 'archive');
+				$mailAccount->setArchiveMailboxId($archiveMailbox->getId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->info("Account " . $account->getId() . " does not have an archive mailbox");
+
+				$mailAccount->setArchiveMailboxId(null);
+			}
+		}
 
 		$this->mailAccountMapper->update($mailAccount);
 	}

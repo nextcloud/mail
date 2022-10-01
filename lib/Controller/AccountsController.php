@@ -194,6 +194,7 @@ class AccountsController extends Controller {
 	 * @param int|null $draftsMailboxId
 	 * @param int|null $sentMailboxId
 	 * @param int|null $trashMailboxId
+	 * @param int|null $archiveMailboxId
 	 * @param bool|null $signatureAboveQuote
 	 *
 	 * @return JSONResponse
@@ -207,6 +208,7 @@ class AccountsController extends Controller {
 								 int $draftsMailboxId = null,
 								 int $sentMailboxId = null,
 								 int $trashMailboxId = null,
+								 int $archiveMailboxId = null,
 								 bool $signatureAboveQuote = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
@@ -223,6 +225,10 @@ class AccountsController extends Controller {
 		if ($trashMailboxId !== null) {
 			$this->mailManager->getMailbox($this->currentUserId, $trashMailboxId);
 			$dbAccount->setTrashMailboxId($trashMailboxId);
+		}
+		if ($archiveMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $archiveMailboxId);
+			$dbAccount->setarchiveMailboxId($archiveMailboxId);
 		}
 		if ($editorMode !== null) {
 			$dbAccount->setEditorMode($editorMode);

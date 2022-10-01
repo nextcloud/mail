@@ -113,6 +113,7 @@ class IMipService {
 			// Check for accounts or mailboxes that no longer exist,
 			// no processing for drafts, sent items, junk or archive
 			if ($account === null
+				|| $account->getMailAccount()->getArchiveMailboxId() === $mailbox->getId()
 				|| $account->getMailAccount()->getTrashMailboxId() === $mailbox->getId()
 				|| $account->getMailAccount()->getSentMailboxId() === $mailbox->getId()
 				|| $account->getMailAccount()->getDraftsMailboxId() === $mailbox->getId()

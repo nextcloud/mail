@@ -55,7 +55,7 @@
 		<AppSettingsSection id="default-folders" :title=" t('mail', 'Default folders')">
 			<p class="settings-hint">
 				{{
-					t('mail', 'The folders to use for drafts, sent messages and deleted messages.')
+					t('mail', 'The folders to use for drafts, sent messages, deleted messages and archived messages.')
 				}}
 			</p>
 			<AccountDefaultsSettings :account="account" />

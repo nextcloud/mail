@@ -115,6 +115,16 @@
 								:size="20" />
 						</template>
 					</ButtonVue>
+					<ButtonVue v-if="showArchiveButton"
+						:close-after-click="true"
+						type="tertiary-no-background"
+						@click.prevent="onArchive">
+						<template #icon>
+							<ArchiveIcon
+								:title="t('mail', 'Archive message')"
+								:size="20" />
+						</template>
+					</ButtonVue>
 					<ButtonVue :close-after-click="true"
 						type="tertiary-no-background"
 						@click.prevent="onDelete">
@@ -161,6 +171,7 @@ import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import StarOutline from 'vue-material-design-icons/StarOutline'
 import DeleteIcon from 'vue-material-design-icons/Delete'
+import ArchiveIcon from 'vue-material-design-icons/PackageDown'
 import EmailUnread from 'vue-material-design-icons/Email'
 import EmailRead from 'vue-material-design-icons/EmailOpen'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
@@ -187,7 +198,7 @@ export default {
 		EmailRead,
 		EmailUnread,
 		DeleteIcon,
-
+		ArchiveIcon,
 	},
 	props: {
 		envelope: {
@@ -264,6 +275,9 @@ export default {
 		},
 		showSubline() {
 			return !this.expanded && !!this.envelope.previewText
+		},
+		showArchiveButton() {
+			return this.account.archiveMailboxId !== null
 		},
 		junkFavoritePosition() {
 			return this.showSubline && this.tags.length > 0
@@ -397,6 +411,27 @@ export default {
 						return t('mail', 'Could not delete message')
 					},
 				}))
+			}
+		},
+		async onArchive() {
+			// Remove from selection first
+			if (this.withSelect) {
+				this.$emit('unselect')
+			}
+
+			// Archive
+			this.$emit('archive', this.envelope.databaseId)
+
+			logger.info(`archiving message ${this.envelope.databaseId}`)
+
+			try {
+				await this.$store.dispatch('moveMessage', {
+					id: this.envelope.databaseId,
+					destMailboxId: this.account.archiveMailboxId,
+				})
+			} catch (error) {
+				logger.error('could not archive message', error)
+				return t('mail', 'Could not archive message')
 			}
 		},
 	},
