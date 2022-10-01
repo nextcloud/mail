@@ -28,7 +28,7 @@
 				:key="'mailbox-' + mailbox.databaseId"
 				:account="unifiedAccount"
 				:mailbox="mailbox" />
-			<NavigationOutbox />
+			<NavigationOutbox v-if="showOutbox" />
 			<AppNavigationSpacer />
 
 			<!-- All other mailboxes grouped by their account -->
@@ -128,6 +128,9 @@ export default {
 		},
 		unifiedMailboxes() {
 			return this.$store.getters.getMailboxes(UNIFIED_ACCOUNT_ID)
+		},
+		showOutbox() {
+			return this.$store.getters['outbox/getAllMessages'].length !== 0
 		},
 	},
 	methods: {
