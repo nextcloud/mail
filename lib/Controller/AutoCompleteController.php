@@ -29,11 +29,8 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class AutoCompleteController extends Controller {
-	/** @var AutoCompleteService */
-	private $service;
-
-	/** @var string|null */
-	private $userId;
+	private AutoCompleteService $service;
+	private ?string $userId;
 
 	public function __construct(string $appName,
 								IRequest $request,

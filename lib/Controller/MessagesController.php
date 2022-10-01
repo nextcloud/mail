@@ -61,62 +61,20 @@ use Psr\Log\LoggerInterface;
 use function array_map;
 
 class MessagesController extends Controller {
-	/** @var AccountService */
-	private $accountService;
+	private AccountService $accountService;
+	private IMailManager $mailManager;
+	private IMailSearch $mailSearch;
+	private ItineraryService $itineraryService;
+	private ?string $currentUserId;
+	private LoggerInterface $logger;
+	private Folder $userFolder;
+	private IMimeTypeDetector $mimeTypeDetector;
+	private IL10N $l10n;
+	private IURLGenerator $urlGenerator;
+	private ContentSecurityPolicyNonceManager $nonceManager;
+	private ITrustedSenderService $trustedSenderService;
+	private IMailTransmission $mailTransmission;
 
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var IMailSearch */
-	private $mailSearch;
-
-	/** @var ItineraryService */
-	private $itineraryService;
-
-	/** @var ?string */
-	private $currentUserId;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var Folder */
-	private $userFolder;
-
-	/** @var IMimeTypeDetector */
-	private $mimeTypeDetector;
-
-	/** @var IL10N */
-	private $l10n;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var ContentSecurityPolicyNonceManager */
-	private $nonceManager;
-
-	/** @var ITrustedSenderService */
-	private $trustedSenderService;
-
-	/** @var IMailTransmission */
-	private $mailTransmission;
-
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AccountService $accountService
-	 * @param IMailManager $mailManager
-	 * @param IMailSearch $mailSearch
-	 * @param ItineraryService $itineraryService
-	 * @param string $UserId
-	 * @param $userFolder
-	 * @param LoggerInterface $logger
-	 * @param IL10N $l10n
-	 * @param IMimeTypeDetector $mimeTypeDetector
-	 * @param IURLGenerator $urlGenerator
-	 * @param ContentSecurityPolicyNonceManager $nonceManager
-	 * @param ITrustedSenderService $trustedSenderService
-	 * @param IMailTransmission $mailTransmission
-	 */
 	public function __construct(string $appName,
 								IRequest $request,
 								AccountService $accountService,

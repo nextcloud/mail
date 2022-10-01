@@ -37,31 +37,12 @@ use OCP\IRequest;
 use OCP\Security\ICrypto;
 
 class SieveController extends Controller {
-	/** @var AccountService */
-	private $accountService;
+	private AccountService $accountService;
+	private MailAccountMapper $mailAccountMapper;
+	private SieveClientFactory $sieveClientFactory;
+	private string $currentUserId;
+	private ICrypto $crypto;
 
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var SieveClientFactory */
-	private $sieveClientFactory;
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var ICrypto */
-	private $crypto;
-
-	/**
-	 * AccountsController constructor.
-	 *
-	 * @param IRequest $request
-	 * @param string $UserId
-	 * @param AccountService $accountService
-	 * @param MailAccountMapper $mailAccountMapper
-	 * @param SieveClientFactory $sieveClientFactory
-	 * @param ICrypto $crypto
-	 */
 	public function __construct(IRequest $request,
 								string $UserId,
 								AccountService $accountService,

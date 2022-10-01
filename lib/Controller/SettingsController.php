@@ -36,11 +36,8 @@ use OCP\IRequest;
 use function array_merge;
 
 class SettingsController extends Controller {
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	/** @var AntiSpamService */
-	private $antiSpamService;
+	private ProvisioningManager $provisioningManager;
+	private AntiSpamService $antiSpamService;
 
 	public function __construct(IRequest $request,
 								ProvisioningManager $provisioningManager,

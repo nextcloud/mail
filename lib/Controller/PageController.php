@@ -50,41 +50,18 @@ use function class_exists;
 use function json_decode;
 
 class PageController extends Controller {
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var IConfig */
-	private $config;
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var AliasesService */
-	private $aliasesService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var IUserSession */
-	private $userSession;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var IInitialState */
-	private $initialStateService;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var OutboxService */
-	private $outboxService;
+	private IURLGenerator $urlGenerator;
+	private IConfig $config;
+	private AccountService $accountService;
+	private AliasesService $aliasesService;
+	private ?string $currentUserId;
+	private IUserSession $userSession;
+	private IUserPreferences $preferences;
+	private IMailManager $mailManager;
+	private TagMapper $tagMapper;
+	private IInitialState $initialStateService;
+	private LoggerInterface $logger;
+	private OutboxService $outboxService;
 	private IEventDispatcher $dispatcher;
 
 	public function __construct(string $appName,
