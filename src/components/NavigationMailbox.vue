@@ -308,9 +308,12 @@ export default {
 	},
 	computed: {
 		visible() {
+			const showPriorityInbox = this.$store.getters.getPreference('show-priority-inbox', 'true') === 'true';
 			return (
 				(this.account.showSubscribedOnly === false
-				|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox
+				|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed')))
+				&& (!this.mailbox.isPriorityInbox || showPriorityInbox)
+				&& (this.isUnifiedButOnlyInbox || !showPriorityInbox)
 			)
 		},
 		notInbox() {
