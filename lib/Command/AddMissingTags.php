@@ -36,14 +36,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AddMissingTags extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var MailAccountMapper */
-	private $mapper;
+	private LoggerInterface $logger;
+	private TagMapper $tagMapper;
+	private MailAccountMapper $mapper;
 
 	public function __construct(MailAccountMapper $mapper,
 								TagMapper $tagMapper,

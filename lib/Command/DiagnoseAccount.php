@@ -42,14 +42,9 @@ use function sort;
 class DiagnoseAccount extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private IMAPClientFactory $clientFactory;
+	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
 								IMAPClientFactory $clientFactory,
