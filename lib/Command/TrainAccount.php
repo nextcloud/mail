@@ -40,17 +40,10 @@ use function memory_get_peak_usage;
 class TrainAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ImportanceClassifier */
-	private $classifier;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private ImportanceClassifier $classifier;
+	private IUserPreferences $preferences;
+	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
 								ImportanceClassifier $classifier,
