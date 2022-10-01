@@ -592,14 +592,14 @@ export default {
 }
 
 .icon-important {
-	::v-deep path {
+	:deep(path) {
 	fill: #ffcc00;
 	stroke: var(--color-main-background);
 	}
 	.list-item:hover &,
 	.list-item:focus &,
 	.list-item.active & {
-	::v-deep path {
+	:deep(path) {
 	stroke: var(--color-background-dark);
 	}
 	}
@@ -664,12 +664,12 @@ export default {
 	opacity: 0.25;
 }
 
-::v-deep .action--primary {
+:deep(.action--primary) {
 	.material-design-icon {
 		margin-bottom: -14px;
 	}
 }
-::v-deep .list-item__extra {
+:deep(.list-item__extra) {
 	margin-left: 41px !important;
 }
 .tag-group__label {
@@ -697,13 +697,13 @@ export default {
 	overflow: hidden;
 	left: 4px;
 }
-::v-deep.list-item__wrapper {
+.list-item__wrapper:deep() {
 	list-style: none;
 }
 .app-content-list-item-star.favorite-icon-style {
 	display: block;
 }
-::v-deep.icon-important.app-content-list-item-star {
+.icon-important.app-content-list-item-star:deep() {
 	position: absolute;
 	top: 14px;
 	z-index: 1;
@@ -721,7 +721,7 @@ export default {
 		opacity: .4;
 	}
 }
-::v-deep .svg svg{
+:deep(.svg svg) {
 	height: 16px;
 	width: 16px;
 }
@@ -731,10 +731,10 @@ export default {
 .attachment-icon-style {
 	opacity: .6;
 }
-::v-deep .list-item-content__wrapper {
+:deep(.list-item-content__wrapper) {
 	margin-top: 6px;
 }
-::v-deep .list-item__extra {
+:deep(.list-item__extra) {
 	margin-top: 9px;
 }
 </style>

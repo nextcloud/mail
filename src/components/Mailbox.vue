@@ -489,7 +489,7 @@ export default {
 <style lang="scss" scoped>
 // Fix vertical space between sections in priority inbox
 .nameimportant {
-	::v-deep #load-more-mail-messages {
+	:deep(#load-more-mail-messages) {
 		margin-top: 0;
 		margin-bottom: 8px;
 	}

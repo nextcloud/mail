@@ -225,7 +225,7 @@ export default {
 .ck-balloon-panel {
 	 z-index: 10000 !important;
  }
-::v-deep.button-vue {
+.button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;
 }

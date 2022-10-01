@@ -288,7 +288,7 @@ export default {
 .contact-existing {
 	font-size: small !important;
 }
-::v-deep .button-vue__text {
+:deep(.button-vue__text) {
 	font-weight: normal !important;
 }
 </style>

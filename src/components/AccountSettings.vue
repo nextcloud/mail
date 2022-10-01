@@ -213,7 +213,7 @@ export default {
 	justify-content: space-between;
 }
 
-::v-deep .modal-container {
+:deep(.modal-container) {
 	display: block;
 	overflow: scroll;
 	transition: transform 300ms ease;

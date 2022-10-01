@@ -180,7 +180,7 @@ export default {
 		animation: rotation 2s linear;
 	}
 }
-::v-deep .app-navigation-new button {
+:deep(.app-navigation-new button) {
 	width: 240px !important;
 	height: 44px;
 }
@@ -195,7 +195,7 @@ to {
 .app-navigation-spacer {
 	order: 0 !important;
 }
-::v-deep .settings-button {
+:deep(.settings-button) {
 	opacity: .7 !important;
 	font-weight: bold !important;
 }

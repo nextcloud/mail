@@ -145,7 +145,7 @@ export default {
 input {
 	width: 195px;
 }
-::v-deep.button-vue {
+.button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;
 }

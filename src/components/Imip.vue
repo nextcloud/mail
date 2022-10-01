@@ -543,7 +543,7 @@ export default {
 				&__multiselect {
 					width: 100%;
 
-					::v-deep .calendar-picker-option__label {
+					:deep(.calendar-picker-option__label) {
 						max-width: unset !important;
 					}
 				}
