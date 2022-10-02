@@ -50,32 +50,15 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 class AccountsController extends Controller {
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IL10N */
-	private $l10n;
-
-	/** @var AliasesService */
-	private $aliasesService;
-
-	/** @var IMailTransmission */
-	private $mailTransmission;
-
-	/** @var SetupService */
-	private $setup;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var SyncService */
-	private $syncService;
+	private AccountService $accountService;
+	private string $currentUserId;
+	private LoggerInterface $logger;
+	private IL10N $l10n;
+	private AliasesService $aliasesService;
+	private IMailTransmission $mailTransmission;
+	private SetupService $setup;
+	private IMailManager $mailManager;
+	private SyncService $syncService;
 
 	public function __construct(string $appName,
 								   IRequest $request,

@@ -35,14 +35,9 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 class OutboxController extends Controller {
-	/** @var OutboxService */
-	private $service;
-
-	/** @var string */
-	private $userId;
-
-	/** @var AccountService */
-	private $accountService;
+	private OutboxService $service;
+	private string $userId;
+	private AccountService $accountService;
 
 	public function __construct(string $appName,
 								$UserId,

@@ -40,23 +40,16 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class MailboxesController extends Controller {
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/**  @var IMailManager */
-	private $mailManager;
-
-	/** @var SyncService */
-	private $syncService;
+	private AccountService $accountService;
+	private ?string $currentUserId;
+	private IMailManager $mailManager;
+	private SyncService $syncService;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
-	 * @param string $UserId
+	 * @param string|null $UserId
 	 * @param IMailManager $mailManager
 	 * @param SyncService $syncService
 	 */
