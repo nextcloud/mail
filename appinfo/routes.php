@@ -305,6 +305,11 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'settings#setAllowNewMailAccounts',
+			'url' => '/api/settings/allownewaccounts',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'

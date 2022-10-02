@@ -175,6 +175,11 @@ class PageController extends Controller {
 			$cronMode === 'ajax',
 		);
 
+		$this->initialStateService->provideInitialState(
+			'allow_new_mail_accounts',
+			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+		);
+
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$response->setContentSecurityPolicy($csp);

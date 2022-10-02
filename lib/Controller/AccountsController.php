@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
@@ -45,6 +46,7 @@ use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
@@ -59,6 +61,7 @@ class AccountsController extends Controller {
 	private SetupService $setup;
 	private IMailManager $mailManager;
 	private SyncService $syncService;
+	private IConfig $config;
 
 	public function __construct(string $appName,
 								   IRequest $request,
@@ -70,7 +73,8 @@ class AccountsController extends Controller {
 								   IMailTransmission $mailTransmission,
 								   SetupService $setup,
 								   IMailManager $mailManager,
-								   SyncService $syncService
+								   SyncService $syncService,
+									IConfig $config
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -82,6 +86,7 @@ class AccountsController extends Controller {
 		$this->setup = $setup;
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
+		$this->config = $config;
 	}
 
 	/**
@@ -157,7 +162,7 @@ class AccountsController extends Controller {
 		}
 
 		try {
-			return \OCA\Mail\Http\JsonResponse::success(
+			return MailJsonResponse::success(
 				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id)
 			);
 		} catch (CouldNotConnectException $e) {
@@ -169,12 +174,12 @@ class AccountsController extends Controller {
 			];
 
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
-			return \OCA\Mail\Http\JsonResponse::fail($data);
+			return MailJsonResponse::fail($data);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
-			return \OCA\Mail\Http\JsonResponse::error('Could not create account');
+			return MailJsonResponse::error('Could not create account');
 		}
 	}
 
@@ -274,22 +279,37 @@ class AccountsController extends Controller {
 	 *
 	 * @param string $accountName
 	 * @param string $emailAddress
-	 * @param string $imapHost
-	 * @param int $imapPort
-	 * @param string $imapSslMode
-	 * @param string $imapUser
-	 * @param string $imapPassword
-	 * @param string $smtpHost
-	 * @param int $smtpPort
-	 * @param string $smtpSslMode
-	 * @param string $smtpUser
-	 * @param string $smtpPassword
+	 * @param string|null $imapHost
+	 * @param int|null $imapPort
+	 * @param string|null $imapSslMode
+	 * @param string|null $imapUser
+	 * @param string|null $imapPassword
+	 * @param string|null $smtpHost
+	 * @param int|null $smtpPort
+	 * @param string|null $smtpSslMode
+	 * @param string|null $smtpUser
+	 * @param string|null $smtpPassword
 	 *
 	 * @return JSONResponse
 	 */
-	public function create(string $accountName, string $emailAddress, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null): JSONResponse {
+	public function create(string $accountName,
+		string $emailAddress,
+		string $imapHost = null,
+		int $imapPort = null,
+		string $imapSslMode = null,
+		string $imapUser = null,
+		string $imapPassword = null,
+		string $smtpHost = null,
+		int $smtpPort = null,
+		string $smtpSslMode = null,
+		string $smtpUser = null,
+		string $smtpPassword = null): JSONResponse {
+		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
+			$this->logger->info('Creating account disabled by admin.');
+			return MailJsonResponse::error('Could not create account');
+		}
 		try {
-			return \OCA\Mail\Http\JsonResponse::success(
+			return MailJsonResponse::success(
 				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId), Http::STATUS_CREATED
 			);
 		} catch (CouldNotConnectException $e) {
@@ -301,12 +321,12 @@ class AccountsController extends Controller {
 			];
 
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
-			return \OCA\Mail\Http\JsonResponse::fail($data);
+			return MailJsonResponse::fail($data);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
-			return \OCA\Mail\Http\JsonResponse::error('Could not create account');
+			return MailJsonResponse::error('Could not create account');
 		}
 	}
 

@@ -87,6 +87,10 @@ store.commit('savePreference', {
 	key: 'tag-classified-messages',
 	value: getPreferenceFromPage('tag-classified-messages'),
 })
+store.commit('savePreference', {
+	key: 'allow-new-accounts',
+	value: loadState('mail', 'allow-new-accounts', true),
+})
 
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
