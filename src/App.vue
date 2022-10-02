@@ -31,7 +31,19 @@ import MailboxLockedError from './errors/MailboxLockedError'
 
 export default {
 	name: 'App',
+	computed: {
+		hasMailAccounts() {
+			return !!this.$store.getters.accounts.find((account) => !account.isUnified)
+		},
+	},
 	mounted() {
+		// Redirect to setup page if no accounts are configured
+		if (!this.hasMailAccounts) {
+			this.$router.replace({
+				name: 'setup',
+			})
+		}
+
 		this.sync()
 	},
 	methods: {
