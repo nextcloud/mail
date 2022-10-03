@@ -249,7 +249,6 @@ p.app-settings {
 }
 .app-settings-button {
 	display: inline-flex;
-width: 100%;
 	background-position: 10px center;
 	text-align: left;
 	margin-top: 6px;
