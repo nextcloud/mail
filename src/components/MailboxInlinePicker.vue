@@ -78,9 +78,13 @@ export default {
 }
 .vue-treeselect--searchable .vue-treeselect__input-container {
 	padding-left: 0;
+	background-color: var(--color-main-background)
 }
 input.vue-treeselect__input {
 	margin: 0;
 	padding: 0;
+}
+.vue-treeselect__menu {
+	background: var(--color-main-background);
 }
 </style>
