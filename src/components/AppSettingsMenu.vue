@@ -145,7 +145,7 @@ export default {
 			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
 		},
 		allowNewMailAccounts() {
-			return this.$store.getters.getPreference('allow-new-accounts', 'true') === 'true'
+			return this.$store.getters.getPreference('allow-new-accounts', true)
 		},
 	},
 	methods: {

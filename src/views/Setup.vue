@@ -47,7 +47,7 @@ export default {
 		return {
 			displayName: loadState('mail', 'prefill_displayName'),
 			email: loadState('mail', 'prefill_email'),
-			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts'),
+			allowNewMailAccounts: loadState('mail', 'allow-new-accounts', true),
 			error: null,
 		}
 	},

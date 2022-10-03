@@ -249,7 +249,7 @@ class PageControllerTest extends TestCase {
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['disable-scheduled-send', false],
-				['allow_new_mail_accounts', true]
+				['allow-new-accounts', true]
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index',
