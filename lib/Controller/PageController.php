@@ -176,7 +176,7 @@ class PageController extends Controller {
 		);
 
 		$this->initialStateService->provideInitialState(
-			'allow_new_mail_accounts',
+			'allow-new-accounts',
 			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
 		);
 
