@@ -411,9 +411,10 @@ class MessageMapper {
 	 */
 	public function getFlagged(Horde_Imap_Client_Socket $client,
 							   Mailbox $mailbox,
-							   string $flag): array {
+							   string $flag,
+							   bool $set = true): array {
 		$query = new Horde_Imap_Client_Search_Query();
-		$query->flag($flag, true);
+		$query->flag($flag, $set);
 		$messages = $client->search($mailbox->getName(), $query);
 		return $messages['match']->ids ?? [];
 	}

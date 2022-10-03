@@ -408,25 +408,51 @@ class ImapToDbSynchronizer {
 				$newOrVanished = !empty($newMessages);
 			}
 			if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
-				$response = $this->synchronizer->sync(
-					$client,
-					new Request(
-						$mailbox->getName(),
-						$mailbox->getSyncChangedToken(),
-						$uids
-					),
-					Horde_Imap_Client::SYNC_FLAGSUIDS
-				);
-				$perf->step('get changed messages via Horde');
+				$client->login();
+				if ($client->capability->isEnabled('CONDSTORE')) {
+					$response = $this->synchronizer->sync(
+						$client,
+						new Request(
+							$mailbox->getName(),
+							$mailbox->getSyncChangedToken(),
+							$uids
+						),
+						Horde_Imap_Client::SYNC_FLAGSUIDS
+					);
+					$perf->step('get changed messages via Horde');
 
-				$permflagsEnabled = $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
+					$permflagsEnabled = $this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName());
 
-				foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
-					$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
-						return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
-					}, $chunk));
+					foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
+						$this->dbMapper->updateBulk($account, $permflagsEnabled, ...array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+							return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
+						}, $chunk));
+					}
+					$perf->step('persist changed messages');
+				} else {
+					$flags = [
+						Horde_Imap_Client::FLAG_ANSWERED,
+						Horde_Imap_Client::FLAG_DELETED,
+						Horde_Imap_Client::FLAG_DRAFT,
+						Horde_Imap_Client::FLAG_FLAGGED,
+						Horde_Imap_Client::FLAG_SEEN,
+						Horde_Imap_Client::FLAG_FORWARDED,
+						Horde_Imap_Client::FLAG_JUNK,
+						Horde_Imap_Client::FLAG_NOTJUNK,
+						Horde_Imap_Client::FLAG_MDNSENT,
+					];
+					foreach ($flags as $flag) {
+						foreach ([true, false] as $set) {
+							$uids = $this->imapMapper->getFlagged($client, $mailbox, $flag, $set);
+							$this->dbMapper->updateFlagBulk(
+								$mailbox,
+								$flag,
+								$set,
+								$uids,
+							);
+						}
+					}
 				}
-				$perf->step('persist changed messages');
 
 				// If a list of UIDs was *provided* (as opposed to loaded from the DB,
 				// we can not assume that all changes were detected, hence this is kinda

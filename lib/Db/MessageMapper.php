@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
+use Horde_Imap_Client;
+use InvalidArgumentException;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -427,6 +429,25 @@ class MessageMapper extends QBMapper {
 		$perf->end();
 
 		return $messages;
+	}
+
+	/**
+	 * @param int[] $uids
+	 */
+	public function updateFlagBulk(Mailbox $mailbox, string $flag, bool $set, array $uids): void {
+		$col = $this->hordeFlagToColumnName($flag);
+		$query = $this->db->getQueryBuilder();
+		$query->update($this->getTableName())
+			->set($col, $query->createNamedParameter($set, IQueryBuilder::PARAM_BOOL))
+			->where(
+				$query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$query->expr()->eq($col, $query->createNamedParameter(!$set, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				$query->expr()->in('uid', $query->createParameter('uids'), IQueryBuilder::PARAM_INT_ARRAY),
+			);
+		foreach (array_chunk($uids, 1000) as $uidChunk) {
+			$query->setParameter('uids', $uidChunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$affected = $query->executeStatement();
+		}
 	}
 
 	/**
@@ -985,6 +1006,26 @@ class MessageMapper extends QBMapper {
 		}
 		$key = ltrim($flag->getFlag(), '\\$');
 		return "flag_$key";
+	}
+
+	private function hordeFlagToColumnName(string $flag): string {
+		$hordeToColumn = [
+			Horde_Imap_Client::FLAG_ANSWERED => 'flag_answered',
+			Horde_Imap_Client::FLAG_DELETED => 'flag_deleted',
+			Horde_Imap_Client::FLAG_DRAFT => 'flag_draft',
+			Horde_Imap_Client::FLAG_FLAGGED => 'flag_flagged',
+			Horde_Imap_Client::FLAG_SEEN => 'flag_seen',
+			Horde_Imap_Client::FLAG_FORWARDED => 'flag_forwarded',
+			Horde_Imap_Client::FLAG_JUNK => 'flag_junk',
+			Horde_Imap_Client::FLAG_NOTJUNK => 'flag_notjunk',
+			Horde_Imap_Client::FLAG_MDNSENT => 'flag_mdnsent',
+		];
+
+		if (!isset($hordeToColumn[$flag])) {
+			throw new InvalidArgumentException("Invalid flag " . $flag);
+		}
+
+		return $hordeToColumn[$flag];
 	}
 
 	/**
