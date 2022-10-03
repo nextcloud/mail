@@ -420,7 +420,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 	.source-modal {
-		::v-deep .modal-container {
+		:deep(.modal-container) {
 			height: 800px;
 		}
 

@@ -179,7 +179,7 @@ export default {
 		overflow-y: auto;
 	}
 }
-::v-deep .button-vue__text {
+:deep(.button-vue__text) {
 	border: none !important;
 	font-weight: normal !important;
 	padding-left: 14px !important;
@@ -189,7 +189,7 @@ export default {
 .message-frame {
 	width: 100%;
 }
-::v-deep .button-vue__icon {
+:deep(.button-vue__icon) {
 	display: none !important;
 }
 </style>

@@ -137,7 +137,7 @@ export default {
 	height: calc(100vh - var(--header-height));
 
 }
-::v-deep .button-vue--vue-secondary {
+:deep(.button-vue--vue-secondary) {
 	box-shadow: none;
 }
 </style>

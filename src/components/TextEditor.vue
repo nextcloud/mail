@@ -210,10 +210,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep a {
+:deep(a) {
 	color: #07d;
 }
-::v-deep p {
+:deep(p) {
 	cursor: text;
 }
 </style>

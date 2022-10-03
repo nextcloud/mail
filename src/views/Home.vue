@@ -128,7 +128,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .app-content-details {
+:deep(.app-content-details) {
 	margin: 0 auto;
 	max-width: 900px;
 	display: flex;
@@ -137,7 +137,7 @@ export default {
 	min-width: 70%;
 }
 // Align the appNavigation toggle with the apps header toolbar
-::v-deep button.app-navigation-toggle {
+:deep(button.app-navigation-toggle) {
 	top: 8px;
 }
 </style>

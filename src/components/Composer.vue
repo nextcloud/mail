@@ -1269,7 +1269,7 @@ export default {
 		padding: 11px 20px 11px 0;
 	}
 
-	::v-deep(.multiselect--multiple .multiselect__tags) {
+	:deep(.multiselect--multiple .multiselect__tags) {
 		display: grid;
 		grid-template-columns: calc(100% - 18px) 18px 100%;
 
@@ -1279,7 +1279,7 @@ export default {
 		}
 	}
 
-	::v-deep(.multiselect__content-wrapper) {
+	:deep(.multiselect__content-wrapper) {
 		border-bottom: 1px solid var(--color-border);
 		margin-top: 0;
 
@@ -1288,18 +1288,18 @@ export default {
 		}
 	}
 
-	::v-deep(.multiselect__input) {
+	:deep(.multiselect__input) {
 		position: relative !important;
 		top: 0;
 		grid-column-start: 1;
 		grid-column-end: 3;
 	}
 
-	::v-deep(.multiselect--active input:focus-visible) {
+	:deep(.multiselect--active input:focus-visible) {
 		box-shadow: none;
 	}
 
-	::v-deep(.multiselect__tags) {
+	:deep(.multiselect__tags) {
 		box-sizing: border-box;
 		height: auto;
 	}
@@ -1450,13 +1450,13 @@ export default {
 	min-height: 100px;
 }
 
-::v-deep .multiselect .multiselect__tags, .subject {
+:deep(.multiselect .multiselect__tags), .subject {
 	border: none !important;
 }
-::v-deep [data-select="create"] .avatardiv--unknown {
+:deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-::v-deep .multiselect.opened .multiselect__tags .multiselect__tags-wrap {
+:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
 	flex-wrap: wrap;
 }
 

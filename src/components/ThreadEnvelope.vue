@@ -482,7 +482,7 @@ export default {
 		min-width: 0; /* https://css-tricks.com/flexbox-truncated-text/ */
 	}
 	.icon-important {
-		::v-deep path {
+		:deep(path) {
 			fill: #ffcc00;
 			stroke: var(--color-main-background);
 			cursor: pointer;

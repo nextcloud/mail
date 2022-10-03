@@ -261,7 +261,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-popover > .trigger > {
+.v-popover > .trigger > * {
 	z-index: 1;
 }
 
@@ -293,7 +293,7 @@ export default {
 #app-content-wrapper {
 	display: flex;
 }
-::v-deep .button-vue--vue-secondary {
+:deep(.button-vue--vue-secondary) {
 	box-shadow: none;
 }
 .envelope-list {

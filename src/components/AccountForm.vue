@@ -547,18 +547,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .tabs-component-tabs {
+:deep(.tabs-component-tabs) {
 	display: flex;
 }
 
-::v-deep .tabs-component-tab {
+:deep(.tabs-component-tab) {
 	flex-grow: 1;
 	text-align: center;
 	color: var(--color-text-lighter);
 	margin-bottom: 10px;
 }
 
-::v-deep .tabs-component-tab.is-active {
+:deep(.tabs-component-tab.is-active) {
 	border-bottom: 1px solid black;
 	font-weight: bold;
 }

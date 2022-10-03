@@ -256,12 +256,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .modal-content {
+:deep(.modal-content) {
 	padding: 0 20px 20px 20px;
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
-::v-deep .modal-container {
+:deep(.modal-container) {
 	width: auto !important;
 }
 .tag-title {
@@ -330,7 +330,7 @@ export default {
 	list-style: none;
 }
 @media only screen and (max-width: 512px) {
-	::v-deep .modal-container {
+	:deep(.modal-container) {
 	top: 100px !important;
 	max-height: calc(100vh - 170px) !important
 	}

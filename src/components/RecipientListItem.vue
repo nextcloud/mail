@@ -75,7 +75,7 @@ export default {
 		background: var(--color-background-darker);
 	}
 }
-::v-deep .option {
+:deep(.option) {
 	margin-left: 10px;
 }
 </style>

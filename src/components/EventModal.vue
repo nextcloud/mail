@@ -180,7 +180,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .modal-wrapper .modal-container {
+:deep(.modal-wrapper .modal-container) {
 	width: calc(100vw - 120px) !important;
 	height: calc(100vh - 120px) !important;
 	max-width: 490px !important;
@@ -192,14 +192,14 @@ export default {
 input {
 	width: 100%;
 }
-::v-deep input[type='text'].multiselect__input {
+:deep(input[type='text'].multiselect__input) {
 	padding: 0 !important;
 }
-::v-deep .multiselect__single {
+:deep(.multiselect__single) {
 	margin-left: -18px;
 	width: 100px;
 }
-::v-deep .multiselect__tags {
+:deep(.multiselect__tags) {
 	border: none !important;
 }
 .all-day {
@@ -214,7 +214,7 @@ input {
 	height: 44px !important;
 	float: right;
 }
-::v-deep .mx-datepicker {
+:deep(.mx-datepicker) {
 	width: 213px;
 }
 </style>

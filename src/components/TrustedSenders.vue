@@ -100,7 +100,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep.button-vue {
+.button-vue:deep() {
 	display: inline-block !important;
 }
 </style>
