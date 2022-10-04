@@ -91,6 +91,10 @@ store.commit('savePreference', {
 	key: 'allow-new-accounts',
 	value: loadState('mail', 'allow-new-accounts', true),
 })
+store.commit('savePreference', {
+	key: 'show-priority-inbox',
+	value: getPreferenceFromPage('show-priority-inbox'),
+})
 
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
