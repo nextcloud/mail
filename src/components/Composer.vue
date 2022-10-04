@@ -781,7 +781,7 @@ export default {
 	},
 	mounted() {
 		if (!this.isReply) {
-			this.$refs.toLabel.$el.focus()
+			this.$nextTick(() => this.$refs.toLabel.$el.focus())
 		}
 
 		// Add attachments in case of forward
