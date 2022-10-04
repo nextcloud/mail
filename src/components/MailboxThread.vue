@@ -124,6 +124,7 @@ export default {
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],
+				arch: ['a'],
 				flag: ['s'],
 				next: ['arrowright'],
 				prev: ['arrowleft'],
