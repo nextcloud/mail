@@ -33,6 +33,20 @@
 			<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
 		</p>
 
+		<p v-if="togglePriorityInbox" class="app-settings">
+			<IconLoading :size="20" />
+			{{ usePriorityInboxText }}
+		</p>
+		<p v-else class="app-settings">
+			<input
+				id="priority-inbox-toggle"
+				class="checkbox"
+				type="checkbox"
+				:checked="usePriorityInbox"
+				@change="onTogglePriorityInbox">
+			<label for="priority-inbox-toggle">{{ usePriorityInboxText }}</label>
+		</p>
+
 		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 			<IconLoading :size="20" />
 			{{ t('mail', 'Use Gravatar and favicon avatars') }}
@@ -129,6 +143,9 @@ export default {
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
+			// eslint-disable-next-line
+			usePriorityInboxText: t('mail', 'Show the priority inbox'),
+			togglePriorityInbox: false,
 		}
 	},
 	computed: {
@@ -146,6 +163,9 @@ export default {
 		},
 		allowNewMailAccounts() {
 			return this.$store.getters.getPreference('allow-new-accounts', true)
+		},
+		usePriorityInbox() {
+			return this.$store.getters.getPreference('show-priority-inbox', 'true') === 'true'
 		},
 	},
 	methods: {
@@ -203,6 +223,23 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			} finally {
 				this.toggleAutoTagging = false
+			}
+		},
+		async onTogglePriorityInbox(e) {
+			this.togglePriorityInbox = true
+
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'show-priority-inbox',
+						value: e.target.checked ? 'true' : 'false',
+					})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+
+				showError(t('mail', 'Could not update preference'))
+			} finally {
+				this.togglePriorityInbox = false
 			}
 		},
 		registerProtocolHandler() {

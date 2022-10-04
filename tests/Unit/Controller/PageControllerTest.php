@@ -146,6 +146,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'collect-data', 'true', 'true'],
 				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'tag-classified-messages', 'true', 'true'],
+				[$this->userId, 'show-priority-inbox', 'true', 'true'],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -261,6 +262,7 @@ class PageControllerTest extends TestCase {
 				'collect-data' => 'true',
 				'start-mailbox-id' => '123',
 				'tag-classified-messages' => 'true',
+				'show-priority-inbox' => 'true',
 			]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');

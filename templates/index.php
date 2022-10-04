@@ -32,3 +32,4 @@ script('mail', 'mail');
 <input type="hidden" id="collect-data" value="<?php p($_['collect-data']); ?>">
 <input type="hidden" id="start-mailbox-id" value="<?php p($_['start-mailbox-id']); ?>">
 <input type="hidden" id="tag-classified-messages" value="<?php p($_['tag-classified-messages']); ?>">
+<input type="hidden" id="show-priority-inbox" value="<?php p($_['show-priority-inbox']); ?>">

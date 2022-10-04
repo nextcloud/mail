@@ -153,6 +153,7 @@ class PageController extends Controller {
 				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
 				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 				'tag-classified-messages' => $this->preferences->getPreference($this->currentUserId, 'tag-classified-messages', 'true'),
+				'show-priority-inbox' => $this->preferences->getPreference($this->currentUserId, 'show-priority-inbox', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
