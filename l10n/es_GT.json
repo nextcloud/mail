@@ -45,7 +45,6 @@
     "Writing mode" : "Modo de escritura",
     "Preferred writing mode for new messages and replies." : "Modo preferido de escritura para nuevos mensajes y respuestas.",
     "Default folders" : "Carpetas predeterminadas",
-    "The folders to use for drafts, sent messages and deleted messages." : "Carpetas usadas para los borradores, mensajes enviados y mensajes eliminados.",
     "Sieve filter rules" : "Reglas del filtro de Sieve",
     "Trusted senders" : "Remitentes de confianza",
     "Mail server" : "Servidor de correo",

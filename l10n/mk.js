@@ -61,7 +61,6 @@ OC.L10N.register(
     "Writing mode" : "Режим на пишување",
     "Preferred writing mode for new messages and replies." : "Претпочитан режим на пишување за нови пораки и одговори.",
     "Default folders" : "Стандардни папки",
-    "The folders to use for drafts, sent messages and deleted messages." : "Папките што се користат за нацрти, испратени пораки и избришани пораки.",
     "Trusted senders" : "Доверливи испраќачи",
     "Mail server" : "Сервер за е-пошта",
     "Email address" : "Е-пошта адреси",

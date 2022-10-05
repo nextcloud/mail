@@ -44,7 +44,6 @@ OC.L10N.register(
     "Writing mode" : "Modo de escrita",
     "Preferred writing mode for new messages and replies." : "Modo de escrita pré definido para novas mensagens e respostas.",
     "Default folders" : "Pastas pré definidas",
-    "The folders to use for drafts, sent messages and deleted messages." : "Pastas a usar para rascunhos, mensagens enviadas e mensagens apagadas.",
     "Trusted senders" : "Remetentes confiáveis",
     "Mail server" : "Servidor de correio electrónico",
     "Email address" : "Endereço de email",

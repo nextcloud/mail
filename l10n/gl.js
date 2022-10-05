@@ -44,7 +44,6 @@ OC.L10N.register(
     "Writing mode" : "Modo de escritura",
     "Preferred writing mode for new messages and replies." : "Modo de escritura preferido para novas mensaxes e respostas.",
     "Default folders" : "Cartafoles predeterminados",
-    "The folders to use for drafts, sent messages and deleted messages." : "Os cartafoles que se van empregar para borradores, mensaxes enviadas e mensaxes eliminadas.",
     "Sieve filter rules" : "Regras de filtros de peneira",
     "Trusted senders" : "Remitentes de confianza",
     "Mail server" : "Servidor de correo",

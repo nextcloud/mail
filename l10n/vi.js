@@ -39,7 +39,6 @@ OC.L10N.register(
     "Writing mode" : "Chế độ soạn thảo",
     "Preferred writing mode for new messages and replies." : "Chế độ soạn thảo ưu tiên cho các tin nhắn và trả lời mới.",
     "Default folders" : "Thư mục mặc định",
-    "The folders to use for drafts, sent messages and deleted messages." : "Các thư mục sử dụng cho thư nháp, tin nhắn đã gửi và tin nhắn đã xóa.",
     "Sieve filter rules" : "Quy tắc lọc Sieve",
     "Trusted senders" : "Người gửi đáng tin cậy",
     "Mail server" : "Máy chủ thư",
