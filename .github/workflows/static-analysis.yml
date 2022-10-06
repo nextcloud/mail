@@ -25,6 +25,8 @@ jobs:
             with:
                 php-version: 7.4
                 coverage: none
+            env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           - name: Install dependencies
             run: composer i
           - name: Install OCP package
