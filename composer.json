@@ -4,6 +4,10 @@
 			"type": "vcs",
 			"url": "https://github.com/kwi-dk/UrlLinker",
 			"branch": "bleeding"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/nextcloud-deps/RubixML"
 		}
 	],
 	"config": {
@@ -39,7 +43,7 @@
 		"nextcloud/horde-managesieve": "^1.0",
 		"nextcloud/horde-smtp": "^1.0",
 		"psr/log": "^1",
-		"rubix/ml": "0.4.2",
+		"rubix/ml": "dev-chore/bump-flysystem-v2.1.1",
 		"sabberworm/php-css-parser": "^8.3",
 		"youthweb/urllinker": "^1.3"
 	},
