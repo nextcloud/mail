@@ -74,6 +74,9 @@ All notable changes to this project will be documented in this file.
 - Sending outbox message of deleted user accounts
 - Collecting addresses in the background
 
+## 1.13.9 – 2022-10-07
+### Changed
+- Dependency updates
 
 ## 1.13.6 - 2022-06-29
 ### Fixed
