@@ -25,6 +25,8 @@ jobs:
         php-version: ${{ matrix.php-versions }}
         extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
         coverage: xdebug
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Checkout Nextcloud
       run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
     - name: Patch version check for nightly PHP
@@ -126,6 +128,8 @@ jobs:
                 php-version: ${{ matrix.php-versions }}
                 extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
                 coverage: xdebug
+            env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           - name: Checkout Nextcloud
             run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
           - name: Patch version check for nightly PHP
