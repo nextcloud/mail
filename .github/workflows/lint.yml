@@ -29,6 +29,8 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         coverage: none
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Lint
       run: composer run lint
 
@@ -43,6 +45,8 @@ jobs:
       with:
         php-version: '8.0'
         coverage: none
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: composer i
     - name: Run coding standards check
