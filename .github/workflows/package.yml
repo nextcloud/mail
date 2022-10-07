@@ -35,6 +35,8 @@ jobs:
           php-version: 7.4
           extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
           coverage: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Krankerl
         run: |
           wget https://github.com/ChristophWurst/krankerl/releases/download/v0.13.0/krankerl_0.13.0_amd64.deb
