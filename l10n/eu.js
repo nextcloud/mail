@@ -163,6 +163,7 @@ OC.L10N.register(
     "Edit tags" : "Editatu etiketak",
     "Move" : "Mugitu",
     "Move thread" : "Mugitu haria",
+    "Archive thread" : "Artxibatu haria",
     "Delete thread" : "Ezabatu haria",
     "More actions" : "Ekintza gehiago",
     "Edit as new message" : "Aldatu mezu berri gisa",
