@@ -32,7 +32,6 @@ use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AccountServiceTest extends TestCase {
-
 	/** @var string */
 	private $user = 'herbert';
 

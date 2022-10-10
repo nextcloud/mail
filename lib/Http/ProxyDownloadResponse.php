@@ -28,7 +28,6 @@ use DateTime;
 use OCP\AppFramework\Http\DownloadResponse;
 
 class ProxyDownloadResponse extends DownloadResponse {
-
 	/** @var string */
 	private $content;
 
@@ -49,7 +48,7 @@ class ProxyDownloadResponse extends DownloadResponse {
 
 		$now = (new DateTime('now'))->getTimestamp();
 		$expires = (new DateTime('now + 11 months'))->getTimestamp();
-		$this->cacheFor($expires - $now);
+		$this->cacheFor($expires - $now, false, true);
 	}
 
 	/**

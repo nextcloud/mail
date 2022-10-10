@@ -43,12 +43,10 @@
 import { iframeResizer } from 'iframe-resizer'
 import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
+import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual'
 import IconMail from 'vue-material-design-icons/Email'
 import IconDomain from 'vue-material-design-icons/Domain'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 
 import logger from '../logger'
 import MdnRequest from './MdnRequest'
@@ -158,7 +156,7 @@ export default {
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
 #mail-content {
-	margin-left: 48px;
+	margin-left: 50px;
 	margin-top: 2px;
 	display: flex;
 	flex-direction: column;
@@ -166,7 +164,7 @@ export default {
 	background-color: #FFFFFF;
 }
 #mail-message-has-blocked-content {
-	margin-left: 8px;
+	margin-left: 10px;
 	color: var(--color-text-maxcontrast) !important;
 }
 
@@ -181,8 +179,7 @@ export default {
 		overflow-y: auto;
 	}
 }
-::v-deep .action-item__menutoggle--with-title {
-	background-color: var(--color-main-background) !important;
+:deep(.button-vue__text) {
 	border: none !important;
 	font-weight: normal !important;
 	padding-left: 14px !important;
@@ -192,7 +189,7 @@ export default {
 .message-frame {
 	width: 100%;
 }
-::v-deep .dots-horizontal-icon {
+:deep(.button-vue__icon) {
 	display: none !important;
 }
 </style>

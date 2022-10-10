@@ -39,10 +39,8 @@
 
 <script>
 
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus'
 import ical from 'ical.js'
 import moment from '@nextcloud/moment'

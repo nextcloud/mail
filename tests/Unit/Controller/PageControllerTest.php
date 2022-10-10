@@ -37,6 +37,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -46,7 +47,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class PageControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 
@@ -89,6 +89,9 @@ class PageControllerTest extends TestCase {
 	/** @var OutboxService|MockObject */
 	private $outboxService;
 
+	/** @var IEventDispatcher|MockObject */
+	private $eventDispatcher;
+
 	/** @var PageController */
 	private $controller;
 
@@ -109,6 +112,7 @@ class PageControllerTest extends TestCase {
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->outboxService = $this->createMock(OutboxService::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -124,7 +128,8 @@ class PageControllerTest extends TestCase {
 			$this->tagMapper,
 			$this->initialState,
 			$this->logger,
-			$this->outboxService
+			$this->outboxService,
+			$this->eventDispatcher,
 		);
 	}
 
@@ -132,13 +137,14 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(5))
+		$this->preferences->expects($this->exactly(6))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
 				[$this->userId, 'external-avatars', 'true', 'true'],
 				[$this->userId, 'reply-mode', 'top', 'bottom'],
 				[$this->userId, 'collect-data', 'true', 'true'],
+				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'tag-classified-messages', 'true', 'true'],
 			]);
 		$this->accountService->expects($this->once())
@@ -211,14 +217,16 @@ class PageControllerTest extends TestCase {
 				['debug', false, true],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(2))
+		$this->config->expects($this->exactly(3))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
-				['core', 'backgroundjobs_mode', 'ajax' ]
+				['core', 'backgroundjobs_mode', 'ajax' ],
+				['mail', 'allow_new_mail_accounts', 'yes']
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
-				$this->returnValue('cron')
+				$this->returnValue('cron'),
+				$this->returnValue('yes')
 			);
 		$user->expects($this->once())
 			->method('getDisplayName')
@@ -230,7 +238,7 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(8))
+		$this->initialState->expects($this->exactly(9))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -240,7 +248,8 @@ class PageControllerTest extends TestCase {
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
-				['disable-scheduled-send', false]
+				['disable-scheduled-send', false],
+				['allow-new-accounts', true]
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index',
@@ -250,6 +259,7 @@ class PageControllerTest extends TestCase {
 				'reply-mode' => 'bottom',
 				'app-version' => '1.2.3',
 				'collect-data' => 'true',
+				'start-mailbox-id' => '123',
 				'tag-classified-messages' => 'true',
 			]);
 		$csp = new ContentSecurityPolicy();

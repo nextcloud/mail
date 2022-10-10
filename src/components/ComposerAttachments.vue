@@ -22,14 +22,21 @@
 
 <template>
 	<div class="new-message-attachments">
-		<div v-if="hasNextLine" class="message-attachments-count" @click="isToggle = !isToggle">
+		<div v-if="hasNextLine"
+			class="new-message-attachments--counter"
+			:class="{ 'new-message-attachments--counter--with-errors': hasAttachmentErrors }"
+			@click="isToggle = !isToggle">
 			<span>
 				{{ n('mail', '{count} attachment', '{count} attachments', attachments.length, { count: attachments.length }) }} ({{ formatBytes(totalSizeOfUpload()) }})
 			</span>
 			<ChevronUp v-if="isToggle" :size="24" />
 			<ChevronDown v-if="!isToggle" :size="24" />
 		</div>
-		<ul class="new-message-attachments--list" :class="isToggle ? 'hide' : (hasNextLine ? 'active' : '')">
+		<ul class="new-message-attachments--list"
+			:class="{
+				hide: isToggle,
+				active: !isToggle && hasNextLine,
+			}">
 			<ComposerAttachment
 				v-for="attachment in attachments"
 				ref="attachments"
@@ -110,6 +117,9 @@ export default {
 		}
 	},
 	computed: {
+		hasAttachmentErrors() {
+			return this.attachments.some(attachment => attachment.error)
+		},
 		uploadProgress() {
 			let uploaded = 0
 			let total = 0
@@ -268,7 +278,7 @@ export default {
 							}])
 						})
 				} catch (error) {
-
+					logger.error('Could not upload file', { file, error })
 				}
 			}, e.target.files)
 
@@ -422,7 +432,19 @@ export default {
 <style scoped lang="scss">
 
 .new-message-attachments {
-	ul.new-message-attachments--list {
+	&--counter {
+		color: var(--color-text-maxcontrast);
+		padding: 10px 20px;
+		cursor:pointer;
+		display:flex;
+		align-items: center;
+
+		&--with-errors {
+			color:red;
+		}
+	}
+
+	&--list {
 		display: flex;
 		flex-wrap: wrap;
 		// 2 and a half attachment height
@@ -440,14 +462,6 @@ export default {
 			overflow: auto;
 			max-height: 287px;
 		}
-	}
-
-	.message-attachments-count {
-		color: var(--color-text-maxcontrast);
-		padding: 10px 20px;
-		cursor:pointer;
-		display:flex;
-		align-items: center;
 	}
 }
 </style>

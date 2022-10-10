@@ -33,12 +33,8 @@ use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 
 class AvatarsController extends Controller {
-
-	/** @var IAvatarService */
-	private $avatarService;
-
-	/** @var string */
-	private $uid;
+	private IAvatarService $avatarService;
+	private string $uid;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -74,7 +70,7 @@ class AvatarsController extends Controller {
 
 			// Debounce this a bit
 			// (cache for one day)
-			$response->cacheFor(24 * 60 * 60);
+			$response->cacheFor(24 * 60 * 60, false, true);
 
 			return $response;
 		}

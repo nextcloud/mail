@@ -21,6 +21,7 @@ OC.L10N.register(
     "Edit tags" : "ট্যাগ সম্পাদনা",
     "Move" : "Move",
     "Create" : "তৈরী কর",
+    "Comment" : "মন্তব্য",
     "Choose" : "বেছে নিন",
     "Other" : "অন্যান্য",
     "Reply" : "জবাব",

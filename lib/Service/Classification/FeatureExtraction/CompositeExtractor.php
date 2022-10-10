@@ -31,7 +31,6 @@ use OCA\Mail\Account;
  * Combines a set of DI'ed extractors so they can be used as one class
  */
 class CompositeExtractor {
-
 	/** @var IExtractor[] */
 	private $extractors;
 

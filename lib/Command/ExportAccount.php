@@ -31,11 +31,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ExportAccount extends Command {
 	public const ARGUMENT_USER_ID = 'user-id';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ICrypto */
-	private $crypto;
+	private AccountService $accountService;
+	private ICrypto $crypto;
 
 	public function __construct(AccountService $service, ICrypto $crypto) {
 		parent::__construct();

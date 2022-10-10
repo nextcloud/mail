@@ -20,6 +20,7 @@ OC.L10N.register(
     "Select" : "Select",
     "Move" : "Move",
     "Create" : "Yarat",
+    "Comment" : "Komentariya",
     "Choose" : "Seç",
     "Other" : "Digər",
     "Reply" : "Cavab",

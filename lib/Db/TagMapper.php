@@ -37,7 +37,6 @@ use OCP\IL10N;
  * @template-extends QBMapper<Tag>
  */
 class TagMapper extends QBMapper {
-
 	/** @var IL10N */
 	private $l10n;
 
@@ -69,9 +68,9 @@ class TagMapper extends QBMapper {
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-					$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT)),
-					$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
-				);
+				$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT)),
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+			);
 		return $this->findEntity($qb);
 	}
 
@@ -83,8 +82,8 @@ class TagMapper extends QBMapper {
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-					$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
-				);
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+			);
 		return $this->findEntities($qb);
 	}
 
@@ -216,31 +215,31 @@ class TagMapper extends QBMapper {
 			$tag->setImapLabel('$label' . $i);
 			$tag->setUserId($account->getUserId());
 			switch ($i) {
-					case 1:
-						$tag->setDisplayName($this->l10n->t('Important'));
-						$tag->setColor('#FF7A66');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 2:
-						$tag->setDisplayName($this->l10n->t('Work'));
-						$tag->setColor('#31CC7C');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 3:
-						$tag->setDisplayName($this->l10n->t('Personal'));
-						$tag->setColor('#A85BF7');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 4:
-						$tag->setDisplayName($this->l10n->t('To Do'));
-						$tag->setColor('#317CCC');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 5:
-						$tag->setDisplayName($this->l10n->t('Later'));
-						$tag->setColor('#B4A443');
-						$tag->setIsDefaultTag(true);
-						break;
+				case 1:
+					$tag->setDisplayName($this->l10n->t('Important'));
+					$tag->setColor('#FF7A66');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 2:
+					$tag->setDisplayName($this->l10n->t('Work'));
+					$tag->setColor('#31CC7C');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 3:
+					$tag->setDisplayName($this->l10n->t('Personal'));
+					$tag->setColor('#A85BF7');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 4:
+					$tag->setDisplayName($this->l10n->t('To Do'));
+					$tag->setColor('#317CCC');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 5:
+					$tag->setDisplayName($this->l10n->t('Later'));
+					$tag->setColor('#B4A443');
+					$tag->setIsDefaultTag(true);
+					break;
 			}
 			$tags[] = $tag;
 		}
@@ -261,7 +260,7 @@ class TagMapper extends QBMapper {
 			$qb->expr()->gt('mt1.id', 'mt2.id'),
 			$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
 			$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
-			)
+		)
 		);
 		$result = $qb->execute();
 		$rows = $result->fetchAll();

@@ -55,6 +55,7 @@ import {
 } from '../service/AccountService'
 import {
 	create as createMailbox,
+	clearMailbox,
 	deleteMailbox,
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
@@ -83,7 +84,11 @@ import { matchError } from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import { wait } from '../util/wait'
-import { updateAccount as updateSieveAccount } from '../service/SieveService'
+import {
+	getActiveScript,
+	updateAccount as updateSieveAccount,
+	updateActiveScript,
+} from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
 import {
@@ -101,6 +106,12 @@ import {
 	buildRecipients as buildReplyRecipients,
 	buildReplySubject,
 } from '../ReplyBuilder'
+import DOMPurify from 'dompurify'
+import {
+	getCurrentUserPrincipal,
+	initializeClientForUserView,
+	findAll,
+} from '../service/caldavService'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -184,6 +195,11 @@ export default {
 	async deleteMailbox({ commit }, { mailbox }) {
 		await deleteMailbox(mailbox.databaseId)
 		commit('removeMailbox', { id: mailbox.databaseId })
+	},
+	async clearMailbox({ commit }, { mailbox }) {
+		await clearMailbox(mailbox.databaseId)
+		commit('removeEnvelopes', { id: mailbox.databaseId })
+		commit('setMailboxUnreadCount', { id: mailbox.databaseId })
 	},
 	async createMailbox({ commit }, { account, name }) {
 		const prefixed = (account.personalNamespace && !name.startsWith(account.personalNamespace))
@@ -284,6 +300,10 @@ export default {
 					})
 				)
 
+				resp.data = DOMPurify.sanitize(resp.data, {
+					FORBID_TAGS: ['style'],
+				})
+
 				data.body = html(resp.data)
 			} else {
 				data.body = plain(original.body)
@@ -359,6 +379,10 @@ export default {
 						id: templateMessageId,
 					})
 				)
+
+				resp.data = DOMPurify.sanitize(resp.data, {
+					FORBID_TAGS: ['style'],
+				})
 
 				data.body = html(resp.data)
 			} else {
@@ -977,6 +1001,14 @@ export default {
 		commit('removeEnvelope', { id })
 		commit('removeMessage', { id })
 	},
+	async fetchActiveSieveScript({ commit }, { accountId }) {
+		const scriptData = await getActiveScript(accountId)
+		commit('setActiveSieveScript', { accountId, scriptData })
+	},
+	async updateActiveSieveScript({ commit }, { accountId, scriptData }) {
+		await updateActiveScript(accountId, scriptData)
+		commit('setActiveSieveScript', { accountId, scriptData })
+	},
 	async updateSieveAccount({ commit }, { account, data }) {
 		logger.debug(`update sieve settings for account ${account.id}`)
 		try {
@@ -1038,6 +1070,31 @@ export default {
 			commit('addEnvelope', envelope)
 			console.error('could not move thread', e)
 			throw e
+		}
+	},
+
+	/**
+	 * Retrieve and commit the principal of the current user.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 */
+	async fetchCurrentUserPrincipal({ commit }) {
+		await initializeClientForUserView()
+		commit('setCurrentUserPrincipal', { currentUserPrincipal: getCurrentUserPrincipal() })
+	},
+
+	/**
+	 * Retrieve and commit calendars.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 * @return {Promise<void>}
+	 */
+	async loadCollections({ commit }) {
+		const { calendars } = await findAll()
+		for (const calendar of calendars) {
+			commit('addCalendar', { calendar })
 		}
 	},
 }

@@ -40,24 +40,16 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class MailboxesController extends Controller {
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/**  @var IMailManager */
-	private $mailManager;
-
-	/** @var SyncService */
-	private $syncService;
+	private AccountService $accountService;
+	private ?string $currentUserId;
+	private IMailManager $mailManager;
+	private SyncService $syncService;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
-	 * @param string $UserId
+	 * @param string|null $UserId
 	 * @param IMailManager $mailManager
 	 * @param SyncService $syncService
 	 */
@@ -282,6 +274,25 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
 		$this->mailManager->deleteMailbox($account, $mailbox);
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @throws \OCP\AppFramework\Db\DoesNotExistException
+	 */
+	public function clearMailbox(int $id): JSONResponse {
+		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+
+		$this->mailManager->clearMailbox($account, $mailbox);
 		return new JSONResponse();
 	}
 }

@@ -33,7 +33,6 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 
 interface ILocalMailboxService {
-
 	/**
 	 * @param string $userId
 	 * @return mixed

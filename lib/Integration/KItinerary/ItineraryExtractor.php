@@ -35,7 +35,6 @@ use ChristophWurst\KItinerary\Sys\SysAdapter;
 use Psr\Log\LoggerInterface;
 
 class ItineraryExtractor {
-
 	/** @var BinaryAdapter */
 	private $binAdapter;
 

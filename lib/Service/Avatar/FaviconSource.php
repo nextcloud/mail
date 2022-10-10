@@ -31,7 +31,6 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 
 class FaviconSource implements IAvatarSource {
-
 	/** @var IClientService */
 	private $clientService;
 

@@ -1,6 +1,6 @@
 <template>
 	<div v-if="state === STATES.EDITING" class="message-composer">
-		<div class="composer-fields mail-account">
+		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
 			</label>
@@ -175,33 +175,26 @@
 		<div class="composer-fields message-editor">
 			<!--@keypress="onBodyKeyPress"-->
 			<TextEditor
-				v-if="!encrypt && editorPlainText"
-				key="editor-plain"
-				v-model="bodyVal"
+				v-if="!encrypt"
+				ref="editor"
+				:key="editorMode"
+				:value="bodyVal"
+				:html="!editorPlainText"
 				name="body"
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onEditorInputText" />
-			<TextEditor
-				v-else-if="!encrypt && !editorPlainText"
-				key="editor-rich"
-				v-model="bodyVal"
-				:html="true"
-				name="body"
-				class="message-body"
-				:placeholder="t('mail', 'Write message …')"
-				:focus="isReply"
-				:bus="bus"
-				@input="onEditorInputText" />
+				@input="onEditorInput"
+				@ready="onEditorReady" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
-				v-model="bodyVal"
+				:value="bodyVal"
 				:recipients="allRecipients"
 				:quoted-text="body"
-				:is-reply-or-forward="isReply || isForward" />
+				:is-reply-or-forward="isReply || isForward"
+				@input="onEditorInput" />
 		</div>
 		<ComposerAttachments v-model="attachments"
 			:bus="bus"
@@ -269,13 +262,22 @@
 								t('mail', 'Send later')
 							}}
 						</ActionButton>
-						<ActionCheckbox
-							:checked="!encrypt && !editorPlainText"
-							:disabled="encrypt"
-							@check="editorMode = 'html'"
-							@uncheck="editorMode = 'plaintext'">
+						<ActionButton
+							v-if="!encrypt && editorPlainText"
+							@click="setEditorModeHtml()">
+							<template #icon>
+								<IconHtml :size="20" />
+							</template>
 							{{ t('mail', 'Enable formatting') }}
-						</ActionCheckbox>
+						</ActionButton>
+						<ActionButton
+							v-if="!encrypt && !editorPlainText"
+							@click="setEditorModeText()">
+							<template #icon>
+								<IconClose :size="20" />
+							</template>
+							{{ t('mail', 'Disable formatting') }}
+						</ActionButton>
 						<ActionCheckbox
 							:checked="requestMdn"
 							@check="requestMdn = true"
@@ -415,28 +417,22 @@ import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
-import ActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcEmptyContent as EmptyContent, NcMultiselect as Multiselect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments'
 import Download from 'vue-material-design-icons/Download'
-import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 import IconUpload from 'vue-material-design-icons/Upload'
 import IconFolder from 'vue-material-design-icons/Folder'
 import IconPublic from 'vue-material-design-icons/Link'
 import IconCheck from 'vue-material-design-icons/Check'
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
-import ListItemIcon from '@nextcloud/vue/dist/Components/NcListItemIcon'
 import RecipientListItem from './RecipientListItem'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
+import IconHtml from 'vue-material-design-icons/ImageSizeSelectActual'
+import IconClose from 'vue-material-design-icons/Close'
 import { showError } from '@nextcloud/dialogs'
-import { translate as t, getCanonicalLocale, getFirstDay, getLocale } from '@nextcloud/l10n'
+import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 
 import { findRecipient } from '../service/AutocompleteService'
@@ -449,17 +445,16 @@ import MailvelopeEditor from './MailvelopeEditor'
 import { getMailvelope } from '../crypto/mailvelope'
 import { isPgpgMessage } from '../crypto/pgp'
 import { matchError } from '../errors/match'
-import NoSentMailboxConfiguredError
-	from '../errors/NoSentMailboxConfiguredError'
-import NoDraftsMailboxConfiguredError
-	from '../errors/NoDraftsMailboxConfiguredError'
-import ManyRecipientsError
-	from '../errors/ManyRecipientsError'
+import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError'
+import NoDraftsMailboxConfiguredError from '../errors/NoDraftsMailboxConfiguredError'
+import ManyRecipientsError from '../errors/ManyRecipientsError'
 
 import Send from 'vue-material-design-icons/Send'
 import SendClock from 'vue-material-design-icons/SendClock'
 import moment from '@nextcloud/moment'
 import { mapGetters } from 'vuex'
+import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand'
+import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -506,6 +501,8 @@ export default {
 		SendClock,
 		UnfoldMoreHorizontal,
 		UnfoldLessHorizontal,
+		IconHtml,
+		IconClose,
 	},
 	props: {
 		fromAccount: {
@@ -577,13 +574,6 @@ export default {
 		},
 	},
 	data() {
-		let bodyVal = this.editorBody
-		if (bodyVal.length === 0) {
-			// an empty body (e.g "") does not trigger an onInput event.
-			// but to append the signature a onInput event is required.
-			bodyVal = '<p></p><p></p>'
-		}
-
 		// Set default custom date time picker value to now + 1 hour
 		const selectedDate = new Date()
 		selectedDate.setHours(selectedDate.getHours() + 1)
@@ -595,7 +585,7 @@ export default {
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal,
+			bodyVal: this.editorBody,
 			attachments: this.attachmentsData,
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			draftsPromise: Promise.resolve(this.draftId),
@@ -616,10 +606,10 @@ export default {
 				keyRing: undefined,
 				keysMissing: [],
 			},
-			editorMode: (this.body?.format !== 'html') ? 'plaintext' : 'html',
+			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 			requestMdn: false,
-			appendSignature: true,
+			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
@@ -636,7 +626,6 @@ export default {
 				},
 			},
 			autoLimit: true,
-			editorInputTextReady: false,
 		}
 	},
 	computed: {
@@ -697,7 +686,7 @@ export default {
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
 		},
 		editorPlainText() {
-			return this.editorMode === 'plaintext'
+			return this.editorMode === EDITOR_MODE_TEXT
 		},
 		submitButtonTitle() {
 			if (this.sendAtVal) {
@@ -785,15 +774,6 @@ export default {
 				this.onAliasChange(newAlias)
 			}
 		},
-		editorMode() {
-			this.appendSignature = true
-		},
-		bodyVal() {
-			if (this.body.value === '') {
-				this.appendSignature = true
-			}
-			this.handleAppendSignature()
-		},
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -802,7 +782,7 @@ export default {
 	},
 	mounted() {
 		if (!this.isReply) {
-			this.$refs.toLabel.$el.focus()
+			this.$nextTick(() => this.$refs.toLabel.$el.focus())
 		}
 
 		// Add attachments in case of forward
@@ -969,21 +949,30 @@ export default {
 		onSave() {
 			this.callSaveDraft(false, this.getMessageData)
 		},
-		handleAppendSignature() {
-			if (this.appendSignature) {
-				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
-				this.bus.$emit('insert-signature', signatureValue, this.selectedAlias.signatureAboveQuote)
-				this.appendSignature = false
+		insertSignature() {
+			let trigger
+
+			if (this.changeSignature) {
+				trigger = TRIGGER_CHANGE_ALIAS
+			} else {
+				trigger = TRIGGER_EDITOR_READY
 			}
+
+			this.$refs.editor.editorExecute('insertSignature',
+				trigger,
+				toHtml(detect(this.selectedAlias.signature)).value,
+				this.selectedAlias.signatureAboveQuote
+			)
+
+			this.changeSignature = false
 		},
-		// needs to bypass an input event of the first initialisation, because of:
-		// an empty body (e.g "") does not trigger an onInput event.
-		// but to append the signature a onInput event is required.
-		onEditorInputText() {
-			if (this.editorInputTextReady) {
-				this.callSaveDraft(true, this.getMessageData)
-			}
-			this.editorInputTextReady = true
+		onEditorInput(text) {
+			this.bodyVal = text
+			this.callSaveDraft(true, this.getMessageData)
+		},
+		onEditorReady(editor) {
+			this.bodyVal = editor.getData()
+			this.insertSignature()
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
@@ -1000,8 +989,21 @@ export default {
 		onAliasChange(alias) {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
-			this.appendSignature = true
-			this.handleAppendSignature()
+			this.changeSignature = true
+
+			/**
+			 * Alias change may change the editor mode as well.
+			 *
+			 * As editorMode is the key for the TextEditor component a change will destroy the current instance
+			 * and the signature for the alias is inserted via onEditorReady event.
+			 *
+			 * Otherwise (when editorMode is the same) call insertSignature directly.
+			 */
+			if (this.editorMode === EDITOR_MODE_TEXT && alias.editorMode === EDITOR_MODE_HTML) {
+				this.editorMode = EDITOR_MODE_HTML
+			} else {
+				this.insertSignature()
+			}
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('on-add-local-attachment')
@@ -1036,8 +1038,8 @@ export default {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
 				.then(() => this.callSaveDraft(true, this.getMessageData))
-				.catch((error) => logger.error('could not upload attachments', { error }))
 				.then(() => logger.debug('attachments uploaded'))
+				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
 		async onMailvelopeLoaded(mailvelope) {
 			this.encrypt = isPgpgMessage(this.body)
@@ -1128,7 +1130,7 @@ export default {
 			this.autocompleteRecipients = []
 			this.newRecipients = []
 			this.requestMdn = false
-			this.appendSignature = true
+			this.changeSignature = false
 			this.savingDraft = undefined
 			this.sendAtVal = undefined
 
@@ -1220,6 +1222,26 @@ export default {
 			this.showCC = !(this.showCC && this.selectCc.length === 0 && this.autoLimit)
 			this.showBCC = !(this.showBCC && this.selectBcc.length === 0 && this.autoLimit)
 		},
+		setEditorModeHtml() {
+			this.editorMode = EDITOR_MODE_HTML
+		},
+		setEditorModeText() {
+			OC.dialogs.confirmDestructive(
+				t('mail', 'Any existing formatting (for example bold, italic, underline or inline images) will be removed.'),
+				t('mail', 'Turn off formatting'),
+				{
+					type: OC.dialogs.YES_NO_BUTTONS,
+					confirm: t('mail', 'Turn off and remove formatting'),
+					confirmClasses: 'error',
+					cancel: t('mail', 'Keep formatting'),
+				},
+				(decision) => {
+					if (decision) {
+						this.editorMode = EDITOR_MODE_TEXT
+					}
+				},
+			)
+		},
 	},
 }
 </script>
@@ -1244,11 +1266,54 @@ export default {
 	border-top: 1px solid var(--color-border);
 	align-items: flex-start;
 
+	label {
+		padding: 11px 20px 11px 0;
+	}
+
+	:deep(.multiselect--multiple .multiselect__tags) {
+		display: grid;
+		grid-template-columns: calc(100% - 18px) 18px 100%;
+
+		.multiselect__limit {
+			margin-right: 0;
+			margin-left: 8px
+		}
+	}
+
+	:deep(.multiselect__content-wrapper) {
+		border-bottom: 1px solid var(--color-border);
+		margin-top: 0;
+
+		& li > span::before {
+			display: none
+		}
+	}
+
+	:deep(.multiselect__input) {
+		position: relative !important;
+		top: 0;
+		grid-column-start: 1;
+		grid-column-end: 3;
+	}
+
+	:deep(.multiselect--active input:focus-visible) {
+		box-shadow: none;
+	}
+
+	:deep(.multiselect__tags) {
+		box-sizing: border-box;
+		height: auto;
+	}
+
+	&__from {
+		margin-right: 50px; /* for the modal close button */
+	}
+
 	.multiselect.multiselect--multiple::after {
-		position:absolute;
+		position: absolute;
 		right: 0;
 		top: auto;
-		bottom:8px
+		bottom: 8px
 	}
 
 	.multiselect__tag {
@@ -1278,17 +1343,19 @@ export default {
 		display: flex;
 		align-items: flex-start;
 		flex-wrap: wrap;
-		padding-top:5px;
+		padding-top: 2px;
 		width: calc(100% - 120px);
 
 		button {
 			margin-top: 0;
+			margin-bottom: 0;
 			background-color: transparent;
-			border:none;
-			opacity: 0.5
+			border: none;
+			opacity: 0.5;
+			padding: 10px 16px;
 		}
 
-		button.active,button:active {
+		button.active, button:active {
 			opacity: 1;
 		}
 
@@ -1300,13 +1367,32 @@ export default {
 	.multiselect {
 		margin-right: 12px;
 	}
-}
 
-.subject {
-	font-size: 20px;
-	font-weight: bold;
-	margin: 0;
-	padding: 24px 20px;
+	.subject {
+		font-size: 15px;
+		font-weight: bold;
+		margin: 3px 0 !important;
+		padding: 0 12px !important;
+
+		&:focus-visible {
+			box-shadow: none !important;
+		}
+	}
+
+	.message-body {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+		padding: 12px;
+
+		// Fix contenteditable not becoming focused upon clichint within it's
+		// boundaries in safari
+		-webkit-user-select: text;
+		user-select: text;
+	}
 }
 
 .warning-box {
@@ -1318,23 +1404,6 @@ export default {
 .message-editor {
 	flex: 1 1 100%;
 	min-height: 0;
-}
-
-.message-body {
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	border: none !important;
-	outline: none !important;
-	box-shadow: none !important;
-	padding-top: 12px;
-	padding-bottom: 12px;
-	padding-left: 20px;
-
-	// Fix contenteditable not becoming focused upon clichint within it's
-	// boundaries in safari
-	-webkit-user-select: text;
-	user-select: text;
 }
 
 .draft-status {
@@ -1382,13 +1451,13 @@ export default {
 	min-height: 100px;
 }
 
-::v-deep .multiselect .multiselect__tags {
+:deep(.multiselect .multiselect__tags), .subject {
 	border: none !important;
 }
-::v-deep [data-select="create"] .avatardiv--unknown {
+:deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-::v-deep .multiselect.opened .multiselect__tags .multiselect__tags-wrap {
+:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
 	flex-wrap: wrap;
 }
 
@@ -1431,7 +1500,7 @@ export default {
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding: 5px;
+	padding: 12px;
 }
 .composer-actions--primary-actions .button {
 	padding: 2px;

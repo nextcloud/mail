@@ -37,7 +37,6 @@ use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ThreadControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 

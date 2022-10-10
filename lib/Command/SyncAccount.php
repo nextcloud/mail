@@ -46,17 +46,10 @@ class SyncAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const OPTION_FORCE = 'force';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var ImapToDbSynchronizer */
-	private $syncService;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private MailboxSync $mailboxSync;
+	private ImapToDbSynchronizer $syncService;
+	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
 								MailboxSync $mailboxSync,

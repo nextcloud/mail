@@ -28,53 +28,43 @@ use Exception;
 use Horde_Imap_Client_Cache_Backend;
 use Horde_Imap_Client_Exception;
 use InvalidArgumentException;
+use OCP\ICache;
 
 /**
  * This class is inspired by Horde_Imap_Client_Cache_Backend_Cache of the Horde Project
  */
 class Cache extends Horde_Imap_Client_Cache_Backend {
-
 	/** Cache structure version. */
 	public const VERSION = 3;
 
 	/**
 	 * The cache object.
-	 *
-	 * @var \OCP\ICache
 	 */
-	protected $_cache;
+	protected ICache $_cache;
 
 	/**
 	 * The working data for the current pageload.  All changes take place to
 	 * this data.
-	 *
-	 * @var array
 	 */
-	protected $_data = [];
+	protected array $_data = [];
 
 	/**
 	 * The list of cache slices loaded.
-	 *
-	 * @var array
 	 */
-	protected $_loaded = [];
+	protected array $_loaded = [];
 
 	/**
 	 * The mapping of UIDs to slices.
-	 *
-	 * @var array
 	 */
-	protected $_slicemap = [];
+	protected array $_slicemap = [];
 
 	/**
 	 * The list of items to update:
 	 *   - add: (array) List of IDs that were added.
 	 *   - slice: (array) List of slices that were modified.
 	 *   - slicemap: (boolean) Was slicemap info changed?
-	 *
-	 * @var array
 	 */
-	protected $_update = [];
+	protected array $_update = [];
 
 	/**
 	 * Constructor.

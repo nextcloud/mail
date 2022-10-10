@@ -40,7 +40,6 @@ use OCA\Mail\IMAP\MessageMapper;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDb {
-
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 

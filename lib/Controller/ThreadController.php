@@ -32,21 +32,11 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface;
 
 class ThreadController extends Controller {
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var IMailManager */
-	private $mailManager;
+	private string $currentUserId;
+	private AccountService $accountService;
+	private IMailManager $mailManager;
 
 	public function __construct(string $appName,
 								IRequest $request,

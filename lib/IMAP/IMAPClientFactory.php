@@ -33,7 +33,6 @@ use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class IMAPClientFactory {
-
 	/** @var ICrypto */
 	private $crypto;
 

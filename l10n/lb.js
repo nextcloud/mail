@@ -19,6 +19,7 @@ OC.L10N.register(
     "Edit tags" : "Tags editéieren",
     "Move" : "Verschieben",
     "Create" : "Erstellen",
+    "Comment" : "Kommentar",
     "Choose" : "Auswielen",
     "Other" : "Aner",
     "Reply" : "Äntwerten",

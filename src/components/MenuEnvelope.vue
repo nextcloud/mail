@@ -195,9 +195,7 @@
 
 <script>
 import axios from '@nextcloud/axios'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import ActionLink from '@nextcloud/vue/dist/Components/NcActionLink'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionLink as ActionLink, NcModal as Modal } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import { Base64 } from 'js-base64'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
@@ -210,7 +208,6 @@ import EventModal from './EventModal'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information'
 import ImportantIcon from './icons/ImportantIcon'
-import Modal from '@nextcloud/vue/dist/Components/NcModal'
 import MoveModal from './MoveModal'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import PlusIcon from 'vue-material-design-icons/Plus'
@@ -423,7 +420,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 	.source-modal {
-		::v-deep .modal-container {
+		:deep(.modal-container) {
 			height: 800px;
 		}
 

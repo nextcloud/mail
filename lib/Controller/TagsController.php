@@ -31,12 +31,8 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class TagsController extends Controller {
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var IMailManager */
-	private $mailManager;
+	private string $currentUserId;
+	private IMailManager $mailManager;
 
 	public function __construct(IRequest $request,
 								string $UserId,

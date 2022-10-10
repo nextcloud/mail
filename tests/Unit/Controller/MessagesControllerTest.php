@@ -62,7 +62,6 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 
 class MessagesControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 
@@ -186,7 +185,7 @@ class MessagesControllerTest extends TestCase {
 		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
 	}
 
-	public function testGetHtmlBody() {
+	public function testGetHtmlBody(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -245,7 +244,9 @@ class MessagesControllerTest extends TestCase {
 		$policy->disallowFontDomain('\'self\'');
 		$policy->disallowMediaDomain('\'self\'');
 		$expectedPlainResponse->setContentSecurityPolicy($policy);
+		$expectedPlainResponse->cacheFor(60 * 60, false, true);
 		$expectedRichResponse->setContentSecurityPolicy($policy);
+		$expectedRichResponse->cacheFor(60 * 60, false, true);
 
 		$actualPlainResponse = $this->controller->getHtmlBody($messageId, true);
 		$actualRichResponse = $this->controller->getHtmlBody($messageId, false);

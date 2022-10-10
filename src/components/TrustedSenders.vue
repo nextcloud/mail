@@ -38,7 +38,7 @@
 <script>
 
 import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop'
 import sortBy from 'lodash/fp/sortBy'
 import logger from '../logger'
@@ -100,7 +100,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep.button-vue {
+.button-vue:deep() {
 	display: inline-block !important;
 }
 </style>

@@ -32,7 +32,6 @@ use OCA\Mail\Tests\Integration\TestCase;
 use OCP\AppFramework\Http\JSONResponse;
 
 class SettingsControllerTest extends TestCase {
-
 	/** @var ServiceMockObject */
 	private $mock;
 

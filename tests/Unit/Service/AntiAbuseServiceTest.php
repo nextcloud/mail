@@ -38,7 +38,6 @@ use function array_map;
 use function range;
 
 class AntiAbuseServiceTest extends TestCase {
-
 	/** @var AntiAbuseService */
 	private $service;
 

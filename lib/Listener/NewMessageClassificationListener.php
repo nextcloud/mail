@@ -95,9 +95,9 @@ class NewMessageClassificationListener implements IEventListener {
 
 		// if this is a message that's been flagged / tagged as important before, we don't want to reclassify it again.
 		$doNotReclassify = $this->tagMapper->getTaggedMessageIdsForMessages(
-						$event->getMessages(),
-						$event->getAccount()->getUserId(),
-						Tag::LABEL_IMPORTANT
+			$event->getMessages(),
+			$event->getAccount()->getUserId(),
+			Tag::LABEL_IMPORTANT
 		);
 		$messages = array_filter($messages, static function ($message) use ($doNotReclassify) {
 			return ($message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));

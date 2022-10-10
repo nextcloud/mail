@@ -42,24 +42,12 @@ use OCP\BackgroundJob\QueuedJob;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantJob extends QueuedJob {
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var MailManager */
-	private $mailManager;
-
-	/** @var MigrateImportantFromImapAndDb */
-	private $migration;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IMAPClientFactory  */
-	private $imapClientFactory;
+	private MailboxMapper $mailboxMapper;
+	private MailAccountMapper $mailAccountMapper;
+	private MailManager $mailManager;
+	private MigrateImportantFromImapAndDb $migration;
+	private LoggerInterface $logger;
+	private IMAPClientFactory $imapClientFactory;
 
 	public function __construct(MailboxMapper $mailboxMapper,
 								MailAccountMapper $mailAccountMapper,

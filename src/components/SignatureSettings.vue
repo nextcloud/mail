@@ -45,6 +45,9 @@
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus" />
+		<p v-if="isLargeSignature" class="warning-large-signature">
+			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.')}}
+		</p>
 		<ButtonVue
 			type="primary"
 			:disabled="loading"
@@ -70,9 +73,7 @@ import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
 
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
 
 export default {
@@ -117,6 +118,9 @@ export default {
 
 			return identities
 		},
+		isLargeSignature() {
+			return (new Blob([this.signature])).size > 2 * 1024 * 1024
+		}
 	},
 	watch: {
 		async signatureAboveQuote(val, oldVal) {
@@ -182,7 +186,8 @@ export default {
 .ck.ck-editor__editable_inline {
   width: 100%;
   max-width: 78vw;
-  height: 100px;
+  height: 100%;
+  min-height: 100px;
   border-radius: var(--border-radius) !important;
   border: 1px solid var(--color-border) !important;
   box-shadow: none !important;
@@ -220,8 +225,11 @@ export default {
 .ck-balloon-panel {
 	 z-index: 10000 !important;
  }
-::v-deep.button-vue {
+.button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;
+}
+.warning-large-signature {
+	color: darkorange;
 }
 </style>

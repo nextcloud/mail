@@ -42,14 +42,9 @@ use function sort;
 class DiagnoseAccount extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private IMAPClientFactory $clientFactory;
+	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
 								IMAPClientFactory $clientFactory,
@@ -109,6 +104,8 @@ class DiagnoseAccount extends Command {
 	private function printCapabilitiesStats(OutputInterface $output,
 											Horde_Imap_Client_Socket $imapClient): void {
 		$output->writeln("IMAP capabilities:");
+		// Once logged in more capabilities are advertised
+		$imapClient->login();
 		$capabilities = array_keys(
 			json_decode(
 				$imapClient->capability->serialize(),

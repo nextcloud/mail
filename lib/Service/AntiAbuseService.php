@@ -36,7 +36,6 @@ use Psr\Log\LoggerInterface;
 use function implode;
 
 class AntiAbuseService {
-
 	/** @var IConfig */
 	private $config;
 

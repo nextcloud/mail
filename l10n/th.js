@@ -29,6 +29,7 @@ OC.L10N.register(
     "Edit tags" : "แก้ไขแท็ก",
     "Move" : "ย้าย",
     "Create" : "สร้าง",
+    "Comment" : "แสดงความคิดเห็น",
     "Accept" : "ยอมรับ",
     "Decline" : "ปฏิเสธ",
     "Choose" : "เลือก",

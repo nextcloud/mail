@@ -48,14 +48,9 @@ class CreateAccount extends Command {
 	public const ARGUMENT_SMTP_USER = 'smtp-user';
 	public const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var \OCP\Security\ICrypto */
-	private $crypto;
-
-	/** @var IUserManager */
-	private $userManager;
+	private AccountService $accountService;
+	private ICrypto $crypto;
+	private IUserManager $userManager;
 
 	public function __construct(AccountService $service,
 								ICrypto $crypto,

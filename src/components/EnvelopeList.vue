@@ -204,12 +204,10 @@
 </template>
 
 <script>
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope'
 import IconDelete from 'vue-material-design-icons/Delete'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import ImportantIcon from './icons/ImportantIcon'
 import IconSelect from 'vue-material-design-icons/CloseThick'
 import IconFavorite from 'vue-material-design-icons/Star'

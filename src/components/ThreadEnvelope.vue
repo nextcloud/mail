@@ -57,8 +57,7 @@
 				class="left"
 				:class="{seen: envelope.flags.seen}"
 				@click.native.prevent="$emit('toggle-expand', $event)">
-				<div class="sender"
-					:class="{ 'centered-sender': centeredSender }">
+				<div class="sender">
 					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
 				</div>
 				<div v-if="showSubline" class="subline">
@@ -116,6 +115,16 @@
 								:size="20" />
 						</template>
 					</ButtonVue>
+					<ButtonVue v-if="showArchiveButton"
+						:close-after-click="true"
+						type="tertiary-no-background"
+						@click.prevent="onArchive">
+						<template #icon>
+							<ArchiveIcon
+								:title="t('mail', 'Archive message')"
+								:size="20" />
+						</template>
+					</ButtonVue>
 					<ButtonVue :close-after-click="true"
 						type="tertiary-no-background"
 						@click.prevent="onDelete">
@@ -148,7 +157,7 @@
 </template>
 <script>
 import Avatar from './Avatar'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
 import IconFavorite from 'vue-material-design-icons/Star'
@@ -162,6 +171,7 @@ import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import StarOutline from 'vue-material-design-icons/StarOutline'
 import DeleteIcon from 'vue-material-design-icons/Delete'
+import ArchiveIcon from 'vue-material-design-icons/PackageDown'
 import EmailUnread from 'vue-material-design-icons/Email'
 import EmailRead from 'vue-material-design-icons/EmailOpen'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
@@ -188,7 +198,7 @@ export default {
 		EmailRead,
 		EmailUnread,
 		DeleteIcon,
-
+		ArchiveIcon,
 	},
 	props: {
 		envelope: {
@@ -266,8 +276,8 @@ export default {
 		showSubline() {
 			return !this.expanded && !!this.envelope.previewText
 		},
-		centeredSender() {
-			  return !this.showSubline && this.tags.length === 0
+		showArchiveButton() {
+			return this.account.archiveMailboxId !== null
 		},
 		junkFavoritePosition() {
 			return this.showSubline && this.tags.length > 0
@@ -403,6 +413,27 @@ export default {
 				}))
 			}
 		},
+		async onArchive() {
+			// Remove from selection first
+			if (this.withSelect) {
+				this.$emit('unselect')
+			}
+
+			// Archive
+			this.$emit('archive', this.envelope.databaseId)
+
+			logger.info(`archiving message ${this.envelope.databaseId}`)
+
+			try {
+				await this.$store.dispatch('moveMessage', {
+					id: this.envelope.databaseId,
+					destMailboxId: this.account.archiveMailboxId,
+				})
+			} catch (error) {
+				logger.error('could not archive message', error)
+				return t('mail', 'Could not archive message')
+			}
+		},
 	},
 }
 </script>
@@ -410,9 +441,6 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-left: 8px;
-	}
-	.centered-sender {
-		margin-top: 8px;
 	}
 
 	.right {
@@ -447,10 +475,6 @@ export default {
 			}
 		}
 	}
-	.avatardiv {
-		display: inline-block;
-		margin-bottom: -23px;
-	}
 	.subline {
 		margin-left: 8px;
 		color: var(--color-text-maxcontrast);
@@ -463,15 +487,15 @@ export default {
 	.envelope {
 		display: flex;
 		flex-direction: column;
-		box-shadow: 0 0 10px var(--color-box-shadow);
+		border: 2px solid var(--color-border);
 		border-radius: 16px;
 		margin-left: 10px;
 		margin-right: 10px;
 		background-color: var(--color-main-background);
-		padding-bottom: 20px;
+		padding-bottom: 28px;
 
 		& + .envelope {
-			margin-top: -20px;
+			margin-top: -28px;
 		}
 
 		&:last-of-type {
@@ -483,15 +507,17 @@ export default {
 	.envelope--header {
 		position: relative;
 		display: flex;
+		align-items: center;
 		padding: 10px;
 		border-radius: var(--border-radius);
+		min-height: 68px; /* prevents jumping between open/collapsed */
 	}
 	.left {
 		flex-grow: 1;
 		min-width: 0; /* https://css-tricks.com/flexbox-truncated-text/ */
 	}
 	.icon-important {
-		::v-deep path {
+		:deep(path) {
 			fill: #ffcc00;
 			stroke: var(--color-main-background);
 			cursor: pointer;
@@ -505,6 +531,7 @@ export default {
 			height: 16px;
 			margin-left: -1px;
 			display: flex;
+			top: 12px;
 
 			&:hover,
 			&:focus {
@@ -515,8 +542,8 @@ export default {
 	.app-content-list-item-star.favorite-icon-style {
 		display: inline-block;
 		position: absolute;
-		top: 8px;
-		left: 40px;
+		top: 10px;
+		left: 36px;
 		cursor: pointer;
 		stroke: var(--color-main-background);
 		stroke-width: 2;
@@ -527,8 +554,8 @@ export default {
 	.app-content-list-item-star.junk-icon-style {
 		display: inline-block;
 		position: absolute;
-		top: 8px;
-		left: 40px;
+		top: 10px;
+		left: 36px;
 		cursor: pointer;
 		opacity: .2;
 		&:hover {

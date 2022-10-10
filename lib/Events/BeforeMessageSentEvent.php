@@ -36,7 +36,6 @@ use OCP\EventDispatcher\Event;
  * @psalm-immutable
  */
 class BeforeMessageSentEvent extends Event {
-
 	/** @var Account */
 	private $account;
 

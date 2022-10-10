@@ -32,7 +32,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AddressbookSourceTest extends TestCase {
-
 	/** @var ContactsIntegration|PHPUnit_Framework_MockObject_MockObject */
 	private $ci;
 

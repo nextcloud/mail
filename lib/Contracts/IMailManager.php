@@ -35,7 +35,6 @@ use OCA\Mail\Service\Quota;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailManager {
-
 	/**
 	 * @param string $uid
 	 * @param int $id
@@ -201,6 +200,14 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function deleteMailbox(Account $account, Mailbox $mailbox): void;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 *
+	 * @throws ServiceException
+	 */
+	public function clearMailbox(Account $account, Mailbox $mailbox): void;
 
 	/**
 	 * @param Account $account

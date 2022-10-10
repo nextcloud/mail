@@ -26,7 +26,6 @@ namespace OCA\Mail\Service\ContactIntegration;
 use OCA\Mail\Service\ContactsIntegration;
 
 class ContactIntegrationService {
-
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 

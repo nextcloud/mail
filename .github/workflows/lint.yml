@@ -32,6 +32,8 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         coverage: none
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Lint
       run: composer run lint
 
@@ -46,6 +48,8 @@ jobs:
       with:
         php-version: '8.0'
         coverage: none
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: composer i
     - name: Run coding standards check
@@ -57,13 +61,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Read package.json node and npm engines version
-      uses: skjnldsv/read-package-engines-version-actions@v1.1
+      uses: skjnldsv/read-package-engines-version-actions@v1.2
       id: versions
       with:
         fallbackNode: '^14'
         fallbackNpm: '^7'
     - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ steps.versions.outputs.nodeVersion }}
     - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
@@ -74,3 +78,25 @@ jobs:
       run: npm run lint
     env:
       CI: true
+
+  summary:
+    runs-on: ubuntu-latest
+    needs:
+      - xml-linters
+      - php-linters
+      - php-cs-fixer
+      - node-linters
+
+    if: always()
+
+    name: lint-summary
+
+    steps:
+      - name: XML linter status
+        run: if ${{ needs.xml-linters.result != 'success' && needs.xml-linters.result != 'skipped' }}; then exit 1; fi
+      - name: PHP linter status
+        run: if ${{ needs.php-linters.result != 'success' && needs.php-linters.result != 'skipped' }}; then exit 1; fi
+      - name: PHP cs fixer status
+        run: if ${{ needs.php-cs-fixer.result != 'success' && needs.php-cs-fixer.result != 'skipped' }}; then exit 1; fi
+      - name: Node linter status
+        run: if ${{ needs.node-linters.result != 'success' && needs.node-linters.result != 'skipped' }}; then exit 1; fi

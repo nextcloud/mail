@@ -37,7 +37,6 @@ use OCP\IUser;
  * @template-extends QBMapper<MailAccount>
  */
 class MailAccountMapper extends QBMapper {
-
 	/**
 	 * @param IDBConnection $db
 	 */

@@ -47,8 +47,7 @@
 </template>
 
 <script>
-import AppContentDetails from '@nextcloud/vue/dist/Components/NcAppContentDetails'
-import Popover from '@nextcloud/vue/dist/Components/NcPopover'
+import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
 
 import { prop, uniqBy } from 'ramda'
 import debounce from 'lodash/fp/debounce'
@@ -258,6 +257,15 @@ export default {
 <style lang="scss">
 #mail-message {
 	flex-grow: 1;
+	max-height: calc(100vh - 50px);
+	margin-bottom: 30vh;
+	overflow: auto;
+
+	.icon-loading {
+		&:only-child:after {
+			margin-top: 20px;
+		}
+	}
 }
 
 .mail-message-body {
@@ -293,7 +301,7 @@ export default {
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 60px;
+	padding-left: 70px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -324,7 +332,7 @@ export default {
 }
 
 #mail-content {
-	margin: 10px 38px 0 60px;
+	margin: 10px 38px 0 59px;
 }
 
 #mail-content iframe {

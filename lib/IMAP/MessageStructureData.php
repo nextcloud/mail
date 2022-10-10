@@ -26,17 +26,21 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP;
 
 class MessageStructureData {
-
 	/** @var bool */
 	private $hasAttachments;
 
 	/** @var string */
 	private $previewText;
 
+	/** @var bool */
+	private $isImipMessage;
+
 	public function __construct(bool $hasAttachments,
-								string $previewText) {
+								string $previewText,
+								bool $isImipMessage) {
 		$this->hasAttachments = $hasAttachments;
 		$this->previewText = $previewText;
+		$this->isImipMessage = $isImipMessage;
 	}
 
 	public function hasAttachments(): bool {
@@ -45,5 +49,9 @@ class MessageStructureData {
 
 	public function getPreviewText(): string {
 		return $this->previewText;
+	}
+
+	public function isImipMessage(): bool {
+		return $this->isImipMessage;
 	}
 }

@@ -30,7 +30,6 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IConfig;
 
 class UserPreferenceService implements IUserPreferences {
-
 	/** @var IConfig */
 	private $config;
 

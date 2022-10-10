@@ -345,6 +345,9 @@ export default {
 
 		Vue.delete(state.envelopes, id)
 	},
+	removeEnvelopes(state, { id }) {
+		Vue.set(state.mailboxes[id], 'envelopeLists', [])
+	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
 	},
@@ -390,5 +393,14 @@ export default {
 	},
 	setScheduledSendingDisabled(state, value) {
 		state.isScheduledSendingDisabled = value
+	},
+	setActiveSieveScript(state, { accountId, scriptData }) {
+		Vue.set(state.sieveScript, accountId, scriptData)
+	},
+	setCurrentUserPrincipal(state, { currentUserPrincipal }) {
+		state.currentUserPrincipal = currentUserPrincipal
+	},
+	addCalendar(state, { calendar }) {
+		state.calendars = [...state.calendars, calendar]
 	},
 }

@@ -165,6 +165,11 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'mailboxes#clearMailbox',
+			'url' => '/api/mailboxes/{id}/clear',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'mailboxes#markAllAsRead',
 			'url' => '/api/mailboxes/{id}/read',
 			'verb' => 'POST'
@@ -298,6 +303,11 @@ return [
 			'name' => 'settings#deleteAntiSpamEmail',
 			'url' => '/api/settings/antispam',
 			'verb' => 'DELETE'
+		],
+		[
+			'name' => 'settings#setAllowNewMailAccounts',
+			'url' => '/api/settings/allownewaccounts',
+			'verb' => 'POST'
 		],
 		[
 			'name' => 'trusted_senders#setTrusted',

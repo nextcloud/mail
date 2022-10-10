@@ -31,7 +31,6 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class HtmlTest extends TestCase {
-
 	/**
 	 * @dataProvider linkDetectionProvider
 	 * @param $expected

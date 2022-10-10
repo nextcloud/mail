@@ -36,7 +36,6 @@ use Psr\Log\LoggerInterface;
 use function class_exists;
 
 class InteractionListener implements IEventListener {
-
 	/** @var IEventDispatcher */
 	private $dispatcher;
 

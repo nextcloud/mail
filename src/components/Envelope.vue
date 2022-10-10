@@ -68,6 +68,14 @@
 				{{ data.previewText }}
 			</div>
 		</template>
+		<template #indicator>
+			<!-- Color dot -->
+			<IconBullet v-if="!data.flags.seen"
+				:size="16"
+				:aria-hidden="false"
+				:aria-label="t('mail', 'This message is unread')"
+				fill-color="var(--color-primary-element)" />
+		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
 				<ActionButton
@@ -76,9 +84,9 @@
 					@click.prevent="onToggleFlagged">
 					<template #icon>
 						<StarOutline v-if="showFavoriteIconVariant"
-							:size="20" />
+							:size="24" />
 						<Star v-else
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
@@ -90,9 +98,9 @@
 					@click.prevent="onToggleSeen">
 					<template #icon>
 						<EmailUnread v-if="showImportantIconVariant"
-							:size="20" />
+							:size="24" />
 						<EmailRead v-else
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
@@ -104,7 +112,7 @@
 					@click.prevent="onToggleImportant">
 					<template #icon>
 						<ImportantIcon
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -152,14 +160,15 @@
 					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
-				<ActionButton :close-after-click="false"
-					@click="moreActionsOpen=true">
+				<ActionButton v-if="showArchiveButton"
+					:close-after-click="true"
+					@click.prevent="onArchive">
 					<template #icon>
-						<DotsHorizontalIcon
-							:title="t('mail', 'More actions')"
+						<ArchiveIcon
+							:title="t('mail', 'Archive thread')"
 							:size="20" />
 					</template>
-					{{ t('mail', 'More actions') }}
+					{{ t('mail', 'Archive thread') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="onDelete">
@@ -169,6 +178,15 @@
 							:size="20" />
 					</template>
 					{{ t('mail', 'Delete thread') }}
+				</ActionButton>
+				<ActionButton :close-after-click="false"
+					@click="moreActionsOpen=true">
+					<template #icon>
+						<DotsHorizontalIcon
+							:title="t('mail', 'More actions')"
+							:size="20" />
+					</template>
+					{{ t('mail', 'More actions') }}
 				</ActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
@@ -236,14 +254,14 @@
 	</ListItem>
 </template>
 <script>
-import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcListItem as ListItem, NcActionButton as ActionButton, NcActionLink as ActionLink } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
 import IconCreateEvent from 'vue-material-design-icons/Calendar'
 import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
+import ArchiveIcon from 'vue-material-design-icons/PackageDown'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
@@ -263,6 +281,7 @@ import EmailRead from 'vue-material-design-icons/EmailOpen'
 import EmailUnread from 'vue-material-design-icons/Email'
 import IconAttachment from 'vue-material-design-icons/Paperclip'
 import ImportantIcon from './icons/ImportantIcon'
+import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle'
 import JunkIcon from './icons/JunkIcon'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
@@ -271,7 +290,6 @@ import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
-import ActionLink from '@nextcloud/vue/dist/Components/NcActionLink'
 import DownloadIcon from 'vue-material-design-icons/Download'
 
 export default {
@@ -283,6 +301,7 @@ export default {
 		CheckIcon,
 		ChevronLeft,
 		DeleteIcon,
+		ArchiveIcon,
 		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
@@ -300,6 +319,7 @@ export default {
 		EmailRead,
 		EmailUnread,
 		IconAttachment,
+		IconBullet,
 		Reply,
 		ActionLink,
 		DownloadIcon,
@@ -411,6 +431,9 @@ export default {
 				return ''
 			}
 		},
+		showArchiveButton() {
+			return this.account.archiveMailboxId !== null
+		},
 		showFavoriteIconVariant() {
 			return this.data.flags.flagged
 		},
@@ -521,6 +544,22 @@ export default {
 				}))
 			}
 		},
+		async onArchive() {
+			// Remove from selection first
+			this.setSelected(false)
+			// Archive
+			this.$emit('archive', this.data.databaseId)
+
+			try {
+				await this.$store.dispatch('moveThread', {
+					envelope: this.data,
+					destMailboxId: this.account.archiveMailboxId,
+				})
+			} catch (error) {
+				logger.error('could not archive message', error)
+				showError(t('mail', 'Could not archive message'))
+			}
+		},
 		async onOpenEditAsNew() {
 			await this.$store.dispatch('showMessageComposer', {
 				templateMessageId: this.data.databaseId,
@@ -568,12 +607,14 @@ export default {
 		gap: 4px;
 
 		&__subject {
+			color: var(--color-main-text);
+			line-height: 130%;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 	}
 	&__preview-text {
-		color: var(--color-text-lighter);
+		color: var(--color-text-maxcontrast);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -582,14 +623,14 @@ export default {
 }
 
 .icon-important {
-	::v-deep path {
+	:deep(path) {
 	fill: #ffcc00;
 	stroke: var(--color-main-background);
 	}
 	.list-item:hover &,
 	.list-item:focus &,
 	.list-item.active & {
-	::v-deep path {
+	:deep(path) {
 	stroke: var(--color-background-dark);
 	}
 	}
@@ -623,6 +664,15 @@ export default {
 .list-item-style.selected {
 	background-color: var(--color-background-dark);
 }
+.list-item-style {
+	.draft {
+		line-height: 130%;
+
+		em {
+			font-style: italic;
+		}
+	}
+}
 .junk-icon-style {
 	opacity: .2;
 	display: flex;
@@ -639,47 +689,18 @@ export default {
 		opacity: .1;
 	}
 }
-list-item-style.draft .app-content-list-item-line-two {
-	font-style: italic;
-}
-.list-item-style.active {
-	background-color: var(--color-primary-light);
-	border-radius: 16px;
-}
 
 .icon-attachment {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
 	opacity: 0.25;
 }
 
-	// Fix layout of messages in list until we move to component
-
-.app-content-list .list-item {
-	padding-right: 0;
-
-	.app-content-list-item-line-two {
-	padding-right: 0;
-	margin-top: -8px;
+:deep(.action--primary) {
+	.material-design-icon {
+		margin-bottom: -14px;
 	}
-
-	.app-content-list-item-menu {
-	margin-right: -2px;
-	margin-top: -8px;
-
-	::v-deep .action-item__menu {
-	right: 7px !important;
-
-	.action-item__menu_arrow {
-	right: 6px !important;
-	}
-	}
-	}
-
-	.app-content-list-item-details {
-		padding-right: 7px;
-		}
 }
-::v-deep .list-item__extra {
+:deep(.list-item__extra) {
 	margin-left: 41px !important;
 }
 .tag-group__label {
@@ -707,13 +728,13 @@ list-item-style.draft .app-content-list-item-line-two {
 	overflow: hidden;
 	left: 4px;
 }
-::v-deep.list-item__wrapper {
+.list-item__wrapper:deep() {
 	list-style: none;
 }
 .app-content-list-item-star.favorite-icon-style {
 	display: block;
 }
-::v-deep.icon-important.app-content-list-item-star {
+.icon-important.app-content-list-item-star:deep() {
 	position: absolute;
 	top: 14px;
 	z-index: 1;
@@ -731,7 +752,7 @@ list-item-style.draft .app-content-list-item-line-two {
 		opacity: .4;
 	}
 }
-::v-deep .svg svg{
+:deep(.svg svg) {
 	height: 16px;
 	width: 16px;
 }
@@ -741,10 +762,10 @@ list-item-style.draft .app-content-list-item-line-two {
 .attachment-icon-style {
 	opacity: .6;
 }
-::v-deep .list-item-content__wrapper {
+:deep(.list-item-content__wrapper) {
 	margin-top: 6px;
 }
-::v-deep .list-item__extra {
+:deep(.list-item__extra) {
 	margin-top: 9px;
 }
 </style>

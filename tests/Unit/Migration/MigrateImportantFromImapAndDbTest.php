@@ -37,7 +37,6 @@ use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDbTest extends TestCase {
-
 	/** @var MockObject */
 	private $clientFactory;
 

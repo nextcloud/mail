@@ -36,7 +36,6 @@ use OCP\IConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AntiSpamServiceTest extends TestCase {
-
 	/** @var AntiSpamService */
 	private $service;
 

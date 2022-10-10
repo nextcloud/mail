@@ -2,6 +2,7 @@
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
  *
@@ -19,6 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { readFileSync } from 'fs'
+import { join } from 'path'
+
 global.OC = {
 	getLocale: () => 'en',
 	getLanguage: () => 'en_US',
@@ -31,4 +35,13 @@ global.OC = {
 		},
 	},
 	isUserAdmin: () => false,
+}
+
+/**
+ * @param {string} path Path to file relative to src/tests/data/
+ * @return {string} File contents
+ */
+global.readTestData = function(path) {
+	path = join('src', 'tests', 'data', path)
+	return readFileSync(path).toString('utf-8')
 }

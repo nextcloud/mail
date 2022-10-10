@@ -64,8 +64,7 @@
 </template>
 
 <script>
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
 import logger from '../logger'
 import AliasForm from './AliasForm'
@@ -146,7 +145,7 @@ export default {
 input {
 	width: 195px;
 }
-::v-deep.button-vue {
+.button-vue:deep() {
 	display: inline-block !important;
 	margin-top: 4px !important;
 }

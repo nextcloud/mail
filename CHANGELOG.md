@@ -1,6 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.0.0 – (unreleased)
+### Added
+- Image support for the message editor and signatures
+- Automatic out-of-office replies (based on Sieve)
+- Preview of images, audio, video and PDF with the Viewer app
+- Add imip processing
+- Users can clear their mailboxes
+- Show warning for large signatures
+- Add ckeditor plugin for mail
+
+### Fixed
+- Enable last day checkbox not being parsed correctly
+- Date formatting for sieve autoresponder
+- Missing line breaks when parsing message from sieve script
+- Avatar being vanished for threads
+-
+### Changed
+- Adapt to Nextcloud 25 design
+- Remember last used mailbox
+- Make primary action icons bigger
+- Improving the appearance of the modal window
+
+### Removed
+- Nextcloud 22-24 support
+
 ## 1.14.0-beta1 - 2022-08-23
 ### Added
 - Preview message content in the thread view
@@ -10,7 +35,7 @@ All notable changes to this project will be documented in this file.
 - Show message preview in envelope list
 - Envelope action links to download whole message
 
-### Fixes
+### Fixed
 - Remove account color
 - Shorten the relative time of envelopes
 - General design improvements
@@ -49,6 +74,9 @@ All notable changes to this project will be documented in this file.
 - Sending outbox message of deleted user accounts
 - Collecting addresses in the background
 
+## 1.13.9 – 2022-10-07
+### Changed
+- Dependency updates
 
 ## 1.13.6 - 2022-06-29
 ### Fixed

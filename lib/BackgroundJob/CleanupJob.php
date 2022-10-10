@@ -32,9 +32,7 @@ use function defined;
 use function method_exists;
 
 class CleanupJob extends TimedJob {
-
-	/** @var CleanupService */
-	private $cleanupService;
+	private CleanupService $cleanupService;
 
 	public function __construct(ITimeFactory $time,
 								CleanupService $cleanupService) {

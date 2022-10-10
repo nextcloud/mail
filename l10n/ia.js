@@ -25,6 +25,7 @@ OC.L10N.register(
     "Select" : "Selectionar",
     "Move" : "Mover",
     "Create" : "Crear",
+    "Comment" : "Commentario",
     "Accept" : "Acceptar",
     "Decline" : "Refusar",
     "Other" : "Altere",

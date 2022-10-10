@@ -43,24 +43,12 @@ use function method_exists;
 use function sprintf;
 
 class SyncJob extends TimedJob {
-
-	/** @var IUserManager */
-	private $userManager;
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ImapToDbSynchronizer */
-	private $syncService;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IJobList */
-	private $jobList;
+	private IUserManager $userManager;
+	private AccountService $accountService;
+	private ImapToDbSynchronizer $syncService;
+	private MailboxSync $mailboxSync;
+	private LoggerInterface $logger;
+	private IJobList $jobList;
 
 	public function __construct(ITimeFactory $time,
 								IUserManager $userManager,

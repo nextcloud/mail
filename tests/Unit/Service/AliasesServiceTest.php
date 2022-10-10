@@ -30,7 +30,6 @@ use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class AliasesServiceTest extends TestCase {
-
 	/** @var AliasesService */
 	private $service;
 

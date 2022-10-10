@@ -45,7 +45,6 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class OutboxService implements ILocalMailboxService {
-
 	/** @var IMailTransmission */
 	private $transmission;
 
@@ -146,6 +145,11 @@ class OutboxService implements ILocalMailboxService {
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
+		if (empty($attachments)) {
+			$message->setAttachments($attachments);
+			return $message;
+		}
+
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
@@ -162,6 +166,11 @@ class OutboxService implements ILocalMailboxService {
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
+
+		if (empty($attachments)) {
+			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));
+			return $message;
+		}
 
 		$client = $this->clientFactory->getClient($account);
 		try {

@@ -96,22 +96,42 @@ updates:
   - "ChristophWurst"
   - "kesselb"
 
-# Stable1.12
+# Stable2.0
 - package-ecosystem: npm
-  target-branch: stable1.12
+  target-branch: stable2.0
   directory: "/"
   schedule:
-      interval: "daily"
+    interval: "daily"
   open-pull-requests-limit: 0
   reviewers:
-  - "ChristophWurst"
-  - "GreatD"
+    - "ChristophWurst"
+    - "GreatD"
 - package-ecosystem: composer
-  target-branch: stable1.12
+  target-branch: stable2.0
   directory: "/"
   schedule:
-      interval: "daily"
+    interval: "daily"
   open-pull-requests-limit: 0
   reviewers:
-  - "ChristophWurst"
-  - "kesselb"
+    - "ChristophWurst"
+    - "kesselb"
+
+  # Stable1.14
+- package-ecosystem: npm
+  target-branch: stable1.14
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 0
+  reviewers:
+    - "ChristophWurst"
+    - "GreatD"
+- package-ecosystem: composer
+  target-branch: stable1.14
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 0
+  reviewers:
+    - "ChristophWurst"
+    - "kesselb"

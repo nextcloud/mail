@@ -33,6 +33,12 @@ export async function updateAccount(id, data) {
 	}
 }
 
+/**
+ * Fetch active sieve script of given account id.
+ *
+ * @param {string} id Account id
+ * @return {Promise<{script: string, scriptName: string}>}
+ */
 export async function getActiveScript(id) {
 	const url = generateUrl('/apps/mail/api/sieve/active/{id}', {
 		id,
@@ -45,6 +51,13 @@ export async function getActiveScript(id) {
 	}
 }
 
+/**
+ * Update active sieve script of given account id.
+ *
+ * @param {string} id Account id
+ * @param {{script: string, scriptName: string}} data Script data object
+ * @return {Promise<void>}
+ */
 export async function updateActiveScript(id, data) {
 	const url = generateUrl('/apps/mail/api/sieve/active/{id}', {
 		id,

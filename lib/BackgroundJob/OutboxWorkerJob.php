@@ -32,9 +32,7 @@ use function defined;
 use function method_exists;
 
 class OutboxWorkerJob extends TimedJob {
-
-	/** @var OutboxService */
-	private $outboxService;
+	private OutboxService $outboxService;
 
 	public function __construct(ITimeFactory $time,
 								OutboxService $outboxService) {

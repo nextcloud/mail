@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 export default {
 	name: 'SieveAccountForm',
 	components: {
@@ -182,6 +182,11 @@ export default {
 					account: this.account,
 					data: this.sieveConfig,
 				})
+				if (this.sieveConfig.sieveEnabled) {
+					await this.$store.dispatch('fetchActiveSieveScript', {
+						accountId: this.account.id,
+					})
+				}
 			} catch (error) {
 				this.errorMessage = error.message
 			}

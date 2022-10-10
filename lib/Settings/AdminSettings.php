@@ -29,12 +29,12 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IConfig;
 use OCP\IInitialStateService;
 use OCP\LDAP\ILDAPProvider;
 use OCP\Settings\ISettings;
 
 class AdminSettings implements ISettings {
-
 	/** @var IInitialStateService */
 	private $initialStateService;
 
@@ -44,12 +44,16 @@ class AdminSettings implements ISettings {
 	/** @var AntiSpamService */
 	private $antiSpamService;
 
+	private IConfig $config;
+
 	public function __construct(IInitialStateService $initialStateService,
 								ProvisioningManager $provisioningManager,
-								AntiSpamService $antiSpamService) {
+								AntiSpamService $antiSpamService,
+								IConfig $config) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
+		$this->config = $config;
 	}
 
 	public function getForm() {
@@ -68,6 +72,11 @@ class AdminSettings implements ISettings {
 			]
 		);
 
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'allow_new_mail_accounts',
+			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+		);
 
 		$this->initialStateService->provideLazyInitialState(
 			Application::APP_ID,

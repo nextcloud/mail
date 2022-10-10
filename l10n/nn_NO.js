@@ -18,6 +18,7 @@ OC.L10N.register(
     "Select" : "Vel",
     "Move" : "Move",
     "Create" : "Lag",
+    "Comment" : "Kommentér",
     "Choose" : "Vel",
     "Other" : "Anna",
     "Reply" : "Svare",

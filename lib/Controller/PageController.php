@@ -33,56 +33,36 @@ use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function class_exists;
 use function json_decode;
 
 class PageController extends Controller {
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var IConfig */
-	private $config;
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var AliasesService */
-	private $aliasesService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var IUserSession */
-	private $userSession;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var IInitialState */
-	private $initialStateService;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var OutboxService */
-	private $outboxService;
+	private IURLGenerator $urlGenerator;
+	private IConfig $config;
+	private AccountService $accountService;
+	private AliasesService $aliasesService;
+	private ?string $currentUserId;
+	private IUserSession $userSession;
+	private IUserPreferences $preferences;
+	private IMailManager $mailManager;
+	private TagMapper $tagMapper;
+	private IInitialState $initialStateService;
+	private LoggerInterface $logger;
+	private OutboxService $outboxService;
+	private IEventDispatcher $dispatcher;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -97,7 +77,8 @@ class PageController extends Controller {
 								TagMapper $tagMapper,
 								IInitialState $initialStateService,
 								LoggerInterface $logger,
-								OutboxService $outboxService) {
+								OutboxService $outboxService,
+								IEventDispatcher $dispatcher) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -112,6 +93,7 @@ class PageController extends Controller {
 		$this->initialStateService = $initialStateService;
 		$this->logger = $logger;
 		$this->outboxService = $outboxService;
+		$this->dispatcher = $dispatcher;
 	}
 
 	/**
@@ -121,6 +103,10 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index(): TemplateResponse {
+		if (class_exists(LoadViewer::class)) {
+			$this->dispatcher->dispatchTyped(new LoadViewer());
+		}
+
 		$this->initialStateService->provideInitialState(
 			'debug',
 			$this->config->getSystemValue('debug', false)
@@ -165,6 +151,7 @@ class PageController extends Controller {
 				'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
 				'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
 				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
+				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 				'tag-classified-messages' => $this->preferences->getPreference($this->currentUserId, 'tag-classified-messages', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
@@ -186,6 +173,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'disable-scheduled-send',
 			$cronMode === 'ajax',
+		);
+
+		$this->initialStateService->provideInitialState(
+			'allow-new-accounts',
+			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
 		);
 
 		$csp = new ContentSecurityPolicy();

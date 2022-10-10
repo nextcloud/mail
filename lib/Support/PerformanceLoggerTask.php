@@ -34,7 +34,6 @@ use function round;
 use function sprintf;
 
 class PerformanceLoggerTask {
-
 	/** @var string */
 	private $task;
 

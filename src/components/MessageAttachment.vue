@@ -20,16 +20,19 @@
   -->
 
 <template>
-	<div class="attachment">
-		<img v-if="isImage"
-			class="mail-attached-image"
-			:src="url"
-			@click="$emit('click', $event)">
-		<img class="attachment-icon" :src="mimeUrl">
-		<span class="attachment-name"
-			:title="label">{{ name }}
-			<span class="attachment-size">({{ humanReadable(size) }})</span>
-		</span>
+	<div class="attachment" :class="{'message-attachment--can-preview': canPreview }">
+		<div class="mail-attachment-img--wrapper" @click="$emit('open', $event)">
+			<img v-if="isImage"
+				class="mail-attached-image"
+				:src="url">
+			<img v-else class="attachment-icon" :src="mimeUrl">
+		</div>
+		<div class="mail-attached--content" @click="$emit('open', $event)">
+			<span class="attachment-name"
+				:title="label">{{ name }}
+			</span>
+			<span class="attachment-size">{{ humanReadable(size) }}</span>
+		</div>
 		<Actions :boundaries-element="boundariesElement">
 			<ActionButton
 				v-if="isCalendarEvent"
@@ -81,11 +84,8 @@ import { translate as t } from '@nextcloud/l10n'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { mixin as onClickOutside } from 'vue-on-click-outside'
 
-import PopoverMenu from '@nextcloud/vue/dist/Components/NcPopoverMenu'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcPopoverMenu as PopoverMenu, NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconSave from 'vue-material-design-icons/Folder'
 import IconDownload from 'vue-material-design-icons/Download'
@@ -137,6 +137,10 @@ export default {
 			default: false,
 		},
 		isCalendarEvent: {
+			type: Boolean,
+			default: false,
+		},
+		canPreview: {
 			type: Boolean,
 			default: false,
 		},
@@ -230,24 +234,63 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .attachment {
-	position: relative;
-	display: inline-block;
-	width: calc(100% - 32px);
-	padding: 16px;
+	height: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: calc(33.3334% - 4px);
+    margin: 2px;
+	padding: 5px;
+    position: relative;
+    align-items: center;
+
+	&:hover {
+		border-radius: 6px;
+	}
 }
 
 .attachment:hover,
 .attachment span:hover {
 	background-color: var(--color-background-hover);
-	cursor: pointer;
+
+	&.message-attachment--can-preview * {
+		cursor: pointer;
+	}
+}
+
+.mail-attachment-img--wrapper {
+	height: 44px;
+	width: 44px;
+	overflow: hidden;
+	display:flex;
+	justify-content: center;
+	position: relative;
+	border-radius: 6px;
+
+	img {
+		transition: 0.3s;
+		opacity: 1;
+		width: 44px;
+		height: 44px;
+	}
+
+	.mail-attached-image {
+		width: 100px;
+	}
+}
+
+.mail-attached--content {
+	width: calc(100% - 100px);
+	display: flex;
+    flex-direction: column;
 }
 
 .mail-attached-image {
 	display: block;
 	max-width: 100%;
 	border-radius: var(--border-radius);
-	cursor: pointer;
 }
 .attachment-import-popover {
 	right: 32px;
@@ -258,18 +301,19 @@ export default {
 }
 .attachment-name {
 	display: inline-block;
-	width: calc(100% - 72px);
+	width: 100%;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	vertical-align: middle;
-	margin-bottom: 20px;
 }
 
 /* show attachment size less prominent */
 .attachment-size {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)';
 	opacity: 0.5;
+	font-size: 12px;
+	line-height: 14px;
 }
 
 .attachment-icon {
@@ -278,8 +322,7 @@ export default {
 	margin-bottom: 20px;
 }
 .action-item {
-	display: inline-block !important;
-	position: relative !important;
+	transition: 0.4s;
 }
 .mail-message-attachments {
 	overflow-x: auto;

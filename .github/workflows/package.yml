@@ -18,13 +18,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Read package.json node and npm engines version
-        uses: skjnldsv/read-package-engines-version-actions@v1.1
+        uses: skjnldsv/read-package-engines-version-actions@v1.2
         id: versions
         with:
           fallbackNode: '^14'
           fallbackNpm: '^7'
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
       - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
@@ -35,6 +35,8 @@ jobs:
           php-version: 7.4
           extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
           coverage: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Krankerl
         run: |
           wget https://github.com/ChristophWurst/krankerl/releases/download/v0.13.0/krankerl_0.13.0_amd64.deb

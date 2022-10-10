@@ -160,7 +160,7 @@ export default {
 	margin-top: 5vh;
 	margin-right: 5px;
 }
-.unread ::v-deep .item__details {
+.unread :deep(.item__details) {
 	font-weight: bold;
 }
 </style>

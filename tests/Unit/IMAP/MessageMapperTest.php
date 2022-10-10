@@ -39,7 +39,6 @@ use Psr\Log\LoggerInterface;
 use function range;
 
 class MessageMapperTest extends TestCase {
-
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 

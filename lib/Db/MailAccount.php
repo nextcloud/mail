@@ -77,6 +77,8 @@ use OCP\AppFramework\Db\Entity;
  * @method int|null getSentMailboxId()
  * @method void setTrashMailboxId(?int $id)
  * @method int|null getTrashMailboxId()
+ * @method void setArchiveMailboxId(?int $id)
+ * @method int|null getArchiveMailboxId()
  * @method bool|null isSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -93,8 +95,13 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSignatureAboveQuote(bool $signatureAboveQuote)
  * @method string getAuthMethod()
  * @method void setAuthMethod(string $method)
+ * @method int getSignatureMode()
+ * @method void setSignatureMode(int $signatureMode)
  */
 class MailAccount extends Entity {
+	public const SIGNATURE_MODE_PLAIN = 0;
+	public const SIGNATURE_MODE_HTML = 1;
+
 	protected $userId;
 	protected $name;
 	protected $email;
@@ -125,6 +132,9 @@ class MailAccount extends Entity {
 	/** @var int|null */
 	protected $trashMailboxId;
 
+	/** @var int|null */
+	protected $archiveMailboxId;
+
 	/** @var bool */
 	protected $sieveEnabled = false;
 	/** @var string|null */
@@ -143,6 +153,8 @@ class MailAccount extends Entity {
 	/** @var int|null */
 	protected $provisioningId;
 
+	/** @var int */
+	protected $signatureMode;
 
 	/**
 	 * @param array $params
@@ -206,9 +218,11 @@ class MailAccount extends Entity {
 		$this->addType('draftsMailboxId', 'integer');
 		$this->addType('sentMailboxId', 'integer');
 		$this->addType('trashMailboxId', 'integer');
+		$this->addType('archiveMailboxId', 'integer');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('signatureAboveQuote', 'boolean');
+		$this->addType('signatureMode', 'int');
 	}
 
 	/**
@@ -233,8 +247,10 @@ class MailAccount extends Entity {
 			'draftsMailboxId' => $this->getDraftsMailboxId(),
 			'sentMailboxId' => $this->getSentMailboxId(),
 			'trashMailboxId' => $this->getTrashMailboxId(),
+			'archiveMailboxId' => $this->getArchiveMailboxId(),
 			'sieveEnabled' => ($this->isSieveEnabled() === true),
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
+			'signatureMode' => $this->getSignatureMode(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

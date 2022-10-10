@@ -38,21 +38,11 @@ use function defined;
 use function method_exists;
 
 class TrainImportanceClassifierJob extends TimedJob {
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ImportanceClassifier */
-	private $classifier;
-
-	/** @var IJobList */
-	private $jobList;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private ImportanceClassifier $classifier;
+	private IJobList $jobList;
+	private IUserPreferences $preferences;
+	private LoggerInterface $logger;
 
 	public function __construct(ITimeFactory $time,
 								AccountService $accountService,

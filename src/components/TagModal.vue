@@ -93,14 +93,9 @@
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/NcModal'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionText from '@nextcloud/vue/dist/Components/NcActionText'
-import ActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import { NcModal as Modal, NcActions as Actions, NcActionText as ActionText, NcActionInput as ActionInput, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconTag from 'vue-material-design-icons/Tag'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
 
@@ -261,12 +256,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .modal-content {
+:deep(.modal-content) {
 	padding: 0 20px 20px 20px;
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
-::v-deep .modal-container {
+:deep(.modal-container) {
 	width: auto !important;
 }
 .tag-title {
@@ -335,7 +330,7 @@ export default {
 	list-style: none;
 }
 @media only screen and (max-width: 512px) {
-	::v-deep .modal-container {
+	:deep(.modal-container) {
 	top: 100px !important;
 	max-height: calc(100vh - 170px) !important
 	}

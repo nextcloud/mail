@@ -16,6 +16,7 @@ OC.L10N.register(
     "Select" : "Select",
     "Move" : "Move",
     "Create" : "បង្កើត",
+    "Comment" : "មតិ",
     "Choose" : "ជ្រើស",
     "Other" : "ផ្សេងៗ",
     "Reply" : "ឆ្លើយតប",

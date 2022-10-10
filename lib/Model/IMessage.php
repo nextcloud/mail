@@ -30,7 +30,6 @@ use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 
 interface IMessage {
-
 	/**
 	 * Get the ID if available
 	 *

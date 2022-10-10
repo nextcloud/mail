@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Sync;
 
 class Request {
-
 	/** @var string */
 	private $mailbox;
 

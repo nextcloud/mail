@@ -650,13 +650,17 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$p->setContents($data);
 		$data = $p->getContents();
 
+		if ($data === null) {
+			return '';
+		}
+
 		// Only convert encoding if it is explicitly specified in the header because text/calendar
 		// data is utf-8 by default.
 		$charset = $p->getContentTypeParameter('charset');
 		if ($charset !== null && strtoupper($charset) !== 'UTF-8') {
 			$data = mb_convert_encoding($data, 'UTF-8', $charset);
 		}
-		return $data;
+		return (string)$data;
 	}
 
 	public function getContent(): string {
@@ -733,6 +737,22 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
+	 * @return AddressList
+	 */
+	public function getReplyTo() {
+		return AddressList::fromHorde($this->getEnvelope()->reply_to);
+	}
+
+	/**
+	 * @param string $id
+	 *
+	 * @return void
+	 */
+	public function setReplyTo(string $id) {
+		throw new Exception('not implemented');
+	}
+
+	/**
 	 * Cast all values from an IMAP message into the correct DB format
 	 *
 	 * @param integer $mailboxId
@@ -779,6 +799,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
+		if (!empty($this->scheduling)) {
+			$msg->setImipMessage(true);
+		}
 
 		$allowed = [
 			Horde_Imap_Client::FLAG_ANSWERED,

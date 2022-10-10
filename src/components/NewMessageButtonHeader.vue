@@ -19,7 +19,9 @@
 			:disabled="refreshing"
 			@click="refreshMailbox">
 			<template #icon>
-				<IconRefresh
+				<IconRefresh v-if="!refreshing"
+					:size="20" />
+				<IconLoading v-if="refreshing"
 					:size="20" />
 			</template>
 		</Button>
@@ -27,9 +29,10 @@
 </template>
 
 <script>
-import Button from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as Button } from '@nextcloud/vue'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconRefresh from 'vue-material-design-icons/Refresh'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import logger from '../logger'
 
 export default {
@@ -38,6 +41,7 @@ export default {
 		Button,
 		IconAdd,
 		IconRefresh,
+		IconLoading,
 	},
 	data() {
 		return {

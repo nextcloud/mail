@@ -35,7 +35,6 @@ use OCA\Mail\Mailbox;
  * @group IMAP
  */
 abstract class AbstractTest extends TestCase {
-
 	/** @var Account */
 	private static $account;
 

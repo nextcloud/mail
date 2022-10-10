@@ -37,7 +37,6 @@ use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AvatarControllerTest extends TestCase {
-
 	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
 	private $avatarService;
 
@@ -97,7 +96,7 @@ class AvatarControllerTest extends TestCase {
 		$resp = $this->controller->url($email);
 
 		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
-		$expected->cacheFor(24 * 60 * 60);
+		$expected->cacheFor(24 * 60 * 60, false, true);
 		$this->assertEquals($expected, $resp);
 	}
 

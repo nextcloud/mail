@@ -70,8 +70,7 @@
 
 <script>
 import logger from '../logger'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconCheck from 'vue-material-design-icons/Check'

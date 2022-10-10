@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<router-link to="/setup" class="app-settings-button button primary new-button">
+		<router-link v-if="allowNewMailAccounts" to="/setup" class="app-settings-button button primary new-button">
 			<IconAdd :size="20" />
 			{{ t('mail', 'Add mail account') }}
 		</router-link>
@@ -98,11 +98,10 @@
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
 import IconInfo from 'vue-material-design-icons/Information'
 import IconAdd from 'vue-material-design-icons/Plus'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import IconEmail from 'vue-material-design-icons/Email'
 import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'
@@ -144,6 +143,9 @@ export default {
 		},
 		useAutoTagging() {
 			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
+		},
+		allowNewMailAccounts() {
+			return this.$store.getters.getPreference('allow-new-accounts', true)
 		},
 	},
 	methods: {
@@ -247,7 +249,6 @@ p.app-settings {
 }
 .app-settings-button {
 	display: inline-flex;
-width: 100%;
 	background-position: 10px center;
 	text-align: left;
 	margin-top: 6px;

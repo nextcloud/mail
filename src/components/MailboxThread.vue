@@ -19,7 +19,8 @@
 					:account="account"
 					:mailbox="mailbox"
 					:search-query="query"
-					:bus="bus" />
+					:bus="bus"
+					:open-first="mailbox.specialRole !== 'drafts'" />
 				<template v-else>
 					<div class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
@@ -65,10 +66,7 @@
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
-import AppContentList from '@nextcloud/vue/dist/Components/NcAppContentList'
-import ButtonVue from '@nextcloud/vue/dist/Components/NcButton'
-import Popover from '@nextcloud/vue/dist/Components/NcPopover'
+import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
@@ -87,6 +85,8 @@ import {
 	priorityOtherQuery,
 } from '../util/priorityInbox'
 import { detect, html } from '../util/text'
+
+const START_MAILBOX_DEBOUNCE = 5 * 1000
 
 export default {
 	name: 'MailboxThread',
@@ -124,6 +124,7 @@ export default {
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],
+				arch: ['a'],
 				flag: ['s'],
 				next: ['arrowright'],
 				prev: ['arrowleft'],
@@ -132,6 +133,7 @@ export default {
 			},
 			priorityImportantQuery,
 			priorityOtherQuery,
+			startMailboxTimer: undefined,
 		}
 	},
 	computed: {
@@ -164,9 +166,19 @@ export default {
 		$route() {
 			this.handleMailto()
 		},
+		mailbox() {
+			clearTimeout(this.startMailboxTimer)
+			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+		},
 	},
 	created() {
 		this.handleMailto()
+	},
+	mounted() {
+		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+	},
+	beforeUnmount() {
+		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
 		deleteMessage(id) {
@@ -213,6 +225,26 @@ export default {
 				})
 			}
 		},
+		async saveStartMailbox() {
+			const currentStartMailboxId = this.$store.getters.getPreference('start-mailbox-id')
+			if (currentStartMailboxId === this.mailbox.databaseId) {
+				return
+			}
+			logger.debug(`Saving mailbox ${this.mailbox.databaseId} as start mailbox`)
+
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'start-mailbox-id',
+						value: this.mailbox.databaseId,
+					})
+			} catch (error) {
+				// Catch and log. This is not critical.
+				logger.warn('Could not update start mailbox id', {
+					error,
+				})
+			}
+		},
 		stringToRecipients(str) {
 			if (str === undefined) {
 				return []
@@ -230,7 +262,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-popover > .trigger > {
+.v-popover > .trigger > * {
 	z-index: 1;
 }
 
@@ -262,7 +294,7 @@ export default {
 #app-content-wrapper {
 	display: flex;
 }
-::v-deep .button-vue--vue-secondary {
+:deep(.button-vue--vue-secondary) {
 	box-shadow: none;
 }
 .envelope-list {

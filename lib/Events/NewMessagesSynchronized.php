@@ -31,7 +31,6 @@ use OCA\Mail\Db\Message;
 use OCP\EventDispatcher\Event;
 
 class NewMessagesSynchronized extends Event {
-
 	/** @var Account */
 	private $account;
 

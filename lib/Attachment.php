@@ -28,7 +28,6 @@ use Horde_Imap_Client_Data_Fetch;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 class Attachment {
-
 	/**
 	 * @param \Horde_Imap_Client_Socket $conn
 	 * @param \Horde_Imap_Client_Mailbox $mailBox

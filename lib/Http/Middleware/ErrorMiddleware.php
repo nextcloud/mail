@@ -43,7 +43,6 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ErrorMiddleware extends Middleware {
-
 	/** @var LoggerInterface */
 	private $logger;
 
