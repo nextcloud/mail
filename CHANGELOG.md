@@ -63,6 +63,8 @@ All notable changes to this project will be documented in this file.
 - Sending outbox message of deleted user accounts
 - Collecting addresses in the background
 - Fix lost modifications of preview text
+- Redirect to setup page if no accounts are configured
+- Show empty content when opening drafts
 
 ## 1.13.6 - 2022-06-29
 ### Fixed
