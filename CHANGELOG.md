@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2.0.0 – (unreleased)
+## 2.0.0 – 2022-10-11
 ### Added
 - Image support for the message editor and signatures
 - Automatic out-of-office replies (based on Sieve)
@@ -16,7 +16,10 @@ All notable changes to this project will be documented in this file.
 - Date formatting for sieve autoresponder
 - Missing line breaks when parsing message from sieve script
 - Avatar being vanished for threads
--
+- Show empty content when opening drafts
+- Fix scrolling on small screen
+- Fix focus on *To* when the composer opens
+
 ### Changed
 - Adapt to Nextcloud 25 design
 - Remember last used mailbox
