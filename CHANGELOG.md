@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2.0.0 – (unreleased)
+## 2.0.0 – 2022-10-11
 ### Added
 - Image support for the message editor and signatures
 - Automatic out-of-office replies (based on Sieve)
@@ -26,21 +26,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Nextcloud 22-24 support
 
-## 1.14.0-beta1 - 2022-08-23
-### Added
-- Preview message content in the thread view
-- Migrate icons to material design icons
-- Show message actions only for expanded messages in thread
-- Show mailbox counter if sub mailbox has unread messages
-- Show message preview in envelope list
-- Envelope action links to download whole message
-
-### Fixed
-- Remove account color
-- Shorten the relative time of envelopes
-- General design improvements
-
-## 1.14.0-alpha4 - 2022-07-15
+## 1.14.0 - 2022-10-10
 ### Added
 - Hide system tags from UI
 - Users can clear their mailboxes
@@ -49,6 +35,13 @@ All notable changes to this project will be documented in this file.
 - 'No subject' on thread when there is none
 - Migrate all icons to material design icons
 - Support for XOAUTH2
+- Preview message content in the thread view
+- Migrate icons to material design icons
+- Show message actions only for expanded messages in thread
+- Show mailbox counter if sub mailbox has unread messages
+- Show message preview in envelope list
+- Envelope action links to download whole message
+
 
 ### Fixed
 - Performance logger message for vanished messages
@@ -73,6 +66,11 @@ All notable changes to this project will be documented in this file.
 - PI sync problems
 - Sending outbox message of deleted user accounts
 - Collecting addresses in the background
+- Remove account color
+- Shorten the relative time of envelopes
+- General design improvements
+- Redirect to setup page if no accounts are configured
+- Show empty content when opening drafts
 
 ## 1.13.9 – 2022-10-07
 ### Changed
