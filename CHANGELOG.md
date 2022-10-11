@@ -16,7 +16,10 @@ All notable changes to this project will be documented in this file.
 - Date formatting for sieve autoresponder
 - Missing line breaks when parsing message from sieve script
 - Avatar being vanished for threads
--
+- Show empty content when opening drafts
+- Scrolling on small screen
+- Focus on *To* when the composer opens
+
 ### Changed
 - Adapt to Nextcloud 25 design
 - Remember last used mailbox
