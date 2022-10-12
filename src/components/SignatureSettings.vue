@@ -46,7 +46,7 @@
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus" />
 		<p v-if="isLargeSignature" class="warning-large-signature">
-			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.')}}
+			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
 		</p>
 		<ButtonVue
 			type="primary"
@@ -120,7 +120,7 @@ export default {
 		},
 		isLargeSignature() {
 			return (new Blob([this.signature])).size > 2 * 1024 * 1024
-		}
+		},
 	},
 	watch: {
 		async signatureAboveQuote(val, oldVal) {
