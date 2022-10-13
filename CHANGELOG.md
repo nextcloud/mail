@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.0.1 – 2022-10-13
+### Fixed
+- Int value out of range when accepting calendar invitation
+- Editor block quote handling
+
 ## 2.0.0 – 2022-10-11
 ### Added
 - Image support for the message editor and signatures
