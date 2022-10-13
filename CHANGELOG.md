@@ -1,8 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.14.0 - 2022-09-20
+## 1.14.1 - 2022-10-13
+### Changed
+- Updated Vue component library to v6
 
+## 1.14.0 - 2022-09-20
 ### Added
 - Migrate icons to material design icons
 - Show primary color dot in subject line for unread messages in envelope list
