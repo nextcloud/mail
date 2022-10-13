@@ -62,20 +62,22 @@ class AutoConfigController extends Controller {
 	public function queryIspdb(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
 		if (!$rfc822Address->valid) {
-			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY);
+			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY)
+				->cacheFor(60 * 60, false, true);
 		}
 		$config = $this->ispDb->query($rfc822Address->host, $rfc822Address);
-		return JsonResponse::success($config);
+		return JsonResponse::success($config)->cacheFor(5 * 60, false, true);
 	}
 
 	public function queryMx(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
 		if (!$rfc822Address->valid) {
-			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY);
+			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY)
+				->cacheFor(60 * 60, false, true);
 		}
 		return JsonResponse::success(
 			$this->mxRecord->query($rfc822Address->host),
-		);
+		)->cacheFor(5 * 60, false, true);
 	}
 
 	public function testConnectivity(string $host, int $port): JsonResponse {

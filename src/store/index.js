@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
  *
@@ -20,7 +21,7 @@
  */
 
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 
 import {
 	UNIFIED_ACCOUNT_ID,
@@ -34,7 +35,7 @@ import outbox from './outbox'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+export default new Store({
 	strict: process.env.NODE_ENV !== 'production',
 	modules: {
 		root: {
@@ -94,7 +95,10 @@ export default new Vuex.Store({
 				tags: {},
 				tagList: [],
 				isScheduledSendingDisabled: false,
+				currentUserPrincipal: undefined,
 				googleOauthUrl: null,
+				sieveScript: {},
+				calendars: [],
 			},
 			getters,
 			mutations,

@@ -32,25 +32,37 @@
 					required>
 			</div>
 			<div class="button-group">
-				<button
-					class="icon"
-					type="submit"
-					:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark'"
-					:title="t('mail', 'Update alias')" />
+				<ButtonVue
+					type="tertiary-no-background"
+					native-type="submit"
+					:title="t('mail', 'Update alias')">
+					<template #icon>
+						<IconLoading v-if="loading" :size="20" />
+						<IconCheck v-else :size="20" />
+					</template>
+				</ButtonVue>
 			</div>
 		</form>
 		<div v-else class="alias-item">
 			<p><strong>{{ alias.name }}</strong> &lt;{{ alias.alias }}&gt;</p>
 			<div class="button-group">
-				<button
-					class="icon icon-rename"
+				<ButtonVue
+					type="tertiary-no-background"
 					:title="t('mail', 'Show update alias form')"
-					@click="showForm = true" />
-				<button v-if="!alias.provisioned"
-					class="icon"
+					@click="showForm = true">
+					<template #icon>
+						<IconRename :size="20" />
+					</template>
+				</ButtonVue>
+				<ButtonVue v-if="!alias.provisioned"
+					type="tertiary-no-background"
 					:title="t('mail', 'Delete alias')"
-					:class="loading ? 'icon-loading-small-dark' : 'icon-delete'"
-					@click="deleteAlias" />
+					@click="deleteAlias">
+					<template #icon>
+						<IconLoading v-if="loading" :size="20" />
+						<IconDelete v-else :size="20" />
+					</template>
+				</ButtonVue>
 			</div>
 		</div>
 	</div>
@@ -58,9 +70,19 @@
 
 <script>
 import logger from '../logger'
-
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import IconDelete from 'vue-material-design-icons/Delete'
+import IconRename from 'vue-material-design-icons/Pencil'
+import IconCheck from 'vue-material-design-icons/Check'
 export default {
 	name: 'AliasForm',
+	components: {
+		ButtonVue,
+		IconRename,
+		IconLoading,
+		IconDelete,
+		IconCheck,
+	},
 	props: {
 		account: {
 			type: Object,

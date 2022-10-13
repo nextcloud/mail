@@ -20,20 +20,28 @@
   -->
 
 <template>
-	<Actions v-if="calendars.length" default-icon="icon-add">
+	<Actions v-if="calendars.length">
+		<template #icon>
+			<IconAdd :size="20" />
+		</template>
 		<ActionButton
 			v-for="(calendar, idx) in cals"
 			:key="idx"
-			:icon="calendar.loading ? 'icon-loading-small' : 'icon-add'"
 			@click="onImport(calendar)">
+			<template #icon>
+				<IconLoading v-if="calendar.loading" :size="20" />
+				<IconAdd v-else :size="20" />
+			</template>
 			{{ t('mail', 'Import into {calendar}', {calendar: calendar.displayname}) }}
 		</ActionButton>
 	</Actions>
 </template>
 
 <script>
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+
+import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+
+import IconAdd from 'vue-material-design-icons/Plus'
 import ical from 'ical.js'
 import moment from '@nextcloud/moment'
 
@@ -42,6 +50,8 @@ export default {
 	components: {
 		Actions,
 		ActionButton,
+		IconAdd,
+		IconLoading,
 	},
 	props: {
 		calendars: {

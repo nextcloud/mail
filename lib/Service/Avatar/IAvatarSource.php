@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Avatar;
 
 interface IAvatarSource {
-
 	/**
 	 * Does this source query external services?
 	 *

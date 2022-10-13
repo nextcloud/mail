@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
  * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
@@ -18,6 +19,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import flatMapDeep from 'lodash/fp/flatMapDeep'
@@ -53,6 +55,7 @@ import {
 } from '../service/AccountService'
 import {
 	create as createMailbox,
+	clearMailbox,
 	deleteMailbox,
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
@@ -81,14 +84,17 @@ import { matchError } from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import { wait } from '../util/wait'
-import { updateAccount as updateSieveAccount } from '../service/SieveService'
+import {
+	getActiveScript,
+	updateAccount as updateSieveAccount,
+	updateActiveScript,
+} from '../service/SieveService'
 import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
 import * as ThreadService from '../service/ThreadService'
 import {
 	getPrioritySearchQueries,
 	priorityImportantQuery,
 	priorityOtherQuery,
-	priorityStarredQuery,
 } from '../util/priorityInbox'
 import { html, plain, toPlain } from '../util/text'
 import Axios from '@nextcloud/axios'
@@ -100,6 +106,12 @@ import {
 	buildRecipients as buildReplyRecipients,
 	buildReplySubject,
 } from '../ReplyBuilder'
+import DOMPurify from 'dompurify'
+import {
+	getCurrentUserPrincipal,
+	initializeClientForUserView,
+	findAll,
+} from '../service/caldavService'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -183,6 +195,11 @@ export default {
 	async deleteMailbox({ commit }, { mailbox }) {
 		await deleteMailbox(mailbox.databaseId)
 		commit('removeMailbox', { id: mailbox.databaseId })
+	},
+	async clearMailbox({ commit }, { mailbox }) {
+		await clearMailbox(mailbox.databaseId)
+		commit('removeEnvelopes', { id: mailbox.databaseId })
+		commit('setMailboxUnreadCount', { id: mailbox.databaseId })
 	},
 	async createMailbox({ commit }, { account, name }) {
 		const prefixed = (account.personalNamespace && !name.startsWith(account.personalNamespace))
@@ -283,6 +300,10 @@ export default {
 					})
 				)
 
+				resp.data = DOMPurify.sanitize(resp.data, {
+					FORBID_TAGS: ['style'],
+				})
+
 				data.body = html(resp.data)
 			} else {
 				data.body = plain(original.body)
@@ -358,6 +379,10 @@ export default {
 						id: templateMessageId,
 					})
 				)
+
+				resp.data = DOMPurify.sanitize(resp.data, {
+					FORBID_TAGS: ['style'],
+				})
 
 				data.body = html(resp.data)
 			} else {
@@ -703,7 +728,7 @@ export default {
 				.filter((a) => !a.isUnified)
 				.map((account) => {
 					return Promise.all(
-						getters.getMailboxes(account.id).map(async(mailbox) => {
+						getters.getMailboxes(account.id).map(async (mailbox) => {
 							if (mailbox.specialRole !== 'inbox') {
 								return
 							}
@@ -730,7 +755,7 @@ export default {
 		try {
 			// Make sure the priority inbox is updated as well
 			logger.info('updating priority inbox')
-			for (const query of [priorityImportantQuery, priorityStarredQuery, priorityOtherQuery]) {
+			for (const query of [priorityImportantQuery, priorityOtherQuery]) {
 				logger.info("sync'ing priority inbox section", { query })
 				const mailbox = getters.getMailbox(UNIFIED_INBOX_ID)
 				const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]
@@ -976,6 +1001,14 @@ export default {
 		commit('removeEnvelope', { id })
 		commit('removeMessage', { id })
 	},
+	async fetchActiveSieveScript({ commit }, { accountId }) {
+		const scriptData = await getActiveScript(accountId)
+		commit('setActiveSieveScript', { accountId, scriptData })
+	},
+	async updateActiveSieveScript({ commit }, { accountId, scriptData }) {
+		await updateActiveScript(accountId, scriptData)
+		commit('setActiveSieveScript', { accountId, scriptData })
+	},
 	async updateSieveAccount({ commit }, { account, data }) {
 		logger.debug(`update sieve settings for account ${account.id}`)
 		try {
@@ -1037,6 +1070,31 @@ export default {
 			commit('addEnvelope', envelope)
 			console.error('could not move thread', e)
 			throw e
+		}
+	},
+
+	/**
+	 * Retrieve and commit the principal of the current user.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 */
+	async fetchCurrentUserPrincipal({ commit }) {
+		await initializeClientForUserView()
+		commit('setCurrentUserPrincipal', { currentUserPrincipal: getCurrentUserPrincipal() })
+	},
+
+	/**
+	 * Retrieve and commit calendars.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 * @return {Promise<void>}
+	 */
+	async loadCollections({ commit }) {
+		const { calendars } = await findAll()
+		for (const calendar of calendars) {
+			commit('addCalendar', { calendar })
 		}
 	},
 }

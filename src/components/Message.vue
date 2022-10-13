@@ -27,6 +27,12 @@
 		<div v-if="itineraries.length > 0" class="message-itinerary">
 			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
+		<div v-if="message.scheduling.length > 0" class="message-imip">
+			<Imip
+				v-for="scheduling in message.scheduling"
+				:key="scheduling.id"
+				:scheduling="scheduling" />
+		</div>
 		<MessageHTMLBody v-if="message.hasHtmlBody"
 			:url="htmlUrl"
 			:message="message"
@@ -54,6 +60,7 @@ import MessageAttachments from './MessageAttachments'
 import MessageEncryptedBody from './MessageEncryptedBody'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
+import Imip from './Imip'
 
 export default {
 	name: 'Message',
@@ -63,6 +70,7 @@ export default {
 		MessageEncryptedBody,
 		MessageHTMLBody,
 		MessagePlainTextBody,
+		Imip,
 	},
 	props: {
 		envelope: {
@@ -102,5 +110,9 @@ export default {
 .v-popover > .trigger > .action-item {
 	border-radius: 22px;
 	background-color: var(--color-background-darker);
+}
+
+.message-imip {
+	padding: 5px 10px;
 }
 </style>

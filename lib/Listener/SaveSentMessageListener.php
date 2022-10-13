@@ -37,7 +37,6 @@ use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
 class SaveSentMessageListener implements IEventListener {
-
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 

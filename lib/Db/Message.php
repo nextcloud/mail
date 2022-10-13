@@ -76,6 +76,12 @@ use function json_encode;
  * @method null|string getPreviewText()
  * @method void setUpdatedAt(int $time)
  * @method int getUpdatedAt()
+ * @method bool isImipMessage()
+ * @method void setImipMessage(bool $imipMessage)
+ * @method bool isImipProcessed()
+ * @method void setImipProcessed(bool $imipProcessed)
+ * @method bool isImipError()
+ * @method void setImipError(bool $imipError)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -114,6 +120,9 @@ class Message extends Entity implements JsonSerializable {
 	protected $flagImportant = false;
 	protected $flagMdnsent;
 	protected $previewText;
+	protected $imipMessage = false;
+	protected $imipProcessed = false;
+	protected $imipError = false;
 
 	/** @var AddressList */
 	private $from;
@@ -152,6 +161,9 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('flagImportant', 'boolean');
 		$this->addType('flagMdnsent', 'boolean');
 		$this->addType('updatedAt', 'integer');
+		$this->addType('imipMessage', 'boolean');
+		$this->addType('imipProcessed', 'boolean');
+		$this->addType('imipError', 'boolean');
 	}
 
 	/**
@@ -316,6 +328,8 @@ class Message extends Entity implements JsonSerializable {
 			'inReplyTo' => $this->getInReplyTo(),
 			'references' => empty($this->getReferences()) ? null: json_decode($this->getReferences(), true),
 			'threadRootId' => $this->getThreadRootId(),
+			'imipMessage' => $this->isImipMessage(),
+			'previewText' => $this->getPreviewText(),
 		];
 	}
 }

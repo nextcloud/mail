@@ -40,9 +40,8 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import CounterBubble from '@nextcloud/vue/dist/Components/CounterBubble'
-import IconOutbox from 'vue-material-design-icons/Email'
+import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
+import IconOutbox from 'vue-material-design-icons/InboxArrowUp'
 
 export default {
 	name: 'NavigationOutbox',
@@ -65,7 +64,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .counter-bubble__counter {
+:deep(.counter-bubble__counter) {
 	margin-right: 43px;
 }
 .outbox-opacity-icon {

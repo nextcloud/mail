@@ -33,7 +33,6 @@ use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Tests\Integration\TestCase;
 
 class SieveControllerTest extends TestCase {
-
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

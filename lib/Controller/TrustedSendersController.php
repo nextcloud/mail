@@ -33,12 +33,8 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 class TrustedSendersController extends Controller {
-
-	/** @var string|null */
-	private $uid;
-
-	/** @var ITrustedSenderService */
-	private $trustedSenderService;
+	private ?string $uid;
+	private ITrustedSenderService $trustedSenderService;
 
 	public function __construct(IRequest $request,
 								?string $UserId,

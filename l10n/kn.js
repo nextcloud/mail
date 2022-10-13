@@ -16,9 +16,7 @@ OC.L10N.register(
     "Move" : "Move",
     "Create" : "ಸೃಷ್ಟಿಸಿ",
     "Choose" : "﻿ಆಯ್ಕೆ",
-    "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Other" : "﻿ಇತರೆ",
-    "Settings" : "ಆಯ್ಕೆ",
     "Quota" : "ಪಾಲು",
     "Delete" : "﻿ಅಳಿಸಿ",
     "Add" : "﻿ಸೇರಿಸಿ",
@@ -31,6 +29,7 @@ OC.L10N.register(
     "Host" : "ಅತಿಥೆಯ-ಗಣಕ",
     "Port" : "﻿ರೇವು",
     "Search" : "Search",
-    "All" : "﻿ಎಲ್ಲಾ"
+    "All" : "﻿ಎಲ್ಲಾ",
+    "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ"
 },
 "nplurals=2; plural=(n > 1);");

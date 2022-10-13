@@ -35,15 +35,9 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 class OutboxController extends Controller {
-
-	/** @var OutboxService */
-	private $service;
-
-	/** @var string */
-	private $userId;
-
-	/** @var AccountService */
-	private $accountService;
+	private OutboxService $service;
+	private string $userId;
+	private AccountService $accountService;
 
 	public function __construct(string $appName,
 								$UserId,
@@ -75,7 +69,6 @@ class OutboxController extends Controller {
 	 */
 	public function show(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
-		$this->accountService->find($this->userId, $message->getAccountId());
 		return JsonResponse::success($message);
 	}
 

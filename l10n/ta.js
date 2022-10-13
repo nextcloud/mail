@@ -15,9 +15,7 @@ OC.L10N.register(
     "Move" : "Move",
     "Create" : "உருவாக்குக",
     "Choose" : "தெரிவுசெய்க ",
-    "Favorites" : "விருப்பங்கள்",
     "Other" : "மற்றவை",
-    "Settings" : "அமைப்புகள்",
     "Quota" : "பங்கு",
     "Saving" : "Saving",
     "Delete" : "நீக்குக",
@@ -30,6 +28,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "Search" : "Search",
     "Refresh" : "மீள் ஏற்றுக",
-    "All" : "எல்லாம்"
+    "All" : "எல்லாம்",
+    "Favorites" : "விருப்பங்கள்"
 },
 "nplurals=2; plural=(n != 1);");

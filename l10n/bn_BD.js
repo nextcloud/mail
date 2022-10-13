@@ -21,12 +21,11 @@ OC.L10N.register(
     "Edit tags" : "ট্যাগ সম্পাদনা",
     "Move" : "Move",
     "Create" : "তৈরী কর",
+    "Comment" : "মন্তব্য",
     "Choose" : "বেছে নিন",
-    "Favorites" : "প্রিয়জন",
     "Other" : "অন্যান্য",
     "Reply" : "জবাব",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",
-    "Settings" : "সেটিংস",
     "Quota" : "কোটা",
     "Mark all as read" : "সব পঠিত হিসেবে চিহ্নিত কর",
     "Clear cache" : "ক্যাশে পরিষ্কার কর",
@@ -43,6 +42,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Search" : "Search",
     "Refresh" : "নবোদ্যম",
-    "All" : "সবাই"
+    "All" : "সবাই",
+    "Favorites" : "প্রিয়জন"
 },
 "nplurals=2; plural=(n != 1);");

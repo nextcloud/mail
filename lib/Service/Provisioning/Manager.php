@@ -43,7 +43,6 @@ use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
 class Manager {
-
 	/** @var IUserManager */
 	private $userManager;
 

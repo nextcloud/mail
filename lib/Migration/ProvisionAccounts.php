@@ -30,7 +30,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class ProvisionAccounts implements IRepairStep {
-
 	/** @var ProvisioningManager */
 	private $provisioningManager;
 

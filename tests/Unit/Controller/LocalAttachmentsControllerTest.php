@@ -32,7 +32,6 @@ use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class LocalAttachmentsControllerTest extends TestCase {
-
 	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
 	private $request;
 

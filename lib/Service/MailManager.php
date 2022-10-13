@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
+use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
@@ -55,7 +56,6 @@ use function array_map;
 use function array_values;
 
 class MailManager implements IMailManager {
-
 	/**
 	 * https://tools.ietf.org/html/rfc3501#section-2.3.2
 	 */
@@ -186,6 +186,35 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException(
 				"Could not load message",
+				(int)$e->getCode(),
+				$e
+			);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param int[] $uids
+	 * @return IMAPMessage[]
+	 * @throws ServiceException
+	 */
+	public function getImapMessagesForScheduleProcessing(Account $account,
+		Mailbox $mailbox,
+		array $uids): array {
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			return $this->imapMessageMapper->findByIds(
+				$client,
+				$mailbox->getName(),
+				new Horde_Imap_Client_Ids($uids),
+				true
+			);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException(
+				'Could not load messages: ' . $e->getMessage(),
 				(int)$e->getCode(),
 				$e
 			);
@@ -493,7 +522,6 @@ class MailManager implements IMailManager {
 	 * @see https://tools.ietf.org/html/rfc2087
 	 */
 	public function getQuota(Account $account): ?Quota {
-
 		/**
 		 * Get all the quotas roots of the user's mailboxes
 		 */
@@ -583,6 +611,39 @@ class MailManager implements IMailManager {
 			$client->logout();
 		}
 		$this->mailboxMapper->delete($mailbox);
+	}
+
+	/**
+	 * Clear messages in folder
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws ServiceException
+	 */
+	public function clearMailbox(Account $account,
+								  Mailbox $mailbox): void {
+		$client = $this->imapClientFactory->getClient($account);
+		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+		$currentMailboxId = $mailbox->getId();
+		try {
+			if (($currentMailboxId !== $trashMailboxId) && !is_null($trashMailboxId)) {
+				$trash = $this->mailboxMapper->findById($trashMailboxId);
+				$client->copy($mailbox->getName(), $trash->getName(), [
+					'move' => true
+				]);
+			} else {
+				$client->expunge($mailbox->getName(), [
+					'delete' => true
+				]);
+			}
+			$this->dbMessageMapper->deleteAll($mailbox);
+		} finally {
+			$client->logout();
+		}
 	}
 
 	/**

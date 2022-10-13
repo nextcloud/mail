@@ -42,9 +42,11 @@
 			</DashboardWidgetItem>
 		</template>
 		<template #empty-content>
-			<EmptyContent id="mail--empty-content" icon="icon-checkmark">
-				<template #desc>
-					{{ t('mail', 'No message found yet') }}
+			<EmptyContent id="mail--empty-content" :title="t('mail', 'No message found yet')">
+				<template #icon>
+					<IconCheck :size="65" />
+				</template>
+				<template #action>
 					<div class="no-account">
 						<a v-if="accounts.length === 0" :href="accountSetupUrl" class="button">{{ t('mail', 'Set up an account') }}</a>
 					</div>
@@ -60,7 +62,8 @@ import { generateUrl, imagePath } from '@nextcloud/router'
 import { DashboardWidget, DashboardWidgetItem } from '@nextcloud/vue-dashboard'
 import orderBy from 'lodash/fp/orderBy'
 import prop from 'lodash/fp/prop'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
+import IconCheck from 'vue-material-design-icons/Check'
 
 import Avatar from '../components/Avatar'
 import { fetchEnvelopes } from '../service/MessageService'
@@ -77,6 +80,7 @@ export default {
 		DashboardWidget,
 		DashboardWidgetItem,
 		EmptyContent,
+		IconCheck,
 	},
 	props: {
 		query: {
@@ -103,7 +107,7 @@ export default {
 		},
 	},
 	async mounted() {
-		const accountInboxes = await Promise.all(this.accounts.map(async(account) => {
+		const accountInboxes = await Promise.all(this.accounts.map(async (account) => {
 			logger.debug('account', {
 				account,
 			})
@@ -122,7 +126,7 @@ export default {
 			inboxes,
 		})
 
-		await Promise.all(inboxes.map(async(mailbox) => {
+		await Promise.all(inboxes.map(async (mailbox) => {
 			const messages = await fetchEnvelopes(mailbox.accountId, mailbox.databaseId, this.query, undefined, 10)
 			this.messages = this.messages !== null ? [...this.messages, ...messages] : messages
 			this.fetchedAccounts++
@@ -156,7 +160,7 @@ export default {
 	margin-top: 5vh;
 	margin-right: 5px;
 }
-.unread ::v-deep .item__details {
+.unread :deep(.item__details) {
 	font-weight: bold;
 }
 </style>

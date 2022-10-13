@@ -31,7 +31,6 @@ use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
 class SaveDraftEvent extends Event {
-
 	/** @var Account */
 	private $account;
 

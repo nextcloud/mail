@@ -9,6 +9,9 @@ updates:
     time: "03:00"
     timezone: Europe/Paris
   open-pull-requests-limit: 10
+  reviewers:
+  - "ChristophWurst"
+  - "kesselb"
 - package-ecosystem: npm
   directory: "/"
   schedule:
@@ -20,11 +23,9 @@ updates:
   labels:
   - 3. to review
   - dependencies
-  ignore:
-  - dependency-name: backbone.marionette
-    versions:
-    - "< 5"
-    - ">= 4.a"
+  reviewers:
+  - "ChristophWurst"
+  - "GretaD"
 - package-ecosystem: composer
   directory: "/"
   schedule:
@@ -40,6 +41,9 @@ updates:
   allow:
   - dependency-type: direct
   - dependency-type: indirect
+  reviewers:
+  - "ChristophWurst"
+  - "kesselb"
 - package-ecosystem: composer
   directory: "/vendor-bin/mozart/"
   schedule:
@@ -54,6 +58,9 @@ updates:
       - php
   allow:
       - dependency-type: direct
+  reviewers:
+  - "ChristophWurst"
+  - "kesselb"
 - package-ecosystem: composer
   directory: "/vendor-bin/cs-fixer/"
   schedule:
@@ -68,6 +75,9 @@ updates:
       - php
   allow:
       - dependency-type: direct
+  reviewers:
+  - "ChristophWurst"
+  - "kesselb"
 - package-ecosystem: composer
   directory: "/vendor-bin/phpunit/"
   schedule:
@@ -82,17 +92,46 @@ updates:
       - php
   allow:
       - dependency-type: direct
+  reviewers:
+  - "ChristophWurst"
+  - "kesselb"
 
-# Stable1.12
+# Stable2.0
 - package-ecosystem: npm
-  target-branch: stable1.12
+  target-branch: stable2.0
   directory: "/"
   schedule:
-      interval: "daily"
+    interval: "daily"
   open-pull-requests-limit: 0
+  reviewers:
+    - "ChristophWurst"
+    - "GreatD"
 - package-ecosystem: composer
-  target-branch: stable1.12
+  target-branch: stable2.0
   directory: "/"
   schedule:
-      interval: "daily"
+    interval: "daily"
   open-pull-requests-limit: 0
+  reviewers:
+    - "ChristophWurst"
+    - "kesselb"
+
+  # Stable1.14
+- package-ecosystem: npm
+  target-branch: stable1.14
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 0
+  reviewers:
+    - "ChristophWurst"
+    - "GreatD"
+- package-ecosystem: composer
+  target-branch: stable1.14
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 0
+  reviewers:
+    - "ChristophWurst"
+    - "kesselb"

@@ -4,7 +4,7 @@
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   - @author 2020 Greta Doci <gretadoci@gmail.com>
-  -
+  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -24,9 +24,11 @@
 
 <template>
 	<AppSettingsDialog
+		id="app-settings-dialog"
 		:open.sync="showSettings"
 		:show-navigation="true">
 		<AppSettingsSection
+			id="account-settings"
 			:title="t('mail', 'Account settings')">
 			<div class="alias-item">
 				<p><strong>{{ displayName }}</strong> &lt;{{ email }}&gt;</p>
@@ -38,46 +40,41 @@
 			</div>
 			<AliasSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Signature')">
+		<AppSettingsSection id="signature" :title="t('mail', 'Signature')">
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 			</p>
 			<SignatureSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Writing mode')">
+		<AppSettingsSection id="writing-mode" :title="t('mail', 'Writing mode')">
 			<p class="settings-hint">
 				{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
 			</p>
 			<EditorSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection :title=" t('mail', 'Default folders')">
+		<AppSettingsSection id="default-folders" :title=" t('mail', 'Default folders')">
 			<p class="settings-hint">
 				{{
-					t('mail', 'The folders to use for drafts, sent messages and deleted messages.')
+					t('mail', 'The folders to use for drafts, sent messages, deleted messages and archived messages.')
 				}}
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioningId" :title="t('mail', 'Mail server')">
-			<div id="mail-settings">
-				<AccountForm
-					:key="account.accountId"
-					ref="accountForm"
-					:display-name="displayName"
-					:email="email"
-					:account="account"
-					@accountUpdated="onAccountUpdated" />
-			</div>
+		<AppSettingsSection
+			v-if="account"
+			id="out-of-office-replies"
+			:title="t('mail', 'Autoresponder')">
+			<p class="settings-hint">
+				{{ t('mail', 'Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.') }}
+			</p>
+			<OutOfOfficeForm v-if="account.sieveEnabled" :account="account" />
+			<p v-else>
+				{{ t('mail', 'Please connect to a sieve server first.') }}
+			</p>
 		</AppSettingsSection>
-		<AppSettingsSection v-if="account && !account.provisioningId" :title="t('mail', 'Sieve filter server')">
-			<div id="sieve-settings">
-				<SieveAccountForm
-					:key="account.accountId"
-					ref="sieveAccountForm"
-					:account="account" />
-			</div>
-		</AppSettingsSection>
-		<AppSettingsSection v-if="account && account.sieveEnabled" :title="t('mail', 'Sieve filter rules')">
+		<AppSettingsSection v-if="account && account.sieveEnabled"
+			id="sieve-filter"
+			:title="t('mail', 'Sieve filter rules')">
 			<div id="sieve-filter">
 				<SieveFilterForm
 					:key="account.accountId"
@@ -85,8 +82,31 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection :title="t('mail', 'Trusted senders')">
+		<AppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
 			<TrustedSenders />
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && !account.provisioningId"
+			id="mail-server"
+			:title="t('mail', 'Mail server')">
+			<div id="mail-settings">
+				<AccountForm
+					:key="account.accountId"
+					ref="accountForm"
+					:display-name="displayName"
+					:email="email"
+					:account="account"
+					@account-updated="onAccountUpdated" />
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && !account.provisioningId"
+			id="sieve-settings"
+			:title="t('mail', 'Sieve filter server')">
+			<div id="sieve-settings">
+				<SieveAccountForm
+					:key="account.accountId"
+					ref="sieveAccountForm"
+					:account="account" />
+			</div>
 		</AppSettingsSection>
 	</AppSettingsDialog>
 </template>
@@ -97,11 +117,13 @@ import EditorSettings from '../components/EditorSettings'
 import AccountDefaultsSettings from '../components/AccountDefaultsSettings'
 import SignatureSettings from '../components/SignatureSettings'
 import AliasSettings from '../components/AliasSettings'
-import AppSettingsDialog from '@nextcloud/vue/dist/Components/AppSettingsDialog'
-import AppSettingsSection from '@nextcloud/vue/dist/Components/AppSettingsSection'
+import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
 import TrustedSenders from './TrustedSenders'
 import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
+import Logger from '../logger'
+import OutOfOfficeForm from './OutOfOfficeForm'
+
 export default {
 	name: 'AccountSettings',
 	components: {
@@ -115,6 +137,7 @@ export default {
 		AppSettingsDialog,
 		AppSettingsSection,
 		AccountDefaultsSettings,
+		OutOfOfficeForm,
 	},
 	props: {
 		account: {
@@ -148,18 +171,37 @@ export default {
 				this.$emit('update:open', value)
 			}
 		},
-		open(value) {
+		async open(value) {
 			if (value) {
-				this.showSettings = true
+				await this.onOpen()
 			}
 		},
 	},
 	methods: {
+		onAccountUpdated(data) {
+			Logger.log('saving data', { data })
+			return this.$store
+				.dispatch('updateAccount', {
+					...data,
+					accountId: this.account.id,
+				})
+				.then((account) => account)
+				.catch((error) => {
+					Logger.error('account update failed:', { error })
+					throw error
+				})
+		},
 		handleClick() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
 			})
 
+		},
+		async onOpen() {
+			this.showSettings = true
+			await this.$store.dispatch('fetchActiveSieveScript', {
+				accountId: this.account.id,
+			})
 		},
 	},
 }
@@ -171,7 +213,7 @@ export default {
 	justify-content: space-between;
 }
 
-::v-deep .modal-container {
+:deep(.modal-container) {
 	display: block;
 	overflow: scroll;
 	transition: transform 300ms ease;

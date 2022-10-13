@@ -10,6 +10,7 @@ Speed up your Mail experience by using keyboard shortcuts.
 | Older message | <kbd>J</kbd> or <kbd>→</kbd>       |
 | Toggle star   | <kbd>S</kbd>                       |
 | Toggle unread | <kbd>U</kbd>                       |
+| Archive       | <kbd>A</kbd>                       |
 | Delete        | <kbd>Del</kbd>                     |
 | Search        | <kbd>Ctrl</kbd> + <kbd>F</kbd>     |
 | Send          | <kbd>Ctrl</kbd> + <kbd>↵</kbd> |

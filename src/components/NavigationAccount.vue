@@ -24,15 +24,17 @@
 		v-if="visible"
 		:id="id"
 		:key="id"
-		:icon="iconError"
 		:menu-open.sync="menuOpen"
 		:title="account.emailAddress"
 		:to="firstMailboxRoute"
 		:exact="true"
 		@update:menuOpen="onMenuToggle">
-		<!-- Color dot -->
-		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
+		<template #icon>
+			<IconError v-if="account.error" :size="20" />
 
+			<!-- Color dot -->
+			<IconBullet v-if="bulletColor" :size="16" :fill-color="bulletColor" />
+		</template>
 		<!-- Actions -->
 		<template #actions>
 			<ActionText v-if="!account.isUnified" :title="t('mail', 'Quota')">
@@ -67,11 +69,14 @@
 			</ActionButton>
 			<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
 				<template #icon>
-					<Folder
+					<IconFolderAdd
 						:size="20" />
 				</template>
 			</ActionInput>
-			<ActionText v-if="showSaving" icon="icon-loading-small">
+			<ActionText v-if="showSaving">
+				<template #icon>
+					<IconLoading :size="20" />
+				</template>
 				{{ t('mail', 'Saving') }}
 			</ActionText>
 			<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
@@ -103,12 +108,8 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+
+import { NcAppNavigationItem as AppNavigationItem, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 
@@ -116,18 +117,19 @@ import { calculateAccountColor } from '../util/AccountColor'
 import logger from '../logger'
 import { fetchQuota } from '../service/AccountService'
 import AccountSettings from './AccountSettings'
-import IconInfo from 'vue-material-design-icons/InformationOutline'
-import IconSettings from 'vue-material-design-icons/CogOutline'
+import IconInfo from 'vue-material-design-icons/Information'
+import IconSettings from 'vue-material-design-icons/Cog'
 import IconFolderAdd from 'vue-material-design-icons/Folder'
-import MenuDown from 'vue-material-design-icons/MenuDown'
-import MenuUp from 'vue-material-design-icons/MenuUp'
+import MenuDown from 'vue-material-design-icons/ChevronDown'
+import MenuUp from 'vue-material-design-icons/ChevronUp'
 import IconDelete from 'vue-material-design-icons/Delete'
+import IconError from 'vue-material-design-icons/AlertCircle'
+import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle'
 
 export default {
 	name: 'NavigationAccount',
 	components: {
 		AppNavigationItem,
-		AppNavigationIconBullet,
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
@@ -139,6 +141,9 @@ export default {
 		MenuDown,
 		MenuUp,
 		IconDelete,
+		IconError,
+		IconBullet,
+		IconLoading,
 	},
 	props: {
 		account: {
@@ -194,7 +199,7 @@ export default {
 			return this.account.error ? undefined : calculateAccountColor(this.account.emailAddress)
 		},
 		iconError() {
-			return this.account.error ? 'icon-error' : undefined
+			return this.account.error
 		},
 		quotaText() {
 			if (this.quota === undefined) {

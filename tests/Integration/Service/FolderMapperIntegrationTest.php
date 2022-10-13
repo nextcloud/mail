@@ -28,7 +28,6 @@ use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\Tests\Integration\TestCase;
 
 class FolderMapperIntegrationTest extends TestCase {
-
 	/** @var FolderMapper */
 	private $mapper;
 

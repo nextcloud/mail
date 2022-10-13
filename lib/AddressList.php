@@ -37,7 +37,6 @@ use ReturnTypeWillChange;
  * @psalm-immutable
  */
 class AddressList implements Countable, JsonSerializable {
-
 	/** @var Address[] */
 	private $addresses;
 
@@ -106,6 +105,7 @@ class AddressList implements Countable, JsonSerializable {
 	/**
 	 * @return int
 	 */
+	#[ReturnTypeWillChange]
 	public function count() {
 		return count($this->addresses);
 	}

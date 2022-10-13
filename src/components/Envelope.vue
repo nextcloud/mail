@@ -7,7 +7,7 @@
 			draggableLabel,
 			selectedEnvelopes,
 		}"
-		class="list-item-style"
+		class="list-item-style envelope"
 		:class="{seen: data.flags.seen, draft, selected: selected}"
 		:to="link"
 		:data-envelope-id="data.databaseId"
@@ -15,10 +15,6 @@
 		:details="formatted()"
 		@click="onClick">
 		<template #icon>
-			<div
-				v-if="mailbox.isUnified && hasMultipleAccounts"
-				class="mail-message-account-color"
-				:style="{'background-color': accountColor}" />
 			<Star
 				v-if="data.flags.flagged"
 				fill-color="#f9cf3d"
@@ -53,7 +49,7 @@
 			</div>
 		</template>
 		<template #subtitle>
-			<div class="subtitle">
+			<div class="envelope__subtitle">
 				<Reply v-if="data.flags.answered"
 					class="seen-icon-style"
 					:size="18" />
@@ -63,8 +59,22 @@
 				<span v-else-if="draft" class="draft">
 					<em>{{ t('mail', 'Draft: ') }}</em>
 				</span>
-				{{ subjectForSubtitle }}
+				<span class="envelope__subtitle__subject">
+					{{ subjectForSubtitle }}
+				</span>
 			</div>
+			<div v-if="data.previewText"
+				class="envelope__preview-text">
+				{{ data.previewText }}
+			</div>
+		</template>
+		<template #indicator>
+			<!-- Color dot -->
+			<IconBullet v-if="!data.flags.seen"
+				:size="16"
+				:aria-hidden="false"
+				:aria-label="t('mail', 'This message is unread')"
+				fill-color="var(--color-primary-element)" />
 		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
@@ -74,9 +84,9 @@
 					@click.prevent="onToggleFlagged">
 					<template #icon>
 						<StarOutline v-if="showFavoriteIconVariant"
-							:size="20" />
+							:size="24" />
 						<Star v-else
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
@@ -87,10 +97,10 @@
 					:close-after-click="true"
 					@click.prevent="onToggleSeen">
 					<template #icon>
-						<Email v-if="showImportantIconVariant"
-							:size="20" />
-						<EmailOutline v-else
-							:size="20" />
+						<EmailUnread v-if="showImportantIconVariant"
+							:size="24" />
+						<EmailRead v-else
+							:size="24" />
 					</template>
 					{{
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
@@ -102,7 +112,7 @@
 					@click.prevent="onToggleImportant">
 					<template #icon>
 						<ImportantIcon
-							:size="20" />
+							:size="24" />
 					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -150,14 +160,15 @@
 					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
-				<ActionButton :close-after-click="false"
-					@click="moreActionsOpen=true">
+				<ActionButton v-if="showArchiveButton"
+					:close-after-click="true"
+					@click.prevent="onArchive">
 					<template #icon>
-						<DotsHorizontalIcon
-							:title="t('mail', 'More actions')"
+						<ArchiveIcon
+							:title="t('mail', 'Archive thread')"
 							:size="20" />
 					</template>
-					{{ t('mail', 'More actions') }}
+					{{ t('mail', 'Archive thread') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="onDelete">
@@ -167,6 +178,15 @@
 							:size="20" />
 					</template>
 					{{ t('mail', 'Delete thread') }}
+				</ActionButton>
+				<ActionButton :close-after-click="false"
+					@click="moreActionsOpen=true">
+					<template #icon>
+						<DotsHorizontalIcon
+							:title="t('mail', 'More actions')"
+							:size="20" />
+					</template>
+					{{ t('mail', 'More actions') }}
 				</ActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
@@ -191,19 +211,23 @@
 				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
-						<CalendarBlankIcon
+						<IconCreateEvent
 							:title="t('mail', 'Create event')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
+				<ActionLink
+					:close-after-click="true"
+					:href="exportMessageLink">
+					<template #icon>
+						<DownloadIcon :size="20" />
+					</template>
+					{{ t('mail', 'Download message') }}
+				</ActionLink>
 			</template>
 		</template>
 		<template #extra>
-			<div
-				v-if="mailbox.isUnified && hasMultipleAccounts"
-				class="mail-message-account-color"
-				:style="{'background-color': accountColor}" />
 			<div v-for="tag in tags"
 				:key="tag.id"
 				class="tag-group">
@@ -230,20 +254,19 @@
 	</ListItem>
 </template>
 <script>
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { NcListItem as ListItem, NcActionButton as ActionButton, NcActionLink as ActionLink } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
-import { calculateAccountColor } from '../util/AccountColor'
-import CalendarBlankIcon from 'vue-material-design-icons/CalendarBlank'
+import IconCreateEvent from 'vue-material-design-icons/Calendar'
 import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
+import ArchiveIcon from 'vue-material-design-icons/PackageDown'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
-import moment from '@nextcloud/moment'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
+import { shortRelativeDatetime } from '../util/shortRelativeDatetime'
 import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
@@ -254,26 +277,31 @@ import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import StarOutline from 'vue-material-design-icons/StarOutline'
 import Star from 'vue-material-design-icons/Star'
 import Reply from 'vue-material-design-icons/Reply'
-import EmailOutline from 'vue-material-design-icons/EmailOutline'
-import Email from 'vue-material-design-icons/Email'
+import EmailRead from 'vue-material-design-icons/EmailOpen'
+import EmailUnread from 'vue-material-design-icons/Email'
 import IconAttachment from 'vue-material-design-icons/Paperclip'
 import ImportantIcon from './icons/ImportantIcon'
+import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle'
 import JunkIcon from './icons/JunkIcon'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
+import { hiddenTags } from './tags.js'
+import { generateUrl } from '@nextcloud/router'
+import DownloadIcon from 'vue-material-design-icons/Download'
 
 export default {
 	name: 'Envelope',
 	components: {
 		AlertOctagonIcon,
 		Avatar,
-		CalendarBlankIcon,
+		IconCreateEvent,
 		CheckIcon,
 		ChevronLeft,
 		DeleteIcon,
+		ArchiveIcon,
 		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
@@ -288,10 +316,13 @@ export default {
 		TagModal,
 		Star,
 		StarOutline,
-		EmailOutline,
-		Email,
+		EmailRead,
+		EmailUnread,
 		IconAttachment,
+		IconBullet,
 		Reply,
+		ActionLink,
+		DownloadIcon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -351,10 +382,6 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
-		accountColor() {
-			const account = this.$store.getters.getAccount(this.data.accountId)
-			return calculateAccountColor(account?.emailAddress ?? '')
-		},
 		draft() {
 			return this.data.flags.draft
 		},
@@ -404,6 +431,9 @@ export default {
 				return ''
 			}
 		},
+		showArchiveButton() {
+			return this.account.archiveMailboxId !== null
+		},
 		showFavoriteIconVariant() {
 			return this.data.flags.flagged
 		},
@@ -416,7 +446,9 @@ export default {
 				.some((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter((tag) => tag.imapLabel && tag.imapLabel !== '$label1')
+			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter(
+				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
+			)
 		},
 		draggableLabel() {
 			let label = this.data.subject
@@ -428,12 +460,23 @@ export default {
 		},
 		/**
 		 * Subject of envelope or "No Subject".
-		 * @returns {string}
+		 *
+		 * @return {string}
 		 */
 		subjectForSubtitle() {
 			// We have to use || here (instead of ??) because the subject might be '', null
 			// or undefined.
 			return this.data.subject || this.t('mail', 'No subject')
+		},
+		/**
+		 * Link to download the whole message (.eml).
+		 *
+		 * @return {string}
+		 */
+		exportMessageLink() {
+			return generateUrl('/apps/mail/api/messages/{id}/export', {
+				id: this.data.databaseId,
+			})
 		},
 	},
 	methods: {
@@ -443,7 +486,7 @@ export default {
 			}
 		},
 		formatted() {
-			return moment.unix(this.data.dateInt).fromNow()
+			return shortRelativeDatetime(new Date(this.data.dateInt * 1000))
 		},
 		unselect() {
 			if (this.selected) {
@@ -501,6 +544,22 @@ export default {
 				}))
 			}
 		},
+		async onArchive() {
+			// Remove from selection first
+			this.setSelected(false)
+			// Archive
+			this.$emit('archive', this.data.databaseId)
+
+			try {
+				await this.$store.dispatch('moveThread', {
+					envelope: this.data,
+					destMailboxId: this.account.archiveMailboxId,
+				})
+			} catch (error) {
+				logger.error('could not archive message', error)
+				showError(t('mail', 'Could not archive message'))
+			}
+		},
 		async onOpenEditAsNew() {
 			await this.$store.dispatch('showMessageComposer', {
 				templateMessageId: this.data.databaseId,
@@ -538,15 +597,40 @@ export default {
 	z-index: 1;
 }
 
+.envelope {
+	.app-content-list-item-icon {
+		height: 40px; // To prevent some unexpected spacing below the avatar
+	}
+
+	&__subtitle {
+		display: flex;
+		gap: 4px;
+
+		&__subject {
+			color: var(--color-main-text);
+			line-height: 130%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	&__preview-text {
+		color: var(--color-text-maxcontrast);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-weight: initial;
+	}
+}
+
 .icon-important {
-	::v-deep path {
+	:deep(path) {
 	fill: #ffcc00;
 	stroke: var(--color-main-background);
 	}
 	.list-item:hover &,
 	.list-item:focus &,
 	.list-item.active & {
-	::v-deep path {
+	:deep(path) {
 	stroke: var(--color-background-dark);
 	}
 	}
@@ -580,10 +664,19 @@ export default {
 .list-item-style.selected {
 	background-color: var(--color-background-dark);
 }
+.list-item-style {
+	.draft {
+		line-height: 130%;
+
+		em {
+			font-style: italic;
+		}
+	}
+}
 .junk-icon-style {
 	opacity: .2;
 	display: flex;
-	top: 6px;
+	top: 14px;
 	left: 34px;
 	background-size: 16px;
 	height: 20px;
@@ -596,58 +689,18 @@ export default {
 		opacity: .1;
 	}
 }
-list-item-style.draft .app-content-list-item-line-two {
-	font-style: italic;
-}
-.list-item-style.active {
-	background-color: var(--color-primary-light);
-	border-radius: 16px;
-}
-
-.icon-reply,
-.icon-attachment {
-	display: inline-block;
-	vertical-align: text-top;
-}
-
-.icon-reply {
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
-	opacity: 0.25;
-}
 
 .icon-attachment {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
 	opacity: 0.25;
 }
 
-	// Fix layout of messages in list until we move to component
-
-.app-content-list .list-item {
-	padding-right: 0;
-
-	.app-content-list-item-line-two {
-	padding-right: 0;
-	margin-top: -8px;
+:deep(.action--primary) {
+	.material-design-icon {
+		margin-bottom: -14px;
 	}
-
-	.app-content-list-item-menu {
-	margin-right: -2px;
-	margin-top: -8px;
-
-	::v-deep .action-item__menu {
-	right: 7px !important;
-
-	.action-item__menu_arrow {
-	right: 6px !important;
-	}
-	}
-	}
-
-	.app-content-list-item-details {
-		padding-right: 7px;
-		}
 }
-::v-deep .list-item__extra {
+:deep(.list-item__extra) {
 	margin-left: 41px !important;
 }
 .tag-group__label {
@@ -675,40 +728,44 @@ list-item-style.draft .app-content-list-item-line-two {
 	overflow: hidden;
 	left: 4px;
 }
-::v-deep.list-item__wrapper {
+.list-item__wrapper:deep() {
 	list-style: none;
 }
 .app-content-list-item-star.favorite-icon-style {
 	display: block;
 }
-::v-deep.icon-important.app-content-list-item-star {
+.icon-important.app-content-list-item-star:deep() {
 	position: absolute;
-	top: 7px;
+	top: 14px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {
 	display: inline-block;
 	position: absolute;
-	margin-bottom: 28px;
+	margin-bottom: 21px;
 	margin-left: 28px;
 	cursor: pointer;
+	stroke: var(--color-main-background);
+	stroke-width: 2;
 	z-index: 1;
 	&:hover {
 		opacity: .4;
 	}
 }
-::v-deep .svg svg{
+:deep(.svg svg) {
 	height: 16px;
 	width: 16px;
-}
-.subtitle {
-	display: flex;
-	gap: 4px;
 }
 .seen-icon-style {
 	opacity: .6;
 }
 .attachment-icon-style {
 	opacity: .6;
+}
+:deep(.list-item-content__wrapper) {
+	margin-top: 6px;
+}
+:deep(.list-item__extra) {
+	margin-top: 9px;
 }
 </style>

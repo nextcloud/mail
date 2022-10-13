@@ -226,13 +226,28 @@
 			{{ t('mail', 'For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password.') }}
 		</div>
 		<div class="account-form__submit-buttons">
-			<button class="primary account-form__submit-button"
-				type="submit"
-				:disabled="mode === 'auto' ? isDisabledAuto : isDisabledManual"
+			<ButtonVue v-if="mode === 'auto'"
+				class="account-form__submit-button"
+				type="primary"
+				native-type="submit"
+				:disabled="isDisabledAuto || loading"
+				<template #icon>
+					<IconLoading v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
+				</template>
+			</ButtonVue>
+			<ButtonVue v-else-if="mode === 'manual'"
+				class="account-form__submit-button"
+				type="primary"
+				native-type="submit"
+				:disabled="isDisabledManual || loading"
 				@click.prevent="onSubmit">
-				<span v-if="loading" class="icon-loading-small account-form__submit-button__spinner" />
+				<template #icon>
+					<IconLoading v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
+				</template>
 				{{ submitButtonText }}
-			</button>
+			</ButtonVue>
 		</div>
 		<div v-if="feedback" class="account-form--feedback">
 			{{ feedback }}
@@ -243,6 +258,8 @@
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
 import { mapGetters } from 'vuex'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import IconCheck from 'vue-material-design-icons/Check'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
@@ -258,6 +275,9 @@ export default {
 	components: {
 		Tab,
 		Tabs,
+		ButtonVue,
+		IconLoading,
+		IconCheck,
 	},
 	props: {
 		displayName: {
@@ -458,7 +478,7 @@ export default {
 						port,
 					}))
 				})
-				const results = await Promise.all(imapAndSmtpHosts.map(async({ host, port }) => {
+				const results = await Promise.all(imapAndSmtpHosts.map(async ({ host, port }) => {
 					return {
 						host,
 						port,
@@ -518,19 +538,19 @@ export default {
 					const account = await this.$store.dispatch('startAccountSetup', data)
 					if (this.useGoogleSso) {
 						this.feedback = t('mail', 'Account created. Please follow the popup instructions to link your Google account')
+						this.$emit('account-created', account)
 						await getUserConsent(this.googleOauthUrl.replace('accountId', account.id))
 						this.clearFeedback()
 					}
 					this.loadingMessage = t('mail', 'Loading account')
 					await this.$store.dispatch('finishAccountSetup', { account })
-					this.$emit('accountCreated', account)
 				} else {
 					const account = await this.$store.dispatch('updateAccount', {
 						...data,
 						accountId: this.account.id,
 					})
 					this.feedback = t('mail', 'Account updated')
-					this.$emit('accountUpdated', account)
+					this.$emit('account-updated', account)
 				}
 				this.feedback = t('mail', 'Changes saved')
 			} catch (error) {
@@ -573,18 +593,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .tabs-component-tabs {
+:deep(.tabs-component-tabs) {
 	display: flex;
 }
 
-::v-deep .tabs-component-tab {
+:deep(.tabs-component-tab) {
 	flex-grow: 1;
 	text-align: center;
 	color: var(--color-text-lighter);
 	margin-bottom: 10px;
 }
 
-::v-deep .tabs-component-tab.is-active {
+:deep(.tabs-component-tab.is-active) {
 	border-bottom: 1px solid black;
 	font-weight: bold;
 }
@@ -648,11 +668,6 @@ input[type='radio'][disabled] + label {
 .account-form__submit-button {
 	display: flex;
 	align-items: center;
-}
-.account-form__submit-button__spinner {
-	margin: 0 10px 0 0;
-	height: auto;
-	width: auto;
 }
 .account-form--feedback {
 	color: var(--color-text-maxcontrast);

@@ -43,7 +43,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IUser;
 
 class MailSearch implements IMailSearch {
-
 	/** @var FilterStringParser */
 	private $filterStringParser;
 

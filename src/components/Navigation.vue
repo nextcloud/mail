@@ -21,64 +21,54 @@
 
 <template>
 	<AppNavigation>
-		<AppNavigationNew
-			:text="t('mail', 'New message')"
-			:disabled="$store.getters.showMessageComposer"
-			button-id="mail_new_message"
-			button-class="icon-add"
-			role="complementary"
-			@click="onNewMessage" />
-		<button v-if="currentMailbox"
-			class="button icon-history"
-			:disabled="refreshing"
-			@click="refreshMailbox" />
 		<template #list>
-			<ul id="accounts-list">
-				<!-- Special mailboxes first -->
-				<NavigationMailbox
-					v-for="mailbox in unifiedMailboxes"
-					:key="'mailbox-' + mailbox.databaseId"
-					:account="unifiedAccount"
-					:mailbox="mailbox" />
-				<NavigationOutbox />
-				<AppNavigationSpacer />
+			<!-- Special mailboxes first -->
+			<NavigationMailbox
+				v-for="mailbox in unifiedMailboxes"
+				:key="'mailbox-' + mailbox.databaseId"
+				:account="unifiedAccount"
+				:mailbox="mailbox" />
+			<NavigationOutbox />
+			<AppNavigationSpacer />
 
-				<!-- All other mailboxes grouped by their account -->
-				<template v-for="group in menu">
-					<NavigationAccount
-						v-if="group.account"
-						:key="group.account.id"
+			<!-- All other mailboxes grouped by their account -->
+			<template v-for="group in menu">
+				<NavigationAccount
+					v-if="group.account"
+					:key="group.account.id"
+					:account="group.account"
+					:first-mailbox="group.mailboxes[0]"
+					:is-first="isFirst(group.account)"
+					:is-last="isLast(group.account)" />
+				<template v-for="item in group.mailboxes">
+					<NavigationMailbox
+						v-show="
+							!group.isCollapsible ||
+								!group.account.collapsed ||
+								!isCollapsed(group.account, item)
+						"
+						:key="'mailbox-' + item.databaseId"
 						:account="group.account"
-						:first-mailbox="group.mailboxes[0]"
-						:is-first="isFirst(group.account)"
-						:is-last="isLast(group.account)" />
-					<template v-for="item in group.mailboxes">
-						<NavigationMailbox
-							v-show="
-								!group.isCollapsible ||
-									!group.account.collapsed ||
-									!isCollapsed(group.account, item)
-							"
-							:key="'mailbox-' + item.databaseId"
-							:account="group.account"
-							:mailbox="item" />
-						<NavigationMailbox
-							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-							:key="item.databaseId + '-starred'"
-							:account="group.account"
-							:mailbox="item"
-							filter="starred" />
-					</template>
-					<NavigationAccountExpandCollapse
-						v-if="!group.account.isUnified && group.isCollapsible"
-						:key="'collapse-' + group.account.id"
-						:account="group.account" />
-					<AppNavigationSpacer :key="'spacer-' + group.account.id" />
+						:mailbox="item" />
+					<NavigationMailbox
+						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+						:key="item.databaseId + '-starred'"
+						:account="group.account"
+						:mailbox="item"
+						filter="starred" />
 				</template>
-			</ul>
+				<NavigationAccountExpandCollapse
+					v-if="!group.account.isUnified && group.isCollapsible"
+					:key="'collapse-' + group.account.id"
+					:account="group.account" />
+				<AppNavigationSpacer :key="'spacer-' + group.account.id" />
+			</template>
 		</template>
 		<template #footer>
-			<AppNavigationSettings :title="t('mail', 'Settings')">
+			<AppNavigationSettings :title="t('mail', 'Mail settings')">
+				<template #icon>
+					<IconSetting :size="20" />
+				</template>
 				<AppSettingsMenu />
 			</AppNavigationSettings>
 		</template>
@@ -86,19 +76,13 @@
 </template>
 
 <script>
-import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
-import AppNavigationSettings
-	from '@nextcloud/vue/dist/Components/AppNavigationSettings'
-import AppNavigationSpacer
-	from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
+import { NcAppNavigation as AppNavigation, NcAppNavigationSettings as AppNavigationSettings, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
 
-import logger from '../logger'
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationMailbox from './NavigationMailbox'
 import NavigationOutbox from './NavigationOutbox'
-
+import IconSetting from 'vue-material-design-icons/Cog'
 import AppSettingsMenu from '../components/AppSettingsMenu'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants'
 
@@ -106,7 +90,6 @@ export default {
 	name: 'Navigation',
 	components: {
 		AppNavigation,
-		AppNavigationNew,
 		AppNavigationSettings,
 		AppNavigationSpacer,
 		AppSettingsMenu,
@@ -114,6 +97,7 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		IconSetting,
 	},
 	data() {
 		return {
@@ -139,12 +123,6 @@ export default {
 					}
 				})
 		},
-		currentMailbox() {
-			if (this.$route.name === 'message' || this.$route.name === 'mailbox') {
-				return this.$store.getters.getMailbox(this.$route.params.mailboxId)
-			}
-			return undefined
-		},
 		unifiedAccount() {
 			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
 		},
@@ -168,11 +146,6 @@ export default {
 
 			return true
 		},
-		onNewMessage() {
-			this.$store.dispatch('showMessageComposer', {
-
-			})
-		},
 		isFirst(account) {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[1]
@@ -180,21 +153,6 @@ export default {
 		isLast(account) {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[accounts.length - 1]
-		},
-		async refreshMailbox() {
-			if (this.refreshing === true) {
-				logger.debug('already sync\'ing mailbox.. aborting')
-				return
-			}
-			this.refreshing = true
-			try {
-				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.currentMailbox.databaseId })
-				logger.debug('Current mailbox is sync\'ing ')
-			} catch (error) {
-				logger.error('could not sync current mailbox', { error })
-			} finally {
-				this.refreshing = false
-			}
 		},
 	},
 }
@@ -222,7 +180,7 @@ export default {
 		animation: rotation 2s linear;
 	}
 }
-::v-deep .app-navigation-new button {
+:deep(.app-navigation-new button) {
 	width: 240px !important;
 	height: 44px;
 }
@@ -236,5 +194,9 @@ to {
 }
 .app-navigation-spacer {
 	order: 0 !important;
+}
+:deep(.settings-button) {
+	opacity: .7 !important;
+	font-weight: bold !important;
 }
 </style>

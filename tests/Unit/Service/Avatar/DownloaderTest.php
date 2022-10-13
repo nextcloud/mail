@@ -33,7 +33,6 @@ use OCP\Http\Client\IResponse;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class DownloaderTest extends TestCase {
-
 	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
 	private $clientService;
 

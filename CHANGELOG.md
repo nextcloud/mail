@@ -1,6 +1,84 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.0.0 – 2022-10-11
+### Added
+- Image support for the message editor and signatures
+- Automatic out-of-office replies (based on Sieve)
+- Preview of images, audio, video and PDF with the Viewer app
+- Add imip processing
+- Users can clear their mailboxes
+- Show warning for large signatures
+- Add ckeditor plugin for mail
+
+### Fixed
+- Enable last day checkbox not being parsed correctly
+- Date formatting for sieve autoresponder
+- Missing line breaks when parsing message from sieve script
+- Avatar being vanished for threads
+- Show empty content when opening drafts
+- Scrolling on small screen
+- Focus on *To* when the composer opens
+
+### Changed
+- Adapt to Nextcloud 25 design
+- Remember last used mailbox
+- Make primary action icons bigger
+- Improving the appearance of the modal window
+
+### Removed
+- Nextcloud 22-24 support
+
+## 1.14.0 - 2022-10-10
+### Added
+- Hide system tags from UI
+- Users can clear their mailboxes
+- Improve the image attachment viewer
+- Send oldest outbox message first
+- 'No subject' on thread when there is none
+- Migrate all icons to material design icons
+- Support for XOAUTH2
+- Preview message content in the thread view
+- Migrate icons to material design icons
+- Show message actions only for expanded messages in thread
+- Show mailbox counter if sub mailbox has unread messages
+- Show message preview in envelope list
+- Envelope action links to download whole message
+
+
+### Fixed
+- Performance logger message for vanished messages
+- Two-way binding for envelope unselect after delete
+- Split auto config and account creation
+- Account form styling
+- Edit drafts
+- Download all as zip
+- Restore ability to write mails in safari
+- Improve the way attachment look
+- Change the opacity of leftside icons to fit the rest of the icons
+- Infinite scrolling on mobile
+- Image preview when the menu is clicked
+- Make sender to be centered with the avatar and timestamps
+- Work around breaking server change and QB expressions
+- Better signature detection: always store the HTML version for the CKeditor body.
+- Quoting forwarded messages
+- l10n: Delete apostrophe
+- l10n: Delete a shortcut
+- Sending erroneous message repeatedly
+- Remove color from flagged message star
+- PI sync problems
+- Sending outbox message of deleted user accounts
+- Collecting addresses in the background
+- Remove account color
+- Shorten the relative time of envelopes
+- General design improvements
+- Redirect to setup page if no accounts are configured
+- Show empty content when opening drafts
+
+## 1.13.9 – 2022-10-07
+### Changed
+- Dependency updates
+
 ## 1.13.6 - 2022-06-29
 ### Fixed
 - Editing draft

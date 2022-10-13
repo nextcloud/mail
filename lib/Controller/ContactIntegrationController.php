@@ -30,9 +30,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class ContactIntegrationController extends Controller {
-
-	/** @var ContactIntegrationService */
-	private $service;
+	private ContactIntegrationService $service;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -50,7 +48,7 @@ class ContactIntegrationController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function match(string $mail): JSONResponse {
-		return new JSONResponse($this->service->findMatches($mail));
+		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
@@ -94,6 +92,6 @@ class ContactIntegrationController extends Controller {
 	 */
 	public function autoComplete(string $term): JSONResponse {
 		$res = $this->service->autoComplete($term);
-		return new JSONResponse($res);
+		return (new JSONResponse($res))->cacheFor(60 * 60, false, true);
 	}
 }

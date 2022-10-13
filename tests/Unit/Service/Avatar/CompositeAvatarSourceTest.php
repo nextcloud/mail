@@ -34,7 +34,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class CompositeAvatarSourceTest extends TestCase {
-
 	/** @var AddressbookSource|PHPUnit_Framework_MockObject_MockObject */
 	private $addressbookSource;
 

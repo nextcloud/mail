@@ -18,15 +18,17 @@ OC.L10N.register(
     "Read" : "කියවීම",
     "Select" : "තෝරන්න",
     "Create" : "සාදන්න",
+    "Comment" : "අදහස",
+    "Accept" : "පිළිගන්න",
+    "Decline" : "ප්‍රතික්ෂේප",
     "Choose" : "තෝරන්න",
-    "Favorites" : "ප්‍රියතම",
     "Other" : "වෙනත්",
     "Reply" : "පිළිතුර",
-    "Settings" : "සැකසුම්",
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Loading …" : "පූරණය වෙමින් …",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
     "Edit name" : "නම සංස්කරණය",
+    "Message" : "පණිවිඩය",
     "Add" : "එකතු කරන්න",
     "Disabled" : "අබල කර ඇත",
     "Enabled" : "සබල කර ඇත",
@@ -36,6 +38,7 @@ OC.L10N.register(
     "Host" : " ධාරකය",
     "Search" : "සොයන්න",
     "All" : "සියල්ල",
-    "Archive" : "සංරක්ෂණය"
+    "Archive" : "සංරක්ෂණය",
+    "Favorites" : "ප්‍රියතම"
 },
 "nplurals=2; plural=(n != 1);");

@@ -26,8 +26,10 @@
 		:show-details="isMessageShown"
 		@update:showDetails="hideMessage">
 		<OutboxMessageContent />
-		<!-- List -->
-		<template #list>
+		<div slot="list" class="header__button">
+			<NewMessageButtonHeader />
+
+			<!-- List -->
 			<AppContentList>
 				<Error
 					v-if="error"
@@ -44,18 +46,18 @@
 					:key="message.id"
 					:message="message" />
 			</AppContentList>
-		</template>
+		</div>
 	</AppContent>
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
+import { NcAppContent as AppContent, NcAppContentList as AppContentList } from '@nextcloud/vue'
 import Loading from './Loading'
 import Error from './Error'
 import EmptyMailbox from './EmptyMailbox'
 import OutboxMessageContent from './OutboxMessageContent'
 import OutboxMessageListItem from './OutboxMessageListItem'
+import NewMessageButtonHeader from './NewMessageButtonHeader'
 import logger from '../logger'
 
 export default {
@@ -68,6 +70,7 @@ export default {
 		EmptyMailbox,
 		OutboxMessageListItem,
 		OutboxMessageContent,
+		NewMessageButtonHeader,
 	},
 	data() {
 		return {
@@ -93,7 +96,7 @@ export default {
 	},
 	created() {
 		// Reload outbox contents every 60 seconds
-		this.refreshInterval = setInterval(async() => {
+		this.refreshInterval = setInterval(async () => {
 			await this.fetchMessages()
 		}, 60000)
 	},
@@ -127,4 +130,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.header__button {
+	display: flex;
+	flex: 1px 0 0;
+	flex-direction: column;
+	height: calc(100vh - var(--header-height));
+
+}
+:deep(.button-vue--vue-secondary) {
+	box-shadow: none;
+}
 </style>

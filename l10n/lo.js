@@ -16,8 +16,7 @@ OC.L10N.register(
     "Forward" : "ໄປຂ້າງຫນ້າ",
     "Create" : "ສ້າງ",
     "Choose" : "ເລືອກ",
-    "Favorites" : "ລາຍການທີ່ມັກ",
-    "Settings" : "ການຕັ້ງຄ່າ",
+    "Show images" : "ສະເເດງຮູບພາບ",
     "Quota" : "ການໃຊ້ຮ່ວມກັນໄດ້",
     "Remove account" : "ຍ້າຍບັນຊີ",
     "Loading …" : "ກຳລັງໂຫຼດ",
@@ -29,6 +28,7 @@ OC.L10N.register(
     "General" : "ທົ່ວໄປ",
     "User" : "ຜູ້ໃຊ້",
     "Search" : "ຄົ້ນຫາ",
-    "Refresh" : "Refresh"
+    "Refresh" : "Refresh",
+    "Favorites" : "ລາຍການທີ່ມັກ"
 },
 "nplurals=1; plural=0;");

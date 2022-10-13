@@ -17,12 +17,11 @@
     "Edit tags" : "Tags editéieren",
     "Move" : "Verschieben",
     "Create" : "Erstellen",
+    "Comment" : "Kommentar",
     "Choose" : "Auswielen",
-    "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
-    "Settings" : "Astellungen",
     "Quota" : "Quota",
     "Saving" : "Speicheren...",
     "Remove account" : "De Kont läschen",
@@ -39,6 +38,7 @@
     "Port" : "Port",
     "Search" : "Search",
     "Refresh" : "Opfrëschen",
-    "All" : "All"
+    "All" : "All",
+    "Favorites" : "Favoriten"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -36,7 +36,6 @@ use OCP\BackgroundJob\IJobList;
 use function array_map;
 
 class AccountService {
-
 	/** @var MailAccountMapper */
 	private $mapper;
 

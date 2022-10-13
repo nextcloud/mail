@@ -29,7 +29,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
 class PerformanceLogger {
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 

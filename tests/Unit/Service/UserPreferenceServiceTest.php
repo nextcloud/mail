@@ -29,7 +29,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IConfig;
 
 class UserPreferenceServiceTest extends TestCase {
-
 	/** @var IConfig */
 	private $config;
 

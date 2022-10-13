@@ -24,7 +24,7 @@
 	</Modal>
 </template>
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
+import { NcModal as Modal } from '@nextcloud/vue'
 import logger from '../logger'
 import { toPlain, toHtml, plain } from '../util/text'
 import { saveDraft } from '../service/MessageService'
@@ -203,11 +203,11 @@ export default {
 
 <style lang="scss" scoped>
 @media only screen and (max-width: 600px) {
-	::v-deep .modal-container {
+	:deep(.modal-container) {
 		max-width: 80%;
 	}
 }
-::v-deep .modal-wrapper .modal-container {
+:deep(.modal-wrapper .modal-container) {
 	overflow-y: auto !important;
 	overflow-x: auto !important;
 	// from original Modal max-height

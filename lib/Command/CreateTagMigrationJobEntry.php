@@ -33,12 +33,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateTagMigrationJobEntry extends Command {
-
-	/** @var JobList */
-	private $jobList;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
+	private JobList $jobList;
+	private MailboxMapper $mailboxMapper;
 
 	public function __construct(JobList $jobList,
 								MailboxMapper $mailboxMapper) {

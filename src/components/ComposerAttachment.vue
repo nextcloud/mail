@@ -1,5 +1,5 @@
 <template>
-	<li class="list-item--attachment" :class="{'error' : attachment.error }">
+	<li class="composer-attachment" :class="{'composer-attachment--with-error' : attachment.error }">
 		<div class="attachment-preview">
 			<img v-if="attachment.imageBlobURL !== false" :src="attachment.imageBlobURL" class="attachment-preview-image">
 			<img v-else-if="attachment.hasPreview" :src="previewURL" class="attachment-preview-image">
@@ -80,7 +80,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.list-item--attachment {
+.composer-attachment {
 	width: calc(50% - 20px);
     box-sizing: border-box;
     display: flex;
@@ -89,7 +89,7 @@ export default {
     margin: 10px;
     flex-wrap: wrap;
 
-	&.error {
+	&--with-error {
 		color:red;
 		opacity: 0.5;
 	}
@@ -137,10 +137,6 @@ export default {
 		border: none;
 		margin: 6px -2px 0 0;
 	}
-}
-
-a.list-item {
-	width:auto !important;
 }
 
 .attachments-upload-progress {

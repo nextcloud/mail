@@ -40,7 +40,6 @@ use function count;
 use function json_encode;
 
 class ItineraryService {
-
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 

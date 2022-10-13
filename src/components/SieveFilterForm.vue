@@ -2,7 +2,7 @@
 	<div class="section">
 		<textarea
 			id="sieve-text-area"
-			v-model="active.script"
+			v-model="script"
 			v-shortkey.avoid
 			rows="20"
 			:disabled="loading" />
@@ -10,21 +10,29 @@
 			{{ t('mail', 'Oh Snap!') }}
 			{{ errorMessage }}
 		</p>
-		<button
+		<ButtonVue
 			class="primary"
-			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
 			:disabled="loading"
 			@click="saveActiveScript">
+			<template #icon>
+				<IconLoading v-if="loading" :size="20" />
+				<IconCheck v-else :size="20" />
+			</template>
 			{{ t('mail', 'Save sieve script') }}
-		</button>
+		</ButtonVue>
 	</div>
 </template>
 
 <script>
-import { getActiveScript, updateActiveScript } from '../service/SieveService'
-
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import IconCheck from 'vue-material-design-icons/Check'
 export default {
 	name: 'SieveFilterForm',
+	components: {
+		ButtonVue,
+		IconLoading,
+		IconCheck,
+	},
 	props: {
 		account: {
 			type: Object,
@@ -33,13 +41,28 @@ export default {
 	},
 	data() {
 		return {
-			active: {},
-			loading: false,
+			script: '',
+			loading: true,
 			errorMessage: '',
 		}
 	},
-	async mounted() {
-		this.active = await getActiveScript(this.account.id)
+	computed: {
+		scriptData() {
+			return this.$store.getters.getActiveSieveScript(this.account.id)
+		},
+	},
+	watch: {
+		scriptData: {
+			immediate: true,
+			handler(scriptData) {
+				if (!scriptData) {
+					return
+				}
+
+				this.script = scriptData.script
+				this.loading = false
+			},
+		},
 	},
 	methods: {
 		async saveActiveScript() {
@@ -47,7 +70,13 @@ export default {
 			this.errorMessage = ''
 
 			try {
-				await updateActiveScript(this.account.id, this.active)
+				await this.$store.dispatch('updateActiveSieveScript', {
+					accountId: this.account.id,
+					scriptData: {
+						...this.scriptData,
+						script: this.script,
+					},
+				})
 			} catch (error) {
 				this.errorMessage = error.message
 			}

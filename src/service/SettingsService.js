@@ -68,3 +68,11 @@ export const deleteAntiSpamEmail = () => {
 	return axios.delete(generateUrl('/apps/mail/api/settings/antispam'))
 		.then((resp) => resp.data)
 }
+
+export const updateAllowNewMailAccounts = (allowed) => {
+	const url = generateUrl('/apps/mail/api/settings/allownewaccounts')
+	const data = {
+		allowed,
+	}
+	return axios.post(url, data).then((resp) => resp.data)
+}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf60d7f2e2448119556c1841143408d3",
+    "content-hash": "755e1a8e01f1c036335bc20b073a7d07",
     "packages": [
         {
             "name": "amphp/amp",
@@ -531,16 +531,16 @@
         },
         {
             "name": "bamarni/composer-bin-plugin",
-            "version": "1.6.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bamarni/composer-bin-plugin.git",
-                "reference": "80b2f1ca19ff81e9aea495e7cf70443e70d12048"
+                "reference": "e12e9769c8ee97d036f7f98abf66b96cf3862346"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/80b2f1ca19ff81e9aea495e7cf70443e70d12048",
-                "reference": "80b2f1ca19ff81e9aea495e7cf70443e70d12048",
+                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/e12e9769c8ee97d036f7f98abf66b96cf3862346",
+                "reference": "e12e9769c8ee97d036f7f98abf66b96cf3862346",
                 "shasum": ""
             },
             "require": {
@@ -549,12 +549,18 @@
             },
             "require-dev": {
                 "composer/composer": "^2.0",
+                "ext-json": "*",
                 "phpstan/extension-installer": "^1.1",
-                "symfony/console": "^5.4.7 || ^6.0.7"
+                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan-phpunit": "^1.1",
+                "phpunit/phpunit": "^8.5 || ^9.5",
+                "symfony/console": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
+                "symfony/finder": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
+                "symfony/process": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0"
             },
             "type": "composer-plugin",
             "extra": {
-                "class": "Bamarni\\Composer\\Bin\\Plugin"
+                "class": "Bamarni\\Composer\\Bin\\BamarniBinPlugin"
             },
             "autoload": {
                 "psr-4": {
@@ -576,9 +582,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bamarni/composer-bin-plugin/issues",
-                "source": "https://github.com/bamarni/composer-bin-plugin/tree/1.6.0"
+                "source": "https://github.com/bamarni/composer-bin-plugin/tree/1.8.1"
             },
-            "time": "2022-07-06T22:16:05+00:00"
+            "time": "2022-08-03T19:58:11+00:00"
         },
         {
             "name": "bytestream/horde-crypt-blowfish",
@@ -684,16 +690,16 @@
         },
         {
             "name": "bytestream/horde-idna",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Idna.git",
-                "reference": "2493578c390afa8f3a4623855646102b2cfd0488"
+                "reference": "e625a869cd73c92d891dd63cf9558104d4d2e9d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Idna/zipball/2493578c390afa8f3a4623855646102b2cfd0488",
-                "reference": "2493578c390afa8f3a4623855646102b2cfd0488",
+                "url": "https://api.github.com/repos/bytestream/Idna/zipball/e625a869cd73c92d891dd63cf9558104d4d2e9d4",
+                "reference": "e625a869cd73c92d891dd63cf9558104d4d2e9d4",
                 "shasum": ""
             },
             "require": {
@@ -727,22 +733,22 @@
             "description": "Horde IDNA normalization library",
             "homepage": "https://www.horde.org",
             "support": {
-                "source": "https://github.com/bytestream/Idna/tree/v1.2.0"
+                "source": "https://github.com/bytestream/Idna/tree/v1.2.1"
             },
-            "time": "2021-12-21T12:51:22+00:00"
+            "time": "2022-07-07T11:36:13+00:00"
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.31.2",
+            "version": "v2.31.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "44e29dbf9ce0404614b62037b1ac8a0c256d9195"
+                "reference": "6c7ff8894da58b12ff39a9ccae655a07d5f571aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/44e29dbf9ce0404614b62037b1ac8a0c256d9195",
-                "reference": "44e29dbf9ce0404614b62037b1ac8a0c256d9195",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/6c7ff8894da58b12ff39a9ccae655a07d5f571aa",
+                "reference": "6c7ff8894da58b12ff39a9ccae655a07d5f571aa",
                 "shasum": ""
             },
             "require": {
@@ -784,9 +790,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.31.2"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.31.4"
             },
-            "time": "2022-06-09T13:59:18+00:00"
+            "time": "2022-09-15T11:49:44+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
@@ -1506,16 +1512,16 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v2.0.1",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "9efced88f9fc31ecbd52c798b6c01283966c0e48"
+                "reference": "436c69db9e0951760ca54b6b123d61c89ab3e918"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/9efced88f9fc31ecbd52c798b6c01283966c0e48",
-                "reference": "9efced88f9fc31ecbd52c798b6c01283966c0e48",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/436c69db9e0951760ca54b6b123d61c89ab3e918",
+                "reference": "436c69db9e0951760ca54b6b123d61c89ab3e918",
                 "shasum": ""
             },
             "require": {
@@ -1547,7 +1553,11 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2022-02-21T15:33:09+00:00"
+            "support": {
+                "issues": "https://github.com/Cerdic/CSSTidy/issues",
+                "source": "https://github.com/Cerdic/CSSTidy/tree/v2.0.3"
+            },
+            "time": "2022-09-14T13:26:35+00:00"
         },
         {
             "name": "christophwurst/kitinerary",
@@ -1702,20 +1712,30 @@
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "v4.14.0",
+            "version": "v4.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "12ab42bd6e742c70c0a52f7b82477fcd44e64b75"
+                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/12ab42bd6e742c70c0a52f7b82477fcd44e64b75",
-                "reference": "12ab42bd6e742c70c0a52f7b82477fcd44e64b75",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/523407fb06eb9e5f3d59889b3978d5bfe94299c8",
+                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2"
+                "php": "~5.6.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0"
+            },
+            "require-dev": {
+                "cerdic/css-tidy": "^1.7 || ^2.0",
+                "simpletest/simpletest": "dev-master"
+            },
+            "suggest": {
+                "cerdic/css-tidy": "If you want to use the filter 'Filter.ExtractStyleBlocks'.",
+                "ext-bcmath": "Used for unit conversion and imagecrash protection",
+                "ext-iconv": "Converts text to and from non-UTF-8 encodings",
+                "ext-tidy": "Used for pretty-printing HTML"
             },
             "type": "library",
             "autoload": {
@@ -1745,7 +1765,11 @@
             "keywords": [
                 "html"
             ],
-            "time": "2021-12-25T01:21:49+00:00"
+            "support": {
+                "issues": "https://github.com/ezyang/htmlpurifier/issues",
+                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.16.0"
+            },
+            "time": "2022-09-18T07:06:19+00:00"
         },
         {
             "name": "gravatarphp/gravatar",
@@ -1799,17 +1823,58 @@
             "time": "2019-01-08T21:43:01+00:00"
         },
         {
-            "name": "league/flysystem",
-            "version": "2.0.8",
+            "name": "html2text/html2text",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "82ad1e9a11745dba58775de2e8f47600b0a3331d"
+                "url": "https://github.com/mtibben/html2text.git",
+                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/82ad1e9a11745dba58775de2e8f47600b0a3331d",
-                "reference": "82ad1e9a11745dba58775de2e8f47600b0a3331d",
+                "url": "https://api.github.com/repos/mtibben/html2text/zipball/61ad68e934066a6f8df29a3d23a6460536d0855c",
+                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance",
+                "symfony/polyfill-mbstring": "If you can't install ext-mbstring"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Html2Text\\": [
+                        "src/",
+                        "test/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Converts HTML to formatted plain text",
+            "support": {
+                "issues": "https://github.com/mtibben/html2text/issues",
+                "source": "https://github.com/mtibben/html2text/tree/4.3.1"
+            },
+            "time": "2020-04-16T23:44:31+00:00"
+        },
+        {
+            "name": "league/flysystem",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem.git",
+                "reference": "8aaffb653c5777781b0f7f69a5d937baf7ab6cdb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8aaffb653c5777781b0f7f69a5d937baf7ab6cdb",
+                "reference": "8aaffb653c5777781b0f7f69a5d937baf7ab6cdb",
                 "shasum": ""
             },
             "require": {
@@ -1826,11 +1891,13 @@
                 "aws/aws-sdk-php": "^3.132.4",
                 "composer/semver": "^3.0",
                 "ext-fileinfo": "*",
-                "friendsofphp/php-cs-fixer": "^2.16",
+                "ext-ftp": "*",
+                "friendsofphp/php-cs-fixer": "^3.2",
                 "google/cloud-storage": "^1.23",
                 "phpseclib/phpseclib": "^2.0",
                 "phpstan/phpstan": "^0.12.26",
-                "phpunit/phpunit": "^8.5 || ^9.4"
+                "phpunit/phpunit": "^8.5 || ^9.4",
+                "sabre/dav": "^4.1"
             },
             "type": "library",
             "autoload": {
@@ -1862,9 +1929,13 @@
                 "sftp",
                 "storage"
             ],
+            "support": {
+                "issues": "https://github.com/thephpleague/flysystem/issues",
+                "source": "https://github.com/thephpleague/flysystem/tree/2.5.0"
+            },
             "funding": [
                 {
-                    "url": "https://offset.earth/frankdejonge",
+                    "url": "https://ecologi.com/frankdejonge",
                     "type": "custom"
                 },
                 {
@@ -1876,7 +1947,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-15T19:53:59+00:00"
+            "time": "2022-09-17T21:02:32+00:00"
         },
         {
             "name": "league/mime-type-detection",
@@ -1918,6 +1989,10 @@
                 }
             ],
             "description": "Mime-type detection for Flysystem",
+            "support": {
+                "issues": "https://github.com/thephpleague/mime-type-detection/issues",
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.11.0"
+            },
             "funding": [
                 {
                     "url": "https://github.com/frankdejonge",
@@ -2086,22 +2161,22 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.4.2",
+            "version": "0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "51f6f02f3d719b8f1c8641ff10accd9339fe691e"
+                "reference": "a09521a9cee7be88cbb6671cf647d27547289667"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/51f6f02f3d719b8f1c8641ff10accd9339fe691e",
-                "reference": "51f6f02f3d719b8f1c8641ff10accd9339fe691e",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/a09521a9cee7be88cbb6671cf647d27547289667",
+                "reference": "a09521a9cee7be88cbb6671cf647d27547289667",
                 "shasum": ""
             },
             "require": {
                 "amphp/parallel": "^1.3",
                 "ext-json": "*",
-                "league/flysystem": "~2.0.2",
+                "league/flysystem": "^2.1.1",
                 "php": ">=7.2",
                 "psr/log": "^1.1",
                 "rubix/tensor": "^2.2",
@@ -2235,13 +2310,20 @@
                 "tsne",
                 "unsupervised learning"
             ],
+            "support": {
+                "chat": "https://t.me/RubixML",
+                "docs": "https://docs.rubixml.com",
+                "email": "support@andrewdalpino.com",
+                "issues": "https://github.com/RubixML/ML/issues",
+                "source": "https://github.com/RubixML/ML"
+            },
             "funding": [
                 {
                     "url": "https://github.com/sponsors/RubixML",
                     "type": "github"
                 }
             ],
-            "time": "2022-02-12T00:57:06+00:00"
+            "time": "2022-10-06T20:25:06+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -2728,16 +2810,16 @@
         },
         {
             "name": "psalm/phar",
-            "version": "4.8.1",
+            "version": "4.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "ce0856e5c28a78382d1fa4e1a11cf9aac6292231"
+                "reference": "2fb09be7df082d4d29c6356ea34866501d187f3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/ce0856e5c28a78382d1fa4e1a11cf9aac6292231",
-                "reference": "ce0856e5c28a78382d1fa4e1a11cf9aac6292231",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/2fb09be7df082d4d29c6356ea34866501d187f3e",
+                "reference": "2fb09be7df082d4d29c6356ea34866501d187f3e",
                 "shasum": ""
             },
             "require": {
@@ -2755,7 +2837,11 @@
                 "MIT"
             ],
             "description": "Composer-based Psalm Phar",
-            "time": "2021-06-21T02:02:58+00:00"
+            "support": {
+                "issues": "https://github.com/psalm/phar/issues",
+                "source": "https://github.com/psalm/phar/tree/4.28.0"
+            },
+            "time": "2022-10-07T16:22:13+00:00"
         },
         {
             "name": "roave/security-advisories",

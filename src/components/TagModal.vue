@@ -2,6 +2,7 @@
   - @copyright 2021 Greta Doci <gretadoci@gmail.com>
   -
   - @author 2021 Greta Doci <gretadoci@gmail.com>
+  - @author 2022 Jonas Sulzer <jonas@violoncello.ch>
   -
   - @license AGPL-3.0-or-later
   -
@@ -35,17 +36,24 @@
 				</button>
 				<Actions :force-menu="true">
 					<ActionButton v-if="renameTagLabel"
-						icon="icon-rename"
 						@click="openEditTag">
+						<template #icon>
+							<IconRename :size="17" />
+						</template>
 						{{ t('mail','Rename tag') }}
 					</ActionButton>
 					<ActionInput v-if="renameTagInput"
-						icon="icon-tag"
 						:value="tag.displayName"
-						@submit="renameTag(tag, $event)" />
+						@submit="renameTag(tag, $event)">
+						<template #icon>
+							<IconTag :size="20" />
+						</template>
+					</ActionInput>
 					<ActionText
-						v-if="showSaving"
-						icon="icon-loading-small">
+						v-if="showSaving">
+						<template #icon>
+							<IconLoading :size="20" />
+						</template>
 						{{ t('mail', 'Saving new tag name …') }}
 					</ActionText>
 				</Actions>
@@ -69,10 +77,14 @@
 					@click="addTagInput">
 					{{ t('mail', 'Add tag') }}
 				</button>
-				<ActionInput v-if="editing" icon="icon-tag" @submit="createTag" />
+				<ActionInput v-if="editing" @submit="createTag">
+					<IconTag :size="20" />
+				</ActionInput>
 				<ActionText
-					v-if="showSaving"
-					icon="icon-loading-small">
+					v-if="showSaving">
+					<template #icon>
+						<IconLoading :size="20" />
+					</template>
 					{{ t('mail', 'Saving tag …') }}
 				</ActionText>
 			</div>
@@ -81,12 +93,11 @@
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { NcModal as Modal, NcActions as Actions, NcActionText as ActionText, NcActionInput as ActionInput, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import IconRename from 'vue-material-design-icons/Pencil'
+import IconTag from 'vue-material-design-icons/Tag'
 import { showError, showInfo } from '@nextcloud/dialogs'
+import { hiddenTags } from './tags.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -103,6 +114,9 @@ export default {
 		ActionText,
 		ActionInput,
 		ActionButton,
+		IconRename,
+		IconTag,
+		IconLoading,
 	},
 	props: {
 		envelope: {
@@ -125,7 +139,7 @@ export default {
 	},
 	computed: {
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1').sort((a, b) => {
+			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -173,6 +187,10 @@ export default {
 		async createTag(event) {
 			this.editing = true
 			const displayName = event.target.querySelector('input[type=text]').value
+			if (displayName.toLowerCase() in hiddenTags) {
+				showError(this.t('mail', 'Tag name is a hidden system tag'))
+				return
+			}
 			if (this.$store.getters.getTags.some(tag => tag.displayName === displayName)) {
 				showError(this.t('mail', 'Tag already exists'))
 				return
@@ -238,12 +256,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .modal-content {
+:deep(.modal-content) {
 	padding: 0 20px 20px 20px;
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
-::v-deep .modal-container {
+:deep(.modal-container) {
 	width: auto !important;
 }
 .tag-title {
@@ -303,12 +321,7 @@ export default {
 	display: inline-block;
 	margin-left: 10px;
 }
-::v-deep .action-input {
-	margin-left: -31px;
-}
-::v-deep .icon-tag {
-	background-image: none;
-}
+
 .action-item {
 	right: 8px;
 	float: right;
@@ -317,7 +330,7 @@ export default {
 	list-style: none;
 }
 @media only screen and (max-width: 512px) {
-	::v-deep .modal-container {
+	:deep(.modal-container) {
 	top: 100px !important;
 	max-height: calc(100vh - 170px) !important
 	}

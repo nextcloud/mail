@@ -98,8 +98,6 @@ class OutboxControllerTest extends TestCase {
 			->method('getMessage')
 			->with($message->getId(), $this->userId)
 			->willReturn($message);
-		$this->accountService->expects(self::once())
-			->method('find');
 
 		$expected = JsonResponse::success($message);
 		$actual = $this->controller->show($message->getId());
@@ -115,27 +113,8 @@ class OutboxControllerTest extends TestCase {
 			->method('getMessage')
 			->with($message->getId(), $this->userId)
 			->willThrowException(new DoesNotExistException(''));
-		$this->accountService->expects(self::never())
-			->method('find');
 
 		$this->expectException(DoesNotExistException::class);
-		$this->controller->show($message->getId());
-	}
-
-	public function testShowAccountNotFound(): void {
-		$message = new LocalMessage();
-		$message->setId(1);
-		$message->setAccountId(1);
-
-		$this->service->expects(self::once())
-			->method('getMessage')
-			->with($message->getId(), $this->userId)
-			->willReturn($message);
-		$this->accountService->expects(self::once())
-			->method('find')
-			->willThrowException(new ClientException('', 400));
-
-		$this->expectException(ClientException::class);
 		$this->controller->show($message->getId());
 	}
 

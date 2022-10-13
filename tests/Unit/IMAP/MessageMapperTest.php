@@ -39,7 +39,6 @@ use Psr\Log\LoggerInterface;
 use function range;
 
 class MessageMapperTest extends TestCase {
-
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
@@ -70,15 +69,61 @@ class MessageMapperTest extends TestCase {
 			->willReturn($fetchResults);
 		$fetchResults[0] = $fetchResult1;
 		$fetchResults[1] = $fetchResult2;
+		$fetchResult1->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
+		$fetchResult2->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
 		$fetchResult1->method('getUid')
 			->willReturn(1);
 		$fetchResult2->method('getUid')
 			->willReturn(3);
+
 		$message1 = new IMAPMessage($imapClient, $mailbox, 1, $fetchResult1);
 		$message2 = new IMAPMessage($imapClient, $mailbox, 3, $fetchResult2);
 		$expected = [
 			$message1,
 			$message2,
+		];
+
+		$result = $this->mapper->findByIds($imapClient, $mailbox, new Horde_Imap_Client_Ids($ids));
+
+		$this->assertEquals($expected, $result);
+	}
+
+	public function testGetByIdsWithEmpty(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$ids = [1, 3];
+
+		$fetchResults = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$fetchResult2 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$imapClient->expects(self::once())
+			->method('fetch')
+			->willReturn($fetchResults);
+		$fetchResults[0] = $fetchResult1;
+		$fetchResults[1] = $fetchResult2;
+		$fetchResult1->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
+		$fetchResult2->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(false);
+		$fetchResult1->method('getUid')
+			->willReturn(1);
+		$fetchResult2->expects(self::never())
+			->method('getUid');
+
+		$message1 = new IMAPMessage($imapClient, $mailbox, 1, $fetchResult1);
+		$expected = [
+			$message1
 		];
 
 		$result = $this->mapper->findByIds($imapClient, $mailbox, new Horde_Imap_Client_Ids($ids));

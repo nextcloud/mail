@@ -38,7 +38,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class MailboxesControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName = 'mail';
 

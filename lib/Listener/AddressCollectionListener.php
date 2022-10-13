@@ -34,7 +34,6 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class AddressCollectionListener implements IEventListener {
-
 	/** @var IUserPreferences */
 	private $preferences;
 

@@ -35,7 +35,6 @@ use OCP\Http\Client\IClientService;
 use OCP\IServerContainer;
 
 class FaviconSourceTest extends TestCase {
-
 	/** @var IServerContainer */
 	private $serverContainer;
 

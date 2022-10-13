@@ -38,18 +38,10 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 class ProxyController extends Controller {
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var ISession */
-	private $session;
-
-	/** @var IClientService */
-	private $clientService;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private IURLGenerator $urlGenerator;
+	private ISession $session;
+	private IClientService $clientService;
+	private LoggerInterface $logger;
 
 	public function __construct(string $appName,
 								IRequest $request,

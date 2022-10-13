@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
+use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccount;
@@ -34,7 +35,6 @@ use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class FixBackgroundJobs implements IRepairStep {
-
 	/** @var IJobList */
 	private $jobList;
 	/** @var MailAccountMapper */
@@ -60,6 +60,7 @@ class FixBackgroundJobs implements IRepairStep {
 		foreach ($accounts as $account) {
 			$this->jobList->add(SyncJob::class, ['accountId' => $account->getId()]);
 			$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $account->getId()]);
+			$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $account->getId()]);
 			$output->advance();
 		}
 		$output->finishProgress();

@@ -23,8 +23,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-style('mail', 'mail');
-style('mail', 'mobile');
 script('mail', 'mail');
 ?>
 
@@ -32,4 +30,5 @@ script('mail', 'mail');
 <input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">
 <input type="hidden" id="external-avatars" value="<?php p($_['external-avatars']); ?>">
 <input type="hidden" id="collect-data" value="<?php p($_['collect-data']); ?>">
+<input type="hidden" id="start-mailbox-id" value="<?php p($_['start-mailbox-id']); ?>">
 <input type="hidden" id="tag-classified-messages" value="<?php p($_['tag-classified-messages']); ?>">

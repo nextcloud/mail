@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
+import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
 import logger from '../logger'
 
 export default {
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .app-navigation-entry__title {
+:deep(.app-navigation-entry__title) {
 	color: var(--color-text-maxcontrast);
 }
 </style>

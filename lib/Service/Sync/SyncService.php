@@ -44,7 +44,6 @@ use function array_diff;
 use function array_map;
 
 class SyncService {
-
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 

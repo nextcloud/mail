@@ -32,7 +32,6 @@ use function array_map;
 use function array_unique;
 
 class SentMessagesExtractor implements IExtractor {
-
 	/** @var StatisticsDao */
 	private $statisticsDao;
 

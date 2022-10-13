@@ -37,19 +37,17 @@
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
-				:thread-subject="threadSubject"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
 				@delete="$emit('delete', env.databaseId)"
 				@move="onMove(env.databaseId)"
-				@toggleExpand="toggleExpand(env.databaseId)" />
+				@toggle-expand="toggleExpand(env.databaseId)" />
 		</template>
 	</AppContentDetails>
 </template>
 
 <script>
-import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
-import Popover from '@nextcloud/vue/dist/Components/Popover'
+import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
 
 import { prop, uniqBy } from 'ramda'
 import debounce from 'lodash/fp/debounce'
@@ -259,6 +257,9 @@ export default {
 <style lang="scss">
 #mail-message {
 	flex-grow: 1;
+	max-height: calc(100vh - 50px);
+	margin-bottom: 30vh;
+	overflow: auto;
 
 	.icon-loading {
 		&:only-child:after {
@@ -300,7 +301,7 @@ export default {
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 60px;
+	padding-left: 70px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -331,7 +332,7 @@ export default {
 }
 
 #mail-content {
-	margin: 10px 38px 0 60px;
+	margin: 10px 38px 0 59px;
 }
 
 #mail-content iframe {
@@ -348,14 +349,6 @@ export default {
 	border-bottom: 1px dotted #07d;
 	text-decoration: none;
 	word-wrap: break-word;
-}
-
-.icon-reply-white,
-.icon-reply-all-white {
-	height: 44px;
-	min-width: 44px;
-	margin: 0 !important;
-	padding: 9px 18px 10px 32px !important;
 }
 
 /* Show action button label and move icon to the left

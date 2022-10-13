@@ -12,9 +12,12 @@
 </template>
 
 <script>
-import Content from '@nextcloud/vue/dist/Components/Content'
-
+import { NcContent as Content } from '@nextcloud/vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
+
+import '../../css/mail.scss'
+import '../../css/mobile.scss'
+
 import logger from '../logger'
 import MailboxThread from '../components/MailboxThread'
 import NewMessageModal from '../components/NewMessageModal'
@@ -44,8 +47,21 @@ export default {
 	},
 	created() {
 		const accounts = this.$store.getters.accounts
+		let startMailboxId = this.$store.getters.getPreference('start-mailbox-id')
+		if (startMailboxId && !this.$store.getters.getMailbox(startMailboxId)) {
+			// The start ID is set but the mailbox doesn't exist anymore
+			startMailboxId = null
+		}
 
-		if (this.$route.name === 'home' && accounts.length > 1) {
+		if (this.$route.name === 'home' && accounts.length > 1 && startMailboxId) {
+			logger.debug('Loading start mailbox', { id: startMailboxId })
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: startMailboxId,
+				},
+			})
+		} else if (this.$route.name === 'home' && accounts.length > 1) {
 			// Show first account
 			const firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one mailbox
@@ -112,12 +128,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .app-content-details {
+:deep(.app-content-details) {
 	margin: 0 auto;
 	max-width: 900px;
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 100%;
-	min-width: 0;
+	min-width: 70%;
+}
+// Align the appNavigation toggle with the apps header toolbar
+:deep(button.app-navigation-toggle) {
+	top: 8px;
 }
 </style>

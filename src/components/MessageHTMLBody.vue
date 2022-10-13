@@ -3,24 +3,31 @@
 		<MdnRequest :message="message" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<Actions default-icon="icon-toggle" :menu-title="t('mail', 'Show')">
-				<ActionButton icon="icon-toggle"
+			<Actions type="tertiary" :menu-title="t('mail', 'Show images')">
+				<ActionButton
 					@click="displayIframe">
+					<template #icon>
+						<IconImage :size="20" />
+					</template>
 					{{ t('mail', 'Show images temporarily') }}
 				</ActionButton>
 				<ActionButton v-if="sender"
-					icon="icon-toggle"
 					@click="onShowBlockedContent">
+					<template #icon>
+						<IconMail :size="20" />
+					</template>
 					{{ t('mail', 'Always show images from {sender}', { sender }) }}
 				</ActionButton>
 				<ActionButton v-if="domain"
-					icon="icon-toggle"
 					@click="onShowBlockedContentForDomain">
+					<template #icon>
+						<IconDomain :size="20" />
+					</template>
 					{{ t('mail', 'Always show images from {domain}', { domain }) }}
 				</ActionButton>
 			</Actions>
 		</div>
-		<div v-if="loading" class="icon-loading" />
+		<IconLoading v-if="loading" />
 		<div id="message-container" :class="{hidden: loading, scroll: !fullHeight}">
 			<iframe ref="iframe"
 				class="message-frame"
@@ -36,8 +43,10 @@
 import { iframeResizer } from 'iframe-resizer'
 import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
+import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import IconImage from 'vue-material-design-icons/ImageSizeSelectActual'
+import IconMail from 'vue-material-design-icons/Email'
+import IconDomain from 'vue-material-design-icons/Domain'
 
 import logger from '../logger'
 import MdnRequest from './MdnRequest'
@@ -49,6 +58,10 @@ export default {
 		MdnRequest,
 		Actions,
 		ActionButton,
+		IconImage,
+		IconMail,
+		IconDomain,
+		IconLoading,
 	},
 	props: {
 		url: {
@@ -143,7 +156,7 @@ export default {
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
 #mail-content {
-	margin-left: 48px;
+	margin-left: 50px;
 	margin-top: 2px;
 	display: flex;
 	flex-direction: column;
@@ -151,7 +164,8 @@ export default {
 	background-color: #FFFFFF;
 }
 #mail-message-has-blocked-content {
-	margin-left: 8px;
+	margin-left: 10px;
+	color: var(--color-text-maxcontrast) !important;
 }
 
 #message-container {
@@ -165,13 +179,17 @@ export default {
 		overflow-y: auto;
 	}
 }
-::v-deep .icon-toggle {
-	background-image: var(--icon-toggle-000) !important;
-}
-::v-deep .action-item__menutoggle--with-title {
-	background-color: var(--color-background-hover) !important;
+:deep(.button-vue__text) {
+	border: none !important;
+	font-weight: normal !important;
+	padding-left: 14px !important;
+	padding-right: 10px !important;
+	text-decoration: underline !important;
 }
 .message-frame {
 	width: 100%;
+}
+:deep(.button-vue__icon) {
+	display: none !important;
 }
 </style>

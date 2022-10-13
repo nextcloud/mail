@@ -38,34 +38,40 @@
 		</ul>
 
 		<div v-if="!account.provisioningId">
-			<button v-if="!showForm" class="primary icon-add" @click="showForm = true">
+			<ButtonVue v-if="!showForm" type="primary" @click="showForm = true">
 				{{ t('mail', 'Add alias') }}
-			</button>
+			</ButtonVue>
 
-			<button v-if="showForm"
-				class="primary"
-				:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
-				type="submit"
+			<ButtonVue v-if="showForm"
+				native-type="submit"
+				type="primary"
 				form="createAliasForm"
 				:disabled="loading">
+				<template #icon>
+					<IconLoading v-if="loading" :size="20" />
+					<IconCheck v-else :size="20" />
+				</template>
 				{{ t('mail', 'Create alias') }}
-			</button>
-			<button v-if="showForm"
+			</ButtonVue>
+			<ButtonVue v-if="showForm"
+				type="tertiary-no-background"
 				class="button-text"
 				@click="resetCreate">
 				{{ t("mail", "Cancel") }}
-			</button>
+			</ButtonVue>
 		</div>
 	</div>
 </template>
 
 <script>
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import IconCheck from 'vue-material-design-icons/Check'
 import logger from '../logger'
 import AliasForm from './AliasForm'
 
 export default {
 	name: 'AliasSettings',
-	components: { AliasForm },
+	components: { AliasForm, ButtonVue, IconLoading, IconCheck },
 	props: {
 		account: {
 			type: Object,
@@ -139,8 +145,8 @@ export default {
 input {
 	width: 195px;
 }
-
-.icon-add {
-	background-image: var(--icon-add-fff);
+.button-vue:deep() {
+	display: inline-block !important;
+	margin-top: 4px !important;
 }
 </style>

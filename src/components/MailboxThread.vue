@@ -1,6 +1,8 @@
 <template>
 	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
-		<template slot="list">
+		<div slot="list"
+			:class="{ header__button: !showThread || !isMobile }">
+			<NewMessageButtonHeader v-if="!showThread || !isMobile" />
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -17,16 +19,20 @@
 					:account="account"
 					:mailbox="mailbox"
 					:search-query="query"
-					:bus="bus" />
+					:bus="bus"
+					:open-first="mailbox.specialRole !== 'drafts'" />
 				<template v-else>
 					<div class="app-content-list-item">
-						<SectionTitle class="important" :name="t('mail', 'Important and unread')" />
+						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
-							<Button slot="trigger" :aria-label="t('mail', 'Important info')" class="button">
+							<ButtonVue slot="trigger"
+								type="tertiary-no-background"
+								:aria-label="t('mail', 'Important info')"
+								class="button">
 								<template #icon>
 									<IconInfo :size="20" />
 								</template>
-							</Button>
+							</ButtonVue>
 							<p class="important-info">
 								{{ importantInfo }}
 							</p>
@@ -39,18 +45,8 @@
 						:search-query="appendToSearch(priorityImportantQuery)"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
-						:initial-page-size="5"
+						:initial-page-size="8"
 						:collapsible="true"
-						:bus="bus" />
-					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
-					<Mailbox
-						class="namestarred"
-						:account="unifiedAccount"
-						:mailbox="unifiedInbox"
-						:search-query="appendToSearch(priorityStarredQuery)"
-						:paginate="'manual'"
-						:is-priority-inbox="true"
-						:initial-page-size="5"
 						:bus="bus" />
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
 					<Mailbox
@@ -63,23 +59,22 @@
 						:bus="bus" />
 				</template>
 			</AppContentList>
-		</template>
+		</div>
 		<Thread v-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
-import Button from '@nextcloud/vue/dist/Components/Button'
-import Popover from '@nextcloud/vue/dist/Components/Popover'
+import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
+
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
+import NewMessageButtonHeader from './NewMessageButtonHeader'
 import Vue from 'vue'
 
 import infiniteScroll from '../directives/infinite-scroll'
-import IconInfo from 'vue-material-design-icons/InformationOutline'
+import IconInfo from 'vue-material-design-icons/Information'
 import logger from '../logger'
 import Mailbox from './Mailbox'
 import NoMessageSelected from './NoMessageSelected'
@@ -88,9 +83,10 @@ import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
-	priorityStarredQuery,
 } from '../util/priorityInbox'
 import { detect, html } from '../util/text'
+
+const START_MAILBOX_DEBOUNCE = 5 * 1000
 
 export default {
 	name: 'MailboxThread',
@@ -100,11 +96,12 @@ export default {
 	components: {
 		AppContent,
 		AppContentList,
-		Button,
+		ButtonVue,
 		IconInfo,
 		Mailbox,
 		NoMessageSelected,
 		Popover,
+		NewMessageButtonHeader,
 		SectionTitle,
 		Thread,
 	},
@@ -127,6 +124,7 @@ export default {
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],
+				arch: ['a'],
 				flag: ['s'],
 				next: ['arrowright'],
 				prev: ['arrowleft'],
@@ -134,8 +132,8 @@ export default {
 				unseen: ['u'],
 			},
 			priorityImportantQuery,
-			priorityStarredQuery,
 			priorityOtherQuery,
+			startMailboxTimer: undefined,
 		}
 	},
 	computed: {
@@ -168,9 +166,19 @@ export default {
 		$route() {
 			this.handleMailto()
 		},
+		mailbox() {
+			clearTimeout(this.startMailboxTimer)
+			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+		},
 	},
 	created() {
 		this.handleMailto()
+	},
+	mounted() {
+		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+	},
+	beforeUnmount() {
+		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
 		deleteMessage(id) {
@@ -179,7 +187,7 @@ export default {
 		onScroll(event) {
 			logger.debug('scroll', { event })
 
-			this.bus.$emit('loadMore')
+			this.bus.$emit('load-more')
 		},
 		onShortcut(e) {
 			this.bus.$emit('shortcut', e)
@@ -217,6 +225,26 @@ export default {
 				})
 			}
 		},
+		async saveStartMailbox() {
+			const currentStartMailboxId = this.$store.getters.getPreference('start-mailbox-id')
+			if (currentStartMailboxId === this.mailbox.databaseId) {
+				return
+			}
+			logger.debug(`Saving mailbox ${this.mailbox.databaseId} as start mailbox`)
+
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'start-mailbox-id',
+						value: this.mailbox.databaseId,
+					})
+			} catch (error) {
+				// Catch and log. This is not critical.
+				logger.warn('Could not update start mailbox id', {
+					error,
+				})
+			}
+		},
 		stringToRecipients(str) {
 			if (str === undefined) {
 				return []
@@ -234,12 +262,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-popover > .trigger > {
+.v-popover > .trigger > * {
 	z-index: 1;
-}
-
-.icon-info {
-	background-image: var(--icon-info-000);
 }
 
 .important-info {
@@ -258,7 +282,7 @@ export default {
 
 .button {
 	background-color: var(--color-main-background);
-	margin-bottom: 12px;
+	margin-bottom: 3px;
 	right: 2px;
 
 	&:hover,
@@ -270,11 +294,20 @@ export default {
 #app-content-wrapper {
 	display: flex;
 }
-::v-deep .button-vue--vue-secondary {
+:deep(.button-vue--vue-secondary) {
 	box-shadow: none;
 }
 .envelope-list {
-	max-height: calc(100vh - var(--header-height));
 	overflow-y: auto;
+	padding: 0 4px;
+}
+.information-icon {
+	opacity: .7;
+}
+.header__button {
+	display: flex;
+	flex: 1 0 0;
+	flex-direction: column;
+	height: calc(100vh - var(--header-height));
 }
 </style>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@owncloud.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -61,7 +62,6 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 
 class MessagesControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 
@@ -185,7 +185,7 @@ class MessagesControllerTest extends TestCase {
 		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
 	}
 
-	public function testGetHtmlBody() {
+	public function testGetHtmlBody(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -244,7 +244,9 @@ class MessagesControllerTest extends TestCase {
 		$policy->disallowFontDomain('\'self\'');
 		$policy->disallowMediaDomain('\'self\'');
 		$expectedPlainResponse->setContentSecurityPolicy($policy);
+		$expectedPlainResponse->cacheFor(60 * 60, false, true);
 		$expectedRichResponse->setContentSecurityPolicy($policy);
+		$expectedRichResponse->cacheFor(60 * 60, false, true);
 
 		$actualPlainResponse = $this->controller->getHtmlBody($messageId, true);
 		$actualRichResponse = $this->controller->getHtmlBody($messageId, false);
@@ -1068,5 +1070,48 @@ class MessagesControllerTest extends TestCase {
 			->method('getThread');
 
 		$this->controller->getThread($id);
+	}
+
+	public function testExport() {
+		$accountId = 17;
+		$mailboxId = 13;
+		$folderId = 'testfolder';
+		$messageId = 4321;
+		$this->account
+			->method('getId')
+			->willReturn($accountId);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid(123);
+		$message->setSubject('core/master has new results');
+		$mailbox->setAccountId($accountId);
+		$mailbox->setName($folderId);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->exactly(1))
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
+		$this->mailManager->expects($this->exactly(1))
+			->method('getSource')
+			->with($this->account, $folderId, 123)
+			->willReturn($source);
+
+		$expectedResponse = new AttachmentDownloadResponse(
+			$source,
+			'core/master has new results.eml',
+			'message/rfc822'
+		);
+		$actualResponse = $this->controller->export($messageId);
+
+		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 }

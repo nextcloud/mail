@@ -33,7 +33,6 @@ use OCA\Mail\Service\Avatar\Downloader;
 use OCP\IURLGenerator;
 
 class AvatarService implements IAvatarService {
-
 	/** @var AvatarCache */
 	private $cache;
 

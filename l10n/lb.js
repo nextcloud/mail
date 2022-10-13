@@ -19,12 +19,11 @@ OC.L10N.register(
     "Edit tags" : "Tags editéieren",
     "Move" : "Verschieben",
     "Create" : "Erstellen",
+    "Comment" : "Kommentar",
     "Choose" : "Auswielen",
-    "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
-    "Settings" : "Astellungen",
     "Quota" : "Quota",
     "Saving" : "Speicheren...",
     "Remove account" : "De Kont läschen",
@@ -41,6 +40,7 @@ OC.L10N.register(
     "Port" : "Port",
     "Search" : "Search",
     "Refresh" : "Opfrëschen",
-    "All" : "All"
+    "All" : "All",
+    "Favorites" : "Favoriten"
 },
 "nplurals=2; plural=(n != 1);");

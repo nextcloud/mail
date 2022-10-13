@@ -1,41 +1,53 @@
 <template>
 	<Content app-name="mail">
 		<Navigation v-if="hasAccounts" />
-		<div class="mail-empty-content">
-			<EmptyContent icon="icon-mail">
-				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
-				<template #desc>
-					<AccountForm :display-name="displayName"
-						:email="email"
-						:error.sync="error"
-						@accountCreated="onAccountCreated" />
-				</template>
-			</EmptyContent>
-		</div>
+		<AppContent>
+			<div class="mail-empty-content">
+				<EmptyContent v-if="allowNewMailAccounts" :title="t('mail', 'Connect your mail account')">
+					<template #icon>
+						<IconMail :size="65" />
+					</template>
+					<template #action>
+						<AccountForm :display-name="displayName"
+							:email="email"
+							:error.sync="error"
+							@account-created="onAccountCreated" />
+					</template>
+				</EmptyContent>
+				<EmptyContent v-else :title="t('mail', 'To add a mail account, please contact your administrator.')">
+					<template #icon>
+						<IconMail :size="65" />
+					</template>
+				</EmptyContent>
+			</div>
+		</AppContent>
 	</Content>
 </template>
 
 <script>
-import Content from '@nextcloud/vue/dist/Components/Content'
+import { NcContent as Content, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import IconMail from 'vue-material-design-icons/Email'
 import Navigation from '../components/Navigation'
 import logger from '../logger'
 
 export default {
 	name: 'Setup',
 	components: {
+		AppContent,
 		AccountForm,
 		Content,
 		EmptyContent,
+		IconMail,
 		Navigation,
 	},
 	data() {
 		return {
 			displayName: loadState('mail', 'prefill_displayName'),
 			email: loadState('mail', 'prefill_email'),
+			allowNewMailAccounts: loadState('mail', 'allow-new-accounts', true),
 			error: null,
 		}
 	},

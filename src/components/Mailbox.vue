@@ -41,7 +41,7 @@
 		:loading-more="loadingMore"
 		:load-more-button="showLoadMore"
 		@delete="onDelete"
-		@loadMore="loadMore" />
+		@load-more="loadMore" />
 </template>
 
 <script>
@@ -125,7 +125,7 @@ export default {
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
-				return this.envelopes.slice(0, 5)
+				return this.envelopes.slice(0, 8)
 			}
 			return this.envelopes
 		},
@@ -173,8 +173,9 @@ export default {
 		},
 	},
 	created() {
-		this.bus.$on('loadMore', this.onScroll)
+		this.bus.$on('load-more', this.onScroll)
 		this.bus.$on('delete', this.onDelete)
+		this.bus.$on('archive', this.onArchive)
 		this.bus.$on('shortcut', this.handleShortcut)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
@@ -186,8 +187,9 @@ export default {
 			})
 	},
 	destroyed() {
-		this.bus.$off('loadMore', this.onScroll)
+		this.bus.$off('load-more', this.onScroll)
 		this.bus.$off('delete', this.onDelete)
+		this.bus.$off('archive', this.onArchive)
 		this.bus.$off('shortcut', this.handleShortcut)
 		this.stopInterval()
 	},
@@ -250,14 +252,14 @@ export default {
 				}
 			} catch (error) {
 				await matchError(error, {
-					[MailboxLockedError.getName()]: async(error) => {
+					[MailboxLockedError.getName()]: async (error) => {
 						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
 
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
-					[MailboxNotCachedError.getName()]: async(error) => {
+					[MailboxNotCachedError.getName()]: async (error) => {
 						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization`, { error })
 						this.loadingEnvelopes = false
 
@@ -365,6 +367,24 @@ export default {
 							return t('mail', 'Could not delete message')
 						},
 					}))
+				}
+
+				break
+			case 'arch':
+				logger.debug('archiving', { env })
+				this.onArchive(env.databaseId)
+				try {
+					await this.$store.dispatch('moveThread', {
+						envelope: env,
+						destMailboxId: this.account.archiveMailboxId,
+					})
+				} catch (error) {
+					logger.error('could not archive envelope', {
+						env,
+						error,
+					})
+
+					showError(t('mail', 'Could not archive message'))
 				}
 
 				break
@@ -488,9 +508,8 @@ export default {
 
 <style lang="scss" scoped>
 // Fix vertical space between sections in priority inbox
-.nameimportant,
-.namestarred {
-	::v-deep #load-more-mail-messages {
+.nameimportant {
+	:deep(#load-more-mail-messages) {
 		margin-top: 0;
 		margin-bottom: 8px;
 	}

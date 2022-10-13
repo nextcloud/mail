@@ -33,7 +33,6 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class AntiAbuseListener implements IEventListener {
-
 	/** @var IUserManager */
 	private $userManager;
 

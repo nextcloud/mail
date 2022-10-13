@@ -62,7 +62,7 @@ class IMAPMessageTest extends TestCase {
 		// mock first fetch
 		$firstFetch = new Horde_Imap_Client_Data_Fetch();
 		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../../data/mail-message-123.txt'),
-				['level' => 1]);
+			['level' => 1]);
 		$firstFetch->setStructure($firstPart);
 		$firstFetch->setBodyPart(1, $firstPart->getPart(1)->getContents());
 		$firstFetch->setBodyPart(2, $firstPart->getPart(2)->getContents());

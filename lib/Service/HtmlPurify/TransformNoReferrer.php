@@ -33,7 +33,6 @@ use HTMLPurifier_URIParser;
  * Adds rel="noreferrer" to all outbound links.
  */
 class TransformNoReferrer extends HTMLPurifier_AttrTransform {
-
 	/** @var HTMLPurifier_URIParser */
 	private $parser;
 

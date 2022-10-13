@@ -28,9 +28,6 @@
 		:details="details"
 		@click="openModal">
 		<template #icon>
-			<div
-				class="account-color"
-				:style="{'background-color': accountColor}" />
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
 		<template #subtitle>
@@ -38,7 +35,6 @@
 		</template>
 		<template slot="actions">
 			<ActionButton
-				icon="icon-checkmark"
 				:close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
@@ -49,9 +45,11 @@
 				</template>
 			</ActionButton>
 			<ActionButton
-				icon="icon-delete"
 				:close-after-click="true"
 				@click="deleteMessage">
+				<template #icon>
+					<IconDelete :size="20" />
+				</template>
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</template>
@@ -59,10 +57,9 @@
 </template>
 
 <script>
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
 import Avatar from './Avatar'
-import { calculateAccountColor } from '../util/AccountColor'
+import IconDelete from 'vue-material-design-icons/Delete'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
 import moment from '@nextcloud/moment'
@@ -79,6 +76,7 @@ export default {
 		ListItem,
 		Avatar,
 		ActionButton,
+		IconDelete,
 		Send,
 	},
 	mixins: [
@@ -93,10 +91,6 @@ export default {
 	computed: {
 		selected() {
 			return this.$route.params.messageId === this.message.id
-		},
-		accountColor() {
-			const account = this.$store.getters.getAccount(this.message.accountId)
-			return calculateAccountColor(account?.emailAddress ?? '')
 		},
 		title() {
 			const recipientToString = recipient => recipient.label
@@ -117,7 +111,8 @@ export default {
 		},
 		/**
 		 * Subject of message or "No Subject".
-		 * @returns {string}
+		 *
+		 * @return {string}
 		 */
 		subjectForSubtitle() {
 			// We have to use || here (instead of ??) because the subject might be '', null

@@ -47,8 +47,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class OutboxServiceTest extends TestCase {
-
-
 	/** @var MailTransmission|MockObject */
 	private $transmission;
 
@@ -250,6 +248,51 @@ class OutboxServiceTest extends TestCase {
 		$this->outboxService->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 	}
 
+	public function testSaveMessageNoAttachments(): void {
+		$message = new LocalMessage();
+		$message->setAccountId(1);
+		$message->setSendAt($this->time->getTime());
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abcd');
+		$to = [
+			[
+				'label' => 'Lewis',
+				'email' => 'tent-living@startdewvalley.com',
+				'type' => Recipient::TYPE_TO,
+			]
+		];
+		$cc = [];
+		$bcc = [];
+		$attachments = [];
+		$rTo = Recipient::fromParams([
+			'label' => 'Lewis',
+			'email' => 'tent-living@startdewvalley.com',
+			'type' => Recipient::TYPE_TO,
+		]);
+		$message2 = $message;
+		$message2->setId(10);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+
+		$this->mapper->expects(self::once())
+			->method('saveWithRecipients')
+			->with($message, [$rTo], $cc, $bcc)
+			->willReturn($message2);
+		$this->clientFactory->expects(self::never())
+			->method('getClient');
+		$this->attachmentService->expects(self::never())
+			->method('handleAttachments');
+		$this->attachmentService->expects(self::never())
+			->method('saveLocalMessageAttachments');
+
+		$result = $this->outboxService->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$this->assertEquals($message2->getId(), $result->getId());
+		$this->assertEmpty($result->getAttachments());
+	}
+
 	public function testUpdateMessage(): void {
 		$message = new LocalMessage();
 		$message->setId(10);
@@ -307,44 +350,54 @@ class OutboxServiceTest extends TestCase {
 		$this->outboxService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 	}
 
-
-	public function testSaveMessageNoAttachments(): void {
+	public function testUpdateMessageNoAttachments(): void {
 		$message = new LocalMessage();
+		$message->setId(10);
 		$message->setAccountId(1);
 		$message->setSendAt($this->time->getTime());
 		$message->setSubject('Test');
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
+		$old = Recipient::fromParams([
+			'label' => 'Pam',
+			'email' => 'BuyMeAnAle@startdewvalley.com',
+			'type' => Recipient::TYPE_TO,
+		]);
+		$message->setRecipients([$old]);
 		$to = [
 			[
-				'label' => 'Pam',
-				'email' => 'BuyMeAnAle@startdewvalley.com',
+				'label' => 'Linus',
+				'email' => 'tent-living@startdewvalley.com',
 				'type' => Recipient::TYPE_TO,
 			]
 		];
 		$cc = [];
 		$bcc = [];
+		$attachments = [];
 		$rTo = Recipient::fromParams([
-			'label' => 'Pam',
-			'email' => 'BuyMeAnAle@startdewvalley.com',
+			'label' => 'Linus',
+			'email' => 'tent-living@startdewvalley.com',
 			'type' => Recipient::TYPE_TO,
 		]);
 		$message2 = $message;
-		$message2->setId(10);
+		$message2->setRecipients([$rTo]);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
-
 		$this->mapper->expects(self::once())
-			->method('saveWithRecipients')
+			->method('updateWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
 			->willReturn($message2);
 		$this->attachmentService->expects(self::once())
-			->method('saveLocalMessageAttachments')
-			->with($this->userId, 10, []);
-
-		$this->outboxService->saveMessage($account, $message, $to, $cc, $bcc);
+			->method('updateLocalMessageAttachments')
+			->with($this->userId, $message2, $attachments);
+		$this->clientFactory->expects(self::never())
+			->method('getClient');
+		$this->attachmentService->expects(self::never())
+			->method('handleAttachments');
+		$result = $this->outboxService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$this->assertEmpty($result->getAttachments());
 	}
 
 	public function testSaveMessageError(): void {

@@ -33,7 +33,6 @@ use function array_combine;
 use function array_map;
 
 class StatisticsDao {
-
 	/** @var IDBConnection */
 	private $db;
 

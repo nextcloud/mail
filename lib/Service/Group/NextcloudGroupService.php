@@ -29,7 +29,6 @@ use OCP\IGroupManager;
 use OCA\Mail\Exception\ServiceException;
 
 class NextcloudGroupService implements IGroupService {
-
 	/**
 	 * Nextcloud's group manager
 	 *

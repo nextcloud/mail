@@ -36,7 +36,6 @@ use function array_combine;
 use function array_map;
 
 class ImportanceRulesClassifier {
-
 	/** @var ImportantMessagesExtractor */
 	private $importantMessagesExtractor;
 

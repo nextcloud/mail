@@ -17,11 +17,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 /**
  * @param {Text} message the message
- * @returns {boolean|*}
+ * @return {boolean|*}
  */
 export const isPgpgMessage = (message) =>
 	message.format === 'plain' && message.value.startsWith('-----BEGIN PGP MESSAGE-----')

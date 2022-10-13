@@ -25,10 +25,11 @@
 			:key="sender.email">
 			{{ sender.email }}
 			{{ senderType(sender.type) }}
-			<button class="button"
+			<ButtonVue type="tertiary"
+				class="button"
 				@click="removeSender(sender)">
 				{{ t('mail','Remove') }}
-			</button>
+			</ButtonVue>
 		</div>
 		<span v-if="!sortedSenders.length"> {{ t('mail', 'No senders are trusted at the moment.') }}</span>
 	</div>
@@ -37,6 +38,7 @@
 <script>
 
 import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop'
 import sortBy from 'lodash/fp/sortBy'
 import logger from '../logger'
@@ -46,6 +48,9 @@ const sortByEmail = sortBy(prop('email'))
 
 export default {
 	name: 'TrustedSenders',
+	components: {
+		ButtonVue,
+	},
 
 	data() {
 		return {
@@ -95,5 +100,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.button-vue:deep() {
+	display: inline-block !important;
+}
 </style>

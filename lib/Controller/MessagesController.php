@@ -61,63 +61,20 @@ use Psr\Log\LoggerInterface;
 use function array_map;
 
 class MessagesController extends Controller {
+	private AccountService $accountService;
+	private IMailManager $mailManager;
+	private IMailSearch $mailSearch;
+	private ItineraryService $itineraryService;
+	private ?string $currentUserId;
+	private LoggerInterface $logger;
+	private Folder $userFolder;
+	private IMimeTypeDetector $mimeTypeDetector;
+	private IL10N $l10n;
+	private IURLGenerator $urlGenerator;
+	private ContentSecurityPolicyNonceManager $nonceManager;
+	private ITrustedSenderService $trustedSenderService;
+	private IMailTransmission $mailTransmission;
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var IMailSearch */
-	private $mailSearch;
-
-	/** @var ItineraryService */
-	private $itineraryService;
-
-	/** @var ?string */
-	private $currentUserId;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var Folder */
-	private $userFolder;
-
-	/** @var IMimeTypeDetector */
-	private $mimeTypeDetector;
-
-	/** @var IL10N */
-	private $l10n;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var ContentSecurityPolicyNonceManager */
-	private $nonceManager;
-
-	/** @var ITrustedSenderService */
-	private $trustedSenderService;
-
-	/** @var IMailTransmission */
-	private $mailTransmission;
-
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AccountService $accountService
-	 * @param IMailManager $mailManager
-	 * @param IMailSearch $mailSearch
-	 * @param ItineraryService $itineraryService
-	 * @param string $UserId
-	 * @param $userFolder
-	 * @param LoggerInterface $logger
-	 * @param IL10N $l10n
-	 * @param IMimeTypeDetector $mimeTypeDetector
-	 * @param IURLGenerator $urlGenerator
-	 * @param ContentSecurityPolicyNonceManager $nonceManager
-	 * @param ITrustedSenderService $trustedSenderService
-	 * @param IMailTransmission $mailTransmission
-	 */
 	public function __construct(string $appName,
 								IRequest $request,
 								AccountService $accountService,
@@ -265,7 +222,7 @@ class MessagesController extends Controller {
 		$response = new JSONResponse($json);
 
 		// Enable caching
-		$response->cacheFor(60 * 60);
+		$response->cacheFor(60 * 60, false, true);
 
 		return $response;
 	}
@@ -289,7 +246,9 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		return new JsonResponse($this->itineraryService->extract($account, $mailbox, $message->getUid()));
+		$response = new JsonResponse($this->itineraryService->extract($account, $mailbox, $message->getUid()));
+		$response->cacheFor(24 * 60 * 60, false, true);
+		return $response;
 	}
 
 	private function isSenderTrusted(Message $message): bool {
@@ -432,9 +391,42 @@ class MessagesController extends Controller {
 		]);
 
 		// Enable caching
-		$response->cacheFor(60 * 60);
+		$response->cacheFor(60 * 60, false, true);
 
 		return $response;
+	}
+
+	/**
+	 * Export a whole message as an .eml file.
+	 *
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 * @return Response
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function export(int $id): Response {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$source = $this->mailManager->getSource(
+			$account,
+			$mailbox->getName(),
+			$message->getUid()
+		);
+		return new AttachmentDownloadResponse(
+			$source,
+			$message->getSubject() . '.eml',
+			'message/rfc822',
+		);
 	}
 
 	/**
@@ -492,7 +484,7 @@ class MessagesController extends Controller {
 			$htmlResponse->setContentSecurityPolicy($policy);
 
 			// Enable caching
-			$htmlResponse->cacheFor(60 * 60);
+			$htmlResponse->cacheFor(60 * 60, false, true);
 
 			return $htmlResponse;
 		} catch (Exception $ex) {

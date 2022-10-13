@@ -60,11 +60,9 @@
 
 <script>
 import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
-import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
+import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcMultiselect as Multiselect } from '@nextcloud/vue'
 import jstz from 'jstz'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
 
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService'
 import logger from '../logger'
 import CalendarPickerOption from './CalendarPickerOption'
@@ -182,7 +180,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .modal-wrapper .modal-container {
+:deep(.modal-wrapper .modal-container) {
 	width: calc(100vw - 120px) !important;
 	height: calc(100vh - 120px) !important;
 	max-width: 490px !important;
@@ -194,14 +192,14 @@ export default {
 input {
 	width: 100%;
 }
-::v-deep input[type='text'].multiselect__input {
+:deep(input[type='text'].multiselect__input) {
 	padding: 0 !important;
 }
-::v-deep .multiselect__single {
+:deep(.multiselect__single) {
 	margin-left: -18px;
 	width: 100px;
 }
-::v-deep .multiselect__tags {
+:deep(.multiselect__tags) {
 	border: none !important;
 }
 .all-day {
@@ -216,7 +214,7 @@ input {
 	height: 44px !important;
 	float: right;
 }
-::v-deep .mx-datepicker {
+:deep(.mx-datepicker) {
 	width: 213px;
 }
 </style>

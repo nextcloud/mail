@@ -178,10 +178,7 @@
 			</div>
 		</transition>
 		<transition-group name="list">
-			<div id="list-refreshing"
-				key="loading"
-				class="icon-loading-small"
-				:class="{refreshing: refreshing}" />
+			<IconLoading v-if="refreshing" key="loading-icon" />
 			<Envelope
 				v-for="(env, index) in envelopes"
 				:key="env.databaseId"
@@ -192,13 +189,13 @@
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
 				@delete="$emit('delete', env.databaseId)"
-				@update:selected="onEnvelopeSelectToggle(env, index, ...$event)"
+				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
-				@click="$emit('loadMore')">
+				@click="$emit('load-more')">
 				{{ t('mail', 'Load more') }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
@@ -207,8 +204,7 @@
 </template>
 
 <script>
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope'
 import IconDelete from 'vue-material-design-icons/Delete'
@@ -235,6 +231,7 @@ export default {
 		ImportantIcon,
 		IconFavorite,
 		IconSelect,
+		IconLoading,
 		MoveModal,
 		OpenInNewIcon,
 		ShareIcon,
@@ -328,10 +325,10 @@ export default {
 		},
 	},
 	mounted() {
-		dragEventBus.$on('envelopesDropped', this.unselectAll)
+		dragEventBus.$on('envelopes-dropped', this.unselectAll)
 	},
 	beforeDestroy() {
-		dragEventBus.$off('envelopesDropped', this.unselectAll)
+		dragEventBus.$off('envelopes-dropped', this.unselectAll)
 	},
 	methods: {
 		isEnvelopeSelected(idx) {
@@ -398,7 +395,7 @@ export default {
 				}
 			}
 
-			await Promise.all(this.selectedEnvelopes.map(async(envelope) => {
+			await Promise.all(this.selectedEnvelopes.map(async (envelope) => {
 				logger.info(`deleting thread ${envelope.threadRootId}`)
 				await this.$store.dispatch('deleteThread', {
 					envelope,
@@ -522,30 +519,9 @@ div {
 }
 
 /* TODO: put this in core icons.css as general rule for buttons with icons */
-#load-more-mail-messages.icon-loading-small {
+#load-more-mail-messages {
 	padding-left: 32px;
 	background-position: 9px center;
-}
-
-#list-refreshing {
-	position: absolute;
-	left: calc(50% - 8px);
-	overflow: hidden;
-	padding: 12px;
-	background-color: var(--color-main-background);
-	z-index: 1;
-	border-radius: var(--border-radius-pill);
-	border: 1px solid var(--color-border);
-	top: -24px;
-	opacity: 0;
-	transition-property: top, opacity;
-	transition-duration: 0.5s;
-	transition-timing-function: ease-in-out;
-
-	&.refreshing {
-		top: 4px;
-		opacity: 1;
-	}
 }
 
 .multiselect-header-enter-active,

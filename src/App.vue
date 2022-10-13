@@ -2,6 +2,7 @@
  - @copyright Copyright (c) 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  -
  - @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ - @author Richard Steinmetz <richard@steinmetz.cloud>
  -
  - @license AGPL-3.0-or-later
  -
@@ -31,12 +32,26 @@ import MailboxLockedError from './errors/MailboxLockedError'
 
 export default {
 	name: 'App',
-	mounted() {
+	computed: {
+		hasMailAccounts() {
+			return !!this.$store.getters.accounts.find((account) => !account.isUnified)
+		},
+	},
+	async mounted() {
+		// Redirect to setup page if no accounts are configured
+		if (!this.hasMailAccounts) {
+			this.$router.replace({
+				name: 'setup',
+			})
+		}
+
 		this.sync()
+		await this.$store.dispatch('fetchCurrentUserPrincipal')
+		await this.$store.dispatch('loadCollections')
 	},
 	methods: {
 		sync() {
-			setTimeout(async() => {
+			setTimeout(async () => {
 				try {
 					await this.$store.dispatch('syncInboxes')
 

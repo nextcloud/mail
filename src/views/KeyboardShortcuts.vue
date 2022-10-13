@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
+import { NcModal as Modal } from '@nextcloud/vue'
 
 export default {
 	name: 'KeyboardShortcuts',
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .modal-wrapper .modal-container {
+:deep(.modal-wrapper .modal-container) {
 	display: block;
 	overflow: scroll;
 	transition: transform 300ms ease;

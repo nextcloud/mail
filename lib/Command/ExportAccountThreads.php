@@ -42,17 +42,10 @@ class ExportAccountThreads extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 	private const OPTION_REDACT = 'redact';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ISecureRandom */
-	private $random;
-
-	/** @var IHasher */
-	private $hasher;
-
-	/** @var MessageMapper */
-	private $messageMapper;
+	private AccountService $accountService;
+	private ISecureRandom $random;
+	private IHasher $hasher;
+	private MessageMapper $messageMapper;
 
 	public function __construct(AccountService $service,
 								ISecureRandom $random,

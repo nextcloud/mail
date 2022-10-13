@@ -22,7 +22,6 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 class MessageBuilder {
-
 	/** @var string */
 	private $from;
 

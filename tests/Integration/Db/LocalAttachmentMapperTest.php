@@ -38,7 +38,6 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LocalAttachmentMapperTest extends TestCase {
-
 	/** @var IDBConnection */
 	private $db;
 

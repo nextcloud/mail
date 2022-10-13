@@ -12,7 +12,7 @@
 - **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.
 - **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 	]]></description>
-	<version>1.14.0-alpha.5</version>
+	<version>2.1.0-alpha.3</version>
 	<licence>agpl</licence>
 	<author>Greta Doçi</author>
 	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>
@@ -30,11 +30,12 @@
 	<screenshot>https://user-images.githubusercontent.com/1374172/79554966-278e1600-809f-11ea-82ea-7a0d72a2704f.png</screenshot>
 	<dependencies>
 		<php min-version="7.4" max-version="8.1" />
-		<nextcloud min-version="22" max-version="25" />
+		<nextcloud min-version="25" max-version="26" />
 	</dependencies>
 	<background-jobs>
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
 		<job>OCA\Mail\BackgroundJob\OutboxWorkerJob</job>
+		<job>OCA\Mail\BackgroundJob\IMipMessageJob</job>
 	</background-jobs>
 	<repair-steps>
 		<post-migration>

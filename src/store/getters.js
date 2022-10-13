@@ -2,6 +2,7 @@
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
  *
@@ -23,6 +24,7 @@ import { defaultTo, head, prop, sortBy } from 'ramda'
 
 import { UNIFIED_ACCOUNT_ID } from './constants'
 import { normalizedEnvelopeListId } from './normalization'
+import { getCalendarHome } from '../service/caldavService'
 
 export const getters = {
 	getPreference: (state) => (key, def) => {
@@ -96,4 +98,21 @@ export const getters = {
 	},
 	isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
 	googleOauthUrl: (state) => state.googleOauthUrl,
+	getActiveSieveScript: (state) => (accountId) => state.sieveScript[accountId],
+	getCurrentUserPrincipal: (state) => state.currentUserPrincipal,
+	getCurrentUserPrincipalEmail: (state) => state.currentUserPrincipal?.email,
+	getCalendars: (state) => state.calendars,
+	getClonedCalendars: (state) => state.calendars.map(calendar => {
+		// Hack: We need to clone all calendars because some methods (e.g. calendarQuery) are
+		// unnecessarily mutating the object and causing vue warnings (if used outside of
+		// mutations).
+		const resourcetype = calendar.resourcetype.find(type => type !== '{DAV:}collection')
+		const calendarHome = getCalendarHome()
+		return new calendarHome._collectionFactoryMapper[resourcetype](
+			calendarHome,
+			calendar._request,
+			calendar._url,
+			calendar._props,
+		)
+	}),
 }

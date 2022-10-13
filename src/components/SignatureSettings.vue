@@ -45,16 +45,25 @@
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus" />
-		<button
-			class="primary"
-			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
+		<p v-if="isLargeSignature" class="warning-large-signature">
+			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
+		</p>
+		<ButtonVue
+			type="primary"
 			:disabled="loading"
 			@click="saveSignature">
-			{{ t("mail", "Save signature") }}
-		</button>
-		<button v-if="signature" class="button-text" @click="deleteSignature">
-			{{ t("mail", "Delete") }}
-		</button>
+			<template #icon>
+				<IconLoading v-if="loading" :size="20" fill-color="white" />
+				<IconCheck v-else :size="20" />
+			</template>
+			{{ t('mail', 'Save signature') }}
+		</ButtonVue>
+		<ButtonVue v-if="signature"
+			type="tertiary-no-background"
+			class="button-text"
+			@click="deleteSignature">
+			{{ t('mail', 'Delete') }}
+		</ButtonVue>
 	</div>
 </template>
 
@@ -63,13 +72,18 @@ import logger from '../logger'
 import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+
+import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import IconCheck from 'vue-material-design-icons/Check'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
 		Multiselect,
+		ButtonVue,
+		IconLoading,
+		IconCheck,
 	},
 	props: {
 		account: {
@@ -103,6 +117,9 @@ export default {
 			})
 
 			return identities
+		},
+		isLargeSignature() {
+			return (new Blob([this.signature])).size > 2 * 1024 * 1024
 		},
 	},
 	watch: {
@@ -169,7 +186,8 @@ export default {
 .ck.ck-editor__editable_inline {
   width: 100%;
   max-width: 78vw;
-  height: 100px;
+  height: 100%;
+  min-height: 100px;
   border-radius: var(--border-radius) !important;
   border: 1px solid var(--color-border) !important;
   box-shadow: none !important;
@@ -204,9 +222,14 @@ export default {
 .multiselect--single {
   width: 100%;
 }
-</style>
-<style>
 .ck-balloon-panel {
-  z-index: 10000 !important;
+	 z-index: 10000 !important;
+ }
+.button-vue:deep() {
+	display: inline-block !important;
+	margin-top: 4px !important;
+}
+.warning-large-signature {
+	color: darkorange;
 }
 </style>
