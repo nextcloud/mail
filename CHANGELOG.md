@@ -29,6 +29,13 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Nextcloud 22-24 support
 
+# Changelog
+All notable changes to this project will be documented in this file.
+
+## 1.14.1 - 2022-10-13
+### Changed
+- Updated Vue component library to v6
+
 ## 1.14.0 - 2022-10-10
 ### Added
 - Hide system tags from UI
