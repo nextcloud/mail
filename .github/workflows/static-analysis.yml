@@ -1,11 +1,5 @@
 name: Static analysis
-
-on:
-  pull_request:
-  push:
-    branches:
-      - main
-      - stable*
+on: pull_request
 
 permissions:
   contents: read
