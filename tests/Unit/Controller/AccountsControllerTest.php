@@ -219,7 +219,6 @@ class AccountsControllerTest extends TestCase {
 		$this->config->expects(self::once())
 			->method('getAppValue')
 			->willReturn('yes');
-		$autoDetect = false;
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
@@ -235,10 +234,10 @@ class AccountsControllerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
 			->willReturn($account);
 
-		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 
 		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 
@@ -246,7 +245,6 @@ class AccountsControllerTest extends TestCase {
 	}
 
 	public function testCreateManualNotAllowed(): void {
-		$autoDetect = false;
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
@@ -268,14 +266,13 @@ class AccountsControllerTest extends TestCase {
 			->method('createNewAccount');
 
 		$expectedResponse = \OCA\Mail\Http\JsonResponse::error('Could not create account');
-		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 
 		self::assertEquals($expectedResponse, $response);
 	}
 
 
 	public function testCreateManualFailure(): void {
-		$autoDetect = false;
 		$email = 'user@domain.tld';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
@@ -290,11 +287,11 @@ class AccountsControllerTest extends TestCase {
 		$smtpPassword = 'mypassword';
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
 			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
-		$this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+		$this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, 'password');
 	}
 
 	public function testUpdateManualSuccess(): void {
@@ -314,7 +311,7 @@ class AccountsControllerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
 			->willReturn($account);
 
 		$response = $this->controller->update($id, $accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
@@ -340,7 +337,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpPassword = 'mypassword';
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
 			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 

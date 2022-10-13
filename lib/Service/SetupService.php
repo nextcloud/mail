@@ -29,6 +29,7 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client_Exception;
 use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
+use InvalidArgumentException;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
@@ -38,6 +39,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
+use function in_array;
 
 class SetupService {
 	/** @var AccountService */
@@ -73,27 +75,26 @@ class SetupService {
 	}
 
 	/**
-	 * @param string $accountName
-	 * @param string $emailAddress
-	 * @param string $imapHost
-	 * @param int $imapPort
-	 * @param string $imapSslMode
-	 * @param string $imapUser
-	 * @param string $imapPassword
-	 * @param string $smtpHost
-	 * @param int $smtpPort
-	 * @param string $smtpSslMode
-	 * @param string $smtpUser
-	 * @param string $smtpPassword
-	 * @param string $uid
-	 * @param int|null $accountId
-	 *
 	 * @throws CouldNotConnectException
 	 * @throws ServiceException
 	 *
 	 * @return Account
 	 */
-	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, ?int $accountId = null): Account {
+	public function createNewAccount(string $accountName,
+		string $emailAddress,
+		string $imapHost,
+		int $imapPort,
+		string $imapSslMode,
+		string $imapUser,
+		?string $imapPassword,
+		string $smtpHost,
+		int $smtpPort,
+		string $smtpSslMode,
+		string $smtpUser,
+		?string $smtpPassword,
+		string $uid,
+		string $authMethod,
+		?int $accountId = null): Account {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
@@ -111,12 +112,22 @@ class SetupService {
 			'smtpPassword' => $smtpPassword
 		]);
 		$newAccount->setUserId($uid);
-		$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
-		$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
+		if ($authMethod === 'password' && $imapPassword !== null) {
+			$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
+		}
+		if ($authMethod === 'password' && $smtpPassword !== null) {
+			$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
+		}
+		if (!in_array($authMethod, ['password', 'xoauth2'], true)) {
+			throw new InvalidArgumentException('Invalid auth method ' . $authMethod);
+		}
+		$newAccount->setAuthMethod($authMethod);
 
 		$account = new Account($newAccount);
-		$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
-		$this->testConnectivity($account);
+		if ($authMethod === 'password' && $imapPassword !== null) {
+			$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
+			$this->testConnectivity($account);
+		}
 
 		$this->accountService->save($newAccount);
 		$this->logger->debug("account created " . $newAccount->getId());
