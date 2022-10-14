@@ -340,6 +340,7 @@ OC.L10N.register(
     "Mark as favorite" : "Oznacz jako nieulubione",
     "Mark as unread" : "Oznacz jako nieprzeczytane",
     "Mark as read" : "Oznacz jako przeczytane",
+    "Archive message" : "Przenieś wiadomość do archiwum",
     "Delete message" : "Usuń wiadomość",
     "Not found" : "Nie znaleziono",
     "Remove" : "Usuń",
