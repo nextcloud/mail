@@ -26,8 +26,11 @@
 				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
-				<label for="auto-password" class="account-form__label--required">{{ t('mail', 'Password') }}</label>
+				<label v-if="!useGoogleSso"
+					for="auto-password"
+					class="account-form__label--required">{{ t('mail', 'Password') }}</label>
 				<input
+					v-if="!useGoogleSso"
 					id="auto-password"
 					v-model="autoConfig.password"
 					:disabled="loading"
@@ -219,6 +222,9 @@
 					@change="clearFeedback">
 			</Tab>
 		</Tabs>
+		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
+			{{ t('mail', 'For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password.') }}
+		</div>
 		<div class="account-form__submit-buttons">
 			<ButtonVue v-if="mode === 'auto'"
 				class="account-form__submit-button"
@@ -232,7 +238,6 @@
 				</template>
 				{{ submitButtonText }}
 			</ButtonVue>
-
 			<ButtonVue v-else-if="mode === 'manual'"
 				class="account-form__submit-button"
 				type="primary"
@@ -254,12 +259,18 @@
 
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
+import { mapGetters } from 'vuex'
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
-import { testConnectivity, queryIspdb, queryMx } from '../service/AutoConfigService'
+import {
+	queryIspdb,
+	queryMx,
+	testConnectivity,
+} from '../service/AutoConfigService'
+import { CONSENT_ABORTED, getUserConsent } from '../integration/google'
 
 export default {
 	name: 'AccountForm',
@@ -319,20 +330,32 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters([
+			'googleOauthUrl',
+		]),
+
 		settingsPage() {
 			return this.account !== undefined
 		},
 
 		isDisabledAuto() {
+			if (this.loading) {
+				return true
+			}
+
 			if (this.mode !== 'auto') {
 				return this.loading
 			}
 
 			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| !this.autoConfig.password
+				|| (!this.isGoogleAccount && !this.autoConfig.password)
 		},
 
 		isDisabledManual() {
+			if (this.loading) {
+				return true
+			}
+
 			if (this.mode !== 'manual') {
 				return this.loading
 			}
@@ -344,9 +367,25 @@ export default {
 				|| !this.manualConfig.smtpUser || !this.manualConfig.smtpPassword
 		},
 
+		isGoogleAccount() {
+			if (this.mode === 'auto') {
+				return this.emailAddress.endsWith('@gmail.com')
+			} else {
+				return this.manualConfig.imapHost === 'imap.gmail.com'
+					|| this.manualConfig.smtpHost === 'smtp.gmail.com'
+			}
+		},
+
+		useGoogleSso() {
+			return this.isGoogleAccount && this.googleOauthUrl
+		},
+
 		submitButtonText() {
 			if (this.loading) {
 				return this.loadingMessage ?? t('mail', 'Connecting')
+			}
+			if (this.useGoogleSso) {
+				return t('mail', 'Sign in with Google')
 			}
 			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
 		},
@@ -495,10 +534,29 @@ export default {
 					emailAddress: this.emailAddress,
 					imapHost: this.manualConfig.imapHost.trim(),
 					smtpHost: this.manualConfig.smtpHost.trim(),
+					authMethod: this.useGoogleSso ? 'xoauth2' : 'password',
 				}
 				if (!this.account) {
-					const account = await this.$store.dispatch('createAccount', data)
-					this.feedback = t('mail', 'Account created')
+					const account = await this.$store.dispatch('startAccountSetup', data)
+					if (this.useGoogleSso) {
+						this.loadingMessage = t('mail', 'Awaiting user consent')
+						this.feedback = t('mail', 'Account created. Please follow the popup instructions to link your Google account')
+						try {
+							await getUserConsent(
+								this.googleOauthUrl
+									.replace('_accountId_', account.id)
+									.replace('_email_', encodeURIComponent(account.emailAddress))
+							)
+						} catch (e) {
+							// Clean up the temporary account before we continue
+							this.$store.dispatch('deleteAccount', account)
+							logger.info(`Temporary account ${account.id} deleted`)
+							throw e
+						}
+						this.clearFeedback()
+					}
+					this.loadingMessage = t('mail', 'Loading account')
+					await this.$store.dispatch('finishAccountSetup', { account })
 					this.$emit('account-created', account)
 				} else {
 					const account = await this.$store.dispatch('updateAccount', {
@@ -529,6 +587,8 @@ export default {
 						this.feedback = t('mail', 'IMAP connection failed')
 					} else if (error.data?.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP connection failed')
+					} else if (error.message === CONSENT_ABORTED) {
+						this.feedback = t('mail', 'Google authorization popup closed')
 					} else {
 						this.feedback = t('mail', 'There was an error while setting up your account')
 					}

@@ -190,6 +190,17 @@
 						)
 					}}
 				</p>
+				<p>
+					{{
+						t(
+							'mail',
+							'You have to register a new Client ID for a "Web application" in the Google Cloud console. Add the URL {url} as authorized redirect URI.',
+							{
+								url: googleOauthRedirectUrl,
+							}
+						)
+					}}
+				</p>
 			</article>
 			<GmailAdminOauthSettings :client-id="googleOauthClientId" />
 		</div>
@@ -218,6 +229,7 @@ import {
 } from '../../service/SettingsService'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
+const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', null)
 
 export default {
 	name: 'AdminSettings',
@@ -243,6 +255,7 @@ export default {
 			formKey: Math.random(),
 			configs: this.provisioningSettings,
 			googleOauthClientId,
+			googleOauthRedirectUrl,
 			preview: {
 				provisioningDomain: '',
 				emailTemplate: '',

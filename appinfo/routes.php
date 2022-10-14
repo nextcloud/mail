@@ -364,6 +364,11 @@ return [
 			'url' => '/api/integration/google',
 			'verb' => 'DELETE',
 		],
+		[
+			'name' => 'googleIntegration#oauthRedirect',
+			'url' => '/integration/google-auth',
+			'verb' => 'GET',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

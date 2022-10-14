@@ -224,14 +224,16 @@ class PageControllerTest extends TestCase {
 				['debug', false, true],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(3))
+		$this->config->expects($this->exactly(4))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
+				['mail', 'google_oauth_client_id' ],
 				['core', 'backgroundjobs_mode', 'ajax' ],
 				['mail', 'allow_new_mail_accounts', 'yes']
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
+				$this->returnValue(''),
 				$this->returnValue('cron'),
 				$this->returnValue('yes')
 			);
@@ -269,16 +271,15 @@ class PageControllerTest extends TestCase {
 				['allow-new-accounts', true]
 			);
 
-		$expected = new TemplateResponse($this->appName, 'index',
-			[
-				'attachment-size-limit' => 123,
-				'external-avatars' => 'true',
-				'reply-mode' => 'bottom',
-				'app-version' => '1.2.3',
-				'collect-data' => 'true',
-				'start-mailbox-id' => '123',
-				'tag-classified-messages' => 'true',
-			]);
+		$expected = new TemplateResponse($this->appName, 'index', [
+			'attachment-size-limit' => 123,
+			'external-avatars' => 'true',
+			'reply-mode' => 'bottom',
+			'app-version' => '1.2.3',
+			'collect-data' => 'true',
+			'start-mailbox-id' => '123',
+			'tag-classified-messages' => 'true',
+		]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$expected->setContentSecurityPolicy($csp);

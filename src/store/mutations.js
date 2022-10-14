@@ -406,4 +406,7 @@ export default {
 	addCalendar(state, { calendar }) {
 		state.calendars = [...state.calendars, calendar]
 	},
+	setGoogleOauthUrl(state, url) {
+		state.googleOauthUrl = url
+	},
 }
