@@ -354,6 +354,16 @@ return [
 			'url' => '/api/outbox/{id}',
 			'verb' => 'POST'
 		],
+		[
+			'name' => 'googleIntegration#configure',
+			'url' => '/api/integration/google',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'googleIntegration#unlink',
+			'url' => '/api/integration/google',
+			'verb' => 'DELETE',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

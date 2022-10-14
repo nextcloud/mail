@@ -172,11 +172,33 @@
 			</article>
 			<AntiSpamSettings />
 		</div>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
+						'Gmail integration'
+					)
+				}}
+			</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords.'
+						)
+					}}
+				</p>
+			</article>
+			<GmailAdminOauthSettings :client-id="googleOauthClientId" />
+		</div>
 	</SettingsSection>
 </template>
 
 <script>
 import Button from '@nextcloud/vue/dist/Components/NcButton'
+import GmailAdminOauthSettings from './GmailAdminOauthSettings'
 import logger from '../../logger'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
@@ -194,9 +216,13 @@ import {
 	updateAllowNewMailAccounts,
 
 } from '../../service/SettingsService'
+
+const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
+
 export default {
 	name: 'AdminSettings',
 	components: {
+		GmailAdminOauthSettings,
 		AntiSpamSettings,
 		ProvisioningSettings,
 		SettingsSection,
@@ -216,6 +242,7 @@ export default {
 			addNew: false,
 			formKey: Math.random(),
 			configs: this.provisioningSettings,
+			googleOauthClientId,
 			preview: {
 				provisioningDomain: '',
 				emailTemplate: '',

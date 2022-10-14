@@ -68,6 +68,13 @@ occ config:app:set mail abuse_number_of_messages_per_1h --value=30
 occ config:app:set mail abuse_number_of_messages_per_1d --value=100
 ```
 
+## Google OAuth
+
+This app can allow users to connect their Google accounts with OAuth. This makes it possible to use accounts without 2FA or app password.
+
+1) [Create authorization credentials](https://developers.google.com/identity/protocols/oauth2/web-server#prerequisites). You will receive a client ID and a client secret.
+2) Open the Nextcloud settings page. Navigate to *Groupware* and scroll down to *Gmail integration*. Enter and save the client ID and client secret.
+
 ## Troubleshooting
 
 ### Logging

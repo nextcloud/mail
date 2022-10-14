@@ -121,7 +121,6 @@ import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSe
 import TrustedSenders from './TrustedSenders'
 import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
-import Logger from '../logger'
 import OutOfOfficeForm from './OutOfOfficeForm'
 
 export default {
