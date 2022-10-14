@@ -24,7 +24,7 @@
 		:error="t('mail', 'Could not open mailbox')"
 		message=""
 		role="alert" />
-	<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages …')" role="alert" />
+	<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
 	<Loading
 		v-else-if="loadingCacheInitialization"
 		:hint="t('mail', 'Loading messages …')"
@@ -47,6 +47,7 @@
 <script>
 import EmptyMailbox from './EmptyMailbox'
 import EnvelopeList from './EnvelopeList'
+import LoadingSkeleton from './LoadingSkeleton'
 import Error from './Error'
 import { findIndex, propEq } from 'ramda'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
@@ -69,6 +70,7 @@ export default {
 		EnvelopeList,
 		Error,
 		Loading,
+		LoadingSkeleton,
 	},
 	mixins: [isMobile],
 	props: {
