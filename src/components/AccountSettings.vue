@@ -213,14 +213,6 @@ export default {
 	justify-content: space-between;
 }
 
-::v-deep .modal-container {
-	display: block;
-	overflow: scroll;
-	transition: transform 300ms ease;
-	border-radius: var(--border-radius-large);
-	box-shadow: 0 0 40px rgba(0,0,0,0.2);
-	padding: 30px 70px 20px;
-}
 .button.icon-rename {
 	background-image: var(--icon-rename-000);
 	background-color: var(--color-main-background);
@@ -246,5 +238,11 @@ h2 {
 }
 .app-settings-section {
 margin-bottom: 45px;
+}
+
+// Fix weird modal glitches on Firefox when toggling autoresponder
+:deep(.modal-container),
+:deep(.app-settings__wrapper) {
+	position: unset !important;
 }
 </style>
