@@ -258,7 +258,7 @@ export default {
 		justify-content: center;
 		font-weight: bold;
 		font-size: 12px;
-		color: var(--color-primary-element-light);
+		color: var(--color-primary-element);
 
 		svg {
 			position: absolute;
@@ -273,7 +273,7 @@ export default {
 			stroke-dashoffset: 0;
 			stroke-linecap: round;
 			stroke-width: 2px;
-			stroke: var(--color-primary-element-lighter);
+			stroke: var(--color-primary-element-light);
 			fill: none;
 			animation: countdown 10s linear infinite forwards;
 		}
