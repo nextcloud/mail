@@ -27,7 +27,7 @@
 		:title="t('mail', 'Outbox')"
 		:to="to">
 		<template #icon>
-			<IconLoading v-if="sending"
+			<NcLoadingIcon v-if="sending"
 				class="outbox-sending-icon"
 				:size="20" />
 			<IconOutbox v-else
@@ -45,7 +45,7 @@
 <script>
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp'
-import IconLoading from 'vue-material-design-icons/Loading'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 
 const RETRY_COUNT = 5
 const RETRY_TIMEOUT = 10000
@@ -56,7 +56,7 @@ export default {
 		AppNavigationItem,
 		CounterBubble,
 		IconOutbox,
-		IconLoading,
+		NcLoadingIcon,
 	},
 	data() {
 		return {
@@ -124,7 +124,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.counter-bubble__counter) {
+::v-deep(.counter-bubble__counter) {
 	margin-right: 43px;
 }
 .outbox-opacity-icon {
@@ -132,17 +132,6 @@ export default {
 
 	&:hover {
 		opacity: 1;
-	}
-}
-.outbox-sending-icon {
-	animation:spin 0.4s linear infinite;
-}
-@keyframes spin {
-	0% {
-		transform: rotate(0deg)
-	}
-	100% {
-		transform: rotate(360deg)
 	}
 }
 </style>

@@ -33,19 +33,21 @@
 			{{ subjectForSubtitle }}
 		</template>
 		<template #indicator>
-			<IconAlertCircleOutline v-if="message.failed && !message.pending"
-				:title="details"
-				:size="20"
-				class="failed-icon error" />
-			<LoadingIcon v-else-if="message.failed && message.pending"
-				:title="details"
-				:size="20"
-				class="failed-icon pending" />
-			<div v-else-if="counter > 0 && !message?.aborted" class="failed-icon countdown">
-				<svg>
-					<circle r="12" cx="20" cy="20" />
-				</svg>
-				{{ counter }}
+			<div class="indicator">
+				<IconAlertCircleOutline v-if="message.failed && !message.pending"
+					:title="details"
+					:size="20"
+					class="failed-icon error" />
+				<NcLoadingIcon v-else-if="message.failed && message.pending"
+					:title="details"
+					:size="20"
+					class="failed-icon pending" />
+				<div v-else-if="counter > 0 && !message?.aborted" class="failed-icon countdown">
+					<svg>
+						<circle r="12" cx="20" cy="20" />
+					</svg>
+					{{ counter }}
+				</div>
 			</div>
 		</template>
 		<template v-if="!message.pending" slot="actions">
@@ -76,7 +78,7 @@ import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextclo
 import Avatar from './Avatar'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconAlertCircleOutline from 'vue-material-design-icons/AlertCircleOutline'
-import LoadingIcon from 'vue-material-design-icons/Loading'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
 import moment from '@nextcloud/moment'
@@ -95,7 +97,7 @@ export default {
 		ActionButton,
 		IconDelete,
 		IconAlertCircleOutline,
-		LoadingIcon,
+		NcLoadingIcon,
 		Send,
 	},
 	mixins: [
@@ -213,6 +215,11 @@ export default {
 <style lang="scss" scoped>
 .outbox-message {
 	list-style: none;
+
+	.indicator {
+		padding: 0 8px;
+	}
+
 	&.active {
 		background-color: var(--color-background-dark);
 		border-radius: 16px;

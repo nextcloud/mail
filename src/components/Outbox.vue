@@ -41,6 +41,12 @@
 							n('mail', 'Retrying send message', 'Retrying send {count} messages', failedMessages.length, {count: failedMessages.length})
 						}}
 					</div>
+					<span
+						class="outbox-retry--btn"
+						:class="{sending: sending}"
+						@click="sendFailedMessages">
+						{{ t('mail', 'Retry') }}
+					</span>
 					<NcButton
 						class="outbox-retry--btn"
 						:title="t('mail', 'Send failed messages')"
@@ -80,8 +86,6 @@ import EmptyMailbox from './EmptyMailbox'
 import OutboxMessageContent from './OutboxMessageContent'
 import OutboxMessageListItem from './OutboxMessageListItem'
 import NewMessageButtonHeader from './NewMessageButtonHeader'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton'
-import EmailFastOutlineIcon from 'vue-material-design-icons/EmailFastOutline'
 import logger from '../logger'
 
 export default {
@@ -95,8 +99,6 @@ export default {
 		OutboxMessageListItem,
 		OutboxMessageContent,
 		NewMessageButtonHeader,
-		NcButton,
-		EmailFastOutlineIcon,
 	},
 	data() {
 		return {
@@ -159,6 +161,9 @@ export default {
 			this.loading = false
 		},
 		sendFailedMessages() {
+			if (this.sending) {
+				return false
+			}
 			this.sending = true
 			const promises = []
 			this.failedMessages.map(async (msg) => {
@@ -212,7 +217,14 @@ export default {
 	}
 
 	.outbox-retry--btn {
-		margin-right: 8px;
+		cursor:pointer;
+		color: var(--color-primary-element);
+		font-weight: bold;
+		padding:0 8px;
+
+		&.sending {
+			opacity: 0.5;
+		}
 	}
 }
 </style>
