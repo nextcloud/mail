@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.0.2 – 2022-10-17
+### Fixed
+- Modal glitches on Firefox when toggling autoresponder
+
 ## 2.0.1 – 2022-10-13
 ### Fixed
 - Int value out of range when accepting calendar invitation
