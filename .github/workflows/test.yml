@@ -103,7 +103,7 @@ jobs:
                   --health-timeout=5s
                   --health-retries=3
           postgres-service:
-              image: postgres:14
+              image: postgres
               env:
                   POSTGRES_USER: nextcloud
                   POSTGRES_DB: nextcloud
