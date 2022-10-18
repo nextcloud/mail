@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26ec6d171efd5172d22576935c5c80e6",
+    "content-hash": "ec98e31e4dacd003b79d1677e5ff4723",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2147,16 +2147,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "dev-chore/bump-flysystem-v2.1.1",
+            "version": "0.4.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nextcloud-deps/RubixML.git",
-                "reference": "35ebe863bb0ecfefb0524d7b77495107e4c5aefb"
+                "url": "https://github.com/RubixML/ML.git",
+                "reference": "a09521a9cee7be88cbb6671cf647d27547289667"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-deps/RubixML/zipball/35ebe863bb0ecfefb0524d7b77495107e4c5aefb",
-                "reference": "35ebe863bb0ecfefb0524d7b77495107e4c5aefb",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/a09521a9cee7be88cbb6671cf647d27547289667",
+                "reference": "a09521a9cee7be88cbb6671cf647d27547289667",
                 "shasum": ""
             },
             "require": {
@@ -2190,53 +2190,24 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Rubix\\ML\\": "src/"
-                },
                 "files": [
                     "src/constants.php",
                     "src/functions.php"
-                ]
-            },
-            "autoload-dev": {
+                ],
                 "psr-4": {
-                    "Rubix\\ML\\Tests\\": "tests/",
-                    "Rubix\\ML\\Benchmarks\\": "benchmarks/"
+                    "Rubix\\ML\\": "src/"
                 }
             },
-            "scripts": {
-                "build": [
-                    "@composer install",
-                    "@analyze",
-                    "@test",
-                    "@check"
-                ],
-                "analyze": [
-                    "phpstan analyse -c phpstan.neon"
-                ],
-                "benchmark": [
-                    "phpbench run --report=env --report=aggregate"
-                ],
-                "check": [
-                    "@putenv PHP_CS_FIXER_IGNORE_ENV=1",
-                    "php-cs-fixer fix --config=.php_cs.dist -v --dry-run --using-cache=no"
-                ],
-                "fix": [
-                    "php-cs-fixer fix --config=.php_cs.dist"
-                ],
-                "test": [
-                    "phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
                     "name": "Andrew DalPino",
-                    "role": "Project Lead",
+                    "email": "support@andrewdalpino.com",
                     "homepage": "https://github.com/andrewdalpino",
-                    "email": "support@andrewdalpino.com"
+                    "role": "Project Lead"
                 },
                 {
                     "name": "Contributors",
@@ -2246,9 +2217,14 @@
             "description": "A high-level machine learning and deep learning library for the PHP language.",
             "homepage": "https://rubixml.com",
             "keywords": [
+                "Algorithm",
+                "Deep learning",
+                "Linear regression",
+                "Neural network",
+                "Rubix",
+                "TF-IDF",
                 "adaboost",
                 "ai",
-                "algorithm",
                 "analytics",
                 "anomaly detection",
                 "artificial intelligence",
@@ -2261,7 +2237,6 @@
                 "data science",
                 "dataset",
                 "dbscan",
-                "deep learning",
                 "dimensionality reduction",
                 "ensemble",
                 "estimator",
@@ -2282,7 +2257,6 @@
                 "k-nearest neighbors",
                 "kmeans",
                 "knn",
-                "linear regression",
                 "local outlier factor",
                 "loda",
                 "lof",
@@ -2296,7 +2270,6 @@
                 "naive bayes",
                 "natural language processing",
                 "nearest neighbors",
-                "neural network",
                 "nlp",
                 "outlier detection",
                 "php",
@@ -2311,7 +2284,6 @@
                 "regression",
                 "regressor",
                 "ridge",
-                "rubix",
                 "rubix ml",
                 "rubixml",
                 "softmax",
@@ -2321,24 +2293,23 @@
                 "t-sne",
                 "text mining",
                 "tf idf",
-                "tf-idf",
                 "tsne",
                 "unsupervised learning"
             ],
             "support": {
-                "docs": "https://docs.rubixml.com",
-                "issues": "https://github.com/RubixML/ML/issues",
-                "source": "https://github.com/RubixML/ML",
                 "chat": "https://t.me/RubixML",
-                "email": "support@andrewdalpino.com"
+                "docs": "https://docs.rubixml.com",
+                "email": "support@andrewdalpino.com",
+                "issues": "https://github.com/RubixML/ML/issues",
+                "source": "https://github.com/RubixML/ML"
             },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/sponsors/RubixML"
+                    "url": "https://github.com/sponsors/RubixML",
+                    "type": "github"
                 }
             ],
-            "time": "2022-10-06T11:26:57+00:00"
+            "time": "2022-10-06T20:25:06+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -3225,7 +3196,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "rubix/ml": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
