@@ -22,6 +22,8 @@
 import VirtualTestEditor from '../../virtualtesteditor'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import SignaturePlugin from '../../../ckeditor/signature/SignaturePlugin'
+import QuotePlugin from '../../../ckeditor/quote/QuotePlugin'
+
 import {
 	TRIGGER_CHANGE_ALIAS,
 	TRIGGER_EDITOR_READY,
@@ -64,6 +66,24 @@ describe('SignaturePlugin', () => {
 			)
 
 			expect(editor.getData()).toEqual(text)
+		})
+
+		it('Add signature to content above quote', async() => {
+			const text = '<p>bonjour bonjour</p><div class="quote">"John Doe" john.doe@localhost - January 1, 1970 1:00 AM <blockquote><p>bonjour bonjour</p></blockquote></div>'
+			const expected = '<p>bonjour bonjour</p><div class=\"signature\">--&nbsp;<p>&nbsp;</p><p>Jane Doe</p><p>&nbsp;</p></div><div class=\"quote\"><p>\"John Doe\" john.doe@localhost - January 1, 1970 1:00 AM</p><p>bonjour bonjour</p></div>'
+
+			const editor = await VirtualTestEditor.create({
+				initialData: text,
+				plugins: [ParagraphPlugin, QuotePlugin, SignaturePlugin],
+			})
+
+			editor.execute('insertSignature',
+				TRIGGER_EDITOR_READY,
+				'<p>Jane Doe</p>',
+				true,
+			)
+
+			expect(editor.getData()).toEqual(expected)
 		})
 
 	})
