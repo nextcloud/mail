@@ -28,6 +28,8 @@ use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\Cache;
+use OCA\Mail\Events\BeforeImapClientCreated;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -42,15 +44,22 @@ class IMAPClientFactory {
 	/** @var ICacheFactory */
 	private $cacheFactory;
 
+	/** @var IEventDispatcher */
+	private $eventDispatcher;
+
 	/**
 	 * @param ICrypto $crypto
 	 * @param IConfig $config
 	 * @param ICacheFactory $cacheFactory
 	 */
-	public function __construct(ICrypto $crypto, IConfig $config, ICacheFactory $cacheFactory) {
+	public function __construct(ICrypto $crypto,
+								IConfig $config,
+								ICacheFactory $cacheFactory,
+								IEventDispatcher $eventDispatcher) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
+		$this->eventDispatcher = $eventDispatcher;
 	}
 
 	/**
@@ -65,6 +74,9 @@ class IMAPClientFactory {
 	 * @return Horde_Imap_Client_Socket
 	 */
 	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
+		$this->eventDispatcher->dispatchTyped(
+			new BeforeImapClientCreated($account)
+		);
 		$host = $account->getMailAccount()->getInboundHost();
 		$user = $account->getMailAccount()->getInboundUser();
 		$decryptedPassword = $this->crypto->decrypt($account->getMailAccount()->getInboundPassword());
