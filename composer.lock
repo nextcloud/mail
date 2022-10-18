@@ -1561,16 +1561,16 @@
         },
         {
             "name": "christophwurst/kitinerary",
-            "version": "0.2.1",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary.git",
-                "reference": "d2adb02b6d46b36571dc3c5127a8360ba2d5b418"
+                "reference": "5e0f19c16af95821d85f4a8da72e571ccc818601"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/d2adb02b6d46b36571dc3c5127a8360ba2d5b418",
-                "reference": "d2adb02b6d46b36571dc3c5127a8360ba2d5b418",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/5e0f19c16af95821d85f4a8da72e571ccc818601",
+                "reference": "5e0f19c16af95821d85f4a8da72e571ccc818601",
                 "shasum": ""
             },
             "require": {
@@ -1593,7 +1593,11 @@
                 }
             ],
             "description": "KItinerary adapter",
-            "time": "2020-01-13T21:39:22+00:00"
+            "support": {
+                "issues": "https://github.com/ChristophWurst/kitinerary/issues",
+                "source": "https://github.com/ChristophWurst/kitinerary/tree/0.2.2"
+            },
+            "time": "2022-10-02T14:11:40+00:00"
         },
         {
             "name": "christophwurst/kitinerary-bin",
@@ -1636,20 +1640,20 @@
         },
         {
             "name": "christophwurst/kitinerary-flatpak",
-            "version": "0.2.2",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-flatpak.git",
-                "reference": "2f0254f31a6b3d88f7a8ac5de25c580820401d37"
+                "reference": "8eca1209dbc009dd301431373598a108fc920aa6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/2f0254f31a6b3d88f7a8ac5de25c580820401d37",
-                "reference": "2f0254f31a6b3d88f7a8ac5de25c580820401d37",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/8eca1209dbc009dd301431373598a108fc920aa6",
+                "reference": "8eca1209dbc009dd301431373598a108fc920aa6",
                 "shasum": ""
             },
             "require": {
-                "christophwurst/kitinerary": "^0.2",
+                "christophwurst/kitinerary": "^0.2.2",
                 "ext-json": "*"
             },
             "type": "library",
@@ -1669,7 +1673,11 @@
                 }
             ],
             "description": "KItinerary Flatpak binding",
-            "time": "2020-01-13T21:42:51+00:00"
+            "support": {
+                "issues": "https://github.com/ChristophWurst/kitinerary-flatpak/issues",
+                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/0.2.3"
+            },
+            "time": "2022-10-03T11:35:21+00:00"
         },
         {
             "name": "christophwurst/kitinerary-sys",
