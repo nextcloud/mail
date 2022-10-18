@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.0.3 – 2022-10-18
+### Fixed
+- Signature above quote
+
 ## 2.0.2 – 2022-10-17
 ### Fixed
 - Modal glitches on Firefox when toggling autoresponder
