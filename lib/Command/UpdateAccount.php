@@ -34,6 +34,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UpdateAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_NAME = 'name';
+	public const ARGUMENT_EMAIL = 'email';
 	public const ARGUMENT_AUTH_METHOD = 'auth-method';
 	public const ARGUMENT_IMAP_HOST = 'imap-host';
 	public const ARGUMENT_IMAP_PORT = 'imap-port';
@@ -69,6 +70,8 @@ class UpdateAccount extends Command {
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 
 		$this->addOption(self::ARGUMENT_NAME, '', InputOption::VALUE_OPTIONAL);
+		$this->addOption(self::ARGUMENT_EMAIL, '', InputOption::VALUE_OPTIONAL);
+
 		$this->addOption(self::ARGUMENT_IMAP_HOST, '', InputOption::VALUE_OPTIONAL);
 		$this->addOption(self::ARGUMENT_IMAP_PORT, '', InputOption::VALUE_OPTIONAL);
 		$this->addOption(self::ARGUMENT_IMAP_SSL_MODE, '', InputOption::VALUE_OPTIONAL);
@@ -88,6 +91,8 @@ class UpdateAccount extends Command {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 
 		$name = $input->getOption(self::ARGUMENT_NAME);
+		$email = $input->getOption(self::ARGUMENT_EMAIL);
+
 		$imapHost = $input->getOption(self::ARGUMENT_IMAP_HOST);
 		$imapPort = $input->getOption(self::ARGUMENT_IMAP_PORT);
 		$imapSslMode = $input->getOption(self::ARGUMENT_IMAP_SSL_MODE);
@@ -115,9 +120,12 @@ class UpdateAccount extends Command {
 			$mailAccount->setAuthMethod($authMethod);
 		}
 
-		//NAME
+		//ACCOUNT OPTIONS
 		if ($input->getOption(self::ARGUMENT_NAME)) {
 			$mailAccount->setName($name);
+		}
+		if ($input->getOption(self::ARGUMENT_EMAIL)) {
+			$mailAccount->setEmail($email);
 		}
 
 		//INBOUND
