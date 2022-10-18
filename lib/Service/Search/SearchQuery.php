@@ -53,6 +53,18 @@ class SearchQuery {
 	/** @var string[] */
 	private $textTokens = [];
 
+	/** @var array[] */
+	private $tags = [];
+
+	/** @var string|null */
+	private $start;
+
+	/** @var string|null */
+	private $end;
+
+	/** @var bool */
+	private $hasAttachments = false;
+
 	/**
 	 * @return int|null
 	 * @psalm-mutation-free
@@ -152,5 +164,77 @@ class SearchQuery {
 
 	public function addTextToken(string $textToken): void {
 		$this->textTokens[] = $textToken;
+	}
+
+	/**
+	 * Get tags to search query
+	 *
+	 * @return array
+	 */
+	public function getTags(): array {
+		return $this->tags;
+	}
+
+	/**
+	 * Set tags to search query
+	 *
+	 * @param array $tags
+	 * @return void
+	 */
+	public function setTags(array $tags): void {
+		$this->tags = $tags;
+	}
+
+	/**
+	 * Get start date to search query
+	 *
+	 * @return string|null
+	 */
+	public function getStart(): ?string {
+		return $this->start;
+	}
+
+	/**
+	 * Set start date to search query
+	 *
+	 * @param string $start
+	 * @return void
+	 */
+	public function setStart(string $start): void {
+		$this->start = $start;
+	}
+
+	/**
+	 * Get start date to search query
+	 *
+	 * @return string|null
+	 */
+	public function getEnd(): ?string {
+		return $this->end;
+	}
+
+	/**
+	 * Set end date to search query
+	 *
+	 * @param string $end
+	 * @return void
+	 */
+	public function setEnd(string $end): void {
+		$this->end = $end;
+	}
+
+	/**
+	 * @return bool|null
+	 * @psalm-mutation-free
+	 */
+	public function getHasAttachments(): ?bool {
+		return $this->hasAttachments;
+	}
+
+	/**
+	 * @param bool $hasAttachments
+	 */
+	public function setHasAttachments(bool $hasAttachments): void {
+		$this->hasAttachments = $hasAttachments;
 	}
 }

@@ -2,7 +2,6 @@
 	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
 		<div slot="list"
 			:class="{ header__button: !showThread || !isMobile }">
-			<NewMessageButtonHeader v-if="!showThread || !isMobile" />
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -70,7 +69,6 @@ import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButto
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
-import NewMessageButtonHeader from './NewMessageButtonHeader'
 import Vue from 'vue'
 
 import infiniteScroll from '../directives/infinite-scroll'
@@ -101,7 +99,6 @@ export default {
 		Mailbox,
 		NoMessageSelected,
 		Popover,
-		NewMessageButtonHeader,
 		SectionTitle,
 		Thread,
 	},
