@@ -21,6 +21,7 @@
 
 <template>
 	<AppNavigation>
+		<NewMessageButtonHeader />
 		<template #list>
 			<!-- Special mailboxes first -->
 			<NavigationMailbox
@@ -77,6 +78,7 @@
 
 <script>
 import { NcAppNavigation as AppNavigation, NcAppNavigationSettings as AppNavigationSettings, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
+import NewMessageButtonHeader from './NewMessageButtonHeader'
 
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
@@ -97,6 +99,7 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 		NavigationOutbox,
+		NewMessageButtonHeader,
 		IconSetting,
 	},
 	data() {

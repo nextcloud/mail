@@ -56,6 +56,9 @@ class FilterStringParser {
 			'read' => Flag::is(Flag::SEEN),
 			'unread' => Flag::not(Flag::SEEN),
 			'important' => Flag::is(Flag::IMPORTANT),
+			'is_important' => FlagExpression::and(
+				Flag::is(Flag::IMPORTANT)
+			)
 		];
 
 		switch ($type) {
@@ -98,7 +101,41 @@ class FilterStringParser {
 				$query->addBcc($param);
 				return true;
 			case 'subject':
-				$query->addSubject($param);
+				// from frontend part subject:My+search+text
+				$subject = str_replace('+', ' ', $param);
+				$query->addSubject($subject);
+				return true;
+			case 'tags':
+				$tags = explode(',', $param);
+				$query->setTags($tags);
+				return true;
+			case 'start':
+				if (!empty($param)) {
+					$query->setStart($param);
+				}
+				return true;
+			case 'end':
+				if (!empty($param)) {
+					$query->setEnd($param);
+				}
+				return true;
+			case 'flags':
+				$flagArray = explode(',', $param);
+				foreach ($flagArray as $flagItem) {
+					if (array_key_exists($flagItem, $flagMap)) {
+						/** @var Flag $flag */
+						$flag = $flagMap[$flagItem];
+						if ($flag instanceof Flag) {
+							$query->addFlag($flag);
+						} elseif ($flag instanceof FlagExpression) {
+							$query->addFlagExpression($flag);
+						}
+					} elseif ($flagItem === 'attachments') {
+						$query->setHasAttachments(true);
+					}
+				}
+
+
 				return true;
 		}
 

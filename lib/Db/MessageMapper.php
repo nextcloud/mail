@@ -726,6 +726,13 @@ class MessageMapper extends QBMapper {
 			$qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT)
 		);
 
+		if (!empty($query->getTags())) {
+			$select->innerJoin('m', 'mail_message_tags', 'tags', 'm.message_id = tags.imap_message_id');
+			$select->andWhere(
+				$qb->expr()->in('tags.tag_id', $qb->createNamedParameter($query->getTags(), IQueryBuilder::PARAM_STR_ARRAY))
+			);
+		}
+
 		if (!empty($query->getFrom())) {
 			$select->andWhere(
 				$qb->expr()->in('r0.email', $qb->createNamedParameter($query->getFrom(), IQueryBuilder::PARAM_STR_ARRAY))
@@ -761,11 +768,31 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
+		if (!empty($query->getStart())) {
+			$select->andWhere(
+				$qb->expr()->gte('m.sent_at', $qb->createNamedParameter($query->getStart()), IQueryBuilder::PARAM_INT)
+			);
+		}
+
+		if (!empty($query->getEnd())) {
+			$select->andWhere(
+				$qb->expr()->lte('m.sent_at', $qb->createNamedParameter($query->getEnd()), IQueryBuilder::PARAM_INT)
+			);
+		}
+
+
+		if ($query->getHasAttachments()) {
+			$select->andWhere(
+				$qb->expr()->eq('m.flag_attachments', $qb->createNamedParameter($query->getHasAttachments(), IQueryBuilder::PARAM_INT))
+			);
+		}
+
 		if ($query->getCursor() !== null) {
 			$select->andWhere(
 				$qb->expr()->lt('m.sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))
 			);
 		}
+
 		// createParameter
 		if ($uids !== null) {
 			$select->andWhere(

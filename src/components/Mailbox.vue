@@ -20,28 +20,34 @@
   -->
 
 <template>
-	<Error v-if="error"
-		:error="t('mail', 'Could not open mailbox')"
-		message=""
-		role="alert" />
-	<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
-	<Loading
-		v-else-if="loadingCacheInitialization"
-		:hint="t('mail', 'Loading messages …')"
-		:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')" />
-	<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
-	<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-	<EnvelopeList
-		v-else
-		:account="account"
-		:mailbox="mailbox"
-		:search-query="searchQuery"
-		:envelopes="envelopesToShow"
-		:refreshing="refreshing"
-		:loading-more="loadingMore"
-		:load-more-button="showLoadMore"
-		@delete="onDelete"
-		@load-more="loadMore" />
+	<div>
+		<SearchMessages
+			v-if="!mailbox.isUnified"
+			:mailbox="mailbox"
+			@search-changed="onUpdateSearchQuery" />
+		<Error v-if="error"
+			:error="t('mail', 'Could not open mailbox')"
+			message=""
+			role="alert" />
+		<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
+		<Loading
+			v-else-if="loadingCacheInitialization"
+			:hint="t('mail', 'Loading messages …')"
+			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')" />
+		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
+		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
+		<EnvelopeList
+			v-else
+			:account="account"
+			:mailbox="mailbox"
+			:search-query="searchQuery"
+			:envelopes="envelopesToShow"
+			:refreshing="refreshing"
+			:loading-more="loadingMore"
+			:load-more-button="showLoadMore"
+			@delete="onDelete"
+			@load-more="loadMore" />
+	</div>
 </template>
 
 <script>
@@ -61,6 +67,7 @@ import EmptyMailboxSection from './EmptyMailboxSection'
 import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
+import SearchMessages from './SearchMessages'
 
 export default {
 	name: 'Mailbox',
@@ -71,6 +78,7 @@ export default {
 		Error,
 		Loading,
 		LoadingSkeleton,
+		SearchMessages,
 	},
 	mixins: [isMobile],
 	props: {
@@ -111,6 +119,7 @@ export default {
 	},
 	data() {
 		return {
+			query: this.searchQuery,
 			error: false,
 			refreshing: false,
 			loadingMore: false,
@@ -123,7 +132,7 @@ export default {
 	},
 	computed: {
 		envelopes() {
-			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.query)
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
@@ -166,11 +175,12 @@ export default {
 		mailbox() {
 			this.loadEnvelopes()
 				.then(() => {
-					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mailbox change`)
+					logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after mailbox change`)
 					this.sync(false)
 				})
 		},
 		searchQuery() {
+			this.query = this.searchQuery
 			this.loadEnvelopes()
 		},
 	},
@@ -184,7 +194,7 @@ export default {
 	async mounted() {
 		this.loadEnvelopes()
 			.then(() => {
-				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
+				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) after mount`)
 				this.sync(false)
 			})
 	},
@@ -200,7 +210,7 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) during cache initalization`)
+			logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) during cache initalization`)
 			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
@@ -209,7 +219,7 @@ export default {
 				})
 		},
 		async loadEnvelopes() {
-			logger.debug(`Fetching envelopes for mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, this.mailbox)
+			logger.debug(`Fetching envelopes for mailbox ${this.mailbox.databaseId} (${this.query})`, this.mailbox)
 			this.loadingEnvelopes = true
 			this.loadingCacheInitialization = false
 			this.error = false
@@ -217,7 +227,7 @@ export default {
 			try {
 				const envelopes = await this.$store.dispatch('fetchEnvelopes', {
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query: this.query,
 					limit: this.initialPageSize,
 				})
 
@@ -255,25 +265,24 @@ export default {
 			} catch (error) {
 				await matchError(error, {
 					[MailboxLockedError.getName()]: async (error) => {
-						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) is locked`, { error })
-
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.query}) is locked`, { error })
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
 					[MailboxNotCachedError.getName()]: async (error) => {
-						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.searchQuery}) not cached. Triggering initialization`, { error })
+						logger.info(`Mailbox ${this.mailbox.databaseId} (${this.query}) not cached. Triggering initialization`, { error })
 						this.loadingEnvelopes = false
 
 						try {
 							await this.initializeCache()
 						} catch (error) {
-							logger.error(`Could not initialize cache of mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
+							logger.error(`Could not initialize cache of mailbox ${this.mailbox.databaseId} (${this.query})`, { error })
 							this.error = error
 						}
 					},
 					default: (error) => {
-						logger.error(`Could not fetch envelopes of mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { error })
+						logger.error(`Could not fetch envelopes of mailbox ${this.mailbox.databaseId} (${this.query})`, { error })
 						this.loadingEnvelopes = false
 						this.error = error
 					},
@@ -293,7 +302,7 @@ export default {
 			try {
 				const envelopes = await this.$store.dispatch('fetchNextEnvelopePage', {
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query: this.query,
 				})
 				if (envelopes.length === 0) {
 					logger.info('envelope list end reached')
@@ -400,7 +409,7 @@ export default {
 				)
 				break
 			case 'refresh':
-				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) per shortcut`)
+				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) per shortcut`)
 				this.sync(false)
 
 				break
@@ -419,7 +428,7 @@ export default {
 		},
 		async sync(init = false) {
 			if (this.refreshing) {
-				logger.debug(`already sync'ing mailbox ${this.mailbox.databaseId} (${this.searchQuery}), aborting`, { init })
+				logger.debug(`already sync'ing mailbox ${this.mailbox.databaseId} (${this.query}), aborting`, { init })
 				return
 			}
 
@@ -427,7 +436,7 @@ export default {
 			try {
 				await this.$store.dispatch('syncEnvelopes', {
 					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
+					query: this.query,
 					init,
 				})
 			} catch (error) {
@@ -441,7 +450,7 @@ export default {
 				})
 			} finally {
 				this.refreshing = false
-				logger.debug(`finished sync'ing mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
+				logger.debug(`finished sync'ing mailbox ${this.mailbox.databaseId} (${this.query})`, { init })
 			}
 		},
 		// onDelete(id): Load more message and navigate to other message if needed
@@ -450,7 +459,7 @@ export default {
 			// Get a new message
 			this.$store.dispatch('fetchNextEnvelopes', {
 				mailboxId: this.mailbox.databaseId,
-				query: this.searchQuery,
+				query: this.query,
 				quantity: 1,
 			})
 			const idx = findIndex(propEq('databaseId', id), this.envelopes)
@@ -494,7 +503,7 @@ export default {
 				return
 			}
 			try {
-				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) in background`)
+				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.query}) in background`)
 				await this.sync(false)
 			} catch (error) {
 				logger.error('Background sync failed: ' + error.message, { error })
@@ -503,6 +512,10 @@ export default {
 		stopInterval() {
 			clearInterval(this.loadMailboxInterval)
 			this.loadMailboxInterval = undefined
+		},
+		onUpdateSearchQuery(query) {
+			this.query = query
+			this.loadEnvelopes()
 		},
 	},
 }
