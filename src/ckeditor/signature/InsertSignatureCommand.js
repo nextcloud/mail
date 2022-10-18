@@ -79,7 +79,7 @@ export default class InsertSignatureCommand extends Command {
 			writer.append(writer.createElement('paragraph'), signatureElement)
 		}
 
-		const signaturePosition = signatureAboveQuote ? this.findPosition(editor, writer) : writer.createPositionAt(editor.model.document.getRoot(), 'end')
+		const signaturePosition = this.findPosition(editor, writer, signatureAboveQuote)
 		editor.model.insertContent(signatureElement, signaturePosition)
 	}
 
