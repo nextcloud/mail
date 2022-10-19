@@ -5,6 +5,7 @@
 		@close="$emit('close', { restoreOriginalSendAt: true })">
 		<Composer
 			:from-account="composerData.accountId"
+			:from-alias="composerData.aliasId"
 			:to="composerData.to"
 			:cc="composerData.cc"
 			:bcc="composerData.bcc"
