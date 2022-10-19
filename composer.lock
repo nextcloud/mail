@@ -1681,23 +1681,26 @@
         },
         {
             "name": "christophwurst/kitinerary-sys",
-            "version": "v0.1.0",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-sys.git",
-                "reference": "db1c61703e94746b95543f14c5a09067faba6f92"
+                "reference": "ad4ca9ac0dcbbce8d3f90be2d8ef55c1c1777849"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/db1c61703e94746b95543f14c5a09067faba6f92",
-                "reference": "db1c61703e94746b95543f14c5a09067faba6f92",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/ad4ca9ac0dcbbce8d3f90be2d8ef55c1c1777849",
+                "reference": "ad4ca9ac0dcbbce8d3f90be2d8ef55c1c1777849",
                 "shasum": ""
             },
             "require": {
-                "christophwurst/kitinerary": "^0.2.1",
+                "christophwurst/kitinerary": "^0.2.2",
                 "ext-json": "*",
                 "php": "^7.1",
                 "psr/log": "^1.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "autoload": {
@@ -1716,7 +1719,11 @@
                 }
             ],
             "description": "KItinerary binding for the system package",
-            "time": "2020-05-15T14:29:54+00:00"
+            "support": {
+                "issues": "https://github.com/ChristophWurst/kitinerary-sys/issues",
+                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.1.1"
+            },
+            "time": "2022-10-03T11:36:57+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -2165,6 +2172,9 @@
                 "psr",
                 "psr-3"
             ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
             "time": "2021-05-03T11:20:27+00:00"
         },
         {
