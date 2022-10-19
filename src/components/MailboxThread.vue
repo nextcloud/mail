@@ -21,7 +21,7 @@
 					:bus="bus"
 					:open-first="mailbox.specialRole !== 'drafts'" />
 				<template v-else>
-					<div class="app-content-list-item">
+					<div v-show="hasImportantEnvelopes" class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
 							<ButtonVue slot="trigger"
@@ -37,7 +37,7 @@
 							</p>
 						</Popover>
 					</div>
-					<Mailbox
+					<Mailbox v-show="hasImportantEnvelopes"
 						class="nameimportant"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
@@ -47,7 +47,9 @@
 						:initial-page-size="8"
 						:collapsible="true"
 						:bus="bus" />
-					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
+					<SectionTitle v-show="hasImportantEnvelopes"
+						class="app-content-list-item other"
+						:name="t('mail', 'Other')" />
 					<Mailbox
 						class="nameother"
 						:account="unifiedAccount"
@@ -142,6 +144,9 @@ export default {
 		},
 		hasEnvelopes() {
 			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
+		},
+		hasImportantEnvelopes() {
+			return this.$store.getters.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
 		},
 		showThread() {
 			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes) && this.$route.name === 'message'
@@ -275,6 +280,9 @@ export default {
 
 .app-content-list-item:hover {
 	background: transparent;
+}
+.app-content-list-item {
+	flex: 0;
 }
 
 .button {
