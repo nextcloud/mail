@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.1.0-rc.1 – 2022-10-19
+### Added
+- Hide important section when no important messages
+- Basic messages filter and search
+- Skeleton for loading state
+- Implement archive functionality
+- Add the option to disable the new account button
+- Implement IAPIWidget
+- Implement IIconWidget and IOptionWidget interfaces
+### Fixed
+- Signature above quote
+- Background for default folders
+- Loading-refresh-icon
+- Disabling the add account button
+- Keyboard button misalignment
+- Scrolling on small screen
+- Empty content when opening drafts
+
 ## 2.0.3 – 2022-10-18
 ### Fixed
 - Signature above quote
