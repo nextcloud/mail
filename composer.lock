@@ -1601,20 +1601,20 @@
         },
         {
             "name": "christophwurst/kitinerary-bin",
-            "version": "0.2.3",
+            "version": "0.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-bin.git",
-                "reference": "eaafa040b404651cb4ab75a2d7a53c71b55d2395"
+                "reference": "1ecb0ec448e22a71a17b0a133b6dc9d32154a879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/eaafa040b404651cb4ab75a2d7a53c71b55d2395",
-                "reference": "eaafa040b404651cb4ab75a2d7a53c71b55d2395",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/1ecb0ec448e22a71a17b0a133b6dc9d32154a879",
+                "reference": "1ecb0ec448e22a71a17b0a133b6dc9d32154a879",
                 "shasum": ""
             },
             "require": {
-                "christophwurst/kitinerary": "^0.2.1",
+                "christophwurst/kitinerary": "^0.2.2",
                 "ext-json": "*",
                 "php": "^7.1",
                 "psr/log": "^1.1"
@@ -1636,7 +1636,11 @@
                 }
             ],
             "description": "KItinerary binary executable",
-            "time": "2020-01-13T21:43:49+00:00"
+            "support": {
+                "issues": "https://github.com/ChristophWurst/kitinerary-bin/issues",
+                "source": "https://github.com/ChristophWurst/kitinerary-bin/tree/0.2.5"
+            },
+            "time": "2022-10-03T11:38:50+00:00"
         },
         {
             "name": "christophwurst/kitinerary-flatpak",
