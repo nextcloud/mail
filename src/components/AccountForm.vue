@@ -130,8 +130,8 @@
 					:disabled="loading"
 					required
 					@change="clearFeedback">
-				<label for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
-				<input
+				<label v-if="!useGoogleSso" for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
+				<input v-if="!useGoogleSso"
 					id="man-imap-password"
 					v-model="manualConfig.imapPassword"
 					type="password"
@@ -211,8 +211,8 @@
 					:disabled="loading"
 					required
 					@change="clearFeedback">
-				<label for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
-				<input
+				<label v-if="!useGoogleSso" for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
+				<input v-if="!useGoogleSso"
 					id="man-smtp-password"
 					v-model="manualConfig.smtpPassword"
 					type="password"
@@ -362,9 +362,9 @@ export default {
 
 			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
 				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
-				|| !this.manualConfig.imapUser || !this.manualConfig.imapPassword
+				|| !this.manualConfig.imapUser || (!this.useGoogleSso && !this.manualConfig.imapPassword)
 				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
-				|| !this.manualConfig.smtpUser || !this.manualConfig.smtpPassword
+				|| !this.manualConfig.smtpUser || (!this.useGoogleSso && !this.manualConfig.smtpPassword)
 		},
 
 		isGoogleAccount() {
@@ -385,7 +385,7 @@ export default {
 				return this.loadingMessage ?? t('mail', 'Connecting')
 			}
 			if (this.useGoogleSso) {
-				return t('mail', 'Sign in with Google')
+				return this.account ? t('mail', 'Reconnect Google account') : t('mail', 'Sign in with Google')
 			}
 			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
 		},
@@ -559,14 +559,33 @@ export default {
 					await this.$store.dispatch('finishAccountSetup', { account })
 					this.$emit('account-created', account)
 				} else {
+					const oldAccountData = this.account
 					const account = await this.$store.dispatch('updateAccount', {
 						...data,
 						accountId: this.account.id,
 					})
+					if (this.useGoogleSso) {
+						this.loadingMessage = t('mail', 'Awaiting user consent')
+						this.feedback = t('mail', 'Account updated. Please follow the popup instructions to reconnect your Google account')
+						try {
+							await getUserConsent(
+								this.googleOauthUrl
+									.replace('_accountId_', account.id)
+									.replace('_email_', encodeURIComponent(account.emailAddress))
+							)
+						} catch (e) {
+							// Undo changes
+							await this.$store.dispatch('updateAccount', {
+								...oldAccountData,
+								accountId: oldAccountData.id,
+							})
+							logger.info(`Account ${account.id} update undone`)
+							throw e
+						}
+						this.clearFeedback()
+					}
 					this.feedback = t('mail', 'Account updated')
-					this.$emit('account-updated', account)
 				}
-				this.feedback = t('mail', 'Changes saved')
 			} catch (error) {
 				logger.error('could not save account details', { error })
 

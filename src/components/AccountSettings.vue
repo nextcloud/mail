@@ -94,8 +94,7 @@
 					ref="accountForm"
 					:display-name="displayName"
 					:email="email"
-					:account="account"
-					@account-updated="onAccountUpdated" />
+					:account="account" />
 			</div>
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
@@ -177,19 +176,6 @@ export default {
 		},
 	},
 	methods: {
-		onAccountUpdated(data) {
-			Logger.log('saving data', { data })
-			return this.$store
-				.dispatch('updateAccount', {
-					...data,
-					accountId: this.account.id,
-				})
-				.then((account) => account)
-				.catch((error) => {
-					Logger.error('account update failed:', { error })
-					throw error
-				})
-		},
 		handleClick() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
