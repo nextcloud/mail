@@ -2,6 +2,9 @@
 	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
 		<div slot="list"
 			:class="{ header__button: !showThread || !isMobile }">
+			<SearchMessages v-if="!showThread || !isMobile"
+				:mailbox="mailbox"
+				@search-changed="onUpdateSearchQuery" />
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -77,6 +80,7 @@ import infiniteScroll from '../directives/infinite-scroll'
 import IconInfo from 'vue-material-design-icons/Information'
 import logger from '../logger'
 import Mailbox from './Mailbox'
+import SearchMessages from './SearchMessages'
 import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
@@ -102,6 +106,7 @@ export default {
 		NoMessageSelected,
 		Popover,
 		SectionTitle,
+		SearchMessages,
 		Thread,
 	},
 	mixins: [isMobile],
@@ -258,6 +263,9 @@ export default {
 					email: str,
 				},
 			]
+		},
+		onUpdateSearchQuery(query) {
+			this.searchQuery = query
 		},
 	},
 }
