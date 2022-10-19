@@ -21,11 +21,13 @@
     "Clear cache" : "ລ້າງ Cache ",
     "Delete" : "ລຶບ",
     "Add" : "ເພີ່ມ",
+    "Tags" : "ປ້າຍກຳກັບ",
+    "Search" : "ຄົ້ນຫາ",
+    "Date" : "ວັນທີ",
     "Unset" : "ຍົກເລີກການຕັ້ງຄ່າ",
     "Remove" : "ຍ້າຍອອກ",
     "General" : "ທົ່ວໄປ",
     "User" : "ຜູ້ໃຊ້",
-    "Search" : "ຄົ້ນຫາ",
     "Refresh" : "Refresh",
     "Favorites" : "ລາຍການທີ່ມັກ"
 },"pluralForm" :"nplurals=1; plural=0;"

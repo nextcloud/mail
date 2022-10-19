@@ -29,6 +29,9 @@ OC.L10N.register(
     "Remove account" : "De Kont läschen",
     "Delete" : "Läschen",
     "Add" : "Derbäimaachen",
+    "Tags" : "Tags",
+    "Search" : "Search",
+    "Date" : "Date",
     "Disabled" : "Deaktivéiert",
     "Enabled" : "Aktivéiert",
     "Custom" : "Individualiséier",
@@ -38,7 +41,6 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
-    "Search" : "Search",
     "Refresh" : "Opfrëschen",
     "All" : "All",
     "Favorites" : "Favoriten"

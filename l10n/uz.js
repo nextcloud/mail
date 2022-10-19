@@ -18,10 +18,11 @@ OC.L10N.register(
     "Saving" : "Saving",
     "Delete" : "Delete",
     "Add" : "Add",
+    "Tags" : "Tags",
+    "Search" : "Search",
     "Remove" : "Remove",
     "General" : "General",
     "Port" : "Port",
-    "Search" : "Search",
     "Refresh" : "Refresh",
     "All" : "All",
     "Favorites" : "Favorites"

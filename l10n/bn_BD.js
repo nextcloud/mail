@@ -31,6 +31,7 @@ OC.L10N.register(
     "Clear cache" : "ক্যাশে পরিষ্কার কর",
     "Delete" : "মুছে",
     "Add" : "যোগ করুন",
+    "Search" : "Search",
     "Disabled" : "অকার্যকর",
     "Enabled" : "কার্যকর",
     "Remove" : "অপসারণ",
@@ -40,7 +41,6 @@ OC.L10N.register(
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
     "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
-    "Search" : "Search",
     "Refresh" : "নবোদ্যম",
     "All" : "সবাই",
     "Favorites" : "প্রিয়জন"

@@ -20,6 +20,8 @@ OC.L10N.register(
     "Quota" : "ಪಾಲು",
     "Delete" : "﻿ಅಳಿಸಿ",
     "Add" : "﻿ಸೇರಿಸಿ",
+    "Search" : "Search",
+    "Date" : "Date",
     "Disabled" : "ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ",
     "Enabled" : "ಸಕ್ರಿಯಗೊಳಿಸಿದೆ",
     "Tag already exists" : "ಕಿರು ಪದ ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ",
@@ -28,7 +30,6 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "ಅತಿಥೆಯ-ಗಣಕ",
     "Port" : "﻿ರೇವು",
-    "Search" : "Search",
     "All" : "﻿ಎಲ್ಲಾ",
     "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ"
 },
