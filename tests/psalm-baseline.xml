@@ -88,6 +88,11 @@
       <code>Command</code>
     </UndefinedClass>
   </file>
+  <file src="lib/Command/UpdateAccount.php">
+    <UndefinedClass occurrences="1">
+      <code>Command</code>
+    </UndefinedClass>
+  </file>
   <file src="lib/Db/AliasMapper.php">
     <ImplicitToStringCast occurrences="1">
       <code>$qb2-&gt;createNamedParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)</code>
