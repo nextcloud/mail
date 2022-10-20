@@ -106,6 +106,7 @@ class AddressList implements Countable, JsonSerializable {
 	/**
 	 * @return int
 	 */
+	#[ReturnTypeWillChange]
 	public function count() {
 		return count($this->addresses);
 	}
