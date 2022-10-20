@@ -143,7 +143,7 @@
 				</template>
 			</div>
 		</div>
-		<Loading v-if="loading !== LOADING_DONE" />
+		<MessageLoadingSkeleton v-if="loading !== LOADING_DONE" />
 		<Message v-if="message && loading !== LOADING_MESSAGE"
 			v-show="loading === LOADING_DONE"
 			:envelope="envelope"
@@ -164,7 +164,7 @@ import Error from './Error'
 import importantSvg from '../../img/important.svg'
 import IconFavorite from 'vue-material-design-icons/Star'
 import JunkIcon from './icons/JunkIcon'
-import Loading from './Loading'
+import MessageLoadingSkeleton from './MessageLoadingSkeleton'
 import logger from '../logger'
 import Message from './Message'
 import MenuEnvelope from './MenuEnvelope'
@@ -196,7 +196,7 @@ export default {
 		Error,
 		IconFavorite,
 		JunkIcon,
-		Loading,
+		MessageLoadingSkeleton,
 		MenuEnvelope,
 		Moment,
 		Message,
@@ -505,6 +505,15 @@ export default {
 		margin-right: 10px;
 		background-color: var(--color-main-background);
 		padding-bottom: 28px;
+		animation: show 200ms 90ms cubic-bezier(.17, .67, .83, .67) forwards;
+		opacity: 0.5;
+		transform-origin: top center;
+		@keyframes show {
+			100% {
+				opacity: 1;
+				transform: none;
+			}
+		}
 
 		& + .envelope {
 			margin-top: -28px;
