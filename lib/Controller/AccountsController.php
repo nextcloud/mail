@@ -245,7 +245,7 @@ class AccountsController extends Controller {
 			$dbAccount->setSignatureAboveQuote($signatureAboveQuote);
 		}
 		return new JSONResponse(
-			$this->accountService->save($dbAccount)->toJson()
+			$this->accountService->save($dbAccount)
 		);
 	}
 
