@@ -787,12 +787,6 @@ export default {
 		editorMode() {
 			this.appendSignature = true
 		},
-		bodyVal() {
-			if (this.body.value === '') {
-				this.appendSignature = true
-			}
-			this.handleAppendSignature()
-		},
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -983,6 +977,7 @@ export default {
 				this.callSaveDraft(true, this.getMessageData)
 			}
 			this.editorInputTextReady = true
+			this.handleAppendSignature()
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
