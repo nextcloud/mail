@@ -84,6 +84,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
     "Set up an account" : "Configurar uma conta",
     "Plain text" : "Texto simples",
+    "No messages" : "Sem mensagens",
     "Draft: " : "Rascunho:",
     "Unfavorite" : "Não favorito",
     "Favorite" : "Favorito",

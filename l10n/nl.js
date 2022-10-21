@@ -109,6 +109,7 @@ OC.L10N.register(
     "Plain text" : "Platte tekst",
     "Rich text" : "Rijke tekst",
     "No messages in this mailbox" : "Geen berichten in deze inbak",
+    "No messages" : "Geen berichten",
     "Draft: " : "Concept:",
     "Unfavorite" : "Favoriet weghalen",
     "Favorite" : "Favoriet",

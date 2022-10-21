@@ -148,7 +148,7 @@ OC.L10N.register(
     "Plain text" : "Texto puro",
     "Rich text" : "Texto rich",
     "No messages in this mailbox" : "Nenhuma mensagem nesta caixa de correio",
-    "Messages marked as important will show up here" : "Mensagens marcadas como importante aparecerão aqui",
+    "No messages" : "Sem mensagens",
     "Draft: " : "Rascunho:",
     "This message is unread" : "Esta mensagem não foi lida.",
     "Unfavorite" : "Não favorito",

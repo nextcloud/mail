@@ -107,6 +107,7 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
     "Plain text" : "Простий текст",
     "Rich text" : "Текст з форматуванням",
+    "No messages" : "Відсутні повідомлення",
     "Draft: " : "Чернетка:",
     "This message is unread" : "Це повідомлення не прочитано",
     "Unfavorite" : "Не улюблене",

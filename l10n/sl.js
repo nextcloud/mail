@@ -116,6 +116,7 @@ OC.L10N.register(
     "Plain text" : "Besedilno",
     "Rich text" : "Obogateno besedilo",
     "No messages in this mailbox" : "V poštnem predalu ni sporočil.",
+    "No messages" : "Ni sporočil",
     "Draft: " : "Osnutek:",
     "Unfavorite" : "Odstrani oznako priljubljeno",
     "Favorite" : "Priljubljeno",

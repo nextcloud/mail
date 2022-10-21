@@ -128,7 +128,7 @@ OC.L10N.register(
     "Plain text" : "Raakateksti",
     "Rich text" : "Rikas teksti",
     "No messages in this mailbox" : "Ei viestejä tässä postilaatikossa",
-    "Messages marked as important will show up here" : "Tärkeiksi merkityt viestit näkyvät täällä",
+    "No messages" : "Ei viestejä",
     "Draft: " : "Luonnos: ",
     "This message is unread" : "Tämä viesti on lukematon",
     "Unfavorite" : "Poista suosikeista",

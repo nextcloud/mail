@@ -138,6 +138,7 @@ OC.L10N.register(
     "Plain text" : "Ren tekst",
     "Rich text" : "Rik tekst",
     "No messages in this mailbox" : "Ingen meldinger i denne postboksen",
+    "No messages" : "Ingen meldinger",
     "Draft: " : "Kladd:",
     "Unfavorite" : "Fjern favorittmarkering",
     "Favorite" : "Favoritt",

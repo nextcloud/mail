@@ -71,6 +71,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Agregar",
     "Tags" : "Etiquetas",
+    "Select tags" : "Selecciona las etiquetas",
     "Clear" : "Limpiar",
     "Search" : "Buscar",
     "Date" : "Fecha",

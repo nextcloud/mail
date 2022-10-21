@@ -148,7 +148,7 @@ OC.L10N.register(
     "Plain text" : "純文字",
     "Rich text" : "RTF",
     "No messages in this mailbox" : "此信箱中沒有郵件",
-    "Messages marked as important will show up here" : "標記為重要的訊息將在此處顯示",
+    "No messages" : "沒有訊息",
     "Draft: " : "草稿：",
     "This message is unread" : "此訊息未讀",
     "Unfavorite" : "取消我的最愛",

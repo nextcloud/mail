@@ -108,6 +108,7 @@ OC.L10N.register(
     "Plain text" : "纯文本",
     "Rich text" : "富文本",
     "No messages in this mailbox" : "此邮箱中没有消息",
+    "No messages" : "没有消息",
     "Draft: " : "草稿: ",
     "Unfavorite" : "取消收藏",
     "Favorite" : "收藏",

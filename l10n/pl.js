@@ -146,7 +146,7 @@ OC.L10N.register(
     "Plain text" : "Zwykły tekst",
     "Rich text" : "Tekst sformatowany",
     "No messages in this mailbox" : "Brak wiadomości w skrzynce pocztowej",
-    "Messages marked as important will show up here" : "Tutaj pojawią się wiadomości oznaczone jako ważne",
+    "No messages" : "Brak wiadomości",
     "Draft: " : "Wersja robocza:",
     "This message is unread" : "Ta wiadomość jest nieprzeczytana",
     "Unfavorite" : "Nie ulubione",

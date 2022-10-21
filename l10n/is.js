@@ -81,6 +81,7 @@ OC.L10N.register(
     "Set up an account" : "Setja upp notandaaðgang",
     "Plain text" : "Ósniðinn texti",
     "Rich text" : "Sniðinn texti",
+    "No messages" : "Engin skilaboð",
     "Draft: " : "Drög: ",
     "Unfavorite" : "Taka úr eftirlætum",
     "Favorite" : "Eftirlæti",

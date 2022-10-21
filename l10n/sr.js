@@ -85,6 +85,7 @@ OC.L10N.register(
     "Set up an account" : "Подесите налог",
     "Plain text" : "Обичан текст",
     "Rich text" : "Обогаћени текст",
+    "No messages" : "Нема порука",
     "Draft: " : "Нацрт: ",
     "Unfavorite" : "Није омиљено",
     "Favorite" : "Омиљени",

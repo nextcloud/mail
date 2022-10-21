@@ -106,6 +106,7 @@ OC.L10N.register(
     "Set up an account" : "Nusistatyti paskyrą",
     "Plain text" : "Grynasis tekstas",
     "Rich text" : "Raiškusis tekstas",
+    "No messages" : "Nėra laiškų",
     "Draft: " : "Juodraštis: ",
     "Unfavorite" : "Nebežymėti kaip mėgstamą",
     "Favorite" : "Mėgstamas",

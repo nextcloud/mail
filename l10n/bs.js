@@ -26,6 +26,7 @@ OC.L10N.register(
     "Delete" : "Obriši",
     "Add" : "Dodaj",
     "Search" : "Search",
+    "Date" : "Date",
     "Disabled" : "Onemogućeno",
     "Enabled" : "Aktivirano",
     "Tag already exists" : "Oznaka već postoji",

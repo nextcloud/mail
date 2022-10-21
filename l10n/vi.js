@@ -87,6 +87,7 @@ OC.L10N.register(
     "No message found yet" : "Không có tin nhắn nào được tìm thấy",
     "Set up an account" : "Thiết lập một tài khoản",
     "No messages in this mailbox" : "Không có thư nào trong hộp thư này",
+    "No messages" : "Không có tin nhắn",
     "Draft: " : "Bản nháp: ",
     "Favorite" : "Ưa thích",
     "Read" : "Đọc",

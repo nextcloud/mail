@@ -108,6 +108,7 @@ OC.L10N.register(
     "Plain text" : "Testo semplice",
     "Rich text" : "Testo formattato",
     "No messages in this mailbox" : "Nessun messaggio in questa casella di posta",
+    "No messages" : "Nessun messaggio",
     "Draft: " : "Bozza:",
     "Unfavorite" : "Rimuovi preferito",
     "Favorite" : "Preferito",

@@ -148,7 +148,7 @@ OC.L10N.register(
     "Plain text" : "Testu arrunta",
     "Rich text" : "Testu aberastua",
     "No messages in this mailbox" : "Mezurik ez postontzi honetan",
-    "Messages marked as important will show up here" : "Garrantzitsu gisa markatutako mezuak hemen agertuko dira",
+    "No messages" : "Mezurik ez",
     "Draft: " : "Zirriborroa: ",
     "This message is unread" : "Mezu hau irakurri gabe dago",
     "Unfavorite" : "Kendu gogokoetatik",

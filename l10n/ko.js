@@ -102,6 +102,7 @@ OC.L10N.register(
     "Set up an account" : "계정 설정",
     "Plain text" : "평문",
     "Rich text" : "서식 있는 텍스트",
+    "No messages" : "메시지가 없음",
     "Draft: " : "임시 보관함",
     "Unfavorite" : "즐겨찾기에서 삭제",
     "Favorite" : "즐겨찾기",

@@ -141,7 +141,7 @@ OC.L10N.register(
     "Plain text" : "Простой текст",
     "Rich text" : "Текст с форматированием",
     "No messages in this mailbox" : "В этой папке нет сообщений",
-    "Messages marked as important will show up here" : "Сообщения, помеченные как важные, будут отображаться здесь",
+    "No messages" : "Нет ни одного сообщения",
     "Draft: " : "Черновик:",
     "This message is unread" : "Это сообщение не прочитано",
     "Unfavorite" : "Убрать из избранного",

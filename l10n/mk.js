@@ -127,6 +127,7 @@ OC.L10N.register(
     "Plain text" : "Обичен текст",
     "Rich text" : "Богат текст",
     "No messages in this mailbox" : "Нема пораки во ова сандаче",
+    "No messages" : "Нема пораки",
     "Draft: " : "Шаблон:",
     "Favorite" : "Омилен",
     "Unread" : "Непрочитана",

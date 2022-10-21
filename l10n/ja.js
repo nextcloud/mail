@@ -92,6 +92,7 @@ OC.L10N.register(
     "Plain text" : "プレーンテキスト",
     "Rich text" : "リッチテキスト",
     "No messages in this mailbox" : "このメールボックスにメッセージはありません",
+    "No messages" : "メッセージはありません",
     "Draft: " : "下書き",
     "Unfavorite" : "お気に入りから外す",
     "Favorite" : "お気に入り",

@@ -105,6 +105,7 @@ OC.L10N.register(
     "Plain text" : "Testu simple",
     "Rich text" : "Testu formatadu",
     "No messages in this mailbox" : "Perunu messàgiu in custa casella de posta",
+    "No messages" : "Perunu messàgiu",
     "Draft: " : "Brutacòpia:",
     "Unfavorite" : "Boga dae is preferidos",
     "Favorite" : "Preferidu",

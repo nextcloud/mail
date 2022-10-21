@@ -107,6 +107,7 @@ OC.L10N.register(
     "Plain text" : "Običan tekst",
     "Rich text" : "Bogat tekst",
     "No messages in this mailbox" : "Nema poruka u ovom sandučiću",
+    "No messages" : "Nema poruka",
     "Draft: " : "Skica: ",
     "Unfavorite" : "Ukloni iz favorita",
     "Favorite" : "Favorit",

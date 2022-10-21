@@ -146,7 +146,7 @@ OC.L10N.register(
     "Plain text" : "Egyszerű szöveg",
     "Rich text" : "Formázott szöveg",
     "No messages in this mailbox" : "Nincs üzenet ebben a postafiókban",
-    "Messages marked as important will show up here" : "A fontosként megjelölt üzenetek itt fognak megjelenni",
+    "No messages" : "Nincs üzenet",
     "Draft: " : "Vázlat: ",
     "This message is unread" : "Ez az üzenet olvasatlan",
     "Unfavorite" : "Nem kedvenc",

@@ -93,6 +93,7 @@ OC.L10N.register(
     "Plain text" : "טקסט פשוט",
     "Rich text" : "טקסט עשיר",
     "No messages in this mailbox" : "אין הודעות בתיבת הדוא״ל הזאת",
+    "No messages" : "אין הודעות",
     "Draft: " : "טיוטה:",
     "Unfavorite" : "ביטול כמועדף",
     "Favorite" : "סימון כמועדף",
