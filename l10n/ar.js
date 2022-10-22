@@ -49,6 +49,7 @@ OC.L10N.register(
     "No sent mailbox configured. Please pick one in the account settings." : "لم يتم اعداد الرسائل في المرسلة في صندوق البريد. يرجى اختيار واحد في اعدادات الحساب.",
     "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
     "Choose a file to share as a link" : "اختر ملفا لمشاركته كرابط",
+    "No messages" : "لاتوجد رسائل",
     "Draft: " : "المسودة:",
     "Unfavorite" : "غير مفضل",
     "Favorite" : "المفضلة",

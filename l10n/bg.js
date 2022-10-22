@@ -148,6 +148,7 @@ OC.L10N.register(
     "Plain text" : "Обикновен текст",
     "Rich text" : "Форматиран текст",
     "No messages in this mailbox" : "Няма съобщения в тази пощенска кутия",
+    "No messages" : "Няма съобщения.",
     "Draft: " : "Чернова: ",
     "This message is unread" : "Това съобщение не е прочетено",
     "Unfavorite" : "Премахване от Любими",
