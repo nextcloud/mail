@@ -87,4 +87,17 @@ input.vue-treeselect__input {
 .vue-treeselect__menu {
 	background: var(--color-main-background);
 }
+.vue-treeselect--single .vue-treeselect__option--selected {
+	background: var(--color-primary-light);
+	border-radius: var(--border-radius-large);
+}
+.vue-treeselect__option.vue-treeselect__option--highlight,
+.vue-treeselect__option:hover,
+.vue-treeselect__option:focus {
+	border-radius: var(--border-radius-large);
+	}
+.vue-treeselect__placeholder, .vue-treeselect__single-value {
+	line-height: 44px;
+}
+
 </style>
