@@ -110,6 +110,7 @@ class DatabaseMessage extends Message implements JsonSerializable {
 			parent::jsonSerialize(),
 			[
 				'databaseId' => $this->databaseId,
+				'threadRootId' => $this->getThreadRootId(),
 			]
 		);
 	}
