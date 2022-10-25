@@ -42,7 +42,7 @@ export const update = (data) => {
 
 	return axios
 		.put(url, data)
-		.then((resp) => resp.data)
+		.then((resp) => resp.data.data)
 		.then(fixAccountId)
 		.catch((e) => {
 			if (e.response && e.response.status === 400) {
