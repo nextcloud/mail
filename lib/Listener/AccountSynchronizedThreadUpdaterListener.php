@@ -65,7 +65,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		$accountId = $event->getAccount()->getId();
 		$logger->debug("Building threads for account $accountId");
 		$messages = $this->mapper->findThreadingData($event->getAccount());
-		$logger->debug("Account $accountId has " . count($messages) . " messages for threading");
+		$logger->debug("Account $accountId has " . count($messages) . " messages with threading information");
 		$threads = $this->builder->build($messages, $logger);
 		$logger->debug("Account $accountId has " . count($threads) . " threads");
 		/** @var DatabaseMessage[] $flattened */
@@ -102,7 +102,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 
 			yield from $this->flattenThreads(
 				$thread->getChildren(),
-				$threadId ?? ($message === null ? null : $message->getId())
+				$threadId ?? ($message === null ? $thread->getId() : $message->getId())
 			);
 		}
 	}
