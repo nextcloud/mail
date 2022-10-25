@@ -1153,9 +1153,10 @@ class MessageMapper extends QBMapper {
 			->leftJoin('m', 'mail_mailboxes', 'mb', $qb1->expr()->eq('m.mailbox_id', 'mb.id'))
 			->where($qb1->expr()->isNull('mb.id'));
 		$result = $idsQuery->execute();
-		$ids = array_map(function (array $row) {
-			return (int)$row['id'];
-		}, $result->fetchAll());
+		$ids = [];
+		while ($row = $result->fetch()) {
+			$ids[] = (int) $row['id'];
+		}
 		$result->closeCursor();
 
 		$qb2 = $this->db->getQueryBuilder();
@@ -1175,9 +1176,9 @@ class MessageMapper extends QBMapper {
 				$qb3->expr()->isNull('r.local_message_id')
 			);
 		$result = $recipientIdsQuery->execute();
-		$ids = array_map(function (array $row) {
-			return (int)$row['id'];
-		}, $result->fetchAll());
+		while ($row = $result->fetch()) {
+			$ids[] = (int) $row['id'];
+		}
 		$result->closeCursor();
 
 		$qb4 = $this->db->getQueryBuilder();
