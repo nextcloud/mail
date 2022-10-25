@@ -33,6 +33,9 @@ class Container {
 	/** @var Message|null */
 	private $message;
 
+	/** @var string|null */
+	private $id;
+
 	/** @var bool */
 	private $root;
 
@@ -43,21 +46,25 @@ class Container {
 	private $children = [];
 
 	private function __construct(?Message $message,
+								 ?string $id = null,
 								 bool $root = false) {
 		$this->message = $message;
+		$this->id = $id;
 		$this->root = $root;
 	}
 
 	public static function root(): self {
 		return new self(
 			null,
+			null,
 			true
 		);
 	}
 
-	public static function empty(): self {
+	public static function empty(?string $id = null): self {
 		return new self(
-			null
+			null,
+			$id,
 		);
 	}
 
@@ -77,6 +84,10 @@ class Container {
 
 	public function getMessage(): ?Message {
 		return $this->message;
+	}
+
+	public function getId(): ?string {
+		return $this->id;
 	}
 
 	public function isRoot(): bool {

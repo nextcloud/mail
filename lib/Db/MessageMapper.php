@@ -204,7 +204,13 @@ class MessageMapper extends QBMapper {
 		$messagesQuery->select('id', 'subject', 'message_id', 'in_reply_to', 'references', 'thread_root_id')
 			->from($this->getTableName())
 			->where($messagesQuery->expr()->in('mailbox_id', $messagesQuery->createFunction($mailboxesQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY))
-			->andWhere($messagesQuery->expr()->isNotNull('message_id'));
+			->andWhere(
+				$messagesQuery->expr()->isNotNull('message_id'),
+				$messagesQuery->expr()->orX(
+					$messagesQuery->expr()->isNotNull('in_reply_to'),
+					$messagesQuery->expr()->neq('references', $messagesQuery->createNamedParameter('[]'))
+				),
+			);
 
 		$result = $messagesQuery->execute();
 		$messages = [];

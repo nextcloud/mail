@@ -475,6 +475,29 @@ class ThreadBuilderTest extends TestCase {
 		);
 	}
 
+	public function testWithVirtualParent(): void {
+		$messages = [
+			new Message('AW: s1', 'id2', ['id1']),
+		];
+
+		$result = $this->builder->build($messages, $this->logger);
+
+		$this->assertEquals(
+			[
+				[
+					'id' => null,
+					'children' => [
+						[
+							'id' => 'id2',
+							'children' => [],
+						],
+					],
+				],
+			],
+			$this->abstract($result)
+		);
+	}
+
 	/**
 	 * This is a test case from real-world data, compared to how Evolution renders the thread
 	 *
