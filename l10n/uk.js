@@ -63,7 +63,7 @@ OC.L10N.register(
     "Preferred writing mode for new messages and replies." : "Режим редагування нових повідомлень та відповідей, якому ви віддаєте перевагу.",
     "Default folders" : "Типові каталоги",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматична відповідь на вхідні повідомлення. Якщо хтось надсилає вам кілька повідомлень, ця автоматична відповідь надсилатиметься щонайбільше раз на 4 дні.",
-    "Please connect to a sieve server first." : "Спочатку підключіться до сервера sieve.",
+    "Please connect to a sieve server first." : "Спочатку з'єднайтеся із сервером sieve.",
     "Mail server" : "Поштовий сервер",
     "Email address" : "Адреса ел.пошти",
     "Cancel" : "Скасувати",
