@@ -462,9 +462,10 @@ export default {
 <style lang="scss">
 .search-messages {
 	min-height: 52px;
-	margin: 3px 3px 0 44px;
+	margin: 3px 0 0 52px;
+	border-right: 1px solid var(--color-border);
 	position: relative;
-	display:flex;
+	display: flex;
 	align-items: center;
 
 	input {
