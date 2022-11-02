@@ -67,7 +67,7 @@ class MessagesController extends Controller {
 	private ItineraryService $itineraryService;
 	private ?string $currentUserId;
 	private LoggerInterface $logger;
-	private Folder $userFolder;
+	private ?Folder $userFolder;
 	private IMimeTypeDetector $mimeTypeDetector;
 	private IL10N $l10n;
 	private IURLGenerator $urlGenerator;
