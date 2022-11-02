@@ -136,61 +136,54 @@ export default {
 			})
 		})
 	},
-	fetchAccounts({ commit, getters }) {
-		return fetchAllAccounts().then((accounts) => {
-			accounts.forEach((account) => commit('addAccount', account))
-			return getters.accounts
-		})
+	async fetchAccounts({ commit, getters }) {
+		const accounts = await fetchAllAccounts()
+		accounts.forEach((account) => commit('addAccount', account))
+		return getters.accounts
 	},
-	fetchAccount({ commit }, id) {
-		return fetchAccount(id).then((account) => {
-			commit('addAccount', account)
-			return account
-		})
+	async fetchAccount({ commit }, id) {
+		const account = await fetchAccount(id)
+		commit('addAccount', account)
+		return account
 	},
-	createAccount({ commit }, config) {
-		return createAccount(config).then((account) => {
-			logger.debug(`account ${account.id} created, fetching mailboxes …`, account)
-			return fetchAllMailboxes(account.id)
-				.then((mailboxes) => {
-					account.mailboxes = mailboxes
-					commit('addAccount', account)
-				})
-				.then(() => console.info("new account's mailboxes fetched"))
-				.then(() => account)
-		})
+	async createAccount({ commit }, config) {
+		const account = await createAccount(config)
+		logger.debug(`account ${account.id} created, fetching mailboxes …`, account)
+		account.mailboxes = await fetchAllMailboxes(account.id)
+		commit('addAccount', account)
+		logger.info("new account's mailboxes fetched", { account, config })
+		return account
 	},
-	updateAccount({ commit }, config) {
-		return updateAccount(config).then((account) => {
-			console.debug('account updated', account)
-			commit('editAccount', account)
-			return account
-		})
+	async updateAccount({ commit }, config) {
+		const account = await updateAccount(config)
+		logger.debug('account updated', { account })
+		commit('editAccount', account)
+		return account
 	},
-	patchAccount({ commit }, { account, data }) {
-		return patchAccount(account, data).then((account) => {
-			console.debug('account patched', account, data)
-			commit('patchAccount', { account, data })
-			return account
-		})
+	async patchAccount({ commit }, { account, data }) {
+		const patchedAccount = await patchAccount(account, data)
+		logger.debug('account patched', { account: patchedAccount, data })
+		commit('patchAccount', { account, data })
+		return account
 	},
-	updateAccountSignature({ commit }, { account, signature }) {
-		return updateSignature(account, signature).then(() => {
-			console.debug('account signature updated')
-			const updated = Object.assign({}, account, { signature })
-			commit('editAccount', updated)
-			return account
-		})
+	async updateAccountSignature({ commit }, { account, signature }) {
+		await updateSignature(account, signature)
+		logger.debug('account signature updated', { account, signature })
+		const updated = Object.assign({}, account, { signature })
+		commit('editAccount', updated)
+		return account
 	},
-	setAccountSetting({ commit, getters }, { accountId, key, value }) {
+	async setAccountSetting({ commit, getters }, { accountId, key, value }) {
 		commit('setAccountSetting', { accountId, key, value })
-		return savePreference('account-settings', JSON.stringify(getters.getAllAccountSettings))
+		return await savePreference('account-settings', JSON.stringify(getters.getAllAccountSettings))
 	},
-	deleteAccount({ commit }, account) {
-		return deleteAccount(account.id).catch((err) => {
-			console.error('could not delete account', err)
-			throw err
-		})
+	async deleteAccount({ commit }, account) {
+		try {
+			await deleteAccount(account.id)
+		} catch (error) {
+			logger.error('could not delete account', { error })
+			throw error
+		}
 	},
 	async deleteMailbox({ commit }, { mailbox }) {
 		await deleteMailbox(mailbox.databaseId)
@@ -212,7 +205,7 @@ export default {
 		commit('setAccountSetting', { accountId: account.id, key: 'collapsed', value: false })
 		return mailbox
 	},
-	moveAccount({ commit, getters }, { account, up }) {
+	async moveAccount({ commit, getters }, { account, up }) {
 		const accounts = getters.accounts
 		const index = accounts.indexOf(account)
 		if (up) {
@@ -224,7 +217,7 @@ export default {
 			accounts[index + 1] = account
 			accounts[index] = next
 		}
-		return Promise.all(
+		return await Promise.all(
 			accounts.map((account, idx) => {
 				if (account.id === 0) {
 					return Promise.resolve()
@@ -234,7 +227,7 @@ export default {
 			})
 		)
 	},
-	markMailboxRead({ getters, dispatch }, { accountId, mailboxId }) {
+	async markMailboxRead({ getters, dispatch }, { accountId, mailboxId }) {
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -250,12 +243,11 @@ export default {
 			)
 		}
 
-		return markMailboxRead(mailboxId).then(
-			dispatch('syncEnvelopes', {
-				accountId,
-				mailboxId,
-			})
-		)
+		await markMailboxRead(mailboxId)
+		dispatch('syncEnvelopes', {
+			accountId,
+			mailboxId,
+		})
 	},
 	async changeMailboxSubscription({ commit }, { mailbox, subscribed }) {
 		logger.debug(`toggle subscription for mailbox ${mailbox.databaseId}`, {
@@ -812,7 +804,7 @@ export default {
 			})
 		}
 	},
-	toggleEnvelopeSeen({ commit, getters }, { envelope, seen }) {
+	async toggleEnvelopeSeen({ commit, getters }, { envelope, seen }) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.seen
 		const newState = seen === undefined ? !oldState : seen
@@ -822,8 +814,10 @@ export default {
 			value: newState,
 		})
 
-		setEnvelopeFlag(envelope.databaseId, 'seen', newState).catch((e) => {
-			console.error('could not toggle message seen state', e)
+		try {
+			await setEnvelopeFlag(envelope.databaseId, 'seen', newState)
+		} catch (error) {
+			console.error('could not toggle message seen state', error)
 
 			// Revert change
 			commit('flagEnvelope', {
@@ -831,9 +825,9 @@ export default {
 				flag: 'seen',
 				value: oldState,
 			})
-		})
+		}
 	},
-	toggleEnvelopeJunk({ commit, getters }, envelope) {
+	async toggleEnvelopeJunk({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.$junk
 		commit('flagEnvelope', {
@@ -847,8 +841,11 @@ export default {
 			value: oldState,
 		})
 
-		setEnvelopeFlag(envelope.databaseId, '$junk', !oldState).catch((e) => {
-			console.error('could not toggle message junk state', e)
+		try {
+			await setEnvelopeFlag(envelope.databaseId, '$junk', !oldState)
+			await setEnvelopeFlag(envelope.databaseId, '$notjunk', oldState)
+		} catch (error) {
+			console.error('could not toggle message junk state', error)
 
 			// Revert change
 			commit('flagEnvelope', {
@@ -861,19 +858,9 @@ export default {
 				flag: '$notjunk',
 				value: !oldState,
 			})
-		})
-		setEnvelopeFlag(envelope.databaseId, '$notjunk', oldState).catch((e) => {
-			console.error('could not toggle message junk state', e)
-
-			// Revert change
-			commit('flagEnvelope', {
-				envelope,
-				flag: '$notjunk',
-				value: !oldState,
-			})
-		})
+		}
 	},
-	markEnvelopeFavoriteOrUnfavorite({ commit, getters }, { envelope, favFlag }) {
+	async markEnvelopeFavoriteOrUnfavorite({ commit, getters }, { envelope, favFlag }) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.flagged
 		commit('flagEnvelope', {
@@ -882,8 +869,10 @@ export default {
 			value: favFlag,
 		})
 
-		setEnvelopeFlag(envelope.databaseId, 'flagged', favFlag).catch((e) => {
-			console.error('could not favorite/unfavorite message ' + envelope.uid, e)
+		try {
+			await setEnvelopeFlag(envelope.databaseId, 'flagged', favFlag)
+		} catch (error) {
+			console.error('could not favorite/unfavorite message ' + envelope.uid, error)
 
 			// Revert change
 			commit('flagEnvelope', {
@@ -891,7 +880,7 @@ export default {
 				flag: 'flagged',
 				value: oldState,
 			})
-		})
+		}
 	},
 	async markEnvelopeImportantOrUnimportant({ dispatch, getters }, { envelope, addTag }) {
 		const importantLabel = '$label1'
@@ -910,7 +899,6 @@ export default {
 			})
 		}
 	},
-
 	async fetchThread({ getters, commit }, id) {
 		const thread = await fetchThread(id)
 		commit('addEnvelopeThread', {
