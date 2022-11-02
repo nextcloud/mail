@@ -45,7 +45,7 @@ class AutoCompleteService {
 	}
 
 	public function findMatches(string $userId, string $term): array {
-		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
+		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($userId, $term);
 		$recipientGroups = $this->groupsIntegration->getMatchingGroups($term);
 		$fromCollector = $this->addressCollector->searchAddress($userId, $term);
 

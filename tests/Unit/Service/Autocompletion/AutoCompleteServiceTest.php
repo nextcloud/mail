@@ -69,7 +69,7 @@ class AutoCompleteServiceTest extends TestCase {
 
 		$this->contactsIntegration->expects($this->once())
 			->method('getMatchingRecipient')
-			->with($term)
+			->with('testuser', $term)
 			->willReturn($contactsResult);
 		$this->groupsIntegration->expects($this->once())
 			->method('getMatchingGroups')

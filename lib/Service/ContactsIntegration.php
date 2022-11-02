@@ -26,39 +26,79 @@ namespace OCA\Mail\Service;
 
 use OCP\Contacts\IManager;
 use OCP\IConfig;
+use OCP\IGroupManager;
+use OCP\IUserManager;
 
 class ContactsIntegration {
 	/** @var IManager */
 	private $contactsManager;
 
+	/** @var IGroupManager */
+	private $groupManager;
+
+	/** @var IUserManager */
+	private $userManager;
+
 	/** @var IConfig */
 	private $config;
 
-	public function __construct(IManager $contactsManager, IConfig $config) {
+	public function __construct(IManager $contactsManager,
+								IGroupManager $groupManager,
+								IUserManager $userManager,
+								IConfig $config) {
 		$this->contactsManager = $contactsManager;
+		$this->groupManager = $groupManager;
+		$this->userManager = $userManager;
 		$this->config = $config;
 	}
 
 	/**
 	 * Extracts all matching contacts with email address and name
 	 *
+	 * @param string $userId
 	 * @param string $term
 	 * @return array
 	 */
-	public function getMatchingRecipient(string $term): array {
+	public function getMatchingRecipient(string $userId, string $term): array {
 		if (!$this->contactsManager->isEnabled()) {
 			return [];
 		}
 
 		// If 'Allow username autocompletion in share dialog' is disabled in the admin sharing settings, then we must not
 		// auto-complete system users
-		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+		$shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+		$shareeEnumerationInGroupOnly = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
+		$shareeEnumerationFullMatch = $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match', 'yes') === 'yes';
+		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
+		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
 
-		$result = $this->contactsManager->search($term, ['FN', 'EMAIL']);
+		$result = $this->contactsManager->search($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $shareeEnumeration]);
+		if (empty($result)) {
+			return [];
+		}
 		$receivers = [];
+
+		if ($shareeEnumeration && $shareeEnumerationInGroupOnly) {
+			$user = $this->userManager->get($userId);
+			if ($user === null) {
+				return [];
+			}
+			$userGroups = $this->groupManager->getUserGroupIds($user);
+		}
+
 		foreach ($result as $r) {
-			if (!$allowSystemUsers && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
-				continue;
+			$isSystemUser = isset($r['isLocalSystemBook']) && $r['isLocalSystemBook'];
+			$isInSameGroup = false;
+			if ($isSystemUser && $shareeEnumerationInGroupOnly) {
+				foreach ($userGroups as $userGroup) {
+					if ($this->groupManager->isInGroup($r['UID'], $userGroup)) {
+						$isInSameGroup = true;
+						break;
+					}
+				}
+				if (!$shareeEnumerationFullMatch && !$isInSameGroup) {
+					continue;
+				}
 			}
 
 			$id = $r['UID'];
@@ -77,18 +117,15 @@ class ContactsIntegration {
 				if ($e === '') {
 					continue;
 				}
-				// Show full name if possible or fall back to email
-				if ($fn !== null) {
+				$lowerTerm = strtolower($term);
+				if (!$isSystemUser || $isInSameGroup || ($lowerTerm !== '' && (
+					($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower($fn)) ||
+					($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id)) ||
+					($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower($e))))) {
 					$receivers[] = [
 						'id' => $id,
-						'label' => "$fn ($e)",
-						'email' => $e,
-						'photo' => $photo,
-					];
-				} else {
-					$receivers[] = [
-						'id' => $id,
-						'label' => $e,
+						// Show full name if possible or fall back to email
+						'label' => (empty($fn) ? $e : "$fn ($e)"),
 						'email' => $e,
 						'photo' => $photo,
 					];
