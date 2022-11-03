@@ -57,7 +57,7 @@ interface IMailTransmission {
 	 * @throws ServiceException
 	 * @return void
 	 */
-	public function sendLocalMessage(Account $account, LocalMessage $message): void;
+	public function sendLocalMessage(Account $account, LocalMessage $message, bool $isDraft = false): void;
 
 	/**
 	 * Save a message draft

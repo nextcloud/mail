@@ -218,7 +218,7 @@ class MailTransmission implements IMailTransmission {
 		);
 	}
 
-	public function sendLocalMessage(Account $account, LocalMessage $message): void {
+	public function sendLocalMessage(Account $account, LocalMessage $message, bool $isDraft = false): void {
 		$to = new AddressList(
 			array_map(
 				static function ($recipient) {
@@ -271,10 +271,14 @@ class MailTransmission implements IMailTransmission {
 			$alias = $this->aliasesService->find($message->getAliasId(), $account->getUserId());
 		}
 
-		try {
-			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
-		} catch (SentMailboxNotSetException $e) {
-			throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
+		if ($isDraft) {
+			$this->saveDraft($messageData);
+		} else {
+			try {
+				$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
+			} catch (SentMailboxNotSetException $e) {
+				throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
+			}
 		}
 	}
 

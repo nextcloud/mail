@@ -57,14 +57,14 @@ class LocalMessageMapper extends QBMapper {
 	 * @return LocalMessage[]
 	 * @throws DBException
 	 */
-	public function getAllForUser(string $userId): array {
+	public function getAllForUser(string $userId, int $type = LocalMessage::TYPE_OUTGOING): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('m.*')
 			->from('mail_accounts', 'a')
 			->join('a', $this->getTableName(), 'm', $qb->expr()->eq('m.account_id', 'a.id'))
 			->where(
 				$qb->expr()->eq('a.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR),
-				$qb->expr()->eq('m.type', $qb->createNamedParameter(LocalMessage::TYPE_OUTGOING, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+				$qb->expr()->eq('m.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 		$rows = $qb->execute();
 
@@ -124,12 +124,13 @@ class LocalMessageMapper extends QBMapper {
 	 *
 	 * @return LocalMessage[]
 	 */
-	public function findDue(int $time): array {
+	public function findDue(int $time, int $type = LocalMessage::TYPE_OUTGOING): array {
 		$qb = $this->db->getQueryBuilder();
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->isNotNull('send_at'),
+				$qb->expr()->eq('type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->orX(
 					$qb->expr()->isNull('failed'),
@@ -137,6 +138,57 @@ class LocalMessageMapper extends QBMapper {
 				)
 			)
 			->orderBy('send_at', 'asc');
+		$messages = $this->findEntities($select);
+
+		if (empty($messages)) {
+			return [];
+		}
+
+		$ids = array_map(function (LocalMessage $message) {
+			return $message->getId();
+		}, $messages);
+
+		$attachments = $this->attachmentMapper->findByLocalMessageIds($ids);
+		$recipients = $this->recipientMapper->findByLocalMessageIds($ids);
+
+		$recipientMap = [];
+		foreach ($recipients as $r) {
+			$recipientMap[$r->getLocalMessageId()][] = $r;
+		}
+		$attachmentMap = [];
+		foreach ($attachments as $a) {
+			$attachmentMap[$a->getLocalMessageId()][] = $a;
+		}
+
+		return array_map(static function ($localMessage) use ($attachmentMap, $recipientMap) {
+			$localMessage->setAttachments($attachmentMap[$localMessage->getId()] ?? []);
+			$localMessage->setRecipients($recipientMap[$localMessage->getId()] ?? []);
+			return $localMessage;
+		}, $messages);
+	}
+
+	/**
+	 * Find all messages that should be sent
+	 *
+	 * @param int $time upper bound send time stamp
+	 *
+	 * @return LocalMessage[]
+	 */
+	public function findDueDrafts(int $time): array {
+		$qb = $this->db->getQueryBuilder();
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->isNotNull('send_at'),
+				$qb->expr()->eq('type', $qb->createNamedParameter(LocalMessage::TYPE_DRAFT, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->lte('updated_at', $qb->createNamedParameter($time - 300, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->orX(
+					$qb->expr()->isNull('failed'),
+					$qb->expr()->eq('failed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				)
+			)
+			->orderBy('updated_at', 'asc')
+			->orderBy('account_id', 'asc');
 		$messages = $this->findEntities($select);
 
 		if (empty($messages)) {
