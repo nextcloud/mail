@@ -31,6 +31,7 @@ describe('Vuex store getters', () => {
 
 	beforeEach(() => {
 		state = {
+			isExpiredSession: false,
 			accountList: [],
 			accounts: {},
 			mailboxes: {},
@@ -43,6 +44,11 @@ describe('Vuex store getters', () => {
 		bindGetters = () => mapObjIndexed(bindGetterToState(getters, state), getters)
 	})
 
+	it('gets session expiry', () => {
+		const getters = bindGetters()
+
+		expect(getters.isExpiredSession).toEqual(false)
+	})
 	it('gets all accounts', () => {
 		state.accountList.push('13')
 		state.accounts[13] = {

@@ -26,6 +26,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { showError } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+
 import logger from './logger'
 import { matchError } from './errors/match'
 import MailboxLockedError from './errors/MailboxLockedError'
@@ -33,8 +37,22 @@ import MailboxLockedError from './errors/MailboxLockedError'
 export default {
 	name: 'App',
 	computed: {
+		...mapGetters([
+			'isExpiredSession',
+		]),
 		hasMailAccounts() {
 			return !!this.$store.getters.accounts.find((account) => !account.isUnified)
+		},
+	},
+	watch: {
+		isExpiredSession(expired) {
+			if (expired) {
+				showError(t('mail', 'Your session expired. The page will be reloaded.'), {
+					onRemove: () => {
+						this.reload()
+					},
+				})
+			}
 		},
 	},
 	async mounted() {
@@ -50,6 +68,9 @@ export default {
 		await this.$store.dispatch('loadCollections')
 	},
 	methods: {
+		reload() {
+			window.location.reload()
+		},
 		sync() {
 			setTimeout(async () => {
 				try {
