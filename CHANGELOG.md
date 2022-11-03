@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2.1.0-rc.1 – 2022-10-19
+## 2.1.0 – 2022-11-03
 ### Added
 - Hide important section when no important messages
 - Basic messages filter and search
@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Keyboard button misalignment
 - Scrolling on small screen
 - Empty content when opening drafts
+- Transfer encoding issue
 
 ## 2.0.3 – 2022-10-18
 ### Fixed
