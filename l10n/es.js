@@ -199,7 +199,7 @@ OC.L10N.register(
     "This event was cancelled" : "Este evento ha sido cancelado",
     "Save to" : "Guardar a",
     "Comment" : "Comentario",
-    "Accept" : "Acceptar",
+    "Accept" : "Aceptar",
     "Decline" : "Declinar",
     "Tentatively accept" : "Aceptar tentativamente",
     "More options" : "Más opciones",
