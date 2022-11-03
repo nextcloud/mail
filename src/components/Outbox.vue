@@ -29,7 +29,6 @@
 		<!-- List -->
 		<template #list>
 			<div slot="list" class="header__button">
-				<NewMessageButtonHeader />
 				<div class="outbox-retry">
 					<div v-if="!sending" class="outbox-retry--info">
 						{{
@@ -47,15 +46,6 @@
 						@click="sendFailedMessages">
 						{{ t('mail', 'Retry') }}
 					</span>
-					<NcButton
-						class="outbox-retry--btn"
-						:title="t('mail', 'Send failed messages')"
-						:disabled="sending"
-						@click="sendFailedMessages">
-						<template #icon>
-							<EmailFastOutlineIcon :size="22" />
-						</template>
-					</NcButton>
 				</div>
 				<AppContentList>
 					<Error
@@ -85,7 +75,6 @@ import Error from './Error'
 import EmptyMailbox from './EmptyMailbox'
 import OutboxMessageContent from './OutboxMessageContent'
 import OutboxMessageListItem from './OutboxMessageListItem'
-import NewMessageButtonHeader from './NewMessageButtonHeader'
 import logger from '../logger'
 
 export default {
@@ -98,7 +87,6 @@ export default {
 		EmptyMailbox,
 		OutboxMessageListItem,
 		OutboxMessageContent,
-		NewMessageButtonHeader,
 	},
 	data() {
 		return {
@@ -208,6 +196,10 @@ export default {
 	align-items: center;
 	justify-content: space-between;
 	border-right: 1px solid var(--color-border);
+	min-height: 52px;
+	margin: 3px 0 0 52px;
+	border-right: 1px solid var(--color-border);
+	position: relative;
 
 	.outbox-retry--info {
 		margin: 4px;
