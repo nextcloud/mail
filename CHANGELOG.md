@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.14.1 - 2022-10-13
+## 1.14.2 - 2022-11-13
 ### Changed
 ## Fixed
 - Transfer encoding issue
