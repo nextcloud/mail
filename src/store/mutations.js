@@ -132,6 +132,9 @@ export default {
 	savePreference(state, { key, value }) {
 		Vue.set(state.preferences, key, value)
 	},
+	setSessionExpired(state) {
+		Vue.set(state, 'isExpiredSession', true)
+	},
 	addAccount(state, account) {
 		account.collapsed = account.collapsed ?? true
 		Vue.set(state.accounts, account.id, account)

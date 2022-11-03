@@ -30,6 +30,9 @@ export const getters = {
 	getPreference: (state) => (key, def) => {
 		return defaultTo(def, state.preferences[key])
 	},
+	isExpiredSession: (state) => {
+		return state.isExpiredSession
+	},
 	getAccount: (state) => (id) => {
 		return state.accounts[id]
 	},
