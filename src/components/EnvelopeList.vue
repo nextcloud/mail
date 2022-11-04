@@ -196,6 +196,7 @@
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
 				@click="$emit('load-more')">
+				<AddIcon :size="20" />
 				{{ t('mail', 'Load more') }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
@@ -210,6 +211,7 @@ import Envelope from './Envelope'
 import IconDelete from 'vue-material-design-icons/Delete'
 import ImportantIcon from './icons/ImportantIcon'
 import IconSelect from 'vue-material-design-icons/CloseThick'
+import AddIcon from 'vue-material-design-icons/Plus'
 import IconFavorite from 'vue-material-design-icons/Star'
 import logger from '../logger'
 import MoveModal from './MoveModal'
@@ -225,6 +227,7 @@ export default {
 	name: 'EnvelopeList',
 	components: {
 		Actions,
+		AddIcon,
 		ActionButton,
 		Envelope,
 		IconDelete,
@@ -497,6 +500,11 @@ div {
 	margin-top: 10px;
 	cursor: pointer;
 	color: var(--color-text-maxcontrast);
+	display: inline-flex;
+	gap: 15px;
+}
+.plus-icon {
+	margin-left: 20px;
 }
 
 .multiselect-header {
