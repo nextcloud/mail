@@ -47,7 +47,7 @@ export default {
 	watch: {
 		isExpiredSession(expired) {
 			if (expired) {
-				showError(t('mail', 'Your session expired. The page will be reloaded.'), {
+				showError(t('mail', 'Your session has expired. The page will be reloaded.'), {
 					onRemove: () => {
 						this.reload()
 					},
