@@ -26,3 +26,7 @@
  */
 export const isPgpgMessage = (message) =>
 	message.format === 'plain' && message.value.startsWith('-----BEGIN PGP MESSAGE-----')
+
+export function isPgpText(text) {
+	return text.startsWith('-----BEGIN PGP MESSAGE-----')
+}
