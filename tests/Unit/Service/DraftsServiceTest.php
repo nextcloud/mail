@@ -33,11 +33,16 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
+use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
+use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -46,7 +51,7 @@ use OCP\DB\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class OutboxServiceTest extends TestCase {
+class DraftsServiceTest extends TestCase {
 	/** @var MailTransmission|MockObject */
 	private $transmission;
 
@@ -54,7 +59,7 @@ class OutboxServiceTest extends TestCase {
 	private $mapper;
 
 	/** @var OutboxService */
-	private $outboxService;
+	private $draftsService;
 
 	/** @var string */
 	private $userId;
@@ -88,73 +93,35 @@ class OutboxServiceTest extends TestCase {
 		$this->attachmentService = $this->createMock(AttachmentService::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->eventDispatcher = $this->createMock(EventDispatcher::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
-		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->outboxService = new OutboxService(
+		$this->draftsService = new DraftsService(
 			$this->transmission,
 			$this->mapper,
 			$this->attachmentService,
-			$this->createMock(EventDispatcher::class),
+			$this->eventDispatcher,
 			$this->clientFactory,
 			$this->mailManager,
-			$this->accountService,
-			$this->timeFactory,
 			$this->logger,
+			$this->accountService,
+			$this->timeFactory
 		);
 		$this->userId = 'linus';
 		$this->time = $this->createMock(ITimeFactory::class);
 	}
 
 	public function testGetMessages(): void {
-		$this->mapper->expects(self::once())
-			->method('getAllForUser')
-			->with($this->userId)
-			->willReturn([
-				[
-					'id' => 1,
-					'type' => 0,
-					'account_id' => 1,
-					'alias_id' => 2,
-					'send_at' => $this->time->getTime(),
-					'subject' => 'Test',
-					'body' => 'Test',
-					'html' => false,
-					'reply_to_id' => null,
-					'draft_id' => 99
-
-				],
-				[
-					'id' => 2,
-					'type' => 0,
-					'account_id' => 1,
-					'alias_id' => 2,
-					'send_at' => $this->time->getTime(),
-					'subject' => 'Second Test',
-					'body' => 'Second Test',
-					'html' => true,
-					'reply_to_id' => null,
-					'draft_id' => null
-				]
-			]);
-
-		$this->outboxService->getMessages($this->userId);
-	}
-
-	public function testGetMessagesNoneFound(): void {
-		$this->mapper->expects(self::once())
-			->method('getAllForUser')
-			->with($this->userId)
-			->willThrowException(new Exception());
-
-		$this->expectException(Exception::class);
-		$this->outboxService->getMessages($this->userId);
+		$this->expectException(NotImplemented::class);
+		$this->draftsService->getMessages($this->userId);
 	}
 
 	public function testGetMessage(): void {
 		$message = new LocalMessage();
 		$message->setAccountId(1);
-		$message->setSendAt($this->time->getTime());
+		$message->setSendAt(null);
+		$message->setUpdatedAt(123456);
 		$message->setSubject('Test');
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
@@ -165,7 +132,7 @@ class OutboxServiceTest extends TestCase {
 			->with(1, $this->userId)
 			->willReturn($message);
 
-		$this->outboxService->getMessage(1, $this->userId);
+		$this->draftsService->getMessage(1, $this->userId);
 	}
 
 	public function testNoMessage(): void {
@@ -175,14 +142,14 @@ class OutboxServiceTest extends TestCase {
 			->willThrowException(new DoesNotExistException('Could not fetch any messages'));
 
 		$this->expectException(DoesNotExistException::class);
-		$this->outboxService->getMessage(1, $this->userId);
+		$this->draftsService->getMessage(1, $this->userId);
 	}
 
 	public function testDeleteMessage(): void {
 		$message = new LocalMessage();
 		$message->setId(10);
 		$message->setAccountId(1);
-		$message->setSendAt($this->time->getTime());
+		$message->setSendAt(null);
 		$message->setSubject('Test');
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
@@ -195,17 +162,18 @@ class OutboxServiceTest extends TestCase {
 			->method('deleteWithRecipients')
 			->with($message);
 
-		$this->outboxService->deleteMessage($this->userId, $message);
+		$this->draftsService->deleteMessage($this->userId, $message);
 	}
 
 	public function testSaveMessage(): void {
 		$message = new LocalMessage();
 		$message->setAccountId(1);
-		$message->setSendAt($this->time->getTime());
+		$message->setSendAt(null);
 		$message->setSubject('Test');
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
+		$message->setType(LocalMessage::TYPE_DRAFT);
 		$to = [
 			[
 				'label' => 'Lewis',
@@ -245,17 +213,18 @@ class OutboxServiceTest extends TestCase {
 			->method('saveLocalMessageAttachments')
 			->with($this->userId, 10, $attachmentIds);
 
-		$this->outboxService->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$this->draftsService->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 	}
 
 	public function testSaveMessageNoAttachments(): void {
 		$message = new LocalMessage();
 		$message->setAccountId(1);
-		$message->setSendAt($this->time->getTime());
+		$message->setSendAt(null);
 		$message->setSubject('Test');
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
+		$message->setType(LocalMessage::TYPE_DRAFT);
 		$to = [
 			[
 				'label' => 'Lewis',
@@ -288,7 +257,7 @@ class OutboxServiceTest extends TestCase {
 		$this->attachmentService->expects(self::never())
 			->method('saveLocalMessageAttachments');
 
-		$result = $this->outboxService->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$result = $this->draftsService->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 		$this->assertEquals($message2->getId(), $result->getId());
 		$this->assertEmpty($result->getAttachments());
 	}
@@ -297,11 +266,12 @@ class OutboxServiceTest extends TestCase {
 		$message = new LocalMessage();
 		$message->setId(10);
 		$message->setAccountId(1);
-		$message->setSendAt($this->time->getTime());
+		$message->setSendAt(null);
 		$message->setSubject('Test');
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
+		$message->setType(LocalMessage::TYPE_DRAFT);
 		$old = Recipient::fromParams([
 			'label' => 'Pam',
 			'email' => 'BuyMeAnAle@startdewvalley.com',
@@ -347,10 +317,10 @@ class OutboxServiceTest extends TestCase {
 			->method('updateLocalMessageAttachments')
 			->with($this->userId, $message2, $attachmentIds);
 
-		$this->outboxService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$this->draftsService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 	}
 
-	public function testUpdateMessageNoAttachments(): void {
+	public function testConvertToOutboxMessage(): void {
 		$message = new LocalMessage();
 		$message->setId(10);
 		$message->setAccountId(1);
@@ -359,6 +329,113 @@ class OutboxServiceTest extends TestCase {
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('abcd');
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$old = Recipient::fromParams([
+			'label' => 'Pam',
+			'email' => 'BuyMeAnAle@startdewvalley.com',
+			'type' => Recipient::TYPE_TO,
+		]);
+		$message->setRecipients([$old]);
+		$to = [
+			[
+				'label' => 'Linus',
+				'email' => 'tent-living@startdewvalley.com',
+				'type' => Recipient::TYPE_TO,
+			]
+		];
+		$cc = [];
+		$bcc = [];
+		$attachments = [['type' => '']];
+		$attachmentIds = [3];
+		$rTo = Recipient::fromParams([
+			'label' => 'Linus',
+			'email' => 'tent-living@startdewvalley.com',
+			'type' => Recipient::TYPE_TO,
+		]);
+		$message2 = $message;
+		$message2->setRecipients([$rTo]);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+
+		$this->mapper->expects(self::once())
+			->method('updateWithRecipients')
+			->with($message, [$rTo], $cc, $bcc)
+			->willReturn($message2);
+		$this->clientFactory->expects(self::once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$this->attachmentService->expects(self::once())
+			->method('handleAttachments')
+			->with($account, $attachments, $client)
+			->willReturn($attachmentIds);
+		$this->attachmentService->expects(self::once())
+			->method('updateLocalMessageAttachments')
+			->with($this->userId, $message2, $attachmentIds);
+
+		$this->draftsService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
+	}
+
+	public function testConvertToOutboxMessageNoRecipients(): void {
+		$message = new LocalMessage();
+		$message->setId(10);
+		$message->setAccountId(1);
+		$message->setSendAt($this->time->getTime());
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abcd');
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$old = Recipient::fromParams([
+			'label' => 'Pam',
+			'email' => 'BuyMeAnAle@startdewvalley.com',
+			'type' => Recipient::TYPE_TO,
+		]);
+		$message->setRecipients([$old]);
+		$to = [];
+		$cc = [];
+		$bcc = [];
+		$attachments = [['type' => '']];
+		$attachmentIds = [3];
+		$message2 = $message;
+		$message2->setRecipients([]);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+
+		$this->mapper->expects(self::never())
+			->method('updateWithRecipients')
+			->with($message, [], $cc, $bcc)
+			->willReturn($message2);
+		$this->clientFactory->expects(self::never())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$this->attachmentService->expects(self::never())
+			->method('handleAttachments')
+			->with($account, $attachments, $client)
+			->willReturn($attachmentIds);
+		$this->attachmentService->expects(self::never())
+			->method('updateLocalMessageAttachments')
+			->with($this->userId, $message2, $attachmentIds);
+
+		$this->expectException(ClientException::class);
+		$this->draftsService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
+	}
+
+	public function testUpdateMessageNoAttachments(): void {
+		$message = new LocalMessage();
+		$message->setId(10);
+		$message->setAccountId(1);
+		$message->setSendAt(null);
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abcd');
+		$message->setType(LocalMessage::TYPE_DRAFT);
 		$old = Recipient::fromParams([
 			'label' => 'Pam',
 			'email' => 'BuyMeAnAle@startdewvalley.com',
@@ -396,7 +473,7 @@ class OutboxServiceTest extends TestCase {
 			->method('getClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
-		$result = $this->outboxService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
+		$result = $this->draftsService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 		$this->assertEmpty($result->getAttachments());
 	}
 
@@ -408,6 +485,7 @@ class OutboxServiceTest extends TestCase {
 		$message->setBody('Test Test Test');
 		$message->setHtml(true);
 		$message->setInReplyToMessageId('laskdjhsakjh33233928@startdewvalley.com');
+		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [
 			[
 				'label' => 'Gunther',
@@ -430,7 +508,7 @@ class OutboxServiceTest extends TestCase {
 			->method('saveLocalMessageAttachments');
 		$this->expectException(Exception::class);
 
-		$this->outboxService->saveMessage($account, $message, $to, [], []);
+		$this->draftsService->saveMessage($account, $message, $to, [], []);
 	}
 
 	public function testSendMessage(): void {
@@ -462,7 +540,7 @@ class OutboxServiceTest extends TestCase {
 			->method('deleteWithRecipients')
 			->with($message);
 
-		$this->outboxService->sendMessage($message, $account);
+		$this->draftsService->sendMessage($message, $account);
 	}
 
 	public function testSendMessageTransmissionError(): void {
@@ -494,6 +572,70 @@ class OutboxServiceTest extends TestCase {
 			->method('deleteWithRecipients');
 
 		$this->expectException(ClientException::class);
-		$this->outboxService->sendMessage($message, $account);
+		$this->draftsService->sendMessage($message, $account);
+	}
+
+	public function testHandleDraft(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('admin');
+		$account = new Account($mailAccount);
+		$draftId = 1;
+		$message = new Message();
+
+		$this->mailManager->expects(self::once())
+			->method('getMessage')
+			->with($account->getUserId(), $draftId)
+			->willReturn($message);
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatchTyped')
+			->with(new DraftMessageCreatedEvent($account, $message));
+
+		$this->draftsService->handleDraft($account, $draftId);
+	}
+
+	public function testFlush(): void {
+		$time = 123456;
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$messages = [$message];
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('linus');
+		$account = new Account($mailAccount);
+
+		$this->timeFactory->expects(self::once())
+			->method('getTime')
+			->willReturn($time);
+		$this->mapper->expects(self::once())
+			->method('findDueDrafts')
+			->with($time)
+			->willReturn($messages);
+		$this->accountService->expects(self::once())
+			->method('findById')
+			->willReturn($account);
+		$this->logger->expects(self::once())
+			->method('debug');
+
+		$this->draftsService->flush();
+	}
+
+	public function testFlushNoMessages(): void {
+		$time = 123456;
+
+		$this->timeFactory->expects(self::once())
+			->method('getTime')
+			->willReturn($time);
+		$this->mapper->expects(self::once())
+			->method('findDueDrafts')
+			->with($time)
+			->willReturn([]);
+		$this->accountService->expects(self::never())
+			->method('findById');
+		$this->logger->expects(self::never())
+			->method('debug');
+		$this->logger->expects(self::never())
+			->method('warning');
+
+		$this->draftsService->flush();
 	}
 }
