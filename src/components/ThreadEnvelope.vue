@@ -62,7 +62,7 @@
 				</div>
 				<div v-if="showSubline" class="subline">
 					<span class="preview">
-						{{ envelope.previewText }}
+						{{ isEncrypted ? t('mail', 'Encrypted message') : envelope.previewText }}
 					</span>
 				</div>
 				<div v-for="tag in tags"
@@ -179,6 +179,7 @@ import { hiddenTags } from './tags.js'
 import { showError } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
+import { isPgpText } from '../crypto/pgp'
 
 export default {
 	name: 'ThreadEnvelope',
@@ -262,6 +263,10 @@ export default {
 					threadId: this.envelope.databaseId,
 				},
 			}
+		},
+		isEncrypted() {
+			return this.envelope.previewText
+				&& isPgpText(this.envelope.previewText)
 		},
 		isImportant() {
 			return this.$store.getters
@@ -475,14 +480,6 @@ export default {
 			}
 		}
 	}
-	.subline {
-		margin-left: 8px;
-		color: var(--color-text-maxcontrast);
-		cursor: default;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
 
 	.envelope {
 		display: flex;
@@ -501,6 +498,15 @@ export default {
 		&:last-of-type {
 			margin-bottom: 10px;
 			padding-bottom: 0;
+		}
+
+		.subline {
+			margin-left: 8px;
+			color: var(--color-text-maxcontrast);
+			cursor: default;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 

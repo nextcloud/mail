@@ -65,7 +65,7 @@
 			</div>
 			<div v-if="data.previewText"
 				class="envelope__preview-text">
-				{{ data.previewText }}
+				{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText }}
 			</div>
 		</template>
 		<template #indicator>
@@ -290,6 +290,7 @@ import EventModal from './EventModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
+import { isPgpText } from '../crypto/pgp'
 import DownloadIcon from 'vue-material-design-icons/Download'
 
 export default {
@@ -439,6 +440,10 @@ export default {
 		},
 		showImportantIconVariant() {
 			return this.data.flags.seen
+		},
+		isEncrypted() {
+			return this.data.previewText
+				&& isPgpText(this.data.previewText)
 		},
 		isImportant() {
 			return this.$store.getters
