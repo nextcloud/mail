@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -28,13 +30,13 @@ class MessageBuilder {
 	/** @var string */
 	private $to;
 
-	/** @var string */
+	/** @var string|null */
 	private $cc;
 
-	/** @var string */
+	/** @var string|null */
 	private $bcc;
 
-	/** @var string */
+	/** @var string|null */
 	private $date;
 
 	/** @var string */
@@ -54,7 +56,7 @@ class MessageBuilder {
 	 * @param string $from
 	 * @return MessageBuilder
 	 */
-	public function from($from) {
+	public function from(string $from) {
 		$this->from = $from;
 		return $this;
 	}
@@ -63,7 +65,7 @@ class MessageBuilder {
 	 * @param string $to
 	 * @return MessageBuilder
 	 */
-	public function to($to) {
+	public function to(string $to) {
 		$this->to = $to;
 		return $this;
 	}
@@ -72,7 +74,7 @@ class MessageBuilder {
 	 * @param string $cc
 	 * @return MessageBuilder
 	 */
-	public function cc($cc) {
+	public function cc(string $cc) {
 		$this->cc = $cc;
 		return $this;
 	}
@@ -81,7 +83,7 @@ class MessageBuilder {
 	 * @param string $bcc
 	 * @return MessageBuilder
 	 */
-	public function bcc($bcc) {
+	public function bcc(string $bcc) {
 		$this->bcc = $bcc;
 		return $this;
 	}

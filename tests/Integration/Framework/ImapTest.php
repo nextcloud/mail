@@ -138,10 +138,16 @@ trait ImapTest {
 		$headers = [
 			'From' => new Horde_Mail_Rfc822_Address($message->getFrom()),
 			'To' => new Horde_Mail_Rfc822_Address($message->getTo()),
-			'Cc' => new Horde_Mail_Rfc822_Address($message->getCc()),
-			'Bcc' => new Horde_Mail_Rfc822_Address($message->getBcc()),
-			'Subject' => $message->getSubject(),
 		];
+		if ($message->getCc() !== null) {
+			$headers['Cc'] = new Horde_Mail_Rfc822_Address($message->getCc());
+		}
+		if ($message->getBcc() !== null) {
+			$headers['Bcc'] = new Horde_Mail_Rfc822_Address($message->getBcc());
+		}
+		if ($message->getSubject() !== null) {
+			$headers['Subject'] = $message->getSubject();
+		}
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
