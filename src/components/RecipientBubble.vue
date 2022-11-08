@@ -20,7 +20,7 @@
   -->
 
 <template>
-	<Popover trigger="click" class="contact-popover">
+	<Popover ref="popover" trigger="click" class="contact-popover">
 		<UserBubble slot="trigger"
 			:display-name="label"
 			:avatar-image="avatarUrlAbsolute"
@@ -204,7 +204,7 @@ export default {
 	},
 	methods: {
 		onClickCopyToClipboard() {
-			this.$copyText(this.email)
+			this.$copyText(this.email, this.$refs.popover.$refs.popover.$refs.popperContent.$el)
 		},
 		onClickReply() {
 			this.$router.push({
