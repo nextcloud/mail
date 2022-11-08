@@ -74,7 +74,7 @@ class FaviconSource implements IAvatarSource {
 			return null;
 		}
 
-		var_dump($iconUrl);
+		echo("iconUrl = |" . $iconUrl . "|\n");
 
 		/** @var string $iconUrl */
 		$client = $this->clientService->newClient();
