@@ -74,12 +74,14 @@ class FaviconSource implements IAvatarSource {
 			return null;
 		}
 
+		var_dump($iconUrl);
+
 		/** @var string $iconUrl */
 		$client = $this->clientService->newClient();
 		try {
 			$response = $client->get($iconUrl);
 		} catch (Exception $exception) {
-			echo("favicon exception: " . $exception->getMessage());
+			echo("favicon exception: " . $exception->getMessage() . "\n");
 			echo($exception->getTraceAsString());
 			return null;
 		}
