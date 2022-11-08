@@ -26,11 +26,11 @@ describe('shortRelativeDatetime', () => {
 	describe('toPlain', () => {
 		it('shortens todays time', () => {
 			const ref = new Date()
-			ref.setUTCFullYear(2020, 1, 13)
-			ref.setUTCHours(13, 14)
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
 			const d = new Date()
-			d.setUTCFullYear(2020, 1, 13)
-			d.setUTCHours(9, 27)
+			d.setFullYear(2020, 1, 13)
+			d.setHours(9, 27)
 
 			const formatted = shortDatetime(ref, d)
 
@@ -39,11 +39,11 @@ describe('shortRelativeDatetime', () => {
 
 		it('shortens this weeks day', () => {
 			const ref = new Date()
-			ref.setUTCFullYear(2020, 1, 13)
-			ref.setUTCHours(13, 14)
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
 			const d = new Date()
-			d.setUTCFullYear(2020, 1, 11)
-			d.setUTCHours(9, 27)
+			d.setFullYear(2020, 1, 11)
+			d.setHours(9, 27)
 
 			const formatted = shortDatetime(ref, d)
 
@@ -52,11 +52,11 @@ describe('shortRelativeDatetime', () => {
 
 		it('shortens this years date', () => {
 			const ref = new Date()
-			ref.setUTCFullYear(2020, 1, 13)
-			ref.setUTCHours(13, 14)
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
 			const d = new Date()
-			d.setUTCFullYear(2020, 0, 1)
-			d.setUTCHours(9, 27)
+			d.setFullYear(2020, 0, 1)
+			d.setHours(9, 27)
 
 			const formatted = shortDatetime(ref, d)
 
@@ -65,11 +65,11 @@ describe('shortRelativeDatetime', () => {
 
 		it('shortens recent last years date', () => {
 			const ref = new Date()
-			ref.setUTCFullYear(2020, 1, 13)
-			ref.setUTCHours(13, 14)
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
 			const d = new Date()
-			d.setUTCFullYear(2019, 10, 17)
-			d.setUTCHours(9, 27)
+			d.setFullYear(2019, 10, 17)
+			d.setHours(9, 27)
 
 			const formatted = shortDatetime(ref, d)
 
@@ -78,11 +78,11 @@ describe('shortRelativeDatetime', () => {
 
 		it('shortens older last years date', () => {
 			const ref = new Date()
-			ref.setUTCFullYear(2020, 1, 13)
-			ref.setUTCHours(13, 14)
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
 			const d = new Date()
-			d.setUTCFullYear(2019, 0, 3)
-			d.setUTCHours(9, 27)
+			d.setFullYear(2019, 0, 3)
+			d.setHours(9, 27)
 
 			const formatted = shortDatetime(ref, d)
 
@@ -91,11 +91,11 @@ describe('shortRelativeDatetime', () => {
 
 		it('shortens old date', () => {
 			const ref = new Date()
-			ref.setUTCFullYear(2020, 1, 13)
-			ref.setUTCHours(13, 14)
+			ref.setFullYear(2020, 1, 13)
+			ref.setHours(13, 14)
 			const d = new Date()
-			d.setUTCFullYear(2013, 7, 8)
-			d.setUTCHours(9, 27)
+			d.setFullYear(2013, 7, 8)
+			d.setHours(9, 27)
 
 			const formatted = shortDatetime(ref, d)
 
