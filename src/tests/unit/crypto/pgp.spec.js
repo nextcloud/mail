@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isPgpgMessage } from '../../../crypto/pgp'
+import { isPgpgMessage, isPgpText } from '../../../crypto/pgp'
 import { html, plain } from '../../../util/text'
 
 describe('pgp', () => {
@@ -43,6 +43,22 @@ describe('pgp', () => {
 		const message = plain('-----BEGIN PGP MESSAGE-----\nVersion: Mailvelope v4.3.1')
 
 		const isPgp = isPgpgMessage(message)
+
+		expect(isPgp).toEqual(true)
+	})
+
+	it('detects non-pgp text', () => {
+		const text = 'Hi Alice'
+
+		const isPgp = isPgpText(text)
+
+		expect(isPgp).toEqual(false)
+	})
+
+	it('detects a pgp text', () => {
+		const message = '-----BEGIN PGP MESSAGE-----\nVersion: Mailvelope v4.3.1'
+
+		const isPgp = isPgpText(message)
 
 		expect(isPgp).toEqual(true)
 	})
