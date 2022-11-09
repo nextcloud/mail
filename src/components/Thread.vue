@@ -35,6 +35,7 @@
 			</div>
 			<ThreadEnvelope v-for="env in thread"
 				:key="env.databaseId"
+				class="thread-animation"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:expanded="expandedThreads.includes(env.databaseId)"
@@ -422,5 +423,20 @@ export default {
 }
 .user-bubble__title {
 	cursor: pointer;
+}
+.thread-animation {
+	animation: show 600ms 100ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+
+	// Prestate
+	opacity: 0;
+	// remove transform for just a fade-in
+	transform: rotateX(-90deg);
+	transform-origin: top center;
+}
+@keyframes show {
+	100% {
+		opacity: 1;
+		transform: none;
+	}
 }
 </style>

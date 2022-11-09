@@ -27,9 +27,9 @@
 				</ActionButton>
 			</Actions>
 		</div>
-		<IconLoading v-if="loading" />
 		<div id="message-container" :class="{hidden: loading, scroll: !fullHeight}">
-			<iframe ref="iframe"
+			<iframe v-show="!hidden"
+				ref="iframe"
 				class="message-frame"
 				:title="t('mail', 'Message frame')"
 				:src="url"
@@ -81,6 +81,7 @@ export default {
 	data() {
 		return {
 			loading: true,
+			hidden: true,
 			hasBlockedContent: false,
 			isSenderTrusted: this.message.isSenderTrusted,
 		}
@@ -109,6 +110,7 @@ export default {
 			return iframe.contentDocument || iframe.contentWindow.document
 		},
 		onMessageFrameLoad() {
+			this.hidden = false
 			const iframeDoc = this.getIframeDoc()
 			this.hasBlockedContent
 				= iframeDoc.querySelectorAll('[data-original-src]').length > 0

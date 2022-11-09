@@ -46,5 +46,16 @@ export default {
 <style scoped>
 #mail-content {
 	height: 450px;
+	animation: show 600ms 100ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+opacity: 0;
+transform: rotateX(-90deg);
+	transform-origin: top center;
 }
+@keyframes show {
+	100% {
+		opacity: 1;
+		transform: none;
+	}
+}
+
 </style>
