@@ -316,7 +316,8 @@
 					<div class="group-inputs">
 						<Button
 							class="config-button save-config"
-							type="secondary submit"
+							type="secondary"
+							:native-type="submit"
 							:disabled="loading">
 							<template #icon>
 								<IconUpload :size="20" />
