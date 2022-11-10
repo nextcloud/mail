@@ -283,7 +283,7 @@ export default {
 	flex-wrap: wrap;
 	padding: 10px 6px 10px 46px;
 	margin-top: 4px;
-	margin-bottom: -40px;
+	margin-bottom: 0;
 	position:sticky;
 	bottom:0;
 	background: linear-gradient(0deg, var(--color-main-background), var(--color-main-background) 90%, rgba(255, 255, 255, 0));
