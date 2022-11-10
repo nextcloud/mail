@@ -1,6 +1,6 @@
 <template>
 	<AppContentDetails id="mail-message">
-		<Loading v-if="loading" />
+		<Loading v-if="loading" :hint="t('mail', 'Loading thread')" />
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
