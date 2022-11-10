@@ -1238,15 +1238,54 @@ export default {
 	border-top: 1px solid var(--color-border);
 	align-items: flex-start;
 
+	label {
+		padding: 11px 20px 11px 0;
+	}
+
+	::v-deep(.multiselect--multiple .multiselect__tags) {
+		display: grid;
+		grid-template-columns: calc(100% - 18px) 18px 100%;
+
+		.multiselect__limit {
+			margin-right: 0;
+			margin-left: 8px
+		}
+	}
+
+	::v-deep(.multiselect__content-wrapper) {
+		border-bottom: 1px solid var(--color-border);
+		margin-top: 0;
+
+		& li > span::before {
+			display: none
+		}
+	}
+
+	::v-deep(.multiselect__input) {
+		position: relative !important;
+		top: 0;
+		grid-column-start: 1;
+		grid-column-end: 3;
+	}
+
+	::v-deep(.multiselect--active input:focus-visible) {
+		box-shadow: none;
+	}
+
+	::v-deep(.multiselect__tags) {
+		box-sizing: border-box;
+		height: auto;
+	}
+
 	&__from {
 		margin-right: 50px; /* for the modal close button */
 	}
 
 	.multiselect.multiselect--multiple::after {
-		position:absolute;
+		position: absolute;
 		right: 0;
 		top: auto;
-		bottom:8px
+		bottom: 8px
 	}
 
 	.multiselect__tag {
@@ -1276,18 +1315,19 @@ export default {
 		display: flex;
 		align-items: flex-start;
 		flex-wrap: wrap;
-		padding-top:2px;
+		padding-top: 2px;
 		width: calc(100% - 120px);
 
 		button {
 			margin-top: 0;
+			margin-bottom: 0;
 			background-color: transparent;
-			border:none;
+			border: none;
 			opacity: 0.5;
 			padding: 10px 16px;
 		}
 
-		button.active,button:active {
+		button.active, button:active {
 			opacity: 1;
 		}
 
@@ -1302,10 +1342,13 @@ export default {
 }
 
 .subject {
-	font-size: 20px;
+	font-size: 15px;
 	font-weight: bold;
 	margin: 0;
 	padding: 24px 20px;
+	&:focus-visible {
+		box-shadow: none !important;
+	}
 }
 
 .warning-box {
@@ -1383,9 +1426,6 @@ export default {
 
 ::v-deep .multiselect .multiselect__tags {
 	border: none !important;
-}
-::v-deep .multiselect .multiselect__input {
-	height: auto !important;
 }
 ::v-deep [data-select="create"] .avatardiv--unknown {
 	background: var(--color-text-maxcontrast) !important;
