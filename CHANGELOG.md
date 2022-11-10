@@ -1,9 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.14.2 - 2022-11-13
+## 1.14.3-alpha.1 - 2022-11-10
 ### Changed
+- Improve the size of padding bottom on threads
+- Improving the appearance of the modal window of composer
 ## Fixed
+- Scrolling and bottom padding for threads
+- Provisioning config not saving
+- Sending PGP messages as HTML
+- Important and favorite icon position
+- Copy to clipboard
+
+## 1.14.2 - 2022-11-03
+### Fixed
 - Transfer encoding issue
 
 ## 1.14.1 - 2022-10-13
