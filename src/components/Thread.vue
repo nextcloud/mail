@@ -266,7 +266,7 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: 60px;
+	margin-bottom: 30px;
 	position: relative;
 }
 
