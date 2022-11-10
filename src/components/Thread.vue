@@ -258,6 +258,10 @@ export default {
 <style lang="scss">
 #mail-message {
 	flex-grow: 1;
+	max-height: calc(100vh - 50px);
+	margin-bottom: 30vh;
+	overflow: auto;
+
 }
 
 .mail-message-body {
