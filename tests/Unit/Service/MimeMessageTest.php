@@ -210,6 +210,49 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('attachment', $attachmentPart2->getDisposition());
 	}
 
+	public function testMultipartAlternativeGreek() {
+		$messageData = new NewMessageData(
+			$this->account,
+			new AddressList(),
+			new AddressList(),
+			new AddressList(),
+			'Text and HTML message',
+			file_get_contents(__DIR__ . '/../../../tests/data/mime-html-greek.txt'),
+			[],
+			true,
+			false
+		);
+
+		$part = $this->mimeMessage->build(
+			$messageData->isHtml(),
+			$messageData->getBody(),
+			[],
+		);
+
+		$this->assertEquals('multipart/alternative', $part->getType());
+
+		/** @var Horde_Mime_Part[] $subParts */
+		$subParts = $part->getParts();
+		$this->assertCount(2, $subParts);
+
+		$this->assertEquals('text/plain', $subParts[0]->getType());
+		$this->assertEquals('text/html', $subParts[1]->getType());
+
+		$this->assertStringContainsString(
+			"Όλοι οι άνθρωποι γεννιούνται ελεύθεροι
+και ίσοι στην αξιοπρέπεια και τα
+δικαιώματα. Είναι προικισμένοι με λογική
+και συνείδηση, και οφείλουν να
+συμπεριφέρονται μεταξύ τους με πνεύμα
+αδελφοσύνης.",
+			$subParts[0]->getContents(),
+		);
+		$this->assertStringContainsString(
+			'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι και ίσοι στην αξιοπρέπεια και τα δικαιώματα. Είναι προικισμένοι με λογική και συνείδηση, και οφείλουν να συμπεριφέρονται μεταξύ τους με πνεύμα αδελφοσύνης.',
+			$subParts[1]->getContents()
+		);
+	}
+
 	/**
 	 * OCA\Mail\Model\Message::createAttachmentDetails
 	 *

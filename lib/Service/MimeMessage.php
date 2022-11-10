@@ -46,7 +46,7 @@ class MimeMessage {
 	public function build(bool $isHtml, string $content, array $attachments): Horde_Mime_Part {
 		if ($isHtml) {
 			$doc = new DOMDocument();
-			$doc->loadHTML($content, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+			$doc->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
 
 			$images = $doc->getElementsByTagName('img');
 			$imageParts = [];
@@ -84,7 +84,7 @@ class MimeMessage {
 				$image->setAttribute('src', 'cid:' . $cid);
 			}
 
-			$htmlContent = $doc->saveHTML();
+			$htmlContent = $doc->saveHTML($doc->documentElement);
 			$textContent = Horde_Text_Filter::filter($htmlContent, 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]);
 
 			$alternativePart = new Horde_Mime_Part();
