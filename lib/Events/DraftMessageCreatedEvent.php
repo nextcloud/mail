@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/*
+/**
  * @copyright 2022 Anna Larch <anna.larch@gmx.net>
  *
  * @author 2022 Anna Larch <anna.larch@gmx.net>
@@ -23,25 +23,34 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\BackgroundJob;
+namespace OCA\Mail\Events;
 
-use OCA\Mail\Service\IMipService;
-use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\BackgroundJob\TimedJob;
+use OCA\Mail\Account;
+use OCA\Mail\Db\Message;
+use OCP\EventDispatcher\Event;
 
-class IMipMessageJob extends TimedJob {
-	private IMipService $iMipService;
+/**
+ * @psalm-immutable
+ */
+class DraftMessageCreatedEvent extends Event {
+	/** @var Account */
+	private $account;
 
-	public function __construct(ITimeFactory $time,
-								IMipService $draftsService) {
-		parent::__construct($time);
+	/** @var Message */
+	private $draft;
 
-		// Run once per hour
-		$this->setInterval(60 * 60);
-		$this->iMipService = $draftsService;
+	public function __construct(Account $account,
+								Message $draft) {
+		parent::__construct();
+		$this->account = $account;
+		$this->draft = $draft;
 	}
 
-	protected function run($argument): void {
-		$this->iMipService->process();
+	public function getAccount(): Account {
+		return $this->account;
+	}
+
+	public function getDraft(): ?Message {
+		return $this->draft;
 	}
 }

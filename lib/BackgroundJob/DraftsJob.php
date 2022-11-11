@@ -25,23 +25,33 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Service\IMipService;
+use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DraftsService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
+use Psr\Log\LoggerInterface;
 
-class IMipMessageJob extends TimedJob {
-	private IMipService $iMipService;
+class DraftsJob extends TimedJob {
+	private DraftsService $draftsService;
+	private LocalMessageMapper $messageMapper;
+	private AccountService $accountService;
+	private LoggerInterface $logger;
 
 	public function __construct(ITimeFactory $time,
-								IMipService $draftsService) {
+								DraftsService $draftsService,
+								AccountService $accountService,
+								LocalMessageMapper $messageMapper,
+								LoggerInterface $logger) {
 		parent::__construct($time);
 
-		// Run once per hour
-		$this->setInterval(60 * 60);
-		$this->iMipService = $draftsService;
+		// Run once per five minutes
+		$this->setInterval(5 * 60);
+		$this->setTimeSensitivity(self::TIME_SENSITIVE);
+		$this->draftsService = $draftsService;
 	}
 
 	protected function run($argument): void {
-		$this->iMipService->process();
+		$this->draftsService->flush();
 	}
 }

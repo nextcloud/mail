@@ -38,6 +38,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\Message;
@@ -517,5 +518,87 @@ class MailTransmissionTest extends TestCase {
 		$this->assertStringContainsString('img src=3D"cid:', $rawMessage);
 		$this->assertStringContainsString('Content-Type: image/png', $rawMessage);
 		$this->assertStringContainsString('Content-Disposition: inline', $rawMessage);
+	}
+
+	public function testSendLocalDraft(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(10);
+		$mailAccount->setUserId('gunther');
+		$mailAccount->setName('Gunther');
+		$mailAccount->setEmail('gunther@stardewvalley-museum.com');
+		$mailAccount->setDraftsMailboxId(123);
+		$message = new LocalMessage();
+		$message->setType(LocalMessage::TYPE_DRAFT);
+		$message->setAccountId($mailAccount->getId());
+		$message->setAliasId(2);
+		$message->setSendAt(123);
+		$message->setSubject('subject');
+		$message->setBody('message');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abc');
+		$message->setAttachments([]);
+		$to = Recipient::fromParams([
+			'email' => 'emily@stardewvalleypub.com',
+			'label' => 'Emily',
+			'type' => Recipient::TYPE_TO
+		]);
+		$message->setRecipients([$to]);
+
+		$alias = Alias::fromParams([
+			'id' => 1,
+			'accountId' => 10,
+			'name' => 'Emily',
+			'alias' => 'Emmerlie'
+		]);
+		$this->aliasService->expects(self::once())
+			->method('find')
+			->with($message->getAliasId(), $mailAccount->getUserId())
+			->willReturn($alias);
+
+		$replyMessage = new DbMessage();
+		$replyMessage->setMessageId('abc');
+
+		$this->transmission->sendLocalMessage(new Account($mailAccount), $message, true);
+	}
+
+	public function testSendLocalDraftNoDraftsMailbox(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(10);
+		$mailAccount->setUserId('gunther');
+		$mailAccount->setName('Gunther');
+		$mailAccount->setEmail('gunther@stardewvalley-museum.com');
+		$message = new LocalMessage();
+		$message->setType(LocalMessage::TYPE_DRAFT);
+		$message->setAccountId($mailAccount->getId());
+		$message->setAliasId(2);
+		$message->setSendAt(123);
+		$message->setSubject('subject');
+		$message->setBody('message');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abc');
+		$message->setAttachments([]);
+		$to = Recipient::fromParams([
+			'email' => 'emily@stardewvalleypub.com',
+			'label' => 'Emily',
+			'type' => Recipient::TYPE_TO
+		]);
+		$message->setRecipients([$to]);
+
+		$alias = Alias::fromParams([
+			'id' => 1,
+			'accountId' => 10,
+			'name' => 'Emily',
+			'alias' => 'Emmerlie'
+		]);
+		$this->aliasService->expects(self::once())
+			->method('find')
+			->with($message->getAliasId(), $mailAccount->getUserId())
+			->willReturn($alias);
+
+		$replyMessage = new DbMessage();
+		$replyMessage->setMessageId('abc');
+
+		$this->expectException(ClientException::class);
+		$this->transmission->sendLocalMessage(new Account($mailAccount), $message, true);
 	}
 }

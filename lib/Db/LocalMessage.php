@@ -37,8 +37,8 @@ use function array_filter;
  * @method void setAccountId(int $accountId)
  * @method int|null getAliasId()
  * @method void setAliasId(?int $aliasId)
- * @method int getSendAt()
- * @method void setSendAt(int $sendAt)
+ * @method int|null getSendAt()
+ * @method void setSendAt(?int $sendAt)
  * @method string getSubject()
  * @method void setSubject(string $subject)
  * @method string getBody()
@@ -51,6 +51,8 @@ use function array_filter;
  * @method void setFailed(bool $failed)
  * @method string|null getInReplyToMessageId()
  * @method void setInReplyToMessageId(?string $inReplyToId)
+ * @method int|null getUpdatedAt()
+ * @method setUpdatedAt(?int $updatedAt)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -95,6 +97,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool|null */
 	protected $failed;
 
+	/** @var int|null */
+	protected $updatedAt;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -102,6 +107,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('sendAt', 'integer');
 		$this->addType('html', 'boolean');
 		$this->addType('failed', 'boolean');
+		$this->addType('updatedAt', 'integer');
 	}
 
 	#[ReturnTypeWillChange]
@@ -112,6 +118,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'accountId' => $this->getAccountId(),
 			'aliasId' => $this->getAliasId(),
 			'sendAt' => $this->getSendAt(),
+			'updatedAt' => $this->getUpdatedAt(),
 			'subject' => $this->getSubject(),
 			'body' => $this->getBody(),
 			'editorBody' => $this->getEditorBody(),

@@ -31,6 +31,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
@@ -71,7 +72,7 @@ class DeleteDraftListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent) && $event->getDraft() !== null) {
+		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent || $event instanceof DraftMessageCreatedEvent) && $event->getDraft() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraft());
 		}
 	}
