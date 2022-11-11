@@ -151,6 +151,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "此信箱中沒有郵件",
     "No messages" : "沒有訊息",
     "Draft: " : "草稿：",
+    "Encrypted message" : "加密訊息",
     "This message is unread" : "此訊息未讀",
     "Unfavorite" : "取消我的最愛",
     "Favorite" : "我的最愛",

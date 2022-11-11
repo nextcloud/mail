@@ -151,6 +151,7 @@ OC.L10N.register(
     "No messages in this mailbox" : "No hay mensajes en esta bandeja",
     "No messages" : "No hay mensajes",
     "Draft: " : "Borrador:",
+    "Encrypted message" : "Mensaje cifrado",
     "This message is unread" : "Este mensaje no se ha leído",
     "Unfavorite" : "Desmarcar como favorito",
     "Favorite" : "Marcar como favorito",
