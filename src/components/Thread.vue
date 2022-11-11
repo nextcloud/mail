@@ -425,7 +425,7 @@ export default {
 	cursor: pointer;
 }
 .thread-animation {
-	animation: show 600ms 100ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+	animation: show 1200ms 1000ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
 
 	// Prestate
 	opacity: 0;

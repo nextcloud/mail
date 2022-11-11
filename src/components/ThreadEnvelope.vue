@@ -145,6 +145,7 @@
 		</div>
 		<Loading v-if="loading" />
 		<Message v-else-if="message"
+			class="message-animation"
 			:envelope="envelope"
 			:message="message"
 			:full-height="fullHeight" />
@@ -233,7 +234,6 @@ export default {
 	data() {
 		return {
 			loading: false,
-			hidden: true,
 			error: undefined,
 			message: undefined,
 			importantSvg,
@@ -606,5 +606,14 @@ export default {
 	}
 	.junk-favorite-position {
 		margin-bottom: 36px !important;
+	}
+	.message-animation {
+		animation: show 400ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+
+		// Prestate
+		opacity: 0;
+		// remove transform for just a fade-in
+		transform: rotateX(-90deg);
+		transform-origin: top center;
 	}
 </style>

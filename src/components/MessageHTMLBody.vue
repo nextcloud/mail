@@ -43,7 +43,7 @@
 import { iframeResizer } from 'iframe-resizer'
 import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService'
-import { NcActionButton as ActionButton, NcActions as Actions, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual'
 import IconMail from 'vue-material-design-icons/Email'
 import IconDomain from 'vue-material-design-icons/Domain'
@@ -61,7 +61,6 @@ export default {
 		IconImage,
 		IconMail,
 		IconDomain,
-		IconLoading,
 	},
 	props: {
 		url: {
@@ -190,6 +189,19 @@ export default {
 }
 .message-frame {
 	width: 100%;
+	animation: show 400ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+
+	// Prestate
+	opacity: 0;
+	// remove transform for just a fade-in
+	transform: rotateX(-90deg);
+	transform-origin: top center;
+}
+@keyframes show {
+	100% {
+		opacity: 1;
+		transform: none;
+	}
 }
 :deep(.button-vue__icon) {
 	display: none !important;
