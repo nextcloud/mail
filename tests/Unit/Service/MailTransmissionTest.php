@@ -514,7 +514,7 @@ class MailTransmissionTest extends TestCase {
 		 * the expected result is to have an img element with src="cid:123" and
 		 * another part for the attachment with Content-Type: image/png
 		 */
-		$this->assertStringContainsString('img src="cid:', $rawMessage);
+		$this->assertStringContainsString('img src=3D"cid:', $rawMessage);
 		$this->assertStringContainsString('Content-Type: image/png', $rawMessage);
 		$this->assertStringContainsString('Content-Disposition: inline', $rawMessage);
 	}
