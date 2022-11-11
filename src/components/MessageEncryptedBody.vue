@@ -46,8 +46,8 @@ export default {
 <style scoped>
 #mail-content {
 	height: 450px;
-	animation: show 400ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
-opacity: 0;
+	animation: show 200ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+opacity: 0.3;
 transform: rotateX(-90deg);
 	transform-origin: top center;
 }

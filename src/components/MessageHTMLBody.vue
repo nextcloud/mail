@@ -189,12 +189,10 @@ export default {
 }
 .message-frame {
 	width: 100%;
-	animation: show 400ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+	animation: show 200ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
 
 	// Prestate
-	opacity: 0;
-	// remove transform for just a fade-in
-	transform: rotateX(-90deg);
+	opacity: 0.3;
 	transform-origin: top center;
 }
 @keyframes show {

@@ -608,12 +608,17 @@ export default {
 		margin-bottom: 36px !important;
 	}
 	.message-animation {
-		animation: show 400ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+		animation: show 200ms 80ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
 
 		// Prestate
-		opacity: 0;
+		opacity: 0.3;
 		// remove transform for just a fade-in
-		transform: rotateX(-90deg);
 		transform-origin: top center;
+	}
+	@keyframes show {
+		100% {
+			opacity: 1;
+			transform: none;
+		}
 	}
 </style>
