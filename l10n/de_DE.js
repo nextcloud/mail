@@ -357,6 +357,7 @@ OC.L10N.register(
     "Tag already exists" : "Schlagwort existiert bereits",
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten, das Schlagwort kann nicht erstellt werden.",
     "An error occurred, unable to rename the tag." : "Es ist ein Fehler aufgetreten. Das Schlagwort konnte nicht umbenannt werden.",
+    "Loading thread" : "Thema wird geladen",
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "Mark as unfavorite" : "Als nicht favorisiert markieren",
     "Mark as favorite" : "Als favorisiert markieren",

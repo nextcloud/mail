@@ -355,6 +355,7 @@
     "Tag already exists" : "Štítek už existuje",
     "An error occurred, unable to create the tag." : "Došlo k chybě, štíte se nepodařilo vytvořit.",
     "An error occurred, unable to rename the tag." : "Došlo k chybě, štítek se nedaří přejmenovat.",
+    "Loading thread" : "Načítání vlákna",
     "Could not load your message thread" : "Nepodařilo se načíst vlákno s danou zprávou",
     "Mark as unfavorite" : "Zrušit označení jako oblíbeného",
     "Mark as favorite" : "Označit jako oblíbené",

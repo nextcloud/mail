@@ -32,6 +32,7 @@ OC.L10N.register(
     "Connecting" : "Savienojuma izveide",
     "Save" : "Saglabāt",
     "Connect" : "Savienoties",
+    "Account settings" : "Konta iestatījumi",
     "Signature" : "Paraksts",
     "Cancel" : "Atcelt",
     "Add mail account" : "Pievienot e-pasta kontu",

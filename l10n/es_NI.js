@@ -1,6 +1,7 @@
 OC.L10N.register(
     "mail",
     {
+    "Embedded message %s" : "Mensaje incrustado %s",
     "Important" : "Importante",
     "Work" : "Trabajo",
     "Personal" : "Personal",
