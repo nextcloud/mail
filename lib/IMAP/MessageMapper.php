@@ -726,22 +726,11 @@ class MessageMapper {
 			$part = $parts[$fetchData->getUid()];
 			$htmlBody = $part->getBodyPart($htmlBodyId);
 			if (!empty($htmlBody)) {
-				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-				}
-				$structure->setContents($htmlBody);
-				$html = new Html2Text($structure->getContents());
+				$html = new Html2Text($htmlBody);
 				return new MessageStructureData($hasAttachments, trim($html->getText()), $isImipMessage);
 			}
 			$textBody = $part->getBodyPart($textBodyId);
 			if (!empty($textBody)) {
-				$mimeHeaders = $part->getMimeHeader($textBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($textBody);
-					return new MessageStructureData($hasAttachments, $structure->getContents(), $isImipMessage);
-				}
 				return new MessageStructureData($hasAttachments, $textBody, $isImipMessage);
 			}
 
