@@ -715,11 +715,11 @@ class MessageMapper {
 			$htmlBody = $part->getBodyPart($htmlBodyId);
 			if (!empty($htmlBody)) {
 				$html = new Html2Text($htmlBody);
-				return new MessageStructureData($hasAttachments, trim($html->getText()), $isImipMessage);
+				return new MessageStructureData($hasAttachments, trim($html->getText()));
 			}
 			$textBody = $part->getBodyPart($textBodyId);
 			if (!empty($textBody)) {
-				return new MessageStructureData($hasAttachments, $textBody, $isImipMessage);
+				return new MessageStructureData($hasAttachments, $textBody);
 			}
 
 			return new MessageStructureData($hasAttachments, $text);
