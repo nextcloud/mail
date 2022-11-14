@@ -1,7 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2.1.0-rc.1 – 2022-10-19
+## 2.1.1 – 2022-11-14
+### Fixed
+- Improve the size of padding bottom on threads
+- Don't decode content for preview twice
+- Broken encoding for outgoing messages
+- Provisioning config not saving
+- Envelope and message previews showing PGP ciphertext
+- Sending PGP messages as HTML
+- Copy to clipboard
+- Double scrollbar in thread view
+
+## 2.1.0 – 2022-11-03
 ### Added
 - Hide important section when no important messages
 - Basic messages filter and search
@@ -18,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Keyboard button misalignment
 - Scrolling on small screen
 - Empty content when opening drafts
+- Transfer encoding issue
 
 ## 2.0.3 – 2022-10-18
 ### Fixed
@@ -59,6 +71,17 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Nextcloud 22-24 support
+
+## 1.14.3 - 2022-11-14
+### Fixed
+- Improve the size of padding bottom on threads
+- Improving the appearance of the modal window of composer
+- Scrolling and bottom padding for threads
+- Provisioning config not saving
+- Sending PGP messages as HTML
+- Important and favorite icon position
+- Copy to clipboard
+- Don't decode content for preview twice
 
 ## 1.14.2 - 2022-11-03
 ### Fixed
