@@ -317,7 +317,7 @@
 						<Button
 							class="config-button save-config"
 							type="secondary"
-							:native-type="submit"
+							native-type="submit"
 							:disabled="loading">
 							<template #icon>
 								<IconUpload :size="20" />
