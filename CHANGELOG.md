@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.14.3-alpha.1 - 2022-11-10
+## 1.14.3 - 2022-11-14
 ### Changed
 - Improve the size of padding bottom on threads
 - Improving the appearance of the modal window of composer
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Sending PGP messages as HTML
 - Important and favorite icon position
 - Copy to clipboard
+- Don't decode content for preview twice
 
 ## 1.14.2 - 2022-11-03
 ### Fixed
