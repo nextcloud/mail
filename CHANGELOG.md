@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.1.1 – 2022-11-14
+### Fixed
+- Improve the size of padding bottom on threads
+- Don't decode content for preview twice
+- Broken encoding for outgoing messages
+- Provisioning config not saving
+- Envelope and message previews showing PGP ciphertext
+- Sending PGP messages as HTML
+- Copy to clipboard
+- Double scrollbar in thread view
+
+
 ## 2.1.0 – 2022-11-03
 ### Added
 - Hide important section when no important messages
