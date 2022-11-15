@@ -329,7 +329,7 @@ export default {
 }
 
 #mail-content {
-	margin: 10px 38px 0 59px;
+	margin: 10px 38px 0 63px;
 }
 
 #mail-content iframe {
