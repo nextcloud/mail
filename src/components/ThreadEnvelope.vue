@@ -491,10 +491,9 @@ export default {
 		margin-right: 10px;
 		background-color: var(--color-main-background);
 		padding-bottom: 28px;
-		min-height: 150px;
 
 		& + .envelope {
-			margin-top: -28px;
+			margin-top: -60px;
 		}
 
 		&:last-of-type {

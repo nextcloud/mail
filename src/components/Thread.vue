@@ -36,6 +36,7 @@
 			<ThreadEnvelope v-for="env in thread"
 				:key="env.databaseId"
 				:envelope="env"
+				:class="{'closedThread': !expanded, 'openedThread': expanded}"
 				:mailbox-id="$route.params.mailboxId"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
@@ -68,6 +69,13 @@ export default {
 		Popover,
 	},
 
+	props: {
+		expanded: {
+			required: false,
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
 			loading: true,
@@ -140,6 +148,13 @@ export default {
 			}
 			logger.debug('navigated to another thread', { to, from })
 			this.resetThread()
+		},
+		expanded(expanded) {
+			if (expanded) {
+				this.fetchThread()
+			} else {
+				this.threadId = undefined
+			}
 		},
 	},
 	created() {
@@ -422,5 +437,11 @@ export default {
 }
 .user-bubble__title {
 	cursor: pointer;
+}
+.closedThread {
+	min-height: 135px;
+}
+.openedThread {
+	min-height: 500px;
 }
 </style>
