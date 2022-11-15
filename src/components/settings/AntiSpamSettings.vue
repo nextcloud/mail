@@ -52,8 +52,9 @@
 							type="email">
 						<br>
 						<Button
-							type="secondary submit"
+							type="secondary"
 							:disabled="loading"
+							native-type="submit"
 							class="config-button">
 							<template #icon>
 								<IconUpload :size="20" />
