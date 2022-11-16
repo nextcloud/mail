@@ -36,7 +36,8 @@
 		<MessageHTMLBody v-if="message.hasHtmlBody"
 			:url="htmlUrl"
 			:message="message"
-			:full-height="fullHeight" />
+			:full-height="fullHeight"
+			@load="$emit('load', $event)" />
 		<MessageEncryptedBody v-else-if="isEncrypted"
 			:body="message.body"
 			:from="from"
