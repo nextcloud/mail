@@ -42,6 +42,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
+use OCA\Mail\Validation\RemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -78,6 +79,9 @@ class AccountsController extends Controller {
 	/** @var SyncService */
 	private $syncService;
 
+	/** @var RemoteHostValidator */
+	private $hostValidator;
+
 	public function __construct(string $appName,
 								   IRequest $request,
 								   AccountService $accountService,
@@ -88,8 +92,8 @@ class AccountsController extends Controller {
 								   IMailTransmission $mailTransmission,
 								   SetupService $setup,
 								   IMailManager $mailManager,
-								   SyncService $syncService
-	) {
+								   SyncService $syncService,
+								   RemoteHostValidator $hostValidator) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -100,6 +104,7 @@ class AccountsController extends Controller {
 		$this->setup = $setup;
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
+		$this->hostValidator = $hostValidator;
 	}
 
 	/**
@@ -172,6 +177,26 @@ class AccountsController extends Controller {
 			$this->accountService->find($this->currentUserId, $id);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		if (!$this->hostValidator->isValid($imapHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'IMAP',
+					'host' => $imapHost,
+					'port' => $imapPort,
+				],
+			);
+		}
+		if (!$this->hostValidator->isValid($smtpHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'SMTP',
+					'host' => $smtpHost,
+					'port' => $smtpPort,
+				],
+			);
 		}
 
 		try {
@@ -306,6 +331,26 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function create(string $accountName, string $emailAddress, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null): JSONResponse {
+		if (!$this->hostValidator->isValid($imapHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'IMAP',
+					'host' => $imapHost,
+					'port' => $imapPort,
+				],
+			);
+		}
+		if (!$this->hostValidator->isValid($smtpHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'SMTP',
+					'host' => $smtpHost,
+					'port' => $smtpPort,
+				],
+			);
+		}
 		try {
 			return \OCA\Mail\Http\JsonResponse::success(
 				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId), Http::STATUS_CREATED

@@ -31,6 +31,7 @@ use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\IspDb;
 use OCA\Mail\Service\AutoConfig\MxRecord;
+use OCA\Mail\Validation\RemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -40,15 +41,18 @@ class AutoConfigController extends Controller {
 	private IspDb $ispDb;
 	private MxRecord $mxRecord;
 	private ConnectivityTester $connectivityTester;
+	private RemoteHostValidator $hostValidator;
 
 	public function __construct(IRequest $request,
 								IspDb $ispDb,
 								MxRecord $mxRecord,
-								ConnectivityTester $connectivityTester) {
+								ConnectivityTester $connectivityTester,
+								RemoteHostValidator $hostValidator) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->ispDb = $ispDb;
 		$this->mxRecord = $mxRecord;
 		$this->connectivityTester = $connectivityTester;
+		$this->hostValidator = $hostValidator;
 	}
 
 	/**
@@ -61,7 +65,7 @@ class AutoConfigController extends Controller {
 	 */
 	public function queryIspdb(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
-		if (!$rfc822Address->valid) {
+		if (!$rfc822Address->valid || !$this->hostValidator->isValid($rfc822Address->host)) {
 			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
 		$config = $this->ispDb->query($rfc822Address->host, $rfc822Address);
@@ -78,7 +82,7 @@ class AutoConfigController extends Controller {
 	 */
 	public function queryMx(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
-		if (!$rfc822Address->valid) {
+		if (!$rfc822Address->valid || !$this->hostValidator->isValid($rfc822Address->host)) {
 			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
 		return JsonResponse::success(
@@ -98,6 +102,9 @@ class AutoConfigController extends Controller {
 	public function testConnectivity(string $host, int $port): JsonResponse {
 		if (!in_array($port, [143, 993, 465, 587])) {
 			return JsonResponse::fail('Port not allowed');
+		}
+		if (!$this->hostValidator->isValid($host)) {
+			return JsonResponse::success(false);
 		}
 		return JsonResponse::success(
 			$this->connectivityTester->canConnect($host, $port),

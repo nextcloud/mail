@@ -7,6 +7,15 @@ Then open the Mail app from the app menu.
 
 ## Configuration
 
+### Local IMAP and SMTP servers
+
+By default, Nextcloud does not allow local hostnames and IP addresses as remote servers. This includes IMAP, SMTP and Sieve servers
+like `localhost`, `mx.local` and `10.0.0.3`. This check can be disabled with via config/config.php
+
+```php
+'allow_local_remote_servers' => true,
+```
+
 ### Attachment size limit
 
 Admins can prevent users from attaching large attachments to their emails. Users will be asked to use link shares instead.
