@@ -1,13 +1,14 @@
 <template>
 	<AppContentDetails id="mail-message">
-		<Loading v-if="loading" :hint="t('mail', 'Loading thread')" />
+		<!-- Show outer loading screen only if we have no data about the thread -->
+		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
 					<h2 :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-					<div ref="avatarHeader" class="avatar-header">
+					<div v-if="thread.length" ref="avatarHeader" class="avatar-header">
 						<!-- Participants that can fit in the parent div -->
 						<RecipientBubble v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
 							:key="participant.email"
@@ -33,7 +34,10 @@
 					</div>
 				</div>
 			</div>
-			<ThreadEnvelope v-for="env in thread"
+			<!-- Show inner loading screen only if we have at least one message of the thread -->
+			<Loading v-if="loading && thread.length" :hint="t('mail', 'Loading messages')" />
+			<ThreadEnvelope v-else
+				v-for="env in thread"
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
