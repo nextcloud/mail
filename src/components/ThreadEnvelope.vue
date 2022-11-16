@@ -22,9 +22,9 @@
   -->
 
 <template>
-	<div class="envelope">
-		<div class="envelope--header"
-			:class="{'list-item-style' : expanded }">
+	<div class="envelope"
+		 :class="{'envelope--expanded' : expanded }">
+		<div class="envelope__header">
 			<Avatar v-if="envelope.from && envelope.from[0]"
 				:email="envelope.from[0].email"
 				:display-name="envelope.from[0].label"
@@ -500,6 +500,15 @@ export default {
 			padding-bottom: 0;
 		}
 
+		&__header {
+			position: relative;
+			display: flex;
+			align-items: center;
+			padding: 10px;
+			border-radius: var(--border-radius);
+			min-height: 68px; /* prevents jumping between open/collapsed */
+		}
+
 		.subline {
 			margin-left: 8px;
 			color: var(--color-text-maxcontrast);
@@ -508,15 +517,10 @@ export default {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
-	}
 
-	.envelope--header {
-		position: relative;
-		display: flex;
-		align-items: center;
-		padding: 10px;
-		border-radius: var(--border-radius);
-		min-height: 68px; /* prevents jumping between open/collapsed */
+		&--expanded {
+			min-height: 350px;
+		}
 	}
 	.left {
 		flex-grow: 1;
@@ -595,9 +599,6 @@ export default {
 		margin: 0 1px;
 		overflow: hidden;
 		left: 4px;
-	}
-	.envelope--header.list-item-style {
-		border-radius: 16px;
 	}
 	.junk-favorite-position-with-tag-subline {
 		margin-bottom: 14px !important;
