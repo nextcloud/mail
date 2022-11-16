@@ -2,6 +2,7 @@
   - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -40,29 +41,32 @@
 					:account="group.account"
 					:first-mailbox="group.mailboxes[0]"
 					:is-first="isFirst(group.account)"
-					:is-last="isLast(group.account)" />
-				<template v-for="item in group.mailboxes">
-					<NavigationMailbox
-						v-show="
-							!group.isCollapsible ||
-								!group.account.collapsed ||
-								!isCollapsed(group.account, item)
-						"
-						:key="'mailbox-' + item.databaseId"
-						:account="group.account"
-						:mailbox="item" />
-					<NavigationMailbox
-						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-						:key="item.databaseId + '-starred'"
-						:account="group.account"
-						:mailbox="item"
-						filter="starred" />
+					:is-last="isLast(group.account)"
+					:is-disabled="isDisabled(group.account)" />
+				<template v-if="!isDisabled(group.account)">
+					<template v-for="item in group.mailboxes">
+						<NavigationMailbox
+							v-show="
+								!group.isCollapsible ||
+									!group.account.collapsed ||
+									!isCollapsed(group.account, item)
+							"
+							:key="'mailbox-' + item.databaseId"
+							:account="group.account"
+							:mailbox="item" />
+						<NavigationMailbox
+							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+							:key="item.databaseId + '-starred'"
+							:account="group.account"
+							:mailbox="item"
+							filter="starred" />
+					</template>
+					<NavigationAccountExpandCollapse
+						v-if="!group.account.isUnified && group.isCollapsible"
+						:key="'collapse-' + group.account.id"
+						:account="group.account" />
+					<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 				</template>
-				<NavigationAccountExpandCollapse
-					v-if="!group.account.isUnified && group.isCollapsible"
-					:key="'collapse-' + group.account.id"
-					:account="group.account" />
-				<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 			</template>
 		</template>
 		<template #footer>
@@ -132,6 +136,14 @@ export default {
 		unifiedMailboxes() {
 			return this.$store.getters.getMailboxes(UNIFIED_ACCOUNT_ID)
 		},
+		/**
+		 * Whether the current session is using passwordless authentication.
+		 *
+		 * @return {boolean}
+		 */
+		passwordIsUnavailable() {
+			return this.$store.getters.getPreference('password-is-unavailable', false)
+		},
 	},
 	methods: {
 		isCollapsed(account, mailbox) {
@@ -156,6 +168,16 @@ export default {
 		isLast(account) {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[accounts.length - 1]
+		},
+		/**
+		 * Disable provisioned accounts when no password is available.
+		 * Loading messages of those accounts will fail and an endless spinner will be shown.
+		 *
+		 * @param {object} account Account object
+		 * @return {boolean} True if the account should be disabled
+		 */
+		isDisabled(account) {
+			return this.passwordIsUnavailable && !!account.provisioningId
 		},
 	},
 }

@@ -70,6 +70,11 @@ class ProvisioningMiddleware extends Middleware {
 		try {
 			$this->provisioningManager->provisionSingleUser($configs, $user);
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
+			// FIXME: Need to check for an empty string here too?
+			// The password is empty (and not null) when using WebAuthn passwordless login.
+			// Maybe research other providers as well.
+			// Ref \OCA\Mail\Controller\PageController::index()
+			//     -> inital state for password-is-unavailable
 			if ($password === null) {
 				// Nothing to update, might be passwordless signin
 				$this->logger->debug('No password set for ' . $user->getUID());

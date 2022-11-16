@@ -2,6 +2,7 @@
   - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -30,76 +31,84 @@
 		:exact="true"
 		@update:menuOpen="onMenuToggle">
 		<template #icon>
-			<IconError v-if="account.error" :size="20" />
-
-			<!-- Color dot -->
-			<IconBullet v-if="bulletColor" :size="16" :fill-color="bulletColor" />
+			<IconError v-if="account.error || isDisabled" :size="20" />
+			<IconBullet v-else-if="bulletColor" :size="16" :fill-color="bulletColor" />
 		</template>
 		<!-- Actions -->
 		<template #actions>
-			<ActionText v-if="!account.isUnified" :title="t('mail', 'Quota')">
-				<template #icon>
-					<IconInfo
-						:size="20" />
-				</template>
-				{{ quotaText }}
-			</ActionText>
-			<ActionButton
-				:close-after-click="true"
-				@click="showAccountSettings"
-				@shortkey="toggleAccountSettings">
-				<template #icon>
-					<IconSettings
-						:size="20" />
-				</template>
-				{{ t('mail', 'Account settings') }}
-			</ActionButton>
-			<ActionCheckbox
-				:checked="account.showSubscribedOnly"
-				:disabled="savingShowOnlySubscribed"
-				@update:checked="changeShowSubscribedOnly">
-				{{ t('mail', 'Show only subscribed mailboxes') }}
-			</ActionCheckbox>
-			<ActionButton v-if="!editing" @click="openCreateMailbox">
-				<template #icon>
-					<IconFolderAdd
-						:size="20" />
-				</template>
-				{{ t('mail', 'Add mailbox') }}
-			</ActionButton>
-			<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
-				<template #icon>
-					<IconFolderAdd
-						:size="20" />
-				</template>
-			</ActionInput>
-			<ActionText v-if="showSaving">
-				<template #icon>
-					<IconLoading :size="20" />
-				</template>
-				{{ t('mail', 'Saving') }}
-			</ActionText>
-			<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
-				<template #icon>
-					<MenuUp
-						:size="20" />
-				</template>
-				{{ t('mail', 'Move up') }}
-			</ActionButton>
-			<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
-				<template #icon>
-					<MenuDown
-						:size="20" />
-				</template>
-				{{ t('mail', 'Move down') }}
-			</ActionButton>
-			<ActionButton v-if="!account.provisioningId" @click="removeAccount">
-				<template #icon>
-					<IconDelete
-						:size="20" />
-				</template>
-				{{ t('mail', 'Remove account') }}
-			</ActionButton>
+			<template v-if="isDisabled">
+				<ActionText :title="t('mail', 'Provisioned account is disabled')">
+					<template #icon>
+						<IconInfo :size="20" />
+					</template>
+					{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
+				</ActionText>
+			</template>
+			<template v-else>
+				<ActionText v-if="!account.isUnified" :title="t('mail', 'Quota')">
+					<template #icon>
+						<IconInfo
+							:size="20" />
+					</template>
+					{{ quotaText }}
+				</ActionText>
+				<ActionButton
+					:close-after-click="true"
+					@click="showAccountSettings"
+					@shortkey="toggleAccountSettings">
+					<template #icon>
+						<IconSettings
+							:size="20" />
+					</template>
+					{{ t('mail', 'Account settings') }}
+				</ActionButton>
+				<ActionCheckbox
+					:checked="account.showSubscribedOnly"
+					:disabled="savingShowOnlySubscribed"
+					@update:checked="changeShowSubscribedOnly">
+					{{ t('mail', 'Show only subscribed mailboxes') }}
+				</ActionCheckbox>
+				<ActionButton v-if="!editing" @click="openCreateMailbox">
+					<template #icon>
+						<IconFolderAdd
+							:size="20" />
+					</template>
+					{{ t('mail', 'Add mailbox') }}
+				</ActionButton>
+				<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
+					<template #icon>
+						<IconFolderAdd
+							:size="20" />
+					</template>
+				</ActionInput>
+				<ActionText v-if="showSaving">
+					<template #icon>
+						<IconLoading :size="20" />
+					</template>
+					{{ t('mail', 'Saving') }}
+				</ActionText>
+				<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
+					<template #icon>
+						<MenuUp
+							:size="20" />
+					</template>
+					{{ t('mail', 'Move up') }}
+				</ActionButton>
+				<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
+					<template #icon>
+						<MenuDown
+							:size="20" />
+					</template>
+					{{ t('mail', 'Move down') }}
+				</ActionButton>
+				<ActionButton v-if="!account.provisioningId" @click="removeAccount">
+					<template #icon>
+						<IconDelete
+							:size="20" />
+					</template>
+					{{ t('mail', 'Remove account') }}
+				</ActionButton>
+			</template>
 		</template>
 		<template #extra>
 			<AccountSettings :open.sync="showSettings" :account="account" />
@@ -162,6 +171,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		isDisabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -181,7 +194,7 @@ export default {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
 		firstMailboxRoute() {
-			if (this.firstMailbox) {
+			if (this.firstMailbox && !this.isDisabled) {
 				return {
 					name: 'mailbox',
 					params: {
@@ -197,9 +210,6 @@ export default {
 		},
 		bulletColor() {
 			return this.account.error ? undefined : calculateAccountColor(this.account.emailAddress)
-		},
-		iconError() {
-			return this.account.error
 		},
 		quotaText() {
 			if (this.quota === undefined) {
