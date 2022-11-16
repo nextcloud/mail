@@ -46,8 +46,9 @@ export default {
 		border-radius: 50px;
 		width: 44px;
 		height: 44px;
-		animation: loadingskeleton 2s ease infinite alternate,
-		nudge 3s linear infinite alternate;
+		background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+		background-size: 400% 400%;
+		animation: gradient 3s ease-in infinite;
 	}
 	.item__details {
 		padding-left: 8px;
@@ -63,8 +64,9 @@ export default {
 		h3 {
 			font-size: 100%;
 			margin: 0;
-			animation: loadingskeleton 2s ease infinite alternate,
-			nudge 3s linear infinite alternate;
+			background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+			background-size: 400% 400%;
+			animation: gradient 3s ease-in infinite;
 			width: 40%;
 			height: 15px;
 		}
@@ -72,27 +74,29 @@ export default {
 			width: 100%;
 			height: 15px;
 			margin-top: 5px;
-			animation: loadingskeleton 2s ease infinite alternate,
-			nudge 3s linear infinite alternate;
+			background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+			background-size: 400% 400%;
+			animation: gradient 3s ease-in infinite;
 		}
 		.message {
 			width: 70%;
 			height: 15px;
 			margin-top: 5px;
-			animation: loadingskeleton 2s ease infinite alternate,
-			nudge 3s linear infinite alternate;
+			background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+			background-size: 400% 400%;
+			animation: gradient 3s ease-in infinite;
 		}
 	}
-	@keyframes loadingskeleton {
-		0%   {background-color: var(--color-border);}
-		25%  {background-color: var(--color-background-hover);}
-		40%  {background-color: var(--color-placeholder-light);}
-		50% {background-color: var(--color-loading-light);}
-		65%  {background-color: var(--color-background-hover);}
-		75%  {background-color: var(--color-placeholder-light);}
-		80% {background-color: var(--color-loading-light);}
-		90% {background-color: var(--color-placeholder-light);}
-		100% {background-color: var(--color-placeholder-light);}
+	@keyframes gradient {
+		0% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
+		100% {
+			background-position: 0% 50%;
+		}
 	}
 }
 
