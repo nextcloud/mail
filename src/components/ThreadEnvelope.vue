@@ -143,11 +143,13 @@
 				</template>
 			</div>
 		</div>
-		<Loading v-if="loading" />
-		<Message v-else-if="message"
+		<Loading v-if="loading !== LOADING_DONE" />
+		<Message v-if="message && loading !== LOADING_MESSAGE"
+			v-show="loading === LOADING_DONE"
 			:envelope="envelope"
 			:message="message"
-			:full-height="fullHeight" />
+			:full-height="fullHeight"
+			@load="loading = LOADING_DONE" />
 		<Error v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
@@ -180,6 +182,11 @@ import { showError } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 import { isPgpText } from '../crypto/pgp'
+
+// Ternary loading state
+const LOADING_DONE = 0
+const LOADING_MESSAGE = 1
+const LOADING_BODY = 2
 
 export default {
 	name: 'ThreadEnvelope',
@@ -232,11 +239,14 @@ export default {
 	},
 	data() {
 		return {
-			loading: false,
+			loading: LOADING_DONE,
 			error: undefined,
 			message: undefined,
 			importantSvg,
 			seenTimer: undefined,
+			LOADING_BODY,
+			LOADING_DONE,
+			LOADING_MESSAGE,
 		}
 	},
 	computed: {
@@ -303,6 +313,7 @@ export default {
 				this.fetchMessage()
 			} else {
 				this.message = undefined
+				this.loading = LOADING_DONE
 			}
 		},
 	},
@@ -323,7 +334,7 @@ export default {
 	},
 	methods: {
 		async fetchMessage() {
-			this.loading = true
+			this.loading = LOADING_MESSAGE
 
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
@@ -339,7 +350,11 @@ export default {
 					}, 2000)
 				}
 
-				this.loading = false
+				if (this.message.hasHtmlBody) {
+					this.loading = LOADING_BODY
+				} else {
+					this.loading = LOADING_DONE
+				}
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
 			}
