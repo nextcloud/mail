@@ -29,6 +29,8 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
+use OCA\Mail\Exception\AuthenticationException;
+use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\IMAP\MessageMapper;
@@ -58,6 +60,7 @@ class Synchronizer {
 	 * @param int $criteria
 	 *
 	 * @return Response
+	 * @throws AuthenticationException
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
 	 * @throws UidValidityChangedException
@@ -91,6 +94,9 @@ class Synchronizer {
 		} catch (Horde_Imap_Client_Exception $e) {
 			if ($e->getCode() === Horde_Imap_Client_Exception::MBOXNOMODSEQ) {
 				throw new MailboxDoesNotSupportModSequencesException($e->getMessage(), $e->getCode(), $e);
+			}
+			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED) {
+				throw new AuthenticationException('IMAP auth failed', 0, $e);
 			}
 			throw $e;
 		}

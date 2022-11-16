@@ -304,6 +304,9 @@ export default {
 			}
 		},
 		async fetchQuota() {
+			if (this.account.error) {
+				this.quota = false
+			}
 			const quota = await fetchQuota(this.account.id)
 			console.debug('quota fetched', {
 				quota,

@@ -30,6 +30,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\AuthenticationException;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
@@ -106,6 +107,7 @@ class SyncService {
 	 * @throws ClientException
 	 * @throws MailboxNotCachedException
 	 * @throws ServiceException
+	 * @throws AuthenticationException
 	 */
 	public function syncMailbox(Account $account,
 								Mailbox $mailbox,

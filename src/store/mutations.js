@@ -156,6 +156,9 @@ export default {
 	patchAccount(state, { account, data }) {
 		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], data))
 	},
+	setAccountError(state, { account, error }) {
+		Vue.set(account, 'error', error)
+	},
 	saveAccountsOrder(state, { account, order }) {
 		Vue.set(account, 'order', order)
 		Vue.set(

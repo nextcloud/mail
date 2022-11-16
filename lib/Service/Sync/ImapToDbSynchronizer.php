@@ -34,6 +34,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
+use OCA\Mail\Exception\AuthenticationException;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxLockedException;
@@ -247,7 +248,7 @@ class ImapToDbSynchronizer {
 					$this->runInitialSync($account, $mailbox, $logger);
 				}
 			}
-		} catch (ServiceException $e) {
+		} catch (ClientException|ServiceException $e) {
 			// Just rethrow, don't wrap into another exception
 			throw $e;
 		} catch (Throwable $e) {
@@ -281,6 +282,7 @@ class ImapToDbSynchronizer {
 	}
 
 	/**
+	 * @throws ClientException
 	 * @throws ServiceException
 	 * @throws IncompleteSyncException
 	 */
@@ -306,6 +308,9 @@ class ImapToDbSynchronizer {
 				);
 				$perf->step(sprintf('fetch %d messages from IMAP', count($imapMessages)));
 			} catch (Horde_Imap_Client_Exception $e) {
+				if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED) {
+					throw new AuthenticationException('IMAP auth failed', 0, $e);
+				}
 				throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
 			}
 
@@ -344,6 +349,7 @@ class ImapToDbSynchronizer {
 	/**
 	 * @param int[] $knownUids
 	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 * @throws UidValidityChangedException
 	 * @return bool whether there are new or vanished messages

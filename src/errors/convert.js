@@ -20,6 +20,7 @@
  *
  */
 
+import AuthenticationError from './AuthenticationError'
 import MailboxLockedError from './MailboxLockedError'
 import MailboxNotCachedError from './MailboxNotCachedError'
 import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError'
@@ -30,6 +31,7 @@ import ManageSieveError from './ManageSieveError'
 import ManyRecipientsError from './ManyRecipientsError'
 
 const map = {
+	'OCA\\Mail\\Exception\\AuthenticationException': AuthenticationError,
 	'OCA\\Mail\\Exception\\DraftsMailboxNotSetException': NoDraftsMailboxConfiguredError,
 	'OCA\\Mail\\Exception\\MailboxLockedException': MailboxLockedError,
 	'OCA\\Mail\\Exception\\MailboxNotCachedException': MailboxNotCachedError,

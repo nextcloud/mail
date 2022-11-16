@@ -113,6 +113,7 @@ import {
 	initializeClientForUserView,
 	findAll,
 } from '../service/caldavService'
+import AuthenticationError from "../errors/AuthenticationError";
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -705,6 +706,10 @@ export default {
 			}
 
 			const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
+			const account = getters.getAccount(mailbox.accountId)
+			if (account.error) {
+				throw new Error('Account is erroneous')
+			}
 			logger.debug(`mailbox sync of ${mailboxId} (${query}) has ${ids.length} known IDs`)
 			return syncEnvelopes(mailbox.accountId, mailboxId, ids, query, init)
 				.then((syncData) => {
@@ -744,6 +749,13 @@ export default {
 				})
 				.catch((error) => {
 					return matchError(error, {
+						[AuthenticationError.getName()]() {
+							console.error(`(initial) sync of mailbox ${mailboxId} (${query}) failed with an auth error`)
+							commit('setAccountError', {
+								account,
+								error: AuthenticationError.getName()
+							})
+						},
 						[SyncIncompleteError.getName()]() {
 							console.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
 							return dispatch('syncEnvelopes', {
