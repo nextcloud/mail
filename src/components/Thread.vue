@@ -36,8 +36,8 @@
 			</div>
 			<!-- Show inner loading screen only if we have at least one message of the thread -->
 			<Loading v-if="loading && thread.length" :hint="t('mail', 'Loading messages')" />
-			<ThreadEnvelope v-else
-				v-for="env in thread"
+			<ThreadEnvelope v-for="env in thread"
+				v-else
 				:key="env.databaseId"
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"

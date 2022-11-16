@@ -23,7 +23,7 @@
 
 <template>
 	<div class="envelope"
-		 :class="{'envelope--expanded' : expanded }">
+		:class="{'envelope--expanded' : expanded }">
 		<div class="envelope__header">
 			<Avatar v-if="envelope.from && envelope.from[0]"
 				:email="envelope.from[0].email"
