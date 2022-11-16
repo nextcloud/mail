@@ -540,6 +540,11 @@ export default {
 	.left {
 		flex-grow: 1;
 		min-width: 0; /* https://css-tricks.com/flexbox-truncated-text/ */
+		display: inline-block;
+		position: relative;
+		z-index: 1;
+		padding: 2em;
+		margin: -2em;
 	}
 	.icon-important {
 		:deep(path) {
