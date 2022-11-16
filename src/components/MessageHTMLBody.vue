@@ -1,5 +1,5 @@
 <template>
-	<div id="mail-content">
+	<div class="html-message-body">
 		<MdnRequest :message="message" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
@@ -155,7 +155,7 @@ export default {
 
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
-#mail-content {
+.html-message-body {
 	margin-left: 50px;
 	margin-top: 2px;
 	display: flex;
