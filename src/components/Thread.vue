@@ -273,6 +273,15 @@ export default {
 	flex: 1;
 	margin-bottom: 30px;
 	position: relative;
+	animation: show 300ms 90ms cubic-bezier(.17, .67, .83, .67) forwards;
+	opacity: 0.5;
+	transform-origin: top center;
+	@keyframes show {
+		100% {
+			opacity: 1;
+			transform: none;
+		}
+	}
 }
 
 #mail-thread-header {
@@ -334,6 +343,16 @@ export default {
 
 #mail-content {
 	margin: 10px 38px 0 59px;
+	height: 450px;
+	animation: show 300ms 90ms cubic-bezier(.17, .67, .83, .67) forwards;
+	opacity: 0.5;
+	transform-origin: top center;
+	@keyframes show {
+		100% {
+			opacity: 1;
+			transform: none;
+		}
+	}
 }
 
 #mail-content iframe {

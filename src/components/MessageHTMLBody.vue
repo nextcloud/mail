@@ -159,6 +159,7 @@ export default {
 	flex-direction: column;
 	height: 100%;
 	background-color: #FFFFFF;
+
 }
 #mail-message-has-blocked-content {
 	margin-left: 10px;
@@ -185,6 +186,15 @@ export default {
 }
 .message-frame {
 	width: 100%;
+	animation: show 300ms 90ms cubic-bezier(.17,.67,.83,.67) forwards;
+	opacity: 0.5;
+	transform-origin: top center;
+	@keyframes show {
+		100% {
+			opacity: 1;
+			transform: none;
+		}
+	}
 }
 :deep(.button-vue__icon) {
 	display: none !important;

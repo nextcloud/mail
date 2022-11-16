@@ -76,7 +76,18 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-.message-container,
+.message-container {
+	white-space: pre-wrap;
+	animation: show 300ms 90ms cubic-bezier(.17,.67,.83,.67) forwards;
+	opacity: 0.5;
+	transform-origin: top center;
+	@keyframes show {
+		100% {
+			opacity: 1;
+			transform: none;
+		}
+	}
+}
 .mail-signature {
 	white-space: pre-wrap;
 }
