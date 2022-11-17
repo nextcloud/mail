@@ -358,6 +358,7 @@ OC.L10N.register(
     "An error occurred, unable to create the tag." : "HIba történt, a címke nem hozható létre.",
     "An error occurred, unable to rename the tag." : "Hiba történt, a címke nem nevezhető át",
     "Loading thread" : "Szál betöltése",
+    "Loading messages" : "Üzenetek betöltése",
     "Could not load your message thread" : "Nem sikerült betölteni az üzenetszálat",
     "Mark as unfavorite" : "Megjelölés nem kedvencként",
     "Mark as favorite" : "Megjelölés kedvencként",

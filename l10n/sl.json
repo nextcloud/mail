@@ -263,6 +263,7 @@
     "Tag already exists" : "Oznaka že obstaja",
     "An error occurred, unable to create the tag." : "Prišlo je do napake, oznake ni mogoče ustvariti.",
     "An error occurred, unable to rename the tag." : "Prišlo je do napake, oznake ni mogoče preimenovati.",
+    "Loading messages" : "Nalaganje sporočil",
     "Could not load your message thread" : "Ni mogoče naložiti niti sporočil",
     "Mark as unread" : "Označi kot neprebrano",
     "Mark as read" : "Označi kot prebrano",

@@ -317,6 +317,7 @@ OC.L10N.register(
     "Tag already exists" : "Метка уже существует",
     "An error occurred, unable to create the tag." : "Не удалось создать метку.",
     "An error occurred, unable to rename the tag." : "Не удалось переименовать метку.",
+    "Loading messages" : "Загрузка сообщений",
     "Could not load your message thread" : "Ошибка загрузки ветки переписки",
     "Mark as unread" : "Отметить не прочитанным",
     "Mark as read" : "Отметить прочитанным",

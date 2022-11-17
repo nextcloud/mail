@@ -187,6 +187,7 @@ OC.L10N.register(
     "Unset" : "Зняти",
     "Add tag" : "Додати позначку",
     "Tag already exists" : "Мітка вже існує",
+    "Loading messages" : "Завантаження повідомлень",
     "Mark as unread" : "Позначити не прочитаним",
     "Mark as read" : "Позначити прочитаним",
     "Not found" : "Не знайдено",

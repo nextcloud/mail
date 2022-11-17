@@ -257,6 +257,7 @@
     "Tag already exists" : "标签已存在",
     "An error occurred, unable to create the tag." : "发生了一个错误，无法创建标签",
     "An error occurred, unable to rename the tag." : "发生错误，无法重命名标签",
+    "Loading messages" : "正在加载消息",
     "Could not load your message thread" : "无法加载您的消息线线程",
     "Mark as unread" : "标为未读",
     "Mark as read" : "标为已读",

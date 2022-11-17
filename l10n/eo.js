@@ -127,6 +127,7 @@ OC.L10N.register(
     "Set" : "Uzi",
     "Unset" : "Malprotekti",
     "Tag already exists" : "La etikedo jam ekzistas",
+    "Loading messages" : "Ŝargas mesaĝojn",
     "Not found" : "Ne trovita",
     "Remove" : "Forigi",
     "Untitled event" : "Sentitola okazaĵo",

@@ -242,6 +242,7 @@ OC.L10N.register(
     "Tag already exists" : "Žymė jau yra",
     "An error occurred, unable to create the tag." : "Įvyko klaida, nepavyko sukurti žymės.",
     "An error occurred, unable to rename the tag." : "Įvyko klaida, nepavyko pervadinti žymės.",
+    "Loading messages" : "Įkeliami laiškai",
     "Mark as unread" : "Žymėti kaip neskaitytą",
     "Mark as read" : "Žymėti kaip skaitytą",
     "Delete message" : "Ištrinti laišką",

@@ -65,6 +65,7 @@ OC.L10N.register(
     "Disabled" : "Desactivat",
     "Enabled" : "Activada",
     "Custom" : "Personalizats",
+    "Loading messages" : "Cargament dels messatges",
     "Mark as unread" : "Marcar coma pas legit",
     "Mark as read" : "Marcar coma legit",
     "Remove" : "Suprimir",

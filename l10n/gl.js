@@ -231,6 +231,7 @@ OC.L10N.register(
     "Unset" : "Sen estabelecer",
     "Add tag" : "Engadir unha etiqueta",
     "Tag already exists" : "Xa existe a etiqueta",
+    "Loading messages" : "Cargando mensaxes",
     "Could not load your message thread" : "Non foi posíbel cargar o fío da mensaxe",
     "Mark as unread" : "Marcar como sen ler",
     "Mark as read" : "Marcar como lido",

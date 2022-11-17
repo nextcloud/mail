@@ -293,6 +293,7 @@ OC.L10N.register(
     "Add tag" : "Lisää tunniste",
     "Saving tag …" : "Tallennetaan tunnistetta…",
     "Tag already exists" : "Tunniste on jo olemassa",
+    "Loading messages" : "Ladataan viestejä",
     "Could not load your message thread" : "Viestiketjua ei voitu ladata",
     "Mark as favorite" : "Merkitse suosikiksi",
     "Mark as unread" : "Merkitse lukemattomaksi",

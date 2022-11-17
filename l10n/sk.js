@@ -344,6 +344,7 @@ OC.L10N.register(
     "Tag already exists" : "Štítok už existuje",
     "An error occurred, unable to create the tag." : "Vyskytla sa chyba, nie je možné vytvoriť štítok.",
     "An error occurred, unable to rename the tag." : "Vyskytla sa chyba, nie je možné premenovať štítok.",
+    "Loading messages" : "Načítavam správy",
     "Could not load your message thread" : "Nepodarilo sa načítať vlákno vašich správ",
     "Mark as unfavorite" : "Zrušiť označenie ako obľúbené",
     "Mark as favorite" : "Označiť ako obľúbené",

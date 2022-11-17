@@ -249,6 +249,7 @@ OC.L10N.register(
     "Tag already exists" : "Taggen finns redan",
     "An error occurred, unable to create the tag." : "Ett fel uppstod, kunde inte spara taggen.",
     "An error occurred, unable to rename the tag." : "Ett fel uppstod, kunde inte byta taggens namn.",
+    "Loading messages" : "Läser in meddelanden",
     "Could not load your message thread" : "Det gick inte att ladda meddelandetråden",
     "Mark as unread" : "Markera som oläst",
     "Mark as read" : "Markera som läst",

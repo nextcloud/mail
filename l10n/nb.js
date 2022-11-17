@@ -308,6 +308,7 @@ OC.L10N.register(
     "Tag already exists" : "Merkelappen finnes allerede",
     "An error occurred, unable to create the tag." : "Det oppstod en feil, kan ikke opprette taggen.",
     "An error occurred, unable to rename the tag." : "Det oppstod en feil, kan ikke gi nytt navn til taggen.",
+    "Loading messages" : "Henter meldinger",
     "Could not load your message thread" : "Kunne ikke laste meldingstråden din",
     "Mark as unread" : "Merk som ulest",
     "Mark as read" : "Merk som lest",

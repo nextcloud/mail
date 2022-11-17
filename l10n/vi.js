@@ -212,6 +212,7 @@ OC.L10N.register(
     "Unset" : "Bỏ cài đặt",
     "Add tag" : "Thêm nhãn",
     "Tag already exists" : "Thẻ đã tồn tại",
+    "Loading messages" : "Đang tải tin nhắn",
     "Could not load your message thread" : "Không thể tải chuỗi tin nhắn của bạn",
     "Mark as unread" : "Đánh dấu là chưa đọc",
     "Mark as read" : "Đánh dấu đã đọc",
