@@ -357,6 +357,7 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "An error occurred, unable to create the tag." : "Ocurrió un error, no fue posible crear la etiqueta.",
     "An error occurred, unable to rename the tag." : "Se ha producido un error y no se ha podido renombrar la etiqueta.",
+    "Loading thread" : "Cargando hilo",
     "Loading messages" : "Cargando mensajes",
     "Could not load your message thread" : "No se ha podido cargar tu hilo de mensajes",
     "Mark as unfavorite" : "Desmarcar como favorito",
