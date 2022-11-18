@@ -188,6 +188,9 @@ export default {
 			}
 		},
 		toggleExpand(threadId) {
+			if (this.thread.length === 1) {
+				return
+			}
 			if (!this.expandedThreads.includes(threadId)) {
 				console.debug(`expand thread ${threadId}`)
 				this.expandedThreads.push(threadId)
