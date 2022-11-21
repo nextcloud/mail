@@ -40,7 +40,7 @@
 					:hide-selected="true"
 					:loading="loadingIndicatorTo"
 					:auto-limit="autoLimit"
-					@input="callSaveDraft(true, getMessageData)"
+					@input="callSaveDraft(true)"
 					@tag="onNewToAddr"
 					@search-change="onAutocomplete($event, 'to')">
 					<template #tag="{ option }">
@@ -87,7 +87,7 @@
 					:loading="loadingIndicatorCc"
 					:auto-limit="autoLimit"
 					:hide-selected="true"
-					@input="callSaveDraft(true, getMessageData)"
+					@input="callSaveDraft(true)"
 					@tag="onNewCcAddr"
 					@search-change="onAutocomplete($event, 'cc')">
 					<template #tag="{ option }">
@@ -127,7 +127,7 @@
 					:preserve-search="true"
 					:loading="loadingIndicatorBcc"
 					:hide-selected="true"
-					@input="callSaveDraft(true, getMessageData)"
+					@input="callSaveDraft(true)"
 					@tag="onNewBccAddr"
 					@search-change="onAutocomplete($event, 'bcc')">
 					<template #tag="{ option }">
@@ -160,7 +160,7 @@
 				class="subject"
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
-				@input="callSaveDraft(true, getMessageData)">
+				@input="callSaveDraft(true)">
 		</div>
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
@@ -445,7 +445,6 @@ import { getMailvelope } from '../crypto/mailvelope'
 import { isPgpgMessage } from '../crypto/pgp'
 import { matchError } from '../errors/match'
 import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError'
-import NoDraftsMailboxConfiguredError from '../errors/NoDraftsMailboxConfiguredError'
 import ManyRecipientsError from '../errors/ManyRecipientsError'
 
 import Send from 'vue-material-design-icons/Send'
@@ -587,11 +586,12 @@ export default {
 			bodyVal: this.editorBody,
 			attachments: this.attachmentsData,
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
-			draftsPromise: Promise.resolve(this.draftId),
+			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
+			localDraftId: undefined,
 			savingDraft: undefined,
-			saveDraftDebounced: debounce(10 * 1000, this.saveDraft),
+			saveDraftDebounced: debounce(5 * 1000, this.saveDraft),
 			state: STATES.EDITING,
 			errorText: undefined,
 			STATES,
@@ -873,16 +873,14 @@ export default {
 			}
 			this.bodyVal = html(body).value
 		},
-		getMessageData(id) {
+		getMessageData() {
 			return {
-				// TODO: Rename account to accountId
-				account: this.selectedAlias.id,
+				id: this.localDraftId,
 				accountId: this.selectedAlias.id,
 				aliasId: this.selectedAlias.aliasId,
 				to: this.selectTo,
 				cc: this.selectCc,
 				bcc: this.selectBcc,
-				draftId: id,
 				subject: this.subjectVal,
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
@@ -892,61 +890,45 @@ export default {
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
 			}
 		},
-		saveDraft(data) {
+		async saveDraft(data) {
 			this.savingDraft = true
-			this.draftsPromise = this.draftsPromise
-				.then((id) => {
-					const draftData = data(id)
-					if (
-						!id
-						&& !draftData.subject
-						&& !draftData.body
-						&& !draftData.cc
-						&& !draftData.bcc
-						&& !draftData.to
-						&& !draftData.sendAt
-					) {
-						// this might happen after a call to reset()
-						// where the text input gets reset as well
-						// and fires an input event
-						logger.debug('Nothing substantial to save, ignoring draft save')
-						this.savingDraft = false
-						return id
-					}
-					return this.draft(draftData)
-				})
-				.then((uid) => {
-					// It works (again)
-					this.canSaveDraft = true
-
-					return uid
-				})
-				.catch(async (error) => {
-					await matchError(error, {
-						[NoDraftsMailboxConfiguredError.getName()]() {
-							return false
-						},
-						default() {
-							return true
-						},
-					})
-					this.canSaveDraft = false
-				})
-				.then((uid) => {
+			try {
+				const id = this.localDraftId
+				const draftData = this.getMessageData()
+				if (!id
+					&& !draftData.subject
+					&& !draftData.body
+					&& !draftData.cc
+					&& !draftData.bcc
+					&& !draftData.to
+					&& !draftData.sendAt) {
+					// this might happen after a call to reset()
+					// where the text input gets reset as well
+					// and fires an input event
+					logger.debug('Nothing substantial to save, ignoring draft save')
 					this.savingDraft = false
-					return uid
-				})
-			return this.draftsPromise
+					return
+				}
+				this.localDraftId = await this.draft(draftData)
+
+				// It works (again)
+				this.canSaveDraft = true
+			} catch (error) {
+				logger.error('Could not save draft', { error })
+				this.canSaveDraft = false
+			} finally {
+				this.savingDraft = false
+			}
 		},
-		callSaveDraft(withDebounce, ...args) {
+		async callSaveDraft(withDebounce) {
 			if (withDebounce) {
-				return this.saveDraftDebounced(...args)
+				this.draftsPromise = this.draftsPromise.then(this.saveDraftDebounced)
 			} else {
-				return this.saveDraft(...args)
+				this.draftsPromise = this.draftsPromise.then(this.saveDraft)
 			}
 		},
 		onSave() {
-			this.callSaveDraft(false, this.getMessageData)
+			this.callSaveDraft(false)
 		},
 		insertSignature() {
 			let trigger
@@ -967,7 +949,7 @@ export default {
 		},
 		onEditorInput(text) {
 			this.bodyVal = text
-			this.callSaveDraft(true, this.getMessageData)
+			this.callSaveDraft(true)
 		},
 		onEditorReady(editor) {
 			this.bodyVal = editor.getData()
@@ -1006,11 +988,11 @@ export default {
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('on-add-local-attachment')
-			this.callSaveDraft(true, this.getMessageData)
+			this.callSaveDraft(true)
 		},
 		onAddCloudAttachment() {
 			this.bus.$emit('on-add-cloud-attachment')
-			this.callSaveDraft(true, this.getMessageData)
+			this.callSaveDraft(true)
 		},
 		onAddCloudAttachmentLink() {
 			this.bus.$emit('on-add-cloud-attachment-link')
@@ -1036,7 +1018,7 @@ export default {
 		onAttachmentsUploading(uploaded) {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
-				.then(() => this.callSaveDraft(true, this.getMessageData))
+				.then(() => this.callSaveDraft(true))
 				.then(() => logger.debug('attachments uploaded'))
 				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
@@ -1067,7 +1049,7 @@ export default {
 			}
 			this.newRecipients.push(res)
 			list.push(res)
-			this.callSaveDraft(true, this.getMessageData)
+			this.callSaveDraft(true)
 		},
 		async onSend(_, force = false) {
 			if (this.encrypt) {
@@ -1118,6 +1100,7 @@ export default {
 		},
 		reset() {
 			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
+			this.localDraftId = undefined
 			this.selectTo = []
 			this.selectCc = []
 			this.selectBcc = []

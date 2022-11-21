@@ -162,7 +162,7 @@ class DraftsController extends Controller {
 		$message->setUpdatedAt($this->timeFactory->getTime());
 
 		$message = $this->service->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
-		return JsonResponse::success($message, Http::STATUS_ACCEPTED);
+		return JsonResponse::success($message);
 	}
 
 	/**
@@ -177,7 +177,7 @@ class DraftsController extends Controller {
 		$account = $this->accountService->find($this->userId, $message->getAccountId());
 
 		$this->service->deleteMessage($this->userId, $message);
-		return JsonResponse::success('Message deleted', Http::STATUS_ACCEPTED);
+		return JsonResponse::success('Message deleted');
 	}
 
 	/**
@@ -191,8 +191,6 @@ class DraftsController extends Controller {
 		$account = $this->accountService->find($this->userId, $message->getAccountId());
 
 		$this->service->sendMessage($message, $account);
-		return  JsonResponse::success(
-			'Message moved to IMAP', Http::STATUS_ACCEPTED
-		);
+		return  JsonResponse::success('Message moved to IMAP');
 	}
 }

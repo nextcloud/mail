@@ -359,6 +359,7 @@ return [
 		'accounts' => ['url' => '/api/accounts'],
 		'aliases' => ['url' => '/api/accounts/{accountId}/aliases'],
 		'autoComplete' => ['url' => '/api/autoComplete'],
+		'drafts' => ['url' => '/api/drafts'],
 		'localAttachments' => ['url' => '/api/attachments'],
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],

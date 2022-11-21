@@ -25,12 +25,13 @@
 </template>
 <script>
 import { NcModal as Modal } from '@nextcloud/vue'
-import logger from '../logger'
-import { toPlain, toHtml, plain } from '../util/text'
-import { saveDraft } from '../service/MessageService'
-import Composer from './Composer'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+
+import Composer from './Composer'
+import logger from '../logger'
+import { saveDraft, updateDraft } from '../service/DraftService'
+import { toPlain, toHtml, plain } from '../util/text'
 import { UNDO_DELAY } from '../store/constants'
 
 export default {
@@ -86,29 +87,27 @@ export default {
 					id: this.composerData.id,
 				})
 			} else {
-				const dataForServer = this.getDataForServer(data, true)
-				const { id } = await saveDraft(data.account, dataForServer)
-
-				// Remove old draft envelope
-				this.$store.commit('removeEnvelope', { id: data.draftId })
-				this.$store.commit('removeMessage', { id: data.draftId })
-
-				// Fetch new draft envelope
-				await this.$store.dispatch('fetchEnvelope', id)
-
-				return id
+				const dataForServer = this.getDataForServer(data)
+				if (dataForServer.id) {
+					await updateDraft(dataForServer)
+					return data.id
+				} else {
+					const { id } = await saveDraft(data.account, dataForServer)
+					return id
+				}
 			}
 		},
-		getDataForServer(data, serializeRecipients = false) {
+		getDataForServer(data) {
 			return {
-				accountId: data.account,
+				id: data.id,
+				accountId: data.accountId,
 				subject: data.subject,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 				editorBody: data.body.value,
 				isHtml: data.isHtml,
-				to: serializeRecipients ? data.to.map(this.recipientToRfc822).join(', ') : data.to,
-				cc: serializeRecipients ? data.cc.map(this.recipientToRfc822).join(', ') : data.cc,
-				bcc: serializeRecipients ? data.bcc.map(this.recipientToRfc822).join(', ') : data.bcc,
+				to: data.to,
+				cc: data.cc,
+				bcc: data.bcc,
 				attachments: data.attachments,
 				aliasId: data.aliasId,
 				inReplyToMessageId: data.inReplyToMessageId,
@@ -134,7 +133,7 @@ export default {
 
 			if (!this.composerData.id) {
 				await this.$store.dispatch('outbox/enqueueMessage', {
-					message: dataForServer,
+					message: await updateDraft(dataForServer),
 				})
 			} else {
 				await this.$store.dispatch('outbox/updateMessage', {

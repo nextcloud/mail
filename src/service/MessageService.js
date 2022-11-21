@@ -183,18 +183,6 @@ export async function fetchMessageItineraries(id) {
 	}
 }
 
-export async function saveDraft(accountId, data) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/draft', {
-		accountId,
-	})
-
-	try {
-		return (await axios.post(url, data)).data
-	} catch (e) {
-		throw convertAxiosError(e)
-	}
-}
-
 export async function deleteMessage(id) {
 	const url = generateUrl('/apps/mail/api/messages/{id}', {
 		id,

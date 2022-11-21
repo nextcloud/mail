@@ -63,7 +63,6 @@ export default {
 	},
 
 	async enqueueMessage({ commit }, { message }) {
-		message = await OutboxService.enqueueMessage(message)
 		commit('addMessage', { message })
 
 		// Future drafts/sends after an error should go through outbox logic
