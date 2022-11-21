@@ -710,7 +710,11 @@ class MessageMapper {
 			]);
 			/** @var Horde_Imap_Client_Data_Fetch $part */
 			$part = $parts[$fetchData->getUid()];
-			$htmlBody = $part->getBodyPart($htmlBodyId);
+			// This is sus - why does this even happen? A delete / move in the middle of this processing?
+			if ($part === null) {
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage);
+			}
+			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {
 				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
