@@ -358,7 +358,6 @@ OC.L10N.register(
     "An error occurred, unable to create the tag." : "Wystąpił błąd, nie można utworzyć etykiety.",
     "An error occurred, unable to rename the tag." : "Wystąpił błąd, nie można zmienić nazwy etykiety.",
     "Loading thread" : "Ładowanie wątku",
-    "Loading messages" : "Wczytywanie wiadomości",
     "Could not load your message thread" : "Nie można załadować wątku wiadomości",
     "Mark as unfavorite" : "Oznacz jako nieulubione",
     "Mark as favorite" : "Oznacz jako nieulubione",

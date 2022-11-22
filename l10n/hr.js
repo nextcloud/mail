@@ -257,7 +257,6 @@ OC.L10N.register(
     "Tag already exists" : "Oznaka već postoji",
     "An error occurred, unable to create the tag." : "Došlo je do pogreške, nije moguće stvoriti oznaku.",
     "An error occurred, unable to rename the tag." : "Došlo je do pogreške, nije moguće promijeniti naziv oznake.",
-    "Loading messages" : "Učitavanje poruka",
     "Could not load your message thread" : "Učitavanje vaše dretve poruka nije uspjelo",
     "Mark as unread" : "Označi kao nepročitano",
     "Mark as read" : "Označi kao pročitano",

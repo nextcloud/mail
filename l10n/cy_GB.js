@@ -78,7 +78,6 @@ OC.L10N.register(
     "Disabled" : "Analluogwyd",
     "Enabled" : "Galluogwyd",
     "Custom" : "Cyfaddas",
-    "Loading messages" : "Llwytho negeseuon",
     "Not found" : "Heb ei ganfod",
     "Remove" : "Gwaredu",
     "(organizer)" : "(trefnydd)",

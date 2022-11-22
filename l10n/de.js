@@ -358,7 +358,6 @@ OC.L10N.register(
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten. Das Schlagwort konnte nicht erstellt werden.",
     "An error occurred, unable to rename the tag." : "Es ist ein Fehler aufgetreten. Das Schlagwort konnte nicht umbenannt werden.",
     "Loading thread" : "Thema wird geladen",
-    "Loading messages" : "Lade Nachrichten",
     "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "Mark as unfavorite" : "Als nicht favorisiert markieren",
     "Mark as favorite" : "Als favorisiert markieren",

@@ -358,7 +358,6 @@ OC.L10N.register(
     "An error occurred, unable to create the tag." : "Etiket eklenirken bir sorun çıktı.",
     "An error occurred, unable to rename the tag." : "Etiket yeniden adlandırılırken bir sorun çıktı.",
     "Loading thread" : "Konu yükleniyor",
-    "Loading messages" : "İletiler yükleniyor",
     "Could not load your message thread" : "İleti grubunuz yüklenemedi",
     "Mark as unfavorite" : "Sık kullanılanlardan kaldır",
     "Mark as favorite" : "Sık kullanılanlara ekle",

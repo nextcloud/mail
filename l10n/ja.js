@@ -207,7 +207,6 @@ OC.L10N.register(
     "Tag already exists" : "タグはすでに存在します",
     "An error occurred, unable to create the tag." : "エラー:タグを作成できませんでした",
     "An error occurred, unable to rename the tag." : "エラー:タグの名前を変更できませんでした",
-    "Loading messages" : "メッセージの読み込み中",
     "Could not load your message thread" : "メッセージを読み込めませんでした",
     "Mark as unread" : "未読にする",
     "Mark as read" : "既読にする",

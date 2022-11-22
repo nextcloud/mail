@@ -344,7 +344,6 @@ OC.L10N.register(
     "Tag already exists" : "Etiketa dagoeneko existitzen da",
     "An error occurred, unable to create the tag." : "Errore bat gertatu da, ezin da etiketa sortu.",
     "An error occurred, unable to rename the tag." : "Errore bat gertatu da, ezin izan zaio etiketa aldatu.",
-    "Loading messages" : "Mezuak kargatzen",
     "Could not load your message thread" : "Ezin izan da zure mezuen haria kargatu",
     "Mark as unfavorite" : "Markatu ez gogoko gisa",
     "Mark as favorite" : "Markatu gogoko gisa",

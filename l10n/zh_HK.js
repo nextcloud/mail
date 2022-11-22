@@ -358,7 +358,6 @@ OC.L10N.register(
     "An error occurred, unable to create the tag." : "發生錯誤，無法建立標籤。",
     "An error occurred, unable to rename the tag." : "發生錯誤，無法重新命名標籤。",
     "Loading thread" : "主題加載中",
-    "Loading messages" : "正在載入訊息",
     "Could not load your message thread" : "無法載入您的郵件串",
     "Mark as unfavorite" : "取消標記我的最愛",
     "Mark as favorite" : "標記為我的最愛",

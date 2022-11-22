@@ -263,7 +263,6 @@ OC.L10N.register(
     "Unset" : "Fjern indstilling",
     "Add tag" : "Tilføj Tag",
     "Tag already exists" : "Mærket eksisterer allerede",
-    "Loading messages" : "Henter beskedder",
     "Mark as unread" : "Marker som ulæst",
     "Mark as read" : "Marker som læst",
     "Delete message" : "Slet besked",

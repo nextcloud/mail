@@ -169,7 +169,6 @@ OC.L10N.register(
     "Unset" : "설정 해제",
     "Add tag" : "태그 추가",
     "Tag already exists" : "태그가 이미 존재합니다",
-    "Loading messages" : "메세지를 불러오는 중",
     "Mark as unread" : "읽지 않은 것으로 표시",
     "Mark as read" : "읽은 것으로 표시",
     "Not found" : "찾을 수 없음",

@@ -190,7 +190,6 @@ OC.L10N.register(
     "Saving tag …" : "התגית נשמרת…",
     "Tag already exists" : "תגית כבר קיימת",
     "An error occurred, unable to create the tag." : "אירעה שגיאה, לא ניתן ליצור את התגית.",
-    "Loading messages" : "ההודעות נטענות",
     "Could not load your message thread" : "לא ניתן לטעון את שרשור ההודעות שלך",
     "Mark as unread" : "סימון כלא נקרא",
     "Mark as read" : "סימון כנקרא",

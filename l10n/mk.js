@@ -287,7 +287,6 @@ OC.L10N.register(
     "Tag already exists" : "Тагот веќе постои",
     "An error occurred, unable to create the tag." : "Настана грешка, неможе да се креира ознака.",
     "An error occurred, unable to rename the tag." : "Настана грешка, неможе да се преименува ознака.",
-    "Loading messages" : "Вчитување пораки",
     "Could not load your message thread" : "Неможат да се преземат информации за пораката",
     "Mark as unread" : "Означи како непрочитано",
     "Mark as read" : "Означи како прочитано",

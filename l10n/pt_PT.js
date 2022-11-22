@@ -169,7 +169,6 @@ OC.L10N.register(
     "Set" : "Definir",
     "Unset" : "Retirar",
     "Tag already exists" : "A etiqueta já existe",
-    "Loading messages" : "A carregar mensagens",
     "Not found" : "Não foi encontrado",
     "Remove" : "Remover",
     "individual" : "individual",
