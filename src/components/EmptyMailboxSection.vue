@@ -1,20 +1,19 @@
 <template>
-	<div id="emptycontent">
-		<slot> {{ t('mail', 'No messages') }} </slot>
-	</div>
+	<NcEmptyContent :title="t('mail', 'No messages')">
+		<template #icon>
+			<IconMail :size="65" />
+		</template>
+	</NcEmptyContent>
 </template>
 
 <script>
+import IconMail from 'vue-material-design-icons/Email'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 export default {
 	name: 'EmptyMailboxSection',
+	components: {
+		IconMail,
+		NcEmptyContent,
+	},
 }
 </script>
-<style scoped lang="scss">
-#emptycontent {
-	margin-top: 10px;
-	color: var(--color-text-maxcontrast);
-	font-size: inherit;
-	text-align: left;
-	padding-left: 16px;
-}
-</style>

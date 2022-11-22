@@ -20,23 +20,27 @@
   -->
 
 <template>
-	<div class="emptycontent">
-		<h2>{{ error }}</h2>
-		<p>{{ message }}</p>
+	<NcEmptyContent
+		:title="error"
+		:description="message">
 		<p v-if="data && data.debug">
 			<a class="button"
 				:href="reportUrl"
 				target="_blank"
 				rel="noopener">{{ t('mail', 'Report this bug') }}</a>
 		</p>
-	</div>
+	</NcEmptyContent>
 </template>
 
 <script>
 import { getReportUrl } from '../util/CrashReport'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 
 export default {
 	name: 'Error',
+	components: {
+		NcEmptyContent,
+	},
 	props: {
 		error: {
 			type: String,
