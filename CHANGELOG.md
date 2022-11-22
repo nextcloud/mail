@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.1.2 – 2022-11-22
+### Fixed
+- Don't collapse if threading has one message only
+- Saving provisioning and anti-spam settings
+- Undefined errorMessage in ThreadEnvelope
+- Server error accessing message routes anonymously
+
 ## 2.1.1 – 2022-11-14
 ### Fixed
 - Improve the size of padding bottom on threads
