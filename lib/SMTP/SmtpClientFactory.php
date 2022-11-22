@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\SMTP;
 
-use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
@@ -65,12 +64,13 @@ class SmtpClientFactory {
 			return new Horde_Mail_Transport_Mail();
 		}
 
-		$decryptedPassword = $this->crypto->decrypt($mailAccount->getOutboundPassword());
+		$password = $mailAccount->getOutboundPassword();
+		$password = $this->crypto->decrypt($password);
 		$security = $mailAccount->getOutboundSslMode();
 		$params = [
 			'localhost' => $this->hostNameFactory->getHostName(),
 			'host' => $mailAccount->getOutboundHost(),
-			'password' => $decryptedPassword,
+			'password' => $password,
 			'port' => $mailAccount->getOutboundPort(),
 			'username' => $mailAccount->getOutboundUser(),
 			'secure' => $security === 'none' ? false : $security,
@@ -82,12 +82,6 @@ class SmtpClientFactory {
 				],
 			],
 		];
-		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
-			$params['xoauth2_token'] = new Horde_Imap_Client_Password_Xoauth2(
-				$account->getEmail(),
-				$decryptedPassword,
-			);
-		}
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
 		}
