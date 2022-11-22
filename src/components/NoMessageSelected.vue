@@ -21,30 +21,25 @@
 
 <template>
 	<AppContentDetails>
-		<div id="emptycontent">
-			<IconMail :size="65" />
-			<h2>{{ t('mail', 'No message selected') }}</h2>
-			<p />
-		</div>
+		<NcEmptyContent
+			:title="t('mail', 'No message selected')">
+			<template #icon>
+				<IconMail :size="65" />
+			</template>
+		</NcEmptyContent>
 	</AppContentDetails>
 </template>
 
 <script>
-import { NcAppContentDetails as AppContentDetails } from '@nextcloud/vue'
+import { NcAppContentDetails as AppContentDetails, NcEmptyContent } from '@nextcloud/vue'
 import IconMail from 'vue-material-design-icons/Email'
 
 export default {
 	name: 'NoMessageSelected',
 	components: {
 		AppContentDetails,
+		NcEmptyContent,
 		IconMail,
 	},
 }
 </script>
-
-<style scoped>
-h2,
-p {
-	text-align: center;
-}
-</style>
