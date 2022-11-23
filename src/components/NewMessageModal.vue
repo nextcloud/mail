@@ -102,6 +102,7 @@ export default {
 				id: data.id,
 				accountId: data.accountId,
 				subject: data.subject,
+				draftId: data.draftId,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 				editorBody: data.body.value,
 				isHtml: data.isHtml,

@@ -878,6 +878,7 @@ export default {
 				id: this.localDraftId,
 				accountId: this.selectedAlias.id,
 				aliasId: this.selectedAlias.aliasId,
+				draftId: this.draftId,
 				to: this.selectTo,
 				cc: this.selectCc,
 				bcc: this.selectBcc,
@@ -890,7 +891,7 @@ export default {
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
 			}
 		},
-		async saveDraft(data) {
+		async saveDraft() {
 			this.savingDraft = true
 			try {
 				const id = this.localDraftId
