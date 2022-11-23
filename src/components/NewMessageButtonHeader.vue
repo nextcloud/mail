@@ -90,7 +90,6 @@ export default {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	gap: 4px;
 	height: 61px;
-	border-right: 1px solid var(--color-border)
 }
 .refresh__button {
 	background-color: transparent;
