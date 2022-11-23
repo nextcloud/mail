@@ -2,6 +2,10 @@
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
+		<Error
+			v-else-if="error"
+			:error="error && error.message ? error.message : t('mail', 'Not found')"
+			:message="errorMessage" />
 		<template v-else>
 			<div id="mail-thread-header">
 				<div id="mail-thread-header-fields">
@@ -56,6 +60,7 @@ import debounce from 'lodash/fp/debounce'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
 import logger from '../logger'
+import Error from './Error'
 import RecipientBubble from './RecipientBubble'
 import ThreadEnvelope from './ThreadEnvelope'
 
@@ -64,6 +69,7 @@ export default {
 	components: {
 		RecipientBubble,
 		AppContentDetails,
+		Error,
 		Loading,
 		ThreadEnvelope,
 		Popover,
@@ -215,8 +221,11 @@ export default {
 		},
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
+			this.errorMessage = ''
+			this.error = undefined
 			await this.fetchThread()
 			this.updateParticipantsToDisplay()
+
 		},
 		async fetchThread() {
 			this.loading = true
@@ -247,10 +256,12 @@ export default {
 				this.loading = false
 			} catch (error) {
 				logger.error('could not load envelope thread', { threadId, error })
-				if (error.isError) {
-					this.errorMessage = t('mail', 'Could not load your message thread')
-					this.error = error
+				if (error?.response?.status === 403) {
+					this.error = t('mail', 'Could not load your message thread')
+					this.errorMessage = t('mail', 'The thread doesn\'t exist or has been deleted')
 					this.loading = false
+				} else {
+					this.errorMessage = t('mail', 'Could not load your message thread')
 				}
 			}
 		},
