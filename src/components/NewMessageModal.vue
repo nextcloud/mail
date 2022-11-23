@@ -30,7 +30,7 @@ import { translate as t } from '@nextcloud/l10n'
 
 import Composer from './Composer'
 import logger from '../logger'
-import { saveDraft, updateDraft } from '../service/DraftService'
+import { deleteDraft, saveDraft, updateDraft} from '../service/DraftService'
 import { toPlain, toHtml, plain } from '../util/text'
 import { UNDO_DELAY } from '../store/constants'
 
@@ -178,7 +178,7 @@ export default {
 				if (isOutbox) {
 					await this.$store.dispatch('outbox/deleteMessage', { id })
 				} else {
-					await this.$store.dispatch('deleteMessage', { id })
+					await deleteDraft(id)
 				}
 				showSuccess(t('mail', 'Message discarded'))
 			} catch (error) {

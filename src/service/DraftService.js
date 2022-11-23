@@ -48,3 +48,15 @@ export async function updateDraft(data) {
 		throw convertAxiosError(e)
 	}
 }
+
+export async function deleteDraft(id) {
+	const url = generateUrl('/apps/mail/api/drafts/{id}', {
+		id,
+	})
+
+	try {
+		return (await axios.delete(url)).data.data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
