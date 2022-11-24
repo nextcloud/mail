@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\ILocalMailboxService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
@@ -44,7 +43,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class OutboxService implements ILocalMailboxService {
+class OutboxService {
 	/** @var IMailTransmission */
 	private $transmission;
 
@@ -121,11 +120,23 @@ class OutboxService implements ILocalMailboxService {
 		return $this->mapper->findById($id, $userId);
 	}
 
+	/**
+	 * @param string $userId
+	 * @param LocalMessage $message
+	 * @return void
+	 */
 	public function deleteMessage(string $userId, LocalMessage $message): void {
 		$this->attachmentService->deleteLocalMessageAttachments($userId, $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
 
+	/**
+	 * @param LocalMessage $message
+	 * @param Account $account
+	 * @return void
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
 		try {
 			$this->transmission->sendLocalMessage($account, $message);
@@ -139,6 +150,15 @@ class OutboxService implements ILocalMailboxService {
 		$this->mapper->deleteWithRecipients($message);
 	}
 
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @param array<int, string[]> $to
+	 * @param array<int, string[]> $cc
+	 * @param array<int, string[]> $bcc
+	 * @param array $attachments
+	 * @return LocalMessage
+	 */
 	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
@@ -161,6 +181,15 @@ class OutboxService implements ILocalMailboxService {
 		return $message;
 	}
 
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @param array<int, string[]> $to
+	 * @param array<int, string[]> $cc
+	 * @param array<int, string[]> $bcc
+	 * @param array $attachments
+	 * @return LocalMessage
+	 */
 	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
@@ -182,6 +211,11 @@ class OutboxService implements ILocalMailboxService {
 		return $message;
 	}
 
+	/**
+	 * @param Account $account
+	 * @param int $draftId
+	 * @return void
+	 */
 	public function handleDraft(Account $account, int $draftId): void {
 		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
 		$this->eventDispatcher->dispatch(
@@ -190,6 +224,9 @@ class OutboxService implements ILocalMailboxService {
 		);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function flush(): void {
 		$messages = $this->mapper->findDue(
 			$this->timeFactory->getTime()

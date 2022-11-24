@@ -38,7 +38,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -110,11 +109,6 @@ class DraftsServiceTest extends TestCase {
 		);
 		$this->userId = 'linus';
 		$this->time = $this->createMock(ITimeFactory::class);
-	}
-
-	public function testGetMessages(): void {
-		$this->expectException(NotImplemented::class);
-		$this->draftsService->getMessages($this->userId);
 	}
 
 	public function testGetMessage(): void {
@@ -531,7 +525,7 @@ class DraftsServiceTest extends TestCase {
 		]);
 
 		$this->transmission->expects(self::once())
-			->method('sendLocalMessage')
+			->method('saveLocalDraft')
 			->with($account, $message);
 		$this->attachmentService->expects(self::once())
 			->method('deleteLocalMessageAttachments')
@@ -563,7 +557,7 @@ class DraftsServiceTest extends TestCase {
 		]);
 
 		$this->transmission->expects(self::once())
-			->method('sendLocalMessage')
+			->method('saveLocalDraft')
 			->with($account, $message)
 			->willThrowException(new ClientException());
 		$this->attachmentService->expects(self::never())

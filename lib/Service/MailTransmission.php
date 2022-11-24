@@ -252,7 +252,7 @@ class MailTransmission implements IMailTransmission {
 		);
 	}
 
-	public function sendLocalMessage(Account $account, LocalMessage $message, bool $isDraft = false): void {
+	public function sendLocalMessage(Account $account, LocalMessage $message): void {
 		$to = new AddressList(
 			array_map(
 				static function ($recipient) {
@@ -308,15 +308,81 @@ class MailTransmission implements IMailTransmission {
 			$alias = $this->aliasesService->find($message->getAliasId(), $account->getUserId());
 		}
 
-		if ($isDraft) {
-			$this->saveDraft($messageData);
-		} else {
-			try {
-				$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
-			} catch (SentMailboxNotSetException $e) {
-				throw new ClientException('Could not send message' . $e->getMessage(), $e->getCode(), $e);
-			}
+		try {
+			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
+		} catch (SentMailboxNotSetException $e) {
+			throw new ClientException('Could not send message' . $e->getMessage(), $e->getCode(), $e);
 		}
+	}
+
+	public function saveLocalDraft(Account $account, LocalMessage $message): void {
+		$messageData = $this->getNewMessageData($message, $account);
+
+		$perfLogger = $this->performanceLogger->start('save local draft');
+
+		$account = $messageData->getAccount();
+		$imapMessage = $account->newMessage();
+		$imapMessage->setTo($messageData->getTo());
+		$imapMessage->setSubject($messageData->getSubject());
+		$from = new AddressList([
+			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+		]);
+		$imapMessage->setFrom($from);
+		$imapMessage->setCC($messageData->getCc());
+		$imapMessage->setBcc($messageData->getBcc());
+		$imapMessage->setContent($messageData->getBody());
+
+		// build mime body
+		$headers = [
+			'From' => $imapMessage->getFrom()->first()->toHorde(),
+			'To' => $imapMessage->getTo()->toHorde(),
+			'Cc' => $imapMessage->getCC()->toHorde(),
+			'Bcc' => $imapMessage->getBCC()->toHorde(),
+			'Subject' => $imapMessage->getSubject(),
+			'Date' => Horde_Mime_Headers_Date::create(),
+		];
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		if ($message->isHtml()) {
+			$mail->setHtmlBody($imapMessage->getContent());
+		} else {
+			$mail->setBody($imapMessage->getContent());
+		}
+		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$perfLogger->step('build local draft message');
+
+		// 'Send' the message
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$transport = new Horde_Mail_Transport_Null();
+			$mail->send($transport, false, false);
+			$perfLogger->step('create IMAP draft message');
+			// save the message in the drafts folder
+			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+			if ($draftsMailboxId === null) {
+				throw new ClientException('No drafts mailbox configured');
+			}
+			$draftsMailbox = $this->mailboxMapper->findById($draftsMailboxId);
+			$this->messageMapper->save(
+				$client,
+				$draftsMailbox,
+				$mail,
+				[Horde_Imap_Client::FLAG_DRAFT]
+			);
+			$perfLogger->step('save local draft message on IMAP');
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
+		} catch (Horde_Exception $e) {
+			throw new ServiceException('Could not save draft message', 0, $e);
+		} finally {
+			$client->logout();
+		}
+
+		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, $messageData, null));
+		$perfLogger->step('emit post local draft save event');
+
+		$perfLogger->end();
 	}
 
 	/**
@@ -665,5 +731,61 @@ class MailTransmission implements IMailTransmission {
 		} catch (Horde_Mime_Exception $e) {
 			throw new ServiceException('Unable to send mdn for message "' . $message->getId() . '" caused by: ' . $e->getMessage(), 0, $e);
 		}
+	}
+
+	/**
+	 * @param LocalMessage $message
+	 * @param Account $account
+	 * @return NewMessageData
+	 */
+	private function getNewMessageData(LocalMessage $message, Account $account): NewMessageData {
+		$to = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_TO;
+				}))
+			)
+		);
+
+		$cc = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_CC;
+				}))
+			)
+		);
+		$bcc = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_BCC;
+				}))
+			)
+		);
+		$attachments = array_map(function (LocalAttachment $attachment) {
+			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
+			return [
+				'type' => 'local',
+				'id' => $attachment->getId(),
+			];
+		}, $message->getAttachments());
+		return new NewMessageData(
+			$account,
+			$to,
+			$cc,
+			$bcc,
+			$message->getSubject(),
+			$message->getBody(),
+			$attachments,
+			$message->isHtml()
+		);
 	}
 }
