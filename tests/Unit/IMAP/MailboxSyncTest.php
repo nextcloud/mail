@@ -113,7 +113,7 @@ class MailboxSyncTest extends TestCase {
 			->willReturn($client);
 		$client->expects($this->once())
 			->method('getNamespaces')
-			->willThrowException(new Horde_Imap_Client_Exception());
+			->willThrowException(new Horde_Imap_Client_Exception('', 0));
 		$folders = [
 			$this->createMock(Folder::class),
 			$this->createMock(Folder::class),

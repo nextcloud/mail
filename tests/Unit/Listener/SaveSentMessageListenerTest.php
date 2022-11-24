@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
@@ -181,7 +182,7 @@ class SaveSentMessageListenerTest extends TestCase {
 				$mailbox,
 				$mail
 			)
-			->willThrowException(new \Horde_Imap_Client_Exception());
+			->willThrowException(new Horde_Imap_Client_Exception('', 0));
 		$this->expectException(ServiceException::class);
 
 		$this->listener->handle($event);
