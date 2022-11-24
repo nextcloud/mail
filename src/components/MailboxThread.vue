@@ -295,10 +295,6 @@ export default {
 		background-color: var(--color-background-dark);
 	}
 }
-
-#app-content-wrapper {
-	display: flex;
-}
 :deep(.button-vue--vue-secondary) {
 	box-shadow: none;
 }
