@@ -272,9 +272,6 @@ export default {
 <style lang="scss">
 #mail-message {
 	margin-bottom: 30vh;
-	max-height: calc(100vh - 50px);
-	overflow: auto;
-	flex-grow: 1;
 
 	.icon-loading {
 		&:only-child:after {
