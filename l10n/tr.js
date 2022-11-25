@@ -360,6 +360,7 @@ OC.L10N.register(
     "Loading thread" : "Konu yükleniyor",
     "Not found" : "Bulunamadı",
     "Could not load your message thread" : "İleti grubunuz yüklenemedi",
+    "The thread doesn't exist or has been deleted" : "Bu konu bulunamadı ya da silinmiş",
     "Mark as unfavorite" : "Sık kullanılanlardan kaldır",
     "Mark as favorite" : "Sık kullanılanlara ekle",
     "Mark as unread" : "Okunmamış olarak işaretle",

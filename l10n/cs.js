@@ -360,6 +360,7 @@ OC.L10N.register(
     "Loading thread" : "Načítání vlákna",
     "Not found" : "Nenalezeno",
     "Could not load your message thread" : "Nepodařilo se načíst vlákno s danou zprávou",
+    "The thread doesn't exist or has been deleted" : "Vlákno neexistuje nebo bylo smazáno",
     "Mark as unfavorite" : "Zrušit označení jako oblíbeného",
     "Mark as favorite" : "Označit jako oblíbené",
     "Mark as unread" : "Označit jako nepřečtené",

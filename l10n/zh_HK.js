@@ -360,6 +360,7 @@ OC.L10N.register(
     "Loading thread" : "主題加載中",
     "Not found" : "找不到",
     "Could not load your message thread" : "無法載入您的郵件串",
+    "The thread doesn't exist or has been deleted" : "話題不存在或已被刪除",
     "Mark as unfavorite" : "取消標記我的最愛",
     "Mark as favorite" : "標記為我的最愛",
     "Mark as unread" : "標為未讀",

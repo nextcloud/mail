@@ -360,6 +360,7 @@ OC.L10N.register(
     "Loading thread" : "Szál betöltése",
     "Not found" : "Nem található",
     "Could not load your message thread" : "Nem sikerült betölteni az üzenetszálat",
+    "The thread doesn't exist or has been deleted" : "Ez a szál nem létezik vagy törölve lett",
     "Mark as unfavorite" : "Megjelölés nem kedvencként",
     "Mark as favorite" : "Megjelölés kedvencként",
     "Mark as unread" : "Megjelölés olvasatlanként",

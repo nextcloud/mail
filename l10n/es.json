@@ -358,6 +358,7 @@
     "Loading thread" : "Cargando hilo",
     "Not found" : "No encontrado",
     "Could not load your message thread" : "No se ha podido cargar tu hilo de mensajes",
+    "The thread doesn't exist or has been deleted" : "El hilo no existe o ha sido eliminado",
     "Mark as unfavorite" : "Desmarcar como favorito",
     "Mark as favorite" : "Marcar como favorito",
     "Mark as unread" : "Marcar como no leído",

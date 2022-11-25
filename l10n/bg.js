@@ -360,6 +360,7 @@ OC.L10N.register(
     "Loading thread" : "Зареждане на нишка",
     "Not found" : "Не е намерен",
     "Could not load your message thread" : " Нишката на вашето съобщение не можа да се зареди",
+    "The thread doesn't exist or has been deleted" : "Нишката не съществува или е била изтрита",
     "Mark as unfavorite" : "Маркиране като непредпочитано",
     "Mark as favorite" : "Маркиране като любими",
     "Mark as unread" : "Маркиране като непрочетено",
