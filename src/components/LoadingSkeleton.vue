@@ -46,7 +46,7 @@ export default {
 		border-radius: 50px;
 		width: 44px;
 		height: 44px;
-		background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+		background: linear-gradient(-45deg, var(--color-background-hover), var(--color-background-dark), var(--color-background-darker), var(--color-placeholder-light));
 		background-size: 400% 400%;
 		animation: gradient 3s ease-in infinite;
 	}
@@ -64,7 +64,7 @@ export default {
 		h3 {
 			font-size: 100%;
 			margin: 0;
-			background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+			background: linear-gradient(-45deg, var(--color-background-hover), var(--color-background-dark), var(--color-background-darker), var(--color-placeholder-light));
 			background-size: 400% 400%;
 			animation: gradient 3s ease-in infinite;
 			width: 40%;
@@ -74,7 +74,7 @@ export default {
 			width: 100%;
 			height: 15px;
 			margin-top: 5px;
-			background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+			background: linear-gradient(-45deg, var(--color-background-hover), var(--color-background-dark), var(--color-background-darker), var(--color-placeholder-light));
 			background-size: 400% 400%;
 			animation: gradient 3s ease-in infinite;
 		}
@@ -82,7 +82,7 @@ export default {
 			width: 70%;
 			height: 15px;
 			margin-top: 5px;
-			background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+			background: linear-gradient(-45deg, var(--color-background-hover), var(--color-background-dark), var(--color-background-darker), var(--color-placeholder-light));
 			background-size: 400% 400%;
 			animation: gradient 3s ease-in infinite;
 		}

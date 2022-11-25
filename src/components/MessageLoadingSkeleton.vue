@@ -54,7 +54,7 @@ export default {
 		&__line-six {
 			white-space: nowrap;
 			height: 13px;
-			background: linear-gradient(-45deg, #d3d3d3, #f5f5f5, #f2f3f4, #e5e4e2);
+			background: linear-gradient(-45deg, var(--color-background-hover), var(--color-background-dark), var(--color-background-darker), var(--color-placeholder-light));
 			background-size: 400% 400%;
 			animation: gradient 3s ease-in infinite;
 		}
