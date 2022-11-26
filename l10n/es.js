@@ -256,6 +256,8 @@ OC.L10N.register(
     "Moving thread" : "Moviendo hilo",
     "Moving message" : "Moviendo mensaje",
     "Mail settings" : "Configuración del correo",
+    "Provisioned account is disabled" : "La cuenta aprovisionada está deshabilitada",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Por favor inicie sesión para habilitar esta cuenta. La sesión actual está utilizando autenticación sin contraseña, p. ej. SSO o WebAuthn.",
     "Quota" : "Espacio asignado",
     "Show only subscribed mailboxes" : "Mostrar solo las bandejas suscritas",
     "Add mailbox" : "Añadir bandeja",

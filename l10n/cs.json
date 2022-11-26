@@ -254,6 +254,8 @@
     "Moving thread" : "Přesouvá se vlákno",
     "Moving message" : "Přesouvá se zpráva",
     "Mail settings" : "Nastavení pro E-mail",
+    "Provisioned account is disabled" : "Předem připravený účet je deaktivován",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Prosíme aktivujte tento účet přihlášením se pomocí hesla. Stávající relace používá bezheslové ověření, např. sjednocené (SSO) nebo WebAuthn.",
     "Quota" : "Kvóta",
     "Show only subscribed mailboxes" : "Zobrazit pouze přihlášené poštovní schránky",
     "Add mailbox" : "Přidat schránku",

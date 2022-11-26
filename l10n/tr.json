@@ -254,6 +254,8 @@
     "Moving thread" : "Konu taşınıyor",
     "Moving message" : "İleti taşınıyor",
     "Mail settings" : "E-posta ayarları",
+    "Provisioned account is disabled" : "Bu hesap devre dışı bırakılmış",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Bu hesabı etkinleştirmek için lütfen bir parola ile oturum açın. Geçerli oturum, SSO ya da WebAuthn gibi parolasız kimlik doğrulama kullanıyor.",
     "Quota" : "Kota",
     "Show only subscribed mailboxes" : "Yalnızca abone olunmuş e-posta kutuları görüntülensin",
     "Add mailbox" : "E-posta kutusu ekle",

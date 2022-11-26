@@ -254,6 +254,8 @@
     "Moving thread" : "Verschiebe Unterhaltung",
     "Moving message" : "Verschiebe Nachricht",
     "Mail settings" : "E-Mail-Einstellungen",
+    "Provisioned account is disabled" : "Bereitgestelltes Konto ist deaktiviert",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Bitte melden Sie sich mit einem Passwort an, um dieses Konto zu aktivieren. Die aktuelle Sitzung verwendet eine passwortlose Authentifizierung, z. B. SSO oder WebAuthn.",
     "Quota" : "Kontingent",
     "Show only subscribed mailboxes" : "Nur abonnierte Postfächer anzeigen",
     "Add mailbox" : "Postfach hinzufügen",
