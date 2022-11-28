@@ -69,6 +69,14 @@ class AutoConfigController extends Controller {
 		return JsonResponse::success($config)->cacheFor(5 * 60, false, true);
 	}
 
+	/**
+	 * @param string $email
+	 *
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @return JsonResponse
+	 */
 	public function queryMx(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
 		if (!$rfc822Address->valid) {
@@ -80,6 +88,15 @@ class AutoConfigController extends Controller {
 		)->cacheFor(5 * 60, false, true);
 	}
 
+	/**
+	 * @param string $host
+	 * @param int $port
+	 *
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @return JsonResponse
+	 */
 	public function testConnectivity(string $host, int $port): JsonResponse {
 		if (!in_array($port, [143, 993, 465, 587])) {
 			return JsonResponse::fail('Port not allowed');
