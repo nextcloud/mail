@@ -304,7 +304,12 @@ export default {
 	}
 }
 :deep(.button-vue--vue-secondary) {
-	box-shadow: none;
+	position: sticky;
+	top:40px;
+	left: 10px;
+}
+:deep(.app-content-wrapper) {
+	overflow: auto;
 }
 .envelope-list {
 	overflow-y: auto;
