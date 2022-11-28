@@ -1,5 +1,5 @@
 <template>
-	<div v-if="state === STATES.EDITING" class="message-composer">
+	<div class="message-composer">
 		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
@@ -41,7 +41,7 @@
 					:loading="loadingIndicatorTo"
 					:auto-limit="autoLimit"
 					:options-limit="30"
-					@input="callSaveDraft(true, getMessageData)"
+					@input="saveDraftDebounced"
 					@tag="onNewToAddr"
 					@search-change="onAutocomplete($event, 'to')">
 					<template #tag="{ option }">
@@ -90,7 +90,7 @@
 					:auto-limit="autoLimit"
 					:hide-selected="true"
 					:options-limit="30"
-					@input="callSaveDraft(true, getMessageData)"
+					@input="saveDraftDebounced"
 					@tag="onNewCcAddr"
 					@search-change="onAutocomplete($event, 'cc')">
 					<template #tag="{ option }">
@@ -132,7 +132,7 @@
 					:loading="loadingIndicatorBcc"
 					:hide-selected="true"
 					:options-limit="30"
-					@input="callSaveDraft(true, getMessageData)"
+					@input="saveDraftDebounced"
 					@tag="onNewBccAddr"
 					@search-change="onAutocomplete($event, 'bcc')">
 					<template #tag="{ option }">
@@ -166,7 +166,7 @@
 				class="subject"
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
-				@input="callSaveDraft(true, getMessageData)">
+				@input="saveDraftDebounced">
 		</div>
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
@@ -205,26 +205,26 @@
 		<ComposerAttachments v-model="attachments"
 			:bus="bus"
 			:upload-size-limit="attachmentSizeLimit"
-			@upload="onAttachmentsUploading" />
+			@upload="$emit('upload-attachment', $event, getMessageData())" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
 				<p class="composer-actions-draft-status">
-					<span v-if="savingDraft === true" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
+					<span v-if="savingDraft" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
-					<span v-else-if="savingDraft === false" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
+					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
 				<ButtonVue v-if="!savingDraft && !canSaveDraft"
 					class="button"
 					type="tertiary"
-					@click="onSave">
+					@click="saveDraft">
 					<template #icon>
 						<Download :size="20" :title="t('mail', 'Save draft')" />
 					</template>
 				</ButtonVue>
-				<ButtonVue v-if="savingDraft === false"
+				<ButtonVue v-if="!savingDraft && draftSaved"
 					class="button"
 					type="tertiary"
-					@click="discardDraft">
+					@click="$emit('discard-draft')">
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
@@ -374,43 +374,6 @@
 			</div>
 		</div>
 	</div>
-	<Loading v-else-if="state === STATES.UPLOADING" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-	<Loading v-else-if="state === STATES.SENDING"
-		:hint="t('mail', 'Sending …')"
-		role="alert"
-		class="sending-hint" />
-	<EmptyContent v-else-if="state === STATES.ERROR"
-		:title="t('mail', 'Error sending your message')"
-		class="centered-content"
-		role="alert">
-		<p v-if="errorText">
-			{{ errorText }}
-		</p>
-		<template #action>
-			<ButtonVue type="tertiary" @click="state = STATES.EDITING">
-				{{ t('mail', 'Go back') }}
-			</ButtonVue>
-			<ButtonVue type="tertiary" @click="onSend">
-				{{ t('mail', 'Retry') }}
-			</ButtonVue>
-		</template>
-	</EmptyContent>
-	<EmptyContent v-else-if="state === STATES.WARNING" :title="t('mail', 'Warning sending your message')" role="alert">
-		<p v-if="errorText">
-			{{ errorText }}
-		</p>
-		<ButtonVue type="tertiary" @click="state = STATES.EDITING">
-			{{ t('mail', 'Go back') }}
-		</ButtonVue>
-		<ButtonVue type="tertiary" @click="onForceSend">
-			{{ t('mail', 'Send anyway') }}
-		</ButtonVue>
-	</EmptyContent>
-	<EmptyContent v-else :title="sendAtVal ? t('mail', 'Message will be sent at') + ' ' + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!')">
-		<template #icon>
-			<IconCheck :size="20" />
-		</template>
-	</EmptyContent>
 </template>
 
 <script>
@@ -421,7 +384,7 @@ import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcEmptyContent as EmptyContent, NcMultiselect as Multiselect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments'
@@ -429,7 +392,6 @@ import Download from 'vue-material-design-icons/Download'
 import IconUpload from 'vue-material-design-icons/Upload'
 import IconFolder from 'vue-material-design-icons/Folder'
 import IconPublic from 'vue-material-design-icons/Link'
-import IconCheck from 'vue-material-design-icons/Check'
 import RecipientListItem from './RecipientListItem'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
@@ -441,17 +403,12 @@ import Vue from 'vue'
 
 import { findRecipient } from '../service/AutocompleteService'
 import { detect, html, plain, toHtml, toPlain } from '../util/text'
-import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
 import { buildReplyBody } from '../ReplyBuilder'
 import MailvelopeEditor from './MailvelopeEditor'
 import { getMailvelope } from '../crypto/mailvelope'
 import { isPgpgMessage } from '../crypto/pgp'
-import { matchError } from '../errors/match'
-import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError'
-import NoDraftsMailboxConfiguredError from '../errors/NoDraftsMailboxConfiguredError'
-import ManyRecipientsError from '../errors/ManyRecipientsError'
 
 import Send from 'vue-material-design-icons/Send'
 import SendClock from 'vue-material-design-icons/SendClock'
@@ -465,17 +422,6 @@ const debouncedSearch = debouncePromise(findRecipient, 500)
 const NO_ALIAS_SET = -1
 
 Vue.use(Autosize)
-
-const STATES = Object.seal({
-	EDITING: 0,
-	UPLOADING: 1,
-	SENDING: 2,
-	ERROR: 3,
-	WARNING: 4,
-	FINISHED: 5,
-	DISCARDING: 6,
-	DISCARDED: 7,
-})
 
 export default {
 	name: 'Composer',
@@ -494,11 +440,8 @@ export default {
 		IconUpload,
 		IconFolder,
 		IconPublic,
-		IconCheck,
-		Loading,
 		Multiselect,
 		TextEditor,
-		EmptyContent,
 		ListItemIcon,
 		RecipientListItem,
 		Send,
@@ -541,18 +484,6 @@ export default {
 			type: String,
 			default: '',
 		},
-		draftId: {
-			type: Number,
-			default: undefined,
-		},
-		draft: {
-			type: Function,
-			required: true,
-		},
-		send: {
-			type: Function,
-			required: true,
-		},
 		inReplyToMessageId: {
 			type: String,
 			default: undefined,
@@ -580,6 +511,26 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		error: {
+			type: String,
+			default: undefined,
+		},
+		canSaveDraft: {
+			type: Boolean,
+			default: false,
+		},
+		uploadingAttachments: {
+			type: Boolean,
+			default: false,
+		},
+		savingDraft: {
+			type: Boolean,
+			default: false,
+		},
+		draftSaved: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -596,14 +547,7 @@ export default {
 			bodyVal: this.editorBody,
 			attachments: this.attachmentsData,
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
-			draftsPromise: Promise.resolve(this.draftId),
-			attachmentsPromise: Promise.resolve(),
-			canSaveDraft: true,
-			savingDraft: undefined,
 			saveDraftDebounced: debounce(10 * 1000, this.saveDraft),
-			state: STATES.EDITING,
-			errorText: undefined,
-			STATES,
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
@@ -889,7 +833,7 @@ export default {
 			}
 			this.bodyVal = html(body).value
 		},
-		getMessageData(id) {
+		getMessageData() {
 			return {
 				// TODO: Rename account to accountId
 				account: this.selectedAlias.id,
@@ -898,7 +842,6 @@ export default {
 				to: this.selectTo,
 				cc: this.selectCc,
 				bcc: this.selectBcc,
-				draftId: id,
 				subject: this.subjectVal,
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
@@ -908,61 +851,22 @@ export default {
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
 			}
 		},
-		saveDraft(data) {
-			this.savingDraft = true
-			this.draftsPromise = this.draftsPromise
-				.then((id) => {
-					const draftData = data(id)
-					if (
-						!id
-						&& !draftData.subject
-						&& !draftData.body
-						&& !draftData.cc
-						&& !draftData.bcc
-						&& !draftData.to
-						&& !draftData.sendAt
-					) {
-						// this might happen after a call to reset()
-						// where the text input gets reset as well
-						// and fires an input event
-						logger.debug('Nothing substantial to save, ignoring draft save')
-						this.savingDraft = false
-						return id
-					}
-					return this.draft(draftData)
-				})
-				.then((uid) => {
-					// It works (again)
-					this.canSaveDraft = true
-
-					return uid
-				})
-				.catch(async (error) => {
-					await matchError(error, {
-						[NoDraftsMailboxConfiguredError.getName()]() {
-							return false
-						},
-						default() {
-							return true
-						},
-					})
-					this.canSaveDraft = false
-				})
-				.then((uid) => {
-					this.savingDraft = false
-					return uid
-				})
-			return this.draftsPromise
-		},
-		callSaveDraft(withDebounce, ...args) {
-			if (withDebounce) {
-				return this.saveDraftDebounced(...args)
-			} else {
-				return this.saveDraft(...args)
+		saveDraft() {
+			const draftData = this.getMessageData()
+			if (draftData.subject === ''
+				&& draftData.body?.value === ''
+				&& draftData.cc.length === 0
+				&& draftData.bcc.length === 0
+				&& draftData.to.length === 0
+				&& draftData.sendAt === undefined) {
+				// this might happen after a call to reset()
+				// where the text input gets reset as well
+				// and fires an input event
+				logger.debug('Nothing substantial to save, ignoring draft save')
+				return
 			}
-		},
-		onSave() {
-			this.callSaveDraft(false, this.getMessageData)
+
+			this.$emit('draft', draftData)
 		},
 		insertSignature() {
 			let trigger
@@ -983,7 +887,7 @@ export default {
 		},
 		onEditorInput(text) {
 			this.bodyVal = text
-			this.callSaveDraft(true, this.getMessageData)
+			this.saveDraftDebounced()
 		},
 		onEditorReady(editor) {
 			this.bodyVal = editor.getData()
@@ -1022,11 +926,11 @@ export default {
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('on-add-local-attachment')
-			this.callSaveDraft(true, this.getMessageData)
+			this.saveDraftDebounced()
 		},
 		onAddCloudAttachment() {
 			this.bus.$emit('on-add-cloud-attachment')
-			this.callSaveDraft(true, this.getMessageData)
+			this.saveDraftDebounced()
 		},
 		onAddCloudAttachmentLink() {
 			this.bus.$emit('on-add-cloud-attachment-link')
@@ -1048,13 +952,6 @@ export default {
 				}
 				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
-		},
-		onAttachmentsUploading(uploaded) {
-			this.attachmentsPromise = this.attachmentsPromise
-				.then(() => uploaded)
-				.then(() => this.callSaveDraft(true, this.getMessageData))
-				.then(() => logger.debug('attachments uploaded'))
-				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
 		async onMailvelopeLoaded(mailvelope) {
 			this.encrypt = isPgpgMessage(this.body)
@@ -1083,7 +980,7 @@ export default {
 			}
 			this.newRecipients.push(res)
 			list.push(res)
-			this.callSaveDraft(true, this.getMessageData)
+			this.saveDraftDebounced()
 		},
 		async onSend(_, force = false) {
 			if (this.encrypt) {
@@ -1091,62 +988,25 @@ export default {
 				await this.$refs.mailvelopeEditor.pull()
 			}
 
-			this.state = STATES.UPLOADING
-
-			await this.attachmentsPromise
-				.then(() => (this.state = STATES.SENDING))
-				.then(() => this.draftsPromise)
-				.then(this.getMessageData)
-				.then((data) => this.send({ ...data, force }))
-				.then(() => logger.info('message sent'))
-				.then(() => (this.state = STATES.FINISHED))
-				.catch(async (error) => {
-					logger.error('could not send message', { error });
-					[this.errorText, this.state] = await matchError(error, {
-						[NoSentMailboxConfiguredError.getName()]() {
-							return [t('mail', 'No sent mailbox configured. Please pick one in the account settings.'), STATES.ERROR]
-						},
-						[ManyRecipientsError.getName()]() {
-							return [t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.'), STATES.WARNING]
-						},
-						default(error) {
-							if (error && error.toString) {
-								return [error.toString(), STATES.ERROR]
-							}
-						},
-					})
-				})
-
-			// Sync sent mailbox when it's currently open
-			const account = this.$store.getters.getAccount(this.selectedAlias.id)
-			if (parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
-				setTimeout(() => {
-					this.$store.dispatch('syncEnvelopes', {
-						mailboxId: account.sentMailboxId,
-						query: '',
-						init: false,
-					})
-				}, 500)
-			}
+			this.$emit('send', {
+				...this.getMessageData(),
+				force,
+			})
 		},
 		async onForceSend() {
 			await this.onSend(null, true)
 		},
 		reset() {
-			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
 			this.selectTo = []
 			this.selectCc = []
 			this.selectBcc = []
 			this.subjectVal = ''
 			this.bodyVal = '<p></p><p></p>'
 			this.attachments = []
-			this.errorText = undefined
-			this.state = STATES.EDITING
 			this.autocompleteRecipients = []
 			this.newRecipients = []
 			this.requestMdn = false
 			this.changeSignature = false
-			this.savingDraft = undefined
 			this.sendAtVal = undefined
 
 			this.setAlias()
@@ -1170,10 +1030,6 @@ export default {
 			}
 
 			return `${alias.name} <${alias.emailAddress}>`
-		},
-		async discardDraft() {
-			const id = await this.draftsPromise
-			this.$emit('discard-draft', id)
 		},
 		/**
 		 * Whether the date is acceptable
@@ -1410,11 +1266,6 @@ export default {
 	}
 }
 
-.warning-box {
-	padding: 5px 12px;
-	border-radius: 0;
-}
-
 // Make composer editor expand
 .message-editor {
 	flex: 1 1 100%;
@@ -1426,7 +1277,6 @@ export default {
 	opacity: 0.5;
 	font-size: small;
 	display: block;
-
 }
 
 .from-label,
@@ -1478,10 +1328,6 @@ export default {
 
 .submit-message.send.primary.icon-confirm-white {
 	color: var(--color-main-background);
-}
-.sending-hint {
-	height: 50px;
-	margin-top: 50px;
 }
 .button {
 	background-color: transparent;
