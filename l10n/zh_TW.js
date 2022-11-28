@@ -256,6 +256,8 @@ OC.L10N.register(
     "Moving thread" : "正在移動討論串",
     "Moving message" : "正在移動訊息",
     "Mail settings" : "電子郵件設定",
+    "Provisioned account is disabled" : "預先設定的帳號已停用",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "請使用密碼登入以啟用此帳號。目前的工作階段正在使用無密碼身份驗證，例如 SSO 或 WebAuthn。",
     "Quota" : "用量",
     "Show only subscribed mailboxes" : "僅顯示已訂閱的信箱",
     "Add mailbox" : "新增信箱",

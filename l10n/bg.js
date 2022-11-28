@@ -256,6 +256,8 @@ OC.L10N.register(
     "Moving thread" : "Нишката се премества",
     "Moving message" : "Съобщението се премества",
     "Mail settings" : "Настройки на пощата",
+    "Provisioned account is disabled" : "Осигуреният профил е деактивиран",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Моля, да се впишете с парола, за да активирате този профил. Текущата сесия използва удостоверяване без парола, напр. SSO или WebAuthn.",
     "Quota" : "Квота",
     "Show only subscribed mailboxes" : "Показване само на абонирани пощенски кутии",
     "Add mailbox" : "Добавяне на пощенски кутии",
