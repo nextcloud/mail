@@ -156,7 +156,10 @@ export default {
 						this.$store.commit('removeMessage', { id: data.draftId })
 
 						// Fetch new draft envelope
-						await this.$store.dispatch('fetchEnvelope', id)
+						await this.$store.dispatch('fetchEnvelope', {
+							accountId: data.account,
+							id,
+						})
 
 						return id
 					}
@@ -179,6 +182,11 @@ export default {
 				to: serializeRecipients ? data.to.map(this.recipientToRfc822).join(', ') : data.to,
 				cc: serializeRecipients ? data.cc.map(this.recipientToRfc822).join(', ') : data.cc,
 				bcc: serializeRecipients ? data.bcc.map(this.recipientToRfc822).join(', ') : data.bcc,
+				attachments: data.attachments,
+				aliasId: data.aliasId,
+				inReplyToMessageId: data.inReplyToMessageId,
+				sendAt: data.sendAt,
+				draftId: data.draftId,
 			}
 		},
 		onAttachmentUploading(done, data) {

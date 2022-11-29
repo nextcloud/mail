@@ -11,7 +11,7 @@ const amendEnvelopeWithIds = curry((accountId, envelope) => ({
 	...envelope,
 }))
 
-export function fetchEnvelope(id) {
+export function fetchEnvelope(accountId, id) {
 	const url = generateUrl('/apps/mail/api/messages/{id}', {
 		id,
 	})
@@ -19,6 +19,7 @@ export function fetchEnvelope(id) {
 	return axios
 		.get(url)
 		.then((resp) => resp.data)
+		.then(amendEnvelopeWithIds(accountId))
 		.catch((error) => {
 			if (error.response && error.response.status === 404) {
 				return undefined
