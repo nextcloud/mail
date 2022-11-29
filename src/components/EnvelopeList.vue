@@ -178,7 +178,6 @@
 			</div>
 		</transition>
 		<transition-group name="list">
-			<IconLoading v-if="refreshing" key="loading-icon" />
 			<Envelope
 				v-for="(env, index) in envelopes"
 				:key="env.databaseId"
@@ -205,7 +204,7 @@
 </template>
 
 <script>
-import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
 import Envelope from './Envelope'
 import IconDelete from 'vue-material-design-icons/Delete'
@@ -234,7 +233,6 @@ export default {
 		ImportantIcon,
 		IconFavorite,
 		IconSelect,
-		IconLoading,
 		MoveModal,
 		OpenInNewIcon,
 		ShareIcon,
