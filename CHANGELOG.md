@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+
+## 2.1.3 – 2022-11-29
+### Fixed
+- Show only existing mailboxes, not all subscribed mailboxes
+- Scrolling for long threads on narrow screens
+- XOAUTH2 auth via SMTP
+
 ## 2.1.2 – 2022-11-22
 ### Fixed
 - Don't collapse if threading has one message only
