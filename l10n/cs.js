@@ -231,7 +231,7 @@ OC.L10N.register(
     "Forward message as attachment" : "Přeposlat zprávu jako přílohu",
     "View source" : "Zobrazit zdroj",
     "Download thread data for debugging" : "Stáhnout si data vlákna pro účely ladění",
-    "Message source" : "Zdrojový kód správy",
+    "Message source" : "Zdrojový kód zprávy",
     "Message body" : "Tělo zprávy",
     "Import into calendar" : "Importovat do kalendáře",
     "Download attachment" : "Stáhnout si přílohu",

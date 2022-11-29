@@ -256,6 +256,8 @@ OC.L10N.register(
     "Moving thread" : "Szál áthelyezése",
     "Moving message" : "Üzenet áthelyezése",
     "Mail settings" : "Levelezési beállítások",
+    "Provisioned account is disabled" : "A felügyelt fiók le van tiltva",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Jelentkezzen be a jelszóval, hogy engedélyezze a fiókot. A jelenlegi munkamenet jelszó nélküli hitelesítést használ, például SSO-t vagy WebAuthnt.",
     "Quota" : "Kvóta",
     "Show only subscribed mailboxes" : "Csak a feliratkozott postafiókok megjelenítése",
     "Add mailbox" : "Postaláda hozzáadása",
