@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.1.4 – 2022-11-30
+### Fixed
+- Show all mailboxes
 
 ## 2.1.3 – 2022-11-29
 ### Fixed
