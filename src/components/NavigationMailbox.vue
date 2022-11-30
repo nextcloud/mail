@@ -21,7 +21,7 @@
 
 <template>
 	<AppNavigationItem
-		v-if="visible"
+		v-if="visible && exists"
 		:id="genId(mailbox)"
 		:key="genId(mailbox)"
 		v-droppable-mailbox="{
@@ -308,10 +308,10 @@ export default {
 	},
 	computed: {
 		visible() {
-			return (
-				this.mailbox.attributes.includes('\\nonexistent')
-				|| this.mailbox.attributes.includes('\\noselect')
-				|| (this.account.showSubscribedOnly === false || (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox)
+			return ((this.account.showSubscribedOnly === false || (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox)
+		},
+		exists() {
+			return !(this.mailbox.attributes.includes('\\nonexistent') || this.mailbox.attributes.includes('\\noselect') )
 		},
 		notInbox() {
 			return this.mailbox.name.toLowerCase() !== 'inbox'
