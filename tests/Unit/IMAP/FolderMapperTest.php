@@ -85,6 +85,29 @@ class FolderMapperTest extends TestCase {
 					],
 					'delimiter' => '.',
 				],
+				[
+					'mailbox' => new Horde_Imap_Client_Mailbox('All'),
+					'attributes' => [
+						'\noselect',
+					],
+					'delimiter' => '.',
+				],
+				[
+					'mailbox' => new Horde_Imap_Client_Mailbox('Nonexistent'),
+					'attributes' => [
+						'\nonexistent',
+					],
+					'delimiter' => '.',
+				],
+				[
+					'mailbox' => new Horde_Imap_Client_Mailbox('Both'),
+					'attributes' => [
+						'\subscribed',
+						'\nonexistent',
+						'\noselect',
+					],
+					'delimiter' => '.',
+				],
 			]);
 		$expected = [
 			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
@@ -133,7 +156,7 @@ class FolderMapperTest extends TestCase {
 		$folders[0]->expects($this->any())
 			->method('getMailbox')
 			->willReturn('folder1');
-		$folders[0]->expects($this->once())
+		$folders[0]->expects($this->exactly(2))
 			->method('getAttributes')
 			->willReturn([]);
 		$client->expects($this->once())
@@ -158,7 +181,7 @@ class FolderMapperTest extends TestCase {
 		$folders[0]->expects($this->any())
 			->method('getMailbox')
 			->willReturn('folder1');
-		$folders[0]->expects($this->once())
+		$folders[0]->expects($this->exactly(2))
 			->method('getAttributes')
 			->willReturn([]);
 		$client->expects($this->once())
@@ -181,9 +204,30 @@ class FolderMapperTest extends TestCase {
 		$folders[0]->expects($this->any())
 			->method('getMailbox')
 			->willReturn('folder1');
-		$folders[0]->expects($this->once())
+		$folders[0]->expects($this->exactly(1))
 			->method('getAttributes')
 			->willReturn(['\\noselect']);
+		$client->expects($this->once())
+			->method('status')
+			->with($this->equalTo([]))
+			->willReturn([]);
+		$folders[0]->expects($this->never())
+			->method('setStatus');
+
+		$this->mapper->getFoldersStatus($folders, $client);
+	}
+
+	public function testGetFoldersStatusNonExistentMailbox() {
+		$folders = [
+			$this->createMock(Folder::class),
+		];
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$folders[0]->expects($this->any())
+			->method('getMailbox')
+			->willReturn('folder1');
+		$folders[0]->expects($this->exactly(2))
+			->method('getAttributes')
+			->willReturn(['\\nonexistent']);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo([]))

@@ -67,6 +67,10 @@ class FolderMapper {
 				return null;
 			}
 
+			if (!empty(array_intersect($mailbox['attributes'], ['\noselect', '\nonexistent']))) {
+				return null;
+			}
+
 			try {
 				$client->status($mailbox["mailbox"]);
 			} catch (Horde_Imap_Client_Exception $e) {
@@ -120,7 +124,7 @@ class FolderMapper {
 		$mailboxes = array_map(function (Folder $folder) {
 			return $folder->getMailbox();
 		}, array_filter($folders, function (Folder $folder) {
-			return !in_array('\noselect', $folder->getAttributes());
+			return !in_array('\noselect', $folder->getAttributes()) && !in_array('\nonexistent', $folder->getAttributes());
 		}));
 
 		$status = $client->status($mailboxes);
