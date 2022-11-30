@@ -25,7 +25,6 @@
 		class="outbox-message"
 		:class="{ selected }"
 		:title="title"
-		:details="details"
 		@click="openModal">
 		<template #icon>
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
@@ -33,7 +32,25 @@
 		<template #subtitle>
 			{{ subjectForSubtitle }}
 		</template>
-		<template slot="actions">
+		<template #indicator>
+			<div class="indicator">
+				<IconAlertCircleOutline v-if="message.failed && !message.pending"
+					:title="details"
+					:size="20"
+					class="failed-icon error" />
+				<NcLoadingIcon v-else-if="message.failed && message.pending"
+					:title="details"
+					:size="20"
+					class="failed-icon pending" />
+				<div v-else-if="counter > 0 && !message?.aborted" class="failed-icon countdown">
+					<svg>
+						<circle r="12" cx="20" cy="20" />
+					</svg>
+					{{ counter }}
+				</div>
+			</div>
+		</template>
+		<template v-if="!message.pending" slot="actions">
 			<ActionButton
 				:close-after-click="true"
 				@click="sendMessageNow">
@@ -60,6 +77,8 @@
 import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
 import Avatar from './Avatar'
 import IconDelete from 'vue-material-design-icons/Delete'
+import IconAlertCircleOutline from 'vue-material-design-icons/AlertCircleOutline'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
 import moment from '@nextcloud/moment'
@@ -77,6 +96,8 @@ export default {
 		Avatar,
 		ActionButton,
 		IconDelete,
+		IconAlertCircleOutline,
+		NcLoadingIcon,
 		Send,
 	},
 	mixins: [
@@ -87,6 +108,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			counter: 0,
+		}
 	},
 	computed: {
 		selected() {
@@ -120,6 +146,24 @@ export default {
 			return this.message.subject || this.t('mail', 'No subject')
 		},
 	},
+	watch: {
+		counter() {
+			if (this.counter > 0 && !this.message?.aborted) {
+				setTimeout(() => {
+					this.counter--
+				}, 1000)
+			} else {
+				this.$store.commit('outbox/updateMessage', {
+					message: {
+						...this.message,
+						failed: true,
+						pending: false,
+					},
+				})
+				this.counter = 0
+			}
+		},
+	},
 	methods: {
 		async deleteMessage() {
 			try {
@@ -139,13 +183,23 @@ export default {
 		async sendMessageNow() {
 			const message = {
 				...this.message,
+				pending: true,
 				failed: false,
 				sendAt: (new Date().getTime() + UNDO_DELAY) / 1000,
 			}
+			this.$store.commit('outbox/updateMessage', { message })
+			this.counter = UNDO_DELAY / 1000
 			await this.$store.dispatch('outbox/updateMessage', { message, id: message.id })
-			await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id })
+			await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id }).catch(() => {
+				message.pending = false
+				message.failed = true
+				this.$store.commit('outbox/updateMessage', { message })
+			})
 		},
 		async openModal() {
+			if (this.message.pending) {
+				return
+			}
 			await this.$store.dispatch('showMessageComposer', {
 				type: 'outbox',
 				data: {
@@ -161,9 +215,34 @@ export default {
 <style lang="scss" scoped>
 .outbox-message {
 	list-style: none;
+
+	.indicator {
+		padding: 0 8px;
+	}
+
 	&.active {
 		background-color: var(--color-background-dark);
 		border-radius: 16px;
+	}
+
+	.failed-icon {
+		position: absolute;
+		top:0;
+		bottom:0;
+		right: 20px;
+		display: flex;
+		align-items: center;
+
+		&.error::v-deep svg {
+			fill: var(--color-error);
+		}
+
+		&.pending {
+			animation:spin 0.4s linear infinite;
+			::v-deep svg {
+				color: var(--color-primary-element-light)
+			}
+		}
 	}
 
 	.account-color {
@@ -172,6 +251,50 @@ export default {
 		width: 2px;
 		height: 69px;
 		z-index: 1;
+	}
+
+	.countdown {
+		width: 20px;
+		justify-content: center;
+		font-weight: bold;
+		font-size: 12px;
+		color: var(--color-primary-element);
+
+		svg {
+			position: absolute;
+			top: 12px;
+			right: -10px;
+			width: 40px;
+			height: 40px;
+			transform: rotateY(-180deg) rotateZ(-90deg);
+		}
+		svg circle {
+			stroke-dasharray: 80px;
+			stroke-dashoffset: 0;
+			stroke-linecap: round;
+			stroke-width: 2px;
+			stroke: var(--color-primary-element-light);
+			fill: none;
+			animation: countdown 10s linear infinite forwards;
+		}
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg)
+		}
+		100% {
+			transform: rotate(360deg)
+		}
+	}
+
+	@keyframes countdown {
+		from {
+			stroke-dashoffset: 0px;
+		}
+		to {
+			stroke-dashoffset: 80px;
+		}
 	}
 }
 </style>

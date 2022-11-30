@@ -33,6 +33,7 @@ export default {
 		const { messages } = await OutboxService.fetchMessages()
 
 		for (const message of messages) {
+			message.pending = false
 			if (existingMessageIds.indexOf(message.id) === -1) {
 				commit('addMessage', { message })
 			} else {
@@ -80,7 +81,7 @@ export default {
 			...message,
 			sentAt: undefined,
 		}, message.id)
-		commit('updateMessage', { message: updatedMessage })
+		commit('updateMessage', { message: Object.assign({ aborted: true }, updatedMessage) })
 		return updatedMessage
 	},
 

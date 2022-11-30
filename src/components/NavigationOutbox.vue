@@ -27,7 +27,10 @@
 		:title="t('mail', 'Outbox')"
 		:to="to">
 		<template #icon>
-			<IconOutbox
+			<NcLoadingIcon v-if="sending"
+				class="outbox-sending-icon"
+				:size="20" />
+			<IconOutbox v-else
 				class="outbox-opacity-icon"
 				:size="20" />
 		</template>
@@ -42,6 +45,10 @@
 <script>
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+
+const RETRY_COUNT = 5
+const RETRY_TIMEOUT = 10000
 
 export default {
 	name: 'NavigationOutbox',
@@ -49,6 +56,15 @@ export default {
 		AppNavigationItem,
 		CounterBubble,
 		IconOutbox,
+		NcLoadingIcon,
+	},
+	data() {
+		return {
+			retry: true,
+			sending: false,
+			attempts: 0,
+			failedMessaged: [],
+		}
 	},
 	computed: {
 		count() {
@@ -60,11 +76,55 @@ export default {
 			}
 		},
 	},
+	watch: {
+		attempts() {
+			if (this.attempts <= RETRY_COUNT && this.retry) {
+				setTimeout(() => {
+					this.retrySendMessages()
+				}, RETRY_TIMEOUT)
+
+			} else {
+
+				this.retry = false
+				this.attempts = 0
+			}
+		},
+	},
+	created() {
+		this.failedMessaged = this.$store.getters['outbox/getAllMessages'].filter(message => {
+			return message.failed
+		})
+
+		setTimeout(() => {
+			this.retrySendMessages()
+		}, RETRY_TIMEOUT)
+	},
+	methods: {
+		retrySendMessages() {
+			const promises = []
+			if (this.sending) {
+				return
+			}
+			this.sending = true
+			this.attempts++
+			this.failedMessaged.map(async (message) => {
+				if (!message.pending) {
+					promises.push(this.$store.dispatch('outbox/sendMessage', { id: message.id }).catch(() => {
+						// TODO write pending state
+					}))
+				}
+				return message
+			})
+			Promise.all(promises).then(() => {
+				this.sending = false
+			})
+		},
+	},
 }
 </script>
 
 <style lang="scss" scoped>
-:deep(.counter-bubble__counter) {
+::v-deep(.counter-bubble__counter) {
 	margin-right: 43px;
 }
 .outbox-opacity-icon {
