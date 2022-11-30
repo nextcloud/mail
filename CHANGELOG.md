@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.4 - 2022-11-30
+### Fixed
+- Saving provisioning and anti-spam settings
+- Undefined errorMessage in ThreadEnvelope
+
 ## 1.14.3 - 2022-11-14
 ### Changed
 - Improve the size of padding bottom on threads
