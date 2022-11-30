@@ -309,9 +309,9 @@ export default {
 	computed: {
 		visible() {
 			return (
-				(this.account.showSubscribedOnly === false
-				|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox
-			)
+				this.mailbox.attributes.includes('\\nonexistent')
+				|| this.mailbox.attributes.includes('\\noselect')
+				|| (this.account.showSubscribedOnly === false || (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox)
 		},
 		notInbox() {
 			return this.mailbox.name.toLowerCase() !== 'inbox'
