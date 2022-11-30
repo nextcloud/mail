@@ -47,7 +47,7 @@ class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_SUBSCRIBED_EXISTS),
+			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL_SUBSCRIBED),
 				$this->equalTo([
 					'delimiter' => true,
 					'attributes' => true,
@@ -66,7 +66,7 @@ class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_SUBSCRIBED_EXISTS),
+			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL_SUBSCRIBED),
 				$this->equalTo([
 					'delimiter' => true,
 					'attributes' => true,
