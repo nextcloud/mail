@@ -526,6 +526,9 @@ export default {
 .search-modal .modal-container {
 	min-height: auto;
 	overflow: visible !important;
+	position: relative;
+	display: flex !important;
+	flex-direction: column;
 
 	.modal-title {
 		padding: 16px 30px 0 30px;
@@ -536,6 +539,8 @@ export default {
 
 	.modal-inner--content {
 		padding: 16px 0 36px 0;
+		overflow-y: scroll;
+		width: calc(100% - 2px);
 
 		.marked-as .modal-inner-inline {
 			display: inline-block;
@@ -584,7 +589,7 @@ export default {
 	flex-wrap: wrap;
 	justify-content: space-between;
 	margin-bottom: 15px;
-	padding: 0 30px;
+	padding: 0 12px 0 30px;
 
 	.checkbox-radio-switch {
 		margin: 0 8px 0 0;
