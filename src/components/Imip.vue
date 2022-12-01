@@ -140,6 +140,7 @@ import { uidToHexColor } from '../util/calendarColor'
 import { randomId } from '../util/randomId'
 import pLimit from 'p-limit'
 import { flatten } from 'ramda'
+import { showError } from '@nextcloud/dialogs'
 
 // iMIP methods
 const REQUEST = 'REQUEST'
@@ -453,7 +454,9 @@ export default {
 				} else {
 					await calendar.createVObject(vCalendar.toICS())
 				}
+				this.showMoreOptions = false
 			} catch (error) {
+				showError(this.t('mail', 'Failed to save your participation status'))
 				logger.error('Failed to save event to calendar', {
 					error,
 					attendee,
@@ -462,14 +465,12 @@ export default {
 					vCalendar,
 					existingEvent: this.existingEvent,
 				})
-				return
 			} finally {
 				this.loading = false
 			}
 
-			this.showMoreOptions = false
-
-			// Refetch the event to update the shown status message.
+			// Refetch the event to update the shown status message or reset the event in the case
+			// of an error.
 			this.existingEventFetched = false
 			await this.fetchExistingEvent(vEvent.uid)
 		},
