@@ -51,6 +51,7 @@ describe('Vuex store actions', () => {
 				getMailboxes: jest.fn(),
 				getEnvelope: jest.fn(),
 				getEnvelopes: jest.fn(),
+				getPreference: jest.fn(),
 			},
 		}
 	})

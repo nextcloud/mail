@@ -82,7 +82,10 @@ store.commit('savePreference', {
 	key: 'tag-classified-messages',
 	value: getPreferenceFromPage('tag-classified-messages'),
 })
-
+store.commit('savePreference', {
+	key: 'password-is-unavailable',
+	value: loadState('mail', 'password-is-unavailable', false),
+})
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
 const tags = loadState('mail', 'tags', [])

@@ -595,10 +595,14 @@ export default {
 
 		const mailbox = getters.getMailbox(mailboxId)
 
+		// Skip superfluous requests if using passwordless authentication. They will fail anyway.
+		const passwordIsUnavailable = getters.getPreference('password-is-unavailable', false)
+		const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
+
 		if (mailbox.isUnified) {
 			return Promise.all(
 				getters.accounts
-					.filter((account) => !account.isUnified)
+					.filter((account) => !account.isUnified && !isDisabled(account))
 					.map((account) =>
 						Promise.all(
 							getters
@@ -619,7 +623,7 @@ export default {
 				getPrioritySearchQueries().map((query) => {
 					return Promise.all(
 						getters.accounts
-							.filter((account) => !account.isUnified)
+							.filter((account) => !account.isUnified && !isDisabled(account))
 							.map((account) =>
 								Promise.all(
 									getters
@@ -699,9 +703,13 @@ export default {
 			})
 	},
 	async syncInboxes({ getters, dispatch }) {
+		// Skip superfluous requests if using passwordless authentication. They will fail anyway.
+		const passwordIsUnavailable = getters.getPreference('password-is-unavailable', false)
+		const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
+
 		const results = await Promise.all(
 			getters.accounts
-				.filter((a) => !a.isUnified)
+				.filter((a) => !a.isUnified && !isDisabled(a))
 				.map((account) => {
 					return Promise.all(
 						getters.getMailboxes(account.id).map(async (mailbox) => {

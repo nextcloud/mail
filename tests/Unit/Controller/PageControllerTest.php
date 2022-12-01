@@ -44,6 +44,8 @@ use OCP\IUser;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 
 class PageControllerTest extends TestCase {
 
@@ -109,6 +111,7 @@ class PageControllerTest extends TestCase {
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->outboxService = $this->createMock(OutboxService::class);
+		$this->credentialStore = $this->createMock(ICredentialStore::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -124,7 +127,8 @@ class PageControllerTest extends TestCase {
 			$this->tagMapper,
 			$this->initialState,
 			$this->logger,
-			$this->outboxService
+			$this->outboxService,
+			$this->credentialStore
 		);
 	}
 
@@ -230,13 +234,21 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(8))
+		$loginCredentials = $this->createMock(ICredentials::class);
+		$loginCredentials->expects($this->once())
+			->method('getPassword')
+			->willReturn(null);
+		$this->credentialStore->expects($this->once())
+			->method('getLoginCredentials')
+			->willReturn($loginCredentials);
+		$this->initialState->expects($this->exactly(9))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],
+				['password-is-unavailable', true],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
