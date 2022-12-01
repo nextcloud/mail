@@ -39,6 +39,9 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Authentication\Exceptions\CredentialsUnavailableException;
+use OCP\Authentication\Exceptions\PasswordUnavailableException;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
@@ -63,6 +66,7 @@ class PageController extends Controller {
 	private LoggerInterface $logger;
 	private OutboxService $outboxService;
 	private IEventDispatcher $dispatcher;
+	private ICredentialstore $credentialStore;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -78,7 +82,8 @@ class PageController extends Controller {
 								IInitialState $initialStateService,
 								LoggerInterface $logger,
 								OutboxService $outboxService,
-								IEventDispatcher $dispatcher) {
+								IEventDispatcher $dispatcher,
+								ICredentialStore $credentialStore) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -94,6 +99,7 @@ class PageController extends Controller {
 		$this->logger = $logger;
 		$this->outboxService = $outboxService;
 		$this->dispatcher = $dispatcher;
+		$this->credentialStore = $credentialStore;
 	}
 
 	/**
@@ -141,6 +147,17 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'tags',
 			$this->tagMapper->getAllTagsForUser($this->currentUserId)
+		);
+
+		try {
+			$password = $this->credentialStore->getLoginCredentials()->getPassword();
+			$passwordIsUnavailable = $password === null || $password === '';
+		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
+			$passwordIsUnavailable = true;
+		}
+		$this->initialStateService->provideInitialState(
+			'password-is-unavailable',
+			$passwordIsUnavailable,
 		);
 
 		$user = $this->userSession->getUser();
