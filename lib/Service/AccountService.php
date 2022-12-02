@@ -152,6 +152,10 @@ class AccountService {
 		return $newAccount;
 	}
 
+	public function update(MailAccount $account): MailAccount {
+		return $this->mapper->update($account);
+	}
+
 	/**
 	 * @param int $id
 	 * @param string $uid

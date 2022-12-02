@@ -29,6 +29,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -53,8 +54,14 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
-		$this->factory = new IMAPClientFactory($this->crypto, $this->config, $this->cacheFactory);
+		$this->factory = new IMAPClientFactory(
+			$this->crypto,
+			$this->config,
+			$this->cacheFactory,
+			$this->eventDispatcher,
+		);
 	}
 
 	/**

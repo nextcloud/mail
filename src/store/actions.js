@@ -152,15 +152,17 @@ export default {
 			return account
 		})
 	},
-	async createAccount({ commit }, config) {
-		return handleHttpAuthErrors(commit, async () => {
-			const account = await createAccount(config)
-			logger.debug(`account ${account.id} created, fetching mailboxes …`, account)
-			account.mailboxes = await fetchAllMailboxes(account.id)
-			commit('addAccount', account)
-			logger.info("new account's mailboxes fetched", { account, config })
-			return account
-		})
+	async startAccountSetup({ commit }, config) {
+		const account = await createAccount(config)
+		logger.debug(`account ${account.id} created`, { account })
+		return account
+	},
+	async finishAccountSetup({ commit }, { account }) {
+		logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
+		account.mailboxes = await fetchAllMailboxes(account.id)
+		commit('addAccount', account)
+		logger.debug('New account mailboxes fetched', { account, mailboxes: account.mailboxes })
+		return account
 	},
 	async updateAccount({ commit }, config) {
 		return handleHttpAuthErrors(commit, async () => {

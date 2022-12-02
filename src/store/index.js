@@ -97,6 +97,7 @@ export default new Store({
 				tagList: [],
 				isScheduledSendingDisabled: false,
 				currentUserPrincipal: undefined,
+				googleOauthUrl: null,
 				sieveScript: {},
 				calendars: [],
 			},

@@ -34,6 +34,7 @@ use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\ImportantMailWidget;
 use OCA\Mail\Dashboard\UnreadMailWidget;
+use OCA\Mail\Events\BeforeImapClientCreated;
 use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
@@ -50,6 +51,7 @@ use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Listener\AntiAbuseListener;
 use OCA\Mail\Listener\HamReportListener;
+use OCA\Mail\Listener\OauthTokenRefreshListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
@@ -104,6 +106,7 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(ITrustedSenderService::class, TrustedSenderService::class);
 		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceService::class);
 
+		$context->registerEventListener(BeforeImapClientCreated::class, OauthTokenRefreshListener::class);
 		$context->registerEventListener(BeforeMessageSentEvent::class, AntiAbuseListener::class);
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
 		$context->registerEventListener(DraftMessageCreatedEvent::class, DeleteDraftListener::class);
