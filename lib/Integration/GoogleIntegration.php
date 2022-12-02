@@ -129,8 +129,7 @@ class GoogleIntegration {
 		$encryptedRefreshToken = $this->crypto->encrypt($data['refresh_token']);
 		$account->getMailAccount()->setOauthRefreshToken($encryptedRefreshToken);
 		$encryptedAccessToken = $this->crypto->encrypt($data['access_token']);
-		$account->getMailAccount()->setInboundPassword($encryptedAccessToken);
-		$account->getMailAccount()->setOutboundPassword($encryptedAccessToken);
+		$account->getMailAccount()->setOauthAccessToken($encryptedAccessToken);
 		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
 		return $account;
 	}
