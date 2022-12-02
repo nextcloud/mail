@@ -267,7 +267,7 @@ import {
 	queryMx,
 	testConnectivity,
 } from '../service/AutoConfigService'
-import { CONSENT_ABORTED, getUserConsent } from '../integration/google'
+import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth'
 
 export default {
 	name: 'AccountForm',
@@ -329,6 +329,7 @@ export default {
 	computed: {
 		...mapGetters([
 			'googleOauthUrl',
+			'microsoftOauthUrl',
 		]),
 
 		settingsPage() {
@@ -369,12 +370,19 @@ export default {
 				|| this.manualConfig.smtpHost === 'smtp.gmail.com'
 		},
 
+		isMicrosoftAccount() {
+			return this.manualConfig.imapHost === 'outlook.office365.com'
+				|| this.manualConfig.smtpHost === 'outlook.office365.com'
+		},
+
 		hasPasswordAlternatives() {
 			return !!this.googleOauthUrl
+				|| !!this.microsoftOauthUrl
 		},
 
 		useOauth() {
-			return this.isGoogleAccount && this.googleOauthUrl
+			return (this.isGoogleAccount && this.googleOauthUrl)
+				|| (this.isMicrosoftAccount && this.microsoftOauthUrl)
 		},
 
 		submitButtonText() {
@@ -547,11 +555,20 @@ export default {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
 						this.feedback = t('mail', 'Account created. Please follow the popup instructions to link your Google account')
 						try {
-							await getUserConsent(
-								this.googleOauthUrl
-									.replace('_accountId_', account.id)
-									.replace('_email_', encodeURIComponent(account.emailAddress))
-							)
+							if (this.isGoogleAccount) {
+								await getUserConsent(
+									this.googleOauthUrl
+										.replace('_accountId_', account.id)
+										.replace('_email_', encodeURIComponent(account.emailAddress))
+								)
+							} else {
+								// Microsoft
+								await getUserConsent(
+									this.microsoftOauthUrl
+										.replace('_accountId_', account.id)
+										.replace('_email_', encodeURIComponent(account.emailAddress))
+								)
+							}
 						} catch (e) {
 							// Clean up the temporary account before we continue
 							this.$store.dispatch('deleteAccount', account)

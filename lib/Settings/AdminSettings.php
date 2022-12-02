@@ -27,6 +27,7 @@ namespace OCA\Mail\Settings;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Integration\GoogleIntegration;
+use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -46,17 +47,20 @@ class AdminSettings implements ISettings {
 	private $antiSpamService;
 
 	private GoogleIntegration $googleIntegration;
+	private MicrosoftIntegration $microsoftIntegration;
 	private IConfig $config;
 
 	public function __construct(IInitialStateService $initialStateService,
 								ProvisioningManager $provisioningManager,
 								AntiSpamService $antiSpamService,
 								GoogleIntegration $googleIntegration,
+								MicrosoftIntegration $microsoftIntegration,
 								IConfig $config) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
 		$this->googleIntegration = $googleIntegration;
+		$this->microsoftIntegration = $microsoftIntegration;
 		$this->config = $config;
 	}
 
@@ -98,6 +102,21 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'google_oauth_redirect_url',
 			$this->googleIntegration->getRedirectUrl(),
+		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'microsoft_oauth_tenant_id',
+			$this->microsoftIntegration->getTenantId(),
+		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'microsoft_oauth_client_id',
+			$this->microsoftIntegration->getClientId(),
+		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'microsoft_oauth_redirect_url',
+			$this->microsoftIntegration->getRedirectUrl(),
 		);
 
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');

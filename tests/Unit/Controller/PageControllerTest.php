@@ -224,15 +224,19 @@ class PageControllerTest extends TestCase {
 				['debug', false, true],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(4))
+		$this->config->expects($this->exactly(6))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
 				['mail', 'google_oauth_client_id' ],
+				['mail', 'microsoft_oauth_client_id' ],
+				['mail', 'microsoft_oauth_tenant_id' ],
 				['core', 'backgroundjobs_mode', 'ajax' ],
 				['mail', 'allow_new_mail_accounts', 'yes']
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
+				$this->returnValue(''),
+				$this->returnValue(''),
 				$this->returnValue(''),
 				$this->returnValue('cron'),
 				$this->returnValue('yes')

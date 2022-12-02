@@ -109,6 +109,7 @@ export const getters = {
 	},
 	isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
 	googleOauthUrl: (state) => state.googleOauthUrl,
+	microsoftOauthUrl: (state) => state.microsoftOauthUrl,
 	getActiveSieveScript: (state) => (accountId) => state.sieveScript[accountId],
 	getCurrentUserPrincipal: (state) => state.currentUserPrincipal,
 	getCurrentUserPrincipalEmail: (state) => state.currentUserPrincipal?.email,
