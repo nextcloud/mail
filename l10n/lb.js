@@ -37,6 +37,7 @@ OC.L10N.register(
     "Custom" : "Individualiséier",
     "Remove" : "Läschen",
     "Reset" : "Zeréck setzen",
+    "Client ID" : "Client ID",
     "General" : "Allgemeng",
     "User" : "User",
     "Host" : "Host",

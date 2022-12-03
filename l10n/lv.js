@@ -89,6 +89,7 @@ OC.L10N.register(
     "Tag already exists" : "Birka jau pastāv",
     "Remove" : "Noņemt",
     "Reset" : "Atiestatīt",
+    "Client ID" : "Klienta ID",
     "General" : "Vispārīgs",
     "User" : "Lietotājs",
     "Host" : "Resursdators",

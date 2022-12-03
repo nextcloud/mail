@@ -32,6 +32,7 @@ OC.L10N.register(
     "Disabled" : "Deaktivert",
     "Set" : "Sett",
     "Remove" : "Fjern",
+    "Client ID" : "Klient-ID",
     "General" : "Generelt",
     "User" : "Bruker",
     "Host" : "Tenar",

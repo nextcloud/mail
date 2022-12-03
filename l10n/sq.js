@@ -84,6 +84,8 @@ OC.L10N.register(
     "Mark as read" : "Shënoje si të lexuar",
     "Remove" : "Hiq",
     "Reset" : "Rivendos",
+    "Client ID" : "ID klienti",
+    "Client secret" : "E fshehtë klienti",
     "General" : "Të përgjithshme",
     "User" : "Përdorues",
     "Host" : "Strehë",

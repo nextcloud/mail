@@ -40,7 +40,6 @@ OC.L10N.register(
     "Connecting" : "Συνδέεται",
     "Save" : "Αποθήκευση",
     "Connect" : "Σύνδεση",
-    "Account created" : "Ο λογαριασμός δημιουργήθηκε",
     "IMAP server is not reachable" : "Ο διακομιστής IMAP δεν είναι προσβάσιμος",
     "SMTP server is not reachable" : "Ο διακομιστής SMTP δεν είναι προσβάσιμος",
     "SMTP username or password is wrong" : "Το όνομα χρήστη ή ο κωδικός πρόσβασης SMTP είναι λάθος",

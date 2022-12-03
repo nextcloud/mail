@@ -145,6 +145,7 @@ OC.L10N.register(
     "Mail app" : "برنامه پست الکترونیکی",
     "The mail app allows users to read mails on their IMAP accounts." : "برنامه نامه الکترونیکی به کاربران این امکان را می دهد تا نامه ها را در حساب های IMAP خود بخوانند.",
     "Reset" : "بازنشاندن",
+    "Client secret" : "رمز مشتری",
     "Email: {email}" : "ایمیل: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} on {host}: {port} (رمزگذاری {ssl))",
     "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP: {user} on {host}: {port} (رمزگذاری s ssl))",

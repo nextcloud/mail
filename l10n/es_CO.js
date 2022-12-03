@@ -81,6 +81,7 @@ OC.L10N.register(
     "Add tag" : "Agregar etiqueta",
     "Remove" : "Eliminar",
     "Reset" : "Reiniciar",
+    "Client secret" : "Secreto del cliente",
     "General" : "General",
     "User" : "Ususario",
     "Host" : "Servidor",

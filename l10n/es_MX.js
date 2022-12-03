@@ -85,6 +85,7 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Remove" : "Eliminar",
     "Reset" : "Reiniciar",
+    "Client secret" : "Secreto del cliente",
     "General" : "General",
     "User" : "Usuario",
     "Host" : "Servidor",
