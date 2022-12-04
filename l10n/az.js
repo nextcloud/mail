@@ -37,6 +37,8 @@ OC.L10N.register(
     "Enabled" : "İşə salınıb",
     "Remove" : "Sil",
     "Reset" : "Sıfırla",
+    "Client ID" : "Müştəri İD-s",
+    "Client secret" : "Müxtəri sirri",
     "General" : "Ümumi",
     "User" : "User",
     "Host" : "Şəbəkədə ünvan",

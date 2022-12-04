@@ -405,6 +405,7 @@ OC.L10N.register(
     "Error saving anti spam email addresses" : "Errorea spamaren aurkako helbide elektronikoak gordetzean",
     "Successfully deleted anti spam reporting email" : "Spamaren aurkako jakinarazpen mezu elektronikoa behar bezala ezabatu da",
     "Error deleting anti spam reporting email" : "Errorea spamaren aurkako jakinarazpen mezu elektronikoa ezabatzean",
+    "Client ID" : "Bezeroaren IDa",
     "Client secret" : "Bezeroaren sekretua",
     "Unlink" : "Deskonektatu",
     "Domain Match: {provisioningDomain}" : "Bat datorren domeinua: {provisioningDomain}",

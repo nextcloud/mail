@@ -252,6 +252,7 @@
     "The mail app allows users to read mails on their IMAP accounts." : ".A apli de correo permite aos usuarios ler correos electrónicos nas súas contas IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Aquí pode atopar axustes para toda a instancia. Os axustes específicos do usuario atópanse na propia aplicación (canto inferior esquerdo).",
     "Reset" : "Restabelecer",
+    "Client ID" : "ID do cliente",
     "Client secret" : "Segredo do cliente",
     "Email: {email}" : "Correo-e: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} en {host}:{port} (cifrado {ssl})",

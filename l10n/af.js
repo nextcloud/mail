@@ -58,6 +58,7 @@ OC.L10N.register(
     "Set" : "Stel in",
     "Remove" : "Verwyder",
     "Reset" : "Herstel",
+    "Client ID" : "Kliënt-ID",
     "General" : "Algemeen",
     "User" : "Gebruiker",
     "Host" : "Gasheer",

@@ -70,6 +70,7 @@ OC.L10N.register(
     "Tag already exists" : "Silt on juba olemas",
     "Remove" : "Eemalda",
     "Reset" : "Lähtesta",
+    "Client ID" : "Kliendi ID",
     "Client secret" : "Kliendi salasõna",
     "General" : "Üldine",
     "User" : "Kasutaja",

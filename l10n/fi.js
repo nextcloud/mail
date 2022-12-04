@@ -324,6 +324,7 @@ OC.L10N.register(
     "Anti Spam" : "Roskapostin esto",
     "The original message will be attached as a \"message/rfc822\" attachment." : "Alkuperäinen viesti asetetaan \"message/rfc822\"-liitteeksi.",
     "Reset" : "Palauta",
+    "Client ID" : "Asiakas-ID",
     "Client secret" : "Asiakassalasana",
     "Email: {email}" : "Sähköposti: {email}",
     "General" : "Yleiset",

@@ -38,6 +38,7 @@ OC.L10N.register(
     "Enabled" : "কার্যকর",
     "Remove" : "অপসারণ",
     "Reset" : "পূণঃনির্ধানণ",
+    "Client ID" : "ক্লায়েন্ট পরিচিতি",
     "General" : "সাধারণ",
     "User" : "User",
     "Host" : "হোস্ট",

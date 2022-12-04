@@ -69,6 +69,8 @@ OC.L10N.register(
     "Custom" : "Personalizáu",
     "Tag already exists" : "Yá esiste la etiqueta",
     "Remove" : "Desaniciar",
+    "Client ID" : "ID de veceru",
+    "Client secret" : "Veceru secretu",
     "General" : "Xeneral",
     "User" : "Usuariu",
     "Host" : "Agospiu",
