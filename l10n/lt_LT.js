@@ -11,6 +11,7 @@ OC.L10N.register(
     "Mails" : "El. laiškai",
     "Mail" : "Paštas",
     "💌 A mail app for Nextcloud" : "💌 Pašto programėlė, skirta Nextcloud",
+    "Your session has expired. The page will be reloaded." : "Jūsų seansas nebegalioja. Puslapis bus įkeltas iš naujo.",
     "Drafts are saved in:" : "Juodraščiai yra įrašomi į:",
     "Sent messages are saved in:" : "Išsiųsti laiškai yra įrašomi į:",
     "Deleted messages are moved in:" : "Ištrinti laiškai yra perkeliami į:",
