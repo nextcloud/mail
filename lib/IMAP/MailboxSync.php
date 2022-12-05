@@ -205,6 +205,7 @@ class MailboxSync {
 		$mailbox->setUnseen($folder->getStatus()['unseen'] ?? 0);
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
+		$mailbox->setMyAcls($folder->getMyAcls());
 		$this->mailboxMapper->update($mailbox);
 	}
 
@@ -218,6 +219,7 @@ class MailboxSync {
 		$mailbox->setUnseen($folder->getStatus()['unseen'] ?? 0);
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
+		$mailbox->setMyAcls($folder->getMyAcls());
 		$this->mailboxMapper->insert($mailbox);
 	}
 }
