@@ -41,7 +41,7 @@
 	opacity: .3;
 }
 [droppable-mailbox="dragover"] {
-	a {
+	> div > a {
 		&:before {
 			content: '';
 			position: absolute;
