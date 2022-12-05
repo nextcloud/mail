@@ -1,6 +1,48 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.0 - 2022-12-05
+### Added
+- Google OAuth support
+- Skeleton for thread
+- Make HTML body loading a single step experience
+- Refactor HTML body element ID to class
+- Give thread messages a minimum height
+- Show thread subject while loading thread messages
+- Local Draft Handling Backend
+- Search box for outbox and PI
+- Support for email field
+### Fixed
+- Advanced search does not scroll
+- Dark theme loading envelops and thread colour
+- Scrolling for long threads on narrow screens
+- Replace emptycontent div with EmptyContent vue component
+- Drop right border from navigation header
+- Saving provisioning and anti-spam settings
+- Don't decode content for preview twice
+- Broken encoding for outgoing messages
+- Add empty content for loading thread
+- Improve the size of padding bottom
+- Provisioning config not saving
+- Sending PGP messages as HTML
+- Copy to clipboard
+- Envelope and message previews showing PGP ciphertext
+- Double scrollbar in thread view
+- Alias provisioning: Skip alias when identical to account email
+- Improve the dropdown multiselect menu of default folders
+- XOAUTH2 auth via SMTP
+- Disable provisioned accounts if using passwordless authentication
+- Dragover indicator being inherited to children
+
+### Changed
+- Remove loading icons when refreshing
+- Migrate Vuex actions from promises to async-await
+- Update app screenshot to match Nextcloud 25 design
+- Don't collapse if threading has one message only
+- Increase the clicable area on envelope thread
+
+
+
 ## 2.1.3 – 2022-11-29
 ### Fixed
 - Show only existing mailboxes, not all subscribed mailboxes
