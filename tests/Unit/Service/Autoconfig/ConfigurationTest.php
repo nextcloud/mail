@@ -31,5 +31,7 @@ use OCA\Mail\Service\AutoConfig\Configuration;
 class ConfigurationTest extends TestCase {
 	public function testEmptyConfig(): void {
 		$cfg = new Configuration(null, null);
+
+		$this->addToAssertionCount(1);
 	}
 }
