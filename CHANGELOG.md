@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.5 – 2022-12-06
+### Fixed
+- Provisioned accounts with passwordless authentication
+- Mailbox cache sync scope of current mailbox
+
 ## 1.14.4 - 2022-11-30
 ### Fixed
 - Saving provisioning and anti-spam settings
