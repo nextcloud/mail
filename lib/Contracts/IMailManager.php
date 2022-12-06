@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -23,6 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
+use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
@@ -83,6 +85,7 @@ interface IMailManager {
 	public function getMessage(string $uid, int $id): Message;
 
 	/**
+	 * @param Horde_Imap_Client_Socket $client
 	 * @param Account $account
 	 * @param string $mailbox
 	 * @param int $uid
@@ -91,9 +94,13 @@ interface IMailManager {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getSource(Account $account, string $mailbox, int $uid): ?string;
+	public function getSource(Horde_Imap_Client_Socket $client,
+							  Account $account,
+							  string $mailbox,
+							  int $uid): ?string;
 
 	/**
+	 * @param Horde_Imap_Client_Socket $client
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param int $uid
@@ -103,7 +110,8 @@ interface IMailManager {
 	 *
 	 * @throws ServiceException
 	 */
-	public function getImapMessage(Account $account,
+	public function getImapMessage(Horde_Imap_Client_Socket $client,
+								   Account $account,
 								   Mailbox $mailbox,
 								   int $uid,
 								   bool $loadBody = false): IMAPMessage;
