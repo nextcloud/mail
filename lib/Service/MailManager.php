@@ -156,9 +156,8 @@ class MailManager implements IMailManager {
 			$this->folderMapper->getFoldersStatus([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"Could not get mailbox status: " .
-				$e->getMessage(),
-				(int)$e->getCode(),
+				"Could not get mailbox status: " . $e->getMessage(),
+				$e->getCode(),
 				$e
 			);
 		} finally {
@@ -186,7 +185,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException(
 				"Could not load message",
-				(int)$e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		} finally {
@@ -215,7 +214,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				'Could not load messages: ' . $e->getMessage(),
-				(int)$e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		} finally {
@@ -396,7 +395,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not set subscription status for mailbox " . $mailbox->getId() . " on IMAP: " . $e->getMessage(),
-				(int)$e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		} finally {
@@ -445,7 +444,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not set message flag on IMAP: " . $e->getMessage(),
-				(int)$e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		} finally {
@@ -498,7 +497,7 @@ class MailManager implements IMailManager {
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
 					"Could not set message keyword on IMAP: " . $e->getMessage(),
-					(int)$e->getCode(),
+					$e->getCode(),
 					$e
 				);
 			} finally {
@@ -709,7 +708,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not get message flag options from IMAP: " . $e->getMessage(),
-				(int)$e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		}

@@ -166,7 +166,7 @@ class Account implements JsonSerializable {
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
 					"Could not connect to IMAP host $host:$port: " . $e->getMessage(),
-					(int) $e->getCode(),
+					$e->getCode(),
 					$e
 				);
 			}

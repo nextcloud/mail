@@ -42,7 +42,7 @@ class CouldNotConnectException extends ServiceException {
 	public function __construct(Throwable $previous, string $service, string $host, int $port) {
 		parent::__construct(
 			"Connection to {$service} at {$host}:{$port} failed. {$previous->getMessage()}",
-			(int)$previous->getCode(),
+			$previous->getCode(),
 			$previous
 		);
 		$this->service = $service;

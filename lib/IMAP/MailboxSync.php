@@ -106,7 +106,7 @@ class MailboxSync {
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
 					sprintf("IMAP error synchronizing account %d: %s", $account->getId(), $e->getMessage()),
-					(int)$e->getCode(),
+					$e->getCode(),
 					$e
 				);
 			}
@@ -146,7 +146,7 @@ class MailboxSync {
 			$id = $mailbox->getId();
 			throw new ServiceException(
 				"Could not fetch stats of mailbox $id. IMAP error: " . $e->getMessage(),
-				(int)$e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		} finally {

@@ -442,7 +442,7 @@ class MessageMapper {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not fetch message source: " . $e->getMessage(),
-				(int) $e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		}

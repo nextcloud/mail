@@ -208,7 +208,7 @@ class MailTransmission implements IMailTransmission {
 		} catch (Horde_Mime_Exception $e) {
 			throw new ServiceException(
 				'Could not send message: ' . $e->getMessage(),
-				(int) $e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		}
@@ -277,7 +277,7 @@ class MailTransmission implements IMailTransmission {
 			try {
 				$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
 			} catch (SentMailboxNotSetException $e) {
-				throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
+				throw new ClientException('Could not send message' . $e->getMessage(), $e->getCode(), $e);
 			}
 		}
 	}
