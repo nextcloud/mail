@@ -23,9 +23,6 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @template-extends QBMapper<Mailbox>
- */
 namespace OCA\Mail\Db;
 
 use OCA\Mail\Account;
@@ -41,6 +38,9 @@ use OCP\DB\QueryBuilder\IQueryFunction;
 use OCP\IDBConnection;
 use function array_map;
 
+/**
+ * @template-extends QBMapper<Mailbox>
+ */
 class MailboxMapper extends QBMapper {
 	/** @var ITimeFactory */
 	private $timeFactory;
