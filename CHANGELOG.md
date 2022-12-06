@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.1 – 2022-12-06
+### Fixed
+- Mailbox cache sync scope of current mailbox
+
 ## 2.2.0 - 2022-12-05
 ### Added
 - Google OAuth support
