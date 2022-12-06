@@ -35,6 +35,9 @@ use OCP\Dashboard\RegisterWidgetEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
+/**
+ * @template-implements IEventListener<Event|RegisterWidgetEvent>
+ */
 class DashboardPanelListener implements IEventListener {
 	/**
 	 * @inheritDoc

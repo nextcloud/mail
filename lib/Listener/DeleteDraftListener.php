@@ -43,6 +43,9 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|DraftSavedEvent|OutboxMessageCreatedEvent|DraftMessageCreatedEvent>
+ */
 class DeleteDraftListener implements IEventListener {
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;

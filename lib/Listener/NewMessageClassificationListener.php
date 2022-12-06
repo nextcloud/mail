@@ -38,6 +38,9 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|NewMessagesSynchronized>
+ */
 class NewMessageClassificationListener implements IEventListener {
 	private const EXEMPT_FROM_CLASSIFICATION = [
 		Horde_Imap_Client::SPECIALUSE_ARCHIVE,
