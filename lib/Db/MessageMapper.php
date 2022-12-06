@@ -42,9 +42,11 @@ use OCP\IDBConnection;
 use OCP\IUser;
 use RuntimeException;
 use Throwable;
+use function array_chunk;
 use function array_combine;
 use function array_keys;
 use function array_map;
+use function array_merge;
 use function array_udiff;
 use function get_class;
 use function ltrim;
@@ -1035,6 +1037,36 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param Mailbox $mailbox
+	 * @param string $userId
+	 * @param int[] $ids
+	 *
+	 * @return Message[]
+	 */
+	public function findByMailboxAndIds(Mailbox $mailbox, string $userId, array $ids): array {
+		if (empty($ids)) {
+			return [];
+		}
+
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
+				$qb->expr()->in('id', $qb->createParameter('ids'))
+			)
+			->orderBy('sent_at', 'desc');
+
+		$results = [];
+		foreach (array_chunk($ids, 1000) as $chunk) {
+			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$results[] = $this->findRelatedData($this->findEntities($qb), $userId);
+		}
+		return array_merge([], ...$results);
+	}
+
+	/**
+	 * @param string $userId
 	 * @param int[] $ids
 	 *
 	 * @return Message[]
