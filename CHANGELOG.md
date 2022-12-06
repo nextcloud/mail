@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.12.9 – 2022-12-06
+### Fixed
+- Mailbox cache sync scope of current mailbox
+
 ## 1.12.8 - 2022-06-29
 ### Fixed
 - Editing draft
