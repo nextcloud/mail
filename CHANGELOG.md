@@ -1,5 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## 1.11.8 – 2022-12-06
+### Fixed
+- Missing aliases for new accounts
+- array_merge with empty array
+- Tests and static analysis workflows
+- Message delete index
+- Mailbox cache sync scope of current mailbox
+
 ## 1.11.7 - 2022-02-21
 ### Added
 - Loading indicator for recipient suggestions
