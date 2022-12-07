@@ -28,7 +28,6 @@ import '@nextcloud/dialogs/styles/toast.scss'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
 import VueShortKey from 'vue-shortkey'
 import vToolTip from 'v-tooltip'
-import VueClipboard from 'vue-clipboard2'
 
 import App from './App'
 import Nextcloud from './mixins/Nextcloud'
@@ -48,7 +47,6 @@ Vue.mixin(Nextcloud)
 
 Vue.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
 Vue.use(vToolTip)
-Vue.use(VueClipboard)
 
 const getPreferenceFromPage = (key) => {
 	const elem = document.getElementById(key)
