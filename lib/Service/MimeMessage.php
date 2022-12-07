@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use DOMDocument;
+use DOMElement;
 use DOMNode;
 use Horde_Mime_Part;
 use Horde_Text_Filter;
@@ -53,7 +54,7 @@ class MimeMessage {
 
 			for ($i = 0; $i < $images->count(); $i++) {
 				$image = $images->item($i);
-				if ($image === null) {
+				if (!($image instanceof DOMElement)) {
 					continue;
 				}
 
@@ -164,7 +165,7 @@ class MimeMessage {
 	 * @return string|null non-null, add this text to the output and skip further processing of the node.
 	 */
 	public function htmlToTextCallback(DOMDocument $doc, DOMNode $node) {
-		if ($node instanceof \DOMElement && strtolower($node->tagName) === 'p') {
+		if ($node instanceof DOMElement && strtolower($node->tagName) === 'p') {
 			return $node->textContent . "\n";
 		}
 

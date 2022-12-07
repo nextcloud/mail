@@ -132,6 +132,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 				foreach (array_keys(array_flip($val['slice'])) as $slice) {
 					$data = [];
 					foreach (array_keys($s['s'], $slice) as $uid) {
+						/** @var int $uid */
 						$data[$uid] = is_array($d[$uid])
 							? serialize($d[$uid])
 							: $d[$uid];
@@ -387,7 +388,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 * @return void
 	 */
 	protected function _loadSlice($mailbox, $slice) {
-		$cache_id = $this->_getCid($mailbox, $slice);
+		$cache_id = $this->_getCid($mailbox, (string)$slice);
 
 		if (!empty($this->_loaded[$cache_id])) {
 			return;
