@@ -314,6 +314,7 @@ OC.L10N.register(
     "Error saving anti spam email addresses" : "Pogreška pri spremanju adresa e-pošte za sprječavanje neželjene pošte",
     "Successfully deleted anti spam reporting email" : "Uspješno izbrisana adresa e-pošte za prijavu neželjene pošte",
     "Error deleting anti spam reporting email" : "Pogreška pri brisanju adrese e-pošte za prijavu neželjene pošte",
+    "Client ID" : "ID klijenta",
     "Client secret" : "Tajni ključ klijenta",
     "Domain Match: {provisioningDomain}" : "Podudaranje domene: {provisioningDomain}",
     "Email: {email}" : "E-pošta: {email}",
