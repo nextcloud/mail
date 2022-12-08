@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\IMAP;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Acl;
+use Horde_Imap_Client_Data_Capability;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
@@ -125,7 +127,7 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $created);
 	}
 
-	public function testGetFoldersStatus() {
+	public function testGetFoldersStatus(): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];
@@ -144,13 +146,22 @@ class FolderMapperTest extends TestCase {
 					'total' => 123
 				],
 			]);
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$client
+			->method('__get')
+			->with('capability')
+			->willReturn($capability);
+		$capability
+			->method('query')
+			->with('ACL')
+			->willReturn(false);
 		$folders[0]->expects($this->once())
 			->method('setStatus');
 
 		$this->mapper->getFoldersStatus($folders, $client);
 	}
 
-	public function testGetFoldersStatusNoStatusReported() {
+	public function testGetFoldersStatusNoStatusReported(): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];
@@ -161,6 +172,15 @@ class FolderMapperTest extends TestCase {
 		$folders[0]->expects($this->once())
 			->method('getAttributes')
 			->willReturn([]);
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$client
+			->method('__get')
+			->with('capability')
+			->willReturn($capability);
+		$capability
+			->method('query')
+			->with('ACL')
+			->willReturn(false);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo(['folder1']))
@@ -173,7 +193,7 @@ class FolderMapperTest extends TestCase {
 		$this->mapper->getFoldersStatus($folders, $client);
 	}
 
-	public function testGetFoldersStatusNotSearchable() {
+	public function testGetFoldersStatusNotSearchable(): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];
@@ -188,13 +208,26 @@ class FolderMapperTest extends TestCase {
 			->method('status')
 			->with($this->equalTo([]))
 			->willReturn([]);
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$capability
+			->method('query')
+			->with('ACL')
+			->willReturn(false);
+		$client
+			->method('__get')
+			->with('capability')
+			->willReturn($capability);
+		$capability
+			->method('query')
+			->with('ACL')
+			->willReturn(false);
 		$folders[0]->expects($this->never())
 			->method('setStatus');
 
 		$this->mapper->getFoldersStatus($folders, $client);
 	}
 
-	public function testGetFoldersStatusAsObject() {
+	public function testGetFoldersStatusAsObject(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('status')
@@ -203,10 +236,51 @@ class FolderMapperTest extends TestCase {
 				'messages' => 123,
 				'unseen' => 2,
 			]);
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$client
+			->method('__get')
+			->with('capability')
+			->willReturn($capability);
+		$capability
+			->method('query')
+			->with('ACL')
+			->willReturn(false);
 
 		$stats = $this->mapper->getFoldersStatusAsObject($client, 'INBOX');
 
-		$expected = new MailboxStats(123, 2);
+		$expected = new MailboxStats(123, 2, null);
+		$this->assertEquals($expected, $stats);
+	}
+
+	public function testGetFoldersStatusAndMyAcls(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('status')
+			->with('INBOX')
+			->willReturn([
+				'messages' => 123,
+				'unseen' => 2,
+			]);
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$client
+			->method('__get')
+			->with('capability')
+			->willReturn($capability);
+		$capability
+			->method('query')
+			->with('ACL')
+			->willReturn(true);
+		$acl = $this->createMock(Horde_Imap_Client_Data_Acl::class);
+		$client->expects(self::once())
+			->method('getMyACLRights')
+			->willReturn($acl);
+		$acl
+			->method('__toString')
+			->willReturn('kthxbye');
+
+		$stats = $this->mapper->getFoldersStatusAsObject($client, 'INBOX');
+
+		$expected = new MailboxStats(123, 2, 'kthxbye');
 		$this->assertEquals($expected, $stats);
 	}
 

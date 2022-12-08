@@ -66,6 +66,8 @@ use function strtolower;
  * @method void setSpecialUse(string $specialUse)
  * @method bool|null getSyncInBackground()
  * @method void setSyncInBackground(bool $sync)
+ * @method string|null getMyAcls()
+ * @method void setMyAcls(string|null $acls)
  */
 class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
@@ -83,6 +85,7 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $selectable;
 	protected $specialUse;
 	protected $syncInBackground;
+	protected $myAcls;
 
 	/**
 	 * @var int
@@ -144,7 +147,7 @@ class Mailbox extends Entity implements JsonSerializable {
 	 * @return MailboxStats
 	 */
 	public function getStats(): MailboxStats {
-		return new MailboxStats($this->getMessages(), $this->getUnseen());
+		return new MailboxStats($this->getMessages(), $this->getUnseen(), $this->getMyAcls());
 	}
 
 	#[ReturnTypeWillChange]
@@ -163,6 +166,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'mailboxes' => [],
 			'syncInBackground' => ($this->getSyncInBackground() === true),
 			'unread' => $this->unseen,
+			'myAcls' => $this->myAcls,
 		];
 	}
 }

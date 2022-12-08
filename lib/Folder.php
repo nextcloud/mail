@@ -44,6 +44,8 @@ class Folder {
 	/** @var string[] */
 	private $specialUse;
 
+	private ?string $myAcls;
+
 	public function __construct(int $accountId, Horde_Imap_Client_Mailbox $mailbox, array $attributes, ?string $delimiter) {
 		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
@@ -51,6 +53,7 @@ class Folder {
 		$this->delimiter = $delimiter;
 		$this->status = [];
 		$this->specialUse = [];
+		$this->myAcls = null;
 	}
 
 	/**
@@ -98,5 +101,13 @@ class Folder {
 	 */
 	public function getSpecialUse() {
 		return $this->specialUse;
+	}
+
+	public function setMyAcls(?string $acls) {
+		$this->myAcls = $acls;
+	}
+
+	public function getMyAcls(): ?string {
+		return $this->myAcls;
 	}
 }

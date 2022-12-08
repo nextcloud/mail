@@ -124,11 +124,19 @@ class FolderMapper {
 		}));
 
 		$status = $client->status($mailboxes);
+		$hasAcls = $client->capability->query('ACL');
 
 		foreach ($folders as $folder) {
 			if (isset($status[$folder->getMailbox()])) {
 				$folder->setStatus($status[$folder->getMailbox()]);
 			}
+
+			$acls = null;
+			if ($hasAcls) {
+				$acls = (string)$client->getMyACLRights($folder->getMailbox());
+			}
+
+			$folder->setMyAcls($acls);
 		}
 	}
 
@@ -143,10 +151,15 @@ class FolderMapper {
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
 											 string $mailbox): MailboxStats {
 		$status = $client->status($mailbox);
+		$acls = null;
+		if ($client->capability->query('ACL')) {
+			$acls = (string)$client->getMyACLRights($mailbox);
+		}
 
 		return new MailboxStats(
 			$status['messages'],
-			$status['unseen']
+			$status['unseen'],
+			$acls
 		);
 	}
 
