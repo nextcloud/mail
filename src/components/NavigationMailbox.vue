@@ -74,23 +74,21 @@
 			</ActionText>
 
 			<ActionButton
-				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified"
+				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasSeenAcl"
 				:title="t('mail', 'Mark all as read')"
 				:disabled="loadingMarkAsRead"
 				@click="markAsRead">
 				<template #icon>
 					<IconEmailCheck
-						:title="t('mail', 'Mark all messages of this mailbox as read')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Mark all messages of this mailbox as read') }}
 			</ActionButton>
 			<ActionButton
-				v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged'"
+				v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
 					<IconFolderAdd
-						:title="t('mail', 'Add submailbox')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Add submailbox') }}
@@ -98,16 +96,14 @@
 			<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
 				<template #icon>
 					<IconFolderAdd
-						:title="t('mail', 'Add submailbox')"
 						:size="20" />
 				</template>
 			</ActionInput>
 			<ActionButton
-				v-if="renameLabel && !hasSubMailboxes && !account.isUnified"
+				v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
 				@click.prevent.stop="openRenameInput">
 				<template #icon>
 					<IconFolderRename
-						:title="t('mail', 'Edit name')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Edit name') }}
@@ -135,7 +131,6 @@
 				@click.prevent="onOpenMoveModal">
 				<template #icon>
 					<IconExternal
-						:title="t('mail', 'Move')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Move') }}
@@ -147,7 +142,6 @@
 				@click="clearCache">
 				<template #icon>
 					<IconFolderSync
-						:title="t('mail', 'Clear locally cached data, in case there are issues with synchronization.')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
@@ -179,10 +173,10 @@
 				{{ t('mail', 'Clear mailbox') }}
 			</ActionButton>
 
-			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" @click="deleteMailbox">
+			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
+				@click="deleteMailbox">
 				<template #icon>
 					<IconDelete
-						:title="t('mail', 'Delete mailbox')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Delete mailbox') }}
@@ -400,6 +394,36 @@ export default {
 		},
 		subCounter() {
 			return this.subMailboxes.reduce((carry, mb) => carry + mb.unread, 0)
+		},
+		hasRenameAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			const parent = this.$store.getters.getParentMailbox(this.mailbox.databaseId)
+			if (!parent || !parent.myAcls) {
+				return this.mailbox.myAcls.indexOf('x') !== -1
+			}
+
+			return this.mailbox.myAcls.indexOf('x') !== -1
+				&& parent.myAcls.indexOf('k') !== -1
+		},
+		hasSeenAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('s') !== -1
+		},
+		hasSubmailboxActionAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('k') !== -1
+		},
+		hasDeleteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('x') !== -1
 		},
 	},
 	mounted() {
