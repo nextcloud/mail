@@ -323,6 +323,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Zkopírovat do schránky",
     "Contact name …" : "Jméno kontaktu…",
     "Add" : "Přidat",
+    "Copied email address to clipboard" : "E-mailová adresa zkopírována do schránky",
+    "Could not copy email address to clipboard" : "E-mailovou adresu se nepodařilo zkopírovat do schránky",
     "Search in mailbox" : "Hledat ve schránce",
     "Search parameters" : "Parametry hledání",
     "Search term" : "Hledat pojem",

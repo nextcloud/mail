@@ -323,6 +323,8 @@ OC.L10N.register(
     "Copy to clipboard" : "Copy to clipboard",
     "Contact name …" : "Contact name …",
     "Add" : "Add",
+    "Copied email address to clipboard" : "Copied email address to clipboard",
+    "Could not copy email address to clipboard" : "Could not copy email address to clipboard",
     "Search in mailbox" : "Search in mailbox",
     "Search parameters" : "Search parameters",
     "Search term" : "Search term",

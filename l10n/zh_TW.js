@@ -323,6 +323,8 @@ OC.L10N.register(
     "Copy to clipboard" : "複製到剪貼簿",
     "Contact name …" : "聯絡人名稱……",
     "Add" : "新增",
+    "Copied email address to clipboard" : "將電子郵件地址複製到剪貼簿",
+    "Could not copy email address to clipboard" : "無法複製電子郵件地址到剪貼簿",
     "Search in mailbox" : "在郵件匣中搜尋",
     "Search parameters" : "搜尋參數",
     "Search term" : "搜尋字詞",
