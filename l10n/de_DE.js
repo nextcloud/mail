@@ -323,6 +323,8 @@ OC.L10N.register(
     "Copy to clipboard" : "In die Zwischenablage kopieren",
     "Contact name …" : "Kontakt-Name …",
     "Add" : "Hinzufügen",
+    "Copied email address to clipboard" : "E-Mail-Adresse in die Zwischenablage kopiert",
+    "Could not copy email address to clipboard" : "E-Mail-Adresse konnte nicht in die Zwischenablage kopiert werden",
     "Search in mailbox" : "Im Postfach suchen",
     "Search parameters" : "Suchparameter",
     "Search term" : "Suchbegriff",
