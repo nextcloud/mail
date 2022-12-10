@@ -2745,22 +2745,24 @@
         },
         {
             "name": "youthweb/urllinker",
-            "version": "1.4.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/youthweb/urllinker.git",
-                "reference": "093f392ef35fea4bd1d3b4ad931d5d3af9a4b5bc"
+                "reference": "0a664d4f0472c63013a43a7ca7ddbd0c58ce998a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/youthweb/urllinker/zipball/093f392ef35fea4bd1d3b4ad931d5d3af9a4b5bc",
-                "reference": "093f392ef35fea4bd1d3b4ad931d5d3af9a4b5bc",
+                "url": "https://api.github.com/repos/youthweb/urllinker/zipball/0a664d4f0472c63013a43a7ca7ddbd0c58ce998a",
+                "reference": "0a664d4f0472c63013a43a7ca7ddbd0c58ce998a",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.13",
+                "phpstan/phpstan": "^1.9",
                 "phpunit/phpunit": "^9"
             },
             "type": "library",
@@ -2788,9 +2790,9 @@
             "homepage": "https://github.com/youthweb",
             "support": {
                 "issues": "https://github.com/youthweb/urllinker/issues",
-                "source": "https://github.com/youthweb/urllinker/tree/1.4.0"
+                "source": "https://github.com/youthweb/urllinker/tree/1.5.1"
             },
-            "time": "2021-03-05T09:22:19+00:00"
+            "time": "2022-12-09T15:03:24+00:00"
         }
     ],
     "packages-dev": [
