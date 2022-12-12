@@ -321,6 +321,8 @@
     "Copy to clipboard" : "Panoya kopyala",
     "Contact name …" : "Kişi adı …",
     "Add" : "Ekle",
+    "Copied email address to clipboard" : "E-posta adresi panoya kopyalandı",
+    "Could not copy email address to clipboard" : "E-posta adresi panoya kopyalanamadı",
     "Search in mailbox" : "Posta kutusunda ara",
     "Search parameters" : "Arama parametreleri",
     "Search term" : "Arama ifadesi",
