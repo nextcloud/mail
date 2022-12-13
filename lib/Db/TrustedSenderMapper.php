@@ -28,6 +28,9 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
+/**
+ * @template-extends QBMapper<TrustedSender>
+ */
 class TrustedSenderMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_trusted_senders');

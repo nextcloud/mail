@@ -35,6 +35,9 @@ use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 use function class_exists;
 
+/**
+ * @template-implements IEventListener<Event|MessageSentEvent>
+ */
 class InteractionListener implements IEventListener {
 	/** @var IEventDispatcher */
 	private $dispatcher;

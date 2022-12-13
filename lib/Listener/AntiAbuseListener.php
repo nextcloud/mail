@@ -32,6 +32,9 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|BeforeMessageSentEvent>
+ */
 class AntiAbuseListener implements IEventListener {
 	/** @var IUserManager */
 	private $userManager;

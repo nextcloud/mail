@@ -31,6 +31,9 @@ use OCA\Mail\Service\AccountService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
+/**
+ * @template-implements IEventListener<Event|BeforeImapClientCreated>
+ */
 class OauthTokenRefreshListener implements IEventListener {
 	private GoogleIntegration $googleIntegration;
 	private AccountService $accountService;
