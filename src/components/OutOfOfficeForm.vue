@@ -81,6 +81,9 @@
 				v-model="subject"
 				type="text"
 				:disabled="!enabled">
+			<p class="form__fieldset__description">
+				{{ t('mail', '${subject} will be replaced with the subject of the message you are responding to') }}
+			</p>
 		</fieldset>
 
 		<fieldset class="form__fieldset">
@@ -282,6 +285,10 @@ export default {
 
 		&__input {
 			flex: 1 auto;
+		}
+
+		&__description {
+			color: var(--color-text-maxcontrast);
 		}
 	}
 

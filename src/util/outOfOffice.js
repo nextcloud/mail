@@ -143,27 +143,46 @@ export function buildOutOfOfficeSieveScript(sieveScript, {
 	vacation.push(`"${escapeStringForSieve(message)}"`)
 
 	// Build sieve script
+	/* eslint-disable no-template-curly-in-string */
+	const subjectSection = [
+		'set "subject" "";',
+		'if header :matches "subject" "*" {',
+		'\tset "subject" "${1}";',
+		'}',
+	]
+	const hasSubjectPlaceholder
+		= subject.indexOf('${subject}') !== -1 || message.indexOf('${subject}') !== -1
+	/* eslint-enable no-template-curly-in-string */
+
 	const requireSection = [
 		MARKER,
 		'require "date";',
 		'require "relational";',
 		'require "vacation";',
-		MARKER,
-	].join('\n')
+	]
+	if (hasSubjectPlaceholder) {
+		requireSection.push('require "variables";')
+	}
+	requireSection.push(MARKER)
 
 	const vacationSection = [
 		MARKER,
 		DATA_MARKER + JSON.stringify(data),
+	]
+	if (hasSubjectPlaceholder) {
+		vacationSection.push(...subjectSection)
+	}
+	vacationSection.push(
 		`if ${condition} {`,
 		`\t${vacation.join(' ')};`,
 		'}',
 		MARKER,
-	].join('\n')
+	)
 
 	return [
-		requireSection,
+		...requireSection,
 		sieveScript,
-		vacationSection,
+		...vacationSection,
 	].join('\n')
 }
 

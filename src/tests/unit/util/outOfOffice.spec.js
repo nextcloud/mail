@@ -139,6 +139,23 @@ describe('outOfOffice', () => {
 			expect(actual).toEqual(expected)
 		})
 
+		it('should build a correct sieve script when the vacation responder is enabled and a subject placeholder is used', () => {
+			const script = readTestData('sieve-vacation-cleaned.txt')
+			const expected = readTestData('sieve-vacation-on-subject-placeholder.txt')
+			const actual = buildOutOfOfficeSieveScript(script, {
+				enabled: true,
+				start: new Date('2022-09-02'),
+				end: new Date('2022-09-08'),
+				subject: 'Re: ${subject}',
+				message: 'I\'m on vacation.',
+				allowedRecipients: [
+					'Test Test <test@test.org>',
+					'Test Alias <alias@test.org>',
+				]
+			})
+			expect(actual).toEqual(expected)
+		})
+
 		it('should build a correct sieve script when the vacation responder is disabled', () => {
 			const script = readTestData('sieve-vacation-cleaned.txt')
 			const expected = readTestData('sieve-vacation-off.txt')
