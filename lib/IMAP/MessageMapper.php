@@ -703,7 +703,6 @@ class MessageMapper {
 			$partsQuery = new Horde_Imap_Client_Fetch_Query();
 			if ($htmlBodyId !== null) {
 				$partsQuery->bodyPart($htmlBodyId, [
-					'decode' => true,
 					'peek' => true,
 				]);
 				$partsQuery->mimeHeader($htmlBodyId, [
@@ -712,7 +711,6 @@ class MessageMapper {
 			}
 			if ($textBodyId !== null) {
 				$partsQuery->bodyPart($textBodyId, [
-					'decode' => true,
 					'peek' => true,
 				]);
 				$partsQuery->mimeHeader($textBodyId, [
@@ -726,11 +724,23 @@ class MessageMapper {
 			$part = $parts[$fetchData->getUid()];
 			$htmlBody = $part->getBodyPart($htmlBodyId);
 			if (!empty($htmlBody)) {
+				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+					$structure->setTransferEncoding($enc);
+					$structure->setContents($htmlBody);
+					$htmlBody = $structure->getContents();
+				}
 				$html = new Html2Text($htmlBody);
 				return new MessageStructureData($hasAttachments, trim($html->getText()), $isImipMessage);
 			}
 			$textBody = $part->getBodyPart($textBodyId);
 			if (!empty($textBody)) {
+				$mimeHeaders = $part->getMimeHeader($textBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+					$structure->setTransferEncoding($enc);
+					$structure->setContents($textBody);
+					$textBody = $structure->getContents();
+				}
 				return new MessageStructureData($hasAttachments, $textBody, $isImipMessage);
 			}
 
