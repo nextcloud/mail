@@ -118,4 +118,5 @@ export const getters = {
 			calendar._props,
 		)
 	}),
+	getSMimeCertificates: (state) => state.sMimeCertificates,
 }

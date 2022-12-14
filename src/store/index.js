@@ -100,6 +100,7 @@ export default new Store({
 				googleOauthUrl: null,
 				sieveScript: {},
 				calendars: [],
+				sMimeCertificates: [],
 			},
 			getters,
 			mutations,
