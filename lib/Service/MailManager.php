@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -170,11 +171,22 @@ class MailManager implements IMailManager {
 		return $this->mailboxMapper->find($account, $name);
 	}
 
-	public function getImapMessage(Account $account,
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param int $uid
+	 * @param bool $loadBody
+	 *
+	 * @return IMAPMessage
+	 *
+	 * @throws ServiceException
+	 */
+	public function getImapMessage(Horde_Imap_Client_Socket $client,
+								   Account $account,
 								   Mailbox $mailbox,
 								   int $uid,
 								   bool $loadBody = false): IMAPMessage {
-		$client = $this->imapClientFactory->getClient($account);
 		try {
 			return $this->imapMessageMapper->find(
 				$client,
@@ -188,8 +200,6 @@ class MailManager implements IMailManager {
 				$e->getCode(),
 				$e
 			);
-		} finally {
-			$client->logout();
 		}
 	}
 
@@ -235,17 +245,19 @@ class MailManager implements IMailManager {
 	}
 
 	/**
+	 * @param Horde_Imap_Client_Socket $client
 	 * @param Account $account
 	 * @param string $mailbox
 	 * @param int $uid
 	 *
 	 * @return string
 	 *
-	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getSource(Account $account, string $mailbox, int $uid): ?string {
-		$client = $this->imapClientFactory->getClient($account);
+	public function getSource(Horde_Imap_Client_Socket $client,
+							  Account $account,
+							  string $mailbox,
+							  int $uid): ?string {
 		try {
 			return $this->imapMessageMapper->getFullText(
 				$client,
@@ -254,8 +266,6 @@ class MailManager implements IMailManager {
 			);
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException("Could not load message", 0, $e);
-		} finally {
-			$client->logout();
 		}
 	}
 

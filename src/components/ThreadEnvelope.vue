@@ -77,6 +77,20 @@
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<template v-if="expanded">
+					<NcActions v-if="sMimeData.isSigned">
+						<template #icon>
+							<LockIcon v-if="sMimeData.signatureIsValid"
+								:size="20"
+								fill-color="#ffcc00" />
+							<LockOffIcon v-else
+								:size="20"
+								fill-color="red" />
+						</template>
+						<NcActionText>
+							{{ sMimeSignMessage }}
+						</NcActionText>
+						<!-- TODO: display information about signer and/or CA certificate -->
+					</NcActions>
 					<ButtonVue
 						:class="{ primary: expanded}"
 						:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
@@ -176,12 +190,16 @@ import DeleteIcon from 'vue-material-design-icons/Delete'
 import ArchiveIcon from 'vue-material-design-icons/PackageDown'
 import EmailUnread from 'vue-material-design-icons/Email'
 import EmailRead from 'vue-material-design-icons/EmailOpen'
+import LockIcon from 'vue-material-design-icons/Lock'
+import LockOffIcon from 'vue-material-design-icons/LockOff'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { hiddenTags } from './tags.js'
 import { showError } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 import { isPgpText } from '../crypto/pgp'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions'
+import NcActionText from '@nextcloud/vue/dist/Components/NcActionText'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -207,6 +225,10 @@ export default {
 		EmailUnread,
 		DeleteIcon,
 		ArchiveIcon,
+		LockIcon,
+		LockOffIcon,
+		NcActions,
+		NcActionText,
 	},
 	props: {
 		envelope: {
@@ -305,6 +327,19 @@ export default {
 		},
 		showImportantIconVariant() {
 			return this.envelope.flags.seen
+		},
+		/**
+		 * @return {{isSigned: (boolean|undefined), signatureIsValid: (boolean|undefined)}}
+		 */
+		sMimeData() {
+			return this.message?.sMime ?? {}
+		},
+		sMimeSignMessage() {
+			if (this.sMimeData.signatureIsValid) {
+				return t('mail', 'This message contains a verified digital S/MIME signature. The message wasn\'t changed since it was sent.')
+			} else {
+				return t('mail', 'This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted.')
+			}
 		},
 	},
 	watch: {

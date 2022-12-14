@@ -32,6 +32,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Exception;
+use Horde_Mime_Exception;
+use Horde_Mime_Part;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
@@ -42,8 +44,11 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Model\SMimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ItineraryService;
+use OCA\Mail\Service\SMimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -74,6 +79,8 @@ class MessagesController extends Controller {
 	private ContentSecurityPolicyNonceManager $nonceManager;
 	private ITrustedSenderService $trustedSenderService;
 	private IMailTransmission $mailTransmission;
+	private SMimeService $sMimeService;
+	private IMAPClientFactory $clientFactory;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -89,7 +96,9 @@ class MessagesController extends Controller {
 								IURLGenerator $urlGenerator,
 								ContentSecurityPolicyNonceManager $nonceManager,
 								ITrustedSenderService $trustedSenderService,
-								IMailTransmission $mailTransmission) {
+								IMailTransmission $mailTransmission,
+								SMimeService $sMimeService,
+								IMAPClientFactory $clientFactory) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -104,6 +113,8 @@ class MessagesController extends Controller {
 		$this->nonceManager = $nonceManager;
 		$this->trustedSenderService = $trustedSenderService;
 		$this->mailTransmission = $mailTransmission;
+		$this->sMimeService = $sMimeService;
+		$this->clientFactory = $clientFactory;
 	}
 
 	/**
@@ -198,12 +209,24 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$json = $this->mailManager->getImapMessage(
-			$account,
-			$mailbox,
-			$message->getUid(),
-			true
-		)->getFullMessage($id);
+		$client = $this->clientFactory->getClient($account);
+		try {
+			$json = $this->mailManager->getImapMessage(
+				$client,
+				$account,
+				$mailbox,
+				$message->getUid(), true
+			)->getFullMessage($id);
+			$rawMessage = $this->mailManager->getSource(
+				$client,
+				$account,
+				$mailbox->getName(),
+				$message->getUid(),
+			);
+		} finally {
+			$client->logout();
+		}
+
 		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getUid());
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
@@ -218,6 +241,18 @@ class MessagesController extends Controller {
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
 		$json['isSenderTrusted'] = $this->isSenderTrusted($message);
+
+		$sMimeData = new SMimeData();
+		try {
+			$parsedMessage = Horde_Mime_Part::parseMessage($rawMessage, ['no_body' => true]);
+			if ($parsedMessage->getType() === 'multipart/signed') {
+				$sMimeData->setIsSigned(true);
+				$sMimeData->setSignatureIsValid($this->sMimeService->verifyMessage($rawMessage));
+			}
+		} catch (Horde_Mime_Exception $e) {
+			$this->logger->warning('Failed to parse MIME message', ['error' => $e]);
+		}
+		$json['sMime'] = $sMimeData;
 
 		$response = new JSONResponse($json);
 
@@ -382,13 +417,19 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$response = new JSONResponse([
-			'source' => $this->mailManager->getSource(
-				$account,
-				$mailbox->getName(),
-				$message->getUid()
-			)
-		]);
+		$client = $this->clientFactory->getClient($account);
+		try {
+			$response = new JSONResponse([
+				'source' => $this->mailManager->getSource(
+					$client,
+					$account,
+					$mailbox->getName(),
+					$message->getUid()
+				)
+			]);
+		} finally {
+			$client->logout();
+		}
 
 		// Enable caching
 		$response->cacheFor(60 * 60, false, true);
@@ -417,11 +458,18 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$source = $this->mailManager->getSource(
-			$account,
-			$mailbox->getName(),
-			$message->getUid()
-		);
+		$client = $this->clientFactory->getClient($account);
+		try {
+			$source = $this->mailManager->getSource(
+				$client,
+				$account,
+				$mailbox->getName(),
+				$message->getUid()
+			);
+		} finally {
+			$client->logout();
+		}
+
 		return new AttachmentDownloadResponse(
 			$source,
 			$message->getSubject() . '.eml',
@@ -456,14 +504,21 @@ class MessagesController extends Controller {
 				);
 			}
 
-			$html = $this->mailManager->getImapMessage(
-				$account,
-				$mailbox,
-				$message->getUid(),
-				true
-			)->getHtmlBody(
-				$id
-			);
+			$client = $this->clientFactory->getClient($account);
+			try {
+				$html = $this->mailManager->getImapMessage(
+					$client,
+					$account,
+					$mailbox,
+					$message->getUid(),
+					true
+				)->getHtmlBody(
+					$id
+				);
+			} finally {
+				$client->logout();
+			}
+
 			$htmlResponse = $plain ?
 				HtmlResponse::plain($html) :
 				HtmlResponse::withResizer(
