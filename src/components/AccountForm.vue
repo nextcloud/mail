@@ -536,6 +536,10 @@ export default {
 					smtpHost: this.manualConfig.smtpHost.trim(),
 					authMethod: this.useGoogleSso ? 'xoauth2' : 'password',
 				}
+				if (this.useGoogleSso) {
+					delete data.imapPassword
+					delete data.smtpPassword
+				}
 				if (!this.account) {
 					const account = await this.$store.dispatch('startAccountSetup', data)
 					if (this.useGoogleSso) {
