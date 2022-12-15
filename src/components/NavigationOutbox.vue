@@ -32,7 +32,9 @@
 				:size="20" />
 		</template>
 		<template #counter>
-			<CounterBubble v-if="count">
+			<CounterBubble
+				v-if="count"
+				class="navigation-outbox__unread-counter">
 				{{ count }}
 			</CounterBubble>
 		</template>
@@ -64,9 +66,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.counter-bubble__counter) {
-	margin-right: 43px;
+.navigation-outbox {
+	&__unread-counter {
+		margin-right: calc(var(--default-grid-baseline)*2);
+	}
 }
+
 .outbox-opacity-icon {
 	opacity: .7;
 
