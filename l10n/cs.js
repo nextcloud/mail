@@ -309,6 +309,7 @@ OC.L10N.register(
     "Autoresponder on" : "Automatické odpovědi zapnuty",
     "First day" : "První den",
     "Last day (optional)" : "Poslední den (nepovinné)",
+    "${subject} will be replaced with the subject of the message you are responding to" : "${subject} bude nahrazeno předmětem správy na kterou odpovídáte",
     "Message" : "Zpráva",
     "Oh Snap!" : "Kruci!",
     "Save autoresponder" : "Uložit automatickou odpověď",

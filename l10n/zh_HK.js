@@ -309,6 +309,7 @@ OC.L10N.register(
     "Autoresponder on" : "開啟自動回復程式",
     "First day" : "第一天",
     "Last day (optional)" : "最後一天（可選）",
+    "${subject} will be replaced with the subject of the message you are responding to" : "${subject} 將替換為您要回應的郵件的主題",
     "Message" : "訊息",
     "Oh Snap!" : "哎呀！",
     "Save autoresponder" : "保存自動回復程式",
