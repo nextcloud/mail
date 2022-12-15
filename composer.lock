@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96e833492b3730fb2a34d91de7ed3962",
+    "content-hash": "b8d9f2af2c6daaa75db9059217aa869f",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2745,16 +2745,16 @@
         },
         {
             "name": "youthweb/urllinker",
-            "version": "1.5.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/youthweb/urllinker.git",
-                "reference": "0a664d4f0472c63013a43a7ca7ddbd0c58ce998a"
+                "reference": "9363e23ccdd20f6d46a8a3c8c6c3c2c0f67f6350"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/youthweb/urllinker/zipball/0a664d4f0472c63013a43a7ca7ddbd0c58ce998a",
-                "reference": "0a664d4f0472c63013a43a7ca7ddbd0c58ce998a",
+                "url": "https://api.github.com/repos/youthweb/urllinker/zipball/9363e23ccdd20f6d46a8a3c8c6c3c2c0f67f6350",
+                "reference": "9363e23ccdd20f6d46a8a3c8c6c3c2c0f67f6350",
                 "shasum": ""
             },
             "require": {
@@ -2790,9 +2790,9 @@
             "homepage": "https://github.com/youthweb",
             "support": {
                 "issues": "https://github.com/youthweb/urllinker/issues",
-                "source": "https://github.com/youthweb/urllinker/tree/1.5.1"
+                "source": "https://github.com/youthweb/urllinker/tree/2.0.0"
             },
-            "time": "2022-12-09T15:03:24+00:00"
+            "time": "2022-12-14T13:25:25+00:00"
         }
     ],
     "packages-dev": [
@@ -3345,7 +3345,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4 <=8.1"
+        "php": ">=7.4 <=8.1",
+        "ext-openssl": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
