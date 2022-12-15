@@ -30,7 +30,6 @@
 				:key="'mailbox-' + mailbox.databaseId"
 				:account="unifiedAccount"
 				:mailbox="mailbox" />
-			<NavigationOutbox />
 			<AppNavigationSpacer />
 
 			<!-- All other mailboxes grouped by their account -->
@@ -70,6 +69,9 @@
 			</template>
 		</template>
 		<template #footer>
+			<div v-if="outboxMessages.length !== 0" class="outbox__border">
+				<NavigationOutbox class="outbox" />
+			</div>
 			<AppNavigationSettings :title="t('mail', 'Mail settings')">
 				<template #icon>
 					<IconSetting :size="20" />
@@ -143,6 +145,9 @@ export default {
 		 */
 		passwordIsUnavailable() {
 			return this.$store.getters.getPreference('password-is-unavailable', false)
+		},
+		outboxMessages() {
+			return this.$store.getters['outbox/getAllMessages']
 		},
 	},
 	methods: {
@@ -223,5 +228,19 @@ to {
 :deep(.settings-button) {
 	opacity: .7 !important;
 	font-weight: bold !important;
+	z-index: 1;
+}
+.outbox {
+	margin-left: 6px;
+	width: auto;
+	&__border {
+		border-top: 1px solid var(--color-background-darker);
+	}
+}
+
+:deep(.app-navigation-entry) {
+	&.active {
+		background-color: transparent !important;
+	}
 }
 </style>

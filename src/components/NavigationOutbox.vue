@@ -65,11 +65,10 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.counter-bubble__counter) {
-	margin-right: 43px;
+	margin-right: 20px;
 }
 .outbox-opacity-icon {
 	opacity: .7;
-
 	&:hover {
 		opacity: 1;
 	}
