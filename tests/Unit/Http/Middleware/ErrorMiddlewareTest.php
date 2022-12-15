@@ -138,10 +138,10 @@ class ErrorMiddlewareTest extends TestCase {
 	public function temporaryExceptionsData(): array {
 		return [
 			[new ServiceException('not temporary'), false],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::DISCONNECT)), true],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::SERVER_CONNECT)), false],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::SERVER_READERROR)), true],
-			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::SERVER_WRITEERROR)), true],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::DISCONNECT)), true],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_CONNECT)), false],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_READERROR)), true],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception('', Horde_Imap_Client_Exception::SERVER_WRITEERROR)), true],
 		];
 	}
 
