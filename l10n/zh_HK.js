@@ -379,6 +379,8 @@ OC.L10N.register(
     "Mark as read" : "標為已讀",
     "Archive message" : "封存郵件",
     "Delete message" : "刪除訊息",
+    "This message contains a verified digital S/MIME signature. The message wasn't changed since it was sent." : "此郵件包含經過驗證的數位 S/MIME 簽名。郵件自發送後未更改。",
+    "This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted." : "此郵件包含未經驗證的數位 S/MIME 簽名。郵件可能在發送後已更改，或者簽名者的證書不受信任。",
     "Remove" : "移除",
     "No senders are trusted at the moment." : "當前沒有發件人是受信任的",
     "Could not remove trusted sender {sender}" : "無法刪除受信任的發件人 {sender}",
