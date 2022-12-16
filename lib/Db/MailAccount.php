@@ -97,6 +97,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setAuthMethod(string $method)
  * @method int getSignatureMode()
  * @method void setSignatureMode(int $signatureMode)
+ * @method string getOauthAccessToken()
+ * @method void setOauthAccessToken(string $token)
  * @method string getOauthRefreshToken()
  * @method void setOauthRefreshToken(string $token)
  * @method int|null getOauthTokenTtl()
@@ -126,6 +128,7 @@ class MailAccount extends Entity {
 	protected $showSubscribedOnly;
 	protected $personalNamespace;
 	protected $authMethod;
+	protected $oauthAccessToken;
 	protected $oauthRefreshToken;
 	protected $oauthTokenTtl;
 
