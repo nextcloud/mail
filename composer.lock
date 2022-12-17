@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96e833492b3730fb2a34d91de7ed3962",
+    "content-hash": "6d51f4b577ba99bab591f7f45ff82ecf",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1413,16 +1413,16 @@
         },
         {
             "name": "bytestream/horde-translation",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Translation.git",
-                "reference": "50b32bf614164e3e44deb23f4210e709f967cbc6"
+                "reference": "2a5c7702f5ad0c036bc8548c74a1c03730b99e74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Translation/zipball/50b32bf614164e3e44deb23f4210e709f967cbc6",
-                "reference": "50b32bf614164e3e44deb23f4210e709f967cbc6",
+                "url": "https://api.github.com/repos/bytestream/Translation/zipball/2a5c7702f5ad0c036bc8548c74a1c03730b99e74",
+                "reference": "2a5c7702f5ad0c036bc8548c74a1c03730b99e74",
                 "shasum": ""
             },
             "require": {
@@ -1451,9 +1451,9 @@
             "description": "Horde Translation library",
             "homepage": "https://www.horde.org/libraries/Horde_Translation",
             "support": {
-                "source": "https://github.com/bytestream/Translation/tree/v2.3.0"
+                "source": "https://github.com/bytestream/Translation/tree/v2.4.0"
             },
-            "time": "2021-12-20T20:30:50+00:00"
+            "time": "2022-12-12T10:15:17+00:00"
         },
         {
             "name": "bytestream/horde-util",
@@ -3345,7 +3345,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4 <=8.1"
+        "php": ">=7.4 <=8.1",
+        "ext-openssl": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
