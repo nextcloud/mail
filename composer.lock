@@ -588,16 +588,16 @@
         },
         {
             "name": "bytestream/horde-crypt-blowfish",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Crypt_Blowfish.git",
-                "reference": "944872aa670719f2e1476264c160960fd2f224c1"
+                "reference": "c1888c663374f8931d0d84768e3c61c53ee8aa4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Crypt_Blowfish/zipball/944872aa670719f2e1476264c160960fd2f224c1",
-                "reference": "944872aa670719f2e1476264c160960fd2f224c1",
+                "url": "https://api.github.com/repos/bytestream/Crypt_Blowfish/zipball/c1888c663374f8931d0d84768e3c61c53ee8aa4e",
+                "reference": "c1888c663374f8931d0d84768e3c61c53ee8aa4e",
                 "shasum": ""
             },
             "require": {
@@ -628,9 +628,9 @@
             "description": "Horde Blowfish encryption library",
             "homepage": "https://www.horde.org/libraries/Horde_Crypt_Blowfish",
             "support": {
-                "source": "https://github.com/bytestream/Crypt_Blowfish/tree/v1.2.0"
+                "source": "https://github.com/bytestream/Crypt_Blowfish/tree/v1.3.0"
             },
-            "time": "2021-12-21T13:33:22+00:00"
+            "time": "2022-12-12T11:35:44+00:00"
         },
         {
             "name": "bytestream/horde-exception",
@@ -1309,16 +1309,16 @@
         },
         {
             "name": "bytestream/horde-text-filter",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Text_Filter.git",
-                "reference": "ffd15ef856a0f31c5d49c8f8f4d5bcb820571121"
+                "reference": "f4654f42665c1784911c63de22f3ab2eca682380"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Text_Filter/zipball/ffd15ef856a0f31c5d49c8f8f4d5bcb820571121",
-                "reference": "ffd15ef856a0f31c5d49c8f8f4d5bcb820571121",
+                "url": "https://api.github.com/repos/bytestream/Text_Filter/zipball/f4654f42665c1784911c63de22f3ab2eca682380",
+                "reference": "f4654f42665c1784911c63de22f3ab2eca682380",
                 "shasum": ""
             },
             "require": {
@@ -1362,9 +1362,9 @@
             "description": "Horde text filtering and conversion library",
             "homepage": "https://www.horde.org/libraries/Horde_Text_Filter",
             "support": {
-                "source": "https://github.com/bytestream/Text_Filter/tree/v2.4.0"
+                "source": "https://github.com/bytestream/Text_Filter/tree/v2.5.0"
             },
-            "time": "2021-12-21T16:08:23+00:00"
+            "time": "2022-12-12T11:55:30+00:00"
         },
         {
             "name": "bytestream/horde-text-flowed",
