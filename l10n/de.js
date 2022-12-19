@@ -309,6 +309,7 @@ OC.L10N.register(
     "Autoresponder on" : "Automatische Antworten senden",
     "First day" : "Erster Tag",
     "Last day (optional)" : "Letzter Tag (optional)",
+    "${subject} will be replaced with the subject of the message you are responding to" : "${subject} wird durch den Betreff der Nachricht ersetzt, auf die du antwortest.",
     "Message" : "Nachricht",
     "Oh Snap!" : "Hoppla!",
     "Save autoresponder" : "Automatische Antworten speichern",

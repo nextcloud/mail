@@ -309,6 +309,7 @@ OC.L10N.register(
     "Autoresponder on" : "Otomatik yanıtlayıcı açık",
     "First day" : "Başlangıç",
     "Last day (optional)" : "Bitiş (isteğe bağlı)",
+    "${subject} will be replaced with the subject of the message you are responding to" : "${subject} konusu yanıtladığınız iletinin konusu ile değiştirilecek",
     "Message" : "İleti",
     "Oh Snap!" : "Hadi canım!",
     "Save autoresponder" : "Otomatik yanıtlayıcıyı kaydet",
