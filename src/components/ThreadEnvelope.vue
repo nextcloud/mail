@@ -116,7 +116,7 @@
 								:size="20" />
 						</template>
 					</ButtonVue>
-					<ButtonVue
+					<ButtonVue v-if="hasSeenAcl"
 						type="tertiary-no-background"
 						class="action--primary"
 						:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
@@ -129,7 +129,7 @@
 								:size="20" />
 						</template>
 					</ButtonVue>
-					<ButtonVue v-if="showArchiveButton"
+					<ButtonVue v-if="showArchiveButton && hasArchiveAcl"
 						:close-after-click="true"
 						type="tertiary-no-background"
 						@click.prevent="onArchive">
@@ -139,7 +139,8 @@
 								:size="20" />
 						</template>
 					</ButtonVue>
-					<ButtonVue :close-after-click="true"
+					<ButtonVue v-if="hasDeleteAcl"
+						:close-after-click="true"
 						type="tertiary-no-background"
 						@click.prevent="onDelete">
 						<template #icon>
@@ -327,6 +328,44 @@ export default {
 		},
 		showImportantIconVariant() {
 			return this.envelope.flags.seen
+		},
+		hasSeenAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('s') !== -1
+		},
+		hasArchiveAcl() {
+			const hasDeleteSourceAcl = () => {
+				if (!this.mailbox.myAcls) {
+					return true
+				}
+
+				return this.mailbox.myAcls.indexOf('t') !== -1
+					&& this.mailbox.myAcls.indexOf('e') !== -1
+			}
+
+			const hasCreateDestinationAcl = () => {
+				if (!this.archiveMailbox.myAcls) {
+					return true
+				}
+
+				return this.archiveMailbox.myAcls.indexOf('i') !== -1
+			}
+
+			return hasDeleteSourceAcl() && hasCreateDestinationAcl()
+		},
+		hasDeleteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+		},
+		mailbox() {
+			return this.$store.getters.getMailbox(this.mailboxId)
+		},
+		archiveMailbox() {
+			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
 		},
 		/**
 		 * @return {{isSigned: (boolean|undefined), signatureIsValid: (boolean|undefined)}}
