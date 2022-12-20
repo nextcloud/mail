@@ -379,6 +379,8 @@ OC.L10N.register(
     "Mark as read" : "Okunmuş olarak işaretle",
     "Archive message" : "İletiyi arşivle",
     "Delete message" : "İletiyi sil",
+    "This message contains a verified digital S/MIME signature. The message wasn't changed since it was sent." : "Bu iletide, doğrulanmış bir sayısal S/MIME imzası bulunuyor. İleti gönderilmesinden sonra değiştirilmemiş.",
+    "This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted." : "Bu iletide, doğrulanmamış bir sayısal S/MIME imzası bulunuyor. İleti gönderilmesinden sonra değiştirilmiş olabilir ya da imzalayanın sertifikası güvenilir değil.",
     "Remove" : "Sil",
     "No senders are trusted at the moment." : "Henüz güvenilen bir gönderici yok.",
     "Could not remove trusted sender {sender}" : "{sender} güvenilen göndericisi silinemedi",
