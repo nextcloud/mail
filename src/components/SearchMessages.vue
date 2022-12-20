@@ -467,6 +467,8 @@ export default {
 	position: relative;
 	display: flex;
 	align-items: center;
+	//important info icon overlaps it while scrolling
+	z-index: 1;
 
 	input {
 		width: calc(100% - 45px);
