@@ -104,12 +104,10 @@ class SetupService {
 			'imapPort' => $imapPort,
 			'imapSslMode' => $imapSslMode,
 			'imapUser' => $imapUser,
-			'imapPassword' => $imapPassword,
 			'smtpHost' => $smtpHost,
 			'smtpPort' => $smtpPort,
 			'smtpSslMode' => $smtpSslMode,
 			'smtpUser' => $smtpUser,
-			'smtpPassword' => $smtpPassword
 		]);
 		$newAccount->setUserId($uid);
 		if ($authMethod === 'password' && $imapPassword !== null) {
