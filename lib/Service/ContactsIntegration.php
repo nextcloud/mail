@@ -149,7 +149,6 @@ class ContactsIntegration {
 			}
 			return $this->getPhotoUri($contact['PHOTO']);
 		}
-
 		return null;
 	}
 
@@ -236,10 +235,12 @@ class ContactsIntegration {
 	/**
 	 * @param string[] $fields
 	 */
-	private function doSearch(string $term, array $fields): array {
+	private function doSearch(string $term, array $fields, bool $strictSearch): array {
 		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
 
-		$result = $this->contactsManager->search($term, $fields);
+		$result = $this->contactsManager->search($term, $fields, [
+			'strict_search' => $strictSearch
+		]);
 		$matches = [];
 		foreach ($result as $r) {
 			if (!$allowSystemUsers && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
@@ -262,7 +263,7 @@ class ContactsIntegration {
 	 * @return array
 	 */
 	public function getContactsWithMail(string $mailAddr) {
-		return $this->doSearch($mailAddr, ['EMAIL']);
+		return $this->doSearch($mailAddr, ['EMAIL'], true);
 	}
 
 	/**
@@ -272,6 +273,6 @@ class ContactsIntegration {
 	 * @return array
 	 */
 	public function getContactsWithName(string $name) {
-		return $this->doSearch($name, ['FN']);
+		return $this->doSearch($name, ['FN'], false);
 	}
 }

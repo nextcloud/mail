@@ -47,7 +47,7 @@
 						:search-query="appendToSearch(priorityImportantQuery)"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
-						:initial-page-size="8"
+						:initial-page-size="importantMessagesInitialPageSize"
 						:collapsible="true"
 						:bus="bus" />
 					<SectionTitle v-show="hasImportantEnvelopes"
@@ -152,6 +152,15 @@ export default {
 		},
 		hasImportantEnvelopes() {
 			return this.$store.getters.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
+		},
+		importantMessagesInitialPageSize() {
+			if (window.innerHeight > 900) {
+				return 7
+			}
+			if (window.innerHeight > 750) {
+				return 5
+			}
+			return 3
 		},
 		showThread() {
 			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes) && this.$route.name === 'message'
@@ -314,6 +323,7 @@ export default {
 .envelope-list {
 	overflow-y: auto;
 	padding: 0 4px;
+	top: -10px;
 }
 .information-icon {
 	opacity: .7;

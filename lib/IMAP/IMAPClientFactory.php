@@ -79,7 +79,10 @@ class IMAPClientFactory {
 		);
 		$host = $account->getMailAccount()->getInboundHost();
 		$user = $account->getMailAccount()->getInboundUser();
-		$decryptedPassword = $this->crypto->decrypt($account->getMailAccount()->getInboundPassword());
+		$decryptedPassword = null;
+		if ($account->getMailAccount()->getInboundPassword() !== null) {
+			$decryptedPassword = $this->crypto->decrypt($account->getMailAccount()->getInboundPassword());
+		}
 		$port = $account->getMailAccount()->getInboundPort();
 		$sslMode = $account->getMailAccount()->getInboundSslMode();
 		if ($sslMode === 'none') {
@@ -101,9 +104,12 @@ class IMAPClientFactory {
 			],
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
+			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+
+			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Imap_Client_Password_Xoauth2(
 				$account->getEmail(),
-				$decryptedPassword,
+				$decryptedAccessToken,
 			);
 		}
 		if ($useCache && $this->cacheFactory->isAvailable()) {

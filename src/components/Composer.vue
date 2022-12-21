@@ -40,6 +40,7 @@
 					:hide-selected="true"
 					:loading="loadingIndicatorTo"
 					:auto-limit="autoLimit"
+					:options-limit="30"
 					@input="callSaveDraft(true, getMessageData)"
 					@tag="onNewToAddr"
 					@search-change="onAutocomplete($event, 'to')">
@@ -54,6 +55,7 @@
 								:no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
+								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
@@ -87,6 +89,7 @@
 					:loading="loadingIndicatorCc"
 					:auto-limit="autoLimit"
 					:hide-selected="true"
+					:options-limit="30"
 					@input="callSaveDraft(true, getMessageData)"
 					@tag="onNewCcAddr"
 					@search-change="onAutocomplete($event, 'cc')">
@@ -101,6 +104,7 @@
 								:no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
+								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
@@ -127,6 +131,7 @@
 					:preserve-search="true"
 					:loading="loadingIndicatorBcc"
 					:hide-selected="true"
+					:options-limit="30"
 					@input="callSaveDraft(true, getMessageData)"
 					@tag="onNewBccAddr"
 					@search-change="onAutocomplete($event, 'bcc')">
@@ -141,6 +146,7 @@
 								:no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
+								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>

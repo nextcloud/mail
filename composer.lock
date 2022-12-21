@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8d9f2af2c6daaa75db9059217aa869f",
+    "content-hash": "411b701d0d85d65b13f72e175c9582c9",
     "packages": [
         {
             "name": "amphp/amp",
@@ -588,16 +588,16 @@
         },
         {
             "name": "bytestream/horde-crypt-blowfish",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Crypt_Blowfish.git",
-                "reference": "944872aa670719f2e1476264c160960fd2f224c1"
+                "reference": "c1888c663374f8931d0d84768e3c61c53ee8aa4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Crypt_Blowfish/zipball/944872aa670719f2e1476264c160960fd2f224c1",
-                "reference": "944872aa670719f2e1476264c160960fd2f224c1",
+                "url": "https://api.github.com/repos/bytestream/Crypt_Blowfish/zipball/c1888c663374f8931d0d84768e3c61c53ee8aa4e",
+                "reference": "c1888c663374f8931d0d84768e3c61c53ee8aa4e",
                 "shasum": ""
             },
             "require": {
@@ -628,22 +628,22 @@
             "description": "Horde Blowfish encryption library",
             "homepage": "https://www.horde.org/libraries/Horde_Crypt_Blowfish",
             "support": {
-                "source": "https://github.com/bytestream/Crypt_Blowfish/tree/v1.2.0"
+                "source": "https://github.com/bytestream/Crypt_Blowfish/tree/v1.3.0"
             },
-            "time": "2021-12-21T13:33:22+00:00"
+            "time": "2022-12-12T11:35:44+00:00"
         },
         {
             "name": "bytestream/horde-exception",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Exception.git",
-                "reference": "c8c243d08556e7df5b37867eab1e478d76effa3e"
+                "reference": "d0f25e79a21f7de648f27ea49b902d13f596d5ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Exception/zipball/c8c243d08556e7df5b37867eab1e478d76effa3e",
-                "reference": "c8c243d08556e7df5b37867eab1e478d76effa3e",
+                "url": "https://api.github.com/repos/bytestream/Exception/zipball/d0f25e79a21f7de648f27ea49b902d13f596d5ca",
+                "reference": "d0f25e79a21f7de648f27ea49b902d13f596d5ca",
                 "shasum": ""
             },
             "require": {
@@ -684,9 +684,9 @@
             "description": "Horde exception handler library",
             "homepage": "https://www.horde.org/libraries/Horde_Exception",
             "support": {
-                "source": "https://github.com/bytestream/Exception/tree/v2.1.0"
+                "source": "https://github.com/bytestream/Exception/tree/v2.2.0"
             },
-            "time": "2021-12-21T12:20:11+00:00"
+            "time": "2022-12-12T12:10:17+00:00"
         },
         {
             "name": "bytestream/horde-idna",
@@ -1252,16 +1252,16 @@
         },
         {
             "name": "bytestream/horde-support",
-            "version": "v2.3.1",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Support.git",
-                "reference": "06e6634d56a6216adc6d5fbab00f099856646f29"
+                "reference": "6e5d9594cf42f470ce1e2622a91a2acdf26d8ec0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Support/zipball/06e6634d56a6216adc6d5fbab00f099856646f29",
-                "reference": "06e6634d56a6216adc6d5fbab00f099856646f29",
+                "url": "https://api.github.com/repos/bytestream/Support/zipball/6e5d9594cf42f470ce1e2622a91a2acdf26d8ec0",
+                "reference": "6e5d9594cf42f470ce1e2622a91a2acdf26d8ec0",
                 "shasum": ""
             },
             "require": {
@@ -1303,22 +1303,22 @@
             "description": "Horde Supporting library",
             "homepage": "https://www.horde.org/libraries/Horde_Support",
             "support": {
-                "source": "https://github.com/bytestream/Support/tree/v2.3.1"
+                "source": "https://github.com/bytestream/Support/tree/v2.4.0"
             },
-            "time": "2022-05-23T13:26:20+00:00"
+            "time": "2022-12-12T11:11:32+00:00"
         },
         {
             "name": "bytestream/horde-text-filter",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Text_Filter.git",
-                "reference": "ffd15ef856a0f31c5d49c8f8f4d5bcb820571121"
+                "reference": "f4654f42665c1784911c63de22f3ab2eca682380"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Text_Filter/zipball/ffd15ef856a0f31c5d49c8f8f4d5bcb820571121",
-                "reference": "ffd15ef856a0f31c5d49c8f8f4d5bcb820571121",
+                "url": "https://api.github.com/repos/bytestream/Text_Filter/zipball/f4654f42665c1784911c63de22f3ab2eca682380",
+                "reference": "f4654f42665c1784911c63de22f3ab2eca682380",
                 "shasum": ""
             },
             "require": {
@@ -1362,9 +1362,9 @@
             "description": "Horde text filtering and conversion library",
             "homepage": "https://www.horde.org/libraries/Horde_Text_Filter",
             "support": {
-                "source": "https://github.com/bytestream/Text_Filter/tree/v2.4.0"
+                "source": "https://github.com/bytestream/Text_Filter/tree/v2.5.0"
             },
-            "time": "2021-12-21T16:08:23+00:00"
+            "time": "2022-12-12T11:55:30+00:00"
         },
         {
             "name": "bytestream/horde-text-flowed",
@@ -1413,16 +1413,16 @@
         },
         {
             "name": "bytestream/horde-translation",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Translation.git",
-                "reference": "50b32bf614164e3e44deb23f4210e709f967cbc6"
+                "reference": "2a5c7702f5ad0c036bc8548c74a1c03730b99e74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Translation/zipball/50b32bf614164e3e44deb23f4210e709f967cbc6",
-                "reference": "50b32bf614164e3e44deb23f4210e709f967cbc6",
+                "url": "https://api.github.com/repos/bytestream/Translation/zipball/2a5c7702f5ad0c036bc8548c74a1c03730b99e74",
+                "reference": "2a5c7702f5ad0c036bc8548c74a1c03730b99e74",
                 "shasum": ""
             },
             "require": {
@@ -1451,27 +1451,28 @@
             "description": "Horde Translation library",
             "homepage": "https://www.horde.org/libraries/Horde_Translation",
             "support": {
-                "source": "https://github.com/bytestream/Translation/tree/v2.3.0"
+                "source": "https://github.com/bytestream/Translation/tree/v2.4.0"
             },
-            "time": "2021-12-20T20:30:50+00:00"
+            "time": "2022-12-12T10:15:17+00:00"
         },
         {
             "name": "bytestream/horde-util",
-            "version": "v2.6.4",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Util.git",
-                "reference": "a678724f07ec5933e2192e4e6d9d84c033b358be"
+                "reference": "131e873b5e0f2acff913d16d47c3f9467f2b9f5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Util/zipball/a678724f07ec5933e2192e4e6d9d84c033b358be",
-                "reference": "a678724f07ec5933e2192e4e6d9d84c033b358be",
+                "url": "https://api.github.com/repos/bytestream/Util/zipball/131e873b5e0f2acff913d16d47c3f9467f2b9f5a",
+                "reference": "131e873b5e0f2acff913d16d47c3f9467f2b9f5a",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
-                "php": "^7.4 || ^8.0"
+                "php": "^7.4 || ^8.0",
+                "symfony/polyfill-php72": "^1.27"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
@@ -1506,9 +1507,9 @@
             "description": "Horde utility library",
             "homepage": "https://www.horde.org/libraries/Horde_Util",
             "support": {
-                "source": "https://github.com/bytestream/Util/tree/v2.6.4"
+                "source": "https://github.com/bytestream/Util/tree/v2.7.0"
             },
-            "time": "2022-06-06T10:55:29+00:00"
+            "time": "2022-12-12T10:10:21+00:00"
         },
         {
             "name": "cerdic/css-tidy",
@@ -2078,16 +2079,16 @@
         },
         {
             "name": "nextcloud/horde-smtp",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud/horde-smtp.git",
-                "reference": "6449ee9e8894876bb796dd9b1d6d995ebe86617d"
+                "reference": "29b9a574136a067a206def77078cacc8f6acf3e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/horde-smtp/zipball/6449ee9e8894876bb796dd9b1d6d995ebe86617d",
-                "reference": "6449ee9e8894876bb796dd9b1d6d995ebe86617d",
+                "url": "https://api.github.com/repos/nextcloud/horde-smtp/zipball/29b9a574136a067a206def77078cacc8f6acf3e5",
+                "reference": "29b9a574136a067a206def77078cacc8f6acf3e5",
                 "shasum": ""
             },
             "require": {
@@ -2127,9 +2128,9 @@
             "description": "Horde SMTP client",
             "homepage": "https://www.horde.org",
             "support": {
-                "source": "https://github.com/nextcloud/horde-smtp/tree/v1.0.1"
+                "source": "https://github.com/nextcloud/horde-smtp/tree/v1.0.2"
             },
-            "time": "2022-05-25T07:41:40+00:00"
+            "time": "2022-12-14T16:39:58+00:00"
         },
         {
             "name": "psr/log",
@@ -2582,6 +2583,82 @@
             "time": "2022-11-03T14:55:06+00:00"
         },
         {
+            "name": "symfony/polyfill-php72",
+            "version": "v1.27.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php72.git",
+                "reference": "869329b1e9894268a8a61dabb69153029b7a8c97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/869329b1e9894268a8a61dabb69153029b7a8c97",
+                "reference": "869329b1e9894268a8a61dabb69153029b7a8c97",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.27-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php72\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 7.2+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php72/tree/v1.27.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-11-03T14:55:06+00:00"
+        },
+        {
             "name": "symfony/polyfill-php73",
             "version": "v1.27.0",
             "source": {
@@ -2841,16 +2918,16 @@
         },
         {
             "name": "psalm/phar",
-            "version": "5.1.0",
+            "version": "5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "43a6cee76d19e9ddc2e39ef1f0ae7d12d351c85f"
+                "reference": "9c5be85e9a587c2ce2baf9c8638ec922ea486092"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/43a6cee76d19e9ddc2e39ef1f0ae7d12d351c85f",
-                "reference": "43a6cee76d19e9ddc2e39ef1f0ae7d12d351c85f",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/9c5be85e9a587c2ce2baf9c8638ec922ea486092",
+                "reference": "9c5be85e9a587c2ce2baf9c8638ec922ea486092",
                 "shasum": ""
             },
             "require": {
@@ -2870,9 +2947,9 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/5.1.0"
+                "source": "https://github.com/psalm/phar/tree/5.2.0"
             },
-            "time": "2022-12-02T21:23:59+00:00"
+            "time": "2022-12-12T08:30:24+00:00"
         },
         {
             "name": "psr/container",

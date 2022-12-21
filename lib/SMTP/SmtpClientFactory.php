@@ -65,7 +65,10 @@ class SmtpClientFactory {
 			return new Horde_Mail_Transport_Mail();
 		}
 
-		$decryptedPassword = $this->crypto->decrypt($mailAccount->getOutboundPassword());
+		$decryptedPassword = null;
+		if ($mailAccount->getOutboundPassword() !== null) {
+			$decryptedPassword = $this->crypto->decrypt($mailAccount->getOutboundPassword());
+		}
 		$security = $mailAccount->getOutboundSslMode();
 		$params = [
 			'localhost' => $this->hostNameFactory->getHostName(),
@@ -83,9 +86,12 @@ class SmtpClientFactory {
 			],
 		];
 		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
+			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+
+			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Smtp_Password_Xoauth2(
 				$account->getEmail(),
-				$decryptedPassword,
+				$decryptedAccessToken,
 			);
 		}
 		if ($this->config->getSystemValue('debug', false)) {

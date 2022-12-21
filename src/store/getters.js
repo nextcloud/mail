@@ -52,6 +52,14 @@ export const getters = {
 		const mailbox = getters.getMailbox(id)
 		return mailbox.mailboxes.map((id) => state.mailboxes[id])
 	},
+	getParentMailbox: (state, getters) => (id) => {
+		for (const mailbox of getters.getMailboxes(getters.getMailbox(id).accountId)) {
+			if (mailbox.mailboxes.includes(id)) {
+				return mailbox
+			}
+		}
+		return undefined
+	},
 	getUnifiedMailbox: (state) => (specialRole) => {
 		return head(
 			state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
