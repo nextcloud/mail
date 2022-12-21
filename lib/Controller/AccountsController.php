@@ -43,6 +43,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
+use OCA\Mail\Validation\RemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -62,6 +63,7 @@ class AccountsController extends Controller {
 	private IMailManager $mailManager;
 	private SyncService $syncService;
 	private IConfig $config;
+	private RemoteHostValidator $hostValidator;
 
 	public function __construct(string $appName,
 								   IRequest $request,
@@ -74,7 +76,8 @@ class AccountsController extends Controller {
 								   SetupService $setup,
 								   IMailManager $mailManager,
 								   SyncService $syncService,
-									IConfig $config
+									IConfig $config,
+									RemoteHostValidator $hostValidator
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -87,6 +90,7 @@ class AccountsController extends Controller {
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
 		$this->config = $config;
+		$this->hostValidator = $hostValidator;
 	}
 
 	/**
@@ -161,6 +165,26 @@ class AccountsController extends Controller {
 			$this->accountService->find($this->currentUserId, $id);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+		if (!$this->hostValidator->isValid($imapHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'IMAP',
+					'host' => $imapHost,
+					'port' => $imapPort,
+				],
+			);
+		}
+		if (!$this->hostValidator->isValid($smtpHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'SMTP',
+					'host' => $smtpHost,
+					'port' => $smtpPort,
+				],
+			);
 		}
 
 		try {
@@ -317,6 +341,26 @@ class AccountsController extends Controller {
 		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
 			$this->logger->info('Creating account disabled by admin.');
 			return MailJsonResponse::error('Could not create account');
+		}
+		if (!$this->hostValidator->isValid($imapHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'IMAP',
+					'host' => $imapHost,
+					'port' => $imapPort,
+				],
+			);
+		}
+		if (!$this->hostValidator->isValid($smtpHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'SMTP',
+					'host' => $smtpHost,
+					'port' => $smtpPort,
+				],
+			);
 		}
 		try {
 			return MailJsonResponse::success(

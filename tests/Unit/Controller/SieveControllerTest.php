@@ -31,8 +31,13 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCA\Mail\Validation\RemoteHostValidator;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SieveControllerTest extends TestCase {
+	/** @var RemoteHostValidator|MockObject */
+	private $remoteHostValidator;
+
 	/** @var ServiceMockObject */
 	private $serviceMock;
 
@@ -42,9 +47,16 @@ class SieveControllerTest extends TestCase {
 
 	protected function setUp(): void {
 		parent::setUp();
+
+		$this->remoteHostValidator = $this->createMock(RemoteHostValidator::class);
+		$this->remoteHostValidator->method('isValid')->willReturn(true);
+
 		$this->serviceMock = $this->createServiceMock(
 			SieveController::class,
-			['UserId' => '1']
+			[
+				'hostValidator' => $this->remoteHostValidator,
+				'UserId' => '1',
+			]
 		);
 		$this->sieveController = $this->serviceMock->getService();
 	}
@@ -59,6 +71,8 @@ class SieveControllerTest extends TestCase {
 			->method('save');
 
 		$response = $this->sieveController->updateAccount(2, false, '', 0, '', '', '');
+
+		$this->assertEquals(200, $response->getStatus());
 		$this->assertEquals(false, $response->getData()['sieveEnabled']);
 	}
 
@@ -72,6 +86,8 @@ class SieveControllerTest extends TestCase {
 			->method('save');
 
 		$response = $this->sieveController->updateAccount(2, true, 'localhost', 4190, 'user', 'password', '');
+
+		$this->assertEquals(200, $response->getStatus());
 		$this->assertEquals(true, $response->getData()['sieveEnabled']);
 	}
 
@@ -89,6 +105,8 @@ class SieveControllerTest extends TestCase {
 			->method('save');
 
 		$response = $this->sieveController->updateAccount(2, true, 'localhost', 4190, '', '', '');
+
+		$this->assertEquals(200, $response->getStatus());
 		$this->assertEquals(true, $response->getData()['sieveEnabled']);
 	}
 
@@ -107,7 +125,7 @@ class SieveControllerTest extends TestCase {
 			->method('createClient')
 			->willThrowException(new Exception('Computer says no'));
 
-		$this->sieveController->updateAccount(2, true, 'localhost', 4190, 'user', 'password', '');
+		$response = $this->sieveController->updateAccount(2, true, 'localhost', 4190, 'user', 'password', '');
 	}
 
 	public function testGetActiveScript(): void {
@@ -126,6 +144,8 @@ class SieveControllerTest extends TestCase {
 			->willReturn(new Account($mailAccount));
 
 		$response = $this->sieveController->getActiveScript(2);
+
+		$this->assertEquals(200, $response->getStatus());
 		$this->assertEquals(['scriptName' => '', 'script' => ''], $response->getData());
 	}
 
@@ -161,6 +181,8 @@ class SieveControllerTest extends TestCase {
 			->willReturn(new Account($mailAccount));
 
 		$response = $this->sieveController->updateActiveScript(2, 'sieve script');
+
+		$this->assertEquals(200, $response->getStatus());
 		$this->assertEquals([], $response->getData());
 	}
 }
