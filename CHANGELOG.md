@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.2 – 2022-12-21
+### Fixed
+- Validate remote hosts
+- Sending password for OAUTH accounts
+- Storing password when we don't expect one
+- Check for quoted-printable transfer encoding and decode messages before parsing html
+
 ## 2.2.1 – 2022-12-06
 ### Fixed
 - Mailbox cache sync scope of current mailbox
