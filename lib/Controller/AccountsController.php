@@ -46,7 +46,6 @@ use OCA\Mail\Validation\RemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
@@ -94,7 +93,6 @@ class AccountsController extends Controller {
 								   SetupService $setup,
 								   IMailManager $mailManager,
 								   SyncService $syncService,
-								   IConfig $config,
 								   RemoteHostValidator $hostValidator) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -106,7 +104,6 @@ class AccountsController extends Controller {
 		$this->setup = $setup;
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
-		$this->config = $config;
 		$this->hostValidator = $hostValidator;
 	}
 
