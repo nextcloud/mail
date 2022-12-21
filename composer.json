@@ -1,11 +1,4 @@
 {
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/kwi-dk/UrlLinker",
-			"branch": "bleeding"
-		}
-	],
 	"config": {
 		"platform": {
 			"php": "7.4"
