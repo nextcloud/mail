@@ -326,7 +326,7 @@ OC.L10N.register(
     "Add" : "Hinzufügen",
     "Search in mailbox" : "Im Postfach suchen",
     "Search parameters" : "Suchparameter",
-    "Search term" : "Scuhbegriff",
+    "Search term" : "Suchbegriff",
     "Pick a start date" : "Startdatum wählen",
     "Pick an end date" : "Enddatum wählen",
     "Select sender" : "Absender wählen",
