@@ -119,7 +119,6 @@ class NewMessageClassificationListener implements IEventListener {
 		try {
 			$predictions = $this->classifier->classifyImportance(
 				$event->getAccount(),
-				$event->getMailbox(),
 				$messages
 			);
 

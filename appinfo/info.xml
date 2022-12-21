@@ -57,6 +57,7 @@
 		<command>OCA\Mail\Command\DiagnoseAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
 		<command>OCA\Mail\Command\ExportAccountThreads</command>
+		<command>OCA\Mail\Command\PredictImportance</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
 		<command>OCA\Mail\Command\TrainAccount</command>
 		<command>OCA\Mail\Command\Thread</command>
