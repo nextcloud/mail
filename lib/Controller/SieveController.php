@@ -28,16 +28,18 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Sieve\SieveClientFactory;
+use OCA\Mail\Validation\RemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 
 class SieveController extends Controller {
-
 	/** @var AccountService */
 	private $accountService;
 
@@ -53,29 +55,23 @@ class SieveController extends Controller {
 	/** @var ICrypto */
 	private $crypto;
 
-	/**
-	 * AccountsController constructor.
-	 *
-	 * @param IRequest $request
-	 * @param string $UserId
-	 * @param AccountService $accountService
-	 * @param MailAccountMapper $mailAccountMapper
-	 * @param SieveClientFactory $sieveClientFactory
-	 * @param ICrypto $crypto
-	 */
+	/** @var RemoteHostValidator */
+	private $hostValidator;
+
 	public function __construct(IRequest $request,
 								string $UserId,
 								AccountService $accountService,
 								MailAccountMapper $mailAccountMapper,
 								SieveClientFactory $sieveClientFactory,
-								ICrypto $crypto
-	) {
+								ICrypto $crypto,
+								RemoteHostValidator $hostValidator) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;
 		$this->accountService = $accountService;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->sieveClientFactory = $sieveClientFactory;
 		$this->crypto = $crypto;
+		$this->hostValidator = $hostValidator;
 	}
 
 	/**
@@ -152,6 +148,17 @@ class SieveController extends Controller {
 								  string $sievePassword,
 								  string $sieveSslMode
 	): JSONResponse {
+		if (!$this->hostValidator->isValid($sieveHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'ManageSieve',
+					'host' => $sieveHost,
+					'port' => $sievePort,
+				],
+				Http::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
 		$mailAccount = $this->mailAccountMapper->find($this->currentUserId, $id);
 
 		if ($sieveEnabled === false) {
