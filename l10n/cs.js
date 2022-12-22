@@ -379,6 +379,8 @@ OC.L10N.register(
     "Mark as read" : "Označit jako přečtené",
     "Archive message" : "Zaarchivovat zprávu",
     "Delete message" : "Smazat zprávu",
+    "This message contains a verified digital S/MIME signature. The message wasn't changed since it was sent." : "Tato zpráva obsahuje ověřený digitílní S/MIME podpis. Zpráva tedy nebyla od odeslání změněna.",
+    "This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted." : "Tato zpráva obsahuje neověřený digitální S/MIME podpis. Zpráva tedy mohla být po odeslání změněna nebo není certifikát podepisujícího považován za důvěryhodný.",
     "Remove" : "Odebrat",
     "No senders are trusted at the moment." : "V tuto chvíli nejsou mezi důvěryhodnými žádní odesílatelé.",
     "Could not remove trusted sender {sender}" : "Nepodařilo se odebrat důvěryhodného odesílatele {sender}",
