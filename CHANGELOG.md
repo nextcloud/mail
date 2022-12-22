@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.15.0 – 2022-12-22
+### Changed
+- Drop Nextcloud 22 support (EOL)
+### Fixed
+- Remote host validation
+
 ## 1.14.5 – 2022-12-06
 ### Fixed
 - Provisioned accounts with passwordless authentication
