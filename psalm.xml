@@ -32,6 +32,11 @@
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Psr\Http\Client\ClientExceptionInterface" />
 				<referencedClass name="Symfony\Component\HttpFoundation\IpUtils" />
+				<referencedClass name="Symfony\Component\Console\Command\Command" />
+				<referencedClass name="Symfony\Component\Console\Input\InputArgument" />
+				<referencedClass name="Symfony\Component\Console\Input\InputInterface" />
+				<referencedClass name="Symfony\Component\Console\Input\InputOption" />
+				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
@@ -42,6 +47,7 @@
 				<referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
+				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 			</errorLevel>
 		</UndefinedDocblockClass>
 		<UndefinedFunction>
