@@ -1,65 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="dev-master@">
-  <file src="lib/Command/AddMissingTags.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/CleanUp.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/CreateAccount.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/CreateTagMigrationJobEntry.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/DeleteAccount.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/DiagnoseAccount.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/ExportAccount.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/ExportAccountThreads.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/SyncAccount.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/Thread.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/TrainAccount.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
-  <file src="lib/Command/UpdateAccount.php">
-    <UndefinedClass occurrences="1">
-      <code>Command</code>
-    </UndefinedClass>
-  </file>
   <file src="lib/Db/MessageMapper.php">
     <InvalidReturnStatement occurrences="1">
       <code>$update-&gt;execute()</code>
@@ -84,24 +24,5 @@
       <code>$node-&gt;tagName</code>
       <code>$node-&gt;textContent</code>
     </UndefinedPropertyFetch>
-  </file>
-  <file src="lib/Support/ConsoleLoggerDecorator.php">
-    <UndefinedClass occurrences="2">
-      <code>OutputInterface</code>
-      <code>OutputInterface</code>
-    </UndefinedClass>
-    <UndefinedDocblockClass occurrences="11">
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>$this-&gt;consoleOutput</code>
-      <code>OutputInterface</code>
-    </UndefinedDocblockClass>
   </file>
 </files>
