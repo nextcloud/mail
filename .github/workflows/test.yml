@@ -16,21 +16,15 @@ jobs:
             nextcloud-versions: stable25
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
-    - name: Set up php${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@v2
+    - name: Set up Nextcloud env
+      uses: ChristophWurst/setup-nextcloud@v0.3.1
       with:
+        nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
-        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
-        coverage: xdebug
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Checkout Nextcloud
-      run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
-    - name: Patch version check for nightly PHP
-      if: ${{ matrix.php-versions == '8.2' }}
-      run: echo "<?php" > nextcloud/lib/versioncheck.php
-    - name: Install Nextcloud
-      run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
+        php-coverage: 'xdebug'
+        patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+        node-version: 'false'
+        install: true
     - name: Checkout Mail
       uses: actions/checkout@v3
       with:
@@ -116,21 +110,16 @@ jobs:
                   --health-timeout 5s
                   --health-retries 5
       steps:
-          - name: Set up php${{ matrix.php-versions }}
-            uses: shivammathur/setup-php@v2
+          - name: Set up Nextcloud env
+            uses: ChristophWurst/setup-nextcloud@v0.3.1
             with:
-                php-version: ${{ matrix.php-versions }}
-                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
-                coverage: xdebug
-            env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          - name: Checkout Nextcloud
-            run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
-          - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.2' }}
-            run: echo "<?php" > nextcloud/lib/versioncheck.php
-          - name: Install Nextcloud
-            run: php -f nextcloud/occ maintenance:install --database-host 127.0.0.1 --database-name nextcloud --database-user nextcloud --database-pass nextcloud --admin-user admin --admin-pass admin --database ${{ matrix.db }}
+              nextcloud-version: ${{ matrix.nextcloud-versions }}
+              php-version: ${{ matrix.php-versions }}
+              php-coverage: 'xdebug'
+              patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+              install: true
+              database: ${{ matrix.db }}
+              node-version: 'false'
           - name: Checkout Mail
             uses: actions/checkout@v3
             with:
