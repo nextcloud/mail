@@ -12,6 +12,9 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
 - package-ecosystem: npm
   directory: "/"
   schedule:
@@ -26,6 +29,55 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "GretaD"
+  commit-message:
+    prefix: chore
+    include: scope
+  ignore:
+    - dependency-type: production
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "03:00"
+    timezone: Europe/Paris
+  open-pull-requests-limit: 10
+  labels:
+    - 3. to review
+    - dependencies
+  reviewers:
+    - "ChristophWurst"
+    - "GretaD"
+  commit-message:
+    prefix: fix
+    include: scope
+  ignore:
+    - dependency-type: production
+      update-types: ["version-update:semver-major", "version-update:semver-minor"]
+  allow:
+    - dependency-type: production
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "03:00"
+    timezone: Europe/Paris
+  open-pull-requests-limit: 10
+  labels:
+    - 3. to review
+    - dependencies
+  reviewers:
+    - "ChristophWurst"
+    - "GretaD"
+  commit-message:
+    prefix: feat
+    include: scope
+  ignore:
+    - dependency-type: production
+      update-types: ["version-update:semver-patch"]
+  allow:
+    - dependency-type: production
 - package-ecosystem: composer
   directory: "/"
   schedule:
@@ -38,12 +90,60 @@ updates:
   - 3. to review
   - dependencies
   - php
-  allow:
-  - dependency-type: direct
-  - dependency-type: indirect
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
+  ignore:
+    - dependency-type: production
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "03:00"
+    timezone: Europe/Paris
+  open-pull-requests-limit: 10
+  labels:
+    - 3. to review
+    - dependencies
+    - php
+  reviewers:
+    - "ChristophWurst"
+    - "kesselb"
+  commit-message:
+    prefix: fix
+    include: scope
+  ignore:
+    - dependency-type: production
+      update-types: ["version-update:semver-major", "version-update:semver-minor"]
+  allow:
+    - dependency-type: production
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "03:00"
+    timezone: Europe/Paris
+  open-pull-requests-limit: 10
+  labels:
+    - 3. to review
+    - dependencies
+    - php
+  reviewers:
+    - "ChristophWurst"
+    - "kesselb"
+  commit-message:
+    prefix: feat
+    include: scope
+  ignore:
+    - dependency-type: production
+      update-types: ["version-update:semver-patch"]
+  allow:
+    - dependency-type: production
 - package-ecosystem: composer
   directory: "/vendor-bin/mozart/"
   schedule:
@@ -61,6 +161,9 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
 - package-ecosystem: composer
   directory: "/vendor-bin/cs-fixer/"
   schedule:
@@ -78,6 +181,9 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
 - package-ecosystem: composer
   directory: "/vendor-bin/phpunit/"
   schedule:
@@ -95,6 +201,9 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
 
 # Stable2.0
 - package-ecosystem: npm
