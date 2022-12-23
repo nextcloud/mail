@@ -440,6 +440,7 @@ export default {
 						logger.error('Could not sync envelopes: ' + error.message, { error, init })
 					},
 				})
+				throw error
 			} finally {
 				this.refreshing = false
 				logger.debug(`finished sync'ing mailbox ${this.mailbox.databaseId} (${this.searchQuery})`, { init })
