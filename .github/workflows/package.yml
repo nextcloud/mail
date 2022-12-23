@@ -15,7 +15,7 @@ jobs:
         uses: skjnldsv/read-package-engines-version-actions@v2.0
         id: versions
       - name: Set up Nextcloud env
-        uses: ChristophWurst/setup-nextcloud@v0.2.3
+        uses: ChristophWurst/setup-nextcloud@v0.3.1
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
           npm-version: ${{ steps.versions.outputs.npmVersion }}
