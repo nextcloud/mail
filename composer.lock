@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "411b701d0d85d65b13f72e175c9582c9",
+    "content-hash": "b8d9f2af2c6daaa75db9059217aa869f",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1209,16 +1209,16 @@
         },
         {
             "name": "bytestream/horde-stringprep",
-            "version": "v1.1.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Stringprep.git",
-                "reference": "9450141cdc3b853c719274a0baee03e33a2d0ce1"
+                "reference": "ab90e418923f86b069b6e9a3d5f6a73f62255691"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Stringprep/zipball/9450141cdc3b853c719274a0baee03e33a2d0ce1",
-                "reference": "9450141cdc3b853c719274a0baee03e33a2d0ce1",
+                "url": "https://api.github.com/repos/bytestream/Stringprep/zipball/ab90e418923f86b069b6e9a3d5f6a73f62255691",
+                "reference": "ab90e418923f86b069b6e9a3d5f6a73f62255691",
                 "shasum": ""
             },
             "require": {
@@ -1246,9 +1246,9 @@
             "description": "Horde internationalized strings preparation library",
             "homepage": "https://www.horde.org",
             "support": {
-                "source": "https://github.com/bytestream/Stringprep/tree/v1.1.0"
+                "source": "https://github.com/bytestream/Stringprep/tree/v1.2.1"
             },
-            "time": "2021-12-21T18:19:43+00:00"
+            "time": "2022-12-12T12:31:30+00:00"
         },
         {
             "name": "bytestream/horde-support",
