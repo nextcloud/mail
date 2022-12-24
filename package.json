@@ -25,7 +25,7 @@
     "@ckeditor/ckeditor5-editor-balloon": "~35.1.0",
     "@ckeditor/ckeditor5-essentials": "~35.1.0",
     "@ckeditor/ckeditor5-font": "~35.1.0",
-    "@ckeditor/ckeditor5-heading": "~35.1.0",
+    "@ckeditor/ckeditor5-heading": "~35.4.0",
     "@ckeditor/ckeditor5-image": "^35.1.0",
     "@ckeditor/ckeditor5-link": "~35.1.0",
     "@ckeditor/ckeditor5-list": "~35.1.0",
