@@ -506,28 +506,30 @@ class MessagesController extends Controller {
 
 			$client = $this->clientFactory->getClient($account);
 			try {
-				$html = $this->mailManager->getImapMessage(
+				$imapMessage = $this->mailManager->getImapMessage(
 					$client,
 					$account,
 					$mailbox,
 					$message->getUid(),
 					true
-				)->getHtmlBody(
-					$id
 				);
 			} finally {
 				$client->logout();
 			}
 
-			$htmlResponse = $plain ?
-				HtmlResponse::plain($html) :
-				HtmlResponse::withResizer(
-					$html,
+			if ($plain) {
+				$htmlResponse = HtmlResponse::plain(
+					$imapMessage->getHtmlBody($id, true)
+				);
+			} else {
+				$htmlResponse = HtmlResponse::withResizer(
+					$imapMessage->getHtmlBody($id),
 					$this->nonceManager->getNonce(),
 					$this->urlGenerator->getAbsoluteURL(
 						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js')
 					)
 				);
+			}
 
 			// Harden the default security policy
 			$policy = new ContentSecurityPolicy();

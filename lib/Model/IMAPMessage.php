@@ -540,11 +540,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @param int $id
+	 * @param int $id message id
+	 * @param bool $plain false to sanitize the body
 	 *
 	 * @return string
 	 */
-	public function getHtmlBody(int $id): string {
+	public function getHtmlBody(int $id, bool $plain = false): string {
+		if ($plain === true) {
+			return $this->htmlMessage;
+		}
+
 		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
 			'id' => $id,
 		], function ($cid) {
