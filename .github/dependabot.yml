@@ -12,6 +12,9 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: ci
+    include: scope
 - package-ecosystem: npm
   directory: "/"
   schedule:
@@ -26,6 +29,9 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "GretaD"
+  commit-message:
+    prefix: chore
+    include: scope
 - package-ecosystem: composer
   directory: "/"
   schedule:
@@ -44,6 +50,9 @@ updates:
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
 - package-ecosystem: composer
   directory: "/vendor-bin/mozart/"
   schedule:
@@ -56,11 +65,12 @@ updates:
       - 3. to review
       - dependencies
       - php
-  allow:
-      - dependency-type: direct
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
 - package-ecosystem: composer
   directory: "/vendor-bin/cs-fixer/"
   schedule:
@@ -73,11 +83,12 @@ updates:
       - 3. to review
       - dependencies
       - php
-  allow:
-      - dependency-type: direct
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
 - package-ecosystem: composer
   directory: "/vendor-bin/phpunit/"
   schedule:
@@ -90,8 +101,9 @@ updates:
       - 3. to review
       - dependencies
       - php
-  allow:
-      - dependency-type: direct
   reviewers:
   - "ChristophWurst"
   - "kesselb"
+  commit-message:
+    prefix: chore
+    include: scope
