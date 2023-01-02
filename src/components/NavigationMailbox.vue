@@ -695,4 +695,8 @@ export default {
 .counter-bubble__counter {
 	max-width: initial;
 }
+// TODO: upsteream collapse icon position fix
+  :deep(.icon-collapse) {
+	  position: absolute !important;
+  }
 </style>
