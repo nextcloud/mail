@@ -28,7 +28,6 @@ namespace OCA\Mail\Net;
 use IPLib\Address\IPv6;
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
-use Symfony\Component\HttpFoundation\IpUtils;
 use function filter_var;
 
 /**
@@ -69,9 +68,21 @@ class IpAddressClassifier {
 			/* Range address */
 			return true;
 		}
-		if (IpUtils::checkIp($ip, self::LOCAL_ADDRESS_RANGES)) {
-			/* Within local range */
-			return true;
+
+		if (class_exists(\Symfony\Component\HttpFoundation\IpUtils::class)) {
+			// >= Nextcloud 25
+			if (\Symfony\Component\HttpFoundation\IpUtils::checkIp($ip, self::LOCAL_ADDRESS_RANGES)) {
+				/* Within local range */
+				return true;
+			}
+		} elseif (class_exists(\OC\Http\IpUtils::class)) {
+			// >= Nextcloud 24.0.4
+			// >= Nextcloud 23.0.8
+			// >= Nextcloud 22.2.11
+			if (\OC\Http\IpUtils::checkIp($ip, self::LOCAL_ADDRESS_RANGES)) {
+				/* Within local range */
+				return true;
+			}
 		}
 
 		return false;
