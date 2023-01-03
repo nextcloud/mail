@@ -1,1 +1,2 @@
-CHANGELOG.md merge=union
+/CHANGELOG.md merge=union
+/vendor-bin/**/composer.lock binary

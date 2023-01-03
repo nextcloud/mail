@@ -29,7 +29,7 @@
 	<repository type="git">https://github.com/nextcloud/mail.git</repository>
 	<screenshot>https://user-images.githubusercontent.com/1374172/79554966-278e1600-809f-11ea-82ea-7a0d72a2704f.png</screenshot>
 	<dependencies>
-		<php min-version="7.4" max-version="8.1" />
+		<php min-version="8.0" max-version="8.1" />
 		<nextcloud min-version="25" max-version="26" />
 	</dependencies>
 	<background-jobs>
