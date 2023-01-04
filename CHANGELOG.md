@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.15.1 - 2023-01-04
+### Fixed
+- Message preview text transfer decoding
+
 ## 1.15.0 – 2022-12-22
 ### Changed
 - Drop Nextcloud 22 support (EOL)
