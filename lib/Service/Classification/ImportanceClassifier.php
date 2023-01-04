@@ -36,6 +36,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClassifierTrainingException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\SubjectExtractor;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
@@ -44,6 +45,9 @@ use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
+use Rubix\ML\Transformers\TextNormalizer;
+use Rubix\ML\Transformers\TfIdfTransformer;
+use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -98,7 +102,7 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 1000;
+	private const MAX_TRAINING_SET_SIZE = 10000;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -108,6 +112,9 @@ class ImportanceClassifier {
 
 	/** @var CompositeExtractor */
 	private $extractor;
+
+	/** @var SubjectExtractor */
+	private $subjectExtractor;
 
 	/** @var PersistenceService */
 	private $persistenceService;
@@ -126,7 +133,8 @@ class ImportanceClassifier {
 								PersistenceService $persistenceService,
 								PerformanceLogger $performanceLogger,
 								ImportanceRulesClassifier $rulesClassifier,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								SubjectExtractor $subjectExtractor) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
@@ -134,6 +142,7 @@ class ImportanceClassifier {
 		$this->performanceLogger = $performanceLogger;
 		$this->rulesClassifier = $rulesClassifier;
 		$this->logger = $logger;
+		$this->subjectExtractor = $subjectExtractor;
 	}
 
 	private function filterMessageHasSenderEmail(Message $message): bool {
@@ -185,16 +194,33 @@ class ImportanceClassifier {
 		$dataSet = $this->getFeaturesAndImportance($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		$perf->step('extract features from messages');
 
+		shuffle($dataSet);
+
 		/**
 		 * How many of the most recent messages are excluded from training?
 		 */
 		$validationThreshold = max(
 			5,
-			(int)(count($dataSet) * 0.1)
+			(int)(count($dataSet) * 0.25)
 		);
 		$validationSet = array_slice($dataSet, 0, $validationThreshold);
 		$trainingSet = array_slice($dataSet, $validationThreshold);
-		$logger->debug('data set split into ' . count($trainingSet) . ' training and ' . count($validationSet) . ' validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
+
+		$validationSetImportantCount = 0;
+		$trainingSetImportantCount = 0;
+		foreach ($validationSet as $data) {
+			if ($data['label'] === self::LABEL_IMPORTANT) {
+				$validationSetImportantCount++;
+			}
+		}
+		foreach ($trainingSet as $data) {
+			if ($data['label'] === self::LABEL_IMPORTANT) {
+				$trainingSetImportantCount++;
+			}
+		}
+
+		$logger->debug('data set split into ' . count($trainingSet) . ' (' . $trainingSetImportantCount . ') training and ' . count($validationSet) . ' (' . $validationSetImportantCount . ') validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
+
 		if ($validationSet === [] || $trainingSet === []) {
 			$logger->info('not enough messages to train a classifier');
 			$perf->end();
@@ -278,15 +304,63 @@ class ImportanceClassifier {
 											  array $outgoingMailboxes,
 											  array $messages): array {
 		$this->extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
+		$this->subjectExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
-		return array_map(function (Message $message) {
+		$allSubjects = $this->subjectExtractor->getSubjects();
+
+		$max = 1000;
+		$wcv = new WordCountVectorizer($max);
+		$tfidf = new TfIdfTransformer();
+
+		$accData = Unlabeled::build($allSubjects)
+			->apply(new TextNormalizer())
+			->apply($wcv)
+			->apply($tfidf);
+
+		$vocab = $wcv->vocabularies()[0];
+		//$vocab = array_slice($vocab, 0, $max);
+		//var_dump($vocab);
+
+		return array_map(function (Message $message) use ($max, $wcv, $tfidf) {
 			$sender = $message->getFrom()->first();
 			if ($sender === null) {
 				throw new RuntimeException("This should not happen");
 			}
 
+			$subjects = $this->subjectExtractor->getSubjectsOfSender($sender->getEmail());
+
+			$data = [];
+			if ($message->getSubject() !== null) {
+				//$fdata = Unlabeled::build([$message->getSubject()])
+				$fdata = Unlabeled::build($subjects)
+					->apply($wcv);
+					//->apply($tfidf);
+				if ($fdata->numColumns() === 0) {
+					$data = array_fill(0, $max, 0);
+				} else {
+					$data = $fdata->sample(0);
+					//$data = array_slice($data, 0, $max);
+				}
+			}
+			if (count($data) > $max) {
+				//$data = array_slice($data, 0, $max);
+			} else {
+				while (count($data) < $max) {
+					//$data[] = 0;
+				}
+			}
+
+			/*
+			$features = array_merge(
+				$this->extractor->extract($sender->getEmail()),
+				$data,
+				//$this->subjectExtractor->extract($sender->getEmail()),
+			);
+			 */
+			$features = $data;
+
 			return [
-				'features' => $this->extractor->extract($message),
+				'features' => $features,
 				'label' => $message->getFlagImportant() ? self::LABEL_IMPORTANT : self::LABEL_NOT_IMPORTANT,
 				'sender' => $sender->getEmail(),
 			];
