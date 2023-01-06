@@ -252,7 +252,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Ordner zum Speichern des Anhangs auswählen",
     "_View {count} more attachment_::_View {count} more attachments_" : ["{count} weiterer Anhang anzeigen","{count} weitere Anhänge anzeigen"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Diese Nachricht wurde mit PGP verschlüsselt. Installieren Sie Mailvelope um sie zu entschlüsseln.",
-    "The images have been blocked to protect your privacy." : "Die Bilder wurden blockiert um Ihre Privatsphäre zu schützen.",
+    "The images have been blocked to protect your privacy." : "Die Bilder wurden blockiert, um Ihre Privatsphäre zu schützen.",
     "Show images" : "Bilder anzeigen",
     "Show images temporarily" : "Bilder temporär anzeigen",
     "Always show images from {sender}" : "Bilder von {sender} immer anzeigen",
