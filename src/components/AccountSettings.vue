@@ -33,7 +33,7 @@
 			<div class="alias-item">
 				<p><strong>{{ displayName }}</strong> &lt;{{ email }}&gt;</p>
 				<a
-					v-if="!account.provisioningId"
+					v-if="!account.provisioningId && hasRenameAcl"
 					class="button icon-rename"
 					:title="t('mail', 'Change name')"
 					@click="handleClick" />
@@ -161,6 +161,12 @@ export default {
 		},
 		email() {
 			return this.account.emailAddress
+		},
+		hasRenameAcl() {
+			if (!this.account.myAcls) {
+				return true
+			}
+			return this.account.myAcls.indexOf('x') !== -1
 		},
 	},
 	watch: {

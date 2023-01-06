@@ -68,7 +68,7 @@
 					@update:checked="changeShowSubscribedOnly">
 					{{ t('mail', 'Show only subscribed mailboxes') }}
 				</ActionCheckbox>
-				<ActionButton v-if="!editing" @click="openCreateMailbox">
+				<ActionButton v-if="!editing && hasSubmailboxActionAcl" @click="openCreateMailbox">
 					<template #icon>
 						<IconFolderAdd
 							:size="20" />
@@ -101,7 +101,7 @@
 					</template>
 					{{ t('mail', 'Move down') }}
 				</ActionButton>
-				<ActionButton v-if="!account.provisioningId" @click="removeAccount">
+				<ActionButton v-if="!account.provisioningId && hasDeleteAcl" @click="removeAccount">
 					<template #icon>
 						<IconDelete
 							:size="20" />
@@ -223,6 +223,18 @@ export default {
 				usage: formatFileSize(this.quota.usage),
 				limit: formatFileSize(this.quota.limit),
 			})
+		},
+		hasSubmailboxActionAcl() {
+			if (!this.account.myAcls) {
+				return true
+			}
+			return this.account.myAcls.indexOf('k') !== -1
+		},
+		hasDeleteAcl() {
+			if (!this.account.myAcls) {
+				return true
+			}
+			return this.account.myAcls.indexOf('x') !== -1
 		},
 	},
 	methods: {
