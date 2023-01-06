@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<router-link v-if="allowNewMailAccounts && hasAddingActionAcl" to="/setup" class="app-settings-button button primary new-button">
+		<router-link v-if="allowNewMailAccounts" to="/setup" class="app-settings-button button primary new-button">
 			<IconAdd :size="20" />
 			{{ t('mail', 'Add mail account') }}
 		</router-link>
@@ -132,9 +132,6 @@ export default {
 		}
 	},
 	computed: {
-		hasAddingActionAcl() {
-			return tba
-		},
 		useBottomReplies() {
 			return this.$store.getters.getPreference('reply-mode', 'top') === 'bottom'
 		},
