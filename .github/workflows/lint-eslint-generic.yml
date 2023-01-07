@@ -1,0 +1,37 @@
+# This workflow is provided via the organization template repository
+#
+# https://github.com/nextcloud/.github
+# https://docs.github.com/en/actions/learn-github-actions/sharing-workflows-with-your-organization
+#
+# Use lint-eslint-generic together with lint-eslint to make eslint a required check for GitHub actions.
+
+name: Lint
+
+on:
+  pull_request:
+    paths-ignore:
+      - '.github/workflows/**'
+      - 'src/**'
+      - 'appinfo/info.xml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - '**.js'
+      - '**.ts'
+      - '**.vue'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-eslint-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    name: eslint
+
+    steps:
+      - run: 'echo "No eslint required"'
