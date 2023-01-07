@@ -3,6 +3,8 @@
 # https://github.com/nextcloud/.github
 # https://docs.github.com/en/actions/learn-github-actions/sharing-workflows-with-your-organization
 
+name: Lint
+
 on:
   pull_request:
     paths:

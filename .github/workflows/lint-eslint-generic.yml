@@ -6,6 +6,8 @@
 # Use lint-eslint together with lint-eslint-generic to make eslint a required check for GitHub actions
 # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/troubleshooting-required-status-checks#handling-skipped-but-required-checks
 
+name: Lint
+
 on:
   pull_request:
     paths-ignore:
@@ -23,7 +25,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: lint-eslint-${{ github.head_ref || github.run_id }}
+  group: lint-eslint-generic-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
