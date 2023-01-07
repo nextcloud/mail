@@ -30,7 +30,7 @@
     "@ckeditor/ckeditor5-link": "~35.1.0",
     "@ckeditor/ckeditor5-list": "~35.1.0",
     "@ckeditor/ckeditor5-paragraph": "~35.1.0",
-    "@ckeditor/ckeditor5-remove-format": "~35.1.0",
+    "@ckeditor/ckeditor5-remove-format": "~35.4.0",
     "@ckeditor/ckeditor5-theme-lark": "~35.1.0",
     "@ckeditor/ckeditor5-upload": "^35.1.0",
     "@ckeditor/ckeditor5-vue2": "^3.0.1",
