@@ -225,6 +225,8 @@ OC.L10N.register(
     "_{total} message_::_{total} messages_" : ["{total} sporočilo","{total} sporočili","{total} sporočila","{total} sporočil"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} neprebrano od skupno {total}","{unread} neprebrana od skupno {total}","{unread} neprebrana od skupno {total}","{unread} neprebranih od skupno {total}"],
     "New message" : "Novo sporočilo",
+    "Message discarded" : "Sporočilo je izbrisano",
+    "Could not discard message" : "Sporočila ni mogoče zavreči",
     "No message selected" : "Ni izbranega nobenega sporočila",
     "Message" : "Sporočilo",
     "Oh Snap!" : "Ojoj!",
