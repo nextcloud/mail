@@ -39,14 +39,19 @@ use OCA\Mail\Service\Classification\FeatureExtraction\SubjectExtractor;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
+use Rubix\ML\Classifiers\ClassificationTree;
 use Rubix\ML\Classifiers\GaussianNB;
+use Rubix\ML\Classifiers\NaiveBayes;
+use Rubix\ML\Classifiers\RandomForest;
 use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
+use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\TextNormalizer;
 use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
+use Rubix\ML\Transformers\ZScaleStandardizer;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -101,7 +106,7 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 10000;
+	private const MAX_TRAINING_SET_SIZE = 1000;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -189,7 +194,7 @@ class ImportanceClassifier {
 		$dataSet = $this->getFeaturesAndImportance($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		$perf->step('extract features from messages');
 
-		shuffle($dataSet);
+		//shuffle($dataSet);
 
 		/**
 		 * How many of the most recent messages are excluded from training?
@@ -304,37 +309,42 @@ class ImportanceClassifier {
 		$allSubjects = $this->subjectExtractor->getSubjects();
 
 		$max = 1000;
-		$wcv = new WordCountVectorizer($max);
+		$wcv = new WordCountVectorizer($max, 1);
 		$tfidf = new TfIdfTransformer();
+		$zscale = new ZScaleStandardizer();
 
 		$accData = Unlabeled::build($allSubjects)
-			->apply(new TextNormalizer())
+			->apply(new MultibyteTextNormalizer())
 			->apply($wcv)
-			->apply($tfidf);
+			->apply($tfidf)
+			->apply($zscale);
 
 		$vocab = $wcv->vocabularies()[0];
 		//$vocab = array_slice($vocab, 0, $max);
 		//var_dump($vocab);
+		$max = count($vocab);
 
-		return array_map(function (Message $message) use ($max, $wcv, $tfidf) {
+		return array_map(function (Message $message) use ($max, $wcv, $tfidf, $zscale) {
 			$sender = $message->getFrom()->first();
 			if ($sender === null) {
 				throw new RuntimeException("This should not happen");
 			}
 
 			$subjects = $this->subjectExtractor->getSubjectsOfSender($sender->getEmail());
+			//$subjects = [$message->getSubject()];
 
 			$data = [];
 			if ($message->getSubject() !== null) {
 				//$fdata = Unlabeled::build([$message->getSubject()])
 				$fdata = Unlabeled::build($subjects)
-					->apply($wcv);
-					//->apply($tfidf);
+					->apply(new MultibyteTextNormalizer())
+					->apply($wcv)
+					->apply($tfidf)
+					->apply($zscale);
 				if ($fdata->numColumns() === 0) {
 					$data = array_fill(0, $max, 0);
 				} else {
 					$data = $fdata->sample(0);
-					//$data = array_slice($data, 0, $max);
 				}
 			}
 			if (count($data) > $max) {
@@ -408,8 +418,16 @@ class ImportanceClassifier {
 		);
 	}
 
-	private function trainClassifier(array $trainingSet): GaussianNB {
+	private function trainClassifier(array $trainingSet): Estimator {
 		$classifier = new GaussianNB();
+		/*
+		$classifier = new RandomForest(
+			new ClassificationTree(10, 1),
+			10,
+			0.2,
+			true,
+		);
+		 */
 		$classifier->train(Labeled::build(
 			array_column($trainingSet, 'features'),
 			array_column($trainingSet, 'label')
