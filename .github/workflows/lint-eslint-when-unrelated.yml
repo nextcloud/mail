@@ -25,11 +25,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: lint-eslint-generic-${{ github.head_ref || github.run_id }}
+  group: lint-eslint-when-unrelated-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
   lint:
+    permissions:
+      contents: none
+
     runs-on: ubuntu-latest
 
     name: eslint
