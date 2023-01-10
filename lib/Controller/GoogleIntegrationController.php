@@ -103,7 +103,7 @@ class GoogleIntegrationController extends Controller {
 			// TODO: redirect to main nextcloud page
 			return new StandaloneTemplateResponse(
 				Application::APP_ID,
-				'google_oauth_done',
+				'oauth_done',
 				[],
 				'guest',
 			);
@@ -113,7 +113,7 @@ class GoogleIntegrationController extends Controller {
 			// TODO: handle error
 			return new StandaloneTemplateResponse(
 				Application::APP_ID,
-				'google_oauth_done',
+				'oauth_done',
 				[],
 				'guest',
 			);
@@ -125,7 +125,7 @@ class GoogleIntegrationController extends Controller {
 			// TODO: redirect to main nextcloud page
 			return new StandaloneTemplateResponse(
 				Application::APP_ID,
-				'google_oauth_done',
+				'oauth_done',
 				[],
 				'guest',
 			);
@@ -143,7 +143,7 @@ class GoogleIntegrationController extends Controller {
 			// TODO: redirect to main nextcloud page
 			return new StandaloneTemplateResponse(
 				Application::APP_ID,
-				'google_oauth_done',
+				'oauth_done',
 				[],
 				'guest',
 			);
@@ -157,7 +157,7 @@ class GoogleIntegrationController extends Controller {
 
 		return new StandaloneTemplateResponse(
 			Application::APP_ID,
-			'google_oauth_done',
+			'oauth_done',
 			[],
 			'guest',
 		);

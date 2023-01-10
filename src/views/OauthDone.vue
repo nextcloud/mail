@@ -30,7 +30,7 @@
 import NcGuestContent from '@nextcloud/vue/dist/Components/NcGuestContent'
 
 export default {
-	name: 'GoogleOauthDone',
+	name: 'OauthDone',
 	components: {
 		NcGuestContent,
 	},
