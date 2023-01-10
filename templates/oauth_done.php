@@ -23,8 +23,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-script(\OCA\Mail\AppInfo\Application::APP_ID, 'googleoauthpopup');
+script(\OCA\Mail\AppInfo\Application::APP_ID, 'oauthpopup');
 
 ?>
 
-<div id="mail-google-oauth-done" />
+<div id="mail-oauth-done" />

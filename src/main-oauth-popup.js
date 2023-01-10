@@ -22,8 +22,9 @@
 import { getRequestToken } from '@nextcloud/auth'
 import { generateFilePath } from '@nextcloud/router'
 import Vue from 'vue'
+
+import OauthDone from './views/OauthDone'
 import Nextcloud from './mixins/Nextcloud'
-import GoogleOauthDone from './views/GoogleOauthDone'
 
 __webpack_nonce__ = btoa(getRequestToken())
 // eslint-disable-next-line camelcase
@@ -31,8 +32,8 @@ __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 Vue.mixin(Nextcloud)
 
-const View = Vue.extend(GoogleOauthDone)
-new View({}).$mount('#mail-google-oauth-done')
+const View = Vue.extend(OauthDone)
+new View({}).$mount('#mail-oauth-done')
 
 if (window.opener) {
 	window.opener.postMessage('DONE')
