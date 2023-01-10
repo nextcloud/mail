@@ -377,6 +377,8 @@
     "Mark as read" : "Marquer comme lu",
     "Archive message" : "Archiver le message",
     "Delete message" : "Supprimer le message",
+    "This message contains a verified digital S/MIME signature. The message wasn't changed since it was sent." : "Ce message contient une signature numérique S/MIME vérifiée. Il n'a pas été modifié depuis son envoi.",
+    "This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted." : "Ce message contient une signature numérique S/MIME non vérifiée. Il a pu être modifié depuis son envoi ou le certificat de l'expéditeur n'est pas fiable.",
     "Remove" : "Supprimer",
     "No senders are trusted at the moment." : "Aucun expéditeur n'est marqué comme fiable pour le moment.",
     "Could not remove trusted sender {sender}" : "Impossible de supprimer l'expéditeur fiable {sender}",
