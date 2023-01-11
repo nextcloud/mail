@@ -53,8 +53,8 @@ OC.L10N.register(
     "User" : "Implijer",
     "Host" : "Ostiz",
     "Port" : "Porzh",
-    "Account connected" : "Kont kenstaged",
     "Refresh" : "Freskaat",
+    "Account connected" : "Kont kenstaged",
     "All" : "Pep tra",
     "Favorites" : "Pennrolloù",
     "Error while sharing file" : "Ur fazi a zo bet en ur rannañ ar restr"

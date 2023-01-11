@@ -30,8 +30,8 @@ OC.L10N.register(
     "Remove" : "ຍ້າຍອອກ",
     "General" : "ທົ່ວໄປ",
     "User" : "ຜູ້ໃຊ້",
-    "Account connected" : "ບັນຊີທີ່ຕິດພັນ",
     "Refresh" : "Refresh",
+    "Account connected" : "ບັນຊີທີ່ຕິດພັນ",
     "Favorites" : "ລາຍການທີ່ມັກ"
 },
 "nplurals=1; plural=0;");
