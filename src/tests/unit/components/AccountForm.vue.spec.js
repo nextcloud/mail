@@ -21,23 +21,33 @@
 
 import { testConnectivity, queryIspdb, queryMx } from '../../../service/AutoConfigService'
 import {createLocalVue, shallowMount} from '@vue/test-utils'
+import Vuex from 'vuex'
 
 import AccountForm from '../../../components/AccountForm'
 import Nextcloud from '../../../mixins/Nextcloud'
 
 const localVue = createLocalVue()
 
+localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
 jest.mock('../../../service/AutoConfigService')
 
 describe('AccountForm', () => {
 
-	let view
 	let save
+	let getters
+	let store
+	let view
 
 	beforeEach(() => {
 		save = jest.fn()
+		getters = {
+			googleOauthUrl: () => () => 'https://google.oauth',
+		}
+		store = new Vuex.Store({
+			getters,
+		})
 		view = shallowMount(AccountForm, {
 			propsData: {
 				displayName: 'Tom Turbo',
@@ -45,6 +55,7 @@ describe('AccountForm', () => {
 				save,
 			},
 			localVue,
+			store,
 		})
 	})
 
