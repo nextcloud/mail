@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -45,11 +46,11 @@ interface IExtractor {
 							array $messages): void;
 
 	/**
-	 * Return the feature value for the given sender address
+	 * Return the feature value for the given message
 	 *
-	 * @param string $email
+	 * @param Message $message
 	 *
-	 * @return float
+	 * @return float[]
 	 */
-	public function extract(string $email): float;
+	public function extract(Message $message): array;
 }

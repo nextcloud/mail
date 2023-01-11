@@ -85,10 +85,10 @@ class ImportanceRulesClassifier {
 					return false;
 				}
 
-				return $this->importantMessagesExtractor->extract($from->getEmail()) > 0.3
-					|| $this->readMessagesExtractor->extract($from->getEmail()) > 0.7
-					|| $this->repliedMessagesExtractor->extract($from->getEmail()) > 0.1
-					|| $this->sentMessagesExtractor->extract($from->getEmail()) > 0.1;
+				return $this->importantMessagesExtractor->extract($m) > 0.3
+					|| $this->readMessagesExtractor->extract($m) > 0.7
+					|| $this->repliedMessagesExtractor->extract($m) > 0.1
+					|| $this->sentMessagesExtractor->extract($m) > 0.1;
 			}, $messages)
 		);
 	}

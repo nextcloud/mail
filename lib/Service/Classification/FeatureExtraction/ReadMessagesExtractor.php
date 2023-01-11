@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -28,6 +29,7 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\StatisticsDao;
+use RuntimeException;
 use function array_map;
 use function array_unique;
 
@@ -60,14 +62,20 @@ class ReadMessagesExtractor implements IExtractor {
 		$this->readMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'seen', $senders);
 	}
 
-	public function extract(string $email): float {
+	public function extract(Message $message): array {
+		$sender = $message->getFrom()->first();
+		if ($sender === null) {
+			throw new RuntimeException("This should not happen");
+		}
+
+		$email = $sender->getEmail();
 		$total = $this->totalMessages[$email] ?? 0;
 
 		// Prevent division by zero and just say no emails are read
 		if ($total === 0) {
-			return 0;
+			return [0];
 		}
 
-		return ($this->readMessages[$email] ?? 0) / $total;
+		return [($this->readMessages[$email] ?? 0) / $total];
 	}
 }

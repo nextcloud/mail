@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -28,6 +29,7 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\StatisticsDao;
+use RuntimeException;
 use function array_map;
 use function array_unique;
 
@@ -59,12 +61,18 @@ class SentMessagesExtractor implements IExtractor {
 		$this->messagesSent = $this->statisticsDao->getMessagesSentToGrouped($outgoingMailboxes, $senders);
 	}
 
-	public function extract(string $email): float {
+	public function extract(Message $message): array {
+		$sender = $message->getFrom()->first();
+		if ($sender === null) {
+			throw new RuntimeException("This should not happen");
+		}
+		$email = $sender->getEmail();
+
 		if (($messagesSentTotal = $this->messagesSentTotal) === 0) {
 			// Prevent div by 0
-			return 0;
+			return [0];
 		}
 
-		return ($this->messagesSent[$email] ?? 0) / $messagesSentTotal;
+		return [($this->messagesSent[$email] ?? 0) / $messagesSentTotal];
 	}
 }
