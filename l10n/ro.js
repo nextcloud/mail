@@ -115,6 +115,7 @@ OC.L10N.register(
     "Edit name" : "Modifică numele",
     "Clear cache" : "Șterge cache",
     "Delete" : "Șterge",
+    "Copy to clipboard" : "Copiază în clipboard",
     "Add" : "Adaugă",
     "Tags" : "Etichete",
     "Clear" : "Șterge ",
