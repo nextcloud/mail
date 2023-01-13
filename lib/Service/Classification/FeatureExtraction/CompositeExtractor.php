@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -26,11 +27,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\Message;
+use function OCA\Mail\array_flat_map;
 
 /**
  * Combines a set of DI'ed extractors so they can be used as one class
  */
-class CompositeExtractor {
+class CompositeExtractor implements IExtractor {
 	/** @var IExtractor[] */
 	private $extractors;
 
@@ -55,9 +58,9 @@ class CompositeExtractor {
 		}
 	}
 
-	public function extract(string $email): array {
-		return array_map(function (IExtractor $extractor) use ($email) {
-			return $extractor->extract($email);
+	public function extract(Message $message): array {
+		return array_flat_map(static function (IExtractor $extractor) use ($message) {
+			return $extractor->extract($message);
 		}, $this->extractors);
 	}
 }

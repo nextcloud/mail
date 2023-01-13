@@ -281,7 +281,7 @@ class ImportanceClassifier {
 			}
 
 			return [
-				'features' => $this->extractor->extract($sender->getEmail()),
+				'features' => $this->extractor->extract($message),
 				'label' => $message->getFlagImportant() ? self::LABEL_IMPORTANT : self::LABEL_NOT_IMPORTANT,
 				'sender' => $sender->getEmail(),
 			];
