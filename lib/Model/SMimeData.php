@@ -64,6 +64,7 @@ class SMimeData implements JsonSerializable {
 		$this->signatureIsValid = $signatureIsValid;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'isSigned' => $this->isSigned,
