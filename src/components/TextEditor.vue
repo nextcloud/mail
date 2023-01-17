@@ -189,8 +189,10 @@ export default {
 			this.$emit('ready', editor)
 		},
 		onEditorInput(text) {
-			logger.debug(`TextEditor input changed to <${text}>`)
-			this.$emit('input', text)
+			if (text !== this.value) {
+				logger.debug(`TextEditor input changed to <${text}>`)
+				this.$emit('input', text)
+			}
 		},
 		appendToBodyAtCursor(toAppend) {
 			// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/faq.html#where-are-the-editorinserthtml-and-editorinserttext-methods-how-to-insert-some-content
