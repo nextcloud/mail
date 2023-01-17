@@ -27,7 +27,7 @@
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.3",
 		"christophwurst/kitinerary-flatpak": "^0.3",
-		"christophwurst/kitinerary-sys": "^0.1.0",
+		"christophwurst/kitinerary-sys": "^0.2.0",
 		"ezyang/htmlpurifier": "4.16.0",
 		"gravatarphp/gravatar": "^2.0",
 		"html2text/html2text": "^4.3",
