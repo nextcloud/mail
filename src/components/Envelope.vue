@@ -92,7 +92,7 @@
 						data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 					}}
 				</ActionButton>
-				<ActionButton
+				<ActionButton v-if="hasSeenAcl"
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleSeen">
@@ -124,18 +124,17 @@
 					@click.prevent="onToggleJunk">
 					<template #icon>
 						<AlertOctagonIcon
-							:title="data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
 							:size="20" />
 					</template>
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
+				<ActionButton
+					:close-after-click="true"
 					@click.prevent="toggleSelected">
 					<template #icon>
 						<CheckIcon
-							:title="selected ? t('mail', 'Unselect') : t('mail', 'Select')"
 							:size="20" />
 					</template>
 					{{
@@ -146,7 +145,6 @@
 					@click.prevent="onOpenTagModal">
 					<template #icon>
 						<TagIcon
-							:title="t('mail', 'Edit tags')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Edit tags') }}
@@ -155,26 +153,24 @@
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
 						<OpenInNewIcon
-							:title="t('mail', 'Move')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
-				<ActionButton v-if="showArchiveButton"
+				<ActionButton v-if="showArchiveButton && hasArchiveAcl"
 					:close-after-click="true"
 					@click.prevent="onArchive">
 					<template #icon>
 						<ArchiveIcon
-							:title="t('mail', 'Archive thread')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Archive thread') }}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
+				<ActionButton v-if="hasDeleteAcl"
+					:close-after-click="true"
 					@click.prevent="onDelete">
 					<template #icon>
 						<DeleteIcon
-							:title="t('mail', 'Delete thread')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Delete thread') }}
@@ -183,7 +179,6 @@
 					@click="moreActionsOpen=true">
 					<template #icon>
 						<DotsHorizontalIcon
-							:title="t('mail', 'More actions')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
@@ -194,7 +189,6 @@
 					@click="moreActionsOpen=false">
 					<template #icon>
 						<ChevronLeft
-							:title="t('mail', 'More actions')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
@@ -203,7 +197,6 @@
 					@click.prevent="onOpenEditAsNew">
 					<template #icon>
 						<PlusIcon
-							:title="t('mail', 'Edit as new message')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Edit as new message') }}
@@ -212,7 +205,6 @@
 					@click.prevent="showEventModal = true">
 					<template #icon>
 						<IconCreateEvent
-							:title="t('mail', 'Create event')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Create event') }}
@@ -482,6 +474,41 @@ export default {
 			return generateUrl('/apps/mail/api/messages/{id}/export', {
 				id: this.data.databaseId,
 			})
+		},
+		hasSeenAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('s') !== -1
+		},
+		hasArchiveAcl() {
+			const hasDeleteSourceAcl = () => {
+				if (!this.mailbox.myAcls) {
+					return true
+				}
+
+				return this.mailbox.myAcls.indexOf('t') !== -1
+					&& this.mailbox.myAcls.indexOf('e') !== -1
+			}
+
+			const hasCreateDestinationAcl = () => {
+				if (!this.archiveMailbox.myAcls) {
+					return true
+				}
+
+				return this.archiveMailbox.myAcls.indexOf('i') !== -1
+			}
+
+			return hasDeleteSourceAcl() && hasCreateDestinationAcl()
+		},
+		hasDeleteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+		},
+		archiveMailbox() {
+			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
 		},
 	},
 	methods: {
