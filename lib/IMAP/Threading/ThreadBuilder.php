@@ -98,7 +98,7 @@ class ThreadBuilder {
 			foreach ($message->getReferences() as $reference) {
 				$refContainer = $idTable[$reference] ?? null;
 				if ($refContainer === null) {
-					$refContainer = $idTable[$reference] = Container::empty();
+					$refContainer = $idTable[$reference] = Container::empty($reference);
 				}
 				if (!$refContainer->hasParent()
 					&& !($parent !== null && !$parent->hasAncestor($refContainer))
@@ -149,7 +149,7 @@ class ThreadBuilder {
 
 			// Step 4.B
 			if (!$container->hasMessage() && $container->hasChildren()) {
-				if (!$container->getParent()->isRoot() && count($container->getChildren()) > 1) {
+				if (!$container->getParent()->isRoot() && count($container->getChildren()) > 0) {
 					// Do not promote
 					continue;
 				}
