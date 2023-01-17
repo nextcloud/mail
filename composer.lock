@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9b6357b8636875aff5cab8d94914e52a",
+    "content-hash": "39f8a123a4109b1e323ae7c0fa9c1f14",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1688,22 +1688,22 @@
         },
         {
             "name": "christophwurst/kitinerary-sys",
-            "version": "v0.1.1",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-sys.git",
-                "reference": "ad4ca9ac0dcbbce8d3f90be2d8ef55c1c1777849"
+                "reference": "e364c3514f270c14c4802df682c0571b412a5fca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/ad4ca9ac0dcbbce8d3f90be2d8ef55c1c1777849",
-                "reference": "ad4ca9ac0dcbbce8d3f90be2d8ef55c1c1777849",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/e364c3514f270c14c4802df682c0571b412a5fca",
+                "reference": "e364c3514f270c14c4802df682c0571b412a5fca",
                 "shasum": ""
             },
             "require": {
                 "christophwurst/kitinerary": "^0.2.2",
                 "ext-json": "*",
-                "php": "^7.1",
+                "php": "^7.1 || ^8.0",
                 "psr/log": "^1.1"
             },
             "require-dev": {
@@ -1728,9 +1728,9 @@
             "description": "KItinerary binding for the system package",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-sys/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.1.1"
+                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.2.0"
             },
-            "time": "2022-10-03T11:36:57+00:00"
+            "time": "2023-01-17T09:44:05+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
