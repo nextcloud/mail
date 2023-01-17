@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ed81a1fd19a0b22de60d3f25d180596",
+    "content-hash": "9b6357b8636875aff5cab8d94914e52a",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1645,21 +1645,23 @@
         },
         {
             "name": "christophwurst/kitinerary-flatpak",
-            "version": "0.2.3",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-flatpak.git",
-                "reference": "8eca1209dbc009dd301431373598a108fc920aa6"
+                "reference": "a616bbac4fb82956a82efaab89753b6acb8e66de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/8eca1209dbc009dd301431373598a108fc920aa6",
-                "reference": "8eca1209dbc009dd301431373598a108fc920aa6",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/a616bbac4fb82956a82efaab89753b6acb8e66de",
+                "reference": "a616bbac4fb82956a82efaab89753b6acb8e66de",
                 "shasum": ""
             },
             "require": {
                 "christophwurst/kitinerary": "^0.2.2",
-                "ext-json": "*"
+                "ext-json": "*",
+                "php": "^7.1 || ^8.0",
+                "psr/log": "^1.1"
             },
             "type": "library",
             "autoload": {
@@ -1680,9 +1682,9 @@
             "description": "KItinerary Flatpak binding",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-flatpak/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/0.2.3"
+                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/v0.3.0"
             },
-            "time": "2022-10-03T11:35:21+00:00"
+            "time": "2023-01-09T19:44:40+00:00"
         },
         {
             "name": "christophwurst/kitinerary-sys",
