@@ -17,6 +17,8 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.json'
+      - '.eslintrc.*'
+      - '.eslintignore'
       - '**.js'
       - '**.ts'
       - '**.vue'
