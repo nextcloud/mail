@@ -82,6 +82,17 @@
 		</ButtonVue>
 		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
 
+		<ButtonVue class="app-settings-button"
+			type="secondary"
+			@click.prevent.stop="displaySMimeCertificateModal = true">
+			<template #icon>
+				<IconLock :size="20" />
+			</template>
+			{{ t('mail', 'Manage S/MIME certificates') }}
+		</ButtonVue>
+		<SMimeCertificateModal v-if="displaySMimeCertificateModal"
+			@close="displaySMimeCertificateModal = false" />
+
 		<p class="mailvelope-section">
 			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
 		</p>
@@ -103,8 +114,10 @@ import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/
 import IconInfo from 'vue-material-design-icons/Information'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconEmail from 'vue-material-design-icons/Email'
+import IconLock from 'vue-material-design-icons/Lock'
 import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'
+import SMimeCertificateModal from './smime/SMimeCertificateModal'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -115,6 +128,8 @@ export default {
 		IconEmail,
 		IconAdd,
 		IconLoading,
+		IconLock,
+		SMimeCertificateModal,
 	},
 	data() {
 		return {
@@ -129,6 +144,7 @@ export default {
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
+			displaySMimeCertificateModal: false,
 		}
 	},
 	computed: {

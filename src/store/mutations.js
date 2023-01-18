@@ -409,4 +409,13 @@ export default {
 	setGoogleOauthUrl(state, url) {
 		state.googleOauthUrl = url
 	},
+	setSMimeCertificates(state, { certificates }) {
+		state.sMimeCertificates = certificates
+	},
+	deleteSMimeCertificate(state, { id }) {
+		state.sMimeCertificates = state.sMimeCertificates.filter(cert => cert.id !== id)
+	},
+	addSMimeCertificate(state, { certificate }) {
+		state.sMimeCertificates = [...state.sMimeCertificates, certificate]
+	},
 }

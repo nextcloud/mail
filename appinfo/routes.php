@@ -379,5 +379,6 @@ return [
 		'messages' => ['url' => '/api/messages'],
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
+		'sMimeCertificates' => ['url' => '/api/smime/certificates'],
 	]
 ];

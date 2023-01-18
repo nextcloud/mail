@@ -113,6 +113,7 @@ import {
 	initializeClientForUserView,
 	findAll,
 } from '../service/caldavService'
+import * as SMimeCertificateService from '../service/SMimeCertificateService'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -1218,6 +1219,53 @@ export default {
 			for (const calendar of calendars) {
 				commit('addCalendar', { calendar })
 			}
+		})
+	},
+
+	/**
+	 * Fetch and commit all S/MIME certificate of the current user.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 * @return {Promise<void>}
+	 */
+	async fetchSMimeCertificates({ commit }) {
+		return handleHttpAuthErrors(commit, async () => {
+			const certificates = await SMimeCertificateService.fetchAll()
+			commit('setSMimeCertificates', { certificates })
+		})
+	},
+
+	/**
+	 * Delete an imported S/MIME certificate.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 * @param id The id of the certificate to be deleted
+	 * @return {Promise<void>}
+	 */
+	async deleteSMimeCertificate({ commit }, id) {
+		return handleHttpAuthErrors(commit, async () => {
+			await SMimeCertificateService.deleteCertificate(id)
+			commit('deleteSMimeCertificate', { id })
+		})
+	},
+
+	/**
+	 * Create a new S/MIME certificate and persist it on the backend.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 * @param {object} files
+	 * @param {Blob} files.certificate
+	 * @param {Blob=} files.privateKey
+	 * @return {Promise<object>}
+	 */
+	async createSMimeCertificate({ commit }, files) {
+		return handleHttpAuthErrors(commit, async () => {
+			const certificate = await SMimeCertificateService.createCertificate(files)
+			commit('addSMimeCertificate', { certificate })
+			return certificate
 		})
 	},
 }
