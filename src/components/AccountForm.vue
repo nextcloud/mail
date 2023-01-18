@@ -26,16 +26,13 @@
 				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
-				<label v-if="!useGoogleSso"
-					for="auto-password"
-					class="account-form__label--required">{{ t('mail', 'Password') }}</label>
-				<input
-					v-if="!useGoogleSso"
-					id="auto-password"
+				<label for="auto-password"
+					:class="{ 'account-form__label': hasPasswordAlternatives, 'account-form__label--required': !hasPasswordAlternatives }">{{ t('mail', 'Password') }}</label>
+				<input id="auto-password"
 					v-model="autoConfig.password"
 					:disabled="loading"
 					:placeholder="t('mail', 'Password')"
-					required
+					:required="!hasPasswordAlternatives"
 					type="password"
 					@change="clearFeedback">
 			</Tab>
@@ -130,8 +127,8 @@
 					:disabled="loading"
 					required
 					@change="clearFeedback">
-				<label v-if="!useGoogleSso" for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
-				<input v-if="!useGoogleSso"
+				<label v-if="!useOauth" for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
+				<input v-if="!useOauth"
 					id="man-imap-password"
 					v-model="manualConfig.imapPassword"
 					type="password"
@@ -211,8 +208,8 @@
 					:disabled="loading"
 					required
 					@change="clearFeedback">
-				<label v-if="!useGoogleSso" for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
-				<input v-if="!useGoogleSso"
+				<label v-if="!useOauth" for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
+				<input v-if="!useOauth"
 					id="man-smtp-password"
 					v-model="manualConfig.smtpPassword"
 					type="password"
@@ -348,7 +345,7 @@ export default {
 			}
 
 			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
-				|| (!this.isGoogleAccount && !this.autoConfig.password)
+				|| (!this.googleOauthUrl && !this.autoConfig.password)
 		},
 
 		isDisabledManual() {
@@ -362,21 +359,21 @@ export default {
 
 			return !this.emailAddress || !this.isValidEmail(this.emailAddress)
 				|| !this.manualConfig.imapHost || !this.manualConfig.imapPort
-				|| !this.manualConfig.imapUser || (!this.useGoogleSso && !this.manualConfig.imapPassword)
+				|| !this.manualConfig.imapUser || (!this.useOauth && !this.manualConfig.imapPassword)
 				|| !this.manualConfig.smtpHost || !this.manualConfig.smtpPort
-				|| !this.manualConfig.smtpUser || (!this.useGoogleSso && !this.manualConfig.smtpPassword)
+				|| !this.manualConfig.smtpUser || (!this.useOauth && !this.manualConfig.smtpPassword)
 		},
 
 		isGoogleAccount() {
-			if (this.mode === 'auto') {
-				return this.emailAddress.endsWith('@gmail.com')
-			} else {
-				return this.manualConfig.imapHost === 'imap.gmail.com'
-					|| this.manualConfig.smtpHost === 'smtp.gmail.com'
-			}
+			return this.manualConfig.imapHost === 'imap.gmail.com'
+				|| this.manualConfig.smtpHost === 'smtp.gmail.com'
 		},
 
-		useGoogleSso() {
+		hasPasswordAlternatives() {
+			return !!this.googleOauthUrl
+		},
+
+		useOauth() {
 			return this.isGoogleAccount && this.googleOauthUrl
 		},
 
@@ -384,7 +381,7 @@ export default {
 			if (this.loading) {
 				return this.loadingMessage ?? t('mail', 'Connecting')
 			}
-			if (this.useGoogleSso) {
+			if (this.mode === 'manual' && this.useOauth) {
 				return this.account ? t('mail', 'Reconnect Google account') : t('mail', 'Sign in with Google')
 			}
 			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
@@ -527,6 +524,10 @@ export default {
 						return
 					}
 				}
+				if (!this.useOauth && this.autoConfig.password === '') {
+					this.feedback = t('mail', 'Password required')
+					return
+				}
 				this.loadingMessage = t('mail', 'Testing authentication')
 				const data = {
 					...this.manualConfig,
@@ -534,15 +535,15 @@ export default {
 					emailAddress: this.emailAddress,
 					imapHost: this.manualConfig.imapHost.trim(),
 					smtpHost: this.manualConfig.smtpHost.trim(),
-					authMethod: this.useGoogleSso ? 'xoauth2' : 'password',
+					authMethod: this.useOauth ? 'xoauth2' : 'password',
 				}
-				if (this.useGoogleSso) {
+				if (this.useOauth) {
 					delete data.imapPassword
 					delete data.smtpPassword
 				}
 				if (!this.account) {
 					const account = await this.$store.dispatch('startAccountSetup', data)
-					if (this.useGoogleSso) {
+					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
 						this.feedback = t('mail', 'Account created. Please follow the popup instructions to link your Google account')
 						try {
@@ -568,7 +569,7 @@ export default {
 						...data,
 						accountId: this.account.id,
 					})
-					if (this.useGoogleSso) {
+					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
 						this.feedback = t('mail', 'Account updated. Please follow the popup instructions to reconnect your Google account')
 						try {
@@ -611,7 +612,7 @@ export default {
 					} else if (error.data?.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP connection failed')
 					} else if (error.message === CONSENT_ABORTED) {
-						this.feedback = t('mail', 'Google authorization popup closed')
+						this.feedback = t('mail', 'Authorization popup closed')
 					} else {
 						this.feedback = t('mail', 'There was an error while setting up your account')
 					}
