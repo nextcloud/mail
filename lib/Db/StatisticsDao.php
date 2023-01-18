@@ -160,7 +160,7 @@ class StatisticsDao {
 		return $data;
 	}
 
-	public function getSubjectsGrouped(array $mailboxes, array $emails): array {
+	public function getSubjects(array $mailboxes, array $emails): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$mailboxIds = array_map(function (Mailbox $mb) {
@@ -179,6 +179,30 @@ class StatisticsDao {
 		$data = [];
 		foreach ($rows as $row) {
 			$data[$row['email']][] = $row['subject'];
+		}
+		return $data;
+	}
+
+	public function getPreviewTexts(array $mailboxes, array $emails): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$mailboxIds = array_map(function (Mailbox $mb) {
+			return $mb->getId();
+		}, $mailboxes);
+		$select = $qb->selectAlias('r.email', 'email')
+			->selectAlias('m.preview_text', 'preview_text')
+			->from('mail_recipients', 'r')
+			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
+			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
+			->andWhere($qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)))
+			->andWhere($qb->expr()->in('r.email', $qb->createNamedParameter($emails, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY))
+			->andWhere($qb->expr()->isNotNull('m.preview_text'));
+		$result = $select->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+		$data = [];
+		foreach ($rows as $row) {
+			$data[$row['email']][] = $row['preview_text'];
 		}
 		return $data;
 	}

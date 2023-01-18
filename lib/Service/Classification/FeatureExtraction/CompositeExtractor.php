@@ -33,31 +33,29 @@ use function OCA\Mail\array_flat_map;
 /**
  * Combines a set of DI'ed extractors so they can be used as one class
  */
-class CompositeExtractor implements IExtractor {
+abstract class CompositeExtractor implements IExtractor {
 	/** @var IExtractor[] */
-	private $extractors;
+	protected array $extractors;
 
-	public function __construct(ImportantMessagesExtractor $ex1,
-								ReadMessagesExtractor $ex2,
-								RepliedMessagesExtractor $ex3,
-								SentMessagesExtractor $ex4) {
-		$this->extractors = [
-			$ex1,
-			$ex2,
-			$ex3,
-			$ex4,
-		];
+	/**
+	 * @param IExtractor[] $extractors
+	 */
+	public function __construct(array $extractors) {
+		$this->extractors = $extractors;
 	}
 
-	public function prepare(Account $account,
-							array $incomingMailboxes,
-							array $outgoingMailboxes,
-							array $messages): void {
+	/**
+	 * @inheritDoc
+	 */
+	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
 		foreach ($this->extractors as $extractor) {
 			$extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function extract(Message $message): array {
 		return array_flat_map(static function (IExtractor $extractor) use ($message) {
 			return $extractor->extract($message);
