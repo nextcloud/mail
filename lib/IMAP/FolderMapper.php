@@ -61,7 +61,7 @@ class FolderMapper {
 			'special_use' => true,
 		]);
 
-		return array_filter(array_map(function (array $mailbox) use ($account, $client) {
+		return array_filter(array_map(static function (array $mailbox) use ($account, $client) {
 			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
 				// This is a special folder that must not be shown
 				return null;
@@ -117,9 +117,9 @@ class FolderMapper {
 	 */
 	public function getFoldersStatus(array $folders,
 									 Horde_Imap_Client_Socket $client): void {
-		$mailboxes = array_map(function (Folder $folder) {
+		$mailboxes = array_map(static function (Folder $folder) {
 			return $folder->getMailbox();
-		}, array_filter($folders, function (Folder $folder) {
+		}, array_filter($folders, static function (Folder $folder) {
 			return !in_array('\noselect', $folder->getAttributes());
 		}));
 
@@ -216,7 +216,7 @@ class FolderMapper {
 			strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
 		];
 
-		$attributes = array_map(function ($n) {
+		$attributes = array_map(static function ($n) {
 			return strtolower($n);
 		}, $folder->getAttributes());
 

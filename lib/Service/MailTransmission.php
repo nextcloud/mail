@@ -249,7 +249,7 @@ class MailTransmission implements IMailTransmission {
 				}))
 			)
 		);
-		$attachments = array_map(function (LocalAttachment $attachment) {
+		$attachments = array_map(static function (LocalAttachment $attachment) {
 			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
 			return [
 				'type' => 'local',

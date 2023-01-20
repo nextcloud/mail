@@ -84,7 +84,7 @@ class AdminSettings implements ISettings {
 		$this->initialStateService->provideLazyInitialState(
 			Application::APP_ID,
 			'ldap_aliases_integration',
-			function () {
+			static function () {
 				return method_exists(ILDAPProvider::class, 'getMultiValueUserAttribute');
 			}
 		);

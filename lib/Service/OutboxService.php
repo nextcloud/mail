@@ -98,7 +98,7 @@ class OutboxService implements ILocalMailboxService {
 	 * @return Recipient[]
 	 */
 	private static function convertToRecipient(array $recipients, int $type): array {
-		return array_map(function ($recipient) use ($type) {
+		return array_map(static function ($recipient) use ($type) {
 			$r = new Recipient();
 			$r->setType($type);
 			$r->setLabel($recipient['label'] ?? $recipient['email']);
@@ -199,7 +199,7 @@ class OutboxService implements ILocalMailboxService {
 			return;
 		}
 
-		$accountIds = array_unique(array_map(function ($message) {
+		$accountIds = array_unique(array_map(static function ($message) {
 			return $message->getAccountId();
 		}, $messages));
 

@@ -91,7 +91,7 @@ class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$context->registerParameter('hostname', Util::getServerHostName());
 
-		$context->registerService('userFolder', function (ContainerInterface $c) {
+		$context->registerService('userFolder', static function (ContainerInterface $c) {
 			$userContainer = $c->get(IServerContainer::class);
 			$uid = $c->get('UserId');
 

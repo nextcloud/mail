@@ -294,7 +294,7 @@ class Message extends Entity implements JsonSerializable {
 		$tags = $this->getTags();
 		$indexed = array_combine(
 			array_map(
-				function (Tag $tag) {
+				static function (Tag $tag) {
 					return $tag->getImapLabel();
 				}, $tags),
 			$tags

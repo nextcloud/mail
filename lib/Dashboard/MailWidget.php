@@ -134,7 +134,7 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 		$emails = $this->mailSearch->findMessagesGlobally($user, $filter, null, $limit);
 
 		if ($minTimestamp !== null) {
-			return array_filter($emails, function (Message $email) use ($minTimestamp) {
+			return array_filter($emails, static function (Message $email) use ($minTimestamp) {
 				return $email->getSentAt() > $minTimestamp;
 			});
 		}

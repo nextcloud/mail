@@ -137,7 +137,7 @@ class Synchronizer {
 		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				function (array $uids) use ($imapClient, $mailbox, $request) {
+				static function (array $uids) use ($imapClient, $mailbox, $request) {
 					return $imapClient->sync($mailbox, $request->getToken(), [
 						'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
 						'ids' => new Horde_Imap_Client_Ids($uids),
@@ -167,7 +167,7 @@ class Synchronizer {
 		$vanishedUids = array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				function (array $uids) use ($imapClient, $mailbox, $request) {
+				static function (array $uids) use ($imapClient, $mailbox, $request) {
 					return $imapClient->sync($mailbox, $request->getToken(), [
 						'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
 						'ids' => new Horde_Imap_Client_Ids($uids),

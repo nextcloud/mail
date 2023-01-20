@@ -42,7 +42,7 @@ class MxRecord {
 			$this->logger->debug("no MX records for host <$host> found");
 			return [];
 		}
-		$mxRecords = array_filter($mxRecords, function ($record) {
+		$mxRecords = array_filter($mxRecords, static function ($record) {
 			return !empty($record);
 		});
 		$this->logger->debug("found " . count($mxRecords) . " MX records for host <$host>");

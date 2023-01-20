@@ -58,7 +58,7 @@ class PreprocessingService {
 			$this->logger->debug('No mailboxes found.');
 			return;
 		}
-		$mailboxIds = array_unique(array_map(function (Mailbox $mailbox) {
+		$mailboxIds = array_unique(array_map(static function (Mailbox $mailbox) {
 			return $mailbox->getId();
 		}, $mailboxes));
 
@@ -70,7 +70,7 @@ class PreprocessingService {
 		}
 
 		foreach ($mailboxes as $mailbox) {
-			$filteredMessages = array_filter($messages, function ($message) use ($mailbox) {
+			$filteredMessages = array_filter($messages, static function ($message) use ($mailbox) {
 				return $message->getMailboxId() === $mailbox->getId();
 			});
 

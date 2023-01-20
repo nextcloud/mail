@@ -552,7 +552,7 @@ class MailManager implements IMailManager {
 		 *
 		 * @see https://tools.ietf.org/html/rfc2087#section-3
 		 */
-		$storageQuotas = array_map(function (array $root) {
+		$storageQuotas = array_map(static function (array $root) {
 			return $root['storage'] ?? [
 				'usage' => 0,
 				'limit' => 0,

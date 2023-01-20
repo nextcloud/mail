@@ -549,7 +549,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'id' => $id,
 		], function ($cid) {
 			$match = array_filter($this->inlineAttachments,
-				function ($a) use ($cid) {
+				static function ($a) use ($cid) {
 					return $a['cid'] === $cid;
 				});
 			$match = array_shift($match);
@@ -818,7 +818,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		];
 
 		// remove all standard IMAP flags from $filters
-		$tags = array_filter($flags, function ($flag) use ($allowed) {
+		$tags = array_filter($flags, static function ($flag) use ($allowed) {
 			return in_array($flag, $allowed, true) === false;
 		});
 

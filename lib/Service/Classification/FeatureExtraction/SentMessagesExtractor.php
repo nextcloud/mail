@@ -51,9 +51,9 @@ class SentMessagesExtractor implements IExtractor {
 							array $incomingMailboxes,
 							array $outgoingMailboxes,
 							array $messages): void {
-		$senders = array_unique(array_map(function (Message $message) {
+		$senders = array_unique(array_map(static function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
-		}, array_filter($messages, function (Message $message) {
+		}, array_filter($messages, static function (Message $message) {
 			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
 		})));
 

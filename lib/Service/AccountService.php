@@ -66,7 +66,7 @@ class AccountService {
 	 */
 	public function findByUserId(string $currentUserId): array {
 		if ($this->accounts === null) {
-			return $this->accounts = array_map(function ($a) {
+			return $this->accounts = array_map(static function ($a) {
 				return new Account($a);
 			}, $this->mapper->findByUserId($currentUserId));
 		}

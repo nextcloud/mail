@@ -125,7 +125,7 @@ class TagMapper extends QBMapper {
 	 * @return Tag[][]
 	 */
 	public function getAllTagsForMessages(array $messages, string $userId): array {
-		$ids = array_map(function (Message $message) {
+		$ids = array_map(static function (Message $message) {
 			return $message->getMessageId();
 		}, $messages);
 
@@ -152,7 +152,7 @@ class TagMapper extends QBMapper {
 				// Construct a Tag instance but omit any other joined columns
 				$tags[$messageId][] = Tag::fromRow(array_filter(
 					$row,
-					function (string $key) {
+					static function (string $key) {
 						return $key !== 'imap_message_id';
 					},
 					ARRAY_FILTER_USE_KEY
@@ -244,7 +244,7 @@ class TagMapper extends QBMapper {
 			$tags[] = $tag;
 		}
 		$dbTags = $this->getAllTagsForUser($account->getUserId());
-		$toInsert = array_udiff($tags, $dbTags, function (Tag $a, Tag $b) {
+		$toInsert = array_udiff($tags, $dbTags, static function (Tag $a, Tag $b) {
 			return strcmp($a->getImapLabel(), $b->getImapLabel());
 		});
 		foreach ($toInsert as $entity) {
@@ -265,7 +265,7 @@ class TagMapper extends QBMapper {
 		$result = $qb->execute();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
-		$ids = array_unique(array_map(function ($row) {
+		$ids = array_unique(array_map(static function ($row) {
 			return $row['id'];
 		}, $rows));
 
@@ -289,7 +289,7 @@ class TagMapper extends QBMapper {
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 
-		$ids = array_map(function (array $row) {
+		$ids = array_map(static function (array $row) {
 			return $row['id'];
 		}, $rows);
 

@@ -310,7 +310,7 @@ class ImapToDbSynchronizer {
 			}
 
 			foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
-				$messages = array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+				$messages = array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 					return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 				}, $chunk);
 				$this->dbMapper->insertBulk($account, ...$messages);
@@ -384,13 +384,13 @@ class ImapToDbSynchronizer {
 					// Filter out anything that is already in the DB. Ideally this never happens, but if there is an error
 					// during a consecutive chunk INSERT, the sync token won't be updated. In that case the same message(s)
 					// will be seen as *new* and therefore cause conflicts.
-					$newMessages = array_filter($response->getNewMessages(), function (IMAPMessage $imapMessage) use ($highestKnownUid) {
+					$newMessages = array_filter($response->getNewMessages(), static function (IMAPMessage $imapMessage) use ($highestKnownUid) {
 						return $imapMessage->getUid() > $highestKnownUid;
 					});
 				}
 
 				foreach (array_chunk($newMessages, 500) as $chunk) {
-					$dbMessages = array_map(function (IMAPMessage $imapMessage) use ($mailbox, $account) {
+					$dbMessages = array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 						return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 					}, $chunk);
 

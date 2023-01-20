@@ -183,13 +183,13 @@ class MessageMapper {
 		}
 		$uidCandidates = array_filter(
 			array_map(
-				function (Horde_Imap_Client_Data_Fetch $data) {
+				static function (Horde_Imap_Client_Data_Fetch $data) {
 					return $data->getUid();
 				},
 				iterator_to_array($fetchResult)
 			),
 
-			function (int $uid) use ($highestKnownUid) {
+			static function (int $uid) use ($highestKnownUid) {
 				// Don't load the ones we already know
 				return $uid > $highestKnownUid;
 			}
@@ -259,7 +259,7 @@ class MessageMapper {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody) {
+		return array_map(static function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody) {
 			if ($loadBody) {
 				return new IMAPMessage(
 					$client,
@@ -447,7 +447,7 @@ class MessageMapper {
 			);
 		}
 
-		$msg = array_map(function (Horde_Imap_Client_Data_Fetch $result) {
+		$msg = array_map(static function (Horde_Imap_Client_Data_Fetch $result) {
 			return $result->getFullMsg();
 		}, $result);
 
@@ -674,7 +674,7 @@ class MessageMapper {
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
 
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
+		return array_map(static function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
 			$hasAttachments = false;
 			$text = '';
 			$isImipMessage = false;

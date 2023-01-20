@@ -80,7 +80,7 @@ class Thread extends Command {
 		$consoleLogger->debug(strlen($json) . 'B read');
 		$parsed = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		$consoleLogger->debug(count($parsed) . ' data sets loaded');
-		$threadData = array_map(function ($serialized) {
+		$threadData = array_map(static function ($serialized) {
 			return new DatabaseMessage(
 				$serialized['databaseId'],
 				$serialized['subject'],

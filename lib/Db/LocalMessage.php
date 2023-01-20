@@ -126,22 +126,22 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_FROM;
 				})
 			),
 			'to' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_TO;
 				})
 			),
 			'cc' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_CC;
 				})
 			),
 			'bcc' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_BCC;
 				})
 			),

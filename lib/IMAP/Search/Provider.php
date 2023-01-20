@@ -74,7 +74,7 @@ class Provider {
 	private function convertMailQueryToHordeQuery(SearchQuery $searchQuery): Horde_Imap_Client_Search_Query {
 		return array_reduce(
 			$searchQuery->getTextTokens(),
-			function (Horde_Imap_Client_Search_Query $query, string $textToken) {
+			static function (Horde_Imap_Client_Search_Query $query, string $textToken) {
 				$query->text($textToken, false);
 				return $query;
 			},

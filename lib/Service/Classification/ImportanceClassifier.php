@@ -159,14 +159,14 @@ class ImportanceClassifier {
 		$logger->debug('found ' . count($outgoingMailboxes) . ' outgoing mailbox(es)');
 		$perf->step('find outgoing mailboxes');
 
-		$mailboxIds = array_map(function (Mailbox $mailbox) {
+		$mailboxIds = array_map(static function (Mailbox $mailbox) {
 			return $mailbox->getId();
 		}, $incomingMailboxes);
 		$messages = array_filter(
 			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
-		$importantMessages = array_filter($messages, function (Message $message) {
+		$importantMessages = array_filter($messages, static function (Message $message) {
 			return ($message->getFlagImportant() === true);
 		});
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
@@ -227,7 +227,7 @@ class ImportanceClassifier {
 	 * @return Mailbox[]
 	 */
 	private function getIncomingMailboxes(Account $account): array {
-		return array_filter($this->mailboxMapper->findAll($account), function (Mailbox $mailbox) {
+		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
 					return false;
@@ -305,10 +305,10 @@ class ImportanceClassifier {
 				$messages
 			);
 			return array_combine(
-				array_map(function (Message $m) {
+				array_map(static function (Message $m) {
 					return $m->getUid();
 				}, $messages),
-				array_map(function (Message $m) use ($predictions) {
+				array_map(static function (Message $m) use ($predictions) {
 					return ($predictions[$m->getUid()] ?? false) === true;
 				}, $messages)
 			);
@@ -325,10 +325,10 @@ class ImportanceClassifier {
 			Unlabeled::build(array_column($features, 'features'))
 		);
 		return array_combine(
-			array_map(function (Message $m) {
+			array_map(static function (Message $m) {
 				return $m->getUid();
 			}, $messagesWithSender),
-			array_map(function ($p) {
+			array_map(static function ($p) {
 				return $p === self::LABEL_IMPORTANT;
 			}, $predictions)
 		);

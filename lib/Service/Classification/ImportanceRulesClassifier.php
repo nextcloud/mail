@@ -76,7 +76,7 @@ class ImportanceRulesClassifier {
 		$this->sentMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
 		return array_combine(
-			array_map(function (Message $m) {
+			array_map(static function (Message $m) {
 				return $m->getUid();
 			}, $messages),
 			array_map(function (Message $m) {
