@@ -612,7 +612,7 @@ export default {
 					} else if (error.data?.service === 'SMTP') {
 						this.feedback = t('mail', 'SMTP connection failed')
 					} else if (error.message === CONSENT_ABORTED) {
-						this.feedback = t('mail', 'Authorization popup closed')
+						this.feedback = t('mail', 'Authorization pop-up closed')
 					} else {
 						this.feedback = t('mail', 'There was an error while setting up your account')
 					}
