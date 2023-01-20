@@ -43,6 +43,7 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "Şəbəkədə ünvan",
     "Port" : "Port",
+    "Valid until" : "Vaxtadək keçərlidir",
     "Refresh" : "Yenilə",
     "All" : "Hamısı",
     "Archive" : "Arxiv",

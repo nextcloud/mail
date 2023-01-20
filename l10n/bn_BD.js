@@ -43,6 +43,7 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
+    "Back" : "পেছনে যাও",
     "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Refresh" : "নবোদ্যম",
     "All" : "সবাই",

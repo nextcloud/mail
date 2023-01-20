@@ -32,6 +32,7 @@ OC.L10N.register(
     "Tag already exists" : "Oznaka već postoji",
     "User" : "User",
     "Port" : "Priključak",
+    "Valid until" : "Validno do",
     "Keyboard shortcuts" : "Tipkovni prečaci",
     "All" : "Sve",
     "Favorites" : "Favoriti"

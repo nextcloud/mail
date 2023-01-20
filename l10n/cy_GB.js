@@ -84,6 +84,7 @@ OC.L10N.register(
     "Untitled event" : "Digwyddiad di-deitl",
     "General" : "Cyffredinol",
     "User" : "User",
+    "Back" : "Nôl",
     "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
     "Speed up your Mail experience with these quick shortcuts." : "Cyflymwch eich profiad E-bost gyda'r llwybrau byr cyflym hyn.",
     "Compose new message" : "Ysgrifennu Neges _Newydd",
