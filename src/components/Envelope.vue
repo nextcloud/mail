@@ -21,19 +21,19 @@
 				:size="18"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
-				@click.prevent="onToggleFlagged" />
+				@click.prevent="hasWriteAcl ? false : onToggleFlagged" />
 			<div
 				v-if="isImportant"
 				class="app-content-list-item-star svg icon-important"
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="onToggleImportant"
-				v-html="importantSvg" />
+				v-html="hasWriteAcl ? false : importantSvg" />
 			<JunkIcon
 				v-if="data.flags.$junk"
 				:size="18"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="data.flags.$junk ? 'true' : 'false'"
-				@click.prevent="onToggleJunk" />
+				@click.prevent="hasWriteAcl ? false : onToggleJunk" />
 			<div class="app-content-list-item-icon">
 				<Avatar :display-name="addresses" :email="avatarEmail" />
 				<p v-if="selectMode" class="app-content-list-item-select-checkbox">
@@ -78,7 +78,7 @@
 		</template>
 		<template #actions>
 			<EnvelopePrimaryActions v-if="!moreActionsOpen">
-				<ActionButton
+				<ActionButton v-if="hasWriteAcl"
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleFlagged">
@@ -106,7 +106,7 @@
 						data.flags.seen ? t('mail', 'Unread') : t('mail', 'Read')
 					}}
 				</ActionButton>
-				<ActionButton
+				<ActionButton v-if="hasWriteAcl"
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleImportant">
@@ -120,7 +120,8 @@
 				</ActionButton>
 			</EnvelopePrimaryActions>
 			<template v-if="!moreActionsOpen">
-				<ActionButton :close-after-click="true"
+				<ActionButton v-if="hasWriteAcl"
+					:close-after-click="true"
 					@click.prevent="onToggleJunk">
 					<template #icon>
 						<AlertOctagonIcon
@@ -506,6 +507,12 @@ export default {
 				return true
 			}
 			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+		},
+		hasWriteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('w') !== -1
 		},
 		archiveMailbox() {
 			return this.$store.getters.getMailbox(this.account.archiveMailboxId)

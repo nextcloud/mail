@@ -28,7 +28,6 @@ import Vuex from 'vuex';
 
 const localVue = createLocalVue()
 
-
 localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
@@ -231,7 +230,7 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 				archiveMailbox() {
-					return { myAcls: 'i' }
+					return { }
 				},
 			},
 			store,
@@ -339,5 +338,105 @@ describe('ThreadEnvelope', () => {
 		})
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
+	})
+	it('allows toggling favorite, important and spam action with w ACL right', () => {
+		const view = shallowMount(ThreadEnvelope, {
+			propsData: {
+				account: {},
+				mailbox: {
+					specialRole: '',
+				},
+				envelope: {
+					accountId: 123,
+					from: [{email: 'info@test.com'}],
+					flags: {
+						seen: false,
+						flagged: false,
+						$junk: false,
+						answered: false,
+						hasAttachments: false,
+						draft: false,
+					},
+				},
+			},
+			computed: {
+				mailbox() {
+					return { myAcls: 'w' }
+				},
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.hasWriteAcl).toBe(true)
+	})
+
+	it('allows toggling favorite, important and spam action without w ACL right', () => {
+		const view = shallowMount(ThreadEnvelope, {
+			propsData: {
+				account: {},
+				mailbox: {
+					specialRole: '',
+				},
+				envelope: {
+					accountId: 123,
+					from: [{email: 'info@test.com'}],
+					flags: {
+						seen: false,
+						flagged: false,
+						$junk: false,
+						answered: false,
+						hasAttachments: false,
+						draft: false,
+					},
+				},
+			},
+			computed: {
+				mailbox() {
+					return { myAcls: 's' }
+				},
+				archiveMailbox() {
+					return { }
+				},
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.hasWriteAcl).toBe(false)
+	})
+	it('allows toggling favorite, important and spam action without ACL right', () => {
+		const view = shallowMount(ThreadEnvelope, {
+			propsData: {
+				account: {},
+				mailbox: {
+					specialRole: '',
+				},
+				envelope: {
+					accountId: 123,
+					from: [{email: 'info@test.com'}],
+					flags: {
+						seen: false,
+						flagged: false,
+						$junk: false,
+						answered: false,
+						hasAttachments: false,
+						draft: false,
+					},
+				},
+			},
+			computed: {
+				mailbox() {
+					return { myAcls: undefined }
+				},
+				archiveMailbox() {
+					return { }
+				},
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.hasWriteAcl).toBe(true)
 	})
 })

@@ -34,7 +34,7 @@
 				v-if="isImportant"
 				class="app-content-list-item-star icon-important"
 				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="onToggleImportant"
+				@click.prevent="hasWriteAcl ? false : onToggleImportant"
 				v-html="importantSvg" />
 			<IconFavorite
 				v-if="envelope.flags.flagged"
@@ -43,14 +43,14 @@
 				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
-				@click.prevent="onToggleFlagged" />
+				@click.prevent="hasWriteAcl ? false : onToggleFlagged" />
 			<JunkIcon
 				v-if="envelope.flags.$junk"
 				:size="18"
 				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
-				@click.prevent="onToggleJunk" />
+				@click.prevent="hasWriteAcl ? false : onToggleJunk" />
 			<router-link
 				:to="route"
 				event=""
@@ -103,7 +103,7 @@
 								:size="20" />
 						</template>
 					</ButtonVue>
-					<ButtonVue
+					<ButtonVue v-if="hasWriteAcl"
 						type="tertiary-no-background"
 						class="action--primary"
 						:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
@@ -360,6 +360,12 @@ export default {
 				return true
 			}
 			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+		},
+		hasWriteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('w') !== -1
 		},
 		mailbox() {
 			return this.$store.getters.getMailbox(this.mailboxId)

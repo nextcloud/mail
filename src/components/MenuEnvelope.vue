@@ -6,7 +6,7 @@
 			event=""
 			@click.native.prevent>
 			<template v-if="!moreActionsOpen">
-				<ActionButton
+				<ActionButton v-if="hasWriteAcl"
 					class="action--primary"
 					:close-after-click="true"
 					@click.prevent="onToggleImportant">
@@ -50,7 +50,8 @@
 					</template>
 					{{ t('mail', 'Forward') }}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
+				<ActionButton v-if="hasWriteAcl"
+					:close-after-click="true"
 					@click.prevent="onToggleJunk">
 					<template #icon>
 						<AlertOctagonIcon
@@ -338,6 +339,12 @@ export default {
 			return generateUrl('/apps/mail/api/messages/{id}/export', {
 				id: this.envelope.databaseId,
 			})
+		},
+		hasWriteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('w') !== -1
 		},
 	},
 	methods: {

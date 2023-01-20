@@ -363,4 +363,79 @@ describe('Envelope', () => {
 
 		expect(view.vm.hasDeleteAcl).toBe(true)
 	})
+	it('allows toggling favorite, important and spam action with w ACL right', () => {
+		const view = shallowMount(Envelope, {
+			mocks: {
+				$route,
+			},
+			propsData: {
+				account: {},
+				mailbox: {
+					specialRole:'',
+				},
+				data: {
+					accountId: 123,
+					from: [{email:'info@test.com'}],
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+				},
+				mailbox: {
+					myAcls: 'w',
+				}
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.hasWriteAcl).toBe(true)
+	})
+	it('allows toggling favorite, important and spam action without w ACL right', () => {
+		const view = shallowMount(Envelope, {
+			mocks: {
+				$route,
+			},
+			propsData: {
+				account: {},
+				mailbox: {
+					specialRole:'',
+				},
+				data: {
+					accountId: 123,
+					from: [{email:'info@test.com'}],
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+				},
+				mailbox: {
+					myAcls: 's',
+				}
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.hasWriteAcl).toBe(false)
+	})
+	it('allows toggling favorite, important and spam action without ACL right', () => {
+		const view = shallowMount(Envelope, {
+			mocks: {
+				$route,
+			},
+			propsData: {
+				account: {},
+				mailbox: {
+					specialRole:'',
+				},
+				data: {
+					accountId: 123,
+					from: [{email:'info@test.com'}],
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+				},
+				mailbox: {
+					myAcls: undefined,
+				}
+			},
+			store,
+			localVue,
+		})
+
+		expect(view.vm.hasWriteAcl).toBe(true)
+	})
 })
