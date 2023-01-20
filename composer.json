@@ -6,7 +6,10 @@
 		"sort-packages": true,
 		"allow-plugins": {
 			"bamarni/composer-bin-plugin": true
-		}
+		},
+		"optimize-autoloader": true,
+		"classmap-authoritative": true,
+		"autoloader-suffix": "Mail"
 	},
 	"require": {
 		"php": ">=8.0 <=8.1",
@@ -46,7 +49,10 @@
 	"autoload": {
 		"files": [
 			"lib/functions.php"
-		]
+		],
+		"psr-4": {
+			"OCA\\Mail\\": "lib/"
+		}
 	},
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
