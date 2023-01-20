@@ -63,7 +63,7 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 	/**
 	 * @return void
 	 */
-	public function run($argument) {
+	public function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 
 		try {

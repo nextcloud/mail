@@ -62,7 +62,7 @@ class Version0161Date20190902114635 extends SimpleMigrationStep {
 	/**
 	 * @return void
 	 */
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		// Force a re-sync
 		$update = $this->connection->getQueryBuilder();
 		$update->update('mail_accounts')

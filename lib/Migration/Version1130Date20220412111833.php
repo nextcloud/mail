@@ -184,7 +184,7 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		$qb1 = $this->connection->getQueryBuilder();
 		$qb1->insert('mail_recipients')
 			->values([

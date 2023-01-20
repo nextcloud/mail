@@ -103,7 +103,7 @@ class Folder {
 		return $this->specialUse;
 	}
 
-	public function setMyAcls(?string $acls) {
+	public function setMyAcls(?string $acls): void {
 		$this->myAcls = $acls;
 	}
 

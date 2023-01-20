@@ -71,7 +71,7 @@ class MigrateImportantJob extends QueuedJob {
 	 *
 	 * @return void
 	 */
-	public function run($argument) {
+	public function run($argument): void {
 		$mailboxId = (int)$argument['mailboxId'];
 		try {
 			/** @var Mailbox $mailbox*/

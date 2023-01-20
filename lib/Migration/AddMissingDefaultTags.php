@@ -55,7 +55,7 @@ class AddMissingDefaultTags implements IRepairStep {
 	/**
 	 * @return void
 	 */
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		$output->info('Looking up default tags');
 		$accounts = $this->accountMapper->getAllAccounts();
 

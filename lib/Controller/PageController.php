@@ -322,7 +322,7 @@ class PageController extends Controller {
 		}
 
 		array_walk($params,
-			function (&$value, $key) {
+			function (&$value, $key): void {
 				$value = "$key=" . urlencode($value);
 			});
 		$name = '?' . implode('&', $params);

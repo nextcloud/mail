@@ -48,7 +48,7 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 	 *
 	 * @return void
 	 */
-	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 

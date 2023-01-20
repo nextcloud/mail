@@ -45,7 +45,7 @@ class FixCollectedAddresses implements IRepairStep {
 	/**
 	 * @return void
 	 */
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		$nrOfAddresses = $this->mapper->getTotal();
 		$output->startProgress($nrOfAddresses);
 

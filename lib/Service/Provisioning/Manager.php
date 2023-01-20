@@ -115,7 +115,7 @@ class Manager {
 	public function provision(): int {
 		$cnt = 0;
 		$configs = $this->getConfigs();
-		$this->userManager->callForAllUsers(function (IUser $user) use ($configs, &$cnt) {
+		$this->userManager->callForAllUsers(function (IUser $user) use ($configs, &$cnt): void {
 			if ($this->provisionSingleUser($configs, $user) === true) {
 				$cnt++;
 			}

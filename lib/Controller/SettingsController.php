@@ -116,7 +116,7 @@ class SettingsController extends Controller {
 		return new JSONResponse([]);
 	}
 
-	public function setAllowNewMailAccounts(bool $allowed) {
+	public function setAllowNewMailAccounts(bool $allowed): void {
 		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
 	}
 }

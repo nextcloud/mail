@@ -44,7 +44,7 @@ class ProvisionAccounts implements IRepairStep {
 	/**
 	 * @return void
 	 */
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		$cnt = $this->provisioningManager->provision();
 		$output->info("$cnt accounts provisioned");
 	}

@@ -101,7 +101,7 @@ class Account implements JsonSerializable {
 	 * @param Alias|null $alias
 	 * @return void
 	 */
-	public function setAlias($alias) {
+	public function setAlias($alias): void {
 		$this->alias = $alias;
 	}
 

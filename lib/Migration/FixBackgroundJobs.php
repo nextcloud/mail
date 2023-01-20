@@ -52,7 +52,7 @@ class FixBackgroundJobs implements IRepairStep {
 	/**
 	 * @return void
 	 */
-	public function run(IOutput $output) {
+	public function run(IOutput $output): void {
 		/** @var MailAccount[] $accounts */
 		$accounts = $this->mapper->getAllAccounts();
 

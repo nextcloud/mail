@@ -51,7 +51,7 @@ class Version1060Date20201015084952 extends SimpleMigrationStep {
 	/**
 	 * @return void
 	 */
-	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 		// Force a re-sync, so the values are propagated ASAP
 		$update = $this->connection->getQueryBuilder();
 		$update->update('mail_accounts')

@@ -194,7 +194,7 @@ class DraftsService implements ILocalMailboxService {
 		throw new NotImplemented('Not implemented');
 	}
 
-	public function flush() {
+	public function flush(): void {
 		$messages = $this->mapper->findDueDrafts($this->time->getTime());
 		if (empty($messages)) {
 			return;

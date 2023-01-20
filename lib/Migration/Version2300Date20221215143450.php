@@ -68,8 +68,8 @@ class Version2300Date20221215143450 extends SimpleMigrationStep {
 		return $schema;
 	}
 
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
-		$this->atomic(function () {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
+		$this->atomic(function (): void {
 			// Migrate old data to the new column
 			$qb1 = $this->connection->getQueryBuilder();
 			$qb1->update('mail_accounts')

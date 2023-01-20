@@ -90,7 +90,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setFlags(array $flags) {
+	public function setFlags(array $flags): void {
 		$this->flags = $flags;
 	}
 
@@ -106,7 +106,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setFrom(AddressList $from) {
+	public function setFrom(AddressList $from): void {
 		$this->from = $from;
 	}
 
@@ -122,7 +122,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setTo(AddressList $to) {
+	public function setTo(AddressList $to): void {
 		$this->to = $to;
 	}
 
@@ -138,7 +138,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setCC(AddressList $cc) {
+	public function setCC(AddressList $cc): void {
 		$this->cc = $cc;
 	}
 
@@ -154,7 +154,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setBcc(AddressList $bcc) {
+	public function setBcc(AddressList $bcc): void {
 		$this->bcc = $bcc;
 	}
 
@@ -170,7 +170,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setInReplyTo(string $id) {
+	public function setInReplyTo(string $id): void {
 		$this->inReplyTo = $id;
 	}
 
@@ -186,7 +186,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setSubject(string $subject) {
+	public function setSubject(string $subject): void {
 		$this->subject = $subject;
 	}
 
@@ -202,7 +202,7 @@ class Message implements IMessage {
 	 *
 	 * @return void
 	 */
-	public function setContent(string $content) {
+	public function setContent(string $content): void {
 		$this->content = $content;
 	}
 

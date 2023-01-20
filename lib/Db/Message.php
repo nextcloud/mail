@@ -270,7 +270,7 @@ class Message extends Entity implements JsonSerializable {
 	/**
 	 * @return void
 	 */
-	public function setFlag(string $flag, bool $value = true) {
+	public function setFlag(string $flag, bool $value = true): void {
 		if (!in_array($flag, self::MUTABLE_FLAGS, true)) {
 			// Ignore
 			return;

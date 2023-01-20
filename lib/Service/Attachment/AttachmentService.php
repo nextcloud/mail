@@ -153,7 +153,7 @@ class AttachmentService implements IAttachmentService {
 	 *
 	 * @return void
 	 */
-	public function deleteAttachment(string $userId, int $id) {
+	public function deleteAttachment(string $userId, int $id): void {
 		try {
 			$attachment = $this->mapper->find($userId, $id);
 			$this->mapper->delete($attachment);

@@ -72,7 +72,7 @@ class GoogleIntegration {
 		);
 	}
 
-	public function unlink() {
+	public function unlink(): void {
 		$this->config->deleteAppValue(
 			Application::APP_ID,
 			'google_oauth_client_id',
