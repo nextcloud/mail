@@ -30,6 +30,7 @@ OC.L10N.register(
     "Remove" : "ຍ້າຍອອກ",
     "General" : "ທົ່ວໄປ",
     "User" : "ຜູ້ໃຊ້",
+    "Back" : "ຫຼັງ",
     "Refresh" : "Refresh",
     "Account connected" : "ບັນຊີທີ່ຕິດພັນ",
     "Favorites" : "ລາຍການທີ່ມັກ"

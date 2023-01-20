@@ -28,6 +28,7 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "ஓம்புனர்",
     "Port" : "துறை ",
+    "Back" : "பின்னுக்கு",
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "Refresh" : "மீள் ஏற்றுக",
     "All" : "எல்லாம்",

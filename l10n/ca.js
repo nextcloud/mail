@@ -439,6 +439,8 @@ OC.L10N.register(
     "Unprovision & Delete Config" : "Desaprovisionar i suprimir la configuració",
     "* %USERID% and %EMAIL% will be replaced with the user's UID and email" : "* %USERID% i %EMAIL% es substituiran per l'UID i el correu electrònic de l'usuari",
     "With the settings above, the app will create account settings in the following way:" : "Amb la configuració anterior, l'aplicació crearà la configuració del compte de la manera següent:",
+    "E-mail address" : "Adreça de correu",
+    "Private key" : "Clau privada",
     "Keyboard shortcut" : "Drecera de teclat",
     "Keyboard shortcuts" : "Dreceres de teclat",
     "Speed up your Mail experience with these quick shortcuts." : "Accelereu l’experiència del correu electrònic amb aquestes dreceres ràpides.",

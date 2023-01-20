@@ -8,6 +8,7 @@ OC.L10N.register(
     "None" : "Ništa",
     "Save" : "Save",
     "Connect" : "Poveži se",
+    "Password required" : "Potrebna je lozinka",
     "Cancel" : "Otkaži",
     "Select account" : "Označite nalog",
     "Send" : "Pošalji",
@@ -33,6 +34,7 @@ OC.L10N.register(
     "Remove" : "Ukloni",
     "General" : "Opšte",
     "User" : "User",
+    "Back" : "Nazad",
     "Refresh" : "Osveži",
     "Favorites" : "Omiljene"
 },

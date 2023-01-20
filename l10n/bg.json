@@ -59,7 +59,6 @@
     "SMTP username or password is wrong" : "Грешно SMTP име на потребител или парола",
     "IMAP connection failed" : "IMAP връзката прекъсна",
     "SMTP connection failed" : "SMTP връзката прекъсна",
-    "Google authorization popup closed" : "Затворен е изскачащият прозорец за оторизация в Google",
     "There was an error while setting up your account" : "Възникна грешка при настройката на вашия профил",
     "Account settings" : "Настройки на профила",
     "Change name" : "Промяна на име",

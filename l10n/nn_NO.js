@@ -37,6 +37,8 @@ OC.L10N.register(
     "User" : "Bruker",
     "Host" : "Tenar",
     "Port" : "Port",
+    "Certificate" : "Sertifikat",
+    "Back" : "Tilbake",
     "Keyboard shortcuts" : "Tastatursnarvegar",
     "Refresh" : "Last inn på nytt",
     "All" : "Alle",

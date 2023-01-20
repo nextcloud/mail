@@ -47,6 +47,8 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "Hospite",
     "Port" : "Porto",
+    "Valid until" : "Valide usque",
+    "Back" : "Retro",
     "Keyboard shortcut" : "Combination de claves",
     "Keyboard shortcuts" : "Combinationes de claves",
     "Refresh" : "Refrescar",

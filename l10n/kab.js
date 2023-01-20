@@ -24,6 +24,7 @@ OC.L10N.register(
     "Remove" : "Kkes",
     "General" : "Amatu",
     "User" : "Aseqdac",
+    "Back" : "Retour",
     "Refresh" : "Sismeḍ",
     "Favorites" : "Imenyafen",
     "Inbox" : "Tanaka"

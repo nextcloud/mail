@@ -42,6 +42,7 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
+    "Back" : "Zeréck",
     "Refresh" : "Opfrëschen",
     "All" : "All",
     "Favorites" : "Favoriten"
