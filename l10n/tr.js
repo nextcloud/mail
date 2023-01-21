@@ -62,7 +62,6 @@ OC.L10N.register(
     "SMTP username or password is wrong" : "SMTP kullanıcı adı ya da parolası hatalı",
     "IMAP connection failed" : "IMAP bağlantısı kurulamadı",
     "SMTP connection failed" : "SMTP bağlantısı kurulamadı",
-    "Authorization popup closed" : "Kimlik doğrulama açılan penceresi kapatıldı",
     "There was an error while setting up your account" : "Hesabınız kurulurken bir sorun çıktı.",
     "Account settings" : "Hesap ayarları",
     "Change name" : "Adı değiştir",
