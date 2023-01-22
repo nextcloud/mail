@@ -60,6 +60,7 @@
     "SMTP username or password is wrong" : "Uživatelské jméno nebo heslo pro SMTP není správné",
     "IMAP connection failed" : "Vytvoření IMAP připojení se nezdařilo",
     "SMTP connection failed" : "Vytvoření SMTP připojení se nezdařilo",
+    "Authorization pop-up closed" : "Vyskakovací okno s autorizací zavřeno",
     "There was an error while setting up your account" : "Při nastavování vašeho účtu došlo k chybě",
     "Account settings" : "Nastavení účtu",
     "Change name" : "Změnit název",

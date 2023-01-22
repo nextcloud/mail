@@ -60,6 +60,7 @@
     "SMTP username or password is wrong" : "SMTP username or password is wrong",
     "IMAP connection failed" : "IMAP connection failed",
     "SMTP connection failed" : "SMTP connection failed",
+    "Authorization pop-up closed" : "Authorisation pop-up closed",
     "There was an error while setting up your account" : "There was an error while setting up your account",
     "Account settings" : "Account settings",
     "Change name" : "Change name",

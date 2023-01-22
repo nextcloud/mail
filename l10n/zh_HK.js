@@ -62,6 +62,7 @@ OC.L10N.register(
     "SMTP username or password is wrong" : "SMTP 用戶名或密碼錯誤",
     "IMAP connection failed" : "IMAP 連線失敗",
     "SMTP connection failed" : "SMTP 連線失敗",
+    "Authorization pop-up closed" : "已關閉授權彈跳視窗",
     "There was an error while setting up your account" : "設置您的帳戶時出錯。 ",
     "Account settings" : "賬號設定",
     "Change name" : "更改名稱",

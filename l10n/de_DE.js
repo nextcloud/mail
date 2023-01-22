@@ -62,6 +62,7 @@ OC.L10N.register(
     "SMTP username or password is wrong" : "Falscher SMTP-Benutzername oder Passwort",
     "IMAP connection failed" : "IMAP-Verbindung fehlgeschlagen",
     "SMTP connection failed" : "SMTP-Verbindung fehlgeschlagen",
+    "Authorization pop-up closed" : "Anmeldungs-Popup wurde geschlossen",
     "There was an error while setting up your account" : "Bei der Einrichtung Ihres Kontos ist ein Fehler aufgetreten",
     "Account settings" : "Konto-Einstellungen",
     "Change name" : "Name ändern",
