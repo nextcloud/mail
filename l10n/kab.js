@@ -25,6 +25,8 @@ OC.L10N.register(
     "Add" : "Rnu",
     "Tags" : "Tibzimin",
     "Search" : "Nadi",
+    "Disabled" : "Ittwarermed",
+    "Enabled" : "Yermed",
     "Set" : "Sbadu",
     "Unset" : "Non défini",
     "Mark as unread" : "Creḍ ur yettwaɣra ara",

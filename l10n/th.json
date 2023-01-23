@@ -18,7 +18,7 @@
     "Cancel" : "ยกเลิก",
     "Sending …" : "กำลังส่ง ...",
     "Go back" : "กลับไป",
-    "Message sent!" : "ส่งข้อความ!",
+    "Message sent!" : "ส่งข้อความแล้ว!",
     "Send" : "ส่ง",
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
     "Favorite" : "รายการโปรด",
@@ -31,10 +31,10 @@
     "Accept" : "ยอมรับ",
     "Decline" : "ปฏิเสธ",
     "Choose" : "เลือก",
-    "Other" : "อื่นๆ",
+    "Other" : "อื่น ๆ",
     "Reply" : "ตอบกลับ",
     "Unnamed" : "ไม่มีชื่อ",
-    "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บสิ่งที่แนบมาใน",
+    "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บไฟล์แนบลงไป",
     "Move" : "ย้าย",
     "Moving" : "กำลังย้าย",
     "Quota" : "โควต้า",
@@ -79,9 +79,9 @@
     "Sent" : "ส่ง",
     "Trash" : "ถังขยะ",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
+    "Error loading message" : "เกิดข้อผิดพลาดขณะโหลดข้อความ",
     "Redirect" : "เปลี่ยนเส้นทาง",
-    "The link leads to %s" : "ลิงค์ที่จะนำไปยัง %s",
+    "The link leads to %s" : "ลิงก์จะนำไปยัง %s",
     "Continue to %s" : "ดำเนินการต่อไปที่ %s"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
