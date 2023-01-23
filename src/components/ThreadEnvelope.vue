@@ -33,7 +33,6 @@
 			<div
 				v-if="isImportant"
 				class="app-content-list-item-star icon-important"
-				:class="{ 'icon-important__not-expanded' : importantPositionWithSubjectNotExpanded }"
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? false : onToggleImportant"
 				v-html="importantSvg" />
@@ -60,9 +59,6 @@
 				@click.native.prevent="$emit('toggle-expand', $event)">
 				<div class="sender">
 					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-				</div>
-				<div v-if="hasChangedSubject" class="subline">
-					{{ cleanSubject }}
 				</div>
 				<div v-if="showSubline" class="subline">
 					<span class="preview">
@@ -263,10 +259,6 @@ export default {
 			type: Boolean,
 			default: true,
 		},
-		threadSubject: {
-			required: true,
-			type: String,
-		},
 	},
 	data() {
 		return {
@@ -319,15 +311,6 @@ export default {
 				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
 			)
 		},
-		hasChangedSubject() {
-			return this.cleanSubject !== this.cleanThreadSubject
-		},
-		cleanSubject() {
-			return this.filterSubject(this.envelope.subject)
-		},
-		cleanThreadSubject() {
-			return this.filterSubject(this.threadSubject)
-		},
 		showSubline() {
 			return !this.expanded && !!this.envelope.previewText
 		},
@@ -339,9 +322,6 @@ export default {
 		},
 		junkFavoritePositionWithTagSubline() {
 			return !this.showSubline && this.tags.length > 0
-		},
-		importantPositionWithSubjectNotExpanded() {
-			return !this.expanded && this.hasChangedSubject
 		},
 		showFavoriteIconVariant() {
 			return this.envelope.flags.flagged
@@ -433,9 +413,6 @@ export default {
 		}
 	},
 	methods: {
-		filterSubject(value) {
-			return value.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
-		},
 		async fetchMessage() {
 			this.loading = LOADING_MESSAGE
 
@@ -679,9 +656,6 @@ export default {
 			&:focus {
 				opacity: 0.5;
 			}
-		}
-		&__not-expanded {
-			margin-top: 10px;
 		}
 	}
 	.app-content-list-item-star.favorite-icon-style {
