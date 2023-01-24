@@ -513,6 +513,10 @@ export default {
 			type: Number,
 			default: () => undefined,
 		},
+		fromAlias: {
+			type: Number,
+			default: undefined,
+		},
 		to: {
 			type: Array,
 			default: () => [],
@@ -836,8 +840,15 @@ export default {
 	methods: {
 		setAlias() {
 			const previous = this.selectedAlias
-			if (this.fromAccount) {
-				this.selectedAlias = this.aliases.find((alias) => alias.id === this.fromAccount)
+			if (this.fromAccount && this.fromAlias) {
+				this.selectedAlias = this.aliases.find((alias) => {
+					return alias.id === this.fromAccount && alias.aliasId === this.fromAlias
+				})
+			} else if (this.fromAccount) {
+				// Default alias of account: aliasId === null
+				this.selectedAlias = this.aliases.find((alias) => {
+					return alias.id === this.fromAccount && !alias.aliasId
+				})
 			} else {
 				this.selectedAlias = this.aliases[0]
 			}
