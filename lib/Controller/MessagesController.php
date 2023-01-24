@@ -662,7 +662,7 @@ class MessagesController extends Controller {
 			// Save all attachments
 			/* @var $m IMAPMessage */
 			$m = $folder->getMessage($message->getUid());
-			$attachmentIds = array_map(function ($a) {
+			$attachmentIds = array_map(static function ($a) {
 				return $a['id'];
 			}, $m->attachments);
 		} else {

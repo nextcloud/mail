@@ -65,9 +65,9 @@ class AddressList implements Countable, JsonSerializable {
 	 * @return AddressList
 	 */
 	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList) {
-		$addresses = array_map(function (Horde_Mail_Rfc822_Address $addr) {
+		$addresses = array_map(static function (Horde_Mail_Rfc822_Address $addr) {
 			return Address::fromHorde($addr);
-		}, array_filter(iterator_to_array($hordeList), function (Horde_Mail_Rfc822_Object $obj) {
+		}, array_filter(iterator_to_array($hordeList), static function (Horde_Mail_Rfc822_Object $obj) {
 			// TODO: how to handle non-addresses? This doesn't seem right …
 			return $obj instanceof Horde_Mail_Rfc822_Address;
 		}));
@@ -97,7 +97,7 @@ class AddressList implements Countable, JsonSerializable {
 
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
-		return array_map(function (Address $address) {
+		return array_map(static function (Address $address) {
 			return $address->jsonSerialize();
 		}, $this->addresses);
 	}
@@ -131,7 +131,7 @@ class AddressList implements Countable, JsonSerializable {
 		$addresses = $this->addresses;
 
 		foreach ($other->addresses as $address) {
-			$same = array_filter($addresses, function (Address $our) use ($address) {
+			$same = array_filter($addresses, static function (Address $our) use ($address) {
 				// Check whether our array contains the other address
 				return $our->equals($address);
 			});
@@ -149,7 +149,7 @@ class AddressList implements Countable, JsonSerializable {
 	 * @return Horde_Mail_Rfc822_List
 	 */
 	public function toHorde() {
-		$hordeAddresses = array_map(function (Address $address) {
+		$hordeAddresses = array_map(static function (Address $address) {
 			return $address->toHorde();
 		}, $this->addresses);
 		return new Horde_Mail_Rfc822_List($hordeAddresses);

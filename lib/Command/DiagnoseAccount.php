@@ -130,7 +130,7 @@ class DiagnoseAccount extends Command {
 		$mailboxes = $imapClient->listMailboxes('*', Horde_Imap_Client::MBOX_ALL, [
 			'flat' => true,
 		]);
-		$messages = array_reduce($mailboxes, function (int $c, Horde_Imap_Client_Mailbox $mb) use ($imapClient) {
+		$messages = array_reduce($mailboxes, static function (int $c, Horde_Imap_Client_Mailbox $mb) use ($imapClient) {
 			$status = $imapClient->status($mb, Horde_Imap_Client::STATUS_MESSAGES);
 			return $c + $status['messages'];
 		}, 0);

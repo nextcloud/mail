@@ -66,7 +66,7 @@ class PreviewEnhancer {
 	 * @return Message[]
 	 */
 	public function process(Account $account, Mailbox $mailbox, array $messages): array {
-		$needAnalyze = array_reduce($messages, function (array $carry, Message $message) {
+		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do
 				return $carry;
@@ -98,7 +98,7 @@ class PreviewEnhancer {
 			$client->logout();
 		}
 
-		return $this->mapper->updatePreviewDataBulk(...array_map(function (Message $message) use ($data) {
+		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
 			if (!array_key_exists($message->getUid(), $data)) {
 				// Nothing to do
 				return $message;

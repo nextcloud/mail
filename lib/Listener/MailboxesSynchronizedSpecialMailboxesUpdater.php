@@ -118,7 +118,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 
 	private function indexMailboxes(array $mailboxes): array {
 		return array_combine(
-			array_map(function (Mailbox $mb): int {
+			array_map(static function (Mailbox $mb) : int {
 				return $mb->getId();
 			}, $mailboxes),
 			$mailboxes

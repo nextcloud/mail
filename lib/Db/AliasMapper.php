@@ -138,7 +138,7 @@ class AliasMapper extends QBMapper {
 			->leftJoin('a', 'mail_accounts', 'ac', $qb1->expr()->eq('a.account_id', 'ac.id'))
 			->where($qb1->expr()->isNull('ac.id'));
 		$result = $idsQuery->execute();
-		$ids = array_map(function (array $row) {
+		$ids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();

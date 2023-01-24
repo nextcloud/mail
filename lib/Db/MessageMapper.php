@@ -84,7 +84,7 @@ class MessageMapper extends QBMapper {
 	 */
 	private function findUids(IQueryBuilder $query): array {
 		$result = $query->execute();
-		$uids = array_map(function (array $row) {
+		$uids = array_map(static function (array $row) {
 			return (int)$row['uid'];
 		}, $result->fetchAll());
 		$result->closeCursor();
@@ -99,7 +99,7 @@ class MessageMapper extends QBMapper {
 	 */
 	private function findIds(IQueryBuilder $query): array {
 		$result = $query->execute();
-		$uids = array_map(function (array $row) {
+		$uids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();
@@ -592,7 +592,7 @@ class MessageMapper extends QBMapper {
 		$messageIds = $cursor->fetchAll();
 		$cursor->closeCursor();
 
-		$messageIds = array_map(function (array $row) {
+		$messageIds = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $messageIds);
 
@@ -637,7 +637,7 @@ class MessageMapper extends QBMapper {
 			$messageIdQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$cursor = $messageIdQuery->execute();
 
-			$messageIds = array_map(function (array $message) {
+			$messageIds = array_map(static function (array $message) {
 				return $message['id'];
 			}, $cursor->fetchAll());
 			$cursor->closeCursor();
@@ -829,13 +829,13 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			return array_flat_map(function (array $chunk) use ($qb, $select) {
 				$qb->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(function (Message $message) {
+				return array_map(static function (Message $message) {
 					return $message->getId();
 				}, $this->findEntities($select));
 			}, array_chunk($uids, 1000));
 		}
 
-		return array_map(function (Message $message) {
+		return array_map(static function (Message $message) {
 			return $message->getId();
 		}, $this->findEntities($select));
 	}
@@ -947,13 +947,13 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			return array_flat_map(function (array $chunk) use ($select) {
 				$select->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-				return array_map(function (Message $message) {
+				return array_map(static function (Message $message) {
 					return $message->getId();
 				}, $this->findEntities($select));
 			}, array_chunk($uids, 1000));
 		}
 
-		return array_map(function (Message $message) {
+		return array_map(static function (Message $message) {
 			return $message->getId();
 		}, $this->findEntities($select));
 	}
@@ -1164,7 +1164,7 @@ class MessageMapper extends QBMapper {
 		$messages = $this->findRecipients($messages);
 		$tags = $this->tagMapper->getAllTagsForMessages($messages, $userId);
 		/** @var Message $message */
-		$messages = array_map(function ($message) use ($tags) {
+		$messages = array_map(static function ($message) use ($tags) {
 			$message->setTags($tags[$message->getMessageId()] ?? []);
 			return $message;
 		}, $messages);

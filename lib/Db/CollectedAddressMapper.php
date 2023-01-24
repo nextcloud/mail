@@ -116,7 +116,7 @@ class CollectedAddressMapper extends QBMapper {
 			->leftJoin('c', 'mail_accounts', 'a', $qb1->expr()->eq('c.user_id', 'a.user_id'))
 			->where($qb1->expr()->isNull('a.id'));
 		$result = $idsQuery->execute();
-		$ids = array_map(function (array $row) {
+		$ids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();

@@ -268,7 +268,7 @@ class MailboxMapper extends QBMapper {
 			->leftJoin('m', 'mail_accounts', 'a', $qb1->expr()->eq('m.account_id', 'a.id'))
 			->where($qb1->expr()->isNull('a.id'));
 		$result = $idsQuery->execute();
-		$ids = array_map(function (array $row) {
+		$ids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();
@@ -297,7 +297,7 @@ class MailboxMapper extends QBMapper {
 				);
 
 		$cursor = $query->execute();
-		$uids = array_map(function (array $row) {
+		$uids = array_map(static function (array $row) {
 			return (int)$row['uid'];
 		}, $cursor->fetchAll());
 		$cursor->closeCursor();

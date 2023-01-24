@@ -101,13 +101,13 @@ class GroupsIntegration {
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))
 					);
-					$members = array_filter($service->getUsers($groupId), function (array $member) {
+					$members = array_filter($service->getUsers($groupId), static function (array $member) {
 						return !empty($member['email']);
 					});
 					if (empty($members)) {
 						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
 					}
-					return array_map(function (array $member) use ($recipient) {
+					return array_map(static function (array $member) use ($recipient) {
 						return Recipient::fromParams([
 							'messageId' => $recipient->getMessageId(),
 							'type' => $recipient->getType(),

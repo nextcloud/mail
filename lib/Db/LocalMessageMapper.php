@@ -144,7 +144,7 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(function (LocalMessage $message) {
+		$ids = array_map(static function (LocalMessage $message) {
 			return $message->getId();
 		}, $messages);
 
@@ -195,7 +195,7 @@ class LocalMessageMapper extends QBMapper {
 			return [];
 		}
 
-		$ids = array_map(function (LocalMessage $message) {
+		$ids = array_map(static function (LocalMessage $message) {
 			return $message->getId();
 		}, $messages);
 

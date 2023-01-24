@@ -73,7 +73,7 @@ class IMipService {
 		// and JOIN with accounts table
 		// although this might not make much of a difference
 		// since there are very few messages to process
-		$mailboxIds = array_unique(array_map(function (Message $message) {
+		$mailboxIds = array_unique(array_map(static function (Message $message) {
 			return $message->getMailboxId();
 		}, $messages));
 
@@ -86,7 +86,7 @@ class IMipService {
 		}, $mailboxIds);
 
 		// Collect all accounts in memory
-		$accountIds = array_unique(array_map(function (Mailbox $mailbox) {
+		$accountIds = array_unique(array_map(static function (Mailbox $mailbox) {
 			return $mailbox->getAccountId();
 		}, $mailboxes));
 
@@ -102,7 +102,7 @@ class IMipService {
 		foreach ($mailboxes as $mailbox) {
 			/** @var Account $account */
 			$account = $accounts[$mailbox->getAccountId()];
-			$filteredMessages = array_filter($messages, function ($message) use ($mailbox) {
+			$filteredMessages = array_filter($messages, static function ($message) use ($mailbox) {
 				return $message->getMailboxId() === $mailbox->getId();
 			});
 
@@ -119,7 +119,7 @@ class IMipService {
 				|| $account->getMailAccount()->getDraftsMailboxId() === $mailbox->getId()
 				|| $mailbox->isSpecialUse(\Horde_Imap_Client::SPECIALUSE_ARCHIVE)
 			) {
-				$processedMessages = array_map(function (Message $message) {
+				$processedMessages = array_map(static function (Message $message) {
 					$message->setImipProcessed(true);
 					return $message;
 				}, $filteredMessages); // Silently drop from passing to DAV and mark as processed, so we won't run into these messages again.
@@ -128,7 +128,7 @@ class IMipService {
 			}
 
 			try {
-				$imapMessages = $this->mailManager->getImapMessagesForScheduleProcessing($account, $mailbox, array_map(function ($message) {
+				$imapMessages = $this->mailManager->getImapMessagesForScheduleProcessing($account, $mailbox, array_map(static function ($message) {
 					return $message->getUid();
 				}, $filteredMessages));
 			} catch (ServiceException $e) {
@@ -138,7 +138,7 @@ class IMipService {
 
 			foreach ($filteredMessages as $message) {
 				/** @var IMAPMessage $imapMessage */
-				$imapMessage = current(array_filter($imapMessages, function (IMAPMessage $imapMessage) use ($message) {
+				$imapMessage = current(array_filter($imapMessages, static function (IMAPMessage $imapMessage) use ($message) {
 					return $message->getUid() === $imapMessage->getUid();
 				}));
 				if (empty($imapMessage->scheduling)) {

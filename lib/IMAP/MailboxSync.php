@@ -114,7 +114,7 @@ class MailboxSync {
 
 			$old = $this->mailboxMapper->findAll($account);
 			$indexedOld = array_combine(
-				array_map(function (Mailbox $mb) {
+				array_map(static function (Mailbox $mb) {
 					return $mb->getName();
 				}, $old),
 				$old

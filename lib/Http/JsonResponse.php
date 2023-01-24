@@ -137,7 +137,7 @@ class JsonResponse extends Base {
 	}
 
 	private static function filterTrace(array $original): array {
-		return array_map(function (array $row) {
+		return array_map(static function (array $row) {
 			return array_intersect_key($row,
 				array_flip(['file', 'line', 'function', 'class']));
 		}, $original);

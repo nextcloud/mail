@@ -52,9 +52,9 @@ class ImportantMessagesExtractor implements IExtractor {
 							array $outgoingMailboxes,
 							array $messages): void {
 		/** @var string[] $senders */
-		$senders = array_unique(array_map(function (Message $message) {
+		$senders = array_unique(array_map(static function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
-		}, array_filter($messages, function (Message $message) {
+		}, array_filter($messages, static function (Message $message) {
 			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
 		})));
 		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
