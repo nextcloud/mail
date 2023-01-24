@@ -388,7 +388,7 @@ OC.L10N.register(
     "Could not remove trusted sender {sender}" : "Could not remove trusted sender {sender}",
     "individual" : "individual",
     "domain" : "domain",
-    "(organizer)" : "(organizer)",
+    "(organizer)" : "(organiser)",
     "Untitled event" : "Untitled event",
     "Import into {calendar}" : "Import into {calendar}",
     "Event imported into {calendar}" : "Event imported into {calendar}",
