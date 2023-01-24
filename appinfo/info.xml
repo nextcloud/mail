@@ -62,6 +62,7 @@
 		<command>OCA\Mail\Command\TrainAccount</command>
 		<command>OCA\Mail\Command\Thread</command>
 		<command>OCA\Mail\Command\UpdateAccount</command>
+		<command>OCA\Mail\Command\PreprocessAccount</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>
