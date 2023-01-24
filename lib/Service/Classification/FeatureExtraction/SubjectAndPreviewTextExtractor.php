@@ -39,6 +39,7 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 	private WordCountVectorizer $wordCountVectorizer;
 	private TfIdfTransformer $tfIdfTransformer;
 	private int $max = -1;
+	private array $senderCache = [];
 
 	/** @var string[][] */
 	private array $subjects;
@@ -51,7 +52,7 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		// Limit vocabulary to limit ram usage. It takes about 5 GB of ram if an unbounded
 		// vocabulary is used (and a lot more time to compute).
 		$this->wordCountVectorizer = new WordCountVectorizer(1000);
-		$this->tfIdfTransformer = new TfIdfTransformer();
+		$this->tfIdfTransformer = new TfIdfTransformer(0.1);
 	}
 
 	/**
@@ -90,6 +91,10 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		}
 		$email = $sender->getEmail();
 
+		if (isset($this->senderCache[$email])) {
+			return $this->senderCache[$email];
+		}
+
 		// Build training data set
 		$subjects = $this->getSubjectsOfSender($email);
 		$previewTexts = $this->getPreviewTextsOfSender($email);
@@ -110,6 +115,8 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 			}
 		}
 		assert(count($textFeatures) === $this->max);
+
+		$this->senderCache[$email] = $textFeatures;
 
 		return $textFeatures;
 	}
