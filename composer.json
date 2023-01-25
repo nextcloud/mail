@@ -70,6 +70,7 @@
 			"\"vendor/bin/mozart\" compose",
 			"composer dump-autoload"
 		],
+		"rector": "rector process",
 		"test:integration": "phpunit -c tests/phpunit.integration.xml --fail-on-warning",
 		"test:integration:dev": "phpunit -c tests/phpunit.integration.xml --no-coverage --order-by=defects --stop-on-defect --fail-on-warning --stop-on-error --stop-on-failure",
 		"test:unit": "phpunit -c tests/phpunit.unit.xml --fail-on-warning",

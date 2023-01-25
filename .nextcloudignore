@@ -29,6 +29,7 @@ codecov.yml
 /phpunit*xml
 /postcss.config.js
 /psalm.xml
+/rector.php
 /screenshots
 /src
 /tests
