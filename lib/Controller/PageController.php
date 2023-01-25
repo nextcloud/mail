@@ -186,17 +186,35 @@ class PageController extends Controller {
 			'outbox-messages',
 			$this->outboxService->getMessages($user->getUID())
 		);
-		$clientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
-		if (!empty($clientId)) {
+		$googleOauthclientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
+		if (!empty($googleOauthclientId)) {
 			$this->initialStateService->provideInitialState(
 				'google-oauth-url',
 				'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query([
-					'client_id' => $clientId,
+					'client_id' => $googleOauthclientId,
 					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.googleIntegration.oauthRedirect'),
 					'response_type' => 'code',
 					'prompt' => 'consent',
 					'state' => '_accountId_', // Replaced by frontend
 					'scope' => 'https://mail.google.com/',
+					'access_type' => 'offline',
+					'login_hint' => '_email_', // Replaced by frontend
+				]),
+			);
+		}
+		$microsoftOauthClientId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_id');
+		$microsoftOauthTenantId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_tenant_id', 'common');
+		if (!empty($microsoftOauthClientId) && !empty($microsoftOauthTenantId)) {
+			$this->initialStateService->provideInitialState(
+				'microsoft-oauth-url',
+				"https://login.microsoftonline.com/$microsoftOauthTenantId/oauth2/v2.0/authorize?" . http_build_query([
+					'client_id' => $microsoftOauthClientId,
+					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.microsoftIntegration.oauthRedirect'),
+					'response_type' => 'code',
+					'response_mode' => 'query',
+					'prompt' => 'consent',
+					'state' => '_accountId_', // Replaced by frontend
+					'scope' => 'offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send',
 					'access_type' => 'offline',
 					'login_hint' => '_email_', // Replaced by frontend
 				]),

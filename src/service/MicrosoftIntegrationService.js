@@ -19,34 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { translate as t } from '@nextcloud/l10n'
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 
-import logger from '../logger'
-
-export const CONSENT_ABORTED = 'GOOGLE_CONSENT_ABORTED'
-
-export async function getUserConsent(redirectUrl) {
-	const ssoWindow = window.open(
-		redirectUrl,
-		t('mail', 'Sign in with Google'),
-		'toolbar=no, menubar=no, width=600, height=700'
+export async function configure(tenantId, clientId, clientSecret) {
+	const response = await axios.post(
+		generateUrl('/apps/mail/api/integration/microsoft'),
+		{
+			tenantId,
+			clientId,
+			clientSecret,
+		},
+		{
+			headers: {
+				Accept: 'application/json',
+			},
+		},
 	)
-	ssoWindow.focus()
-	await new Promise((resolve, reject) => {
-		window.addEventListener('message', (event) => {
-			const { data } = event
-			logger.debug('Child window message received', { event })
 
-			if (data === 'DONE') {
-				logger.info('Google user consent given')
-				resolve()
-			}
-		})
-		const windowClosedTimer = setInterval(() => {
-			if (ssoWindow.closed) {
-				clearInterval(windowClosedTimer)
-				reject(new Error(CONSENT_ABORTED))
-			}
-		}, 200)
-	})
+	return response.data.data
+}
+
+export async function unlink() {
+	const response = await axios.delete(
+		generateUrl('/apps/mail/api/integration/microsoft'),
+		{
+			headers: {
+				Accept: 'application/json',
+			},
+		},
+	)
+
+	return response.data.data
 }

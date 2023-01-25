@@ -204,6 +204,38 @@
 			</article>
 			<GmailAdminOauthSettings :client-id="googleOauthClientId" />
 		</div>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
+						'Microsoft integration'
+					)
+				}}
+			</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.'
+						)
+					}}
+				</p>
+				<p>
+					{{
+						t(
+							'mail',
+							'You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI.',
+							{
+								url: microsoftOauthRedirectUrl,
+							}
+						)
+					}}
+				</p>
+			</article>
+			<MicrosoftAdminOauthSettings :tenant-id="microsoftOauthTenantId" :client-id="microsoftOauthClientId" />
+		</div>
 	</SettingsSection>
 </template>
 
@@ -211,6 +243,7 @@
 import Button from '@nextcloud/vue/dist/Components/NcButton'
 import GmailAdminOauthSettings from './GmailAdminOauthSettings'
 import logger from '../../logger'
+import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import ProvisioningSettings from './ProvisioningSettings'
@@ -230,12 +263,16 @@ import {
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
 const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', null)
+const microsoftOauthTenantId = loadState('mail', 'microsoft_oauth_tenant_id', null) ?? undefined
+const microsoftOauthClientId = loadState('mail', 'microsoft_oauth_client_id', null) ?? undefined
+const microsoftOauthRedirectUrl = loadState('mail', 'microsoft_oauth_redirect_url', null)
 
 export default {
 	name: 'AdminSettings',
 	components: {
 		GmailAdminOauthSettings,
 		AntiSpamSettings,
+		MicrosoftAdminOauthSettings,
 		ProvisioningSettings,
 		SettingsSection,
 		Button,
@@ -256,6 +293,9 @@ export default {
 			configs: this.provisioningSettings,
 			googleOauthClientId,
 			googleOauthRedirectUrl,
+			microsoftOauthTenantId,
+			microsoftOauthClientId,
+			microsoftOauthRedirectUrl,
 			preview: {
 				provisioningDomain: '',
 				emailTemplate: '',
