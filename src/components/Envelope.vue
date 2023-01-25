@@ -26,8 +26,8 @@
 				v-if="isImportant"
 				class="app-content-list-item-star svg icon-important"
 				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="onToggleImportant"
-				v-html="hasWriteAcl ? false : importantSvg" />
+				@click.prevent="hasWriteAcl ? false : onToggleImportant"
+				v-html="importantSvg" />
 			<JunkIcon
 				v-if="data.flags.$junk"
 				:size="18"
