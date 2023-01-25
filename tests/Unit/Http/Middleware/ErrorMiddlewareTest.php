@@ -32,12 +32,13 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
+use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
+use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -49,9 +50,6 @@ class ErrorMiddlewareTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
-	/** @var IControllerMethodReflector|MockObject */
-	private $reflector;
-
 	/** @var ErrorMiddleware */
 	private $middleware;
 
@@ -60,12 +58,10 @@ class ErrorMiddlewareTest extends TestCase {
 
 		$this->config = $this->createMock(IConfig::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->reflector = $this->createMock(IControllerMethodReflector::class);
 
 		$this->middleware = new ErrorMiddleware(
 			$this->config,
 			$this->logger,
-			$this->reflector
 		);
 	}
 
@@ -79,14 +75,18 @@ class ErrorMiddlewareTest extends TestCase {
 	}
 
 	public function testDoesNotChangeUntaggedMethodResponses() {
-		$controller = $this->createMock(Controller::class);
+		$request = $this->createMock(IRequest::class);
+		$controller = new class($request) extends Controller {
+			public function __construct(IRequest $request) {
+				parent::__construct('myapp', $request);
+			}
+			public function foo() {
+			}
+		};
 		$exception = new DoesNotExistException('nope');
-		$this->reflector->expects($this->once())
-			->method('hasAnnotation')
-			->willReturn(false);
 		$this->expectException(DoesNotExistException::class);
 
-		$this->middleware->afterException($controller, 'index', $exception);
+		$this->middleware->afterException($controller, 'foo', $exception);
 	}
 
 	public function trappedErrorsData() {
@@ -101,17 +101,22 @@ class ErrorMiddlewareTest extends TestCase {
 	 * @dataProvider trappedErrorsData
 	 */
 	public function testTrapsErrors($exception, $shouldLog, $expectedStatus) {
-		$controller = $this->createMock(Controller::class);
-		$this->reflector->expects($this->once())
-			->method('hasAnnotation')
-			->willReturn(true);
+		$request = $this->createMock(IRequest::class);
+		$controller = new class($request) extends Controller {
+			public function __construct(IRequest $request) {
+				parent::__construct('myapp', $request);
+			}
+			#[TrapError]
+			public function foo() {
+			}
+		};
 		$this->logger->expects($this->exactly($shouldLog ? 1 : 0))
 			->method('error')
 			->with($exception->getMessage(), [
 				'exception' => $exception,
 			]);
 
-		$response = $this->middleware->afterException($controller, 'index', $exception);
+		$response = $this->middleware->afterException($controller, 'foo', $exception);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 		$this->assertEquals($expectedStatus, $response->getStatus());
@@ -120,17 +125,23 @@ class ErrorMiddlewareTest extends TestCase {
 	public function testSerializesRecursively() {
 		$inner = new Exception();
 		$outer = new ServiceException("Test", 0, $inner);
-		$controller = $this->createMock(Controller::class);
-		$this->reflector->expects($this->once())
-			->method('hasAnnotation')
-			->willReturn(true);
+		$request = $this->createMock(IRequest::class);
+		$controller = new class($request) extends Controller {
+			public function __construct(IRequest $request) {
+				parent::__construct('myapp', $request);
+			}
+
+			#[TrapError]
+			public function foo() {
+			}
+		};
 		$this->logger->expects($this->once())
 			->method('error')
 			->with($outer->getMessage(), [
 				'exception' => $outer,
 			]);
 
-		$response = $this->middleware->afterException($controller, 'index', $outer);
+		$response = $this->middleware->afterException($controller, 'foo', $outer);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
@@ -150,9 +161,16 @@ class ErrorMiddlewareTest extends TestCase {
 	 */
 	public function testHandlesTemporaryErrors(Throwable $ex, bool $temporary): void {
 		$controller = $this->createMock(Controller::class);
-		$this->reflector->expects($this->once())
-			->method('hasAnnotation')
-			->willReturn(true);
+		$request = $this->createMock(IRequest::class);
+		$controller = new class($request) extends Controller {
+			public function __construct(IRequest $request) {
+				parent::__construct('myapp', $request);
+			}
+
+			#[TrapError]
+			public function foo() {
+			}
+		};
 		$this->logger->expects($this->once())
 			->method($temporary ? 'warning' : 'error')
 			->with($ex->getMessage(),
@@ -161,7 +179,7 @@ class ErrorMiddlewareTest extends TestCase {
 				]
 			);
 
-		$response = $this->middleware->afterException($controller, 'index', $ex);
+		$response = $this->middleware->afterException($controller, 'foo', $ex);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 		$this->assertSame(

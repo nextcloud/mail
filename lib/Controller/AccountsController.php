@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use Horde_Imap_Client;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
@@ -95,10 +96,10 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function index(): JSONResponse {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 
@@ -113,20 +114,19 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function show(int $id): JSONResponse {
 		return new JSONResponse($this->accountService->find($this->currentUserId, $id));
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $accountName
@@ -146,6 +146,7 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function update(int $id,
 						   string $accountName,
 						   string $emailAddress,
@@ -211,7 +212,6 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string|null $editorMode
@@ -227,6 +227,7 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function patchAccount(int $id,
 								 string $editorMode = null,
 								 int $order = null,
@@ -275,7 +276,6 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string|null $signature
@@ -285,6 +285,7 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function updateSignature(int $id, string $signature = null): JSONResponse {
 		$this->accountService->updateSignature($id, $this->currentUserId, $signature);
 		return new JSONResponse();
@@ -292,7 +293,6 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -300,6 +300,7 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		$this->accountService->delete($this->currentUserId, $id);
 		return new JSONResponse();
@@ -307,7 +308,6 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $accountName
 	 * @param string $emailAddress
@@ -325,6 +325,7 @@ class AccountsController extends Controller {
 	 *
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function create(string $accountName,
 		string $emailAddress,
 		string $imapHost = null,
@@ -386,7 +387,6 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $subject
@@ -400,6 +400,7 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function draft(int $id,
 						  string $subject,
 						  string $body,

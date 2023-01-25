@@ -28,6 +28,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -50,11 +51,11 @@ class PreferencesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $id
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function show(string $id): JSONResponse {
 		return new JSONResponse([
 			'value' => $this->userPreference->getPreference($this->userId, $id)
@@ -63,13 +64,13 @@ class PreferencesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $key
 	 * @param string $value
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function update($key, $value): JSONResponse {
 		if (is_null($key) || is_null($value)) {
 			throw new ClientException('key or value missing');

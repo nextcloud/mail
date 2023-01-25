@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use Exception;
 use Horde_Mime_Exception;
 use Horde_Mime_Part;
@@ -119,7 +120,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $mailboxId
 	 * @param int $cursor
@@ -131,7 +131,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-
+	#[TrapError]
 	public function index(int $mailboxId,
 						  int $cursor = null,
 						  string $filter = null,
@@ -158,7 +158,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -169,6 +168,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function show(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -191,7 +191,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -200,6 +199,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function getBody(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -264,7 +264,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -272,6 +271,7 @@ class MessagesController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function getItineraries(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -305,13 +305,13 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function getThread(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -330,7 +330,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param int $destFolderId
@@ -340,6 +339,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function move(int $id, int $destFolderId): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -363,7 +363,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -372,6 +371,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function mdn(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -399,7 +399,6 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -408,6 +407,7 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function getSource(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -442,13 +442,13 @@ class MessagesController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @return Response
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function export(int $id): Response {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -480,7 +480,6 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param bool $plain do not inject scripts if true (default=false)
@@ -489,6 +488,7 @@ class MessagesController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function getHtmlBody(int $id, bool $plain = false): Response {
 		try {
 			try {
@@ -555,7 +555,6 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -567,6 +566,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function downloadAttachment(int $id,
 									   string $attachmentId): Response {
 		try {
@@ -599,7 +599,6 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param int $id the message id
 	 * @param string $attachmentId
@@ -610,6 +609,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 * @throws DoesNotExistException
 	 */
+	#[TrapError]
 	public function downloadAttachments(int $id): Response {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -635,7 +635,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $attachmentId
@@ -646,6 +645,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function saveAttachment(int $id,
 								   string $attachmentId,
 								   string $targetPath) {
@@ -693,7 +693,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param array $flags
@@ -703,6 +702,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function setFlags(int $id, array $flags): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -721,7 +721,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $imapLabel
@@ -731,6 +730,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function setTag(int $id, string $imapLabel): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -752,7 +752,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $imapLabel
@@ -762,6 +761,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function removeTag(int $id, string $imapLabel): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -783,7 +783,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -794,6 +793,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);

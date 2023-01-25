@@ -28,6 +28,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -47,12 +48,12 @@ class TrustedSendersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $email
 	 * @param string $type
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function setTrusted(string $email, string $type): JsonResponse {
 		$this->trustedSenderService->trust(
 			$this->uid,
@@ -65,12 +66,12 @@ class TrustedSendersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $email
 	 * @param string $type
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function removeTrust(string $email, string $type): JsonResponse {
 		$this->trustedSenderService->trust(
 			$this->uid,
@@ -83,11 +84,10 @@ class TrustedSendersController extends Controller {
 	}
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
-	 *
 	 *
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function list(): JsonResponse {
 		$list = $this->trustedSenderService->getTrusted(
 			$this->uid
