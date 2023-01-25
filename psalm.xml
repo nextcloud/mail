@@ -21,8 +21,6 @@
 	<issueHandlers>
 		<UndefinedClass>
 			<errorLevel type="suppress">
-				<referencedClass name="IPLib\Factory" />
-				<referencedClass name="IPLib\Address\IPv6" />
 				<referencedClass name="OC" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Psr\Http\Client\ClientExceptionInterface" />

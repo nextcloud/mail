@@ -28,6 +28,7 @@ namespace OCA\Mail\Net;
 use IPLib\Address\IPv6;
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
+use function class_exists;
 use function filter_var;
 
 /**
@@ -49,19 +50,21 @@ class IpAddressClassifier {
 	 * @return bool
 	 */
 	public function isLocalAddress(string $ip): bool {
-		$parsedIp = Factory::parseAddressString(
-			$ip,
-			ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED
-		);
-		if ($parsedIp === null) {
-			/* Not an IP */
-			return false;
-		}
-		/* Replace by normalized form */
-		if ($parsedIp instanceof IPv6) {
-			$ip = (string)($parsedIp->toIPv4() ?? $parsedIp);
-		} else {
-			$ip = (string)$parsedIp;
+		if (class_exists(Factory::class)) {
+			$parsedIp = Factory::parseAddressString(
+				$ip,
+				ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED
+			);
+			if ($parsedIp === null) {
+				/* Not an IP */
+				return false;
+			}
+			/* Replace by normalized form */
+			if ($parsedIp instanceof IPv6) {
+				$ip = (string)($parsedIp->toIPv4() ?? $parsedIp);
+			} else {
+				$ip = (string)$parsedIp;
+			}
 		}
 
 		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
