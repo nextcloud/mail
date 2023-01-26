@@ -5,6 +5,7 @@
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Lukas Reschke <lukas@owncloud.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -103,6 +104,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOauthRefreshToken(string $token)
  * @method int|null getOauthTokenTtl()
  * @method void setOauthTokenTtl(int $ttl)
+ * @method int|null getSmimeCertificateId()
+ * @method void setSmimeCertificateId(int|null $smimeCertificateId)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -164,6 +167,9 @@ class MailAccount extends Entity {
 
 	/** @var int */
 	protected $signatureMode;
+
+	/** @var int|null */
+	protected $smimeCertificateId;
 
 	/**
 	 * @param array $params
@@ -232,6 +238,7 @@ class MailAccount extends Entity {
 		$this->addType('sievePort', 'integer');
 		$this->addType('signatureAboveQuote', 'boolean');
 		$this->addType('signatureMode', 'int');
+		$this->addType('smimeCertificateId', 'integer');
 	}
 
 	/**
@@ -260,6 +267,7 @@ class MailAccount extends Entity {
 			'sieveEnabled' => ($this->isSieveEnabled() === true),
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
 			'signatureMode' => $this->getSignatureMode(),
+			'smimeCertificateId' => $this->getSmimeCertificateId(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

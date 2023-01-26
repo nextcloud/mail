@@ -412,13 +412,13 @@ export default {
 	setMicrosoftOauthUrl(state, url) {
 		state.microsoftOauthUrl = url
 	},
-	setSMimeCertificates(state, { certificates }) {
-		state.sMimeCertificates = certificates
+	setSmimeCertificates(state, certificates) {
+		state.smimeCertificates = certificates
 	},
-	deleteSMimeCertificate(state, { id }) {
-		state.sMimeCertificates = state.sMimeCertificates.filter(cert => cert.id !== id)
+	deleteSmimeCertificate(state, { id }) {
+		state.smimeCertificates = state.smimeCertificates.filter(cert => cert.id !== id)
 	},
-	addSMimeCertificate(state, { certificate }) {
-		state.sMimeCertificates = [...state.sMimeCertificates, certificate]
+	addSmimeCertificate(state, { certificate }) {
+		state.smimeCertificates = [...state.smimeCertificates, certificate]
 	},
 }

@@ -27,7 +27,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Service\SMimeService;
+use OCA\Mail\Service\SmimeService;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCA\Mail\Db\Tag;
@@ -128,8 +128,8 @@ class MessagesControllerTest extends TestCase {
 	/** @var ITimeFactory */
 	private $oldFactory;
 
-	/** @var MockObject|SMimeService */
-	private $sMimeService;
+	/** @var MockObject|SmimeService */
+	private $smimeService;
 
 	/** @var MockObject|IMAPClientFactory  */
 	private $clientFactory;
@@ -153,7 +153,7 @@ class MessagesControllerTest extends TestCase {
 		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
 		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
 		$this->mailTransmission = $this->createMock(IMailTransmission::class);
-		$this->sMimeService = $this->createMock(SMimeService::class);
+		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
@@ -181,7 +181,7 @@ class MessagesControllerTest extends TestCase {
 			$this->nonceManager,
 			$this->trustedSenderService,
 			$this->mailTransmission,
-			$this->sMimeService,
+			$this->smimeService,
 			$this->clientFactory,
 		);
 

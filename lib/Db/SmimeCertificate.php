@@ -39,7 +39,7 @@ use ReturnTypeWillChange;
  * @method void setPrivateKey(string|null $privateKey)
  * @method string|null getPrivateKey()
  */
-class SMimeCertificate extends Entity implements JsonSerializable {
+class SmimeCertificate extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $userId;
 
@@ -54,11 +54,11 @@ class SMimeCertificate extends Entity implements JsonSerializable {
 
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
+		// Don't leak certificate and private key
 		return [
 			'id' => $this->getId(),
-			'userId' => $this->getUserId(),
 			'emailAddress' => $this->getEmailAddress(),
-			// Don't leak certificate and private key
+			'hasKey' => $this->getPrivateKey() !== null,
 		];
 	}
 }

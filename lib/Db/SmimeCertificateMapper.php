@@ -33,9 +33,9 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @template-extends QBMapper<SMimeCertificate>
+ * @template-extends QBMapper<SmimeCertificate>
  */
-class SMimeCertificateMapper extends QBMapper {
+class SmimeCertificateMapper extends QBMapper {
 	/**
 	 * @param IDBConnection $db
 	 */
@@ -46,11 +46,11 @@ class SMimeCertificateMapper extends QBMapper {
 	/**
 	 * @param int $id
 	 * @param string $userId
-	 * @return SMimeCertificate
+	 * @return SmimeCertificate
 	 *
 	 * @throws DoesNotExistException
 	 */
-	public function find(int $id, string $userId): SMimeCertificate {
+	public function find(int $id, string $userId): SmimeCertificate {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -67,7 +67,7 @@ class SMimeCertificateMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
-	 * @return SMimeCertificate[]
+	 * @return SmimeCertificate[]
 	 */
 	public function findAll(string $userId): array {
 		$qb = $this->db->getQueryBuilder();
@@ -83,12 +83,12 @@ class SMimeCertificateMapper extends QBMapper {
 	/**
 	 * @param string $userId
 	 * @param string $emailAddress
-	 * @return SMimeCertificate
+	 * @return SmimeCertificate
 	 *
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function findByEmailAddress(string $userId, string $emailAddress): SMimeCertificate {
+	public function findByEmailAddress(string $userId, string $emailAddress): SmimeCertificate {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())

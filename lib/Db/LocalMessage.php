@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2022 Anna Larch <anna@nextcloud.com>
  *
  * @author 2022 Anna Larch <anna@nextcloud.com>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -53,6 +54,10 @@ use function array_filter;
  * @method void setInReplyToMessageId(?string $inReplyToId)
  * @method int|null getUpdatedAt()
  * @method setUpdatedAt(?int $updatedAt)
+ * @method bool|null getSmimeSign()
+ * @method setSmimeSign(bool $smimeSign)
+ * @method int|null getSmimeCertificateId()
+ * @method setSmimeCertificateId(?int $smimeCertificateId)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -100,6 +105,12 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var int|null */
 	protected $updatedAt;
 
+	/** @var bool|null */
+	protected $smimeSign;
+
+	/** @var int|null */
+	protected $smimeCertificateId;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -108,6 +119,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('html', 'boolean');
 		$this->addType('failed', 'boolean');
 		$this->addType('updatedAt', 'integer');
+		$this->addType('smimeSign', 'boolean');
+		$this->addType('smimeCertificateId', 'integer');
 	}
 
 	#[ReturnTypeWillChange]
@@ -146,6 +159,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 				})
 			),
 			'failed' => $this->isFailed() === true,
+			'smimeCertificateId' => $this->getSmimeCertificateId(),
+			'smimeSign' => $this->getSmimeSign() === true,
 		];
 	}
 

@@ -30,10 +30,12 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -69,6 +71,7 @@ class PageController extends Controller {
 	private OutboxService $outboxService;
 	private IEventDispatcher $dispatcher;
 	private ICredentialstore $credentialStore;
+	private SmimeService $smimeService;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -76,16 +79,17 @@ class PageController extends Controller {
 								IConfig $config,
 								AccountService $accountService,
 								AliasesService $aliasesService,
-								?string $UserId,
-								IUserSession $userSession,
+								?string          $UserId,
+								IUserSession     $userSession,
 								IUserPreferences $preferences,
-								IMailManager $mailManager,
-								TagMapper $tagMapper,
-								IInitialState $initialStateService,
-								LoggerInterface $logger,
-								OutboxService $outboxService,
+								IMailManager     $mailManager,
+								TagMapper        $tagMapper,
+								IInitialState    $initialStateService,
+								LoggerInterface  $logger,
+								OutboxService    $outboxService,
 								IEventDispatcher $dispatcher,
-								ICredentialStore $credentialStore) {
+								ICredentialStore $credentialStore,
+								SmimeService     $smimeService) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -102,6 +106,7 @@ class PageController extends Controller {
 		$this->outboxService = $outboxService;
 		$this->dispatcher = $dispatcher;
 		$this->credentialStore = $credentialStore;
+		$this->smimeService = $smimeService;
 	}
 
 	/**
@@ -231,6 +236,16 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'allow-new-accounts',
 			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
+			'smime-certificates',
+			array_map(
+				function (SmimeCertificate $certificate) {
+					return $this->smimeService->enrichCertificate($certificate);
+				},
+				$this->smimeService->findAllCertificates($user->getUID()),
+			),
 		);
 
 		$csp = new ContentSecurityPolicy();

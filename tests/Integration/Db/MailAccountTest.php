@@ -73,6 +73,7 @@ class MailAccountTest extends TestCase {
 			'sieveEnabled' => false,
 			'signatureAboveQuote' => false,
 			'signatureMode' => null,
+			'smimeCertificateId' => null,
 		], $a->toJson());
 	}
 
@@ -103,6 +104,7 @@ class MailAccountTest extends TestCase {
 			'sieveEnabled' => false,
 			'signatureAboveQuote' => false,
 			'signatureMode' => null,
+			'smimeCertificateId' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

@@ -30,15 +30,7 @@
 		<AppSettingsSection
 			id="account-settings"
 			:title="t('mail', 'Account settings')">
-			<div class="alias-item">
-				<p><strong>{{ displayName }}</strong> &lt;{{ email }}&gt;</p>
-				<a
-					v-if="!account.provisioningId"
-					class="button icon-rename"
-					:title="t('mail', 'Change name')"
-					@click="handleClick" />
-			</div>
-			<AliasSettings :account="account" />
+			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</AppSettingsSection>
 		<AppSettingsSection id="signature" :title="t('mail', 'Signature')">
 			<p class="settings-hint">
@@ -176,11 +168,10 @@ export default {
 		},
 	},
 	methods: {
-		handleClick() {
+		scrollToAccountSettings() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
 			})
-
 		},
 		async onOpen() {
 			this.showSettings = true

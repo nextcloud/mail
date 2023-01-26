@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @copyright 2022 Anna Larch <anna.larch@gmx.net>
  *
  * @author Anna Larch <anna.larch@gmx.net>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -99,6 +100,7 @@ class OutboxController extends Controller {
 		string  $body,
 		string  $editorBody,
 		bool    $isHtml,
+		bool    $smimeSign,
 		array   $to = [],
 		array   $cc = [],
 		array   $bcc = [],
@@ -106,7 +108,8 @@ class OutboxController extends Controller {
 		?int    $draftId = null,
 		?int    $aliasId = null,
 		?string $inReplyToMessageId = null,
-		?int $sendAt = null): JsonResponse {
+		?int    $smimeCertificateId = null,
+		?int    $sendAt = null): JsonResponse {
 		$account = $this->accountService->find($this->userId, $accountId);
 
 		if ($draftId !== null) {
@@ -123,6 +126,8 @@ class OutboxController extends Controller {
 		$message->setHtml($isHtml);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
+		$message->setSmimeSign($smimeSign);
+		$message->setSmimeCertificateId($smimeCertificateId);
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 

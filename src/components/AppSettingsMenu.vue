@@ -84,14 +84,14 @@
 
 		<ButtonVue class="app-settings-button"
 			type="secondary"
-			@click.prevent.stop="displaySMimeCertificateModal = true">
+			@click.prevent.stop="displaySmimeCertificateModal = true">
 			<template #icon>
 				<IconLock :size="20" />
 			</template>
 			{{ t('mail', 'Manage S/MIME certificates') }}
 		</ButtonVue>
-		<SMimeCertificateModal v-if="displaySMimeCertificateModal"
-			@close="displaySMimeCertificateModal = false" />
+		<SmimeCertificateModal v-if="displaySmimeCertificateModal"
+			@close="displaySmimeCertificateModal = false" />
 
 		<p class="mailvelope-section">
 			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
@@ -117,7 +117,7 @@ import IconEmail from 'vue-material-design-icons/Email'
 import IconLock from 'vue-material-design-icons/Lock'
 import Logger from '../logger'
 import KeyboardShortcuts from '../views/KeyboardShortcuts'
-import SMimeCertificateModal from './smime/SMimeCertificateModal'
+import SmimeCertificateModal from './smime/SmimeCertificateModal'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -129,7 +129,7 @@ export default {
 		IconAdd,
 		IconLoading,
 		IconLock,
-		SMimeCertificateModal,
+		SmimeCertificateModal,
 	},
 	data() {
 		return {
@@ -144,7 +144,7 @@ export default {
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
-			displaySMimeCertificateModal: false,
+			displaySmimeCertificateModal: false,
 		}
 	},
 	computed: {

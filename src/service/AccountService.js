@@ -107,3 +107,12 @@ export const deleteAccount = (id) => {
 
 	return axios.delete(url).then((resp) => fixAccountId(resp.data))
 }
+
+export const updateSmimeCertificate = async (id, smimeCertificateId) => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/smime-certificate', {
+		id,
+	})
+
+	const response = await axios.put(url, { smimeCertificateId })
+	return response.data.data
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -72,8 +73,19 @@ class AliasesController extends Controller {
 	 * @NoAdminRequired
 	 */
 	#[TrapError]
-	public function update(int $id, string $alias, string $aliasName): JSONResponse {
-		return new JSONResponse($this->aliasService->update($this->currentUserId, $id, $alias, $aliasName));
+	public function update(int    $id,
+						   string $alias,
+						   string $aliasName,
+						   ?int   $smimeCertificateId = null): JSONResponse {
+		return new JSONResponse(
+			$this->aliasService->update(
+				$this->currentUserId,
+				$id,
+				$alias,
+				$aliasName,
+				$smimeCertificateId,
+			)
+		);
 	}
 
 	/**

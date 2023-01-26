@@ -43,16 +43,17 @@ export const deleteAlias = async (accountId, aliasId) => {
  * @param {number} aliasId if of alias
  * @param {string} alias new alias
  * @param {string} aliasName new alias name
+ * @param {number?} smimeCertificateId new S/Mime certificate id
  * @return {Promise<Alias>}
  */
-export const updateAlias = async (accountId, aliasId, alias, aliasName) => {
+export const updateAlias = async (accountId, aliasId, alias, aliasName, smimeCertificateId) => {
 	const url = generateUrl(
 		'/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
 			id: accountId,
 			aliasId,
 		})
 
-	return axios.put(url, { alias, aliasName }).then(resp => resp.data)
+	return axios.put(url, { alias, aliasName, smimeCertificateId }).then(resp => resp.data)
 }
 
 /**

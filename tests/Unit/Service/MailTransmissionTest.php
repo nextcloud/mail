@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -46,6 +47,7 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\Service\SmimeService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\EventDispatcher\Event;
@@ -91,6 +93,8 @@ class MailTransmissionTest extends TestCase {
 	/** @var GroupsIntegration|MockObject */
 	private $groupsIntegration;
 
+	private SmimeService $smimeService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -106,6 +110,7 @@ class MailTransmissionTest extends TestCase {
 		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
 		$this->aliasService = $this->createMock(AliasesService::class);
 		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
+		$this->smimeService = $this->createMock(SmimeService::class);
 
 		$this->transmission = new MailTransmission(
 			$this->userFolder,
@@ -120,6 +125,7 @@ class MailTransmissionTest extends TestCase {
 			$this->performanceLogger,
 			$this->aliasService,
 			$this->groupsIntegration,
+			$this->smimeService,
 		);
 	}
 

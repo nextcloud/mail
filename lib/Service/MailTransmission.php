@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -59,6 +60,7 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMessage;
@@ -75,6 +77,8 @@ use function array_filter;
 use function array_map;
 
 class MailTransmission implements IMailTransmission {
+	private SmimeService $smimeService;
+
 	/** @var Folder */
 	private $userFolder;
 
@@ -125,7 +129,8 @@ class MailTransmission implements IMailTransmission {
 								LoggerInterface $logger,
 								PerformanceLogger $performanceLogger,
 								AliasesService $aliasesService,
-								GroupsIntegration $groupsIntegration) {
+								GroupsIntegration $groupsIntegration,
+								SmimeService $smimeService) {
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
 		$this->mailManager = $mailManager;
@@ -138,6 +143,7 @@ class MailTransmission implements IMailTransmission {
 		$this->performanceLogger = $performanceLogger;
 		$this->aliasesService = $aliasesService;
 		$this->groupsIntegration = $groupsIntegration;
+		$this->smimeService = $smimeService;
 	}
 
 	public function sendMessage(NewMessageData $messageData,
@@ -191,12 +197,40 @@ class MailTransmission implements IMailTransmission {
 		$mimeMessage = new MimeMessage(
 			new DataUriParser()
 		);
-
-		$mail->setBasePart($mimeMessage->build(
+		$mimePart = $mimeMessage->build(
 			$messageData->isHtml(),
 			$message->getContent(),
 			$message->getAttachments()
-		));
+		);
+
+		// TODO: add smimeEncrypt check if implemented
+		if ($messageData->getSmimeSign()) {
+			if ($messageData->getSmimeCertificateId() === null) {
+				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
+			}
+
+			try {
+				$certificate = $this->smimeService->findCertificate(
+					$messageData->getSmimeCertificateId(),
+					$account->getUserId(),
+				);
+				$mimePart = $this->smimeService->signMimePart($mimePart, $certificate);
+			} catch (DoesNotExistException $e) {
+				throw new ServiceException(
+					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			} catch (SmimeSignException | ServiceException $e) {
+				throw new ServiceException(
+					'Could not send message: Failed to sign MIME part: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			}
+		}
+
+		$mail->setBasePart($mimePart);
 
 		$this->eventDispatcher->dispatchTyped(
 			new BeforeMessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
@@ -264,7 +298,10 @@ class MailTransmission implements IMailTransmission {
 			$message->getSubject(),
 			$message->getBody(),
 			$attachments,
-			$message->isHtml()
+			$message->isHtml(),
+			false,
+			$message->getSmimeCertificateId(),
+			$message->getSmimeSign() ?? false,
 		);
 
 		if ($message->getAliasId() !== null) {

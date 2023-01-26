@@ -52,6 +52,7 @@ import {
 	patch as patchAccount,
 	update as updateAccount,
 	updateSignature,
+	updateSmimeCertificate as updateAccountSmimeCertificate,
 } from '../service/AccountService'
 import {
 	create as createMailbox,
@@ -113,7 +114,7 @@ import {
 	initializeClientForUserView,
 	findAll,
 } from '../service/caldavService'
-import * as SMimeCertificateService from '../service/SMimeCertificateService'
+import * as SmimeCertificateService from '../service/SmimeCertificateService'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -1063,13 +1064,23 @@ export default {
 			})
 		})
 	},
-	async updateAlias({ commit }, { account, aliasId, alias, name }) {
+	async updateAlias({ commit }, { account, aliasId, alias, name, smimeCertificateId }) {
 		return handleHttpAuthErrors(commit, async () => {
-			const entity = await AliasService.updateAlias(account.id, aliasId, alias, name)
+			const entity = await AliasService.updateAlias(
+				account.id,
+				aliasId,
+				alias,
+				name,
+				smimeCertificateId,
+			)
 			commit('patchAlias', {
 				account,
 				aliasId: entity.id,
-				data: { alias: entity.alias, name: entity.name },
+				data: {
+					alias: entity.alias,
+					name: entity.name,
+					smimeCertificateId: entity.smimeCertificateId,
+				},
 			})
 			commit('editAccount', account)
 		})
@@ -1229,10 +1240,10 @@ export default {
 	 * @param {Function} context.commit Vuex store mutations
 	 * @return {Promise<void>}
 	 */
-	async fetchSMimeCertificates({ commit }) {
+	async fetchSmimeCertificates({ commit }) {
 		return handleHttpAuthErrors(commit, async () => {
-			const certificates = await SMimeCertificateService.fetchAll()
-			commit('setSMimeCertificates', { certificates })
+			const certificates = await SmimeCertificateService.fetchAll()
+			commit('setSmimeCertificates', certificates)
 		})
 	},
 
@@ -1244,10 +1255,10 @@ export default {
 	 * @param id The id of the certificate to be deleted
 	 * @return {Promise<void>}
 	 */
-	async deleteSMimeCertificate({ commit }, id) {
+	async deleteSmimeCertificate({ commit }, id) {
 		return handleHttpAuthErrors(commit, async () => {
-			await SMimeCertificateService.deleteCertificate(id)
-			commit('deleteSMimeCertificate', { id })
+			await SmimeCertificateService.deleteCertificate(id)
+			commit('deleteSmimeCertificate', { id })
 		})
 	},
 
@@ -1261,11 +1272,30 @@ export default {
 	 * @param {Blob=} files.privateKey
 	 * @return {Promise<object>}
 	 */
-	async createSMimeCertificate({ commit }, files) {
+	async createSmimeCertificate({ commit }, files) {
 		return handleHttpAuthErrors(commit, async () => {
-			const certificate = await SMimeCertificateService.createCertificate(files)
-			commit('addSMimeCertificate', { certificate })
+			const certificate = await SmimeCertificateService.createCertificate(files)
+			commit('addSmimeCertificate', { certificate })
 			return certificate
+		})
+	},
+
+	/**
+	 * Update the S/MIME certificate of an account.
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {Function} context.commit Vuex store mutations
+	 * @param {Function} context.getters Vuex store getters
+	 * @param {object} data
+	 * @param {object} data.accountId
+	 * @param {number=} data.smimeCertificateId
+	 * @param data.account
+	 * @return {Promise<void>}
+	 */
+	async updateAccountSmimeCertificate({ commit, getters }, { account, smimeCertificateId }) {
+		return handleHttpAuthErrors(commit, async () => {
+			await updateAccountSmimeCertificate(account.id, smimeCertificateId)
+			commit('patchAccount', { account, data: { smimeCertificateId } })
 		})
 	},
 }

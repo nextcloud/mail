@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @author Anna Larch <anna.larch@gmx.net>
  *
  * @copyright 2022 Anna Larch <anna.larch@gmx.net>
+ * @copyright 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -252,6 +253,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
@@ -273,6 +275,7 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
 			$to,
 			$cc,
 			[],
@@ -293,6 +296,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
@@ -312,6 +316,7 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
 			$to,
 			$cc,
 			[],
@@ -330,6 +335,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
@@ -349,6 +355,7 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
 			$to,
 			$cc,
 			[],

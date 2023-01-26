@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -33,6 +34,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -100,6 +102,8 @@ class PageControllerTest extends TestCase {
 	/** @var PageController */
 	private $controller;
 
+	private SmimeService $smimeService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -119,6 +123,7 @@ class PageControllerTest extends TestCase {
 		$this->outboxService = $this->createMock(OutboxService::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
+		$this->smimeService = $this->createMock(SmimeService::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -137,6 +142,7 @@ class PageControllerTest extends TestCase {
 			$this->outboxService,
 			$this->eventDispatcher,
 			$this->credentialStore,
+			$this->smimeService,
 		);
 	}
 
@@ -260,7 +266,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(10))
+		$this->initialState->expects($this->exactly(11))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -272,7 +278,8 @@ class PageControllerTest extends TestCase {
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['disable-scheduled-send', false],
-				['allow-new-accounts', true]
+				['allow-new-accounts', true],
+				['smime-certificates', []],
 			);
 
 		$expected = new TemplateResponse($this->appName, 'index', [
