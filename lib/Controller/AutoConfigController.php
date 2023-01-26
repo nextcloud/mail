@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Http\JsonResponse;
@@ -59,10 +60,10 @@ class AutoConfigController extends Controller {
 	 * @param string $email
 	 *
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function queryIspdb(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
 		if (!$rfc822Address->valid || !$this->hostValidator->isValid($rfc822Address->host)) {
@@ -77,10 +78,10 @@ class AutoConfigController extends Controller {
 	 * @param string $email
 	 *
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function queryMx(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
 		if (!$rfc822Address->valid || !$this->hostValidator->isValid($rfc822Address->host)) {
@@ -97,10 +98,10 @@ class AutoConfigController extends Controller {
 	 * @param int $port
 	 *
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function testConnectivity(string $host, int $port): JsonResponse {
 		if (!in_array($port, [143, 993, 465, 587])) {
 			return JsonResponse::fail('Port not allowed');

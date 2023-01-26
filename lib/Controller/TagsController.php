@@ -26,6 +26,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -45,7 +46,6 @@ class TagsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $displayName
 	 * @param string $color
@@ -53,6 +53,7 @@ class TagsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function create(string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);
@@ -63,7 +64,6 @@ class TagsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $displayName
@@ -72,6 +72,7 @@ class TagsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function update(int $id, string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);

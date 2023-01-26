@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
@@ -56,7 +57,6 @@ class DraftsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $subject
@@ -73,6 +73,7 @@ class DraftsController extends Controller {
 	 * @param int|null $draftId
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function create(
 		int     $accountId,
 		string  $subject,
@@ -112,7 +113,6 @@ class DraftsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param int $accountId
@@ -130,6 +130,7 @@ class DraftsController extends Controller {
 	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function update(int $id,
 		int     $accountId,
 		string  $subject,
@@ -167,11 +168,11 @@ class DraftsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $message->getAccountId());
@@ -182,10 +183,11 @@ class DraftsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
+	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function move(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $message->getAccountId());

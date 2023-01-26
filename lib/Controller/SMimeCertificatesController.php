@@ -30,6 +30,7 @@ use OCA\Mail\Db\SMimeCertificate;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SMimeCertificateParserException;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\SMimeService;
 use OCP\AppFramework\Controller;
@@ -56,11 +57,11 @@ class SMimeCertificatesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @throws ServiceException
 	 * @throws SMimeCertificateParserException
 	 */
+	#[TrapError]
 	public function index(): JsonResponse {
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
 		$certificates = array_map(function (SMimeCertificate $certificate) {
@@ -82,13 +83,13 @@ class SMimeCertificatesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 *
 	 * @throws DoesNotExistException
 	 */
+	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		$this->certificateService->deleteCertificate($id, $this->userId);
 		return JsonResponse::success();
@@ -96,13 +97,13 @@ class SMimeCertificatesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @return JsonResponse
 	 *
 	 * @throws ServiceException
 	 * @throws SMimeCertificateParserException
 	 */
+	#[TrapError]
 	public function create(): JsonResponse {
 		// TODO: What about PKCS12 certificates?
 		// They need to be decrypted by the client because they are protected by a password.

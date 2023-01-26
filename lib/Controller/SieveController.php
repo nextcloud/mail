@@ -29,6 +29,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Sieve\SieveClientFactory;
 use OCA\Mail\Validation\RemoteHostValidator;
@@ -66,7 +67,6 @@ class SieveController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id account id
 	 *
@@ -75,6 +75,7 @@ class SieveController extends Controller {
 	 * @throws CouldNotConnectException
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function getActiveScript(int $id): JSONResponse {
 		$sieve = $this->getClient($id);
 
@@ -93,7 +94,6 @@ class SieveController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id account id
 	 * @param string $script
@@ -104,6 +104,7 @@ class SieveController extends Controller {
 	 * @throws CouldNotConnectException
 	 * @throws ManagesieveException
 	 */
+	#[TrapError]
 	public function updateActiveScript(int $id, string $script): JSONResponse {
 		$sieve = $this->getClient($id);
 
@@ -115,7 +116,6 @@ class SieveController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id account id
 	 * @param bool $sieveEnabled
@@ -130,6 +130,7 @@ class SieveController extends Controller {
 	 * @throws CouldNotConnectException
 	 * @throws DoesNotExistException
 	 */
+	#[TrapError]
 	public function updateAccount(int $id,
 								  bool $sieveEnabled,
 								  string $sieveHost,

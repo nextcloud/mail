@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
@@ -44,11 +45,12 @@ class AutoCompleteController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $term
+	 *
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function index(string $term): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse([]);

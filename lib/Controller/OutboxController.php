@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
@@ -52,21 +53,21 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function index(): JsonResponse {
 		return JsonResponse::success(['messages' => $this->service->getMessages($this->userId)]);
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function show(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		return JsonResponse::success($message);
@@ -74,7 +75,6 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $subject
@@ -89,8 +89,10 @@ class OutboxController extends Controller {
 	 * @param int|null $aliasId
 	 * @param string|null $inReplyToMessageId
 	 * @param int|null $sendAt
+	 *
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function create(
 		int     $accountId,
 		string  $subject,
@@ -129,7 +131,6 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param int $accountId
@@ -147,6 +148,7 @@ class OutboxController extends Controller {
 	 * @param int|null $sendAt
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function update(int     $id,
 						   int     $accountId,
 						   string  $subject,
@@ -181,11 +183,11 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function send(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $message->getAccountId());
@@ -198,11 +200,11 @@ class OutboxController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
+	#[TrapError]
 	public function destroy(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$this->service->deleteMessage($this->userId, $message);

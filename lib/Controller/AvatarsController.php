@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Http\AvatarDownloadResponse;
 use OCP\AppFramework\Controller;
@@ -49,11 +50,11 @@ class AvatarsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param string $email
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function url(string $email): JSONResponse {
 		if (empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
@@ -86,11 +87,11 @@ class AvatarsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @TrapError
 	 *
 	 * @param string $email
 	 * @return Response
 	 */
+	#[TrapError]
 	public function image(string $email): Response {
 		if (empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
