@@ -21,19 +21,19 @@
 				:size="18"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? false : onToggleFlagged" />
+				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 			<div
 				v-if="isImportant"
 				class="app-content-list-item-star svg icon-important"
 				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="onToggleImportant"
-				v-html="hasWriteAcl ? false : importantSvg" />
+				@click.prevent="hasWriteAcl ? onToggleImportant() : false"
+				v-html="importantSvg" />
 			<JunkIcon
 				v-if="data.flags.$junk"
 				:size="18"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="data.flags.$junk ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? false : onToggleJunk" />
+				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			<div class="app-content-list-item-icon">
 				<Avatar :display-name="addresses" :email="avatarEmail" />
 				<p v-if="selectMode" class="app-content-list-item-select-checkbox">

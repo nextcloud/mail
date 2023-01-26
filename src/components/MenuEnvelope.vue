@@ -251,10 +251,9 @@ export default {
 			required: true,
 		},
 		mailbox: {
-			// It is just used to get the accountId when envelope doesn't have it
+			// Required for checking ACLs
 			type: Object,
-			required: false,
-			default: undefined,
+			required: true,
 		},
 		isSelected: {
 			// Indicates if the envelope is currently selected
