@@ -33,7 +33,9 @@ use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Transformers\LinearDiscriminantAnalysis;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
+use Rubix\ML\Transformers\PrincipalComponentAnalysis;
 use Rubix\ML\Transformers\TfIdfTransformer;
+use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function array_column;
@@ -42,7 +44,7 @@ use function array_map;
 class SubjectAndPreviewTextExtractor implements IExtractor {
 	private StatisticsDao $statisticsDao;
 	private WordCountVectorizer $wordCountVectorizer;
-	private LinearDiscriminantAnalysis $ldaTransformer;
+	private Transformer $dimensionalReductionTransformer;
 	private int $max = -1;
 
 	private array $senderCache = [];
@@ -51,8 +53,8 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		$this->statisticsDao = $statisticsDao;
 		// Limit vocabulary to limit ram usage. It takes about 5 GB of ram if an unbounded
 		// vocabulary is used (and a lot more time to compute).
-		$this->wordCountVectorizer = new WordCountVectorizer(1000);
-		$this->ldaTransformer = new LinearDiscriminantAnalysis(20);
+		$this->wordCountVectorizer = new WordCountVectorizer(100);
+		$this->dimensionalReductionTransformer = new PrincipalComponentAnalysis(15);
 	}
 
 	/**
@@ -73,7 +75,7 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		)
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->ldaTransformer);
+			->apply($this->dimensionalReductionTransformer);
 
 		// Limit feature vector length to actual vocabulary size
 		$vocab = $this->wordCountVectorizer->vocabularies()[0];
@@ -100,7 +102,7 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		$trainDataSet = Unlabeled::build([$trainText])
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->ldaTransformer);
+			->apply($this->dimensionalReductionTransformer);
 
 		// Use zeroed vector if no features could be extracted
 		if ($trainDataSet->numColumns() === 0) {
@@ -108,7 +110,6 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		} else {
 			$textFeatures = $trainDataSet->sample(0);
 		}
-		assert(count($textFeatures) === 20);
 
 		$this->senderCache[$email] = $textFeatures;
 
