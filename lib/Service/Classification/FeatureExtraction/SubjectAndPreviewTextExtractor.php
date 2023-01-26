@@ -28,53 +28,52 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\StatisticsDao;
+use OCA\Mail\Service\Classification\ImportanceClassifier;
+use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
+use Rubix\ML\Transformers\LinearDiscriminantAnalysis;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
+use function array_column;
+use function array_map;
 
 class SubjectAndPreviewTextExtractor implements IExtractor {
 	private StatisticsDao $statisticsDao;
 	private WordCountVectorizer $wordCountVectorizer;
-	private TfIdfTransformer $tfIdfTransformer;
+	private LinearDiscriminantAnalysis $ldaTransformer;
 	private int $max = -1;
+
 	private array $senderCache = [];
-
-	/** @var string[][] */
-	private array $subjects;
-
-	/** @var string[][] */
-	private array $previewTexts;
 
 	public function __construct(StatisticsDao $statisticsDao) {
 		$this->statisticsDao = $statisticsDao;
 		// Limit vocabulary to limit ram usage. It takes about 5 GB of ram if an unbounded
 		// vocabulary is used (and a lot more time to compute).
 		$this->wordCountVectorizer = new WordCountVectorizer(1000);
-		$this->tfIdfTransformer = new TfIdfTransformer(0.1);
+		$this->ldaTransformer = new LinearDiscriminantAnalysis(20);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
-		/** @var string[] $senders */
-		$senders = array_unique(array_map(function (Message $message) {
-			return $message->getFrom()->first()->getEmail();
-		}, array_filter($messages, function (Message $message) {
-			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
-		})));
-
-		$this->subjects = $this->statisticsDao->getSubjects($incomingMailboxes, $senders);
-		$this->previewTexts = $this->statisticsDao->getPreviewTexts($incomingMailboxes, $senders);
+		$data = array_map(function(Message $message) {
+			return [
+				'text' => ($message->getSubject() ?? '') . ' ' . ($message->getPreviewText() ?? ''),
+				'label' => $message->getFlagImportant() ? 'i' : 'ni',
+			];
+		}, $messages);
 
 		// Fit transformers
-		$fitText = implode(' ', [...$this->getSubjects(), ...$this->getPreviewTexts()]);
-		Unlabeled::build([$fitText])
+		Labeled::build(
+			array_column($data, 'text'),
+			array_column($data, 'label'),
+		)
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->tfIdfTransformer);
+			->apply($this->ldaTransformer);
 
 		// Limit feature vector length to actual vocabulary size
 		$vocab = $this->wordCountVectorizer->vocabularies()[0];
@@ -96,25 +95,20 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		}
 
 		// Build training data set
-		$subjects = $this->getSubjectsOfSender($email);
-		$previewTexts = $this->getPreviewTextsOfSender($email);
-		$trainText = implode(' ', [...$subjects, ...$previewTexts]);
+		$trainText = ($message->getSubject() ?? '') . ' ' . ($message->getPreviewText() ?? '');
 
-		$textFeatures = [];
-		if ($message->getSubject() !== null) {
-			$trainDataSet = Unlabeled::build([$trainText])
-				->apply(new MultibyteTextNormalizer())
-				->apply($this->wordCountVectorizer)
-				->apply($this->tfIdfTransformer);
+		$trainDataSet = Unlabeled::build([$trainText])
+			->apply(new MultibyteTextNormalizer())
+			->apply($this->wordCountVectorizer)
+			->apply($this->ldaTransformer);
 
-			// Use zeroed vector if no features could be extracted
-			if ($trainDataSet->numColumns() === 0) {
-				$textFeatures = array_fill(0, $this->max, 0);
-			} else {
-				$textFeatures = $trainDataSet->sample(0);
-			}
+		// Use zeroed vector if no features could be extracted
+		if ($trainDataSet->numColumns() === 0) {
+			$textFeatures = array_fill(0, $this->max, 0);
+		} else {
+			$textFeatures = $trainDataSet->sample(0);
 		}
-		assert(count($textFeatures) === $this->max);
+		assert(count($textFeatures) === 20);
 
 		$this->senderCache[$email] = $textFeatures;
 
