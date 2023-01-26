@@ -41,11 +41,16 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use Rubix\ML\Classifiers\ClassificationTree;
 use Rubix\ML\Classifiers\GaussianNB;
+use Rubix\ML\Classifiers\MultilayerPerceptron;
 use Rubix\ML\Classifiers\RandomForest;
 use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
+use Rubix\ML\NeuralNet\ActivationFunctions\Sigmoid;
+use Rubix\ML\NeuralNet\Layers\Activation;
+use Rubix\ML\NeuralNet\Layers\Dense;
+use Rubix\ML\NeuralNet\Optimizers\Adam;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -100,7 +105,7 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 4000;
+	private const MAX_TRAINING_SET_SIZE = 1000;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -360,15 +365,23 @@ class ImportanceClassifier {
 	}
 
 	private function trainClassifier(array $trainingSet): Estimator {
-		$classifier = new GaussianNB();
-		/*
+		//$classifier = new GaussianNB();
 		$classifier = new RandomForest(
 			new ClassificationTree(10, 1),
 			10,
 			0.2,
 			true,
 		);
-		 */
+		/*$classifier = new MultilayerPerceptron(
+			[
+				new Dense(1004),
+				new Activation(new Sigmoid())
+			],
+			32,
+			null,
+			1e-4,
+			10,
+		);*/
 		$classifier->train(Labeled::build(
 			array_column($trainingSet, 'features'),
 			array_column($trainingSet, 'label')
