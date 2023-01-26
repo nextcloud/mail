@@ -34,7 +34,7 @@
 				v-if="isImportant"
 				class="app-content-list-item-star icon-important"
 				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? false : onToggleImportant"
+				@click.prevent="hasWriteAcl ? onToggleImportant() : false"
 				v-html="importantSvg" />
 			<IconFavorite
 				v-if="envelope.flags.flagged"
@@ -43,14 +43,14 @@
 				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? false : onToggleFlagged" />
+				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 			<JunkIcon
 				v-if="envelope.flags.$junk"
 				:size="18"
 				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? false : onToggleJunk" />
+				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			<router-link
 				:to="route"
 				event=""
@@ -151,6 +151,7 @@
 					</ButtonVue>
 					<MenuEnvelope class="app-content-list-item-menu"
 						:envelope="envelope"
+						:mailbox="mailbox"
 						:with-reply="false"
 						:with-select="false"
 						:with-show-source="true"
