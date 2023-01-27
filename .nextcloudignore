@@ -30,6 +30,7 @@ codecov.yml
 /postcss.config.js
 /psalm.xml
 /rector.php
+/renovate.json
 /screenshots
 /src
 /tests
