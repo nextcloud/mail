@@ -65,7 +65,7 @@ class ProvisioningMiddleware extends Middleware {
 		}
 		$configs = $this->provisioningManager->getConfigs();
 		if (empty($configs)) {
-			return null;
+			return;
 		}
 		try {
 			$this->provisioningManager->provisionSingleUser($configs, $user);
