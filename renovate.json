@@ -1,42 +1,50 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
-  "timezone": "Europe/Vienna",
-  "schedule": [
-    "before 5am every weekday"
-  ],
-  "reviewers": ["@ChristophWurst"],
-  "labels": ["dependencies"],
-  "rangeStrategy": "bump",
-  "rebaseWhen": "conflicted",
-  "ignoreUnstable": false,
-  "baseBranches": [
-    "stable2.1",
-    "stable1.15"
-  ],
-  "enabledManagers": [
-    "composer",
-    "npm"
-  ],
-  "ignoreDeps": [
-    "node",
-    "npm"
-  ],
-  "packageRules": [
-    {
-      "enabled": false,
-      "groupName": "everything",
-      "matchManagers": [
-        "composer",
-        "npm"
-      ],
-      "matchPackagePatterns": ["*"],
-      "separateMajorMinor": false
-    }
-  ],
-  "vulnerabilityAlerts": {
-    "enabled": true
-  }
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"config:base",
+		":semanticCommits",
+		":dependencyDashboard"
+	],
+	"timezone": "Europe/Vienna",
+	"schedule": [
+		"before 5am every weekday"
+	],
+	"reviewers": [
+		"@ChristophWurst"
+	],
+	"labels": [
+		"dependencies"
+	],
+	"rangeStrategy": "bump",
+	"rebaseWhen": "conflicted",
+	"ignoreUnstable": false,
+	"baseBranches": [
+		"stable2.1",
+		"stable1.15"
+	],
+	"enabledManagers": [
+		"composer",
+		"npm"
+	],
+	"ignoreDeps": [
+		"node",
+		"npm"
+	],
+	"packageRules": [
+		{
+			"enabled": false,
+			"groupName": "everything",
+			"matchManagers": [
+				"composer",
+				"npm"
+			],
+			"matchPackagePatterns": [
+				"*"
+			],
+			"separateMajorMinor": false
+		}
+	],
+	"vulnerabilityAlerts": {
+		"enabled": true
+	}
 }
