@@ -28,6 +28,7 @@ OC.L10N.register(
     "Unselect" : "ยกเลิกการเลือก",
     "Select" : "เลือก",
     "Edit tags" : "แก้ไขแท็ก",
+    "Forward" : "ส่งต่อ",
     "Create" : "สร้าง",
     "Comment" : "ความคิดเห็น",
     "Accept" : "ยอมรับ",

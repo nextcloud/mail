@@ -22,6 +22,7 @@ OC.L10N.register(
     "Move" : "Senkez",
     "Message" : "Izen",
     "Delete" : "Kkes",
+    "Copy to clipboard" : "Copier dans le presse-papiers",
     "Add" : "Rnu",
     "Tags" : "Tibzimin",
     "Search" : "Nadi",
