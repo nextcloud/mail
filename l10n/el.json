@@ -302,6 +302,7 @@
     "Remove" : "Αφαίρεση",
     "No senders are trusted at the moment." : "Κανένας αποστολέας δεν είναι αξιόπιστος αυτή τη στιγμή.",
     "Could not remove trusted sender {sender}" : "Δεν ήταν δυνατή η κατάργηση του αξιόπιστου αποστολέα {sender}",
+    "domain" : "τομέας",
     "(organizer)" : "(organizer)",
     "Untitled event" : "Συμβάν χωρίς όνομα",
     "Import into {calendar}" : "Εισαγωγή στο {calendar}",
