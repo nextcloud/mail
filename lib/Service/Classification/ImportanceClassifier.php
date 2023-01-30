@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -117,18 +118,22 @@ class ImportanceClassifier {
 	/** @var ImportanceRulesClassifier */
 	private $rulesClassifier;
 
+	private LoggerInterface $logger;
+
 	public function __construct(MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								CompositeExtractor $extractor,
 								PersistenceService $persistenceService,
 								PerformanceLogger $performanceLogger,
-								ImportanceRulesClassifier $rulesClassifier) {
+								ImportanceRulesClassifier $rulesClassifier,
+								LoggerInterface $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
 		$this->persistenceService = $persistenceService;
 		$this->performanceLogger = $performanceLogger;
 		$this->rulesClassifier = $rulesClassifier;
+		$this->logger = $logger;
 	}
 
 	private function filterMessageHasSenderEmail(Message $message): bool {
@@ -296,7 +301,15 @@ class ImportanceClassifier {
 	 * @throws ServiceException
 	 */
 	public function classifyImportance(Account $account, array $messages): array {
-		$estimator = $this->persistenceService->loadLatest($account);
+		$estimator = null;
+		try {
+			$estimator = $this->persistenceService->loadLatest($account);
+		} catch (ServiceException $e) {
+			$this->logger->warning('Failed to load importance classifier: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+		}
+
 		if ($estimator === null) {
 			$predictions = $this->rulesClassifier->classifyImportance(
 				$account,
@@ -367,7 +380,7 @@ class ImportanceClassifier {
 		);
 		$recallImportant = $report['classes'][self::LABEL_IMPORTANT]['recall'] ?? 0;
 		$precisionImportant = $report['classes'][self::LABEL_IMPORTANT]['precision'] ?? 0;
-		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1_score'] ?? 0;
+		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1 score'] ?? 0;
 
 		/**
 		 * What we care most is the percentage of messages classified as important in relation to the truly important messages
