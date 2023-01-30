@@ -47,6 +47,7 @@ use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
+use Rubix\ML\Kernels\Distance\Jaccard;
 use Rubix\ML\Kernels\Distance\Manhattan;
 use Rubix\ML\NeuralNet\ActivationFunctions\Sigmoid;
 use Rubix\ML\NeuralNet\Layers\Activation;
@@ -365,7 +366,7 @@ class ImportanceClassifier {
 			0.2,
 			true,
 		);*/
-		$classifier = new KNearestNeighbors(3, false, new Manhattan());
+		$classifier = new KNearestNeighbors(3, true, new Jaccard());
 		/*$classifier = new MultilayerPerceptron(
 			[
 				new Dense(1004),
