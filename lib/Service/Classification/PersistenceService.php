@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -40,7 +41,9 @@ use OCP\ICacheFactory;
 use OCP\ITempManager;
 use Psr\Log\LoggerInterface;
 use Rubix\ML\Estimator;
+use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
+use Rubix\ML\PersistentModel;
 use Rubix\ML\Persisters\Filesystem;
 use RuntimeException;
 use function file_get_contents;
@@ -92,11 +95,11 @@ class PersistenceService {
 	 * Persist the classifier data to the database and the estimator to storage
 	 *
 	 * @param Classifier $classifier
-	 * @param Persistable $estimator
+	 * @param Learner&Persistable $estimator
 	 *
 	 * @throws ServiceException
 	 */
-	public function persist(Classifier $classifier, Persistable $estimator): void {
+	public function persist(Classifier $classifier, Learner $estimator): void {
 		/*
 		 * First we have to insert the row to get the unique ID, but disable
 		 * it until the model is persisted as well. Otherwise another process
@@ -114,8 +117,8 @@ class PersistenceService {
 		 */
 		$tmpPath = $this->tempManager->getTemporaryFile();
 		try {
-			$persister = new Filesystem($tmpPath);
-			$persister->save($estimator);
+			$model = new PersistentModel($estimator, new Filesystem($tmpPath));
+			$model->save();
 			$serializedClassifier = file_get_contents($tmpPath);
 			$this->logger->debug('Serialized classifier written to tmp file (' . strlen($serializedClassifier) . 'B');
 		} catch (RuntimeException $e) {
@@ -199,13 +202,9 @@ class PersistenceService {
 		file_put_contents($tmpPath, $serialized);
 
 		try {
-			$persister = new Filesystem($tmpPath);
-			$estimator = $persister->load();
+			$estimator = PersistentModel::load(new Filesystem($tmpPath));
 		} catch (RuntimeException $e) {
 			throw new ServiceException("Could not deserialize persisted classifier $id: " . $e->getMessage(), 0, $e);
-		}
-		if (!($estimator instanceof Estimator)) {
-			throw new ServiceException("Deserialized estimator has an unknown type " . get_class($estimator));
 		}
 
 		return $estimator;
