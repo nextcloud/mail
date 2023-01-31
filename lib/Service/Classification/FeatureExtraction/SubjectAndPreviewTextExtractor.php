@@ -31,9 +31,12 @@ use OCA\Mail\Db\StatisticsDao;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
+use Rubix\ML\Transformers\TSNE;
+use Rubix\ML\Transformers\GaussianRandomProjector;
 use Rubix\ML\Transformers\LinearDiscriminantAnalysis;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\PrincipalComponentAnalysis;
+use Rubix\ML\Transformers\SparseRandomProjector;
 use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
@@ -51,17 +54,20 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 
 	public function __construct(StatisticsDao $statisticsDao) {
 		$this->statisticsDao = $statisticsDao;
+
 		// Limit vocabulary to limit ram usage. It takes about 5 GB of ram if an unbounded
 		// vocabulary is used (and a lot more time to compute).
-		$this->wordCountVectorizer = new WordCountVectorizer(100);
-		$this->dimensionalReductionTransformer = new PrincipalComponentAnalysis(15);
+		$vocabSize = 100;
+		$this->wordCountVectorizer = new WordCountVectorizer($vocabSize);
+
+		$this->dimensionalReductionTransformer = new TSNE((int)($vocabSize * 0.1));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
-		$data = array_map(function(Message $message) {
+		$data = array_map(static function(Message $message) {
 			return [
 				'text' => ($message->getSubject() ?? '') . ' ' . ($message->getPreviewText() ?? ''),
 				'label' => $message->getFlagImportant() ? 'i' : 'ni',
@@ -93,7 +99,7 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		$email = $sender->getEmail();
 
 		if (isset($this->senderCache[$email])) {
-			return $this->senderCache[$email];
+			//return $this->senderCache[$email];
 		}
 
 		// Build training data set
@@ -105,13 +111,13 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 			->apply($this->dimensionalReductionTransformer);
 
 		// Use zeroed vector if no features could be extracted
-		if ($trainDataSet->numColumns() === 0) {
+		if ($trainDataSet->numFeatures() === 0) {
 			$textFeatures = array_fill(0, $this->max, 0);
 		} else {
 			$textFeatures = $trainDataSet->sample(0);
 		}
 
-		$this->senderCache[$email] = $textFeatures;
+		//$this->senderCache[$email] = $textFeatures;
 
 		return $textFeatures;
 	}
