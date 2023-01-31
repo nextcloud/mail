@@ -375,7 +375,7 @@ class ImportanceClassifier {
 			0.2,
 			true,
 		);*/
-		$classifier = new KNearestNeighbors(3, true, new Jaccard());
+		$classifier = new KNearestNeighbors(5, true, new Jaccard());
 		/*$classifier = new MultilayerPerceptron(
 			[
 				new Dense(1004),
@@ -415,9 +415,14 @@ class ImportanceClassifier {
 			$predictedValidationLabel,
 			array_column($validationSet, 'label')
 		);
+		/*
 		$recallImportant = $report['classes'][self::LABEL_IMPORTANT]['recall'] ?? 0;
 		$precisionImportant = $report['classes'][self::LABEL_IMPORTANT]['precision'] ?? 0;
 		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1 score'] ?? 0;
+		*/
+		$recallImportant = $report['overall']['recall'] ?? 0;
+		$precisionImportant = $report['overall']['precision'] ?? 0;
+		$f1ScoreImportant = $report['overall']['f1 score'] ?? 0;
 
 		/**
 		 * What we care most is the percentage of messages classified as important in relation to the truly important messages
