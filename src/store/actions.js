@@ -134,7 +134,7 @@ export default {
 			const newValue = await savePreference(key, value)
 			commit('savePreference', {
 				key,
-				value: newValue,
+				value: newValue.value,
 			})
 		})
 	},
