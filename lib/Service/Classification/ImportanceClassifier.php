@@ -239,6 +239,8 @@ class ImportanceClassifier {
 	 * @return Mailbox[]
 	 */
 	private function getIncomingMailboxes(Account $account): array {
+		return [$this->mailboxMapper->find($account, 'INBOX')];
+		/*
 		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
@@ -247,6 +249,7 @@ class ImportanceClassifier {
 			}
 			return true;
 		});
+		*/
 	}
 
 	/**
