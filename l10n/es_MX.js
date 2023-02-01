@@ -66,6 +66,7 @@ OC.L10N.register(
     "Saving" : "Guardando",
     "Remove account" : "Eliminar cuenta",
     "Mark all as read" : "Marcar todos como leídos",
+    "Edit name" : "Editar nombre",
     "Clear cache" : "Borrar el caché",
     "New message" : "Mensaje nuevo",
     "Message" : "Mensaje",
