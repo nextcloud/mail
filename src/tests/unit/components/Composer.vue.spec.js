@@ -61,8 +61,6 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				inReplyToMessageId: 'abc123',
-				draft: jest.fn(),
-				send: jest.fn(),
 			},
 			store,
 			localVue,
@@ -71,6 +69,37 @@ describe('Composer', () => {
 		const composerData = view.vm.getMessageData()
 
 		expect(composerData.inReplyToMessageId).toEqual('abc123')
+	})
+
+	it('disabled the send button', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				inReplyToMessageId: 'abc123',
+			},
+			store,
+			localVue,
+		})
+
+		const canSend = view.vm.canSend
+
+		expect(canSend).toEqual(false)
+	})
+
+	it('enables the send button if data is entered', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				inReplyToMessageId: 'abc123',
+				to: [
+					{ label: 'test', email: 'test@domain.tld' },
+				]
+			},
+			store,
+			localVue,
+		})
+
+		const canSend = view.vm.canSend
+
+		expect(canSend).toEqual(true)
 	})
 
 })

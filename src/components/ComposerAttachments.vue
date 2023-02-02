@@ -259,15 +259,7 @@ export default {
 							})
 						})
 						.then(({ file, id }) => {
-							logger.info('uploaded')
-							this.attachments.some((attachment, i) => {
-								if (attachment.displayName === file.name) {
-									this.attachments[i].id = id
-									this.attachments[i].finished = true
-									return true
-								}
-								return false
-							})
+							logger.info('local attachment uploaded', { file, id })
 
 							this.emitNewAttachments([{
 								fileName: file.name,
