@@ -235,16 +235,29 @@ export default {
 
 <style lang="scss" scoped>
 
+@media screen and (max-width: 1024px) {
+	.attachment{
+		width: 100% !important;
+	}
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1500px) {
+	.attachment{
+		width: calc(50% - 4px)!important;
+	}
+}
+
 .attachment {
 	height: auto;
     display: inline-flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    width: calc(33.3334% - 4px);
+	width: calc(33.3334% - 4px);
     margin: 2px;
 	padding: 5px;
     position: relative;
     align-items: center;
+	flex-grow: 1;
 
 	&:hover {
 		border-radius: 6px;
