@@ -59,6 +59,7 @@ class ExportAccount extends Command {
 			$output->writeln("<info>Account " . $account->getId() . ":</info>");
 			$output->writeln("- E-Mail: " . $account->getEmail());
 			$output->writeln("- Name: " . $account->getName());
+			$output->writeln("- Provision: " . ($account->getMailAccount()->getProvisioningId() ? "set" : "none" ). " ID: " . ($account->getMailAccount()->getProvisioningId() ? $account->getProvisioningId():"N/A"));
 			$output->writeln("- IMAP user: " . $account->getMailAccount()->getInboundUser());
 			$output->writeln("- IMAP host: " . $account->getMailAccount()->getInboundHost() . ":" . $account->getMailAccount()->getInboundPort() . ", security: " . $account->getMailAccount()->getInboundSslMode());
 			$output->writeln("- SMTP user: " . $account->getMailAccount()->getOutboundUser());
