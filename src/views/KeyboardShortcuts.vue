@@ -30,6 +30,10 @@
 				<dd>{{ t('mail', 'Toggle unread') }}</dd>
 			</div>
 			<div>
+				<dt><kbd>A</kbd></dt>
+				<dd>{{ t('mail', 'Archive') }}</dd>
+			</div>
+			<div>
 				<dt><kbd>Del</kbd></dt>
 				<dd>{{ t('mail', 'Delete') }}</dd>
 			</div>
