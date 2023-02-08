@@ -43,6 +43,7 @@ use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
 class Manager {
+	public const MAIL_PROVISIONINGS = 'mail_provisionings';
 	/** @var IUserManager */
 	private $userManager;
 
@@ -96,8 +97,8 @@ class Manager {
 
 	public function getConfigs(): array {
 		$cache = null;
-		if ($this->cacheFactory->isLocalCacheAvailable()) {
-			$cache = $this->cacheFactory->createLocal('provisionings');
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
 			$cached = $cache->get('provisionings_all');
 			if ($cached !== null) {
 				return unserialize($cached, ['allowed_classes' => [Provisioning::class]]);
@@ -106,7 +107,7 @@ class Manager {
 
 		$provisionings = $this->provisioningMapper->getAll();
 		// let's cache the provisionings for 5 minutes
-		if ($this->cacheFactory->isLocalCacheAvailable()) {
+		if ($cache !== null) {
 			$cache->set('provisionings_all', serialize($provisionings), 60 * 5);
 		}
 		return $provisionings;
@@ -255,6 +256,10 @@ class Manager {
 	public function newProvisioning(array $data): Provisioning {
 		$provisioning = $this->provisioningMapper->validate($data);
 		return $this->provisioningMapper->insert($provisioning);
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+			$cache->clear();
+		}
 	}
 
 	/**
@@ -264,6 +269,10 @@ class Manager {
 	public function updateProvisioning(array $data): void {
 		$provisioning = $this->provisioningMapper->validate($data);
 		$this->provisioningMapper->update($provisioning);
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+			$cache->clear();
+		}
 	}
 
 	private function updateAccount(IUser $user, MailAccount $account, Provisioning $config): MailAccount {
@@ -300,6 +309,10 @@ class Manager {
 	public function deprovision(Provisioning $provisioning): void {
 		$this->mailAccountMapper->deleteProvisionedAccounts($provisioning->getId());
 		$this->provisioningMapper->delete($provisioning);
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+			$cache->clear();
+		}
 	}
 
 	public function updatePassword(IUser $user, string $password): void {
