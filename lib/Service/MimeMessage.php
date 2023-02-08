@@ -45,47 +45,51 @@ class MimeMessage {
 	 */
 	public function build(bool $isHtml, string $content, array $attachments): Horde_Mime_Part {
 		if ($isHtml) {
-			$doc = new DOMDocument();
-			$doc->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
-
-			$images = $doc->getElementsByTagName('img');
 			$imageParts = [];
+			if (empty($content)) {
+				$htmlContent = $textContent = $content;
+			} else {
+				$doc = new DOMDocument();
+				$doc->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
 
-			for ($i = 0; $i < $images->count(); $i++) {
-				$image = $images->item($i);
-				if ($image === null) {
-					continue;
+				$images = $doc->getElementsByTagName('img');
+
+				for ($i = 0; $i < $images->count(); $i++) {
+					$image = $images->item($i);
+					if ($image === null) {
+						continue;
+					}
+
+					$src = $image->getAttribute('src');
+					if ($src === '') {
+						continue;
+					}
+
+					try {
+						$dataUri = $this->uriParser->parse($src);
+					} catch (InvalidDataUriException $e) {
+						continue;
+					}
+
+					$part = new Horde_Mime_Part();
+					$part->setType($dataUri->getMediaType());
+					$part->setCharset($dataUri->getParameters()['charset']);
+					$part->setName('embedded_image_' . $i);
+					$part->setDisposition('inline');
+					if ($dataUri->isBase64()) {
+						$part->setTransferEncoding('base64');
+					}
+					$part->setContents($dataUri->getData());
+
+					$cid = $part->setContentId();
+					$imageParts[] = $part;
+
+					$image->setAttribute('src', 'cid:' . $cid);
 				}
 
-				$src = $image->getAttribute('src');
-				if ($src === '') {
-					continue;
-				}
-
-				try {
-					$dataUri = $this->uriParser->parse($src);
-				} catch (InvalidDataUriException $e) {
-					continue;
-				}
-
-				$part = new Horde_Mime_Part();
-				$part->setType($dataUri->getMediaType());
-				$part->setCharset($dataUri->getParameters()['charset']);
-				$part->setName('embedded_image_' . $i);
-				$part->setDisposition('inline');
-				if ($dataUri->isBase64()) {
-					$part->setTransferEncoding('base64');
-				}
-				$part->setContents($dataUri->getData());
-
-				$cid = $part->setContentId();
-				$imageParts[] = $part;
-
-				$image->setAttribute('src', 'cid:' . $cid);
+				$htmlContent = $doc->saveHTML($doc->documentElement);
+				$textContent = Horde_Text_Filter::filter($htmlContent, 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]);
 			}
-
-			$htmlContent = $doc->saveHTML($doc->documentElement);
-			$textContent = Horde_Text_Filter::filter($htmlContent, 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]);
 
 			$alternativePart = new Horde_Mime_Part();
 			$alternativePart->setType('multipart/alternative');
