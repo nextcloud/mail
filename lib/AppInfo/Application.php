@@ -50,6 +50,7 @@ use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Listener\AntiAbuseListener;
 use OCA\Mail\Listener\HamReportListener;
+use OCA\Mail\Listener\RegisterEntitiesListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
@@ -75,6 +76,9 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\IServerContainer;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
+use OCP\WorkflowEngine\Events\RegisterChecksEvent;
+use OCP\WorkflowEngine\Events\RegisterEntitiesEvent;
+use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 use Psr\Container\ContainerInterface;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
@@ -120,6 +124,11 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+
+		$context->registerEventListener(RegisterEntitiesEvent::class, RegisterEntitiesListener::class);
+		$context->registerEventListener(RegisterChecksEvent::class, RegisterEntitiesListener::class);
+		$context->registerEventListener(RegisterOperationsEvent::class, RegisterEntitiesListener::class);
+		$context->registerEventListener(NewMessagesSynchronized::class, RegisterEntitiesListener::class);
 
 		$context->registerMiddleWare(ErrorMiddleware::class);
 		$context->registerMiddleWare(ProvisioningMiddleware::class);

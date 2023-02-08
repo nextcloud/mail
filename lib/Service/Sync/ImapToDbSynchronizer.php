@@ -462,6 +462,8 @@ class ImapToDbSynchronizer {
 				}
 				$newOrVanished = $newOrVanished || !empty($response->getVanishedMessageUids());
 			}
+		} catch (\Throwable $e) {
+			$this->logger->error('Failed', ['exception' => $e]);
 		} finally {
 			$client->logout();
 		}
