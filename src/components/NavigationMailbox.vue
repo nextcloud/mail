@@ -48,13 +48,13 @@
 					:size="20" />
 				<IconFavorite v-else-if="filter === 'starred'"
 					:size="20" />
-				<IconDraft v-else-if="mailbox.specialRole === 'drafts'"
+				<IconDraft v-else-if="mailbox.databaseId === account.draftsMailboxId"
 					:size="20" />
-				<IconSend v-else-if="mailbox.specialRole === 'sent'"
+				<IconSend v-else-if="mailbox.databaseId === account.sentMailboxId"
 					:size="20" />
-				<IconArchive v-else-if="mailbox.specialRole === 'archive'"
+				<IconArchive v-else-if="mailbox.databaseId === account.archiveMailboxId"
 					:size="20" />
-				<IconDelete v-else-if="mailbox.specialRole === 'trash'"
+				<IconDelete v-else-if="mailbox.databaseId === account.trashMailboxId"
 					:size="20" />
 				<IconFolder v-else
 					:size="20" />
