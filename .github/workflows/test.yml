@@ -56,6 +56,7 @@ jobs:
       uses: codecov/codecov-action@v3.1.1
       if: ${{ always() && matrix.php-versions == '8.0' }}
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
         flags: unittests
         fail_ci_if_error: true
@@ -177,6 +178,7 @@ jobs:
             uses: codecov/codecov-action@v3.1.1
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
+              token: ${{ secrets.CODECOV_TOKEN }}
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
               flags: integrationtests
               fail_ci_if_error: true
