@@ -401,6 +401,7 @@
     "You can set up an anti spam service email address here." : "Hemen spamaren aurkako zerbitzuaren helbide elektronikoa konfigura dezakezu.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Spam gisa markatutako edozein mezu elektroniko spamaren aurkako zerbitzura bidaliko da.",
     "Gmail integration" : "Gmail integrazioa",
+    "Microsoft integration" : "Microsoft integrazioa",
     "Successfully updated config for \"{domain}\"" : "\"{domain}\"-ren konfigurazioa behar bezala eguneratu da",
     "Error saving config" : "Errorea konfigurazioa gordetzean",
     "Saved config for \"{domain}\"" : "\"{domain}\"-ren konfigurazioa gorde da",
