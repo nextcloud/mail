@@ -332,8 +332,9 @@ export default {
 		},
 		async saveNewSettings(settings) {
 			try {
-				await createProvisioningSettings(settings)
-				this.configs.unshift(settings)
+				const config = await createProvisioningSettings(settings)
+				logger.info('new provisioning config saved', { config })
+				this.configs.unshift(config)
 				this.addNew = false
 				this.resetForm()
 				showSuccess(t('mail', 'Saved config for "{domain}"', { domain: settings.provisioningDomain }))

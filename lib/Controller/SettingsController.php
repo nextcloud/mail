@@ -64,14 +64,14 @@ class SettingsController extends Controller {
 
 	public function createProvisioning(array $data): JSONResponse {
 		try {
-			$this->provisioningManager->newProvisioning($data);
+			return new JSONResponse(
+				$this->provisioningManager->newProvisioning($data)
+			);
 		} catch (ValidationException $e) {
 			return HttpJsonResponse::fail([$e->getFields()]);
 		} catch (\Exception $e) {
 			return HttpJsonResponse::fail([$e->getMessage()]);
 		}
-
-		return new JSONResponse([]);
 	}
 
 	public function updateProvisioning(int $id, array $data): JSONResponse {
