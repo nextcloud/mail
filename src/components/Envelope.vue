@@ -400,7 +400,7 @@ export default {
 		},
 		addresses() {
 			// Show recipients' label/address in a sent mailbox
-			if (this.mailbox.specialRole === 'sent') {
+			if (this.mailbox.specialRole === 'sent' || this.account.sentMailboxId === this.mailbox.databaseId) {
 				const recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.label ? recipient.label : recipient.email
 				})

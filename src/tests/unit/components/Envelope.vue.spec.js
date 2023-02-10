@@ -64,17 +64,16 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
-				mailbox: {
-					specialRole:'',
-				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 				},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					myAcls: undefined,
+					databaseId:'3',
+					specialRole:''
 				},
 			},
 			store,
@@ -90,17 +89,16 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 'x',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
-				},
-				mailbox: {
-					myAcls: 'x',
 				},
 			},
 			store,
@@ -116,17 +114,16 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 's',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
-				},
-				mailbox: {
-					myAcls: 's',
 				},
 			},
 			store,
@@ -141,17 +138,16 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
-				},
-				mailbox: {
-					myAcls: undefined,
 				},
 			},
 			computed: {
@@ -172,17 +168,16 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 'te',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
-				},
-				mailbox: {
-					myAcls: 'te',
 				},
 			},
 			computed: {
@@ -203,18 +198,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 'te',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 				},
-				mailbox: {
-					myAcls: 'te',
-				}
 			},
 			computed: {
 				archiveMailbox() {
@@ -234,17 +228,16 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
-				},
-				mailbox: {
-					myAcls: undefined,
 				},
 			},
 			computed: {
@@ -265,18 +258,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 'x',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 				},
-				mailbox: {
-					myAcls: 'x',
-				}
 			},
 			store,
 			localVue,
@@ -292,18 +284,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 
-				},
-				mailbox: {
-					myAcls: undefined,
 				},
 			},
 			store,
@@ -318,18 +309,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 's',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 
-				},
-				mailbox: {
-					myAcls: 's',
 				},
 			},
 			store,
@@ -344,18 +334,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					sentMailboxId:'1'
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 				},
-				mailbox: {
-					myAcls: 'te',
-				}
 			},
 			store,
 			localVue,
@@ -369,18 +358,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 'w',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 				},
-				mailbox: {
-					myAcls: 'w',
-				}
 			},
 			store,
 			localVue,
@@ -394,18 +382,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: 's',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 				},
-				mailbox: {
-					myAcls: 's',
-				}
 			},
 			store,
 			localVue,
@@ -419,18 +406,17 @@ describe('Envelope', () => {
 				$route,
 			},
 			propsData: {
-				account: {},
+				account: {sentMailboxId:'1'},
 				mailbox: {
 					specialRole:'',
+					databaseId:'3',
+					myAcls: undefined,
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
 				},
-				mailbox: {
-					myAcls: undefined,
-				}
 			},
 			store,
 			localVue,
