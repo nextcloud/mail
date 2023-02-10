@@ -252,9 +252,9 @@ class Manager {
 	 * @throws ValidationException
 	 * @throws \OCP\DB\Exception
 	 */
-	public function newProvisioning(array $data): void {
+	public function newProvisioning(array $data): Provisioning {
 		$provisioning = $this->provisioningMapper->validate($data);
-		$this->provisioningMapper->insert($provisioning);
+		return $this->provisioningMapper->insert($provisioning);
 	}
 
 	/**
