@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.3 - 2023-02-09
+### Fixed
+- Allow sending of messages with empty body content
+- Check if  is empty before trying to make it an iterator
+- ProvisioningMiddleware method return type
+- Select correct account/alias when opening messages
+- Unread counter position for outbox
+
 ## 2.2.2 – 2022-12-21
 ### Fixed
 - Validate remote hosts
