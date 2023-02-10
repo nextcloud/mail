@@ -229,34 +229,18 @@ class ManagerTest extends TestCase {
 		$this->manager->updatePassword($user, '123456');
 	}
 
-	public function testNewProvisioning() {
-		$config = new Provisioning([
-			'active' => true,
-			'email' => '%USERID%@domain.com',
-			'imapUser' => '%USERID%@domain.com',
-			'imapHost' => 'mx.domain.com',
-			'imapPort' => 993,
-			'imapSslMode' => 'ssl',
-			'smtpUser' => '%USERID%@domain.com',
-			'smtpHost' => 'mx.domain.com',
-			'smtpPort' => 567,
-			'smtpSslMode' => 'tls',
-			'sieveEnabled' => false,
-			'sieveUser' => '',
-			'sieveHost' => '',
-			'sievePort' => 0,
-			'sieveSslMode' => 'tls'
-		]);
+	public function testNewProvisioning(): void {
+		$config = new Provisioning();
 		$this->mock->getParameter('provisioningMapper')
 			->expects($this->once())
 			->method('validate')
 			->willReturn($config);
-
 		$this->mock->getParameter('provisioningMapper')
 			->expects($this->once())
-			->method('insert');
+			->method('insert')
+			->willReturn($config);
 
-		$this->manager->newProvisioning([
+		$result = $this->manager->newProvisioning([
 			'active' => true,
 			'email' => '%USERID%@domain.com',
 			'imapUser' => '%USERID%@domain.com',
@@ -273,5 +257,7 @@ class ManagerTest extends TestCase {
 			'sievePort' => 0,
 			'sieveSslMode' => 'tls'
 		]);
+
+		self::assertInstanceOf(Provisioning::class, $result);
 	}
 }
