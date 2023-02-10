@@ -290,6 +290,12 @@
 							@uncheck="requestMdn = false">
 							{{ t('mail', 'Request a read receipt') }}
 						</ActionCheckbox>
+						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
+							:checked="wantsSmimeSign"
+							@check="wantsSmimeSign = true"
+							@uncheck="wantsSmimeSign = false">
+							{{ t('mail', 'Sign message via S/MIME') }}
+						</ActionCheckbox>
 						<ActionCheckbox
 							v-if="mailvelope.available"
 							:checked="encrypt"
@@ -578,6 +584,7 @@ export default {
 				},
 			},
 			autoLimit: true,
+			wantsSmimeSign: false,
 		}
 	},
 	computed: {
@@ -597,6 +604,7 @@ export default {
 					name: account.name,
 					emailAddress: account.emailAddress,
 					signatureAboveQuote: account.signatureAboveQuote,
+					smimeCertificateId: account.smimeCertificateId,
 				},
 				account.aliases.map((alias) => {
 					return {
@@ -608,6 +616,7 @@ export default {
 						name: alias.name,
 						emailAddress: alias.alias,
 						signatureAboveQuote: account.signatureAboveQuote,
+						smimeCertificateId: alias.smimeCertificateId,
 					}
 				}),
 			])
@@ -702,6 +711,32 @@ export default {
 			} else {
 				return false
 			}
+		},
+
+		/**
+		 * The S/MIME certificate object of the current alias/account.
+		 *
+		 * @return {object|undefined} S/MIME certificate of current account or alias if one is selected
+		 */
+		smimeCertificateForCurrentAlias() {
+			if (this.selectedAlias === NO_ALIAS_SET) {
+				return undefined
+			}
+
+			const certificateId = this.selectedAlias.smimeCertificateId
+			if (!certificateId) {
+				return undefined
+			}
+			return this.$store.getters.getSmimeCertificate(certificateId)
+		},
+
+		/**
+		 * Whether the outgoing messge should be signed via S/MIME.
+		 *
+		 * @return {boolean} True if the message should be signed
+		 */
+		smimeSign() {
+			return this.wantsSmimeSign && !!this.smimeCertificateForCurrentAlias
 		},
 	},
 	watch: {
@@ -849,6 +884,8 @@ export default {
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdn,
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
+				smimeSign: this.smimeSign,
+				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
 			}
 		},
 		saveDraft() {

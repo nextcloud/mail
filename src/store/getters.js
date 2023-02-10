@@ -127,5 +127,6 @@ export const getters = {
 			calendar._props,
 		)
 	}),
-	getSMimeCertificates: (state) => state.sMimeCertificates,
+	getSmimeCertificates: (state) => state.smimeCertificates,
+	getSmimeCertificate: (state) => (id) => state.smimeCertificates.find((cert) => cert.id === id),
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2022 Richard Steinmetz <richard@steinmetz.cloud>
+ * @copyright Copyright (c) 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
@@ -26,49 +26,50 @@ declare(strict_types=1);
 namespace OCA\Mail\Model;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 
-class SMimeData implements JsonSerializable {
-	private bool $isSigned;
-	private ?bool $signatureIsValid;
+class SmimeCertificatePurposes implements JsonSerializable {
+	private bool $sign;
+	private bool $encrypt;
 
-	public function __construct() {
-		$this->isSigned = false;
-		$this->signatureIsValid = null;
+	public function __construct(bool $sign, bool $encrypt) {
+		$this->sign = $sign;
+		$this->encrypt = $encrypt;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isSigned(): bool {
-		return $this->isSigned;
+	public function hasSign(): bool {
+		return $this->sign;
 	}
 
 	/**
-	 * @param bool $isSigned
+	 * @param bool $sign
 	 */
-	public function setIsSigned(bool $isSigned): void {
-		$this->isSigned = $isSigned;
+	public function setSign(bool $sign): void {
+		$this->sign = $sign;
 	}
 
 	/**
-	 * @return bool|null
+	 * @return bool
 	 */
-	public function getSignatureIsValid(): ?bool {
-		return $this->signatureIsValid;
+	public function hasEncrypt(): bool {
+		return $this->encrypt;
 	}
 
 	/**
-	 * @param bool|null $signatureIsValid
+	 * @param bool $encrypt
 	 */
-	public function setSignatureIsValid(?bool $signatureIsValid): void {
-		$this->signatureIsValid = $signatureIsValid;
+	public function setEncrypt(bool $encrypt): void {
+		$this->encrypt = $encrypt;
 	}
 
-	#[\ReturnTypeWillChange]
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
-			'isSigned' => $this->isSigned,
-			'signatureIsValid' => $this->signatureIsValid,
+			'sign' => $this->sign,
+			'encrypt' => $this->encrypt,
 		];
 	}
 }

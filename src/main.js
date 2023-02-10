@@ -3,6 +3,8 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
+ *
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -124,6 +126,9 @@ outboxMessages.forEach(message => store.commit('outbox/addMessage', { message })
 store.commit('setScheduledSendingDisabled', disableScheduledSend)
 store.commit('setGoogleOauthUrl', googleOauthUrl)
 store.commit('setMicrosoftOauthUrl', microsoftOauthUrl)
+
+const smimeCertificates = loadState('mail', 'smime-certificates', [])
+store.commit('setSmimeCertificates', smimeCertificates)
 
 export default new Vue({
 	el: '#content',

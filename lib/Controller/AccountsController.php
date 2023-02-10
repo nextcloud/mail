@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Matthias Rella <mrella@pisys.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -461,5 +462,21 @@ class AccountsController extends Controller {
 			return MailJsonResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
 		}
 		return MailJsonResponse::success($quota)->cacheFor(5 * 60, false, true);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id Account id
+	 * @param ?int $smimeCertificateId
+	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 */
+	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {
+		$account = $this->accountService->find($this->currentUserId, $id)->getMailAccount();
+		$account->setSmimeCertificateId($smimeCertificateId);
+		$this->accountService->update($account);
+		return MailJsonResponse::success();
 	}
 }

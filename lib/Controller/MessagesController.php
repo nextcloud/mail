@@ -46,10 +46,10 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Model\SMimeData;
+use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ItineraryService;
-use OCA\Mail\Service\SMimeService;
+use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -80,7 +80,7 @@ class MessagesController extends Controller {
 	private ContentSecurityPolicyNonceManager $nonceManager;
 	private ITrustedSenderService $trustedSenderService;
 	private IMailTransmission $mailTransmission;
-	private SMimeService $sMimeService;
+	private SmimeService $smimeService;
 	private IMAPClientFactory $clientFactory;
 
 	public function __construct(string $appName,
@@ -98,7 +98,7 @@ class MessagesController extends Controller {
 								ContentSecurityPolicyNonceManager $nonceManager,
 								ITrustedSenderService $trustedSenderService,
 								IMailTransmission $mailTransmission,
-								SMimeService $sMimeService,
+								SmimeService $smimeService,
 								IMAPClientFactory $clientFactory) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -114,7 +114,7 @@ class MessagesController extends Controller {
 		$this->nonceManager = $nonceManager;
 		$this->trustedSenderService = $trustedSenderService;
 		$this->mailTransmission = $mailTransmission;
-		$this->sMimeService = $sMimeService;
+		$this->smimeService = $smimeService;
 		$this->clientFactory = $clientFactory;
 	}
 
@@ -242,17 +242,17 @@ class MessagesController extends Controller {
 		$json['databaseId'] = $message->getId();
 		$json['isSenderTrusted'] = $this->isSenderTrusted($message);
 
-		$sMimeData = new SMimeData();
+		$smimeData = new SmimeData();
 		try {
 			$parsedMessage = Horde_Mime_Part::parseMessage($rawMessage, ['no_body' => true]);
 			if ($parsedMessage->getType() === 'multipart/signed') {
-				$sMimeData->setIsSigned(true);
-				$sMimeData->setSignatureIsValid($this->sMimeService->verifyMessage($rawMessage));
+				$smimeData->setIsSigned(true);
+				$smimeData->setSignatureIsValid($this->smimeService->verifyMessage($rawMessage));
 			}
 		} catch (Horde_Mime_Exception $e) {
 			$this->logger->warning('Failed to parse MIME message', ['error' => $e]);
 		}
-		$json['sMime'] = $sMimeData;
+		$json['smime'] = $smimeData;
 
 		$response = new JSONResponse($json);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -111,13 +112,18 @@ class AliasesService {
 	 *
 	 * @throws DoesNotExistException
 	 */
-	public function update(string $userId, int $aliasId, string $alias, string $aliasName): Alias {
+	public function update(string $userId,
+						   int $aliasId,
+						   string $alias,
+						   string $aliasName,
+						   ?int $smimeCertificateId): Alias {
 		$entity = $this->aliasMapper->find($aliasId, $userId);
 
 		if (!$entity->isProvisioned()) {
 			$entity->setAlias($alias);
 		}
 		$entity->setName($aliasName);
+		$entity->setSmimeCertificateId($smimeCertificateId);
 
 		return $this->aliasMapper->update($entity);
 	}

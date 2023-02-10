@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Jakob Sack <mail@jakobsack.de>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -40,6 +41,8 @@ use ReturnTypeWillChange;
  * @method int|null getProvisioningId()
  * @method int getSignatureMode()
  * @method void setSignatureMode(int $signatureMode)
+ * @method int|null getSmimeCertificateId()
+ * @method void setSmimeCertificateId(int|null $smimeCertificateId)
  */
 class Alias extends Entity implements JsonSerializable {
 	public const SIGNATURE_MODE_PLAIN = MailAccount::SIGNATURE_MODE_PLAIN;
@@ -63,12 +66,16 @@ class Alias extends Entity implements JsonSerializable {
 	/** @var integer */
 	protected $signatureMode;
 
+	/** @var int|null */
+	protected $smimeCertificateId;
+
 	public function __construct() {
 		$this->addType('accountId', 'int');
 		$this->addType('name', 'string');
 		$this->addType('alias', 'string');
 		$this->addType('provisioningId', 'int');
 		$this->addType('signatureMode', 'int');
+		$this->addType('smimeCertificateId', 'int');
 	}
 
 	public function isProvisioned(): bool {
@@ -84,6 +91,7 @@ class Alias extends Entity implements JsonSerializable {
 			'signature' => $this->getSignature(),
 			'provisioned' => $this->isProvisioned(),
 			'signatureMode' => $this->getSignatureMode(),
+			'smimeCertificateId' => $this->getSmimeCertificateId(),
 		];
 	}
 }

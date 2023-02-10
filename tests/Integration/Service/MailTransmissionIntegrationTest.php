@@ -44,6 +44,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\Service\SmimeService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
@@ -119,7 +120,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 			OC::$server->query(LoggerInterface::class),
 			OC::$server->query(PerformanceLogger::class),
 			OC::$server->get(AliasesService::class),
-			OC::$server->get(GroupsIntegration::class)
+			OC::$server->get(GroupsIntegration::class),
+			OC::$server->get(SmimeService::class),
 		);
 	}
 

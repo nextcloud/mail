@@ -113,7 +113,7 @@ import moment from '@nextcloud/moment'
 import DeleteIcon from 'vue-material-design-icons/Delete'
 
 export default {
-	name: 'SMimeCertificateModal',
+	name: 'SmimeCertificateModal',
 	components: {
 		NcModal,
 		NcButton,
@@ -130,18 +130,19 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			certificates: 'getSMimeCertificates',
+			certificates: 'getSmimeCertificates',
 		}),
 		inputFormIsValid() {
 			return !!this.certificate
 		},
 	},
 	async mounted() {
-		await this.$store.dispatch('fetchSMimeCertificates')
+		// Refresh S/MIME certificates for good measure
+		await this.$store.dispatch('fetchSmimeCertificates')
 	},
 	methods: {
 		async deleteCertificate(id) {
-			await this.$store.dispatch('deleteSMimeCertificate', id)
+			await this.$store.dispatch('deleteSmimeCertificate', id)
 		},
 		async uploadCertificate() {
 			const certificate = this.$refs.certificate.files[0]
@@ -149,7 +150,7 @@ export default {
 
 			this.loading = true
 			try {
-				await this.$store.dispatch('createSMimeCertificate', {
+				await this.$store.dispatch('createSmimeCertificate', {
 					certificate,
 					privateKey,
 				})

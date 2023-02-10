@@ -2,6 +2,7 @@
  * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
  *
@@ -50,6 +51,7 @@ describe('Composer', () => {
 			getPreference: () => (key, fallback) => fallback,
 			getAccount: () => ({}),
 			isScheduledSendingDisabled: () => false,
+			getSmimeCertificates: () => [],
 		}
 		store = new Vuex.Store({
 			actions,
@@ -102,4 +104,39 @@ describe('Composer', () => {
 		expect(canSend).toEqual(true)
 	})
 
+	it('should not S/MIME sign messages if there are no certs', () => {
+		const view = shallowMount(Composer, {
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return undefined
+				}
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeSign = false
+		expect(view.vm.smimeSign).toEqual(false)
+
+		view.vm.wantsSmimeSign = true
+		expect(view.vm.smimeSign).toEqual(false)
+	})
+
+	it('should S/MIME sign messages if there are certs', () => {
+		const view = shallowMount(Composer, {
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return { foo: 'bar' }
+				}
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeSign = true
+		expect(view.vm.smimeSign).toEqual(true)
+
+		view.vm.wantsSmimeSign = false
+		expect(view.vm.smimeSign).toEqual(false)
+	})
 })

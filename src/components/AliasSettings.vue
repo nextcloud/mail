@@ -1,6 +1,8 @@
 <!--
   - @copyright 2020 Patrick Bender <patrick@bender-it-services.de>
   -
+  - @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
+  -
   - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
@@ -20,9 +22,33 @@
 <template>
 	<div>
 		<ul class="aliases-list">
-			<li v-for="alias in aliases" :key="alias.id">
-				<AliasForm :account="account" :alias="alias" />
+			<!-- Primary alias -->
+			<li>
+				<AliasForm :account="account"
+					:alias="accountAlias"
+					:enable-update="false"
+					:enable-delete="false"
+					:on-update-smime-certificate="updateAccountSmimeCertificate">
+					<ButtonVue v-if="!account.provisioningId"
+						type="tertiary-no-background"
+						:title="t('mail', 'Change name')"
+						@click="$emit('rename-primary-alias')">
+						<template #icon>
+							<IconRename :size="20" />
+						</template>
+					</ButtonVue>
+				</AliasForm>
 			</li>
+
+			<!-- Secondary aliases -->
+			<li v-for="alias in aliases" :key="alias.id">
+				<AliasForm :account="account"
+					:alias="alias"
+					:on-update-alias="updateAlias"
+					:on-update-smime-certificate="updateAliasSmimeCertificate"
+					:on-delete="deleteAlias" />
+			</li>
+
 			<li v-if="showForm">
 				<form id="createAliasForm" @submit.prevent="createAlias">
 					<input v-model="newName"
@@ -66,12 +92,19 @@
 <script>
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
+import IconRename from 'vue-material-design-icons/Pencil'
 import logger from '../logger'
 import AliasForm from './AliasForm'
 
 export default {
 	name: 'AliasSettings',
-	components: { AliasForm, ButtonVue, IconLoading, IconCheck },
+	components: {
+		AliasForm,
+		ButtonVue,
+		IconLoading,
+		IconCheck,
+		IconRename,
+	},
 	props: {
 		account: {
 			type: Object,
@@ -89,6 +122,14 @@ export default {
 	computed: {
 		aliases() {
 			return this.account.aliases
+		},
+		accountAlias() {
+			return {
+				alias: this.account.emailAddress,
+				name: this.account.name,
+				provisioned: !!this.account.provisioningId,
+				smimeCertificateId: this.account.smimeCertificateId,
+			}
 		},
 	},
 	methods: {
@@ -114,6 +155,38 @@ export default {
 			this.newAlias = ''
 			this.newName = this.account.name
 			this.showForm = false
+		},
+		async updateAccountSmimeCertificate(aliasId, smimeCertificateId) {
+			await this.$store.dispatch('updateAccountSmimeCertificate', {
+				account: this.account,
+				smimeCertificateId,
+			})
+		},
+		async updateAliasSmimeCertificate(aliasId, smimeCertificateId) {
+			const alias = this.aliases.find((alias) => alias.id === aliasId)
+			await this.$store.dispatch('updateAlias', {
+				account: this.account,
+				aliasId,
+				alias: alias.alias,
+				name: alias.name,
+				smimeCertificateId,
+			})
+		},
+		async updateAlias(aliasId, newAlias) {
+			const alias = this.aliases.find((alias) => alias.id === aliasId)
+			await this.$store.dispatch('updateAlias', {
+				account: this.account,
+				aliasId: alias.id,
+				alias: newAlias.alias,
+				name: newAlias.name,
+				smimeCertificateId: alias.smimeCertificateId,
+			})
+		},
+		async deleteAlias(aliasId) {
+			await this.$store.dispatch('deleteAlias', {
+				account: this.account,
+				aliasId,
+			})
 		},
 	},
 }

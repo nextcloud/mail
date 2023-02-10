@@ -25,58 +25,42 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Exception;
-use OCA\Mail\Db\SMimeCertificate;
+use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Exception\SMimeCertificateParserException;
+use OCA\Mail\Exception\SmimeCertificateParserException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\Attachment\UploadedFile;
-use OCA\Mail\Service\SMimeService;
+use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
-use OCP\Security\ICrypto;
 
-class SMimeCertificatesController extends Controller {
+class SmimeCertificatesController extends Controller {
 	private ?string $userId;
-	private SMimeService $certificateService;
-	private ICrypto $crypto;
+	private SmimeService $certificateService;
 
-	public function __construct(string $appName,
-								IRequest $request,
-								?string $userId,
-								SMimeService $certificateService,
-								ICrypto $crypto) {
+	public function __construct(string       $appName,
+								IRequest     $request,
+								?string      $userId,
+								SmimeService $certificateService) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->certificateService = $certificateService;
-		$this->crypto = $crypto;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 * @throws ServiceException
-	 * @throws SMimeCertificateParserException
+	 * @throws SmimeCertificateParserException
 	 */
 	#[TrapError]
 	public function index(): JsonResponse {
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
-		$certificates = array_map(function (SMimeCertificate $certificate) {
-			try {
-				$decryptedCertificate = $this->crypto->decrypt($certificate->getCertificate());
-			} catch (Exception $e) {
-				throw new ServiceException(
-					'Failed to decrypt certificate: ' . $e->getMessage(),
-					0,
-					$e,
-				);
-			}
-			$json = $certificate->jsonSerialize();
-			$json['info'] = $this->certificateService->parseCertificate($decryptedCertificate);
-			return $json;
+		$certificates = array_map(function (SmimeCertificate $certificate) {
+			return $this->certificateService->enrichCertificate($certificate);
 		}, $certificates);
 		return JsonResponse::success($certificates);
 	}
@@ -101,7 +85,7 @@ class SMimeCertificatesController extends Controller {
 	 * @return JsonResponse
 	 *
 	 * @throws ServiceException
-	 * @throws SMimeCertificateParserException
+	 * @throws SmimeCertificateParserException
 	 */
 	#[TrapError]
 	public function create(): JsonResponse {
@@ -138,8 +122,7 @@ class SMimeCertificatesController extends Controller {
 			$certificateData,
 			$privateKeyData,
 		);
-		$json = $certificate->jsonSerialize();
-		$json['info'] = $this->certificateService->parseCertificate($certificateData);
-		return JsonResponse::success($json);
+		$enrichedCertificate = $this->certificateService->enrichCertificate($certificate);
+		return JsonResponse::success($enrichedCertificate);
 	}
 }

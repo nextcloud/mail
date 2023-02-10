@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -92,6 +93,11 @@ return [
 		[
 			'name' => 'accounts#updateSignature',
 			'url' => '/api/accounts/{id}/signature',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'accounts#updateSmimeCertificate',
+			'url' => '/api/accounts/{id}/smime-certificate',
 			'verb' => 'PUT'
 		],
 		[
@@ -394,6 +400,6 @@ return [
 		'messages' => ['url' => '/api/messages'],
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
-		'sMimeCertificates' => ['url' => '/api/smime/certificates'],
+		'smimeCertificates' => ['url' => '/api/smime/certificates'],
 	]
 ];
