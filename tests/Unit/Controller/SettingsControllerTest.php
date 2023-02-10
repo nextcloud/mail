@@ -57,6 +57,18 @@ class SettingsControllerTest extends TestCase {
 		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
+	public function testCreateProvisioning(): void {
+		$provisioning = new Provisioning();
+		$this->mock->getParameter('provisioningManager')
+			->expects(self::once())
+			->method('newProvisioning')
+			->willReturn($provisioning);
+
+		$response = $this->controller->createProvisioning([]);
+
+		self::assertEquals(new JSONResponse($provisioning), $response);
+	}
+
 	public function testDeprovision() {
 		$provisioning = new Provisioning();
 		$this->mock->getParameter('provisioningManager')
