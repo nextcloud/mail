@@ -142,7 +142,8 @@
 						selected ? t('mail', 'Unselect') : t('mail', 'Select')
 					}}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
+				<ActionButton v-if="hasWriteAcl"
+					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
 					<template #icon>
 						<TagIcon

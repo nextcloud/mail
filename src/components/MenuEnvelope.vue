@@ -62,7 +62,8 @@
 						envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
+				<ActionButton v-if="hasWriteAcl"
+					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
 					<template #icon>
 						<TagIcon
