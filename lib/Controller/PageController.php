@@ -45,6 +45,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\Exceptions\PasswordUnavailableException;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
+use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
@@ -123,6 +124,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'debug',
 			$this->config->getSystemValue('debug', false)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'ncVersion',
+			$this->config->getSystemValue('version', '0.0.0')
 		);
 
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
@@ -251,7 +257,7 @@ class PageController extends Controller {
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$response->setContentSecurityPolicy($csp);
-
+		$this->dispatcher->dispatchTyped(new RenderReferenceEvent());
 		return $response;
 	}
 
