@@ -476,9 +476,6 @@ export default {
 	}
 
 	.action-item--single {
-		position: absolute;
-		top: 3px;
-		right: -2px;
 		border-radius: var(--border-radius-pill);
 		border: none;
 		background: none;
