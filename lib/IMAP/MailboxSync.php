@@ -97,7 +97,9 @@ class MailboxSync {
 					$this->getPersonalNamespace($namespaces)
 				);
 			} catch (Horde_Imap_Client_Exception $e) {
-				$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage());
+				$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage(), [
+					'exception' => $e,
+				]);
 			}
 
 			try {
