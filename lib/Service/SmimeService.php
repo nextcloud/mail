@@ -26,12 +26,19 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use Exception;
+use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Fetch_Query;
+use Horde_Mail_Rfc822_Address;
 use Horde_Mime_Exception;
+use Horde_Mime_Headers;
+use Horde_Mime_Headers_ContentParam_ContentType;
 use Horde_Mime_Part;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeCertificateParserException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\Model\EnrichedSmimeCertificate;
 use OCA\Mail\Model\SmimeCertificateInfo;
@@ -63,6 +70,7 @@ class SmimeService {
 
 	/**
 	 * Attempt to verify a message signed with S/MIME.
+	 *
 	 * Requires the openssl extension.
 	 *
 	 * @param string $message Whole message including all headers and parts as stored on IMAP
@@ -78,15 +86,65 @@ class SmimeService {
 		fwrite($messageTempHandle, $message);
 		fclose($messageTempHandle);
 		/** @psalm-suppress NullArgument */
-		$valid = openssl_pkcs7_verify($messageTemp, 0, null, [
-			$this->certificateManager->getAbsoluteBundlePath(),
-		]);
+		$valid = openssl_pkcs7_verify(
+			$messageTemp,
+			0,
+			null,
+			[$this->certificateManager->getAbsoluteBundlePath()],
+		);
+
 		if (is_int($valid)) {
 			// OpenSSL error
 			return false;
 		}
 
 		return $valid;
+	}
+
+	/**
+	 * Attempt to extract the signed content from a signed S/MIME message.
+	 * Can be used to extract opaque signed content even if the signature itself can't be verified.
+	 *
+	 * Warning: This method does not attempt to verify the signature.
+	 *
+	 * Requires the openssl extension.
+	 *
+	 * @param string $message Whole message including all headers and parts as stored on IMAP
+	 * @return string Signed content
+	 *
+	 * @throws ServiceException If no signed content can be extracted
+	 */
+	public function extractSignedContent(string $message): string {
+		// Ideally, we should use the more modern openssl cms module as it is a superset of the
+		// smime/pkcs7 module. Unfortunately, it is only supported since php 8.
+		// Ref https://www.php.net/manual/en/function.openssl-cms-verify.php
+
+		$verifiedContentTemp = $this->tempManager->getTemporaryFile();
+		$messageTemp = $this->tempManager->getTemporaryFile();
+		$messageTempHandle = fopen($messageTemp, 'wb');
+		fwrite($messageTempHandle, $message);
+		fclose($messageTempHandle);
+		/** @psalm-suppress NullArgument */
+		$valid = openssl_pkcs7_verify(
+			$messageTemp,
+			PKCS7_NOSIGS | PKCS7_NOVERIFY,
+			null,
+			[$this->certificateManager->getAbsoluteBundlePath()],
+			null,
+			$verifiedContentTemp,
+		);
+
+		if (is_int($valid)) {
+			// OpenSSL error
+			throw new ServiceException('Failed to extract signed content');
+		}
+
+		$verifiedContent = file_get_contents($verifiedContentTemp);
+		if ($verifiedContent === false) {
+			throw new ServiceException('Could not read back verified content');
+		}
+
+		return $verifiedContent;
 	}
 
 	/**
@@ -180,6 +238,28 @@ class SmimeService {
 	 */
 	public function findCertificate(int $certificateId, string $userId): SmimeCertificate {
 		return $this->certificateMapper->find($certificateId, $userId);
+	}
+
+	/**
+	 * Get all S/MIME certificates belonging to an email address.
+	 *
+	 * @param string $emailAddress
+	 * @param string $userId
+	 * @return SmimeCertificate[]
+	 *
+	 * @throws ServiceException If the database query fails
+	 */
+	public function findCertificatesByEmailAddress(string $emailAddress,
+												  string $userId): array {
+		try {
+			return $this->certificateMapper->findAllByEmailAddress($userId, $emailAddress);
+		} catch (\OCP\DB\Exception $e) {
+			throw new ServiceException(
+				'Failed to fetch certificates by email address: ' . $e->getMessage(),
+				0,
+				$e,
+			);
+		}
 	}
 
 	/**
@@ -292,5 +372,153 @@ class SmimeService {
 		$parsedPart[1] = $part;
 
 		return $parsedPart;
+	}
+
+	/**
+	 * Decrypt full text of a MIME message.
+	 * This method assumes the given mime part text to be encrypted without checking.
+	 *
+	 * @param string $mimePartText
+	 * @param SmimeCertificate $certificate The certificate needs to contain a private key.
+	 * @return string Full text of decrypted MIME message. It will probably contain multiple parts.
+	 *
+	 * @throws ServiceException If the given certificate does not have a private key or can't be decrypted
+	 * @throws SmimeDecryptException If openssl reports an error during decryption
+	 */
+	public function decryptMimePartText(string $mimePartText,
+									SmimeCertificate $certificate): string {
+		if ($certificate->getPrivateKey() === null) {
+			throw new ServiceException('Certificate does not have a private key');
+		}
+
+		try {
+			$decryptedCertificate = $this->crypto->decrypt($certificate->getCertificate());
+			$decryptedKey = $this->crypto->decrypt($certificate->getPrivateKey());
+		} catch (Exception $e) {
+			throw new ServiceException(
+				'Failed to decrypt certificate or private key: ' . $e->getMessage(),
+				0,
+				$e,
+			);
+		}
+
+		$inPath = $this->tempManager->getTemporaryFile();
+		$outPath = $this->tempManager->getTemporaryFile();
+		file_put_contents($inPath, $mimePartText);
+		if (!openssl_pkcs7_decrypt($inPath, $outPath, $decryptedCertificate, $decryptedKey)) {
+			throw new SmimeDecryptException('Failed to decrypt MIME part text');
+		}
+
+		$decryptedMessage = file_get_contents($outPath);
+
+		// Handle smime-type="signed-data" as the content is opaque until verified
+		$headers = Horde_Mime_Headers::parseHeaders($decryptedMessage);
+		if (!isset($headers['content-type'])) {
+			return $decryptedMessage;
+		}
+		/** @var Horde_Mime_Headers_ContentParam_ContentType $contentType */
+		$contentType = $headers['content-type'];
+
+		if ($contentType->ptype !== 'application'
+			|| $contentType->stype !== 'pkcs7-mime'
+			|| !isset($contentType['smime-type'])
+			|| $contentType['smime-type'] !== 'signed-data') {
+			return $decryptedMessage;
+		}
+
+		try {
+			// TODO: propagate signature verification status
+			$decryptedMessage = $this->extractSignedContent($decryptedMessage);
+		} catch (ServiceException $e) {
+			throw new ServiceException(
+				'Failed to extract nested signed data: ' . $e->getMessage(),
+				0,
+				$e,
+			);
+		}
+
+		return $decryptedMessage;
+	}
+
+	/**
+	 * Try to decrypt a raw data fetch from horde.
+	 * The fetch needs to contain at least envelope, headerText and fullText.
+	 * See the addDecryptQueries() method.
+	 *
+	 * This method will do nothing to the full text if the message is not encrypted.
+	 *
+	 * @param Horde_Imap_Client_Data_Fetch $message
+	 * @param string $userId
+	 * @return string
+	 *
+	 * @throws ServiceException
+	 */
+	public function decryptDataFetch(Horde_Imap_Client_Data_Fetch $message, string $userId): string {
+		$encryptedText = $message->getFullMsg();
+		if (!$this->isEncrypted($message)) {
+			return $encryptedText;
+		}
+
+		$decryptedText = null;
+		$envelope = $message->getEnvelope();
+		foreach ($envelope->to as $recipient) {
+			/** @var Horde_Mail_Rfc822_Address $recipient  */
+			$recipientAddress = $recipient->bare_address;
+			$certs = $this->findCertificatesByEmailAddress(
+				$recipientAddress,
+				$userId,
+			);
+
+			foreach ($certs as $cert) {
+				try {
+					$decryptedText = $this->decryptMimePartText($encryptedText, $cert);
+				} catch (ServiceException | SmimeDecryptException $e) {
+					// Certificate probably didn't match -> continue
+					// TODO: filter a real decryption error
+					// (is hard because openssl doesn't return a proper error code)
+					continue;
+				}
+			}
+		}
+
+		if ($decryptedText === null) {
+			throw new ServiceException('Failed to find a suitable S/MIME certificate for decryption');
+		}
+
+		return $decryptedText;
+	}
+
+	public function addEncryptionCheckQueries(Horde_Imap_Client_Fetch_Query $query,
+											  bool $peek = true): void {
+		if (!$query->contains(Horde_Imap_Client::FETCH_HEADERTEXT)) {
+			$query->headerText([
+				'peek' => $peek,
+			]);
+		}
+	}
+
+	public function addDecryptQueries(Horde_Imap_Client_Fetch_Query $query,
+									  bool $peek = true): void {
+		$this->addEncryptionCheckQueries($query, $peek);
+		$query->envelope();
+		if (!$query->contains(Horde_Imap_Client::FETCH_FULLMSG)) {
+			$query->fullText([
+				'peek' => $peek,
+			]);
+		}
+	}
+
+	public function isEncrypted(Horde_Imap_Client_Data_Fetch $message): bool {
+		$headers = $message->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		if (!isset($headers['content-type'])) {
+			return false;
+		}
+
+		/** @var Horde_Mime_Headers_ContentParam_ContentType $contentType */
+		$contentType = $headers['content-type'];
+		return $contentType->ptype === 'application'
+			&& $contentType->stype === 'pkcs7-mime'
+			&& isset($contentType['smime-type'])
+			&& $contentType['smime-type'] === 'enveloped-data';
 	}
 }

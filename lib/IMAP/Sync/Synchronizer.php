@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -65,6 +66,7 @@ class Synchronizer {
 	 */
 	public function sync(Horde_Imap_Client_Base $imapClient,
 						 Request $request,
+						 string $userId,
 						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
 		try {
@@ -95,8 +97,8 @@ class Synchronizer {
 			throw $e;
 		}
 
-		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($newUids));
-		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($changedUids));
+		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($newUids), $userId);
+		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($changedUids), $userId);
 		$vanishedMessageUids = $vanishedUids;
 
 		return new Response($newMessages, $changedMessages, $vanishedMessageUids);

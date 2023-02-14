@@ -87,7 +87,7 @@ class ItineraryService {
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$itinerary = new Itinerary();
-			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id);
+			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id, $account->getUserId());
 			if ($htmlBody !== null) {
 				$itinerary = $itinerary->merge(
 					$this->extractor->extract($htmlBody)
@@ -96,7 +96,7 @@ class ItineraryService {
 			} else {
 				$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
 			}
-			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id);
+			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id, $account->getUserId());
 		} finally {
 			$client->logout();
 		}

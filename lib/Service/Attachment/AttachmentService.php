@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Luc Calaresu <dev@calaresu.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -279,7 +280,8 @@ class AttachmentService implements IAttachmentService {
 		$fullText = $this->messageMapper->getFullText(
 			$client,
 			$mailbox->getName(),
-			$attachmentMessage->getUid()
+			$attachmentMessage->getUid(),
+			$account->getUserId()
 		);
 
 		// detect mime type
@@ -317,6 +319,7 @@ class AttachmentService implements IAttachmentService {
 			$client,
 			$mailbox->getName(),
 			(int)$attachment['uid'],
+			$account->getUserId(),
 			[
 				$attachment['id'] ?? []
 			]

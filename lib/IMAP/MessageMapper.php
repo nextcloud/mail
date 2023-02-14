@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -27,16 +28,21 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
+use Horde_Mime_Exception;
+use Horde_Mime_Headers;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
 use Html2Text\Html2Text;
+use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
@@ -48,15 +54,21 @@ use function in_array;
 use function iterator_to_array;
 use function max;
 use function min;
-use function reset;
 use function sprintf;
 
 class MessageMapper {
 	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(LoggerInterface $logger) {
+	private SMimeService $smimeService;
+	private ImapMessageFetcherFactory $imapMessageFactory;
+
+	public function __construct(LoggerInterface           $logger,
+								SmimeService              $smimeService,
+								ImapMessageFetcherFactory $imapMessageFactory) {
 		$this->logger = $logger;
+		$this->smimeService = $smimeService;
+		$this->imapMessageFactory = $imapMessageFactory;
 	}
 
 	/**
@@ -67,8 +79,9 @@ class MessageMapper {
 	public function find(Horde_Imap_Client_Base $client,
 						 string $mailbox,
 						 int $id,
+						 string $userId,
 						 bool $loadBody = false): IMAPMessage {
-		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $loadBody);
+		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody);
 
 		if (count($result) === 0) {
 			throw new DoesNotExistException("Message does not exist");
@@ -93,7 +106,8 @@ class MessageMapper {
 							int $maxResults,
 							int $highestKnownUid,
 							LoggerInterface $logger,
-							PerformanceLoggerTask $perf): array {
+							PerformanceLoggerTask $perf,
+							string $userId): array {
 		/**
 		 * To prevent memory exhaustion, we don't want to just ask for a list of
 		 * all UIDs and limit them client-side. Instead, we can (hopefully
@@ -179,7 +193,7 @@ class MessageMapper {
 			 * there is nothing to fetch in $highestKnownUid:$upper
 			 */
 			$logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
-			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf);
+			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf, $userId);
 		}
 		$uidCandidates = array_filter(
 			array_map(
@@ -211,7 +225,8 @@ class MessageMapper {
 		$messages = $this->findByIds(
 			$client,
 			$mailbox,
-			new Horde_Imap_Client_Ids($fetchRange)
+			new Horde_Imap_Client_Ids($fetchRange),
+			$userId,
 		);
 		$perf->step('find IMAP messages by UID');
 		return [
@@ -222,12 +237,23 @@ class MessageMapper {
 	}
 
 	/**
+	 * @param Horde_Imap_Client_Base $client
+	 * @param string $mailbox
+	 * @param Horde_Imap_Client_Ids $ids
+	 * @param string $userId
+	 * @param bool $loadBody
 	 * @return IMAPMessage[]
+	 *
+	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
 							  string $mailbox,
 							  Horde_Imap_Client_Ids $ids,
+							  string $userId,
 							  bool $loadBody = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
@@ -259,23 +285,16 @@ class MessageMapper {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
-		return array_map(static function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody) {
-			if ($loadBody) {
-				return new IMAPMessage(
-					$client,
-					$mailbox,
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody, $userId) {
+			return $this->imapMessageFactory
+				->build(
 					$fetchResult->getUid(),
-					null,
-					$loadBody
-				);
-			} else {
-				return new IMAPMessage(
-					$client,
 					$mailbox,
-					$fetchResult->getUid(),
-					$fetchResult
-				);
-			}
+					$client,
+					$userId,
+				)
+				->withBody($loadBody)
+				->fetchMessage($fetchResult);
 		}, $fetchResults);
 	}
 
@@ -422,23 +441,29 @@ class MessageMapper {
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
 	 * @param int $uid
-	 *
+	 * @param string $userId
+	 * @param bool $decrypt
 	 * @return string|null
+	 *
 	 * @throws ServiceException
 	 */
 	public function getFullText(Horde_Imap_Client_Socket $client,
 								string $mailbox,
-								int $uid): ?string {
+								int $uid,
+								string $userId,
+								bool $decrypt = true): ?string {
 		$query = new Horde_Imap_Client_Fetch_Query();
-		$query->uid();
-		$query->fullText([
-			'peek' => true,
-		]);
+
+		if ($decrypt) {
+			$this->smimeService->addDecryptQueries($query);
+		} else {
+			$query->fullText([ 'peek' => true ]);
+		}
 
 		try {
-			$result = iterator_to_array($client->fetch($mailbox, $query, [
+			$result = $client->fetch($mailbox, $query, [
 				'ids' => new Horde_Imap_Client_Ids($uid),
-			]), false);
+			]);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not fetch message source: " . $e->getMessage(),
@@ -447,23 +472,38 @@ class MessageMapper {
 			);
 		}
 
-		$msg = array_map(static function (Horde_Imap_Client_Data_Fetch $result) {
-			return $result->getFullMsg();
-		}, $result);
-
-		if (empty($msg)) {
+		if (($message = $result->first()) === null) {
 			return null;
 		}
 
-		return reset($msg);
+		if ($decrypt) {
+			return $this->smimeService->decryptDataFetch($message, $userId);
+		}
+
+		return $message->getFullMsg();
 	}
 
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $mailbox
+	 * @param int $uid
+	 * @param string $userId
+	 * @return string|null
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
+	 */
 	public function getHtmlBody(Horde_Imap_Client_Socket $client,
-								string $mailbox,
-								int $uid): ?string {
+								string                   $mailbox,
+								int                      $uid,
+								string                   $userId): ?string {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->envelope();
 		$messageQuery->structure();
+		$this->smimeService->addEncryptionCheckQueries($messageQuery, true);
 
 		$result = $client->fetch($mailbox, $messageQuery, [
 			'ids' => new Horde_Imap_Client_Ids([$uid]),
@@ -474,6 +514,23 @@ class MessageMapper {
 		}
 
 		$structure = $message->getStructure();
+
+		// Handle S/MIME encrypted message
+		if ($this->smimeService->isEncrypted($message)) {
+			// Encrypted messages have to be fully fetched in order to analyze the structure because
+			// it is hidden (obviously).
+			$fullText = $this->getFullText($client, $mailbox, $uid, $userId);
+
+			// Force mime parsing as decrypted S/MIME payload doesn't have to contain a MIME header
+			$mimePart = Horde_Mime_Part::parseMessage($fullText, ['forcemime' => true ]);
+			$htmlPartId = $mimePart->findBody('html');
+			if (!isset($mimePart[$htmlPartId])) {
+				return null;
+			}
+
+			return $mimePart[$htmlPartId];
+		}
+
 		$htmlPartId = $structure->findBody('html');
 		if ($htmlPartId === null) {
 			// No HTML part
@@ -501,58 +558,31 @@ class MessageMapper {
 		return null;
 	}
 
+	/**
+	 * @deprecated Use getAttachments() instead
+	 *
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $mailbox
+	 * @param int $uid
+	 * @param string $userId
+	 * @param array|null $attachmentIds
+	 * @return array
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
+	 */
 	public function getRawAttachments(Horde_Imap_Client_Socket $client,
-									string $mailbox,
-									int $uid,
-									?array $attachmentIds = []): array {
-		$messageQuery = new Horde_Imap_Client_Fetch_Query();
-		$messageQuery->structure();
-
-		$result = $client->fetch($mailbox, $messageQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$uid]),
-		]);
-
-		if (($structureResult = $result->first()) === null) {
-			throw new DoesNotExistException('Message does not exist');
-		}
-
-		$structure = $structureResult->getStructure();
-		$partsQuery = $this->buildAttachmentsPartsQuery($structure, $attachmentIds);
-
-		$parts = $client->fetch($mailbox, $partsQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$uid]),
-		]);
-		if (($messageData = $parts->first()) === null) {
-			throw new DoesNotExistException('Message does not exist');
-		}
-
-		$attachments = [];
-		foreach ($structure->partIterator() as $key => $part) {
-			/** @var Horde_Mime_Part $part */
-
-			if (!$part->isAttachment()) {
-				continue;
-			}
-
-			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
-				// We are looking for specific parts only and this is not one of them
-				continue;
-			}
-
-			$stream = $messageData->getBodyPart($key, true);
-			$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-			if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-				$part->setTransferEncoding($enc);
-			}
-			$part->setContents($stream, [
-				'usestream' => true,
-			]);
-			$decoded = $part->getContents();
-			fclose($stream);
-
-			$attachments[] = $decoded;
-		}
-		return $attachments;
+									  string $mailbox,
+									  int $uid,
+									  string $userId,
+									  ?array $attachmentIds = []): array {
+		$attachments = $this->getAttachments($client, $mailbox, $uid, $userId, $attachmentIds);
+		return array_map(static function (array $attachment) {
+			return $attachment['content'];
+		}, $attachments);
 	}
 
 	/**
@@ -561,32 +591,55 @@ class MessageMapper {
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
 	 * @param integer $uid
+	 * @param string $userId
 	 * @param array|null $attachmentIds
 	 * @return array[]
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws ServiceException
+	 * @throws Horde_Mime_Exception
 	 */
 	public function getAttachments(Horde_Imap_Client_Socket $client,
-									string $mailbox,
-									int $uid,
-									?array $attachmentIds = []): array {
+								   string $mailbox,
+								   int $uid,
+								   string $userId,
+								   ?array $attachmentIds = []): array {
+		$uids = new Horde_Imap_Client_Ids([$uid]);
+
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->structure();
+		$this->smimeService->addEncryptionCheckQueries($messageQuery);
 
-		$result = $client->fetch($mailbox, $messageQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$uid]),
-		]);
+		$result = $client->fetch($mailbox, $messageQuery, ['ids' => $uids ]);
 
 		if (($structureResult = $result->first()) === null) {
 			throw new DoesNotExistException('Message does not exist');
 		}
 
 		$structure = $structureResult->getStructure();
-		$partsQuery = $this->buildAttachmentsPartsQuery($structure, $attachmentIds);
+		$messageData = null;
 
-		$parts = $client->fetch($mailbox, $partsQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$uid]),
-		]);
-		if (($messageData = $parts->first()) === null) {
-			throw new DoesNotExistException('Message does not exist');
+		$isEncrypted = $this->smimeService->isEncrypted($structureResult);
+		if ($isEncrypted) {
+			$fullTextQuery = new Horde_Imap_Client_Fetch_Query();
+			$this->smimeService->addDecryptQueries($fullTextQuery);
+
+			$fullTextParts = $client->fetch($mailbox, $fullTextQuery, ['ids' => $uids ]);
+			if (($fullTextResult = $fullTextParts->first()) === null) {
+				throw new DoesNotExistException('Message does not exist');
+			}
+			$decryptedText = $this->smimeService->decryptDataFetch($fullTextResult, $userId);
+
+			// Replace opaque structure with decrypted structure
+			$structure = Horde_Mime_Part::parseMessage($decryptedText, [ 'forcemime' => true ]);
+		} else {
+			$partsQuery = $this->buildAttachmentsPartsQuery($structure, $attachmentIds);
+			$parts = $client->fetch($mailbox, $partsQuery, ['ids' => $uids ]);
+			if (($messageData = $parts->first()) === null) {
+				throw new DoesNotExistException('Message does not exist');
+			}
 		}
 
 		$attachments = [];
@@ -602,28 +655,136 @@ class MessageMapper {
 				continue;
 			}
 
-			$stream = $messageData->getBodyPart($key, true);
-			$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-			if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-				$part->setTransferEncoding($enc);
+			if ($isEncrypted) {
+				// Decrypted message already contains all data
+				$content = $part->getContents();
+			} else {
+				$stream = $messageData->getBodyPart($key, true);
+				$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+					$part->setTransferEncoding($enc);
+				}
+				$part->setContents($stream, [
+					'usestream' => true,
+				]);
+				$content = $part->getContents();
+				fclose($stream);
 			}
-			$part->setContents($stream, [
-				'usestream' => true,
-			]);
+
 			$attachments[] = [
-				'content' => $part->getContents(),
+				'content' => $content,
 				'name' => $part->getName(),
 				'size' => $part->getBytes()
 			];
-			fclose($stream);
 		}
 		return $attachments;
 	}
 
 	/**
+	 * @param Horde_Imap_Client_Base $client
+	 * @param string $mailbox
+	 * @param int $messageUid
+	 * @param string $attachmentId
+	 * @param string $userId
+	 * @return Attachment
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws ServiceException
+	 * @throws Horde_Mime_Exception
+	 */
+	public function getAttachment(Horde_Imap_Client_Base $client,
+								  string $mailbox,
+								  int $messageUid,
+								  string $attachmentId,
+								  string $userId): Attachment {
+		// TODO: compare logic and merge with getAttachments()
+
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->bodyPart($attachmentId);
+		$query->mimeHeader($attachmentId);
+		$this->smimeService->addEncryptionCheckQueries($query);
+
+		$uids = new Horde_Imap_Client_Ids($messageUid);
+		$headers = $client->fetch($mailbox, $query, ['ids' => $uids]);
+		if (!isset($headers[$messageUid])) {
+			throw new DoesNotExistException('Unable to load the attachment.');
+		}
+
+		/** @var Horde_Imap_Client_Data_Fetch $fetch */
+		$fetch = $headers[$messageUid];
+
+		/** @var Horde_Mime_Headers $mimeHeaders */
+		$mimeHeaders = $fetch->getMimeHeader($attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+
+		$body = $fetch->getBodyPart($attachmentId);
+
+		$isEncrypted = $this->smimeService->isEncrypted($fetch);
+		if ($isEncrypted) {
+			$fullTextQuery = new Horde_Imap_Client_Fetch_Query();
+			$this->smimeService->addDecryptQueries($fullTextQuery);
+
+			$result = $client->fetch($mailbox, $fullTextQuery, ['ids' => $uids]);
+			if (!isset($result[$messageUid])) {
+				throw new DoesNotExistException('Unable to load the attachment.');
+			}
+			/** @var Horde_Imap_Client_Data_Fetch $fetch */
+			$fullTextResult = $result[$messageUid];
+
+			$decryptedText = $this->smimeService->decryptDataFetch($fullTextResult, $userId);
+			$decryptedPart = Horde_Mime_Part::parseMessage($decryptedText, [ 'forcemime' => true ]);
+			if (!isset($decryptedPart[$attachmentId])) {
+				throw new DoesNotExistException('Unable to load the attachment.');
+			}
+
+			$attachmentPart = $decryptedPart[$attachmentId];
+			$body = $attachmentPart->getContents();
+			$mimeHeaders = $attachmentPart->addMimeHeaders();
+		}
+
+		$mimePart = new Horde_Mime_Part();
+
+		// Serve all files with a content-disposition of "attachment" to prevent Cross-Site Scripting
+		$mimePart->setDisposition('attachment');
+
+		// Extract headers from part
+		$contentDisposition = $mimeHeaders->getValue('content-disposition', Horde_Mime_Headers::VALUE_PARAMS);
+		if (!is_null($contentDisposition) && isset($contentDisposition['filename'])) {
+			$mimePart->setDispositionParameter('filename', $contentDisposition['filename']);
+		} else {
+			$contentDisposition = $mimeHeaders->getValue('content-type', Horde_Mime_Headers::VALUE_PARAMS);
+			if (isset($contentDisposition['name'])) {
+				$mimePart->setContentTypeParameter('name', $contentDisposition['name']);
+			}
+		}
+
+		// Content transfer encoding
+		// Decrypted parts are already decoded because they went through the MIME parser
+		if (!$isEncrypted && $tmp = $mimeHeaders->getValue('content-transfer-encoding')) {
+			$mimePart->setTransferEncoding($tmp);
+		}
+
+		/* Content type */
+		$contentType = $mimeHeaders->getValue('content-type');
+		if (!is_null($contentType) && str_contains($contentType, 'text/calendar')) {
+			$mimePart->setType('text/calendar');
+			if ($mimePart->getContentTypeParameter('name') === null) {
+				$mimePart->setContentTypeParameter('name', 'calendar.ics');
+			}
+		} else {
+			// To prevent potential problems with the SOP we serve all files but calendar entries with the
+			// MIME type "application/octet-stream"
+			$mimePart->setType('application/octet-stream');
+		}
+
+		$mimePart->setContents($body);
+		return new Attachment($mimePart);
+	}
+
+	/**
 	 * Build the parts query for attachments
 	 *
-	 * @param $structure
+	 * @param Horde_Mime_Part $structure
 	 * @param array $attachmentIds
 	 * @return Horde_Imap_Client_Fetch_Query
 	 */
@@ -669,17 +830,24 @@ class MessageMapper {
 			'cache' => true,
 			'peek' => true,
 		]);
+		$this->smimeService->addEncryptionCheckQueries($structureQuery);
 
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
 
-		return array_map(static function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
 			$hasAttachments = false;
 			$text = '';
 			$isImipMessage = false;
+			$isEncrypted = false;
+
+			if ($this->smimeService->isEncrypted($fetchData)) {
+				$isEncrypted = true;
+			}
 
 			$structure = $fetchData->getStructure();
+
 			/** @var Horde_Mime_Part $part */
 			foreach ($structure->getParts() as $part) {
 				if ($part->isAttachment()) {
@@ -698,7 +866,7 @@ class MessageMapper {
 			$textBodyId = $structure->findBody() ?? $structure->findBody('text');
 			$htmlBodyId = $structure->findBody('html');
 			if ($textBodyId === null && $htmlBodyId === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
 			}
 			$partsQuery = new Horde_Imap_Client_Fetch_Query();
 			if ($htmlBodyId !== null) {
@@ -724,7 +892,7 @@ class MessageMapper {
 			$part = $parts[$fetchData->getUid()];
 			// This is sus - why does this even happen? A delete / move in the middle of this processing?
 			if ($part === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
 			}
 			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
 			if (!empty($htmlBody)) {
@@ -735,7 +903,12 @@ class MessageMapper {
 					$htmlBody = $structure->getContents();
 				}
 				$html = new Html2Text($htmlBody);
-				return new MessageStructureData($hasAttachments, trim($html->getText()), $isImipMessage);
+				return new MessageStructureData(
+					$hasAttachments,
+					trim($html->getText()),
+					$isImipMessage,
+					$isEncrypted,
+				);
 			}
 			$textBody = $part->getBodyPart($textBodyId);
 			if (!empty($textBody)) {
@@ -745,10 +918,15 @@ class MessageMapper {
 					$structure->setContents($textBody);
 					$textBody = $structure->getContents();
 				}
-				return new MessageStructureData($hasAttachments, $textBody, $isImipMessage);
+				return new MessageStructureData(
+					$hasAttachments,
+					$textBody,
+					$isImipMessage,
+					$isEncrypted,
+				);
 			}
 
-			return new MessageStructureData($hasAttachments, $text, $isImipMessage);
+			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
 		}, iterator_to_array($structures->getIterator()));
 	}
 }

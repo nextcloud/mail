@@ -63,7 +63,7 @@
 					{{ subjectForSubtitle }}
 				</span>
 			</div>
-			<div v-if="data.previewText"
+			<div v-if="data.encrypted || data.previewText"
 				class="envelope__preview-text">
 				{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText }}
 			</div>
@@ -435,8 +435,8 @@ export default {
 			return this.data.flags.seen
 		},
 		isEncrypted() {
-			return this.data.previewText
-				&& isPgpText(this.data.previewText)
+			return this.data.encrypted // S/MIME
+				|| (this.data.previewText && isPgpText(this.data.previewText)) // PGP/Mailvelope
 		},
 		isImportant() {
 			return this.$store.getters

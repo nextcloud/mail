@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -302,7 +303,8 @@ class ImapToDbSynchronizer {
 					self::MAX_NEW_MESSAGES,
 					$highestKnownUid ?? 0,
 					$logger,
-					$perf
+					$perf,
+					$account->getUserId(),
 				);
 				$perf->step(sprintf('fetch %d messages from IMAP', count($imapMessages)));
 			} catch (Horde_Imap_Client_Exception $e) {
@@ -372,6 +374,7 @@ class ImapToDbSynchronizer {
 						$mailbox->getSyncNewToken(),
 						$uids
 					),
+					$account->getUserId(),
 					Horde_Imap_Client::SYNC_NEWMSGSUIDS
 				);
 				$perf->step('get new messages via Horde');
@@ -415,6 +418,7 @@ class ImapToDbSynchronizer {
 						$mailbox->getSyncChangedToken(),
 						$uids
 					),
+					$account->getUserId(),
 					Horde_Imap_Client::SYNC_FLAGSUIDS
 				);
 				$perf->step('get changed messages via Horde');
@@ -444,6 +448,7 @@ class ImapToDbSynchronizer {
 						$mailbox->getSyncVanishedToken(),
 						$uids
 					),
+					$account->getUserId(),
 					Horde_Imap_Client::SYNC_VANISHEDUIDS
 				);
 				$perf->step('get vanished messages via Horde');

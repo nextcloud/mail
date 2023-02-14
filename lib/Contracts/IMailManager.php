@@ -27,6 +27,7 @@ namespace OCA\Mail\Contracts;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
@@ -248,6 +249,15 @@ interface IMailManager {
 	 * @return array
 	 */
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message) : array;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
+	 * @param string $attachmentId
+	 * @return Attachment
+	 */
+	public function getMailAttachment(Account $account, Mailbox $mailbox, Message $message, string $attachmentId): Attachment;
 
 	/**
 	 * @param string $imapLabel

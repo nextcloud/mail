@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -82,6 +83,8 @@ use function json_encode;
  * @method void setImipProcessed(bool $imipProcessed)
  * @method bool isImipError()
  * @method void setImipError(bool $imipError)
+ * @method bool|null isEncrypted()
+ * @method void setEncrypted(bool|null $encrypted)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -124,6 +127,11 @@ class Message extends Entity implements JsonSerializable {
 	protected $imipProcessed = false;
 	protected $imipError = false;
 
+	/**
+	 * @var bool|null
+	 */
+	protected $encrypted;
+
 	/** @var AddressList */
 	private $from;
 
@@ -164,6 +172,7 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('imipMessage', 'boolean');
 		$this->addType('imipProcessed', 'boolean');
 		$this->addType('imipError', 'boolean');
+		$this->addType('encrypted', 'boolean');
 	}
 
 	/**
@@ -330,6 +339,7 @@ class Message extends Entity implements JsonSerializable {
 			'threadRootId' => $this->getThreadRootId(),
 			'imipMessage' => $this->isImipMessage(),
 			'previewText' => $this->getPreviewText(),
+			'encrypted' => ($this->isEncrypted() === true),
 		];
 	}
 }
