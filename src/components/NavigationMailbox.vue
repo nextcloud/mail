@@ -93,7 +93,10 @@
 				</template>
 				{{ t('mail', 'Add submailbox') }}
 			</ActionButton>
-			<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
+			<ActionInput
+				v-if="editing"
+				:value.sync="createMailboxName"
+				@submit.prevent.stop="createMailbox">
 				<template #icon>
 					<IconFolderAdd
 						:size="20" />
@@ -298,6 +301,7 @@ export default {
 			showMoveModal: false,
 			hasDelimiter: !!this.mailbox.delimiter,
 			UNIFIED_INBOX_ID,
+			createMailboxName: '',
 		}
 	},
 	computed: {
@@ -479,7 +483,7 @@ export default {
 
 		async createMailbox(e) {
 			this.editing = true
-			const name = e.target.elements[1].value
+			const name = this.createMailboxName
 			const withPrefix = this.mailbox.name + this.mailbox.delimiter + name
 			logger.info(`creating mailbox ${withPrefix} as submailbox of ${this.mailbox.databaseId}`)
 			this.menuOpen = false

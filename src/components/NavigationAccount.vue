@@ -75,7 +75,10 @@
 					</template>
 					{{ t('mail', 'Add mailbox') }}
 				</ActionButton>
-				<ActionInput v-if="editing" @submit.prevent.stop="createMailbox">
+				<ActionInput
+					v-if="editing"
+					:value.sync="createMailboxName"
+					@submit.prevent.stop="createMailbox">
 					<template #icon>
 						<IconFolderAdd
 							:size="20" />
@@ -187,6 +190,7 @@ export default {
 			editing: false,
 			showSaving: false,
 			showSettings: false,
+			createMailboxName: '',
 		}
 	},
 	computed: {
@@ -228,7 +232,7 @@ export default {
 	methods: {
 		createMailbox(e) {
 			this.editing = true
-			const name = e.target.elements[1].value
+			const name = this.createMailboxName
 			logger.info('creating mailbox ' + name)
 			this.menuOpen = false
 			this.$store
