@@ -306,6 +306,24 @@ export default {
 				this.loadingMore = false
 			}
 		},
+		hasDeleteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('d') !== -1
+		},
+		hasSeenAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('s') !== -1
+		},
+		hasArchiveAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+		},
 		async handleShortcut(e) {
 			const envelopes = this.envelopes
 			const currentId = parseInt(this.$route.params.threadId, 10)
@@ -350,6 +368,9 @@ export default {
 				})
 				break
 			case 'del':
+				if (!this.hasDeleteAcl()) {
+					return
+				}
 				logger.debug('deleting', { env })
 				this.onDelete(env.databaseId)
 				try {
@@ -374,6 +395,9 @@ export default {
 
 				break
 			case 'arch':
+				if (this.hasArchiveAcl()) {
+					return
+				}
 				logger.debug('archiving', { env })
 				this.onArchive(env.databaseId)
 				try {
@@ -389,7 +413,6 @@ export default {
 
 					showError(t('mail', 'Could not archive message'))
 				}
-
 				break
 			case 'flag':
 				logger.debug('flagging envelope via shortkey', { env })
@@ -406,6 +429,9 @@ export default {
 
 				break
 			case 'unseen':
+				if (this.hasSeenAcl()) {
+					return
+				}
 				logger.debug('marking message as seen/unseen via shortkey', { env })
 				this.$store.dispatch('toggleEnvelopeSeen', { envelope: env }).catch((error) =>
 					logger.error('could not mark envelope as seen/unseen via shortkey', {
@@ -413,6 +439,7 @@ export default {
 						error,
 					})
 				)
+
 				break
 			default:
 				logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
