@@ -617,6 +617,7 @@ export default {
 	height: auto;
 	z-index: 5;
 	right: 45px;
+	left: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
