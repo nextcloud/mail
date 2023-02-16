@@ -423,7 +423,7 @@ export default {
 				this.message = await this.$store.dispatch('fetchMessage', this.envelope.databaseId)
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message: this.message })
 
-				if (!this.envelope.flags.seen) {
+				if (!this.envelope.flags.seen && this.hasSeenAcl) {
 					logger.info('Starting timer to mark message as seen/read')
 					this.seenTimer = setTimeout(() => {
 						this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
