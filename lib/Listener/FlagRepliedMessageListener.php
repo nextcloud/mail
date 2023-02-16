@@ -83,6 +83,10 @@ class FlagRepliedMessageListener implements IEventListener {
 			foreach ($messages as $message) {
 				try {
 					$mailbox = $this->mailboxMapper->findById($message->getMailboxId());
+					//ignore read-only mailboxes
+					if ($mailbox->getMyAcls() !== null && !strpos($mailbox->getMyAcls(), "w")) {
+						continue;
+					}
 					// ignore drafts and sent
 					if ($mailbox->getSpecialUse() === '["sent"]' || $mailbox->getSpecialUse() === '["drafts"]') {
 						continue;
