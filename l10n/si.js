@@ -41,8 +41,8 @@ OC.L10N.register(
     "Certificate" : "සහතිකය",
     "Private key" : "පුද්ගලික යතුර",
     "Back" : "ආපසු",
-    "All" : "සියල්ල",
     "Archive" : "සංරක්ෂණය",
+    "All" : "සියල්ල",
     "Favorites" : "ප්‍රියතම"
 },
 "nplurals=2; plural=(n != 1);");
