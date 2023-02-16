@@ -6,6 +6,7 @@
 			envelopeId: data.databaseId,
 			draggableLabel,
 			selectedEnvelopes,
+			isDraggable,
 		}"
 		class="list-item-style envelope"
 		:class="{seen: data.flags.seen, draft, selected: selected}"
@@ -456,6 +457,9 @@ export default {
 				label += ` (${sender})`
 			}
 			return label
+		},
+		isDraggable() {
+			return this.hasDeleteAcl
 		},
 		/**
 		 * Subject of envelope or "No Subject".

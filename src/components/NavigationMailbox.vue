@@ -379,7 +379,7 @@ export default {
 			return this.$route.params.mailboxId === this.mailbox.databaseId
 		},
 		isValidDropTarget() {
-			if (this.isActive) {
+			if (this.isActive || !this.hasInsertAcl) {
 				return false
 			}
 			return this.isDroppableSpecialMailbox || (!this.mailbox.specialRole && !this.account.isUnified)
@@ -410,6 +410,12 @@ export default {
 
 			return this.mailbox.myAcls.indexOf('x') !== -1
 				&& parent.myAcls.indexOf('k') !== -1
+		},
+		hasInsertAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('i') !== -1
 		},
 		hasSeenAcl() {
 			if (!this.mailbox.myAcls) {
