@@ -30,6 +30,9 @@ export class DraggableEnvelope {
 	}
 
 	onDragStart(event) {
+		if (!this.options.isDraggable) {
+			return
+		}
 		const { accountId, mailboxId, selectedEnvelopes } = this.options
 
 		event.dataTransfer.clearData()
