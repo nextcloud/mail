@@ -152,7 +152,8 @@
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
+				<ActionButton v-if="hasDeleteAcl"
+					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
 						<OpenInNewIcon
