@@ -71,6 +71,7 @@ import IconFolder from 'vue-material-design-icons/Folder'
 
 import { translate as t } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
+import { mailboxHasRights } from '../util/acl'
 
 export default {
 	name: 'MailboxPicker',
@@ -135,9 +136,9 @@ export default {
 		},
 		filteredMailboxes() {
 			if (this.pickedMailbox) {
-				return this.mailboxes.filter(mailbox => mailbox.databaseId !== this.pickedMailbox.databaseId)
+				return this.mailboxes.filter(mailbox => mailbox.databaseId !== this.pickedMailbox.databaseId && mailboxHasRights(mailbox, 'k'))
 			}
-			return this.mailboxes
+			return this.mailboxes.filter(mailbox => mailboxHasRights(mailbox, 'i'))
 		},
 	},
 	methods: {
