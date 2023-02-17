@@ -84,7 +84,9 @@
 						isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
 					}}
 				</ActionButton>
-				<ActionButton :close-after-click="true"
+				<ActionButton
+					v-if="hasDeleteAcl"
+					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
 						<OpenInNewIcon
@@ -345,6 +347,12 @@ export default {
 				return true
 			}
 			return this.mailbox.myAcls.indexOf('w') !== -1
+		},
+		hasDeleteAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
 		},
 	},
 	methods: {
