@@ -88,7 +88,7 @@ class FlagRepliedMessageListener implements IEventListener {
 						continue;
 					}
 					// ignore drafts and sent
-					if ($mailbox->getSpecialUse() === '["sent"]' || $mailbox->getSpecialUse() === '["drafts"]') {
+					if ($mailbox->isSpecialUse('sent') || $mailbox->isSpecialUse('drafts')) {
 						continue;
 					}
 					// Mark all other mailboxes that contain the message with the same imap message id as replied
