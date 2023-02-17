@@ -8,7 +8,6 @@
 			"bamarni/composer-bin-plugin": true
 		},
 		"optimize-autoloader": true,
-		"classmap-authoritative": true,
 		"autoloader-suffix": "Mail"
 	},
 	"require": {
