@@ -93,7 +93,7 @@ class SynchronizerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testSyncChunked(): void {
+	public function testSyncRange(): void {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
 		$request = $this->createMock(Request::class);
 		$request->method('getMailbox')
@@ -112,7 +112,45 @@ class SynchronizerTest extends TestCase {
 			->with('QRESYNC')
 			->willReturn(false);
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
-		$imapClient->expects($this->exactly(3))
+		$imapClient->expects(self::once())
+			->method('sync')
+			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
+			->willReturn($hordeSync);
+		$newMessages = $changedMessages = $vanishedMessageUids = [];
+		$hordeSync->expects($this->any())
+			->method('__get')
+			->willReturn(new Horde_Imap_Client_Ids([]));
+		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids);
+
+		$response = $this->synchronizer->sync(
+			$imapClient,
+			$request,
+			Horde_Imap_Client::SYNC_VANISHEDUIDS
+		);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testSyncRawUids(): void {
+		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		$request = $this->createMock(Request::class);
+		$request->method('getMailbox')
+			->willReturn('inbox');
+		$request->method('getToken')
+			->willReturn('123456');
+		$request->method('getUids')
+			->willReturn(range(1, 9999, 4));
+		$capabilities = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$imapClient->expects(self::once())
+			->method('__get')
+			->with('capability')
+			->willReturn($capabilities);
+		$capabilities->expects(self::once())
+			->method('isEnabled')
+			->with('QRESYNC')
+			->willReturn(false);
+		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
+		$imapClient->expects(self::once())
 			->method('sync')
 			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
 			->willReturn($hordeSync);
