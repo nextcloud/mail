@@ -99,6 +99,7 @@
     "Message {id} could not be found" : "Meddelandet {id} hittades inte",
     "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
     "Choose a file to share as a link" : "Välj en fil att dela som länk",
+    "_{count} attachment_::_{count} attachments_" : ["{count} bilaga","{count} bilagor"],
     "No message found yet" : "Inget meddelande har ännu hittats",
     "Set up an account" : "Skapa ett konto",
     "Plain text" : "Oformaterad text",
