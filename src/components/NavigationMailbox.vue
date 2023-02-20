@@ -128,7 +128,7 @@
 				</template>
 				{{ t('mail', 'Saving') }}
 			</ActionText>
-			<ActionButton v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes"
+			<ActionButton v-if="!account.isUnified && hasDelimiter && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
 				:id="genId(mailbox)"
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
@@ -136,7 +136,7 @@
 					<IconExternal
 						:size="20" />
 				</template>
-				{{ t('mail', 'Move') }}
+				{{ t('mail', 'Move mailbox') }}
 			</ActionButton>
 			<ActionButton
 				v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
