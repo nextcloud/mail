@@ -236,11 +236,11 @@ to {
 	&__border {
 		border-top: 1px solid var(--color-background-darker);
 	}
-}
-
-:deep(.app-navigation-entry) {
-	&.active {
-		background-color: transparent !important;
+	:deep(.app-navigation-entry) {
+		&.active {
+			background-color: transparent !important;
+		}
 	}
 }
+
 </style>
