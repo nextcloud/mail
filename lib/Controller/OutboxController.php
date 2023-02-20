@@ -82,9 +82,9 @@ class OutboxController extends Controller {
 	 * @param string $body
 	 * @param string $editorBody
 	 * @param bool $isHtml
-	 * @param array $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
-	 * @param array $cc
-	 * @param array $bcc
+	 * @param array<int, string[]> $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
+	 * @param array<int, string[]> $cc
+	 * @param array<int, string[]> $bcc
 	 * @param array $attachments
 	 * @param int|null $draftId
 	 * @param int|null $aliasId

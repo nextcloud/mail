@@ -556,15 +556,11 @@ class MailTransmissionTest extends TestCase {
 			'name' => 'Emily',
 			'alias' => 'Emmerlie'
 		]);
-		$this->aliasService->expects(self::once())
-			->method('find')
-			->with($message->getAliasId(), $mailAccount->getUserId())
-			->willReturn($alias);
 
 		$replyMessage = new DbMessage();
 		$replyMessage->setMessageId('abc');
 
-		$this->transmission->sendLocalMessage(new Account($mailAccount), $message, true);
+		$this->transmission->saveLocalDraft(new Account($mailAccount), $message);
 	}
 
 	public function testSendLocalDraftNoDraftsMailbox(): void {
@@ -605,6 +601,6 @@ class MailTransmissionTest extends TestCase {
 		$replyMessage->setMessageId('abc');
 
 		$this->expectException(ClientException::class);
-		$this->transmission->sendLocalMessage(new Account($mailAccount), $message, true);
+		$this->transmission->sendLocalMessage(new Account($mailAccount), $message);
 	}
 }
