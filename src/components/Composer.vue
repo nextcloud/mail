@@ -171,7 +171,7 @@
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
 		</div>
-		<div v-if="mailvelope.keysMissing.length" class="warning noreply-warning">
+		<div v-if="encrypt && mailvelope.keysMissing.length" class="warning noreply-warning">
 			{{
 				t('mail', 'The following recipients do not have a PGP key: {recipients}.', {
 					recipients: mailvelope.keysMissing.join(', '),
