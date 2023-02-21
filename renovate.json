@@ -7,10 +7,11 @@
 	],
 	"timezone": "Europe/Vienna",
 	"schedule": [
-		"before 5am every weekday"
+		"before 5am on wednesday"
 	],
 	"reviewers": [
-		"@ChristophWurst"
+		"@ChristophWurst",
+		"@GretaD"
 	],
 	"labels": [
 		"dependencies"
@@ -19,7 +20,8 @@
 	"rebaseWhen": "conflicted",
 	"ignoreUnstable": false,
 	"baseBranches": [
-		"stable2.1",
+		"main",
+		"stable2.2",
 		"stable1.15"
 	],
 	"enabledManagers": [
@@ -33,15 +35,12 @@
 	"packageRules": [
 		{
 			"enabled": false,
-			"groupName": "everything",
-			"matchManagers": [
-				"composer",
-				"npm"
-			],
-			"matchPackagePatterns": [
-				"*"
-			],
-			"separateMajorMinor": false
+			"matchBaseBranches": "stable(.)+"
+		},
+		{
+			"matchBaseBranches": ["main"],
+			"matchDepTypes": ["devDependencies"],
+			"extends": ["schedule:monthly"]
 		}
 	],
 	"vulnerabilityAlerts": {
