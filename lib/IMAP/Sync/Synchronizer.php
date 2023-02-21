@@ -32,8 +32,6 @@ use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\IMAP\MessageMapper;
-use function array_chunk;
-use function array_merge;
 
 class Synchronizer {
 	/**
@@ -134,7 +132,7 @@ class Synchronizer {
 
 		// Without QRESYNC we need to specify the known ids
 		$uids = $request->getUids();
-		if(count($uids) < self::UID_CHUNK_SIZE) {
+		if (count($uids) < self::UID_CHUNK_SIZE) {
 			return $imapClient->sync($mailbox, $request->getToken(), [
 				'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
 				'ids' => new Horde_Imap_Client_Ids($uids),
@@ -167,7 +165,7 @@ class Synchronizer {
 
 		// Without QRESYNC we need to specify the known ids
 		$uids = $request->getUids();
-		if(count($uids) < self::UID_CHUNK_SIZE) {
+		if (count($uids) < self::UID_CHUNK_SIZE) {
 			return $imapClient->sync($mailbox, $request->getToken(), [
 				'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
 				'ids' => new Horde_Imap_Client_Ids($uids),
