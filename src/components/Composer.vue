@@ -172,6 +172,13 @@
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
 		</div>
+		<div v-if="wantsSmimeEncrypt && missingSmimeCertificatesForRecipients.length" class="warning noreply-warning">
+			{{
+				t('mail', 'The following recipients do not have a S/MIME certificate: {recipients}.', {
+					recipients: missingSmimeCertificatesForRecipients.join(', '),
+				})
+			}}
+		</div>
 		<div v-if="encrypt && mailvelope.keysMissing.length" class="warning noreply-warning">
 			{{
 				t('mail', 'The following recipients do not have a PGP key: {recipients}.', {
@@ -304,11 +311,19 @@
 							:checked="wantsSmimeSign"
 							@check="wantsSmimeSign = true"
 							@uncheck="wantsSmimeSign = false">
-							{{ t('mail', 'Sign message via S/MIME') }}
+							{{ t('mail', 'Sign message with S/MIME') }}
+						</ActionCheckbox>
+						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
+							:checked="wantsSmimeEncrypt"
+							:disabled="encrypt"
+							@check="wantsSmimeEncrypt = true"
+							@uncheck="wantsSmimeEncrypt = false">
+							{{ t('mail', 'Encrypt message with S/MIME') }}
 						</ActionCheckbox>
 						<ActionCheckbox
 							v-if="mailvelope.available"
 							:checked="encrypt"
+							:disabled="wantsSmimeEncrypt"
 							@change="isActionsOpen = false"
 							@check="encrypt = true"
 							@uncheck="encrypt = false">
@@ -414,7 +429,7 @@ import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
 import IconHtml from 'vue-material-design-icons/ImageSizeSelectActual'
 import IconClose from 'vue-material-design-icons/Close'
-import { showError } from '@nextcloud/dialogs'
+import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 
@@ -552,6 +567,14 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		smimeSign: {
+			type: Boolean,
+			default: false,
+		},
+		smimeEncrypt: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -600,7 +623,8 @@ export default {
 				},
 			},
 			autoLimit: true,
-			wantsSmimeSign: false,
+			wantsSmimeSign: this.smimeSign,
+			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
 		}
 	},
@@ -660,6 +684,10 @@ export default {
 			return this.replyTo !== undefined
 		},
 		canSend() {
+			if (this.wantsSmimeEncrypt && (!this.smimeCertificateForCurrentAlias || this.missingSmimeCertificatesForRecipients.length)) {
+				return false
+			}
+
 			if (this.encrypt && this.mailvelope.keysMissing.length) {
 				return false
 			}
@@ -670,14 +698,24 @@ export default {
 			return this.editorMode === EDITOR_MODE_TEXT
 		},
 		submitButtonTitle() {
+			if (this.wantsSmimeEncrypt) {
+				if (this.sendAtVal) {
+					return t('mail', 'Encrypt with S/MIME and send later') + ` ${this.convertToLocalDate(this.sendAtVal)}`
+				}
+				return t('mail', 'Encrypt with S/MIME and send')
+			}
+
+			if (this.mailvelope.available && this.encrypt) {
+				if (this.sendAtVal) {
+					return t('mail', 'Encrypt with Mailvelope and send later') + ` ${this.convertToLocalDate(this.sendAtVal)}`
+				}
+				return t('mail', 'Encrypt with Mailvelope and send')
+			}
+
 			if (this.sendAtVal) {
 				return t('mail', 'Send later') + ` ${this.convertToLocalDate(this.sendAtVal)}`
 			}
-			if (!this.mailvelope.available) {
-				return t('mail', 'Send')
-			}
-
-			return this.encrypt ? t('mail', 'Encrypt and send') : t('mail', 'Send unencrypted')
+			return t('mail', 'Send')
 		},
 		dateTomorrowMorning() {
 			const today = new Date()
@@ -743,20 +781,43 @@ export default {
 				return undefined
 			}
 
-			const certificateId = this.selectedAlias.smimeCertificateId
-			if (!certificateId) {
-				return undefined
-			}
-			return this.$store.getters.getSmimeCertificate(certificateId)
+			return this.smimeCertificateForAlias(this.selectedAlias)
 		},
 
 		/**
-		 * Whether the outgoing messge should be signed via S/MIME.
+		 * Whether the outgoing message should be signed with S/MIME.
 		 *
 		 * @return {boolean} True if the message should be signed
 		 */
-		smimeSign() {
+		shouldSmimeSign() {
 			return this.wantsSmimeSign && !!this.smimeCertificateForCurrentAlias
+		},
+
+		/**
+		 * Whether the outgoing message should be encrypted with S/MIME.
+		 *
+		 * @return {boolean} True if the message should be encrypted
+		 */
+		shouldSmimeEncrypt() {
+			return this.wantsSmimeEncrypt && !!this.smimeCertificateForCurrentAlias && this.missingSmimeCertificatesForRecipients.length === 0
+		},
+
+		/**
+		 * Return a list of recipients without a matching S/MIME certificate.
+		 *
+		 * @return {Array} Recipients without matching certificate
+		 */
+		missingSmimeCertificatesForRecipients() {
+			const missingCertificates = []
+
+			this.allRecipients.forEach((recipient) => {
+				const recipientCertificate = this.$store.getters.getSmimeCertificateByEmail(recipient.email)
+				if (!recipientCertificate) {
+					missingCertificates.push(recipient.email)
+				}
+			})
+
+			return missingCertificates
 		},
 	},
 	watch: {
@@ -910,7 +971,8 @@ export default {
 				isHtml: !this.encrypt && !this.editorPlainText,
 				requestMdn: this.requestMdn,
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
-				smimeSign: this.smimeSign,
+				smimeSign: this.shouldSmimeSign,
+				smimeEncrypt: this.shouldSmimeEncrypt,
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
 			}
 		},
@@ -976,6 +1038,14 @@ export default {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
 			this.changeSignature = true
+
+			if (this.wantsSmimeSign || this.wantsSmimeEncrypt) {
+				if (!this.smimeCertificateForAlias(alias)) {
+					this.wantsSmimeSign = false
+					this.wantsSmimeEncrypt = false
+					showWarning(t('mail', 'Sign or Encrypt with S/MIME was selected, but we don\'t have a certificate for the selected alias. The message will not be signed or encrypted.'))
+				}
+			}
 
 			/**
 			 * Alias change may change the editor mode as well.
@@ -1179,6 +1249,19 @@ export default {
 					}
 				},
 			)
+		},
+		/**
+		 * The S/MIME certificate object for an alias/account.
+		 *
+		 * @param {object} alias object
+		 * @return {object|undefined} S/MIME certificate of account or alias if one is selected
+		 */
+		smimeCertificateForAlias(alias) {
+			const certificateId = alias.smimeCertificateId
+			if (!certificateId) {
+				return undefined
+			}
+			return this.$store.getters.getSmimeCertificate(certificateId)
 		},
 	},
 }

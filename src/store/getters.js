@@ -129,5 +129,6 @@ export const getters = {
 	}),
 	getSmimeCertificates: (state) => state.smimeCertificates,
 	getSmimeCertificate: (state) => (id) => state.smimeCertificates.find((cert) => cert.id === id),
+	getSmimeCertificateByEmail: (state) => (email) => state.smimeCertificates.find((cert) => cert.emailAddress === email),
 	getNcVersion: (state) => state.preferences?.ncVersion,
 }

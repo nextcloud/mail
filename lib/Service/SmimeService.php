@@ -34,11 +34,14 @@ use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Headers_ContentParam_ContentType;
 use Horde_Mime_Part;
+use OCA\Mail\Address;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeCertificateParserException;
 use OCA\Mail\Exception\SmimeDecryptException;
+use OCA\Mail\Exception\SmimeEncryptException;
 use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\Model\EnrichedSmimeCertificate;
 use OCA\Mail\Model\SmimeCertificateInfo;
@@ -259,6 +262,38 @@ class SmimeService {
 				0,
 				$e,
 			);
+		}
+	}
+
+	/**
+	 * Get all S/MIME certificates belonging to an address list
+	 *
+	 * @param AddressList $addressList
+	 * @param string $userId
+	 * @return SmimeCertificate[]
+	 *
+	 * @throws ServiceException If the database query fails or converting an email address failed
+	 */
+	public function findCertificatesByAddressList(AddressList $addressList, string $userId): array {
+		$emailAddresses = [];
+
+		foreach ($addressList->iterate() as $address) {
+			/** @var Address $address */
+			try {
+				$emailAddress = $address->getEmail();
+			} catch (\Exception $e) {
+				throw new ServiceException($e->getMessage(), 0, $e);
+			}
+
+			if (!empty($emailAddress)) {
+				$emailAddresses[] = $emailAddress;
+			}
+		}
+
+		try {
+			return $this->certificateMapper->findAllByEmailAddresses($userId, $emailAddresses);
+		} catch (\OCP\DB\Exception $e) {
+			throw new ServiceException('Failed to fetch certificates by email addresses: ' . $e->getMessage(), 0, $e);
 		}
 	}
 
@@ -517,8 +552,58 @@ class SmimeService {
 		/** @var Horde_Mime_Headers_ContentParam_ContentType $contentType */
 		$contentType = $headers['content-type'];
 		return $contentType->ptype === 'application'
-			&& $contentType->stype === 'pkcs7-mime'
+			&& str_ends_with($contentType->stype, 'pkcs7-mime')
 			&& isset($contentType['smime-type'])
 			&& $contentType['smime-type'] === 'enveloped-data';
+	}
+
+	/**
+	 * Encrypt a MIME part using the given certificates.
+	 *
+	 * @param Horde_Mime_Part $part
+	 * @param SmimeCertificate[] $certificates
+	 * @return Horde_Mime_Part New MIME part containing the encrypted message and the signature
+	 *
+	 * @throws ServiceException If decrypting the certificates fails
+	 * @throws SmimeEncryptException If encrypting the message fails
+	 */
+	public function encryptMimePart(Horde_Mime_Part  $part, array $certificates): Horde_Mime_Part {
+		try {
+			/** @var string[] $decryptedCertificates */
+			$decryptedCertificates = array_map(function (SmimeCertificate $certificate) {
+				return $this->crypto->decrypt($certificate->getCertificate());
+			}, $certificates);
+		} catch (Exception $e) {
+			throw new ServiceException('Failed to decrypt certificate: ' . $e->getMessage(), 0, $e);
+		}
+
+		$inPath = $this->tempManager->getTemporaryFile();
+		$outPath = $this->tempManager->getTemporaryFile();
+		file_put_contents($inPath, $part->toString([
+			'canonical' => true,
+			'headers' => true,
+		]));
+
+		/**
+		 * Content-Type is application/x-pkcs7-mime by default.
+		 * The flag PKCS7_NOOLDMIMETYPE / 0x400 let openssl use application/pkcs7-mime as Content-Type.
+		 * PKCS7_NOOLDMIMETYPE is not available as constant in PHP.
+		 *
+		 * https://github.com/openssl/openssl/blob/9a2f78e14a67eeaadefc77d05f0778fc9684d26c/include/openssl/pkcs7.h.in#L211
+		 * https://github.com/php/php-src/blob/51b70e4414b43a571ebd743d752cf4cbd1556eb5/ext/openssl/openssl_arginfo.h#L572-L580
+		 */
+		if (!openssl_pkcs7_encrypt($inPath, $outPath, $decryptedCertificates, [], 0x400, OPENSSL_CIPHER_AES_128_CBC)) {
+			throw new SmimeEncryptException('Failed to encrypt MIME part');
+		}
+
+		try {
+			$parsedPart = Horde_Mime_Part::parseMessage(file_get_contents($outPath), [
+				'forcemime' => true,
+			]);
+		} catch (Horde_Mime_Exception $e) {
+			throw new SmimeEncryptException('Failed to parse signed MIME part: ' . $e->getMessage(), 0, $e);
+		}
+
+		return $parsedPart;
 	}
 }

@@ -49,6 +49,8 @@
 			:can-save-draft="canSaveDraft"
 			:saving-draft="savingDraft"
 			:draft-saved="draftSaved"
+			:smime-sign="composerData.smimeSign"
+			:smime-encrypt="composerData.smimeEncrypt"
 			@draft="onDraft"
 			@discard-draft="discardDraft"
 			@upload-attachment="onAttachmentUploading"

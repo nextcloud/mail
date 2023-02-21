@@ -27,12 +27,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 
@@ -40,16 +43,19 @@ class OutboxController extends Controller {
 	private OutboxService $service;
 	private string $userId;
 	private AccountService $accountService;
+	private SmimeService $smimeService;
 
 	public function __construct(string $appName,
 								$UserId,
 								IRequest $request,
 								OutboxService $service,
-								AccountService $accountService) {
+								AccountService $accountService,
+								SmimeService $smimeService) {
 		parent::__construct($appName, $request);
 		$this->userId = $UserId;
 		$this->service = $service;
 		$this->accountService = $accountService;
+		$this->smimeService = $smimeService;
 	}
 
 	/**
@@ -92,24 +98,28 @@ class OutboxController extends Controller {
 	 * @param int|null $sendAt
 	 *
 	 * @return JsonResponse
+	 * @throws DoesNotExistException
+	 * @throws ClientException
 	 */
 	#[TrapError]
 	public function create(
-		int     $accountId,
-		string  $subject,
-		string  $body,
-		string  $editorBody,
-		bool    $isHtml,
-		bool    $smimeSign,
-		array   $to = [],
-		array   $cc = [],
-		array   $bcc = [],
-		array   $attachments = [],
-		?int    $draftId = null,
-		?int    $aliasId = null,
+		int $accountId,
+		string $subject,
+		string $body,
+		string $editorBody,
+		bool $isHtml,
+		bool $smimeSign,
+		bool $smimeEncrypt,
+		array $to = [],
+		array $cc = [],
+		array $bcc = [],
+		array $attachments = [],
+		?int $draftId = null,
+		?int $aliasId = null,
 		?string $inReplyToMessageId = null,
-		?int    $smimeCertificateId = null,
-		?int    $sendAt = null): JsonResponse {
+		?int $smimeCertificateId = null,
+		?int $sendAt = null
+	): JsonResponse {
 		$account = $this->accountService->find($this->userId, $accountId);
 
 		if ($draftId !== null) {
@@ -127,7 +137,12 @@ class OutboxController extends Controller {
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
-		$message->setSmimeCertificateId($smimeCertificateId);
+		$message->setSmimeEncrypt($smimeEncrypt);
+
+		if (!empty($smimeCertificateId)) {
+			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
+			$message->setSmimeCertificateId($smimeCertificate->getId());
+		}
 
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 
@@ -154,20 +169,25 @@ class OutboxController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	public function update(int     $id,
-						   int     $accountId,
-						   string  $subject,
-						   string  $body,
-						   string  $editorBody,
-						   bool    $isHtml,
-						   bool    $failed = false,
-						   array   $to = [],
-						   array   $cc = [],
-						   array   $bcc = [],
-						   array   $attachments = [],
-						   ?int    $aliasId = null,
-						   ?string $inReplyToMessageId = null,
-						   ?int $sendAt = null): JsonResponse {
+	public function update(
+		int $id,
+		int $accountId,
+		string $subject,
+		string $body,
+		string $editorBody,
+		bool $isHtml,
+		bool $smimeSign,
+		bool $smimeEncrypt,
+		bool $failed = false,
+		array $to = [],
+		array $cc = [],
+		array $bcc = [],
+		array $attachments = [],
+		?int $aliasId = null,
+		?string $inReplyToMessageId = null,
+		?int $smimeCertificateId = null,
+		?int $sendAt = null
+	): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $accountId);
 
@@ -180,6 +200,13 @@ class OutboxController extends Controller {
 		$message->setFailed($failed);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
+		$message->setSmimeSign($smimeSign);
+		$message->setSmimeEncrypt($smimeEncrypt);
+
+		if (!empty($smimeCertificateId)) {
+			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
+			$message->setSmimeCertificateId($smimeCertificate->getId());
+		}
 
 		$message = $this->service->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 

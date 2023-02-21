@@ -100,4 +100,25 @@ class SmimeCertificateMapper extends QBMapper {
 
 		return $this->findEntities($qb);
 	}
+
+	/**
+	 * Find all S/MIME certificates by email addresses
+	 *
+	 * @param string $userId
+	 * @param string[] $emailAddresses
+	 * @return SmimeCertificate[]
+	 *
+	 * @throws \OCP\DB\Exception
+	 */
+	public function findAllByEmailAddresses(string $userId, array $emailAddresses): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId)),
+				$qb->expr()->in('email_address', $qb->createNamedParameter($emailAddresses, IQueryBuilder::PARAM_STR_ARRAY)),
+			);
+
+		return $this->findEntities($qb);
+	}
 }
