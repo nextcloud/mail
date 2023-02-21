@@ -98,6 +98,7 @@ OC.L10N.register(
     "Keep formatting" : "Продовжуйте форматувати",
     "Choose a file to add as attachment" : "Виберіть файл для вкладення",
     "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
+    "_{count} attachment_::_{count} attachments_" : ["{count} долучений файл","{count} долучені файли","{count} долучених файлів","{count} долучених файлів"],
     "Plain text" : "Простий текст",
     "Rich text" : "Текст з форматуванням",
     "No messages" : "Відсутні повідомлення",
