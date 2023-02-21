@@ -211,7 +211,7 @@ if [ ! -f ca.key ] || [ ! -f ca.crt ]; then
         -key ca.key \
         -out ca.crt \
         -days 3650 \
-        -subj "/CN=S\\/MIME CA"
+        -subj "/CN=0 S\\/MIME CA"
 fi
 
 # Generate client certificate
