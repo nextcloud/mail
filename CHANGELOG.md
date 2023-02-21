@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.15.2 - 2023-02-21
+### Fixed
+- Npm package updates
+
 ## 1.15.1 - 2023-01-04
 ### Fixed
 - Message preview text transfer decoding
