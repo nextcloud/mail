@@ -129,4 +129,5 @@ export const getters = {
 	}),
 	getSmimeCertificates: (state) => state.smimeCertificates,
 	getSmimeCertificate: (state) => (id) => state.smimeCertificates.find((cert) => cert.id === id),
+	getNcVersion: (state) => state.preferences?.ncVersion,
 }

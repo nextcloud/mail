@@ -228,6 +228,7 @@ class PageControllerTest extends TestCase {
 			->method('getSystemValue')
 			->willReturnMap([
 				['debug', false, true],
+				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
 		$this->config->expects($this->exactly(6))
@@ -266,10 +267,11 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(11))
+		$this->initialState->expects($this->exactly(12))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
+				['ncVersion', '26.0.0'],
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],

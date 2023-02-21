@@ -1,5 +1,6 @@
 <template>
 	<div class="message-composer">
+		<ReferencePickerModal v-if="isPickerAvailable && isPickerOpen" @submit="onPicked" @cancel="closePicker" />
 		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
@@ -243,7 +244,7 @@
 						</ActionButton>
 						<ActionButton @click="onAddCloudAttachment">
 							<template #icon>
-								<IconFolder :sizse="20" />
+								<IconFolder :size="20" />
 							</template>
 							{{
 								t('mail', 'Add attachment from Files')
@@ -255,6 +256,14 @@
 							</template>
 							{{
 								addShareLink
+							}}
+						</ActionButton>
+						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
+							<template #icon>
+								<IconPublic :size="20" />
+							</template>
+							{{
+								t('mail', 'Add link')
 							}}
 						</ActionButton>
 						<ActionButton
@@ -416,6 +425,9 @@ import MailvelopeEditor from './MailvelopeEditor'
 import { getMailvelope } from '../crypto/mailvelope'
 import { isPgpgMessage } from '../crypto/pgp'
 
+import '@nextcloud/vue-richtext/dist/style.css'
+import { ReferencePickerModal } from '@nextcloud/vue-richtext'
+
 import Send from 'vue-material-design-icons/Send'
 import SendClock from 'vue-material-design-icons/SendClock'
 import moment from '@nextcloud/moment'
@@ -456,6 +468,7 @@ export default {
 		UnfoldLessHorizontal,
 		IconHtml,
 		IconClose,
+		ReferencePickerModal,
 	},
 	props: {
 		fromAccount: {
@@ -585,12 +598,16 @@ export default {
 			},
 			autoLimit: true,
 			wantsSmimeSign: false,
+			isPickerOpen: false,
 		}
 	},
 	computed: {
 		...mapGetters([
 			'isScheduledSendingDisabled',
 		]),
+		isPickerAvailable() {
+			return parseInt(this.$store.getters.getNcVersion) >= 26
+		},
 		aliases() {
 			let cnt = 0
 			const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
@@ -817,6 +834,12 @@ export default {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
+		openPicker() {
+			this.isPickerOpen = true
+		},
+		closePicker() {
+			this.isPickerOpen = false
+		},
 		setAlias() {
 			const previous = this.selectedAlias
 			if (this.fromAccount && this.fromAlias) {
@@ -921,6 +944,10 @@ export default {
 			)
 
 			this.changeSignature = false
+		},
+		onPicked(content) {
+			this.closePicker()
+			this.bus.$emit('append-to-body-at-cursor', content)
 		},
 		onEditorInput(text) {
 			this.bodyVal = text
