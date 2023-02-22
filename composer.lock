@@ -830,16 +830,16 @@
         },
         {
             "name": "bytestream/horde-imap-client",
-            "version": "v2.31.4",
+            "version": "v2.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Imap_Client.git",
-                "reference": "6c7ff8894da58b12ff39a9ccae655a07d5f571aa"
+                "reference": "de1d7f0e2d115faf5004bb052880a958d108b698"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/6c7ff8894da58b12ff39a9ccae655a07d5f571aa",
-                "reference": "6c7ff8894da58b12ff39a9ccae655a07d5f571aa",
+                "url": "https://api.github.com/repos/bytestream/Imap_Client/zipball/de1d7f0e2d115faf5004bb052880a958d108b698",
+                "reference": "de1d7f0e2d115faf5004bb052880a958d108b698",
                 "shasum": ""
             },
             "require": {
@@ -881,9 +881,9 @@
             "description": "Horde IMAP client library",
             "homepage": "https://www.horde.org/libraries/Horde_Imap_Client",
             "support": {
-                "source": "https://github.com/bytestream/Imap_Client/tree/v2.31.4"
+                "source": "https://github.com/bytestream/Imap_Client/tree/v2.32.0"
             },
-            "time": "2022-09-15T11:49:44+00:00"
+            "time": "2023-02-06T12:59:15+00:00"
         },
         {
             "name": "bytestream/horde-listheaders",
