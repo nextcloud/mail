@@ -167,7 +167,7 @@
 			</ActionCheckbox>
 
 			<ActionButton
-				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified"
+				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasClearMailboxAcl"
 				:close-after-click="true"
 				@click="clearMailbox">
 				<template #icon>
@@ -434,6 +434,12 @@ export default {
 				return true
 			}
 			return this.mailbox.myAcls.indexOf('x') !== -1
+		},
+		hasClearMailboxAcl() {
+			if (!this.mailbox.myAcls) {
+				return true
+			}
+			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
 		},
 	},
 	mounted() {
