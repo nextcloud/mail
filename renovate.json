@@ -34,6 +34,13 @@
 	],
 	"packageRules": [
 		{
+			"matchUpdateTypes": ["minor", "patch"],
+			"matchCurrentVersion": "!/^0/",
+			"automerge": true,
+			"automergeType": "pr",
+			"platformAutomerge": true
+		},
+		{
 			"enabled": false,
 			"matchBaseBranches": "/^stable(.)+/"
 		},
