@@ -107,6 +107,7 @@ OC.L10N.register(
     "Discard & close draft" : "Descarta i tanca l'esborrany",
     "Upload attachment" : "Carrega l'adjunt",
     "Add attachment from Files" : "Afegeix adjunts des dels fitxers",
+    "Add link" : "Afegeix un enllaç",
     "Send later" : "Envia més tard",
     "Enable formatting" : "Habilita formateig",
     "Disable formatting" : "Desactiva el format",

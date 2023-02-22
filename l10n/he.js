@@ -72,6 +72,7 @@ OC.L10N.register(
     "Draft saved" : "הטיוטה נשמרה",
     "Upload attachment" : "העלאת קובץ מצורף",
     "Add attachment from Files" : "הוספת קובץ מצורף מהקבצים",
+    "Add link" : "הוספת קישור",
     "Enable formatting" : "הפעלת עיצוב",
     "Request a read receipt" : "בקשת אישור קריאה",
     "Encrypt message with Mailvelope" : "הצפנת הודעה עם Mailvelope",

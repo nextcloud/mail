@@ -65,6 +65,7 @@ OC.L10N.register(
     "Draft saved" : "Нацрт сачуван",
     "Upload attachment" : "Закачи прилог",
     "Add attachment from Files" : "Додај прилог из фајлова",
+    "Add link" : "Додај везу",
     "Enable formatting" : "Укључи форматирање",
     "Encrypt message with Mailvelope" : "Шифруј поруку са Mailvelope-ом",
     "Tomorrow morning" : "Сутра ујутру",

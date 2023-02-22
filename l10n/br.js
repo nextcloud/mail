@@ -16,6 +16,7 @@ OC.L10N.register(
     "Password required" : "Ger-tremen ret",
     "Change name" : "Cheñch env",
     "Cancel" : "Arrest",
+    "Add link" : "Ouzhpnna ul liamm",
     "Send" : "Kas",
     "Set up an account" : "Staliañ ur c'hont",
     "Unfavorite" : "Digaretañ",

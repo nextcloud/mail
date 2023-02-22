@@ -67,6 +67,7 @@ OC.L10N.register(
     "Draft saved" : "Bản nháp đã được lưu",
     "Upload attachment" : "Tải lên một đính kèm",
     "Add attachment from Files" : "Thêm tệp đính kèm từ Tệp",
+    "Add link" : "Thêm đường dẫn",
     "Enable formatting" : "Bật định dạng",
     "Request a read receipt" : "Yêu cầu xác nhận đã đọc",
     "Encrypt message with Mailvelope" : "Mã hóa thư bằng Mailvelope",

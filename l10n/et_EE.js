@@ -26,6 +26,7 @@ OC.L10N.register(
     "Signature" : "Allkiri",
     "Cancel" : "Loobu",
     "Subject" : "Teema",
+    "Add link" : "Lisa link",
     "Enter a date" : "Sisesta kuupäev",
     "Send" : "Saada",
     "Choose a file to add as attachment" : "Vali fail, mida manustada",

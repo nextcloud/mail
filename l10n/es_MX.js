@@ -33,6 +33,7 @@ OC.L10N.register(
     "Subject" : "Asunto",
     "Upload attachment" : "Cargar adjunto",
     "Add attachment from Files" : "Agregar adjunto desd Archivos",
+    "Add link" : "Añadir liga",
     "Send" : "Enviar",
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
     "Unfavorite" : "Quitar favorito",

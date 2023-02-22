@@ -57,6 +57,7 @@ OC.L10N.register(
     "Draft saved" : "Malneto konservita",
     "Upload attachment" : "Alŝuti kunsendaĵon",
     "Add attachment from Files" : "Aldoni kunsendaĵojn el „Dosieroj“",
+    "Add link" : "Aldoni ligilon",
     "Enable formatting" : "Ebligi formatado",
     "Enter a date" : "Entajpu daton",
     "Send" : "Sendi",

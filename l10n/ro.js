@@ -69,6 +69,7 @@ OC.L10N.register(
     "Discard & close draft" : "Renunță și închide mesajul",
     "Upload attachment" : "Încarcă atașament",
     "Add attachment from Files" : "Atașează din Fișiere",
+    "Add link" : "Adaugă link",
     "Send later" : "Trimite mai târziu",
     "Enable formatting" : "Permite formatarea",
     "Encrypt message with Mailvelope" : "Criptează mesajul cu Mailvelope",

@@ -96,6 +96,7 @@ OC.L10N.register(
     "Discard & close draft" : "Opusti in zapri osnutek",
     "Upload attachment" : "Pošlji prilogo",
     "Add attachment from Files" : "Dodaj prilogo iz Datotek",
+    "Add link" : "Dodaj povezavo",
     "Send later" : "Pošlji kasneje",
     "Enable formatting" : "Omogoči oblikovanje",
     "Disable formatting" : "Onemogoči oblikovanje",

@@ -109,6 +109,7 @@ OC.L10N.register(
     "Discard & close draft" : "Hylkää ja sulje luonnos",
     "Upload attachment" : "Lähetä liite",
     "Add attachment from Files" : "Lisää liitteitä tiedostosovelluksesta",
+    "Add link" : "Lisää linkki",
     "Send later" : "Lähetä myöhemmin",
     "Enable formatting" : "Käytä muotoilua",
     "Disable formatting" : "Poista muotoilu käytöstä",

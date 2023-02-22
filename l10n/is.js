@@ -65,6 +65,7 @@ OC.L10N.register(
     "Draft saved" : "Drög vistuð",
     "Upload attachment" : "Senda inn viðhengi",
     "Add attachment from Files" : "Bæta við viðhengi úr skrám",
+    "Add link" : "Bæta við tengli",
     "Enable formatting" : "Virkja sniðmótun",
     "Encrypt message with Mailvelope" : "Dulrita skilaboð með Mailvelope",
     "Send" : "Senda",

@@ -57,6 +57,7 @@ OC.L10N.register(
     "Draft saved" : "پیش نویس ذخیره شد",
     "Upload attachment" : "پیوست را بارگیری کنید",
     "Add attachment from Files" : "پیوست را از پرونده ها اضافه کنید",
+    "Add link" : "افزودن لینک",
     "Enable formatting" : "قالب بندی را فعال کنید",
     "Enter a date" : "تاریخ را وارد کنید",
     "Send" : "ارسال",

@@ -73,6 +73,7 @@ OC.L10N.register(
     "Draft saved" : "下書きを保存しました。",
     "Upload attachment" : "添付ファイルをアップロードする",
     "Add attachment from Files" : "ファイルから添付ファイルの追加",
+    "Add link" : "リンクを追加",
     "Enable formatting" : "フォーマットを有効にする",
     "Encrypt message with Mailvelope" : "Mailvelopeでメッセージを暗号化",
     "Enter a date" : "日付を入力してください",

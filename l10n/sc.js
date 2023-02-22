@@ -78,6 +78,7 @@ OC.L10N.register(
     "Draft saved" : "Brutacòpia sarvada",
     "Upload attachment" : "Càrriga alligongiadu",
     "Add attachment from Files" : "Agiunghe alligongiadu dae Archìvios",
+    "Add link" : "Agiunghe ligòngiu",
     "Enable formatting" : "Ativa formatatzione",
     "Request a read receipt" : "Pedi una cunfirma de letura",
     "Encrypt message with Mailvelope" : "Tzifra messàgiu cun Mailvelope",

@@ -31,6 +31,7 @@ OC.L10N.register(
     "Subject" : "Temë",
     "Upload attachment" : "Ngarko bashkëngjitje",
     "Add attachment from Files" : "Shto bashkëlidhje nga Dosjet",
+    "Add link" : "Shto link",
     "Send" : "Dërgo",
     "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje",
     "Unfavorite" : "Jo i/e preferuar",

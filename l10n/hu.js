@@ -117,6 +117,7 @@ OC.L10N.register(
     "Discard & close draft" : "Piszkozat elvetése és bezárása",
     "Upload attachment" : "Melléklet feltöltése",
     "Add attachment from Files" : "Melléklet hozzáadása a Fájlokból",
+    "Add link" : "Hivatkozás hozzáadása",
     "Send later" : "Küldés később",
     "Enable formatting" : "Formázás engedélyezése",
     "Disable formatting" : "Formázás letiltása",

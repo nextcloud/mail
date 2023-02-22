@@ -84,6 +84,7 @@ OC.L10N.register(
     "Discard & close draft" : "Verwijderen & concept sluiten",
     "Upload attachment" : "Bijlage uploaden",
     "Add attachment from Files" : "Bijlage toevoegen vanuit Bestanden",
+    "Add link" : "Voeg link toe",
     "Enable formatting" : "Inschakelen formattering",
     "Request a read receipt" : "Vraag een leesbevestiging",
     "Encrypt message with Mailvelope" : "Versleutel bericht met Mailvelope",

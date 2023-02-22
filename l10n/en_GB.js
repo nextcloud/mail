@@ -120,6 +120,7 @@ OC.L10N.register(
     "Discard & close draft" : "Discard & close draft",
     "Upload attachment" : "Upload attachment",
     "Add attachment from Files" : "Add attachment from Files",
+    "Add link" : "Add link",
     "Send later" : "Send later",
     "Enable formatting" : "Enable formatting",
     "Disable formatting" : "Disable formatting",

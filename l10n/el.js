@@ -93,6 +93,7 @@ OC.L10N.register(
     "Discard & close draft" : "Απόρριψη & κλείσιμο πρόχειρου",
     "Upload attachment" : "Μεταφόρτωση συνημμένων",
     "Add attachment from Files" : "Προσθήκη συνημμένου από Αρχεία",
+    "Add link" : "Προσθήκη συνδέσμου",
     "Send later" : "Αποστολή αργότερα",
     "Enable formatting" : "Ενεργοποίηση μορφοποίησης",
     "Request a read receipt" : "Ζητήστε βεβαίωση ανάγνωσης",
