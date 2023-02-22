@@ -62,7 +62,8 @@
 				"@ckeditor/ckeditor5-theme-lark",
 				"@ckeditor/ckeditor5-upload"
 			],
-			"rangeStrategy": "pin"
+			"rangeStrategy": "pin",
+			"automerge": false
 		}
 	],
 	"vulnerabilityAlerts": {
