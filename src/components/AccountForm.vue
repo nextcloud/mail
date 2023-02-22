@@ -532,9 +532,15 @@ export default {
 						return
 					}
 				}
-				if (!this.useOauth && this.autoConfig.password === '') {
-					this.feedback = t('mail', 'Password required')
-					return
+				if (!this.useOauth) {
+					if (this.mode === 'auto' && this.autoConfig.password === '') {
+						this.feedback = t('mail', 'Password required')
+						return
+					}
+					if (this.mode === 'manual' && (this.manualConfig.imapPassword === '' || this.manualConfig.smtpPassword === '')) {
+						this.feedback = t('mail', 'Password required')
+						return
+					}
 				}
 				this.loadingMessage = t('mail', 'Testing authentication')
 				const data = {
