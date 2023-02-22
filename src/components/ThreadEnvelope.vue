@@ -151,9 +151,10 @@
 			:full-height="fullHeight"
 			@load="loading = LOADING_DONE" />
 		<Error v-else-if="error"
-			:error="error && error.message ? error.message : t('mail', 'Not found')"
+			:error="error.message || t('mail', 'Not found')"
 			message=""
 			:data="error"
+			:auto-margin="true"
 			role="alert" />
 	</div>
 </template>
@@ -335,6 +336,7 @@ export default {
 	methods: {
 		async fetchMessage() {
 			this.loading = LOADING_MESSAGE
+			this.error = undefined
 
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
@@ -356,6 +358,8 @@ export default {
 					this.loading = LOADING_DONE
 				}
 			} catch (error) {
+				this.error = error
+				this.loading = LOADING_DONE
 				logger.error('Could not fetch message', { error })
 			}
 
