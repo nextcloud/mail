@@ -2,6 +2,7 @@
   - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -22,24 +23,32 @@
 <template>
 	<NcEmptyContent
 		:title="error"
-		:description="message">
-		<p v-if="data && data.debug">
-			<a class="button"
-				:href="reportUrl"
-				target="_blank"
-				rel="noopener">{{ t('mail', 'Report this bug') }}</a>
-		</p>
+		:description="message"
+		class="mail-error"
+		:class="{ 'mail-error--auto-margin': autoMargin }">
+		<template #icon>
+			<AlertCircleIcon :size="24" />
+		</template>
+		<template v-if="data && data.debug" #action>
+			<NcButton :href="reportUrl">
+				{{ t('mail', 'Report this bug') }}
+			</NcButton>
+		</template>
 	</NcEmptyContent>
 </template>
 
 <script>
 import { getReportUrl } from '../util/CrashReport'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton'
+import AlertCircleIcon from 'vue-material-design-icons/AlertCircle.vue'
 
 export default {
 	name: 'Error',
 	components: {
 		NcEmptyContent,
+		NcButton,
+		AlertCircleIcon,
 	},
 	props: {
 		error: {
@@ -54,6 +63,10 @@ export default {
 			type: Object,
 			default: () => undefined,
 		},
+		autoMargin: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		reportUrl() {
@@ -62,3 +75,11 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.mail-error {
+	&--auto-margin {
+		margin: auto 0;
+	}
+}
+</style>
