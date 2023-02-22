@@ -18,7 +18,7 @@
 		"bytestream/horde-exception": "^2.1",
 		"bytestream/horde-imap-client": "^2.31",
 		"bytestream/horde-mail": "^2.7",
-		"bytestream/horde-mime": "^2.12",
+		"bytestream/horde-mime": "^2.13.0",
 		"bytestream/horde-stream": "^1.7",
 		"bytestream/horde-stringprep": "^1.1",
 		"bytestream/horde-support": "^2.3",
