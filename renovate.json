@@ -35,7 +35,7 @@
 	"packageRules": [
 		{
 			"enabled": false,
-			"matchBaseBranches": "stable(.)+"
+			"matchBaseBranches": "/^stable(.)+/"
 		},
 		{
 			"matchBaseBranches": ["main"],
