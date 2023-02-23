@@ -34,7 +34,7 @@
 		"gravatarphp/gravatar": "dev-master#6b9f6a45477ce48285738d9d0c3f0dbf97abe263",
 		"html2text/html2text": "^4.3",
 		"nextcloud/horde-managesieve": "^1.0",
-		"nextcloud/horde-smtp": "^1.0",
+		"nextcloud/horde-smtp": "^1.0.2",
 		"psr/log": "^1",
 		"rubix/ml": "2.3.0",
 		"sabberworm/php-css-parser": "^8.3",
