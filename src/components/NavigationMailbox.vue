@@ -227,7 +227,7 @@ import ImportantIcon from './icons/ImportantIcon'
 import IconSend from 'vue-material-design-icons/Send'
 import MoveMailboxModal from './MoveMailboxModal'
 import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants'
-
+import { mailboxHasRights } from '../util/acl'
 import { clearCache } from '../service/MessageService'
 import { getMailboxStatus } from '../service/MailboxService'
 import logger from '../logger'
@@ -405,41 +405,26 @@ export default {
 			}
 			const parent = this.$store.getters.getParentMailbox(this.mailbox.databaseId)
 			if (!parent || !parent.myAcls) {
-				return this.mailbox.myAcls.indexOf('x') !== -1
+				return mailboxHasRights(this.mailbox, 'x')
 			}
 
-			return this.mailbox.myAcls.indexOf('x') !== -1
-				&& parent.myAcls.indexOf('k') !== -1
+			return mailboxHasRights(this.mailbox, 'x')
+				&& mailboxHasRights(parent, 'k')
 		},
 		hasInsertAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('i') !== -1
+			return mailboxHasRights(this.mailbox, 'i')
 		},
 		hasSeenAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('s') !== -1
+			return mailboxHasRights(this.mailbox, 's')
 		},
 		hasSubmailboxActionAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('k') !== -1
+			return mailboxHasRights(this.mailbox, 'k')
 		},
 		hasDeleteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('x') !== -1
+			return mailboxHasRights(this.mailbox, 'x')
 		},
 		hasClearMailboxAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+			return mailboxHasRights(this.mailbox, 'te')
 		},
 	},
 	mounted() {

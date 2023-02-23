@@ -209,6 +209,7 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import DownloadIcon from 'vue-material-design-icons/Download'
 import EventModal from './EventModal'
+import { mailboxHasRights } from '../util/acl'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information'
 import ImportantIcon from './icons/ImportantIcon'
@@ -343,16 +344,10 @@ export default {
 			})
 		},
 		hasWriteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('w') !== -1
+			return mailboxHasRights(this.mailbox, 'w')
 		},
 		hasDeleteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+			return mailboxHasRights(this.mailbox, 'te')
 		},
 	},
 	methods: {

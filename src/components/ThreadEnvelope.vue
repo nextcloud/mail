@@ -186,6 +186,7 @@ import logger from '../logger'
 import Message from './Message'
 import MenuEnvelope from './MenuEnvelope'
 import Moment from './Moment'
+import { mailboxHasRights } from '../util/acl'
 import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import StarOutline from 'vue-material-design-icons/StarOutline'
@@ -332,42 +333,24 @@ export default {
 			return this.envelope.flags.seen
 		},
 		hasSeenAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('s') !== -1
+			return mailboxHasRights(this.mailbox, 's')
 		},
 		hasArchiveAcl() {
 			const hasDeleteSourceAcl = () => {
-				if (!this.mailbox.myAcls) {
-					return true
-				}
-
-				return this.mailbox.myAcls.indexOf('t') !== -1
-					&& this.mailbox.myAcls.indexOf('e') !== -1
+				return mailboxHasRights(this.mailbox, 'te')
 			}
 
 			const hasCreateDestinationAcl = () => {
-				if (!this.archiveMailbox.myAcls) {
-					return true
-				}
-
-				return this.archiveMailbox.myAcls.indexOf('i') !== -1
+				return mailboxHasRights(this.archiveMailbox, 'i')
 			}
 
 			return hasDeleteSourceAcl() && hasCreateDestinationAcl()
 		},
 		hasDeleteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+			return mailboxHasRights(this.mailbox, 'te')
 		},
 		hasWriteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('w') !== -1
+			return mailboxHasRights(this.mailbox, 'w')
 		},
 		mailbox() {
 			return this.$store.getters.getMailbox(this.mailboxId)

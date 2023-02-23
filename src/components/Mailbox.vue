@@ -59,6 +59,7 @@ import MailboxLockedError from '../errors/MailboxLockedError'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError'
 import { matchError } from '../errors/match'
 import { wait } from '../util/wait'
+import { mailboxHasRights } from '../util/acl'
 import EmptyMailboxSection from './EmptyMailboxSection'
 import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
@@ -307,22 +308,13 @@ export default {
 			}
 		},
 		hasDeleteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('d') !== -1
+			return mailboxHasRights(this.mailbox, 'x')
 		},
 		hasSeenAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('s') !== -1
+			return mailboxHasRights(this.mailbox, 's')
 		},
 		hasArchiveAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+			return mailboxHasRights(this.mailbox, 'te')
 		},
 		async handleShortcut(e) {
 			const envelopes = this.envelopes

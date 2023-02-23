@@ -287,6 +287,7 @@ import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
 import { isPgpText } from '../crypto/pgp'
+import { mailboxHasRights } from '../util/acl'
 import DownloadIcon from 'vue-material-design-icons/Download'
 
 export default {
@@ -460,7 +461,7 @@ export default {
 			return label
 		},
 		isDraggable() {
-			return this.hasDeleteAcl
+			return mailboxHasRights(this.mailbox, 'te')
 		},
 		/**
 		 * Subject of envelope or "No Subject".
@@ -483,42 +484,23 @@ export default {
 			})
 		},
 		hasSeenAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('s') !== -1
+			return mailboxHasRights(this.mailbox, 's')
 		},
 		hasArchiveAcl() {
 			const hasDeleteSourceAcl = () => {
-				if (!this.mailbox.myAcls) {
-					return true
-				}
-
-				return this.mailbox.myAcls.indexOf('t') !== -1
-					&& this.mailbox.myAcls.indexOf('e') !== -1
+				return mailboxHasRights(this.mailbox, 'te')
 			}
-
 			const hasCreateDestinationAcl = () => {
-				if (!this.archiveMailbox.myAcls) {
-					return true
-				}
+				return mailboxHasRights(this.archiveMailbox, 'i')
 
-				return this.archiveMailbox.myAcls.indexOf('i') !== -1
 			}
-
 			return hasDeleteSourceAcl() && hasCreateDestinationAcl()
 		},
 		hasDeleteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('t') !== -1 && this.mailbox.myAcls.indexOf('e') !== -1
+			return mailboxHasRights(this.mailbox, 'te')
 		},
 		hasWriteAcl() {
-			if (!this.mailbox.myAcls) {
-				return true
-			}
-			return this.mailbox.myAcls.indexOf('w') !== -1
+			return mailboxHasRights(this.mailbox, 'w')
 		},
 		archiveMailbox() {
 			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
