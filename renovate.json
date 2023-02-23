@@ -3,7 +3,8 @@
 	"extends": [
 		"config:base",
 		":semanticCommits",
-		":dependencyDashboard"
+		":dependencyDashboard",
+		"helpers:pinGitHubActionDigests"
 	],
 	"timezone": "Europe/Vienna",
 	"schedule": [
@@ -26,6 +27,7 @@
 	],
 	"enabledManagers": [
 		"composer",
+		"github-actions",
 		"npm"
 	],
 	"ignoreDeps": [
@@ -48,6 +50,15 @@
 			"matchBaseBranches": ["main"],
 			"matchDepTypes": ["devDependencies"],
 			"extends": ["schedule:monthly"]
+		},
+		{
+			"description": "Bump Github actions monthly",
+			"matchManagers": ["github-actions"],
+			"extends": ["schedule:monthly"],
+			"reviewers": [
+				"ChristophWurst",
+				"kesselb"
+			]
 		},
 		{
 			"description": "CKEditor family",
