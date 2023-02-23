@@ -41,6 +41,7 @@ OC.L10N.register(
     "Subject" : "الموضوع",
     "Upload attachment" : "رفع المرفقات",
     "Add attachment from Files" : "إضافة مرفقات مِن الملفات",
+    "Add link" : "إضافة رابط",
     "Enter a date" : "ادخل تاريخ",
     "Send" : "أرسل",
     "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
