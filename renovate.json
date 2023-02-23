@@ -10,10 +10,6 @@
 	"schedule": [
 		"before 5am on wednesday"
 	],
-	"reviewers": [
-		"@ChristophWurst",
-		"@GretaD"
-	],
 	"labels": [
 		"dependencies",
 		"3. to review"
@@ -45,7 +41,8 @@
 			"labels": [
 				"dependencies",
 				"4. to release"
-			]
+			],
+			"reviewers": []
 		},
 		{
 			"enabled": false,
@@ -87,6 +84,22 @@
 			],
 			"rangeStrategy": "pin",
 			"automerge": false
+		},
+		{
+			"description": "Request JavaScript reviews",
+			"matchManagers": ["npm"],
+			"reviewers": [
+				"@ChristophWurst",
+				"@GretaD"
+			]
+		},
+		{
+			"description": "Request PHP reviews",
+			"matchManagers": ["composer"],
+			"reviewers": [
+				"@ChristophWurst",
+				"@kesselb"
+			]
 		}
 	],
 	"vulnerabilityAlerts": {
