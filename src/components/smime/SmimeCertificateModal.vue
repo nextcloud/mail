@@ -64,17 +64,44 @@
 				@submit.prevent="uploadCertificate">
 				<h2>{{ t('mail', 'Import S/MIME certificate') }}</h2>
 
+				<fieldset class="certificate-modal__import__type">
+					<div>
+						<input
+							id="certificate-type-pkcs12"
+							v-model="certificateType"
+							name="certificate-type"
+							type="radio"
+							:value="TYPE_PKCS12">
+						<label for="certificate-type-pkcs12">
+							{{ t('mail', 'PKCS #12 Certificate') }}
+						</label>
+					</div>
+
+					<div>
+						<input
+							id="certificate-type-pem"
+							v-model="certificateType"
+							name="certificate-type"
+							type="radio"
+							:value="TYPE_PEM">
+						<label for="certificate-type-pem">
+							{{ t('mail', 'PEM Certificate') }}
+						</label>
+					</div>
+				</fieldset>
+
 				<fieldset>
 					<label for="certificate">{{ t('mail', 'Certificate') }}</label>
 					<input
 						id="certificate"
 						ref="certificate"
 						type="file"
+						required
 						@change="certificate = $event.target.files[0]">
 				</fieldset>
 
-				<fieldset>
-					<label for="private-key">{{ t('mail', 'Private key') }}</label>
+				<fieldset v-if="certificateType === TYPE_PEM">
+					<label for="private-key">{{ t('mail', 'Private key (optional)') }}</label>
 					<input
 						id="private-key"
 						ref="privateKey"
@@ -82,8 +109,15 @@
 						@change="privateKey = $event.target.files[0]">
 				</fieldset>
 
+				<fieldset v-if="certificateType === TYPE_PKCS12">
+					<label for="password">{{ t('mail', 'Password') }}</label>
+					<NcPasswordField :value.sync="password" :label="t('mail', 'Password')" />
+				</fieldset>
+
 				<div class="certificate-modal__import__hints">
-					<p>{{ t('mail', 'Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can\'t be imported and need to be converted.') }}</p>
+					<p v-if="certificateType === TYPE_PEM">
+						{{ t('mail', 'The private key is only required if you intend to send signed and encrypted emails using this certificate.') }}
+					</p>
 				</div>
 
 				<div class="certificate-modal__import__actions">
@@ -106,26 +140,36 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { NcButton, NcModal } from '@nextcloud/vue'
+import { NcButton, NcModal, NcPasswordField } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger'
 import moment from '@nextcloud/moment'
 import DeleteIcon from 'vue-material-design-icons/Delete'
+import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12'
+
+const TYPE_PKCS12 = 'pkcs12'
+const TYPE_PEM = 'pem'
 
 export default {
 	name: 'SmimeCertificateModal',
 	components: {
 		NcModal,
 		NcButton,
+		NcPasswordField,
 		DeleteIcon,
 	},
 	data() {
 		return {
+			TYPE_PKCS12,
+			TYPE_PEM,
+
 			moment,
 			showImportScreen: false,
 			loading: false,
+			certificateType: TYPE_PKCS12,
 			certificate: undefined,
 			privateKey: undefined,
+			password: '',
 		}
 	},
 	computed: {
@@ -145,8 +189,29 @@ export default {
 			await this.$store.dispatch('deleteSmimeCertificate', id)
 		},
 		async uploadCertificate() {
-			const certificate = this.$refs.certificate.files[0]
-			const privateKey = this.$refs.privateKey.files[0]
+			let certificate = this.$refs.certificate.files[0]
+			let privateKey
+			if (this.certificateType === TYPE_PKCS12) {
+				try {
+					const result = convertPkcs12ToPem(await certificate.arrayBuffer(), this.password)
+					certificate = new Blob([result.certificate])
+					privateKey = new Blob([result.privateKey])
+				} catch (error) {
+					if (error.name === InvalidPkcs12CertificateError.name) {
+						logger.error('PKCS #12 certificate contains multiple certs or keys', { error })
+						showError(t('mail', 'The provided PKCS #12 certificate must contain a single certificate and private key.'))
+					} else {
+						logger.debug('Is probably not a PKCS #12 certificate or the password is wrong', { error })
+						showError(t('mail', 'Failed to import the certificate. Please check the password.'))
+					}
+
+					return
+				}
+			} else if (this.certificateType === TYPE_PEM) {
+				privateKey = this.$refs.privateKey.files[0]
+			} else {
+				return
+			}
 
 			this.loading = true
 			try {
@@ -171,9 +236,11 @@ export default {
 			}
 		},
 		resetImportForm() {
+			this.certificateType = TYPE_PKCS12
 			this.showImportScreen = false
 			this.certificate = undefined
 			this.privateKey = undefined
+			this.password = ''
 		},
 	},
 }
@@ -211,9 +278,21 @@ export default {
 		flex-direction: column;
 		gap: 10px;
 
-		input {
+		input[type=file] {
 			display: flex;
 			width: 100%;
+		}
+
+		&__type {
+			display: flex;
+			gap: 0 20px;
+			flex-wrap: wrap;
+
+			> div {
+				display: flex;
+				gap: 5px;
+				align-items: center;
+			}
 		}
 
 		&__hints {
