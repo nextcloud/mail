@@ -490,6 +490,7 @@ class MessageMapper extends QBMapper {
 				->set('structure_analyzed', $query->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
 				->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
 				->set('imip_message', $query->createParameter('imip_message'))
+				->set('encrypted', $query->createParameter('encrypted'))
 				->where($query->expr()->andX(
 					$query->expr()->eq('uid', $query->createParameter('uid')),
 					$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
@@ -516,6 +517,7 @@ class MessageMapper extends QBMapper {
 					$previewText === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
 				);
 				$query->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('encrypted', $message->isEncrypted(), IQueryBuilder::PARAM_BOOL);
 
 				$query->execute();
 			}

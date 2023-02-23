@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -110,6 +111,7 @@ class PreviewEnhancer {
 			$message->setPreviewText($structureData->getPreviewText());
 			$message->setStructureAnalyzed(true);
 			$message->setImipMessage($structureData->isImipMessage());
+			$message->setEncrypted($structureData->isEncrypted());
 
 			return $message;
 		}, $messages));

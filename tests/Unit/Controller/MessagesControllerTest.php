@@ -32,7 +32,6 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Account;
-use OCA\Mail\Mailbox;
 use OCP\Files\Folder;
 use ReflectionObject;
 use OCP\IURLGenerator;
@@ -100,9 +99,6 @@ class MessagesControllerTest extends TestCase {
 
 	/** @var MockObject|Account */
 	private $account;
-
-	/** @var MockObject|Mailbox */
-	private $mailbox;
 
 	/** @var MockObject|Message */
 	private $message;
@@ -186,7 +182,6 @@ class MessagesControllerTest extends TestCase {
 		);
 
 		$this->account = $this->createMock(Account::class);
-		$this->mailbox = $this->createMock(Mailbox::class);
 		$this->message = $this->createMock(IMAPMessage::class);
 		$this->attachment = $this->createMock(Attachment::class);
 	}
@@ -298,17 +293,14 @@ class MessagesControllerTest extends TestCase {
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachment')
+			->with($this->account, $mailbox, $message, $attachmentId)
+			->will($this->returnValue($this->attachment));
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->willReturn($this->mailbox);
-		$this->mailbox->expects($this->once())
-			->method('getAttachment')
-			->with($uid, $attachmentId)
-			->will($this->returnValue($this->attachment));
 		$this->attachment->expects($this->once())
 			->method('getContents')
 			->will($this->returnValue($contents));
@@ -353,13 +345,9 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->with('INBOX')
-			->will($this->returnValue($this->mailbox));
-		$this->mailbox->expects($this->once())
-			->method('getAttachment')
-			->with($uid, $attachmentId)
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachment')
+			->with($this->account, $mailbox, $message, $attachmentId)
 			->will($this->returnValue($this->attachment));
 		$this->attachment->expects($this->once())
 			->method('getName')
@@ -406,6 +394,7 @@ class MessagesControllerTest extends TestCase {
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id)
@@ -418,23 +407,23 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->with('INBOX')
-			->will($this->returnValue($this->mailbox));
-		$this->mailbox->expects($this->once())
-			->method('getMessage')
-			->with($uid)
-			->will($this->returnValue($this->message));
+		$this->clientFactory->expects($this->once())
+			->method('getClient')
+			->with($this->account)
+			->willReturn($client);
+		$this->mailManager->expects($this->once())
+			->method('getImapMessage')
+			->with($client, $this->account, $mailbox, $message->getUid(), true)
+			->willReturn($this->message);
 		$this->message->attachments = [
 			[
 				'id' => $attachmentId
 			]
 		];
 
-		$this->mailbox->expects($this->once())
-			->method('getAttachment')
-			->with($uid, $attachmentId)
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachment')
+			->with($this->account, $mailbox, $message, $attachmentId)
 			->will($this->returnValue($this->attachment));
 		$this->attachment->expects($this->once())
 			->method('getName')

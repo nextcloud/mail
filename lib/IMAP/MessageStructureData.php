@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -35,12 +36,16 @@ class MessageStructureData {
 	/** @var bool */
 	private $isImipMessage;
 
+	private bool $isEncrypted;
+
 	public function __construct(bool $hasAttachments,
 								string $previewText,
-								bool $isImipMessage) {
+								bool $isImipMessage,
+								bool $isEncrypted) {
 		$this->hasAttachments = $hasAttachments;
 		$this->previewText = $previewText;
 		$this->isImipMessage = $isImipMessage;
+		$this->isEncrypted = $isEncrypted;
 	}
 
 	public function hasAttachments(): bool {
@@ -53,5 +58,9 @@ class MessageStructureData {
 
 	public function isImipMessage(): bool {
 		return $this->isImipMessage;
+	}
+
+	public function isEncrypted(): bool {
+		return $this->isEncrypted;
 	}
 }

@@ -30,10 +30,12 @@ use JsonSerializable;
 class SmimeData implements JsonSerializable {
 	private bool $isSigned;
 	private ?bool $signatureIsValid;
+	private bool $isEncrypted;
 
 	public function __construct() {
 		$this->isSigned = false;
 		$this->signatureIsValid = null;
+		$this->isEncrypted = false;
 	}
 
 	/**
@@ -64,11 +66,27 @@ class SmimeData implements JsonSerializable {
 		$this->signatureIsValid = $signatureIsValid;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function isEncrypted(): bool {
+		return $this->isEncrypted;
+	}
+
+	/**
+	 * @param bool $isEncrypted
+	 * @return void
+	 */
+	public function setIsEncrypted(bool $isEncrypted): void {
+		$this->isEncrypted = $isEncrypted;
+	}
+
 	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'isSigned' => $this->isSigned,
 			'signatureIsValid' => $this->signatureIsValid,
+			'isEncrypted' => $this->isEncrypted,
 		];
 	}
 }

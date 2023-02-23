@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -87,6 +88,7 @@ class SynchronizerTest extends TestCase {
 		$response = $this->synchronizer->sync(
 			$imapClient,
 			$request,
+			'user',
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 
@@ -125,6 +127,7 @@ class SynchronizerTest extends TestCase {
 		$response = $this->synchronizer->sync(
 			$imapClient,
 			$request,
+			'user',
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 

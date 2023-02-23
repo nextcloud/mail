@@ -211,12 +211,13 @@ class MessagesController extends Controller {
 
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$json = $this->mailManager->getImapMessage(
+			$imapMessage = $this->mailManager->getImapMessage(
 				$client,
 				$account,
 				$mailbox,
 				$message->getUid(), true
-			)->getFullMessage($id);
+			);
+			$json = $imapMessage->getFullMessage($id);
 			$rawMessage = $this->mailManager->getSource(
 				$client,
 				$account,
@@ -243,7 +244,13 @@ class MessagesController extends Controller {
 		$json['isSenderTrusted'] = $this->isSenderTrusted($message);
 
 		$smimeData = new SmimeData();
+		$smimeData->setIsEncrypted($message->isEncrypted() || $imapMessage->isEncrypted());
+		if ($imapMessage->isSigned()) {
+			$smimeData->setIsSigned(true);
+			$smimeData->setSignatureIsValid($imapMessage->isSignatureValid());
+		}
 		try {
+			// TODO: possibly merge with code in ImapMessageFetcher to handle verification early
 			$parsedMessage = Horde_Mime_Part::parseMessage($rawMessage, ['no_body' => true]);
 			if ($parsedMessage->getType() === 'multipart/signed') {
 				$smimeData->setIsSigned(true);
@@ -556,15 +563,12 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $accountId
-	 * @param string $folderId
 	 * @param int $id
 	 * @param string $attachmentId
 	 *
 	 * @return Response
 	 *
 	 * @throws ClientException
-	 * @throws ServiceException
 	 */
 	#[TrapError]
 	public function downloadAttachment(int $id,
@@ -576,8 +580,13 @@ class MessagesController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
-		$folder = $account->getMailbox($mailbox->getName());
-		$attachment = $folder->getAttachment($message->getUid(), $attachmentId);
+
+		$attachment = $this->mailManager->getMailAttachment(
+			$account,
+			$mailbox,
+			$message,
+			$attachmentId,
+		);
 
 		// Body party and embedded messages do not have a name
 		if ($attachment->getName() === null) {
@@ -656,12 +665,22 @@ class MessagesController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
-		$folder = $account->getMailbox($mailbox->getName());
 
 		if ($attachmentId === '0') {
+			$client = $this->clientFactory->getClient($account);
+			try {
+				$m = $this->mailManager->getImapMessage(
+					$client,
+					$account,
+					$mailbox,
+					$message->getUid(),
+					true // Body is required for attachments
+				);
+			} finally {
+				$client->logout();
+			}
+
 			// Save all attachments
-			/* @var $m IMAPMessage */
-			$m = $folder->getMessage($message->getUid());
 			$attachmentIds = array_map(static function ($a) {
 				return $a['id'];
 			}, $m->attachments);
@@ -670,7 +689,12 @@ class MessagesController extends Controller {
 		}
 
 		foreach ($attachmentIds as $aid) {
-			$attachment = $folder->getAttachment($message->getUid(), $aid);
+			$attachment = $this->mailManager->getMailAttachment(
+				$account,
+				$mailbox,
+				$message,
+				$aid,
+			);
 
 			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
 				$aid,

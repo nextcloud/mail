@@ -563,7 +563,8 @@ class MailTransmission implements IMailTransmission {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
 				$mailbox->getName(),
-				$attachmentMessage->getUid()
+				$attachmentMessage->getUid(),
+				$userId
 			);
 		} finally {
 			$client->logout();
@@ -593,7 +594,8 @@ class MailTransmission implements IMailTransmission {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
 				$mailbox->getName(),
-				$attachmentMessage->getUid()
+				$attachmentMessage->getUid(),
+				$userId
 			);
 		} finally {
 			$client->logout();
@@ -624,6 +626,7 @@ class MailTransmission implements IMailTransmission {
 				$client,
 				$mailbox->getName(),
 				$attachmentMessage->getUid(),
+				$userId,
 				[
 					$attachment['id']
 				]

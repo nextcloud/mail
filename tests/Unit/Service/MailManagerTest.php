@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -517,6 +518,9 @@ class MailManagerTest extends TestCase {
 
 	public function testGetMailAttachments(): void {
 		$account = $this->createMock(Account::class);
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('user');
 		$attachments = [
 			[
 				'content' => 'abcdefg',

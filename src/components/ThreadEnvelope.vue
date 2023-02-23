@@ -77,9 +77,12 @@
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<template v-if="expanded">
-					<NcActions v-if="smimeData.isSigned">
+					<NcActions v-if="smimeData.isSigned || smimeData.isEncrypted">
 						<template #icon>
-							<LockIcon v-if="smimeData.signatureIsValid"
+							<LockIcon v-if="smimeData.isEncrypted"
+								:size="20"
+								fill-color="#008000" />
+							<LockIcon v-else-if="smimeData.signatureIsValid"
 								:size="20"
 								fill-color="#ffcc00" />
 							<LockOffIcon v-else
@@ -87,7 +90,7 @@
 								fill-color="red" />
 						</template>
 						<NcActionText>
-							{{ smimeSignMessage }}
+							{{ smimeMessage }}
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
@@ -381,12 +384,16 @@ export default {
 		smimeData() {
 			return this.message?.smime ?? {}
 		},
-		smimeSignMessage() {
+		smimeMessage() {
+			if (this.smimeData.isEncrypted) {
+				return t('mail', 'This message was encrypted by the sender before it was sent.')
+			}
+
 			if (this.smimeData.signatureIsValid) {
 				return t('mail', 'This message contains a verified digital S/MIME signature. The message wasn\'t changed since it was sent.')
-			} else {
-				return t('mail', 'This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted.')
 			}
+
+			return t('mail', 'This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted.')
 		},
 	},
 	watch: {

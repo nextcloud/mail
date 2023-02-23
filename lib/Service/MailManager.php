@@ -29,7 +29,9 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
+use Horde_Mime_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -192,6 +194,7 @@ class MailManager implements IMailManager {
 				$client,
 				$mailbox->getName(),
 				$uid,
+				$account->getUserId(),
 				$loadBody
 			);
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
@@ -219,6 +222,7 @@ class MailManager implements IMailManager {
 				$client,
 				$mailbox->getName(),
 				new Horde_Imap_Client_Ids($uids),
+				$account->getUserId(),
 				true
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -262,7 +266,9 @@ class MailManager implements IMailManager {
 			return $this->imapMessageMapper->getFullText(
 				$client,
 				$mailbox,
-				$uid
+				$uid,
+				$account->getUserId(),
+				false,
 			);
 		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException("Could not load message", 0, $e);
@@ -664,7 +670,43 @@ class MailManager implements IMailManager {
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message): array {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			return $this->imapMessageMapper->getAttachments($client, $mailbox->getName(), $message->getUid());
+			return $this->imapMessageMapper->getAttachments(
+				$client,
+				$mailbox->getName(),
+				$message->getUid(),
+				$account->getUserId(),
+			);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
+	 * @param string $attachmentId
+	 * @return Attachment
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws ServiceException
+	 * @throws Horde_Mime_Exception
+	 */
+	public function getMailAttachment(Account $account,
+									  Mailbox $mailbox,
+									  Message $message,
+									  string $attachmentId): Attachment {
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			return $this->imapMessageMapper->getAttachment(
+				$client,
+				$mailbox->getName(),
+				$message->getUid(),
+				$attachmentId,
+				$account->getUserId(),
+			);
 		} finally {
 			$client->logout();
 		}

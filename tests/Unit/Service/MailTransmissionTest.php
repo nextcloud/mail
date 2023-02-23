@@ -184,8 +184,10 @@ class MailTransmissionTest extends TestCase {
 	}
 
 	public function testSendNewMessageWithMessageAsAttachment() {
+		$userId = 'testuser';
+
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('testuser');
+		$mailAccount->setUserId($userId);
 		$mailAccount->setSentMailboxId(123);
 
 		/** @var Account|MockObject $account */
@@ -193,6 +195,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account->method('getName')->willReturn('Test User');
 		$account->method('getEMailAddress')->willReturn('test@user');
+		$account->method('getUserId')->willReturn($userId);
 
 		$originalAttachment = [
 			[
@@ -244,7 +247,8 @@ class MailTransmissionTest extends TestCase {
 			->with(
 				$this->imapClientFactory->getClient($account),
 				$mailbox->getName(),
-				11
+				11,
+				$userId,
 			)
 			->willReturn($source);
 
@@ -309,7 +313,7 @@ class MailTransmissionTest extends TestCase {
 		$content = ['blablabla'];
 		$this->messageMapper->expects($this->once())
 			->method('getRawAttachments')
-			->with($this->imapClientFactory->getClient($account), $mailbox->getName(), $attachmentMessage->getUid(),
+			->with($this->imapClientFactory->getClient($account), $mailbox->getName(), $attachmentMessage->getUid(), 'testuser',
 				[$originalAttachment[0]['id']])
 			->willReturn($content);
 

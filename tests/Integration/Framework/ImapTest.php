@@ -27,6 +27,7 @@ use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_Address;
+use Horde_Mime_Headers;
 use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
@@ -163,6 +164,33 @@ trait ImapTest {
 			return $client->append($mailbox, [
 				[
 					'data' => $data,
+				]
+			])->ids[0];
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * @param string $mailbox
+	 * @param string $mimeText
+	 * @param MailAccount|null $account
+	 * @return int Uid of the new message
+	 */
+	public function saveMimeMessage(string $mailbox, string $mimeText, ?MailAccount $account = null): int {
+		$headers = Horde_Mime_Headers::parseHeaders($mimeText);
+		$mimePart = Horde_Mime_Part::parseMessage($mimeText);
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		$mail->setBasePart($mimePart);
+
+		$data = $mail->getRaw(false);
+		$client = $this->getClient($account);
+		try {
+			return $client->append($mailbox, [
+				[
+					'data' => $mimeText,
 				]
 			])->ids[0];
 		} finally {
