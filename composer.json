@@ -24,7 +24,7 @@
 		"bytestream/horde-support": "^2.4.0",
 		"bytestream/horde-text-filter": "^2.5.0",
 		"bytestream/horde-text-flowed": "^2.1",
-		"bytestream/horde-util": "^2.6",
+		"bytestream/horde-util": "^2.7.0",
 		"cerdic/css-tidy": "v2.0.3",
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.3",
