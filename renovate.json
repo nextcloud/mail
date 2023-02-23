@@ -14,7 +14,8 @@
 		"@GretaD"
 	],
 	"labels": [
-		"dependencies"
+		"dependencies",
+		"3. to review"
 	],
 	"rangeStrategy": "bump",
 	"rebaseWhen": "conflicted",
@@ -38,7 +39,11 @@
 			"matchCurrentVersion": "!/^0/",
 			"automerge": true,
 			"automergeType": "pr",
-			"platformAutomerge": true
+			"platformAutomerge": true,
+			"labels": [
+				"dependencies",
+				"4. to release"
+			]
 		},
 		{
 			"enabled": false,
