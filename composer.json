@@ -21,7 +21,7 @@
 		"bytestream/horde-mime": "^2.13.0",
 		"bytestream/horde-stream": "^1.7.1",
 		"bytestream/horde-stringprep": "^1.2.1",
-		"bytestream/horde-support": "^2.3",
+		"bytestream/horde-support": "^2.4.0",
 		"bytestream/horde-text-filter": "^2.5.0",
 		"bytestream/horde-text-flowed": "^2.1",
 		"bytestream/horde-util": "^2.6",
