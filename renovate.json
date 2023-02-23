@@ -63,7 +63,7 @@
 			]
 		},
 		{
-			"description": "CKEditor family",
+			"groupName": "CKEditor family",
 			"matchPackageNames": [
 				"@ckeditor/ckeditor5-alignment",
 				"@ckeditor/ckeditor5-basic-styles",
