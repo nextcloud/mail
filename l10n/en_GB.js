@@ -281,6 +281,7 @@ OC.L10N.register(
     "Mark all messages of this mailbox as read" : "Mark all messages of this mailbox as read",
     "Add submailbox" : "Add submailbox",
     "Edit name" : "Edit name",
+    "Move mailbox" : "Move mailbox",
     "Clear cache" : "Clear cache",
     "Clear locally cached data, in case there are issues with synchronization." : "Clear locally cached data, in case there are issues with synchronization.",
     "Subscribed" : "Subscribed",
