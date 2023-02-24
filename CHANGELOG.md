@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.4 - 2023-02-24
+### Fixed
+- Open composer actions after changing encryption mode
+- Close button position in SearchMessages.vue
+- Background touches search input
+
 ## 2.2.3 - 2023-02-09
 ### Fixed
 - Allow sending of messages with empty body content
