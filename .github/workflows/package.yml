@@ -10,19 +10,19 @@ jobs:
     name: Build release tarball
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
       - name: Read package.json node and npm engines version
-        uses: skjnldsv/read-package-engines-version-actions@v2.0
+        uses: skjnldsv/read-package-engines-version-actions@9bc020752ccc3352de3382e10a1d6cd1bd0ace5a # v2.0
         id: versions
       - name: Set up Nextcloud env
-        uses: ChristophWurst/setup-nextcloud@v0.3.1
+        uses: ChristophWurst/setup-nextcloud@8bc31fe189b3cb3b44122dede08ce39e8932c554 # v0.3.1
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
           npm-version: ${{ steps.versions.outputs.npmVersion }}
           tools: 'krankerl'
       - name: Package app
         run: krankerl package
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3
         with:
           path: build/artifacts/mail.tar.gz
           if-no-files-found: error
