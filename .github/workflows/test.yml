@@ -17,7 +17,7 @@ jobs:
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
-      uses: ChristophWurst/setup-nextcloud@v0.3.1
+      uses: ChristophWurst/setup-nextcloud@8bc31fe189b3cb3b44122dede08ce39e8932c554 # v0.3.1
       with:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
@@ -26,7 +26,7 @@ jobs:
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@v3
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
       with:
         path: nextcloud/apps/mail
     - name: Install dependencies
@@ -45,7 +45,7 @@ jobs:
       env:
         XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@v3.1.1
+      uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1
       if: ${{ always() && matrix.php-versions == '8.0' }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -109,7 +109,7 @@ jobs:
                   --health-retries 5
       steps:
           - name: Set up Nextcloud env
-            uses: ChristophWurst/setup-nextcloud@v0.3.1
+            uses: ChristophWurst/setup-nextcloud@8bc31fe189b3cb3b44122dede08ce39e8932c554 # v0.3.1
             with:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
@@ -119,7 +119,7 @@ jobs:
               database: ${{ matrix.db }}
               node-version: 'false'
           - name: Checkout Mail
-            uses: actions/checkout@v3
+            uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
             with:
                 path: nextcloud/apps/mail
           - name: Install dependencies
@@ -159,7 +159,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@v3.1.1
+            uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
@@ -170,15 +170,15 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
           - name: Read package.json node and npm engines version
-            uses: skjnldsv/read-package-engines-version-actions@v2.0
+            uses: skjnldsv/read-package-engines-version-actions@9bc020752ccc3352de3382e10a1d6cd1bd0ace5a # v2.0
             id: versions
             with:
               fallbackNode: '^14'
               fallbackNpm: '^7'
           - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-            uses: actions/setup-node@v3
+            uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
             with:
               node-version: ${{ steps.versions.outputs.nodeVersion }}
           - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
