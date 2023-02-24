@@ -36,6 +36,31 @@
 	],
 	"packageRules": [
 		{
+			"description": "Request JavaScript reviews",
+			"matchManagers": ["npm"],
+			"reviewers": [
+				"@ChristophWurst",
+				"@GretaD"
+			]
+		},
+		{
+			"description": "Request PHP reviews",
+			"matchManagers": ["composer"],
+			"reviewers": [
+				"@ChristophWurst",
+				"@kesselb"
+			]
+		},
+		{
+			"description": "Bump Github actions monthly and request reviews",
+			"matchManagers": ["github-actions"],
+			"extends": ["schedule:monthly"],
+			"reviewers": [
+				"ChristophWurst",
+				"kesselb"
+			]
+		},
+		{
 			"matchUpdateTypes": ["minor", "patch"],
 			"matchCurrentVersion": "!/^0/",
 			"automerge": true,
@@ -55,15 +80,6 @@
 			"matchBaseBranches": ["main"],
 			"matchDepTypes": ["devDependencies"],
 			"extends": ["schedule:monthly"]
-		},
-		{
-			"description": "Bump Github actions monthly",
-			"matchManagers": ["github-actions"],
-			"extends": ["schedule:monthly"],
-			"reviewers": [
-				"ChristophWurst",
-				"kesselb"
-			]
 		},
 		{
 			"groupName": "CKEditor family",
@@ -87,22 +103,6 @@
 			],
 			"rangeStrategy": "pin",
 			"automerge": false
-		},
-		{
-			"description": "Request JavaScript reviews",
-			"matchManagers": ["npm"],
-			"reviewers": [
-				"@ChristophWurst",
-				"@GretaD"
-			]
-		},
-		{
-			"description": "Request PHP reviews",
-			"matchManagers": ["composer"],
-			"reviewers": [
-				"@ChristophWurst",
-				"@kesselb"
-			]
 		}
 	],
 	"vulnerabilityAlerts": {
