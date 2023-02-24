@@ -42,7 +42,7 @@
 	},
 	"require-dev": {
 		"nextcloud/ocp": "dev-stable25",
-		"psalm/phar": "^5.1",
+		"psalm/phar": "^5.7.5",
 		"roave/security-advisories": "dev-master"
 	},
 	"autoload": {
