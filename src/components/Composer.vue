@@ -232,7 +232,8 @@
 				</ButtonVue>
 			</div>
 			<div class="composer-actions--secondary-actions">
-				<Actions @close="isMoreActionsOpen = false">
+				<Actions :open.sync="isActionsOpen"
+					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
 						<ActionButton @click="onAddLocalAttachment">
 							<template #icon>
@@ -308,6 +309,7 @@
 						<ActionCheckbox
 							v-if="mailvelope.available"
 							:checked="encrypt"
+							@change="isActionsOpen = false"
 							@check="encrypt = true"
 							@uncheck="encrypt = false">
 							{{ t('mail', 'Encrypt message with Mailvelope') }}
@@ -584,6 +586,7 @@ export default {
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
+			isActionsOpen: false,
 			isMoreActionsOpen: false,
 			selectedDate,
 			sendAtVal: this.sendAt,
