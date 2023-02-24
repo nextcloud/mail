@@ -81,7 +81,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mysql-service:
-              image: mariadb:10.5
+              image: mariadb:10.11
               env:
                   MYSQL_ROOT_PASSWORD: my-secret-pw
                   MYSQL_DATABASE: nextcloud
