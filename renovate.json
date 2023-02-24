@@ -2,9 +2,10 @@
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
 		"config:base",
-		":semanticCommits",
+		"helpers:pinGitHubActionDigests",
 		":dependencyDashboard",
-		"helpers:pinGitHubActionDigests"
+		":semanticCommits",
+		":gitSignOff"
 	],
 	"timezone": "Europe/Vienna",
 	"schedule": [
