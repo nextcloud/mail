@@ -393,7 +393,6 @@ OC.L10N.register(
     "E-mail address" : "E-postadresse",
     "Valid until" : "Gyldig til",
     "Certificate" : "Sertifikat",
-    "Private key" : "Privatnøkkel",
     "Back" : "Tilbake",
     "Submit" : "Send inn",
     "Keyboard shortcut" : "Hurtigtast",

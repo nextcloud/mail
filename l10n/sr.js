@@ -207,7 +207,6 @@ OC.L10N.register(
     "E-mail address" : "Адреса е-поште",
     "Valid until" : "Важи до",
     "Certificate" : "Сертификат",
-    "Private key" : "Тајни кључ",
     "Back" : "Назад",
     "Submit" : "Пошаљи",
     "Keyboard shortcut" : "Пречица тастатуре",

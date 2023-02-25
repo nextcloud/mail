@@ -153,7 +153,6 @@ OC.L10N.register(
     "E-mail address" : "Retpoŝtadreso",
     "Valid until" : "Valida ĝis",
     "Certificate" : "Atestilo",
-    "Private key" : "Privata ŝlosilo",
     "Back" : "Antaŭen",
     "Submit" : "Sendi",
     "Keyboard shortcuts" : "Fulmoklavoj",

@@ -247,7 +247,6 @@ OC.L10N.register(
     "E-mail address" : "メールアドレス",
     "Valid until" : "有効期限",
     "Certificate" : "証明",
-    "Private key" : "秘密鍵",
     "Back" : "戻る",
     "Submit" : "送信",
     "Keyboard shortcut" : "キーボードショートカット",

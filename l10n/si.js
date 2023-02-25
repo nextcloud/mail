@@ -39,7 +39,6 @@ OC.L10N.register(
     "User" : "පරිශීලක",
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",
-    "Private key" : "පුද්ගලික යතුර",
     "Back" : "ආපසු",
     "Archive" : "සංරක්ෂණය",
     "All" : "සියල්ල",

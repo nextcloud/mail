@@ -202,7 +202,6 @@ OC.L10N.register(
     "With the settings above, the app will create account settings in the following way:" : "Með stillingunum hér fyrir ofan, mun forritið útbúa aðgangsstillingar á eftirfarandi máta:",
     "Valid until" : "Gildir til",
     "Certificate" : "Skilríki",
-    "Private key" : "Einkalykill",
     "Back" : "Til baka",
     "Submit" : "Senda inn",
     "Keyboard shortcut" : "Flýtilykill",

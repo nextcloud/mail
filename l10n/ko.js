@@ -196,7 +196,6 @@ OC.L10N.register(
     "E-mail address" : "이메일 주소",
     "Valid until" : "만료 기간:",
     "Certificate" : "인증서",
-    "Private key" : "비밀 키",
     "Back" : "뒤로",
     "Submit" : "제출",
     "Keyboard shortcut" : "키보드 단축키",

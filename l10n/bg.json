@@ -488,8 +488,6 @@
     "Import certificate" : "Импортиране /внасяне/ на сертификат",
     "Import S/MIME certificate" : "Импортиране на S/MIME сертификат",
     "Certificate" : "Сертификат",
-    "Private key" : "Частен ключ",
-    "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted." : "Поддържат се само PEM кодирани сертификати и частни ключове. Сертификатите PKCS #12 (.p12 файлове) не могат да бъдат импортирани и трябва да бъдат конвертирани.",
     "Back" : "Назад",
     "Submit" : "Изпращане",
     "Certificate imported successfully" : "Успешно импортиране на сертификата",

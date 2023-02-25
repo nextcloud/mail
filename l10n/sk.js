@@ -452,7 +452,6 @@ OC.L10N.register(
     "E-mail address" : "E-mailová adresa",
     "Valid until" : "Platný do",
     "Certificate" : "Certifikát",
-    "Private key" : "Súkromný kľúč",
     "Back" : "Späť",
     "Submit" : "Odoslať",
     "Keyboard shortcut" : "Klávesová skratka",

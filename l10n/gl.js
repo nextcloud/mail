@@ -470,7 +470,6 @@ OC.L10N.register(
     "E-mail address" : "Enderezo de correo",
     "Valid until" : "Válido ata",
     "Certificate" : "Certificado",
-    "Private key" : "Clave privada",
     "Back" : "Atrás",
     "Submit" : "Enviar",
     "Keyboard shortcut" : "Atallo de teclado",

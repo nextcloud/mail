@@ -405,8 +405,6 @@ OC.L10N.register(
     "Import certificate" : "Tuo varmenne",
     "Import S/MIME certificate" : "Tuo S/MIME-varmenne",
     "Certificate" : "Varmenne",
-    "Private key" : "Yksityinen avain",
-    "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted." : "Vain PEM-koodatut varmenteet ja yksityiset avaimet ovat tuettuja. PKCS #12 -varmenteita (.p12-tiedostot) ei voi tuoda, ne tulee muuntaa.",
     "Back" : "Takaisin",
     "Submit" : "Lähetä",
     "Certificate imported successfully" : "Varmenne tuotu onnistuneesti",

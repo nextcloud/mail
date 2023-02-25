@@ -212,7 +212,6 @@ OC.L10N.register(
     "E-mail address" : "Електронна адреса",
     "Valid until" : "Дійсно до",
     "Certificate" : "Сертифікат",
-    "Private key" : "Приватний ключ",
     "Back" : "Назад",
     "Submit" : "Гаразд",
     "Keyboard shortcut" : "Сполучення клавіш",

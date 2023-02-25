@@ -293,7 +293,6 @@ OC.L10N.register(
     "E-mail address" : "E-postadress",
     "Valid until" : "Giltigt till",
     "Certificate" : "Certifikat",
-    "Private key" : "Privat nyckel",
     "Back" : "Tillbaka",
     "Submit" : "Skicka",
     "Keyboard shortcut" : "Tangentbordsgenvägar",

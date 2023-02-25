@@ -490,8 +490,6 @@ OC.L10N.register(
     "Import certificate" : "Sertifikayı içe aktar",
     "Import S/MIME certificate" : "S/MIME sertifikasını içe aktar",
     "Certificate" : "Sertifika",
-    "Private key" : "Kişisel anahtar",
-    "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted." : "Yalnızca PEM kodlu sertifikalar ve kişisel anahtarlar desteklenir. PKCS #12 sertifikaları (.p12 dosyaları) içe aktarılamaz ve dönüştürülmeleri gerekir.",
     "Back" : "Geri",
     "Submit" : "Gönder",
     "Certificate imported successfully" : "Sertifika içe aktarıldı",

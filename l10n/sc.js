@@ -316,7 +316,6 @@ OC.L10N.register(
     "With the settings above, the app will create account settings in the following way:" : "Cun is impostatziones de antis, s'aplicatzione at a creare is impostatziones de contu in custa manera:",
     "E-mail address" : "Indiritzu de posta eletrònica",
     "Certificate" : "Tzertificadu",
-    "Private key" : "Crae privada",
     "Back" : "In segus",
     "Submit" : "Imbia",
     "Keyboard shortcut" : "Curtziadòrgiu de tecladu",

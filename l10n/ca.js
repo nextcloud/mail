@@ -442,7 +442,6 @@ OC.L10N.register(
     "E-mail address" : "Adreça de correu",
     "Valid until" : "Valid fins",
     "Certificate" : "Certificat",
-    "Private key" : "Clau privada",
     "Back" : "Torna",
     "Submit" : "Envia",
     "Keyboard shortcut" : "Drecera de teclat",

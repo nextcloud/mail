@@ -301,7 +301,6 @@ OC.L10N.register(
     "E-mail address" : "E-mail adresse",
     "Valid until" : "Gyldig indtil",
     "Certificate" : "Certifikat",
-    "Private key" : "Private key",
     "Back" : "Tilbage",
     "Submit" : "Tilføj",
     "Keyboard shortcut" : "Tastaturgenvej",

@@ -353,7 +353,6 @@ OC.L10N.register(
     "E-mail address" : "E-mailadres",
     "Valid until" : "Geldig tot",
     "Certificate" : "Certificaat",
-    "Private key" : "Privésleutel",
     "Back" : "Terug",
     "Submit" : "Verwerken",
     "Keyboard shortcut" : "Sneltoets",

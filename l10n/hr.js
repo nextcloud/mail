@@ -345,7 +345,6 @@ OC.L10N.register(
     "E-mail address" : "Adresa e-pošte",
     "Valid until" : "Vrijedi do",
     "Certificate" : "Vjerodajnica",
-    "Private key" : "Privatni ključ",
     "Back" : "Natrag",
     "Submit" : "Šalji",
     "Keyboard shortcut" : "Tipkovni prečac",

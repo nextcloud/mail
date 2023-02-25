@@ -490,8 +490,6 @@ OC.L10N.register(
     "Import certificate" : "Import certificate",
     "Import S/MIME certificate" : "Import S/MIME certificate",
     "Certificate" : "Certificado",
-    "Private key" : "Chave privada",
-    "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted." : "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted.",
     "Back" : "Voltar",
     "Submit" : "Enviar",
     "Certificate imported successfully" : "Certificate imported successfully",

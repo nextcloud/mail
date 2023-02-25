@@ -461,7 +461,6 @@ OC.L10N.register(
     "Import certificate" : "Inportatu ziurtagiria",
     "Import S/MIME certificate" : "Inportatu S/MIME ziurtagiria",
     "Certificate" : "Ziurtagiria",
-    "Private key" : "Gako pribatua",
     "Back" : "Atzera",
     "Submit" : "Bidali",
     "Keyboard shortcut" : "Teklatuko lasterbidea",

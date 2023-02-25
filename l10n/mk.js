@@ -352,7 +352,6 @@ OC.L10N.register(
     "E-mail address" : "Е-пошта адреса",
     "Valid until" : "Валиден до",
     "Certificate" : "Сертификат",
-    "Private key" : "Приватен клуч",
     "Back" : "Назад",
     "Submit" : "Испрати",
     "Keyboard shortcut" : "Кратенка преку тастатура",

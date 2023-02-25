@@ -484,8 +484,6 @@
     "Import certificate" : "Tanúsítvány importálása",
     "Import S/MIME certificate" : "S/MIME tanúsítvány importálása",
     "Certificate" : "Tanúsítvány",
-    "Private key" : "Privát kulcs",
-    "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted." : "Csak a PEM kódolású tanúsítványok és privát kulcsok támogatottak. A PKCS #12 tanúsítványok (.p12 fájlok) nem importálhatók, és át kell őket alakítani.",
     "Back" : "Vissza",
     "Submit" : "Beküldés",
     "Certificate imported successfully" : "Tanúsítvány sikeresen importálva",

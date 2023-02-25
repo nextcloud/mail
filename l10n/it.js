@@ -353,7 +353,6 @@ OC.L10N.register(
     "E-mail address" : "Indirizzo di posta",
     "Valid until" : "Valido fino al",
     "Certificate" : "Certificato",
-    "Private key" : "Chiave privata",
     "Back" : "Indietro",
     "Submit" : "Invia",
     "Keyboard shortcut" : "Scorciatoia da tastiera",

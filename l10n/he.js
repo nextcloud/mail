@@ -230,7 +230,6 @@ OC.L10N.register(
     "E-mail address" : "כתובת דוא״ל",
     "Valid until" : "בתוקף עד",
     "Certificate" : "אישור",
-    "Private key" : "מפתח פרט",
     "Back" : "חזרה",
     "Submit" : "שליחה",
     "Keyboard shortcut" : "קיצור מקלדת",

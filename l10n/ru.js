@@ -404,7 +404,6 @@ OC.L10N.register(
     "E-mail address" : "Адрес эл. почты",
     "Valid until" : "Дата истечения",
     "Certificate" : "Сертификат",
-    "Private key" : "Закрытый ключ",
     "Back" : "Назад",
     "Submit" : "Отправить ответ",
     "Keyboard shortcut" : "Комбинации клавиш",

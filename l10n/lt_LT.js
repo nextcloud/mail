@@ -283,7 +283,6 @@ OC.L10N.register(
     "E-mail address" : "El. pašto adresas",
     "Valid until" : "Galioja iki",
     "Certificate" : "Liudijimas",
-    "Private key" : "Privatusis raktas",
     "Back" : "Atgal",
     "Submit" : "Pateikti",
     "Keyboard shortcut" : "Spartusis klavišas",

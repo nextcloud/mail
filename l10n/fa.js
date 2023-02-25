@@ -161,7 +161,6 @@ OC.L10N.register(
     "E-mail address" : "آدرس ایمیل",
     "Valid until" : "متعبر تا",
     "Certificate" : "گواهی",
-    "Private key" : "کلید خصوصی",
     "Back" : "بازگشت",
     "Submit" : "ارسال",
     "Keyboard shortcut" : "صفحه کلید",

@@ -376,7 +376,6 @@ OC.L10N.register(
     "Valid until" : "Veljavno do",
     "Import certificate" : "Uvozi potrdilo",
     "Certificate" : "Potrdilo",
-    "Private key" : "Zasebni ključ",
     "Back" : "Nazaj",
     "Submit" : "Pošlji",
     "Keyboard shortcut" : "Tipkovna bližnica",

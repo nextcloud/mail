@@ -489,8 +489,6 @@
     "Import certificate" : "匯入憑證",
     "Import S/MIME certificate" : "匯入 S/MIME 憑證",
     "Certificate" : "憑證",
-    "Private key" : "私鑰",
-    "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted." : "僅支援 PEM 編碼憑證與私鑰。無法匯入 PKCS #12 憑證（.p12 檔案），必須轉換。",
     "Back" : "返回",
     "Submit" : "遞交",
     "Certificate imported successfully" : "成功匯出憑證",

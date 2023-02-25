@@ -334,7 +334,6 @@ OC.L10N.register(
     "E-mail address" : "E-mail διεύθυνση",
     "Valid until" : "Έγκυρο έως",
     "Certificate" : "Πιστοποιητικό",
-    "Private key" : "Ιδιωτικό κλειδί",
     "Back" : "Πίσω",
     "Submit" : "Υποβολή",
     "Keyboard shortcut" : "Συντόμευση πλητρολογίου",

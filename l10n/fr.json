@@ -489,8 +489,6 @@
     "Import certificate" : "Importer un certificat",
     "Import S/MIME certificate" : "Importer un certificat S/MIME",
     "Certificate" : "Certificat",
-    "Private key" : "Clé privée",
-    "Only PEM encoded certificates and private keys are supported. PKCS #12 certificates (.p12 files) can't be imported and need to be converted." : "Seulement les clés privés et les certificats encodés en PEM sont supportés. Les certificats PKCS #12 (fichiers .p12) ne peuvent être importés et doivent être convertis.",
     "Back" : "Retour",
     "Submit" : "Soumettre",
     "Certificate imported successfully" : "Certificat importé avec succès",
