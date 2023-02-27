@@ -60,10 +60,13 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ZipResponse;
 use OCP\Files\Folder;
+use OCP\Files\GenericFileException;
 use OCP\Files\IMimeTypeDetector;
+use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\Lock\LockedException;
 use Psr\Log\LoggerInterface;
 use function array_map;
 
@@ -653,7 +656,9 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
-	 * @throws ServiceException
+	 * @throws GenericFileException
+	 * @throws NotPermittedException
+	 * @throws LockedException
 	 */
 	#[TrapError]
 	public function saveAttachment(int $id,
@@ -667,38 +672,26 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		/** @var Attachment[] $attachments */
+		$attachments = [];
 		if ($attachmentId === '0') {
-			$client = $this->clientFactory->getClient($account);
-			try {
-				$m = $this->mailManager->getImapMessage(
-					$client,
-					$account,
-					$mailbox,
-					$message->getUid(),
-					true // Body is required for attachments
-				);
-			} finally {
-				$client->logout();
-			}
-
-			// Save all attachments
-			$attachmentIds = array_map(static function ($a) {
-				return $a['id'];
-			}, $m->attachments);
-		} else {
-			$attachmentIds = [$attachmentId];
-		}
-
-		foreach ($attachmentIds as $aid) {
-			$attachment = $this->mailManager->getMailAttachment(
+			$attachments = $this->mailManager->getMailAttachments(
 				$account,
 				$mailbox,
 				$message,
-				$aid,
 			);
+		} else {
+			$attachments[] = $this->mailManager->getMailAttachment(
+				$account,
+				$mailbox,
+				$message,
+				$attachmentId,
+			);
+		}
 
+		foreach ($attachments as $attachment) {
 			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
-				$aid,
+				$attachment->getId(),
 			]) . '.eml';
 			$fileParts = pathinfo($fileName);
 			$fileName = $fileParts['filename'];
