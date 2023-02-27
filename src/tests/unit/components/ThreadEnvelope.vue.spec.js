@@ -72,6 +72,11 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
+			methods: {
+				filterSubject() {
+					return undefined;
+				},
+			},
 			store,
 			localVue,
 		})
@@ -95,6 +100,11 @@ describe('ThreadEnvelope', () => {
 			computed: {
 				mailbox() {
 					return { myAcls: 'x' }
+				},
+			},
+			methods: {
+				filterSubject() {
+					return undefined;
 				},
 			},
 			store,
@@ -122,6 +132,11 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 's' }
 				},
 			},
+			methods: {
+				filterSubject() {
+					return undefined;
+				},
+			},
 			store,
 			localVue,
 		})
@@ -147,6 +162,11 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { myAcls: undefined }
+				},
+			},
+			methods: {
+				filterSubject() {
+					return undefined;
 				},
 			},
 			store,
@@ -177,6 +197,11 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 'i' }
 				},
 			},
+			methods: {
+				filterSubject() {
+					return undefined;
+				},
+			},
 			store,
 			localVue,
 		})
@@ -203,6 +228,11 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { myAcls: undefined }
+				},
+			},
+			methods: {
+				filterSubject() {
+					return undefined;
 				},
 			},
 			store,
@@ -233,6 +263,11 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
+			methods: {
+				filterSubject() {
+					return undefined;
+				},
+			},
 			store,
 			localVue,
 		})
@@ -256,6 +291,11 @@ describe('ThreadEnvelope', () => {
 			computed: {
 				mailbox() {
 					return { myAcls: 'x' }
+				},
+			},
+			methods: {
+				filterSubject() {
+					return undefined;
 				},
 			},
 			store,
@@ -284,6 +324,11 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: undefined }
 				},
 			},
+			methods: {
+				filterSubject() {
+					return undefined;
+				},
+			},
 			store,
 			localVue,
 		})
@@ -309,6 +354,11 @@ describe('ThreadEnvelope', () => {
 					return { myAcls: 's' }
 				},
 			},
+			methods: {
+				filterSubject() {
+					return undefined;
+				},
+			},
 			store,
 			localVue,
 		})
@@ -331,6 +381,11 @@ describe('ThreadEnvelope', () => {
 			computed: {
 				mailbox() {
 					return { myAcls: 'te' }
+				},
+			},
+			methods: {
+				filterSubject() {
+					return undefined;
 				},
 			},
 			store,
@@ -362,6 +417,11 @@ describe('ThreadEnvelope', () => {
 			computed: {
 				mailbox() {
 					return { myAcls: 'w' }
+				},
+			},
+			methods: {
+				filterSubject() {
+					return undefined;
 				},
 			},
 			store,
@@ -399,6 +459,11 @@ describe('ThreadEnvelope', () => {
 					return { }
 				},
 			},
+			methods: {
+				filterSubject() {
+					return undefined;
+				},
+			},
 			store,
 			localVue,
 		})
@@ -431,6 +496,11 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { }
+				},
+			},
+			methods: {
+				filterSubject() {
+					return undefined;
 				},
 			},
 			store,
