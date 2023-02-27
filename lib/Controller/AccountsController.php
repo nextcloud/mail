@@ -46,6 +46,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Validation\RemoteHostValidator;
+use OCA\Mail\IMAP\MailboxSync;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -66,6 +67,7 @@ class AccountsController extends Controller {
 	private SyncService $syncService;
 	private IConfig $config;
 	private RemoteHostValidator $hostValidator;
+	private MailboxSync $mailboxSync;
 
 	public function __construct(string $appName,
 								   IRequest $request,
@@ -79,7 +81,8 @@ class AccountsController extends Controller {
 								   IMailManager $mailManager,
 								   SyncService $syncService,
 									IConfig $config,
-									RemoteHostValidator $hostValidator
+									RemoteHostValidator $hostValidator,
+									MailboxSync $mailboxSync
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -93,6 +96,7 @@ class AccountsController extends Controller {
 		$this->syncService = $syncService;
 		$this->config = $config;
 		$this->hostValidator = $hostValidator;
+		$this->mailboxSync = $mailboxSync;
 	}
 
 	/**
@@ -365,9 +369,7 @@ class AccountsController extends Controller {
 			);
 		}
 		try {
-			return MailJsonResponse::success(
-				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod), Http::STATUS_CREATED
-			);
+			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod);
 		} catch (CouldNotConnectException $e) {
 			$data = [
 				'error' => $e->getReason(),
@@ -384,6 +386,16 @@ class AccountsController extends Controller {
 			]);
 			return MailJsonResponse::error('Could not create account');
 		}
+		try {
+			$this->mailboxSync->sync($account, $this->logger);
+		} catch (ServiceException $e) {
+			$this->logger->error('Failed syncing the newly created account' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+		}
+		return MailJsonResponse::success(
+			$account, Http::STATUS_CREATED
+		);
 	}
 
 	/**
