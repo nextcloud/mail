@@ -2,12 +2,13 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 /**
- * @typedef {object} Alias
+ * @typedef Alias
  * @property {number} id the id
  * @property {string} alias alias address
  * @property {string} name alias display name
  * @property {string} signature alias signature
  * @property {boolean} provisioned whether the alias comes from LDAP
+ * @property {number|null} smimeCertificateId smime certificate id
  */
 
 /**

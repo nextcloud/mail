@@ -31,6 +31,8 @@ use Horde_Imap_Client_Data_Envelope;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Mime_Headers;
 use Horde_Mime_Headers_ContentParam_ContentType;
+use Horde_Mime_Part;
+use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
@@ -58,6 +60,9 @@ class SmimeServiceTest extends TestCase {
 
 	/** @var ITimeFactory|MockObject */
 	private $timeFactory;
+
+	/** @var SmimeService&MockObject */
+	private $smimeService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -300,5 +305,75 @@ class SmimeServiceTest extends TestCase {
 			$verifiedContent,
 			$this->smimeService->extractSignedContent($signedMessage),
 		);
+	}
+	public function testFindCertificatesByAddressList(): void {
+		$addressJohn = Address::fromRaw('John', 'john@foo.bar');
+		$addressJane = Address::fromRaw('Jane', 'jane@foo.bar');
+
+		$addressList = new AddressList([
+			$addressJohn,
+			$addressJane
+		]);
+
+		$certificateJohn = new SmimeCertificate();
+		$certificateJohn->setId(1);
+		$certificateJohn->setUserId('100');
+		$certificateJohn->setCertificate('10101010');
+
+		$certificateJane = new SmimeCertificate();
+		$certificateJane->setId(2);
+		$certificateJane->setUserId('100');
+		$certificateJane->setCertificate('10101010');
+
+		$this->certificateMapper
+			->method('findAllByEmailAddresses')
+			->with(100, ['john@foo.bar', 'jane@foo.bar'])
+			->willReturn([$certificateJohn, $certificateJane]);
+
+		$certificates = $this->smimeService->findCertificatesByAddressList($addressList, '100');
+		$this->assertCount(2, $certificates);
+	}
+
+	public function testEncryptMimePartText() {
+		$certificateDomainTld = $this->getTestCertificate('user@domain.tld');
+		$certificateImapLocalhost = $this->getTestCertificate('user@imap.localhost');
+
+		$certificates = [
+			$certificateDomainTld,
+			$certificateImapLocalhost
+		];
+
+		$mailBody = file_get_contents(__DIR__ . '/../../../tests/data/mime-html-image.txt');
+
+		$mimePart = new \Horde_Mime_Part();
+		$mimePart->setContents($mailBody);
+
+		$this->crypto
+			->method('decrypt')
+			->will($this->returnArgument(0));
+		$this->tempManager
+			->method('getTemporaryFile')
+			->willReturnCallback(function () {
+				return $this->createTempFile();
+			});
+
+		$encryptedMimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);
+		$encryptedText = $encryptedMimePart->toString([
+			'canonical' => true,
+			'headers' => true,
+		]);
+
+		$decryptedTextImapLocalhost = $this->smimeService->decryptMimePartText($encryptedText, $certificateImapLocalhost);
+		$decryptedMimePartImapLocalhost = Horde_Mime_Part::parseMessage($decryptedTextImapLocalhost, [
+			'forcemime' => true,
+		]);
+
+		$decryptedTextDomainTld = $this->smimeService->decryptMimePartText($encryptedText, $certificateDomainTld);
+		$decryptedMimePartDomainTld = Horde_Mime_Part::parseMessage($decryptedTextDomainTld, [
+			'forcemime' => true,
+		]);
+
+		$this->assertEquals($mimePart->getContents(), $decryptedMimePartImapLocalhost->getContents());
+		$this->assertEquals($mimePart->getContents(), $decryptedMimePartDomainTld->getContents());
 	}
 }

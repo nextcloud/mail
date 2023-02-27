@@ -116,10 +116,10 @@ describe('Composer', () => {
 		})
 
 		view.vm.wantsSmimeSign = false
-		expect(view.vm.smimeSign).toEqual(false)
+		expect(view.vm.shouldSmimeSign).toEqual(false)
 
 		view.vm.wantsSmimeSign = true
-		expect(view.vm.smimeSign).toEqual(false)
+		expect(view.vm.shouldSmimeSign).toEqual(false)
 	})
 
 	it('should S/MIME sign messages if there are certs', () => {
@@ -134,9 +134,110 @@ describe('Composer', () => {
 		})
 
 		view.vm.wantsSmimeSign = true
-		expect(view.vm.smimeSign).toEqual(true)
+		expect(view.vm.shouldSmimeSign).toEqual(true)
 
 		view.vm.wantsSmimeSign = false
-		expect(view.vm.smimeSign).toEqual(false)
+		expect(view.vm.shouldSmimeSign).toEqual(false)
 	})
+
+	it('should not S/MIME encrypt messages if there are no certs', () => {
+		const view = shallowMount(Composer, {
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return undefined
+				}
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeEncrypt = false
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+	})
+
+	it('should not S/MIME encrypt messages if there are missing recipient certs', () => {
+		const view = shallowMount(Composer, {
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return { foo: 'bar' }
+				},
+				missingSmimeCertificatesForRecipients() {
+					return ['john@foo.bar']
+				}
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeEncrypt = false
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+	})
+
+	it('should S/MIME sign messages if there are certs', () => {
+		const view = shallowMount(Composer, {
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return { foo: 'bar' }
+				},
+				missingSmimeCertificatesForRecipients() {
+					return []
+				}
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.shouldSmimeEncrypt).toEqual(true)
+
+		view.vm.wantsSmimeEncrypt = false
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+	})
+
+	it('generate title for submit button', () => {
+		const view = shallowMount(Composer, {
+			store,
+			localVue,
+		})
+
+
+		expect(view.vm.submitButtonTitle).toEqual('Send')
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with S/MIME and send')
+
+		view.vm.wantsSmimeEncrypt = false
+		view.vm.mailvelope.available = true
+		view.vm.encrypt = true
+
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send')
+	})
+
+	it('generate title for submit button (send later)', () => {
+		const view = shallowMount(Composer, {
+			store,
+			localVue,
+		})
+
+		view.vm.sendAtVal = '2023-01-01 14:00'
+
+		expect(view.vm.submitButtonTitle).toEqual('Send later Jan 1, 02:00 PM')
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with S/MIME and send later Jan 1, 02:00 PM')
+
+		view.vm.wantsSmimeEncrypt = false
+		view.vm.mailvelope.available = true
+		view.vm.encrypt = true
+
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send later Jan 1, 02:00 PM')
+	})
+
+
 })

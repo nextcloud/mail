@@ -58,6 +58,8 @@ use function array_filter;
  * @method setSmimeSign(bool $smimeSign)
  * @method int|null getSmimeCertificateId()
  * @method setSmimeCertificateId(?int $smimeCertificateId)
+ * @method bool|null getSmimeEncrypt()
+ * @method setSmimeEncrypt (bool $smimeEncryt)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -111,6 +113,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var int|null */
 	protected $smimeCertificateId;
 
+	/** @var bool|null */
+	protected $smimeEncrypt;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -121,6 +126,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('updatedAt', 'integer');
 		$this->addType('smimeSign', 'boolean');
 		$this->addType('smimeCertificateId', 'integer');
+		$this->addType('smimeEncrypt', 'boolean');
 	}
 
 	#[ReturnTypeWillChange]
@@ -161,6 +167,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'failed' => $this->isFailed() === true,
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
 			'smimeSign' => $this->getSmimeSign() === true,
+			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
 		];
 	}
 

@@ -35,6 +35,7 @@ use OCA\Mail\AddressList;
 class NewMessageData {
 	private ?int $smimeCertificateId;
 	private bool $smimeSign;
+	private bool $smimeEncrypt;
 
 	/** @var Account */
 	private $account;
@@ -86,7 +87,8 @@ class NewMessageData {
 								bool $isHtml = true,
 								bool $isMdnRequested = false,
 								?int $smimeCertificateId = null,
-								bool $smimeSign = false) {
+								bool $smimeSign = false,
+								bool $smimeEncrypt = false) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -98,6 +100,7 @@ class NewMessageData {
 		$this->isMdnRequested = $isMdnRequested;
 		$this->smimeCertificateId = $smimeCertificateId;
 		$this->smimeSign = $smimeSign;
+		$this->smimeEncrypt = $smimeEncrypt;
 	}
 
 	/**
@@ -124,7 +127,8 @@ class NewMessageData {
 									   bool $isHtml = true,
 									   bool $requestMdn = false,
 									   ?int $smimeCertificateId = null,
-									   bool $smimeSign = false): NewMessageData {
+									   bool $smimeSign = false,
+									   bool $smimeEncrypt = false): NewMessageData {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
@@ -141,6 +145,7 @@ class NewMessageData {
 			$requestMdn,
 			$smimeCertificateId,
 			$smimeSign,
+			$smimeEncrypt,
 		);
 	}
 
@@ -207,5 +212,9 @@ class NewMessageData {
 
 	public function getSmimeCertificateId(): ?int {
 		return $this->smimeCertificateId;
+	}
+
+	public function getSmimeEncrypt(): bool {
+		return $this->smimeEncrypt;
 	}
 }

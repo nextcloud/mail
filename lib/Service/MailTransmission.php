@@ -60,6 +60,7 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeEncryptException;
 use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -230,6 +231,36 @@ class MailTransmission implements IMailTransmission {
 			}
 		}
 
+		if ($messageData->getSmimeEncrypt()) {
+			if ($messageData->getSmimeCertificateId() === null) {
+				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
+			}
+
+			try {
+				$addressList = $messageData->getTo()
+					->merge($messageData->getCc())
+					->merge($messageData->getBcc());
+				$certificates = $this->smimeService->findCertificatesByAddressList($addressList, $account->getUserId());
+
+				$senderCertificate = $this->smimeService->findCertificate($messageData->getSmimeCertificateId(), $account->getUserId());
+				$certificates[] = $senderCertificate;
+
+				$mimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);
+			} catch (DoesNotExistException $e) {
+				throw new ServiceException(
+					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			} catch (SmimeEncryptException | ServiceException $e) {
+				throw new ServiceException(
+					'Could not send message: Failed to encrypt MIME part: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			}
+		}
+
 		$mail->setBasePart($mimePart);
 
 		$this->eventDispatcher->dispatchTyped(
@@ -302,6 +333,7 @@ class MailTransmission implements IMailTransmission {
 			false,
 			$message->getSmimeCertificateId(),
 			$message->getSmimeSign() ?? false,
+			$message->getSmimeEncrypt() ?? false,
 		);
 
 		if ($message->getAliasId() !== null) {
