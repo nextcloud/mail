@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Attachment;
 use OCA\Mail\Http\TrapError;
 use Exception;
 use Horde_Mime_Exception;
@@ -591,7 +592,7 @@ class MessagesController extends Controller {
 		// Body party and embedded messages do not have a name
 		if ($attachment->getName() === null) {
 			return new AttachmentDownloadResponse(
-				$attachment->getContents(),
+				$attachment->getContent(),
 				$this->l10n->t('Embedded message %s', [
 					$attachmentId,
 				]) . '.eml',
@@ -599,7 +600,7 @@ class MessagesController extends Controller {
 			);
 		}
 		return new AttachmentDownloadResponse(
-			$attachment->getContents(),
+			$attachment->getContent(),
 			$attachment->getName(),
 			$attachment->getType()
 		);
@@ -632,10 +633,10 @@ class MessagesController extends Controller {
 		$zip = new ZipResponse($this->request, 'attachments');
 
 		foreach ($attachments as $attachment) {
-			$fileName = $attachment['name'];
+			$fileName = $attachment->getName();
 			$fh = fopen("php://temp", 'r+');
-			fputs($fh, $attachment['content']);
-			$size = (int)$attachment['size'];
+			fputs($fh, $attachment->getContent());
+			$size = $attachment->getSize();
 			rewind($fh);
 			$zip->addResource($fh, $fileName, $size);
 		}
@@ -710,7 +711,7 @@ class MessagesController extends Controller {
 			}
 
 			$newFile = $this->userFolder->newFile($fullPath);
-			$newFile->putContent($attachment->getContents());
+			$newFile->putContent($attachment->getContent());
 		}
 		return new JSONResponse();
 	}

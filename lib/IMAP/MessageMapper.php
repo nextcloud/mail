@@ -580,8 +580,8 @@ class MessageMapper {
 									  string $userId,
 									  ?array $attachmentIds = []): array {
 		$attachments = $this->getAttachments($client, $mailbox, $uid, $userId, $attachmentIds);
-		return array_map(static function (array $attachment) {
-			return $attachment['content'];
+		return array_map(static function (Attachment $attachment) {
+			return $attachment->getContent();
 		}, $attachments);
 	}
 
@@ -593,7 +593,7 @@ class MessageMapper {
 	 * @param integer $uid
 	 * @param string $userId
 	 * @param array|null $attachmentIds
-	 * @return array[]
+	 * @return Attachment[]
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
@@ -642,6 +642,7 @@ class MessageMapper {
 			}
 		}
 
+		/** @var Attachment[] $attachments */
 		$attachments = [];
 		foreach ($structure->partIterator() as $key => $part) {
 			/** @var Horde_Mime_Part $part */
@@ -655,10 +656,8 @@ class MessageMapper {
 				continue;
 			}
 
-			if ($isEncrypted) {
-				// Decrypted message already contains all data
-				$content = $part->getContents();
-			} else {
+			// Encrypted parts were already decoded and their content can be used directly
+			if (!$isEncrypted) {
 				$stream = $messageData->getBodyPart($key, true);
 				$mimeHeaders = $messageData->getMimeHeader($key, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
@@ -667,15 +666,10 @@ class MessageMapper {
 				$part->setContents($stream, [
 					'usestream' => true,
 				]);
-				$content = $part->getContents();
 				fclose($stream);
 			}
 
-			$attachments[] = [
-				'content' => $content,
-				'name' => $part->getName(),
-				'size' => $part->getBytes()
-			];
+			$attachments[] = Attachment::fromMimePart($part);
 		}
 		return $attachments;
 	}
@@ -778,7 +772,7 @@ class MessageMapper {
 		}
 
 		$mimePart->setContents($body);
-		return new Attachment($mimePart);
+		return Attachment::fromMimePart($mimePart);
 	}
 
 	/**

@@ -27,6 +27,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -522,11 +523,13 @@ class MailManagerTest extends TestCase {
 			->method('getUserId')
 			->willReturn('user');
 		$attachments = [
-			[
-				'content' => 'abcdefg',
-				'name' => 'cat.png',
-				'size' => ''
-			]
+			new Attachment(
+				null,
+				'cat.png',
+				'image/png',
+				'abcdefg',
+				7
+			),
 		];
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
