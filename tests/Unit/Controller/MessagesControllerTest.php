@@ -302,7 +302,7 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$this->attachment->expects($this->once())
-			->method('getContents')
+			->method('getContent')
 			->will($this->returnValue($contents));
 		$this->attachment->expects($this->any())
 			->method('getName')
@@ -368,7 +368,7 @@ class MessagesControllerTest extends TestCase {
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
-			->method('getContents')
+			->method('getContent')
 			->will($this->returnValue('abcdefg'));
 
 		$expected = new JSONResponse();
@@ -444,7 +444,7 @@ class MessagesControllerTest extends TestCase {
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
-			->method('getContents')
+			->method('getContent')
 			->will($this->returnValue('abcdefg'));
 
 		$expected = new JSONResponse();
@@ -469,11 +469,13 @@ class MessagesControllerTest extends TestCase {
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
 		$attachments = [
-			[
-				'content' => 'abcdefg',
-				'name' => 'cat.png',
-				'size' => ''
-			]
+			new Attachment(
+				null,
+				'cat.png',
+				'image/png',
+				'abcdefg',
+				7,
+			),
 		];
 
 		$this->mailManager->expects($this->once())
@@ -503,10 +505,10 @@ class MessagesControllerTest extends TestCase {
 
 		$zip = new ZipResponse($this->request, 'attachments');
 		foreach ($attachments as $attachment) {
-			$fileName = $attachment['name'];
+			$fileName = $attachment->getName();
 			$fh = fopen("php://temp", 'r+');
-			fputs($fh, $attachment['content']);
-			$size = (int)$attachment['size'];
+			fputs($fh, $attachment->getContent());
+			$size = $attachment->getSize();
 			rewind($fh);
 			$zip->addResource($fh, $fileName, $size);
 		}

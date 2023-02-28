@@ -246,7 +246,7 @@ interface IMailManager {
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param Message $message
-	 * @return array
+	 * @return Attachment[]
 	 */
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message) : array;
 

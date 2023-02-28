@@ -665,7 +665,7 @@ class MailManager implements IMailManager {
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param Message $message
-	 * @return array[]
+	 * @return Attachment[]
 	 */
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message): array {
 		$client = $this->imapClientFactory->getClient($account);
