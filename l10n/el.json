@@ -104,8 +104,6 @@
     "Enter a date" : "Προσθέστε ημερομηνία",
     "Add share link from {productName} Files" : "Προσθήκη συνδέσμου κοινής χρήσης από αρχεία {productName}",
     "Send" : "Αποστολή",
-    "Encrypt and send" : "Κρυπτογράφηση και αποστολή",
-    "Send unencrypted" : "Αποστολή μη κρυπτογραφημένου",
     "Message {id} could not be found" : "Δεν ήταν δυνατή η εύρεση του μηνύματος {id}",
     "Choose a file to add as attachment" : "Επιλέξτε ένα αρχείο για να προσθέσετε ως συνημμένο",
     "Choose a file to share as a link" : "Επιλέξτε ένα αρχείο για κοινή χρήση ως σύνδεσμο",

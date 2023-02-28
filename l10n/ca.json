@@ -119,8 +119,6 @@
     "Enter a date" : "Introduïu una data",
     "Add share link from {productName} Files" : "Afegeix un enllaç per compartir des de {productName} Fitxers",
     "Send" : "Envia",
-    "Encrypt and send" : "Encripta i enviï",
-    "Send unencrypted" : "Envia sense encriptar",
     "Message {id} could not be found" : "No s'ha pogut trobar el missatge {id}",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "S'eliminarà qualsevol format existent (per exemple, en negreta, cursiva, subratllat o en línia).",
     "Turn off formatting" : "Desactiva el format",

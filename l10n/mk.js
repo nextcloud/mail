@@ -110,8 +110,6 @@ OC.L10N.register(
     "Enter a date" : "Внесете датум",
     "Add share link from {productName} Files" : "Додади линк со споделување од {productName} датотеките",
     "Send" : "Прати",
-    "Encrypt and send" : "Шифрирај и испрати",
-    "Send unencrypted" : "Испрати нешифрирана",
     "Message {id} could not be found" : "Пораката {id} не е пронајдена",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Сите постоечки форматирања (како пример: болд, потцртан текст, италик итн.) ќе бидат отстранети.",
     "Turn off formatting" : "Исклучи форматирање",

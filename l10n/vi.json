@@ -71,8 +71,6 @@
     "Encrypt message with Mailvelope" : "Mã hóa thư bằng Mailvelope",
     "Add share link from {productName} Files" : "Thêm liên kết chia sẻ từ Tệp {productName}",
     "Send" : "Gởi",
-    "Encrypt and send" : "Mã hóa và gửi",
-    "Send unencrypted" : "Gửi không mã hóa",
     "Message {id} could not be found" : "Không tìm thấy tin nhắn {id}",
     "Choose a file to add as attachment" : "Chọn một tệp để thêm dưới dạng tệp đính kèm",
     "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết",

@@ -89,8 +89,6 @@ OC.L10N.register(
     "Encrypt message with Mailvelope" : "Cifrar el mensaje con Mailvelope",
     "Add share link from {productName} Files" : "Añade un enlace para compartir desde Archivos de {productName}",
     "Send" : "Enviar",
-    "Encrypt and send" : "Cifrar y enviar",
-    "Send unencrypted" : "Enviar sin cifrar",
     "Message {id} could not be found" : "No se ha podido encontrar el mensaje {id}",
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
     "Choose a file to share as a link" : "Selecciona un archivo para compartir como enlace",

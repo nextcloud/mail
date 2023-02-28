@@ -97,8 +97,6 @@ OC.L10N.register(
     "Custom date and time" : "Anpassat datum och tid",
     "Enter a date" : "Ange datum",
     "Send" : "Skicka",
-    "Encrypt and send" : "Kryptera och skicka",
-    "Send unencrypted" : "Skicka okrypterat",
     "Message {id} could not be found" : "Meddelandet {id} hittades inte",
     "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
     "Choose a file to share as a link" : "Välj en fil att dela som länk",

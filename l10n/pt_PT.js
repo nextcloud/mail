@@ -72,8 +72,6 @@ OC.L10N.register(
     "Request a read receipt" : "Solicitar um recibo de leitura",
     "Encrypt message with Mailvelope" : "Cifrar a mensagem com Mailvelope",
     "Send" : "Enviar",
-    "Encrypt and send" : "Cifrar e enviar",
-    "Send unencrypted" : "Enviar sem cifra",
     "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
     "Set up an account" : "Configurar uma conta",
     "Plain text" : "Texto simples",

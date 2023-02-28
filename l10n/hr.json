@@ -86,8 +86,6 @@
     "Enter a date" : "Unesi datum",
     "Add share link from {productName} Files" : "Dodaj poveznicu za dijeljenje iz datoteka {productName}",
     "Send" : "Pošalji",
-    "Encrypt and send" : "Šifriraj i pošalji",
-    "Send unencrypted" : "Pošalji nešifrirano",
     "Message {id} could not be found" : "Poruka {id} nije pronađena",
     "Choose a file to add as attachment" : "Izaberi datoteku kao privitak",
     "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice",

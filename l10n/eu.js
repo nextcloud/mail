@@ -124,8 +124,6 @@ OC.L10N.register(
     "Enter a date" : "Sartu data bat",
     "Add share link from {productName} Files" : "Gehitu partekatze esteka {productName} Fitxategiak-etik",
     "Send" : "Bidali",
-    "Encrypt and send" : "Zifratu eta bidali",
-    "Send unencrypted" : "Bidali zifratu gabe",
     "Message {id} could not be found" : "Ezin izan da {id} mezua aurkitu",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Lehendik dagoen edozein formatua (adibidez, lodia, etzana, azpimarra edo lerroan dauden irudiak) kenduko da.",
     "Turn off formatting" : "Itzali formateatzea",

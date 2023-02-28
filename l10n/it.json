@@ -89,8 +89,6 @@
     "Enter a date" : "Digita una data",
     "Add share link from {productName} Files" : "Aggiungi collegamento di condivisione da {productName} File",
     "Send" : "Invia",
-    "Encrypt and send" : "Cifra e invia",
-    "Send unencrypted" : "Invia in chiaro",
     "Message {id} could not be found" : "Il messaggio {id} non può essere trovato",
     "Choose a file to add as attachment" : "Scegli un file da aggiungere come allegato",
     "Choose a file to share as a link" : "Scegli un file da condividere come un collegamento",

@@ -127,8 +127,6 @@
     "Enter a date" : "输入日期",
     "Add share link from {productName} Files" : "添加来自 {productName} 文件的共享链接",
     "Send" : "发送",
-    "Encrypt and send" : "加密并发送",
-    "Send unencrypted" : "不加密发送",
     "Message {id} could not be found" : "消息 {id} 未找到",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "任何现有格式（例如粗体、斜体、下划线或内联图像）都将被删除。",
     "Turn off formatting" : "关闭格式化",

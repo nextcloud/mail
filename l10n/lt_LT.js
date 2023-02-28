@@ -100,8 +100,6 @@ OC.L10N.register(
     "Send now" : "Siųsti dabar",
     "Enter a date" : "Įveskite datą",
     "Send" : "Siųsti",
-    "Encrypt and send" : "Šifruoti ir siųsti",
-    "Send unencrypted" : "Siųsti nešifruotą",
     "Turn off formatting" : "Išjungti formatavimą",
     "Turn off and remove formatting" : "Išjungti ir šalinti formatavimą",
     "Keep formatting" : "Palikti formatavimą",

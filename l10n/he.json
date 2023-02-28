@@ -77,8 +77,6 @@
     "Enter a date" : "נא למלא תאריך",
     "Add share link from {productName} Files" : "הוספת קישור שיתוף מקבצים של {productName}",
     "Send" : "שליחה",
-    "Encrypt and send" : "להצפין ולשלוח",
-    "Send unencrypted" : "לשלוח ללא הצפנה",
     "Message {id} could not be found" : "לא ניתן למצוא את הודעה {id}",
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
     "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור",

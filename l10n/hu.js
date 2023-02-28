@@ -131,8 +131,6 @@ OC.L10N.register(
     "Enter a date" : "Adjon meg egy dátumot",
     "Add share link from {productName} Files" : "Megosztási hivatkozás hozzáadása a(z) {productName} fájlokból",
     "Send" : "Küldés",
-    "Encrypt and send" : "Titkosítás és küldés",
-    "Send unencrypted" : "Küldés titkosítatlanul",
     "Message {id} could not be found" : "A(z) {id} üzenet nem található",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Minden meglévő formázás (például félkövér, dőlt és aláhúzott szöveg vagy beszűrt képek) eltávolításra kerül.",
     "Turn off formatting" : "Formázás kikapcsolása",

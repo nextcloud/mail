@@ -129,8 +129,6 @@
     "Enter a date" : "Datum eingeben",
     "Add share link from {productName} Files" : "Freigabelink aus {productName}-Dateien hinzufügen",
     "Send" : "Senden",
-    "Encrypt and send" : "Verschlüsseln und senden",
-    "Send unencrypted" : "Unverschlüsselt senden",
     "Message {id} could not be found" : "Nachricht {id} konnte nicht gefunden werden",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Vorhandene Formatierungen (z. B. fett, kursiv, unterstrichen oder eingefügte Bilder) werden entfernt.",
     "Turn off formatting" : "Formatierung ausschalten",

@@ -110,8 +110,6 @@ OC.L10N.register(
     "Enter a date" : "Vpis datuma ...",
     "Add share link from {productName} Files" : "Dodaj mapo do mesta souporabe datotek {productName}",
     "Send" : "Pošlji",
-    "Encrypt and send" : "Zašifriraj in pošlji",
-    "Send unencrypted" : "Pošlji nešifrirano",
     "Message {id} could not be found" : "Sporočila {id} ni mogoče najti.",
     "Turn off formatting" : "Onemogoči oblikovanje",
     "Turn off and remove formatting" : "Onemogoči in odstrani oblikovanje",

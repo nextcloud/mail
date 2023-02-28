@@ -123,8 +123,6 @@ OC.L10N.register(
     "Enter a date" : "Zadajte dátum",
     "Add share link from {productName} Files" : "Pridať odkaz sprístupnenia zo Súborov {productName}",
     "Send" : "Odoslať",
-    "Encrypt and send" : "Zašifrovať a odoslať",
-    "Send unencrypted" : "Poslať nezašifrované",
     "Message {id} could not be found" : "Správu {id} sa nepodarilo nájsť",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Akékoľvek existujúce formátovanie (napríklad tučné, kurzíva, podčiarknuté alebo vložené obrázky) bude odstránené.",
     "Turn off formatting" : "Vypnúť formátovanie",

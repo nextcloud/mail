@@ -120,8 +120,6 @@ OC.L10N.register(
     "Enter a date" : "Indtast en dato",
     "Add share link from {productName} Files" : "Tilføj delingslink fra {productName} filer",
     "Send" : "Send",
-    "Encrypt and send" : "Kryptér og send",
-    "Send unencrypted" : "Send ukrypteret",
     "Message {id} could not be found" : "Beskeden {id} kunne ikke findes",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Enhver eksisterende formatering (f.eks. fed, kursiv, understregning eller indlejrede billeder) vil blive fjernet.",
     "Turn off formatting" : "Slå formatering fra",

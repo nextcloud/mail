@@ -115,8 +115,6 @@ OC.L10N.register(
     "Enter a date" : "Skriv inn dato",
     "Add share link from {productName} Files" : "Legg til delingslink fra {productName}-filer",
     "Send" : "Send",
-    "Encrypt and send" : "Krypter og send",
-    "Send unencrypted" : "Send ukryptert",
     "Message {id} could not be found" : "Meldingen {id} ble ikke funnet",
     "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
     "Choose a file to share as a link" : "Velg en fil du vil dele som en lenke",

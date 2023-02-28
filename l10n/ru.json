@@ -114,8 +114,6 @@
     "Enter a date" : "Выберите дату",
     "Add share link from {productName} Files" : "Добавить ссылку для общего доступа из приложения Файлы для {productName}",
     "Send" : "Отправить",
-    "Encrypt and send" : "Зашифровать и отправить",
-    "Send unencrypted" : "Отправить без шифрования",
     "Message {id} could not be found" : "Не удалось найти сообщение {id}",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Любое существующее форматирование (например, жирный шрифт, курсив, подчеркивание или встроенные изображения) будет удалено.",
     "Turn off formatting" : "Отключить форматирование",

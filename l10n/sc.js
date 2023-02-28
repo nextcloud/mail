@@ -85,8 +85,6 @@ OC.L10N.register(
     "Enter a date" : "Inserta una data",
     "Add share link from {productName} Files" : "Agiunghe unu ligòngiu de cumpartzidura dae {productName} Archìvios",
     "Send" : "Imbia",
-    "Encrypt and send" : "Tzifra e imbia",
-    "Send unencrypted" : "Imbia chene tzifrare",
     "Message {id} could not be found" : "Su messàgiu {id} no s'est pòdidu agatare",
     "Choose a file to add as attachment" : "Sèbera un'archìviu de agiùnghere comente alligongiadu",
     "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu",
