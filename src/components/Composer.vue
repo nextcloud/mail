@@ -1,6 +1,6 @@
 <template>
 	<div class="message-composer">
-		<ReferencePickerModal v-if="isPickerAvailable && isPickerOpen" @submit="onPicked" @cancel="closePicker" />
+		<NcReferencePickerModal v-if="isPickerAvailable && isPickerOpen" @submit="onPicked" @cancel="closePicker" />
 		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
@@ -442,8 +442,7 @@ import MailvelopeEditor from './MailvelopeEditor'
 import { getMailvelope } from '../crypto/mailvelope'
 import { isPgpgMessage } from '../crypto/pgp'
 
-import '@nextcloud/vue-richtext/dist/style.css'
-import { ReferencePickerModal } from '@nextcloud/vue-richtext'
+import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichText.js'
 
 import Send from 'vue-material-design-icons/Send'
 import SendClock from 'vue-material-design-icons/SendClock'
@@ -485,7 +484,7 @@ export default {
 		UnfoldLessHorizontal,
 		IconHtml,
 		IconClose,
-		ReferencePickerModal,
+		NcReferencePickerModal,
 	},
 	props: {
 		fromAccount: {
