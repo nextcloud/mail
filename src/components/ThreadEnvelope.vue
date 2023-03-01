@@ -83,17 +83,17 @@
 				<template v-if="expanded">
 					<NcActions v-if="smimeData.isSigned || smimeData.isEncrypted">
 						<template #icon>
-							<LockIcon v-if="smimeData.isEncrypted"
+							<LockPlusIcon v-if="smimeData.isEncrypted"
 								:size="20"
 								fill-color="#008000" />
 							<LockIcon v-else-if="smimeData.signatureIsValid"
 								:size="20"
-								fill-color="#ffcc00" />
+								fill-color="#008000" />
 							<LockOffIcon v-else
 								:size="20"
 								fill-color="red" />
 						</template>
-						<NcActionText class="smime-text">
+						<NcActionText class="smime-text" :title="smimeHeading">
 							{{ smimeMessage }}
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
@@ -202,6 +202,7 @@ import ArchiveIcon from 'vue-material-design-icons/PackageDown'
 import EmailUnread from 'vue-material-design-icons/Email'
 import EmailRead from 'vue-material-design-icons/EmailOpen'
 import LockIcon from 'vue-material-design-icons/Lock'
+import LockPlusIcon from 'vue-material-design-icons/LockPlus'
 import LockOffIcon from 'vue-material-design-icons/LockOff'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { hiddenTags } from './tags.js'
@@ -238,6 +239,7 @@ export default {
 		ArchiveIcon,
 		LockIcon,
 		LockOffIcon,
+		LockPlusIcon,
 		NcActions,
 		NcActionText,
 	},
@@ -386,6 +388,17 @@ export default {
 		 */
 		smimeData() {
 			return this.message?.smime ?? {}
+		},
+		smimeHeading() {
+			if (this.smimeData.isEncrypted) {
+				return t('mail', 'Encrypted & verified ')
+			}
+
+			if (this.smimeData.signatureIsValid) {
+				return t('mail', 'Signature verified')
+			}
+
+			return t('mail', 'Signature unverified ')
 		},
 		smimeMessage() {
 			if (this.smimeData.isEncrypted) {
