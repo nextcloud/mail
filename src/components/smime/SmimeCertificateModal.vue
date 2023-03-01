@@ -41,11 +41,12 @@
 							<td>{{ certificate.info.emailAddress }}</td>
 							<td>{{ moment.unix(certificate.info.notAfter).format('LL') }}</td>
 							<td>
-								<NcButton type="secondary" @click="deleteCertificate(certificate.id)">
+								<NcButton type="tertiary-no-background" @click="deleteCertificate(certificate.id)">
 									<template #icon>
-										<DeleteIcon :size="20" />
+										<DeleteIcon
+											:title="t('mail', 'Delete certificate')"
+											:size="20" />
 									</template>
-									{{ t('mail', 'Delete') }}
 								</NcButton>
 							</td>
 						</tr>
