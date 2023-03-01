@@ -68,6 +68,8 @@ use function strtolower;
  * @method void setSyncInBackground(bool $sync)
  * @method string|null getMyAcls()
  * @method void setMyAcls(string|null $acls)
+ * @method bool|null isShared()
+ * @method void setShared(bool $shared)
  */
 class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
@@ -86,6 +88,7 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $specialUse;
 	protected $syncInBackground;
 	protected $myAcls;
+	protected $shared;
 
 	/**
 	 * @var int
@@ -102,6 +105,7 @@ class Mailbox extends Entity implements JsonSerializable {
 		$this->addType('syncVanishedLock', 'integer');
 		$this->addType('selectable', 'boolean');
 		$this->addType('syncInBackground', 'boolean');
+		$this->addType('shared', 'boolean');
 	}
 
 	public function isInbox(): bool {
@@ -167,6 +171,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'syncInBackground' => ($this->getSyncInBackground() === true),
 			'unread' => $this->unseen,
 			'myAcls' => $this->myAcls,
+			'shared' => $this->shared === true,
 		];
 	}
 }
