@@ -106,7 +106,7 @@ import moment from '@nextcloud/moment'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconCheck from 'vue-material-design-icons/Check'
-import IconCertificate from 'vue-material-design-icons/Certificate'
+import IconCertificate from 'vue-material-design-icons/Lock'
 import { compareSmimeCertificates } from '../util/smime'
 
 export default {
