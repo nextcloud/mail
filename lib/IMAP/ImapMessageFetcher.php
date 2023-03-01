@@ -139,6 +139,9 @@ class ImapMessageFetcher {
 			$this->hasAnyAttachment = $this->hasAttachments($structure);
 
 			$isEncrypted = $this->smimeService->isEncrypted($fetch);
+			$isOpaqueSigned = $structure->getContentTypeParameter('smime-type') === 'signed-data'
+				&& ($structure->getType() === 'application/pkcs7-mime'
+					|| $structure->getType() === 'application/x-pkcs7-mime');
 			if ($isEncrypted) {
 				// Fetch and parse full text if message is encrypted in order to analyze the
 				// structure. Conditional fetching doesn't work for encrypted messages.
@@ -163,20 +166,8 @@ class ImapMessageFetcher {
 				$structure = Horde_Mime_Part::parseMessage($decryptedText, [
 					'forcemime' => true,
 				]);
-			} elseif ($structure->getType() === 'application/pkcs7-mime'
-				&& $structure->getContentTypeParameter('smime-type') === 'signed-data') {
-				// Handle smime-type="signed-data" as the content is opaque until verified
-				// TODO: Idea: also handle regular signed message verification here
-
-				$isSigned = true;
-
+			} elseif ($isOpaqueSigned || $structure->getType() === 'multipart/signed') {
 				$query = new Horde_Imap_Client_Fetch_Query();
-				$query->envelope();
-				$query->flags();
-				$query->imapDate();
-				$query->headerText([
-					'peek' => true,
-				]);
 				$query->fullText([
 					'peek' => true,
 				]);
@@ -189,10 +180,15 @@ class ImapMessageFetcher {
 				}
 
 				$signedText = $fullTextFetch->getFullMsg();
+				$isSigned = true;
 				$signatureIsValid = $this->smimeService->verifyMessage($signedText);
-				$signedContent = $this->smimeService->extractSignedContent($signedText);
 
-				$structure = Horde_Mime_Part::parseMessage($signedContent, [
+				// Extract opaque signed content (smime-type="signed-data")
+				if ($isOpaqueSigned) {
+					$signedText = $this->smimeService->extractSignedContent($signedText);
+				}
+
+				$structure = Horde_Mime_Part::parseMessage($signedText, [
 					'forcemime' => true,
 				]);
 			}
@@ -261,14 +257,14 @@ class ImapMessageFetcher {
 	/**
 	 * @param Horde_Mime_Part $p
 	 * @param string $partNo
-	 * @param bool $isEncrypted
+	 * @param bool $isFetched Body is already fetched and contained within the mime part object
 	 * @return void
 	 *
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 */
-	private function getPart(Horde_Mime_Part $p, string $partNo, bool $isEncrypted): void {
+	private function getPart(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
 		// iMIP messages
 		// Handle text/calendar parts first because they might be attachments at the same time.
 		// Otherwise, some of the following if-conditions might break the handling and treat iMIP
@@ -301,7 +297,7 @@ class ImapMessageFetcher {
 					'id' => $p->getMimeId(),
 					'messageId' => $this->uid,
 					'method' => strtoupper($allContentTypeParameters['method']),
-					'contents' => $this->loadBodyData($p, $partNo, $isEncrypted),
+					'contents' => $this->loadBodyData($p, $partNo, $isFetched),
 				];
 				return;
 			}
@@ -342,17 +338,17 @@ class ImapMessageFetcher {
 		}
 
 		if ($p->getPrimaryType() === 'multipart') {
-			$this->handleMultiPartMessage($p, $partNo, $isEncrypted);
+			$this->handleMultiPartMessage($p, $partNo, $isFetched);
 			return;
 		}
 
 		if ($p->getType() === 'text/plain') {
-			$this->handleTextMessage($p, $partNo, $isEncrypted);
+			$this->handleTextMessage($p, $partNo, $isFetched);
 			return;
 		}
 
 		if ($p->getType() === 'text/html') {
-			$this->handleHtmlMessage($p, $partNo, $isEncrypted);
+			$this->handleHtmlMessage($p, $partNo, $isFetched);
 			return;
 		}
 
@@ -362,7 +358,7 @@ class ImapMessageFetcher {
 		// There are no PHP functions to parse embedded messages,
 		// so this just appends the raw source to the main message.
 		if ($p[0] === 'message') {
-			$data = $this->loadBodyData($p, $partNo, $isEncrypted);
+			$data = $this->loadBodyData($p, $partNo, $isFetched);
 			$this->plainMessage .= trim($data) . "\n\n";
 		}
 	}
