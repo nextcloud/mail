@@ -270,7 +270,8 @@ export default {
 		}
 
 		&__actions {
-			margin-top: 12px;
+			margin: 12px;
+			float: right;
 		}
 	}
 
