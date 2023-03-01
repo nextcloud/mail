@@ -35,6 +35,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Validation\RemoteHostValidator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -87,6 +88,10 @@ class AccountsControllerTest extends TestCase {
 
 	/** @var SyncService|MockObject */
 	private $syncService;
+
+	/** @var MailboxSync|MockObject */
+	private $mailboxSync;
+
 	/** @var RemoteHostValidator|MockObject */
 	private $hostValidator;
 
@@ -104,6 +109,7 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService = $this->createMock(SetupService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
+		$this->mailboxSync = $this->createMock(mailboxSync::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->hostValidator = $this->createMock(RemoteHostValidator::class);
 		$this->hostValidator->method('isValid')->willReturn(true);
@@ -122,6 +128,7 @@ class AccountsControllerTest extends TestCase {
 			$this->syncService,
 			$this->config,
 			$this->hostValidator,
+			$this->mailboxSync,
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
