@@ -69,7 +69,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 		}
 
 		try {
-			$this->classifier->train(
+			$this->classifier->trainWithDefaultEstimator(
 				$account,
 				$this->logger
 			);
