@@ -56,6 +56,8 @@
 					:size="20" />
 				<IconDelete v-else-if="mailbox.databaseId === account.trashMailboxId"
 					:size="20" />
+				<IconFolderShared v-else-if="mailbox.shared"
+					:size="20" />
 				<IconFolder v-else
 					:size="20" />
 			</div>
@@ -212,6 +214,7 @@ import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBub
 import IconEmailCheck from 'vue-material-design-icons/EmailCheck'
 import IconExternal from 'vue-material-design-icons/OpenInNew'
 import IconFolder from 'vue-material-design-icons/Folder'
+import IconFolderShared from 'vue-material-design-icons/FolderAccount'
 import IconFolderAdd from 'vue-material-design-icons/FolderMultiple'
 import IconFavorite from 'vue-material-design-icons/Star'
 import IconFolderRename from 'vue-material-design-icons/FolderEdit'
@@ -257,6 +260,7 @@ export default {
 		IconAllInboxes,
 		IconFavorite,
 		IconFolder,
+		IconFolderShared,
 		IconDraft,
 		IconArchive,
 		IconInbox,
