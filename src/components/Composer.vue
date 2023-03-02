@@ -591,7 +591,7 @@ export default {
 			subjectVal: this.subject,
 			bodyVal: this.editorBody,
 			attachments: this.attachmentsData,
-			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
+			noReply: this.to.some((to) => to.email?.startsWith('noreply@') || to.email?.startsWith('no-reply@')),
 			draftsPromise: Promise.resolve(this.draftId),
 			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
