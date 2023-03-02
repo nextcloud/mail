@@ -34,8 +34,6 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Attachment;
 use OCA\Mail\Http\TrapError;
 use Exception;
-use Horde_Mime_Exception;
-use Horde_Mime_Part;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
@@ -219,12 +217,6 @@ class MessagesController extends Controller {
 				$message->getUid(), true
 			);
 			$json = $imapMessage->getFullMessage($id);
-			$rawMessage = $this->mailManager->getSource(
-				$client,
-				$account,
-				$mailbox->getName(),
-				$message->getUid(),
-			);
 		} finally {
 			$client->logout();
 		}
@@ -249,16 +241,6 @@ class MessagesController extends Controller {
 		if ($imapMessage->isSigned()) {
 			$smimeData->setIsSigned(true);
 			$smimeData->setSignatureIsValid($imapMessage->isSignatureValid());
-		}
-		try {
-			// TODO: possibly merge with code in ImapMessageFetcher to handle verification early
-			$parsedMessage = Horde_Mime_Part::parseMessage($rawMessage, ['no_body' => true]);
-			if ($parsedMessage->getType() === 'multipart/signed') {
-				$smimeData->setIsSigned(true);
-				$smimeData->setSignatureIsValid($this->smimeService->verifyMessage($rawMessage));
-			}
-		} catch (Horde_Mime_Exception $e) {
-			$this->logger->warning('Failed to parse MIME message', ['error' => $e]);
 		}
 		$json['smime'] = $smimeData;
 
