@@ -93,7 +93,7 @@
 								:size="20"
 								fill-color="red" />
 						</template>
-						<NcActionText>
+						<NcActionText class="smime-text">
 							{{ smimeMessage }}
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
@@ -735,5 +735,9 @@ export default {
 	}
 	.junk-favorite-position {
 		margin-bottom: 36px !important;
+	}
+	.smime-text {
+		// same as padding-right on action-text styling
+		padding-left: 14px;
 	}
 </style>
