@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Namespace_List;
 use Horde_Imap_Client_Socket;
 use OC\AppFramework\Utility\TimeFactory;
 use OCA\Mail\Account;
@@ -135,6 +137,59 @@ class MailboxSyncTest extends TestCase {
 			->expects($this->once())
 			->method('dispatchTyped')
 			->with($this->equalTo(new MailboxesSynchronizedEvent($account)));
+
+		$this->sync->sync($account, new NullLogger());
+	}
+
+	public function testSyncShared(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setLastMailboxSync(0);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$this->timeFactory->method('getTime')->willReturn(100000);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$personal = new Horde_Imap_Client_Data_Namespace();
+		$personal->name = '';
+		$personal->type = Horde_Imap_Client_Data_Namespace::NS_PERSONAL;
+		$shared = new Horde_Imap_Client_Data_Namespace();
+		$shared->name = 'Shared/';
+		$shared->type = Horde_Imap_Client_Data_Namespace::NS_OTHER;
+		$client->expects($this->once())
+			->method('getNamespaces')
+			->willReturn(new Horde_Imap_Client_Namespace_List([
+				$personal,
+				$shared,
+			]));
+		$folders = [
+			$this->createMock(Folder::class),
+			$this->createMock(Folder::class),
+		];
+		$status = [
+			'unseen' => 10,
+			'messages' => 42,
+		];
+		$folders[0]->method('getStatus')->willReturn($status);
+		$folders[1]->method('getStatus')->willReturn($status);
+		$folders[0]->method('getMailbox')->willReturn('INBOX');
+		$folders[1]->method('getMailbox')->willReturn('Shared/Foo');
+		$this->folderMapper->expects($this->once())
+			->method('getFolders')
+			->with($account, $client)
+			->willReturn($folders);
+		$inbox = new Mailbox();
+		$inbox->setId(101);
+		$inbox->setName('INBOX');
+		$sharedMailbox = new Mailbox();
+		$sharedMailbox->setId(102);
+		$sharedMailbox->setName('Shared/Foo');
+		$this->mailboxMapper->expects(self::once())
+			->method('findAll')
+			->with($account)
+			->willReturn([$inbox, $sharedMailbox]);
 
 		$this->sync->sync($account, new NullLogger());
 	}

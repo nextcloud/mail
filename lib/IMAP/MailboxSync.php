@@ -42,6 +42,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Folder;
 use OCP\AppFramework\Utility\ITimeFactory;
 use function sprintf;
+use function str_starts_with;
 
 class MailboxSync {
 	/** @var MailboxMapper */
@@ -100,6 +101,7 @@ class MailboxSync {
 				$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage(), [
 					'exception' => $e,
 				]);
+				$namespaces = null;
 			}
 
 			try {
@@ -122,7 +124,7 @@ class MailboxSync {
 				$old
 			);
 
-			$this->persist($account, $folders, $indexedOld);
+			$this->persist($account, $folders, $indexedOld, $namespaces);
 
 			$this->dispatcher->dispatchTyped(
 				new MailboxesSynchronizedEvent($account)
@@ -160,21 +162,22 @@ class MailboxSync {
 		$this->mailboxMapper->update($mailbox);
 	}
 
-	/**
-	 * @param Account $account
-	 * @param Folder[] $folders
-	 * @param Mailbox[] $existing
-	 */
-	private function persist(Account $account, array $folders, array $existing): void {
+	private function persist(Account $account,
+		array $folders,
+		array $existing,
+		?Horde_Imap_Client_Namespace_List $namespaces): void {
 		foreach ($folders as $folder) {
 			if (isset($existing[$folder->getMailbox()])) {
 				$this->updateMailboxFromFolder(
-					$folder, $existing[$folder->getMailbox()]
+					$folder,
+					$existing[$folder->getMailbox()],
+					$namespaces,
 				);
 			} else {
 				$this->createMailboxFromFolder(
 					$account,
-					$folder
+					$folder,
+					$namespaces,
 				);
 			}
 
@@ -195,11 +198,12 @@ class MailboxSync {
 			if ($namespace->type === Horde_Imap_Client::NS_PERSONAL) {
 				return $namespace->name;
 			}
+			$namespace->name;
 		}
 		return null;
 	}
 
-	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox): void {
+	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox, ?Horde_Imap_Client_Namespace_List $namespaces): void {
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
@@ -208,10 +212,11 @@ class MailboxSync {
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$mailbox->setMyAcls($folder->getMyAcls());
+		$mailbox->setShared($this->isMailboxShared($namespaces, $mailbox));
 		$this->mailboxMapper->update($mailbox);
 	}
 
-	private function createMailboxFromFolder(Account $account, Folder $folder): void {
+	private function createMailboxFromFolder(Account $account, Folder $folder, ?Horde_Imap_Client_Namespace_List $namespaces): void {
 		$mailbox = new Mailbox();
 		$mailbox->setName($folder->getMailbox());
 		$mailbox->setAccountId($account->getId());
@@ -222,6 +227,17 @@ class MailboxSync {
 		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$mailbox->setMyAcls($folder->getMyAcls());
+		$mailbox->setShared($this->isMailboxShared($namespaces, $mailbox));
 		$this->mailboxMapper->insert($mailbox);
+	}
+
+	private function isMailboxShared(?Horde_Imap_Client_Namespace_List $namespaces, Mailbox $mailbox): bool {
+		foreach (($namespaces ?? []) as $namespace) {
+			/** @var Horde_Imap_Client_Data_Namespace $namespace */
+			if ($namespace->type === Horde_Imap_Client_Data_Namespace::NS_OTHER && str_starts_with($mailbox->getName(), $namespace->name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
