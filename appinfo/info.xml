@@ -63,6 +63,7 @@
 		<command>OCA\Mail\Command\Thread</command>
 		<command>OCA\Mail\Command\UpdateAccount</command>
 		<command>OCA\Mail\Command\PreprocessAccount</command>
+		<command>OCA\Mail\Command\RunMetaEstimator</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>

@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification;
 
+use Closure;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Classifier;
@@ -37,7 +38,9 @@ use OCA\Mail\Exception\ClassifierTrainingException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
 use OCA\Mail\Support\PerformanceLogger;
+use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
+use PHPUnit\Framework\Constraint\Callback;
 use Psr\Log\LoggerInterface;
 use Rubix\ML\Classifiers\ClassificationTree;
 use Rubix\ML\Classifiers\GaussianNB;
@@ -50,10 +53,12 @@ use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
 use Rubix\ML\Kernels\Distance\Jaccard;
 use Rubix\ML\Kernels\Distance\Manhattan;
+use Rubix\ML\Learner;
 use Rubix\ML\NeuralNet\ActivationFunctions\Sigmoid;
 use Rubix\ML\NeuralNet\Layers\Activation;
 use Rubix\ML\NeuralNet\Layers\Dense;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
+use Rubix\ML\Persistable;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -108,7 +113,7 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 2000;
+	private const MAX_TRAINING_SET_SIZE = 200;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -142,22 +147,55 @@ class ImportanceClassifier {
 	}
 
 	/**
-	 * Train an account's classifier of important messages
-	 *
-	 * Train a classifier based on a user's existing messages to be able to derive
-	 * importance markers for new incoming messages.
-	 *
-	 * To factor in (server-side) filtering into multiple mailboxes, the algorithm
-	 * will not only look for messages in the inbox but also other non-special
-	 * mailboxes.
-	 *
-	 * To prevent memory exhaustion, the process will only load a fixed maximum
-	 * number of messages per account.
+	 * @return Estimator&Learner&Persistable
+	 */
+	private function getDefaultEstimator(): Estimator {
+		//return new GaussianNB();
+
+		/*
+		return new RandomForest(
+			new ClassificationTree(10, 1),
+			10,
+			0.2,
+			true,
+		);
+		*/
+
+		/*
+		return new MultilayerPerceptron(
+			[
+				new Dense(1004),
+				new Activation(new Sigmoid())
+			],
+			32,
+			null,
+			1e-4,
+			10,
+		);
+		*/
+
+		return new KNearestNeighbors(5, true, new Jaccard());
+	}
+
+	/**
+	 * Build a data set for training an importance classifier.
 	 *
 	 * @param Account $account
+	 * @param IExtractor $extractor
+	 * @param LoggerInterface $logger
+	 * @param PerformanceLoggerTask|null $perf
+	 * @param bool $shuffle
+	 * @return array|null Returns null if there are not enough messages to train
 	 */
-	public function train(Account $account, LoggerInterface $logger, IExtractor $extractor, bool $shuffleDataSet = false): void {
-		$perf = $this->performanceLogger->start('importance classifier training');
+	public function buildDataSet(
+		Account $account,
+		IExtractor $extractor,
+		LoggerInterface $logger,
+		?PerformanceLoggerTask $perf = null,
+		bool $shuffle = false,
+	): ?array {
+		$perf ??= $this->performanceLogger->start('build data set for importance classifier training');
+
 		$incomingMailboxes = $this->getIncomingMailboxes($account);
 		$logger->debug('found ' . count($incomingMailboxes) . ' incoming mailbox(es)');
 		$perf->step('find incoming mailboxes');
@@ -178,23 +216,98 @@ class ImportanceClassifier {
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
 			$logger->info('not enough messages to train a classifier');
-			$perf->end();
-			return;
+			return null;
 		}
 		$perf->step('find latest ' . self::MAX_TRAINING_SET_SIZE . ' messages');
 
 		$dataSet = $this->getFeaturesAndImportance($account, $incomingMailboxes, $outgoingMailboxes, $messages, $extractor);
-		if ($shuffleDataSet) {
+		if ($shuffle) {
 			shuffle($dataSet);
 		}
-		$perf->step('extract features from messages');
+
+		return $dataSet;
+	}
+
+	/**
+	 * Train an account's classifier of important messages
+	 *
+	 * Train a classifier based on a user's existing messages to be able to derive
+	 * importance markers for new incoming messages.
+	 *
+	 * To factor in (server-side) filtering into multiple mailboxes, the algorithm
+	 * will not only look for messages in the inbox but also other non-special
+	 * mailboxes.
+	 *
+	 * To prevent memory exhaustion, the process will only load a fixed maximum
+	 * number of messages per account.
+	 *
+	 * @param Account $account
+	 * @param LoggerInterface $logger
+	 * @param IExtractor $extractor
+	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
+	 * @param bool $shuffleDataSet Shuffle the data set before training
+	 * @param bool $persist Persist the trained classifier to use it for message classification
+	 *
+	 * @throws ServiceException
+	 */
+	public function train(
+		Account $account,
+		LoggerInterface $logger,
+		IExtractor $extractor,
+		?Closure $estimator = null,
+		bool $shuffleDataSet = false,
+		bool $persist = true,
+	): void {
+		$perf = $this->performanceLogger->start('importance classifier training');
+
+		$dataSet = $this->buildDataSet($account, $extractor, $logger, $perf, $shuffleDataSet);
+		if ($dataSet === null) {
+			return;
+		}
+
+		$this->trainWithCustomDataSet(
+			$account,
+			$logger,
+			$dataSet,
+			$estimator,
+			$perf,
+			$persist,
+		);
+	}
+
+	/**
+	 * Train a classifier using a custom data set.
+	 *
+	 * @param Account $account
+	 * @param LoggerInterface $logger
+	 * @param array $dataSet Training data set built by buildDataSet()
+	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
+	 * @param bool $persist Persist the trained classifier to use it for message classification
+	 *
+	 * @throws ServiceException
+	 */
+	public function trainWithCustomDataSet(
+		Account $account,
+		LoggerInterface $logger,
+		array $dataSet,
+		?Closure $estimator = null,
+		?PerformanceLoggerTask $perf = null,
+		bool $persist = true,
+	): void {
+		if ($estimator === null) {
+			$estimator = function () {
+				return $this->getDefaultEstimator();
+			};
+		}
+
+		$perf ??= $this->performanceLogger->start('importance classifier training');
 
 		/**
 		 * How many of the most recent messages are excluded from training?
 		 */
 		$validationThreshold = max(
 			5,
-			(int)(count($dataSet) * 0.25)
+			(int)(count($dataSet) * 0.2)
 		);
 		$validationSet = array_slice($dataSet, 0, $validationThreshold);
 		$trainingSet = array_slice($dataSet, $validationThreshold);
@@ -219,7 +332,10 @@ class ImportanceClassifier {
 			$perf->end();
 			return;
 		}
-		$validationEstimator = $this->trainClassifier($trainingSet);
+
+		/** @var Learner&Estimator&Persistable $validationEstimator */
+		$validationEstimator = $estimator();
+		$this->trainClassifier($validationEstimator, $validationSet);
 		try {
 			$classifier = $this->validateClassifier(
 				$validationEstimator,
@@ -236,14 +352,19 @@ class ImportanceClassifier {
 		}
 		$perf->step("train and validate classifier with training and validation sets");
 
-		$estimator = $this->trainClassifier($dataSet);
-		$perf->step("train classifier with full data set");
+		if ($persist) {
+			/** @var Learner&Estimator&Persistable $persistedEstimator */
+			$persistedEstimator = $estimator();
+			$this->trainClassifier($persistedEstimator, $dataSet);
+			$perf->step("train classifier with full data set");
 
-		$classifier->setAccountId($account->getId());
-		$classifier->setDuration($perf->end());
-		$this->persistenceService->persist($classifier, $estimator);
-		$logger->debug("classifier {$classifier->getId()} persisted");
+			$classifier->setAccountId($account->getId());
+			$classifier->setDuration($perf->end());
+			$this->persistenceService->persist($classifier, $persistedEstimator);
+			$logger->debug("classifier {$classifier->getId()} persisted");
+		}
 	}
+
 
 	/**
 	 * @param Account $account
@@ -370,30 +491,11 @@ class ImportanceClassifier {
 		);
 	}
 
-	private function trainClassifier(array $trainingSet): Estimator {
-		//$classifier = new GaussianNB();
-		/*$classifier = new RandomForest(
-			new ClassificationTree(10, 1),
-			10,
-			0.2,
-			true,
-		);*/
-		$classifier = new KNearestNeighbors(5, true, new Jaccard());
-		/*$classifier = new MultilayerPerceptron(
-			[
-				new Dense(1004),
-				new Activation(new Sigmoid())
-			],
-			32,
-			null,
-			1e-4,
-			10,
-		);*/
+	private function trainClassifier(Learner $classifier, array $trainingSet): void {
 		$classifier->train(Labeled::build(
 			array_column($trainingSet, 'features'),
 			array_column($trainingSet, 'label')
 		));
-		return $classifier;
 	}
 
 	/**
