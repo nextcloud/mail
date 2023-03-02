@@ -52,7 +52,9 @@
 						</tr>
 					</tbody>
 				</table>
-
+				<NcEmptyContent v-if="certificates.length === 0"
+					class="certificate__empty"
+					:title="t('mail', 'No certificate imported yet')" />
 				<div class="certificate-modal__list__actions">
 					<NcButton type="primary" @click="showImportScreen = true">
 						{{ t('mail', 'Import certificate') }}
@@ -141,7 +143,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { NcButton, NcModal, NcPasswordField } from '@nextcloud/vue'
+import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger'
 import moment from '@nextcloud/moment'
@@ -157,6 +159,7 @@ export default {
 		NcModal,
 		NcButton,
 		NcPasswordField,
+		NcEmptyContent,
 		DeleteIcon,
 	},
 	data() {
