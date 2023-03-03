@@ -407,24 +407,11 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->clientFactory->expects($this->once())
-			->method('getClient')
-			->with($this->account)
-			->willReturn($client);
-		$this->mailManager->expects($this->once())
-			->method('getImapMessage')
-			->with($client, $this->account, $mailbox, $message->getUid(), true)
-			->willReturn($this->message);
-		$this->message->attachments = [
-			[
-				'id' => $attachmentId
-			]
-		];
 
 		$this->mailManager->expects($this->once())
-			->method('getMailAttachment')
-			->with($this->account, $mailbox, $message, $attachmentId)
-			->will($this->returnValue($this->attachment));
+			->method('getMailAttachments')
+			->with($this->account, $mailbox, $message)
+			->will($this->returnValue([$this->attachment]));
 		$this->attachment->expects($this->once())
 			->method('getName')
 			->with()
