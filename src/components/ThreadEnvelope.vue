@@ -138,6 +138,7 @@
 					</ButtonVue>
 					<ButtonVue v-if="showArchiveButton && hasArchiveAcl"
 						:close-after-click="true"
+						:disabled="disableArchiveButton"
 						type="tertiary-no-background"
 						@click.prevent="onArchive">
 						<template #icon>
@@ -341,6 +342,10 @@ export default {
 		},
 		showArchiveButton() {
 			return this.account.archiveMailboxId !== null
+		},
+		disableArchiveButton() {
+			return this.account.archiveMailboxId !== null
+				&& this.account.archiveMailboxId === this.mailbox.databaseId
 		},
 		junkFavoritePosition() {
 			return this.showSubline && this.tags.length > 0
