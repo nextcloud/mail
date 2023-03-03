@@ -494,6 +494,7 @@ OC.L10N.register(
     "Certificate name" : "證書名稱",
     "E-mail address" : "電郵地址",
     "Valid until" : "到期日",
+    "Delete certificate" : "刪除憑證",
     "Import certificate" : "導入證書",
     "Import S/MIME certificate" : "導入 S/MIME 證書",
     "PKCS #12 Certificate" : "PKCS #12 證書",

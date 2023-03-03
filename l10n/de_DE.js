@@ -494,6 +494,7 @@ OC.L10N.register(
     "Certificate name" : "Zertifikatsname",
     "E-mail address" : "E-Mail-Adresse",
     "Valid until" : "Gültig bis",
+    "Delete certificate" : "Zertifikat löschen",
     "Import certificate" : "Zertifikat importieren",
     "Import S/MIME certificate" : "S/MIME-Zertifikat importieren",
     "PKCS #12 Certificate" : "PKCS #12-Zertifikat",

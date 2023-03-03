@@ -492,6 +492,7 @@
     "Certificate name" : "憑證名稱",
     "E-mail address" : "電子郵件地址",
     "Valid until" : "到期日",
+    "Delete certificate" : "刪除憑證",
     "Import certificate" : "匯入憑證",
     "Import S/MIME certificate" : "匯入 S/MIME 憑證",
     "PKCS #12 Certificate" : "PKCS #12 憑證",
