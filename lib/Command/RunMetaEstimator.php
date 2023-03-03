@@ -49,6 +49,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RunMetaEstimator extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
+	public const ARGUMENT_SHUFFLE = 'shuffle';
 	public const ARGUMENT_LOAD_DATA = 'load-data';
 
 	private AccountService $accountService;
@@ -74,6 +75,7 @@ class RunMetaEstimator extends Command {
 		$this->setName('mail:account:run-meta-estimator');
 		$this->setDescription('Run the meta estimator for an account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
+		$this->addOption(self::ARGUMENT_SHUFFLE, null, null, 'Shuffle data set before training');
 		$this->addOption(
 			self::ARGUMENT_LOAD_DATA,
 			null,
@@ -84,6 +86,7 @@ class RunMetaEstimator extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
+		$shuffle = (bool)$input->getOption(self::ARGUMENT_SHUFFLE);
 
 		try {
 			$account = $this->accountService->findById($accountId);
@@ -102,7 +105,13 @@ class RunMetaEstimator extends Command {
 			$json = file_get_contents($loadDataPath);
 			$dataSet = json_decode($json, true);
 		} else {
-			$dataSet = $this->classifier->buildDataSet($account, $extractor, $consoleLogger);
+			$dataSet = $this->classifier->buildDataSet(
+				$account,
+				$extractor,
+				$consoleLogger,
+				null,
+				$shuffle,
+			);
 		}
 
 		$params = [
@@ -111,24 +120,45 @@ class RunMetaEstimator extends Command {
 			[new Euclidean(), new Manhattan(), new Jaccard()], // Kernel
 		];
 
-		$this->classifier->trainWithCustomDataSet(
-			$account,
-			$consoleLogger,
-			$dataSet,
-			static function () use ($params, $consoleLogger) {
-				$estimator = new GridSearch(
-					KNearestNeighbors::class,
-					$params,
-					new FBeta(),
-					new KFold(3)
-				);
-				$estimator->setLogger($consoleLogger);
-				$estimator->setBackend(new Amp());
-				return $estimator;
-			},
-			null,
-			false,
-		);
+		if ($dataSet) {
+			$this->classifier->trainWithCustomDataSet(
+				$account,
+				$consoleLogger,
+				$dataSet,
+				static function () use ($params, $consoleLogger) {
+					$estimator = new GridSearch(
+						KNearestNeighbors::class,
+						$params,
+						new FBeta(),
+						new KFold(3)
+					);
+					$estimator->setLogger($consoleLogger);
+					$estimator->setBackend(new Amp());
+					return $estimator;
+				},
+				null,
+				false,
+			);
+		} else {
+			$this->classifier->train(
+				$account,
+				$consoleLogger,
+				$extractor,
+				static function () use ($params, $consoleLogger) {
+					$estimator = new GridSearch(
+						KNearestNeighbors::class,
+						$params,
+						new FBeta(),
+						new KFold(3)
+					);
+					$estimator->setLogger($consoleLogger);
+					$estimator->setBackend(new Amp());
+					return $estimator;
+				},
+				$shuffle,
+				false,
+			);
+		}
 
 		return 0;
 	}
