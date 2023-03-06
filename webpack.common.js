@@ -3,6 +3,7 @@ const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
 const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
+const { ProvidePlugin } = require('webpack')
 
 function getPostCssConfig(ckEditorOpts) {
 	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
@@ -18,6 +19,12 @@ const plugins = [
 		language: 'en',
 	}),
 	new VueLoaderPlugin(),
+	new ProvidePlugin({
+		// Make a global `process` variable that points to the `process` package,
+		// because the `util` package expects there to be a global variable named `process`.
+		// Thanks to https://stackoverflow.com/a/65018686/14239942
+		process: 'process/browser.js',
+	}),
 ]
 
 module.exports = {
