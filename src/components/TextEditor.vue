@@ -222,6 +222,7 @@ export default {
 }
 ::v-deep p {
 	cursor: text;
+	margin: 0 !important;
 }
 </style>
 
