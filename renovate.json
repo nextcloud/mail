@@ -74,6 +74,19 @@
 			"reviewers": []
 		},
 		{
+			"description": "Do not merge @nextcloud/vue without human review",
+			"matchPackageNames": ["@nextcloud/vue"],
+			"automerge": false,
+			"labels": [
+				"dependencies",
+				"3. to review"
+			],
+			"reviewers": [
+				"@ChristophWurst",
+				"@GretaD"
+			]
+		},
+		{
 			"enabled": false,
 			"matchBaseBranches": "/^stable(.)+/"
 		},
