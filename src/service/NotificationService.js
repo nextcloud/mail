@@ -2,6 +2,7 @@
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
  *
@@ -45,13 +46,17 @@ const request = () => {
 	return Notification.requestPermission()
 }
 
-const showNotification = (title, body, icon) => {
-	request().then(() => {
-		if (document.querySelector(':focus') !== null) {
-			Logger.debug('browser is active. notification request is ignored')
+const showNotification = async (title, body, icon) => {
+	try {
+		await request()
+	} catch (error) {
+		// User denied permission
+		return
+	}
 
-		}
-	})
+	if (document.querySelector(':focus') !== null) {
+		Logger.debug('browser is active. notification request is ignored')
+	}
 
 	const notification = new Notification(title, {
 		body,
