@@ -41,14 +41,14 @@
 				v-if="envelope.flags.flagged"
 				fill-color="#f9cf3d"
 				:size="18"
-				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
+				:class="{ 'icon-important__not-expanded' : importantPositionWithSubjectNotExpanded, 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 			<JunkIcon
 				v-if="envelope.flags.$junk"
 				:size="18"
-				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
+				:class="{ 'icon-important__not-expanded' : importantPositionWithSubjectNotExpanded, 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
