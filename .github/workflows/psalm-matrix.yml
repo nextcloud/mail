@@ -24,7 +24,7 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        ocp-version: [ 'dev-master' ]
+        ocp-version: [ 'dev-stable26' ]
 
     name: Nextcloud ${{ matrix.ocp-version }}
     steps:
