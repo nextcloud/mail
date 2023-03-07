@@ -61,7 +61,7 @@ import { matchError } from '../errors/match'
 import { wait } from '../util/wait'
 import { mailboxHasRights } from '../util/acl'
 import EmptyMailboxSection from './EmptyMailboxSection'
-import { showError } from '@nextcloud/dialogs'
+import { showError, showWarning } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 
@@ -387,11 +387,25 @@ export default {
 
 				break
 			case 'arch':
-				if (this.hasArchiveAcl()) {
+				logger.debug('archiving via shortcut')
+
+				if (this.account.archiveMailboxId === null) {
+					showWarning(t('mail', 'To archive a message please configure a archive mailbox in account settings'))
 					return
 				}
+
+				if (!this.hasArchiveAcl()) {
+					showWarning(t('mail', 'You are not allowed to move this message to the archive folder and/or delete this message from the current folder'))
+					return
+				}
+
+				if (env.mailboxId === this.account.archiveMailboxId) {
+					logger.debug('message is already in archive mailbox')
+					return
+				}
+
 				logger.debug('archiving', { env })
-				this.onArchive(env.databaseId)
+				this.onDelete(env.databaseId)
 				try {
 					await this.$store.dispatch('moveThread', {
 						envelope: env,
