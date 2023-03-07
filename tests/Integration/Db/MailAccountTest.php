@@ -78,6 +78,8 @@ class MailAccountTest extends TestCase {
 			'smimeCertificateId' => null,
 			'quotaPercentage' => 10,
 			'trashRetentionDays' => 60,
+			'junkMailboxId' => null,
+			'moveJunk' => false
 		], $a->toJson());
 	}
 
@@ -111,6 +113,8 @@ class MailAccountTest extends TestCase {
 			'smimeCertificateId' => null,
 			'quotaPercentage' => null,
 			'trashRetentionDays' => 60,
+			'junkMailboxId' => null,
+			'moveJunk' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

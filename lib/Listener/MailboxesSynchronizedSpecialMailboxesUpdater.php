@@ -112,6 +112,15 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$mailAccount->setArchiveMailboxId(null);
 			}
 		}
+		if ($mailAccount->getJunkMailboxId() === null || !array_key_exists($mailAccount->getJunkMailboxId(), $mailboxes)) {
+			try {
+				$junkMailbox = $this->findSpecial($mailboxes, 'junk');
+				$mailAccount->setJunkMailboxId($junkMailbox->getId());
+			} catch (DoesNotExistException) {
+				$this->logger->info("Account " . $account->getId() . " does not have an junk mailbox");
+				$mailAccount->setJunkMailboxId(null);
+			}
+		}
 
 		$this->mailAccountMapper->update($mailAccount);
 	}

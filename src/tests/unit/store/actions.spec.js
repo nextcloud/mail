@@ -47,6 +47,8 @@ describe('Vuex store actions', () => {
 			dispatch: jest.fn(),
 			getters: {
 				accounts: [],
+				getAccount: jest.fn(),
+				getInbox: jest.fn(),
 				getMailbox: jest.fn(),
 				getMailboxes: jest.fn(),
 				getEnvelope: jest.fn(),
@@ -512,5 +514,88 @@ describe('Vuex store actions', () => {
 			// Here we expect notifications
 			expect(NotificationService.showNewMessagesNotification).toHaveBeenCalled
 		})
+	})
+
+	it('should move message to junk', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			moveJunk: true,
+			junkMailboxId: 10
+		})
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: false
+			},
+			mailboxId: 1
+		})
+
+		expect(removeEnvelope).toBeTruthy()
+	})
+
+	it('should move message to junk, no mailbox configured', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			moveJunk: true,
+			junkMailboxId: null
+		})
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: false
+			},
+			mailboxId: 1
+		})
+
+		expect(removeEnvelope).toBeFalsy()
+	})
+
+	it('should move message to inbox', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			moveJunk: true,
+			junkMailboxId: 10
+		})
+		context.getters.getInbox.mockReturnValueOnce({
+			databaseId: 1
+		})
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: true
+			},
+			mailboxId: 10
+		})
+
+		expect(removeEnvelope).toBeTruthy()
+	})
+
+	it('should move message to inbox, inbox not found', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			moveJunk: true,
+			junkMailboxId: 10
+		})
+		context.getters.getInbox.mockReturnValueOnce(undefined)
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: true
+			},
+			mailboxId: 10
+		})
+
+		expect(removeEnvelope).toBeFalsy()
+	})
+
+	it('should not move messages', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			moveJunk: false
+		})
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: true
+			},
+			mailboxId: 10
+		})
+
+		expect(removeEnvelope).toBeFalsy()
 	})
 })
