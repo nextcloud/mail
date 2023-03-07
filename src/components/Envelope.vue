@@ -163,6 +163,7 @@
 				</ActionButton>
 				<ActionButton v-if="showArchiveButton && hasArchiveAcl"
 					:close-after-click="true"
+					:disabled="disableArchiveButton"
 					@click.prevent="onArchive">
 					<template #icon>
 						<ArchiveIcon
@@ -431,6 +432,10 @@ export default {
 		},
 		showArchiveButton() {
 			return this.account.archiveMailboxId !== null
+		},
+		disableArchiveButton() {
+			return this.account.archiveMailboxId !== null
+				&& this.account.archiveMailboxId === this.mailbox.databaseId
 		},
 		showFavoriteIconVariant() {
 			return this.data.flags.flagged
