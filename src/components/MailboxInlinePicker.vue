@@ -10,6 +10,7 @@
 <script>
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { mailboxHasRights } from '../util/acl'
 
 export default {
 	name: 'MailboxInlinePicker',
@@ -56,6 +57,7 @@ export default {
 			} else {
 				mailboxes = this.$store.getters.getSubMailboxes(mailboxId)
 			}
+			mailboxes = mailboxes.filter(mailbox => mailboxHasRights(mailbox, 'i'))
 			return mailboxes.map((mailbox) => {
 				 return {
 					id: mailbox.databaseId,
