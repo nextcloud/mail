@@ -173,7 +173,7 @@ OC.L10N.register(
     "Move thread" : "Déplacer ce fil de discussion",
     "Archive thread" : "Fil de discussion archivé",
     "Delete thread" : "Supprimer ce fil de discussion",
-    "More actions" : "Autres actions",
+    "More actions" : "Plus d'actions…",
     "Edit as new message" : "Modifier comme nouveau message",
     "Create event" : "Créer un événement",
     "Download message" : "Télécharger le message",
