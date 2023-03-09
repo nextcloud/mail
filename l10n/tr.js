@@ -221,6 +221,8 @@ OC.L10N.register(
     "Could not open mailbox" : "Posta kutusu açılamadı",
     "Loading messages …" : "İletiler yükleniyor…",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "İletileriniz dizine ekleniyor. Çok sayıda ileti bulunan posta kutularında bu işlem biraz zaman alabilir.",
+    "To archive a message please configure a archive mailbox in account settings" : "Bir iletiyi arşivlemek için lütfen hesap ayarlarından bir e-posta arşivi kutusu yapılandırın ",
+    "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Bu iletiyi arşiv kutusuna taşıma veya geçerli klasörden silme izniniz yok ",
     "Choose target mailbox" : "Hedef e-posta kutusunu seçin",
     "No more submailboxes in here" : "Burada başka alt e-posta kutusu yok",
     "Choose" : "Seçin",
