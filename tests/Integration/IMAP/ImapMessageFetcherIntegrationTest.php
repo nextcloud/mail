@@ -120,8 +120,32 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertEquals("Just some encrypted test images.\n\n", $message->getPlainBody());
 		$this->assertCount(3, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
-		// TODO: $this->assertTrue($message->isSigned());
-		// TODO: $this->assertTrue($message->isSignatureValid());
+		$this->assertTrue($message->isSigned());
+		$this->assertTrue($message->isSignatureValid());
+	}
+
+	public function testFetchMessageWithEncryptedUnverifiedMessage(): void {
+		// Force verification to fail
+		$this->certificateManager->removeCertificate('imap.localhost.ca.crt');
+
+		$encryptedMessage = file_get_contents(__DIR__ . '/../../data/encrypted-message.txt');
+		$uid = $this->saveMimeMessage('INBOX', $encryptedMessage);
+		$fetcher = $this->fetcherFactory
+			->build(
+				$uid,
+				'INBOX',
+				$this->getTestClient(),
+				$this->account->getUserId()
+			)
+			->withBody(true);
+
+		$message = $fetcher->fetchMessage();
+
+		$this->assertEquals("Just some encrypted test images.\n\n", $message->getPlainBody());
+		$this->assertCount(3, $message->attachments);
+		$this->assertTrue($message->isEncrypted());
+		$this->assertTrue($message->isSigned());
+		$this->assertFalse($message->isSignatureValid());
 	}
 
 	public function testFetchMessageWithEncryptedSignedOpaqueMessage(): void {
@@ -140,8 +164,8 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$this->assertEquals("hoi\n\n", $message->getPlainBody());
 		$this->assertTrue($message->isEncrypted());
-		// TODO: $this->assertTrue($message->isSigned());
-		// TODO: $this->assertTrue($message->isSignatureValid());
+		$this->assertTrue($message->isSigned());
+		$this->assertTrue($message->isSignatureValid());
 	}
 
 	public function testFetchMessageWithSignedMessage(): void {

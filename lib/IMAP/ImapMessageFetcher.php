@@ -147,12 +147,6 @@ class ImapMessageFetcher {
 				// structure. Conditional fetching doesn't work for encrypted messages.
 
 				$query = new Horde_Imap_Client_Fetch_Query();
-				$query->envelope();
-				$query->flags();
-				$query->imapDate();
-				$query->headerText([
-					'peek' => true,
-				]);
 				$this->smimeService->addDecryptQueries($query, true);
 
 				$headers = $this->client->fetch($this->mailbox, $query, ['ids' => $ids]);
@@ -162,10 +156,15 @@ class ImapMessageFetcher {
 					throw new DoesNotExistException("This email ($this->uid) can't be found. Probably it was deleted from the server recently. Please reload.");
 				}
 
-				$decryptedText = $this->smimeService->decryptDataFetch($fullTextFetch, $this->userId);
-				$structure = Horde_Mime_Part::parseMessage($decryptedText, [
-					'forcemime' => true,
-				]);
+
+				$decryptionResult = $this->smimeService->decryptDataFetch($fullTextFetch, $this->userId);
+				$isSigned = $decryptionResult->isSigned();
+				$signatureIsValid = $decryptionResult->isSignatureValid();
+
+				$structure = Horde_Mime_Part::parseMessage(
+					$decryptionResult->getDecryptedMessage(),
+					['forcemime' => true],
+				);
 			} elseif ($isOpaqueSigned || $structure->getType() === 'multipart/signed') {
 				$query = new Horde_Imap_Client_Fetch_Query();
 				$query->fullText([
