@@ -390,7 +390,7 @@ export default {
 				logger.debug('archiving via shortcut')
 
 				if (this.account.archiveMailboxId === null) {
-					showWarning(t('mail', 'To archive a message please configure a archive mailbox in account settings'))
+					showWarning(t('mail', 'To archive a message please configure an archive mailbox in account settings'))
 					return
 				}
 
