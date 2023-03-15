@@ -87,12 +87,14 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 
 		$jsonResponse = $this->foldersController->sync(
 			$inbox->getId(),
-			[]
+			[],
+			null
 		);
 
 		$data = $jsonResponse->getData()->jsonSerialize();
@@ -123,6 +125,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		// Second, put a new message into the mailbox
@@ -134,7 +137,8 @@ class MailboxSynchronizationTest extends TestCase {
 
 		$jsonResponse = $this->foldersController->sync(
 			$inbox->getId(),
-			[]
+			[],
+			null
 		);
 
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
@@ -169,6 +173,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		$this->flagMessage($mailbox, $uid, $this->account);
@@ -178,7 +183,8 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox->getId(),
 			[
 				$id
-			]);
+			],
+			null);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		self::assertCount(0, $syncJson['newMessages']);
@@ -210,6 +216,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		$this->deleteMessage($mailbox, $uid, $this->account);
@@ -218,7 +225,8 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox->getId(),
 			[
 				$uid // This will only work if UID and database ID are equal (1 on a clean setup), otherwise this fails
-			]);
+			],
+			null);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		self::assertCount(0, $syncJson['newMessages']);

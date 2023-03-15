@@ -197,13 +197,13 @@ describe('Vuex store actions', () => {
 			query: undefined,
 			addToUnifiedMailboxes: false,
 		})
-		expect(context.commit).toBeCalledWith('addEnvelope', {
-			envelope: {
+		expect(context.commit).toBeCalledWith('addEnvelopes', {
+			envelopes: [{
 				databaseId: 123,
 				mailboxId: 21,
 				uid: 321,
 				subject: 'msg1',
-			},
+			}],
 			query: undefined,
 		})
 	})

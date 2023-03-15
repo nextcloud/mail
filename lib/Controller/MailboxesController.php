@@ -27,6 +27,7 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
@@ -145,9 +146,10 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function sync(int $id, array $ids = [], bool $init = false, string $query = null): JSONResponse {
+	public function sync(int $id, array $ids = [], ?int $lastMessageTimestamp, bool $init = false, string $sortOrder = 'newest', string $query = null): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		$order = $sortOrder === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
 
 		try {
 			$syncResponse = $this->syncService->syncMailbox(
@@ -157,7 +159,9 @@ class MailboxesController extends Controller {
 				array_map(static function ($id) {
 					return (int)$id;
 				}, $ids),
+				$lastMessageTimestamp,
 				!$init,
+				$order,
 				$query
 			);
 		} catch (MailboxNotCachedException $e) {

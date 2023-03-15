@@ -92,6 +92,7 @@ class MailSearch implements IMailSearch {
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
+	 * @param string $sortOrder
 	 * @param string|null $filter
 	 * @param int|null $cursor
 	 * @param int|null $limit
@@ -103,6 +104,7 @@ class MailSearch implements IMailSearch {
 	 */
 	public function findMessages(Account $account,
 		Mailbox $mailbox,
+		string $sortOrder,
 		?string $filter,
 		?int $cursor,
 		?int $limit): array {
@@ -130,7 +132,8 @@ class MailSearch implements IMailSearch {
 			$account,
 			$mailbox,
 			$this->messageMapper->findByIds($account->getUserId(),
-				$this->getIdsLocally($account, $mailbox, $query, $limit)
+				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
+				$sortOrder,
 			)
 		);
 	}
@@ -155,7 +158,8 @@ class MailSearch implements IMailSearch {
 		}
 
 		return $this->messageMapper->findByIds($user->getUID(),
-			$this->getIdsGlobally($user, $query, $limit)
+			$this->getIdsGlobally($user, $query, $limit),
+			'DESC'
 		);
 	}
 
@@ -164,9 +168,9 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
-	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
+	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
 		if (empty($query->getBodies())) {
-			return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit);
+			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
 		}
 
 		$fromImap = $this->imapSearchProvider->findMatches(
@@ -174,7 +178,7 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			$query
 		);
-		return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit, $fromImap);
+		return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit, $fromImap);
 	}
 
 	/**

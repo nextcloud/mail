@@ -121,6 +121,9 @@ export default {
 		}
 	},
 	computed: {
+		sortOrder() {
+			return this.$store.getters.getPreference('sort-order', 'DESC')
+		},
 		envelopes() {
 			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
@@ -146,6 +149,9 @@ export default {
 				})
 		},
 		searchQuery() {
+			this.loadEnvelopes()
+		},
+		sortOrder() {
 			this.loadEnvelopes()
 		},
 	},

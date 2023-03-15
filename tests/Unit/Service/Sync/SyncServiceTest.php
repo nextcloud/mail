@@ -100,7 +100,9 @@ class SyncServiceTest extends TestCase {
 			$mailbox,
 			42,
 			[],
-			true
+			null,
+			true,
+			'DESC'
 		);
 	}
 
@@ -140,6 +142,7 @@ class SyncServiceTest extends TestCase {
 			$mailbox,
 			0,
 			[],
+			null,
 			false
 		);
 

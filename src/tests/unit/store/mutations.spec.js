@@ -668,17 +668,18 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -710,6 +711,7 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -732,29 +734,30 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes:[ {
 				mailboxId: 27,
 				databaseId: 12346,
 				id: 124,
 				subject: 'henlo 2',
 				uid: 322,
 				threadRootId: '234-567-890',
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -796,6 +799,7 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -824,16 +828,17 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -872,6 +877,7 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -1076,11 +1082,12 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes:[ {
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
@@ -1096,7 +1103,7 @@ describe('Vuex store mutations', () => {
 						isDefaultTag: true,
 					},
 				},
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -1139,6 +1146,7 @@ describe('Vuex store mutations', () => {
 					isDefaultTag: true,
 				},
 			},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -1456,32 +1464,33 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
 
 		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes:[ {
 				mailboxId: 27,
 				databaseId: 12347,
 				id: 234,
 				subject: 'henlo',
 				uid: 432,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
 
 		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)

@@ -162,10 +162,11 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(7))
+		$this->preferences->expects($this->exactly(8))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
+				[$this->userId, 'sort-order', 'newest', 'newest'],
 				[$this->userId, 'external-avatars', 'true', 'true'],
 				[$this->userId, 'reply-mode', 'top', 'bottom'],
 				[$this->userId, 'collect-data', 'true', 'true'],
@@ -285,7 +286,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(14))
+		$this->initialState->expects($this->exactly(15))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -293,6 +294,7 @@ class PageControllerTest extends TestCase {
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],
+				['sort-order', 'newest'],
 				['password-is-unavailable', true],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],

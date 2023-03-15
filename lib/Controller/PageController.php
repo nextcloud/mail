@@ -170,6 +170,11 @@ class PageController extends Controller {
 			$this->tagMapper->getAllTagsForUser($this->currentUserId)
 		);
 
+		$this->initialStateService->provideInitialState(
+			'sort-order',
+			$this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest')
+		);
+		
 		try {
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
 			$passwordIsUnavailable = $password === null || $password === '';
