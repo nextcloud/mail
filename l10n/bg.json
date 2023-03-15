@@ -219,7 +219,6 @@
     "Could not open mailbox" : "Пощенската кутия не можа да се отвори",
     "Loading messages …" : "Зареждане на съобщения ...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Индексиране на вашите съобщения. Това може да отнеме малко повече време за по-големи пощенски кутии.",
-    "To archive a message please configure a archive mailbox in account settings" : "За архивиране на съобщение, конфигурирайте архивна пощенска кутия в настройките на вашият профил.",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Нямате право да преместите това съобщение в архивната папка и/или да изтриете това съобщение от текущата папка",
     "Choose target mailbox" : "Избор на целева пощенска кутия ",
     "No more submailboxes in here" : "Тук няма повече допълнителни пощенски кутии",

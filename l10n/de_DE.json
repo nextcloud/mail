@@ -219,7 +219,6 @@
     "Could not open mailbox" : "E-Mail-Postfach konnte nicht geöffnet werden",
     "Loading messages …" : "Lade Nachrichten …",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Ihre Nachrichten werden indiziert. Dies kann bei größeren E-Mail-Postfächern etwas länger dauern.",
-    "To archive a message please configure a archive mailbox in account settings" : "Um eine Nachricht zu archivieren, bitte ein Archivpostfach in den Kontoeinstellungen einrichten",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Sie haben nicht die Berechtigung, diese Nachricht in den Archivordner zu verschieben und/oder diese Nachricht aus dem aktuellen Ordner zu löschen",
     "Choose target mailbox" : "Zielpostfach auswählen",
     "No more submailboxes in here" : "Keine Unter-Postfächer vorhanden",

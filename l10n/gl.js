@@ -221,7 +221,6 @@ OC.L10N.register(
     "Could not open mailbox" : "Non foi posíbel abrir a caixa de correo",
     "Loading messages …" : "Cargando mensaxes...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexación das súas mensaxes. Isto pode levar un pouco máis en caixas de correo máis grandes.",
-    "To archive a message please configure a archive mailbox in account settings" : "Para arquivar unha mensaxe, configure unha caixa de correo de arquivo na configuración da conta",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Non tes permiso para mover esta mensaxe ao cartafol de arquivo e/ou eliminar esta mensaxe do cartafol actual",
     "Choose target mailbox" : "Escoller a caixa de correo de destino",
     "No more submailboxes in here" : "Aquí non hai máis subcaixas de correo",
