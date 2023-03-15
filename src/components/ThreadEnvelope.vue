@@ -22,7 +22,8 @@
   -->
 
 <template>
-	<div class="envelope"
+	<div ref="envelope"
+		class="envelope"
 		:class="{'envelope--expanded' : expanded }">
 		<div class="envelope__header">
 			<div class="envelope__header__avatar">
@@ -112,77 +113,81 @@
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
-					<ButtonVue
-						:class="{ primary: expanded}"
-						:aria-label="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
-						:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
-						type="tertiary-no-background"
-						@click="onReply">
-						<template #icon>
-							<ReplyAllIcon v-if="hasMultipleRecipients"
-								:size="20" />
-							<ReplyIcon v-else
-								:size="20" />
-						</template>
-					</ButtonVue>
-					<ButtonVue v-if="hasWriteAcl"
-						type="tertiary-no-background"
-						class="action--primary"
-						:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-						:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-						:close-after-click="true"
-						@click.prevent="onToggleFlagged">
-						<template #icon>
-							<StarOutline v-if="showFavoriteIconVariant"
-								:size="20" />
-							<IconFavorite v-else
-								:size="20" />
-						</template>
-					</ButtonVue>
-					<ButtonVue v-if="hasSeenAcl"
-						type="tertiary-no-background"
-						class="action--primary"
-						:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-						:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-						:close-after-click="true"
-						@click.prevent="onToggleSeen">
-						<template #icon>
-							<EmailRead v-if="showImportantIconVariant"
-								:size="20" />
-							<EmailUnread v-else
-								:size="20" />
-						</template>
-					</ButtonVue>
-					<ButtonVue v-if="showArchiveButton && hasArchiveAcl"
-						:close-after-click="true"
-						:disabled="disableArchiveButton"
-						:aria-label="t('mail', 'Archive message')"
-						type="tertiary-no-background"
-						@click.prevent="onArchive">
-						<template #icon>
-							<ArchiveIcon
-								:title="t('mail', 'Archive message')"
-								:size="20" />
-						</template>
-					</ButtonVue>
-					<ButtonVue v-if="hasDeleteAcl"
-						:close-after-click="true"
-						:aria-label="t('mail', 'Delete message')"
-						type="tertiary-no-background"
-						@click.prevent="onDelete">
-						<template #icon>
-							<DeleteIcon
-								:title="t('mail', 'Delete message')"
-								:size="20" />
-						</template>
-					</ButtonVue>
-					<MenuEnvelope class="app-content-list-item-menu"
-						:envelope="envelope"
-						:mailbox="mailbox"
-						:with-reply="false"
-						:with-select="false"
-						:with-show-source="true"
-						@delete="$emit('delete',envelope.databaseId)" />
+					<NcActions :inline="inlineMenuSize">
+						<NcActionButton
+							:class="{ primary: expanded}"
+							:aria-label="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
+							:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
+							type="tertiary-no-background"
+							@click="onReply">
+							<template #icon>
+								<ReplyAllIcon v-if="hasMultipleRecipients"
+									:size="20" />
+								<ReplyIcon v-else
+									:size="20" />
+							</template>
+						</NcActionButton>
+						<NcActionButton v-if="hasWriteAcl"
+							type="tertiary-no-background"
+							class="action--primary"
+							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
+							:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
+							:close-after-click="true"
+							@click.prevent="onToggleFlagged">
+							<template #icon>
+								<StarOutline v-if="showFavoriteIconVariant"
+									:size="20" />
+								<IconFavorite v-else
+									:size="20" />
+							</template>
+						</NcActionButton>
+						<NcActionButton v-if="hasSeenAcl"
+							type="tertiary-no-background"
+							class="action--primary"
+							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
+							:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
+							:close-after-click="true"
+							@click.prevent="onToggleSeen">
+							<template #icon>
+								<EmailRead v-if="showImportantIconVariant"
+									:size="20" />
+								<EmailUnread v-else
+									:size="20" />
+							</template>
+						</NcActionButton>
+						<NcActionButton v-if="showArchiveButton && hasArchiveAcl"
+							:close-after-click="true"
+							:title="t('mail', 'Archive message')"
+							:disabled="disableArchiveButton"
+							:aria-label="t('mail', 'Archive message')"
+							type="tertiary-no-background"
+							@click.prevent="onArchive">
+							<template #icon>
+								<ArchiveIcon
+									:title="t('mail', 'Archive message')"
+									:size="20" />
+							</template>
+						</NcActionButton>
+						<NcActionButton v-if="hasDeleteAcl"
+							:close-after-click="true"
+							:title="t('mail', 'Delete message')"
+							:aria-label="t('mail', 'Delete message')"
+							type="tertiary-no-background"
+							@click.prevent="onDelete">
+							<template #icon>
+								<DeleteIcon
+									:title="t('mail', 'Delete message')"
+									:size="20" />
+							</template>
+						</NcActionButton>
+						<MenuEnvelope class="app-content-list-item-menu"
+							:envelope="envelope"
+							:mailbox="mailbox"
+							:with-reply="false"
+							:with-select="false"
+							:with-show-source="true"
+							@delete="$emit('delete',envelope.databaseId)" />
+					</NcActions>
 				</template>
 			</div>
 		</div>
@@ -226,7 +231,7 @@
 </template>
 <script>
 import Avatar from './Avatar'
-import { NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcActionButton } from '@nextcloud/vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
@@ -268,7 +273,7 @@ export default {
 	components: {
 		ConfirmModal,
 		Avatar,
-		ButtonVue,
+		NcActionButton,
 		Error,
 		IconFavorite,
 		JunkIcon,
@@ -334,9 +339,17 @@ export default {
 			LOADING_BODY,
 			LOADING_DONE,
 			LOADING_MESSAGE,
+			recomputeMenuSize: 0,
 		}
 	},
 	computed: {
+		inlineMenuSize() {
+			// eslint-disable-next-line no-unused-expressions
+			const { envelope } = this.$refs
+			const envelopeWidth = (envelope && envelope.clientWidth) || 250
+			const spaceToFill = envelopeWidth - 500 + this.recomputeMenuSize
+			return Math.floor(spaceToFill / 44)
+		},
 		account() {
 			return this.$store.getters.getAccount(this.envelope.accountId)
 		},
@@ -478,6 +491,7 @@ export default {
 		},
 	},
 	async mounted() {
+		window.addEventListener('resize', this.redrawMenuBar)
 		if (this.expanded) {
 			await this.fetchMessage()
 
@@ -485,14 +499,28 @@ export default {
 			// assume that this is the relevant envelope to be scrolled to.
 			this.$nextTick(() => this.scrollToCurrentEnvelope())
 		}
+		this.$checkInterval = setInterval(() => {
+			const { envelope } = this.$refs
+			const isWidthAvailable = (envelope && envelope.clientWidth > 0)
+			if (isWidthAvailable) {
+				this.redrawMenuBar()
+				clearInterval(this.$checkInterval)
+			}
+		}, 100)
 	},
 	beforeDestroy() {
 		if (this.seenTimer !== undefined) {
 			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
 			clearTimeout(this.seenTimer)
 		}
+		window.removeEventListener('resize', this.redrawMenuBar)
 	},
 	methods: {
+		redrawMenuBar() {
+			this.$nextTick(() => {
+				this.recomputeMenuSize++
+			})
+		},
 		filterSubject(value) {
 			return value.replace(/((?:[\t ]*(?:R|RE|F|FW|FWD):[\t ]*)*)/i, '')
 		},
@@ -879,5 +907,8 @@ export default {
 	.smime-text {
 		// same as padding-right on action-text styling
 		padding-left: 14px;
+	}
+	:deep(.action-button__title) {
+		font-weight: normal;
 	}
 </style>
