@@ -896,8 +896,7 @@ class MessageMapper {
 					$structure->setContents($htmlBody);
 					$htmlBody = $structure->getContents();
 				}
-				// TODO:  add 'alt_image' => 'hide' once it's added to the Html2Text package
-				$html = new Html2Text($htmlBody, array('do_links' => 'none',));
+				$html = new Html2Text($htmlBody);
 				return new MessageStructureData(
 					$hasAttachments,
 					trim($html->getText()),
