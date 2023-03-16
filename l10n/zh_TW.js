@@ -221,6 +221,7 @@ OC.L10N.register(
     "Could not open mailbox" : "無法開啟信箱",
     "Loading messages …" : "正在載入郵件……",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "正在索引您的郵件。對於較大的信箱來說，這可能需要較長的時間。",
+    "To archive a message please configure an archive mailbox in account settings" : "要封存訊息，請在帳號設定中設定封存信箱。",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "您不能將此訊息移到封存資料夾及/或從目前資料夾中刪除此訊息",
     "Choose target mailbox" : "選擇目標信箱",
     "No more submailboxes in here" : "這裡沒有更多子信箱",

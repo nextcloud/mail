@@ -219,6 +219,7 @@
     "Could not open mailbox" : "Nedaří se otevřít e-mailovou schránku",
     "Loading messages …" : "Načítání zpráv…",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Vytváření rejstříku vašich zpráv. V případě rozsáhlejších e-mailových schránek toto může trvat poněkud déle.",
+    "To archive a message please configure an archive mailbox in account settings" : "Pokud chcete zprávu zaarchivovat, nastavte si v účtu schránku pro archiv",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Nejste oprávněni přesunout tuto zprávu do archivní složky a/nebo tuto zprávu smazat ze stávající složky",
     "Choose target mailbox" : "Zvolte cílovou schránku",
     "No more submailboxes in here" : "Nejsou zde žádné další dílčí schránky",

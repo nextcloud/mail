@@ -221,6 +221,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Impossible d'afficher les messages",
     "Loading messages …" : "Chargement des messages ...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "L'indexation des messages est en cours. Cette opération peut être un peu longue pour les dossiers volumineux.",
+    "To archive a message please configure an archive mailbox in account settings" : "Pour archiver un message, merci de configurer un dossier d'archives dans les paramètres du compte",
     "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "Vous n'êtes pas autorisé à déplacer ce message dans le dossier d'archives et/ou à supprimer ce message du dossier courant.",
     "Choose target mailbox" : "Sélectionnez le dossier cible",
     "No more submailboxes in here" : "Plus aucun sous-dossier ici",
