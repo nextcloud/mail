@@ -123,5 +123,6 @@
 	],
 	"vulnerabilityAlerts": {
 		"enabled": true
-	}
+	},
+	"osvVulnerabilityAlerts": true
 }
