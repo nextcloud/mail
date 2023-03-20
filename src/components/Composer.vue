@@ -268,10 +268,10 @@
 						</ActionButton>
 						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
 							<template #icon>
-								<IconPublic :size="20" />
+								<IconLinkPicker :size="20" />
 							</template>
 							{{
-								t('mail', 'Add link')
+								t('mail', 'Smart picker')
 							}}
 						</ActionButton>
 						<ActionButton
@@ -424,6 +424,7 @@ import Download from 'vue-material-design-icons/Download'
 import IconUpload from 'vue-material-design-icons/Upload'
 import IconFolder from 'vue-material-design-icons/Folder'
 import IconPublic from 'vue-material-design-icons/Link'
+import IconLinkPicker from 'vue-material-design-icons/Shape'
 import RecipientListItem from './RecipientListItem'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
@@ -475,6 +476,7 @@ export default {
 		IconUpload,
 		IconFolder,
 		IconPublic,
+		IconLinkPicker,
 		Multiselect,
 		TextEditor,
 		ListItemIcon,
