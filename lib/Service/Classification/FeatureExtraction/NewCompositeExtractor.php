@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 class NewCompositeExtractor extends CompositeExtractor {
-	public function __construct(VanillaCompositeExtractor      $ex1,
+	public function __construct(VanillaCompositeExtractor $ex1,
 								SubjectAndPreviewTextExtractor $ex2) {
 		parent::__construct([$ex1, $ex2]);
 	}
