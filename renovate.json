@@ -119,6 +119,17 @@
 			],
 			"rangeStrategy": "pin",
 			"automerge": false
+		},
+		{
+			"groupName": "Jest family",
+			"matchPackageNames": [
+				"jest",
+				"jest-environment-jsdom",
+				"babel-jest",
+				"@vue/vue2-jest",
+				"@types/jest"
+			],
+			"automerge": true
 		}
 	],
 	"vulnerabilityAlerts": {
