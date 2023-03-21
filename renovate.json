@@ -122,7 +122,10 @@
 		}
 	],
 	"vulnerabilityAlerts": {
-		"enabled": true
+		"enabled": true,
+		"schedule": "before 7am every weekday",
+		"dependencyDashboardApproval": false,
+		"commitMessageSuffix": ""
 	},
 	"osvVulnerabilityAlerts": true
 }
