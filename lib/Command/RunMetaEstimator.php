@@ -114,28 +114,30 @@ class RunMetaEstimator extends Command {
 			);
 		}
 
-		$params = [
-			[1, 3, 5, 10], // Neighbors
-			[true, false], // Weighted?
-			[new Euclidean(), new Manhattan(), new Jaccard()], // Kernel
-		];
+		$estimator = static function () use ($consoleLogger) {
+			$params = [
+				[5, 10, 15, 20, 25, 30], // Neighbors
+				[true, false], // Weighted?
+				[new Euclidean(), new Manhattan(), new Jaccard()], // Kernel
+			];
+
+			$estimator = new GridSearch(
+				KNearestNeighbors::class,
+				$params,
+				new FBeta(),
+				new KFold(3)
+			);
+			$estimator->setLogger($consoleLogger);
+			$estimator->setBackend(new Amp());
+			return $estimator;
+		};
 
 		if ($dataSet) {
 			$this->classifier->trainWithCustomDataSet(
 				$account,
 				$consoleLogger,
 				$dataSet,
-				static function () use ($params, $consoleLogger) {
-					$estimator = new GridSearch(
-						KNearestNeighbors::class,
-						$params,
-						new FBeta(),
-						new KFold(3)
-					);
-					$estimator->setLogger($consoleLogger);
-					$estimator->setBackend(new Amp());
-					return $estimator;
-				},
+				$estimator,
 				null,
 				false,
 			);
@@ -144,17 +146,7 @@ class RunMetaEstimator extends Command {
 				$account,
 				$consoleLogger,
 				$extractor,
-				static function () use ($params, $consoleLogger) {
-					$estimator = new GridSearch(
-						KNearestNeighbors::class,
-						$params,
-						new FBeta(),
-						new KFold(3)
-					);
-					$estimator->setLogger($consoleLogger);
-					$estimator->setBackend(new Amp());
-					return $estimator;
-				},
+				$estimator,
 				$shuffle,
 				false,
 			);
