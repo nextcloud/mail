@@ -113,7 +113,7 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 200;
+	private const MAX_TRAINING_SET_SIZE = 350;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -150,7 +150,7 @@ class ImportanceClassifier {
 	 * @return Estimator&Learner&Persistable
 	 */
 	private function getDefaultEstimator(): Estimator {
-		//return new GaussianNB();
+		return new GaussianNB();
 
 		/*
 		return new RandomForest(
@@ -174,7 +174,8 @@ class ImportanceClassifier {
 		);
 		*/
 
-		return new KNearestNeighbors(5, true, new Jaccard());
+		//return new KNearestNeighbors(5, true, new Jaccard());
+		//return new KNearestNeighbors(2, false, new Manhattan());
 	}
 
 	/**

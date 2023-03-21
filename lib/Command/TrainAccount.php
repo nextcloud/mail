@@ -35,6 +35,9 @@ use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Rubix\ML\Classifiers\GaussianNB;
+use Rubix\ML\Classifiers\KNearestNeighbors;
+use Rubix\ML\Kernels\Distance\Manhattan;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,6 +48,8 @@ use function memory_get_peak_usage;
 class TrainAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_NEW = 'new';
+	public const ARGUMENT_NEW_ESTIMATOR = 'new-estimator';
+	public const ARGUMENT_NEW_EXTRACTOR = 'new-extractor';
 	public const ARGUMENT_SHUFFLE = 'shuffle';
 	public const ARGUMENT_SAVE_DATA = 'save-data';
 	public const ARGUMENT_LOAD_DATA = 'load-data';
@@ -77,7 +82,19 @@ class TrainAccount extends Command {
 		$this->setName('mail:account:train');
 		$this->setDescription('Train the classifier of new messages');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
-		$this->addOption(self::ARGUMENT_NEW, null, null, 'Enable new composite extractor using text based features');
+		$this->addOption(
+			self::ARGUMENT_NEW,
+			null,
+			null,
+			'Enable new composite extractor and KNN estimator'
+		);
+		$this->addOption(
+			self::ARGUMENT_NEW_EXTRACTOR,
+			null,
+			null,
+			'Enable new composite extractor using text based features'
+		);
+		$this->addOption(self::ARGUMENT_NEW_ESTIMATOR, null, null, 'Enable new KNN estimator');
 		$this->addOption(self::ARGUMENT_SHUFFLE, null, null, 'Shuffle data set before training');
 		$this->addOption(
 			self::ARGUMENT_DRY_RUN,
@@ -106,6 +123,9 @@ class TrainAccount extends Command {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 		$shuffle = (bool)$input->getOption(self::ARGUMENT_SHUFFLE);
 		$dryRun = (bool)$input->getOption(self::ARGUMENT_DRY_RUN);
+		$new = (bool)$input->getOption(self::ARGUMENT_NEW);
+		$newEstimator = $new || (bool)$input->getOption(self::ARGUMENT_NEW_ESTIMATOR);
+		$newExtractor = $new || (bool)$input->getOption(self::ARGUMENT_NEW_EXTRACTOR);
 
 		try {
 			$account = $this->accountService->findById($accountId);
@@ -121,7 +141,22 @@ class TrainAccount extends Command {
 		}
 		*/
 
-		if ($input->getOption(self::ARGUMENT_NEW)) {
+		if ($newEstimator) {
+			$estimator = static function () {
+				// A meta estimator was trained on the same data multiple times to average out the
+				// variance of the trained model.
+				// Parameters were chosen from the best configuration across 100 runs.
+				// Both variance (spread) and f1 score were considered.
+				// Note: Lower k values generally yield higher f1 scores but show higher variances.
+				return new KNearestNeighbors(15, true, new Manhattan());
+			};
+		} else {
+			$estimator = static function() {
+				return new GaussianNB();
+			};
+		}
+
+		if ($newExtractor) {
 			$extractor = $this->container->get(NewCompositeExtractor::class);
 		} else {
 			$extractor = $this->container->get(VanillaCompositeExtractor::class);
@@ -153,7 +188,7 @@ class TrainAccount extends Command {
 				$account,
 				$consoleLogger,
 				$dataSet,
-				null,
+				$estimator,
 				null,
 				!$dryRun
 			);
@@ -162,7 +197,7 @@ class TrainAccount extends Command {
 				$account,
 				$consoleLogger,
 				$extractor,
-				null,
+				$estimator,
 				$shuffle,
 				!$dryRun
 			);
