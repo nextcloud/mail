@@ -121,7 +121,6 @@ OC.L10N.register(
     "Discard & close draft" : "Descartar e pechar o borrador",
     "Upload attachment" : "Enviar anexos",
     "Add attachment from Files" : "Engadir anexos dende Ficheiros",
-    "Add link" : "Engadir a ligazón",
     "Send later" : "Enviar máis tarde",
     "Enable formatting" : "Activar o formatado",
     "Disable formatting" : "Desactivar o formato",

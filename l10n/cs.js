@@ -121,7 +121,6 @@ OC.L10N.register(
     "Discard & close draft" : "Zahodit a zavřít koncept",
     "Upload attachment" : "Nahrát přílohu",
     "Add attachment from Files" : "Přidat přílohu ze Souborů",
-    "Add link" : "Přidat odkaz",
     "Send later" : "Odeslat později",
     "Enable formatting" : "Povolit formátování",
     "Disable formatting" : "Odebrat formátování",

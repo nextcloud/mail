@@ -28,7 +28,6 @@ OC.L10N.register(
     "Cancel" : "Anullar",
     "From" : "De",
     "Write message …" : "Escriure un messatge…",
-    "Add link" : "Apondre un ligam",
     "Monday morning" : "Diluns matin",
     "Send" : "Mandar",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",

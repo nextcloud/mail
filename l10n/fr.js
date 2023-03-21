@@ -121,7 +121,6 @@ OC.L10N.register(
     "Discard & close draft" : "Ignorer et fermer le brouillon",
     "Upload attachment" : "Téléverser des pièces jointes",
     "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
-    "Add link" : "Ajouter un lien",
     "Send later" : "Envoyer ultérieurement",
     "Enable formatting" : "Activer le formatage",
     "Disable formatting" : "Désactiver le formatage",

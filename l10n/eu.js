@@ -110,7 +110,6 @@ OC.L10N.register(
     "Discard & close draft" : "Baztertu eta itxi zirriborroa",
     "Upload attachment" : "Igo eranskina",
     "Add attachment from Files" : "Gehitu eranskina Fitxategiak-etik",
-    "Add link" : "Gehitu esteka",
     "Send later" : "Bidali geroago",
     "Enable formatting" : "Gaitu formateatzea",
     "Disable formatting" : "Desgaitu formateatzea",

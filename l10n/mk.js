@@ -100,7 +100,6 @@ OC.L10N.register(
     "Discard & close draft" : "Отфрли & затвори примерок",
     "Upload attachment" : "Прикачи прилог",
     "Add attachment from Files" : "Додади прилог од датотеките",
-    "Add link" : "Додади линк",
     "Send later" : "Испрати покасно",
     "Enable formatting" : "Овозможи форматирање",
     "Disable formatting" : "Оневозможи форматирање",

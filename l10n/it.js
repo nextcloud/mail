@@ -84,7 +84,6 @@ OC.L10N.register(
     "Discard & close draft" : "Scarta e chiudi bozza",
     "Upload attachment" : "Carica allegato",
     "Add attachment from Files" : "Aggiungi allegato da File",
-    "Add link" : "Aggiungi collegamento",
     "Enable formatting" : "Abilita formattazione",
     "Request a read receipt" : "Richiedi una conferma di lettura",
     "Encrypt message with Mailvelope" : "Cifra il messaggio con Mailvelope",

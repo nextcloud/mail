@@ -117,7 +117,6 @@ OC.L10N.register(
     "Discard & close draft" : "Odrzuć i zamknij wersję roboczą",
     "Upload attachment" : "Dodaj załącznik",
     "Add attachment from Files" : "Dodaj załącznik z Plików",
-    "Add link" : "Dodaj link",
     "Send later" : "Wyślij później",
     "Enable formatting" : "Włącz formatowanie",
     "Disable formatting" : "Wyłącz formatowanie",

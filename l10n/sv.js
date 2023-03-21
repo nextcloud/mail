@@ -85,7 +85,6 @@ OC.L10N.register(
     "Discard & close draft" : "Stäng och radera utkast",
     "Upload attachment" : "Ladda upp bilaga",
     "Add attachment from Files" : "Lägg till bilaga från Filer",
-    "Add link" : "Lägg till länk",
     "Send later" : "Skicka senare",
     "Enable formatting" : "Aktivera formatering",
     "Request a read receipt" : "Begär läskvitto",

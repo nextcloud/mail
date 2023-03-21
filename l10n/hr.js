@@ -81,7 +81,6 @@ OC.L10N.register(
     "Draft saved" : "Skica je spremljena",
     "Upload attachment" : "Otpremi privitak",
     "Add attachment from Files" : "Dodaj privitak iz datoteka",
-    "Add link" : "Dodaj poveznicu",
     "Enable formatting" : "Omogući oblikovanje",
     "Request a read receipt" : "Zatražite potvrdu o čitanju",
     "Encrypt message with Mailvelope" : "Šifriraj poruku s Mailvelope",

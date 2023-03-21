@@ -92,7 +92,6 @@ OC.L10N.register(
     "Discard & close draft" : "Atmesti ir užverti juodraštį",
     "Upload attachment" : "Įkelti priedą",
     "Add attachment from Files" : "Pridėti priedą iš Failų",
-    "Add link" : "Pridėti nuorodą",
     "Send later" : "Siųsti vėliau",
     "Enable formatting" : "Įjungti formatavimą",
     "Disable formatting" : "Išjungti formatavimą",

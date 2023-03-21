@@ -115,7 +115,6 @@ OC.L10N.register(
     "Discard & close draft" : "丢弃并关闭草稿",
     "Upload attachment" : "上传附件",
     "Add attachment from Files" : "从文件添加附件",
-    "Add link" : "添加链接",
     "Send later" : "稍后发送",
     "Enable formatting" : "启用格式化",
     "Disable formatting" : "禁用格式化",

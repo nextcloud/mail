@@ -106,7 +106,6 @@ OC.L10N.register(
     "Discard & close draft" : "Kassér og luk kladde",
     "Upload attachment" : "Upload vedhæftning",
     "Add attachment from Files" : "Vedhæft fra filer",
-    "Add link" : "Tilføj link",
     "Send later" : "Send senere",
     "Enable formatting" : "Aktiver formatering",
     "Disable formatting" : "Deaktiver formatering",

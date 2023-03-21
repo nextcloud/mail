@@ -25,7 +25,6 @@ OC.L10N.register(
     "Cancel" : "Kanselleer",
     "Add mail account" : "Voeg posrekening toe",
     "Subject" : "Onderwerp",
-    "Add link" : "Voeg skakel toe",
     "Send" : "Stuur",
     "Favorite" : "Gunsteling",
     "Select" : "Kies",

@@ -121,7 +121,6 @@ OC.L10N.register(
     "Discard & close draft" : "Отхвърляне и затворяне на черновата",
     "Upload attachment" : "Качи прикачен файл/ове",
     "Add attachment from Files" : "Прикачи от \"Файлове\"",
-    "Add link" : "Добавяне на връзка",
     "Send later" : "Изпратете по-късно",
     "Enable formatting" : "Форматиран текст",
     "Disable formatting" : "Деактивиране на форматирането",
