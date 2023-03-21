@@ -30,6 +30,7 @@ use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Validation\RemoteHostValidator;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClient;
@@ -50,6 +51,8 @@ class FaviconSourceTest extends TestCase {
 
 	/** @var FaviconSource */
 	private $source;
+	/** @var RemoteHostValidator|(RemoteHostValidator&MockObject)|MockObject */
+	private $remoteHostValidator;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -57,12 +60,37 @@ class FaviconSourceTest extends TestCase {
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->favicon = $this->createMock(Favicon::class);
 		$this->mimeDetector = $this->createMock(IMimeTypeDetector::class);
+		$this->remoteHostValidator = $this->createMock(RemoteHostValidator::class);
 
-		$this->source = new FaviconSource($this->clientService, $this->favicon, $this->mimeDetector);
+		$this->source = new FaviconSource(
+			$this->clientService,
+			$this->favicon,
+			$this->mimeDetector,
+			$this->remoteHostValidator,
+		);
 	}
 
-	public function testFetchNoIconsFound() {
+	public function testFetchInvaild(): void {
 		$email = 'hey@jancborchardt.net';
+		$this->remoteHostValidator->expects(self::once())
+			->method('isValid')
+			->with('https://jancborchardt.net')
+			->willReturn(false);
+		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$this->favicon->expects(self::never())
+			->method('get');
+
+		$avatar = $this->source->fetch($email, $avatarFactory);
+
+		$this->assertNull($avatar);
+	}
+
+	public function testFetchNoIconsFound(): void {
+		$email = 'hey@jancborchardt.net';
+		$this->remoteHostValidator->expects(self::once())
+			->method('isValid')
+			->with('https://jancborchardt.net')
+			->willReturn(true);
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->favicon->expects($this->once())
 			->method('get')
@@ -74,9 +102,13 @@ class FaviconSourceTest extends TestCase {
 		$this->assertNull($avatar);
 	}
 
-	public function testFetchSingleIcon() {
+	public function testFetchSingleIcon(): void {
 		$email = 'hey@jancborchardt.net';
 		$iconUrl = "https://domain.tld/favicon.ic";
+		$this->remoteHostValidator->expects(self::once())
+			->method('isValid')
+			->with('https://jancborchardt.net')
+			->willReturn(true);
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$avatar = new Avatar('https://domain.tld/favicon.ico');
 		$this->favicon->expects($this->once())
@@ -109,9 +141,13 @@ class FaviconSourceTest extends TestCase {
 		$this->assertSame($avatar, $actualAvatar);
 	}
 
-	public function testFetchEmptyIcon() {
+	public function testFetchEmptyIcon(): void {
 		$email = 'hey@jancborchardt.net';
 		$iconUrl = "https://domain.tld/favicon.ic";
+		$this->remoteHostValidator->expects(self::once())
+			->method('isValid')
+			->with('https://jancborchardt.net')
+			->willReturn(true);
 		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->favicon->expects($this->once())
 			->method('get')
