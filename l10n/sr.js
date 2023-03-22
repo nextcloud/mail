@@ -121,6 +121,7 @@ OC.L10N.register(
     "Discard & close draft" : "Одбаци и затвори нацрт",
     "Upload attachment" : "Закачи прилог",
     "Add attachment from Files" : "Додај прилог из фајлова",
+    "Smart picker" : "Паметни бирач",
     "Send later" : "Пошаљи касније",
     "Enable formatting" : "Укључи форматирање",
     "Disable formatting" : "Искључи форматирање",

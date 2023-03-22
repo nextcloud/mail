@@ -121,6 +121,7 @@ OC.L10N.register(
     "Discard & close draft" : "放棄並關閉草稿",
     "Upload attachment" : "已上傳附件",
     "Add attachment from Files" : "從雲端檔案中加入附件",
+    "Smart picker" : "智慧型挑選器",
     "Send later" : "稍後傳送",
     "Enable formatting" : "啟用格式",
     "Disable formatting" : "停用格式化",
