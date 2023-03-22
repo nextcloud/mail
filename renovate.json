@@ -134,6 +134,7 @@
 	],
 	"vulnerabilityAlerts": {
 		"enabled": true,
+		"semanticCommitType": "fix",
 		"schedule": "before 7am every weekday",
 		"dependencyDashboardApproval": false,
 		"commitMessageSuffix": ""
