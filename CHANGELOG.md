@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.0.1 - 2023-03-23
+### Fixed
+- Hide "Has Cal" tag
+- HTML messages dont expand depending on size
+
 ## 3.0.0 - 2023-03-20
 ### Added
 - S/MIME support
