@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.0.2 - 2023-03-23
+### Fixed
+- Validate favicon hosts
+- Message preview
+- Attachments width
+
+
 ## 3.0.1 - 2023-03-23
 ### Fixed
 - Hide "Has Cal" tag
