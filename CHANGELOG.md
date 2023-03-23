@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.5 - 2023-03-23
+### Fixed
+- Validate favicon hosts
+- Attachments width
+- Message preview
+
 ## 2.2.4 - 2023-02-24
 ### Fixed
 - Open composer actions after changing encryption mode
