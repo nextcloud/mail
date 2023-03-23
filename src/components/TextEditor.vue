@@ -210,11 +210,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 :deep(a) {
 	color: #07d;
 }
 :deep(p) {
 	cursor: text;
+	margin: 0 !important;
 }
 </style>
 
