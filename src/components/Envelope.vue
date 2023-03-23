@@ -122,6 +122,16 @@
 				</ActionButton>
 			</EnvelopePrimaryActions>
 			<template v-if="!moreActionsOpen">
+				<ActionText>
+					<template #icon>
+						<ClockOutlineIcon
+							:size="20" />
+					</template>
+					{{
+						messageLongDate
+					}}
+				</ActionText>
+				<ActionSeparator />
 				<ActionButton v-if="hasWriteAcl"
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
@@ -252,10 +262,11 @@
 	</ListItem>
 </template>
 <script>
-import { NcListItem as ListItem, NcActionButton as ActionButton, NcActionLink as ActionLink } from '@nextcloud/vue'
+import { NcListItem as ListItem, NcActionButton as ActionButton, NcActionLink as ActionLink, NcActionSeparator as ActionSeparator, NcActionText as ActionText } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
 import IconCreateEvent from 'vue-material-design-icons/Calendar'
+import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline'
 import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
@@ -264,7 +275,7 @@ import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
-import { shortRelativeDatetime } from '../util/shortRelativeDatetime'
+import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime'
 import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
@@ -322,7 +333,10 @@ export default {
 		IconBullet,
 		Reply,
 		ActionLink,
+		ActionSeparator,
+		ActionText,
 		DownloadIcon,
+		ClockOutlineIcon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -370,6 +384,9 @@ export default {
 		}
 	},
 	computed: {
+		messageLongDate() {
+			return messageDateTime(new Date(this.data.dateInt))
+		},
 		hasMultipleRecipients() {
 			if (!this.account) {
 				console.error('account is undefined', {
