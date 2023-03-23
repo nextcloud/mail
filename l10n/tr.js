@@ -121,6 +121,7 @@ OC.L10N.register(
     "Discard & close draft" : "Taslağı kapat ve sil",
     "Upload attachment" : "Ek dosya yükle",
     "Add attachment from Files" : "Dosyalardan ek dosya ekle",
+    "Smart picker" : "Akıllı seçici",
     "Send later" : "Daha sonra gönder",
     "Enable formatting" : "Biçimlendirme kullanılsın",
     "Disable formatting" : "Biçimlendirme kullanılmasın",
