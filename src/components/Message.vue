@@ -24,6 +24,16 @@
 	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail','Message body')">
+		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
+			class="invalid-signature-warning">
+			<LockOffIcon
+				:size="20"
+				fill-color="red"
+				class="invalid-signature-warning__icon" />
+			<p>
+				{{ t('mail', 'Warning: The S/MIME signature of this message is  unverified. The sender might be impersonating someone!') }}
+			</p>
+		</div>
 		<div v-if="itineraries.length > 0" class="message-itinerary">
 			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
@@ -62,6 +72,7 @@ import MessageEncryptedBody from './MessageEncryptedBody'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
 import Imip from './Imip'
+import LockOffIcon from 'vue-material-design-icons/LockOff'
 
 export default {
 	name: 'Message',
@@ -72,6 +83,7 @@ export default {
 		MessageHTMLBody,
 		MessagePlainTextBody,
 		Imip,
+		LockOffIcon,
 	},
 	props: {
 		envelope: {
@@ -115,5 +127,23 @@ export default {
 
 .message-imip {
 	padding: 5px 10px;
+}
+
+.invalid-signature-warning {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+
+	border: solid 2px var(--color-border);
+	border-radius: var(--border-radius-large);
+	border-color: var(--color-warning);
+
+	margin: 5px 10px;
+	padding: 10px;
+
+	&__icon {
+		// Fix alignment with message
+		margin-top: -5px;
+	}
 }
 </style>
