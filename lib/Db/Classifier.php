@@ -63,6 +63,12 @@ use OCP\AppFramework\Db\Entity;
  *
  * @method int getCreatedAt()
  * @method void setCreatedAt(int $createdAt)
+ *
+ * @method int getTransformerCount()
+ * @method void setTransformerCount(int $transformerCount)
+ *
+ * @method string|null getTransformers()
+ * @method void setTransformers(string|null $transformers)
  */
 class Classifier extends Entity {
 	public const TYPE_IMPORTANCE = 'importance';
@@ -103,6 +109,12 @@ class Classifier extends Entity {
 	/** @var int */
 	protected $createdAt;
 
+	/** @var int */
+	protected $transformerCount;
+
+	/** @var string */
+	protected $transformers;
+
 	public function __construct() {
 		$this->addType('accountId', 'int');
 		$this->addType('type', 'string');
@@ -115,5 +127,7 @@ class Classifier extends Entity {
 		$this->addType('duration', 'int');
 		$this->addType('active', 'boolean');
 		$this->addType('createdAt', 'int');
+		$this->addType('transformerCount', 'int');
+		$this->addType('transformers', 'string');
 	}
 }

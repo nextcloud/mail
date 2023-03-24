@@ -95,6 +95,7 @@ class RunMetaEstimator extends Command {
 			return 1;
 		}
 
+		/** @var NewCompositeExtractor $extractor */
 		$extractor = $this->container->get(NewCompositeExtractor::class);
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
@@ -103,7 +104,7 @@ class RunMetaEstimator extends Command {
 
 		if ($loadDataPath = $input->getOption(self::ARGUMENT_LOAD_DATA)) {
 			$json = file_get_contents($loadDataPath);
-			$dataSet = json_decode($json, true);
+			$dataSet = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		} else {
 			$dataSet = $this->classifier->buildDataSet(
 				$account,
@@ -137,6 +138,7 @@ class RunMetaEstimator extends Command {
 				$account,
 				$consoleLogger,
 				$dataSet,
+				$extractor,
 				$estimator,
 				null,
 				false,
@@ -152,6 +154,8 @@ class RunMetaEstimator extends Command {
 			);
 		}
 
+		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
+		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
 		return 0;
 	}
 }

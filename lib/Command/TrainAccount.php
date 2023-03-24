@@ -28,6 +28,7 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
 use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
 use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
@@ -36,8 +37,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Rubix\ML\Classifiers\GaussianNB;
-use Rubix\ML\Classifiers\KNearestNeighbors;
-use Rubix\ML\Kernels\Distance\Manhattan;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,13 +46,14 @@ use function memory_get_peak_usage;
 
 class TrainAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
-	public const ARGUMENT_NEW = 'new';
-	public const ARGUMENT_NEW_ESTIMATOR = 'new-estimator';
-	public const ARGUMENT_NEW_EXTRACTOR = 'new-extractor';
+	public const ARGUMENT_OLD = 'old';
+	public const ARGUMENT_OLD_ESTIMATOR = 'old-estimator';
+	public const ARGUMENT_OLD_EXTRACTOR = 'old-extractor';
 	public const ARGUMENT_SHUFFLE = 'shuffle';
 	public const ARGUMENT_SAVE_DATA = 'save-data';
 	public const ARGUMENT_LOAD_DATA = 'load-data';
 	public const ARGUMENT_DRY_RUN = 'dry-run';
+	public const ARGUMENT_FORCE = 'force';
 
 	private AccountService $accountService;
 	private ImportanceClassifier $classifier;
@@ -83,24 +83,30 @@ class TrainAccount extends Command {
 		$this->setDescription('Train the classifier of new messages');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 		$this->addOption(
-			self::ARGUMENT_NEW,
+			self::ARGUMENT_OLD,
 			null,
 			null,
-			'Enable new composite extractor and KNN estimator'
+			'Use old vanilla composite extractor and GaussianNB estimator (implies --old-extractor and --old-estimator)'
 		);
 		$this->addOption(
-			self::ARGUMENT_NEW_EXTRACTOR,
+			self::ARGUMENT_OLD_EXTRACTOR,
 			null,
 			null,
-			'Enable new composite extractor using text based features'
+			'Use old vanilla composite extractor without text based features'
 		);
-		$this->addOption(self::ARGUMENT_NEW_ESTIMATOR, null, null, 'Enable new KNN estimator');
+		$this->addOption(self::ARGUMENT_OLD_ESTIMATOR, null, null, 'Use old GaussianNB estimator');
 		$this->addOption(self::ARGUMENT_SHUFFLE, null, null, 'Shuffle data set before training');
 		$this->addOption(
 			self::ARGUMENT_DRY_RUN,
 			null,
 			null,
 			'Don\'t persist classifier after training'
+		);
+		$this->addOption(
+			self::ARGUMENT_FORCE,
+			null,
+			null,
+			'Train an estimator even if the classification is disabled by the user'
 		);
 		$this->addOption(
 			self::ARGUMENT_SAVE_DATA,
@@ -116,16 +122,14 @@ class TrainAccount extends Command {
 		);
 	}
 
-	/**
-	 * @return int
-	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 		$shuffle = (bool)$input->getOption(self::ARGUMENT_SHUFFLE);
 		$dryRun = (bool)$input->getOption(self::ARGUMENT_DRY_RUN);
-		$new = (bool)$input->getOption(self::ARGUMENT_NEW);
-		$newEstimator = $new || (bool)$input->getOption(self::ARGUMENT_NEW_ESTIMATOR);
-		$newExtractor = $new || (bool)$input->getOption(self::ARGUMENT_NEW_EXTRACTOR);
+		$force = (bool)$input->getOption(self::ARGUMENT_FORCE);
+		$old = (bool)$input->getOption(self::ARGUMENT_OLD);
+		$oldEstimator = $old || $input->getOption(self::ARGUMENT_OLD_ESTIMATOR);
+		$oldExtractor = $old || $input->getOption(self::ARGUMENT_OLD_EXTRACTOR);
 
 		try {
 			$account = $this->accountService->findById($accountId);
@@ -134,32 +138,23 @@ class TrainAccount extends Command {
 			return 1;
 		}
 
-		/*
-		if ($this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
+		if (!$force && $this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
 			$output->writeln("<info>classification is turned off for account $accountId</info>");
 			return 2;
 		}
-		*/
 
-		if ($newEstimator) {
-			$estimator = static function () {
-				// A meta estimator was trained on the same data multiple times to average out the
-				// variance of the trained model.
-				// Parameters were chosen from the best configuration across 100 runs.
-				// Both variance (spread) and f1 score were considered.
-				// Note: Lower k values generally yield higher f1 scores but show higher variances.
-				return new KNearestNeighbors(15, true, new Manhattan());
-			};
+		/** @var IExtractor $extractor */
+		if ($oldExtractor) {
+			$extractor = $this->container->get(VanillaCompositeExtractor::class);
 		} else {
-			$estimator = static function() {
-				return new GaussianNB();
-			};
+			$extractor = $this->container->get(NewCompositeExtractor::class);
 		}
 
-		if ($newExtractor) {
-			$extractor = $this->container->get(NewCompositeExtractor::class);
-		} else {
-			$extractor = $this->container->get(VanillaCompositeExtractor::class);
+		$estimator = null;
+		if ($oldEstimator) {
+			$estimator = static function () {
+				return new GaussianNB();
+			};
 		}
 
 		$consoleLogger = new ConsoleLoggerDecorator(
@@ -176,11 +171,11 @@ class TrainAccount extends Command {
 				null,
 				$shuffle,
 			);
-			$json = json_encode($dataSet);
+			$json = json_encode($dataSet, JSON_THROW_ON_ERROR);
 			file_put_contents($saveDataPath, $json);
 		} else if ($loadDataPath = $input->getOption(self::ARGUMENT_LOAD_DATA)) {
 			$json = file_get_contents($loadDataPath);
-			$dataSet = json_decode($json, true);
+			$dataSet = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		}
 
 		if ($dataSet) {
@@ -188,6 +183,7 @@ class TrainAccount extends Command {
 				$account,
 				$consoleLogger,
 				$dataSet,
+				$extractor,
 				$estimator,
 				null,
 				!$dryRun
@@ -201,7 +197,6 @@ class TrainAccount extends Command {
 				$shuffle,
 				!$dryRun
 			);
-
 		}
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);

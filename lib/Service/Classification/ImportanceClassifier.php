@@ -37,28 +37,25 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClassifierTrainingException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\SubjectExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
-use PHPUnit\Framework\Constraint\Callback;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Rubix\ML\Classifiers\ClassificationTree;
-use Rubix\ML\Classifiers\GaussianNB;
 use Rubix\ML\Classifiers\KNearestNeighbors;
-use Rubix\ML\Classifiers\MultilayerPerceptron;
-use Rubix\ML\Classifiers\RandomForest;
 use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
-use Rubix\ML\Kernels\Distance\Jaccard;
 use Rubix\ML\Kernels\Distance\Manhattan;
 use Rubix\ML\Learner;
-use Rubix\ML\NeuralNet\ActivationFunctions\Sigmoid;
-use Rubix\ML\NeuralNet\Layers\Activation;
-use Rubix\ML\NeuralNet\Layers\Dense;
-use Rubix\ML\NeuralNet\Optimizers\Adam;
 use Rubix\ML\Persistable;
+use Rubix\ML\Transformers\Transformer;
+use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -130,52 +127,36 @@ class ImportanceClassifier {
 	/** @var ImportanceRulesClassifier */
 	private $rulesClassifier;
 
-	public function __construct(MailboxMapper                  $mailboxMapper,
-								MessageMapper                  $messageMapper,
-								PersistenceService             $persistenceService,
-								PerformanceLogger              $performanceLogger,
-								ImportanceRulesClassifier      $rulesClassifier) {
+	private VanillaCompositeExtractor $vanillaExtractor;
+	private ContainerInterface $container;
+
+	public function __construct(MailboxMapper $mailboxMapper,
+ 								MessageMapper $messageMapper,
+ 								PersistenceService $persistenceService,
+ 								PerformanceLogger $performanceLogger,
+ 								ImportanceRulesClassifier $rulesClassifier,
+								VanillaCompositeExtractor $vanillaExtractor,
+								ContainerInterface $container) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->persistenceService = $persistenceService;
 		$this->performanceLogger = $performanceLogger;
 		$this->rulesClassifier = $rulesClassifier;
+		$this->vanillaExtractor = $vanillaExtractor;
+		$this->container = $container;
+	}
+
+	private static function createDefaultEstimator(): KNearestNeighbors {
+		// A meta estimator was trained on the same data multiple times to average out the
+		// variance of the trained model.
+		// Parameters were chosen from the best configuration across 100 runs.
+		// Both variance (spread) and f1 score were considered.
+		// Note: Lower k values yield slightly higher f1 scores but show higher variances.
+		return new KNearestNeighbors(15, true, new Manhattan());
 	}
 
 	private function filterMessageHasSenderEmail(Message $message): bool {
 		return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
-	}
-
-	/**
-	 * @return Estimator&Learner&Persistable
-	 */
-	private function getDefaultEstimator(): Estimator {
-		return new GaussianNB();
-
-		/*
-		return new RandomForest(
-			new ClassificationTree(10, 1),
-			10,
-			0.2,
-			true,
-		);
-		*/
-
-		/*
-		return new MultilayerPerceptron(
-			[
-				new Dense(1004),
-				new Activation(new Sigmoid())
-			],
-			32,
-			null,
-			1e-4,
-			10,
-		);
-		*/
-
-		//return new KNearestNeighbors(5, true, new Jaccard());
-		//return new KNearestNeighbors(2, false, new Manhattan());
 	}
 
 	/**
@@ -244,7 +225,7 @@ class ImportanceClassifier {
 	 *
 	 * @param Account $account
 	 * @param LoggerInterface $logger
-	 * @param IExtractor $extractor
+	 * @param ?IExtractor $extractor The extractor to use for feature extraction. If null, the default extractor will be used.
 	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
 	 * @param bool $shuffleDataSet Shuffle the data set before training
 	 * @param bool $persist Persist the trained classifier to use it for message classification
@@ -254,12 +235,20 @@ class ImportanceClassifier {
 	public function train(
 		Account $account,
 		LoggerInterface $logger,
-		IExtractor $extractor,
+		?IExtractor $extractor = null,
 		?Closure $estimator = null,
 		bool $shuffleDataSet = false,
 		bool $persist = true,
 	): void {
 		$perf = $this->performanceLogger->start('importance classifier training');
+
+		if ($extractor === null) {
+			try {
+				$extractor = $this->container->get(NewCompositeExtractor::class);
+			} catch (ContainerExceptionInterface $e) {
+				throw new ServiceException('Default extractor is not available', 0, $e);
+			}
+		}
 
 		$dataSet = $this->buildDataSet($account, $extractor, $logger, $perf, $shuffleDataSet);
 		if ($dataSet === null) {
@@ -270,6 +259,7 @@ class ImportanceClassifier {
 			$account,
 			$logger,
 			$dataSet,
+			$extractor,
 			$estimator,
 			$perf,
 			$persist,
@@ -282,7 +272,9 @@ class ImportanceClassifier {
 	 * @param Account $account
 	 * @param LoggerInterface $logger
 	 * @param array $dataSet Training data set built by buildDataSet()
+	 * @param IExtractor $extractor Extractor used to extract the given data set
 	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
+	 * @param PerformanceLoggerTask|null $perf Optionally reuse a performance logger task
 	 * @param bool $persist Persist the trained classifier to use it for message classification
 	 *
 	 * @throws ServiceException
@@ -291,17 +283,18 @@ class ImportanceClassifier {
 		Account $account,
 		LoggerInterface $logger,
 		array $dataSet,
-		?Closure $estimator = null,
+		IExtractor $extractor,
+		?Closure $estimator,
 		?PerformanceLoggerTask $perf = null,
 		bool $persist = true,
 	): void {
+		$perf ??= $this->performanceLogger->start('importance classifier training');
+
 		if ($estimator === null) {
-			$estimator = function () {
-				return $this->getDefaultEstimator();
+			$estimator = static function() {
+				return self::createDefaultEstimator();
 			};
 		}
-
-		$perf ??= $this->performanceLogger->start('importance classifier training');
 
 		/**
 		 * How many of the most recent messages are excluded from training?
@@ -359,9 +352,17 @@ class ImportanceClassifier {
 			$this->trainClassifier($persistedEstimator, $dataSet);
 			$perf->step("train classifier with full data set");
 
+			// Extract persisted transformers of the subject extractor.
+			// Is a bit hacky but a full abstraction would be overkill.
+			/** @var (Transformer&Persistable)[] $transformers */
+			$transformers = [];
+			if ($extractor instanceof NewCompositeExtractor) {
+				$transformers[] = $extractor->getSubjectExtractor()->getWordCountVectorizer();
+			}
+
 			$classifier->setAccountId($account->getId());
 			$classifier->setDuration($perf->end());
-			$this->persistenceService->persist($classifier, $persistedEstimator);
+			$this->persistenceService->persist($classifier, $persistedEstimator, $transformers);
 			$logger->debug("classifier {$classifier->getId()} persisted");
 		}
 	}
@@ -373,8 +374,6 @@ class ImportanceClassifier {
 	 * @return Mailbox[]
 	 */
 	private function getIncomingMailboxes(Account $account): array {
-		return [$this->mailboxMapper->find($account, 'INBOX')];
-		/*
 		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
@@ -383,7 +382,6 @@ class ImportanceClassifier {
 			}
 			return true;
 		});
-		*/
 	}
 
 	/**
@@ -424,7 +422,7 @@ class ImportanceClassifier {
 											  IExtractor $extractor): array {
 		$extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
-		return array_map(function (Message $message) use ($extractor) {
+		return array_map(static function (Message $message) use ($extractor) {
 			$sender = $message->getFrom()->first();
 			if ($sender === null) {
 				throw new RuntimeException("This should not happen");
@@ -441,21 +439,25 @@ class ImportanceClassifier {
 	/**
 	 * @param Account $account
 	 * @param Message[] $messages
+	 * @param LoggerInterface $logger
 	 *
 	 * @return bool[]
+	 *
 	 * @throws ServiceException
 	 */
-	public function classifyImportance(Account $account, array $messages): array {
-		$estimator = null;
+	public function classifyImportance(Account $account,
+									   array $messages,
+									   LoggerInterface $logger): array {
+		$pipeline = null;
 		try {
-			$estimator = $this->persistenceService->loadLatest($account);
+			$pipeline = $this->persistenceService->loadLatest($account);
 		} catch (ServiceException $e) {
-			$this->logger->warning('Failed to load importance classifier: ' . $e->getMessage(), [
+			$logger->warning('Failed to load importance classifier: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 		}
 
-		if ($estimator === null) {
+		if ($pipeline === null) {
 			$predictions = $this->rulesClassifier->classifyImportance(
 				$account,
 				$this->getIncomingMailboxes($account),
@@ -473,13 +475,29 @@ class ImportanceClassifier {
 		}
 		$messagesWithSender = array_filter($messages, [$this, 'filterMessageHasSenderEmail']);
 
+		// Load persisted transformers of the subject extractor.
+		// Is a bit hacky but a full abstraction would be overkill.
+		$transformers = $pipeline->getTransformers();
+		$wordCountVectorizer = $transformers[0];
+		if (!($wordCountVectorizer instanceof WordCountVectorizer)) {
+			throw new ServiceException("Failed to load persisted transformer: Expected " . WordCountVectorizer::class . ", got" . $wordCountVectorizer::class);
+		}
+
+		$subjectExtractor = new SubjectExtractor();
+		$subjectExtractor->setWordCountVectorizer($wordCountVectorizer);
+		$extractor = new NewCompositeExtractor(
+			$this->vanillaExtractor,
+			$subjectExtractor,
+		);
+
 		$features = $this->getFeaturesAndImportance(
 			$account,
 			$this->getIncomingMailboxes($account),
 			$this->getOutgoingMailboxes($account),
-			$messagesWithSender
+			$messagesWithSender,
+			$extractor
 		);
-		$predictions = $estimator->predict(
+		$predictions = $pipeline->getEstimator()->predict(
 			Unlabeled::build(array_column($features, 'features'))
 		);
 		return array_combine(
@@ -503,9 +521,9 @@ class ImportanceClassifier {
 	 * @param Estimator $estimator
 	 * @param array $trainingSet
 	 * @param array $validationSet
+	 * @param LoggerInterface $logger
 	 *
 	 * @return Classifier
-	 * @throws ClassifierTrainingException
 	 */
 	private function validateClassifier(Estimator $estimator,
 										array $trainingSet,
@@ -524,9 +542,6 @@ class ImportanceClassifier {
 		$recallImportant = $report['classes'][self::LABEL_IMPORTANT]['recall'] ?? 0;
 		$precisionImportant = $report['classes'][self::LABEL_IMPORTANT]['precision'] ?? 0;
 		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1 score'] ?? 0;
-		//$recallImportant = $report['overall']['recall'] ?? 0;
-		//$precisionImportant = $report['overall']['precision'] ?? 0;
-		//$f1ScoreImportant = $report['overall']['f1 score'] ?? 0;
 
 		/**
 		 * What we care most is the percentage of messages classified as important in relation to the truly important messages

@@ -26,25 +26,32 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification;
 
+use OCA\DAV\Connector\Sabre\File;
 use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\Classifier;
 use OCA\Mail\Db\ClassifierMapper;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Model\ClassifierPipeline;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
+use OCP\Files;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\ICacheFactory;
 use OCP\ITempManager;
 use Psr\Log\LoggerInterface;
+use Rubix\ML\Encoding;
 use Rubix\ML\Estimator;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
 use Rubix\ML\PersistentModel;
 use Rubix\ML\Persisters\Filesystem;
+use Rubix\ML\Serializers\RBX;
+use Rubix\ML\Transformers\Transformer;
 use RuntimeException;
 use function file_get_contents;
 use function file_put_contents;
@@ -92,14 +99,17 @@ class PersistenceService {
 	}
 
 	/**
-	 * Persist the classifier data to the database and the estimator to storage
+	 * Persist the classifier data to the database, the estimator and its transformers to storage
 	 *
 	 * @param Classifier $classifier
 	 * @param Learner&Persistable $estimator
+	 * @param (Transformer&Persistable)[] $transformers
 	 *
 	 * @throws ServiceException
 	 */
-	public function persist(Classifier $classifier, Learner $estimator): void {
+	public function persist(Classifier $classifier,
+							Learner $estimator,
+							array $transformers): void {
 		/*
 		 * First we have to insert the row to get the unique ID, but disable
 		 * it until the model is persisted as well. Otherwise another process
@@ -139,9 +149,49 @@ class PersistenceService {
 			$file = $folder->newFile((string) $classifier->getId());
 			$file->putContent($serializedClassifier);
 			$this->logger->debug('Serialized classifier written to app data');
-		} catch (NotPermittedException $e) {
+		} catch (NotPermittedException | NotFoundException $e) {
 			throw new ServiceException("Could not create classifiers directory: " . $e->getMessage(), 0, $e);
 		}
+
+		/*
+		 * Then we serialize the transformer pipeline to temporary files
+		 */
+		$transformerIndex = 0;
+		$serializer = new RBX();
+		foreach ($transformers as $transformer) {
+			$tmpPath = $this->tempManager->getTemporaryFile();
+			try {
+				/**
+				 * This is how to serialize a transformer according to the official docs.
+				 * PersistentModel can only be used on Learners which transformers don't implement.
+				 *
+				 * Ref https://docs.rubixml.com/2.0/model-persistence.html#persisting-transformers
+				 *
+				 * @psalm-suppress InternalMethod
+				 */
+				$serializer->serialize($transformer)->saveTo(new Filesystem($tmpPath));
+				$serializedTransformer = file_get_contents($tmpPath);
+				$this->logger->debug('Serialized transformer written to tmp file (' . strlen($serializedTransformer) . 'B');
+			} catch (RuntimeException $e) {
+				throw new ServiceException("Could not serialize transformer: " . $e->getMessage(), 0, $e);
+			}
+
+			try {
+				$file = $folder->newFile("{$classifier->getId()}_t$transformerIndex");
+				$file->putContent($serializedTransformer);
+				$this->logger->debug("Serialized transformer $transformerIndex written to app data");
+			} catch (NotPermittedException | NotFoundException $e) {
+				throw new ServiceException(
+					"Failed to persist transformer $transformerIndex: " . $e->getMessage(),
+					0,
+					$e
+				);
+			}
+
+			$transformerIndex++;
+		}
+
+		$classifier->setTransformerCount($transformerIndex);
 
 		/*
 		 * Now we set the model active so it can be used by the next request
@@ -153,29 +203,34 @@ class PersistenceService {
 	/**
 	 * @param Account $account
 	 *
-	 * @return Estimator|null
+	 * @return ?ClassifierPipeline
+	 *
 	 * @throws ServiceException
 	 */
-	public function loadLatest(Account $account): ?Estimator {
+	public function loadLatest(Account $account): ?ClassifierPipeline {
 		try {
 			$latestModel = $this->mapper->findLatest($account->getId());
 		} catch (DoesNotExistException $e) {
 			return null;
 		}
-		return $this->load($latestModel->getId());
+		return $this->load($latestModel);
 	}
 
 	/**
-	 * @param int $id
+	 * Load an estimator and its transformers of a classifier from storage
 	 *
-	 * @return Estimator
+	 * @param Classifier $classifier
+	 * @return ClassifierPipeline
+	 *
 	 * @throws ServiceException
 	 */
-	public function load(int $id): Estimator {
-		$cached = $this->getCached($id);
+	public function load(Classifier $classifier): ClassifierPipeline {
+		$id = $classifier->getId();
+		$cached = $this->getCached($classifier->getId(), $classifier->getTransformerCount());
 		if ($cached !== null) {
 			$this->logger->debug("Using cached serialized classifier $id");
-			$serialized = $cached;
+			$serialized = $cached[0];
+			$serializedTransformers = array_slice($cached, 1);
 		} else {
 			$this->logger->debug("Loading serialized classifier from app data");
 			try {
@@ -195,41 +250,97 @@ class PersistenceService {
 			$size = strlen($serialized);
 			$this->logger->debug("Serialized classifier loaded (size=$size)");
 
-			$this->cache($id, $serialized);
+			$serializedTransformers = [];
+			for ($i = 0; $i < $classifier->getTransformerCount(); $i++) {
+				try {
+					$transformerFile = $modelsFolder->getFile("{$id}_t$i");
+				} catch (NotFoundException $e) {
+					$this->logger->debug("Could not load transformer $i of classifier $id: " . $e->getMessage());
+					throw new ServiceException("Could not load transformer $i of classifier $id: " . $e->getMessage(), 0, $e);
+				}
+
+				try {
+					$serializedTransformer = $transformerFile->getContent();
+				} catch (NotFoundException | NotPermittedException $e) {
+					$this->logger->debug("Could not load content for transformer file $i with classifier id $id: " . $e->getMessage());
+					throw new ServiceException("Could not load content for transformer file $i with classifier id $id: " . $e->getMessage(), 0, $e);
+				}
+				$size = strlen($serializedTransformer);
+				$this->logger->debug("Serialized transformer $i loaded (size=$size)");
+				$serializedTransformers[] = $serializedTransformer;
+			}
+
+			$this->cache($id, $serialized, $serializedTransformers);
 		}
 
 		$tmpPath = $this->tempManager->getTemporaryFile();
 		file_put_contents($tmpPath, $serialized);
-
 		try {
 			$estimator = PersistentModel::load(new Filesystem($tmpPath));
 		} catch (RuntimeException $e) {
 			throw new ServiceException("Could not deserialize persisted classifier $id: " . $e->getMessage(), 0, $e);
 		}
 
-		return $estimator;
+		$transformers = array_map(function(string $serializedTransformer) use ($id) {
+			$serializer = new RBX();
+			$tmpPath = $this->tempManager->getTemporaryFile();
+			file_put_contents($tmpPath, $serializedTransformer);
+			try {
+				$persister = new Filesystem($tmpPath);
+				$transformer =  $persister->load()->deserializeWith($serializer);
+			} catch (RuntimeException $e) {
+				throw new ServiceException("Could not deserialize persisted transformer of classifier $id: " . $e->getMessage(), 0, $e);
+			}
+
+			if (!($transformer instanceof Transformer)) {
+				throw new ServiceException("Transformer of classifier $id is not a transformer: Got " . $transformer::class);
+			}
+
+			return $transformer;
+		}, $serializedTransformers);
+
+		return new ClassifierPipeline($estimator, $transformers);
 	}
 
 	private function getCacheKey(int $id): string {
 		return "mail_classifier_$id";
 	}
 
-	private function getCached(int $id): ?string {
+	private function getTransformerCacheKey(int $id, int $index): string {
+		return $this->getCacheKey($id) . "_transformer_$index";
+	}
+
+	/**
+	 * @param int $id
+	 * @param int $transformerCount
+	 *
+	 * @return string[]|null Array of serialized classifier and transformers
+	 */
+	private function getCached(int $id, int $transformerCount): ?array {
 		if (!$this->cacheFactory->isLocalCacheAvailable()) {
 			return null;
 		}
 		$cache = $this->cacheFactory->createLocal();
 
-		return $cache->get(
-			$this->getCacheKey($id)
-		);
+		$values = [];
+		$values[] = $cache->get($this->getCacheKey($id));
+		for ($i = 0; $i < $transformerCount; $i++) {
+			$values[] = $cache->get($this->getTransformerCacheKey($id, $i));
+		}
+		return $values;
 	}
 
-	private function cache(int $id, string $serialized): void {
+	private function cache(int $id, string $serialized, array $serializedTransformers): void {
 		if (!$this->cacheFactory->isLocalCacheAvailable()) {
 			return;
 		}
 		$cache = $this->cacheFactory->createLocal();
 		$cache->set($this->getCacheKey($id), $serialized);
+
+		$transformerIndex = 0;
+		foreach ($serializedTransformers as $transformer) {
+			$cache->set($this->getTransformerCacheKey($id, $transformerIndex), $transformer);
+			$transformerIndex++;
+		}
 	}
 }

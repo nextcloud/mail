@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -28,9 +29,12 @@ namespace OCA\Mail\Command;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
+use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -46,17 +50,20 @@ class PredictImportance extends Command {
 	private ImportanceClassifier $classifier;
 	private IConfig $config;
 	private LoggerInterface $logger;
+	private ContainerInterface $container;
 
 	public function __construct(AccountService $service,
 								ImportanceClassifier $classifier,
 								IConfig $config,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								ContainerInterface $container) {
 		parent::__construct();
 
 		$this->accountService = $service;
 		$this->classifier = $classifier;
 		$this->logger = $logger;
 		$this->config = $config;
+		$this->container = $container;
 	}
 
 	/**
@@ -80,6 +87,11 @@ class PredictImportance extends Command {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 		$sender = $input->getArgument(self::ARGUMENT_SENDER);
 
+		$consoleLogger = new ConsoleLoggerDecorator(
+			$this->logger,
+			$output
+		);
+
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
@@ -91,7 +103,8 @@ class PredictImportance extends Command {
 		$fakeMessage->setFrom(AddressList::parse("Name <$sender>"));
 		[$prediction] = $this->classifier->classifyImportance(
 			$account,
-			[$fakeMessage]
+			[$fakeMessage],
+			$consoleLogger
 		);
 		if ($prediction) {
 			$output->writeln('Message is important');

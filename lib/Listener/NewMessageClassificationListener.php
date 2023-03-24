@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -119,10 +120,12 @@ class NewMessageClassificationListener implements IEventListener {
 		try {
 			$predictions = $this->classifier->classifyImportance(
 				$event->getAccount(),
-				$messages
+				$messages,
+				$this->logger
 			);
 
 			foreach ($event->getMessages() as $message) {
+				$this->logger->info("Message {$message->getUid()} ({$message->getPreviewText()}) is " . ($predictions[$message->getUid()] ? 'important' : 'not important'));
 				if ($predictions[$message->getUid()] ?? false) {
 					$this->mailManager->flagMessage($event->getAccount(), $event->getMailbox()->getName(), $message->getUid(), Tag::LABEL_IMPORTANT, true);
 					$this->mailManager->tagMessage($event->getAccount(), $event->getMailbox()->getName(), $message, $important, true);
