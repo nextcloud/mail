@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Threading;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 use RuntimeException;
 use function array_key_exists;
 use function spl_object_id;
@@ -149,6 +150,7 @@ class Container implements JsonSerializable {
 		return $this->children;
 	}
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'message' => $this->message,
