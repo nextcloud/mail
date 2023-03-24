@@ -93,8 +93,8 @@ class MailboxSync {
 						 LoggerInterface $logger,
 						 bool $force = false): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
-			//$logger->debug("account is up to date, skipping mailbox sync");
-			//return;
+			$logger->debug("account is up to date, skipping mailbox sync");
+			return;
 		}
 
 		$client = $this->imapClientFactory->getClient($account);
