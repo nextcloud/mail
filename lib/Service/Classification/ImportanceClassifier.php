@@ -274,7 +274,7 @@ class ImportanceClassifier {
 		$perf ??= $this->performanceLogger->start('importance classifier training');
 
 		if ($estimator === null) {
-			$estimator = static function() {
+			$estimator = static function () {
 				return self::createDefaultEstimator();
 			};
 		}
