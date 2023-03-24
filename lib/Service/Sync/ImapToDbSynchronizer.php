@@ -29,6 +29,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
+use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
@@ -72,6 +73,8 @@ class ImapToDbSynchronizer {
 	/** @var IMailManager */
 	private $mailManager;
 
+	private PreviewEnhancer $previewEnhancer;
+
 	public function __construct(DatabaseMessageMapper $dbMapper,
 		IMAPClientFactory $clientFactory,
 		ImapMessageMapper $imapMapper,
@@ -80,7 +83,8 @@ class ImapToDbSynchronizer {
 		IEventDispatcher $dispatcher,
 		PerformanceLogger $performanceLogger,
 		LoggerInterface $logger,
-		IMailManager $mailManager) {
+		IMailManager $mailManager,
+		PreviewEnhancer $previewEnhancer) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -90,6 +94,7 @@ class ImapToDbSynchronizer {
 		$this->performanceLogger = $performanceLogger;
 		$this->logger = $logger;
 		$this->mailManager = $mailManager;
+		$this->previewEnhancer = $previewEnhancer;
 	}
 
 	/**
@@ -105,9 +110,9 @@ class ImapToDbSynchronizer {
 		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
 		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		$trashRetentionDays = $account->getMailAccount()->getTrashRetentionDays();
-		
+
 		$client = $this->clientFactory->getClient($account);
-		
+
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$syncTrash = $trashMailboxId === $mailbox->getId() && $trashRetentionDays !== null;
 			$syncSnooze = $snoozeMailboxId === $mailbox->getId();
@@ -131,7 +136,7 @@ class ImapToDbSynchronizer {
 				$rebuildThreads = true;
 			}
 		}
-		
+
 		$client->logout();
 
 		$this->dispatcher->dispatchTyped(

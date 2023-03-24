@@ -27,49 +27,47 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Db\StatisticsDao;
-use OCA\Mail\Service\Classification\ImportanceClassifier;
+use OCA\Mail\Exception\ServiceException;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Transformers\TSNE;
-use Rubix\ML\Transformers\GaussianRandomProjector;
-use Rubix\ML\Transformers\LinearDiscriminantAnalysis;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
-use Rubix\ML\Transformers\PrincipalComponentAnalysis;
-use Rubix\ML\Transformers\SparseRandomProjector;
-use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function array_column;
 use function array_map;
 
-class SubjectAndPreviewTextExtractor implements IExtractor {
-	private StatisticsDao $statisticsDao;
+class SubjectExtractor implements IExtractor {
 	private WordCountVectorizer $wordCountVectorizer;
 	private Transformer $dimensionalReductionTransformer;
 	private int $max = -1;
 
-	private array $senderCache = [];
-
-	public function __construct(StatisticsDao $statisticsDao) {
-		$this->statisticsDao = $statisticsDao;
-
-		// Limit vocabulary to limit ram usage. It takes about 5 GB of ram if an unbounded
-		// vocabulary is used (and a lot more time to compute).
+	public function __construct() {
+		// Limit vocabulary to limit memory usage
 		$vocabSize = 100;
 		$this->wordCountVectorizer = new WordCountVectorizer($vocabSize);
 
 		$this->dimensionalReductionTransformer = new TSNE((int)($vocabSize * 0.1));
 	}
 
+	public function getWordCountVectorizer(): WordCountVectorizer {
+		return $this->wordCountVectorizer;
+	}
+
+	public function setWordCountVectorizer(WordCountVectorizer $wordCountVectorizer): void {
+		$this->wordCountVectorizer = $wordCountVectorizer;
+		$this->limitFeatureSize();
+	}
+
 	/**
 	 * @inheritDoc
 	 */
 	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
+		/** @var array<array-key, array<string, string>> $data */
 		$data = array_map(static function(Message $message) {
 			return [
-				'text' => ($message->getSubject() ?? '') . ' ' . ($message->getPreviewText() ?? ''),
+				'text' => $message->getSubject() ?? '',
 				'label' => $message->getFlagImportant() ? 'i' : 'ni',
 			];
 		}, $messages);
@@ -83,9 +81,7 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 			->apply($this->wordCountVectorizer)
 			->apply($this->dimensionalReductionTransformer);
 
-		// Limit feature vector length to actual vocabulary size
-		$vocab = $this->wordCountVectorizer->vocabularies()[0];
-		$this->max = count($vocab);
+		$this->limitFeatureSize();
 	}
 
 	/**
@@ -98,14 +94,10 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 		}
 		$email = $sender->getEmail();
 
-		if (isset($this->senderCache[$email])) {
-			//return $this->senderCache[$email];
-		}
-
 		// Build training data set
 		$trainText = ($message->getSubject() ?? '') . ' ' . ($message->getPreviewText() ?? '');
 
-		$trainDataSet = Unlabeled::build([$trainText])
+		$trainDataSet = Unlabeled::build([[$trainText]])
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
 			->apply($this->dimensionalReductionTransformer);
@@ -117,42 +109,14 @@ class SubjectAndPreviewTextExtractor implements IExtractor {
 			$textFeatures = $trainDataSet->sample(0);
 		}
 
-		//$this->senderCache[$email] = $textFeatures;
-
 		return $textFeatures;
 	}
 
-	private function getSubjects(): array {
-		return array_merge(...array_values($this->subjects));
-	}
-
-	private function getPreviewTexts(): array {
-		return array_merge(...array_values($this->previewTexts));
-	}
-
-	private function getSubjectsOfSender(string $email): array {
-		$concatSubjects = [];
-		foreach ($this->subjects as $sender => $subjects) {
-			if ($sender !== $email) {
-				continue;
-			}
-
-			$concatSubjects[] = $subjects;
-		}
-
-		return array_merge(...$concatSubjects);
-	}
-
-	private function getPreviewTextsOfSender(string $email): array {
-		$concatPreviewTexts = [];
-		foreach ($this->previewTexts as $sender => $previewTexts) {
-			if ($sender !== $email) {
-				continue;
-			}
-
-			$concatPreviewTexts[] = $previewTexts;
-		}
-
-		return array_merge(...$concatPreviewTexts);
+	/**
+	 * Limit feature vector length to actual vocabulary size.
+	 */
+	private function limitFeatureSize(): void {
+		$vocab = $this->wordCountVectorizer->vocabularies()[0];
+		$this->max = count($vocab);
 	}
 }
