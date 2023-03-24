@@ -312,7 +312,7 @@ class PersistenceService {
 	 * @param int $id
 	 * @param int $transformerCount
 	 *
-	 * @return string[]|null Array of serialized classifier and transformers
+	 * @return (?string)[]|null Array of serialized classifier and transformers
 	 */
 	private function getCached(int $id, int $transformerCount): ?array {
 		if (!$this->cacheFactory->isLocalCacheAvailable()) {
@@ -325,6 +325,12 @@ class PersistenceService {
 		for ($i = 0; $i < $transformerCount; $i++) {
 			$values[] = $cache->get($this->getTransformerCacheKey($id, $i));
 		}
+
+		// Only return cached values if estimator and all transformers are available
+		if (in_array(null, $values, true)) {
+			return null;
+		}
+
 		return $values;
 	}
 

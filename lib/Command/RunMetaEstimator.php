@@ -31,6 +31,7 @@ use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\IConfig;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Rubix\ML\Backends\Amp;
@@ -56,12 +57,14 @@ class RunMetaEstimator extends Command {
 	private LoggerInterface $logger;
 	private ImportanceClassifier $classifier;
 	private ContainerInterface $container;
+	private IConfig $config;
 
 	public function __construct(
 		AccountService $accountService,
 		LoggerInterface $logger,
 		ImportanceClassifier $classifier,
 		ContainerInterface $container,
+		IConfig $config,
 	) {
 		parent::__construct();
 
@@ -69,6 +72,7 @@ class RunMetaEstimator extends Command {
 		$this->logger = $logger;
 		$this->classifier = $classifier;
 		$this->container = $container;
+		$this->config = $config;
 	}
 
 	protected function configure(): void {
@@ -82,6 +86,10 @@ class RunMetaEstimator extends Command {
 			InputOption::VALUE_REQUIRED,
 			'Load training data set from a JSON file'
 		);
+	}
+
+	public function isEnabled(): bool {
+		return $this->config->getSystemValueBool('debug');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
