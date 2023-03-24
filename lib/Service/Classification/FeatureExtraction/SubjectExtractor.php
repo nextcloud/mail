@@ -27,7 +27,6 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Exception\ServiceException;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Transformers\TSNE;
@@ -65,7 +64,7 @@ class SubjectExtractor implements IExtractor {
 	 */
 	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
 		/** @var array<array-key, array<string, string>> $data */
-		$data = array_map(static function(Message $message) {
+		$data = array_map(static function (Message $message) {
 			return [
 				'text' => $message->getSubject() ?? '',
 				'label' => $message->getFlagImportant() ? 'i' : 'ni',

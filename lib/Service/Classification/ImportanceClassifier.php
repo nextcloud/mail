@@ -131,10 +131,10 @@ class ImportanceClassifier {
 	private ContainerInterface $container;
 
 	public function __construct(MailboxMapper $mailboxMapper,
- 								MessageMapper $messageMapper,
- 								PersistenceService $persistenceService,
- 								PerformanceLogger $performanceLogger,
- 								ImportanceRulesClassifier $rulesClassifier,
+								MessageMapper $messageMapper,
+								PersistenceService $persistenceService,
+								PerformanceLogger $performanceLogger,
+								ImportanceRulesClassifier $rulesClassifier,
 								VanillaCompositeExtractor $vanillaExtractor,
 								ContainerInterface $container) {
 		$this->mailboxMapper = $mailboxMapper;
@@ -291,7 +291,7 @@ class ImportanceClassifier {
 		$perf ??= $this->performanceLogger->start('importance classifier training');
 
 		if ($estimator === null) {
-			$estimator = static function() {
+			$estimator = static function () {
 				return self::createDefaultEstimator();
 			};
 		}

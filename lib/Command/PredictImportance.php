@@ -29,7 +29,6 @@ namespace OCA\Mail\Command;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;

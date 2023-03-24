@@ -173,7 +173,7 @@ class TrainAccount extends Command {
 			);
 			$json = json_encode($dataSet, JSON_THROW_ON_ERROR);
 			file_put_contents($saveDataPath, $json);
-		} else if ($loadDataPath = $input->getOption(self::ARGUMENT_LOAD_DATA)) {
+		} elseif ($loadDataPath = $input->getOption(self::ARGUMENT_LOAD_DATA)) {
 			$json = file_get_contents($loadDataPath);
 			$dataSet = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		}

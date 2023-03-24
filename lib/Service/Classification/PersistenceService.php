@@ -36,7 +36,6 @@ use OCA\Mail\Model\ClassifierPipeline;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\DB\Exception;
 use OCP\Files;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
@@ -44,7 +43,6 @@ use OCP\Files\NotPermittedException;
 use OCP\ICacheFactory;
 use OCP\ITempManager;
 use Psr\Log\LoggerInterface;
-use Rubix\ML\Encoding;
 use Rubix\ML\Estimator;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
@@ -281,13 +279,13 @@ class PersistenceService {
 			throw new ServiceException("Could not deserialize persisted classifier $id: " . $e->getMessage(), 0, $e);
 		}
 
-		$transformers = array_map(function(string $serializedTransformer) use ($id) {
+		$transformers = array_map(function (string $serializedTransformer) use ($id) {
 			$serializer = new RBX();
 			$tmpPath = $this->tempManager->getTemporaryFile();
 			file_put_contents($tmpPath, $serializedTransformer);
 			try {
 				$persister = new Filesystem($tmpPath);
-				$transformer =  $persister->load()->deserializeWith($serializer);
+				$transformer = $persister->load()->deserializeWith($serializer);
 			} catch (RuntimeException $e) {
 				throw new ServiceException("Could not deserialize persisted transformer of classifier $id: " . $e->getMessage(), 0, $e);
 			}
