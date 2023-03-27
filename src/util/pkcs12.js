@@ -42,8 +42,12 @@ export function convertPkcs12ToPem(pkcs12Der, password) {
 	const certBags = getBags(forge.pki.oids.certBag)
 	const keyBags = getBags(forge.pki.oids.pkcs8ShroudedKeyBag)
 
-	if (certBags.length !== 1 || keyBags.length !== 1) {
-		throw new InvalidPkcs12CertificateError('The PKCS #12 certificate must contain a single certificate and key')
+	if (certBags.length === 0) {
+		throw new InvalidPkcs12CertificateError('The PKCS #12 certificate must contain at least one certificate')
+	}
+
+	if (keyBags.length !== 1) {
+		throw new InvalidPkcs12CertificateError('The PKCS #12 certificate must contain a single key')
 	}
 
 	return {

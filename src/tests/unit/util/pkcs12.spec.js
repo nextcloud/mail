@@ -34,5 +34,16 @@ describe('pkcs12', () => {
 				privateKey: keyPem,
 			})
 		})
+
+		it('correctly handles PKCS#12 files with multiple cert bags', () => {
+			const certPem = readTestData('user@imap.localhost.crt').replaceAll('\n', '\r\n')
+			const keyPem = readTestData('user@imap.localhost.key').replaceAll('\n', '\r\n')
+			const pkcs12Der = toArrayBuffer(readTestDataRaw('user@imap.localhost.chain.p12'))
+
+			expect(convertPkcs12ToPem(pkcs12Der, 'smime')).toEqual({
+				certificate: certPem,
+				privateKey: keyPem,
+			})
+		})
 	})
 })
