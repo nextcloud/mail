@@ -1,7 +1,7 @@
 {
   "name": "nextcloud-mail",
   "description": "Nextcloud Mail",
-  "version": "1.15.2",
+  "version": "1.15.3",
   "author": "Christoph Wurst <christoph@winzerhof-wurst.at>",
   "license": "agpl",
   "private": true,
