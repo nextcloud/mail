@@ -203,7 +203,7 @@ export default {
 				} catch (error) {
 					if (error.name === InvalidPkcs12CertificateError.name) {
 						logger.error('PKCS #12 certificate contains multiple certs or keys', { error })
-						showError(t('mail', 'The provided PKCS #12 certificate must contain a single certificate and private key.'))
+						showError(t('mail', 'The provided PKCS #12 certificate must contain at least one certificate and exactly one private key.'))
 					} else {
 						logger.debug('Is probably not a PKCS #12 certificate or the password is wrong', { error })
 						showError(t('mail', 'Failed to import the certificate. Please check the password.'))
