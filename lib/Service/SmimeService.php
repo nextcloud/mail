@@ -167,13 +167,14 @@ class SmimeService {
 			throw new SmimeCertificateParserException('Could not parse certificate');
 		}
 
-		if (!isset($certificateData['subject']['emailAddress'])) {
+		if (!isset($certificateData['subject']['emailAddress'])
+			&& !isset($certificateData['subject']['CN'])) {
 			throw new SmimeCertificateParserException('Certificate does not contain an email address');
 		}
 
 		return new SmimeCertificateInfo(
 			$certificateData['subject']['CN'] ?? null,
-			$certificateData['subject']['emailAddress'] ?? null,
+			$certificateData['subject']['emailAddress'] ?? $certificateData['subject']['CN'],
 			$certificateData['validTo_time_t'],
 		);
 	}

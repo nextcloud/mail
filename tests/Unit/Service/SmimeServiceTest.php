@@ -36,6 +36,7 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
+use OCA\Mail\Model\SmimeCertificateInfo;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\ICertificateManager;
@@ -375,5 +376,37 @@ class SmimeServiceTest extends TestCase {
 
 		$this->assertEquals($mimePart->getContents(), $decryptedMimePartImapLocalhost->getContents());
 		$this->assertEquals($mimePart->getContents(), $decryptedMimePartDomainTld->getContents());
+	}
+
+	public function provideParseCertificateData(): array {
+		return [
+			[
+				$this->getTestCertificate('user@imap.localhost'),
+				new SmimeCertificateInfo(
+					'user',
+					'user@imap.localhost',
+					1706263943,
+				),
+			],
+			[
+				$this->getTestCertificate('cn-only@imap.localhost'),
+				new SmimeCertificateInfo(
+					'cn-only@imap.localhost',
+					'cn-only@imap.localhost',
+					1711452343,
+				),
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider provideParseCertificateData
+	 */
+	public function testParseCertificate(SmimeCertificate $certificate,
+										 SmimeCertificateInfo $expected): void {
+		$this->assertEquals(
+			$expected,
+			$this->smimeService->parseCertificate($certificate->getCertificate()),
+		);
 	}
 }
