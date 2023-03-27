@@ -670,6 +670,7 @@ export default {
 		z-index: 1;
 		padding: 2em;
 		margin: -2em;
+		margin-right: 0;
 	}
 	.icon-important {
 		:deep(path) {
