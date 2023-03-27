@@ -1,5 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## 1.15.3 - 2023-03-27
+### Fixed
+- Validate favicon hosts
+- Composer margin on rich text
 
 ## 1.15.2 - 2023-02-21
 ### Fixed
