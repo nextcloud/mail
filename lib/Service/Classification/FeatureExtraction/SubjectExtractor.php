@@ -29,6 +29,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
+use Rubix\ML\Transformers\MinMaxNormalizer;
 use Rubix\ML\Transformers\TSNE;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\Transformer;
@@ -40,6 +41,7 @@ use function array_map;
 class SubjectExtractor implements IExtractor {
 	private WordCountVectorizer $wordCountVectorizer;
 	private Transformer $dimensionalReductionTransformer;
+	private Transformer $normalizer;
 	private int $max = -1;
 
 	public function __construct() {
@@ -48,6 +50,7 @@ class SubjectExtractor implements IExtractor {
 		$this->wordCountVectorizer = new WordCountVectorizer($vocabSize);
 
 		$this->dimensionalReductionTransformer = new TSNE((int)($vocabSize * 0.1));
+		$this->normalizer = new MinMaxNormalizer();
 	}
 
 	public function getWordCountVectorizer(): WordCountVectorizer {
@@ -78,7 +81,8 @@ class SubjectExtractor implements IExtractor {
 		)
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->dimensionalReductionTransformer);
+			->apply($this->dimensionalReductionTransformer)
+			->apply($this->normalizer);
 
 		$this->limitFeatureSize();
 	}
@@ -99,7 +103,8 @@ class SubjectExtractor implements IExtractor {
 		$trainDataSet = Unlabeled::build([[$trainText]])
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->dimensionalReductionTransformer);
+			->apply($this->dimensionalReductionTransformer)
+			->apply($this->normalizer);
 
 		// Use zeroed vector if no features could be extracted
 		if ($trainDataSet->numFeatures() === 0) {
@@ -107,6 +112,8 @@ class SubjectExtractor implements IExtractor {
 		} else {
 			$textFeatures = $trainDataSet->sample(0);
 		}
+
+		var_dump($textFeatures);
 
 		return $textFeatures;
 	}
