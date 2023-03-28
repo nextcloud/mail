@@ -334,7 +334,6 @@
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Den private nøgle er kun påkrævet, hvis du har til hensigt at sende signerede og krypterede e-mails ved hjælp af dette certifikat.",
     "Back" : "Tilbage",
     "Submit" : "Tilføj",
-    "The provided PKCS #12 certificate must contain a single certificate and private key." : "PKCS #12-certifikatet skal indeholde et enkelt certifikat og en privat nøgle.",
     "Failed to import the certificate. Please check the password." : "Kunne ikke importere certifikatet. Tjek venligst adgangskoden.",
     "Certificate imported successfully" : "Certifikatet blev importeret",
     "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "Kunne ikke importere certifikatet. Sørg for, at den private nøgle matcher certifikatet og ikke er beskyttet af en kode.",

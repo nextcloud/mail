@@ -508,7 +508,6 @@
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Kişisel anahtar, yalnızca bu sertifikayı kullanarak imzalanmış ve şifrelenmiş e-postalar göndermeyi düşünüyorsanız gereklidir.",
     "Back" : "Geri",
     "Submit" : "Gönder",
-    "The provided PKCS #12 certificate must contain a single certificate and private key." : "Belirtilen PKCS #12 sertifikasında, tek bir sertifika ve kişisel anahtar bulunmalıdır.",
     "Failed to import the certificate. Please check the password." : "Sertifika içe aktarılamadı. Lütfen parolayı denetleyin.",
     "Certificate imported successfully" : "Sertifika içe aktarıldı",
     "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "Sertifika içe aktarılamadı. Lütfen kişisel anahtarın sertifika ile eşleştiğinden ve bir parola ile korunmadığından emin olun.",

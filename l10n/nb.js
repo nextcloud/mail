@@ -428,7 +428,7 @@ OC.L10N.register(
     "Could not load the message" : "Kunne ikke laste meldingen",
     "Error loading message" : "Feil ved innlasting av melding",
     "Forwarding to %s" : "Videresender til %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Klikk her hvis du ikke blir videresendt automatisk innen noen få sekunder.",
+    "Click here if you are not automatically redirected within the next few seconds." : "Klikk her hvis du ikke blir videresendt automatisk innen få sekunder.",
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
