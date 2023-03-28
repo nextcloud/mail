@@ -45,8 +45,8 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
-use OCA\Mail\Validation\RemoteHostValidator;
 use OCA\Mail\IMAP\MailboxSync;
+use OCP\Security\IRemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -66,7 +66,7 @@ class AccountsController extends Controller {
 	private IMailManager $mailManager;
 	private SyncService $syncService;
 	private IConfig $config;
-	private RemoteHostValidator $hostValidator;
+	private IRemoteHostValidator $hostValidator;
 	private MailboxSync $mailboxSync;
 
 	public function __construct(string $appName,
@@ -81,7 +81,7 @@ class AccountsController extends Controller {
 								   IMailManager $mailManager,
 								   SyncService $syncService,
 									IConfig $config,
-									RemoteHostValidator $hostValidator,
+									IRemoteHostValidator $hostValidator,
 									MailboxSync $mailboxSync
 	) {
 		parent::__construct($appName, $request);

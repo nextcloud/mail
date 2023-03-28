@@ -31,11 +31,11 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Tests\Integration\TestCase;
-use OCA\Mail\Validation\RemoteHostValidator;
+use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SieveControllerTest extends TestCase {
-	/** @var RemoteHostValidator|MockObject */
+	/** @var IRemoteHostValidator|MockObject */
 	private $remoteHostValidator;
 
 	/** @var ServiceMockObject */
@@ -48,7 +48,7 @@ class SieveControllerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->remoteHostValidator = $this->createMock(RemoteHostValidator::class);
+		$this->remoteHostValidator = $this->createMock(IRemoteHostValidator::class);
 		$this->remoteHostValidator->method('isValid')->willReturn(true);
 
 		$this->serviceMock = $this->createServiceMock(

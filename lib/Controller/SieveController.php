@@ -32,7 +32,7 @@ use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Sieve\SieveClientFactory;
-use OCA\Mail\Validation\RemoteHostValidator;
+use OCP\Security\IRemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -46,7 +46,7 @@ class SieveController extends Controller {
 	private SieveClientFactory $sieveClientFactory;
 	private string $currentUserId;
 	private ICrypto $crypto;
-	private RemoteHostValidator $hostValidator;
+	private IRemoteHostValidator $hostValidator;
 
 	public function __construct(IRequest $request,
 								string $UserId,
@@ -54,7 +54,7 @@ class SieveController extends Controller {
 								MailAccountMapper $mailAccountMapper,
 								SieveClientFactory $sieveClientFactory,
 								ICrypto $crypto,
-								RemoteHostValidator $hostValidator
+								IRemoteHostValidator $hostValidator
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;
