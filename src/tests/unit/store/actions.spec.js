@@ -63,7 +63,7 @@ describe('Vuex store actions', () => {
 		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(MailboxService.create).toHaveBeenCalledWith(13, 'Important')
+		expect(MailboxService.create).toHaveBeenCalledWith(13, 'Important', false)
 	})
 
 	it('creates a sub-mailbox', async () => {
@@ -84,7 +84,7 @@ describe('Vuex store actions', () => {
 		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(MailboxService.create).toHaveBeenCalledWith(13, 'Archive.2020')
+		expect(MailboxService.create).toHaveBeenCalledWith(13, 'Archive.2020', false)
 	})
 
 	it('adds a prefix to new mailboxes if the account has a personal namespace', async () => {
@@ -105,7 +105,7 @@ describe('Vuex store actions', () => {
 		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Important')
+		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Important', false)
 	})
 
 	it('adds no prefix to new sub-mailboxes if the account has a personal namespace', async () => {
@@ -126,7 +126,7 @@ describe('Vuex store actions', () => {
 		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Archive.2020')
+		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Archive.2020', false)
 	})
 
 	it('combines unified inbox even if no inboxes are present', async() => {

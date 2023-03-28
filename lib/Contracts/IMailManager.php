@@ -45,12 +45,13 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
+	 * @param bool $isSentMailbox
 	 *
 	 * @return Mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function createMailbox(Account $account, string $name): Mailbox;
+	public function createMailbox(Account $account, string $name, bool $isSentMailbox = false): Mailbox;
 
 	/**
 	 * @param Mailbox $mailbox

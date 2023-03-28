@@ -76,8 +76,13 @@ class FolderMapper {
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
 		Account $account,
-		string $name): Folder {
-		$client->createMailbox($name);
+		string $name,
+		bool $isSentMailbox = false): Folder {
+		$opts = [];
+		if ($isSentMailbox) {
+			$opts[] = Horde_Imap_Client::SPECIALUSE_SENT;
+		}
+		$client->createMailbox($name, $opts);
 
 		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,

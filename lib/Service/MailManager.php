@@ -142,14 +142,15 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $name
+	 * @param bool $isSentMailbox
 	 *
 	 * @return Mailbox
 	 * @throws ServiceException
 	 */
-	public function createMailbox(Account $account, string $name): Mailbox {
+	public function createMailbox(Account $account, string $name, bool $isSentMailbox = false): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$folder = $this->folderMapper->createFolder($client, $account, $name);
+			$folder = $this->folderMapper->createFolder($client, $account, $name, $isSentMailbox);
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
