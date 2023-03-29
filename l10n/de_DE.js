@@ -511,6 +511,7 @@ OC.L10N.register(
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "Der private Schlüssel wird nur benötigt, wenn Sie beabsichtigen, signierte und verschlüsselte E-Mails mit diesem Zertifikat zu versenden.",
     "Back" : "Zurück",
     "Submit" : "Übermitteln",
+    "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Das bereitgestellte PKCS #12-Zertifikat muss mindestens ein Zertifikat und genau einen privaten Schlüssel enthalten.",
     "Failed to import the certificate. Please check the password." : "Das Zertifikat konnte nicht importiert werden. Bitte überprüfen Sie das Passwort.",
     "Certificate imported successfully" : "Zertifikat erfolgreich importiert",
     "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "Das Zertifikat konnte nicht importiert werden. Bitte stellen Sie sicher, dass der private Schlüssel zum Zertifikat passt und nicht durch eine Passphrase geschützt ist.",
