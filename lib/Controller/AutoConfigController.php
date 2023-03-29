@@ -32,7 +32,7 @@ use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\IspDb;
 use OCA\Mail\Service\AutoConfig\MxRecord;
-use OCA\Mail\Validation\RemoteHostValidator;
+use OCP\Security\IRemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -42,13 +42,13 @@ class AutoConfigController extends Controller {
 	private IspDb $ispDb;
 	private MxRecord $mxRecord;
 	private ConnectivityTester $connectivityTester;
-	private RemoteHostValidator $hostValidator;
+	private IRemoteHostValidator $hostValidator;
 
 	public function __construct(IRequest $request,
 								IspDb $ispDb,
 								MxRecord $mxRecord,
 								ConnectivityTester $connectivityTester,
-								RemoteHostValidator $hostValidator) {
+								IRemoteHostValidator $hostValidator) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->ispDb = $ispDb;
 		$this->mxRecord = $mxRecord;

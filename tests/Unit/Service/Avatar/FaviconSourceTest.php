@@ -30,9 +30,9 @@ use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Validation\RemoteHostValidator;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
+use OCP\Security\IRemoteHostValidator;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
@@ -50,8 +50,8 @@ class FaviconSourceTest extends TestCase {
 
 	/** @var FaviconSource */
 	private $source;
-	/** @var RemoteHostValidator|(RemoteHostValidator&MockObject)|MockObject */
-	private RemoteHostValidator|MockObject $remoteHostValidator;
+	/** @var IRemoteHostValidator|(IRemoteHostValidator&MockObject)|MockObject */
+	private IRemoteHostValidator|MockObject $remoteHostValidator;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -59,7 +59,7 @@ class FaviconSourceTest extends TestCase {
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->favicon = $this->createMock(Favicon::class);
 		$this->mimeDetector = $this->createMock(IMimeTypeDetector::class);
-		$this->remoteHostValidator = $this->createMock(RemoteHostValidator::class);
+		$this->remoteHostValidator = $this->createMock(IRemoteHostValidator::class);
 
 		$this->source = new FaviconSource(
 			$this->clientService,

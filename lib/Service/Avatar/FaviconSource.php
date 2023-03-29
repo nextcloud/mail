@@ -26,9 +26,9 @@ namespace OCA\Mail\Service\Avatar;
 
 use Exception;
 use Horde_Mail_Rfc822_Address;
-use OCA\Mail\Validation\RemoteHostValidator;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
+use OCP\Security\IRemoteHostValidator;
 use OCP\Http\Client\IClientService;
 
 class FaviconSource implements IAvatarSource {
@@ -40,12 +40,12 @@ class FaviconSource implements IAvatarSource {
 
 	/** @var IMimeTypeDetector */
 	private $mimeDetector;
-	private RemoteHostValidator $remoteHostValidator;
+	private IRemoteHostValidator $remoteHostValidator;
 
 	public function __construct(IClientService $clientService,
 								Favicon $favicon,
 								IMimeTypeDetector $mimeDetector,
-								RemoteHostValidator $remoteHostValidator) {
+								IRemoteHostValidator $remoteHostValidator) {
 		$this->clientService = $clientService;
 		$this->favicon = $favicon;
 		$this->favicon->setCacheTimeout(0);

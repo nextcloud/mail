@@ -29,8 +29,8 @@ use OC;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Validation\RemoteHostValidator;
 use OCA\Mail\Vendor\Favicon\Favicon;
+use OCP\Security\IRemoteHostValidator;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 use OCP\IServerContainer;
@@ -56,7 +56,7 @@ class FaviconSourceTest extends TestCase {
 			$clientService,
 			new Favicon(),
 			$mimeDetector,
-			$this->serverContainer->get(RemoteHostValidator::class),
+			$this->serverContainer->get(IRemoteHostValidator::class),
 		);
 
 		$avatar = $source->fetch($email, $avatarFactory);
