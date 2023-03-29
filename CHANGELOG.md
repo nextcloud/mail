@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.0.3 – unreleased
+### Fixed
+- OAuth account setup
+
 ## 3.0.2 - 2023-03-23
 ### Fixed
 - Validate favicon hosts
