@@ -30,12 +30,17 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
+
+
+
 use function filter_var;
 
 class GoogleIntegrationController extends Controller {
@@ -43,17 +48,21 @@ class GoogleIntegrationController extends Controller {
 	private GoogleIntegration $googleIntegration;
 	private AccountService $accountService;
 	private LoggerInterface $logger;
+	private MailboxSync $mailboxSync;
+
 
 	public function __construct(IRequest $request,
 								?string $UserId,
 								GoogleIntegration $googleIntegration,
 								AccountService $accountService,
-								LoggerInterface $logger) {
+								LoggerInterface $logger,
+								MailboxSync $mailboxSync) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->userId = $UserId;
 		$this->googleIntegration = $googleIntegration;
 		$this->accountService = $accountService;
 		$this->logger = $logger;
+		$this->mailboxSync = $mailboxSync;
 	}
 
 	/**
@@ -154,7 +163,13 @@ class GoogleIntegrationController extends Controller {
 			$code,
 		);
 		$this->accountService->update($updated->getMailAccount());
-
+		try {
+			$this->mailboxSync->sync($account, $this->logger);
+		} catch (ServiceException $e) {
+			$this->logger->error('Failed syncing the newly created account' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+		}
 		return new StandaloneTemplateResponse(
 			Application::APP_ID,
 			'oauth_done',

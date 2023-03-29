@@ -386,12 +386,14 @@ class AccountsController extends Controller {
 			]);
 			return MailJsonResponse::error('Could not create account');
 		}
-		try {
-			$this->mailboxSync->sync($account, $this->logger);
-		} catch (ServiceException $e) {
-			$this->logger->error('Failed syncing the newly created account' . $e->getMessage(), [
-				'exception' => $e,
-			]);
+		if ($authMethod != 'xoauth2') {
+			try {
+				$this->mailboxSync->sync($account, $this->logger);
+			} catch (ServiceException $e) {
+				$this->logger->error('Failed syncing the newly created account' . $e->getMessage(), [
+					'exception' => $e,
+				]);
+			}
 		}
 		return MailJsonResponse::success(
 			$account, Http::STATUS_CREATED
