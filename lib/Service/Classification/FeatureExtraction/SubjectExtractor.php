@@ -95,10 +95,9 @@ class SubjectExtractor implements IExtractor {
 		if ($sender === null) {
 			throw new RuntimeException("This should not happen");
 		}
-		$email = $sender->getEmail();
 
 		// Build training data set
-		$trainText = ($message->getSubject() ?? '') . ' ' . ($message->getPreviewText() ?? '');
+		$trainText = $message->getSubject() ?? '';
 
 		$trainDataSet = Unlabeled::build([[$trainText]])
 			->apply(new MultibyteTextNormalizer())
