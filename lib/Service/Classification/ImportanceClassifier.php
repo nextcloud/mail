@@ -93,7 +93,7 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 350;
+	private const MAX_TRAINING_SET_SIZE = 333;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -411,8 +411,11 @@ class ImportanceClassifier {
 				throw new RuntimeException('This should not happen');
 			}
 
+			$features = $extractor->extract($message);
+			//var_dump($features);
+
 			return [
-				'features' => $extractor->extract($message),
+				'features' => $features,
 				'label' => $message->getFlagImportant() ? self::LABEL_IMPORTANT : self::LABEL_NOT_IMPORTANT,
 				'sender' => $sender->getEmail(),
 			];
