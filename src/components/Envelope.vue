@@ -11,6 +11,7 @@
 		class="list-item-style envelope"
 		:class="{seen: data.flags.seen, draft, selected: selected}"
 		:to="link"
+		:exact="true"
 		:data-envelope-id="data.databaseId"
 		:title="addresses"
 		:details="formatted()"
@@ -399,7 +400,6 @@ export default {
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 						threadId: this.data.databaseId,
 					},
-					exact: true,
 				}
 			}
 		},
