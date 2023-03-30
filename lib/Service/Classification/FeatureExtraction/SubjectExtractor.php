@@ -30,6 +30,8 @@ use OCA\Mail\Db\Message;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Transformers\MinMaxNormalizer;
+use Rubix\ML\Transformers\PrincipalComponentAnalysis;
+use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\TSNE;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\Transformer;
@@ -42,15 +44,17 @@ class SubjectExtractor implements IExtractor {
 	private WordCountVectorizer $wordCountVectorizer;
 	private Transformer $dimensionalReductionTransformer;
 	private Transformer $normalizer;
+	private Transformer $tfidf;
 	private int $max = -1;
 
 	public function __construct() {
 		// Limit vocabulary to limit memory usage
-		$vocabSize = 100;
+		$vocabSize = 500;
 		$this->wordCountVectorizer = new WordCountVectorizer($vocabSize);
 
-		$this->dimensionalReductionTransformer = new TSNE((int)($vocabSize * 0.1));
-		$this->normalizer = new MinMaxNormalizer();
+		$this->tfidf = new TfIdfTransformer();
+		//$this->dimensionalReductionTransformer = new PrincipalComponentAnalysis((int)($vocabSize * 0.1));
+		//$this->normalizer = new MinMaxNormalizer();
 	}
 
 	public function getWordCountVectorizer(): WordCountVectorizer {
@@ -81,8 +85,8 @@ class SubjectExtractor implements IExtractor {
 		)
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->dimensionalReductionTransformer)
-			->apply($this->normalizer);
+			->apply($this->tfidf)
+			;//->apply($this->dimensionalReductionTransformer);
 
 		$this->limitFeatureSize();
 	}
@@ -102,8 +106,8 @@ class SubjectExtractor implements IExtractor {
 		$trainDataSet = Unlabeled::build([[$trainText]])
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->dimensionalReductionTransformer)
-			->apply($this->normalizer);
+			->apply($this->tfidf)
+			;//->apply($this->dimensionalReductionTransformer);
 
 		// Use zeroed vector if no features could be extracted
 		if ($trainDataSet->numFeatures() === 0) {
@@ -112,7 +116,7 @@ class SubjectExtractor implements IExtractor {
 			$textFeatures = $trainDataSet->sample(0);
 		}
 
-		var_dump($textFeatures);
+		//var_dump($textFeatures);
 
 		return $textFeatures;
 	}
@@ -123,5 +127,6 @@ class SubjectExtractor implements IExtractor {
 	private function limitFeatureSize(): void {
 		$vocab = $this->wordCountVectorizer->vocabularies()[0];
 		$this->max = count($vocab);
+		echo("WCF vocab size: {$this->max}\n");
 	}
 }
