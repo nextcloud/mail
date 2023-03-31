@@ -60,12 +60,12 @@
 				<button v-if="!isSet(tag.imapLabel)"
 					class="tag-actions"
 					@click="addTag(tag.imapLabel)">
-					{{ t('mail','Set') }}
+					{{ t('mail','Set tag') }}
 				</button>
 				<button v-else
 					class="tag-actions"
 					@click="removeTag(tag.imapLabel)">
-					{{ t('mail','Unset') }}
+					{{ t('mail','Unset tag') }}
 				</button>
 			</div>
 			<h2 class="tag-title">
