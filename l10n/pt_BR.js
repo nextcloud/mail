@@ -511,6 +511,7 @@ OC.L10N.register(
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "The private key is only required if you intend to send signed and encrypted emails using this certificate.",
     "Back" : "Voltar",
     "Submit" : "Enviar",
+    "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "O certificado PKCS #12 fornecido deve conter pelo menos um certificado e exatamente uma chave privada.",
     "Failed to import the certificate. Please check the password." : "Failed to import the certificate. Please check the password.",
     "Certificate imported successfully" : "Certificate imported successfully",
     "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase.",

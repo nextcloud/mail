@@ -509,6 +509,7 @@
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "La clé privée n'est requise que si vous prévoyez d'envoyer des messages signés et chiffrés grâce à ce certificat.",
     "Back" : "Retour",
     "Submit" : "Soumettre",
+    "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "Le certificat PKCS #12 fourni doit contenir au moins un certificat et une seule clé privée.",
     "Failed to import the certificate. Please check the password." : "L'import du certificat a échoué. Merci de vérifier le mot de passe.",
     "Certificate imported successfully" : "Certificat importé avec succès",
     "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "L'import du certificat a échoué. Assurez-vous de la correspondance entre la clé privée et le certificat et que celle-ci n'est pas protégée par une phrase secrète.",

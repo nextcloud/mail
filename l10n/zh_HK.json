@@ -509,6 +509,7 @@
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "僅當您打算使用此證書發送簽名和加密的電子郵件時才需要私鑰。",
     "Back" : "返回",
     "Submit" : "遞交",
+    "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "提供的 PKCS #12 憑證必須包含至少一個憑證與一個私鑰。",
     "Failed to import the certificate. Please check the password." : "無法導入證書。請檢查密碼。",
     "Certificate imported successfully" : "成功導入了證書",
     "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "無法導入證書。請確保私鑰與證書匹配並且不受密碼片語保護。",

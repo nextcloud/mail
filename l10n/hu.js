@@ -511,6 +511,7 @@ OC.L10N.register(
     "The private key is only required if you intend to send signed and encrypted emails using this certificate." : "A titkos kulcs csak akkor szükséges, ha aláírt és titkosított e-maileket akar küldeni a tanúsítvány használatával.",
     "Back" : "Vissza",
     "Submit" : "Beküldés",
+    "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "A megadott PKCS #12 tanúsítványnak legalább egy tanúsítványt és pontosan egy titkos kulcsot kell tartalmaznia.",
     "Failed to import the certificate. Please check the password." : "A tanúsítvány importálása nem sikerült. Ellenőrizze a jelszót.",
     "Certificate imported successfully" : "Tanúsítvány sikeresen importálva",
     "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "A tanúsítvány importálása sikertelen. Győződjön meg arról, hogy a privát kulcs megfelel a tanúsítványnak, és nem védi jelszó.",
