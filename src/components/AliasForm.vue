@@ -82,7 +82,7 @@
 					:title="t('mail', 'Select S/MIME certificate')"
 					@click.prevent="showSmimeForm = true">
 					<template #icon>
-						<IconCertificate :size="20" />
+						<IconLock :size="20" />
 					</template>
 				</NcButton>
 				<NcButton v-if="enableDelete && !alias.provisioned"
@@ -106,7 +106,7 @@ import moment from '@nextcloud/moment'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconCheck from 'vue-material-design-icons/Check'
-import IconCertificate from 'vue-material-design-icons/Lock'
+import IconLock from 'vue-material-design-icons/Lock'
 import { compareSmimeCertificates } from '../util/smime'
 
 export default {
@@ -118,7 +118,7 @@ export default {
 		IconLoading,
 		IconDelete,
 		IconCheck,
-		IconCertificate,
+		IconLock,
 	},
 	props: {
 		account: {
