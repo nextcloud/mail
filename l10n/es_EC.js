@@ -60,6 +60,7 @@ OC.L10N.register(
     "Quota" : "Cuota",
     "Saving" : "Guardando",
     "Remove account" : "Eliminar cuenta",
+    "Loading …" : "Loading …",
     "Mark all as read" : "Marcar todos como leídos",
     "Clear cache" : "Borrar el caché",
     "New message" : "Mensaje nuevo",
