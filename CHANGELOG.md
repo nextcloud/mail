@@ -1,6 +1,41 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.0.0 - 2023-03-20
+### Added
+- S/MIME support
+- Share and receive mailboxes via IMAP ACLs
+- Smart picker
+
+### Removed
+- Nextcloud 25 support
+
+### Fixed
+- The composer jumps when adding format
+- Archiving messages via shortcut
+- Dashboard loading forever
+- S/MIME design
+- Missing mailboxes on new account
+- Fetch message once when saving attachments in files
+- Show subject on a thread when the subject is changed
+- Open composer actions after changing encryption mode
+- Hide the missing pgp key warning when mailevelope is disabled again
+- Update password of existing account
+- Refactor and fix issues with draft handling
+- Show active state for mailbox
+
+## 2.2.5 - 2023-03-23
+### Fixed
+- Validate favicon hosts
+- Attachments width
+- Message preview
+
+## 2.2.4 - 2023-02-24
+### Fixed
+- Open composer actions after changing encryption mode
+- Close button position in SearchMessages.vue
+- Background touches search input
+
 ## 2.2.3 - 2023-02-09
 ### Fixed
 - Allow sending of messages with empty body content
