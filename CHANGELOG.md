@@ -1,5 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## 3.1.0 - 2023-04-04
+### Added
+- Warning when a signature is not verified
+- Respect acl for MailboxInlinePicker
+### Fixed
+- Certificate to alias mapping UI
+- Login using xoauth2
+- Message preview
+- Archiving messages via shortcut
+- Handle certificates with no emailAddress field
+- Handle PKCS12 stores with multiple certificates
+- Clickable area partially covering timestamp
+- Validate favicon hosts
+- Composer margin on rich text
+- Dashboard loading forever
+- Hide "Has Cal" tag
+### Changed
+- Smart link icon and rename it
+- Remove explicit width for attachments
 
 ## 3.0.0 - 2023-03-20
 ### Added
