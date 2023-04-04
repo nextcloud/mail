@@ -27,8 +27,7 @@
 				<AliasForm :account="account"
 					:alias="accountAlias"
 					:enable-update="false"
-					:enable-delete="false"
-					:on-update-smime-certificate="updateAccountSmimeCertificate">
+					:enable-delete="false">
 					<ButtonVue v-if="!account.provisioningId"
 						type="tertiary-no-background"
 						:title="t('mail', 'Change name')"
@@ -45,7 +44,6 @@
 				<AliasForm :account="account"
 					:alias="alias"
 					:on-update-alias="updateAlias"
-					:on-update-smime-certificate="updateAliasSmimeCertificate"
 					:on-delete="deleteAlias" />
 			</li>
 
@@ -156,22 +154,7 @@ export default {
 			this.newName = this.account.name
 			this.showForm = false
 		},
-		async updateAccountSmimeCertificate(aliasId, smimeCertificateId) {
-			await this.$store.dispatch('updateAccountSmimeCertificate', {
-				account: this.account,
-				smimeCertificateId,
-			})
-		},
-		async updateAliasSmimeCertificate(aliasId, smimeCertificateId) {
-			const alias = this.aliases.find((alias) => alias.id === aliasId)
-			await this.$store.dispatch('updateAlias', {
-				account: this.account,
-				aliasId,
-				alias: alias.alias,
-				name: alias.name,
-				smimeCertificateId,
-			})
-		},
+
 		async updateAlias(aliasId, newAlias) {
 			const alias = this.aliases.find((alias) => alias.id === aliasId)
 			await this.$store.dispatch('updateAlias', {

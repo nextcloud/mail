@@ -32,6 +32,11 @@
 			:title="t('mail', 'Account settings')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</AppSettingsSection>
+		<AppSettingsSection
+			id="certificate-settings"
+			:title="t('mail', 'Alias to S/MIME certificate mapping')">
+			<CertificateSettings :account="account" />
+		</AppSettingsSection>
 		<AppSettingsSection id="signature" :title="t('mail', 'Signature')">
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
@@ -113,6 +118,7 @@ import TrustedSenders from './TrustedSenders'
 import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
 import OutOfOfficeForm from './OutOfOfficeForm'
+import CertificateSettings from './CertificateSettings'
 
 export default {
 	name: 'AccountSettings',
@@ -128,6 +134,7 @@ export default {
 		AppSettingsSection,
 		AccountDefaultsSettings,
 		OutOfOfficeForm,
+		CertificateSettings,
 	},
 	props: {
 		account: {

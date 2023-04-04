@@ -36,25 +36,12 @@
 				class="alias-form__form__input"
 				required>
 		</form>
-		<form v-else-if="showSmimeForm"
-			:id="formId"
-			class="alias-form__form"
-			@submit.prevent="updateSmimeCertificate">
-			<NcSelect v-model="changeSmimeCert"
-				:options="smimeCertOptions"
-				:placeholder="t('mail', 'Select a S/MIME certificate for signing and encrypting')"
-				class="alias-form__form__input">
-				<template #option="option">
-					{{ option.label }}
-				</template>
-			</NcSelect>
-		</form>
 		<div v-else>
 			<strong>{{ alias.name }}</strong> &lt;{{ alias.alias }}&gt;
 		</div>
 
 		<div class="alias-form__actions">
-			<template v-if="showForm || showSmimeForm">
+			<template v-if="showForm">
 				<NcButton type="tertiary-no-background"
 					native-type="submit"
 					:form="formId"
@@ -77,14 +64,6 @@
 						<IconRename :size="20" />
 					</template>
 				</NcButton>
-				<NcButton v-if="smimeCertOptions.length > 0"
-					type="tertiary-no-background"
-					:title="t('mail', 'Select S/MIME certificate')"
-					@click.prevent="showSmimeForm = true">
-					<template #icon>
-						<IconCertificate :size="20" />
-					</template>
-				</NcButton>
 				<NcButton v-if="enableDelete && !alias.provisioned"
 					type="tertiary-no-background"
 					:title="t('mail', 'Delete alias')"
@@ -100,25 +79,19 @@
 </template>
 
 <script>
-import { NcButton, NcLoadingIcon as IconLoading, NcSelect } from '@nextcloud/vue'
-import { mapGetters } from 'vuex'
-import moment from '@nextcloud/moment'
+import { NcButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconDelete from 'vue-material-design-icons/Delete'
 import IconRename from 'vue-material-design-icons/Pencil'
 import IconCheck from 'vue-material-design-icons/Check'
-import IconCertificate from 'vue-material-design-icons/Certificate'
-import { compareSmimeCertificates } from '../util/smime'
 
 export default {
 	name: 'AliasForm',
 	components: {
 		NcButton,
-		NcSelect,
 		IconRename,
 		IconLoading,
 		IconDelete,
 		IconCheck,
-		IconCertificate,
 	},
 	props: {
 		account: {
@@ -137,10 +110,6 @@ export default {
 			type: Boolean,
 			default: true,
 		},
-		onUpdateSmimeCertificate: {
-			type: Function,
-			default: async (aliasId, smimeCertificateId) => {},
-		},
 		onUpdateAlias: {
 			type: Function,
 			default: async (aliasId, { alias, name }) => {},
@@ -154,54 +123,13 @@ export default {
 		return {
 			changeAlias: this.alias.alias,
 			changeName: this.alias.name,
-			changeSmimeCert: undefined,
 			showForm: false,
-			showSmimeForm: false,
 			loading: false,
 		}
 	},
 	computed: {
-		...mapGetters({
-			smimeCertificates: 'getSmimeCertificates',
-		}),
 		formId() {
 			return `alias-form-${this.alias.id}`
-		},
-		smimeCertOptions() {
-			// Only show certificates that are at least valid until tomorrow
-			const now = (new Date().getTime() / 1000) + 3600 * 24
-
-			return this.smimeCertificates
-				.filter((cert) => {
-					return cert.hasKey
-						&& cert.emailAddress === this.alias.alias
-						&& cert.info.notAfter >= now
-						&& cert.purposes.sign
-						&& cert.purposes.encrypt
-						// TODO: select a separate certificate for encryption?!
-				})
-				.map(this.mapCertificateToOption)
-				.sort(compareSmimeCertificates)
-		},
-	},
-	watch: {
-		alias: {
-			immediate: true,
-			handler(newAlias) {
-				if (!newAlias.smimeCertificateId) {
-					return
-				}
-
-				const cert = this.smimeCertificates.find((cert) => {
-					return cert.id === newAlias.smimeCertificateId
-				})
-
-				if (!cert) {
-					return
-				}
-
-				this.changeSmimeCert = this.mapCertificateToOption(cert)
-			},
 		},
 	},
 	methods: {
@@ -219,19 +147,6 @@ export default {
 			this.showForm = false
 			this.loading = false
 		},
-
-		/**
-		 * Call S/MIME certificate update event handler of parent.
-		 *
-		 * @return {Promise<void>}
-		 */
-		async updateSmimeCertificate() {
-			this.loading = true
-			await this.onUpdateSmimeCertificate(this.alias.id, this.changeSmimeCert?.id)
-			this.showSmimeForm = false
-			this.loading = false
-		},
-
 		/**
 		 * Call alias deletion event handler of parent.
 		 *
@@ -241,20 +156,6 @@ export default {
 			this.loading = true
 			await this.onDelete(this.alias.id)
 			this.loading = false
-		},
-
-		/**
-		 * Map an S/MIME certificate from the db to a NcSelect option.
-		 *
-		 * @param {object} cert S/MIME certificate
-		 * @return {object} NcSelect option
-		 */
-		mapCertificateToOption(cert) {
-			const label = this.t('mail', '{commonName} - Valid until {expiryDate}', {
-				commonName: cert.info.commonName ?? cert.info.emailAddress,
-				expiryDate: moment.unix(cert.info.notAfter).format('LL'),
-			})
-			return { ...cert, label }
 		},
 	},
 }
