@@ -270,7 +270,7 @@ p.app-settings {
 	margin-top: 6px;
 }
 .app-settings-button.button.primary.new-button {
-	color: var(--color-main-background);
+	color: var(--color-primary-text);
 	//this style will be removed after we migrate also the  'add mail account' to material design
 	padding-left: 34px;
 	gap: 4px;
@@ -295,7 +295,6 @@ p.app-settings {
 	}
 }
 .material-design-icon {
-	opacity: .7;
 	&.lock-icon {
 		margin-right: 10px;
 	}
