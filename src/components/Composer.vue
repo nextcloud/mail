@@ -1121,6 +1121,13 @@ export default {
 			this.saveDraftDebounced()
 		},
 		async onSend(_, force = false) {
+			const selectedAccount = this.$store.getters.getAccount(this.selectedAlias.id)
+			if (!selectedAccount?.sentMailboxId) {
+				this.$emit('new-mailbox-then-send', {
+					...this.getMessageData(),
+				})
+				return
+			}
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()

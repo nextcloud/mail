@@ -18,6 +18,9 @@
 			</template>
 		</EmptyContent>
 		<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
+		<Loading v-else-if="creatingSentMailbox"
+			:hint="t('mail', 'Creating new sent mailbox …')"
+			role="alert" />
 		<Loading v-else-if="sending"
 			:hint="t('mail', 'Sending …')"
 			role="alert" />
@@ -54,7 +57,8 @@
 			@draft="onDraft"
 			@discard-draft="discardDraft"
 			@upload-attachment="onAttachmentUploading"
-			@send="onSend" />
+			@send="onSend"
+			@new-mailbox-then-send="onNewSentMailbox" />
 	</Modal>
 </template>
 <script>
@@ -63,7 +67,7 @@ import {
 	NcEmptyContent as EmptyContent,
 	NcModal as Modal,
 } from '@nextcloud/vue'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { showError, showSuccess, showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
@@ -94,9 +98,11 @@ export default {
 			savingDraft: false,
 			draftSaved: false,
 			uploadingAttachments: false,
+			creatingSentMailbox: false,
 			sending: false,
 			error: undefined,
 			warning: undefined,
+			newSentMailboxId: null,
 		}
 	},
 	computed: {
@@ -128,6 +134,53 @@ export default {
 	methods: {
 		toHtml,
 		plain,
+		async onNewSentMailbox(data) {
+			const account = this.$store.getters.getAccount(data.accountId)
+			showWarning(t('mail', 'Setting Sent default folder'))
+			this.creatingSentMailbox = true
+
+			logger.info('creating automated_sent mailbox')
+			await this.$store
+				.dispatch('createMailbox', { account, name: 'automated_sent' })
+				.then((e) => {
+					logger.info('mailbox Temporary automated_sent created')
+					 this.newSentMailboxId = e.databaseId
+				})
+				.catch((error) => {
+					this.creatingSentMailbox = false
+					showError(t('mail', 'Could not create new mailbox, please try setting a sent mailbox manually'))
+					logger.error('could not create mailbox', { error })
+					this.$emit('close')
+					throw error
+				})
+
+			if (this.newSentMailboxId) {
+				logger.debug('setting sent mailbox to ' + this.newSentMailboxId)
+				await this.$store.dispatch('patchAccount', {
+					account,
+					data: {
+						sentMailboxId: this.newSentMailboxId,
+					},
+				})
+					.then(() => {
+						logger.debug('Resending message after new setting sent mailbox')
+						this.onSend(data)
+						showSuccess(t('mail', 'New sent folder set, resending message'))
+					})
+					.catch((error) => {
+						showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
+						logger.error('could not set sent mailbox', { error })
+						this.$emit('close')
+					})
+					.finally(() => {
+						this.creatingSentMailbox = false
+					})
+			} else {
+				showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
+				this.creatingSentMailbox = false
+				this.$emit('close')
+			}
+		},
 		onDraft(data) {
 			if (!this.composerMessage) {
 				logger.info('Ignoring draft because there is no message anymore', { data })
