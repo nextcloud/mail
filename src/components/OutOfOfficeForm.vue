@@ -101,7 +101,11 @@
 			{{ errorMessage }}
 		</p>
 
-		<Button type="primary" native-type="submit" :disabled="loading || !valid">
+		<Button
+			type="primary"
+			native-type="submit"
+			:aria-label="t('mail', 'Save autoresponder')"
+			:disabled="loading || !valid">
 			<template #icon>
 				<CheckIcon :size="20" />
 			</template>

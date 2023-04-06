@@ -316,6 +316,7 @@
 					<div class="group-inputs">
 						<Button
 							class="config-button save-config"
+							:aria-label="t('mail', 'Save Config')"
 							type="secondary"
 							native-type="submit"
 							:disabled="loading">
@@ -328,6 +329,7 @@
 							v-if="deleteButton"
 							type="secondary"
 							class="config-button"
+							:aria-label="t('mail', 'Unprovision & Delete Config')"
 							:disabled="loading"
 							@click="disableConfig()">
 							<template #icon>

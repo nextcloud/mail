@@ -6,6 +6,7 @@
 			class="search-messages--input"
 			:placeholder="t('mail', 'Search in mailbox')">
 		<NcButton v-if="filterChanged"
+			:aria-label="t('mail', 'Close')"
 			class="search-messages--close"
 			@click="resetFilter()">
 			<template #icon>
@@ -252,6 +253,7 @@
 				<div class="modal-inner-field--right">
 					<NcButton
 						class="button-reset-filter"
+						:aria-label="t('mail', 'Clear')"
 						@click="resetFilter()">
 						<template #icon>
 							<Close :size="24" />
@@ -260,6 +262,7 @@
 					</NcButton>
 					<NcButton
 						type="primary"
+						:aria-label="t('mail', 'Search')"
 						@click="closeSearchModal()">
 						<template #icon>
 							<Magnify :size="24" />

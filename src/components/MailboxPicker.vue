@@ -49,7 +49,11 @@
 				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 			</div>
 			<div class="buttons">
-				<ButtonVue type="primary" :disabled="loading || (!allowRoot && !selectedMailboxId)" @click="onSelect">
+				<ButtonVue
+					type="primary"
+					:disabled="loading || (!allowRoot && !selectedMailboxId)"
+					:aria-label="loading ? labelSelectLoading : labelSelect"
+					@click="onSelect">
 					<template #icon>
 						<IconLoading v-if="loading" :size="20" />
 					</template>

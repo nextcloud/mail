@@ -13,6 +13,7 @@
 		<ButtonVue
 			class="primary"
 			:disabled="loading"
+			:aria-label="t('mail', 'Save sieve script')"
 			@click="saveActiveScript">
 			<template #icon>
 				<IconLoading v-if="loading" :size="20" />

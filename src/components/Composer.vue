@@ -225,6 +225,7 @@
 				<ButtonVue v-if="!savingDraft && !canSaveDraft"
 					class="button"
 					type="tertiary"
+					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
 						<Download :size="20" :title="t('mail', 'Save draft')" />
@@ -233,6 +234,7 @@
 				<ButtonVue v-if="!savingDraft && draftSaved"
 					class="button"
 					type="tertiary"
+					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discard-draft')">
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
@@ -396,6 +398,7 @@
 				<ButtonVue :disabled="!canSend"
 					native-type="submit"
 					type="primary"
+					:aria-label="submitButtonTitle"
 					@click="onSend">
 					<template #icon>
 						<Send

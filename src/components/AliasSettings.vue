@@ -30,6 +30,7 @@
 					:enable-delete="false">
 					<ButtonVue v-if="!account.provisioningId"
 						type="tertiary-no-background"
+						:aria-label="t('mail', 'Go back')"
 						:title="t('mail', 'Change name')"
 						@click="$emit('rename-primary-alias')">
 						<template #icon>
@@ -62,7 +63,11 @@
 		</ul>
 
 		<div v-if="!account.provisioningId">
-			<ButtonVue v-if="!showForm" type="primary" @click="showForm = true">
+			<ButtonVue
+				v-if="!showForm"
+				type="primary"
+				:aria-label="t('mail', 'Add alias')"
+				@click="showForm = true">
 				{{ t('mail', 'Add alias') }}
 			</ButtonVue>
 
@@ -70,6 +75,7 @@
 				native-type="submit"
 				type="primary"
 				form="createAliasForm"
+				:aria-label="t('mail', 'Create alias')"
 				:disabled="loading">
 				<template #icon>
 					<IconLoading v-if="loading" :size="20" />
@@ -80,6 +86,7 @@
 			<ButtonVue v-if="showForm"
 				type="tertiary-no-background"
 				class="button-text"
+				:aria-label="t('mail', 'Cancel')"
 				@click="resetCreate">
 				{{ t("mail", "Cancel") }}
 			</ButtonVue>

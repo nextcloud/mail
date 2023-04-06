@@ -1,6 +1,7 @@
 <template>
 	<div class="header">
 		<Button
+			:aria-label="t('mail', 'New message')"
 			type="primary"
 			class="new-message-button"
 			:disabled="$store.getters.showMessageComposer"
@@ -15,6 +16,7 @@
 			{{ t('mail', 'New message') }}
 		</Button>
 		<Button v-if="currentMailbox"
+			:aria-label="t('mail', 'Refresh')"
 			type="tertiary-no-background"
 			class="refresh__button"
 			:disabled="refreshing"

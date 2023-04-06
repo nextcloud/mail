@@ -39,8 +39,12 @@
 			label="label"
 			track-by="id"
 			@select="selectCertificate" />
-		<Button type="primary" :disabled="certificate === null" @click="updateSmimeCertificate">
-			Update Certificate
+		<Button
+			type="primary"
+			:disabled="certificate === null"
+			:aria-label="t('mail', 'Update Certificate')"
+			@click="updateSmimeCertificate">
+			{{ t('mail', 'Update Certificate') }}
 		</Button>
 	</div>
 </template>
