@@ -185,6 +185,9 @@ export default {
 				editor.editing.view.focus()
 			}
 
+			if (this.html) {
+				this.$emit('show-toolbar', editor.ui._focusableToolbarDefinitions[0].toolbarView.element)
+			}
 			this.bus.$on('append-to-body-at-cursor', this.appendToBodyAtCursor)
 			this.$emit('ready', editor)
 		},

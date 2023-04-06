@@ -2,6 +2,7 @@
 	<Modal
 		size="normal"
 		:title="modalTitle"
+		:additional-trap-elements="toolbar"
 		@close="$emit('close', { restoreOriginalSendAt: true })">
 		<EmptyContent v-if="error"
 			:title="t('mail', 'Error sending your message')"
@@ -54,7 +55,8 @@
 			@draft="onDraft"
 			@discard-draft="discardDraft"
 			@upload-attachment="onAttachmentUploading"
-			@send="onSend" />
+			@send="onSend"
+			@show-toolbar="handleShow" />
 	</Modal>
 </template>
 <script>
@@ -87,6 +89,7 @@ export default {
 	},
 	data() {
 		return {
+			toolbar: undefined,
 			original: undefined,
 			draftsPromise: Promise.resolve(this.composerData?.draftId),
 			attachmentsPromise: Promise.resolve(),
@@ -126,6 +129,9 @@ export default {
 		},
 	},
 	methods: {
+		handleShow(event) {
+			this.toolbar = [event]
+		},
 		toHtml,
 		plain,
 		onDraft(data) {
