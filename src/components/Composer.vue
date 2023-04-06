@@ -200,7 +200,8 @@
 				:focus="isReply"
 				:bus="bus"
 				@input="onEditorInput"
-				@ready="onEditorReady" />
+				@ready="onEditorReady"
+				@show-toolbar="handleShow" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
@@ -899,6 +900,9 @@ export default {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
+		handleShow(event) {
+			this.$emit('show-toolbar', event)
+		},
 		openPicker() {
 			this.isPickerOpen = true
 		},
