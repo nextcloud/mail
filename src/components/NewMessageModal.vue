@@ -2,7 +2,7 @@
 	<Modal
 		size="normal"
 		:title="modalTitle"
-		:additional-trap-elements="toolbar"
+		:additional-trap-elements="toolbarElements"
 		@close="$emit('close', { restoreOriginalSendAt: true })">
 		<EmptyContent v-if="error"
 			:title="t('mail', 'Error sending your message')"
@@ -89,7 +89,7 @@ export default {
 	},
 	data() {
 		return {
-			toolbar: undefined,
+			toolbarElements: undefined,
 			original: undefined,
 			draftsPromise: Promise.resolve(this.composerData?.draftId),
 			attachmentsPromise: Promise.resolve(),
@@ -129,8 +129,8 @@ export default {
 		},
 	},
 	methods: {
-		handleShow(event) {
-			this.toolbar = [event]
+		handleShow(element) {
+			this.toolbarElements = [element]
 		},
 		toHtml,
 		plain,
