@@ -133,6 +133,6 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 				$address->getEmail(),
 				$address->getDisplayName()
 			])
-			->execute();
+			->executeStatement();
 	}
 }

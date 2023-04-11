@@ -56,6 +56,6 @@ class Version1060Date20201015084952 extends SimpleMigrationStep {
 		$update = $this->connection->getQueryBuilder();
 		$update->update('mail_accounts')
 			->set('last_mailbox_sync', $update->createNamedParameter(0));
-		$update->execute();
+		$update->executeStatement();
 	}
 }

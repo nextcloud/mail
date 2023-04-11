@@ -74,7 +74,7 @@ class MailboxMapper extends QBMapper {
 		$qb->select('id')
 			->from($this->getTableName());
 
-		$cursor = $qb->execute();
+		$cursor = $qb->executeQuery();
 		while ($row = $cursor->fetch()) {
 			yield (int)$row['id'];
 		}
@@ -193,7 +193,7 @@ class MailboxMapper extends QBMapper {
 				$query->expr()->eq('id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 				$this->eqOrNull($query, $attr, $lock, IQueryBuilder::PARAM_INT)
 			);
-		if ($query->execute() === 0) {
+		if ($query->executeStatement() === 0) {
 			// Another process just started syncing
 
 			throw MailboxLockedException::from($mailbox);
@@ -267,7 +267,7 @@ class MailboxMapper extends QBMapper {
 			->from($this->getTableName(), 'm')
 			->leftJoin('m', 'mail_accounts', 'a', $qb1->expr()->eq('m.account_id', 'a.id'))
 			->where($qb1->expr()->isNull('a.id'));
-		$result = $idsQuery->execute();
+		$result = $idsQuery->executeQuery();
 		$ids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
@@ -278,7 +278,7 @@ class MailboxMapper extends QBMapper {
 			->where($qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$query = $qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$query->execute();
+			$query->executeStatement();
 		}
 	}
 
@@ -296,7 +296,7 @@ class MailboxMapper extends QBMapper {
 					$qb->expr()->eq('flag_important', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
 				);
 
-		$cursor = $query->execute();
+		$cursor = $query->executeQuery();
 		$uids = array_map(static function (array $row) {
 			return (int)$row['uid'];
 		}, $cursor->fetchAll());

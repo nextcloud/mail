@@ -136,7 +136,7 @@ class MailAccountMapper extends QBMapper {
 		$delete = $qb->delete($this->getTableName())
 			->where($qb->expr()->eq('provisioning_id', $qb->createNamedParameter($provisioningId, IQueryBuilder::PARAM_INT)));
 
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
 	public function deleteProvisionedAccountsByUid(string $uid): void {
@@ -148,7 +148,7 @@ class MailAccountMapper extends QBMapper {
 				$qb->expr()->isNotNull('provisioning_id')
 			);
 
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
 	public function getAllAccounts(): array {

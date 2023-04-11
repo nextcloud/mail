@@ -77,7 +77,7 @@ class RecipientMapper extends QBMapper {
 			->where(
 				$qb->expr()->eq('local_message_id', $qb->createNamedParameter($localMessageId, IQueryBuilder::PARAM_INT))
 			);
-		$qb->execute();
+		$qb->executeStatement();
 	}
 
 	/**

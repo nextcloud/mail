@@ -83,7 +83,7 @@ class MessageMapper extends QBMapper {
 	 * @return int[]
 	 */
 	private function findUids(IQueryBuilder $query): array {
-		$result = $query->execute();
+		$result = $query->executeQuery();
 		$uids = array_map(static function (array $row) {
 			return (int)$row['uid'];
 		}, $result->fetchAll());
@@ -98,7 +98,7 @@ class MessageMapper extends QBMapper {
 	 * @return int[]
 	 */
 	private function findIds(IQueryBuilder $query): array {
-		$result = $query->execute();
+		$result = $query->executeQuery();
 		$uids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
@@ -114,7 +114,7 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName())
 			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
 
-		$result = $query->execute();
+		$result = $query->executeQuery();
 		$max = (int)$result->fetchColumn();
 		$result->closeCursor();
 
@@ -212,7 +212,7 @@ class MessageMapper extends QBMapper {
 				),
 			);
 
-		$result = $messagesQuery->execute();
+		$result = $messagesQuery->executeQuery();
 		$messages = [];
 		while (($row = $result->fetch())) {
 			$messages[] = DatabaseMessage::fromRowData(
@@ -251,7 +251,7 @@ class MessageMapper extends QBMapper {
 				);
 				$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
 
-				$query->execute();
+				$query->executeStatement();
 			}
 
 			$this->db->commit();
@@ -320,7 +320,7 @@ class MessageMapper extends QBMapper {
 				$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
-				$qb1->execute();
+				$qb1->executeStatement();
 
 				$messageId = $qb1->getLastInsertId();
 				$recipientTypes = [
@@ -343,7 +343,7 @@ class MessageMapper extends QBMapper {
 						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
 						$qb2->setParameter('email', $recipient->getEmail(), IQueryBuilder::PARAM_STR);
 
-						$qb2->execute();
+						$qb2->executeStatement();
 					}
 				}
 				foreach ($message->getTags() as $tag) {
@@ -414,7 +414,7 @@ class MessageMapper extends QBMapper {
 					$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
 					$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
 					$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
-					$query->execute();
+					$query->executeStatement();
 					$perf->step('Updated message ' . $message->getId());
 				}
 
@@ -519,7 +519,7 @@ class MessageMapper extends QBMapper {
 				$query->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
 				$query->setParameter('encrypted', $message->isEncrypted(), IQueryBuilder::PARAM_BOOL);
 
-				$query->execute();
+				$query->executeStatement();
 			}
 
 			$this->db->commit();
@@ -563,7 +563,7 @@ class MessageMapper extends QBMapper {
 				$query->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
 				$query->setParameter('imip_error', $message->isImipError(), IQueryBuilder::PARAM_BOOL);
 				$query->setParameter('imip_processed', $message->isImipProcessed(), IQueryBuilder::PARAM_BOOL);
-				$query->execute();
+				$query->executeStatement();
 			}
 
 			$this->db->commit();
@@ -590,7 +590,7 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName())
 			->where($messageIdQuery->expr()->eq('mailbox_id', $messageIdQuery->createNamedParameter($mailbox->getId())));
 
-		$cursor = $messageIdQuery->execute();
+		$cursor = $messageIdQuery->executeQuery();
 		$messageIds = $cursor->fetchAll();
 		$cursor->closeCursor();
 
@@ -605,7 +605,7 @@ class MessageMapper extends QBMapper {
 		foreach (array_chunk($messageIds, 1000) as $chunk) {
 			// delete all related recipient entries
 			$deleteRecipientsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteRecipientsQuery->execute();
+			$deleteRecipientsQuery->executeStatement();
 		}
 
 		$query = $this->db->getQueryBuilder();
@@ -613,7 +613,7 @@ class MessageMapper extends QBMapper {
 		$query->delete($this->getTableName())
 			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
 
-		$query->execute();
+		$query->executeStatement();
 	}
 
 	public function deleteByUid(Mailbox $mailbox, int ...$uids): void {
@@ -637,7 +637,7 @@ class MessageMapper extends QBMapper {
 
 		foreach (array_chunk($uids, 1000) as $chunk) {
 			$messageIdQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$cursor = $messageIdQuery->execute();
+			$cursor = $messageIdQuery->executeQuery();
 
 			$messageIds = array_map(static function (array $message) {
 				return $message['id'];
@@ -646,11 +646,11 @@ class MessageMapper extends QBMapper {
 
 			// delete all related recipient entries
 			$deleteRecipientsQuery->setParameter('messageIds', $messageIds, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteRecipientsQuery->execute();
+			$deleteRecipientsQuery->executeStatement();
 
 			// delete all messages
 			$deleteMessagesQuery->setParameter('messageIds', $messageIds, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteMessagesQuery->execute();
+			$deleteMessagesQuery->executeStatement();
 		}
 	}
 
@@ -1122,7 +1122,7 @@ class MessageMapper extends QBMapper {
 		$recipientsResults = [];
 		foreach (array_chunk(array_keys($indexedMessages), 1000) as $chunk) {
 			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$result = $qb2->execute();
+			$result = $qb2->executeQuery();
 			$recipientsResults[] = $result->fetchAll();
 			$result->closeCursor();
 		}
@@ -1264,7 +1264,7 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName(), 'm')
 			->leftJoin('m', 'mail_mailboxes', 'mb', $qb1->expr()->eq('m.mailbox_id', 'mb.id'))
 			->where($qb1->expr()->isNull('mb.id'));
-		$result = $idsQuery->execute();
+		$result = $idsQuery->executeQuery();
 		$ids = [];
 		while ($row = $result->fetch()) {
 			$ids[] = (int) $row['id'];
@@ -1277,7 +1277,7 @@ class MessageMapper extends QBMapper {
 			->where($qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$query->execute();
+			$query->executeStatement();
 		}
 		$qb3 = $this->db->getQueryBuilder();
 		$recipientIdsQuery = $qb3->selectDistinct('r.id')
@@ -1287,7 +1287,7 @@ class MessageMapper extends QBMapper {
 				$qb3->expr()->isNull('m.id'),
 				$qb3->expr()->isNull('r.local_message_id')
 			);
-		$result = $recipientIdsQuery->execute();
+		$result = $recipientIdsQuery->executeQuery();
 		while ($row = $result->fetch()) {
 			$ids[] = (int) $row['id'];
 		}
@@ -1299,7 +1299,7 @@ class MessageMapper extends QBMapper {
 			->where($qb4->expr()->in('id', $qb4->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$recipientsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$recipientsQuery->execute();
+			$recipientsQuery->executeStatement();
 		}
 	}
 
@@ -1313,7 +1313,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('uid', $qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		if (empty($rows)) {
@@ -1345,7 +1345,7 @@ class MessageMapper extends QBMapper {
 			->where(
 				$qb->expr()->like('in_reply_to', $qb->createNamedParameter("<>", IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			);
-		return $update->execute();
+		return $update->executeStatement();
 	}
 
 	/**

@@ -74,7 +74,7 @@ class LocalAttachmentMapperTest extends TestCase {
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$attachment1 = LocalAttachment::fromParams([
 			'fileName' => 'slimes_in_the_mines.jpeg',

@@ -73,11 +73,11 @@ class RecipientMapperTest extends TestCase {
 
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$qb2 = $this->db->getQueryBuilder();
 		$delete2 = $qb2->delete($this->localMessageMapper->getTableName());
-		$delete2->execute();
+		$delete2->executeStatement();
 
 		$this->account = $this->createTestAccount();
 

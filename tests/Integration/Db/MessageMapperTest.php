@@ -62,7 +62,7 @@ class MessageMapperTest extends TestCase {
 		$qb = $this->db->getQueryBuilder();
 
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
 	public function testResetInReplyTo() : void {
@@ -79,7 +79,7 @@ class MessageMapperTest extends TestCase {
 					'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
 					'in_reply_to' => $qb->createNamedParameter('<>')
 				]);
-			$insert->execute();
+			$insert->executeStatement();
 		}, range(1, 10));
 
 		array_map(function ($i) {
@@ -93,7 +93,7 @@ class MessageMapperTest extends TestCase {
 					'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
 					'in_reply_to' => $qb->createNamedParameter('<abc@dgf.com>')
 				]);
-			$insert->execute();
+			$insert->executeStatement();
 		}, range(11, 20));
 
 		$result = $this->mapper->resetInReplyTo();
@@ -107,7 +107,7 @@ class MessageMapperTest extends TestCase {
 				$qb2->expr()->like('in_reply_to', $qb2->createNamedParameter("<>", IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			);
 
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$rows = $result->fetchAll();
 
 		$this->assertEmpty($rows);
@@ -124,7 +124,7 @@ class MessageMapperTest extends TestCase {
 				'subject' => $qb->createNamedParameter('TEST'),
 				'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
 			]);
-		$insert->execute();
+		$insert->executeStatement();
 
 		$this->mapper->resetPreviewDataFlag();
 

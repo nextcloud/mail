@@ -103,7 +103,7 @@ class TagMapper extends QBMapper {
 		$qb->insert('mail_message_tags')
 		   ->setValue('imap_message_id', $qb->createNamedParameter($messageId))
 		   ->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
-		$qb->execute();
+		$qb->executeStatement();
 	}
 
 	/**
@@ -116,7 +116,7 @@ class TagMapper extends QBMapper {
 		$qb->delete('mail_message_tags')
 			->where($qb->expr()->eq('imap_message_id', $qb->createNamedParameter($messageId)))
 			->andWhere($qb->expr()->eq('tag_id', $qb->createNamedParameter($tag->getId())));
-		$qb->execute();
+		$qb->executeStatement();
 	}
 
 	/**
@@ -141,7 +141,7 @@ class TagMapper extends QBMapper {
 
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
-			$queryResult = $tagsQuery->execute();
+			$queryResult = $tagsQuery->executeQuery();
 
 			while (($row = $queryResult->fetch()) !== false) {
 				$messageId = $row['imap_message_id'];
@@ -187,7 +187,7 @@ class TagMapper extends QBMapper {
 		$messageIds = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
-			$queryResult = $tagsQuery->execute();
+			$queryResult = $tagsQuery->executeQuery();
 
 			while (($row = $queryResult->fetch()) !== false) {
 				$messageIds[] = $row['imap_message_id'];
@@ -262,7 +262,7 @@ class TagMapper extends QBMapper {
 			$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
 		)
 		);
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		$ids = array_unique(array_map(static function ($row) {
@@ -274,7 +274,7 @@ class TagMapper extends QBMapper {
 			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteQB->execute();
+			$deleteQB->executeStatement();
 		}
 	}
 
@@ -285,7 +285,7 @@ class TagMapper extends QBMapper {
 		->from('mail_message_tags', 'mt')
 		->leftJoin('mt', $this->getTableName(), 't', $qb->expr()->eq('t.id', 'mt.tag_id'))
 		->where($qb->expr()->isNull('t.id'));
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 
@@ -298,7 +298,7 @@ class TagMapper extends QBMapper {
 			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteQB->execute();
+			$deleteQB->executeStatement();
 		}
 	}
 }

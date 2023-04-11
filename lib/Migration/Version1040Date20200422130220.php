@@ -47,11 +47,11 @@ class Version1040Date20200422130220 extends SimpleMigrationStep {
 			->set('sync_changed_token', $qb1->createNamedParameter(null))
 			->set('sync_vanished_lock', $qb1->createNamedParameter(null))
 			->set('sync_vanished_token', $qb1->createNamedParameter(null));
-		$updateMailboxes->execute();
+		$updateMailboxes->executeStatement();
 
 		// Clean up some orphaned data
 		$qb2 = $this->connection->getQueryBuilder();
 		$deleteRecipients = $qb2->delete('mail_recipients');
-		$deleteRecipients->execute();
+		$deleteRecipients->executeStatement();
 	}
 }

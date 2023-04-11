@@ -80,7 +80,7 @@ class CollectedAddressMapperTest extends TestCase {
 		// Empty DB
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->mapper->getTableName());
-		$qb->execute();
+		$qb->executeStatement();
 
 		$stmt->execute([
 			$this->address1->getEmail(),
