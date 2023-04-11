@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -21,7 +22,7 @@ class Version1090Date20210216154409 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$table = $schema->getTable('mail_trusted_senders');
-		$table->addColumn('type', 'string', [
+		$table->addColumn('type', Types::STRING, [
 			'notnull' => true,
 			'default' => 'individual',
 		]);

@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\IDBConnection;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
@@ -30,65 +31,65 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$messagesTable = $schema->createTable('mail_messages');
-		$messagesTable->addColumn('id', 'integer', [
+		$messagesTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
 			'length' => 20,
 		]);
-		$messagesTable->addColumn('uid', 'integer', [
+		$messagesTable->addColumn('uid', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$messagesTable->addColumn('message_id', 'string', [
+		$messagesTable->addColumn('message_id', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
-		$messagesTable->addColumn('mailbox_id', 'string', [
+		$messagesTable->addColumn('mailbox_id', Types::STRING, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$messagesTable->addColumn('subject', 'string', [
+		$messagesTable->addColumn('subject', Types::STRING, [
 			'notnull' => true,
 			'length' => 255,
 			'default' => '',
 		]);
-		$messagesTable->addColumn('sent_at', 'integer', [
+		$messagesTable->addColumn('sent_at', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$messagesTable->addColumn('flag_answered', 'boolean', [
+		$messagesTable->addColumn('flag_answered', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_deleted', 'boolean', [
+		$messagesTable->addColumn('flag_deleted', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_draft', 'boolean', [
+		$messagesTable->addColumn('flag_draft', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_flagged', 'boolean', [
+		$messagesTable->addColumn('flag_flagged', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_seen', 'boolean', [
+		$messagesTable->addColumn('flag_seen', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_forwarded', 'boolean', [
+		$messagesTable->addColumn('flag_forwarded', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_junk', 'boolean', [
+		$messagesTable->addColumn('flag_junk', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_notjunk', 'boolean', [
+		$messagesTable->addColumn('flag_notjunk', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('updated_at', 'integer', [
+		$messagesTable->addColumn('updated_at', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);
@@ -101,24 +102,24 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		$messagesTable->addIndex(['sent_at'], 'mail_message_sent_idx');
 
 		$recipientsTable = $schema->createTable('mail_recipients');
-		$recipientsTable->addColumn('id', 'integer', [
+		$recipientsTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
 			'length' => 20,
 		]);
-		$recipientsTable->addColumn('message_id', 'integer', [
+		$recipientsTable->addColumn('message_id', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 20,
 		]);
-		$recipientsTable->addColumn('type', 'integer', [
+		$recipientsTable->addColumn('type', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 2,
 		]);
-		$recipientsTable->addColumn('label', 'string', [
+		$recipientsTable->addColumn('label', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
-		$recipientsTable->addColumn('email', 'string', [
+		$recipientsTable->addColumn('email', Types::STRING, [
 			'notnull' => true,
 			'length' => 255,
 		]);
@@ -127,27 +128,27 @@ class Version1020Date20191002091035 extends SimpleMigrationStep {
 		$recipientsTable->addIndex(['email'], 'mail_recipient_email_idx');
 
 		$mailboxTable = $schema->getTable('mail_mailboxes');
-		$mailboxTable->addColumn('sync_new_lock', 'integer', [
+		$mailboxTable->addColumn('sync_new_lock', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);
-		$mailboxTable->addColumn('sync_changed_lock', 'integer', [
+		$mailboxTable->addColumn('sync_changed_lock', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);
-		$mailboxTable->addColumn('sync_vanished_lock', 'integer', [
+		$mailboxTable->addColumn('sync_vanished_lock', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);
-		$mailboxTable->addColumn('sync_new_token', 'string', [
+		$mailboxTable->addColumn('sync_new_token', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
-		$mailboxTable->addColumn('sync_changed_token', 'string', [
+		$mailboxTable->addColumn('sync_changed_token', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
-		$mailboxTable->addColumn('sync_vanished_token', 'string', [
+		$mailboxTable->addColumn('sync_vanished_token', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);

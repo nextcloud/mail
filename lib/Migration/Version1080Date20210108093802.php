@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -21,7 +22,7 @@ class Version1080Date20210108093802 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$messagesTable = $schema->getTable('mail_messages');
-		$messagesTable->addColumn('flag_mdnsent', 'boolean', [
+		$messagesTable->addColumn('flag_mdnsent', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);

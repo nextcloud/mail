@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -24,29 +25,29 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_tags')) {
 			$tagsTable = $schema->createTable('mail_tags');
-			$tagsTable->addColumn('id', 'integer', [
+			$tagsTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$tagsTable->addColumn('user_id', 'string', [
+			$tagsTable->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 			]);
-			$tagsTable->addColumn('imap_label', 'string', [
+			$tagsTable->addColumn('imap_label', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 			]);
-			$tagsTable->addColumn('display_name', 'string', [
+			$tagsTable->addColumn('display_name', Types::STRING, [
 				'notnull' => true,
 				'length' => 128,
 			]);
-			$tagsTable->addColumn('color', 'string', [
+			$tagsTable->addColumn('color', Types::STRING, [
 				'notnull' => false,
 				'length' => 9,
 				'default' => "#fff"
 			]);
-			$tagsTable->addColumn('is_default_tag', 'boolean', [
+			$tagsTable->addColumn('is_default_tag', Types::BOOLEAN, [
 				'notnull' => false,
 				'default' => false
 			]);
@@ -63,16 +64,16 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_message_tags')) {
 			$tagsMessageTable = $schema->createTable('mail_message_tags');
-			$tagsMessageTable->addColumn('id', 'integer', [
+			$tagsMessageTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$tagsMessageTable->addColumn('imap_message_id', 'string', [
+			$tagsMessageTable->addColumn('imap_message_id', Types::STRING, [
 				'notnull' => true,
 				'length' => 1023,
 			]);
-			$tagsMessageTable->addColumn('tag_id', 'integer', [
+			$tagsMessageTable->addColumn('tag_id', Types::INTEGER, [
 				'notnull' => true,
 				'length' => 4,
 			]);
