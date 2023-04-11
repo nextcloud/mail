@@ -44,7 +44,6 @@
 			:in-reply-to-message-id="composerData.inReplyToMessageId"
 			:reply-to="composerData.replyTo"
 			:forward-from="composerData.forwardFrom"
-			:draft-id="composerData.draftId"
 			:send-at="composerData.sendAt * 1000"
 			:forwarded-messages="forwardedMessages"
 			:can-save-draft="canSaveDraft"
@@ -91,7 +90,7 @@ export default {
 		return {
 			toolbarElements: undefined,
 			original: undefined,
-			draftsPromise: Promise.resolve(this.composerData?.draftId),
+			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
 			canSaveDraft: true,
 			savingDraft: false,
@@ -100,6 +99,12 @@ export default {
 			sending: false,
 			error: undefined,
 			warning: undefined,
+		}
+	},
+	created() {
+		const draftId = this.composerData?.draftId
+		if (draftId) {
+			this.draftsPromise = Promise.resolve(draftId)
 		}
 	},
 	computed: {
