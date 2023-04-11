@@ -28,6 +28,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -44,13 +45,13 @@ class Version2300Date20230127093733 extends SimpleMigrationStep {
 
 		$outboxTable = $schema->getTable('mail_local_messages');
 		if (!$outboxTable->hasColumn('smime_sign')) {
-			$outboxTable->addColumn('smime_sign', 'boolean', [
+			$outboxTable->addColumn('smime_sign', Types::BOOLEAN, [
 				'notnull' => false,
 				'default' => false,
 			]);
 		}
 		if (!$outboxTable->hasColumn('smime_certificate_id')) {
-			$outboxTable->addColumn('smime_certificate_id', 'integer', [
+			$outboxTable->addColumn('smime_certificate_id', Types::INTEGER, [
 				'notnull' => false,
 				'length' => 4,
 			]);
@@ -58,7 +59,7 @@ class Version2300Date20230127093733 extends SimpleMigrationStep {
 
 		$accountsTable = $schema->getTable('mail_accounts');
 		if (!$accountsTable->hasColumn('smime_certificate_id')) {
-			$accountsTable->addColumn('smime_certificate_id', 'integer', [
+			$accountsTable->addColumn('smime_certificate_id', Types::INTEGER, [
 				'notnull' => false,
 				'length' => 4,
 			]);
@@ -66,7 +67,7 @@ class Version2300Date20230127093733 extends SimpleMigrationStep {
 
 		$aliasesTable = $schema->getTable('mail_aliases');
 		if (!$aliasesTable->hasColumn('smime_certificate_id')) {
-			$aliasesTable->addColumn('smime_certificate_id', 'integer', [
+			$aliasesTable->addColumn('smime_certificate_id', Types::INTEGER, [
 				'notnull' => false,
 				'length' => 4,
 			]);

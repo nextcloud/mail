@@ -27,6 +27,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\IDBConnection;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
@@ -51,7 +52,7 @@ class Version0161Date20190902114635 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$mailboxTable = $schema->getTable('mail_mailboxes');
-		$mailboxTable->addColumn('special_use', 'string', [
+		$mailboxTable->addColumn('special_use', Types::STRING, [
 			'length' => 255,
 			'default' => '[]',
 		]);

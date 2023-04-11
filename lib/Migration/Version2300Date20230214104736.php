@@ -28,6 +28,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -44,7 +45,7 @@ class Version2300Date20230214104736 extends SimpleMigrationStep {
 
 		$messageTable = $schema->getTable('mail_messages');
 		if (!$messageTable->hasColumn('encrypted')) {
-			$messageTable->addColumn('encrypted', 'boolean', [
+			$messageTable->addColumn('encrypted', Types::BOOLEAN, [
 				'notnull' => false,
 				'default' => false,
 			]);

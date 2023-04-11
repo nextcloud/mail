@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -29,7 +30,7 @@ class Version2010Date20221002201527 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$accountsTable = $schema->getTable('mail_accounts');
-		$accountsTable->addColumn('archive_mailbox_id', 'integer', [
+		$accountsTable->addColumn('archive_mailbox_id', Types::INTEGER, [
 			'notnull' => false,
 			'default' => null,
 			'length' => 20,

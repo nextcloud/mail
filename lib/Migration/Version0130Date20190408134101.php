@@ -26,6 +26,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 
@@ -42,7 +43,7 @@ class Version0130Date20190408134101 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$accountsTable = $schema->getTable('mail_accounts');
-		$accountsTable->addColumn('signature', 'text', [
+		$accountsTable->addColumn('signature', Types::TEXT, [
 			'notnull' => false,
 			'length' => 1024,
 			'default' => '',

@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -21,31 +22,31 @@ class Version1090Date20210127160127 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$table = $schema->getTable('mail_accounts');
-		$table->addColumn('sieve_enabled', 'boolean', [
+		$table->addColumn('sieve_enabled', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$table->addColumn('sieve_host', 'string', [
+		$table->addColumn('sieve_host', Types::STRING, [
 			'notnull' => false,
 			'length' => 64,
 			'default' => null,
 		]);
-		$table->addColumn('sieve_port', 'string', [
+		$table->addColumn('sieve_port', Types::STRING, [
 			'notnull' => false,
 			'length' => 6,
 			'default' => null,
 		]);
-		$table->addColumn('sieve_ssl_mode', 'string', [
+		$table->addColumn('sieve_ssl_mode', Types::STRING, [
 			'notnull' => false,
 			'length' => 10,
 			'default' => null,
 		]);
-		$table->addColumn('sieve_user', 'string', [
+		$table->addColumn('sieve_user', Types::STRING, [
 			'notnull' => false,
 			'length' => 64,
 			'default' => null,
 		]);
-		$table->addColumn('sieve_password', 'string', [
+		$table->addColumn('sieve_password', Types::STRING, [
 			'notnull' => false,
 			'length' => 2048,
 			'default' => null,

@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -21,7 +22,7 @@ class Version1050Date20200831124954 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$accountsTable = $schema->getTable('mail_accounts');
-		$accountsTable->addColumn('personal_namespace', 'string', [
+		$accountsTable->addColumn('personal_namespace', Types::STRING, [
 			'notnull' => false,
 		]);
 

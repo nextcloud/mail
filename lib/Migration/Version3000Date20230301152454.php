@@ -26,6 +26,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -42,7 +43,7 @@ class Version3000Date20230301152454 extends SimpleMigrationStep {
 
 		$mailboxesTable = $schema->getTable('mail_mailboxes');
 		if (!$mailboxesTable->hasColumn('shared')) {
-			$mailboxesTable->addColumn('shared', 'boolean', [
+			$mailboxesTable->addColumn('shared', Types::BOOLEAN, [
 				'notnull' => false,
 				'default' => false,
 			]);

@@ -9,6 +9,7 @@ use JsonException;
 use OCA\Mail\AppInfo\Application;
 use OCP\DB\ISchemaWrapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\DB\Types;
 use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
@@ -42,76 +43,76 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_provisionings')) {
 			$provisioningTable = $schema->createTable('mail_provisionings');
-			$provisioningTable->addColumn('id', 'integer', [
+			$provisioningTable->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$provisioningTable->addColumn('provisioning_domain', 'string', [
+			$provisioningTable->addColumn('provisioning_domain', Types::STRING, [
 				'notnull' => true,
 				'length' => 63,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('email_template', 'string', [
+			$provisioningTable->addColumn('email_template', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('imap_user', 'string', [
+			$provisioningTable->addColumn('imap_user', Types::STRING, [
 				'notnull' => true,
 				'length' => 128,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('imap_host', 'string', [
+			$provisioningTable->addColumn('imap_host', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('imap_port', 'smallint', [
+			$provisioningTable->addColumn('imap_port', Types::SMALLINT, [
 				'notnull' => true,
 				'unsigned' => true,
 			]);
-			$provisioningTable->addColumn('imap_ssl_mode', 'string', [
+			$provisioningTable->addColumn('imap_ssl_mode', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('smtp_user', 'string', [
+			$provisioningTable->addColumn('smtp_user', Types::STRING, [
 				'notnull' => true,
 				'length' => 128,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('smtp_host', 'string', [
+			$provisioningTable->addColumn('smtp_host', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('smtp_port', 'smallint', [
+			$provisioningTable->addColumn('smtp_port', Types::SMALLINT, [
 				'notnull' => true,
 				'unsigned' => true,
 			]);
-			$provisioningTable->addColumn('smtp_ssl_mode', 'string', [
+			$provisioningTable->addColumn('smtp_ssl_mode', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
 			]);
-			$provisioningTable->addColumn('sieve_enabled', 'boolean', [
+			$provisioningTable->addColumn('sieve_enabled', Types::BOOLEAN, [
 				'notnull' => false,
 				'default' => false,
 			]);
-			$provisioningTable->addColumn('sieve_user', 'string', [
+			$provisioningTable->addColumn('sieve_user', Types::STRING, [
 				'notnull' => false,
 				'length' => 128,
 			]);
-			$provisioningTable->addColumn('sieve_host', 'string', [
+			$provisioningTable->addColumn('sieve_host', Types::STRING, [
 				'notnull' => false,
 				'length' => 128,
 			]);
-			$provisioningTable->addColumn('sieve_port', 'smallint', [
+			$provisioningTable->addColumn('sieve_port', Types::SMALLINT, [
 				'notnull' => false,
 				'unsigned' => true,
 			]);
-			$provisioningTable->addColumn('sieve_ssl_mode', 'string', [
+			$provisioningTable->addColumn('sieve_ssl_mode', Types::STRING, [
 				'notnull' => false,
 				'length' => 64,
 			]);
@@ -125,7 +126,7 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 		}
 
 		$accountsTable = $schema->getTable('mail_accounts');
-		$accountsTable->addColumn('provisioning_id', 'integer', [
+		$accountsTable->addColumn('provisioning_id', Types::INTEGER, [
 			'length' => 4,
 			'notnull' => false,
 		]);

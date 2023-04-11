@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -23,7 +24,7 @@ class Version1040Date20200515080614 extends SimpleMigrationStep {
 
 		$accountsTable = $schema->getTable('mail_accounts');
 
-		$accountsTable->addColumn('show_subscribed_only', 'boolean', [
+		$accountsTable->addColumn('show_subscribed_only', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);

@@ -6,6 +6,7 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -22,14 +23,14 @@ class Version1020Date20200206134751 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$messagesTable = $schema->getTable('mail_messages');
-		$messagesTable->addColumn('structure_analyzed', 'boolean', [
+		$messagesTable->addColumn('structure_analyzed', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_attachments', 'boolean', [
+		$messagesTable->addColumn('flag_attachments', Types::BOOLEAN, [
 			'notnull' => false,
 		]);
-		$messagesTable->addColumn('preview_text', 'string', [
+		$messagesTable->addColumn('preview_text', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
