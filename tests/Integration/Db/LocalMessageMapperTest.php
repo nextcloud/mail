@@ -71,7 +71,7 @@ class LocalMessageMapperTest extends TestCase {
 
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$this->account = $this->createTestAccount();
 
@@ -140,7 +140,7 @@ class LocalMessageMapperTest extends TestCase {
 		// cleanup
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$message = new LocalMessage();
 		$message->setType(LocalMessage::TYPE_OUTGOING);

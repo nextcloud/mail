@@ -66,7 +66,7 @@ class LocalMessageMapper extends QBMapper {
 				$qb->expr()->eq('a.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR),
 				$qb->expr()->eq('m.type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
-		$rows = $qb->execute();
+		$rows = $qb->executeQuery();
 
 		$results = [];
 		$ids = [];

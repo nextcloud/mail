@@ -73,7 +73,7 @@ class TrustedSenderMapper extends QBMapper {
 				'type' => $qb->createNamedParameter($type),
 			]);
 
-		$insert->execute();
+		$insert->executeStatement();
 	}
 
 	public function remove(string $uid, string $email, string $type): void {
@@ -86,7 +86,7 @@ class TrustedSenderMapper extends QBMapper {
 				$qb->expr()->eq('type', $qb->createNamedParameter($type))
 			);
 
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
 	/**

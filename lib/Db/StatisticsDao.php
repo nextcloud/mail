@@ -60,7 +60,7 @@ class StatisticsDao {
 			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id'))
 			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
 			->andWhere($qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$cnt = $result->fetchColumn();
 		$result->closeCursor();
 		return (int)$cnt;
@@ -75,7 +75,7 @@ class StatisticsDao {
 			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_TO), IQueryBuilder::PARAM_INT))
 			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)))
 			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)));
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$cnt = $result->fetchColumn();
 		$result->closeCursor();
 		return (int)$cnt;
@@ -95,7 +95,7 @@ class StatisticsDao {
 			->andWhere($qb->expr()->in('r.email', $qb->createNamedParameter($emails, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY))
 			->andWhere($qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)))
 			->groupBy('r.email');
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$rows = $result->fetchAll();
 		$data = $this->emailCountResultToIndexedArray($rows);
 		$result->closeCursor();
@@ -112,7 +112,7 @@ class StatisticsDao {
 			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->eq('m.flag_important', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
 			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$cnt = $result->fetchColumn();
 		$result->closeCursor();
 		return (int)$cnt;
@@ -127,7 +127,7 @@ class StatisticsDao {
 			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
 			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
 			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR));
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$cnt = $result->fetchColumn();
 		$result->closeCursor();
 		return (int)$cnt;
@@ -153,7 +153,7 @@ class StatisticsDao {
 			->andWhere($qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)))
 			->andWhere($qb->expr()->in('r.email', $qb->createNamedParameter($emails, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY))
 			->groupBy('r.email');
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$rows = $result->fetchAll();
 		$data = $this->emailCountResultToIndexedArray($rows);
 		$result->closeCursor();
@@ -170,7 +170,7 @@ class StatisticsDao {
 			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->eq('m.flag_seen', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
 			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$cnt = $result->fetchColumn();
 		$result->closeCursor();
 		return (int)$cnt;
@@ -198,7 +198,7 @@ class StatisticsDao {
 			->andWhere($qb->expr()->eq("m.flag_$flag", $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
 			->andWhere($qb->expr()->in('r.email', $qb->createNamedParameter($emails, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY))
 			->groupBy('r.email');
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$rows = $result->fetchAll();
 		$data = $this->emailCountResultToIndexedArray($rows);
 		$result->closeCursor();
@@ -215,7 +215,7 @@ class StatisticsDao {
 			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->eq('m.flag_answered', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
 			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$cnt = $result->fetchColumn();
 		$result->closeCursor();
 		return (int)$cnt;

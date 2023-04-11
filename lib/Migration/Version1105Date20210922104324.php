@@ -30,7 +30,7 @@ class Version1105Date20210922104324 extends SimpleMigrationStep {
 			->andWhere($qb->expr()->isNull('provisionings.id'));
 
 		try {
-			$result = $qb->execute();
+			$result = $qb->executeQuery();
 		} catch (Exception $e) {
 			$this->logger->info('Migration to cleanup mail accounts without valid provisioning configuration failed', [
 				'exception' => $e
@@ -52,7 +52,7 @@ class Version1105Date20210922104324 extends SimpleMigrationStep {
 			->where($qb->expr()->in('id', $qb->createNamedParameter($accountIds, IQueryBuilder::PARAM_INT_ARRAY)));
 
 		try {
-			$qb->execute();
+			$qb->executeStatement();
 		} catch (Exception $e) {
 			$this->logger->info('Migration to cleanup mail accounts without valid provisioning configuration failed', [
 				'exception' => $e

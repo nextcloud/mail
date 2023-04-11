@@ -177,7 +177,7 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 		$insertQb->setValue('sieve_host', $insertQb->createNamedParameter($conf['sieveHost'] ?? ''));
 		$insertQb->setValue('sieve_port', $insertQb->createNamedParameter($conf['sievePort'] ?? 4190, IQueryBuilder::PARAM_INT));
 		$insertQb->setValue('sieve_ssl_mode', $insertQb->createNamedParameter($conf['sieveSslMode'] ?? ''));
-		$insertQb->execute();
+		$insertQb->executeStatement();
 		$id = $insertQb->getLastInsertId();
 
 		// set wildcard provisioning config for all provisioned accounts so we don't use state
@@ -185,7 +185,7 @@ class Version1100Date20210419080523 extends SimpleMigrationStep {
 		$updateQb = $updateQb->update('mail_accounts')
 			->set('provisioning_id', $updateQb->createNamedParameter($id, IQueryBuilder::PARAM_INT))
 			->where($updateQb->expr()->eq('provisioned', $updateQb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)));
-		$updateQb->execute();
+		$updateQb->executeStatement();
 
 		$this->config->deleteAppValue(
 			Application::APP_ID,
