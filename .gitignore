@@ -38,6 +38,7 @@ tests/.phpunit.result.cache
 
 # VSCode / VSCodium
 .vscode/
+*.code-workspace
 
 # PhpStorm
 .idea
