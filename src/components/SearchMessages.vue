@@ -290,6 +290,7 @@ import Magnify from 'vue-material-design-icons/Magnify'
 import debouncePromise from 'debounce-promise'
 import { findRecipient } from '../service/AutocompleteService'
 import uniqBy from 'lodash/fp/uniqBy'
+import { hiddenTags } from './tags'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -335,7 +336,21 @@ export default {
 	},
 	computed: {
 		tags() {
-			return this.$store.getters.getTags
+			return this.$store.getters.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+				if (a.isDefaultTag && !b.isDefaultTag) {
+					return -1
+				}
+				if (b.isDefaultTag && !a.isDefaultTag) {
+					return 1
+				}
+				if (a.isDefaultTag && b.isDefaultTag) {
+					if (a.displayName < b.displayName) {
+						return 1
+					}
+					return -1
+				}
+				return a.displayName.localeCompare(b.displayName)
+			})
 		},
 		filterChanged() {
 			return Object.entries(this.filterData).filter(([key, val]) => {
