@@ -25,9 +25,9 @@
 			:display-name="label"
 			:avatar-image="avatarUrlAbsolute"
 			@click="onClickOpenContactDialog">
-			<span class="user-bubble-email">{{ email }}</span>
 		</UserBubble>
 		<div class="contact-wrapper">
+			<p class="contact-popover__email">{{ email }}</p>
 			<ButtonVue
 				v-if="contactsWithEmail && contactsWithEmail.length > 0"
 				type="tertiary-no-background"
@@ -280,9 +280,6 @@ export default {
 .user-bubble__title {
 	max-width: 30vw;
 }
-.user-bubble-email {
-	margin: 10px;
-}
 
 .contact-menu {
 	display: flex;
@@ -290,6 +287,10 @@ export default {
 }
 .contact-popover {
 	display: inline-block;
+
+	&__email {
+		text-align: center;
+	}
 }
 .contact-wrapper {
 	padding:10px;
