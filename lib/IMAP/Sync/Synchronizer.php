@@ -32,8 +32,8 @@ use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\IMAP\MessageMapper;
-use function array_chunk;
 use function array_merge;
+use function OCA\Mail\chunk_uid_sequence;
 
 class Synchronizer {
 	/**
@@ -43,7 +43,7 @@ class Synchronizer {
 	 * shown to cause IMAP errors for some accounts where the UID list can't be
 	 * compressed much by Horde.
 	 */
-	private const UID_CHUNK_SIZE = 10000;
+	private const UID_CHUNK_MAX_BYTES = 10000;
 
 	/** @var MessageMapper */
 	private $messageMapper;
@@ -137,13 +137,13 @@ class Synchronizer {
 		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				function (array $uids) use ($imapClient, $mailbox, $request) {
+				function (Horde_Imap_Client_Ids $uids) use ($imapClient, $mailbox, $request) {
 					return $imapClient->sync($mailbox, $request->getToken(), [
 						'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
-						'ids' => new Horde_Imap_Client_Ids($uids),
+						'ids' => $uids,
 					])->flagsuids->ids;
 				},
-				array_chunk($request->getUids(), self::UID_CHUNK_SIZE)
+				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
 			)
 		);
 	}
@@ -167,13 +167,13 @@ class Synchronizer {
 		$vanishedUids = array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				function (array $uids) use ($imapClient, $mailbox, $request) {
+				function (Horde_Imap_Client_Ids $uids) use ($imapClient, $mailbox, $request) {
 					return $imapClient->sync($mailbox, $request->getToken(), [
 						'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
-						'ids' => new Horde_Imap_Client_Ids($uids),
+						'ids' => $uids,
 					])->vanisheduids->ids;
 				},
-				array_chunk($request->getUids(), self::UID_CHUNK_SIZE)
+				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
 			)
 		);
 		return $vanishedUids;
