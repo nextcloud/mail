@@ -62,7 +62,11 @@
 		</p>
 
 		<p>
-			<ButtonVue type="secondary" class="app-settings-button" @click="registerProtocolHandler">
+			<ButtonVue
+				type="secondary"
+				class="app-settings-button"
+				:aria-label="t('mail', 'Register as application for mail links')"
+				@click="registerProtocolHandler">
 				<template #icon>
 					<IconEmail :size="20" />
 				</template>
@@ -73,6 +77,7 @@
 		<ButtonVue
 			class="app-settings-button"
 			type="secondary"
+			:aria-label="t('mail', 'Show keyboard shortcuts')"
 			@click.prevent.stop="showKeyboardShortcuts"
 			@shortkey="toggleKeyboardShortcuts">
 			<template #icon>
@@ -82,8 +87,10 @@
 		</ButtonVue>
 		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
 
-		<ButtonVue class="app-settings-button"
+		<ButtonVue
+			class="app-settings-button"
 			type="secondary"
+			:aria-label="t('mail', 'Manage S/MIME certificates')"
 			@click.prevent.stop="displaySmimeCertificateModal = true">
 			<template #icon>
 				<IconLock :size="20" />

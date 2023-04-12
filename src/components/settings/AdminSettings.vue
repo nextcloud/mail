@@ -107,13 +107,19 @@
 			}}
 		</h3>
 		<p>
-			<Button class="config-button" @click="addNew=true">
+			<Button
+				class="config-button"
+				:aria-label="t('mail', 'Add new config')"
+				@click="addNew=true">
 				<template #icon>
 					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add new config') }}
 			</Button>
-			<Button class="config-button" @click="provisionAll">
+			<Button
+				class="config-button"
+				:aria-label="t('mail', 'Provision all accounts')"
+				@click="provisionAll">
 				<template #icon>
 					<IconSettings :size="20" />
 				</template>

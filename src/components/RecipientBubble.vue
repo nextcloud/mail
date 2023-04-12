@@ -28,7 +28,11 @@
 			<span class="user-bubble-email">{{ email }}</span>
 		</UserBubble>
 		<div class="contact-wrapper">
-			<ButtonVue v-if="contactsWithEmail && contactsWithEmail.length > 0" type="tertiary-no-background" class="contact-existing">
+			<ButtonVue
+				v-if="contactsWithEmail && contactsWithEmail.length > 0"
+				type="tertiary-no-background"
+				:aria-label="t('mail', 'Contacts with this address')"
+				class="contact-existing">
 				<template #icon>
 					<IconDetails :size="20" />
 				</template>
@@ -38,25 +42,37 @@
 				</span>
 			</ButtonVue>
 			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
-				<ButtonVue type="tertiary-no-background" @click="onClickReply">
+				<ButtonVue
+					:aria-label="t('mail', 'Reply')"
+					type="tertiary-no-background"
+					@click="onClickReply">
 					<template #icon>
 						<IconReply :size="20" />
 					</template>
 					{{ t('mail', 'Reply') }}
 				</ButtonVue>
-				<ButtonVue type="tertiary-no-background" @click="selection = ContactSelectionStateEnum.existing">
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Add to Contact')"
+					@click="selection = ContactSelectionStateEnum.existing">
 					<template #icon>
 						<IconUser :size="20" />
 					</template>
 					{{ t('mail', 'Add to Contact') }}
 				</ButtonVue>
-				<ButtonVue type="tertiary-no-background" @click="selection = ContactSelectionStateEnum.new">
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'New Contact')"
+					@click="selection = ContactSelectionStateEnum.new">
 					<template #icon>
 						<IconAdd :size="20" />
 					</template>
 					{{ t('mail', 'New Contact') }}
 				</ButtonVue>
-				<ButtonVue type="tertiary-no-background" @click="onClickCopyToClipboard">
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Copy to clipboard')"
+					@click="onClickCopyToClipboard">
 					<template #icon>
 						<IconClipboard :size="20" />
 					</template>
@@ -83,7 +99,10 @@
 				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
 			</div>
 			<div v-if="selection !== ContactSelectionStateEnum.select">
-				<ButtonVue type="tertiary-no-background" @click="selection = ContactSelectionStateEnum.select">
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Go back')"
+					@click="selection = ContactSelectionStateEnum.select">
 					<template #icon>
 						<IconClose :size="20" />
 					</template>
@@ -94,6 +113,7 @@
 					v-close-popover
 					:disabled="addButtonDisabled"
 					type="tertiary-no-background"
+					:aria-label="t('mail', 'Add')"
 					@click="onClickAddToContact">
 					<template #icon>
 						<IconCheck :size="20" />

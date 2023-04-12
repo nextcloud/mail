@@ -127,6 +127,7 @@
 		</p>
 		<ButtonVue type="primary"
 			:disabled="loading"
+			:aria-label="t('mail', 'Save sieve settings')"
 			@click.prevent="onSubmit">
 			{{ t('mail', 'Save sieve settings') }}
 		</ButtonVue>

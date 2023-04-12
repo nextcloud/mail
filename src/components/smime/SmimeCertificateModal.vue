@@ -41,7 +41,10 @@
 							<td>{{ certificate.info.emailAddress }}</td>
 							<td>{{ moment.unix(certificate.info.notAfter).format('LL') }}</td>
 							<td>
-								<NcButton type="tertiary-no-background" @click="deleteCertificate(certificate.id)">
+								<NcButton
+									type="tertiary-no-background"
+									:aria-label="t('mail', 'Delete certificate')"
+									@click="deleteCertificate(certificate.id)">
 									<template #icon>
 										<DeleteIcon
 											:title="t('mail', 'Delete certificate')"
@@ -56,7 +59,10 @@
 					class="certificate__empty"
 					:title="t('mail', 'No certificate imported yet')" />
 				<div class="certificate-modal__list__actions">
-					<NcButton type="primary" @click="showImportScreen = true">
+					<NcButton
+						type="primary"
+						:aria-label="t('mail', 'Import certificate')"
+						@click="showImportScreen = true">
 						{{ t('mail', 'Import certificate') }}
 					</NcButton>
 				</div>
@@ -126,11 +132,13 @@
 				<div class="certificate-modal__import__actions">
 					<NcButton
 						type="tertiary-no-background"
+						:aria-label="t('mail', 'Back')"
 						@click="resetImportForm">
 						{{ t('mail', 'Back') }}
 					</NcButton>
 					<NcButton
 						type="primary"
+						:aria-label="t('mail', 'Submit')"
 						native-type="submit"
 						:disabled="loading || !inputFormIsValid">
 						{{ t('mail', 'Submit') }}

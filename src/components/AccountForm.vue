@@ -224,6 +224,7 @@
 		</div>
 		<div class="account-form__submit-buttons">
 			<ButtonVue v-if="mode === 'auto'"
+				:aria-label="submitButtonText"
 				class="account-form__submit-button"
 				type="primary"
 				native-type="submit"
@@ -236,6 +237,7 @@
 				{{ submitButtonText }}
 			</ButtonVue>
 			<ButtonVue v-else-if="mode === 'manual'"
+				:aria-label="submitButtonText"
 				class="account-form__submit-button"
 				type="primary"
 				native-type="submit"

@@ -30,7 +30,9 @@
 			<AlertCircleIcon :size="24" />
 		</template>
 		<template v-if="data && data.debug" #action>
-			<NcButton :href="reportUrl">
+			<NcButton
+				:aria-label="t('mail', 'Report this bug')"
+				:href="reportUrl">
 				{{ t('mail', 'Report this bug') }}
 			</NcButton>
 		</template>

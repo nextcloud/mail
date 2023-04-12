@@ -27,6 +27,7 @@
 			{{ senderType(sender.type) }}
 			<ButtonVue type="tertiary"
 				class="button"
+				:aria-label="t('mail','Remove')"
 				@click="removeSender(sender)">
 				{{ t('mail','Remove') }}
 			</ButtonVue>

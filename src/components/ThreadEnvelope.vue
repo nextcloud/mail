@@ -100,6 +100,7 @@
 					</NcActions>
 					<ButtonVue
 						:class="{ primary: expanded}"
+						:aria-label="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
 						:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
 						type="tertiary-no-background"
 						@click="onReply">
@@ -113,6 +114,7 @@
 					<ButtonVue v-if="hasWriteAcl"
 						type="tertiary-no-background"
 						class="action--primary"
+						:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
 						:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
 						:close-after-click="true"
 						@click.prevent="onToggleFlagged">
@@ -126,6 +128,7 @@
 					<ButtonVue v-if="hasSeenAcl"
 						type="tertiary-no-background"
 						class="action--primary"
+						:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
 						:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
 						:close-after-click="true"
 						@click.prevent="onToggleSeen">
@@ -139,6 +142,7 @@
 					<ButtonVue v-if="showArchiveButton && hasArchiveAcl"
 						:close-after-click="true"
 						:disabled="disableArchiveButton"
+						:aria-label="t('mail', 'Archive message')"
 						type="tertiary-no-background"
 						@click.prevent="onArchive">
 						<template #icon>
@@ -149,6 +153,7 @@
 					</ButtonVue>
 					<ButtonVue v-if="hasDeleteAcl"
 						:close-after-click="true"
+						:aria-label="t('mail', 'Delete message')"
 						type="tertiary-no-background"
 						@click.prevent="onDelete">
 						<template #icon>

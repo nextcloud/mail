@@ -51,6 +51,7 @@
 		<ButtonVue
 			type="primary"
 			:disabled="loading"
+			:aria-label="t('mail', 'Save signature')"
 			@click="saveSignature">
 			<template #icon>
 				<IconLoading v-if="loading" :size="20" fill-color="white" />
@@ -59,6 +60,7 @@
 			{{ t('mail', 'Save signature') }}
 		</ButtonVue>
 		<ButtonVue v-if="signature"
+			:aria-label="t('mail', 'Delete')"
 			type="tertiary-no-background"
 			class="button-text"
 			@click="deleteSignature">

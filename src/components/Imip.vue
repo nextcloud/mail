@@ -96,24 +96,28 @@
 				<Button
 					type="secondary"
 					:loading="loading"
+					:aria-label="t('mail', 'Accept')"
 					@click="accept">
 					{{ t('mail', 'Accept') }}
 				</Button>
 				<Button
 					type="tertiary"
 					:loading="loading"
+					:aria-label="t('mail', 'Decline')"
 					@click="decline">
 					{{ t('mail', 'Decline') }}
 				</Button>
 				<Button
 					type="tertiary"
 					:loading="loading"
+					:aria-label="t('mail', 'Tentatively accept')"
 					@click="acceptTentatively">
 					{{ t('mail', 'Tentatively accept') }}
 				</Button>
 				<Button
 					v-if="!showMoreOptions"
 					type="tertiary"
+					:aria-label="t('mail', 'More options')"
 					@click="showMoreOptions = true">
 					{{ t('mail', 'More options') }}
 				</Button>

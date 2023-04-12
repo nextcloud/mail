@@ -10,10 +10,16 @@
 			role="alert">
 			<p>{{ error }}</p>
 			<template #action>
-				<ButtonVue type="tertiary" @click="state = STATES.EDITING">
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Go back')"
+					@click="state = STATES.EDITING">
 					{{ t('mail', 'Go back') }}
 				</ButtonVue>
-				<ButtonVue type="tertiary" @click="onSend">
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Retry')"
+					@click="onSend">
 					{{ t('mail', 'Retry') }}
 				</ButtonVue>
 			</template>
@@ -24,10 +30,16 @@
 			role="alert" />
 		<EmptyContent v-else-if="warning" :title="t('mail', 'Warning sending your message')" role="alert">
 			<p>{{ warning }}</p>
-			<ButtonVue type="tertiary" @click="state = STATES.EDITING">
+			<ButtonVue
+				type="tertiary"
+				:aria-label="t('mail', 'Go back')"
+				@click="state = STATES.EDITING">
 				{{ t('mail', 'Go back') }}
 			</ButtonVue>
-			<ButtonVue type="tertiary" @click="onForceSend">
+			<ButtonVue
+				type="tertiary"
+				:aria-label="t('mail', 'Send anyway')"
+				@click="onForceSend">
 				{{ t('mail', 'Send anyway') }}
 			</ButtonVue>
 		</EmptyContent>

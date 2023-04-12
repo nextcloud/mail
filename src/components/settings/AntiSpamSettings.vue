@@ -53,6 +53,7 @@
 						<br>
 						<Button
 							type="secondary"
+							:aria-label="t('mail', 'Save')"
 							:disabled="loading"
 							native-type="submit"
 							class="config-button">
@@ -63,6 +64,7 @@
 						</Button>
 						<Button
 							:disabled="loading"
+							:aria-label="t('mail', 'Reset')"
 							class="config-button"
 							type="secondary"
 							@click="resetForm()">
