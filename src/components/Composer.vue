@@ -1520,6 +1520,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	padding: 12px;
+	gap: 5px;
 }
 .composer-actions--primary-actions .button {
 	padding: 2px;
