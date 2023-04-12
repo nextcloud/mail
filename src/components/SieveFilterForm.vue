@@ -11,7 +11,7 @@
 			{{ errorMessage }}
 		</p>
 		<ButtonVue
-			class="primary"
+			type="primary"
 			:disabled="loading"
 			@click="saveActiveScript">
 			<template #icon>
