@@ -11,7 +11,7 @@
 			{{ errorMessage }}
 		</p>
 		<ButtonVue
-			class="primary"
+			type="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save sieve script')"
 			@click="saveActiveScript">
