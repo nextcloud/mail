@@ -54,7 +54,6 @@ OC.L10N.register(
     "Search" : "Soek",
     "Date" : "Datum",
     "Custom" : "Eie",
-    "Set" : "Stel in",
     "Remove" : "Verwyder",
     "Reset" : "Herstel",
     "Client ID" : "Kliënt-ID",

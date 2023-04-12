@@ -75,7 +75,6 @@ OC.L10N.register(
     "Disabled" : "Deshabilitado",
     "Enabled" : "Habilitado",
     "Custom" : "Personalizado",
-    "Unset" : "Desconectado",
     "Add tag" : "Añadir etiqueta",
     "Tag already exists" : "La etiqueta ya existe",
     "Remove" : "Borrar",

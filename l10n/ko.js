@@ -165,8 +165,6 @@ OC.L10N.register(
     "Custom" : "사용자 정의",
     "Signature …" : "서명 …",
     "Save signature" : "서명 저장",
-    "Set" : "설정",
-    "Unset" : "설정 해제",
     "Add tag" : "태그 추가",
     "Tag already exists" : "태그가 이미 존재합니다",
     "Not found" : "찾을 수 없음",

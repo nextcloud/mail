@@ -182,8 +182,6 @@ OC.L10N.register(
     "Custom" : "מותאם אישית",
     "Signature …" : "חתימה…",
     "Save signature" : "שמירת החתימה",
-    "Set" : "הגדרה",
-    "Unset" : "ביטול הגדרה",
     "Add tag" : "הוספת תגית",
     "Saving tag …" : "התגית נשמרת…",
     "Tag already exists" : "תגית כבר קיימת",

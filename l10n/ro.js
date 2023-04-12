@@ -124,7 +124,6 @@ OC.L10N.register(
     "Disabled" : "Dezactivați",
     "Enabled" : "Activat",
     "Custom" : "Particularizat",
-    "Unset" : "Desetează",
     "Add tag" : "Adaugă etichetă",
     "Tag already exists" : "Eticheta deja există",
     "Mark as unread" : "Marchează ca necitit",

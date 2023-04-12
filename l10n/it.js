@@ -256,8 +256,6 @@ OC.L10N.register(
     "Add default tags" : "Aggiungi etichette predefiniti",
     "Rename tag" : "Rinomina l'etichetta",
     "Saving new tag name …" : "Salvataggio nuovo nome della etichetta...",
-    "Set" : "Imposta",
-    "Unset" : "Rimuovi",
     "Add tag" : "Aggiungi etichetta",
     "Saving tag …" : "Salvataggio etichetta …",
     "Tag already exists" : "L'etichetta esiste già",

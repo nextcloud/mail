@@ -30,7 +30,6 @@ OC.L10N.register(
     "Search" : "Search",
     "Date" : "Dato",
     "Disabled" : "Deaktivert",
-    "Set" : "Sett",
     "Remove" : "Fjern",
     "Client ID" : "Klient-ID",
     "General" : "Generelt",

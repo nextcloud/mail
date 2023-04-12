@@ -180,8 +180,6 @@ OC.L10N.register(
     "Custom" : "Custom",
     "Signature …" : "Підпис...",
     "Save signature" : "Зберегти підпис",
-    "Set" : "Встановити",
-    "Unset" : "Зняти",
     "Add tag" : "Додати позначку",
     "Tag already exists" : "Мітка вже існує",
     "Not found" : "Не знайдено",

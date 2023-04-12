@@ -124,8 +124,6 @@ OC.L10N.register(
     "Enabled" : "فعال شده",
     "Signature …" : "امضا ...",
     "Save signature" : "ذخیره امضا",
-    "Set" : "تنظیم",
-    "Unset" : "تنظیم نشده است",
     "Add tag" : "برچسب اضافه کنید",
     "Tag already exists" : "تگ از قبل وجود دارد",
     "Not found" : "پیدا نشد",

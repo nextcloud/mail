@@ -77,7 +77,6 @@ OC.L10N.register(
     "Disabled" : "I çaktivizuar",
     "Enabled" : "I aktivizuar",
     "Custom" : "E përshtatur",
-    "Unset" : "E pavendosur",
     "Add tag" : "Shto etiketim",
     "Tag already exists" : "Etiketa ekziston",
     "Mark as unread" : "Shënoje si të palexuar",

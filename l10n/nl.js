@@ -256,8 +256,6 @@ OC.L10N.register(
     "Add default tags" : "Voeg standaard tags toe",
     "Rename tag" : "Hernoem tag",
     "Saving new tag name …" : "Sla nieuw tag op ...",
-    "Set" : "Stel in",
-    "Unset" : "Schakel uit",
     "Add tag" : "Toevoegen tag",
     "Saving tag …" : "Opslaan tag ...",
     "Tag already exists" : "Markering bestaat al",

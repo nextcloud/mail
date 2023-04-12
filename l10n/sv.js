@@ -246,8 +246,6 @@ OC.L10N.register(
     "Place signature above quoted text" : "Placera signaturen ovanför citerad text",
     "Add default tags" : "Lägg till standardtaggar",
     "Rename tag" : "Byt namn på tagg",
-    "Set" : "Sätt",
-    "Unset" : "Inaktivera",
     "Add tag" : "Lägg till tagg",
     "Saving tag …" : "Sparar tagg …",
     "Tag already exists" : "Taggen finns redan",

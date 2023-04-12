@@ -30,7 +30,6 @@ OC.L10N.register(
     "Tags" : "Oznake",
     "Search" : "Search",
     "Date" : "Date",
-    "Unset" : "Ukloni",
     "Remove" : "Ukloni",
     "General" : "Opšte",
     "User" : "User",

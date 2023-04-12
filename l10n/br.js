@@ -47,7 +47,6 @@ OC.L10N.register(
     "Date" : "Deiz",
     "Disabled" : "Disaotreañ",
     "Enabled" : "Aotreet",
-    "Unset" : "N'eo ket bet lakaet",
     "Remove" : "Lemel",
     "Client ID" : "ID kliant",
     "General" : "Hollek",

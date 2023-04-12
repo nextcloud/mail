@@ -295,8 +295,6 @@ OC.L10N.register(
     "Add default tags" : "Legg til standardtags",
     "Rename tag" : "Gi nytt navn til taggen",
     "Saving new tag name …" : "Lagrer nytt tagnavn …",
-    "Set" : "Sett",
-    "Unset" : "Ikke satt",
     "Add tag" : "Legg til merkelapp",
     "Saving tag …" : "Lagrer tag …",
     "Tag name is a hidden system tag" : "Tagnavn er en skjult systemtag",

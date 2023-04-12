@@ -313,8 +313,6 @@ OC.L10N.register(
     "Add default tags" : "Добавить метки по умолчанию",
     "Rename tag" : "Переименовать метку",
     "Saving new tag name …" : "Сохранение нового названия метки…",
-    "Set" : "Установить",
-    "Unset" : "Снять",
     "Add tag" : "Добавить метку",
     "Saving tag …" : "Сохранение метки…",
     "Tag already exists" : "Метка уже существует",

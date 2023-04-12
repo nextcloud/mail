@@ -248,8 +248,6 @@ OC.L10N.register(
     "Add default tags" : "Dodaj zadane oznake",
     "Rename tag" : "Preimenuj oznaku",
     "Saving new tag name …" : "Spremanje novog naziva oznake…",
-    "Set" : "Postavi",
-    "Unset" : "Ukloni",
     "Add tag" : "Dodaj oznaku",
     "Saving tag …" : "Spremanje oznake...",
     "Tag already exists" : "Oznaka već postoji",

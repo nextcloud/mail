@@ -233,8 +233,6 @@ OC.L10N.register(
     "Custom" : "Tinkinti",
     "Signature …" : "Parašas…",
     "Save signature" : "Įrašyti parašą",
-    "Set" : "Nustatyti",
-    "Unset" : "Nenustatyta",
     "Add tag" : "Pridėti žymę",
     "Tag already exists" : "Žymė jau yra",
     "An error occurred, unable to create the tag." : "Įvyko klaida, nepavyko sukurti žymės.",

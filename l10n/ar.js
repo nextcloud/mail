@@ -99,8 +99,6 @@ OC.L10N.register(
     "Disabled" : "معطّل",
     "Enabled" : "مفعلة",
     "Custom" : "مخصّص",
-    "Set" : "تعيين",
-    "Unset" : "غير محدد",
     "Add tag" : "إضافة وسما",
     "Not found" : "غير موجود",
     "Mark as unread" : "تمييز كغير مقروء",

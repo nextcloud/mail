@@ -85,7 +85,6 @@ OC.L10N.register(
     "Disabled" : "Atspējots",
     "Enabled" : "Iespējots",
     "Custom" : "Pielāgots",
-    "Unset" : "Neuzstādīts",
     "Tag already exists" : "Birka jau pastāv",
     "Remove" : "Noņemt",
     "Reset" : "Atiestatīt",

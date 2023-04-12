@@ -124,8 +124,6 @@ OC.L10N.register(
     "Custom" : "Propra",
     "Signature …" : "Subskribo …",
     "Save signature" : "Konservi subskribon",
-    "Set" : "Uzi",
-    "Unset" : "Malprotekti",
     "Tag already exists" : "La etikedo jam ekzistas",
     "Not found" : "Ne trovita",
     "Remove" : "Forigi",
