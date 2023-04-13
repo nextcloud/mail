@@ -158,10 +158,7 @@ export default {
 				if (!this.isSet(a.imapLabel) && this.isSet(b.imapLabel)) {
 					return 1
 				}
-				if (a.displayName < b.displayName) {
-					return 1
-				}
-				return -1
+				return a.displayName.localeCompare(b.displayName)
 			})
 		},
 	},
