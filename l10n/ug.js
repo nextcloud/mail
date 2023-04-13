@@ -17,8 +17,10 @@ OC.L10N.register(
     "Other" : "باشقا",
     "Reply" : "جاۋاب قايتۇر",
     "Move" : "Move",
+    "Refresh" : "يېڭىلا",
     "Delete" : "ئۆچۈر",
     "Add" : "قوش",
+    "Close" : "ياپ",
     "Tags" : "بەلگەلەر",
     "Search" : "Search",
     "Date" : "Date",
@@ -27,7 +29,6 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "باش ئاپپارات",
     "Port" : "ئېغىز",
-    "Refresh" : "يېڭىلا",
     "All" : "ھەممىسى",
     "Favorites" : "يىغقۇچ"
 },

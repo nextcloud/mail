@@ -20,6 +20,7 @@ OC.L10N.register(
     "Quota" : "ಪಾಲು",
     "Delete" : "﻿ಅಳಿಸಿ",
     "Add" : "﻿ಸೇರಿಸಿ",
+    "Close" : "ಮುಚ್ಚು",
     "Search" : "Search",
     "Date" : "Date",
     "Disabled" : "ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ",

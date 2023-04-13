@@ -18,8 +18,10 @@ OC.L10N.register(
     "Move" : "Move",
     "Quota" : "பங்கு",
     "Saving" : "Saving",
+    "Refresh" : "மீள் ஏற்றுக",
     "Delete" : "நீக்குக",
     "Add" : "சேர்க்க",
+    "Close" : "மூடுக",
     "Tags" : "சீட்டுகள்",
     "Search" : "Search",
     "Date" : "Date",
@@ -30,7 +32,6 @@ OC.L10N.register(
     "Port" : "துறை ",
     "Back" : "பின்னுக்கு",
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
-    "Refresh" : "மீள் ஏற்றுக",
     "All" : "எல்லாம்",
     "Favorites" : "விருப்பங்கள்"
 },

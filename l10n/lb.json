@@ -8,6 +8,7 @@
     "None" : "Keng",
     "Save" : "Späicheren",
     "Connect" : "Verbannen",
+    "Go back" : "Zeréckgoen",
     "Cancel" : "Ofbriechen",
     "Select account" : "Account auswielen",
     "Send" : "Schécken",
@@ -24,9 +25,10 @@
     "Quota" : "Quota",
     "Saving" : "Speicheren...",
     "Remove account" : "De Kont läschen",
-    "Go back" : "Zeréckgoen",
+    "Refresh" : "Opfrëschen",
     "Delete" : "Läschen",
     "Add" : "Derbäimaachen",
+    "Close" : "Zoumaachen",
     "Tags" : "Tags",
     "Search" : "Search",
     "Date" : "Date",
@@ -41,7 +43,6 @@
     "Host" : "Host",
     "Port" : "Port",
     "Back" : "Zeréck",
-    "Refresh" : "Opfrëschen",
     "All" : "All",
     "Favorites" : "Favoriten"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

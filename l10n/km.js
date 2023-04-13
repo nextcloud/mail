@@ -22,6 +22,7 @@ OC.L10N.register(
     "Sending …" : "កំពុង​ផ្ញើរ...",
     "Delete" : "លុប",
     "Add" : "បញ្ចូល",
+    "Close" : "បិទ",
     "Tags" : "ស្លាក",
     "Search" : "Search",
     "Date" : "កាលបរិច្ឆេទ",

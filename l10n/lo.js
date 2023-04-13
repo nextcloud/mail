@@ -21,8 +21,10 @@ OC.L10N.register(
     "Remove account" : "ຍ້າຍບັນຊີ",
     "Loading …" : "ກຳລັງໂຫຼດ",
     "Clear cache" : "ລ້າງ Cache ",
+    "Refresh" : "Refresh",
     "Delete" : "ລຶບ",
     "Add" : "ເພີ່ມ",
+    "Close" : "ປິດ",
     "Tags" : "ປ້າຍກຳກັບ",
     "Search" : "ຄົ້ນຫາ",
     "Date" : "ວັນທີ",
@@ -30,7 +32,6 @@ OC.L10N.register(
     "General" : "ທົ່ວໄປ",
     "User" : "ຜູ້ໃຊ້",
     "Back" : "ຫຼັງ",
-    "Refresh" : "Refresh",
     "Account connected" : "ບັນຊີທີ່ຕິດພັນ",
     "Favorites" : "ລາຍການທີ່ມັກ"
 },
