@@ -103,7 +103,7 @@ class SynchronizerTest extends TestCase {
 		$request->method('getToken')
 			->willReturn('123456');
 		$request->method('getUids')
-			->willReturn(range(1, 30000, 1));
+			->willReturn(range(1, 8000, 2)); // 19444 bytes
 		$capabilities = $this->createMock(Horde_Imap_Client_Data_Capability::class);
 		$imapClient->expects(self::once())
 			->method('__get')
