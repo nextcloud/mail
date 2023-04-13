@@ -25,7 +25,9 @@ import escapeRegExp from 'lodash/fp/escapeRegExp'
 import orderBy from 'lodash/fp/orderBy'
 import uniq from 'lodash/fp/uniq'
 import Vue from 'vue'
+import ICAL from 'ical.js'
 
+import Task from '../task'
 import { sortMailboxes } from '../imap/MailboxSorter'
 import { normalizedEnvelopeListId } from './normalization'
 import { UNIFIED_ACCOUNT_ID } from './constants'
@@ -79,7 +81,6 @@ const sortAccounts = (accounts) => {
 	accounts.sort((a1, a2) => a1.order - a2.order)
 	return accounts
 }
-
 /**
  * Convert envelope tag objects to references and add new tags to global list.
  *
@@ -420,5 +421,45 @@ export default {
 	},
 	addSmimeCertificate(state, { certificate }) {
 		state.smimeCertificates = [...state.smimeCertificates, certificate]
+	},
+	/**
+	 * Creates a new task
+	 *
+	 * @param {object} context The store mutations
+	 * @param state
+	 * @param {object} taskData The data of the new task
+	 * @return {Promise}
+	 */
+	async createTask(state, taskData) {
+
+		const task = new Task('BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Nextcloud Mail v' + this._vm.$appVersion + '\nEND:VCALENDAR', taskData.calendar)
+
+		task.created = ICAL.Time.now()
+		task.summary = taskData.summary
+		task.hidesubtasks = 0
+		if (taskData.priority) {
+			task.priority = taskData.priority
+		}
+		if (taskData.complete) {
+			task.complete = taskData.complete
+		}
+		if (taskData.note) {
+			task.note = taskData.note
+		}
+		if (taskData.due) {
+			task.due = taskData.due
+		}
+		if (taskData.start) {
+			task.start = taskData.start
+		}
+		if (taskData.allDay) {
+			task.allDay = taskData.allDay
+		}
+		const vData = ICAL.stringify(task.jCal)
+
+			 await task.calendar.dav.createVObject(vData)
+
+		return task
+
 	},
 }

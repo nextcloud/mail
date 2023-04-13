@@ -215,6 +215,14 @@
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
+				<ActionButton :close-after-click="true"
+					@click.prevent="showTaskModal = true">
+					<template #icon>
+						<TaskIcon
+							:size="20" />
+					</template>
+					{{ t('mail', 'Create task') }}
+				</ActionButton>
 				<ActionLink
 					:close-after-click="true"
 					:href="exportMessageLink">
@@ -243,6 +251,9 @@
 			<EventModal v-if="showEventModal"
 				:envelope="data"
 				@close="showEventModal = false" />
+			<TaskModal v-if="showTaskModal"
+				:envelope="data"
+				@close="showTaskModal = false" />
 			<TagModal
 				v-if="showTagModal"
 				:account="account"
@@ -260,6 +271,7 @@ import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DeleteIcon from 'vue-material-design-icons/Delete'
 import ArchiveIcon from 'vue-material-design-icons/PackageDown'
+import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
@@ -285,6 +297,7 @@ import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
 import EventModal from './EventModal'
+import TaskModal from './TaskModal'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions'
 import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
@@ -302,9 +315,11 @@ export default {
 		ChevronLeft,
 		DeleteIcon,
 		ArchiveIcon,
+		TaskIcon,
 		DotsHorizontalIcon,
 		EnvelopePrimaryActions,
 		EventModal,
+		TaskModal,
 		ListItem,
 		ImportantIcon,
 		JunkIcon,
@@ -365,6 +380,7 @@ export default {
 			importantSvg,
 			showMoveModal: false,
 			showEventModal: false,
+			showTaskModal: false,
 			showTagModal: false,
 			moreActionsOpen: false,
 		}
