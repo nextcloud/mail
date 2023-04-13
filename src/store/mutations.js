@@ -79,7 +79,6 @@ const sortAccounts = (accounts) => {
 	accounts.sort((a1, a2) => a1.order - a2.order)
 	return accounts
 }
-
 /**
  * Convert envelope tag objects to references and add new tags to global list.
  *

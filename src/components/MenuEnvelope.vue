@@ -142,6 +142,15 @@
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
+				<ActionButton :close-after-click="true"
+					@click.prevent="showTaskModal = true">
+					<template #icon>
+						<TaskIcon
+							:title="t('mail', 'Create task')"
+							:size="20" />
+					</template>
+					{{ t('mail', 'Create task') }}
+				</ActionButton>
 				<ActionButton v-if="withShowSource"
 					:close-after-click="true"
 					@click.prevent="onShowSourceModal">
@@ -189,6 +198,9 @@
 		<EventModal v-if="showEventModal"
 			:envelope="envelope"
 			@close="showEventModal = false" />
+		<TaskModal v-if="showTaskModal"
+			:envelope="envelope"
+			@close="showTaskModal = false" />
 		<TagModal
 			v-if="showTagModal"
 			:account="account"
@@ -209,6 +221,7 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import DownloadIcon from 'vue-material-design-icons/Download'
 import EventModal from './EventModal'
+import TaskModal from './TaskModal'
 import { mailboxHasRights } from '../util/acl'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information'
@@ -218,6 +231,7 @@ import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
+import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline'
 import ShareIcon from 'vue-material-design-icons/Share'
 
 import TagIcon from 'vue-material-design-icons/Tag'
@@ -236,6 +250,7 @@ export default {
 		DotsHorizontalIcon,
 		DownloadIcon,
 		EventModal,
+		TaskModal,
 		InformationIcon,
 		Modal,
 		MoveModal,
@@ -247,6 +262,7 @@ export default {
 		TagIcon,
 		TagModal,
 		ImportantIcon,
+		TaskIcon,
 	},
 	props: {
 		envelope: {
@@ -288,6 +304,7 @@ export default {
 			showSourceModal: false,
 			showMoveModal: false,
 			showEventModal: false,
+			showTaskModal: false,
 			showTagModal: false,
 			moreActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
