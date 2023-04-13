@@ -76,8 +76,8 @@
 			"reviewers": []
 		},
 		{
-			"description": "Do not merge @nextcloud/vue without human review",
-			"matchPackageNames": ["@nextcloud/vue"],
+			"description": "Only automerge packages that follow semver",
+			"matchPackageNames": ["@nextcloud/vue", "friendsofphp/php-cs-fixer"],
 			"automerge": false,
 			"labels": [
 				"dependencies",
