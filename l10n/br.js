@@ -42,6 +42,7 @@ OC.L10N.register(
     "Retry" : "Klaskit en dro",
     "Delete" : "Dilemel",
     "Add" : "Ouzhpennañ",
+    "Close" : "Serriñ",
     "Tags" : "Klavioù",
     "Clear" : "Netaat",
     "Search" : "Klask",

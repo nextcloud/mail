@@ -31,6 +31,7 @@ OC.L10N.register(
     "Sending …" : "Göndərilir...",
     "Delete" : "Sil",
     "Add" : "Əlavə etmək",
+    "Close" : "Bağla",
     "Tags" : "Işarələr",
     "Search" : "Axtarış",
     "Date" : "Date",

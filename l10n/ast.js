@@ -61,6 +61,7 @@ OC.L10N.register(
     "Delete" : "Desaniciar",
     "Copy to clipboard" : "Copiar al cartafueyu",
     "Add" : "Amestar",
+    "Close" : "Zarrar",
     "Tags" : "Etiquetes",
     "Search" : "Guetar",
     "Date" : "Date",

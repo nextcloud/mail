@@ -345,6 +345,7 @@ OC.L10N.register(
     "Copied email address to clipboard" : "S'ha copiat l'adreça de correu electrònic al porta-retalls",
     "Could not copy email address to clipboard" : "No s'ha pogut copiar l'adreça de correu electrònic al porta-retalls",
     "Search in mailbox" : "Cercar a la bústia d'entrada",
+    "Close" : "Tanca",
     "Search parameters" : "Cerca paràmetres",
     "Search term" : "Terme de cerca",
     "Pick a start date" : "Tria una data d'inici",

@@ -93,6 +93,7 @@ OC.L10N.register(
     "Delete" : "حذف",
     "Copy to clipboard" : "نسخ الرابط",
     "Add" : "إضافة",
+    "Close" : "إغلاق",
     "Tags" : "الوسوم",
     "Clear" : "مسح ",
     "Search" : "بحث",

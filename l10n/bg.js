@@ -340,6 +340,7 @@ OC.L10N.register(
     "Copied email address to clipboard" : "Копиран е имейл адрес в клипборда",
     "Could not copy email address to clipboard" : "Неуспешно копиране на имейл адреса в клипборда",
     "Search in mailbox" : "Търсене в пощенската кутия",
+    "Close" : "Затваряне",
     "Search parameters" : "Параметри на търсенето",
     "Search term" : "Термин за търсене",
     "Pick a start date" : "Избор на начална дата",

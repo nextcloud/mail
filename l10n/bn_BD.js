@@ -32,6 +32,7 @@ OC.L10N.register(
     "Sending …" : "পাঠানো হচ্ছে......",
     "Delete" : "মুছে",
     "Add" : "যোগ করুন",
+    "Close" : "বন্ধ",
     "Tags" : "ট্যাগ",
     "Search" : "Search",
     "Date" : "Date",

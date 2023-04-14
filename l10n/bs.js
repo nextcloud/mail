@@ -25,6 +25,7 @@ OC.L10N.register(
     "Quota" : "Kvota",
     "Delete" : "Obriši",
     "Add" : "Dodaj",
+    "Close" : "Zatvori",
     "Search" : "Search",
     "Date" : "Date",
     "Disabled" : "Onemogućeno",

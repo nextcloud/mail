@@ -340,7 +340,7 @@ OC.L10N.register(
     "Copied email address to clipboard" : "E-Mail-Adresse in die Zwischenablage kopiert",
     "Could not copy email address to clipboard" : "E-Mail-Adresse konnte nicht in die Zwischenablage kopiert werden",
     "Search in mailbox" : "Im Postfach suchen",
-    "Close" : "Benötigt keine Übersetzung. Hier wird nur die formelle Übersetzung verwendet (de_DE).",
+    "Close" : "Schließen",
     "Search parameters" : "Suchparameter",
     "Search term" : "Suchbegriff",
     "Pick a start date" : "Startdatum wählen",
