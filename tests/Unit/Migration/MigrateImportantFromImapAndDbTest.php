@@ -30,9 +30,9 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
 use Psr\Log\LoggerInterface;
 

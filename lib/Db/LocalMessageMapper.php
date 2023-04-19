@@ -26,12 +26,12 @@ declare(strict_types=1);
 namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\DB\Exception as DBException;
-use Throwable;
-use function array_map;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception as DBException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use Throwable;
+use function array_map;
 use function array_merge;
 
 /**

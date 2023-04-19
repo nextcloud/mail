@@ -21,8 +21,8 @@
 
 namespace OCA\Mail\Tests\Integration;
 
-use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use ChristophWurst\Nextcloud\Testing\TestCase as Base;
+use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use function class_uses;
 use function in_array;
 

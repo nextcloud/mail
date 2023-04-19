@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;

@@ -25,13 +25,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use function array_map;
-use function array_chunk;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IL10N;
+use function array_chunk;
+use function array_map;
 
 /**
  * @template-extends QBMapper<Tag>

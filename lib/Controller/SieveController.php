@@ -32,13 +32,13 @@ use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Sieve\SieveClientFactory;
-use OCP\Security\IRemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
+use OCP\Security\IRemoteHostValidator;
 
 class SieveController extends Controller {
 	private AccountService $accountService;

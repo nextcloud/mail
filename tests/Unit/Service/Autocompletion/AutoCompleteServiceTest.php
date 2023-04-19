@@ -24,8 +24,8 @@ namespace OCA\Mail\Tests\Unit\Service\Autocompletion;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\CollectedAddress;
-use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
+use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 

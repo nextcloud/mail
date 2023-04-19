@@ -25,17 +25,17 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\IspDb;
 use OCA\Mail\Service\AutoConfig\MxRecord;
-use OCP\Security\IRemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
+use OCP\Security\IRemoteHostValidator;
 use function in_array;
 
 class AutoConfigController extends Controller {

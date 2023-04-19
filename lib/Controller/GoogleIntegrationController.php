@@ -27,11 +27,11 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;

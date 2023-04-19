@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Db\Recipient;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Group\ContactsGroupService;
 use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
-use OCA\Mail\Exception\ServiceException;
 use function array_map;
 use function mb_strlen;
 use function mb_strpos;

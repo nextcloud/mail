@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Model;
 
 use Horde_Imap_Client_Data_Envelope;
-use Horde_Mail_Rfc822_List;
 use Horde_Mail_Rfc822_Address;
+use Horde_Mail_Rfc822_List;
 
 trait ConvertAddresses {
 	private function hordeToString(Horde_Mail_Rfc822_Address $address): string {

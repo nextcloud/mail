@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Account;
-use Psr\Log\LoggerInterface;
-use OCA\Mail\Service\AccountService;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

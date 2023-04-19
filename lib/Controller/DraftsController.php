@@ -26,9 +26,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DraftsService;
 use OCP\AppFramework\Controller;

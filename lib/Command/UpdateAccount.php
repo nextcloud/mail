@@ -23,12 +23,12 @@
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Db\MailAccountMapper;
-use OCP\Security\ICrypto;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\Security\ICrypto;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateAccount extends Command {

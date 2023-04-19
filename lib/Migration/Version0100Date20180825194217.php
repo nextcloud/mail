@@ -25,8 +25,8 @@ namespace OCA\Mail\Migration;
 
 use OCP\DB\ISchemaWrapper;
 use OCP\DB\Types;
-use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version0100Date20180825194217 extends SimpleMigrationStep {
 	/**

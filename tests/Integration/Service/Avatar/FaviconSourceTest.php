@@ -25,15 +25,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\Service\Avatar;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Vendor\Favicon\Favicon;
-use OCP\Security\IRemoteHostValidator;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 use OCP\IServerContainer;
+use OCP\Security\IRemoteHostValidator;
 
 class FaviconSourceTest extends TestCase {
 	/** @var IServerContainer */

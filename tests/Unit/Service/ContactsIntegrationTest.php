@@ -26,8 +26,8 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCP\Contacts\IManager;
 use OCP\IConfig;
 use OCP\IGroupManager;
-use OCP\IUserManager;
 use OCP\IUser;
+use OCP\IUserManager;
 
 class ContactsIntegrationTest extends TestCase {
 	/** @var IManager */

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\IMAP;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Acl;
 use Horde_Imap_Client_Data_Capability;
@@ -32,7 +33,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\MailboxStats;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 
 class FolderMapperTest extends TestCase {
 	/** @var FolderMapper */

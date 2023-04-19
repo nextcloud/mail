@@ -22,11 +22,11 @@
 
 namespace OCA\Mail\Tests\Integration\Db;
 
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
-use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IDBConnection;
 
 /**
