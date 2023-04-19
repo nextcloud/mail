@@ -94,6 +94,38 @@ class MessageMapperTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
+	public function testGetByIdsWithManyMessages(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$ids = range(1, 10000, 2);
+		$userId = 'user';
+		$loadBody = false;
+		$fetchResults = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$fetchResult2 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$imapClient->expects(self::exactly(3))
+			->method('fetch')
+			->willReturnOnConsecutiveCalls(
+				$fetchResults,
+				$fetchResults,
+				$fetchResults
+			);
+		$fetchResults[0] = $fetchResult1;
+		$fetchResults[1] = $fetchResult2;
+		$fetchResult1->method('getUid')
+			->willReturn(1);
+		$fetchResult2->method('getUid')
+			->willReturn(3);
+
+		$this->mapper->findByIds(
+			$imapClient,
+			$mailbox,
+			$ids,
+			$loadBody
+		);
+	}
+
 	public function testGetByIdsWithEmpty(): void {
 		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);

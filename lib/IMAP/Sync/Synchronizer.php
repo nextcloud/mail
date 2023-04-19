@@ -95,8 +95,8 @@ class Synchronizer {
 			throw $e;
 		}
 
-		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($newUids));
-		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($changedUids));
+		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $newUids);
+		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $changedUids);
 		$vanishedMessageUids = $vanishedUids;
 
 		return new Response($newMessages, $changedMessages, $vanishedMessageUids);

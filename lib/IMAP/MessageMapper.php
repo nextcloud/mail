@@ -45,9 +45,12 @@ use function array_map;
 use function count;
 use function fclose;
 use function in_array;
+use function is_array;
 use function iterator_to_array;
 use function max;
 use function min;
+use function OCA\Mail\array_flat_map;
+use function OCA\Mail\chunk_uid_sequence;
 use function reset;
 use function sprintf;
 
@@ -222,12 +225,13 @@ class MessageMapper {
 	}
 
 	/**
+	 * @param int[]|Horde_Imap_Client_Ids $ids
 	 * @return IMAPMessage[]
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
 							  string $mailbox,
-							  Horde_Imap_Client_Ids $ids,
+							  $ids,
 							  bool $loadBody = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
@@ -241,10 +245,20 @@ class MessageMapper {
 			]
 		);
 
-		/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
-		$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
-			'ids' => $ids,
-		]), false);
+		if (is_array($ids)) {
+			// Chunk to prevent overly long IMAP commands
+			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
+			$fetchResults = array_flat_map(function ($ids) use ($query, $mailbox, $client) {
+				return iterator_to_array($client->fetch($mailbox, $query, [
+					'ids' => $ids,
+				]), false);
+			}, chunk_uid_sequence($ids, 10000));
+		} else {
+			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
+			$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
+				'ids' => $ids,
+			]), false);
+		}
 
 		$fetchResults = array_values(array_filter($fetchResults, static function (Horde_Imap_Client_Data_Fetch $fetchResult) {
 			return $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE);
@@ -255,7 +269,11 @@ class MessageMapper {
 		} else {
 			$minFetched = $fetchResults[0]->getUid();
 			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
-			$range = $ids->range_string;
+			if ($ids instanceof Horde_Imap_Client_Ids) {
+				$range = $ids->range_string;
+			} else {
+				$range = 'literals';
+			}
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 

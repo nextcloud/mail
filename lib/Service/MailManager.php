@@ -26,7 +26,6 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
-use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
@@ -208,7 +207,7 @@ class MailManager implements IMailManager {
 			return $this->imapMessageMapper->findByIds(
 				$client,
 				$mailbox->getName(),
-				new Horde_Imap_Client_Ids($uids),
+				$uids,
 				true
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
