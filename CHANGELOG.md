@@ -1,5 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## 3.1.1 - 2023-04-19
+### Fixed
+- Delete old draft when saving new version
+- App between primary actions
+- Button styles
+- Colors for button on dark-theme
+
 ## 3.1.0 - 2023-04-04
 ### Added
 - Warning when a signature is not verified
