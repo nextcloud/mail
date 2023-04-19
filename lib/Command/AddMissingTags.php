@@ -25,8 +25,8 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\TagMapper;
-use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Db\DoesNotExistException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;

@@ -24,10 +24,10 @@
 
 namespace OCA\Mail\Tests\Integration\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use OC;
 use OCA\Mail\Account;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;

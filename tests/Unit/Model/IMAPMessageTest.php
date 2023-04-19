@@ -32,8 +32,8 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
-use OCP\IURLGenerator;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class IMAPMessageTest extends TestCase {
 	/** @var Html|MockObject */

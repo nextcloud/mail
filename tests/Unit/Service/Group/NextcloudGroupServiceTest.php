@@ -23,11 +23,11 @@
 namespace OCA\Mail\Tests\Unit\Service\Group;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCP\IConfig;
-use OCP\IGroupManager;
 use OCP\IGroup;
+use OCP\IGroupManager;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
 

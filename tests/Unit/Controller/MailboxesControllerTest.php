@@ -23,19 +23,19 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
-use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Service\Sync\SyncService;
-use PHPUnit\Framework\MockObject\MockObject;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
-use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MailboxesControllerTest extends TestCase {
 	/** @var string */

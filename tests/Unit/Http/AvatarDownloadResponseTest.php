@@ -24,8 +24,8 @@
 
 namespace OCA\Mail\Tests\Unit\Http;
 
-use OCA\Mail\Http\AvatarDownloadResponse;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Http\AvatarDownloadResponse;
 
 class AvatarDownloadResponseTest extends TestCase {
 	public function testResponse() {

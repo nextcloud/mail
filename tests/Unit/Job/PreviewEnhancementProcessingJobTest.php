@@ -25,6 +25,7 @@
 
 namespace OCA\Mail\Tests\Unit\Job;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\Db\MailAccount;
@@ -36,7 +37,6 @@ use OCP\BackgroundJob\IJobList;
 use OCP\IUser;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use Psr\Log\LoggerInterface;
 
 class PreviewEnhancementProcessingJobTest extends TestCase {

@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\IMAP;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IConfig;

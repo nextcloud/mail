@@ -30,7 +30,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use Horde_Imap_Client;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
@@ -40,19 +39,20 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
+use OCA\Mail\Http\TrapError;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
-use OCA\Mail\IMAP\MailboxSync;
-use OCP\Security\IRemoteHostValidator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
 
 class AccountsController extends Controller {

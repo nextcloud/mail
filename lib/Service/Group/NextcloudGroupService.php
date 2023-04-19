@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Group;
 
+use OCA\Mail\Exception\ServiceException;
 use OCP\IConfig;
 use OCP\IGroupManager;
-use OCA\Mail\Exception\ServiceException;
 
 class NextcloudGroupService implements IGroupService {
 	/**

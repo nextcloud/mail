@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;

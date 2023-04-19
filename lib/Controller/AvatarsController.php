@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Http\AvatarDownloadResponse;
+use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;

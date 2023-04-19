@@ -25,16 +25,16 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\TrapError;
 use Horde_Imap_Client;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Service\Sync\SyncService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;

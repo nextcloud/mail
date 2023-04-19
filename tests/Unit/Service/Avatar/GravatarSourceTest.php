@@ -24,11 +24,11 @@
 
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\GravatarSource;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;

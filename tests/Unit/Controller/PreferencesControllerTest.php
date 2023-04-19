@@ -24,9 +24,9 @@
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PreferencesController;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;

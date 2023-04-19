@@ -26,16 +26,16 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
-use OCP\Security\IRemoteHostValidator;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
+use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FaviconSourceTest extends TestCase {

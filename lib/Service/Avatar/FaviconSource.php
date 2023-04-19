@@ -28,8 +28,8 @@ use Exception;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
-use OCP\Security\IRemoteHostValidator;
 use OCP\Http\Client\IClientService;
+use OCP\Security\IRemoteHostValidator;
 
 class FaviconSource implements IAvatarSource {
 	/** @var IClientService */
