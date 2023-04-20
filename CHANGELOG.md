@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.6 - 2023-04-20
+### Fixed
+- Gap between primary actions
+- Button style
+- Clear config cache after every mutation
+- Chunk UIDs by string length
+
 ## 2.2.5 - 2023-03-23
 ### Fixed
 - Validate favicon hosts
