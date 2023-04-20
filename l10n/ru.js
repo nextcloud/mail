@@ -42,6 +42,7 @@ OC.L10N.register(
     "SMTP Password" : "Пароль SMTP",
     "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Для настройки учётной записи Google необходимо включить двухфакторную аутентификацию и создать пароль приложения.",
     "Connecting" : "Подключение",
+    "Sign in with Google" : "Войти через Google",
     "Save" : "Сохранить",
     "Connect" : "Подключиться",
     "Checking mail host connectivity" : "Проверка подключения почтового сервера",
