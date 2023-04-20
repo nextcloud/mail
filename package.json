@@ -67,7 +67,7 @@
     "p-limit": "^4.0.0",
     "printscout": "2.0.3",
     "process": "^0.11.10",
-    "ramda": "^0.28.0",
+    "ramda": "^0.29.0",
     "raw-loader": "^4.0.2",
     "stream-browserify": "^3.0.0",
     "stylelint": "^14.16.1",

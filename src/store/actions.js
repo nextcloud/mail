@@ -124,7 +124,7 @@ const findIndividualMailboxes = curry((getMailboxes, specialRole) =>
 		map(prop('id')),
 		map(getMailboxes),
 		flatten,
-		filter(propEq('specialRole', specialRole))
+		filter(propEq(specialRole, 'specialRole'))
 	)
 )
 
