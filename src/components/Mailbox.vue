@@ -488,7 +488,7 @@ export default {
 				query: this.searchQuery,
 				quantity: 1,
 			})
-			const idx = findIndex(propEq('databaseId', id), this.envelopes)
+			const idx = findIndex(propEq(id, 'databaseId'), this.envelopes)
 			if (idx === -1) {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
