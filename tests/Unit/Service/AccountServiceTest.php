@@ -73,10 +73,6 @@ class AccountServiceTest extends TestCase {
 		$this->account2 = $this->createMock(MailAccount::class);
 	}
 
-	public function testFails(): void {
-		self::assertTrue(false);
-	}
-
 	public function testFindByUserId() {
 		$this->mapper->expects($this->once())
 			->method('findByUserId')
