@@ -124,13 +124,20 @@ class SmimeServiceTest extends TestCase {
 				[$certificate->getCertificate(), '', $certificate->getCertificate()],
 				[$certificate->getPrivateKey(), '', $certificate->getPrivateKey()],
 			]);
-		$this->tempManager->expects(self::exactly(2))
+		$this->tempManager->expects(self::exactly(3))
 			->method('getTemporaryFile')
-			->willReturnOnConsecutiveCalls($this->createTempFile(), $this->createTempFile());
+			->willReturnCallback(function () {
+				return $this->createTempFile();
+			});
+		$this->certificateManager->expects(self::once())
+			->method('getAbsoluteBundlePath')
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
 
 		$this->assertEquals(
 			$decryptedBody,
-			$this->smimeService->decryptMimePartText($encryptedMessage, $certificate),
+			$this->smimeService
+				->decryptMimePartText($encryptedMessage, $certificate)
+				->getDecryptedMessage(),
 		);
 	}
 
@@ -166,13 +173,18 @@ class SmimeServiceTest extends TestCase {
 				[$certificate->getCertificate(), '', $certificate->getCertificate()],
 				[$certificate->getPrivateKey(), '', $certificate->getPrivateKey()],
 			]);
-		$this->tempManager->expects(self::exactly(2))
+		$this->tempManager->expects(self::exactly(3))
 			->method('getTemporaryFile')
-			->willReturnOnConsecutiveCalls($this->createTempFile(), $this->createTempFile());
+			->willReturnCallback(function () {
+				return $this->createTempFile();
+			});
+		$this->certificateManager->expects(self::once())
+			->method('getAbsoluteBundlePath')
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
 
 		$this->assertEquals(
 			$decryptedBody,
-			$this->smimeService->decryptDataFetch($message, 'user'),
+			$this->smimeService->decryptDataFetch($message, 'user')->getDecryptedMessage(),
 		);
 	}
 
@@ -208,21 +220,18 @@ class SmimeServiceTest extends TestCase {
 				[$certificate->getCertificate(), '', $certificate->getCertificate()],
 				[$certificate->getPrivateKey(), '', $certificate->getPrivateKey()],
 			]);
-		$this->tempManager->expects(self::exactly(4))
+		$this->tempManager->expects(self::exactly(5))
 			->method('getTemporaryFile')
-			->willReturnOnConsecutiveCalls(
-				$this->createTempFile(),
-				$this->createTempFile(),
-				$this->createTempFile(),
-				$this->createTempFile(),
-			);
-		$this->certificateManager->expects(self::once())
+			->willReturnCallback(function () {
+				return $this->createTempFile();
+			});
+		$this->certificateManager->expects(self::exactly(2))
 			->method('getAbsoluteBundlePath')
 			->willReturn(__DIR__ . '/../../data/smime-certs/domain.tld.ca.crt');
 
 		$this->assertEquals(
 			$decryptedBody,
-			$this->smimeService->decryptDataFetch($message, 'user'),
+			$this->smimeService->decryptDataFetch($message, 'user')->getDecryptedMessage(),
 		);
 	}
 
@@ -242,7 +251,7 @@ class SmimeServiceTest extends TestCase {
 
 		$this->assertEquals(
 			$messageText,
-			$this->smimeService->decryptDataFetch($message, 'user'),
+			$this->smimeService->decryptDataFetch($message, 'user')->getDecryptedMessage(),
 		);
 	}
 
@@ -364,12 +373,16 @@ class SmimeServiceTest extends TestCase {
 			'headers' => true,
 		]);
 
-		$decryptedTextImapLocalhost = $this->smimeService->decryptMimePartText($encryptedText, $certificateImapLocalhost);
+		$decryptedTextImapLocalhost = $this->smimeService
+			->decryptMimePartText($encryptedText, $certificateImapLocalhost)
+			->getDecryptedMessage();
 		$decryptedMimePartImapLocalhost = Horde_Mime_Part::parseMessage($decryptedTextImapLocalhost, [
 			'forcemime' => true,
 		]);
 
-		$decryptedTextDomainTld = $this->smimeService->decryptMimePartText($encryptedText, $certificateDomainTld);
+		$decryptedTextDomainTld = $this->smimeService
+			->decryptMimePartText($encryptedText, $certificateDomainTld)
+			->getDecryptedMessage();
 		$decryptedMimePartDomainTld = Horde_Mime_Part::parseMessage($decryptedTextDomainTld, [
 			'forcemime' => true,
 		]);

@@ -494,7 +494,7 @@ class MessageMapper {
 		}
 
 		if ($decrypt) {
-			return $this->smimeService->decryptDataFetch($message, $userId);
+			return $this->smimeService->decryptDataFetch($message, $userId)->getDecryptedMessage();
 		}
 
 		return $message->getFullMsg();
@@ -647,7 +647,9 @@ class MessageMapper {
 			if (($fullTextResult = $fullTextParts->first()) === null) {
 				throw new DoesNotExistException('Message does not exist');
 			}
-			$decryptedText = $this->smimeService->decryptDataFetch($fullTextResult, $userId);
+			$decryptedText = $this->smimeService
+				->decryptDataFetch($fullTextResult, $userId)
+				->getDecryptedMessage();
 
 			// Replace opaque structure with decrypted structure
 			$structure = Horde_Mime_Part::parseMessage($decryptedText, [ 'forcemime' => true ]);
@@ -742,7 +744,9 @@ class MessageMapper {
 			/** @var Horde_Imap_Client_Data_Fetch $fetch */
 			$fullTextResult = $result[$messageUid];
 
-			$decryptedText = $this->smimeService->decryptDataFetch($fullTextResult, $userId);
+			$decryptedText = $this->smimeService
+				->decryptDataFetch($fullTextResult, $userId)
+				->getDecryptedMessage();
 			$decryptedPart = Horde_Mime_Part::parseMessage($decryptedText, [ 'forcemime' => true ]);
 			if (!isset($decryptedPart[$attachmentId])) {
 				throw new DoesNotExistException('Unable to load the attachment.');
