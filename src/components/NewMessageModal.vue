@@ -113,12 +113,6 @@ export default {
 			warning: undefined,
 		}
 	},
-	created() {
-		const draftId = this.composerData?.draftId
-		if (draftId) {
-			this.draftsPromise = Promise.resolve(draftId)
-		}
-	},
 	computed: {
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
@@ -144,6 +138,12 @@ export default {
 		forwardedMessages() {
 			return this.composerMessage?.options?.forwardedMessages ?? []
 		},
+	},
+	created() {
+		const draftId = this.composerData?.draftId
+		if (draftId) {
+			this.draftsPromise = Promise.resolve(draftId)
+		}
 	},
 	methods: {
 		handleShow(element) {
