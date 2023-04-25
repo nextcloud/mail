@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3
 
       - name: Set up php
-        uses: shivammathur/setup-php@d30ad8b1843ace22e6698ab99bbafaa747b6bd0d # v2
+        uses: shivammathur/setup-php@cb8f453143149404c7fd670b5f37c91d395b3054 # v2
         with:
           php-version: 8.0
           coverage: none
