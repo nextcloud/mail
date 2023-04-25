@@ -24,10 +24,11 @@
 		<UserBubble slot="trigger"
 			:display-name="label"
 			:avatar-image="avatarUrlAbsolute"
-			@click="onClickOpenContactDialog">
-		</UserBubble>
+			@click="onClickOpenContactDialog" />
 		<div class="contact-wrapper">
-			<p class="contact-popover__email">{{ email }}</p>
+			<p class="contact-popover__email">
+				{{ email }}
+			</p>
 			<ButtonVue
 				v-if="contactsWithEmail && contactsWithEmail.length > 0"
 				type="tertiary-no-background"
