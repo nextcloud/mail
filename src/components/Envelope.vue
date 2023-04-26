@@ -725,8 +725,8 @@ export default {
 .junk-icon-style {
 	opacity: .2;
 	display: flex;
-	top: 14px;
-	left: 34px;
+	top: 42px;
+	left: 32px;
 	background-size: 16px;
 	height: 20px;
 	width: 20px;
