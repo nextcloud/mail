@@ -52,6 +52,7 @@
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
+
 			<router-link
 				:to="route"
 				event=""
@@ -60,6 +61,9 @@
 				@click.native.prevent="$emit('toggle-expand', $event)">
 				<div class="sender">
 					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
+					<p class="sender__email">
+						{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
+					</p>
 				</div>
 				<div v-if="hasChangedSubject" class="subline">
 					{{ cleanSubject }}
@@ -582,6 +586,10 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-left: 8px;
+
+		&__email{
+			color: var(--color-text-maxcontrast);
+		}
 	}
 
 	.right {
