@@ -20,7 +20,6 @@ import '../../css/mobile.scss'
 
 import logger from '../logger'
 import MailboxThread from '../components/MailboxThread'
-import NewMessageModal from '../components/NewMessageModal'
 import Navigation from '../components/Navigation'
 import Outbox from '../components/Outbox'
 
@@ -30,7 +29,7 @@ export default {
 		Content,
 		MailboxThread,
 		Navigation,
-		NewMessageModal,
+		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
 		Outbox,
 	},
 	mixins: [isMobile],
