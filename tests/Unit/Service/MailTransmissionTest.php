@@ -84,6 +84,8 @@ class MailTransmissionTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
+	private PerformanceLogger|MockObject $performanceLogger;
+
 	/** @var MailTransmission */
 	private $transmission;
 
@@ -92,7 +94,6 @@ class MailTransmissionTest extends TestCase {
 
 	/** @var GroupsIntegration|MockObject */
 	private $groupsIntegration;
-
 	private SmimeService $smimeService;
 
 	protected function setUp(): void {
