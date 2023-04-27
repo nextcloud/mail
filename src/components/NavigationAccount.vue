@@ -114,7 +114,7 @@
 			</template>
 		</template>
 		<template #extra>
-			<AccountSettings :open.sync="showSettings" :account="account" />
+			<AccountSettings v-if="showSettings" :account="account" @close="showAccountSettings = false" />
 		</template>
 	</AppNavigationItem>
 </template>
@@ -128,7 +128,6 @@ import { generateUrl } from '@nextcloud/router'
 import { calculateAccountColor } from '../util/AccountColor'
 import logger from '../logger'
 import { fetchQuota } from '../service/AccountService'
-import AccountSettings from './AccountSettings'
 import IconInfo from 'vue-material-design-icons/Information'
 import IconSettings from 'vue-material-design-icons/Cog'
 import IconFolderAdd from 'vue-material-design-icons/Folder'
@@ -146,7 +145,7 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		ActionText,
-		AccountSettings,
+		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings'),
 		IconInfo,
 		IconSettings,
 		IconFolderAdd,
