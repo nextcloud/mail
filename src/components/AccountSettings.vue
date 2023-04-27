@@ -23,9 +23,8 @@
   -->
 
 <template>
-	<AppSettingsDialog
+	<AppSettingsDialog :open="true"
 		id="app-settings-dialog"
-		:open.sync="showSettings"
 		:show-navigation="true">
 		<AppSettingsSection
 			id="account-settings"
@@ -141,15 +140,6 @@ export default {
 			required: true,
 			type: Object,
 		},
-		open: {
-			required: true,
-			type: Boolean,
-		},
-	},
-	data() {
-		return {
-			showSettings: false,
-		}
 	},
 	computed: {
 		menu() {
@@ -162,26 +152,13 @@ export default {
 			return this.account.emailAddress
 		},
 	},
-	watch: {
-		showSettings(value) {
-			if (!value) {
-				this.$emit('update:open', value)
-			}
-		},
-		async open(value) {
-			if (value) {
-				await this.onOpen()
-			}
-		},
-	},
 	methods: {
 		scrollToAccountSettings() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
 			})
 		},
-		async onOpen() {
-			this.showSettings = true
+		async mounted() {
 			await this.$store.dispatch('fetchActiveSieveScript', {
 				accountId: this.account.id,
 			})
