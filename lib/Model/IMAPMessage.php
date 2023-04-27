@@ -76,35 +76,37 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private Horde_Imap_Client_DateTime $imapDate;
 	private string $rawReferences;
 	private string $dispositionNotificationTo;
+	private ?string $unsubscribeUrl;
 	private string $rawInReplyTo;
 	private bool $isEncrypted;
 	private bool $isSigned;
 	private bool $signatureIsValid;
 
 	public function __construct(int $uid,
-								string $messageId,
-								array $flags,
-								AddressList $from,
-								AddressList $to,
-								AddressList $cc,
-								AddressList $bcc,
-								AddressList $replyTo,
-								string $subject,
-								string $plainMessage,
-								string $htmlMessage,
-								bool $hasHtmlMessage,
-								array $attachments,
-								array $inlineAttachments,
-								bool $hasAttachments,
-								array $scheduling,
-								Horde_Imap_Client_DateTime $imapDate,
-								string $rawReferences,
-								string $dispositionNotificationTo,
-								string $rawInReplyTo,
-								bool $isEncrypted,
-								bool $isSigned,
-								bool $signatureIsValid,
-								Html $htmlService) {
+		string $messageId,
+		array $flags,
+		AddressList $from,
+		AddressList $to,
+		AddressList $cc,
+		AddressList $bcc,
+		AddressList $replyTo,
+		string $subject,
+		string $plainMessage,
+		string $htmlMessage,
+		bool $hasHtmlMessage,
+		array $attachments,
+		array $inlineAttachments,
+		bool $hasAttachments,
+		array $scheduling,
+		Horde_Imap_Client_DateTime $imapDate,
+		string $rawReferences,
+		string $dispositionNotificationTo,
+		?string $unsubscribeUrl,
+		string $rawInReplyTo,
+		bool $isEncrypted,
+		bool $isSigned,
+		bool $signatureIsValid,
+		Html $htmlService) {
 		$this->messageId = $uid;
 		$this->realMessageId = $messageId;
 		$this->flags = $flags;
@@ -124,6 +126,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->imapDate = $imapDate;
 		$this->rawReferences = $rawReferences;
 		$this->dispositionNotificationTo = $dispositionNotificationTo;
+		$this->unsubscribeUrl = $unsubscribeUrl;
 		$this->rawInReplyTo = $rawInReplyTo;
 		$this->isEncrypted = $isEncrypted;
 		$this->isSigned = $isSigned;
@@ -305,6 +308,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'flags' => $this->getFlags(),
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
+			'unsubscribeUrl' => $this->unsubscribeUrl,
 			'scheduling' => $this->scheduling,
 		];
 	}

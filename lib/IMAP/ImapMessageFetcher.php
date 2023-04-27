@@ -33,6 +33,8 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
+use Horde_ListHeaders;
+use Horde_ListHeaders_Base;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
@@ -42,6 +44,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use function str_starts_with;
 
 class ImapMessageFetcher {
 	/** @var string[] */
@@ -66,13 +69,14 @@ class ImapMessageFetcher {
 	private string $mailbox;
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
+	private ?string $unsubscribeUrl = null;
 
 	public function __construct(int $uid,
-								string $mailbox,
-								Horde_Imap_Client_Base $client,
-								string $userId,
-								Html $htmlService,
-								SmimeService $smimeService) {
+		string $mailbox,
+		Horde_Imap_Client_Base $client,
+		string $userId,
+		Html $htmlService,
+		SmimeService $smimeService) {
 		$this->uid = $uid;
 		$this->mailbox = $mailbox;
 		$this->client = $client;
@@ -245,6 +249,7 @@ class ImapMessageFetcher {
 			$fetch->getImapDate(),
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
+			$this->unsubscribeUrl,
 			$envelope->in_reply_to,
 			$isEncrypted,
 			$isSigned,
@@ -503,6 +508,19 @@ class ImapMessageFetcher {
 		$dispositionNotificationTo = $parsedHeaders->getHeader('disposition-notification-to');
 		if ($dispositionNotificationTo !== null) {
 			$this->dispositionNotificationTo = $dispositionNotificationTo->value_single;
+		}
+
+		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
+		if ($listUnsubscribeHeader !== null) {
+			$listHeaders = new Horde_ListHeaders();
+			/** @var Horde_ListHeaders_Base[] $headers */
+			$headers = $listHeaders->parse($listUnsubscribeHeader->name, $listUnsubscribeHeader->value_single);
+			foreach ($headers as $header) {
+				if (str_starts_with($header->url, 'http')) {
+					$this->unsubscribeUrl = $header->url;
+					break;
+				}
+			}
 		}
 	}
 }

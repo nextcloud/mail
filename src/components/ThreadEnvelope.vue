@@ -82,6 +82,15 @@
 							:style="{color: tag.color}">{{ tag.displayName }} </span>
 					</div>
 				</div>
+				<div class="envelope__header__left__unsubscribe">
+					<ButtonVue
+						v-if="message && message.unsubscribeUrl"
+						type="tertiary"
+						class="envelope__header__unsubscribe"
+						@click="showListUnsubscribeConfirmation = true">
+						{{ t('mail', 'Unsubscribe') }}
+					</ButtonVue>
+				</div>
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
@@ -190,11 +199,20 @@
 			:data="error"
 			:auto-margin="true"
 			role="alert" />
+		<ConfirmModal v-if="showListUnsubscribeConfirmation"
+			:confirm-text="t('mail', 'Unsubscribe')"
+			:confirm-url="message.unsubscribeUrl"
+			:title="t('mail', 'Unsubscribe')"
+			@cancel="showListUnsubscribeConfirmation = false"
+			@confirm="showListUnsubscribeConfirmation = false">
+			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
+		</ConfirmModal>
 	</div>
 </template>
 <script>
 import Avatar from './Avatar'
 import { NcButton as ButtonVue } from '@nextcloud/vue'
+import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
 import IconFavorite from 'vue-material-design-icons/Star'
@@ -232,6 +250,7 @@ const LOADING_BODY = 2
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		ConfirmModal,
 		Avatar,
 		ButtonVue,
 		Error,
@@ -290,6 +309,7 @@ export default {
 	data() {
 		return {
 			loading: LOADING_DONE,
+			showListUnsubscribeConfirmation: false,
 			error: undefined,
 			message: undefined,
 			importantSvg,
@@ -302,6 +322,15 @@ export default {
 	computed: {
 		account() {
 			return this.$store.getters.getAccount(this.envelope.accountId)
+		},
+		from() {
+			if (!this.message || !this.message.from.length) {
+				return '?'
+			}
+			if (this.message.from[0].label) {
+				return this.message.from[0].label
+			}
+			return this.message.from[0].email
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -705,6 +734,10 @@ export default {
 					}
 				}
 			}
+
+			&__unsubscribe {
+				color: var(--color-text-maxcontrast);
+			}
 		}
 
 		.subline {
@@ -723,12 +756,13 @@ export default {
 	.left {
 		flex-grow: 1;
 		min-width: 0; /* https://css-tricks.com/flexbox-truncated-text/ */
-		display: inline-block;
+		display: flex;
 		position: relative;
 		z-index: 1;
 		padding: 2em;
 		margin: -2em;
 		margin-right: 0;
+		align-items: center;
 	}
 	.left:not(.seen) {
 		font-weight: bold;
