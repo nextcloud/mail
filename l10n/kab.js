@@ -10,6 +10,7 @@ OC.L10N.register(
     "Email address" : "Tansa imayl",
     "Cancel" : "Sefsex",
     "Send" : "Tuzna",
+    "Confirm" : "Serggeg",
     "Favorite" : "Menyif",
     "Select" : "Fren",
     "Forward" : "Avancer",

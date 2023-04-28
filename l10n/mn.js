@@ -27,6 +27,7 @@ OC.L10N.register(
     "Subject" : "Сэдэв",
     "Add attachment from Files" : "Файлаас хавсралт нэмэх",
     "Send" : "илгээх",
+    "Confirm" : "Батлах",
     "Favorite" : "Дуртай",
     "Select" : "Сонгох",
     "Forward" : "дамжих",

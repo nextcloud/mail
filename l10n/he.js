@@ -82,6 +82,7 @@ OC.L10N.register(
     "Message {id} could not be found" : "לא ניתן למצוא את הודעה {id}",
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
     "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור",
+    "Confirm" : "אימות",
     "No message found yet" : "לא נמצאו הודעות עדיין",
     "Set up an account" : "הגדרת חשבון",
     "Plain text" : "טקסט פשוט",

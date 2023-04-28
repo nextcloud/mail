@@ -19,6 +19,7 @@ OC.L10N.register(
     "Cancel" : "Cancellar",
     "Send" : "Inviar",
     "Choose a file to add as attachment" : "Selectiona un file pro adder como attachamento",
+    "Confirm" : "Confirmar",
     "Favorite" : "Favorite",
     "Select" : "Selectionar",
     "Create" : "Crear",

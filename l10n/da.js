@@ -139,6 +139,7 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Vælg en fil der skal deles som link",
     "_{count} attachment_::_{count} attachments_" : ["{count} vedhæftet fil","{count} vedhæftede filer"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Den vedhæftede fil overskrider den tilladte størrelse på vedhæftede filer på {size}. Del venligst filen via link i stedet.","De vedhæftede filer overskrider den tilladte størrelse på vedhæftede filer på {size}. Del venligst filerne via link i stedet."],
+    "Confirm" : "Bekræft",
     "No message found yet" : "Ingen beskeder",
     "Set up an account" : "Opret en konto",
     "Plain text" : "Klartekst",

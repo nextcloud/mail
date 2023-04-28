@@ -35,6 +35,7 @@ OC.L10N.register(
     "Add attachment from Files" : "დანართის დამატება ფაილებიდან",
     "Send" : "გაგზავნა",
     "Choose a file to add as attachment" : "დანართად დასამატებლად აირჩიეთ ფაილი",
+    "Confirm" : "დადასტურება",
     "Unfavorite" : "რჩეულებიდან ამოშლა",
     "Favorite" : "რჩეული",
     "Read" : "წაკითხვა",

@@ -62,6 +62,7 @@ OC.L10N.register(
     "Enter a date" : "Entajpu daton",
     "Send" : "Sendi",
     "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",
+    "Confirm" : "Konfirmi",
     "Plain text" : "Ebenaĵa teksto",
     "Draft: " : "Malneto:",
     "Unfavorite" : "Malpliŝatati",

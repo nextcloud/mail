@@ -13,6 +13,7 @@ OC.L10N.register(
     "Go back" : "ආපසු යන්න",
     "Cancel" : "අවලංගු කරන්න",
     "Send" : "යවන්න",
+    "Confirm" : "තහවුරු කරන්න",
     "Favorite" : "ප්‍රියතම",
     "Read" : "කියවීම",
     "Select" : "තෝරන්න",

@@ -62,6 +62,7 @@ OC.L10N.register(
     "Enter a date" : "تاریخ را وارد کنید",
     "Send" : "ارسال",
     "Choose a file to add as attachment" : "پرونده ای را برای اضافه کردن به عنوان پیوست انتخاب کنید",
+    "Confirm" : "تائید",
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",
     "Draft: " : "پیش نویس:",

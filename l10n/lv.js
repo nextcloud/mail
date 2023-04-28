@@ -45,6 +45,7 @@ OC.L10N.register(
     "Enter a date" : "Ievadiet datumu",
     "Send" : "Sūtīt",
     "Choose a file to add as attachment" : "Izvēlēties datni ko pievienot kā pielikumu",
+    "Confirm" : "Apstiprināt",
     "Favorite" : "Favorīts",
     "Read" : "Lasīt",
     "Unselect" : "Noņemt atlasi",

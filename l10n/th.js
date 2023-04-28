@@ -21,6 +21,7 @@ OC.L10N.register(
     "Cancel" : "ยกเลิก",
     "Send" : "ส่ง",
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
+    "Confirm" : "ยืนยัน",
     "Favorite" : "รายการโปรด",
     "Read" : "อ่าน",
     "Unselect" : "ยกเลิกการเลือก",

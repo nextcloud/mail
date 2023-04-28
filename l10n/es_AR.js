@@ -34,6 +34,7 @@ OC.L10N.register(
     "Add attachment from Files" : "Agregar adjunto desde Archivos",
     "Send" : "Enviar",
     "Choose a file to add as attachment" : "Seleccione el archivo a agregar como adjunto",
+    "Confirm" : "Confirmar",
     "Favorite" : "Favorito",
     "Read" : "Leer",
     "Select" : "Seleccionar",

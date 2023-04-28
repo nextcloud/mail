@@ -34,6 +34,7 @@ OC.L10N.register(
     "Add attachment from Files" : "Shto bashkëlidhje nga Dosjet",
     "Send" : "Dërgo",
     "Choose a file to add as attachment" : "Zgjidhni një kartelë që të shtohet si bashkëngjitje",
+    "Confirm" : "Konfirmo",
     "Unfavorite" : "Jo i/e preferuar",
     "Favorite" : "I/E Preferuar",
     "Read" : "Lexoni",

@@ -9,6 +9,7 @@ OC.L10N.register(
     "Change name" : "ປ່ຽນຊື່",
     "Cancel" : "ຍົກເລີກ",
     "Send" : "ສົ່ງ",
+    "Confirm" : "ຢືນຢັນ",
     "Unfavorite" : "ລາຍການທີ່ບໍ່ມັກ",
     "Favorite" : "ລາຍການທີ່ມັກ",
     "Select" : "ເລືອກ",

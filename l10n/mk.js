@@ -123,6 +123,7 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Избери датотека за да се сподели како линк",
     "_{count} attachment_::_{count} attachments_" : ["{count} прилог","{count} прилози"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Прилогот ја надминува најголемата дозволена големина за прилози од {size}. Споделете го прилогот со линк.","Прилозите ја надминуваат најголемата дозволена големина за прилози од {size}. Споделете ги прилозите со линк."],
+    "Confirm" : "Потврди",
     "No message found yet" : "Не се пронајдени пораки",
     "Set up an account" : "Постави сметка",
     "Plain text" : "Обичен текст",

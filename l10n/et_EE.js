@@ -30,6 +30,7 @@ OC.L10N.register(
     "Enter a date" : "Sisesta kuupäev",
     "Send" : "Saada",
     "Choose a file to add as attachment" : "Vali fail, mida manustada",
+    "Confirm" : "Kinnita",
     "Favorite" : "Lemmik",
     "Read" : "Lugemine",
     "Select" : "Vali",

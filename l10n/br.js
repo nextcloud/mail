@@ -17,6 +17,7 @@ OC.L10N.register(
     "Change name" : "Cheñch env",
     "Cancel" : "Arrest",
     "Send" : "Kas",
+    "Confirm" : "Kadarnañ",
     "Set up an account" : "Staliañ ur c'hont",
     "Unfavorite" : "Digaretañ",
     "Favorite" : "Pennrollañ",

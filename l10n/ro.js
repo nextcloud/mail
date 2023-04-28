@@ -80,6 +80,7 @@ OC.L10N.register(
     "Custom date and time" : "Dată și oră personalizate",
     "Enter a date" : "Introdu data",
     "Send" : "Trimite",
+    "Confirm" : "Confirmă",
     "Favorite" : "Favorite",
     "Unread" : "Necitit",
     "Read" : "Citit",

@@ -121,6 +121,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Виберіть файл для вкладення",
     "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
     "_{count} attachment_::_{count} attachments_" : ["{count} долучений файл","{count} долучені файли","{count} долучених файлів","{count} долучених файлів"],
+    "Confirm" : "Підтвердити",
     "Set up an account" : "Створити обліковий запис",
     "Plain text" : "Простий текст",
     "Rich text" : "Текст з форматуванням",
