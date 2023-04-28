@@ -92,6 +92,8 @@ class AccountsControllerTest extends TestCase {
 	/** @var MailboxSync|MockObject */
 	private $mailboxSync;
 
+	/** @var IConfig|(IConfig&MockObject)|MockObject */
+	private IConfig|MockObject $config;
 	/** @var IRemoteHostValidator|MockObject */
 	private $hostValidator;
 
