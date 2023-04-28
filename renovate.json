@@ -35,7 +35,8 @@
 	"ignoreDeps": [
 		"node",
 		"npm",
-		"php"
+		"php",
+		"postcss-loader"
 	],
 	"packageRules": [
 		{
