@@ -402,6 +402,7 @@ OC.L10N.register(
     "Mark as read" : "Означи као прочитано",
     "Archive message" : "Архивирај поруку",
     "Delete message" : "Обриши поруку",
+    "Unsubscribing will stop all messages from the mailing list {sender}" : "Укидање претплате ће да заустави пријем свих порука иза мејлинг листе {sender}",
     "Encrypted & verified " : "Шифрована и потврђена",
     "Signature verified" : "Потпис је потврђен",
     "Signature unverified " : "Потпис је означен као непотрвђен",

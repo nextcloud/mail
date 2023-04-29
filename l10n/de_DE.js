@@ -402,6 +402,7 @@ OC.L10N.register(
     "Mark as read" : "Als gelesen markieren",
     "Archive message" : "Nachricht archivieren",
     "Delete message" : "Nachricht löschen",
+    "Unsubscribing will stop all messages from the mailing list {sender}" : "Die Abmeldung stoppt alle Nachrichten von der Mailingliste {sender}",
     "Encrypted & verified " : "Veschlüsselt und überprüft",
     "Signature verified" : "Signatur überprüft",
     "Signature unverified " : "Signatur nicht überprüft",
