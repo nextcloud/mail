@@ -230,7 +230,7 @@ export default {
 				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
 					accountId = parseInt(this.$route.params.accountId, 10)
 				}
-				this.$store.dispatch('showMessageComposer', {
+				this.$store.dispatch('startComposerSession', {
 					data: {
 						accountId,
 						to: this.stringToRecipients(this.$route.query.to),

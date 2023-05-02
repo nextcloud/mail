@@ -545,7 +545,7 @@ export default {
 			window.scrollTo({ top })
 		},
 		onReply() {
-			this.$store.dispatch('showMessageComposer', {
+			this.$store.dispatch('startComposerSession', {
 				reply: {
 					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
 					data: this.envelope,

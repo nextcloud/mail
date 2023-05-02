@@ -545,9 +545,9 @@ export default {
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
 		},
-		onClick(event) {
+		async onClick(event) {
 			if (this.draft && !event.defaultPrevented) {
-				this.$store.dispatch('showMessageComposer', {
+				await this.$store.dispatch('startComposerSession', {
 					data: {
 						...this.data,
 						draftId: this.data.databaseId,
@@ -610,7 +610,7 @@ export default {
 			}
 		},
 		async onOpenEditAsNew() {
-			await this.$store.dispatch('showMessageComposer', {
+			await this.$store.dispatch('startComposerSession', {
 				templateMessageId: this.data.databaseId,
 				data: this.data,
 			})

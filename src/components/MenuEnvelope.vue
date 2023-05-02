@@ -352,7 +352,7 @@ export default {
 	},
 	methods: {
 		onForward() {
-			this.$store.dispatch('showMessageComposer', {
+			this.$store.dispatch('startComposerSession', {
 				reply: {
 					mode: 'forward',
 					data: this.envelope,
@@ -420,7 +420,7 @@ export default {
 			this.showTagModal = false
 		},
 		async onOpenEditAsNew() {
-			await this.$store.dispatch('showMessageComposer', {
+			await this.$store.dispatch('startComposerSession', {
 				templateMessageId: this.envelope.databaseId,
 				data: this.envelope,
 			})

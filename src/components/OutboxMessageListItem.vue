@@ -146,7 +146,7 @@ export default {
 			await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id })
 		},
 		async openModal() {
-			await this.$store.dispatch('showMessageComposer', {
+			await this.$store.dispatch('startComposerSession', {
 				type: 'outbox',
 				data: {
 					...this.message,

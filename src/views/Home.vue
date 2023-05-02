@@ -5,9 +5,11 @@
 		<MailboxThread v-else-if="activeAccount"
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
-		<NewMessageModal
-			v-if="$store.getters.showMessageComposer"
-			@close="onCloseModal" />
+
+		<template v-if="hasComposerSession">
+			<ComposerSessionIndicator @close="onCloseMessageModal" />
+			<NewMessageModal ref="newMessageModal" />
+		</template>
 	</Content>
 </template>
 
@@ -22,6 +24,8 @@ import logger from '../logger'
 import MailboxThread from '../components/MailboxThread'
 import Navigation from '../components/Navigation'
 import Outbox from '../components/Outbox'
+import ComposerSessionIndicator from '../components/ComposerSessionIndicator'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'Home',
@@ -31,9 +35,16 @@ export default {
 		Navigation,
 		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
 		Outbox,
+		ComposerSessionIndicator,
 	},
 	mixins: [isMobile],
+	data() {
+		return {
+			hasComposerSession: false,
+		}
+	},
 	computed: {
+		...mapGetters(['composerSessionId']),
 		activeAccount() {
 			return this.$store.getters.getAccount(this.activeMailbox?.accountId)
 		},
@@ -42,6 +53,25 @@ export default {
 		},
 		menu() {
 			return this.buildMenu()
+		},
+	},
+	watch: {
+		async composerSessionId(id) {
+			// Session was closed or discarded
+			if (!id) {
+				this.hasComposerSession = false
+				return
+			}
+
+			// A new session is replacing the old session.  Fully reset the NewMessageModal
+			// component in this case and wait for the template to fully render before showing the
+			// modal again.
+			if (this.hasComposerSession) {
+				this.hasComposerSession = false
+				await this.$nextTick()
+			}
+
+			this.hasComposerSession = true
 		},
 	},
 	created() {
@@ -118,8 +148,8 @@ export default {
 				},
 			})
 		},
-		async onCloseModal(opts) {
-			await this.$store.dispatch('closeMessageComposer', opts ?? {})
+		async onCloseMessageModal() {
+			await this.$refs.newMessageModal.onClose()
 		},
 	},
 }

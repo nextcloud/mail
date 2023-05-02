@@ -4,14 +4,12 @@
 			:aria-label="t('mail', 'New message')"
 			type="primary"
 			class="new-message-button"
-			:disabled="$store.getters.showMessageComposer"
 			button-id="mail_new_message"
 			role="complementary"
 			:wide="true"
 			@click="onNewMessage">
 			<template #icon>
-				<IconAdd
-					:size="20" />
+				<IconAdd :size="20" />
 			</template>
 			{{ t('mail', 'New message') }}
 		</Button>
@@ -75,9 +73,9 @@ export default {
 				this.refreshing = false
 			}
 		},
-		onNewMessage() {
-			this.$store.dispatch('showMessageComposer', {
-
+		async onNewMessage() {
+			await this.$store.dispatch('startComposerSession', {
+				isBlankMessage: true,
 			})
 		},
 	},

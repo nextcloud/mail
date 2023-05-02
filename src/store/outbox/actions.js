@@ -147,7 +147,7 @@ export default {
 					logger.info('Attempting to stop sending message ' + message.id)
 					const stopped = await dispatch('stopMessage', { message })
 					logger.info('Message ' + message.id + ' stopped', { message: stopped })
-					await dispatch('showMessageComposer', {
+					await dispatch('startComposerSession', {
 						type: 'outbox',
 						data: {
 							...message,
