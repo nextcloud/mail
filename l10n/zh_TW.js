@@ -402,6 +402,7 @@ OC.L10N.register(
     "Mark as read" : "標為已讀",
     "Archive message" : "封存訊息",
     "Delete message" : "刪除訊息",
+    "Unsubscribing will stop all messages from the mailing list {sender}" : "取消訂閱將停止來自郵件清單 {sender} 的所有訊息",
     "Encrypted & verified " : "加密與驗證",
     "Signature verified" : "簽章已驗證",
     "Signature unverified " : "簽章未驗證",
