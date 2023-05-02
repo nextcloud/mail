@@ -25,7 +25,7 @@ import { defaultTo, head, prop, sortBy } from 'ramda'
 import { UNIFIED_ACCOUNT_ID } from './constants'
 import { normalizedEnvelopeListId } from './normalization'
 import { getCalendarHome } from '../service/caldavService'
-import toCalendar from './asba'
+import toCalendar from './calendar'
 
 export const getters = {
 	getPreference: (state) => (key, def) => {
@@ -137,4 +137,5 @@ export const getters = {
 		}).map(calendar => toCalendar(calendar))
 	},
 	getNcVersion: (state) => state.preferences?.ncVersion,
+	getAppVersion: (state) => state.preferences?.version,
 }

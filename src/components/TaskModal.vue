@@ -66,9 +66,11 @@ import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcMultiselect as 
 import jstz from 'jstz'
 
 import logger from '../logger'
+import ICAL from 'ical.js'
+import Task from '../task.js'
 import CalendarPickerOption from './CalendarPickerOption'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import moment from 'moment'
+import moment from '@nextcloud/moment'
 
 export default {
 	name: 'TaskModal',
@@ -132,6 +134,36 @@ export default {
 		onClose() {
 			this.$emit('close')
 		},
+		async createTask(taskData) {
+			const task = new Task('BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Nextcloud Mail v' + this.$store.getters.getAppVersion + '\nEND:VCALENDAR', taskData.calendar)
+			task.created = ICAL.Time.now()
+			task.summary = taskData.summary
+			task.hidesubtasks = 0
+			if (taskData.priority) {
+				task.priority = taskData.priority
+			}
+			if (taskData.complete) {
+				task.complete = taskData.complete
+			}
+			if (taskData.note) {
+				task.note = taskData.note
+			}
+			if (taskData.due) {
+				task.due = taskData.due
+			}
+			if (taskData.start) {
+				task.start = taskData.start
+			}
+			if (taskData.allDay) {
+				task.allDay = taskData.allDay
+			}
+			const vData = ICAL.stringify(task.jCal)
+
+			await task.calendar.dav.createVObject(vData)
+
+			return task
+
+		},
 		async onSave() {
 			this.saving = true
 
@@ -146,7 +178,7 @@ export default {
 			try {
 				logger.debug('create task', taskData)
 
-				this.$store.commit('createTask', taskData)
+				await this.createTask(taskData)
 
 				showSuccess(t('mail', 'Task created'))
 
