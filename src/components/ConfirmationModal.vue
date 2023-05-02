@@ -25,12 +25,13 @@
 			<h2>{{ title }}</h2>
 			<slot />
 			<div class="confirm-modal__buttons">
-				<NcButton type="tertiary" @click="cancel">
+				<NcButton type="tertiary" :disabled="disabled" @click="cancel">
 					{{ t('mail', 'Cancel') }}
 				</NcButton>
 				<NcButton :href="confirmUrl"
 					:rel="confirmUrl ? 'noopener noreferrer' : false"
 					:target="confirmUrl ? '_blank' : false"
+					:disabled="disabled"
 					type="primary"
 					@click="confirm">
 					{{ confirmText }}
@@ -63,6 +64,10 @@ export default {
 		confirmUrl: {
 			type: String,
 			default: undefined,
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	methods: {

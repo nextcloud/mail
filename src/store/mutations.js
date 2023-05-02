@@ -217,6 +217,10 @@ export default {
 		})
 	},
 	convertComposerMessageToOutbox(state, { message }) {
+		if (!state.newMessage) {
+			// If the message is dispatched in the background there is no newMessage data in state
+			return
+		}
 		Vue.set(state.newMessage, 'type', 'outbox')
 		Vue.set(state.newMessage.data, 'id', message.id)
 	},

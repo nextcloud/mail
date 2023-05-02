@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -85,6 +87,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			null,
+			null,
 			'',
 			false,
 			false,
@@ -123,6 +126,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			null,
+			null,
 			'',
 			false,
 			false,
@@ -153,6 +157,7 @@ class IMAPMessageTest extends TestCase {
 				'important' => true,
 			],
 			'unsubscribeUrl' => null,
+			'unsubscribeMailto' => null,
 			'hasHtmlBody' => true,
 			'dispositionNotificationTo' => 'disposition',
 			'scheduling' => [],

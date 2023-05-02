@@ -84,7 +84,7 @@
 				</div>
 				<div class="envelope__header__left__unsubscribe">
 					<ButtonVue
-						v-if="message && message.unsubscribeUrl"
+						v-if="message && (message.unsubscribeUrl || message.unsubscribeMailto)"
 						type="tertiary"
 						class="envelope__header__unsubscribe"
 						@click="showListUnsubscribeConfirmation = true">
@@ -199,12 +199,20 @@
 			:data="error"
 			:auto-margin="true"
 			role="alert" />
-		<ConfirmModal v-if="showListUnsubscribeConfirmation"
+		<ConfirmModal v-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Unsubscribe')"
 			:confirm-url="message.unsubscribeUrl"
-			:title="t('mail', 'Unsubscribe')"
+			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="showListUnsubscribeConfirmation = false">
+			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
+		</ConfirmModal>
+		<ConfirmModal v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
+			:confirm-text="t('mail', 'Send unsubscribe email')"
+			:title="t('mail', 'Unsubscribe via email')"
+			:disabled="unsubscribing"
+			@cancel="showListUnsubscribeConfirmation = false"
+			@confirm="unsubscribeViaMailto">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
 		</ConfirmModal>
 	</div>
@@ -235,7 +243,7 @@ import LockPlusIcon from 'vue-material-design-icons/LockPlus'
 import LockOffIcon from 'vue-material-design-icons/LockOff'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { hiddenTags } from './tags.js'
-import { showError } from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError'
 import { isPgpText } from '../crypto/pgp'
@@ -313,6 +321,7 @@ export default {
 			error: undefined,
 			message: undefined,
 			importantSvg,
+			unsubscribing: false,
 			seenTimer: undefined,
 			LOADING_BODY,
 			LOADING_DONE,
@@ -601,6 +610,53 @@ export default {
 			} catch (error) {
 				logger.error('could not archive message', error)
 				return t('mail', 'Could not archive message')
+			}
+		},
+		async unsubscribeViaMailto() {
+			const mailto = this.message.unsubscribeMailto
+			const [email, paramString] = mailto.replace(/^mailto:/, '').split('?')
+			let params = {}
+			const now = new Date().getTime() / 1000
+			if (paramString) {
+				params = paramString.split('&').map(encoded => ({
+					key: encoded.split('=')[0].toLowerCase(),
+					value: decodeURIComponent(encoded.split('=')[1]),
+				}))
+			}
+			try {
+				this.unsubscribing = true
+				const message = await this.$store.dispatch('outbox/enqueueMessage', {
+					message: {
+						accountId: this.message.accountId,
+						subject: params.subject || 'Unsubscribe',
+						body: params.body || '',
+						editorBody: params.body || '',
+						isHtml: false,
+						to: [{
+							label: email,
+							email,
+						}],
+						cc: [],
+						bcc: [],
+						attachments: [],
+						aliasId: null,
+						inReplyToMessageId: null,
+						sendAt: now,
+						draftId: null,
+						smimeEncrypt: false,
+						smimeSign: false,
+					},
+				})
+				logger.debug('Unsubscribe email to ' + email + ' enqueued')
+				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
+				logger.debug('Unsubscribe email sent to ' + email)
+				showSuccess(t('mail', 'Unsubscribe request sent'))
+			} catch (error) {
+				logger.error('Could not enqueue or send unsubscribe email', { error })
+				showError(t('mail', 'Could not unsubscribe from mailing list'))
+			} finally {
+				this.unsubscribing = false
+				this.showListUnsubscribeConfirmation = false
 			}
 		},
 	},
