@@ -77,6 +77,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private string $rawReferences;
 	private string $dispositionNotificationTo;
 	private ?string $unsubscribeUrl;
+	private bool $isOneClickUnsubscribe;
 	private ?string $unsubscribeMailto;
 	private string $rawInReplyTo;
 	private bool $isEncrypted;
@@ -103,6 +104,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		string $rawReferences,
 		string $dispositionNotificationTo,
 		?string $unsubscribeUrl,
+		bool $isOneClickUnsubscribe,
 		?string $unsubscribeMailto,
 		string $rawInReplyTo,
 		bool $isEncrypted,
@@ -129,6 +131,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->rawReferences = $rawReferences;
 		$this->dispositionNotificationTo = $dispositionNotificationTo;
 		$this->unsubscribeUrl = $unsubscribeUrl;
+		$this->isOneClickUnsubscribe = $isOneClickUnsubscribe;
 		$this->unsubscribeMailto = $unsubscribeMailto;
 		$this->rawInReplyTo = $rawInReplyTo;
 		$this->isEncrypted = $isEncrypted;
@@ -312,6 +315,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
 			'unsubscribeUrl' => $this->unsubscribeUrl,
+			'isOneClickUnsubscribe' => $this->isOneClickUnsubscribe,
 			'unsubscribeMailto' => $this->unsubscribeMailto,
 			'scheduling' => $this->scheduling,
 		];
@@ -441,6 +445,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	public function isSignatureValid(): bool {
 		return $this->signatureIsValid;
+	}
+
+	public function getUnsubscribeUrl(): ?string {
+		return $this->unsubscribeUrl;
+	}
+
+	public function isOneClickUnsubscribe(): bool {
+		return $this->isOneClickUnsubscribe;
 	}
 
 	/**

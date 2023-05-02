@@ -199,7 +199,14 @@
 			:data="error"
 			:auto-margin="true"
 			role="alert" />
-		<ConfirmModal v-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
+		<ConfirmModal v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
+			:confirm-text="t('mail', 'Unsubscribe')"
+			:title="t('mail', 'Unsubscribe via link')"
+			@cancel="showListUnsubscribeConfirmation = false"
+			@confirm="unsubscribeViaOneClick">
+			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
+		</ConfirmModal>
+		<ConfirmModal v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Unsubscribe')"
 			:confirm-url="message.unsubscribeUrl"
 			:title="t('mail', 'Unsubscribe via link')"
@@ -249,6 +256,7 @@ import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredErr
 import { isPgpText } from '../crypto/pgp'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions'
 import NcActionText from '@nextcloud/vue/dist/Components/NcActionText'
+import { unsubscribe } from '../service/ListService'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -610,6 +618,20 @@ export default {
 			} catch (error) {
 				logger.error('could not archive message', error)
 				return t('mail', 'Could not archive message')
+			}
+		},
+		async unsubscribeViaOneClick() {
+			try {
+				this.unsubscribing = true
+
+				await unsubscribe(this.envelope.databaseId)
+				showSuccess(t('mail', 'Unsubscribe request sent'))
+			} catch (error) {
+				logger.error('Could not one-click unsubscribe', { error })
+				showError(t('mail', 'Could not unsubscribe from mailing list'))
+			} finally {
+				this.unsubscribing = false
+				this.showListUnsubscribeConfirmation = false
 			}
 		},
 		async unsubscribeViaMailto() {

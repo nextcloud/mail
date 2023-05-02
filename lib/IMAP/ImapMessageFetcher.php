@@ -45,6 +45,7 @@ use OCA\Mail\Service\Html;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use function str_starts_with;
+use function strtolower;
 
 class ImapMessageFetcher {
 	/** @var string[] */
@@ -70,6 +71,7 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private ?string $unsubscribeUrl = null;
+	private bool $isOneClickUnsubscribe = false;
 	private ?string $unsubscribeMailto = null;
 
 	public function __construct(int $uid,
@@ -251,6 +253,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->unsubscribeUrl,
+			$this->isOneClickUnsubscribe,
 			$this->unsubscribeMailto,
 			$envelope->in_reply_to,
 			$isEncrypted,
@@ -512,19 +515,29 @@ class ImapMessageFetcher {
 			$this->dispositionNotificationTo = $dispositionNotificationTo->value_single;
 		}
 
-		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
-		if ($listUnsubscribeHeader !== null) {
-			$listHeaders = new Horde_ListHeaders();
-			/** @var Horde_ListHeaders_Base[] $headers */
-			$headers = $listHeaders->parse($listUnsubscribeHeader->name, $listUnsubscribeHeader->value_single);
-			foreach ($headers as $header) {
-				if (str_starts_with($header->url, 'http')) {
-					$this->unsubscribeUrl = $header->url;
-					break;
-				}
-				if (str_starts_with($header->url, 'mailto')) {
-					$this->unsubscribeMailto = $header->url;
-					break;
+		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
+		$hasDkimSignature = $dkimSignatureHeader !== null;
+
+		if ($hasDkimSignature) {
+			$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
+			if ($listUnsubscribeHeader !== null) {
+				$listHeaders = new Horde_ListHeaders();
+				/** @var Horde_ListHeaders_Base[] $headers */
+				$headers = $listHeaders->parse($listUnsubscribeHeader->name, $listUnsubscribeHeader->value_single);
+				foreach ($headers as $header) {
+					if (str_starts_with($header->url, 'http')) {
+						$this->unsubscribeUrl = $header->url;
+
+						$unsubscribePostHeader = $parsedHeaders->getHeader('List-Unsubscribe-Post');
+						if ($unsubscribePostHeader !== null) {
+							$this->isOneClickUnsubscribe = strtolower($unsubscribePostHeader->value_single) === 'list-unsubscribe=one-click';
+						}
+						break;
+					}
+					if (str_starts_with($header->url, 'mailto')) {
+						$this->unsubscribeMailto = $header->url;
+						break;
+					}
 				}
 			}
 		}
