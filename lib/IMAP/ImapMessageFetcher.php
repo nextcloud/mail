@@ -70,6 +70,7 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private ?string $unsubscribeUrl = null;
+	private ?string $unsubscribeMailto = null;
 
 	public function __construct(int $uid,
 		string $mailbox,
@@ -250,6 +251,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->unsubscribeUrl,
+			$this->unsubscribeMailto,
 			$envelope->in_reply_to,
 			$isEncrypted,
 			$isSigned,
@@ -518,6 +520,10 @@ class ImapMessageFetcher {
 			foreach ($headers as $header) {
 				if (str_starts_with($header->url, 'http')) {
 					$this->unsubscribeUrl = $header->url;
+					break;
+				}
+				if (str_starts_with($header->url, 'mailto')) {
+					$this->unsubscribeMailto = $header->url;
 					break;
 				}
 			}

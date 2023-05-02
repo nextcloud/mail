@@ -77,6 +77,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private string $rawReferences;
 	private string $dispositionNotificationTo;
 	private ?string $unsubscribeUrl;
+	private ?string $unsubscribeMailto;
 	private string $rawInReplyTo;
 	private bool $isEncrypted;
 	private bool $isSigned;
@@ -102,6 +103,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		string $rawReferences,
 		string $dispositionNotificationTo,
 		?string $unsubscribeUrl,
+		?string $unsubscribeMailto,
 		string $rawInReplyTo,
 		bool $isEncrypted,
 		bool $isSigned,
@@ -127,6 +129,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->rawReferences = $rawReferences;
 		$this->dispositionNotificationTo = $dispositionNotificationTo;
 		$this->unsubscribeUrl = $unsubscribeUrl;
+		$this->unsubscribeMailto = $unsubscribeMailto;
 		$this->rawInReplyTo = $rawInReplyTo;
 		$this->isEncrypted = $isEncrypted;
 		$this->isSigned = $isSigned;
@@ -309,6 +312,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
 			'unsubscribeUrl' => $this->unsubscribeUrl,
+			'unsubscribeMailto' => $this->unsubscribeMailto,
 			'scheduling' => $this->scheduling,
 		];
 	}

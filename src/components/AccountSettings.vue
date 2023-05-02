@@ -23,8 +23,8 @@
   -->
 
 <template>
-	<AppSettingsDialog :open="true"
-		id="app-settings-dialog"
+	<AppSettingsDialog id="app-settings-dialog"
+		:open="true"
 		:show-navigation="true">
 		<AppSettingsSection
 			id="account-settings"
