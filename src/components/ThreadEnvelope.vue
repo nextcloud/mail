@@ -794,6 +794,12 @@ export default {
 			&__unsubscribe {
 				color: var(--color-text-maxcontrast);
 			}
+			&__left__sender-subject-tags {
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				width: 100%;
+			}
 		}
 
 		.subline {
