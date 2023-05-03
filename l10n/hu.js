@@ -402,6 +402,7 @@ OC.L10N.register(
     "Mark as read" : "Megjelölés olvasottként",
     "Archive message" : "Üzenet archiválása",
     "Delete message" : "Üzenet törlése",
+    "Unsubscribing will stop all messages from the mailing list {sender}" : "A leiratkozás leállít minden üzenetet, amely a(z) {sender} levelezőlistáról érkezik",
     "Encrypted & verified " : "Titkosított és ellenőrzött",
     "Signature verified" : "Az aláírás ellenőrizve",
     "Signature unverified " : "Az aláírás nincs ellenőrizve",

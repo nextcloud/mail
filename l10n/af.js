@@ -27,6 +27,7 @@ OC.L10N.register(
     "Add mail account" : "Voeg posrekening toe",
     "Subject" : "Onderwerp",
     "Send" : "Stuur",
+    "Confirm" : "Bevestig",
     "Favorite" : "Gunsteling",
     "Select" : "Kies",
     "Forward" : "Stuur aan",

@@ -29,6 +29,7 @@ OC.L10N.register(
     "Subject" : "Asuntu",
     "Send" : "Unviar",
     "Choose a file to add as attachment" : "Escueyi un ficheru p'amestalu como axuntu",
+    "Confirm" : "Confirmar",
     "Favorite" : "Marcar como favoritu",
     "Read" : "Lleer",
     "Select" : "Esbillar",

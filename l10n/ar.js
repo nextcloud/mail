@@ -46,6 +46,7 @@ OC.L10N.register(
     "Send" : "أرسل",
     "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
     "Choose a file to share as a link" : "اختر ملفا لمشاركته كرابط",
+    "Confirm" : "تأكيد",
     "No messages" : "لاتوجد رسائل",
     "Draft: " : "المسودة:",
     "Unfavorite" : "غير مفضل",
