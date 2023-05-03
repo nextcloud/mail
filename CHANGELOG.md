@@ -1,5 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## 3.2.0-alpha.1 - unreleased
+### Added
+- Minimize composer modal while editing a message
+- Easy unsubscribe from lists with mailto unsubscribe header
+- Easy unsubscribe from lists with http unsubscribe header
+- Show message timestamp in action menu
+- Sort tags alphabetically
+- Verify signature of encrypted messages
+### Fixed
+- Position thread envelope icons relative to avatar
+- Display email address instead of label
+- Missing background box for redirect page
+- Button style
+- Warnings because of missing aria-label on NcButton component
+- Delete old draft when saving new version
+- Gap between primary actions
+- Colors button dark-theme
+- Explicit set/unset tag in TagModal
+
 ## 3.1.0 - 2023-04-04
 ### Added
 - Warning when a signature is not verified
