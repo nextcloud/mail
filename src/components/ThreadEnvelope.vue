@@ -25,57 +25,58 @@
 	<div class="envelope"
 		:class="{'envelope--expanded' : expanded }">
 		<div class="envelope__header">
-			<Avatar v-if="envelope.from && envelope.from[0]"
-				:email="envelope.from[0].email"
-				:display-name="envelope.from[0].label"
-				:disable-tooltip="true"
-				:size="40" />
-			<div
-				v-if="isImportant"
-				class="app-content-list-item-star icon-important"
-				:class="{ 'icon-important__not-expanded' : importantPositionWithSubjectNotExpanded }"
-				:data-starred="isImportant ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? onToggleImportant() : false"
-				v-html="importantSvg" />
-			<IconFavorite
-				v-if="envelope.flags.flagged"
-				fill-color="#f9cf3d"
-				:size="18"
-				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
-				class="app-content-list-item-star favorite-icon-style"
-				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-			<JunkIcon
-				v-if="envelope.flags.$junk"
-				:size="18"
-				:class="{ 'junk-favorite-position': junkFavoritePosition, 'junk-favorite-position-with-tag-subline': junkFavoritePositionWithTagSubline }"
-				class="app-content-list-item-star junk-icon-style"
-				:data-starred="envelope.flags.$junk ? 'true' : 'false'"
-				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
+			<div class="envelope__header__avatar">
+				<Avatar v-if="envelope.from && envelope.from[0]"
+					:email="envelope.from[0].email"
+					:display-name="envelope.from[0].label"
+					:disable-tooltip="true"
+					:size="40" />
+				<div
+					v-if="isImportant"
+					class="app-content-list-item-star icon-important"
+					:data-starred="isImportant ? 'true' : 'false'"
+					@click.prevent="hasWriteAcl ? onToggleImportant() : false"
+					v-html="importantSvg" />
+				<IconFavorite
+					v-if="envelope.flags.flagged"
+					fill-color="#f9cf3d"
+					:size="18"
+					class="app-content-list-item-star favorite-icon-style"
+					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
+					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
+				<JunkIcon
+					v-if="envelope.flags.$junk"
+					:size="18"
+					class="app-content-list-item-star junk-icon-style"
+					:data-starred="envelope.flags.$junk ? 'true' : 'false'"
+					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
+			</div>
 			<router-link
 				:to="route"
 				event=""
 				class="left"
 				:class="{seen: envelope.flags.seen}"
 				@click.native.prevent="$emit('toggle-expand', $event)">
-				<div class="sender">
-					{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-				</div>
-				<div v-if="hasChangedSubject" class="subline">
-					{{ cleanSubject }}
-				</div>
-				<div v-if="showSubline" class="subline">
-					<span class="preview">
-						{{ isEncrypted ? t('mail', 'Encrypted message') : envelope.previewText }}
-					</span>
-				</div>
-				<div v-for="tag in tags"
-					:key="tag.id"
-					class="tag-group">
-					<div class="tag-group__bg"
-						:style="{'background-color': tag.color}" />
-					<span class="tag-group__label"
-						:style="{color: tag.color}">{{ tag.displayName }} </span>
+				<div class="envelope__header__left__sender-subject-tags">
+					<div class="sender">
+						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
+					</div>
+					<div v-if="hasChangedSubject" class="subline">
+						{{ cleanSubject }}
+					</div>
+					<div v-if="showSubline" class="subline">
+						<span class="preview">
+							{{ isEncrypted ? t('mail', 'Encrypted message') : envelope.previewText }}
+						</span>
+					</div>
+					<div v-for="tag in tags"
+						:key="tag.id"
+						class="tag-group">
+						<div class="tag-group__bg"
+							:style="{'background-color': tag.color}" />
+						<span class="tag-group__label"
+							:style="{color: tag.color}">{{ tag.displayName }} </span>
+					</div>
 				</div>
 			</router-link>
 			<div class="right">
@@ -349,12 +350,6 @@ export default {
 		},
 		junkFavoritePosition() {
 			return this.showSubline && this.tags.length > 0
-		},
-		junkFavoritePositionWithTagSubline() {
-			return !this.showSubline && this.tags.length > 0
-		},
-		importantPositionWithSubjectNotExpanded() {
-			return !this.expanded && this.hasChangedSubject
 		},
 		showFavoriteIconVariant() {
 			return this.envelope.flags.flagged
@@ -647,6 +642,55 @@ export default {
 			padding: 10px;
 			border-radius: var(--border-radius);
 			min-height: 68px; /* prevents jumping between open/collapsed */
+			&__avatar {
+				position: relative;
+
+				.app-content-list-item-star {
+					position: absolute;
+					cursor: pointer;
+
+					&.icon-important {
+						background-image: none;
+						opacity: 1;
+						width: 16px;
+						height: 16px;
+						display: flex;
+						top: 0px;
+						left: 0px;
+
+						&:hover,
+						&:focus {
+							opacity: 0.5;
+						}
+
+						:deep(path) {
+							fill: #ffcc00;
+							stroke: var(--color-main-background);
+							cursor: pointer;
+						}
+					}
+					&.favorite-icon-style {
+						display: inline-block;
+						top: -2px;
+						right: -2px;
+
+						stroke: var(--color-main-background);
+						stroke-width: 2;
+						&:hover {
+							opacity: .5;
+						}
+					}
+					&.junk-icon-style {
+						display: inline-block;
+						bottom: -2px;
+						right: -2px;
+						opacity: .2;
+						&:hover {
+							opacity: .1;
+						}
+					}
+				}
+			}
 		}
 
 		.subline {
@@ -671,55 +715,6 @@ export default {
 		padding: 2em;
 		margin: -2em;
 		margin-right: 0;
-	}
-	.icon-important {
-		:deep(path) {
-			fill: #ffcc00;
-			stroke: var(--color-main-background);
-			cursor: pointer;
-		}
-
-		&.app-content-list-item-star {
-			background-image: none;
-			position: absolute;
-			opacity: 1;
-			width: 16px;
-			height: 16px;
-			margin-left: -1px;
-			display: flex;
-			top: 12px;
-
-			&:hover,
-			&:focus {
-				opacity: 0.5;
-			}
-		}
-		&__not-expanded {
-			margin-top: 10px;
-		}
-	}
-	.app-content-list-item-star.favorite-icon-style {
-		display: inline-block;
-		position: absolute;
-		top: 10px;
-		left: 36px;
-		cursor: pointer;
-		stroke: var(--color-main-background);
-		stroke-width: 2;
-		&:hover {
-			opacity: .5;
-		}
-	}
-	.app-content-list-item-star.junk-icon-style {
-		display: inline-block;
-		position: absolute;
-		top: 10px;
-		left: 36px;
-		cursor: pointer;
-		opacity: .2;
-		&:hover {
-			opacity: .1;
-		}
 	}
 	.left:not(.seen) {
 		font-weight: bold;
@@ -748,12 +743,6 @@ export default {
 		margin: 0 1px;
 		overflow: hidden;
 		left: 4px;
-	}
-	.junk-favorite-position-with-tag-subline {
-		margin-bottom: 14px !important;
-	}
-	.junk-favorite-position {
-		margin-bottom: 36px !important;
 	}
 	.smime-text {
 		// same as padding-right on action-text styling
