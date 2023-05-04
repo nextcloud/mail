@@ -44,12 +44,16 @@ class Folder {
 	/** @var string[] */
 	private $specialUse;
 
-	public function __construct(int $accountId, Horde_Imap_Client_Mailbox $mailbox, array $attributes, ?string $delimiter) {
+	public function __construct(int $accountId,
+		Horde_Imap_Client_Mailbox $mailbox,
+		array $attributes,
+		?string $delimiter,
+		array $status) {
 		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
 		$this->delimiter = $delimiter;
-		$this->status = [];
+		$this->status = $status;
 		$this->specialUse = [];
 	}
 

@@ -153,7 +153,6 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$folder = $this->folderMapper->createFolder($client, $account, $name);
-			$this->folderMapper->getFoldersStatus([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"Could not get mailbox status: " .

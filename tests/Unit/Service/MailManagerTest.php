@@ -142,9 +142,6 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($client), $this->equalTo($account), $this->equalTo('new'))
 			->willReturn($folder);
 		$this->folderMapper->expects($this->once())
-			->method('getFoldersStatus')
-			->with($this->equalTo([$folder]));
-		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($this->equalTo([$folder]));
 		$mailbox = new Mailbox();
