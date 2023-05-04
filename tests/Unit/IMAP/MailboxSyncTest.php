@@ -44,6 +44,7 @@ use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\MailboxSync;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
@@ -68,6 +69,8 @@ class MailboxSyncTest extends TestCase {
 
 	/** @var IEventDispatcher|MockObject */
 	private $dispatcher;
+	/** @var IDBConnection|(IDBConnection&MockObject)|MockObject */
+	private IDBConnection|MockObject $dbConnection;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -78,6 +81,7 @@ class MailboxSyncTest extends TestCase {
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->dispatcher = $this->createMock(IEventDispatcher::class);
+		$this->dbConnection = $this->createMock(IDBConnection::class);
 
 		$this->sync = new MailboxSync(
 			$this->mailboxMapper,
@@ -85,7 +89,8 @@ class MailboxSyncTest extends TestCase {
 			$this->mailAccountMapper,
 			$this->imapClientFactory,
 			$this->timeFactory,
-			$this->dispatcher
+			$this->dispatcher,
+			$this->dbConnection,
 		);
 	}
 
