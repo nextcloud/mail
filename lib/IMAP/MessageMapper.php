@@ -257,6 +257,7 @@ class MessageMapper {
 								   string $userId,
 								   bool $loadBody = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
 		$query->flags();
 
 		return $this->findByQuery($ids, $query, $mailbox, $client, $loadBody, $userId);
@@ -328,11 +329,11 @@ class MessageMapper {
 		}
 
 		$fetchResults = array_values(array_filter($fetchResults, static function (Horde_Imap_Client_Data_Fetch $fetchResult) {
-			return $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE);
+			return $fetchResult->exists(Horde_Imap_Client::FETCH_UID);
 		}));
 
 		if ($fetchResults === []) {
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
+			$this->logger->debug("findByQuery in $mailbox got " . count($ids) . " UIDs but found none");
 		} else {
 			$minFetched = $fetchResults[0]->getUid();
 			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
@@ -341,7 +342,7 @@ class MessageMapper {
 			} else {
 				$range = 'literals';
 			}
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
+			$this->logger->debug("findByQuery in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
 		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody, $userId) {
