@@ -36,15 +36,21 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
+use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IDBConnection;
 use Psr\Log\LoggerInterface;
+use function array_combine;
+use function array_map;
 use function in_array;
 use function json_encode;
 use function sprintf;
 use function str_starts_with;
 
 class MailboxSync {
+	use TTransactional;
+
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
@@ -62,19 +68,22 @@ class MailboxSync {
 
 	/** @var IEventDispatcher */
 	private $dispatcher;
+	private IDBConnection $dbConnection;
 
 	public function __construct(MailboxMapper $mailboxMapper,
 								FolderMapper $folderMapper,
 								MailAccountMapper $mailAccountMapper,
 								IMAPClientFactory $imapClientFactory,
 								ITimeFactory $timeFactory,
-								IEventDispatcher $dispatcher) {
+								IEventDispatcher $dispatcher,
+								IDBConnection $dbConnection) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->folderMapper = $folderMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->timeFactory = $timeFactory;
 		$this->dispatcher = $dispatcher;
+		$this->dbConnection = $dbConnection;
 	}
 
 	/**
@@ -116,15 +125,17 @@ class MailboxSync {
 			}
 			$this->folderMapper->detectFolderSpecialUse($folders);
 
-			$old = $this->mailboxMapper->findAll($account);
-			$indexedOld = array_combine(
-				array_map(static function (Mailbox $mb) {
-					return $mb->getName();
-				}, $old),
-				$old
-			);
+			$this->atomic(function () use ($account, $folders, $namespaces) {
+				$old = $this->mailboxMapper->findAll($account);
+				$indexedOld = array_combine(
+					array_map(static function (Mailbox $mb) {
+						return $mb->getName();
+					}, $old),
+					$old
+				);
 
-			$this->persist($account, $folders, $indexedOld, $namespaces);
+				$this->persist($account, $folders, $indexedOld, $namespaces);
+			}, $this->dbConnection);
 
 			$this->dispatcher->dispatchTyped(
 				new MailboxesSynchronizedEvent($account)
