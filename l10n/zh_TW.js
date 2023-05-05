@@ -184,6 +184,7 @@ OC.L10N.register(
     "More actions" : "更多動作",
     "Edit as new message" : "以新郵件的方式編輯",
     "Create event" : "建立事件",
+    "Create task" : "建立工作項目",
     "Download message" : "下載訊息",
     "Blind copy recipients only" : "僅密件副本收件者",
     "No subject" : "沒有主旨",

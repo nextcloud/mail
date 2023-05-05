@@ -138,6 +138,7 @@ OC.L10N.register(
     "Edit tags" : "Редагувати мітки",
     "More actions" : "Більше дій",
     "Create event" : "Додати подію",
+    "Create task" : "Створити завдання",
     "Download message" : "Завантажити повідомлення",
     "Blind copy recipients only" : "Лише отримувачі у прихованій копії",
     "Forward" : "Переслати",

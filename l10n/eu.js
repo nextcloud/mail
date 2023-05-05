@@ -183,6 +183,7 @@ OC.L10N.register(
     "More actions" : "Ekintza gehiago",
     "Edit as new message" : "Aldatu mezu berri gisa",
     "Create event" : "Sortu gertaera",
+    "Create task" : "Sortu zeregina",
     "Download message" : "Deskargatu mezua",
     "Blind copy recipients only" : "Kopia itsuen jasotzaileek besterik ez",
     "No subject" : "Gairik ez",

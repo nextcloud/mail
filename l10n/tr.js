@@ -183,6 +183,7 @@ OC.L10N.register(
     "More actions" : "Diğer işlemler",
     "Edit as new message" : "Yeni ileti olarak düzenle",
     "Create event" : "Etkinlik ekle",
+    "Create task" : "Görev ekle",
     "Download message" : "İletiyi indir",
     "Blind copy recipients only" : "Alıcılar gizli kopya olarak eklensin",
     "No subject" : "Konu yok",

@@ -158,6 +158,7 @@ OC.L10N.register(
     "More actions" : "Lisää toimintoja",
     "Edit as new message" : "Muokkaa uutena viestinä",
     "Create event" : "Luo tapahtuma",
+    "Create task" : "Luo tehtävä",
     "Download message" : "Lataa viesti",
     "Blind copy recipients only" : "Vain piilokopion vastaanottajat",
     "No subject" : "Ei aihetta",

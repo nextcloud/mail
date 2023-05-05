@@ -184,6 +184,7 @@ OC.L10N.register(
     "More actions" : "More actions",
     "Edit as new message" : "Edit as new message",
     "Create event" : "Create event",
+    "Create task" : "Create task",
     "Download message" : "Download message",
     "Blind copy recipients only" : "Blind copy recipients only",
     "No subject" : "No subject",

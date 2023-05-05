@@ -144,6 +144,7 @@ OC.L10N.register(
     "More actions" : "Повеќе акции",
     "Edit as new message" : "Измени како нова порака",
     "Create event" : "Креирај настан",
+    "Create task" : "Креирај задача",
     "Download message" : "Преземи порака",
     "Blind copy recipients only" : "Само приматели на слепи копии",
     "No subject" : "Нема наслов",

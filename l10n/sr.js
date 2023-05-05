@@ -183,6 +183,7 @@ OC.L10N.register(
     "More actions" : "Још акција",
     "Edit as new message" : "Уреди као нову поруку",
     "Create event" : "Креирај догађај",
+    "Create task" : "Креирај задатак",
     "Download message" : "Преузми поруку",
     "Blind copy recipients only" : "Само примаоци невидљиве копије",
     "No subject" : "Нема наслова",

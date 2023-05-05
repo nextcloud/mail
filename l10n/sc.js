@@ -110,6 +110,7 @@ OC.L10N.register(
     "More actions" : "Àteras atziones",
     "Edit as new message" : "Modìfica comente messàgiu nou",
     "Create event" : "Crea eventu",
+    "Create task" : "Crea faina",
     "Blind copy recipients only" : "Isceti persones destinatàrias in còpia cuada",
     "No trash mailbox configured" : "Peruna casella de àliga cunfigurada",
     "Could not delete message" : "No at fatu a cantzellare su messàgiu",

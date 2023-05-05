@@ -158,6 +158,7 @@ OC.L10N.register(
     "More actions" : "Viac akcií",
     "Edit as new message" : "Upraviť ako novú správu",
     "Create event" : "Vytvoriť udalosť",
+    "Create task" : "Vytvoriť úlohu",
     "Download message" : "Stiahnuť správu",
     "Blind copy recipients only" : "Iba príjemcovia slepej kópie",
     "No subject" : "Žiadny predmet",

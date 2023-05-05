@@ -163,6 +163,7 @@ OC.L10N.register(
     "More actions" : "Flere handlinger",
     "Edit as new message" : "Rediger som ny besked",
     "Create event" : "Opret begivenhed",
+    "Create task" : "Opret opgave",
     "Download message" : "Download besked",
     "Blind copy recipients only" : "Kun blinde kopi-modtagere",
     "No subject" : "Intet emne",

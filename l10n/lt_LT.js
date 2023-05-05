@@ -125,6 +125,7 @@ OC.L10N.register(
     "More actions" : "Daugiau veiksmų",
     "Edit as new message" : "Taisyti kaip naują laišką",
     "Create event" : "Sukurti įvykį",
+    "Create task" : "Sukurti užduotį",
     "Download message" : "Atsisiųsti laišką",
     "No subject" : "Be temos",
     "Could not delete message" : "Nepavyko ištrinti laiško",

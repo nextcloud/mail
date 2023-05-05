@@ -134,6 +134,7 @@ OC.L10N.register(
     "More actions" : "Περισσότερες ενέργειες",
     "Edit as new message" : "Επεξεργασία ως νέο μήνυμα",
     "Create event" : "Δημιουργία συμβάντος",
+    "Create task" : "Δημιουργία εργασίας",
     "Download message" : "Λήψη μηνύματος",
     "Blind copy recipients only" : "Αποδέκτες με κρυφή κοινοποίηση μόνο",
     "No subject" : "Χωρίς θέμα",

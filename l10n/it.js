@@ -118,6 +118,7 @@ OC.L10N.register(
     "More actions" : "Altre azioni",
     "Edit as new message" : "Modifica come nuovo messaggio",
     "Create event" : "Crea evento",
+    "Create task" : "Crea attività",
     "Blind copy recipients only" : "Solo destinatari in copia nascosta",
     "No trash mailbox configured" : "Nessuna casella del cestino configurata",
     "Could not delete message" : "Impossibile eliminare il messaggio",

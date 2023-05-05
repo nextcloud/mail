@@ -113,6 +113,7 @@ OC.L10N.register(
     "More actions" : "Dodatne radnje",
     "Edit as new message" : "Uredi kao novu poruku",
     "Create event" : "Stvori događaj",
+    "Create task" : "Stvori zadatak",
     "Blind copy recipients only" : "Samo primatelji skrivenih kopija poruke",
     "No trash mailbox configured" : "Nije konfiguriran sandučić za izbrisanu poštu",
     "Could not delete message" : "Brisanje poruke nije uspjelo",

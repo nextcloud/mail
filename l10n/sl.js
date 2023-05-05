@@ -143,6 +143,7 @@ OC.L10N.register(
     "More actions" : "Več dejanj",
     "Edit as new message" : "Uredi kot novo sporočilo",
     "Create event" : "Ustvari dogodek",
+    "Create task" : "Ustvari nalogo",
     "Download message" : "Prejmi sporočilo",
     "Blind copy recipients only" : "Le prejemniki skrite kopije",
     "No subject" : "Ni zadeve",

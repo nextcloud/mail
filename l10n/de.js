@@ -183,6 +183,7 @@ OC.L10N.register(
     "More actions" : "Weitere Aktionen",
     "Edit as new message" : "Als neue Nachricht bearbeiten",
     "Create event" : "Termin erstellen",
+    "Create task" : "Aufgabe erstellen",
     "Download message" : "Nachricht herunterladen",
     "Blind copy recipients only" : "Nur BCC-Empfänger",
     "No subject" : "Kein Betreff",

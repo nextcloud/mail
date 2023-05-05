@@ -156,6 +156,7 @@ OC.L10N.register(
     "More actions" : "Больше действий",
     "Edit as new message" : "Редактировать как новое сообщение",
     "Create event" : "Создать событие",
+    "Create task" : "Создать задачу",
     "Download message" : "Скачать письмо",
     "Blind copy recipients only" : "Только получатели скрытой копии",
     "No subject" : "Без темы",

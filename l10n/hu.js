@@ -183,6 +183,7 @@ OC.L10N.register(
     "More actions" : "További műveletek",
     "Edit as new message" : "Szerkesztés új üzenetként",
     "Create event" : "Esemény létrehozása",
+    "Create task" : "Feladat létrehozása",
     "Download message" : "Üzenet letöltése",
     "Blind copy recipients only" : "Csak a rejtett másolatok címzettjei",
     "No subject" : "Nincs tárgy",

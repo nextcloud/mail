@@ -118,6 +118,7 @@ OC.L10N.register(
     "More actions" : "Meer acties",
     "Edit as new message" : "Bewerk als nieuw bericht",
     "Create event" : "Creëer afspraak",
+    "Create task" : "Aanmaken taak",
     "Blind copy recipients only" : "Alleen ontvangers van blinde kopie",
     "No trash mailbox configured" : "Geen verwijderde berichtenmap ingesteld",
     "Could not delete message" : "Kon bericht niet verwijderen",

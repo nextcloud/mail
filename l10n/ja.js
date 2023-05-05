@@ -106,6 +106,7 @@ OC.L10N.register(
     "More actions" : "その他のアクション",
     "Edit as new message" : "新しいメッセージとして編集",
     "Create event" : "イベントを作成",
+    "Create task" : "タスクを作成する",
     "Blind copy recipients only" : "BCC受信者のみ",
     "Could not delete message" : "メッセージを削除できませんでした",
     "Forward" : "転送",
