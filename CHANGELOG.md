@@ -1,5 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## 3.2.0-beta.1 - unreleased
+### Added
+- Create a task from a message
+### Fixed
+- The preview string is shown outside the box of the thread
+
 ## 3.2.0-alpha.1 - unreleased
 ### Added
 - Minimize composer modal while editing a message
