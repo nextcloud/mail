@@ -390,6 +390,11 @@ return [
 			'url' => '/integration/microsoft-auth',
 			'verb' => 'GET',
 		],
+		[
+			'name' => 'list#unsubscribe',
+			'url' => '/api/list/unsubscribe/{id}',
+			'verb' => 'POST',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
