@@ -44,7 +44,7 @@ class FolderMapperTest extends TestCase {
 		$this->mapper = new FolderMapper();
 	}
 
-	public function testGetFoldersEmtpyAccount() {
+	public function testGetFoldersEmtpyAccount(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
@@ -54,6 +54,7 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
+					'status' => Horde_Imap_Client::STATUS_ALL,
 				]))
 			->willReturn([]);
 
@@ -62,7 +63,7 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals([], $folders);
 	}
 
-	public function testGetFolders() {
+	public function testGetFolders(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(27);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
@@ -73,12 +74,16 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
+					'status' => Horde_Imap_Client::STATUS_ALL,
 				]))
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('INBOX'),
 					'attributes' => [],
 					'delimiter' => '.',
+					'status' => [
+						'unseen' => 0,
+					],
 				],
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('Sent'),
@@ -86,11 +91,14 @@ class FolderMapperTest extends TestCase {
 						'\sent',
 					],
 					'delimiter' => '.',
+					'status' => [
+						'unseen' => 1,
+					],
 				],
 			]);
 		$expected = [
-			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
-			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.'),
+			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', ['unseen' => 0]),
+			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.', ['unseen' => 1]),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -98,7 +106,7 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $folders);
 	}
 
-	public function testCreateFolder() {
+	public function testCreateFolder(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(42);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
@@ -112,22 +120,26 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
+					'status' => Horde_Imap_Client::STATUS_ALL,
 				]))
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('new'),
 					'attributes' => [],
 					'delimiter' => '.',
+					'status' => [
+						'unseen' => 0,
+					],
 				],
 			]);
 
 		$created = $this->mapper->createFolder($client, $account, 'new');
 
-		$expected = new Folder(42, new Horde_Imap_Client_Mailbox('new'), [], '.');
+		$expected = new Folder(42, new Horde_Imap_Client_Mailbox('new'), [], '.', ['unseen' => 0]);
 		$this->assertEquals($expected, $created);
 	}
 
-	public function testGetFoldersStatus(): void {
+	public function testFetchFoldersAcls(): void {
 		$folders = [
 			$this->createMock(Folder::class),
 		];
@@ -135,17 +147,6 @@ class FolderMapperTest extends TestCase {
 		$folders[0]->expects($this->any())
 			->method('getMailbox')
 			->willReturn('folder1');
-		$folders[0]->expects($this->once())
-			->method('getAttributes')
-			->willReturn([]);
-		$client->expects($this->once())
-			->method('status')
-			->with($this->equalTo(['folder1']))
-			->willReturn([
-				'folder1' => [
-					'total' => 123
-				],
-			]);
 		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
 		$client
 			->method('__get')
@@ -155,76 +156,8 @@ class FolderMapperTest extends TestCase {
 			->method('query')
 			->with('ACL')
 			->willReturn(false);
-		$folders[0]->expects($this->once())
-			->method('setStatus');
 
-		$this->mapper->getFoldersStatus($folders, $client);
-	}
-
-	public function testGetFoldersStatusNoStatusReported(): void {
-		$folders = [
-			$this->createMock(Folder::class),
-		];
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$folders[0]->expects($this->any())
-			->method('getMailbox')
-			->willReturn('folder1');
-		$folders[0]->expects($this->once())
-			->method('getAttributes')
-			->willReturn([]);
-		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$client
-			->method('__get')
-			->with('capability')
-			->willReturn($capability);
-		$capability
-			->method('query')
-			->with('ACL')
-			->willReturn(false);
-		$client->expects($this->once())
-			->method('status')
-			->with($this->equalTo(['folder1']))
-			->willReturn([
-				// Nothing reported for this folder
-			]);
-		$folders[0]->expects($this->never())
-			->method('setStatus');
-
-		$this->mapper->getFoldersStatus($folders, $client);
-	}
-
-	public function testGetFoldersStatusNotSearchable(): void {
-		$folders = [
-			$this->createMock(Folder::class),
-		];
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$folders[0]->expects($this->any())
-			->method('getMailbox')
-			->willReturn('folder1');
-		$folders[0]->expects($this->once())
-			->method('getAttributes')
-			->willReturn(['\\noselect']);
-		$client->expects($this->once())
-			->method('status')
-			->with($this->equalTo([]))
-			->willReturn([]);
-		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$capability
-			->method('query')
-			->with('ACL')
-			->willReturn(false);
-		$client
-			->method('__get')
-			->with('capability')
-			->willReturn($capability);
-		$capability
-			->method('query')
-			->with('ACL')
-			->willReturn(false);
-		$folders[0]->expects($this->never())
-			->method('setStatus');
-
-		$this->mapper->getFoldersStatus($folders, $client);
+		$this->mapper->fetchFolderAcls($folders, $client);
 	}
 
 	public function testGetFoldersStatusAsObject(): void {

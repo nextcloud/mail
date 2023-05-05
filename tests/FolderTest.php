@@ -40,7 +40,7 @@ class FolderTest extends TestCase {
 		$this->accountId = 15;
 		$this->mailbox = $this->createMock(Horde_Imap_Client_Mailbox::class);
 
-		$this->folder = new Folder($this->accountId, $this->mailbox, $attributes, $delimiter);
+		$this->folder = new Folder($this->accountId, $this->mailbox, $attributes, $delimiter, []);
 	}
 
 	public function testGetMailbox() {
