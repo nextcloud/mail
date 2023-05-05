@@ -106,7 +106,7 @@ class MailboxSync {
 
 			try {
 				$folders = $this->folderMapper->getFolders($account, $client);
-				$this->folderMapper->getFoldersStatus($folders, $client);
+				$this->folderMapper->fetchFolderAcls($folders, $client);
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
 					sprintf("IMAP error synchronizing account %d: %s", $account->getId(), $e->getMessage()),
