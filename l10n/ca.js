@@ -183,6 +183,7 @@ OC.L10N.register(
     "More actions" : "Més accions",
     "Edit as new message" : "Edita com un missatge nou",
     "Create event" : "Crea un esdeveniment",
+    "Create task" : "Crea una tasca",
     "Download message" : "Descarrega el missatge",
     "Blind copy recipients only" : "Només destinataris de còpia cega",
     "No subject" : "Sense Assumpte",

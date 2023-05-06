@@ -57,6 +57,7 @@ OC.L10N.register(
     "More actions" : "إجراءات أخرى",
     "Edit as new message" : "تحرير كرسالة جديدة",
     "Create event" : "انشاء فعالية",
+    "Create task" : "أنشئ المهمّة",
     "No trash mailbox configured" : "لم يتم اعداد سلة المحذوفات لصندوق البريد",
     "Could not delete message" : "لا يمكن حذف الرسالة",
     "Forward" : "إعادة توجيه ",

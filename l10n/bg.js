@@ -183,6 +183,7 @@ OC.L10N.register(
     "More actions" : "Повече действия",
     "Edit as new message" : "Редактиране като ново съобщение",
     "Create event" : "Създаване на събитие",
+    "Create task" : "Създаване на задача",
     "Download message" : "Изтегляне на съобщение",
     "Blind copy recipients only" : "Само получателите на слепи копия",
     "No subject" : "Без /няма/ тема",
