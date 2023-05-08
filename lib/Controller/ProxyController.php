@@ -36,6 +36,7 @@ use OCP\ISession;
 use OCP\IURLGenerator;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
+use function file_get_contents;
 
 class ProxyController extends Controller {
 	private IURLGenerator $urlGenerator;
@@ -104,6 +105,12 @@ class ProxyController extends Controller {
 	public function proxy(string $src): ProxyDownloadResponse {
 		// close the session to allow parallel downloads
 		$this->session->close();
+
+		// If strict cookies are set it means we come from the same domain so no open redirect
+		if (!$this->request->passesStrictCookieCheck()) {
+			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+		}
 
 		$client = $this->clientService->newClient();
 		try {
