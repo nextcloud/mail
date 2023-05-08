@@ -104,7 +104,7 @@ export default {
 					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
-							sentMailboxId,
+							sentMailboxId: null,
 						},
 					})
 				} catch (error) {

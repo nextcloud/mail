@@ -26,7 +26,7 @@
 				</NcButton>
 			</template>
 		</EmptyContent>
-		<Loading v-else-if="uploadingAttachments || creatingSentMailbox"
+		<Loading v-else-if="uploadingAttachments"
 			:hint="t('mail', 'Uploading attachments …')"
 			role="alert" />
 		<Loading v-else-if="sending" :hint="t('mail', 'Sending …')" role="alert" />
@@ -111,8 +111,7 @@
 						@discard-draft="discardDraft"
 						@upload-attachment="onAttachmentUploading"
 						@send="onSend"
-						@show-toolbar="handleShow" 
-						@new-mailbox-then-send="onNewSentMailbox"/>
+						@show-toolbar="handleShow" />
 				</div>
 
 				<div v-if="showRecipientPane" class="right-pane">
@@ -133,7 +132,6 @@ import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger.js'
 import { toPlain, toHtml, plain } from '../util/text.js'
-import { getMailboxExists } from '../service/MailboxService'
 import Composer from './Composer.vue'
 import { UNDO_DELAY } from '../store/constants.js'
 import { matchError } from '../errors/match.js'
@@ -179,7 +177,6 @@ export default {
 			savingDraft: false,
 			draftSaved: false,
 			uploadingAttachments: false,
-			creatingSentMailbox: false,
 			sending: false,
 			error: undefined,
 			warning: undefined,
@@ -193,7 +190,6 @@ export default {
 				name: '',
 				email: '',
 			},
-			newSentMailboxId: null,
 		}
 	},
 	computed: {
@@ -298,59 +294,50 @@ export default {
 		},
 		toHtml,
 		plain,
-		async onNewSentMailbox(data) {
-			const account = this.$store.getters.getAccount(data.accountId)
+		async onNewSentMailbox(data, account) {
 			showWarning(t('mail', 'Setting Sent default folder'))
-			this.creatingSentMailbox = true
-			const mailboxes = this.$store.getters.getMailboxes(data.accountId)
+			let newSentMailboxId = null
+			const mailboxes = this.mainStore.getMailboxes(data.accountId)
 			const sentMailboxId = mailboxes.find((mailbox) => mailbox.name === account.personalNamespace + 'Sent' || mailbox.name === account.personalNamespace + t('mail', 'Sent'))?.databaseId
 			if (sentMailboxId) {
 				await this.setSentMailboxAndResend(account, sentMailboxId, data)
-				return
 			}
-			logger.info('creating automated_sent mailbox')
-			await this.$store
-				.dispatch('createMailbox', { account, name: account.personalNamespace + t('mail', 'Sent') })
-				.then((e) => {
-					logger.info(`mailbox ${account.personalNamespace + t('mail', 'Sent')} created`)
-					 this.newSentMailboxId = e.databaseId
-				})
-				.catch((error) => {
-					this.creatingSentMailbox = false
-					showError(t('mail', 'Could not create new mailbox, please try setting a sent mailbox manually'))
-					logger.error('could not create mailbox', { error })
-					this.$emit('close')
-				})
+			logger.info(`creating ${t('mail', 'Sent')} mailbox`)
+			try {
+				const newSentMailbox = await this.mainStore.createMailbox({ account, name: account.personalNamespace + t('mail', 'Sent') })
+				logger.info(`mailbox ${account.personalNamespace + t('mail', 'Sent')} created`)
+				newSentMailboxId = newSentMailbox.databaseId
+			} catch (error) {
+				showError(t('mail', 'Could not create new mailbox, please try setting a sent mailbox manually'))
+				logger.error('could not create mailbox', { error })
+				this.$emit('close')
+			}
 
-			if (this.newSentMailboxId) {
-				await this.setSentMailboxAndResend(account, this.newSentMailboxId, data)
+			if (newSentMailboxId) {
+				await this.setSentMailboxAndResend(account, newSentMailboxId, data)
 			} else {
 				showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
-				this.creatingSentMailbox = false
 				this.$emit('close')
 			}
 		},
 
 		async setSentMailboxAndResend(account, id, data) {
 			logger.debug('setting sent mailbox to ' + id)
-			await this.$store.dispatch('patchAccount', {
-				account,
-				data: {
-					sentMailboxId: id,
-				},
-			}).then(() => {
+			try {
+				await this.mainStore.patchAccount({
+					account,
+					data: {
+						sentMailboxId: id,
+					},
+				})
 				logger.debug('Resending message after new setting sent mailbox')
 				this.onSend(data)
 				showSuccess(t('mail', 'Sent folder set, resending message'))
-			})
-				.catch((error) => {
-					showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
-					logger.error('could not set sent mailbox', { error })
-					this.$emit('close')
-				})
-				.finally(() => {
-					this.creatingSentMailbox = false
-				})
+			} catch (error) {
+				showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
+				logger.error('could not set sent mailbox', { error })
+				this.$emit('close')
+			}
 		},
 		/**
 		 * @param data Message data
@@ -450,6 +437,11 @@ export default {
 				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
 		async onSend(data, force = false) {
+			const account = this.mainStore.getAccount(data.accountId)
+			if (!account?.sentMailboxId) {
+				this.onNewSentMailbox(data, account)
+				return
+			}
 			logger.debug('sending message', { data })
 
 			await this.attachmentsPromise
@@ -553,7 +545,6 @@ export default {
 			}
 
 			// Sync sent mailbox when it's currently open
-			const account = this.mainStore.getAccount(data.accountId)
 			if (account && parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
 				setTimeout(() => {
 					this.mainStore.syncEnvelopes({
