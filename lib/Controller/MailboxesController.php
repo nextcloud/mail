@@ -290,6 +290,25 @@ class MailboxesController extends Controller {
 	}
 
 	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $accountId
+	 * @param string $name
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @throws \OCP\AppFramework\Db\DoesNotExistException
+	 */
+	public function checkMailbox(int $accountId, string $name): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		$mailbox = $this->mailManager->getMailboxByName($account, $name);
+		
+		return new JSONResponse($mailbox);
+	}
+
+	/**
 	 * Delete all vanished mails that are still cached.
 	 */
 	#[TrapError]

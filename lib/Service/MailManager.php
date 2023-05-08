@@ -146,6 +146,22 @@ class MailManager implements IMailManager {
 	 * @return Mailbox
 	 * @throws ServiceException
 	 */
+	public function getMailboxByName(Account $account, string $name): int {
+		try {
+			$mailbox = $this->mailboxMapper->find($account, $name);
+			return $mailbox->getId();
+		} catch (DoesNotExistException $e) {
+			return -1;
+		}
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $name
+	 *
+	 * @return Mailbox
+	 * @throws ServiceException
+	 */
 	public function createMailbox(Account $account, string $name): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 		try {

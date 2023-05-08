@@ -35,6 +35,15 @@ export function getMailboxStatus(id) {
 	return axios.get(url).then((resp) => resp.data)
 }
 
+export function getMailboxExists(id, name) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/name/{name}', {
+		id,
+		name,
+	})
+
+	return axios.get(url).then((resp) => resp.data)
+}
+
 export function markMailboxRead(id) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}/read', {
 		id,
