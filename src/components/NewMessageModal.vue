@@ -302,18 +302,9 @@ export default {
 			const account = this.$store.getters.getAccount(data.accountId)
 			showWarning(t('mail', 'Setting Sent default folder'))
 			this.creatingSentMailbox = true
-
-			// check if sent mailbox already exists
-			let sentMailboxId = await getMailboxExists(data.accountId, account.personalNamespace + 'Sent').catch((error) => {
-				this.creatingSentMailbox = false
-				showError(t('mail', 'Could not set Sent default folder, Please try manually'))
-				logger.error('could not find sent mailbox', { error })
-				this.$emit('close')
-			})
-			if (sentMailboxId < 0) {
-				sentMailboxId = await getMailboxExists(data.accountId, account.personalNamespace + t('mail', 'Sent'))
-			}
-			if (sentMailboxId > 0) {
+			const mailboxes = this.$store.getters.getMailboxes(data.accountId)
+			const sentMailboxId = mailboxes.find((mailbox) => mailbox.name === account.personalNamespace + 'Sent' || mailbox.name === account.personalNamespace + t('mail', 'Sent'))?.databaseId
+			if (sentMailboxId) {
 				await this.setSentMailboxAndResend(account, sentMailboxId, data)
 				return
 			}
@@ -350,7 +341,7 @@ export default {
 			}).then(() => {
 				logger.debug('Resending message after new setting sent mailbox')
 				this.onSend(data)
-				showSuccess(t('mail', 'New sent folder set, resending message'))
+				showSuccess(t('mail', 'Sent folder set, resending message'))
 			})
 				.catch((error) => {
 					showError(t('mail', 'Couldn\'t set sent default folder, please try manually before sending a new message'))
