@@ -153,6 +153,7 @@ class FolderMapperTest extends TestCase {
 			->with('capability')
 			->willReturn($capability);
 		$capability
+			->expects(self::once())
 			->method('query')
 			->with('ACL')
 			->willReturn(false);

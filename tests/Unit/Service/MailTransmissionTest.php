@@ -554,16 +554,10 @@ class MailTransmissionTest extends TestCase {
 			'type' => Recipient::TYPE_TO
 		]);
 		$message->setRecipients([$to]);
-
-		$alias = Alias::fromParams([
-			'id' => 1,
-			'accountId' => 10,
-			'name' => 'Emily',
-			'alias' => 'Emmerlie'
-		]);
-
 		$replyMessage = new DbMessage();
 		$replyMessage->setMessageId('abc');
+		$this->messageMapper->expects(self::once())
+			->method('save');
 
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $message);
 	}
