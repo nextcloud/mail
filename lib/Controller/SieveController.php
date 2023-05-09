@@ -39,6 +39,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use OCP\Security\IRemoteHostValidator;
+use Psr\Log\LoggerInterface;
 
 class SieveController extends Controller {
 	private AccountService $accountService;
@@ -47,6 +48,7 @@ class SieveController extends Controller {
 	private string $currentUserId;
 	private ICrypto $crypto;
 	private IRemoteHostValidator $hostValidator;
+	private LoggerInterface $logger;
 
 	public function __construct(IRequest $request,
 								string $UserId,
@@ -54,7 +56,8 @@ class SieveController extends Controller {
 								MailAccountMapper $mailAccountMapper,
 								SieveClientFactory $sieveClientFactory,
 								ICrypto $crypto,
-								IRemoteHostValidator $hostValidator
+								IRemoteHostValidator $hostValidator,
+								LoggerInterface $logger
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;
@@ -63,6 +66,7 @@ class SieveController extends Controller {
 		$this->sieveClientFactory = $sieveClientFactory;
 		$this->crypto = $crypto;
 		$this->hostValidator = $hostValidator;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -109,7 +113,13 @@ class SieveController extends Controller {
 		$sieve = $this->getClient($id);
 
 		$scriptName = $sieve->getActive() ?? 'nextcloud';
-		$sieve->installScript($scriptName, $script, true);
+
+		try {
+			$sieve->installScript($scriptName, $script, true);
+		} catch (ManagesieveException $e) {
+			$this->logger->error('Installing sieve script failed: ' . $e->getMessage(), ['app' => 'mail', 'exception' => $e]);
+			return new JSONResponse(data: ['message' => $e->getMessage()], statusCode: Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
 
 		return new JSONResponse();
 	}
