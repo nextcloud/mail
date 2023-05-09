@@ -185,6 +185,7 @@ OC.L10N.register(
     "Mark all as read" : "Всі прочитані",
     "Edit name" : "Редагувати назву",
     "Clear cache" : "Очистити кеш",
+    "Subscribed" : "Підписано",
     "_{total} message_::_{total} messages_" : ["{total} повідомлення","{total} повідомлення","{total} повідомлень","{total} повідомлень"],
     "New message" : "Нове повідомлення",
     "Refresh" : "Оновити",
