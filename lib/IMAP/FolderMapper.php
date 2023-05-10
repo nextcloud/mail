@@ -59,31 +59,21 @@ class FolderMapper {
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
+			'status' => Horde_Imap_Client::STATUS_ALL,
 		]);
 
-		return array_filter(array_map(function (array $mailbox) use ($account, $client) {
+		return array_filter(array_map(static function (array $mailbox) use ($account) {
 			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
 				// This is a special folder that must not be shown
 				return null;
-			}
-
-			try {
-				$client->status($mailbox["mailbox"]);
-			} catch (Horde_Imap_Client_Exception $e) {
-				// ignore folders which cause errors on access
-				// (i.e. server-side system I/O errors)
-				if (in_array($e->getCode(), [
-					Horde_Imap_Client_Exception::UNSPECIFIED,
-				], true)) {
-					return null;
-				}
 			}
 
 			return new Folder(
 				$account->getId(),
 				$mailbox['mailbox'],
 				$mailbox['attributes'],
-				$mailbox['delimiter']
+				$mailbox['delimiter'],
+				$mailbox['status'],
 			);
 		}, $mailboxes));
 	}
@@ -97,6 +87,7 @@ class FolderMapper {
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
+			'status' => Horde_Imap_Client::STATUS_ALL,
 		]);
 		$mb = reset($list);
 
@@ -104,32 +95,13 @@ class FolderMapper {
 			throw new ServiceException("Created mailbox does not exist");
 		}
 
-		return new Folder($account->getId(), $mb['mailbox'], $mb['attributes'], $mb['delimiter']);
-	}
-
-	/**
-	 * @param Folder[] $folders
-	 * @param Horde_Imap_Client_Socket $client
-	 *
-	 * @throws Horde_Imap_Client_Exception
-	 *
-	 * @return void
-	 */
-	public function getFoldersStatus(array $folders,
-									 Horde_Imap_Client_Socket $client): void {
-		$mailboxes = array_map(function (Folder $folder) {
-			return $folder->getMailbox();
-		}, array_filter($folders, function (Folder $folder) {
-			return !in_array('\noselect', $folder->getAttributes());
-		}));
-
-		$status = $client->status($mailboxes);
-
-		foreach ($folders as $folder) {
-			if (isset($status[$folder->getMailbox()])) {
-				$folder->setStatus($status[$folder->getMailbox()]);
-			}
-		}
+		return new Folder(
+			$account->getId(),
+			$mb['mailbox'],
+			$mb['attributes'],
+			$mb['delimiter'],
+			$mb['status'],
+		);
 	}
 
 	/**
