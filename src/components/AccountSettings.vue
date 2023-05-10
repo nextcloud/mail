@@ -152,15 +152,15 @@ export default {
 			return this.account.emailAddress
 		},
 	},
+	mounted() {
+		this.$store.dispatch('fetchActiveSieveScript', {
+			accountId: this.account.id,
+		})
+	},
 	methods: {
 		scrollToAccountSettings() {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
-			})
-		},
-		async mounted() {
-			await this.$store.dispatch('fetchActiveSieveScript', {
-				accountId: this.account.id,
 			})
 		},
 	},
