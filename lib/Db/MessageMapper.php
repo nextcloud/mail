@@ -137,7 +137,7 @@ class MessageMapper extends QBMapper {
 			);
 
 		$results = $this->findRelatedData($this->findEntities($query), $userId);
-		if (empty($results)) {
+		if ($results === []) {
 			throw new DoesNotExistException("Message $id does not exist");
 		}
 		return $results[0];
@@ -170,7 +170,7 @@ class MessageMapper extends QBMapper {
 	 * @return int[]
 	 */
 	public function findUidsForIds(Mailbox $mailbox, array $ids) {
-		if (empty($ids)) {
+		if ($ids === []) {
 			// Shortcut for empty sets
 			return [];
 		}
@@ -447,7 +447,7 @@ class MessageMapper extends QBMapper {
 		$imapTags = $message->getTags();
 		$dbTags = $tags[$message->getMessageId()] ?? [];
 
-		if (empty($imapTags) && empty($dbTags)) {
+		if ($imapTags === [] && $dbTags === []) {
 			// neither old nor new tags
 			return;
 		}
@@ -460,7 +460,7 @@ class MessageMapper extends QBMapper {
 		}
 		$perf->step("Tagged messages");
 
-		if (empty($dbTags)) {
+		if ($dbTags === []) {
 			// we have nothing to possibly remove
 			return;
 		}
@@ -1052,7 +1052,7 @@ class MessageMapper extends QBMapper {
 	 * @return Message[]
 	 */
 	public function findByMailboxAndIds(Mailbox $mailbox, string $userId, array $ids): array {
-		if (empty($ids)) {
+		if ($ids === []) {
 			return [];
 		}
 
@@ -1080,7 +1080,7 @@ class MessageMapper extends QBMapper {
 	 * @return Message[]
 	 */
 	public function findByIds(string $userId, array $ids): array {
-		if (empty($ids)) {
+		if ($ids === []) {
 			return [];
 		}
 

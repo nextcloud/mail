@@ -115,13 +115,13 @@ class DraftsService {
 
 		// if this message has a "sent at" datestamp and the type is set as Type Outbox
 		// check for a valid recipient
-		if ($message->getType() === LocalMessage::TYPE_OUTGOING && empty($toRecipients)) {
+		if ($message->getType() === LocalMessage::TYPE_OUTGOING && $toRecipients === []) {
 			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
 		}
 
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			$message->setAttachments($attachments);
 			return $message;
 		}
@@ -153,13 +153,13 @@ class DraftsService {
 
 		// if this message has a "sent at" datestamp and the type is set as Type Outbox
 		// check for a valid recipient
-		if ($message->getType() === LocalMessage::TYPE_OUTGOING && empty($toRecipients)) {
+		if ($message->getType() === LocalMessage::TYPE_OUTGOING && $toRecipients === []) {
 			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
 		}
 
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));
 			return $message;
 		}
@@ -216,7 +216,7 @@ class DraftsService {
 	 */
 	public function flush() {
 		$messages = $this->mapper->findDueDrafts($this->time->getTime());
-		if (empty($messages)) {
+		if ($messages === []) {
 			return;
 		}
 

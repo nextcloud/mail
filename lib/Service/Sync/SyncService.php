@@ -151,7 +151,7 @@ class SyncService {
 											Mailbox $mailbox,
 											array $knownIds,
 											?SearchQuery $query): Response {
-		if (empty($knownIds)) {
+		if ($knownIds === []) {
 			$newIds = $this->messageMapper->findAllIds($mailbox);
 		} else {
 			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds);

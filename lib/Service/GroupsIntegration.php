@@ -104,7 +104,7 @@ class GroupsIntegration {
 					$members = array_filter($service->getUsers($groupId), static function (array $member) {
 						return !empty($member['email']);
 					});
-					if (empty($members)) {
+					if ($members === []) {
 						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
 					}
 					return array_map(static function (array $member) use ($recipient) {

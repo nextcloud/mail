@@ -54,7 +54,7 @@ class PreprocessingService {
 
 	public function process(int $limitTimestamp, Account $account): void {
 		$mailboxes = $this->mailboxMapper->findAll($account);
-		if (empty($mailboxes)) {
+		if ($mailboxes === []) {
 			$this->logger->debug('No mailboxes found.');
 			return;
 		}
@@ -64,7 +64,7 @@ class PreprocessingService {
 
 
 		$messages = $this->messageMapper->getUnanalyzed($limitTimestamp, $mailboxIds);
-		if (empty($messages)) {
+		if ($messages === []) {
 			$this->logger->debug('No structure data to analyse.');
 			return;
 		}
@@ -74,7 +74,7 @@ class PreprocessingService {
 				return $message->getMailboxId() === $mailbox->getId();
 			});
 
-			if (empty($filteredMessages)) {
+			if ($filteredMessages === []) {
 				continue;
 			}
 

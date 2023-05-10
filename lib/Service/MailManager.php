@@ -564,7 +564,7 @@ class MailManager implements IMailManager {
 			];
 		}, array_merge(...array_values($quotas)));
 
-		if (empty($storageQuotas)) {
+		if ($storageQuotas === []) {
 			// Nothing left to do, and array_merge doesn't like to be called with zero arguments.
 			return null;
 		}

@@ -83,7 +83,7 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			[$message]
 		);
-		if (empty($processed)) {
+		if ($processed === []) {
 			throw new DoesNotExistException("Message does not exist");
 		}
 		return $processed[0];

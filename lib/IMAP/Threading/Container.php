@@ -140,7 +140,7 @@ class Container implements JsonSerializable {
 	}
 
 	public function hasChildren(): bool {
-		return !empty($this->children);
+		return $this->children !== [];
 	}
 
 	/**

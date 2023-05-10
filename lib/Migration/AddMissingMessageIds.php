@@ -68,7 +68,7 @@ class AddMissingMessageIds implements IRepairStep {
 		}
 
 		$toFix = $this->mapper->findWithEmptyMessageId();
-		if (empty($toFix)) {
+		if ($toFix === []) {
 			return;
 		}
 		$output->info(sprintf('%d messages need an update', count($toFix)));
