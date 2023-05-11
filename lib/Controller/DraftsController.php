@@ -27,11 +27,14 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DraftsService;
+use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
@@ -41,18 +44,22 @@ class DraftsController extends Controller {
 	private string $userId;
 	private AccountService $accountService;
 	private ITimeFactory $timeFactory;
+	private SmimeService $smimeService;
+
 
 	public function __construct(string $appName,
 		$UserId,
 		IRequest $request,
 		DraftsService $service,
 		AccountService $accountService,
-		ITimeFactory $timeFactory) {
+		ITimeFactory $timeFactory,
+		SmimeService $smimeService) {
 		parent::__construct($appName, $request);
 		$this->userId = $UserId;
 		$this->service = $service;
 		$this->accountService = $accountService;
 		$this->timeFactory = $timeFactory;
+		$this->smimeService = $smimeService;
 	}
 
 	/**
@@ -63,15 +70,21 @@ class DraftsController extends Controller {
 	 * @param string $body
 	 * @param string $editorBody
 	 * @param bool $isHtml
+	 * @param bool $smimeSign
+	 * @param bool $smimeEncrypt
 	 * @param array<int, string[]> $to i. e. [['label' => 'Linus', 'email' => 'tent@stardewvalley.com'], ['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']]
 	 * @param array<int, string[]> $cc
 	 * @param array<int, string[]> $bcc
 	 * @param array $attachments
 	 * @param int|null $aliasId
 	 * @param string|null $inReplyToMessageId
+	 * @param int|null $smimeCertificateId
 	 * @param int|null $sendAt
 	 * @param int|null $draftId
+	 *
 	 * @return JsonResponse
+	 * @throws DoesNotExistException
+	 * @throws ClientException
 	 */
 	#[TrapError]
 	public function create(
@@ -80,12 +93,15 @@ class DraftsController extends Controller {
 		string  $body,
 		string  $editorBody,
 		bool    $isHtml,
+		?bool $smimeSign,
+		?bool $smimeEncrypt,
 		array   $to = [],
 		array   $cc = [],
 		array   $bcc = [],
 		array   $attachments = [],
 		?int    $aliasId = null,
 		?string $inReplyToMessageId = null,
+		?int $smimeCertificateId = null,
 		?int $sendAt = null,
 		?int $draftId = null) : JsonResponse {
 		$account = $this->accountService->find($this->userId, $accountId);
@@ -103,9 +119,17 @@ class DraftsController extends Controller {
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setUpdatedAt($this->timeFactory->getTime());
 		$message->setSendAt($sendAt);
+		$message->setSmimeSign($smimeSign);
+		$message->setSmimeEncrypt($smimeEncrypt);
 		if ($sendAt !== null) {
 			$message->setType(LocalMessage::TYPE_OUTGOING);
 		}
+
+		if (!empty($smimeCertificateId)) {
+			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
+			$message->setSmimeCertificateId($smimeCertificate->getId());
+		}
+
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 
 		return JsonResponse::success($message, Http::STATUS_CREATED);
@@ -137,6 +161,8 @@ class DraftsController extends Controller {
 		string  $body,
 		string  $editorBody,
 		bool    $isHtml,
+		?bool $smimeSign,
+		?bool $smimeEncrypt,
 		bool    $failed = false,
 		array   $to = [],
 		array   $cc = [],
@@ -144,6 +170,7 @@ class DraftsController extends Controller {
 		array   $attachments = [],
 		?int    $aliasId = null,
 		?string $inReplyToMessageId = null,
+		?int $smimeCertificateId = null,
 		?int $sendAt = null): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $accountId);
@@ -161,6 +188,13 @@ class DraftsController extends Controller {
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
 		$message->setUpdatedAt($this->timeFactory->getTime());
+		$message->setSmimeSign($smimeSign);
+		$message->setSmimeEncrypt($smimeEncrypt);
+
+		if (!empty($smimeCertificateId)) {
+			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
+			$message->setSmimeCertificateId($smimeCertificate->getId());
+		}
 
 		$message = $this->service->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 		return JsonResponse::success($message, Http::STATUS_ACCEPTED);

@@ -604,7 +604,7 @@ export default {
 			bodyVal: this.editorBody,
 			attachments: this.attachmentsData,
 			noReply: this.to.some((to) => to.email?.startsWith('noreply@') || to.email?.startsWith('no-reply@')),
-			saveDraftDebounced: debounce(10 * 1000, this.saveDraft),
+			saveDraftDebounced: debounce(5 * 1000, this.saveDraft),
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
