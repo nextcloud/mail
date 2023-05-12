@@ -79,7 +79,11 @@ export default {
 					},
 				})
 			} catch (error) {
-				this.errorMessage = error.message
+				if (error.response.status === 422) {
+					this.errorMessage = t('mail', 'The syntax seems to be incorrect:') + ' ' + error.response.data.message
+				} else {
+					this.errorMessage = error.message
+				}
 			}
 
 			this.loading = false
