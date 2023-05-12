@@ -74,7 +74,7 @@ class FlagRepliedMessageListener implements IEventListener {
 		}
 
 		$messages = $this->dbMessageMapper->findByMessageId($event->getAccount(), $event->getRepliedToMessageId());
-		if (empty($messages)) {
+		if ($messages === []) {
 			return;
 		}
 

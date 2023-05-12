@@ -64,7 +64,7 @@ class ProvisioningMiddleware extends Middleware {
 			return;
 		}
 		$configs = $this->provisioningManager->getConfigs();
-		if (empty($configs)) {
+		if ($configs === []) {
 			return;
 		}
 		try {

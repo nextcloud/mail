@@ -57,7 +57,7 @@ class RecipientMapper extends QBMapper {
 	 * @return Recipient[]
 	 */
 	public function findByLocalMessageIds(array $localMessageIds): array {
-		if (empty($localMessageIds)) {
+		if ($localMessageIds === []) {
 			return [];
 		}
 		$qb = $this->db->getQueryBuilder();
@@ -105,7 +105,7 @@ class RecipientMapper extends QBMapper {
 			return;
 		}
 
-		if (empty($oldRecipients)) {
+		if ($oldRecipients === []) {
 			// No need for a diff, save and return
 			$this->saveRecipients($localMessageId, $to);
 			$this->saveRecipients($localMessageId, $cc);
@@ -128,7 +128,7 @@ class RecipientMapper extends QBMapper {
 		$newTo = array_udiff($to, $oldTo, static function (Recipient $a, Recipient $b) {
 			return strcmp($a->getEmail(), $b->getEmail());
 		});
-		if (!empty($newTo)) {
+		if ($newTo !== []) {
 			$this->saveRecipients($localMessageId, $newTo);
 		}
 
@@ -143,7 +143,7 @@ class RecipientMapper extends QBMapper {
 		$newCC = array_udiff($cc, $oldCc, static function (Recipient $a, Recipient $b) {
 			return strcmp($a->getEmail(), $b->getEmail());
 		});
-		if (!empty($newCC)) {
+		if ($newCC !== []) {
 			$this->saveRecipients($localMessageId, $newCC);
 		}
 
@@ -158,7 +158,7 @@ class RecipientMapper extends QBMapper {
 		$newBcc = array_udiff($bcc, $oldBcc, static function (Recipient $a, Recipient $b) {
 			return strcmp($a->getEmail(), $b->getEmail());
 		});
-		if (!empty($newBcc)) {
+		if ($newBcc !== []) {
 			$this->saveRecipients($localMessageId, $newBcc);
 		}
 

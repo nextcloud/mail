@@ -408,7 +408,7 @@ class ImapToDbSynchronizer {
 				$perf->step('persist new messages');
 
 				$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
-				$newOrVanished = !empty($newMessages);
+				$newOrVanished = $newMessages !== [];
 			}
 			if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
 				$response = $this->synchronizer->sync(

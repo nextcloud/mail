@@ -41,7 +41,7 @@ function array_flat_map(callable $map, array $data): array {
  */
 function chunk_uid_sequence(array $uids, int $bytes): array {
 	$chunks = [];
-	while (!empty($uids)) {
+	while ($uids !== []) {
 		$take = count($uids);
 		while (strlen((new Horde_Imap_Client_Ids(array_slice($uids, 0, $take)))->tostring) >= $bytes) {
 			$take = (int)($take * 0.75);

@@ -71,7 +71,7 @@ class ErrorMiddleware extends Middleware {
 	public function afterException($controller, $methodName, Exception $exception) {
 		$reflectionMethod = new ReflectionMethod($controller, $methodName);
 		$attributes = $reflectionMethod->getAttributes(TrapError::class);
-		if (empty($attributes)) {
+		if ($attributes === []) {
 			return parent::afterException($controller, $methodName, $exception);
 		}
 

@@ -188,7 +188,7 @@ class AttachmentService implements IAttachmentService {
 	 * @return LocalAttachment[]
 	 */
 	public function saveLocalMessageAttachments(string $userId, int $messageId, array $attachmentIds): array {
-		if (empty($attachmentIds)) {
+		if ($attachmentIds === []) {
 			return [];
 		}
 		$this->mapper->saveLocalMessageAttachments($userId, $messageId, $attachmentIds);
@@ -200,7 +200,7 @@ class AttachmentService implements IAttachmentService {
 	 */
 	public function updateLocalMessageAttachments(string $userId, LocalMessage $message, array $newAttachmentIds): array {
 		// no attachments any more. Delete any old ones and we're done
-		if (empty($newAttachmentIds)) {
+		if ($newAttachmentIds === []) {
 			$this->deleteLocalMessageAttachments($userId, $message->getId());
 			return [];
 		}
@@ -216,12 +216,12 @@ class AttachmentService implements IAttachmentService {
 		}, $message->getAttachments());
 
 		$add = array_diff($newAttachmentIds, $oldAttachmentIds);
-		if (!empty($add)) {
+		if ($add !== []) {
 			$this->mapper->saveLocalMessageAttachments($userId, $message->getId(), $add);
 		}
 
 		$delete = array_diff($oldAttachmentIds, $newAttachmentIds);
-		if (!empty($delete)) {
+		if ($delete !== []) {
 			$this->deleteLocalMessageAttachmentsById($userId, $message->getId(), $delete);
 		}
 
@@ -236,7 +236,7 @@ class AttachmentService implements IAttachmentService {
 	public function handleAttachments(Account $account, array $attachments, \Horde_Imap_Client_Socket $client): array {
 		$attachmentIds = [];
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			return $attachmentIds;
 		}
 
@@ -325,7 +325,7 @@ class AttachmentService implements IAttachmentService {
 			]
 		);
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			return null;
 		}
 

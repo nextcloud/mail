@@ -76,7 +76,7 @@ class PreviewEnhancer {
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
 
-		if (empty($needAnalyze)) {
+		if ($needAnalyze === []) {
 			// Nothing to enhance
 			return $messages;
 		}

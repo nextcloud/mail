@@ -65,7 +65,7 @@ class AddMissingTags extends Command {
 		if ($accountId === 0) {
 			$accounts = $this->mapper->getAllAccounts();
 			$output->writeln(sprintf('%d accounts to check found', count($accounts)));
-			if (empty($accounts)) {
+			if ($accounts === []) {
 				$output->writeLn('<error>No accounts exist</error>');
 				return 1;
 			}

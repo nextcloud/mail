@@ -502,7 +502,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
-		if (!empty($this->scheduling)) {
+		if ($this->scheduling !== []) {
 			$msg->setImipMessage(true);
 		}
 
@@ -525,7 +525,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			return in_array($flag, $allowed, true) === false;
 		});
 
-		if (empty($tags) === true) {
+		if (($tags === []) === true) {
 			return $msg;
 		}
 		// cast all leftover $flags to be used as tags

@@ -60,7 +60,7 @@ class LocalAttachmentMapper extends QBMapper {
 	 * @return LocalAttachment[]
 	 */
 	public function findByLocalMessageIds(array $localMessageIds): array {
-		if (empty($localMessageIds)) {
+		if ($localMessageIds === []) {
 			return [];
 		}
 		$qb = $this->db->getQueryBuilder();

@@ -60,7 +60,7 @@ class TrustedSenderMapper extends QBMapper {
 		/** @var TrustedSender[] $rows */
 		$rows = $this->findEntities($select);
 
-		return !empty($rows);
+		return $rows !== [];
 	}
 
 	public function create(string $uid, string $email, string $type): void {

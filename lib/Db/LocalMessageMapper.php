@@ -76,7 +76,7 @@ class LocalMessageMapper extends QBMapper {
 		}
 		$rows->closeCursor();
 
-		if (empty($ids)) {
+		if ($ids === []) {
 			return [];
 		}
 

@@ -289,7 +289,7 @@ class MessageMapper {
 			return $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE);
 		}));
 
-		if (empty($fetchResults)) {
+		if ($fetchResults === []) {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
 		} else {
 			$minFetched = $fetchResults[0]->getUid();
@@ -813,7 +813,7 @@ class MessageMapper {
 				continue;
 			}
 
-			if (!empty($attachmentIds) && !in_array($part->getMimeId(), $attachmentIds, true)) {
+			if ($attachmentIds !== [] && !in_array($part->getMimeId(), $attachmentIds, true)) {
 				// We are looking for specific parts only and this is not one of them
 				continue;
 			}

@@ -165,7 +165,7 @@ class OutboxService {
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			$message->setAttachments($attachments);
 			return $message;
 		}
@@ -196,7 +196,7 @@ class OutboxService {
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));
 			return $message;
 		}
@@ -232,7 +232,7 @@ class OutboxService {
 			$this->timeFactory->getTime()
 		);
 
-		if (empty($messages)) {
+		if ($messages === []) {
 			return;
 		}
 

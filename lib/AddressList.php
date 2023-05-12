@@ -88,7 +88,7 @@ class AddressList implements Countable, JsonSerializable {
 	 * @return Address|null
 	 */
 	public function first() {
-		if (empty($this->addresses)) {
+		if ($this->addresses === []) {
 			return null;
 		}
 
@@ -135,7 +135,7 @@ class AddressList implements Countable, JsonSerializable {
 				// Check whether our array contains the other address
 				return $our->equals($address);
 			});
-			if (empty($same)) {
+			if ($same === []) {
 				// No dup found, hence the address is new and we
 				// have to add it
 				$addresses[] = $address;
