@@ -126,6 +126,7 @@ OC.L10N.register(
     "More actions" : "Fler händelser",
     "Edit as new message" : "Redigera som nytt meddelande",
     "Create event" : "Skapa evenemang",
+    "Create task" : "Skapa uppgift",
     "Blind copy recipients only" : "Endast mottagare för blindkopior",
     "No subject" : "Ingen ämnesrad",
     "No trash mailbox configured" : "Ingen skräpkorg är konfigurerad",
