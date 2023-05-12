@@ -46,7 +46,7 @@
     "@nextcloud/moment": "^1.2.1",
     "@nextcloud/paths": "^2.1.0",
     "@nextcloud/router": "^2.1.1",
-    "@nextcloud/vue": "^7.11.3",
+    "@nextcloud/vue": "^7.11.4",
     "@nextcloud/vue-dashboard": "^2.0.1",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^5.0.8",
