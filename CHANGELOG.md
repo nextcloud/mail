@@ -1,21 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.2.0-beta.1 - unreleased
+## 3.2.0-beta.2 - unreleased
 ### Added
 - Create a task from a message
-### Fixed
-- The preview string is shown outside the box of the thread
-
-## 3.2.0-alpha.1 - unreleased
-### Added
 - Minimize composer modal while editing a message
 - Easy unsubscribe from lists with mailto unsubscribe header
 - Easy unsubscribe from lists with http unsubscribe header
 - Show message timestamp in action menu
 - Sort tags alphabetically
 - Verify signature of encrypted messages
+- One-click unsubscribe
 ### Fixed
+- The preview string is shown outside the box of the thread
 - Position thread envelope icons relative to avatar
 - Display email address instead of label
 - Missing background box for redirect page
@@ -25,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Gap between primary actions
 - Colors button dark-theme
 - Explicit set/unset tag in TagModal
+- Only fetch mailbox STATUS once
 
 ## 3.1.0 - 2023-04-04
 ### Added
