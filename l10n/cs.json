@@ -378,6 +378,7 @@
     "Sieve Password" : "Heslo do sieve",
     "Save sieve settings" : "Uložit nastavení pro sieve",
     "Save sieve script" : "Uložit sieve skript",
+    "The syntax seems to be incorrect:" : "Syntaxe se nezdá být správná:",
     "Signature …" : "Podpis…",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Váš podpis je větší než 2 MB. To může zpomalovat editor.",
     "Save signature" : "Uložit podpis",

@@ -381,6 +381,7 @@ OC.L10N.register(
     "Sieve Password" : "Sieve parolası",
     "Save sieve settings" : "Sieve ayarlarını kaydet",
     "Save sieve script" : "Sieve betiğini kaydet",
+    "The syntax seems to be incorrect:" : "Yazım yanlış görünüyor:",
     "Signature …" : "İmza …",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "İmzanız 2 MB boyutundan büyük. Bu durum düzenleyici başarımını olumsuz etkileyebilir.",
     "Save signature" : "İmzayı kaydet",

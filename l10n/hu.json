@@ -379,6 +379,7 @@
     "Sieve Password" : "Levélszűrő jelszó",
     "Save sieve settings" : "Levélszűrő beállítások mentése",
     "Save sieve script" : "Levélszűrő parancsfájl mentése",
+    "The syntax seems to be incorrect:" : "A szintaxis helytelennek tűnik:",
     "Signature …" : "Aláírás…",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Az aláírás 2 MB-nál nagyobb. Ez hatással lehet a szerkesztő teljesítményére",
     "Save signature" : "Aláírás mentése",
