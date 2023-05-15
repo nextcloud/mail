@@ -29,7 +29,6 @@ use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\HordeTranslationHandler;
@@ -124,6 +123,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, MessageKnownSinceListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessagesNotifier::class);
+		$context->registerEventListener(MessageSentEvent::class, SaveSentMessageListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, FollowUpClassifierListener::class);
