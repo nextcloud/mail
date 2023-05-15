@@ -42,7 +42,6 @@ use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\HordeTranslationHandler;
@@ -57,7 +56,6 @@ use OCA\Mail\Listener\HamReportListener;
 use OCA\Mail\Listener\InteractionListener;
 use OCA\Mail\Listener\MailboxesSynchronizedSpecialMailboxesUpdater;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
-use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\OauthTokenRefreshListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\SpamReportListener;
@@ -120,7 +118,6 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(MessageSentEvent::class, FlagRepliedMessageListener::class);
 		$context->registerEventListener(MessageSentEvent::class, InteractionListener::class);
 		$context->registerEventListener(MessageSentEvent::class, SaveSentMessageListener::class);
-		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 

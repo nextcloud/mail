@@ -33,7 +33,8 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
-use OCA\Mail\Events\NewMessagesSynchronized;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
@@ -48,7 +49,9 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\Classification\NewMessagesClassifier;
 use OCA\Mail\Support\PerformanceLogger;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -92,6 +95,8 @@ class ImapToDbSynchronizer {
 	private $mailManager;
 
 	private PreviewEnhancer $previewEnhancer;
+	private TagMapper $tagMapper;
+	private NewMessagesClassifier $newMessagesClassifier;
 
 	public function __construct(DatabaseMessageMapper $dbMapper,
 								IMAPClientFactory $clientFactory,
@@ -103,7 +108,9 @@ class ImapToDbSynchronizer {
 								PerformanceLogger $performanceLogger,
 								LoggerInterface $logger,
 								IMailManager $mailManager,
-								PreviewEnhancer $previewEnhancer) {
+								PreviewEnhancer $previewEnhancer,
+								TagMapper $tagMapper,
+								NewMessagesClassifier $newMessagesClassifier) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -115,6 +122,8 @@ class ImapToDbSynchronizer {
 		$this->logger = $logger;
 		$this->mailManager = $mailManager;
 		$this->previewEnhancer = $previewEnhancer;
+		$this->tagMapper = $tagMapper;
+		$this->newMessagesClassifier = $newMessagesClassifier;
 	}
 
 	/**
@@ -397,21 +406,34 @@ class ImapToDbSynchronizer {
 					});
 				}
 
+				$importantTag = null;
+				try {
+					$importantTag = $this->tagMapper->getTagByImapLabel(Tag::LABEL_IMPORTANT, $account->getUserId());
+				} catch (DoesNotExistException $e) {
+					$this->logger->error('Could not find important tag for ' . $account->getUserId(). ' ' . $e->getMessage(), [
+						'exception' => $e,
+					]);
+				}
+
 				foreach (array_chunk($newMessages, 500) as $chunk) {
+					$perf->step('classified a chunk of new messages');
 					$dbMessages = array_map(static function (IMAPMessage $imapMessage) use ($mailbox, $account) {
 						return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 					}, $chunk);
 
 					// Ensure that the preview text is generated
-					$dbMessages = $this->previewEnhancer->process($account, $mailbox, $dbMessages);
+					//$dbMessages = $this->previewEnhancer->process($account, $mailbox, $dbMessages);
+
+					if ($importantTag) {
+						$this->newMessagesClassifier->classifyNewMessages(
+							$dbMessages,
+							$mailbox,
+							$account,
+							$importantTag,
+						);
+					}
 
 					$this->dbMapper->insertBulk($account, ...$dbMessages);
-
-					$this->dispatcher->dispatch(
-						NewMessagesSynchronized::class,
-						new NewMessagesSynchronized($account, $mailbox, $dbMessages)
-					);
-					$perf->step('classified a chunk of new messages');
 				}
 				$perf->step('persist new messages');
 
