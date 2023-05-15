@@ -54,6 +54,7 @@ use Rubix\ML\Estimator;
 use Rubix\ML\Kernels\Distance\Manhattan;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
+use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
@@ -358,6 +359,7 @@ class ImportanceClassifier {
 			$transformers = [];
 			if ($extractor instanceof NewCompositeExtractor) {
 				$transformers[] = $extractor->getSubjectExtractor()->getWordCountVectorizer();
+				$transformers[] = $extractor->getSubjectExtractor()->getTfidf();
 			}
 
 			$classifier->setAccountId($account->getId());
@@ -375,12 +377,16 @@ class ImportanceClassifier {
 	 */
 	private function getIncomingMailboxes(Account $account): array {
 		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
+			return $mailbox->isInbox();
+
+			/*
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
 					return false;
 				}
 			}
 			return true;
+			*/
 		});
 	}
 
@@ -481,17 +487,27 @@ class ImportanceClassifier {
 		// Load persisted transformers of the subject extractor.
 		// Is a bit hacky but a full abstraction would be overkill.
 		$transformers = $pipeline->getTransformers();
-		$wordCountVectorizer = $transformers[0];
-		if (!($wordCountVectorizer instanceof WordCountVectorizer)) {
-			throw new ServiceException("Failed to load persisted transformer: Expected " . WordCountVectorizer::class . ", got" . $wordCountVectorizer::class);
-		}
+		if (count($transformers) === 2) {
+			$wordCountVectorizer = $transformers[0];
+			if (!($wordCountVectorizer instanceof WordCountVectorizer)) {
+				throw new ServiceException("Failed to load persisted transformer: Expected " . WordCountVectorizer::class . ", got" . $wordCountVectorizer::class);
+			}
+			$tfidfTransformer = $transformers[1];
+			if (!($tfidfTransformer instanceof TfIdfTransformer)) {
+				throw new ServiceException("Failed to load persisted transformer: Expected " . TfIdfTransformer::class . ", got" . $tfidfTransformer::class);
+			}
 
-		$subjectExtractor = new SubjectExtractor();
-		$subjectExtractor->setWordCountVectorizer($wordCountVectorizer);
-		$extractor = new NewCompositeExtractor(
-			$this->vanillaExtractor,
-			$subjectExtractor,
-		);
+			$subjectExtractor = new SubjectExtractor();
+			$subjectExtractor->setWordCountVectorizer($wordCountVectorizer);
+			$subjectExtractor->setTfidf($tfidfTransformer);
+			$extractor = new NewCompositeExtractor(
+				$this->vanillaExtractor,
+				$subjectExtractor,
+			);
+		} else {
+			$logger->warning('Falling back to vanilla feature extractor');
+			$extractor = $this->vanillaExtractor;
+		}
 
 		$features = $this->getFeaturesAndImportance(
 			$account,
