@@ -381,6 +381,7 @@ OC.L10N.register(
     "Sieve Password" : "Sieve-Passwort",
     "Save sieve settings" : "Sieve-Einstellungen speichern",
     "Save sieve script" : "Sieve-Skript speichern",
+    "The syntax seems to be incorrect:" : "Die Syntax scheint falsch zu sein:",
     "Signature …" : "Signatur …",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Ihre Signatur ist größer als 2 MB. Dies kann die Leistung Ihres Editors beeinträchtigen.",
     "Save signature" : "Signatur speichern",
