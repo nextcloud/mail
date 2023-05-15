@@ -66,6 +66,14 @@ class SubjectExtractor implements IExtractor {
 		$this->limitFeatureSize();
 	}
 
+	public function getTfidf(): Transformer {
+		return $this->tfidf;
+	}
+
+	public function setTfidf(TfIdfTransformer $tfidf): void {
+		$this->tfidf = $tfidf;
+	}
+
 	/**
 	 * @inheritDoc
 	 */
