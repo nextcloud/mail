@@ -158,7 +158,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 			return $ret;
 		}
 
-		if ($fields !== []) {
+		if (!empty($fields)) {
 			$fields = array_flip($fields);
 		}
 		$ptr = &$this->_data[$mailbox];
@@ -171,7 +171,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 				}
 			}
 
-			$ret[$val] = ($fields === [] || empty($ptr[$val]))
+			$ret[$val] = (empty($fields) || empty($ptr[$val]))
 				? $ptr[$val]
 				: array_intersect_key($ptr[$val], $fields);
 		}
@@ -234,7 +234,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	public function getMetaData($mailbox, $uidvalid, $entries) {
 		$this->_loadSliceMap($mailbox, $uidvalid);
 
-		return $entries === []
+		return empty($entries)
 			? $this->_slicemap[$mailbox]['d']
 			: array_intersect_key($this->_slicemap[$mailbox]['d'], array_flip($entries));
 	}
@@ -268,7 +268,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 			);
 		}
 
-		if ($deleted === []) {
+		if (empty($deleted)) {
 			return;
 		}
 
