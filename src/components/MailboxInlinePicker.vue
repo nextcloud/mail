@@ -90,7 +90,7 @@ input.vue-treeselect__input {
 	background: var(--color-main-background);
 }
 .vue-treeselect--single .vue-treeselect__option--selected {
-	background: var(--color-primary-light);
+	background: var(--color-primary-element-light);
 	border-radius: var(--border-radius-large);
 }
 .vue-treeselect__option.vue-treeselect__option--highlight,

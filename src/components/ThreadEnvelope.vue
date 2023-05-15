@@ -719,7 +719,7 @@ export default {
 			display: none;
 
 			&.primary {
-				background-color: var(--color-primary);
+				background-color: var(--color-primary-element);
 				opacity: 1;
 				margin-bottom: 0;
 
