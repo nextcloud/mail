@@ -86,6 +86,7 @@ class IMAPMessageTest extends TestCase {
 			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
 			'',
 			'disposition',
+			false,
 			null,
 			false,
 			'',
@@ -126,6 +127,7 @@ class IMAPMessageTest extends TestCase {
 			new Horde_Imap_Client_DateTime('2016-01-01 00:00:00'),
 			'',
 			'disposition',
+			false,
 			null,
 			false,
 			null,
@@ -163,6 +165,7 @@ class IMAPMessageTest extends TestCase {
 			'unsubscribeMailto' => null,
 			'hasHtmlBody' => true,
 			'dispositionNotificationTo' => 'disposition',
+			'hasDkimSignature' => false,
 			'scheduling' => [],
 		], $json);
 		$this->assertEquals(1234, $json['uid']);

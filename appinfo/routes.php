@@ -211,6 +211,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#getDkim',
+			'url' => '/api/messages/{id}/dkim',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#getSource',
 			'url' => '/api/messages/{id}/source',
 			'verb' => 'GET'

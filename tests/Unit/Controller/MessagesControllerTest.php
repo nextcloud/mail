@@ -31,6 +31,7 @@ use OC\AppFramework\Http\Request;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
+use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -129,6 +130,7 @@ class MessagesControllerTest extends TestCase {
 
 	/** @var MockObject|IMAPClientFactory  */
 	private $clientFactory;
+	private IDkimService $dkimService;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -151,6 +153,7 @@ class MessagesControllerTest extends TestCase {
 		$this->mailTransmission = $this->createMock(IMailTransmission::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->dkimService = $this->createMock(IDkimService::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -179,6 +182,7 @@ class MessagesControllerTest extends TestCase {
 			$this->mailTransmission,
 			$this->smimeService,
 			$this->clientFactory,
+			$this->dkimService,
 		);
 
 		$this->account = $this->createMock(Account::class);

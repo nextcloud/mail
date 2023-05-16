@@ -85,7 +85,7 @@
 				</div>
 				<div class="envelope__header__left__unsubscribe">
 					<ButtonVue
-						v-if="message && (message.unsubscribeUrl || message.unsubscribeMailto)"
+						v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
 						type="tertiary"
 						class="envelope__header__unsubscribe"
 						@click="showListUnsubscribeConfirmation = true">
@@ -555,7 +555,11 @@ export default {
 
 			// Fetch itineraries if they haven't been included in the message data
 			if (this.message && !this.message.itineraries) {
-				await this.fetchItineraries()
+				this.fetchItineraries()
+			}
+			// Fetch dkim
+			if (this.message && this.message.dkimValid === undefined) {
+				this.fetchDkim()
 			}
 		},
 		async fetchItineraries() {
@@ -571,6 +575,20 @@ export default {
 				logger.debug(`Itineraries of message ${this.envelope.databaseId} fetched`, { itineraries })
 			} catch (error) {
 				logger.error(`Could not fetch itineraries of message ${this.envelope.databaseId}`, { error })
+			}
+		},
+		async fetchDkim() {
+			if (this.message.hasDkimSignature === false) {
+				return
+			}
+
+			logger.debug(`Fetching DKIM for message ${this.envelope.databaseId}`)
+
+			try {
+				const dkim = await this.$store.dispatch('fetchDkim', this.envelope.databaseId)
+				logger.debug(`DKIM of message ${this.envelope.databaseId} fetched`, { dkim })
+			} catch (error) {
+				logger.error(`Could not fetch DKIM of message ${this.envelope.databaseId}`, { error })
 			}
 		},
 		scrollToCurrentEnvelope() {

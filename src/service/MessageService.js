@@ -184,6 +184,23 @@ export async function fetchMessageItineraries(id) {
 	}
 }
 
+export async function fetchMessageDkim(id) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/dkim', {
+		id,
+	})
+
+	try {
+		const resp = await axios.get(url)
+		return resp.data
+	} catch (error) {
+		if (error.response && error.response.status === 404) {
+			return undefined
+		}
+
+		throw parseErrorResponse(error.response)
+	}
+}
+
 export async function saveDraft(accountId, data) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/draft', {
 		accountId,
