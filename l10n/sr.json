@@ -379,6 +379,7 @@
     "Sieve Password" : "Лозинка сита",
     "Save sieve settings" : "Сачувај подешавања сита",
     "Save sieve script" : "Сачувај скрипту сита",
+    "The syntax seems to be incorrect:" : "Изгледа да синтакса није исправна:",
     "Signature …" : "Потпис…",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Ваш потпис је већи од 2 MB. Ово може да утиче на перформансе вашег едитора.",
     "Save signature" : "Сачувај потпис",

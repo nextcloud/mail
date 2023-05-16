@@ -379,6 +379,7 @@
     "Sieve Password" : "Contraseña Sieve",
     "Save sieve settings" : "Guardar configuración de Sieve",
     "Save sieve script" : "Guardar comandos de Sieve",
+    "The syntax seems to be incorrect:" : "La sintaxis parece ser incorrecta:",
     "Signature …" : "Firma …",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Su firma es mayor a 2 MB. Esto podría afectar el rendimiento de su editor.",
     "Save signature" : "Guardar la firma",
