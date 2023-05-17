@@ -461,7 +461,7 @@ class ImportanceClassifier {
 		try {
 			$pipeline = $this->persistenceService->loadLatest($account);
 		} catch (ServiceException $e) {
-			$logger->warning('Failed to load importance classifier: ' . $e->getMessage(), [
+			$logger->warning('Failed to load persisted estimator and extractor: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 		}
@@ -482,41 +482,17 @@ class ImportanceClassifier {
 				}, $messages)
 			);
 		}
+
+		[$estimator, $extractor] = $pipeline;
 		$messagesWithSender = array_filter($messages, [$this, 'filterMessageHasSenderEmail']);
-
-		// Load persisted transformers of the subject extractor.
-		// Is a bit hacky but a full abstraction would be overkill.
-		$transformers = $pipeline->getTransformers();
-		if (count($transformers) === 2) {
-			$wordCountVectorizer = $transformers[0];
-			if (!($wordCountVectorizer instanceof WordCountVectorizer)) {
-				throw new ServiceException("Failed to load persisted transformer: Expected " . WordCountVectorizer::class . ", got" . $wordCountVectorizer::class);
-			}
-			$tfidfTransformer = $transformers[1];
-			if (!($tfidfTransformer instanceof TfIdfTransformer)) {
-				throw new ServiceException("Failed to load persisted transformer: Expected " . TfIdfTransformer::class . ", got" . $tfidfTransformer::class);
-			}
-
-			$subjectExtractor = new SubjectExtractor();
-			$subjectExtractor->setWordCountVectorizer($wordCountVectorizer);
-			$subjectExtractor->setTfidf($tfidfTransformer);
-			$extractor = new NewCompositeExtractor(
-				$this->vanillaExtractor,
-				$subjectExtractor,
-			);
-		} else {
-			$logger->warning('Falling back to vanilla feature extractor');
-			$extractor = $this->vanillaExtractor;
-		}
-
 		$features = $this->getFeaturesAndImportance(
 			$account,
 			$this->getIncomingMailboxes($account),
 			$this->getOutgoingMailboxes($account),
 			$messagesWithSender,
-			$extractor
+			$extractor,
 		);
-		$predictions = $pipeline->getEstimator()->predict(
+		$predictions = $estimator->predict(
 			Unlabeled::build(array_column($features, 'features'))
 		);
 		return array_combine(

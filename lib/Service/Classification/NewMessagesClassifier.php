@@ -52,7 +52,8 @@ class NewMessagesClassifier {
 		private TagMapper $tagMapper,
 		private LoggerInterface $logger,
 		private IMailManager $mailManager,
-		private IUserPreferences $preferences) {
+		private IUserPreferences $preferences,
+	) {
 	}
 
 	/**

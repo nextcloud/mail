@@ -421,9 +421,6 @@ class ImapToDbSynchronizer {
 						return $imapMessage->toDbMessage($mailbox->getId(), $account->getMailAccount());
 					}, $chunk);
 
-					// Ensure that the preview text is generated
-					//$dbMessages = $this->previewEnhancer->process($account, $mailbox, $dbMessages);
-
 					if ($importantTag) {
 						$this->newMessagesClassifier->classifyNewMessages(
 							$dbMessages,
