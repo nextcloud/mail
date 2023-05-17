@@ -17,6 +17,10 @@ use OCA\Mail\Db\ClassifierMapper;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\ClassifierPipeline;
+use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\SubjectExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -26,14 +30,17 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\ICacheFactory;
 use OCP\ITempManager;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Rubix\ML\Estimator;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
 use Rubix\ML\PersistentModel;
 use Rubix\ML\Persisters\Filesystem;
 use Rubix\ML\Serializers\RBX;
+use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
+use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function file_get_contents;
 use function file_put_contents;
@@ -67,6 +74,8 @@ class PersistenceService {
 	/** @var MailAccountMapper */
 	private $accountMapper;
 
+	private ContainerInterface $container;
+
 	public function __construct(ClassifierMapper $mapper,
 		IAppData $appData,
 		ITempManager $tempManager,
@@ -74,7 +83,8 @@ class PersistenceService {
 		IAppManager $appManager,
 		ICacheFactory $cacheFactory,
 		LoggerInterface $logger,
-		MailAccountMapper $accountMapper) {
+		MailAccountMapper $accountMapper,
+		ContainerInterface $container) {
 		$this->mapper = $mapper;
 		$this->appData = $appData;
 		$this->tempManager = $tempManager;
@@ -83,6 +93,7 @@ class PersistenceService {
 		$this->cacheFactory = $cacheFactory;
 		$this->logger = $logger;
 		$this->accountMapper = $accountMapper;
+		$this->container = $container;
 	}
 
 	/**
@@ -178,8 +189,6 @@ class PersistenceService {
 			$transformerIndex++;
 		}
 
-		$classifier->setTransformerCount($transformerIndex);
-
 		/*
 		 * Now we set the model active so it can be used by the next request
 		 */
@@ -190,17 +199,29 @@ class PersistenceService {
 	/**
 	 * @param Account $account
 	 *
-	 * @return ?ClassifierPipeline
+	 * @return ?array [Estimator, IExtractor]
 	 *
 	 * @throws ServiceException
 	 */
-	public function loadLatest(Account $account): ?ClassifierPipeline {
+	public function loadLatest(Account $account): ?array {
 		try {
 			$latestModel = $this->mapper->findLatest($account->getId());
 		} catch (DoesNotExistException $e) {
 			return null;
 		}
-		return $this->load($latestModel);
+
+		$pipeline = $this->load($latestModel);
+		try {
+			$extractor = $this->loadExtractor($latestModel, $pipeline);
+		} catch (ContainerExceptionInterface $e) {
+			throw new ServiceException(
+				"Failed to load extractor: {$e->getMessage()}",
+				0,
+				$e,
+			);
+		}
+
+		return [$pipeline->getEstimator(), $extractor];
 	}
 
 	/**
@@ -212,8 +233,14 @@ class PersistenceService {
 	 * @throws ServiceException
 	 */
 	public function load(Classifier $classifier): ClassifierPipeline {
+		$transformerCount = 0;
+		$appVersion = $this->parseAppVersion($classifier->getAppVersion());
+		if ($appVersion[0] >= 3 && $appVersion[1] >= 2) {
+			$transformerCount = 2;
+		}
+
 		$id = $classifier->getId();
-		$cached = $this->getCached($classifier->getId(), $classifier->getTransformerCount());
+		$cached = $this->getCached($classifier->getId(), $transformerCount);
 		if ($cached !== null) {
 			$this->logger->debug("Using cached serialized classifier $id");
 			$serialized = $cached[0];
@@ -238,7 +265,7 @@ class PersistenceService {
 			$this->logger->debug("Serialized classifier loaded (size=$size)");
 
 			$serializedTransformers = [];
-			for ($i = 0; $i < $classifier->getTransformerCount(); $i++) {
+			for ($i = 0; $i < $transformerCount; $i++) {
 				try {
 					$transformerFile = $modelsFolder->getFile("{$id}_t$i");
 				} catch (NotFoundException $e) {
@@ -323,6 +350,60 @@ class PersistenceService {
 				'exception' => $e,
 			]);
 		}
+
+	/**
+	 * Load and instantiate extractor based on a classifier's app version.
+	 *
+	 * @param Classifier $classifier
+	 * @param ClassifierPipeline $pipeline
+	 * @return IExtractor
+	 *
+	 * @throws ContainerExceptionInterface
+	 * @throws ServiceException
+	 */
+	private function loadExtractor(Classifier         $classifier,
+								   ClassifierPipeline $pipeline): IExtractor {
+		$appVersion = $this->parseAppVersion($classifier->getAppVersion());
+		if ($appVersion[0] >= 3 && $appVersion[1] >= 2) {
+			return $this->loadExtractorV2($pipeline->getTransformers());
+		}
+
+		return $this->loadExtractorV1($pipeline->getTransformers());
+	}
+
+	/**
+	 * @return VanillaCompositeExtractor
+	 *
+	 * @throws ContainerExceptionInterface
+	 */
+	private function loadExtractorV1(): VanillaCompositeExtractor {
+		return $this->container->get(VanillaCompositeExtractor::class);
+	}
+
+	/**
+	 * @param Transformer[] $transformers
+	 * @return NewCompositeExtractor
+	 *
+	 * @throws ContainerExceptionInterface
+	 * @throws ServiceException
+	 */
+	private function loadExtractorV2(array $transformers): NewCompositeExtractor {
+		$wordCountVectorizer = $transformers[0];
+		if (!($wordCountVectorizer instanceof WordCountVectorizer)) {
+			throw new ServiceException("Failed to load persisted transformer: Expected " . WordCountVectorizer::class . ", got" . $wordCountVectorizer::class);
+		}
+		$tfidfTransformer = $transformers[1];
+		if (!($tfidfTransformer instanceof TfIdfTransformer)) {
+			throw new ServiceException("Failed to load persisted transformer: Expected " . TfIdfTransformer::class . ", got" . $tfidfTransformer::class);
+		}
+
+		$subjectExtractor = new SubjectExtractor();
+		$subjectExtractor->setWordCountVectorizer($wordCountVectorizer);
+		$subjectExtractor->setTfidf($tfidfTransformer);
+		return new NewCompositeExtractor(
+			$this->container->get(VanillaCompositeExtractor::class),
+			$subjectExtractor,
+		);
 	}
 
 	private function getCacheKey(int $id): string {
@@ -340,6 +421,9 @@ class PersistenceService {
 	 * @return (?string)[]|null Array of serialized classifier and transformers
 	 */
 	private function getCached(int $id, int $transformerCount): ?array {
+		// FIXME: Will always return null as the cached, serialized data is always an empty string.
+		//        See my note in self::cache() for further elaboration.
+
 		if (!$this->cacheFactory->isLocalCacheAvailable()) {
 			return null;
 		}
@@ -360,6 +444,14 @@ class PersistenceService {
 	}
 
 	private function cache(int $id, string $serialized, array $serializedTransformers): void {
+		// FIXME: This is broken as some cache implementations will run the provided value through
+		//        json_encode which drops non-utf8 strings. The serialized string contains binary
+		//        data so an empty string will be saved instead (tested on Redis).
+		//        Note: JSON requires strings to be valid utf8 (as per its spec).
+
+		// IDEA: Implement a method ICache::setRaw() that forwards a raw/binary string as is to the
+		//       underlying cache backend.
+
 		if (!$this->cacheFactory->isLocalCacheAvailable()) {
 			return;
 		}
@@ -371,5 +463,19 @@ class PersistenceService {
 			$cache->set($this->getTransformerCacheKey($id, $transformerIndex), $transformer);
 			$transformerIndex++;
 		}
+	}
+
+	/**
+	 * Parse minor and major part of the given semver string.
+	 *
+	 * @return int[]
+	 */
+	private function parseAppVersion(string $version): array {
+		$parts = explode('.', $version);
+		if (count($parts) < 2) {
+			return [0, 0];
+		}
+
+		return [(int)$parts[0], (int)$parts[1]];
 	}
 }
