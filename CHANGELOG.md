@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.2.0-beta.2 - unreleased
+## 3.2.0-rc.1 - unreleased
 ### Added
 - Create a task from a message
 - Minimize composer modal while editing a message
@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Colors button dark-theme
 - Explicit set/unset tag in TagModal
 - Only fetch mailbox STATUS once
+- Use the color-primary-element variables
 
 ## 3.1.0 - 2023-04-04
 ### Added
