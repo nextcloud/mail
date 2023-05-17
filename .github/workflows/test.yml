@@ -14,6 +14,8 @@ jobs:
         include:
           - php-versions: '8.1'
             nextcloud-versions: 'stable26'
+          - php-versions: '8.1'
+            nextcloud-versions: 'stable27'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
@@ -65,7 +67,7 @@ jobs:
                   nextcloud-versions: stable26
                   db: 'pgsql'
                 - php-versions: 8.2
-                  nextcloud-versions: stable26
+                  nextcloud-versions: stable27
                   db: 'sqlite'
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
