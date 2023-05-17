@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5dbd5945c195cb98c5600550240d40fc",
+    "content-hash": "fc564181e19ea030e95f583136b289d3",
     "packages": [
         {
             "name": "amphp/amp",
@@ -174,16 +174,16 @@
         },
         {
             "name": "amphp/parallel",
-            "version": "v1.4.2",
+            "version": "v1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/parallel.git",
-                "reference": "75853e1623efa5aa5e65e986ec9a97db573a5267"
+                "reference": "3aac213ba7858566fd83d38ccb85b91b2d652cb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/parallel/zipball/75853e1623efa5aa5e65e986ec9a97db573a5267",
-                "reference": "75853e1623efa5aa5e65e986ec9a97db573a5267",
+                "url": "https://api.github.com/repos/amphp/parallel/zipball/3aac213ba7858566fd83d38ccb85b91b2d652cb0",
+                "reference": "3aac213ba7858566fd83d38ccb85b91b2d652cb0",
                 "shasum": ""
             },
             "require": {
@@ -236,7 +236,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/parallel/issues",
-                "source": "https://github.com/amphp/parallel/tree/v1.4.2"
+                "source": "https://github.com/amphp/parallel/tree/v1.4.3"
             },
             "funding": [
                 {
@@ -244,7 +244,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-12-30T00:21:42+00:00"
+            "time": "2023-03-23T08:04:23+00:00"
         },
         {
             "name": "amphp/parser",
@@ -2150,16 +2150,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "2.3.1",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "65ae632dfe9f72a68fb0dc9e42b31804108be2d8"
+                "reference": "79100cb37aa0513e4c313d6568b29143a6766d7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/65ae632dfe9f72a68fb0dc9e42b31804108be2d8",
-                "reference": "65ae632dfe9f72a68fb0dc9e42b31804108be2d8",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/79100cb37aa0513e4c313d6568b29143a6766d7f",
+                "reference": "79100cb37aa0513e4c313d6568b29143a6766d7f",
                 "shasum": ""
             },
             "require": {
@@ -2173,7 +2173,7 @@
                 "symfony/polyfill-php80": "^1.17",
                 "symfony/polyfill-php82": "^1.27",
                 "symfony/polyfill-php83": "^1.27",
-                "wamania/php-stemmer": "^2.0"
+                "wamania/php-stemmer": "^3.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -2308,7 +2308,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-07T01:45:04+00:00"
+            "time": "2023-05-13T19:12:38+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -3287,24 +3287,24 @@
         },
         {
             "name": "wamania/php-stemmer",
-            "version": "v2.2.0",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wamania/php-stemmer.git",
-                "reference": "a5eafec3f6c48e277939af0dbc0c24a76e658c04"
+                "reference": "eab7b93465eb3d5da372806c8e1b01da5766aea5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wamania/php-stemmer/zipball/a5eafec3f6c48e277939af0dbc0c24a76e658c04",
-                "reference": "a5eafec3f6c48e277939af0dbc0c24a76e658c04",
+                "url": "https://api.github.com/repos/wamania/php-stemmer/zipball/eab7b93465eb3d5da372806c8e1b01da5766aea5",
+                "reference": "eab7b93465eb3d5da372806c8e1b01da5766aea5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0",
+                "php": ">=7.3",
                 "voku/portable-utf8": "^5.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8"
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "autoload": {
@@ -3330,9 +3330,9 @@
             ],
             "support": {
                 "issues": "https://github.com/wamania/php-stemmer/issues",
-                "source": "https://github.com/wamania/php-stemmer/tree/v2.2.0"
+                "source": "https://github.com/wamania/php-stemmer/tree/v3.0.0"
             },
-            "time": "2021-02-10T09:07:25+00:00"
+            "time": "2021-08-17T18:16:34+00:00"
         },
         {
             "name": "youthweb/urllinker",

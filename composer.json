@@ -36,7 +36,7 @@
 		"nextcloud/horde-managesieve": "^1.0",
 		"nextcloud/horde-smtp": "^1.0.2",
 		"psr/log": "^1",
-		"rubix/ml": "2.3.1",
+		"rubix/ml": "2.3.2",
 		"sabberworm/php-css-parser": "^8.4.0",
 		"youthweb/urllinker": "^2.0"
 	},
