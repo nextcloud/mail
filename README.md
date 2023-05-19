@@ -17,7 +17,7 @@
 * **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * **📑 Message threads!** Now we have proper grouping of message threads.
 * **🗄️ Mailbox management!** You can edit, delete, add submailboxes and more.
-* **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
+* **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://www.horde.org) libraries.
 * **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template chooser](https://github.com/nextcloud/mail/issues/new/choose) so we get the info needed to debug and fix the problem. Thanks!
