@@ -127,7 +127,7 @@ OC.L10N.register(
     "Discard & close draft" : "Descartar y cerrar borrador",
     "Upload attachment" : "Subir adjunto",
     "Add attachment from Files" : "Añadir adjunto desde Archivos",
-    "Smart picker" : "Seleccionador inteligente",
+    "Smart picker" : "Selector inteligente",
     "Send later" : "Enviar más tarde",
     "Enable formatting" : "Habilitar formato",
     "Disable formatting" : "Deshabilitar formato",
