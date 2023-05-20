@@ -112,6 +112,7 @@ OC.L10N.register(
     "Untitled event" : "فعالية بدون اسم",
     "Reset" : "إعادة الضبط",
     "Client ID" : "معرف العميل",
+    "Client secret" : "كلمة سر العميل",
     "General" : "العامة",
     "User" : "المستخدم",
     "Host" : "المضيف",

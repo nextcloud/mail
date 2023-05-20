@@ -411,6 +411,7 @@
     "Archive message" : "Zaarchivovat zprávu",
     "Delete message" : "Smazat zprávu",
     "Unsubscribe via link" : "Zrušit (prostřednictvím odkazu) přihlášení se k odběru",
+    "Unsubscribing will stop all messages from the mailing list {sender}" : "Zrušení přihlášení se k odběru zastaví veškeré zprávy  z e-mailové distribuce {sender}",
     "Send unsubscribe email" : "Odeslat e-mail ohledně zrušení odběru",
     "Unsubscribe via email" : "Zrušit (prostřednictvím e-mailu) přihlášení se k odběru",
     "Encrypted & verified " : "Šifrováno a ověřen",

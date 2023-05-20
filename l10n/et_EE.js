@@ -26,6 +26,8 @@ OC.L10N.register(
     "Signature" : "Allkiri",
     "Go back" : "Mine tagasi",
     "Cancel" : "Loobu",
+    "From" : "Saatja",
+    "To" : "Saaja",
     "Subject" : "Teema",
     "Enter a date" : "Sisesta kuupäev",
     "Send" : "Saada",

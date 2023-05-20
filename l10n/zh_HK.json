@@ -379,6 +379,7 @@
     "Sieve Password" : "Sieve 密碼",
     "Save sieve settings" : "保存 Sieve 設置",
     "Save sieve script" : "保存 Sieve 腳本語言（script）",
+    "The syntax seems to be incorrect:" : "語法似乎不正確：",
     "Signature …" : "簽名……",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "您的簽名大於 2 MB。這可能會影響編輯器的性能。",
     "Save signature" : "儲存簽名",
