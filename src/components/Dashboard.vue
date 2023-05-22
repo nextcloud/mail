@@ -33,7 +33,7 @@
 				:main-text="itemMainText(item)"
 				:sub-text="itemSubText(item)">
 				<template #avatar>
-					<Avatar v-if="item.from"
+					<Avatar v-if="item.from && item.from.length"
 						:email="item.from[0].email"
 						:display-name="item.from[0].label"
 						:disable-tooltip="true"
@@ -128,6 +128,7 @@ export default {
 
 		await Promise.all(inboxes.map(async (mailbox) => {
 			const messages = await fetchEnvelopes(mailbox.accountId, mailbox.databaseId, this.query, undefined, 10)
+			messages.forEach(message => { message.id = message.databaseId })
 			this.messages = this.messages !== null ? [...this.messages, ...messages] : messages
 			this.fetchedAccounts++
 		}))
@@ -136,7 +137,7 @@ export default {
 	},
 	methods: {
 		itemMainText(item) {
-			return item.from ? item.from[0].label : ''
+			return item.from && item.from.length ? item.from[0].label : ''
 		},
 		itemSubText(item) {
 			return item.subject
