@@ -59,28 +59,25 @@ class FolderMapper {
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
-			'status' => Horde_Imap_Client::STATUS_ALL,
 		]);
-
-		return array_filter(array_map(static function (array $mailbox) use ($account) {
+		$toPersist = array_filter($mailboxes, function (array $mailbox) {
 			$attributes = array_flip(array_map('strtolower', $mailbox['attributes']));
 			if (isset($attributes['\\nonexistent'])) {
 				// Ignore mailbox that does not exist, similar to \Horde_Imap_Client::MBOX_SUBSCRIBED_EXISTS mode
-				return null;
+				return false;
 			}
-			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
-				// This is a special folder that must not be shown
-				return null;
-			}
-
+			// This is a special folder that must not be shown
+			return !in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true);
+		});
+		return array_map(static function (array $mailbox) use ($account) {
 			return new Folder(
 				$account->getId(),
 				$mailbox['mailbox'],
 				$mailbox['attributes'],
 				$mailbox['delimiter'],
-				$mailbox['status'],
+				null,
 			);
-		}, $mailboxes));
+		}, $toPersist);
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
@@ -137,21 +134,20 @@ class FolderMapper {
 	 *
 	 * @throws Horde_Imap_Client_Exception
 	 *
-	 * @return MailboxStats
+	 * @return MailboxStats[]
 	 */
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
-											 string $mailbox): MailboxStats {
-		$status = $client->status($mailbox);
-		$acls = null;
-		if ($client->capability->query('ACL')) {
-			$acls = (string)$client->getMyACLRights($mailbox);
-		}
+		array $mailboxes): array {
+		$multiStatus = $client->status($mailboxes);
 
-		return new MailboxStats(
-			$status['messages'],
-			$status['unseen'],
-			$acls
-		);
+		$statuses = [];
+		foreach ($multiStatus as $mailbox => $status) {
+			$statuses[$mailbox] = new MailboxStats(
+				$status['messages'],
+				$status['unseen'],
+			);
+		}
+		return $statuses;
 	}
 
 	/**

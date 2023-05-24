@@ -38,7 +38,7 @@ class Folder {
 	/** @var string */
 	private $delimiter;
 
-	/** @var array */
+	/** @var null|array */
 	private $status;
 
 	/** @var string[] */
@@ -50,7 +50,7 @@ class Folder {
 		Horde_Imap_Client_Mailbox $mailbox,
 		array $attributes,
 		?string $delimiter,
-		array $status) {
+		?array $status) {
 		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
@@ -76,9 +76,9 @@ class Folder {
 	}
 
 	/**
-	 * @return array
+	 * @return null|array
 	 */
-	public function getStatus(): array {
+	public function getStatus(): ?array {
 		return $this->status;
 	}
 
