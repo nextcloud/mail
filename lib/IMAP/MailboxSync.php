@@ -215,7 +215,6 @@ class MailboxSync {
 	}
 
 	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox, ?Horde_Imap_Client_Namespace_List $namespaces): void {
-		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setMessages($folder->getStatus()['messages'] ?? 0);
