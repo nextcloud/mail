@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc564181e19ea030e95f583136b289d3",
+    "content-hash": "5c4067593380abda421a8ba27a6a9cd2",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3389,16 +3389,16 @@
     "packages-dev": [
         {
             "name": "nextcloud/ocp",
-            "version": "dev-stable25",
+            "version": "dev-stable26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-deps/ocp.git",
-                "reference": "31e4bbd0e476d12b675b648a38b73ab38711bb9b"
+                "reference": "92d0c03fc41b75647e05d9de743e1b3bda26af35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/31e4bbd0e476d12b675b648a38b73ab38711bb9b",
-                "reference": "31e4bbd0e476d12b675b648a38b73ab38711bb9b",
+                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/92d0c03fc41b75647e05d9de743e1b3bda26af35",
+                "reference": "92d0c03fc41b75647e05d9de743e1b3bda26af35",
                 "shasum": ""
             },
             "require": {
@@ -3426,9 +3426,9 @@
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
             "support": {
                 "issues": "https://github.com/nextcloud-deps/ocp/issues",
-                "source": "https://github.com/nextcloud-deps/ocp/tree/stable25"
+                "source": "https://github.com/nextcloud-deps/ocp/tree/stable26"
             },
-            "time": "2023-01-06T00:37:46+00:00"
+            "time": "2023-05-18T00:34:12+00:00"
         },
         {
             "name": "psalm/phar",
