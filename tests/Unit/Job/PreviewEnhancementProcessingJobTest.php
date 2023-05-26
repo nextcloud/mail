@@ -57,6 +57,7 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 
 	/** @var IJobList|IJobList&MockObject|MockObject  */
 	private $jobList;
+	private PreviewEnhancementProcessingJob $job;
 
 	/** @var int[]  */
 	private static $argument;

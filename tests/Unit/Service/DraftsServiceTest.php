@@ -47,6 +47,7 @@ use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
+use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -74,7 +75,7 @@ class DraftsServiceTest extends TestCase {
 
 	/** @var IMailManager|MockObject */
 	private $mailManager;
-
+	private IEventDispatcher $eventDispatcher;
 	/** @var AccountService|MockObject */
 	private $accountService;
 
