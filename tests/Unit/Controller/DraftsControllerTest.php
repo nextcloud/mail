@@ -42,6 +42,14 @@ use OCP\DB\Exception;
 use OCP\IRequest;
 
 class DraftsControllerTest extends TestCase {
+	private string $appName;
+	private DraftsService $service;
+	private string $userId;
+	private IRequest $request;
+	private ITimeFactory $timeFactory;
+	private AccountService $accountService;
+	private DraftsController $controller;
+
 	protected function setUp(): void {
 		parent::setUp();
 

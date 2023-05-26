@@ -75,6 +75,7 @@ class IMipServiceTest extends TestCase {
 
 	/** @var AccountService|MockObject */
 	private $accountService;
+	private IManager $calendarManager;
 
 	/** @var MailManager|MockObject  */
 	private $mailManager;
