@@ -379,6 +379,7 @@
     "Sieve Password" : "Senha Sieve",
     "Save sieve settings" : "Salvar configurações do Sieve",
     "Save sieve script" : "Salvar o script Sieve",
+    "The syntax seems to be incorrect:" : "A sintaxe parece estar incorreta:",
     "Signature …" : "Assinatura...",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Sua assinatura é maior que 2 MB. Isso pode afetar o desempenho do seu editor.",
     "Save signature" : "Salvar assinatura",
