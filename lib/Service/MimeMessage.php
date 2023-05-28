@@ -50,8 +50,10 @@ class MimeMessage {
 			if (empty($content)) {
 				$htmlContent = $textContent = $content;
 			} else {
+				$source = '<html><meta http-equiv="content-type" content="text/html; charset=UTF-8"><body>' . $content . '</body>';
+
 				$doc = new DOMDocument();
-				$doc->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+				$doc->loadHTML($source, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
 
 				$images = $doc->getElementsByTagName('img');
 
@@ -88,7 +90,7 @@ class MimeMessage {
 					$image->setAttribute('src', 'cid:' . $cid);
 				}
 
-				$htmlContent = $doc->saveHTML($doc->documentElement);
+				$htmlContent = $doc->saveHTML();
 				$textContent = Horde_Text_Filter::filter($htmlContent, 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]);
 			}
 
