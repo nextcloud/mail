@@ -40,6 +40,9 @@ use function count;
 use function json_encode;
 
 class ItineraryService {
+	private const CACHE_PREFIX = 'mail_itinerary';
+	private const CACHE_TTL = 7 * 24 * 3600;
+
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 
@@ -63,12 +66,12 @@ class ItineraryService {
 		$this->clientFactory = $clientFactory;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
-		$this->cache = $cacheFactory->createLocal();
+		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
 		$this->logger = $logger;
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
-		return 'mail_itinerary_' . $account->getId() . '_' . $mailbox->getName() . '_' . $id;
+		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
 	}
 
 	public function getCached(Account $account, Mailbox $mailbox, int $id): ?Itinerary {
@@ -112,7 +115,7 @@ class ItineraryService {
 		$this->logger->debug('Reduced ' . count($itinerary) . ' itinerary entries to ' . count($final) . ' entries');
 
 		$cache_key = $this->buildCacheKey($account, $mailbox, $id);
-		$this->cache->set($cache_key, json_encode($final));
+		$this->cache->set($cache_key, json_encode($final), self::CACHE_TTL);
 
 		return $final;
 	}
