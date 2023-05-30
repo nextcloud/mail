@@ -1,187 +1,182 @@
 <!-- Standard Actions menu for Envelopes -->
 <template>
-	<div>
-		<Actions
-			menu-align="right"
-			event=""
-			@click.native.prevent>
-			<template v-if="!moreActionsOpen">
-				<ActionButton v-if="hasWriteAcl"
-					class="action--primary"
-					:close-after-click="true"
-					@click.prevent="onToggleImportant">
-					<template #icon>
-						<ImportantIcon
-							:size="20" />
-					</template>
-					{{
-						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
-					}}
-				</ActionButton>
-				<ActionButton v-if="withReply"
-					:close-after-click="true"
-					@click="onReply">
-					<template #icon>
-						<ReplyAllIcon v-if="hasMultipleRecipients"
-							:title="t('mail', 'Reply all')"
-							:size="20" />
-						<ReplyIcon v-else
-							:title="t('mail', 'Reply')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Reply') }}
-				</ActionButton>
-				<ActionButton v-if="hasMultipleRecipients"
-					:close-after-click="true"
-					@click="onReply(true)">
-					<template #icon>
-						<ReplyIcon
-							:title="t('mail', 'Reply to sender only')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Reply to sender only') }}
-				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click="onForward">
-					<template #icon>
-						<ShareIcon
-							:title="t('mail', 'Forward')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Forward') }}
-				</ActionButton>
-				<ActionButton v-if="hasWriteAcl"
-					:close-after-click="true"
-					@click.prevent="onToggleJunk">
-					<template #icon>
-						<AlertOctagonIcon
-							:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
-							:size="20" />
-					</template>
-					{{
-						envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
-					}}
-				</ActionButton>
-				<ActionButton v-if="hasWriteAcl"
-					:close-after-click="true"
-					@click.prevent="onOpenTagModal">
-					<template #icon>
-						<TagIcon
-							:title="t('mail', 'Edit tags')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Edit tags') }}
-				</ActionButton>
-				<ActionButton v-if="withSelect"
-					:close-after-click="true"
-					@click.prevent="toggleSelected">
-					<template #icon>
-						<CheckIcon
-							:title="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
-							:size="20" />
-					</template>
-					{{
-						isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
-					}}
-				</ActionButton>
-				<ActionButton
-					v-if="hasDeleteAcl"
-					:close-after-click="true"
-					@click.prevent="onOpenMoveModal">
-					<template #icon>
-						<OpenInNewIcon
-							:title="t('mail', 'Move message')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Move message') }}
-				</ActionButton>
-				<ActionButton :close-after-click="false"
-					@click="moreActionsOpen=true">
-					<template #icon>
-						<DotsHorizontalIcon
-							:title="t('mail', 'More actions')"
-							:size="20" />
-					</template>
+	<Fragment>
+		<template v-if="!moreActionsOpen">
+			<ActionButton v-if="hasWriteAcl"
+				class="action--primary"
+				:close-after-click="true"
+				@click.prevent="onToggleImportant">
+				<template #icon>
+					<ImportantIcon
+						:size="20" />
+				</template>
+				{{
+					isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
+				}}
+			</ActionButton>
+			<ActionButton v-if="withReply"
+				:close-after-click="true"
+				@click="onReply">
+				<template #icon>
+					<ReplyAllIcon v-if="hasMultipleRecipients"
+						:title="t('mail', 'Reply all')"
+						:size="20" />
+					<ReplyIcon v-else
+						:title="t('mail', 'Reply')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Reply') }}
+			</ActionButton>
+			<ActionButton v-if="hasMultipleRecipients"
+				:close-after-click="true"
+				@click="onReply(true)">
+				<template #icon>
+					<ReplyIcon
+						:title="t('mail', 'Reply to sender only')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Reply to sender only') }}
+			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click="onForward">
+				<template #icon>
+					<ShareIcon
+						:title="t('mail', 'Forward')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Forward') }}
+			</ActionButton>
+			<ActionButton v-if="hasWriteAcl"
+				:close-after-click="true"
+				@click.prevent="onToggleJunk">
+				<template #icon>
+					<AlertOctagonIcon
+						:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+						:size="20" />
+				</template>
+				{{
+					envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+				}}
+			</ActionButton>
+			<ActionButton v-if="hasWriteAcl"
+				:close-after-click="true"
+				@click.prevent="onOpenTagModal">
+				<template #icon>
+					<TagIcon
+						:title="t('mail', 'Edit tags')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Edit tags') }}
+			</ActionButton>
+			<ActionButton v-if="withSelect"
+				:close-after-click="true"
+				@click.prevent="toggleSelected">
+				<template #icon>
+					<CheckIcon
+						:title="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
+						:size="20" />
+				</template>
+				{{
+					isSelected ? t('mail', 'Unselect') : t('mail', 'Select')
+				}}
+			</ActionButton>
+			<ActionButton
+				v-if="hasDeleteAcl"
+				:close-after-click="true"
+				@click.prevent="onOpenMoveModal">
+				<template #icon>
+					<OpenInNewIcon
+						:title="t('mail', 'Move message')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Move message') }}
+			</ActionButton>
+			<ActionButton :close-after-click="false"
+				@click="moreActionsOpen=true">
+				<template #icon>
+					<DotsHorizontalIcon
+						:title="t('mail', 'More actions')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'More actions') }}
+			</ActionButton>
+		</template>
+		<template v-else>
+			<ActionButton :close-after-click="false"
+				@click="moreActionsOpen=false">
+				<template #icon>
+					<ChevronLeft
+						:title="t('mail', 'More actions')"
+						:size="20" />
 					{{ t('mail', 'More actions') }}
-				</ActionButton>
-			</template>
-			<template v-if="moreActionsOpen">
-				<ActionButton :close-after-click="false"
-					@click="moreActionsOpen=false">
-					<template #icon>
-						<ChevronLeft
-							:title="t('mail', 'More actions')"
-							:size="20" />
-						{{ t('mail', 'More actions') }}
-					</template>
-				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click.prevent="forwardSelectedAsAttachment">
-					<template #icon>
-						<ShareIcon
-							:title="t('mail', 'Forward message as attachment')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Forward message as attachment') }}
-				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click="onOpenEditAsNew">
-					<template #icon>
-						<PlusIcon
-							:title="t('mail', 'Edit as new message')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Edit as new message') }}
-				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click.prevent="showEventModal = true">
-					<template #icon>
-						<CalendarBlankIcon
-							:title="t('mail', 'Create event')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Create event') }}
-				</ActionButton>
-				<ActionButton :close-after-click="true"
-					@click.prevent="showTaskModal = true">
-					<template #icon>
-						<TaskIcon
-							:title="t('mail', 'Create task')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Create task') }}
-				</ActionButton>
-				<ActionButton v-if="withShowSource"
-					:close-after-click="true"
-					@click.prevent="onShowSourceModal">
-					<template #icon>
-						<InformationIcon
-							:title="t('mail', 'View source')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'View source') }}
-				</ActionButton>
-				<ActionLink
-					:close-after-click="true"
-					:href="exportMessageLink">
-					<template #icon>
-						<DownloadIcon :size="20" />
-					</template>
-					{{ t('mail', 'Download message') }}
-				</ActionLink>
-				<ActionLink v-if="debug"
-					:download="threadingFileName"
-					:href="threadingFile"
-					:close-after-click="true">
-					<template #icon>
-						<DownloadIcon
-							:title="t('mail', 'Download thread data for debugging')"
-							:size="20" />
-					</template>
-					{{ t('mail', 'Download thread data for debugging') }}
-				</ActionLink>
-			</template>
-		</Actions>
+				</template>
+			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click.prevent="forwardSelectedAsAttachment">
+				<template #icon>
+					<ShareIcon
+						:title="t('mail', 'Forward message as attachment')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Forward message as attachment') }}
+			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click="onOpenEditAsNew">
+				<template #icon>
+					<PlusIcon
+						:title="t('mail', 'Edit as new message')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Edit as new message') }}
+			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click.prevent="showEventModal = true">
+				<template #icon>
+					<CalendarBlankIcon
+						:title="t('mail', 'Create event')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Create event') }}
+			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click.prevent="showTaskModal = true">
+				<template #icon>
+					<TaskIcon
+						:title="t('mail', 'Create task')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Create task') }}
+			</ActionButton>
+			<ActionButton v-if="withShowSource"
+				:close-after-click="true"
+				@click.prevent="onShowSourceModal">
+				<template #icon>
+					<InformationIcon
+						:title="t('mail', 'View source')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'View source') }}
+			</ActionButton>
+			<ActionLink
+				:close-after-click="true"
+				:href="exportMessageLink">
+				<template #icon>
+					<DownloadIcon :size="20" />
+				</template>
+				{{ t('mail', 'Download message') }}
+			</ActionLink>
+			<ActionLink v-if="debug"
+				:download="threadingFileName"
+				:href="threadingFile"
+				:close-after-click="true">
+				<template #icon>
+					<DownloadIcon
+						:title="t('mail', 'Download thread data for debugging')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Download thread data for debugging') }}
+			</ActionLink>
+		</template>
 		<Modal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
 			<div class="source-modal-content">
 				<div class="section">
@@ -206,12 +201,12 @@
 			:account="account"
 			:envelope="envelope"
 			@close="onCloseTagModal" />
-	</div>
+	</Fragment>
 </template>
 
 <script>
 import axios from '@nextcloud/axios'
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionLink as ActionLink, NcModal as Modal } from '@nextcloud/vue'
+import { NcActionButton as ActionButton, NcActionLink as ActionLink, NcModal as Modal } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import { Base64 } from 'js-base64'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
@@ -233,6 +228,7 @@ import ReplyIcon from 'vue-material-design-icons/Reply'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline'
 import ShareIcon from 'vue-material-design-icons/Share'
+import { Fragment } from 'vue-frag'
 
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal'
@@ -240,7 +236,6 @@ import TagModal from './TagModal'
 export default {
 	name: 'MenuEnvelope',
 	components: {
-		Actions,
 		ActionButton,
 		ActionLink,
 		AlertOctagonIcon,
@@ -250,7 +245,7 @@ export default {
 		DotsHorizontalIcon,
 		DownloadIcon,
 		EventModal,
-		TaskModal,
+		Fragment,
 		InformationIcon,
 		Modal,
 		MoveModal,
@@ -263,6 +258,7 @@ export default {
 		TagModal,
 		ImportantIcon,
 		TaskIcon,
+		TaskModal,
 	},
 	props: {
 		envelope: {
