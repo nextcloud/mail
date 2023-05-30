@@ -86,6 +86,7 @@ OC.L10N.register(
     "Message {id} could not be found" : "メッセージ {id} が見つかりません",
     "Choose a file to add as attachment" : "添付として追加するファイルを選択",
     "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
+    "_{count} attachment_::_{count} attachments_" : ["{count} 個の添付ファイル"],
     "Confirm" : "承認",
     "No message found yet" : "メッセージはまだありません",
     "Set up an account" : "アカウントを設定",
