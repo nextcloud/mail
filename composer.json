@@ -27,7 +27,7 @@
 		"bytestream/horde-util": "^2.7.0",
 		"cerdic/css-tidy": "v2.0.3",
 		"christophwurst/kitinerary": "^0.2",
-		"christophwurst/kitinerary-bin": "^0.3",
+		"christophwurst/kitinerary-bin": "^0.4",
 		"christophwurst/kitinerary-flatpak": "^0.3",
 		"christophwurst/kitinerary-sys": "^0.2.1",
 		"ezyang/htmlpurifier": "4.16.0",
