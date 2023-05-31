@@ -32,7 +32,7 @@ jobs:
           echo "APP_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Checkout
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           path: ${{ env.APP_NAME }}
 
@@ -126,9 +126,10 @@ jobs:
           unzip latest-$NCVERSION.zip
 
       - name: Checkout server master fallback
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         if: ${{ steps.server-checkout.outcome != 'success' }}
         with:
+          submodules: true
           repository: nextcloud/server
           path: nextcloud
 
@@ -148,7 +149,7 @@ jobs:
           tar -zcvf ${{ env.APP_NAME }}.tar.gz ${{ env.APP_NAME }}
 
       - name: Attach tarball to github release
-        uses: svenstaro/upload-release-action@7319e4733ec7a184d739a6f412c40ffc339b69c7 # v2
+        uses: svenstaro/upload-release-action@133984371c30d34e38222a64855679a414cb7575 # v2
         id: attach_to_release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
