@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.2.0-rc.2 - unreleased
+## 3.2.0-rc.3 - unreleased
 ### Added
 - Create a task from a message
 - Minimize composer modal while editing a message
