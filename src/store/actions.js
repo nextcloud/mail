@@ -68,6 +68,7 @@ import {
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
+	fetchMessageDkim,
 	fetchMessageItineraries,
 	fetchThread,
 	moveMessage,
@@ -1069,6 +1070,16 @@ export default {
 				itineraries,
 			})
 			return itineraries
+		})
+	},
+	async fetchDkim({ commit }, id) {
+		return handleHttpAuthErrors(commit, async () => {
+			const result = await fetchMessageDkim(id)
+			commit('addMessageDkim', {
+				id,
+				result,
+			})
+			return result
 		})
 	},
 	async deleteMessage({ getters, commit }, { id }) {

@@ -34,6 +34,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Attachment;
+use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -84,6 +85,7 @@ class MessagesController extends Controller {
 	private IMailTransmission $mailTransmission;
 	private SmimeService $smimeService;
 	private IMAPClientFactory $clientFactory;
+	private IDkimService $dkimService;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -101,7 +103,8 @@ class MessagesController extends Controller {
 								ITrustedSenderService $trustedSenderService,
 								IMailTransmission $mailTransmission,
 								SmimeService $smimeService,
-								IMAPClientFactory $clientFactory) {
+								IMAPClientFactory $clientFactory,
+								IDkimService $dkimService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -118,6 +121,7 @@ class MessagesController extends Controller {
 		$this->mailTransmission = $mailTransmission;
 		$this->smimeService = $smimeService;
 		$this->clientFactory = $clientFactory;
+		$this->dkimService = $dkimService;
 	}
 
 	/**
@@ -247,6 +251,11 @@ class MessagesController extends Controller {
 		}
 		$json['smime'] = $smimeData;
 
+		$dkimResult = $this->dkimService->getCached($account, $mailbox, $message->getUid());
+		if (is_bool($dkimResult)) {
+			$json['dkimValid'] = $dkimResult;
+		}
+
 		$response = new JSONResponse($json);
 
 		// Enable caching
@@ -275,6 +284,25 @@ class MessagesController extends Controller {
 		}
 
 		$response = new JsonResponse($this->itineraryService->extract($account, $mailbox, $message->getUid()));
+		$response->cacheFor(24 * 60 * 60, false, true);
+		return $response;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @param int $id
+	 * @return JSONResponse
+	 */
+	public function getDkim(int $id): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$response = new JSONResponse($this->dkimService->validate($account, $mailbox, $message->getUid()));
 		$response->cacheFor(24 * 60 * 60, false, true);
 		return $response;
 	}

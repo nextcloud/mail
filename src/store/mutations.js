@@ -417,6 +417,13 @@ export default {
 		}
 		Vue.set(message, 'itineraries', itineraries)
 	},
+	addMessageDkim(state, { id, result }) {
+		const message = state.messages[id]
+		if (!message) {
+			return
+		}
+		Vue.set(message, 'dkimValid', result)
+	},
 	addEnvelopeThread(state, { id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists
 		thread.forEach(e => {

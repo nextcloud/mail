@@ -27,6 +27,8 @@ namespace OCA\Mail\AppInfo;
 use Horde_Translation;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
+use OCA\Mail\Contracts\IDkimService;
+use OCA\Mail\Contracts\IDkimValidator;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -65,6 +67,8 @@ use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Search\Provider;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
+use OCA\Mail\Service\DkimService;
+use OCA\Mail\Service\DkimValidator;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
@@ -105,6 +109,8 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
 		$context->registerServiceAlias(ITrustedSenderService::class, TrustedSenderService::class);
 		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceService::class);
+		$context->registerServiceAlias(IDkimService::class, DkimService::class);
+		$context->registerServiceAlias(IDkimValidator::class, DkimValidator::class);
 
 		$context->registerEventListener(BeforeImapClientCreated::class, OauthTokenRefreshListener::class);
 		$context->registerEventListener(BeforeMessageSentEvent::class, AntiAbuseListener::class);

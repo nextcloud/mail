@@ -76,6 +76,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private Horde_Imap_Client_DateTime $imapDate;
 	private string $rawReferences;
 	private string $dispositionNotificationTo;
+	private bool $hasDkimSignature;
 	private ?string $unsubscribeUrl;
 	private bool $isOneClickUnsubscribe;
 	private ?string $unsubscribeMailto;
@@ -103,6 +104,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		Horde_Imap_Client_DateTime $imapDate,
 		string $rawReferences,
 		string $dispositionNotificationTo,
+		bool $hasDkimSignature,
 		?string $unsubscribeUrl,
 		bool $isOneClickUnsubscribe,
 		?string $unsubscribeMailto,
@@ -130,6 +132,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->imapDate = $imapDate;
 		$this->rawReferences = $rawReferences;
 		$this->dispositionNotificationTo = $dispositionNotificationTo;
+		$this->hasDkimSignature = $hasDkimSignature;
 		$this->unsubscribeUrl = $unsubscribeUrl;
 		$this->isOneClickUnsubscribe = $isOneClickUnsubscribe;
 		$this->unsubscribeMailto = $unsubscribeMailto;
@@ -314,6 +317,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'flags' => $this->getFlags(),
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
+			'hasDkimSignature' => $this->hasDkimSignature,
 			'unsubscribeUrl' => $this->unsubscribeUrl,
 			'isOneClickUnsubscribe' => $this->isOneClickUnsubscribe,
 			'unsubscribeMailto' => $this->unsubscribeMailto,
