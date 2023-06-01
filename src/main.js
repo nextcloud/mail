@@ -134,8 +134,10 @@ store.commit('setMicrosoftOauthUrl', microsoftOauthUrl)
 const smimeCertificates = loadState('mail', 'smime-certificates', [])
 store.commit('setSmimeCertificates', smimeCertificates)
 
+/* eslint-disable vue/match-component-file-name */
 export default new Vue({
 	el: '#content',
+	name: 'Mail',
 	router,
 	store,
 	render: (h) => h(App),
