@@ -422,7 +422,7 @@ export default {
 		if (!message) {
 			return
 		}
-		Vue.set(message, 'dkimValid', result)
+		Vue.set(message, 'dkimValid', result.valid)
 	},
 	addEnvelopeThread(state, { id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists

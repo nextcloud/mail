@@ -37,6 +37,7 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Controller\MessagesController;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -1117,5 +1118,46 @@ class MessagesControllerTest extends TestCase {
 		$actualResponse = $this->controller->export($messageId);
 
 		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testGetDkim() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId($this->userId);
+		$account = new Account($mailAccount);
+
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setId(4);
+		$mailbox->setAccountId($account->getId());
+		$mailbox->setName('FooBar');
+
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(4448);
+		$message->setMailboxId($mailbox->getId());
+		$message->setUid(123);
+		$message->setSubject('core/master has new results');
+
+
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMessage')
+			->with($this->userId, $message->getId())
+			->willReturn($message);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMailbox')
+			->with($this->userId, $mailbox->getId())
+			->willReturn($mailbox);
+		$this->accountService->expects($this->exactly(1))
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($account->getId()))
+			->will($this->returnValue($account));
+		$this->dkimService->expects($this->exactly(1))
+			->method('validate')
+			->with($account, $mailbox, $message->getUid())
+			->willReturn(true);
+
+		$actualResponse = $this->controller->getDkim($message->getId());
+
+		$this->assertInstanceOf(JSONResponse::class, $actualResponse);
+		$this->assertEquals(['valid' => true], $actualResponse->getData());
 	}
 }

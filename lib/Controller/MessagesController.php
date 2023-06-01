@@ -302,7 +302,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$response = new JSONResponse($this->dkimService->validate($account, $mailbox, $message->getUid()));
+		$response = new JSONResponse(['valid' => $this->dkimService->validate($account, $mailbox, $message->getUid())]);
 		$response->cacheFor(24 * 60 * 60, false, true);
 		return $response;
 	}
