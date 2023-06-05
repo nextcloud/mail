@@ -83,7 +83,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mysql-service:
-              image: mariadb:10.11
+              image: ghcr.io/nextcloud/continuous-integration-mariadb-10.11:latest
               env:
                   MYSQL_ROOT_PASSWORD: my-secret-pw
                   MYSQL_DATABASE: nextcloud
@@ -97,7 +97,7 @@ jobs:
                   --health-timeout=5s
                   --health-retries=3
           postgres-service:
-              image: postgres:15
+              image: ghcr.io/nextcloud/continuous-integration-postgres-15:latest
               env:
                   POSTGRES_USER: nextcloud
                   POSTGRES_DB: nextcloud
