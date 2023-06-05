@@ -28,8 +28,6 @@ namespace OCA\Mail\BackgroundJob;
 use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
-use function defined;
-use function method_exists;
 
 class OutboxWorkerJob extends TimedJob {
 	private OutboxService $outboxService;
@@ -40,12 +38,7 @@ class OutboxWorkerJob extends TimedJob {
 
 		// Run once per five minutes
 		$this->setInterval(5 * 60);
-		/**
-		 * @todo remove checks with 24+
-		 */
-		if (defined('\OCP\BackgroundJob\IJob::TIME_SENSITIVE') && method_exists($this, 'setTimeSensitivity')) {
-			$this->setTimeSensitivity(self::TIME_SENSITIVE);
-		}
+		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 		$this->outboxService = $outboxService;
 	}
 

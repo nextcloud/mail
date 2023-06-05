@@ -38,8 +38,6 @@ use OCP\BackgroundJob\TimedJob;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
-use function defined;
-use function method_exists;
 use function sprintf;
 
 class SyncJob extends TimedJob {
@@ -67,12 +65,7 @@ class SyncJob extends TimedJob {
 		$this->jobList = $jobList;
 
 		$this->setInterval(3600);
-		/**
-		 * @todo remove checks with 24+
-		 */
-		if (defined('\OCP\BackgroundJob\IJob::TIME_SENSITIVE') && method_exists($this, 'setTimeSensitivity')) {
-			$this->setTimeSensitivity(self::TIME_SENSITIVE);
-		}
+		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 
 	/**
