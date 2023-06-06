@@ -114,7 +114,7 @@
 			</template>
 		</template>
 		<template #extra>
-			<AccountSettings v-if="showSettings" :account="account" @close="showAccountSettings = false" />
+			<AccountSettings :open="showSettings" :account="account" @update:open="toggleAccountSettings" />
 		</template>
 	</AppNavigationItem>
 </template>
@@ -333,7 +333,7 @@ export default {
 		 * Toggles the account settings overview
 		 */
 		toggleAccountSettings() {
-			this.displayAccountSettings = !this.displayAccountSettings
+			this.showSettings = !this.showSettings
 		},
 		/**
 		 * Shows the account settings

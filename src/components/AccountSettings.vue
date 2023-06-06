@@ -24,8 +24,9 @@
 
 <template>
 	<AppSettingsDialog id="app-settings-dialog"
-		:open="true"
-		:show-navigation="true">
+		:open="open"
+		:show-navigation="true"
+		@update:open="updateOpen">
 		<AppSettingsSection
 			id="account-settings"
 			:title="t('mail', 'Account settings')">
@@ -140,6 +141,10 @@ export default {
 			required: true,
 			type: Object,
 		},
+		open: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		menu() {
@@ -162,6 +167,9 @@ export default {
 			this.$refs.accountForm.$el.scrollIntoView({
 				behavior: 'smooth',
 			})
+		},
+		updateOpen() {
+			this.$emit('update:open')
 		},
 	},
 }
