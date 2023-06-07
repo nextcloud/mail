@@ -35,9 +35,11 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
+use OCP\IConfig;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function max;
 use function sprintf;
 
 class SyncJob extends TimedJob {
@@ -54,7 +56,8 @@ class SyncJob extends TimedJob {
 								MailboxSync $mailboxSync,
 								ImapToDbSynchronizer $syncService,
 								LoggerInterface $logger,
-								IJobList $jobList) {
+								IJobList $jobList,
+								IConfig $config) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -64,7 +67,12 @@ class SyncJob extends TimedJob {
 		$this->logger = $logger;
 		$this->jobList = $jobList;
 
-		$this->setInterval(3600);
+		$this->setInterval(
+			max(
+				5 * 60,
+				$config->getSystemValueInt('app.mail.background-sync-interval', 3600)
+			),
+		);
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 

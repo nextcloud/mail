@@ -42,6 +42,14 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 'app.mail.sieve.timeout' => 2
 ```
 
+### Background sync interval
+
+Configure how often Mail keeps users' mailboxes updated in the background in seconds. Defaults to 3600.
+
+```php
+'app.mail.background-sync-interval' => 7200,
+```
+
 ### Use php-mail for sending mail
 You can use the php-mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
