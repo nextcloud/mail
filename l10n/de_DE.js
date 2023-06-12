@@ -65,7 +65,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "Anmeldungs-Popup wurde geschlossen",
     "There was an error while setting up your account" : "Bei der Einrichtung Ihres Kontos ist ein Fehler aufgetreten",
     "Account settings" : "Konto-Einstellungen",
-    "Alias to S/MIME certificate mapping" : "Alias einerm S/MIME-Zertifikat zuordnen",
+    "Alias to S/MIME certificate mapping" : "Alias einem S/MIME-Zertifikat zuordnen",
     "Signature" : "Signatur",
     "A signature is added to the text of new messages and replies." : "Dem Text der Nachrichten und Antworten wird eine Signatur hinzugefügt.",
     "Writing mode" : "Schreibmodus",
