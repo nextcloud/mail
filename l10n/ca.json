@@ -272,7 +272,7 @@
     "Moving" : "Movent",
     "Moving thread" : "Movent fil",
     "Moving message" : "Movent missatge",
-    "Mail settings" : "Configuració de correu",
+    "Mail settings" : "Paràmetres de Correu",
     "Provisioned account is disabled" : "El compte provisionat està desactivat",
     "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Si us plau, inicieu la sessió amb una contrasenya per habilitar aquest compte. La sessió actual utilitza l'autenticació sense contrasenya, p. SSO o WebAuthn.",
     "Quota" : "Quota",
