@@ -34,14 +34,19 @@
 
 		<div class="composer-session__actions">
 			<NcActions>
-				<NcActionButton :disabled="disabled" @click.stop="onShowComposer">
+				<NcActionButton
+					:aria-label="t('mail', 'Expand composer')"
+					:disabled="disabled"
+					@click.stop="onShowComposer">
 					<template #icon>
 						<ArrowExpandIcon :size="20" />
 					</template>
 				</NcActionButton>
 			</NcActions>
 			<NcActions>
-				<NcActionButton :disabled="disabled" @click.stop="onClose">
+				<NcActionButton :aria-label="t('mail', 'Close composer')"
+					:disabled="disabled"
+					@click.stop="onClose">
 					<template #icon>
 						<CloseIcon :size="20" />
 					</template>

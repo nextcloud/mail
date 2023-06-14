@@ -46,7 +46,7 @@
 		</EmptyContent>
 		<template v-else>
 			<NcActions class="minimize-button">
-				<NcActionButton @click="onMinimize">
+				<NcActionButton :aria-label="t('mail', 'Minimize composer')" @click="onMinimize">
 					<template #icon>
 						<MinimizeIcon :size="20" />
 					</template>
