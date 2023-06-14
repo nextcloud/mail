@@ -94,7 +94,7 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 333;
+	private const MAX_TRAINING_SET_SIZE = 300;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
