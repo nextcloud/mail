@@ -34,45 +34,51 @@
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>
 		<Actions :boundaries-element="boundariesElement">
-			<ActionButton
-				v-if="isCalendarEvent"
-				class="attachment-import calendar"
-				:disabled="loadingCalendars"
-				@click.stop="loadCalendars">
-				<template #icon>
-					<IconAdd v-if="!loadingCalendars" :size="20" />
-					<IconLoading v-else-if="loadingCalendars" :size="20" />
-				</template>
-				{{ t('mail', 'Import into calendar') }}
-			</ActionButton>
-			<ActionButton
-				class="attachment-download"
-				@click="download">
-				<template #icon>
-					<IconDownload :size="20" />
-				</template>
-				{{ t('mail', 'Download attachment') }}
-			</ActionButton>
-			<ActionButton
-				class="attachment-save-to-cloud"
-				:disabled="savingToCloud"
-				@click.stop="saveToCloud">
-				<template #icon>
-					<IconSave v-if="!savingToCloud" :size="20" />
-					<IconLoading v-else-if="savingToCloud" :size="20" />
-				</template>
-				{{ t('mail', 'Save to Files') }}
-			</ActionButton>
-			<div
-				v-on-click-outside="closeCalendarPopover"
-				class="popovermenu bubble attachment-import-popover hidden"
-				:class="{open: showCalendarPopover}">
-				<PopoverMenu :menu="calendarMenuEntries">
+			<template v-if="!showCalendarPopover">
+				<ActionButton
+					v-if="isCalendarEvent"
+					class="attachment-import calendar"
+					:disabled="loadingCalendars"
+					@click.stop="loadCalendars">
 					<template #icon>
-						<IconAdd :size="20" />
+						<IconAdd v-if="!loadingCalendars" :size="20" />
+						<IconLoading v-else-if="loadingCalendars" :size="20" />
 					</template>
-				</PopoverMenu>
-			</div>
+					{{ t('mail', 'Import into calendar') }}
+				</ActionButton>
+				<ActionButton
+					class="attachment-download"
+					@click="download">
+					<template #icon>
+						<IconDownload :size="20" />
+					</template>
+					{{ t('mail', 'Download attachment') }}
+				</ActionButton>
+				<ActionButton
+					class="attachment-save-to-cloud"
+					:disabled="savingToCloud"
+					@click.stop="saveToCloud">
+					<template #icon>
+						<IconSave v-if="!savingToCloud" :size="20" />
+						<IconLoading v-else-if="savingToCloud" :size="20" />
+					</template>
+					{{ t('mail', 'Save to Files') }}
+				</ActionButton>
+			</template>
+			<template v-else>
+				<ActionButton
+					@click="closeCalendarPopover">
+					<template #icon>
+						<IconArrow :size="20" />
+					</template>
+					{{ t('mail', 'Go back') }}
+				</ActionButton>
+				<ActionButton v-for="entry in calendarMenuEntries"
+					:key="entry.text"
+					@click="entry.action">
+					{{ entry.text }}
+				</ActionButton>
+			</template>
 		</Actions>
 	</div>
 </template>
@@ -81,12 +87,13 @@
 
 import { formatFileSize } from '@nextcloud/files'
 import { translate as t } from '@nextcloud/l10n'
-import { getFilePickerBuilder } from '@nextcloud/dialogs'
+import { getFilePickerBuilder, showError, showSuccess } from '@nextcloud/dialogs'
 import { mixin as onClickOutside } from 'vue-on-click-outside'
 
-import { NcPopoverMenu as PopoverMenu, NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
 import IconAdd from 'vue-material-design-icons/Plus'
+import IconArrow from 'vue-material-design-icons/ArrowLeft'
 import IconSave from 'vue-material-design-icons/Folder'
 import IconDownload from 'vue-material-design-icons/Download'
 import Logger from '../logger'
@@ -97,10 +104,10 @@ import { getUserCalendars, importCalendarEvent } from '../service/DAVService'
 export default {
 	name: 'MessageAttachment',
 	components: {
-		PopoverMenu,
 		Actions,
 		ActionButton,
 		IconAdd,
+		IconArrow,
 		IconLoading,
 		IconSave,
 		IconDownload,
@@ -224,8 +231,13 @@ export default {
 			return () => {
 				downloadAttachment(this.url)
 					.then(importCalendarEvent(url))
-					.then(() => Logger.info('calendar imported'))
-					.catch((e) => Logger.error('import error', { error: e }))
+					.then(() => {
+						showSuccess(t('mail', 'calendar imported'))
+					})
+					.catch((error) => {
+						Logger.error('Could not import event', { error })
+						showError(t('mail', 'Could not create event'))
+					})
 					.then(() => (this.showCalendarPopover = false))
 			}
 		},
