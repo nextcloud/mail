@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.2.1 - 2023-06-14
+### Fixed
+- Allow dynamic autoloading for classes added during upgrade
+
 ## 3.2.0 - 2023-06-07
 ### Added
 - Create a task from a message
