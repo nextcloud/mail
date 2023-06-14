@@ -125,7 +125,7 @@ class RunMetaEstimator extends Command {
 
 		$estimator = static function () use ($consoleLogger) {
 			$params = [
-				[5, 10, 15, 20, 25, 30], // Neighbors
+				[5, 10, 15, 20, 25, 30, 35, 40], // Neighbors
 				[true, false], // Weighted?
 				[new Euclidean(), new Manhattan(), new Jaccard()], // Kernel
 			];
@@ -134,7 +134,7 @@ class RunMetaEstimator extends Command {
 				KNearestNeighbors::class,
 				$params,
 				new FBeta(),
-				new KFold(3)
+				new KFold(5)
 			);
 			$estimator->setLogger($consoleLogger);
 			$estimator->setBackend(new Amp());
