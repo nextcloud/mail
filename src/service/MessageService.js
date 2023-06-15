@@ -106,18 +106,22 @@ export async function clearCache(accountId, id) {
 	}
 }
 
-export function setEnvelopeFlag(id, flag, value) {
+/**
+ * Set flags for envelope
+ *
+ * @param {int} id
+ * @param {object} flags
+ */
+export async function setEnvelopeFlags(id, flags) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/flags', {
 		id,
 	})
 
-	return axios
-		.put(url, {
-			flags: {
-				[flag]: value,
-			},
-		})
+	return await axios.put(url, {
+		flags,
+	})
 }
+
 export async function createEnvelopeTag(displayName, color) {
 	const url = generateUrl('/apps/mail/api/tags')
 
