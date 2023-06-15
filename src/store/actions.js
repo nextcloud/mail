@@ -73,7 +73,7 @@ import {
 	fetchThread,
 	moveMessage,
 	removeEnvelopeTag,
-	setEnvelopeFlag,
+	setEnvelopeFlags,
 	setEnvelopeTag,
 	syncEnvelopes,
 	updateEnvelopeTag,
@@ -897,7 +897,9 @@ export default {
 			})
 
 			try {
-				await setEnvelopeFlag(envelope.databaseId, 'flagged', !oldState)
+				await setEnvelopeFlags(envelope.databaseId, {
+					flagged: !oldState,
+				})
 			} catch (error) {
 				logger.error('Could not toggle message flagged state', { error })
 
@@ -943,7 +945,9 @@ export default {
 			})
 
 			try {
-				await setEnvelopeFlag(envelope.databaseId, 'seen', newState)
+				await setEnvelopeFlags(envelope.databaseId, {
+					seen: newState,
+				})
 			} catch (error) {
 				console.error('could not toggle message seen state', error)
 
@@ -974,8 +978,10 @@ export default {
 			})
 
 			try {
-				await setEnvelopeFlag(envelope.databaseId, '$junk', !oldState)
-				await setEnvelopeFlag(envelope.databaseId, '$notjunk', oldState)
+				await setEnvelopeFlags(envelope.databaseId, {
+					$junk: !oldState,
+					$notjunk: oldState,
+				})
 			} catch (error) {
 				console.error('could not toggle message junk state', error)
 
@@ -1006,7 +1012,9 @@ export default {
 			})
 
 			try {
-				await setEnvelopeFlag(envelope.databaseId, 'flagged', favFlag)
+				await setEnvelopeFlags(envelope.databaseId, {
+					flagged: favFlag,
+				})
 			} catch (error) {
 				console.error('could not favorite/unfavorite message ' + envelope.uid, error)
 
