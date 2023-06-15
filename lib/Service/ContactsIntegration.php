@@ -72,7 +72,7 @@ class ContactsIntegration {
 		$shareeEnumerationFullMatchUserId = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_userid', 'yes') === 'yes';
 		$shareeEnumerationFullMatchEmail = $shareeEnumerationFullMatch && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes') === 'yes';
 
-		$result = $this->contactsManager->search($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $shareeEnumeration]);
+		$result = $this->contactsManager->search($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $shareeEnumeration, 'fullmatch' => $shareeEnumerationFullMatch]);
 		if (empty($result)) {
 			return [];
 		}
@@ -118,18 +118,25 @@ class ContactsIntegration {
 					continue;
 				}
 				$lowerTerm = strtolower($term);
-				if (!$isSystemUser || $isInSameGroup || ($lowerTerm !== '' && (
-					($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower($fn)) ||
-					($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id)) ||
-					($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower($e))))) {
-					$receivers[] = [
-						'id' => $id,
-						// Show full name if possible or fall back to email
-						'label' => (empty($fn) ? $e : "$fn ($e)"),
-						'email' => $e,
-						'photo' => $photo,
-					];
+
+				if ($isSystemUser && $shareeEnumerationInGroupOnly && !$isInSameGroup) {
+					// Check for full match. If full match is disabled, matching results already filtered out
+					if (!($lowerTerm !== '' && (
+						($shareeEnumerationFullMatch && !empty($fn) && $lowerTerm === strtolower($fn)) ||
+						($shareeEnumerationFullMatchUserId && $lowerTerm === strtolower($id)) ||
+						($shareeEnumerationFullMatchEmail && $lowerTerm === strtolower($e))))) {
+						// Not a full Match
+						continue;
+					}
 				}
+
+				$receivers[] = [
+					'id' => $id,
+					// Show full name if possible or fall back to email
+					'label' => (empty($fn) ? $e : "$fn ($e)"),
+					'email' => $e,
+					'photo' => $photo,
+				];
 			}
 		}
 
