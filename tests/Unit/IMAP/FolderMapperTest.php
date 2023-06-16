@@ -63,6 +63,48 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals([], $folders);
 	}
 
+	public function testGetFoldersNonExistent(): void {
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(27);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('listMailboxes')
+			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL_SUBSCRIBED),
+				$this->equalTo([
+					'delimiter' => true,
+					'attributes' => true,
+					'special_use' => true,
+					'status' => Horde_Imap_Client::STATUS_ALL,
+				]))
+			->willReturn([
+				[
+					'mailbox' => new Horde_Imap_Client_Mailbox('INBOX'),
+					'attributes' => [],
+					'delimiter' => '.',
+					'status' => [
+						'unseen' => 0,
+					],
+				],
+				[
+					'mailbox' => new Horde_Imap_Client_Mailbox('shared'),
+					'attributes' => [
+						'\\nonexistent',
+					],
+					'delimiter' => '.',
+					'status' => [
+						'unseen' => null,
+					],
+				],
+			]);
+		$expected = [
+			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', ['unseen' => 0]),
+		];
+
+		$folders = $this->mapper->getFolders($account, $client);
+
+		$this->assertEquals($expected, $folders);
+	}
+
 	public function testGetFolders(): void {
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(27);
