@@ -15,7 +15,8 @@
 		:data-envelope-id="data.databaseId"
 		:title="addresses"
 		:details="formatted()"
-		@click="onClick">
+		@click="onClick"
+		@click.ctrl="toggleSelected">
 		<template #icon>
 			<Star
 				v-if="data.flags.flagged"
