@@ -25,6 +25,7 @@ OC.L10N.register(
     "Connect" : "Ühenda",
     "Signature" : "Allkiri",
     "Go back" : "Mine tagasi",
+    "Email address" : "E-posti aadress",
     "Cancel" : "Loobu",
     "From" : "Saatja",
     "To" : "Saaja",
