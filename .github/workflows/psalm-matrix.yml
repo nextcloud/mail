@@ -24,18 +24,19 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        ocp-version: [ 'dev-master', 'dev-stable26' ]
+        ocp-version: [ 'dev-stable27', 'dev-stable26' ]
 
     name: Nextcloud ${{ matrix.ocp-version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
       - name: Set up php
-        uses: shivammathur/setup-php@cb8f453143149404c7fd670b5f37c91d395b3054 # v2
+        uses: shivammathur/setup-php@c5fc0d8281aba02c7fda07d3a70cc5371548067d # v2
         with:
           php-version: 8.0
           coverage: none
+          ini-file: development
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -43,7 +44,7 @@ jobs:
         run: composer i
 
       - name: Install dependencies
-        run: composer require --dev nextcloud/ocp:${{ matrix.ocp-version }} --ignore-platform-reqs
+        run: composer require --dev nextcloud/ocp:${{ matrix.ocp-version }} --ignore-platform-reqs --with-dependencies
 
       - name: Run coding standards check
         run: composer run psalm
