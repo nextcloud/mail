@@ -113,7 +113,7 @@ OC.L10N.register(
     "Monday morning" : "У понеділок вранці",
     "Enter a date" : "Введіть дату",
     "Send" : "Надіслати",
-    "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Будь-яке існуюче форматування (наприклад, напівжирний шрифт, курсив, підкреслені чи вбудовані зображення) буде видалено.",
+    "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Будь-яке існуюче форматування (наприклад, напівгрубий шрифт, курсив, підкреслені чи вбудовані зображення) буде видалено.",
     "Turn off formatting" : "Вимкніть форматування",
     "Turn off and remove formatting" : "Вимкніть і видаліть форматування",
     "Keep formatting" : "Продовжуйте форматувати",
