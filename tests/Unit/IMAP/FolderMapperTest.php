@@ -181,6 +181,30 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $created);
 	}
 
+	public function testFetchFoldersAclsNoSelect(): void {
+		$folders = [
+			$this->createMock(Folder::class),
+		];
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$folders[0]->expects($this->any())
+			->method('getAttributes')
+			->willReturn(['\\NoSelect']);
+		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
+		$client
+			->method('__get')
+			->with('capability')
+			->willReturn($capability);
+		$capability
+			->expects(self::once())
+			->method('query')
+			->with('ACL')
+			->willReturn(true);
+		$client->expects(self::never())
+			->method('getMyACLRights');
+
+		$this->mapper->fetchFolderAcls($folders, $client);
+	}
+
 	public function testFetchFoldersAcls(): void {
 		$folders = [
 			$this->createMock(Folder::class),
@@ -199,6 +223,8 @@ class FolderMapperTest extends TestCase {
 			->method('query')
 			->with('ACL')
 			->willReturn(false);
+		$client->expects(self::never())
+			->method('getMyACLRights');
 
 		$this->mapper->fetchFolderAcls($folders, $client);
 	}
