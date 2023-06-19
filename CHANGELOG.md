@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.2.2 - 2023-06-19
+### Fixed
+- Calendar import popup
+- PHP8.2 warnings about string interpolation
+- OAuth access token written to wrong database field
+### Changed
+- Document Ethical AI rating
+
 ## 3.2.1 - 2023-06-14
 ### Fixed
 - Allow dynamic autoloading for classes added during upgrade
