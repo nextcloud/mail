@@ -123,7 +123,7 @@ class FolderMapper {
 
 		foreach ($folders as $folder) {
 			$acls = null;
-			if ($hasAcls) {
+			if ($hasAcls && !in_array('\\noselect', array_map('strtolower', $folder->getAttributes()), true)) {
 				$acls = (string)$client->getMyACLRights($folder->getMailbox());
 			}
 
