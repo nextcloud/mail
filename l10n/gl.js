@@ -532,7 +532,7 @@ OC.L10N.register(
     "The provided PKCS #12 certificate must contain at least one certificate and exactly one private key." : "O certificado PKCS #12 subministrado debe conter polo menos un certificado e exactamente unha chave privada.",
     "Failed to import the certificate. Please check the password." : "Produciuse un fallo ao importar o certificado. Comprobe o contrasinal.",
     "Certificate imported successfully" : "O certificado importouse correctamente",
-    "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "Produciuse un fallo ao importar o certificado. Asegúrese de que a chave privada coincide co certificado e non estea protexida por un contrasinal.",
+    "Failed to import the certificate. Please make sure that the private key matches the certificate and is not protected by a passphrase." : "Produciuse un fallo ao importar o certificado. Asegúrese de que a chave privada coincide co certificado e non estea protexida por unha frase de contrasinal.",
     "Failed to import the certificate" : "Produciuse un fallo ao importar o certificado",
     "Keyboard shortcut" : "Atallo de teclado",
     "Keyboard shortcuts" : "Atallos de teclado",
