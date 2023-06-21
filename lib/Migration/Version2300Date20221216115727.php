@@ -65,6 +65,7 @@ class Version2300Date20221216115727 extends SimpleMigrationStep {
 			$table->addColumn('private_key', Types::TEXT, [
 				'notnull' => false,
 			]);
+			$table->setPrimaryKey(['id'], 'mail_smime_certs_id_idx');
 			$table->addIndex(['user_id'], 'mail_smime_certs_uid_idx');
 			$table->addIndex(['id', 'user_id'], 'mail_smime_certs_id_uid_idx');
 		}
