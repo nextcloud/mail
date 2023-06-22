@@ -55,6 +55,7 @@ class FilterStringParser {
 			'answered' => Flag::is(Flag::ANSWERED),
 			'read' => Flag::is(Flag::SEEN),
 			'unread' => Flag::not(Flag::SEEN),
+			'starred' => Flag::is(Flag::FLAGGED),
 			'important' => Flag::is(Flag::IMPORTANT),
 			'is_important' => FlagExpression::and(
 				Flag::is(Flag::IMPORTANT)
