@@ -127,7 +127,7 @@ class ImapToDbSynchronizer {
 				continue;
 			}
 			$logger->debug("Syncing " . $mailbox->getId());
-			$rebuildThreads = $rebuildThreads || $this->sync(
+			if ($this->sync(
 				$account,
 				$mailbox,
 				$logger,
@@ -135,7 +135,9 @@ class ImapToDbSynchronizer {
 				null,
 				$force,
 				true
-			);
+			)) {
+				$rebuildThreads = true;
+			}
 		}
 		$this->dispatcher->dispatchTyped(
 			new SynchronizationEvent(
