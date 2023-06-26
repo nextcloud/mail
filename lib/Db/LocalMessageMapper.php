@@ -179,7 +179,7 @@ class LocalMessageMapper extends QBMapper {
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->isNotNull('send_at'),
+				$qb->expr()->isNull('send_at'),
 				$qb->expr()->eq('type', $qb->createNamedParameter(LocalMessage::TYPE_DRAFT, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->lte('updated_at', $qb->createNamedParameter($time - 300, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->orX(
