@@ -85,7 +85,7 @@ OC.L10N.register(
     "Send later" : "나중에 보내기",
     "Enable formatting" : "서식 활성화",
     "Request a read receipt" : "수신 확인 요청",
-    "Encrypt message with Mailvelope" : "Mailvelope로 메세지 암호화",
+    "Encrypt message with Mailvelope" : "Mailvelope로 메시지 암호화",
     "Send now" : "지금 보내기",
     "Tomorrow morning" : "내일 아침",
     "Tomorrow afternoon" : "내일 오후",
