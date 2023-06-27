@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="dev-master@">
-  <file src="lib/Db/MessageMapper.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$update-&gt;execute()</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>int</code>
-    </InvalidReturnType>
+<files psalm-version="5.13.1@086b94371304750d1c673315321a55d15fc59015">
+  <file src="lib/Cache/Cache.php">
+    <UnsupportedPropertyReferenceUsage>
+      <code><![CDATA[$d = &$this->_data[$mailbox]]]></code>
+      <code><![CDATA[$d = &$this->_data[$mailbox]]]></code>
+      <code><![CDATA[$d = &$this->_data[$mbox]]]></code>
+      <code><![CDATA[$ptr = &$this->_data[$mailbox]]]></code>
+      <code><![CDATA[$ptr = &$this->_slicemap[$mailbox]]]></code>
+      <code><![CDATA[$ptr = &$this->_slicemap[$mailbox]]]></code>
+      <code><![CDATA[$s = &$this->_slicemap[$mailbox]['s']]]></code>
+      <code><![CDATA[$s = &$this->_slicemap[$mbox]]]></code>
+      <code><![CDATA[$slicemap = &$this->_slicemap[$mailbox]]]></code>
+    </UnsupportedPropertyReferenceUsage>
   </file>
-  <file src="lib/Service/Classification/ImportanceClassifier.php">
-    <InvalidArgument occurrences="1">
-      <code>$predictedValidationLabel</code>
-    </InvalidArgument>
-  </file>
-  <file src="lib/Service/ContactsIntegration.php">
-    <InvalidArgument occurrences="1">
-      <code>['types' =&gt; true, 'limit' =&gt; 1]</code>
-    </InvalidArgument>
-  </file>
-  <file src="lib/Service/MimeMessage.php">
-    <UndefinedPropertyFetch occurrences="3">
-      <code>$doc-&gt;documentElement</code>
-      <code>$node-&gt;tagName</code>
-      <code>$node-&gt;textContent</code>
-    </UndefinedPropertyFetch>
+  <file src="lib/Rector/ServerGetRector.php">
+    <UndefinedClass>
+      <code>AbstractRector</code>
+    </UndefinedClass>
   </file>
 </files>
