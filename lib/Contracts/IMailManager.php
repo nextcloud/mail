@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
-use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
@@ -44,7 +43,7 @@ interface IMailManager {
 	 *
 	 * @return Mailbox
 	 *
-	 * @throws DoesNotExistException
+	 * @throws ClientException
 	 */
 	public function getMailbox(string $uid, int $id): Mailbox;
 
