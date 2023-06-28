@@ -3,12 +3,11 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright Copyright (c) 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,13 +25,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OCA\Mail\AddressList;
-use OCA\Mail\Db\Message;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Classification\ImportanceClassifier;
-use OCA\Mail\Support\ConsoleLoggerDecorator;
+use OCA\Mail\Service\PreprocessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,73 +35,47 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
 
-class PredictImportance extends Command {
+class PreprocessAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
-	public const ARGUMENT_SENDER = 'sender';
-	public const ARGUMENT_SUBJECT = 'subject';
 
 	private AccountService $accountService;
-	private ImportanceClassifier $classifier;
-	private IConfig $config;
+	private PreprocessingService $preprocessingService;
 	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								ImportanceClassifier $classifier,
-								IConfig $config,
-								LoggerInterface $logger) {
+		PreprocessingService $preprocessingService,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
-		$this->classifier = $classifier;
+		$this->preprocessingService = $preprocessingService;
 		$this->logger = $logger;
-		$this->config = $config;
 	}
 
-	protected function configure(): void {
-		$this->setName('mail:predict-importance');
-		$this->setDescription('Predict importance of an incoming message');
+	/**
+	 * @return void
+	 */
+	protected function configure() {
+		$this->setName('mail:account:preprocess');
+		$this->setDescription('Preprocess all mailboxes of an IMAP account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
-		$this->addArgument(self::ARGUMENT_SENDER, InputArgument::REQUIRED);
-		$this->addArgument(self::ARGUMENT_SUBJECT, InputArgument::OPTIONAL);
-	}
-
-	public function isEnabled(): bool {
-		return $this->config->getSystemValueBool('debug');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
-		$sender = $input->getArgument(self::ARGUMENT_SENDER);
-		$subject = $input->getArgument(self::ARGUMENT_SUBJECT) ?? '';
-
-		$consoleLogger = new ConsoleLoggerDecorator(
-			$this->logger,
-			$output
-		);
 
 		try {
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$output->writeln("<error>account $accountId does not exist</error>");
+			$output->writeln("<error>Account $accountId does not exist</error>");
 			return 1;
 		}
-		$fakeMessage = new Message();
-		$fakeMessage->setUid(0);
-		$fakeMessage->setFrom(AddressList::parse("Name <$sender>"));
-		$fakeMessage->setSubject($subject);
-		[$prediction] = $this->classifier->classifyImportance(
-			$account,
-			[$fakeMessage],
-			$consoleLogger
-		);
-		if ($prediction) {
-			$output->writeln('Message is important');
-		} else {
-			$output->writeln('Message is not important');
-		}
+
+		$this->preprocessingService->process(4294967296, $account);
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
 		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
+
 		return 0;
 	}
 }

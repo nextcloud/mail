@@ -63,6 +63,9 @@ use OCP\AppFramework\Db\Entity;
  *
  * @method int getCreatedAt()
  * @method void setCreatedAt(int $createdAt)
+ *
+ * @method string|null getTransformers()
+ * @method void setTransformers(string|null $transformers)
  */
 class Classifier extends Entity {
 	public const TYPE_IMPORTANCE = 'importance';
