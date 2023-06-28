@@ -563,7 +563,7 @@ OC.L10N.register(
     "Could not load the message" : "No s’ha pogut carregar el missatge",
     "Error loading message" : "S'ha produït un error mentre es carregava el missatge",
     "Forwarding to %s" : "S'està reenviant a %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Premeu aquí si no se us redirigeix automàticament d'aquí pocs segons.",
+    "Click here if you are not automatically redirected within the next few seconds." : "Premeu aquí si no se us redirigeix automàticament d'aquí a pocs segons.",
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -156,11 +158,41 @@ class ProxyControllerTest extends TestCase {
 		$this->controller->redirect('ftps://example.com');
 	}
 
-	public function testProxy() {
+	public function testProxyWithoutCookies(): void {
+		$src = 'http://example.com';
+		$content = '🐵🐵🐵';
+		$this->session->expects($this->once())
+			->method('close');
+		$client = $this->getMockBuilder(IClient::class)->getMock();
+		$this->clientService->expects(self::never())
+			->method('newClient')
+			->willReturn($client);
+		$unexpected = new ProxyDownloadResponse(
+			$content,
+			$src,
+			'application/octet-stream'
+		);
+		$this->controller = new ProxyController(
+			$this->appName,
+			$this->request,
+			$this->urlGenerator,
+			$this->session,
+			$this->clientService,
+			$this->logger
+		);
+
+		$response = $this->controller->proxy($src);
+
+		$this->assertNotEquals($unexpected, $response);
+	}
+
+	public function testProxy(): void {
 		$src = 'http://example.com';
 		$httpResponse = $this->createMock(IResponse::class);
 		$content = '🐵🐵🐵';
-
+		$this->request->expects(self::once())
+			->method('passesStrictCookieCheck')
+			->willReturn(true);
 		$this->session->expects($this->once())
 			->method('close');
 		$client = $this->getMockBuilder(IClient::class)->getMock();
