@@ -335,7 +335,7 @@ class MessageMapper extends QBMapper {
 						$qb2->setParameter('message_id', $messageId, IQueryBuilder::PARAM_INT);
 						$qb2->setParameter('type', $type, IQueryBuilder::PARAM_INT);
 						$qb2->setParameter('label', mb_strcut($recipient->getLabel(), 0, 255), IQueryBuilder::PARAM_STR);
-						$qb2->setParameter('email', $recipient->getEmail(), IQueryBuilder::PARAM_STR);
+						$qb2->setParameter('email', mb_strcut($recipient->getEmail(), 0, 255), IQueryBuilder::PARAM_STR);
 
 						$qb2->execute();
 					}
