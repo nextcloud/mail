@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.2.3 - 2023-06-28
+### Fixed
+- Ignore no select mailboxes for MYRIGHTS
+- Ignore non existent mailboxes (again)
+- Truncate email addresses that are more than 244 characters long
+- Check strict cookies for image proxy
+- DB-Query for open drafts
+- Set primary key in first migration
+
+
 ## 3.2.2 - 2023-06-19
 ### Fixed
 - Calendar import popup
