@@ -488,7 +488,7 @@ OC.L10N.register(
     "Error saving anti spam email addresses" : "Produciuse un erro ao gardar os enderezos de correo «antispam»",
     "Successfully deleted anti spam reporting email" : "Eliminouse correctamente o correo de informes «antispam»",
     "Error deleting anti spam reporting email" : "Produciuse un erro ao eliminar o correo de informes «antispam»",
-    "Client ID" : "ID do cliente",
+    "Client ID" : "ID de cliente",
     "Client secret" : "Segredo do cliente",
     "Unlink" : "Desligar",
     "Google integration configured" : "Foi configurada a integración de Google",
