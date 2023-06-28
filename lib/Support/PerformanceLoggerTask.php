@@ -50,8 +50,8 @@ class PerformanceLoggerTask {
 	private $rel;
 
 	public function __construct(string $task,
-								ITimeFactory $timeFactory,
-								LoggerInterface $logger) {
+		ITimeFactory $timeFactory,
+		LoggerInterface $logger) {
 		$this->task = $task;
 		$this->timeFactory = $timeFactory;
 		$this->logger = $logger;

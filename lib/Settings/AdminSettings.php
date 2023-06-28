@@ -51,11 +51,11 @@ class AdminSettings implements ISettings {
 	private IConfig $config;
 
 	public function __construct(IInitialStateService $initialStateService,
-								ProvisioningManager $provisioningManager,
-								AntiSpamService $antiSpamService,
-								GoogleIntegration $googleIntegration,
-								MicrosoftIntegration $microsoftIntegration,
-								IConfig $config) {
+		ProvisioningManager $provisioningManager,
+		AntiSpamService $antiSpamService,
+		GoogleIntegration $googleIntegration,
+		MicrosoftIntegration $microsoftIntegration,
+		IConfig $config) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;

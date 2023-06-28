@@ -120,18 +120,18 @@ class MailTransmission implements IMailTransmission {
 	 * @param Folder $userFolder
 	 */
 	public function __construct($userFolder,
-								IAttachmentService $attachmentService,
-								IMailManager $mailManager,
-								IMAPClientFactory $imapClientFactory,
-								SmtpClientFactory $smtpClientFactory,
-								IEventDispatcher $eventDispatcher,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								LoggerInterface $logger,
-								PerformanceLogger $performanceLogger,
-								AliasesService $aliasesService,
-								GroupsIntegration $groupsIntegration,
-								SmimeService $smimeService) {
+		IAttachmentService $attachmentService,
+		IMailManager $mailManager,
+		IMAPClientFactory $imapClientFactory,
+		SmtpClientFactory $smtpClientFactory,
+		IEventDispatcher $eventDispatcher,
+		MailboxMapper $mailboxMapper,
+		MessageMapper $messageMapper,
+		LoggerInterface $logger,
+		PerformanceLogger $performanceLogger,
+		AliasesService $aliasesService,
+		GroupsIntegration $groupsIntegration,
+		SmimeService $smimeService) {
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
 		$this->mailManager = $mailManager;
@@ -148,9 +148,9 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	public function sendMessage(NewMessageData $messageData,
-								?string $repliedToMessageId = null,
-								Alias $alias = null,
-								Message $draft = null): void {
+		?string $repliedToMessageId = null,
+		Alias $alias = null,
+		Message $draft = null): void {
 		$account = $messageData->getAccount();
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			throw new SentMailboxNotSetException();
@@ -504,8 +504,8 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	private function buildReplyMessage(Account $account,
-									   NewMessageData $messageData,
-									   string $repliedToMessageId): IMessage {
+		NewMessageData $messageData,
+		string $repliedToMessageId): IMessage {
 		// Reply
 		$message = $account->newMessage();
 		$message->setSubject($messageData->getSubject());

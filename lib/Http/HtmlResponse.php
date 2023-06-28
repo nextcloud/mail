@@ -47,9 +47,9 @@ class HtmlResponse extends Response {
 	 * @param string|null $scriptUrl
 	 */
 	private function __construct(string $content,
-								 bool $plain = false,
-								 string $nonce = null,
-								 string $scriptUrl = null) {
+		bool $plain = false,
+		string $nonce = null,
+		string $scriptUrl = null) {
 		parent::__construct();
 		$this->content = $content;
 		$this->plain = $plain;
@@ -62,8 +62,8 @@ class HtmlResponse extends Response {
 	}
 
 	public static function withResizer(string $content,
-									   string $nonce,
-									   string $scriptUrl): self {
+		string $nonce,
+		string $scriptUrl): self {
 		return new self(
 			$content,
 			false,

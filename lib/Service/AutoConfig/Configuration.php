@@ -36,7 +36,7 @@ class Configuration implements JsonSerializable {
 	private ?ServerConfiguration $smtpConfig;
 
 	public function __construct(?ServerConfiguration $imapConfig,
-								?ServerConfiguration $smtpConfig) {
+		?ServerConfiguration $smtpConfig) {
 		$this->imapConfig = $imapConfig;
 		$this->smtpConfig = $smtpConfig;
 	}

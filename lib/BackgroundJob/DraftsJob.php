@@ -33,7 +33,7 @@ class DraftsJob extends TimedJob {
 	private DraftsService $draftsService;
 
 	public function __construct(ITimeFactory $time,
-								DraftsService $draftsService) {
+		DraftsService $draftsService) {
 		parent::__construct($time);
 
 		// Run once per five minutes

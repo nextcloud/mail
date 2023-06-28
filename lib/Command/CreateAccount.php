@@ -53,8 +53,8 @@ class CreateAccount extends Command {
 	private IUserManager $userManager;
 
 	public function __construct(AccountService $service,
-								ICrypto $crypto,
-								IUserManager $userManager) {
+		ICrypto $crypto,
+		IUserManager $userManager) {
 		parent::__construct();
 
 		$this->accountService = $service;

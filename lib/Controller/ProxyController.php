@@ -45,11 +45,11 @@ class ProxyController extends Controller {
 	private LoggerInterface $logger;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								IURLGenerator $urlGenerator,
-								ISession $session,
-								IClientService $clientService,
-								LoggerInterface $logger) {
+		IRequest $request,
+		IURLGenerator $urlGenerator,
+		ISession $session,
+		IClientService $clientService,
+		LoggerInterface $logger) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;

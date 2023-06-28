@@ -49,8 +49,8 @@ class InteractionListener implements IEventListener {
 	private $logger;
 
 	public function __construct(IEventDispatcher $dispatcher,
-								IUserSession $userSession,
-								LoggerInterface $logger) {
+		IUserSession $userSession,
+		LoggerInterface $logger) {
 		$this->dispatcher = $dispatcher;
 		$this->userSession = $userSession;
 		$this->logger = $logger;

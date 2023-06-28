@@ -41,7 +41,7 @@ class TagMapper extends QBMapper {
 	private $l10n;
 
 	public function __construct(IDBConnection $db,
-								IL10N $l10n) {
+		IL10N $l10n) {
 		parent::__construct($db, 'mail_tags');
 		$this->l10n = $l10n;
 	}

@@ -33,7 +33,7 @@ class OutboxWorkerJob extends TimedJob {
 	private OutboxService $outboxService;
 
 	public function __construct(ITimeFactory $time,
-								OutboxService $outboxService) {
+		OutboxService $outboxService) {
 		parent::__construct($time);
 
 		// Run once per five minutes

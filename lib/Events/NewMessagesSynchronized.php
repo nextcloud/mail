@@ -46,8 +46,8 @@ class NewMessagesSynchronized extends Event {
 	 * @param Message[] $messages
 	 */
 	public function __construct(Account $account,
-								Mailbox $mailbox,
-								array $messages) {
+		Mailbox $mailbox,
+		array $messages) {
 		parent::__construct();
 		$this->account = $account;
 		$this->mailbox = $mailbox;

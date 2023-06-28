@@ -67,8 +67,8 @@ class MessageMapper {
 	private ImapMessageFetcherFactory $imapMessageFactory;
 
 	public function __construct(LoggerInterface           $logger,
-								SmimeService              $smimeService,
-								ImapMessageFetcherFactory $imapMessageFactory) {
+		SmimeService              $smimeService,
+		ImapMessageFetcherFactory $imapMessageFactory) {
 		$this->logger = $logger;
 		$this->smimeService = $smimeService;
 		$this->imapMessageFactory = $imapMessageFactory;
@@ -80,10 +80,10 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function find(Horde_Imap_Client_Base $client,
-						 string $mailbox,
-						 int $id,
-						 string $userId,
-						 bool $loadBody = false): IMAPMessage {
+		string $mailbox,
+		int $id,
+		string $userId,
+		bool $loadBody = false): IMAPMessage {
 		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody);
 
 		if (count($result) === 0) {
@@ -105,12 +105,12 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function findAll(Horde_Imap_Client_Socket $client,
-							string $mailbox,
-							int $maxResults,
-							int $highestKnownUid,
-							LoggerInterface $logger,
-							PerformanceLoggerTask $perf,
-							string $userId): array {
+		string $mailbox,
+		int $maxResults,
+		int $highestKnownUid,
+		LoggerInterface $logger,
+		PerformanceLoggerTask $perf,
+		string $userId): array {
 		/**
 		 * To prevent memory exhaustion, we don't want to just ask for a list of
 		 * all UIDs and limit them client-side. Instead, we can (hopefully
@@ -254,10 +254,10 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
-							  string $mailbox,
-							  $ids,
-							  string $userId,
-							  bool $loadBody = false): array {
+		string $mailbox,
+		$ids,
+		string $userId,
+		bool $loadBody = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
 		$query->flags();
@@ -322,9 +322,9 @@ class MessageMapper {
 	 * @param string $destFolderId
 	 */
 	public function move(Horde_Imap_Client_Base $client,
-						 string $sourceFolderId,
-						 int $messageId,
-						 string $destFolderId): void {
+		string $sourceFolderId,
+		int $messageId,
+		string $destFolderId): void {
 		try {
 			$client->copy($sourceFolderId, $destFolderId,
 				[
@@ -347,7 +347,7 @@ class MessageMapper {
 	}
 
 	public function markAllRead(Horde_Imap_Client_Base $client,
-								string $mailbox): void {
+		string $mailbox): void {
 		$client->store($mailbox, [
 			'add' => [
 				Horde_Imap_Client::FLAG_SEEN,
@@ -359,8 +359,8 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function expunge(Horde_Imap_Client_Base $client,
-							string $mailbox,
-							int $id): void {
+		string $mailbox,
+		int $id): void {
 		try {
 			$client->expunge(
 				$mailbox,
@@ -385,9 +385,9 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function save(Horde_Imap_Client_Socket $client,
-						 Mailbox $mailbox,
-						 Horde_Mime_Mail $mail,
-						 array $flags = []): int {
+		Mailbox $mailbox,
+		Horde_Mime_Mail $mail,
+		array $flags = []): int {
 		$flags = array_merge([
 			Horde_Imap_Client::FLAG_SEEN,
 		], $flags);
@@ -409,9 +409,9 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function addFlag(Horde_Imap_Client_Socket $client,
-							Mailbox $mailbox,
-							array $uids,
-							string $flag): void {
+		Mailbox $mailbox,
+		array $uids,
+		string $flag): void {
 		$client->store(
 			$mailbox->getName(),
 			[
@@ -425,9 +425,9 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function removeFlag(Horde_Imap_Client_Socket $client,
-							   Mailbox $mailbox,
-							   array $uids,
-							   string $flag): void {
+		Mailbox $mailbox,
+		array $uids,
+		string $flag): void {
 		$client->store(
 			$mailbox->getName(),
 			[
@@ -446,8 +446,8 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFlagged(Horde_Imap_Client_Socket $client,
-							   Mailbox $mailbox,
-							   string $flag): array {
+		Mailbox $mailbox,
+		string $flag): array {
 		$query = new Horde_Imap_Client_Search_Query();
 		$query->flag($flag, true);
 		$messages = $client->search($mailbox->getName(), $query);
@@ -465,10 +465,10 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function getFullText(Horde_Imap_Client_Socket $client,
-								string $mailbox,
-								int $uid,
-								string $userId,
-								bool $decrypt = true): ?string {
+		string $mailbox,
+		int $uid,
+		string $userId,
+		bool $decrypt = true): ?string {
 		$query = new Horde_Imap_Client_Fetch_Query();
 
 		if ($decrypt) {
@@ -514,9 +514,9 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function getHtmlBody(Horde_Imap_Client_Socket $client,
-								string                   $mailbox,
-								int                      $uid,
-								string                   $userId): ?string {
+		string                   $mailbox,
+		int                      $uid,
+		string                   $userId): ?string {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->envelope();
 		$messageQuery->structure();
@@ -592,10 +592,10 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function getRawAttachments(Horde_Imap_Client_Socket $client,
-									  string $mailbox,
-									  int $uid,
-									  string $userId,
-									  ?array $attachmentIds = []): array {
+		string $mailbox,
+		int $uid,
+		string $userId,
+		?array $attachmentIds = []): array {
 		$attachments = $this->getAttachments($client, $mailbox, $uid, $userId, $attachmentIds);
 		return array_map(static function (Attachment $attachment) {
 			return $attachment->getContent();
@@ -619,10 +619,10 @@ class MessageMapper {
 	 * @throws Horde_Mime_Exception
 	 */
 	public function getAttachments(Horde_Imap_Client_Socket $client,
-								   string $mailbox,
-								   int $uid,
-								   string $userId,
-								   ?array $attachmentIds = []): array {
+		string $mailbox,
+		int $uid,
+		string $userId,
+		?array $attachmentIds = []): array {
 		$uids = new Horde_Imap_Client_Ids([$uid]);
 
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
@@ -707,10 +707,10 @@ class MessageMapper {
 	 * @throws Horde_Mime_Exception
 	 */
 	public function getAttachment(Horde_Imap_Client_Base $client,
-								  string $mailbox,
-								  int $messageUid,
-								  string $attachmentId,
-								  string $userId): Attachment {
+		string $mailbox,
+		int $messageUid,
+		string $attachmentId,
+		string $userId): Attachment {
 		// TODO: compare logic and merge with getAttachments()
 
 		$query = new Horde_Imap_Client_Fetch_Query();
@@ -837,8 +837,8 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getBodyStructureData(Horde_Imap_Client_Socket $client,
-										 string $mailbox,
-										 array $uids): array {
+		string $mailbox,
+		array $uids): array {
 		$structureQuery = new Horde_Imap_Client_Fetch_Query();
 		$structureQuery->structure();
 		$structureQuery->headerText([

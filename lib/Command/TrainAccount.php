@@ -46,9 +46,9 @@ class TrainAccount extends Command {
 	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								ImportanceClassifier $classifier,
-								IUserPreferences $preferences,
-								LoggerInterface $logger) {
+		ImportanceClassifier $classifier,
+		IUserPreferences $preferences,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;

@@ -42,7 +42,7 @@ class SpamReportListener implements IEventListener {
 	private $antiSpamService;
 
 	public function __construct(LoggerInterface $logger,
-								AntiSpamService $antiSpamService) {
+		AntiSpamService $antiSpamService) {
 		$this->logger = $logger;
 		$this->antiSpamService = $antiSpamService;
 	}

@@ -48,9 +48,9 @@ class PredictImportance extends Command {
 	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								ImportanceClassifier $classifier,
-								IConfig $config,
-								LoggerInterface $logger) {
+		ImportanceClassifier $classifier,
+		IConfig $config,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;

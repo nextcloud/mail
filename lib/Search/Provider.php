@@ -52,9 +52,9 @@ class Provider implements IProvider {
 	private $urlGenerator;
 
 	public function __construct(IMailSearch $mailSearch,
-								IL10N $l10n,
-								IDateTimeFormatter $dateTimeFormatter,
-								IURLGenerator $urlGenerator) {
+		IL10N $l10n,
+		IDateTimeFormatter $dateTimeFormatter,
+		IURLGenerator $urlGenerator) {
 		$this->mailSearch = $mailSearch;
 		$this->l10n = $l10n;
 		$this->dateTimeFormatter = $dateTimeFormatter;

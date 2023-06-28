@@ -38,9 +38,9 @@ class ServerConfiguration implements JsonSerializable {
 	private string $security;
 
 	public function __construct(string $username,
-								string $host,
-								int $port,
-								string $security) {
+		string $host,
+		int $port,
+		string $security) {
 		$this->username = $username;
 		$this->host = $host;
 		$this->port = $port;

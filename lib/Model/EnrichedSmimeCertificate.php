@@ -40,8 +40,8 @@ class EnrichedSmimeCertificate implements JsonSerializable {
 	 * @param SmimeCertificatePurposes $purposes
 	 */
 	public function __construct(SmimeCertificate         $certificate,
-								SmimeCertificateInfo     $info,
-								SmimeCertificatePurposes $purposes) {
+		SmimeCertificateInfo     $info,
+		SmimeCertificatePurposes $purposes) {
 		$this->certificate = $certificate;
 		$this->info = $info;
 		$this->purposes = $purposes;

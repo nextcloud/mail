@@ -51,13 +51,13 @@ class SyncJob extends TimedJob {
 	private IJobList $jobList;
 
 	public function __construct(ITimeFactory $time,
-								IUserManager $userManager,
-								AccountService $accountService,
-								MailboxSync $mailboxSync,
-								ImapToDbSynchronizer $syncService,
-								LoggerInterface $logger,
-								IJobList $jobList,
-								IConfig $config) {
+		IUserManager $userManager,
+		AccountService $accountService,
+		MailboxSync $mailboxSync,
+		ImapToDbSynchronizer $syncService,
+		LoggerInterface $logger,
+		IJobList $jobList,
+		IConfig $config) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;

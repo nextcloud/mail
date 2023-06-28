@@ -40,8 +40,8 @@ class SynchronizationEvent extends Event {
 	private $rebuildThreads;
 
 	public function __construct(Account $account,
-								LoggerInterface $logger,
-								bool $rebuildThreads) {
+		LoggerInterface $logger,
+		bool $rebuildThreads) {
 		parent::__construct();
 
 		$this->account = $account;

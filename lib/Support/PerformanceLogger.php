@@ -36,7 +36,7 @@ class PerformanceLogger {
 	private $logger;
 
 	public function __construct(ITimeFactory $timeFactory,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->timeFactory = $timeFactory;
 		$this->logger = $logger;
 	}

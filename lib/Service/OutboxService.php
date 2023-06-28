@@ -72,14 +72,14 @@ class OutboxService {
 	private $logger;
 
 	public function __construct(IMailTransmission  $transmission,
-								LocalMessageMapper $mapper,
-								AttachmentService  $attachmentService,
-								IEventDispatcher    $eventDispatcher,
-								IMAPClientFactory $clientFactory,
-								IMailManager $mailManager,
-								AccountService $accountService,
-								ITimeFactory $timeFactory,
-								LoggerInterface $logger) {
+		LocalMessageMapper $mapper,
+		AttachmentService  $attachmentService,
+		IEventDispatcher    $eventDispatcher,
+		IMAPClientFactory $clientFactory,
+		IMailManager $mailManager,
+		AccountService $accountService,
+		ITimeFactory $timeFactory,
+		LoggerInterface $logger) {
 		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;

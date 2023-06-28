@@ -49,7 +49,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private $builder;
 
 	public function __construct(MessageMapper $mapper,
-								ThreadBuilder $builder) {
+		ThreadBuilder $builder) {
 		$this->mapper = $mapper;
 		$this->builder = $builder;
 	}
@@ -88,7 +88,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	 * @psalm-return Generator<int, DatabaseMessage>
 	 */
 	private function flattenThreads(array $threads,
-									?string $threadId = null): Generator {
+		?string $threadId = null): Generator {
 		foreach ($threads as $thread) {
 			if (($message = $thread->getMessage()) !== null) {
 				/** @var DatabaseMessage $message */

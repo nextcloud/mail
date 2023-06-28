@@ -45,8 +45,8 @@ class LocalMessageMapper extends QBMapper {
 	private $recipientMapper;
 
 	public function __construct(IDBConnection $db,
-								LocalAttachmentMapper $attachmentMapper,
-								RecipientMapper $recipientMapper) {
+		LocalAttachmentMapper $attachmentMapper,
+		RecipientMapper $recipientMapper) {
 		parent::__construct($db, 'mail_local_messages');
 		$this->recipientMapper = $recipientMapper;
 		$this->attachmentMapper = $attachmentMapper;

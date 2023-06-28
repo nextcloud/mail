@@ -42,10 +42,10 @@ class DatabaseMessage extends Message implements JsonSerializable {
 	private $dirty = false;
 
 	public function __construct(int $databaseId,
-								string $subject,
-								string $id,
-								array $references,
-								?string $threadRootId) {
+		string $subject,
+		string $id,
+		array $references,
+		?string $threadRootId) {
 		parent::__construct($subject, $id, $references);
 
 		$this->databaseId = $databaseId;
@@ -53,11 +53,11 @@ class DatabaseMessage extends Message implements JsonSerializable {
 	}
 
 	public static function fromRowData(int $id,
-									   string $subject,
-									   ?string $messageId,
-									   ?string $references,
-									   ?string $inReplyTo,
-									   ?string $threadRootId): self {
+		string $subject,
+		?string $messageId,
+		?string $references,
+		?string $inReplyTo,
+		?string $threadRootId): self {
 		$referencesForThreading = $references !== null ? json_decode($references, true) : [];
 		if (!empty($inReplyTo)) {
 			$referencesForThreading[] = $inReplyTo;

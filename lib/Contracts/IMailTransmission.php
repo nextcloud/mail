@@ -46,9 +46,9 @@ interface IMailTransmission {
 	 * @throws ServiceException
 	 */
 	public function sendMessage(NewMessageData $messageData,
-								string $repliedToMessageId = null,
-								Alias $alias = null,
-								Message $draft = null): void;
+		string $repliedToMessageId = null,
+		Alias $alias = null,
+		Message $draft = null): void;
 
 	/**
 	 * @param Account $account

@@ -37,7 +37,7 @@ class RepairMailTheads implements IRepairStep {
 	private $logger;
 
 	public function __construct(MessageMapper $mapper,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}

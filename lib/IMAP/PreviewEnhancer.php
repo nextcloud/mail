@@ -52,9 +52,9 @@ class PreviewEnhancer {
 	private $logger;
 
 	public function __construct(IMAPClientFactory $clientFactory,
-								ImapMapper $imapMapper,
-								DbMapper $dbMapper,
-								LoggerInterface $logger) {
+		ImapMapper $imapMapper,
+		DbMapper $dbMapper,
+		LoggerInterface $logger) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;

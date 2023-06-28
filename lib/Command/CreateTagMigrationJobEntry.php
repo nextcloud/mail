@@ -37,7 +37,7 @@ class CreateTagMigrationJobEntry extends Command {
 	private MailboxMapper $mailboxMapper;
 
 	public function __construct(JobList $jobList,
-								MailboxMapper $mailboxMapper) {
+		MailboxMapper $mailboxMapper) {
 		parent::__construct();
 		$this->jobList = $jobList;
 		$this->mailboxMapper = $mailboxMapper;

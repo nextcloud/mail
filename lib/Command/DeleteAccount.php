@@ -40,7 +40,7 @@ class DeleteAccount extends Command {
 	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;

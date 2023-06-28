@@ -43,7 +43,7 @@ class AddMissingDefaultTags implements IRepairStep {
 
 
 	public function __construct(MailAccountMapper $accountMapper,
-								TagMapper $tagMapper) {
+		TagMapper $tagMapper) {
 		$this->accountMapper = $accountMapper;
 		$this->tagMapper = $tagMapper;
 	}

@@ -49,9 +49,9 @@ class ImportanceRulesClassifier {
 	private $sentMessagesExtractor;
 
 	public function __construct(ImportantMessagesExtractor $importantMessagesExtractor,
-								ReadMessagesExtractor $readMessagesExtractor,
-								RepliedMessagesExtractor $repliedMessagesExtractor,
-								SentMessagesExtractor $sentMessagesExtractor) {
+		ReadMessagesExtractor $readMessagesExtractor,
+		RepliedMessagesExtractor $repliedMessagesExtractor,
+		SentMessagesExtractor $sentMessagesExtractor) {
 		$this->importantMessagesExtractor = $importantMessagesExtractor;
 		$this->readMessagesExtractor = $readMessagesExtractor;
 		$this->repliedMessagesExtractor = $repliedMessagesExtractor;
@@ -67,9 +67,9 @@ class ImportanceRulesClassifier {
 	 * @return bool[]
 	 */
 	public function classifyImportance(Account $account,
-									   array $incomingMailboxes,
-									   array $outgoingMailboxes,
-									   array $messages): array {
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): array {
 		$this->importantMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		$this->readMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		$this->repliedMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);

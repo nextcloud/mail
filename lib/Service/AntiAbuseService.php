@@ -49,9 +49,9 @@ class AntiAbuseService {
 	private $logger;
 
 	public function __construct(IConfig $config,
-								ICacheFactory $cacheFactory,
-								ITimeFactory $timeFactory,
-								LoggerInterface $logger) {
+		ICacheFactory $cacheFactory,
+		ITimeFactory $timeFactory,
+		LoggerInterface $logger) {
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->timeFactory = $timeFactory;
@@ -59,7 +59,7 @@ class AntiAbuseService {
 	}
 
 	public function onBeforeMessageSent(IUser $user,
-										NewMessageData $messageData): void {
+		NewMessageData $messageData): void {
 		$abuseDetection = $this->config->getAppValue(
 			Application::APP_ID,
 			'abuse_detection',
@@ -75,7 +75,7 @@ class AntiAbuseService {
 	}
 
 	private function checkNumberOfRecipients(IUser $user,
-											 NewMessageData $messageData): void {
+		NewMessageData $messageData): void {
 		$numberOfRecipientsThreshold = (int)$this->config->getAppValue(
 			Application::APP_ID,
 			'abuse_number_of_recipients_per_message_threshold',
@@ -99,7 +99,7 @@ class AntiAbuseService {
 	}
 
 	private function checkRateLimits(IUser $user,
-									 NewMessageData $messageData): void {
+		NewMessageData $messageData): void {
 		if (!$this->cacheFactory->isAvailable()) {
 			// No cache, no rate limits
 			return;
@@ -116,10 +116,10 @@ class AntiAbuseService {
 	}
 
 	private function checkRateLimitsForPeriod(IUser $user,
-											  NewMessageData $messageData,
-											  IMemcache $cache,
-											  string $id,
-											  int $period): void {
+		NewMessageData $messageData,
+		IMemcache $cache,
+		string $id,
+		int $period): void {
 		$maxNumberOfMessages = (int)$this->config->getAppValue(
 			Application::APP_ID,
 			'abuse_number_of_messages_per_' . $id,

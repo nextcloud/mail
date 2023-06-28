@@ -43,11 +43,11 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 	private PreprocessingService $preprocessingService;
 
 	public function __construct(ITimeFactory $time,
-								IUserManager $userManager,
-								AccountService $accountService,
-								PreprocessingService $preprocessingService,
-								LoggerInterface $logger,
-								IJobList $jobList) {
+		IUserManager $userManager,
+		AccountService $accountService,
+		PreprocessingService $preprocessingService,
+		LoggerInterface $logger,
+		IJobList $jobList) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;

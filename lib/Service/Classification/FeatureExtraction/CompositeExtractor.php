@@ -38,9 +38,9 @@ class CompositeExtractor implements IExtractor {
 	private $extractors;
 
 	public function __construct(ImportantMessagesExtractor $ex1,
-								ReadMessagesExtractor $ex2,
-								RepliedMessagesExtractor $ex3,
-								SentMessagesExtractor $ex4) {
+		ReadMessagesExtractor $ex2,
+		RepliedMessagesExtractor $ex3,
+		SentMessagesExtractor $ex4) {
 		$this->extractors = [
 			$ex1,
 			$ex2,
@@ -50,9 +50,9 @@ class CompositeExtractor implements IExtractor {
 	}
 
 	public function prepare(Account $account,
-							array $incomingMailboxes,
-							array $outgoingMailboxes,
-							array $messages): void {
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): void {
 		foreach ($this->extractors as $extractor) {
 			$extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		}

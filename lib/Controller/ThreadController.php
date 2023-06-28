@@ -40,10 +40,10 @@ class ThreadController extends Controller {
 	private IMailManager $mailManager;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								string $UserId,
-								AccountService $accountService,
-								IMailManager $mailManager) {
+		IRequest $request,
+		string $UserId,
+		AccountService $accountService,
+		IMailManager $mailManager) {
 		parent::__construct($appName, $request);
 
 		$this->currentUserId = $UserId;

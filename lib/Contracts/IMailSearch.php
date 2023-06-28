@@ -45,8 +45,8 @@ interface IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessage(Account $account,
-								Mailbox $mailbox,
-								Message $message): Message;
+		Mailbox $mailbox,
+		Message $message): Message;
 
 	/**
 	 * @param Account $account
@@ -61,10 +61,10 @@ interface IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessages(Account $account,
-								 Mailbox $mailbox,
-								 ?string $filter,
-								 ?int $cursor,
-								 ?int $limit): array;
+		Mailbox $mailbox,
+		?string $filter,
+		?int $cursor,
+		?int $limit): array;
 
 	/**
 	 * @param IUser $user

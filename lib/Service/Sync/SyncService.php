@@ -66,12 +66,12 @@ class SyncService {
 	private $mailboxSync;
 
 	public function __construct(ImapToDbSynchronizer $synchronizer,
-								FilterStringParser $filterStringParser,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								PreviewEnhancer $previewEnhancer,
-								LoggerInterface $logger,
-								MailboxSync $mailboxSync) {
+		FilterStringParser $filterStringParser,
+		MailboxMapper $mailboxMapper,
+		MessageMapper $messageMapper,
+		PreviewEnhancer $previewEnhancer,
+		LoggerInterface $logger,
+		MailboxSync $mailboxSync) {
 		$this->synchronizer = $synchronizer;
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
@@ -89,7 +89,7 @@ class SyncService {
 	 * @throws ServiceException
 	 */
 	public function clearCache(Account $account,
-							   Mailbox $mailbox): void {
+		Mailbox $mailbox): void {
 		$this->synchronizer->clearCache($account, $mailbox);
 	}
 
@@ -108,11 +108,11 @@ class SyncService {
 	 * @throws ServiceException
 	 */
 	public function syncMailbox(Account $account,
-								Mailbox $mailbox,
-								int $criteria,
-								array $knownIds = null,
-								bool $partialOnly,
-								string $filter = null): Response {
+		Mailbox $mailbox,
+		int $criteria,
+		array $knownIds = null,
+		bool $partialOnly,
+		string $filter = null): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}
@@ -148,9 +148,9 @@ class SyncService {
 	 *
 	 */
 	private function getDatabaseSyncChanges(Account $account,
-											Mailbox $mailbox,
-											array $knownIds,
-											?SearchQuery $query): Response {
+		Mailbox $mailbox,
+		array $knownIds,
+		?SearchQuery $query): Response {
 		if ($knownIds === []) {
 			$newIds = $this->messageMapper->findAllIds($mailbox);
 		} else {

@@ -66,10 +66,10 @@ class NewMessageClassificationListener implements IEventListener {
 	private $preferences;
 
 	public function __construct(ImportanceClassifier $classifier,
-								TagMapper $tagMapper,
-								LoggerInterface $logger,
-								IMailManager $mailManager,
-								IUserPreferences $preferences) {
+		TagMapper $tagMapper,
+		LoggerInterface $logger,
+		IMailManager $mailManager,
+		IUserPreferences $preferences) {
 		$this->classifier = $classifier;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;

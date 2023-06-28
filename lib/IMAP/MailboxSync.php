@@ -71,12 +71,12 @@ class MailboxSync {
 	private IDBConnection $dbConnection;
 
 	public function __construct(MailboxMapper $mailboxMapper,
-								FolderMapper $folderMapper,
-								MailAccountMapper $mailAccountMapper,
-								IMAPClientFactory $imapClientFactory,
-								ITimeFactory $timeFactory,
-								IEventDispatcher $dispatcher,
-								IDBConnection $dbConnection) {
+		FolderMapper $folderMapper,
+		MailAccountMapper $mailAccountMapper,
+		IMAPClientFactory $imapClientFactory,
+		ITimeFactory $timeFactory,
+		IEventDispatcher $dispatcher,
+		IDBConnection $dbConnection) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->folderMapper = $folderMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -90,8 +90,8 @@ class MailboxSync {
 	 * @throws ServiceException
 	 */
 	public function sync(Account $account,
-						 LoggerInterface $logger,
-						 bool $force = false): void {
+		LoggerInterface $logger,
+		bool $force = false): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
 			$logger->debug("account is up to date, skipping mailbox sync");
 			return;

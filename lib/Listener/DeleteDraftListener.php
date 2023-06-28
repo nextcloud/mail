@@ -63,10 +63,10 @@ class DeleteDraftListener implements IEventListener {
 	private $eventDispatcher;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								LoggerInterface $logger,
-								IEventDispatcher $eventDispatcher) {
+		MailboxMapper $mailboxMapper,
+		MessageMapper $messageMapper,
+		LoggerInterface $logger,
+		IEventDispatcher $eventDispatcher) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;

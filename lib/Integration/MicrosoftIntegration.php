@@ -45,11 +45,11 @@ class MicrosoftIntegration {
 	private LoggerInterface $logger;
 
 	public function __construct(ITimeFactory $timeFactory,
-								IConfig $config,
-								ICrypto $crypto,
-								IClientService $clientService,
-								IURLGenerator $urlGenerator,
-								LoggerInterface $logger) {
+		IConfig $config,
+		ICrypto $crypto,
+		IClientService $clientService,
+		IURLGenerator $urlGenerator,
+		LoggerInterface $logger) {
 		$this->timeFactory = $timeFactory;
 		$this->clientService = $clientService;
 		$this->crypto = $crypto;
@@ -111,7 +111,7 @@ class MicrosoftIntegration {
 	}
 
 	public function finishConnect(Account $account,
-								  string $code): Account {
+		string $code): Account {
 		$tenantId = $this->getTenantId();
 		$clientId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_id');
 		$encryptedClientSecret = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_secret');

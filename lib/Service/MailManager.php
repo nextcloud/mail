@@ -103,15 +103,15 @@ class MailManager implements IMailManager {
 	private $threadMapper;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
-								MailboxMapper $mailboxMapper,
-								MailboxSync $mailboxSync,
-								FolderMapper $folderMapper,
-								ImapMessageMapper $messageMapper,
-								DbMessageMapper $dbMessageMapper,
-								IEventDispatcher $eventDispatcher,
-								LoggerInterface $logger,
-								TagMapper $tagMapper,
-								ThreadMapper $threadMapper) {
+		MailboxMapper $mailboxMapper,
+		MailboxSync $mailboxSync,
+		FolderMapper $folderMapper,
+		ImapMessageMapper $messageMapper,
+		DbMessageMapper $dbMessageMapper,
+		IEventDispatcher $eventDispatcher,
+		LoggerInterface $logger,
+		TagMapper $tagMapper,
+		ThreadMapper $threadMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
@@ -184,10 +184,10 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 */
 	public function getImapMessage(Horde_Imap_Client_Socket $client,
-								   Account $account,
-								   Mailbox $mailbox,
-								   int $uid,
-								   bool $loadBody = false): IMAPMessage {
+		Account $account,
+		Mailbox $mailbox,
+		int $uid,
+		bool $loadBody = false): IMAPMessage {
 		try {
 			return $this->imapMessageMapper->find(
 				$client,
@@ -258,9 +258,9 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 */
 	public function getSource(Horde_Imap_Client_Socket $client,
-							  Account $account,
-							  string $mailbox,
-							  int $uid): ?string {
+		Account $account,
+		string $mailbox,
+		int $uid): ?string {
 		try {
 			return $this->imapMessageMapper->getFullText(
 				$client,
@@ -286,10 +286,10 @@ class MailManager implements IMailManager {
 	 *
 	 */
 	public function moveMessage(Account $sourceAccount,
-								string $sourceFolderId,
-								int $uid,
-								Account $destinationAccount,
-								string $destFolderId) {
+		string $sourceFolderId,
+		int $uid,
+		Account $destinationAccount,
+		string $destFolderId) {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
 			try {
 				$sourceMailbox = $this->mailboxMapper->find($sourceAccount, $sourceFolderId);
@@ -320,8 +320,8 @@ class MailManager implements IMailManager {
 	 * @todo evaluate if we should sync mailboxes first
 	 */
 	public function deleteMessage(Account $account,
-								  string $mailboxId,
-								  int $messageId): void {
+		string $mailboxId,
+		int $messageId): void {
 		$this->eventDispatcher->dispatch(
 			BeforeMessageDeletedEvent::class,
 			new BeforeMessageDeletedEvent($account, $mailboxId, $messageId)
@@ -380,9 +380,9 @@ class MailManager implements IMailManager {
 	 *
 	 */
 	private function moveMessageOnSameAccount(Account $account,
-											  string $sourceFolderId,
-											  string $destFolderId,
-											  int $messageId): void {
+		string $sourceFolderId,
+		string $destFolderId,
+		int $messageId): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
@@ -429,7 +429,7 @@ class MailManager implements IMailManager {
 	}
 
 	public function enableMailboxBackgroundSync(Mailbox $mailbox,
-												bool $syncInBackground): Mailbox {
+		bool $syncInBackground): Mailbox {
 		$mailbox->setSyncInBackground($syncInBackground);
 
 		return $this->mailboxMapper->update($mailbox);
@@ -617,7 +617,7 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 */
 	public function deleteMailbox(Account $account,
-								  Mailbox $mailbox): void {
+		Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$this->folderMapper->delete($client, $mailbox->getName());
@@ -639,7 +639,7 @@ class MailManager implements IMailManager {
 	 * @throws ServiceException
 	 */
 	public function clearMailbox(Account $account,
-								  Mailbox $mailbox): void {
+		Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
 		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
 		$currentMailboxId = $mailbox->getId();
@@ -694,9 +694,9 @@ class MailManager implements IMailManager {
 	 * @throws Horde_Mime_Exception
 	 */
 	public function getMailAttachment(Account $account,
-									  Mailbox $mailbox,
-									  Message $message,
-									  string $attachmentId): Attachment {
+		Mailbox $mailbox,
+		Message $message,
+		string $attachmentId): Attachment {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			return $this->imapMessageMapper->getAttachment(

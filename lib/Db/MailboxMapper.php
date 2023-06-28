@@ -46,7 +46,7 @@ class MailboxMapper extends QBMapper {
 	private $timeFactory;
 
 	public function __construct(IDBConnection $db,
-								ITimeFactory $timeFactory) {
+		ITimeFactory $timeFactory) {
 		parent::__construct($db, 'mail_mailboxes');
 		$this->timeFactory = $timeFactory;
 	}

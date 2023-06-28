@@ -42,7 +42,7 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 	private $file;
 
 	public function __construct(LoggerInterface $logger,
-								string $file = null) {
+		string $file = null) {
 		$this->file = $file ?? __DIR__ . '/../../vendor/christophwurst/kitinerary-bin/bin/kitinerary-extractor';
 		$this->logger = $logger;
 	}

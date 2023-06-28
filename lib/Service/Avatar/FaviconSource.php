@@ -43,9 +43,9 @@ class FaviconSource implements IAvatarSource {
 	private IRemoteHostValidator $remoteHostValidator;
 
 	public function __construct(IClientService $clientService,
-								Favicon $favicon,
-								IMimeTypeDetector $mimeDetector,
-								IRemoteHostValidator $remoteHostValidator) {
+		Favicon $favicon,
+		IMimeTypeDetector $mimeDetector,
+		IRemoteHostValidator $remoteHostValidator) {
 		$this->clientService = $clientService;
 		$this->favicon = $favicon;
 		$this->favicon->setCacheTimeout(0);

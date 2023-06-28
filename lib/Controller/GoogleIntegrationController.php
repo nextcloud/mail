@@ -52,11 +52,11 @@ class GoogleIntegrationController extends Controller {
 
 
 	public function __construct(IRequest $request,
-								?string $UserId,
-								GoogleIntegration $googleIntegration,
-								AccountService $accountService,
-								LoggerInterface $logger,
-								MailboxSync $mailboxSync) {
+		?string $UserId,
+		GoogleIntegration $googleIntegration,
+		AccountService $accountService,
+		LoggerInterface $logger,
+		MailboxSync $mailboxSync) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->userId = $UserId;
 		$this->googleIntegration = $googleIntegration;

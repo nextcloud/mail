@@ -53,9 +53,9 @@ class MigrateImportantFromImapAndDb {
 	private $logger;
 
 	public function __construct(MessageMapper $messageMapper,
-								MailboxMapper $mailboxMapper,
-								LoggerInterface $logger
-								) {
+		MailboxMapper $mailboxMapper,
+		LoggerInterface $logger
+	) {
 		$this->messageMapper = $messageMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->logger = $logger;

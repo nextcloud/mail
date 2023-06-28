@@ -88,23 +88,23 @@ class MessagesController extends Controller {
 	private IDkimService $dkimService;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								AccountService $accountService,
-								IMailManager $mailManager,
-								IMailSearch $mailSearch,
-								ItineraryService $itineraryService,
-								?string $UserId,
-								$userFolder,
-								LoggerInterface $logger,
-								IL10N $l10n,
-								IMimeTypeDetector $mimeTypeDetector,
-								IURLGenerator $urlGenerator,
-								ContentSecurityPolicyNonceManager $nonceManager,
-								ITrustedSenderService $trustedSenderService,
-								IMailTransmission $mailTransmission,
-								SmimeService $smimeService,
-								IMAPClientFactory $clientFactory,
-								IDkimService $dkimService) {
+		IRequest $request,
+		AccountService $accountService,
+		IMailManager $mailManager,
+		IMailSearch $mailSearch,
+		ItineraryService $itineraryService,
+		?string $UserId,
+		$userFolder,
+		LoggerInterface $logger,
+		IL10N $l10n,
+		IMimeTypeDetector $mimeTypeDetector,
+		IURLGenerator $urlGenerator,
+		ContentSecurityPolicyNonceManager $nonceManager,
+		ITrustedSenderService $trustedSenderService,
+		IMailTransmission $mailTransmission,
+		SmimeService $smimeService,
+		IMAPClientFactory $clientFactory,
+		IDkimService $dkimService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -139,9 +139,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(int $mailboxId,
-						  int $cursor = null,
-						  string $filter = null,
-						  int $limit = null): JSONResponse {
+		int $cursor = null,
+		string $filter = null,
+		int $limit = null): JSONResponse {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -586,7 +586,7 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function downloadAttachment(int $id,
-									   string $attachmentId): Response {
+		string $attachmentId): Response {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -672,8 +672,8 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function saveAttachment(int $id,
-								   string $attachmentId,
-								   string $targetPath) {
+		string $attachmentId,
+		string $targetPath) {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
@@ -848,7 +848,7 @@ class MessagesController extends Controller {
 	 * @return array
 	 */
 	private function enrichDownloadUrl(int $id,
-									   array $attachment) {
+		array $attachment) {
 		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
 			[
 				'id' => $id,

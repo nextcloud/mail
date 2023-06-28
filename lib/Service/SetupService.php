@@ -61,11 +61,11 @@ class SetupService {
 	private $tagMapper;
 
 	public function __construct(AccountService $accountService,
-								ICrypto $crypto,
-								SmtpClientFactory $smtpClientFactory,
-								IMAPClientFactory $imapClientFactory,
-								LoggerInterface $logger,
-								TagMapper $tagMapper) {
+		ICrypto $crypto,
+		SmtpClientFactory $smtpClientFactory,
+		IMAPClientFactory $imapClientFactory,
+		LoggerInterface $logger,
+		TagMapper $tagMapper) {
 		$this->accountService = $accountService;
 		$this->crypto = $crypto;
 		$this->smtpClientFactory = $smtpClientFactory;

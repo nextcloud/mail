@@ -78,17 +78,17 @@ class NewMessageData {
 	 * @param bool $isMdnRequested
 	 */
 	public function __construct(Account $account,
-								AddressList $to,
-								AddressList $cc,
-								AddressList $bcc,
-								string $subject,
-								string $body,
-								array $attachments = [],
-								bool $isHtml = true,
-								bool $isMdnRequested = false,
-								?int $smimeCertificateId = null,
-								bool $smimeSign = false,
-								bool $smimeEncrypt = false) {
+		AddressList $to,
+		AddressList $cc,
+		AddressList $bcc,
+		string $subject,
+		string $body,
+		array $attachments = [],
+		bool $isHtml = true,
+		bool $isMdnRequested = false,
+		?int $smimeCertificateId = null,
+		bool $smimeSign = false,
+		bool $smimeEncrypt = false) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -118,17 +118,17 @@ class NewMessageData {
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account,
-									   string $to = null,
-									   string $cc = null,
-									   string $bcc = null,
-									   string $subject,
-									   string $body,
-									   array $attachments = [],
-									   bool $isHtml = true,
-									   bool $requestMdn = false,
-									   ?int $smimeCertificateId = null,
-									   bool $smimeSign = false,
-									   bool $smimeEncrypt = false): NewMessageData {
+		string $to = null,
+		string $cc = null,
+		string $bcc = null,
+		string $subject,
+		string $body,
+		array $attachments = [],
+		bool $isHtml = true,
+		bool $requestMdn = false,
+		?int $smimeCertificateId = null,
+		bool $smimeSign = false,
+		bool $smimeEncrypt = false): NewMessageData {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');

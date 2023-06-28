@@ -75,22 +75,22 @@ class PageController extends Controller {
 	private SmimeService $smimeService;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								IURLGenerator $urlGenerator,
-								IConfig $config,
-								AccountService $accountService,
-								AliasesService $aliasesService,
-								?string          $UserId,
-								IUserSession     $userSession,
-								IUserPreferences $preferences,
-								IMailManager     $mailManager,
-								TagMapper        $tagMapper,
-								IInitialState    $initialStateService,
-								LoggerInterface  $logger,
-								OutboxService    $outboxService,
-								IEventDispatcher $dispatcher,
-								ICredentialStore $credentialStore,
-								SmimeService     $smimeService) {
+		IRequest $request,
+		IURLGenerator $urlGenerator,
+		IConfig $config,
+		AccountService $accountService,
+		AliasesService $aliasesService,
+		?string          $UserId,
+		IUserSession     $userSession,
+		IUserPreferences $preferences,
+		IMailManager     $mailManager,
+		TagMapper        $tagMapper,
+		IInitialState    $initialStateService,
+		LoggerInterface  $logger,
+		OutboxService    $outboxService,
+		IEventDispatcher $dispatcher,
+		ICredentialStore $credentialStore,
+		SmimeService     $smimeService) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;

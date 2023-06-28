@@ -224,6 +224,6 @@ class MailboxSynchronizationTest extends TestCase {
 		self::assertCount(0, $syncJson['newMessages']);
 		// TODO: deleted messages are flagged as changed? could be a testing-only issue
 		// self::assertCount(0, $syncJson['changedMessages']);
-//		self::assertCount(1, $syncJson['vanishedMessages'], 'Message does not show as vanished, possibly because UID and ID are mixed up above.');
+		//		self::assertCount(1, $syncJson['vanishedMessages'], 'Message does not show as vanished, possibly because UID and ID are mixed up above.');
 	}
 }

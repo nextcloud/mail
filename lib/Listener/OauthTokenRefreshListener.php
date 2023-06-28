@@ -40,8 +40,8 @@ class OauthTokenRefreshListener implements IEventListener {
 	private MicrosoftIntegration $microsoftIntegration;
 	private AccountService $accountService;
 	public function __construct(GoogleIntegration $googleIntegration,
-								MicrosoftIntegration $microsoftIntegration,
-								AccountService $accountService) {
+		MicrosoftIntegration $microsoftIntegration,
+		AccountService $accountService) {
 		$this->googleIntegration = $googleIntegration;
 		$this->accountService = $accountService;
 		$this->microsoftIntegration = $microsoftIntegration;

@@ -48,10 +48,10 @@ class CleanupService {
 	private $tagMapper;
 
 	public function __construct(AliasMapper $aliasMapper,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								CollectedAddressMapper $collectedAddressMapper,
-								TagMapper $tagMapper) {
+		MailboxMapper $mailboxMapper,
+		MessageMapper $messageMapper,
+		CollectedAddressMapper $collectedAddressMapper,
+		TagMapper $tagMapper) {
 		$this->aliasMapper = $aliasMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
