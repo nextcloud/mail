@@ -63,6 +63,11 @@ class FolderMapper {
 		]);
 
 		return array_filter(array_map(static function (array $mailbox) use ($account) {
+			$attributes = array_flip(array_map('strtolower', $mailbox['attributes']));
+			if (isset($attributes['\\nonexistent'])) {
+				// Ignore mailbox that does not exist, similar to \Horde_Imap_Client::MBOX_SUBSCRIBED_EXISTS mode
+				return null;
+			}
 			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
 				// This is a special folder that must not be shown
 				return null;
@@ -118,7 +123,7 @@ class FolderMapper {
 
 		foreach ($folders as $folder) {
 			$acls = null;
-			if ($hasAcls) {
+			if ($hasAcls && !in_array('\\noselect', array_map('strtolower', $folder->getAttributes()), true)) {
 				$acls = (string)$client->getMyACLRights($folder->getMailbox());
 			}
 
