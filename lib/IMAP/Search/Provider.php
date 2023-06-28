@@ -47,8 +47,8 @@ class Provider {
 	 * @throws ServiceException
 	 */
 	public function findMatches(Account $account,
-								Mailbox $mailbox,
-								SearchQuery $searchQuery): array {
+		Mailbox $mailbox,
+		SearchQuery $searchQuery): array {
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$fetchResult = $client->search(

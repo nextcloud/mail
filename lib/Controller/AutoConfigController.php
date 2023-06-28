@@ -45,10 +45,10 @@ class AutoConfigController extends Controller {
 	private IRemoteHostValidator $hostValidator;
 
 	public function __construct(IRequest $request,
-								IspDb $ispDb,
-								MxRecord $mxRecord,
-								ConnectivityTester $connectivityTester,
-								IRemoteHostValidator $hostValidator) {
+		IspDb $ispDb,
+		MxRecord $mxRecord,
+		ConnectivityTester $connectivityTester,
+		IRemoteHostValidator $hostValidator) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->ispDb = $ispDb;
 		$this->mxRecord = $mxRecord;

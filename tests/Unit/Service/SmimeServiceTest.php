@@ -270,8 +270,8 @@ class SmimeServiceTest extends TestCase {
 	 * @dataProvider provideIsEncryptedData
 	 */
 	public function testIsEncrypted(?string $contentType,
-									array $contentTypeParams,
-									bool $expectedResult): void {
+		array $contentTypeParams,
+		bool $expectedResult): void {
 		$message = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
 		$headers = new Horde_Mime_Headers();
 		$contentType = new Horde_Mime_Headers_ContentParam_ContentType('', $contentType);
@@ -416,7 +416,7 @@ class SmimeServiceTest extends TestCase {
 	 * @dataProvider provideParseCertificateData
 	 */
 	public function testParseCertificate(SmimeCertificate $certificate,
-										 SmimeCertificateInfo $expected): void {
+		SmimeCertificateInfo $expected): void {
 		$this->assertEquals(
 			$expected,
 			$this->smimeService->parseCertificate($certificate->getCertificate()),

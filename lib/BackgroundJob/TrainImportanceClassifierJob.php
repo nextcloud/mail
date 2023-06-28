@@ -43,11 +43,11 @@ class TrainImportanceClassifierJob extends TimedJob {
 	private LoggerInterface $logger;
 
 	public function __construct(ITimeFactory $time,
-								AccountService $accountService,
-								ImportanceClassifier $classifier,
-								IJobList $jobList,
-								IUserPreferences $preferences,
-								LoggerInterface $logger) {
+		AccountService $accountService,
+		ImportanceClassifier $classifier,
+		IJobList $jobList,
+		IUserPreferences $preferences,
+		LoggerInterface $logger) {
 		parent::__construct($time);
 
 		$this->accountService = $accountService;

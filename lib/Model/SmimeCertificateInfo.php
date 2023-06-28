@@ -34,8 +34,8 @@ class SmimeCertificateInfo implements JsonSerializable {
 	private int $notAfter;
 
 	public function __construct(?string $commonName,
-								?string $emailAddress,
-								int $notAfter) {
+		?string $emailAddress,
+		int $notAfter) {
 		$this->commonName = $commonName;
 		$this->emailAddress = $emailAddress;
 		$this->notAfter = $notAfter;

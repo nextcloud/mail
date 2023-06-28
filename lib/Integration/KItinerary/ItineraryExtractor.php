@@ -51,9 +51,9 @@ class ItineraryExtractor {
 	private $adapter;
 
 	public function __construct(BinaryAdapter $binAdapter,
-								FlatpakAdapter $flatpakAdapter,
-								SysAdapter $sysAdapter,
-								LoggerInterface $logger) {
+		FlatpakAdapter $flatpakAdapter,
+		SysAdapter $sysAdapter,
+		LoggerInterface $logger) {
 		$this->binAdapter = $binAdapter;
 		$this->flatpakAdapter = $flatpakAdapter;
 		$this->sysAdapter = $sysAdapter;

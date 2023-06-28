@@ -53,8 +53,8 @@ class AccountService {
 	private $jobList;
 
 	public function __construct(MailAccountMapper $mapper,
-								AliasesService $aliasesService,
-								IJobList $jobList) {
+		AliasesService $aliasesService,
+		IJobList $jobList) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
 		$this->jobList = $jobList;

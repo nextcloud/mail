@@ -91,15 +91,15 @@ class ImapToDbSynchronizer {
 	private $mailManager;
 
 	public function __construct(DatabaseMessageMapper $dbMapper,
-								IMAPClientFactory $clientFactory,
-								ImapMessageMapper $imapMapper,
-								MailboxMapper $mailboxMapper,
-								DatabaseMessageMapper $messageMapper,
-								Synchronizer $synchronizer,
-								IEventDispatcher $dispatcher,
-								PerformanceLogger $performanceLogger,
-								LoggerInterface $logger,
-								IMailManager $mailManager) {
+		IMAPClientFactory $clientFactory,
+		ImapMessageMapper $imapMapper,
+		MailboxMapper $mailboxMapper,
+		DatabaseMessageMapper $messageMapper,
+		Synchronizer $synchronizer,
+		IEventDispatcher $dispatcher,
+		PerformanceLogger $performanceLogger,
+		LoggerInterface $logger,
+		IMailManager $mailManager) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -117,9 +117,9 @@ class ImapToDbSynchronizer {
 	 * @throws ServiceException
 	 */
 	public function syncAccount(Account $account,
-								LoggerInterface $logger,
-								bool $force = false,
-								int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): void {
+		LoggerInterface $logger,
+		bool $force = false,
+		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): void {
 		$rebuildThreads = false;
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			if (!$mailbox->isInbox() && !$mailbox->getSyncInBackground()) {
@@ -156,7 +156,7 @@ class ImapToDbSynchronizer {
 	 * @throws ServiceException
 	 */
 	public function clearCache(Account $account,
-							   Mailbox $mailbox): void {
+		Mailbox $mailbox): void {
 		$id = $account->getId() . ":" . $mailbox->getName();
 		try {
 			$this->mailboxMapper->lockForNewSync($mailbox);
@@ -198,12 +198,12 @@ class ImapToDbSynchronizer {
 	 * @return bool whether to rebuild threads or not
 	 */
 	public function sync(Account $account,
-						 Mailbox $mailbox,
-						 LoggerInterface $logger,
-						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-						 array $knownUids = null,
-						 bool $force = false,
-						 bool $batchSync = false): bool {
+		Mailbox $mailbox,
+		LoggerInterface $logger,
+		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+		array $knownUids = null,
+		bool $force = false,
+		bool $batchSync = false): bool {
 		$rebuildThreads = true;
 		if ($mailbox->getSelectable() === false) {
 			return $rebuildThreads;
@@ -286,8 +286,8 @@ class ImapToDbSynchronizer {
 	 * @throws IncompleteSyncException
 	 */
 	private function runInitialSync(Account $account,
-									Mailbox $mailbox,
-									LoggerInterface  $logger): void {
+		Mailbox $mailbox,
+		LoggerInterface  $logger): void {
 		$perf = $this->performanceLogger->startWithLogger(
 			'Initial sync ' . $account->getId() . ':' . $mailbox->getName(),
 			$logger
@@ -351,10 +351,10 @@ class ImapToDbSynchronizer {
 	 * @return bool whether there are new or vanished messages
 	 */
 	private function runPartialSync(Account $account,
-									Mailbox $mailbox,
-									LoggerInterface $logger,
-									int $criteria,
-									array $knownUids = null): bool {
+		Mailbox $mailbox,
+		LoggerInterface $logger,
+		int $criteria,
+		array $knownUids = null): bool {
 		$newOrVanished = false;
 		$perf = $this->performanceLogger->startWithLogger(
 			'partial sync ' . $account->getId() . ':' . $mailbox->getName(),

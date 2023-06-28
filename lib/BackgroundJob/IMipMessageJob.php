@@ -33,7 +33,7 @@ class IMipMessageJob extends TimedJob {
 	private IMipService $iMipService;
 
 	public function __construct(ITimeFactory $time,
-								IMipService $iMipService) {
+		IMipService $iMipService) {
 		parent::__construct($time);
 
 		// Run once per hour

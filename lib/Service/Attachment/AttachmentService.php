@@ -71,11 +71,11 @@ class AttachmentService implements IAttachmentService {
 	 * @param Folder $userFolder
 	 */
 	public function __construct($userFolder,
-								LocalAttachmentMapper $mapper,
-								AttachmentStorage $storage,
-								IMailManager $mailManager,
-								MessageMapper $imapMessageMapper,
-								LoggerInterface $logger) {
+		LocalAttachmentMapper $mapper,
+		AttachmentStorage $storage,
+		IMailManager $mailManager,
+		MessageMapper $imapMessageMapper,
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
 		$this->mailManager = $mailManager;

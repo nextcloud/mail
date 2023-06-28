@@ -54,12 +54,12 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	protected IL10N $l10n;
 
 	public function __construct(IL10N $l10n,
-								IURLGenerator $urlGenerator,
-								IUserManager $userManager,
-								AccountService $accountService,
-								IMailSearch $mailSearch,
-								IInitialState $initialState,
-								?string $userId) {
+		IURLGenerator $urlGenerator,
+		IUserManager $userManager,
+		AccountService $accountService,
+		IMailSearch $mailSearch,
+		IInitialState $initialState,
+		?string $userId) {
 		$this->urlGenerator = $urlGenerator;
 		$this->userManager = $userManager;
 		$this->accountService = $accountService;

@@ -61,10 +61,10 @@ class SmimeService {
 	private ITimeFactory $timeFactory;
 
 	public function __construct(ITempManager           $tempManager,
-								ICertificateManager    $certificateManager,
-								ICrypto                $crypto,
-								SmimeCertificateMapper $certificateMapper,
-								ITimeFactory           $timeFactory) {
+		ICertificateManager    $certificateManager,
+		ICrypto                $crypto,
+		SmimeCertificateMapper $certificateMapper,
+		ITimeFactory           $timeFactory) {
 		$this->tempManager = $tempManager;
 		$this->certificateManager = $certificateManager;
 		$this->crypto = $crypto;
@@ -255,7 +255,7 @@ class SmimeService {
 	 * @throws ServiceException If the database query fails
 	 */
 	public function findCertificatesByEmailAddress(string $emailAddress,
-												  string $userId): array {
+		string $userId): array {
 		try {
 			return $this->certificateMapper->findAllByEmailAddress($userId, $emailAddress);
 		} catch (\OCP\DB\Exception $e) {
@@ -336,8 +336,8 @@ class SmimeService {
 	 * @throws ServiceException
 	 */
 	public function createCertificate(string $userId,
-									  string $certificateData,
-									  ?string $privateKeyData): SmimeCertificate {
+		string $certificateData,
+		?string $privateKeyData): SmimeCertificate {
 		$emailAddress = $this->parseCertificate($certificateData)->getEmailAddress();
 
 		$certificate = new SmimeCertificate();
@@ -364,7 +364,7 @@ class SmimeService {
 	 * @throws ServiceException If decrypting the certificate or private key fails or the private key is missing
 	 */
 	public function signMimePart(Horde_Mime_Part  $part,
-								 SmimeCertificate $certificate): Horde_Mime_Part {
+		SmimeCertificate $certificate): Horde_Mime_Part {
 		if ($certificate->getPrivateKey() === null) {
 			throw new ServiceException('Certificate does not have a private key');
 		}
@@ -423,7 +423,7 @@ class SmimeService {
 	 * @throws SmimeDecryptException If openssl reports an error during decryption
 	 */
 	public function decryptMimePartText(string $mimePartText,
-									SmimeCertificate $certificate): SmimeDecryptionResult {
+		SmimeCertificate $certificate): SmimeDecryptionResult {
 		if ($certificate->getPrivateKey() === null) {
 			throw new ServiceException('Certificate does not have a private key');
 		}
@@ -506,7 +506,7 @@ class SmimeService {
 	 * @throws ServiceException
 	 */
 	public function decryptDataFetch(Horde_Imap_Client_Data_Fetch $message,
-									 string $userId): SmimeDecryptionResult {
+		string $userId): SmimeDecryptionResult {
 		$encryptedText = $message->getFullMsg();
 		if (!$this->isEncrypted($message)) {
 			// Verification of a potential signature is up to the caller because it is trivial
@@ -543,7 +543,7 @@ class SmimeService {
 	}
 
 	public function addEncryptionCheckQueries(Horde_Imap_Client_Fetch_Query $query,
-											  bool $peek = true): void {
+		bool $peek = true): void {
 		if (!$query->contains(Horde_Imap_Client::FETCH_HEADERTEXT)) {
 			$query->headerText([
 				'peek' => $peek,
@@ -552,7 +552,7 @@ class SmimeService {
 	}
 
 	public function addDecryptQueries(Horde_Imap_Client_Fetch_Query $query,
-									  bool $peek = true): void {
+		bool $peek = true): void {
 		$this->addEncryptionCheckQueries($query, $peek);
 		$query->envelope();
 		if (!$query->contains(Horde_Imap_Client::FETCH_FULLMSG)) {

@@ -40,7 +40,7 @@ class DraftMessageCreatedEvent extends Event {
 	private $draft;
 
 	public function __construct(Account $account,
-								Message $draft) {
+		Message $draft) {
 		parent::__construct();
 		$this->account = $account;
 		$this->draft = $draft;

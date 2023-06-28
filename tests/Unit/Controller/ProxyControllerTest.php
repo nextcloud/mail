@@ -110,8 +110,8 @@ class ProxyControllerTest extends TestCase {
 	 * @dataProvider redirectDataProvider
 	 */
 	public function testRedirect(string $url,
-								 bool $passesTest,
-								 bool $authorized) {
+		bool $passesTest,
+		bool $authorized) {
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
 			->with('mail.page.index')

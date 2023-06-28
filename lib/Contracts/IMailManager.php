@@ -96,9 +96,9 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function getSource(Horde_Imap_Client_Socket $client,
-							  Account $account,
-							  string $mailbox,
-							  int $uid): ?string;
+		Account $account,
+		string $mailbox,
+		int $uid): ?string;
 
 	/**
 	 * @param Horde_Imap_Client_Socket $client
@@ -112,10 +112,10 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function getImapMessage(Horde_Imap_Client_Socket $client,
-								   Account $account,
-								   Mailbox $mailbox,
-								   int $uid,
-								   bool $loadBody = false): IMAPMessage;
+		Account $account,
+		Mailbox $mailbox,
+		int $uid,
+		bool $loadBody = false): IMAPMessage;
 
 	/**
 	 * @param Account $account
@@ -135,10 +135,10 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function moveMessage(Account $sourceAccount,
-								string $sourceFolderId,
-								int $uid,
-								Account $destinationAccount,
-								string $destFolderId);
+		string $sourceFolderId,
+		int $uid,
+		Account $destinationAccount,
+		string $destFolderId);
 
 	/**
 	 * @param Account $account
@@ -228,8 +228,8 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function updateSubscription(Account $account,
-									   Mailbox $mailbox,
-									   bool $subscribed): Mailbox;
+		Mailbox $mailbox,
+		bool $subscribed): Mailbox;
 
 	/**
 	 * @param Mailbox $mailbox
@@ -240,7 +240,7 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function enableMailboxBackgroundSync(Mailbox $mailbox,
-												bool $syncInBackground): Mailbox;
+		bool $syncInBackground): Mailbox;
 
 	/**
 	 * @param Account $account

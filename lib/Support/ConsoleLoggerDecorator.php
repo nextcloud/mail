@@ -36,7 +36,7 @@ class ConsoleLoggerDecorator implements LoggerInterface {
 	private $consoleOutput;
 
 	public function __construct(LoggerInterface $inner,
-								OutputInterface $consoleOutput) {
+		OutputInterface $consoleOutput) {
 		$this->inner = $inner;
 		$this->consoleOutput = $consoleOutput;
 	}

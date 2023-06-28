@@ -35,15 +35,15 @@ class ImapMessageFetcherFactory {
 	private SmimeService $smimeService;
 
 	public function __construct(Html         $htmlService,
-								SmimeService $smimeService) {
+		SmimeService $smimeService) {
 		$this->htmlService = $htmlService;
 		$this->smimeService = $smimeService;
 	}
 
 	public function build(int $uid,
-						  string $mailbox,
-						  Horde_Imap_Client_Base $client,
-						  string $userId): ImapMessageFetcher {
+		string $mailbox,
+		Horde_Imap_Client_Base $client,
+		string $userId): ImapMessageFetcher {
 		return new ImapMessageFetcher(
 			$uid,
 			$mailbox,

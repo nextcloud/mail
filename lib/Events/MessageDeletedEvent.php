@@ -40,8 +40,8 @@ class MessageDeletedEvent extends Event {
 	private $messageId;
 
 	public function __construct(Account $account,
-								Mailbox $mailbox,
-								int $messageId) {
+		Mailbox $mailbox,
+		int $messageId) {
 		parent::__construct();
 		$this->account = $account;
 		$this->mailbox = $mailbox;

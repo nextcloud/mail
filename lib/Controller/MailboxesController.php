@@ -55,11 +55,11 @@ class MailboxesController extends Controller {
 	 * @param SyncService $syncService
 	 */
 	public function __construct(string $appName,
-								IRequest $request,
-								AccountService $accountService,
-								?string $UserId,
-								IMailManager $mailManager,
-								SyncService $syncService) {
+		IRequest $request,
+		AccountService $accountService,
+		?string $UserId,
+		IMailManager $mailManager,
+		SyncService $syncService) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
@@ -101,9 +101,9 @@ class MailboxesController extends Controller {
 	 */
 	#[TrapError]
 	public function patch(int $id,
-						  ?string $name = null,
-						  ?bool $subscribed = null,
-						  ?bool $syncInBackground = null): JSONResponse {
+		?string $name = null,
+		?bool $subscribed = null,
+		?bool $syncInBackground = null): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 

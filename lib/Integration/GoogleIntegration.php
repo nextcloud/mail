@@ -46,11 +46,11 @@ class GoogleIntegration {
 	private LoggerInterface $logger;
 
 	public function __construct(ITimeFactory $timeFactory,
-								IConfig $config,
-								ICrypto $crypto,
-								IClientService $clientService,
-								IURLGenerator $urlGenerator,
-								LoggerInterface $logger) {
+		IConfig $config,
+		ICrypto $crypto,
+		IClientService $clientService,
+		IURLGenerator $urlGenerator,
+		LoggerInterface $logger) {
 		$this->timeFactory = $timeFactory;
 		$this->clientService = $clientService;
 		$this->crypto = $crypto;
@@ -97,7 +97,7 @@ class GoogleIntegration {
 	}
 
 	public function finishConnect(Account $account,
-								  string $code): Account {
+		string $code): Account {
 		$clientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
 		$encryptedClientSecret = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_secret');
 		if (empty($clientId) || empty($encryptedClientSecret)) {

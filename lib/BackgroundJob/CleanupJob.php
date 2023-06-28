@@ -33,7 +33,7 @@ class CleanupJob extends TimedJob {
 	private CleanupService $cleanupService;
 
 	public function __construct(ITimeFactory $time,
-								CleanupService $cleanupService) {
+		CleanupService $cleanupService) {
 		parent::__construct($time);
 		$this->cleanupService = $cleanupService;
 

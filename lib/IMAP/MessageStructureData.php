@@ -39,9 +39,9 @@ class MessageStructureData {
 	private bool $isEncrypted;
 
 	public function __construct(bool $hasAttachments,
-								string $previewText,
-								bool $isImipMessage,
-								bool $isEncrypted) {
+		string $previewText,
+		bool $isImipMessage,
+		bool $isEncrypted) {
 		$this->hasAttachments = $hasAttachments;
 		$this->previewText = $previewText;
 		$this->isImipMessage = $isImipMessage;

@@ -36,8 +36,8 @@ class TagsController extends Controller {
 	private IMailManager $mailManager;
 
 	public function __construct(IRequest $request,
-								string $UserId,
-								IMailManager $mailManager
+		string $UserId,
+		IMailManager $mailManager
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;

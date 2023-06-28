@@ -41,9 +41,9 @@ interface IExtractor {
 	 * @param Message[] $messages
 	 */
 	public function prepare(Account $account,
-							array $incomingMailboxes,
-							array $outgoingMailboxes,
-							array $messages): void;
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): void;
 
 	/**
 	 * Return the feature value for the given message

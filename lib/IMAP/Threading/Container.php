@@ -48,8 +48,8 @@ class Container implements JsonSerializable {
 	private $children = [];
 
 	private function __construct(?Message $message,
-								 ?string $id = null,
-								 bool $root = false) {
+		?string $id = null,
+		bool $root = false) {
 		$this->message = $message;
 		$this->id = $id;
 		$this->root = $root;

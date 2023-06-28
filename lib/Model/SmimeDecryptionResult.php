@@ -33,9 +33,9 @@ class SmimeDecryptionResult {
 	private bool $isSignatureValid;
 
 	public function __construct(string $decryptedMessage,
-								bool $isEncrypted,
-								bool $isSigned,
-								bool $isSignatureValid) {
+		bool $isEncrypted,
+		bool $isSigned,
+		bool $isSignatureValid) {
 		$this->isEncrypted = $isEncrypted;
 		$this->isSigned = $isSigned;
 		$this->isSignatureValid = $isSignatureValid;

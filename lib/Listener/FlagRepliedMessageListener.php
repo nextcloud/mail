@@ -57,10 +57,10 @@ class FlagRepliedMessageListener implements IEventListener {
 	private $dbMessageMapper;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
-								MailboxMapper     $mailboxMapper,
-								DbMessageMapper   $dbMessageMapper,
-								MessageMapper     $mapper,
-								LoggerInterface   $logger) {
+		MailboxMapper     $mailboxMapper,
+		DbMessageMapper   $dbMessageMapper,
+		MessageMapper     $mapper,
+		LoggerInterface   $logger) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->dbMessageMapper = $dbMessageMapper;

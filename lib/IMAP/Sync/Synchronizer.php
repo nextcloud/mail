@@ -65,9 +65,9 @@ class Synchronizer {
 	 * @throws MailboxDoesNotSupportModSequencesException
 	 */
 	public function sync(Horde_Imap_Client_Base $imapClient,
-						 Request $request,
-						 string $userId,
-						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
+		Request $request,
+		string $userId,
+		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
 		try {
 			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {

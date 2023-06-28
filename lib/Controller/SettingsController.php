@@ -43,9 +43,9 @@ class SettingsController extends Controller {
 	private IConfig $config;
 
 	public function __construct(IRequest $request,
-								ProvisioningManager $provisioningManager,
-								AntiSpamService $antiSpamService,
-								IConfig $config) {
+		ProvisioningManager $provisioningManager,
+		AntiSpamService $antiSpamService,
+		IConfig $config) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;

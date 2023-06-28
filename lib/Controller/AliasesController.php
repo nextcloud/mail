@@ -38,9 +38,9 @@ class AliasesController extends Controller {
 	private string $currentUserId;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								AliasesService $aliasesService,
-								string $UserId) {
+		IRequest $request,
+		AliasesService $aliasesService,
+		string $UserId) {
 		parent::__construct($appName, $request);
 		$this->aliasService = $aliasesService;
 		$this->currentUserId = $UserId;
@@ -74,9 +74,9 @@ class AliasesController extends Controller {
 	 */
 	#[TrapError]
 	public function update(int    $id,
-						   string $alias,
-						   string $aliasName,
-						   ?int   $smimeCertificateId = null): JSONResponse {
+		string $alias,
+		string $aliasName,
+		?int   $smimeCertificateId = null): JSONResponse {
 		return new JSONResponse(
 			$this->aliasService->update(
 				$this->currentUserId,

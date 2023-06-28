@@ -48,9 +48,9 @@ class ImportantMessagesExtractor implements IExtractor {
 	}
 
 	public function prepare(Account $account,
-							array $incomingMailboxes,
-							array $outgoingMailboxes,
-							array $messages): void {
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): void {
 		/** @var string[] $senders */
 		$senders = array_unique(array_map(static function (Message $message) {
 			return $message->getFrom()->first()->getEmail();

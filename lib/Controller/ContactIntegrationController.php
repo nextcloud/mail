@@ -34,8 +34,8 @@ class ContactIntegrationController extends Controller {
 	private ContactIntegrationService $service;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								ContactIntegrationService $service) {
+		IRequest $request,
+		ContactIntegrationService $service) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;

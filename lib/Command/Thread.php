@@ -44,7 +44,7 @@ class Thread extends Command {
 	private LoggerInterface $logger;
 
 	public function __construct(ThreadBuilder $builder,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		parent::__construct();
 		$this->builder = $builder;
 		$this->logger = $logger;

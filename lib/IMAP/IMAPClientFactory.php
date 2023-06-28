@@ -53,9 +53,9 @@ class IMAPClientFactory {
 	 * @param ICacheFactory $cacheFactory
 	 */
 	public function __construct(ICrypto $crypto,
-								IConfig $config,
-								ICacheFactory $cacheFactory,
-								IEventDispatcher $eventDispatcher) {
+		IConfig $config,
+		ICacheFactory $cacheFactory,
+		IEventDispatcher $eventDispatcher) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;

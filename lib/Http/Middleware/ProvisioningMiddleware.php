@@ -48,9 +48,9 @@ class ProvisioningMiddleware extends Middleware {
 	private $logger;
 
 	public function __construct(IUserSession $userSession,
-								ICredentialStore $credentialStore,
-								ProvisioningManager $provisioningManager,
-								LoggerInterface $logger) {
+		ICredentialStore $credentialStore,
+		ProvisioningManager $provisioningManager,
+		LoggerInterface $logger) {
 		$this->userSession = $userSession;
 		$this->credentialStore = $credentialStore;
 		$this->provisioningManager = $provisioningManager;

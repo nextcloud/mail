@@ -48,9 +48,9 @@ class ExportAccountThreads extends Command {
 	private MessageMapper $messageMapper;
 
 	public function __construct(AccountService $service,
-								ISecureRandom $random,
-								IHasher $hasher,
-								MessageMapper $messageMapper) {
+		ISecureRandom $random,
+		IHasher $hasher,
+		MessageMapper $messageMapper) {
 		parent::__construct();
 
 		$this->accountService = $service;

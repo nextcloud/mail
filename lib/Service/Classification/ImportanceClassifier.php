@@ -121,12 +121,12 @@ class ImportanceClassifier {
 	private LoggerInterface $logger;
 
 	public function __construct(MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								CompositeExtractor $extractor,
-								PersistenceService $persistenceService,
-								PerformanceLogger $performanceLogger,
-								ImportanceRulesClassifier $rulesClassifier,
-								LoggerInterface $logger) {
+		MessageMapper $messageMapper,
+		CompositeExtractor $extractor,
+		PersistenceService $persistenceService,
+		PerformanceLogger $performanceLogger,
+		ImportanceRulesClassifier $rulesClassifier,
+		LoggerInterface $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
@@ -274,9 +274,9 @@ class ImportanceClassifier {
 	 * @return array
 	 */
 	private function getFeaturesAndImportance(Account $account,
-											  array $incomingMailboxes,
-											  array $outgoingMailboxes,
-											  array $messages): array {
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): array {
 		$this->extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
 		return array_map(function (Message $message) {
@@ -365,9 +365,9 @@ class ImportanceClassifier {
 	 * @throws ClassifierTrainingException
 	 */
 	private function validateClassifier(Estimator $estimator,
-										array $trainingSet,
-										array $validationSet,
-										LoggerInterface $logger): Classifier {
+		array $trainingSet,
+		array $validationSet,
+		LoggerInterface $logger): Classifier {
 		/** @var float[] $predictedValidationLabel */
 		$predictedValidationLabel = $estimator->predict(Unlabeled::build(
 			array_column($validationSet, 'features')

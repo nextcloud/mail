@@ -76,12 +76,12 @@ class PersistenceService {
 	private $logger;
 
 	public function __construct(ClassifierMapper $mapper,
-								IAppData $appData,
-								ITempManager $tempManager,
-								ITimeFactory $timeFactory,
-								IAppManager $appManager,
-								ICacheFactory $cacheFactory,
-								LoggerInterface $logger) {
+		IAppData $appData,
+		ITempManager $tempManager,
+		ITimeFactory $timeFactory,
+		IAppManager $appManager,
+		ICacheFactory $cacheFactory,
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->appData = $appData;
 		$this->tempManager = $tempManager;

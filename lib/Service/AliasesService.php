@@ -113,10 +113,10 @@ class AliasesService {
 	 * @throws DoesNotExistException
 	 */
 	public function update(string $userId,
-						   int $aliasId,
-						   string $alias,
-						   string $aliasName,
-						   ?int $smimeCertificateId): Alias {
+		int $aliasId,
+		string $alias,
+		string $aliasName,
+		?int $smimeCertificateId): Alias {
 		$entity = $this->aliasMapper->find($aliasId, $userId);
 
 		if (!$entity->isProvisioned()) {

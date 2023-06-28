@@ -47,8 +47,8 @@ class DiagnoseAccount extends Command {
 	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								IMAPClientFactory $clientFactory,
-								LoggerInterface $logger) {
+		IMAPClientFactory $clientFactory,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
@@ -102,7 +102,7 @@ class DiagnoseAccount extends Command {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	private function printCapabilitiesStats(OutputInterface $output,
-											Horde_Imap_Client_Socket $imapClient): void {
+		Horde_Imap_Client_Socket $imapClient): void {
 		$output->writeln("IMAP capabilities:");
 		// Once logged in more capabilities are advertised
 		$imapClient->login();
@@ -126,7 +126,7 @@ class DiagnoseAccount extends Command {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	protected function printMailboxesMessagesStats(OutputInterface $output,
-												   Horde_Imap_Client_Socket $imapClient): void {
+		Horde_Imap_Client_Socket $imapClient): void {
 		$mailboxes = $imapClient->listMailboxes('*', Horde_Imap_Client::MBOX_ALL, [
 			'flat' => true,
 		]);

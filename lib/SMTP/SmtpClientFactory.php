@@ -46,8 +46,8 @@ class SmtpClientFactory {
 	private $hostNameFactory;
 
 	public function __construct(IConfig $config,
-								ICrypto $crypto,
-								HostNameFactory $hostNameFactory) {
+		ICrypto $crypto,
+		HostNameFactory $hostNameFactory) {
 		$this->config = $config;
 		$this->crypto = $crypto;
 		$this->hostNameFactory = $hostNameFactory;

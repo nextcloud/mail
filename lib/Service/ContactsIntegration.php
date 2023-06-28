@@ -43,9 +43,9 @@ class ContactsIntegration {
 	private $config;
 
 	public function __construct(IManager $contactsManager,
-								IGroupManager $groupManager,
-								IUserManager $userManager,
-								IConfig $config) {
+		IGroupManager $groupManager,
+		IUserManager $userManager,
+		IConfig $config) {
 		$this->contactsManager = $contactsManager;
 		$this->groupManager = $groupManager;
 		$this->userManager = $userManager;

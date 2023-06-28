@@ -70,19 +70,19 @@ class AccountsController extends Controller {
 	private MailboxSync $mailboxSync;
 
 	public function __construct(string $appName,
-								   IRequest $request,
-								   AccountService $accountService,
-								   $UserId,
-								   LoggerInterface $logger,
-								   IL10N $l10n,
-								   AliasesService $aliasesService,
-								   IMailTransmission $mailTransmission,
-								   SetupService $setup,
-								   IMailManager $mailManager,
-								   SyncService $syncService,
-									IConfig $config,
-									IRemoteHostValidator $hostValidator,
-									MailboxSync $mailboxSync
+		IRequest $request,
+		AccountService $accountService,
+		$UserId,
+		LoggerInterface $logger,
+		IL10N $l10n,
+		AliasesService $aliasesService,
+		IMailTransmission $mailTransmission,
+		SetupService $setup,
+		IMailManager $mailManager,
+		SyncService $syncService,
+		IConfig $config,
+		IRemoteHostValidator $hostValidator,
+		MailboxSync $mailboxSync
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -153,19 +153,19 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function update(int $id,
-						   string $accountName,
-						   string $emailAddress,
-						   string $imapHost = null,
-						   int $imapPort = null,
-						   string $imapSslMode = null,
-						   string $imapUser = null,
-						   string $imapPassword = null,
-						   string $smtpHost = null,
-						   int $smtpPort = null,
-						   string $smtpSslMode = null,
-						   string $smtpUser = null,
-						   string $smtpPassword = null,
-						   string $authMethod = 'password'): JSONResponse {
+		string $accountName,
+		string $emailAddress,
+		string $imapHost = null,
+		int $imapPort = null,
+		string $imapSslMode = null,
+		string $imapUser = null,
+		string $imapPassword = null,
+		string $smtpHost = null,
+		int $smtpPort = null,
+		string $smtpSslMode = null,
+		string $smtpUser = null,
+		string $smtpPassword = null,
+		string $authMethod = 'password'): JSONResponse {
 		try {
 			// Make sure the account actually exists
 			$this->accountService->find($this->currentUserId, $id);
@@ -234,14 +234,14 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function patchAccount(int $id,
-								 string $editorMode = null,
-								 int $order = null,
-								 bool $showSubscribedOnly = null,
-								 int $draftsMailboxId = null,
-								 int $sentMailboxId = null,
-								 int $trashMailboxId = null,
-								 int $archiveMailboxId = null,
-								 bool $signatureAboveQuote = null): JSONResponse {
+		string $editorMode = null,
+		int $order = null,
+		bool $showSubscribedOnly = null,
+		int $draftsMailboxId = null,
+		int $sentMailboxId = null,
+		int $trashMailboxId = null,
+		int $archiveMailboxId = null,
+		bool $signatureAboveQuote = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -417,13 +417,13 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function draft(int $id,
-						  string $subject,
-						  string $body,
-						  string $to,
-						  string $cc,
-						  string $bcc,
-						  bool $isHtml = true,
-						  int $draftId = null): JSONResponse {
+		string $subject,
+		string $body,
+		string $to,
+		string $cc,
+		string $bcc,
+		bool $isHtml = true,
+		int $draftId = null): JSONResponse {
 		if ($draftId === null) {
 			$this->logger->info("Saving a new draft in account <$id>");
 		} else {

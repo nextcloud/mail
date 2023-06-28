@@ -34,9 +34,9 @@ class AutoCompleteController extends Controller {
 	private ?string $userId;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								AutoCompleteService $service,
-								?string $userId) {
+		IRequest $request,
+		AutoCompleteService $service,
+		?string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;

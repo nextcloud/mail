@@ -55,14 +55,14 @@ class DraftsService {
 	private ITimeFactory $time;
 
 	public function __construct(IMailTransmission  $transmission,
-								LocalMessageMapper $mapper,
-								AttachmentService  $attachmentService,
-								IEventDispatcher    $eventDispatcher,
-								IMAPClientFactory $clientFactory,
-								IMailManager $mailManager,
-								LoggerInterface $logger,
-								AccountService $accountService,
-								ITimeFactory $time) {
+		LocalMessageMapper $mapper,
+		AttachmentService  $attachmentService,
+		IEventDispatcher    $eventDispatcher,
+		IMAPClientFactory $clientFactory,
+		IMailManager $mailManager,
+		LoggerInterface $logger,
+		AccountService $accountService,
+		ITimeFactory $time) {
 		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;

@@ -51,13 +51,13 @@ class SieveController extends Controller {
 	private LoggerInterface $logger;
 
 	public function __construct(IRequest $request,
-								string $UserId,
-								AccountService $accountService,
-								MailAccountMapper $mailAccountMapper,
-								SieveClientFactory $sieveClientFactory,
-								ICrypto $crypto,
-								IRemoteHostValidator $hostValidator,
-								LoggerInterface $logger
+		string $UserId,
+		AccountService $accountService,
+		MailAccountMapper $mailAccountMapper,
+		SieveClientFactory $sieveClientFactory,
+		ICrypto $crypto,
+		IRemoteHostValidator $hostValidator,
+		LoggerInterface $logger
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;
@@ -142,12 +142,12 @@ class SieveController extends Controller {
 	 */
 	#[TrapError]
 	public function updateAccount(int $id,
-								  bool $sieveEnabled,
-								  string $sieveHost,
-								  int $sievePort,
-								  string $sieveUser,
-								  string $sievePassword,
-								  string $sieveSslMode
+		bool $sieveEnabled,
+		string $sieveHost,
+		int $sievePort,
+		string $sieveUser,
+		string $sievePassword,
+		string $sieveSslMode
 	): JSONResponse {
 		if (!$this->hostValidator->isValid($sieveHost)) {
 			return MailJsonResponse::fail(

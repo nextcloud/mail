@@ -55,11 +55,11 @@ class MessageSentEvent extends Event {
 	private $mail;
 
 	public function __construct(Account $account,
-								NewMessageData $newMessageData,
-								?string $repliedToMessageId,
-								?Message $draft,
-								IMessage $message,
-								Horde_Mime_Mail $mail) {
+		NewMessageData $newMessageData,
+		?string $repliedToMessageId,
+		?Message $draft,
+		IMessage $message,
+		Horde_Mime_Mail $mail) {
 		parent::__construct();
 		$this->account = $account;
 		$this->newMessageData = $newMessageData;

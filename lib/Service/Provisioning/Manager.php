@@ -72,14 +72,14 @@ class Manager {
 	private $cacheFactory;
 
 	public function __construct(IUserManager $userManager,
-								ProvisioningMapper $provisioningMapper,
-								MailAccountMapper $mailAccountMapper,
-								ICrypto $crypto,
-								ILDAPProviderFactory $ldapProviderFactory,
-								AliasMapper $aliasMapper,
-								LoggerInterface $logger,
-								TagMapper $tagMapper,
-								ICacheFactory $cacheFactory) {
+		ProvisioningMapper $provisioningMapper,
+		MailAccountMapper $mailAccountMapper,
+		ICrypto $crypto,
+		ILDAPProviderFactory $ldapProviderFactory,
+		AliasMapper $aliasMapper,
+		LoggerInterface $logger,
+		TagMapper $tagMapper,
+		ICacheFactory $cacheFactory) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;

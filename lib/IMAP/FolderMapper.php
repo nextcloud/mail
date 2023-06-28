@@ -54,7 +54,7 @@ class FolderMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
-							   string $pattern = '*'): array {
+		string $pattern = '*'): array {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,
 			'attributes' => true,
@@ -84,8 +84,8 @@ class FolderMapper {
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
-								 Account $account,
-								 string $name): Folder {
+		Account $account,
+		string $name): Folder {
 		$client->createMailbox($name);
 
 		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
@@ -118,7 +118,7 @@ class FolderMapper {
 	 * @return void
 	 */
 	public function fetchFolderAcls(array $folders,
-									 Horde_Imap_Client_Socket $client): void {
+		Horde_Imap_Client_Socket $client): void {
 		$hasAcls = $client->capability->query('ACL');
 
 		foreach ($folders as $folder) {
@@ -140,7 +140,7 @@ class FolderMapper {
 	 * @return MailboxStats
 	 */
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
-											 string $mailbox): MailboxStats {
+		string $mailbox): MailboxStats {
 		$status = $client->status($mailbox);
 		$acls = null;
 		if ($client->capability->query('ACL')) {
@@ -162,8 +162,8 @@ class FolderMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function renameFolder(Horde_Imap_Client_Socket $client,
-								 string $oldName,
-								 string $newName): void {
+		string $oldName,
+		string $newName): void {
 		$client->renameMailbox($oldName, $newName);
 	}
 

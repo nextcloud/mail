@@ -52,9 +52,9 @@ class SyncAccount extends Command {
 	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								MailboxSync $mailboxSync,
-								ImapToDbSynchronizer $messageSync,
-								LoggerInterface $logger) {
+		MailboxSync $mailboxSync,
+		ImapToDbSynchronizer $messageSync,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;

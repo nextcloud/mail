@@ -46,8 +46,8 @@ class AntiAbuseListener implements IEventListener {
 	private $logger;
 
 	public function __construct(IUserManager $userManager,
-								AntiAbuseService $service,
-								LoggerInterface $logger) {
+		AntiAbuseService $service,
+		LoggerInterface $logger) {
 		$this->service = $service;
 		$this->userManager = $userManager;
 		$this->logger = $logger;

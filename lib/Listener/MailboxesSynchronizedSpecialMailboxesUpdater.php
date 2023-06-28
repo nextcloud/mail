@@ -54,8 +54,8 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 	private $logger;
 
 	public function __construct(MailAccountMapper $mailAccountMapper,
-								MailboxMapper $mailboxMapper,
-								LoggerInterface $logger) {
+		MailboxMapper $mailboxMapper,
+		LoggerInterface $logger) {
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->logger = $logger;

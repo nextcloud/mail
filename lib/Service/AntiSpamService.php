@@ -48,8 +48,8 @@ class AntiSpamService {
 	private $transmission;
 
 	public function __construct(IConfig $config,
-								MessageMapper $messageMapper,
-								IMailTransmission $transmission) {
+		MessageMapper $messageMapper,
+		IMailTransmission $transmission) {
 		$this->config = $config;
 		$this->messageMapper = $messageMapper;
 		$this->transmission = $transmission;

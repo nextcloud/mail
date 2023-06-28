@@ -59,10 +59,10 @@ class ItineraryService {
 	private $logger;
 
 	public function __construct(IMAPClientFactory $clientFactory,
-								MessageMapper $messageMapper,
-								ItineraryExtractor $extractor,
-								ICacheFactory $cacheFactory,
-								LoggerInterface $logger) {
+		MessageMapper $messageMapper,
+		ItineraryExtractor $extractor,
+		ICacheFactory $cacheFactory,
+		LoggerInterface $logger) {
 		$this->clientFactory = $clientFactory;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;

@@ -50,9 +50,9 @@ class Response implements JsonSerializable {
 	 * @param MailboxStats|null $stats
 	 */
 	public function __construct(array $newMessages,
-								array $changedMessages,
-								array $vanishedMessageUids,
-								MailboxStats $stats = null) {
+		array $changedMessages,
+		array $vanishedMessageUids,
+		MailboxStats $stats = null) {
 		$this->newMessages = $newMessages;
 		$this->changedMessages = $changedMessages;
 		$this->vanishedMessageUids = $vanishedMessageUids;

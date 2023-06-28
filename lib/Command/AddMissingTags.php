@@ -41,8 +41,8 @@ class AddMissingTags extends Command {
 	private MailAccountMapper $mapper;
 
 	public function __construct(MailAccountMapper $mapper,
-								TagMapper $tagMapper,
-								LoggerInterface $logger) {
+		TagMapper $tagMapper,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->mapper = $mapper;

@@ -62,11 +62,11 @@ class MailSearch implements IMailSearch {
 	private $timeFactory;
 
 	public function __construct(FilterStringParser $filterStringParser,
-								MailboxMapper $mailboxMapper,
-								ImapSearchProvider $imapSearchProvider,
-								MessageMapper $messageMapper,
-								PreviewEnhancer $previewEnhancer,
-								ITimeFactory $timeFactory) {
+		MailboxMapper $mailboxMapper,
+		ImapSearchProvider $imapSearchProvider,
+		MessageMapper $messageMapper,
+		PreviewEnhancer $previewEnhancer,
+		ITimeFactory $timeFactory) {
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapSearchProvider = $imapSearchProvider;
@@ -76,8 +76,8 @@ class MailSearch implements IMailSearch {
 	}
 
 	public function findMessage(Account $account,
-								Mailbox $mailbox,
-								Message $message): Message {
+		Mailbox $mailbox,
+		Message $message): Message {
 		$processed = $this->previewEnhancer->process(
 			$account,
 			$mailbox,
@@ -102,10 +102,10 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessages(Account $account,
-								 Mailbox $mailbox,
-								 ?string $filter,
-								 ?int $cursor,
-								 ?int $limit): array {
+		Mailbox $mailbox,
+		?string $filter,
+		?int $cursor,
+		?int $limit): array {
 		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
 			throw MailboxLockedException::from($mailbox);
 		}
@@ -146,9 +146,9 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessagesGlobally(IUser $user,
-								 ?string $filter,
-								 ?int $cursor,
-								 ?int $limit): array {
+		?string $filter,
+		?int $cursor,
+		?int $limit): array {
 		$query = $this->filterStringParser->parse($filter);
 		if ($cursor !== null) {
 			$query->setCursor($cursor);
