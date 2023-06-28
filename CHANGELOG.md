@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.7 - 2023-06-28
+### Fixed
+- Truncate email addresses that are more than 244 characters long
+- Check strict cookies for image proxy
+- Only fetch mailbox STATUS once
+- Missing background box for redirect page
+
 ## 2.2.6 - 2023-04-20
 ### Fixed
 - Gap between primary actions
