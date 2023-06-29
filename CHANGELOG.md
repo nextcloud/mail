@@ -1,6 +1,36 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.3.0-alpha.1 - unreleased
+### Added
+- Allow a configurable background sync interval
+- Send multiple flags in a single request
+- Complete moving OAuth access token into a dedicated column
+- Use proper json response for getDkim
+- Validate dkim signature for one click unsubscribe
+- Set app name for mail
+- Rework draft handling front-end
+- Support for selecting messages with crtl key
+
+### Fixed
+- Update interface to match implementation
+- Truncate email addresses that are more than 244 characters long
+- Ignore no select mailboxes for MYRIGHTS
+- Ignore non existent mailboxes
+- DB-Query for open drafts
+- Check strict cookies for image proxy
+- Set primary key in first migration
+- Add arial-label to NcActionButtons without text
+- Calendar import popup
+- Version on package lock
+- Allow dynamic autoloading for classes added during upgrade
+- Re-open account settings
+- Overlapping of primary menu with recipient
+
+### Changed
+- Ethical AI rating
+
+
 ## 3.2.0-rc.1 - unreleased
 ### Added
 - Create a task from a message
