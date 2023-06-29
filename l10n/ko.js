@@ -140,6 +140,7 @@ OC.L10N.register(
     "Move down" : "아래로 이동",
     "Remove account" : "계정 삭제",
     "Loading …" : "불러오는 중 …",
+    "{usage} of {limit} used" : "{limit} 중 {usage} 사용중",
     "Remove account {email}" : "{email} 계정 제거",
     "Remove {email}" : "{email} 제거",
     "Mark all as read" : "모두 읽은 것으로 표시",
