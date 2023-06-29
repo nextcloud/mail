@@ -46,6 +46,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
 		<job>OCA\Mail\BackgroundJob\OutboxWorkerJob</job>
 		<job>OCA\Mail\BackgroundJob\IMipMessageJob</job>
+		<job>OCA\Mail\BackgroundJob\DraftsJob</job>
 	</background-jobs>
 	<repair-steps>
 		<post-migration>

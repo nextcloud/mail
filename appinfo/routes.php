@@ -400,11 +400,18 @@ return [
 			'url' => '/api/list/unsubscribe/{id}',
 			'verb' => 'POST',
 		],
+		[
+			'name' => 'drafts#move',
+			'url' => '/api/drafts/move/{id}',
+			'verb' => 'POST',
+		],
+
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
 		'aliases' => ['url' => '/api/accounts/{accountId}/aliases'],
 		'autoComplete' => ['url' => '/api/autoComplete'],
+		'drafts' => ['url' => '/api/drafts'],
 		'localAttachments' => ['url' => '/api/attachments'],
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],

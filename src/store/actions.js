@@ -78,6 +78,7 @@ import {
 	syncEnvelopes,
 	updateEnvelopeTag,
 } from '../service/MessageService'
+import { moveDraft, updateDraft } from '../service/DraftService'
 import * as AliasService from '../service/AliasService'
 import logger from '../logger'
 import { normalizedEnvelopeListId } from './normalization'
@@ -483,21 +484,19 @@ export default {
 			}
 		})
 	},
-	stopComposerSession({ commit, dispatch, getters }, { restoreOriginalSendAt = false } = {}) {
+	async stopComposerSession({ commit, dispatch, getters }, { restoreOriginalSendAt = false, moveToImap = false, id } = {}) {
 		return handleHttpAuthErrors(commit, async () => {
 
 			// Restore original sendAt timestamp when requested
 			const message = getters.composerMessage
 			if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
 				const body = message.data.body
-				await dispatch('outbox/updateMessage', {
-					id: message.data.id,
-					message: {
-						...message.data,
-						body: message.data.isHtml ? body.value : toPlain(body).value,
-						sendAt: message.options.originalSendAt,
-					},
-				})
+				message.body = message.data.isHtml ? body.value : toPlain(body).value
+				message.sendAt = message.options.originalSendAt
+				updateDraft(message)
+			}
+			if (moveToImap) {
+				 await moveDraft(id)
 			}
 
 			commit('stopComposerSession')

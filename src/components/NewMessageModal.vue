@@ -1,3 +1,4 @@
+
 <template>
 	<Modal
 		v-if="showMessageComposer"
@@ -107,7 +108,6 @@ import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger'
 import { toPlain, toHtml, plain } from '../util/text'
-import { saveDraft } from '../service/MessageService'
 import Composer from './Composer'
 import { UNDO_DELAY } from '../store/constants'
 import { matchError } from '../errors/match'
@@ -116,6 +116,7 @@ import ManyRecipientsError from '../errors/ManyRecipientsError'
 import Loading from './Loading'
 import { mapGetters } from 'vuex'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
+import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService'
 
 export default {
 	name: 'NewMessageModal',
@@ -144,6 +145,7 @@ export default {
 			warning: undefined,
 			modalFirstOpen: true,
 			cookedComposerData: undefined,
+			changed: false,
 		}
 	},
 	computed: {
@@ -174,9 +176,9 @@ export default {
 		},
 	},
 	created() {
-		const draftId = this.composerData?.draftId
-		if (draftId) {
-			this.draftsPromise = Promise.resolve(draftId)
+		const id = this.composerData?.id
+		if (id) {
+			this.draftsPromise = Promise.resolve(id)
 		}
 	},
 	async mounted() {
@@ -195,43 +197,33 @@ export default {
 		 * @param {boolean=} opts.showToast Show a toast after saving
 		 * @return {Promise<number>} Draft id promise
 		 */
+		// TODO: when there's no draft is saved, Cloing wont move ie case 2 doesn't work
 		onDraft(data, { showToast = false } = {}) {
 			if (!this.composerMessage) {
 				logger.info('Ignoring draft because there is no message anymore', { data })
 				return this.draftsPromise
 			}
+			this.changed = true
 
 			this.draftsPromise = this.draftsPromise.then(async (id) => {
 				this.savingDraft = true
 				this.draftSaved = false
-				data.draftId = id
 				try {
 					let idToReturn
-					if (this.composerMessage.type === 'outbox') {
-						const dataForServer = this.getDataForServer(data)
-						delete dataForServer.sendAt
-						await this.$store.dispatch('outbox/updateMessage', {
-							message: dataForServer,
-							id: this.composerData.id,
-						})
-						this.canSaveDraft = true
-						this.draftSaved = true
-					} else {
-						const dataForServer = this.getDataForServer(data, true)
+					const dataForServer = this.getDataForServer(data, true)
+					if (!id) {
 						const { id } = await saveDraft(data.account, dataForServer)
+						dataForServer.id = id
+						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId })
 						this.canSaveDraft = true
 						this.draftSaved = true
 
-						// Remove old draft envelope
-						this.$store.commit('removeEnvelope', { id: data.draftId })
-						this.$store.commit('removeMessage', { id: data.draftId })
-
-						// Fetch new draft envelope
-						await this.$store.dispatch('fetchEnvelope', {
-							accountId: data.account,
-							id,
-						})
-
+						idToReturn = id
+					} else {
+						dataForServer.id = id
+						await updateDraft(dataForServer)
+						this.canSaveDraft = true
+						this.draftSaved = true
 						idToReturn = id
 					}
 
@@ -267,20 +259,21 @@ export default {
 
 			return this.draftsPromise
 		},
-		getDataForServer(data, serializeRecipients = false) {
+		getDataForServer(data) {
 			return {
 				...data,
-				accountId: data.account,
+				id: data.id,
+				accountId: data.accountId,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 				editorBody: data.body.value,
-				to: serializeRecipients ? data.to.map(this.recipientToRfc822).join(', ') : data.to,
-				cc: serializeRecipients ? data.cc.map(this.recipientToRfc822).join(', ') : data.cc,
-				bcc: serializeRecipients ? data.bcc.map(this.recipientToRfc822).join(', ') : data.bcc,
+				to: data.to,
+				cc: data.cc,
+				bcc: data.bcc,
 				attachments: data.attachments,
 				aliasId: data.aliasId,
 				inReplyToMessageId: data.inReplyToMessageId,
 				sendAt: data.sendAt,
-				draftId: data.draftId,
+				draftId: this.composerData?.draftId,
 			}
 		},
 		onAttachmentUploading(done, data) {
@@ -306,7 +299,7 @@ export default {
 				}
 				const dataForServer = this.getDataForServer({
 					...data,
-					draftId: await this.draftsPromise,
+					id: await this.draftsPromise,
 					sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
 				})
 				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
@@ -314,10 +307,13 @@ export default {
 				}
 
 				if (!this.composerData.id) {
+					const { id } = await saveDraft(data.account, dataForServer)
+					dataForServer.id = id
 					await this.$store.dispatch('outbox/enqueueMessage', {
 						message: dataForServer,
 					})
 				} else {
+					dataForServer.id = this.composerData.id
 					await this.$store.dispatch('outbox/updateMessage', {
 						message: dataForServer,
 						id: this.composerData.id,
@@ -326,12 +322,11 @@ export default {
 
 				if (!data.sendAt || data.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 					// Awaiting here would keep the modal open for a long time and thus block the user
-					this.$store.dispatch('outbox/sendMessageWithUndo', { id: this.composerData.id })
+					this.$store.dispatch('outbox/sendMessageWithUndo', { id: dataForServer.id })
 				}
-				if (data.draftId) {
+				if (dataForServer.id) {
 					// Remove old draft envelope
-					this.$store.commit('removeEnvelope', { id: data.draftId })
-					this.$store.commit('removeMessage', { id: data.draftId })
+					this.$store.commit('removeMessage', { id: dataForServer.id })
 				}
 				await this.$store.dispatch('stopComposerSession')
 				this.$emit('close')
@@ -396,7 +391,7 @@ export default {
 				if (isOutbox) {
 					await this.$store.dispatch('outbox/deleteMessage', { id })
 				} else {
-					await this.$store.dispatch('deleteMessage', { id })
+					deleteDraft(id)
 				}
 				showSuccess(t('mail', 'Message discarded'))
 			} catch (error) {
@@ -424,6 +419,7 @@ export default {
 			this.cookedComposerData = this.$refs.composer.getMessageData()
 		},
 		async patchComposerData(data) {
+			this.changed = true
 			this.updateCookedComposerData()
 			await this.$store.dispatch('patchComposerData', data)
 		},
@@ -431,20 +427,24 @@ export default {
 			this.modalFirstOpen = false
 
 			await this.$store.dispatch('closeMessageComposer')
-			if (!this.$store.getters.composerMessageIsSaved) {
+			if (!this.$store.getters.composerMessageIsSaved && this.changed) {
 				await this.onDraft(this.cookedComposerData, { showToast: true })
 			}
+
 		},
 		async onClose() {
 			this.$store.commit('setComposerIndicatorDisabled', true)
 			await this.onMinimize()
 
 			// End the session only if all unsaved changes have been saved
-			if (this.canSaveDraft) {
+			if (this.canSaveDraft && ((this.changed && this.draftSaved) || !this.changed)) {
 				logger.debug('Closing composer session due to close button click')
 				await this.$store.dispatch('stopComposerSession', {
 					restoreOriginalSendAt: true,
+					moveToImap: this.changed,
+					id: this.composerData.id,
 				})
+
 			}
 		},
 	},
