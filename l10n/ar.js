@@ -86,6 +86,7 @@ OC.L10N.register(
     "Save all to Files" : "حفظ الجميع لـ الملفات",
     "The images have been blocked to protect your privacy." : "تم حجب هذه الصورة لحماية خصوصيتك",
     "Show images" : "عرض الصور",
+    "Quoted text" : "نصٌ مُقتبسٌ",
     "Move" : "نقل",
     "Quota" : "الحصة",
     "Saving" : "جاري الحفظ ...",
