@@ -682,13 +682,36 @@ class MessageMapper {
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
 					$part->setTransferEncoding($enc);
 				}
-				$part->setContents($stream, [
-					'usestream' => true,
-				]);
-				fclose($stream);
-			}
 
-			$attachments[] = Attachment::fromMimePart($part);
+				/*
+				 * usestream depends on transfer encoding
+				 *
+				 * Case 1: base64 encoded file
+				 * Base64 stream is copied to a new stream and decoded using a convert.base64-decode stream filter.
+				 *
+				 * Case 2: text file (no transfer encoding)
+				 * Existing stream is reused in Horde_Mime_Part.
+				 *
+				 * To handle both cases:
+				 *
+				 * 1) Horde_Mime_Part.clearContents to close the internal stream (Horde_Mime_Part._contents)
+				 * 2) If $stream is still open, the data was transfer encoded, close it.
+				 *
+				 * Attachment.fromMimePart uses Horde_Mime_Part.getContents and Horde_Mime_Part.getBytes
+				 * and therefore needs an open input stream.
+				 */
+				$part->setContents($stream, [
+					'usestream' => true
+				]);
+				$attachments[] = Attachment::fromMimePart($part);
+				$part->clearContents();
+				if (is_resource($stream)) {
+					fclose($stream);
+				}
+			} else {
+				$attachments[] = Attachment::fromMimePart($part);
+				$part->clearContents();
+			}
 		}
 		return $attachments;
 	}
