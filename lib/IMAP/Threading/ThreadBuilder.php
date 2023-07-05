@@ -127,7 +127,7 @@ class ThreadBuilder {
 	 */
 	private function buildRootContainer(array $idTable): Container {
 		$rootContainer = Container::empty();
-		foreach ($idTable as $id => $container) {
+		foreach ($idTable as $container) {
 			if (!$container->hasParent()) {
 				$container->setParent($rootContainer);
 			}
@@ -139,8 +139,7 @@ class ThreadBuilder {
 	 * @param Container $container
 	 */
 	private function pruneContainers(Container $root): void {
-		/** @var Container $container */
-		foreach ($root->getChildren() as $id => $container) {
+		foreach ($root->getChildren() as $container) {
 			// Step 4.A
 			if (!$container->hasMessage() && !$container->hasChildren()) {
 				$container->unlink();
