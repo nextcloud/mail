@@ -57,7 +57,6 @@ class TrustedSenderMapper extends QBMapper {
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid))
 			);
 
-		/** @var TrustedSender[] $rows */
 		$rows = $this->findEntities($select);
 
 		return $rows !== [];

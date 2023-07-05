@@ -330,9 +330,7 @@ class MessageMapper extends QBMapper {
 					Address::TYPE_BCC => $message->getBcc(),
 				];
 				foreach ($recipientTypes as $type => $recipients) {
-					/** @var AddressList $recipients */
 					foreach ($recipients->iterate() as $recipient) {
-						/** @var Address $recipient */
 						if ($recipient->getEmail() === null) {
 							// If for some reason the e-mail is not set we should ignore this entry
 							continue;

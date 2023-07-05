@@ -105,7 +105,6 @@ class PreviewEnhancer {
 				return $message;
 			}
 
-			/** @var MessageStructureData $structureData */
 			$structureData = $data[$message->getUid()];
 			$message->setFlagAttachments($structureData->hasAttachments());
 			$message->setPreviewText($structureData->getPreviewText());
