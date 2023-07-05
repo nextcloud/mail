@@ -255,11 +255,12 @@ class Manager {
 	 */
 	public function newProvisioning(array $data): Provisioning {
 		$provisioning = $this->provisioningMapper->validate($data);
-		return $this->provisioningMapper->insert($provisioning);
+		$provisioning = $this->provisioningMapper->insert($provisioning);
 		if ($this->cacheFactory->isAvailable()) {
 			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
 			$cache->clear();
 		}
+		return $provisioning;
 	}
 
 	/**
