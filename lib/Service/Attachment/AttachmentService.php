@@ -107,11 +107,6 @@ class AttachmentService implements IAttachmentService {
 		return $attachment;
 	}
 
-	/**
-	 * @param string $userId
-	 * @param UploadedFile $file
-	 * @return LocalAttachment
-	 */
 	public function addFileFromString(string $userId, string $name, string $mime, string $fileContents): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);

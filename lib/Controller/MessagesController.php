@@ -165,11 +165,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
-	 * @param string $folderId
 	 * @param int $id
-	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
@@ -421,11 +417,6 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $accountId
-	 * @param string $folderId
-	 * @param int $messageId
-	 *
-	 * @return JSONResponse
 	 * @throws ServiceException
 	 */
 	#[TrapError]
@@ -624,7 +615,6 @@ class MessagesController extends Controller {
 	 * @NoCSRFRequired
 	 *
 	 * @param int $id the message id
-	 * @param string $attachmentId
 	 *
 	 * @return ZipResponse|JSONResponse
 	 *
@@ -812,11 +802,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
-	 * @param string $folderId
 	 * @param int $id
-	 *
-	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException

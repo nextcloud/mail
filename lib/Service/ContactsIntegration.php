@@ -204,13 +204,8 @@ class ContactsIntegration {
 
 	/**
 	 * Adds a new contact with the specified email to an addressbook
-	 *
-	 * @param string $uid
-	 * @param string $mailAddr
-	 * @param string $addressbook
-	 * @return array|null
 	 */
-	public function newContact(string $name, string $mailAddr, string $type = 'HOME', string $addressbook = null) {
+	public function newContact(string $name, string $mailAddr, string $type = 'HOME', string $addressbook = null): ?array {
 		if (!$this->contactsManager->isEnabled()) {
 			return null;
 		}
@@ -268,11 +263,8 @@ class ContactsIntegration {
 
 	/**
 	 * Extracts all Contacts with the specified name
-	 *
-	 * @param string $mailAddr
-	 * @return array
 	 */
-	public function getContactsWithName(string $name) {
+	public function getContactsWithName(string $name): array {
 		return $this->doSearch($name, ['FN'], false);
 	}
 }

@@ -135,9 +135,6 @@ class ThreadBuilder {
 		return $rootContainer;
 	}
 
-	/**
-	 * @param Container $container
-	 */
 	private function pruneContainers(Container $root): void {
 		/** @var Container $container */
 		foreach ($root->getChildren() as $id => $container) {

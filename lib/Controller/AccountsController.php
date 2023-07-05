@@ -403,14 +403,6 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $subject
-	 * @param string $body
-	 * @param string $to
-	 * @param string $cc
-	 * @param string $bcc
-	 * @param int $uid
-	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException

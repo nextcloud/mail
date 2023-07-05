@@ -94,7 +94,6 @@ class AliasMapper extends QBMapper {
 
 	/**
 	 * @param int $accountId the account whose aliases will be deleted
-	 * @param string $currentUserId the user that is currently logged in
 	 *
 	 * @return void
 	 */
