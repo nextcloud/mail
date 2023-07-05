@@ -64,10 +64,8 @@ class ListController extends Controller {
 	}
 
 	/**
-	 * @param int $messageId
 	 * @NoAdminRequired
 	 * @UserRateThrottle(limit=10, period=3600)
-	 * @return JsonResponse
 	 */
 	public function unsubscribe(int $id): JsonResponse {
 		try {

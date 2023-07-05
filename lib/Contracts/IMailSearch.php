@@ -35,11 +35,6 @@ use OCP\IUser;
 
 interface IMailSearch {
 	/**
-	 * @param Account $account
-	 * @param string $mailboxName
-	 * @param int $uid
-	 *
-	 * @return Message
 	 * @throws DoesNotExistException
 	 * @throws ClientException
 	 * @throws ServiceException

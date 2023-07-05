@@ -89,7 +89,6 @@ class MicrosoftIntegrationController extends Controller {
 	}
 
 	/**
-	 * @param int $id
 	 * @param string|null $code
 	 * @param string|null $state
 	 * @param string|null $session_state

@@ -105,7 +105,6 @@ class MailboxMapper extends QBMapper {
 
 	/**
 	 * @param int $id
-	 * @param string $uid
 	 *
 	 * @return Mailbox
 	 *
@@ -230,10 +229,6 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param IQueryBuilder $query
-	 * @param int|null $value
-	 *
 	 * @return string|IQueryFunction
 	 */
 	private function eqOrNull(IQueryBuilder $query, string $column, ?int $value, int $type) {

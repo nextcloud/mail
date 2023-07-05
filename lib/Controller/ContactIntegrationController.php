@@ -70,10 +70,6 @@ class ContactIntegrationController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param string $name
-	 * @param string $mail
-	 * @return JSONResponse
 	 */
 	#[TrapError]
 	public function newContact(string $contactName = null, string $mail = null): JSONResponse {
