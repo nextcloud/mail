@@ -25,6 +25,10 @@ namespace OCA\Mail\Http;
 
 use OCP\AppFramework\Http\DownloadResponse;
 
+/**
+ * @psalm-suppress MissingTemplateParam
+ * @todo spec template with 28+
+ */
 class AvatarDownloadResponse extends DownloadResponse {
 	/** @var string */
 	private $content;
