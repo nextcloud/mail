@@ -1,16 +1,18 @@
 OC.L10N.register(
     "mail",
     {
-    "Important mail" : "البريد الهام",
+    "Embedded message %s" : "رسالة مُضمّنة Embedded ـ %s",
+    "Important mail" : "بريدٌ هامٌّ",
     "Unread mail" : "البريد غير المقروء",
-    "Important" : "مهم",
+    "Important" : "هامٌّ",
     "Work" : "العمل",
     "Personal" : "شخصي",
-    "Later" : "لاحقا",
-    "Mails" : "الرسائل",
+    "To Do" : "مَهَام",
+    "Later" : "لاحقاً",
+    "Mails" : "رسائل",
     "Mail" : "البريد",
-    "💌 A mail app for Nextcloud" : "💌 تطبيق بريد نكست كلود",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n### Rating: 🟢\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "** 💌 تطبيق بريد نكست كلود ** \n\n- ** 🚀 متكامل مع تطبيقات نكست كلود الأخرى! ** جهات الاتصال الحالية والتقويم والملفات - والمزيد آتي.\n-** 📥 حسابات بريد متعددة! ** حساب شخصي وحساب الشركة ؟ لا يوجد مشكلة، وصندوق بريد موحد لطيف. قم بربط أي حساب بروتوكول الوصول إلى رسائل الإنترنت IMAP.\n-** 🔒 قم بإرسال واستقبال رسائل بريدية مشفرة! ** باستخدام امتداد المتصفح الرائع [ميل فيلبوب Mailvelope] (https://mailvelope.com).\n-** 🙈 نحن لا نبدأ من الصفر! * * نعتمد علي مكتبات برمجية مجاميع [هورد Horde] (https://horde.org) الضخمة.\n-** 📬 هل تريد استضافة خادم البريد الخاص بك؟ ** نحن لسنا مضطرين إلي إعادة تجميع هذا حيث يمكنك تنصيب برمجية[ميل إن أ بوكس Mail-in -a-Box] (https://mailinabox.email)! يتم إنشاء النموذج وتجريب برنامج أو بريمسيز استنادًا إلى البيانات الخاصة بالمستخدم. \n\n## تقييم AI الوصفي\n### التقييم: 🟢 \n\nالإيجابي: \n* البرنامج للتدريب والاستدلال لهذا النموذج مفتوح المصدر \n* يتم إنشاء النموذج وتجريب أون بريمسيز بناءً على البيانات الخاصة بالمستخدم.\n* بيانات التدريب متاحة مجانًا، مما يجعل من الممكن التحقق من الخطأ المنهجي وتصحيحه أو تحسين أداء النموذج واستخدام CO2. \n\nتعرف على المزيد حول التقييم الوصفي لنكست كلود AI [من خلال مدونتنا] (https://nextcloud.com/blog/nextcloud-ethical-ai-rating/ ).",
+    "💌 A mail app for Nextcloud" : "💌 تطبيق البريد الالكتروني Mail لنكست كلود",
+    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n### Rating: 🟢\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "** 💌 تطبيق بريد نكست كلود ** \n\n- ** 🚀 متكامل مع تطبيقات نكست كلود الأخرى! ** جهات الاتصال الحالية والتقويم والملفات - والمزيد آتٍ.\n-** 📥 حسابات بريد متعددة! ** حساب شخصي وحساب الشركة ؟ لا مشكلة، و صندوق للوارد موحد و لطيف. قم بربط أي حساب IMAP.\n-** 🔒 قم بإرسال واستقبال رسائل بريدية مشفرة! ** باستخدام امتداد المتصفح الرائع [ميل فيلبوب Mailvelope] (https://mailvelope.com).\n-** 🙈 نحن لا نبدأ من الصفر! * * نعتمد علي المكتبة البرمجية العظيمة [هورد Horde] (https://horde.org).\n-** 📬 هل تريد استضافة خادم البريد الخاص بك؟ ** لست مضطراً لإعادة البناء؛ حيث يمكنك تنصيب الحزمة البرمجية [ميل إن أ بوكس Mail-in -a-Box] (https://mailinabox.email)! \n\n## تقييم AI الوصفي\n\n### التقييم: 🟢 إيجابي: \n* برمجيات التمرين و الاستنتاج لهذا النموذج مفتوحة المصدر \n* يتم إنشاء النموذج وتدريبه محليًا بناءً على بيانات المستخدم الخاصة \n* يمكن للمستخدم الوصول إلى بيانات التدريب، مما يجعل من الممكن التحقق من التحيز أو تصحيحه أو تحسين الأداء واستخدام ثاني أكسيد الكربون CO2. \n\nتعرف على المزيد حول تصنيف Nextcloud Ethical AI [في مدونتنا] (https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)",
     "Auto" : "تلقائي",
     "Name" : "الإسم",
     "Mail address" : "عنوان البريد الإلكتروني",
@@ -31,6 +33,7 @@ OC.L10N.register(
     "SMTP Port" : "منفذ SMTP",
     "SMTP User" : "مستخدم SMTP",
     "SMTP Password" : "كلمة مرور SMTP",
+    "Sign in with Google" : "أدخُل مع قوقل",
     "Save" : "حفظ",
     "Connect" : "اتصال",
     "Password required" : "كلمة السر مطلوبة",
@@ -43,24 +46,31 @@ OC.L10N.register(
     "Go back" : "العودة",
     "Change name" : "تغيير الإسم",
     "Email address" : "عنوان البريد الإلكتروني",
+    "Add alias" : "إضافة اسم مستعار",
     "Cancel" : "إلغاء",
     "Add mail account" : "أضف حساب بريدي",
     "Use Gravatar and favicon avatars" : "استخدم الصور الرمزية Gravatar و favicon",
+    "Register as application for mail links" : "مسجل كتطبيق لروابط البريد",
     "Show keyboard shortcuts" : "اظهار اختصارات لوحة المفاتيح",
+    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "السماح للتطبيق بجمع بيانات حول تفاعلاتك. بناءً على هذه البيانات، سيتكيف التطبيق مع تفضيلاتك. سيتم تخزين البيانات محليًا فقط.",
     "From" : "من :",
     "Select account" : "إختيار حساب",
     "To" : "إلى :",
     "Contact or email address …" : "جهة الاتصال أو عنوان البريد الإلكتروني ...",
+    "Cc" : "نسخة كربونية",
+    "Bcc" : "نسخة مخفية الوجهة",
     "No contacts found." : "لم يتم العثور على جهات اتصال.",
     "Subject" : "الموضوع",
     "Subject …" : "موضوع …",
     "This message came from a noreply address so your reply will probably not be read." : "وردت هذه الرسالة من عنوان لا يدعم الرد، لذا من المحتمل ألا تتم قراءة ردك.",
+    "The following recipients do not have a PGP key: {recipients}." : "المستلمون التالون ليس لديهم مفتاح بي جي بي: {recipients}.",
     "Write message …" : "اكتب رسالة …",
     "Saving draft …" : "جارٍ حفظ المسودة ...",
     "Draft saved" : "تم حفظ المسودة",
     "Upload attachment" : "رفع المرفقات",
     "Add attachment from Files" : "إضافة مرفقات مِن الملفات",
     "Enable formatting" : "تفعيل التنسيق",
+    "Encrypt message with Mailvelope" : "تشفير الرسالة باستخدام Mailvelope",
     "Enter a date" : "ادخل تاريخ",
     "Send" : "أرسل",
     "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
@@ -68,6 +78,8 @@ OC.L10N.register(
     "Expand composer" : "تمديد المنشئ",
     "Close composer" : "إغلاق المنشئ",
     "Confirm" : "تأكيد",
+    "No message found yet" : "لم يتم العثور على رسائل حتى الآن",
+    "Set up an account" : "إعداد وتنصيب حساب",
     "Plain text" : "نص عادي",
     "Rich text" : "نص ريتش",
     "No messages" : "لاتوجد رسائل",
@@ -76,6 +88,8 @@ OC.L10N.register(
     "Favorite" : "المفضلة",
     "Unread" : "غير مقروء",
     "Read" : "القراءة",
+    "Mark not spam" : "ضع علامة أنها ليست بريدًا عشوائيًا",
+    "Mark as spam" : "تعليمها كبريد عشوائي",
     "Unselect" : "إلغاء التحديد",
     "Select" : "تحديد",
     "More actions" : "إجراءات أخرى",
@@ -90,34 +104,56 @@ OC.L10N.register(
     "Report this bug" : "الإبلاغ عن هذا الخلل",
     "All day" : "اليوم بأكمله",
     "Create" : "إنشاء",
+    "Could not create event" : "تعذر إنشاء الحدث",
     "Comment" : "تعليق",
     "Accept" : "قبول",
     "Decline" : "رفض",
     "More options" : "مزيد من الخيارات",
+    "Could not open mailbox" : "تعذر فتح صندوق البريد",
+    "Indexing your messages. This can take a bit longer for larger mailboxes." : "فهرسة رسائلك. قد يستغرق هذا وقتًا أطول قليلاً بالنسبة لصناديق البريد الأكبر حجمًا.",
     "Choose" : "إختر",
+    "Important info" : "معلومات مهمة",
     "Other" : "آخر",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سيتم وضع علامة على الرسائل تلقائيًا على أنها مهمة بناءً على الرسائل التي تفاعلت معها أو تم وضع علامة عليها كمهمة. في البداية، قد تضطر إلى تغيير الأهمية يديا من أجل تعليم النظام، لكنه سيتحسن بمرور الوقت.",
     "Reply" : "رد",
     "Reply to sender only" : "الرد على المرسل فقط",
+    "View source" : "الاطلاع علي المصدر",
+    "Download thread data for debugging" : "تنزيل خيط بيانات من أجل التصحيح",
+    "Message source" : "مصدر الرسالة",
     "Import into calendar" : "إستيراد من التقويم",
     "Download attachment" : "تنزيل الملحق",
     "Save to Files" : "حفظ للـ الملفات",
+    "Unnamed" : "بدون اسم",
+    "Embedded message" : "رسالة مضمنة",
     "Choose a folder to store the attachment in" : "اختر مجلد لتخزين المرفقات ",
     "calendar imported" : "تمّ استيراد التقويم",
     "Save all to Files" : "حفظ الجميع لـ الملفات",
     "Choose a folder to store the attachments in" : "اختر مجلدًا لتخزين المرفقات فيه",
+    "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "هذه الرسالة مشفرة باستخدام PGP. قم بتثبيت Mailvelope لفك تشفيره.",
     "The images have been blocked to protect your privacy." : "تم حجب هذه الصورة لحماية خصوصيتك",
     "Show images" : "عرض الصور",
+    "Message frame" : "إطار الرسالة",
     "Quoted text" : "نصٌ مُقتبسٌ",
     "Move" : "نقل",
     "Quota" : "الحصة",
     "Saving" : "جاري الحفظ ...",
+    "Move up" : "نقل للأعلي",
+    "Move down" : "نقل إلى الأسفل",
     "Remove account" : "حذف حساب",
     "Loading …" : "جاري التحميل …",
+    "Not supported by the server" : "غير مدعوم من قبل الخادم",
+    "{usage} of {limit} used" : "تم استخدام {Usage} من {limit}",
+    "Remove account {email}" : "إزالة الحساب {email}",
+    "Remove {email}" : "إزالة {email}",
     "Mark all as read" : "تحديد الكل كمقروء",
+    "Mark all messages of this mailbox as read" : "وضع علامة على كافة رسائل صندوق البريد هذا كمقروءة",
     "Edit name" : "تعديل الاسم",
     "Clear cache" : "مسح ذاكرة التخزين المؤقتة",
+    "Clear locally cached data, in case there are issues with synchronization." : "مسح البيانات المخزنة مؤقتًا محليًا في حالة وجود مشكلات في المزامنة.",
     "Subscribed" : "مُشترِكٍ subscribed",
+    "Sync in background" : "مزامنة في الخلفية",
     "Delete mailbox" : "حذف صندوق البريد",
+    "An error occurred, unable to rename the mailbox." : "حدث خطأ، غير قادر على إعادة تسمية صندوق البريد.",
     "New message" : "رسالة جديدة",
     "Refresh" : "تحديث",
     "Error sending your message" : "خطأ في إرسال رسالتك",
@@ -144,18 +180,36 @@ OC.L10N.register(
     "Save signature" : "حفظ التوقيع",
     "Add tag" : "إضافة وسما",
     "Not found" : "غير موجود",
+    "Could not load your message thread" : "تعذر تحميل تسلسل رسائلك",
+    "Unsubscribe" : "إلغاء الاشتراك",
     "Mark as unread" : "تمييز كغير مقروء",
     "Mark as read" : "تمييز كمقروء",
     "Remove" : "حذف",
     "(organizer)" : "(منظم)",
     "Untitled event" : "فعالية بدون اسم",
+    "Import into {calendar}" : "استيراد إلى {calendar}",
+    "Event imported into {calendar}" : "تم استيراد الحدث إلى {calendar}",
+    "Airplane" : "الطائرة",
+    "Reservation {id}" : "الحجز {id}",
+    "Flight {flightNr} from {depAirport} to {arrAirport}" : "رحلة رقم {flightNr} من {depAirport} إلى {arrAirport}",
+    "Train" : "القطار",
+    "{trainNr} from {depStation} to {arrStation}" : "{trainNr} من {depStation} إلى {arrStation}",
+    "Train from {depStation} to {arrStation}" : "قطار من {depStation} إلى {arrStation}",
+    "Mail app" : "تطبيق البريد",
+    "The mail app allows users to read mails on their IMAP accounts." : "يسمح تطبيق البريد للمستخدمين بقراءة رسائل البريد على حسابات IMAP الخاصة بهم.",
     "Reset" : "إعادة الضبط",
     "Client ID" : "معرف العميل",
     "Client secret" : "كلمة سر العميل",
+    "Email: {email}" : "البريد الإلكتروني: {email}",
+    "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} على {host}: {port} ({ssl} تشفير)",
+    "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP: {user} على {host}: {port} ({ssl} تشفير)",
     "General" : "العامة",
+    "IMAP" : "IMAP",
     "User" : "المستخدم",
     "Host" : "المضيف",
     "Port" : "المنفذ",
+    "SMTP" : "SMTP",
+    "With the settings above, the app will create account settings in the following way:" : "باستخدام الإعدادات أعلاه، سيقوم التطبيق بإنشاء إعدادات الحساب بالطريقة التالية:",
     "E-mail address" : "البريد الإلكتروني",
     "Valid until" : "صالح حتى",
     "Certificate" : "الشهادة",
@@ -172,9 +226,11 @@ OC.L10N.register(
     "Archive" : "الأرشيف",
     "Account connected" : "الحساب متصل",
     "Connect your mail account" : "تحديث",
+    "Itinerary for {type} is not supported yet" : "مسار الرحلة لـ {type} غير مدعوم حتى الآن",
     "All" : "الكل",
     "Drafts" : "المسودات",
     "Favorites" : "المفضلات",
+    "Priority inbox" : "البريد الهام",
     "All inboxes" : "جميع الوارد",
     "Inbox" : "صندوق الوارد",
     "Junk" : "عشوائي",
