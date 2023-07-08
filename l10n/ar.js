@@ -12,10 +12,16 @@ OC.L10N.register(
     "Mails" : "رسائل",
     "Mail" : "البريد",
     "💌 A mail app for Nextcloud" : "💌 تطبيق البريد الالكتروني Mail لنكست كلود",
-    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n### Rating: 🟢\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "** 💌 تطبيق بريد نكست كلود ** \n\n- ** 🚀 متكامل مع تطبيقات نكست كلود الأخرى! ** جهات الاتصال الحالية والتقويم والملفات - والمزيد آتٍ.\n-** 📥 حسابات بريد متعددة! ** حساب شخصي وحساب الشركة ؟ لا مشكلة، و صندوق للوارد موحد و لطيف. قم بربط أي حساب IMAP.\n-** 🔒 قم بإرسال واستقبال رسائل بريدية مشفرة! ** باستخدام امتداد المتصفح الرائع [ميل فيلبوب Mailvelope] (https://mailvelope.com).\n-** 🙈 نحن لا نبدأ من الصفر! * * نعتمد علي المكتبة البرمجية العظيمة [هورد Horde] (https://horde.org).\n-** 📬 هل تريد استضافة خادم البريد الخاص بك؟ ** لست مضطراً لإعادة البناء؛ حيث يمكنك تنصيب الحزمة البرمجية [ميل إن أ بوكس Mail-in -a-Box] (https://mailinabox.email)! \n\n## تقييم AI الوصفي\n\n### التقييم: 🟢 إيجابي: \n* برمجيات التمرين و الاستنتاج لهذا النموذج مفتوحة المصدر \n* يتم إنشاء النموذج وتدريبه محليًا بناءً على بيانات المستخدم الخاصة \n* يمكن للمستخدم الوصول إلى بيانات التدريب، مما يجعل من الممكن التحقق من التحيز أو تصحيحه أو تحسين الأداء واستخدام ثاني أكسيد الكربون CO2. \n\nتعرف على المزيد حول تصنيف Nextcloud Ethical AI [في مدونتنا] (https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)",
+    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n### Rating: 🟢\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "** 💌 تطبيق \"البريد\" Mail لنكست كلود ** \n\n- ** 🚀 متكامل مع تطبيقات نكست كلود الأخرى! ** جهات الاتصال الحالية والتقويم والملفات - والمزيد آتٍ.\n-** 📥 حسابات بريد متعددة! ** حساب شخصي وحساب الشركة ؟ لا مشكلة، و صندوق للوارد موحد و لطيف. قم بربط أي حساب IMAP.\n-** 🔒 قم بإرسال واستقبال رسائل بريدية مشفرة! ** باستخدام امتداد المتصفح الرائع [ميل فيلبوب Mailvelope] (https://mailvelope.com).\n-** 🙈 نحن لا نبدأ من الصفر! * * نعتمد علي المكتبة البرمجية العظيمة [هورد Horde] (https://horde.org).\n-** 📬 هل تريد استضافة خادم البريد الخاص بك؟ ** لست مضطراً لإعادة البناء؛ حيث يمكنك تنصيب الحزمة البرمجية [ميل إن أ بوكس Mail-in -a-Box] (https://mailinabox.email)! \n\n## تقييم AI الوصفي\n\n### التقييم: 🟢 إيجابي: \n* برمجيات التمرين و الاستنتاج لهذا النموذج مفتوحة المصدر \n* يتم إنشاء النموذج وتدريبه محليًا بناءً على بيانات المستخدم الخاصة \n* يمكن للمستخدم الوصول إلى بيانات التدريب، مما يجعل من الممكن التحقق من التحيز أو تصحيحه أو تحسين الأداء واستخدام ثاني أكسيد الكربون CO2. \n\nتعرف على المزيد حول تصنيف Nextcloud Ethical AI [في مدونتنا] (https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)",
+    "Drafts are saved in:" : "المُسوّدات تُحفظ في:",
+    "Sent messages are saved in:" : "الرسائل الصادرة تُحفظ في:",
+    "Deleted messages are moved in:" : "الرسائل المحذوفة تُحفظ في:",
+    "Archived messages are moved in:" : "الرسائل المؤرشفة تُحفظ في:",
     "Auto" : "تلقائي",
     "Name" : "الإسم",
     "Mail address" : "عنوان البريد الإلكتروني",
+    "name@example.org" : "name@example.org",
+    "Please enter an email of the format name@example.com" : "رجاءً، أدخِل حساب البريد الالكتروني مماثلاً للصيغة التالية: name@example.com",
     "Password" : "كلمة المرور",
     "Manual" : "يدوي",
     "IMAP Settings" : "إعدادات IMAP",
@@ -33,139 +39,287 @@ OC.L10N.register(
     "SMTP Port" : "منفذ SMTP",
     "SMTP User" : "مستخدم SMTP",
     "SMTP Password" : "كلمة مرور SMTP",
+    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "لكي يعمل حساب Google مع هذا التطبيق، يلزمك تمكين التحقُّق المُثنّى من الهويّة 2FA لـ Google وإنشاء كلمة مرور للتطبيق.",
+    "Connecting" : "توصيل",
+    "Reconnect Google account" : "إعادة توصيل حساب قوقل",
     "Sign in with Google" : "أدخُل مع قوقل",
-    "Save" : "حفظ",
-    "Connect" : "اتصال",
-    "Password required" : "كلمة السر مطلوبة",
+    "Save" : "حِفظ",
+    "Connect" : "اتّصال",
+    "Looking up configuration" : "البحث في التهيئة",
+    "Checking mail host connectivity" : "التحقُّق من اتّصال مُضيف البريد mail host",
+    "Configuration discovery failed. Please use the manual settings" : "أخفق اكتشاف التهيئة. رجاءً، استعمل الإعدادات اليدوية",
+    "Password required" : "كلمة السر لازمةٌ",
+    "Testing authentication" : "إختبار المصادقة على الهويّة",
+    "Awaiting user consent" : "في انتظار مُوافقة المستخدِم",
+    "Account created. Please follow the popup instructions to link your Google account" : "تم إنشاء الحساب. يُرجى اتباع التعليمات في النافذة المنبثقة للربط مع حسابك على Google.",
+    "Loading account" : "تحميل الحساب",
+    "Account updated. Please follow the popup instructions to reconnect your Google account" : "تمّ تحديث الحساب. يُرجى اتباع التعليمات في النافذة المنبثقة لإعادة الاتصال بحسابك على Google.",
+    "Account updated" : "تمّ تحديث الحساب",
+    "IMAP server is not reachable" : "خادوم IMAP لا يمكن الوصول إليه",
+    "SMTP server is not reachable" : "خادوم SMTP لا يمكن الوصول إليه",
+    "IMAP username or password is wrong" : "اسم المستخدم و كلمة المرور في IMAP غير صحيحة",
+    "SMTP username or password is wrong" : "اسم المستخدم و كلمة المرور فيSMTP غير صحيحة",
+    "IMAP connection failed" : "أخفق اتصال IMAP",
+    "SMTP connection failed" : "أخفق اتصال SMTP",
+    "Authorization pop-up closed" : "تمّ إغلاق نافذة التخويل المنبثقة Authorization pop-up",
+    "There was an error while setting up your account" : "حدث خطأ أثناء إعداد حسابك",
     "Account settings" : "إعدادت الحساب",
+    "Alias to S/MIME certificate mapping" : "أسماء مُستعارة Alias لربط شهادات S/MIME",
     "Signature" : "التوقيع",
     "A signature is added to the text of new messages and replies." : "تم إضافة توقيع إلى نص الرسائل والردود الجديدة.",
     "Writing mode" : "وضع الكتابة",
     "Preferred writing mode for new messages and replies." : "وضع الكتابة المفضل للرسائل والردود الجديدة.",
-    "Mail server" : "خادم البريد",
-    "Go back" : "العودة",
-    "Change name" : "تغيير الإسم",
+    "Default folders" : "المُجلّدات التلقائية",
+    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "المجلدات المراد استخدامها للمُسوّدات، و الرسائل المرسلة، و الرسائل المحذوفة، و الرسائل المؤرشفة.",
+    "Autoresponder" : "المُجيب الآلي Autoresponder",
+    "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "الرد الآلي على الرسائل الواردة. إذا أرسل إليك شخص ما عدة رسائل، فسيتم إرسال هذا الرد التلقائي مرة واحدة كل 4 أيام على الأكثر.",
+    "Please connect to a sieve server first." : "رجاءً، إتّصل بخادوم الغربال sieve أوّلاً.",
+    "Sieve filter rules" : "قواعد فلتر الغربال sieve",
+    "Trusted senders" : "مُرسِلُون مَوثُوقُون",
+    "Mail server" : "خادوم البريد",
+    "Sieve filter server" : "خادوم فلتر الغربال sieve filter",
+    "Update alias" : "تحديث الاسم المُستعار alias ",
+    "Rename alias" : "تغيير تسمية اسم مُستعار alias",
+    "Show update alias form" : "عرض نموذج تحديث الاسم المُستعار alias",
+    "Delete alias" : "حذف اسم مُستعار alias",
+    "Go back" : "عودة",
+    "Change name" : "تغيير الاسم",
     "Email address" : "عنوان البريد الإلكتروني",
-    "Add alias" : "إضافة اسم مستعار",
+    "Add alias" : "إضافة اسم مُستعار alias",
+    "Create alias" : "إنشاء اسم مُستعار alias",
     "Cancel" : "إلغاء",
-    "Add mail account" : "أضف حساب بريدي",
-    "Use Gravatar and favicon avatars" : "استخدم الصور الرمزية Gravatar و favicon",
-    "Register as application for mail links" : "مسجل كتطبيق لروابط البريد",
-    "Show keyboard shortcuts" : "اظهار اختصارات لوحة المفاتيح",
+    "Add mail account" : "أضِف حساب بريد الكتروني",
+    "Use Gravatar and favicon avatars" : "استخدم الرموز التجسيدية Gravatar و favicon",
+    "Register as application for mail links" : "سجِّل كتطبيق بالنسبة لروابط البريد الالكتروني",
+    "Show keyboard shortcuts" : "إظهار اختصارات لوحة المفاتيح",
+    "Manage S/MIME certificates" : "إدارة شهادات S/MIME",
+    "Looking for a way to encrypt your emails?" : "هل تبحث عن طريقة لتشفير رسائل بريدك الالكتروني؟",
+    "Install Mailvelope browser extension here" : "تنصيب امتداد Mailvelope للمُتصفِّح هنا",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "السماح للتطبيق بجمع بيانات حول تفاعلاتك. بناءً على هذه البيانات، سيتكيف التطبيق مع تفضيلاتك. سيتم تخزين البيانات محليًا فقط.",
+    "Put my text to the bottom of a reply instead of on top of it." : "ضع نصي في أسفل الرد بدلاً من وضعه فوقه.",
+    "Automatically classify importance of new email" : "تصنيف أهمية البريد الإلكتروني الجديد تلقائيًا",
+    "Could not update preference" : "تعذّر تحديث التفضيلات",
+    "Select an alias" : "إختَر اسماً مُستعاراً alias",
+    "Update Certificate" : "تحديث الشهادة",
+    "No certificate" : "لا شهادة",
+    "Certificate updated" : "تمّ تحديث الشهادة",
+    "Could not update certificate" : "تعذّر تحديث الشهادة",
+    "{commonName} - Valid until {expiryDate}" : "{commonName} - صالحٌ حتّى {expiryDate}",
     "From" : "من :",
-    "Select account" : "إختيار حساب",
+    "Select account" : "إختَر الحساب",
     "To" : "إلى :",
     "Contact or email address …" : "جهة الاتصال أو عنوان البريد الإلكتروني ...",
-    "Cc" : "نسخة كربونية",
-    "Bcc" : "نسخة مخفية الوجهة",
-    "No contacts found." : "لم يتم العثور على جهات اتصال.",
+    "Toggle recipients list mode" : "بدّل وضعية قائمة المُستَلِمِين recipients",
+    "Cc" : "نُسخة كَربونية Cc",
+    "Bcc" : "نُسخة مَخفية الوجهة Bcc",
+    "No contacts found." : "لم يتم العثور على أيّ جهة اتصالٍ.",
     "Subject" : "الموضوع",
-    "Subject …" : "موضوع …",
-    "This message came from a noreply address so your reply will probably not be read." : "وردت هذه الرسالة من عنوان لا يدعم الرد، لذا من المحتمل ألا تتم قراءة ردك.",
-    "The following recipients do not have a PGP key: {recipients}." : "المستلمون التالون ليس لديهم مفتاح بي جي بي: {recipients}.",
-    "Write message …" : "اكتب رسالة …",
-    "Saving draft …" : "جارٍ حفظ المسودة ...",
-    "Draft saved" : "تم حفظ المسودة",
-    "Upload attachment" : "رفع المرفقات",
-    "Add attachment from Files" : "إضافة مرفقات مِن الملفات",
-    "Enable formatting" : "تفعيل التنسيق",
-    "Encrypt message with Mailvelope" : "تشفير الرسالة باستخدام Mailvelope",
-    "Enter a date" : "ادخل تاريخ",
-    "Send" : "أرسل",
-    "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
-    "Choose a file to share as a link" : "اختر ملفا لمشاركته كرابط",
-    "Expand composer" : "تمديد المنشئ",
-    "Close composer" : "إغلاق المنشئ",
+    "Subject …" : "الموضوع …",
+    "This message came from a noreply address so your reply will probably not be read." : "وردت هذه الرسالة من عنوانٍ لا يدعم الرَّدّ، لذا من المحتمل ألا يُقرأَ ردُّك.",
+    "The following recipients do not have a S/MIME certificate: {recipients}." : "المُستَلِمُون التّالون ليس لديهم شهادة S/MIME ـ : {recipients}.",
+    "The following recipients do not have a PGP key: {recipients}." : "المُستَلِمُون التّالون ليس لديهم مفتاح PGP ـ : {recipients}.",
+    "Write message …" : "اكتُب رسالةً …",
+    "Saving draft …" : "حفظ المُسوَّدة جارٍ ...",
+    "Error saving draft" : "خطأ في تخزين المُسوَّدة",
+    "Draft saved" : "تمّ حفظ المُسوَّدة",
+    "Save draft" : " حفظ المُسوَّدة",
+    "Discard & close draft" : "تجاهل و إغلاق  المُسوَّدة",
+    "Upload attachment" : "رفع المُرفَقات",
+    "Add attachment from Files" : "أضِف مرفقاتٍ مِن الملفات Files",
+    "Smart picker" : "اللاقط الذكي Smart picker",
+    "Send later" : "أرسِل لاحقاً",
+    "Enable formatting" : "تمكين التنسيق",
+    "Disable formatting" : "إيقاف التنسيق",
+    "Request a read receipt" : "طلب إيصال بالتسليم read reciept",
+    "Sign message with S/MIME" : "توقيع الرسالة مع S/MIME",
+    "Encrypt message with S/MIME" : "تشفير الرسالة مع S/MIME",
+    "Encrypt message with Mailvelope" : "تشفير الرسالة مع Mailvelope",
+    "Send now" : "أرسِل الآن",
+    "Tomorrow morning" : "غداً صباحاً",
+    "Tomorrow afternoon" : "غداً ظُهراً",
+    "Monday morning" : "أول صباح عمل في الأسبوع",
+    "Custom date and time" : "وقت و تاريخ مُخصّص",
+    "Enter a date" : "أدخِل تاريخاً",
+    "Add share link from {productName} Files" : "أضِف رابطَ مُشارَكة من ملفات {productName}",
+    "Encrypt with S/MIME and send later" : "شفّر مع S/MIME و أرسِل لاحقاً",
+    "Encrypt with S/MIME and send" : "شفّر مع S/MIME و أرسِل ",
+    "Encrypt with Mailvelope and send later" : "شفّر مع Mailvelope و أرسل لاحقاً",
+    "Encrypt with Mailvelope and send" : "شفّر مع Mailvelope و أرسِل ",
+    "Send" : "أرسِل",
+    "Message {id} could not be found" : "تعذّر العثور على الرسالة {id}",
+    "Sign or Encrypt with S/MIME was selected, but we don't have a certificate for the selected alias. The message will not be signed or encrypted." : "بالرغم من أنه تمّ تحديد Sign أو Encrypt باستخدام S/MIME، فإنه ليس لدينا شهادة للاسم المستعار alias المحدد. لن يتم توقيع الرسالة أو تشفيرها.",
+    "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "ستتم إزالة أي تنسيق موجود (على سبيل المثال، غامق أو مائل أو مُسطّر أو مُضمّن).",
+    "Turn off formatting" : "إيقاف التنسيق",
+    "Turn off and remove formatting" : "إيقاف و حذف التنسيقات",
+    "Keep formatting" : "الاستمرار في التنسيق",
+    "Choose a file to add as attachment" : "إختَر ملفاً لإضافته كمُرفَقٍ",
+    "Choose a file to share as a link" : "إختَر ملفاً لمُشاركته كرابطٍ",
+    "Expand composer" : "تمديد الناظِم composer",
+    "Close composer" : "إغلاق الناظِم composer",
+    "Untitled message" : "رسالة بدون عنوان",
     "Confirm" : "تأكيد",
-    "No message found yet" : "لم يتم العثور على رسائل حتى الآن",
+    "No message found yet" : "لا توجد أي رسائل حتى الآن",
     "Set up an account" : "إعداد وتنصيب حساب",
-    "Plain text" : "نص عادي",
-    "Rich text" : "نص ريتش",
+    "Plain text" : "نصٌّ جَلِيٌّ plain text",
+    "Rich text" : "نصٌّ مُنسَّقٌ rich text",
+    "No messages in this mailbox" : "لا توجد رسائل في صندوق البريد هذا",
     "No messages" : "لاتوجد رسائل",
-    "Draft: " : "المسودة:",
-    "Unfavorite" : "غير مفضل",
+    "Draft: " : "المُسوَّدة:",
+    "Encrypted message" : "رسالة مُشفّرة",
+    "This message is unread" : "هذه الرسالة غير مقرؤة",
+    "Unfavorite" : "إبعادٌ من المُفضّلة",
     "Favorite" : "المفضلة",
     "Unread" : "غير مقروء",
     "Read" : "القراءة",
-    "Mark not spam" : "ضع علامة أنها ليست بريدًا عشوائيًا",
-    "Mark as spam" : "تعليمها كبريد عشوائي",
+    "Unimportant" : "إبعادٌ من المُهِمَّة",
+    "Mark not spam" : "علِّم \"ليست بريدًا عشوائيًا\" not spam",
+    "Mark as spam" : "علّم كـ\"بريد عشوائي\" spam",
     "Unselect" : "إلغاء التحديد",
     "Select" : "تحديد",
+    "Edit tags" : "تعديل السمات tags",
+    "Move thread" : "أنقُل النَّظْمَة thread",
+    "Archive thread" : "نشِّط النَّظْمَة thread",
+    "Delete thread" : "إحذِف النَّظْمَة thread",
     "More actions" : "إجراءات أخرى",
     "Edit as new message" : "تحرير كرسالة جديدة",
-    "Create event" : "انشاء فعالية",
-    "Create task" : "أنشئ المهمّة",
-    "Blind copy recipients only" : "مستلمي النسخ المخفية فقط",
-    "No trash mailbox configured" : "لم يتم اعداد سلة المحذوفات لصندوق البريد",
-    "Could not delete message" : "لا يمكن حذف الرسالة",
+    "Create event" : "إنشاء حَدَثٍ event",
+    "Create task" : "إنشاء مُهِمَّة task",
+    "Download message" : "تنزيل الرسالة",
+    "Blind copy recipients only" : "مُستَلِمِي النُّسخ المَخفِيّة bcc فقط",
+    "No subject" : "لا يوجد موضوع",
+    "No trash mailbox configured" : "لم يتم إعداد سلّة المحذُوفات لصندوق البريد trash mailbox ",
+    "Could not delete message" : "تعذّر حذف الرسالة",
+    "Could not archive message" : "تعذّرت أرشفة الرسالة",
     "Forward" : "إعادة توجيه ",
     "Load more" : "حمّل أكثر",
     "Report this bug" : "الإبلاغ عن هذا الخلل",
-    "All day" : "اليوم بأكمله",
+    "All day" : "طِوَال اليوم",
     "Create" : "إنشاء",
-    "Could not create event" : "تعذر إنشاء الحدث",
+    "Event created" : "تمّ إنشاء الحدث",
+    "Could not create event" : "تعذّر إنشاء الحدث",
+    "You accepted this invitation" : "أنت قَبِلت هذه الدعوة",
+    "You tentatively accepted this invitation" : "أنت قَبِلت هذه الدعوة بشكلٍ مبدئيٍّ",
+    "You declined this invitation" : "أنت رفضت هذه الدعوة",
+    "You already reacted to this invitation" : "لقد سبق لك الرّدّ على هذه الدعوة",
+    "You have been invited to an event" : "أنت مدعُوٌّ إلى حدثٍ",
+    "This event was cancelled" : "الحدثُ تمّ إلغاؤه",
+    "Save to" : "حفظ في",
     "Comment" : "تعليق",
     "Accept" : "قبول",
     "Decline" : "رفض",
+    "Tentatively accept" : "قبول مبدئي",
     "More options" : "مزيد من الخيارات",
-    "Could not open mailbox" : "تعذر فتح صندوق البريد",
+    "This event is in the past." : "هذا الحدث كان في الماضي",
+    "This event was updated" : "هذا الحدث تمّ تعديله",
+    "{attendeeName} accepted your invitation" : "{attendeeName} قَبِل دعوتك",
+    "{attendeeName} tentatively accepted your invitation" : "{attendeeName} قَبِل دعوتك بشكلٍ مبدئيٍّ",
+    "{attendeeName} declined your invitation" : "{attendeeName} رفض دعوتك",
+    "{attendeeName} reacted to your invitation" : "{attendeeName} ردَّ على دعوتك",
+    "Failed to save your participation status" : "تعذّر حفظ حالة اشتراكك participation status",
+    "Could not open mailbox" : "تعذّر فتح صندوق البريد",
+    "Loading messages …" : "تحميل الرسائل ...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "فهرسة رسائلك. قد يستغرق هذا وقتًا أطول قليلاً بالنسبة لصناديق البريد الأكبر حجمًا.",
-    "Choose" : "إختر",
+    "To archive a message please configure an archive mailbox in account settings" : "لأرشفة رسالة، يُرجى تكوين صندوق بريد أرشيف archive mailbox في إعدادات الحساب",
+    "You are not allowed to move this message to the archive folder and/or delete this message from the current folder" : "غير مسموح لك بنقل هذه الرسالة إلى مجلد الأرشيف و / أو حذف هذه الرسالة من المجلد الحالي",
+    "Choose target mailbox" : "اختَر صندوق البريد المُستهدَف",
+    "No more submailboxes in here" : "لم تعُد هناك أيّ صناديق بريد فرعية هنا",
+    "Choose" : "إختَر",
     "Important info" : "معلومات مهمة",
-    "Other" : "آخر",
-    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سيتم وضع علامة على الرسائل تلقائيًا على أنها مهمة بناءً على الرسائل التي تفاعلت معها أو تم وضع علامة عليها كمهمة. في البداية، قد تضطر إلى تغيير الأهمية يديا من أجل تعليم النظام، لكنه سيتحسن بمرور الوقت.",
-    "Reply" : "رد",
-    "Reply to sender only" : "الرد على المرسل فقط",
-    "View source" : "الاطلاع علي المصدر",
-    "Download thread data for debugging" : "تنزيل خيط بيانات من أجل التصحيح",
+    "Other" : "آخَر",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "سيتم وضع علامة على الرسائل تلقائيًا على أنها مهمة بناءً على الرسائل التي تفاعلت معها أو تم وضع علامة عليها كمهمة. في البداية، قد تضطر إلى تغيير الأهمية يدويّاً من أجل تعليم النظام، لكنه سيتحسن بمرور الوقت.",
+    "The sender of this message has asked to be notified when you read this message." : "مُرسِل هذه الرسالة طلب أن يتمّ إعلامُه عندما تقرأ هذه الرسالة.",
+    "Notify the sender" : "أبلِغ المُرسِل",
+    "You sent a read confirmation to the sender of this message." : "لقد قمت بإرسال تأكيد قراءة إلى مُرسِل هذه الرسالة.",
+    "Could not send mdn" : "تعذّر إرسال mdn",
+    "Reply all" : "الرَّدّ على الجميع",
+    "Reply" : "الرَّدّ",
+    "Reply to sender only" : "الرَّدَ على المُرسِل فقط",
+    "Move message" : "أنقُل الرسالة",
+    "Forward message as attachment" : "أعِد توجيه الرسالة كمُرفَقٍٍ",
+    "View source" : "إطَّلِع علي المصدر",
+    "Download thread data for debugging" : "تنزيل بيانات النَّظْمَة thread data لغرض التنقيح",
     "Message source" : "مصدر الرسالة",
-    "Import into calendar" : "إستيراد من التقويم",
-    "Download attachment" : "تنزيل الملحق",
-    "Save to Files" : "حفظ للـ الملفات",
+    "Message body" : "متنُ الرسالة",
+    "Warning: The S/MIME signature of this message is unverified. The sender might be impersonating someone!" : "تحذير: لم يتم التحقق من توقيع S/MIME لهذه الرسالة. قد يكون المرسل مُنتَحِلاً شخصية شخص آخر!",
+    "Import into calendar" : "إستيراد إلى التقويم",
+    "Download attachment" : "تنزيل المُرفَق",
+    "Save to Files" : "حفظ إلى الملفات Files",
     "Unnamed" : "بدون اسم",
-    "Embedded message" : "رسالة مضمنة",
-    "Choose a folder to store the attachment in" : "اختر مجلد لتخزين المرفقات ",
+    "Embedded message" : "رسالة مُضمّنة",
+    "Choose a folder to store the attachment in" : "إختَر مُجلداً لتخزين المرفقات ",
     "calendar imported" : "تمّ استيراد التقويم",
-    "Save all to Files" : "حفظ الجميع لـ الملفات",
-    "Choose a folder to store the attachments in" : "اختر مجلدًا لتخزين المرفقات فيه",
-    "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "هذه الرسالة مشفرة باستخدام PGP. قم بتثبيت Mailvelope لفك تشفيره.",
-    "The images have been blocked to protect your privacy." : "تم حجب هذه الصورة لحماية خصوصيتك",
-    "Show images" : "عرض الصور",
+    "View fewer attachments" : "أرنِي مُرفَقَاتٍ أقل",
+    "Save all to Files" : "حفظ الجميع في الملفات Files",
+    "Download Zip" : "تنزيل مضغوط zip",
+    "Choose a folder to store the attachments in" : "إختَر مُجلّدًا لتخزين المُرفَقَات فيه",
+    "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "هذه الرسالة مُشفّرة باستخدام PGP. قم بتثبيت Mailvelope لفك تشفيرها.",
+    "The images have been blocked to protect your privacy." : "تم حجب هذه الصور لحماية خصوصيتك",
+    "Show images" : "أعرُض الصور",
+    "Show images temporarily" : "أعرُض الصور مؤقّتاً",
+    "Always show images from {sender}" : "دائماً أعرُض الصور من {sender}",
+    "Always show images from {domain}" : "دائماً أعرُض الصور من {domain}",
     "Message frame" : "إطار الرسالة",
-    "Quoted text" : "نصٌ مُقتبسٌ",
+    "Quoted text" : "نصٌّ مُقتَبَسٌ",
     "Move" : "نقل",
+    "Moving" : "النقل جارٍ ...",
+    "Moving thread" : "نقل النَّظْمَة thread ",
+    "Moving message" : "نقل الرسالة",
+    "Mail settings" : "إعدادات البريد الالكتروني",
+    "Provisioned account is disabled" : "الحساب المخصص تمّ تعطيله",
+    "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "الرجاء تسجيل الدخول باستخدام كلمة مرور لتمكين هذا الحساب. الجلسة الحالية تستعمل آلية المُصادقةً بدون كلمات مرور  passwordless مثل SSO أو WebAuthn.",
     "Quota" : "الحصة",
-    "Saving" : "جاري الحفظ ...",
-    "Move up" : "نقل للأعلي",
-    "Move down" : "نقل إلى الأسفل",
+    "Show only subscribed mailboxes" : "إظهار صناديق البريد المشترِكة subscribed mailboxes فقط",
+    "Add mailbox" : "أضِف صندوقَ بريدٍ",
+    "Saving" : "الحفظ جارٍ ...",
+    "Move up" : "نقلٌ للأعلي",
+    "Move down" : "نقلٌ للأسفل",
     "Remove account" : "حذف حساب",
-    "Loading …" : "جاري التحميل …",
-    "Not supported by the server" : "غير مدعوم من قبل الخادم",
-    "{usage} of {limit} used" : "تم استخدام {Usage} من {limit}",
+    "Loading …" : "التحميل جارٍ …",
+    "Not supported by the server" : "غير مدعوم من قبل الخادوم",
+    "{usage} of {limit} used" : "تمّ استخدام {Usage} من {limit}",
+    "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "ستتم إزالة حساب {email} وبيانات البريد الإلكتروني المخزنة مؤقتًا من نكست كلاود، ولكن ليس من مُزوِّد بريدك الإلكتروني.",
     "Remove account {email}" : "إزالة الحساب {email}",
     "Remove {email}" : "إزالة {email}",
+    "Show all subscribed mailboxes" : "عرض كافة صناديق البريد المُشترِكة",
+    "Show all mailboxes" : "عرض كافة صناديق البريد",
+    "Collapse mailboxes" : "طي صناديق البريد",
     "Mark all as read" : "تحديد الكل كمقروء",
     "Mark all messages of this mailbox as read" : "وضع علامة على كافة رسائل صندوق البريد هذا كمقروءة",
+    "Add submailbox" : "إضافة صندوق بريد فرعي",
     "Edit name" : "تعديل الاسم",
+    "Move mailbox" : "نقل صندوق البريد",
     "Clear cache" : "مسح ذاكرة التخزين المؤقتة",
     "Clear locally cached data, in case there are issues with synchronization." : "مسح البيانات المخزنة مؤقتًا محليًا في حالة وجود مشكلات في المزامنة.",
-    "Subscribed" : "مُشترِكٍ subscribed",
-    "Sync in background" : "مزامنة في الخلفية",
+    "Subscribed" : "مُشترِكٌ subscribed",
+    "Sync in background" : "مُزامنة في الخلفية",
+    "Clear mailbox" : "إخلاء clear صندوق البريد",
     "Delete mailbox" : "حذف صندوق البريد",
-    "An error occurred, unable to rename the mailbox." : "حدث خطأ، غير قادر على إعادة تسمية صندوق البريد.",
+    "All messages in mailbox will be deleted." : "كل الرسائل في الصندوق سيقع حذفها",
+    "Clear mailbox {name}" : "إخلاء صندوق البريد {name}",
+    "The mailbox and all messages in it will be deleted." : "سيتم حذف صندوق البريد وجميع الرسائل الموجودة فيه.",
+    "Delete mailbox {name}" : "حذف صندوق البريد {name}",
+    "An error occurred, unable to rename the mailbox." : "حدث خطأ، تعذّر تغيير تسمية صندوق البريد.",
+    "Outbox" : "صندوق الصادر ",
     "New message" : "رسالة جديدة",
     "Refresh" : "تحديث",
     "Error sending your message" : "خطأ في إرسال رسالتك",
-    "Retry" : "أعد المحاولة",
-    "Uploading attachments …" : "جارٍ تحميل المرفقات …",
-    "Sending …" : "جار الإرسال",
-    "Minimize composer" : "تصغير المنشئ",
+    "Retry" : "أعِدِ المحاولة",
+    "Uploading attachments …" : "تحميل المرفقات جارٍ …",
+    "Sending …" : "الإرسال جارٍ ...",
+    "Warning sending your message" : "تحذير إرسال رسائلك",
+    "Send anyway" : "أرسل على كُلِّ حالٍ",
+    "Minimize composer" : "تصغير الناظم composer",
     "No sent mailbox configured. Please pick one in the account settings." : "لم يتم اعداد الرسائل في المرسلة في صندوق البريد. يرجى اختيار واحد في اعدادات الحساب.",
+    "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "أنت تحاول الإرسال إلى العديد من المستلمين في حقل \"إلى\" و/أو \"نسخة كربونية\". ضع في اعتبارك استخدام نسخة مخفية الوجهة لإخفاء عناوين المستلمين.",
     "No message selected" : "لم يتم اختيار رسالة",
     "Message" : "الرسالة",
+    "Oh Snap!" : "أوه سناب \"Oh Snap!\"!",
     "Delete" : "حذف",
+    "Contacts with this address" : "جهات الاتصال بهذا العنوان",
+    "Add to Contact" : "إضافة لقائمة جهات الاتصال",
+    "New Contact" : "جهة اتصال جديدة",
     "Copy to clipboard" : "نسخ الرابط",
+    "Contact name …" : "اسم جهة الاتصال ...",
     "Add" : "إضافة",
     "Close" : "إغلاق",
     "Tags" : "الوسوم",
@@ -175,16 +329,31 @@ OC.L10N.register(
     "Date" : "التاريخ ",
     "Disabled" : "معطّل",
     "Enabled" : "مفعلة",
+    "Sieve Host" : "مضيف تطبيق Sieve",
+    "Sieve Security" : "تطبيق Sieve Security",
+    "Sieve Port" : "منفذ تطبيق Sieve",
+    "Sieve Credentials" : "تطبيق Sieve Credentials",
+    "IMAP Credentials" : "بيانات اعتماد IMAP",
     "Custom" : "مخصّص",
+    "Sieve User" : "مستخدم تطبيق Sieve",
+    "Sieve Password" : "تطبيق Sieve Password",
+    "Save sieve settings" : "حفظ إعدادات تطبيق Sieve ",
+    "Save sieve script" : "حفظ البرمجة النصية لتطبيق Sieve",
     "Signature …" : "توقيع …",
     "Save signature" : "حفظ التوقيع",
     "Add tag" : "إضافة وسما",
+    "Loading thread" : "تحميل النَّظْمَة thread ",
     "Not found" : "غير موجود",
-    "Could not load your message thread" : "تعذر تحميل تسلسل رسائلك",
+    "Could not load your message thread" : "تعذر تحميل نَظْمَة thread  رسائلك",
+    "The thread doesn't exist or has been deleted" : " النَّظْمَة thread غير موجودة أو تمّ حذفها",
     "Unsubscribe" : "إلغاء الاشتراك",
     "Mark as unread" : "تمييز كغير مقروء",
     "Mark as read" : "تمييز كمقروء",
     "Remove" : "حذف",
+    "No senders are trusted at the moment." : "لا يوجد مرسلين موثوقين في الوقت الحالي.",
+    "Could not remove trusted sender {sender}" : "تعذر إزالة المرسل الموثوق {sender}",
+    "individual" : "فردي",
+    "domain" : "النطاق",
     "(organizer)" : "(منظم)",
     "Untitled event" : "فعالية بدون اسم",
     "Import into {calendar}" : "استيراد إلى {calendar}",
@@ -197,18 +366,22 @@ OC.L10N.register(
     "Train from {depStation} to {arrStation}" : "قطار من {depStation} إلى {arrStation}",
     "Mail app" : "تطبيق البريد",
     "The mail app allows users to read mails on their IMAP accounts." : "يسمح تطبيق البريد للمستخدمين بقراءة رسائل البريد على حسابات IMAP الخاصة بهم.",
+    "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "هنا يمكنك العثور على إعدادات واسعة للمثيل. توجد الإعدادات الخاصة بالمستخدم في التطبيق نفسه (الزاوية اليسرى السفلية).",
     "Reset" : "إعادة الضبط",
     "Client ID" : "معرف العميل",
     "Client secret" : "كلمة سر العميل",
     "Email: {email}" : "البريد الإلكتروني: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} على {host}: {port} ({ssl} تشفير)",
     "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP: {user} على {host}: {port} ({ssl} تشفير)",
+    "Sieve: {user} on {host}:{port} ({ssl} encryption)" : "تطبيق سيف: {user} على {host}: {port} ({ssl} تشفير)",
     "General" : "العامة",
     "IMAP" : "IMAP",
     "User" : "المستخدم",
     "Host" : "المضيف",
     "Port" : "المنفذ",
     "SMTP" : "SMTP",
+    "Sieve" : "تطبيق سيف \"Sieve\"",
+    "Enable sieve integration" : "تفعيل تكامل تطبيق Sieve",
     "With the settings above, the app will create account settings in the following way:" : "باستخدام الإعدادات أعلاه، سيقوم التطبيق بإنشاء إعدادات الحساب بالطريقة التالية:",
     "E-mail address" : "البريد الإلكتروني",
     "Valid until" : "صالح حتى",
