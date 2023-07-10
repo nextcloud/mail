@@ -107,7 +107,7 @@ class MailboxSyncTest extends TestCase {
 		$this->sync->sync($account, new NullLogger());
 	}
 
-	public function testSync() {
+	public function testSync(): void {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setLastMailboxSync(0);
@@ -130,14 +130,29 @@ class MailboxSyncTest extends TestCase {
 			'messages' => 42,
 		];
 		$folders[0]->method('getStatus')->willReturn($status);
+		$folders[0]->method('getMailbox')->willReturn('mb1');
 		$folders[1]->method('getStatus')->willReturn($status);
+		$folders[1]->method('getMailbox')->willReturn('mb2');
 		$this->folderMapper->expects($this->once())
 			->method('getFolders')
 			->with($account, $client)
 			->willReturn($folders);
 		$this->folderMapper->expects($this->once())
+			->method('getFoldersStatusAsObject')
+			->with($client, self::equalToCanonicalizing(['mb1', 'mb2',]))
+			->willReturn([
+				'mb1' => new MailboxStats(1, 2),
+				'mb2' => new MailboxStats(1, 2),
+			]);
+		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($folders);
+		$this->mailboxMapper->expects(self::exactly(2))
+			->method('insert')
+			->willReturnArgument(0);
+		$this->mailboxMapper->expects(self::exactly(2))
+			->method('update')
+			->willReturnArgument(0);
 		$this->dispatcher
 			->expects($this->once())
 			->method('dispatchTyped')
@@ -195,6 +210,16 @@ class MailboxSyncTest extends TestCase {
 			->method('findAll')
 			->with($account)
 			->willReturn([$inbox, $sharedMailbox]);
+		$this->folderMapper->expects($this->once())
+			->method('getFoldersStatusAsObject')
+			->with($client, [$inbox->getName(), $sharedMailbox->getName()])
+			->willReturn([
+				$inbox->getName() => new MailboxStats(1, 2),
+				$sharedMailbox->getName() => new MailboxStats(0, 0),
+			]);
+		$this->mailboxMapper->expects(self::exactly(4))
+			->method('update')
+			->willReturnArgument(0);
 
 		$this->sync->sync($account, new NullLogger());
 	}
@@ -211,8 +236,8 @@ class MailboxSyncTest extends TestCase {
 		$mailbox->setName('mailbox');
 		$this->folderMapper->expects($this->once())
 			->method('getFoldersStatusAsObject')
-			->with($client, $mailbox->getName())
-			->willReturn($stats);
+			->with($client, [$mailbox->getName()])
+			->willReturn(['mailbox' => $stats]);
 		$this->mailboxMapper->expects($this->once())
 			->method('update')
 			->with($mailbox);

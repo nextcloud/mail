@@ -32,12 +32,10 @@ use ReturnTypeWillChange;
 class MailboxStats implements JsonSerializable {
 	private int $total;
 	private int $unread;
-	private ?string $myAcls;
 
-	public function __construct(int $total, int $unread, ?string $myAcls) {
+	public function __construct(int $total, int $unread) {
 		$this->total = $total;
 		$this->unread = $unread;
-		$this->myAcls = $myAcls;
 	}
 
 	public function getTotal(): int {
@@ -48,16 +46,11 @@ class MailboxStats implements JsonSerializable {
 		return $this->unread;
 	}
 
-	public function getMyAcls(): ?string {
-		return $this->myAcls;
-	}
-
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'total' => $this->total,
 			'unread' => $this->unread,
-			'myAcls' => $this->myAcls,
 		];
 	}
 }

@@ -151,7 +151,7 @@ class Mailbox extends Entity implements JsonSerializable {
 	 * @return MailboxStats
 	 */
 	public function getStats(): MailboxStats {
-		return new MailboxStats($this->getMessages(), $this->getUnseen(), $this->getMyAcls());
+		return new MailboxStats($this->getMessages(), $this->getUnseen());
 	}
 
 	#[ReturnTypeWillChange]
