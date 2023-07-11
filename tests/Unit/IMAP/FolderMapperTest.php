@@ -25,7 +25,6 @@ namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
-use Horde_Imap_Client_Data_Acl;
 use Horde_Imap_Client_Data_Capability;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
@@ -54,7 +53,6 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-					'status' => Horde_Imap_Client::STATUS_ALL,
 				]))
 			->willReturn([]);
 
@@ -74,16 +72,12 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-					'status' => Horde_Imap_Client::STATUS_ALL,
 				]))
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('INBOX'),
 					'attributes' => [],
 					'delimiter' => '.',
-					'status' => [
-						'unseen' => 0,
-					],
 				],
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('shared'),
@@ -91,13 +85,10 @@ class FolderMapperTest extends TestCase {
 						'\\nonexistent',
 					],
 					'delimiter' => '.',
-					'status' => [
-						'unseen' => null,
-					],
 				],
 			]);
 		$expected = [
-			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', ['unseen' => 0]),
+			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -116,16 +107,12 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-					'status' => Horde_Imap_Client::STATUS_ALL,
 				]))
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('INBOX'),
 					'attributes' => [],
 					'delimiter' => '.',
-					'status' => [
-						'unseen' => 0,
-					],
 				],
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('Sent'),
@@ -133,14 +120,11 @@ class FolderMapperTest extends TestCase {
 						'\sent',
 					],
 					'delimiter' => '.',
-					'status' => [
-						'unseen' => 1,
-					],
 				],
 			]);
 		$expected = [
-			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', ['unseen' => 0]),
-			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.', ['unseen' => 1]),
+			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.', null),
+			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.', null),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -233,57 +217,19 @@ class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('status')
-			->with('INBOX')
+			->with(['INBOX'])
 			->willReturn([
-				'messages' => 123,
-				'unseen' => 2,
+				'INBOX' => [
+					'messages' => 123,
+					'unseen' => 2,
+				],
 			]);
-		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$client
-			->method('__get')
-			->with('capability')
-			->willReturn($capability);
-		$capability
-			->method('query')
-			->with('ACL')
-			->willReturn(false);
 
-		$stats = $this->mapper->getFoldersStatusAsObject($client, 'INBOX');
+		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
 
-		$expected = new MailboxStats(123, 2, null);
-		$this->assertEquals($expected, $stats);
-	}
-
-	public function testGetFoldersStatusAndMyAcls(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$client->expects($this->once())
-			->method('status')
-			->with('INBOX')
-			->willReturn([
-				'messages' => 123,
-				'unseen' => 2,
-			]);
-		$capability = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$client
-			->method('__get')
-			->with('capability')
-			->willReturn($capability);
-		$capability
-			->method('query')
-			->with('ACL')
-			->willReturn(true);
-		$acl = $this->createMock(Horde_Imap_Client_Data_Acl::class);
-		$client->expects(self::once())
-			->method('getMyACLRights')
-			->willReturn($acl);
-		$acl
-			->method('__toString')
-			->willReturn('kthxbye');
-
-		$stats = $this->mapper->getFoldersStatusAsObject($client, 'INBOX');
-
-		$expected = new MailboxStats(123, 2, 'kthxbye');
-		$this->assertEquals($expected, $stats);
+		self::assertArrayHasKey('INBOX', $stats);
+		$expected = new MailboxStats(123, 2);
+		self::assertEquals($expected, $stats['INBOX']);
 	}
 
 	public function testDetectSpecialUseFromAttributes() {
