@@ -20,6 +20,7 @@ OC.L10N.register(
     "Other" : "Wayeḍ",
     "Reply" : "Err",
     "Move" : "Senkez",
+    "Loading …" : "Asali ...",
     "Refresh" : "Sismeḍ",
     "Retry" : "Ɛreḍ tikkelt-nniḍen",
     "Message" : "Izen",
