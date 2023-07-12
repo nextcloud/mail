@@ -1,5 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## 3.2.4 - 2023-07-12
+### Fixed
+- Show starred messages in Favourites again
+- Reduce number of STATUS commands for background mailbox sync
+- Mailboxes not being synced due to short-circuiting
 
 ## 3.2.3 - 2023-06-28
 ### Fixed
