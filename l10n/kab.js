@@ -20,6 +20,7 @@ OC.L10N.register(
     "Other" : "Wayeḍ",
     "Reply" : "Err",
     "Move" : "Senkez",
+    "Remove account" : "Kkes amiḍan",
     "Loading …" : "Asali ...",
     "Refresh" : "Sismeḍ",
     "Retry" : "Ɛreḍ tikkelt-nniḍen",
