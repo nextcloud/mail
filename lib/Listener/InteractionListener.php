@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Address;
 use OCA\Mail\Events\MessageSentEvent;
 use OCP\Contacts\Events\ContactInteractedWithEvent;
 use OCP\EventDispatcher\Event;
@@ -75,7 +74,6 @@ class InteractionListener implements IEventListener {
 			->merge($event->getMessage()->getCC())
 			->merge($event->getMessage()->getBCC());
 		foreach ($recipients->iterate() as $recipient) {
-			/** @var Address $recipient */
 			$interactionEvent = new ContactInteractedWithEvent($user);
 			$email = $recipient->getEmail();
 			if ($email === null) {

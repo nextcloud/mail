@@ -56,7 +56,6 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 			return;
 		}
 
-		/** @var IDBConnection $connection */
 		$connection = $this->connection;
 
 		// add method to overwrite tableName / entityClass

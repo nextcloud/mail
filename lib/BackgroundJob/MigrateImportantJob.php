@@ -29,7 +29,6 @@ namespace OCA\Mail\BackgroundJob;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
-use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 
 use OCA\Mail\Exception\ServiceException;
@@ -74,7 +73,6 @@ class MigrateImportantJob extends QueuedJob {
 	public function run($argument) {
 		$mailboxId = (int)$argument['mailboxId'];
 		try {
-			/** @var Mailbox $mailbox*/
 			$mailbox = $this->mailboxMapper->findById($mailboxId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Could not find mailbox <' . $mailboxId . '>');

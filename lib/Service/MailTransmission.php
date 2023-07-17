@@ -27,7 +27,6 @@ namespace OCA\Mail\Service;
 use Horde_Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
-use Horde_Imap_Client_DateTime;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Mail_Transport_Null;
@@ -722,7 +721,6 @@ class MailTransmission implements IMailTransmission {
 			throw new ServiceException('Message "' .$message->getId() . '" not found.');
 		}
 
-		/** @var Horde_Imap_Client_DateTime $imapDate */
 		$imapDate = $fetchResults[0]->getImapDate();
 		/** @var Horde_Mime_Headers $headers */
 		$mdnHeaders = $fetchResults[0]->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);

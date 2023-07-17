@@ -133,11 +133,8 @@ class MessageMapper {
 			]
 		);
 		$perf->step('mailbox meta search');
-		/** @var int $min */
 		$min = (int) $metaResults['min'];
-		/** @var int $max */
 		$max = (int) $metaResults['max'];
-		/** @var int $total */
 		$total = (int) $metaResults['count'];
 
 		if ($total === 0) {
@@ -764,7 +761,6 @@ class MessageMapper {
 			if (!isset($result[$messageUid])) {
 				throw new DoesNotExistException('Unable to load the attachment.');
 			}
-			/** @var Horde_Imap_Client_Data_Fetch $fetch */
 			$fullTextResult = $result[$messageUid];
 
 			$decryptedText = $this->smimeService

@@ -280,7 +280,6 @@ class SmimeService {
 		$emailAddresses = [];
 
 		foreach ($addressList->iterate() as $address) {
-			/** @var Address $address */
 			try {
 				$emailAddress = $address->getEmail();
 			} catch (\Exception $e) {
@@ -588,7 +587,6 @@ class SmimeService {
 	 */
 	public function encryptMimePart(Horde_Mime_Part  $part, array $certificates): Horde_Mime_Part {
 		try {
-			/** @var string[] $decryptedCertificates */
 			$decryptedCertificates = array_map(function (SmimeCertificate $certificate) {
 				return $this->crypto->decrypt($certificate->getCertificate());
 			}, $certificates);

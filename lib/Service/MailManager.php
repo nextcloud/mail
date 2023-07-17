@@ -768,7 +768,6 @@ class MailManager implements IMailManager {
 
 	public function createTag(string $displayName, string $color, string $userId): Tag {
 		$imapLabel = str_replace(' ', '_', $displayName);
-		/** @var string|false $imapLabel */
 		$imapLabel = mb_convert_encoding($imapLabel, 'UTF7-IMAP', 'UTF-8');
 		if ($imapLabel === false) {
 			throw new ClientException('Error converting display name to UTF7-IMAP ', 0);

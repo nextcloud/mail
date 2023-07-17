@@ -16,7 +16,6 @@ class Version1101Date20210616141806 extends SimpleMigrationStep {
 	 * @throws SchemaException
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
-		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$provisioningTable = $schema->getTable('mail_provisionings');

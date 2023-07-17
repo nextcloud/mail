@@ -84,7 +84,6 @@ class ThreadBuilder {
 		$idTable = [];
 
 		foreach ($messages as $message) {
-			/** @var Message $message */
 			// Step 1.A
 			$container = $idTable[$message->getId()] ?? null;
 			if ($container !== null && !$container->hasMessage()) {
