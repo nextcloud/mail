@@ -108,6 +108,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSmimeCertificateId(int|null $smimeCertificateId)
  * @method int|null getQuotaPercentage()
  * @method void setQuotaPercentage(int $quota);
+ * @method int|null getTrashRetentionDays()
+ * @method void setTrashRetentionDays(int|null $trashRetentionDays)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -176,6 +178,9 @@ class MailAccount extends Entity {
 	/** @var int|null */
 	protected $quotaPercentage;
 
+	/** @var int|null */
+	protected $trashRetentionDays;
+
 	/**
 	 * @param array $params
 	 */
@@ -227,6 +232,9 @@ class MailAccount extends Entity {
 		if (isset($params['signatureAboveQuote'])) {
 			$this->setSignatureAboveQuote($params['signatureAboveQuote']);
 		}
+		if (isset($params['trashRetentionDays'])) {
+			$this->setTrashRetentionDays($params['trashRetentionDays']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
@@ -245,6 +253,7 @@ class MailAccount extends Entity {
 		$this->addType('signatureMode', 'int');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('quotaPercentage', 'integer');
+		$this->addType('trashRetentionDays', 'integer');
 	}
 
 	/**
@@ -275,6 +284,7 @@ class MailAccount extends Entity {
 			'signatureMode' => $this->getSignatureMode(),
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
 			'quotaPercentage' => $this->getQuotaPercentage(),
+			'trashRetentionDays' => $this->getTrashRetentionDays(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

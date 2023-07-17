@@ -59,6 +59,12 @@
 			</p>
 			<AccountDefaultsSettings :account="account" />
 		</AppSettingsSection>
+		<AppSettingsSection id="trash-retention" :title=" t('mail', 'Automatic trash deletion')">
+			<p class="settings-hint">
+				{{ t('mail', 'Days after which messages in Trash will automatically be deleted:') }}
+			</p>
+			<TrashRetentionSettings :account="account" />
+		</AppSettingsSection>
 		<AppSettingsSection
 			v-if="account"
 			id="out-of-office-replies"
@@ -121,6 +127,7 @@ import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
 import OutOfOfficeForm from './OutOfOfficeForm'
 import CertificateSettings from './CertificateSettings'
+import TrashRetentionSettings from './TrashRetentionSettings'
 
 export default {
 	name: 'AccountSettings',
@@ -137,6 +144,7 @@ export default {
 		AccountDefaultsSettings,
 		OutOfOfficeForm,
 		CertificateSettings,
+		TrashRetentionSettings,
 	},
 	props: {
 		account: {

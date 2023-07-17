@@ -321,17 +321,38 @@ class MailManager implements IMailManager {
 	 */
 	public function deleteMessage(Account $account,
 		string $mailboxId,
-		int $messageId): void {
-		$this->eventDispatcher->dispatch(
-			BeforeMessageDeletedEvent::class,
-			new BeforeMessageDeletedEvent($account, $mailboxId, $messageId)
-		);
-
+		int $messageUid): void {
 		try {
 			$sourceMailbox = $this->mailboxMapper->find($account, $mailboxId);
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException("Source mailbox $mailboxId does not exist", 0, $e);
 		}
+
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$this->deleteMessageWithClient($account, $sourceMailbox, $messageUid, $client);
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * @throws ServiceException
+	 * @throws ClientException
+	 * @throws TrashMailboxNotSetException
+	 *
+	 * @todo evaluate if we should sync mailboxes first
+	 */
+	public function deleteMessageWithClient(
+		Account $account,
+		Mailbox $mailbox,
+		int $messageUid,
+		Horde_Imap_Client_Socket $client,
+	): void {
+		$this->eventDispatcher->dispatchTyped(
+			new BeforeMessageDeletedEvent($account, $mailbox->getName(), $messageUid)
+		);
+
 		try {
 			$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
 			if ($trashMailboxId === null) {
@@ -342,30 +363,24 @@ class MailManager implements IMailManager {
 			throw new ServiceException("No trash folder", 0, $e);
 		}
 
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			if ($mailboxId === $trashMailbox->getName()) {
-				// Delete inside trash -> expunge
-				$this->imapMessageMapper->expunge(
-					$client,
-					$sourceMailbox->getName(),
-					$messageId
-				);
-			} else {
-				$this->imapMessageMapper->move(
-					$client,
-					$sourceMailbox->getName(),
-					$messageId,
-					$trashMailbox->getName()
-				);
-			}
-		} finally {
-			$client->logout();
+		if ($mailbox->getName() === $trashMailbox->getName()) {
+			// Delete inside trash -> expunge
+			$this->imapMessageMapper->expunge(
+				$client,
+				$mailbox->getName(),
+				$messageUid
+			);
+		} else {
+			$this->imapMessageMapper->move(
+				$client,
+				$mailbox->getName(),
+				$messageUid,
+				$trashMailbox->getName()
+			);
 		}
 
-		$this->eventDispatcher->dispatch(
-			MessageDeletedEvent::class,
-			new MessageDeletedEvent($account, $sourceMailbox, $messageId)
+		$this->eventDispatcher->dispatchTyped(
+			new MessageDeletedEvent($account, $mailbox, $messageUid)
 		);
 	}
 
