@@ -1194,9 +1194,6 @@ export default {
 				force,
 			})
 		},
-		async onForceSend() {
-			await this.onSend(null, true)
-		},
 		reset() {
 			this.selectTo = []
 			this.selectCc = []
