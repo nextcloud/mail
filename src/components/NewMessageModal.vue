@@ -361,6 +361,9 @@ export default {
 				}, 500)
 			}
 		},
+		async onForceSend() {
+			await this.onSend(null, true)
+		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
 				// From mailto or sender without proper label
