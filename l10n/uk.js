@@ -104,6 +104,7 @@ OC.L10N.register(
     "Draft saved" : "Чернетку збережено",
     "Upload attachment" : "Завантажити вкладення",
     "Add attachment from Files" : "Додати вкладення з Файлів",
+    "Smart picker" : "Асистент розумного вибору",
     "Send later" : "Надішліть пізніше",
     "Enable formatting" : "Увімкнути форматування",
     "Disable formatting" : "Вимкнути форматування",
