@@ -15,7 +15,7 @@
 				<ButtonVue
 					type="tertiary"
 					:aria-label="t('mail', 'Go back')"
-					@click="state = STATES.EDITING">
+					@click="error = undefined">
 					{{ t('mail', 'Go back') }}
 				</ButtonVue>
 				<ButtonVue
@@ -35,7 +35,7 @@
 			<ButtonVue
 				type="tertiary"
 				:aria-label="t('mail', 'Go back')"
-				@click="state = STATES.EDITING">
+				@click="warning = undefined">
 				{{ t('mail', 'Go back') }}
 			</ButtonVue>
 			<ButtonVue
