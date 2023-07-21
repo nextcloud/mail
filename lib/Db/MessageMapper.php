@@ -743,22 +743,38 @@ class MessageMapper extends QBMapper {
 
 		if (!empty($query->getFrom())) {
 			$select->andWhere(
-				$qb->expr()->in('r0.email', $qb->createNamedParameter($query->getFrom(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->orX(
+					...array_map(function (string $email) use ($qb) {
+						return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
+					}, $query->getFrom())
+				)
 			);
 		}
 		if (!empty($query->getTo())) {
 			$select->andWhere(
-				$qb->expr()->in('r1.email', $qb->createNamedParameter($query->getTo(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->orX(
+					...array_map(function (string $email) use ($qb) {
+						return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
+					}, $query->getTo())
+				)
 			);
 		}
 		if (!empty($query->getCc())) {
 			$select->andWhere(
-				$qb->expr()->in('r2.email', $qb->createNamedParameter($query->getCc(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->orX(
+					...array_map(function (string $email) use ($qb) {
+						return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
+					}, $query->getCc())
+				)
 			);
 		}
 		if (!empty($query->getBcc())) {
 			$select->andWhere(
-				$qb->expr()->in('r3.email', $qb->createNamedParameter($query->getBcc(), IQueryBuilder::PARAM_STR_ARRAY))
+				$qb->expr()->orX(
+					...array_map(function (string $email) use ($qb) {
+						return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
+					}, $query->getBcc())
+				)
 			);
 		}
 
