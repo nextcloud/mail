@@ -44,7 +44,8 @@
 			v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
-			:bus="bus" />
+			:bus="bus"
+			@show-toolbar="handleShowToolbar" />
 		<p v-if="isLargeSignature" class="warning-large-signature">
 			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
 		</p>
@@ -179,6 +180,9 @@ export default {
 					logger.error('could not update account signature', { error })
 					throw error
 				})
+		},
+		handleShowToolbar(event) {
+			this.$emit('show-toolbar', event)
 		},
 	},
 }

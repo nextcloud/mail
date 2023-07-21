@@ -26,6 +26,7 @@
 	<AppSettingsDialog id="app-settings-dialog"
 		:open="open"
 		:show-navigation="true"
+		:additional-trap-elements="trapElements"
 		@update:open="updateOpen">
 		<AppSettingsSection
 			id="account-settings"
@@ -41,7 +42,7 @@
 			<p class="settings-hint">
 				{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 			</p>
-			<SignatureSettings :account="account" />
+			<SignatureSettings :account="account" @show-toolbar="handleShowToolbar" />
 		</AppSettingsSection>
 		<AppSettingsSection id="writing-mode" :title="t('mail', 'Writing mode')">
 			<p class="settings-hint">
@@ -146,6 +147,11 @@ export default {
 			default: false,
 		},
 	},
+	data() {
+		return {
+			trapElements: [],
+		}
+	},
 	computed: {
 		menu() {
 			return this.buildMenu()
@@ -170,6 +176,9 @@ export default {
 		},
 		updateOpen() {
 			this.$emit('update:open')
+		},
+		handleShowToolbar(element) {
+			this.trapElements.push(element)
 		},
 	},
 }
