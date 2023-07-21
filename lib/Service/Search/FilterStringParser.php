@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Search;
 
+use function urldecode;
+
 class FilterStringParser {
 	public function parse(?string $filter): SearchQuery {
 		$query = new SearchQuery();
@@ -49,7 +51,8 @@ class FilterStringParser {
 			return false;
 		}
 
-		[$type, $param] = explode(':', $token);
+		[$type, $encodedParam] = explode(':', $token);
+		$param = urldecode($encodedParam);
 		$type = strtolower($type);
 		$flagMap = [
 			'answered' => Flag::is(Flag::ANSWERED),
@@ -102,9 +105,7 @@ class FilterStringParser {
 				$query->addBcc($param);
 				return true;
 			case 'subject':
-				// from frontend part subject:My+search+text
-				$subject = str_replace('+', ' ', $param);
-				$query->addSubject($subject);
+				$query->addSubject($param);
 				return true;
 			case 'tags':
 				$tags = explode(',', $param);

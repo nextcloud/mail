@@ -378,10 +378,7 @@ export default {
 			let _search = ''
 			Object.entries(this.filterData).filter(([key, val]) => {
 				if (val !== '' && val !== null) {
-					if (val.indexOf(' ') !== -1) {
-						val = val.replace(/ /g, '+')
-					}
-					_search += `${key}:${val} `
+					_search += `${key}:${encodeURI(val)} `
 				}
 				return val
 			})
