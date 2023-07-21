@@ -372,7 +372,11 @@ export default {
 				return this.loadingMessage ?? t('mail', 'Connecting')
 			}
 			if (this.mode === 'manual' && this.useOauth) {
-				return this.account ? t('mail', 'Reconnect Google account') : t('mail', 'Sign in with Google')
+				if (this.isGoogleAccount) {
+				    return this.account ? t('mail', 'Reconnect Google account') : t('mail', 'Sign in with Google')
+				} else {
+				    return this.account ? t('mail', 'Reconnect Microsoft account') : t('mail', 'Sign in with Microsoft')
+				}
 			}
 			return this.account ? t('mail', 'Save') : t('mail', 'Connect')
 		},
@@ -557,16 +561,16 @@ export default {
 					const account = await this.$store.dispatch('startAccountSetup', data)
 					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
-						this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
 						try {
 							if (this.isGoogleAccount) {
+								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
 								await getUserConsent(
 									this.googleOauthUrl
 										.replace('_accountId_', account.id)
 										.replace('_email_', encodeURIComponent(account.emailAddress)),
 								)
 							} else {
-								// Microsoft
+								this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Microsoft account')
 								await getUserConsent(
 									this.microsoftOauthUrl
 										.replace('_accountId_', account.id)
@@ -592,13 +596,22 @@ export default {
 					})
 					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
-						this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
 						try {
-							await getUserConsent(
-								this.googleOauthUrl
-									.replace('_accountId_', account.id)
-									.replace('_email_', encodeURIComponent(account.emailAddress)),
-							)
+							if (this.isGoogleAccount) {
+								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
+								await getUserConsent(
+									this.googleOauthUrl
+										.replace('_accountId_', account.id)
+										.replace('_email_', encodeURIComponent(account.emailAddress)),
+								)
+							} else {
+								this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Microsoft account')
+								await getUserConsent(
+									this.microsoftOauthUrl
+										.replace('_accountId_', account.id)
+										.replace('_email_', encodeURIComponent(account.emailAddress)),
+								)
+							}
 						} catch (e) {
 							// Undo changes
 							await this.$store.dispatch('updateAccount', {
