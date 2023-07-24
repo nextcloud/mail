@@ -4,6 +4,12 @@
 			<IconAdd :size="20" />
 			{{ t('mail', 'Add mail account') }}
 		</router-link>
+		<ButtonVue @click="randomMail">
+			<template #icon>
+				<IconShuffle />
+			</template>
+			Random mail
+		</ButtonVue>
 
 		<p v-if="loadingOptOutSettings" class="app-settings">
 			<IconLoading :size="20" />
@@ -119,6 +125,7 @@ import { showError } from '@nextcloud/dialogs'
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
 import IconInfo from 'vue-material-design-icons/Information'
+import IconShuffle from 'vue-material-design-icons/Shuffle'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconEmail from 'vue-material-design-icons/Email'
 import IconLock from 'vue-material-design-icons/Lock'
@@ -137,6 +144,7 @@ export default {
 		IconLoading,
 		IconLock,
 		SmimeCertificateModal,
+		IconShuffle,
 	},
 	data() {
 		return {
@@ -155,6 +163,9 @@ export default {
 		}
 	},
 	computed: {
+		openMailbox() {
+			return this.$route.params.mailboxId
+		},
 		useBottomReplies() {
 			return this.$store.getters.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -172,6 +183,17 @@ export default {
 		},
 	},
 	methods: {
+		async randomMail() {
+			const envelopes = this.$store.getters.getEnvelopes(this.openMailbox)
+			const randomInd = Math.floor(Math.random() * envelopes.length)
+			await this.$router.push({
+				name: 'message',
+				params: {
+					mailboxId: this.openMailbox,
+					threadId: envelopes[randomInd].databaseId,
+				},
+			})
+		},
 		onToggleButtonReplies(e) {
 			this.loadingReplySettings = true
 
