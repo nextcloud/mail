@@ -128,6 +128,7 @@ import SieveFilterForm from './SieveFilterForm'
 import OutOfOfficeForm from './OutOfOfficeForm'
 import CertificateSettings from './CertificateSettings'
 import TrashRetentionSettings from './TrashRetentionSettings'
+import logger from '../logger'
 
 export default {
 	name: 'AccountSettings',
@@ -159,6 +160,7 @@ export default {
 	data() {
 		return {
 			trapElements: [],
+			fetchActiveSieveScript: this.account.sieveEnabled,
 		}
 	},
 	computed: {
@@ -172,10 +174,16 @@ export default {
 			return this.account.emailAddress
 		},
 	},
-	mounted() {
-		this.$store.dispatch('fetchActiveSieveScript', {
-			accountId: this.account.id,
-		})
+	watch: {
+		open(newState, oldState) {
+			if (newState === true && this.fetchActiveSieveScript === true) {
+				logger.debug(`Load active sieve script for account ${this.account.accountId}`)
+				this.fetchActiveSieveScript = false
+				this.$store.dispatch('fetchActiveSieveScript', {
+					accountId: this.account.id,
+				})
+			}
+		},
 	},
 	methods: {
 		scrollToAccountSettings() {
