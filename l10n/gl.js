@@ -264,7 +264,7 @@ OC.L10N.register(
     "View fewer attachments" : "Ver menos anexos",
     "Save all to Files" : "Gardar todo en Ficheiros",
     "Download Zip" : "Descargar o ZIP",
-    "Choose a folder to store the attachments in" : "Escolla un cartafol no que gardar o anexo",
+    "Choose a folder to store the attachments in" : "Escoller un cartafol no que gardar o anexo",
     "_View {count} more attachment_::_View {count} more attachments_" : ["Ver {count} anexo máis","Ver {count} anexos máis"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Esta mensaxe está cifrada con PGP. Instale Mailvelope para descifralo.",
     "The images have been blocked to protect your privacy." : "As imaxes foron bloqueadas para protexer a súa intimidade.",
