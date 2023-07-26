@@ -53,7 +53,7 @@ class AdminSettingsTest extends TestCase {
 	}
 
 	public function testGetForm() {
-		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(8))
+		$this->serviceMock->getParameter('initialStateService')->expects($this->exactly(10))
 			->method('provideInitialState')
 			->withConsecutive(
 				[
@@ -69,6 +69,16 @@ class AdminSettingsTest extends TestCase {
 				[
 					Application::APP_ID,
 					'allow_new_mail_accounts',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'enabled_thread_summary',
+					$this->anything()
+				],
+				[
+					Application::APP_ID,
+					'enabled_llm_backend',
 					$this->anything()
 				],
 				[

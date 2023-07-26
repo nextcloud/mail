@@ -38,6 +38,7 @@
 					</div>
 				</div>
 			</div>
+			<ThreadSummary v-if="showSummaryBox" :loading="summaryLoading" :summary="summaryText" />
 			<ThreadEnvelope v-for="env in thread"
 				:key="env.databaseId"
 				:envelope="env"
@@ -54,21 +55,26 @@
 
 <script>
 import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '@nextcloud/vue'
+import { showError } from '@nextcloud/dialogs'
 
 import { prop, uniqBy } from 'ramda'
 import debounce from 'lodash/fp/debounce'
+import { loadState } from '@nextcloud/initial-state'
 
+import { summarizeThread } from '../service/AiIntergrationsService'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
 import logger from '../logger'
 import Error from './Error'
 import RecipientBubble from './RecipientBubble'
 import ThreadEnvelope from './ThreadEnvelope'
+import ThreadSummary from './ThreadSummary'
 
 export default {
 	name: 'Thread',
 	components: {
 		RecipientBubble,
+		ThreadSummary,
 		AppContentDetails,
 		Error,
 		Loading,
@@ -78,6 +84,7 @@ export default {
 
 	data() {
 		return {
+			summaryLoading: false,
 			loading: true,
 			message: undefined,
 			errorMessage: '',
@@ -85,6 +92,9 @@ export default {
 			expandedThreads: [],
 			participantsToDisplay: 999,
 			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
+			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
+			summaryText: '',
+			summaryError: false,
 		}
 	},
 
@@ -134,6 +144,9 @@ export default {
 			}
 			return thread[0].subject || this.t('mail', 'No subject')
 		},
+		showSummaryBox() {
+			return this.thread.length > 2 && this.enabledThreadSummary && !this.summaryError
+		},
 	},
 	watch: {
 		$route(to, from) {
@@ -158,6 +171,20 @@ export default {
 		window.removeEventListener('resize', this.resizeDebounced)
 	},
 	methods: {
+		async updateSummary() {
+			if (this.thread.length < 2 || !this.enabledThreadSummary) return
+
+			this.summaryLoading = true
+			try {
+				this.summaryText = await summarizeThread(this.thread[0].databaseId)
+			} catch (error) {
+				this.summaryError = true
+				showError(t('mail', 'Summarizing thread failed.'))
+				logger.error('Summarizing thread failed', { error })
+			} finally {
+				this.summaryLoading = false
+			}
+		},
 		updateParticipantsToDisplay() {
 			// Wait until everything is in place
 			if (!this.$refs.avatarHeader || !this.threadParticipants) {
@@ -226,6 +253,7 @@ export default {
 			this.error = undefined
 			await this.fetchThread()
 			this.updateParticipantsToDisplay()
+			this.updateSummary()
 
 		},
 		async fetchThread() {

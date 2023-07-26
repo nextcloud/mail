@@ -321,6 +321,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'settings#setEnabledThreadSummary',
+			'url' => '/api/settings/threadsummary',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'
@@ -359,6 +364,11 @@ return [
 			'name' => 'thread#move',
 			'url' => '/api/thread/{id}',
 			'verb' => 'POST'
+		],
+		[
+			'name' => 'thread#summarize',
+			'url' => '/api/thread/{id}/summary',
+			'verb' => 'GET'
 		],
 		[
 			'name' => 'outbox#send',

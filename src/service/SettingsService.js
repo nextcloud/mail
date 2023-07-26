@@ -76,3 +76,12 @@ export const updateAllowNewMailAccounts = (allowed) => {
 	}
 	return axios.post(url, data).then((resp) => resp.data)
 }
+
+export const updateEnabledThreadSummary = async (enabled) => {
+	const url = generateUrl('/apps/mail/api/settings/threadsummary')
+	const data = {
+		enabled,
+	}
+	const resp = await axios.put(url, data)
+	return resp.data
+}

@@ -31,6 +31,7 @@ use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
@@ -68,6 +69,9 @@ class PageControllerTest extends TestCase {
 
 	/** @var AccountService|MockObject */
 	private $accountService;
+
+	/** @var AiIntegrationsService|MockObject */
+	private $aiIntegrationsService;
 
 	/** @var AliasesService|MockObject */
 	private $aliasesService;
@@ -113,6 +117,7 @@ class PageControllerTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->accountService = $this->createMock(AccountService::class);
+		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
@@ -143,6 +148,7 @@ class PageControllerTest extends TestCase {
 			$this->eventDispatcher,
 			$this->credentialStore,
 			$this->smimeService,
+			$this->aiIntegrationsService,
 		);
 	}
 
@@ -231,7 +237,7 @@ class PageControllerTest extends TestCase {
 				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(6))
+		$this->config->expects($this->exactly(7))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
@@ -239,14 +245,16 @@ class PageControllerTest extends TestCase {
 				['mail', 'microsoft_oauth_client_id' ],
 				['mail', 'microsoft_oauth_tenant_id' ],
 				['core', 'backgroundjobs_mode', 'ajax' ],
-				['mail', 'allow_new_mail_accounts', 'yes']
+				['mail', 'allow_new_mail_accounts', 'yes'],
+				['mail', 'enabled_thread_summary', 'no'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
 				$this->returnValue(''),
 				$this->returnValue(''),
 				$this->returnValue(''),
 				$this->returnValue('cron'),
-				$this->returnValue('yes')
+				$this->returnValue('yes'),
+				$this->returnValue('no')
 			);
 		$user->expects($this->once())
 			->method('getDisplayName')
@@ -267,7 +275,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(12))
+		$this->initialState->expects($this->exactly(13))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -281,6 +289,7 @@ class PageControllerTest extends TestCase {
 				['outbox-messages', []],
 				['disable-scheduled-send', false],
 				['allow-new-accounts', true],
+				['enabled_thread_summary', false],
 				['smime-certificates', []],
 			);
 

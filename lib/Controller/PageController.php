@@ -33,6 +33,7 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
@@ -73,6 +74,7 @@ class PageController extends Controller {
 	private IEventDispatcher $dispatcher;
 	private ICredentialstore $credentialStore;
 	private SmimeService $smimeService;
+	private AiIntegrationsService $aiIntegrationsService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -90,7 +92,8 @@ class PageController extends Controller {
 		OutboxService    $outboxService,
 		IEventDispatcher $dispatcher,
 		ICredentialStore $credentialStore,
-		SmimeService     $smimeService) {
+		SmimeService     $smimeService,
+		AiIntegrationsService $aiIntegrationsService) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -108,6 +111,7 @@ class PageController extends Controller {
 		$this->dispatcher = $dispatcher;
 		$this->credentialStore = $credentialStore;
 		$this->smimeService = $smimeService;
+		$this->aiIntegrationsService = $aiIntegrationsService;
 	}
 
 	/**
@@ -242,6 +246,11 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'allow-new-accounts',
 			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
+			'enabled_thread_summary',
+			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable()
 		);
 
 		$this->initialStateService->provideInitialState(
