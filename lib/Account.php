@@ -46,6 +46,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
+use OCA\Mail\Service\Quota;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -228,5 +229,19 @@ class Account implements JsonSerializable {
 	 */
 	public function newMessage() {
 		return new Message();
+	}
+
+	/**
+	 * Set the quota percentage
+	 * @param Quota $quota
+	 * @return void
+	 */
+	public function calculateAndSetQuotaPercentage(Quota $quota): void {
+		$percentage = (int)round($quota->getUsage() / $quota->getLimit() * 100);
+		$this->account->setQuotaPercentage($percentage);
+	}
+
+	public function getQuotaPercentage(): ?int {
+		return $this->account->getQuotaPercentage();
 	}
 }

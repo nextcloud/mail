@@ -46,6 +46,7 @@ class MailAccountTest extends TestCase {
 		$a->setEditorMode('html');
 		$a->setProvisioningId(null);
 		$a->setOrder(13);
+		$a->setQuotaPercentage(10);
 
 		$this->assertEquals([
 			'id' => 12345,
@@ -74,6 +75,7 @@ class MailAccountTest extends TestCase {
 			'signatureAboveQuote' => false,
 			'signatureMode' => null,
 			'smimeCertificateId' => null,
+			'quotaPercentage' => 10,
 		], $a->toJson());
 	}
 
@@ -105,6 +107,7 @@ class MailAccountTest extends TestCase {
 			'signatureAboveQuote' => false,
 			'signatureMode' => null,
 			'smimeCertificateId' => null,
+			'quotaPercentage' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

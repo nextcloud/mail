@@ -106,6 +106,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOauthTokenTtl(int $ttl)
  * @method int|null getSmimeCertificateId()
  * @method void setSmimeCertificateId(int|null $smimeCertificateId)
+ * @method int|null getQuotaPercentage()
+ * @method void setQuotaPercentage(int $quota);
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -170,6 +172,9 @@ class MailAccount extends Entity {
 
 	/** @var int|null */
 	protected $smimeCertificateId;
+
+	/** @var int|null */
+	protected $quotaPercentage;
 
 	/**
 	 * @param array $params
@@ -239,6 +244,7 @@ class MailAccount extends Entity {
 		$this->addType('signatureAboveQuote', 'boolean');
 		$this->addType('signatureMode', 'int');
 		$this->addType('smimeCertificateId', 'integer');
+		$this->addType('quotaPercentage', 'integer');
 	}
 
 	/**
@@ -268,6 +274,7 @@ class MailAccount extends Entity {
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
 			'signatureMode' => $this->getSignatureMode(),
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
+			'quotaPercentage' => $this->getQuotaPercentage(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

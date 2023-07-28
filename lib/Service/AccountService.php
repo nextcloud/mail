@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
+use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccount;
@@ -150,6 +151,7 @@ class AccountService {
 		$this->jobList->add(SyncJob::class, ['accountId' => $newAccount->getId()]);
 		$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $newAccount->getId()]);
 		$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $newAccount->getId()]);
+		$this->jobList->add(QuotaJob::class, ['accountId' => $newAccount->getId()]);
 
 		return $newAccount;
 	}
@@ -171,5 +173,12 @@ class AccountService {
 		$mailAccount = $account->getMailAccount();
 		$mailAccount->setSignature($signature);
 		$this->mapper->save($mailAccount);
+	}
+
+	/**
+	 * @return Account[]
+	 */
+	public function getAllAcounts(): array {
+		return $this->mapper->getAllAccounts();
 	}
 }
