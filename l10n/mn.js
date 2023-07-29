@@ -62,6 +62,7 @@ OC.L10N.register(
     "Custom" : "Дурын",
     "Remove" : "Устгах",
     "Reset" : "тохируулах",
+    "Client ID" : "Хэрэглэгчийн ID",
     "General" : "Ерөнхий",
     "User" : "Хэрэглэгч",
     "Host" : "хост",
