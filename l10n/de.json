@@ -59,7 +59,7 @@
     "SMTP username or password is wrong" : "SMTP-Benutzername oder Passwort ist falsch.",
     "IMAP connection failed" : "IMAP-Verbindung fehlgeschlagen",
     "SMTP connection failed" : "SMTP-Verbindung fehlgeschlagen",
-    "Authorization pop-up closed" : "Anmeldungs-Popup wurde geschlossen",
+    "Authorization pop-up closed" : "Anmeldungs-Pop-up wurde geschlossen",
     "There was an error while setting up your account" : "Bei der Einrichtung deines Kontos ist ein Fehler aufgetreten.",
     "Account settings" : "Konto-Einstellungen",
     "Alias to S/MIME certificate mapping" : "Alias einerm S/MIME-Zertifikat zuordnen",

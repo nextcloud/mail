@@ -10,6 +10,8 @@ OC.L10N.register(
     "To Do" : "Úkoly",
     "Later" : "Později",
     "Mail" : "E-mail",
+    "You are reaching your mailbox quota limit for {account}" : "Blížíte se limitu kvóty objemu vaší e-mailové schránky u účtu {account}",
+    "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Nyní využíváte {percentage} úložiště vaší e-mailové schránky. Uvolněte nějaké místo smazáním nepotřebných e-mailů.",
     "Mails" : "E-maily",
     "💌 A mail app for Nextcloud" : "💌 E-mailová aplikace pro Nextcloud",
     "Your session has expired. The page will be reloaded." : "Platnost vaší relace skončila. Stránka bude znovu načtena.",
