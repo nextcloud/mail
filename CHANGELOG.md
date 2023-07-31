@@ -1,5 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## 3.2.5 - 2023-07-31
+### Fixed
+- Make nested toolbar working for signature editor
+- Make system address book searchable not just full matches
+- Fix force sending emails
+- Add preview enhancement job to new accounts joblist
+
 ## 3.2.4 - 2023-07-12
 ### Fixed
 - Show starred messages in Favourites again
