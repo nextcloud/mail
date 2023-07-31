@@ -30,8 +30,41 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Ethical AI rating
 
+## 3.2.5 - 2023-07-31
+### Fixed
+- Make nested toolbar working for signature editor
+- Make system address book searchable not just full matches
+- Fix force sending emails
+- Add preview enhancement job to new accounts joblist
 
-## 3.2.0-rc.1 - unreleased
+## 3.2.4 - 2023-07-12
+### Fixed
+- Show starred messages in Favourites again
+- Reduce number of STATUS commands for background mailbox sync
+- Mailboxes not being synced due to short-circuiting
+
+## 3.2.3 - 2023-06-28
+### Fixed
+- Ignore no select mailboxes for MYRIGHTS
+- Ignore non existent mailboxes (again)
+- Truncate email addresses that are more than 244 characters long
+- Check strict cookies for image proxy
+- DB-Query for open drafts
+- Set primary key in first migration
+
+## 3.2.2 - 2023-06-19
+### Fixed
+- Calendar import popup
+- PHP8.2 warnings about string interpolation
+- OAuth access token written to wrong database field
+### Changed
+- Document Ethical AI rating
+
+## 3.2.1 - 2023-06-14
+### Fixed
+- Allow dynamic autoloading for classes added during upgrade
+
+## 3.2.0- 2023-06-07
 ### Added
 - Create a task from a message
 - Minimize composer modal while editing a message
@@ -55,6 +88,13 @@ All notable changes to this project will be documented in this file.
 - Only fetch mailbox STATUS once
 - Use the color-primary-element variables
 
+## 3.1.1 - 2023-04-19
+### Fixed
+- Delete old draft when saving new version
+- App between primary actions
+- Button styles
+- Colors for button on dark-theme
+
 ## 3.1.0 - 2023-04-04
 ### Added
 - Warning when a signature is not verified
@@ -74,6 +114,21 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Smart link icon and rename it
 - Remove explicit width for attachments
+
+## 3.0.3 – 2023-03-29
+### Fixed
+- OAuth account setup
+
+## 3.0.2 - 2023-03-23
+### Fixed
+- Validate favicon hosts
+- Message preview
+- Attachments width
+
+## 3.0.1 - 2023-03-23
+### Fixed
+- Hide "Has Cal" tag
+- HTML messages dont expand depending on size
 
 ## 3.0.0 - 2023-03-20
 ### Added
@@ -97,6 +152,20 @@ All notable changes to this project will be documented in this file.
 - Update password of existing account
 - Refactor and fix issues with draft handling
 - Show active state for mailbox
+
+## 2.2.7 - 2023-06-28
+### Fixed
+- Truncate email addresses that are more than 244 characters long
+- Check strict cookies for image proxy
+- Only fetch mailbox STATUS once
+- Missing background box for redirect page
+
+## 2.2.6 - 2023-04-20
+### Fixed
+- Gap between primary actions
+- Button style
+- Clear config cache after every mutation
+- Chunk UIDs by string length
 
 ## 2.2.5 - 2023-03-23
 ### Fixed
