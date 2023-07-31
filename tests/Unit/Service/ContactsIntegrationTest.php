@@ -151,7 +151,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$this->common($term, $searchResult, true, true, false, false);
+		$this->common($term, $searchResult, true, true, false, false, false);
 		$user = $this->createMock(IUser::class);
 		$this->userManager->expects($this->once())
 			->method('get')
@@ -191,150 +191,157 @@ class ContactsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToFullMatch() {
-		$term = 'jo'; // searching for: John Doe
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchUserId() {
+		$term = 'jf'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
+				// Simple match
 				'UID' => 'jf',
 				'FN' => 'Jonathan Frakes',
 				'EMAIL' => 'jonathan@frakes.com',
 				'isLocalSystemBook' => true,
 			],
-			[
-				'UID' => 'jd',
-				'FN' => 'John Doe',
-				'EMAIL' => [
-					'john@doe.info',
-					'doe@john.info',
-				],
-				'isLocalSystemBook' => true,
-			],
-			[
-				'UID' => 'js',
-				'FN' => 'Johann Strauss II',
-				'EMAIL' => 'johann@strauss.com',
-			],
 		];
-		$this->common($term, $searchResult, true, false, true);
+
+		$this->common($term, $searchResult, true, true, true);
+		$user = $this->createMock(IUser::class);
+		$this->userManager->expects($this->once())
+			->method('get')
+			->with('auser')
+			->will($this->returnValue($user));
+		$this->groupManager->expects($this->once())
+			->method('getUserGroupIds')
+			->will($this->returnValue(['agroup']));
+		$this->groupManager->expects(self::exactly(1))
+			->method('isInGroup')
+			->withConsecutive(['jf', 'agroup'])
+			->willReturnOnConsecutiveCalls(false);
 
 		$expected = [
 			[
-				'id' => 'js',
-				'label' => 'Johann Strauss II (johann@strauss.com)',
-				'email' => 'johann@strauss.com',
+				'id' => 'jf',
+				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'email' => 'jonathan@frakes.com',
 				'photo' => null,
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
 
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToFullMatchFullName() {
-		$term = 'john doe'; // searching for: John Doe
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchFullName() {
+		$term = 'Jonathan Frakes'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
-				// Array of addresses
-				'UID' => 'jd',
-				'FN' => 'John Doe',
-				'EMAIL' => [
-					'john@doe.info',
-					'doe@john.info',
-				],
+				// Simple match
+				'UID' => 'jf',
+				'FN' => 'Jonathan Frakes',
+				'EMAIL' => 'jonathan@frakes.com',
 				'isLocalSystemBook' => true,
-			]
+			],
 		];
 
-		$this->common($term, $searchResult, true, false, true);
+		$this->common($term, $searchResult, true, true, true);
+		$user = $this->createMock(IUser::class);
+		$this->userManager->expects($this->once())
+			->method('get')
+			->with('auser')
+			->will($this->returnValue($user));
+		$this->groupManager->expects($this->once())
+			->method('getUserGroupIds')
+			->will($this->returnValue(['agroup']));
+		$this->groupManager->expects(self::exactly(1))
+			->method('isInGroup')
+			->withConsecutive(['jf', 'agroup'])
+			->willReturnOnConsecutiveCalls(false);
 
 		$expected = [
 			[
-				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
-				'email' => 'john@doe.info',
-				'photo' => null,
-			],
-			[
-				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
-				'email' => 'doe@john.info',
+				'id' => 'jf',
+				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'email' => 'jonathan@frakes.com',
 				'photo' => null,
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
 
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testGetMatchingRecipientRestrictedToFullMatchUserId() {
-		$term = 'jd'; // searching for: John Doe
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchEmail() {
+		$term = 'jonathan@frakes.com'; // searching for: Jonathan Frakes
 		$searchResult = [
 			[
-				// Array of addresses
-				'UID' => 'jd',
-				'FN' => 'John Doe',
-				'EMAIL' => [
-					'john@doe.info',
-					'doe@john.info',
-				],
+				// Simple match
+				'UID' => 'jf',
+				'FN' => 'Jonathan Frakes',
+				'EMAIL' => 'jonathan@frakes.com',
 				'isLocalSystemBook' => true,
-			]
+			],
 		];
 
-		$this->common($term, $searchResult, true, false, true);
+		$this->common($term, $searchResult, true, true, true);
+		$user = $this->createMock(IUser::class);
+		$this->userManager->expects($this->once())
+			->method('get')
+			->with('auser')
+			->will($this->returnValue($user));
+		$this->groupManager->expects($this->once())
+			->method('getUserGroupIds')
+			->will($this->returnValue(['agroup']));
+		$this->groupManager->expects(self::exactly(1))
+			->method('isInGroup')
+			->withConsecutive(['jf', 'agroup'])
+			->willReturnOnConsecutiveCalls(false);
 
 		$expected = [
 			[
-				'id' => 'jd',
-				'label' => 'John Doe (john@doe.info)',
-				'email' => 'john@doe.info',
-				'photo' => null,
-			],
-			[
-				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
-				'email' => 'doe@john.info',
+				'id' => 'jf',
+				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'email' => 'jonathan@frakes.com',
 				'photo' => null,
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
 
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function testGetMatchingRecipientRestrictedToGroupFullMatchFalse() {
+		$term = 'jf'; // searching for: Jonathan Frakes
 
-
-	public function testGetMatchingRecipientRestrictedToFullMatchEmail() {
-		$term = 'doe@john.info'; // searching for: John Doe
 		$searchResult = [
 			[
-				// Array of addresses
-				'UID' => 'jd',
-				'FN' => 'John Doe',
-				'EMAIL' => [
-					'john@doe.info',
-					'doe@john.info',
-				],
+				// Simple match
+				'UID' => 'jf',
+				'FN' => 'Jonathan Frakes',
+				'EMAIL' => 'jonathan@frakes.com',
 				'isLocalSystemBook' => true,
-			]
-		];
-
-		$this->common($term, $searchResult, true, false, true);
-
-		$expected = [
-			[
-				'id' => 'jd',
-				'label' => 'John Doe (doe@john.info)',
-				'email' => 'doe@john.info',
-				'photo' => null,
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("", $term);
+		$this->common($term, $searchResult, true, true, false, false, false);
 
+		$user = $this->createMock(IUser::class);
+		$this->userManager->expects($this->once())
+			->method('get')
+			->with('auser')
+			->will($this->returnValue($user));
+		$this->groupManager->expects($this->once())
+			->method('getUserGroupIds')
+			->will($this->returnValue(['agroup']));
+		$this->groupManager->expects(self::exactly(1))
+			->method('isInGroup')
+			->withConsecutive(['jf', 'agroup'])
+			->willReturnOnConsecutiveCalls(false);
+
+		$expected = [];
+
+		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -359,7 +366,7 @@ class ContactsIntegrationTest extends TestCase {
 			->will($this->returnValue(true));
 		$this->contactsManager->expects($this->once())
 			->method('search')
-			->with($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $allowSystemUsers])
+			->with($term, ['UID', 'FN', 'EMAIL'], ['enumeration' => $allowSystemUsers, 'fullmatch' => $shareeEnumerationFullMatch])
 			->will($this->returnValue($searchResult));
 	}
 
