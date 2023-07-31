@@ -561,7 +561,7 @@ export default {
 					const account = await this.$store.dispatch('startAccountSetup', data)
 					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
-						this.feedback = t('mail', 'Account created. Please follow the popup instructions to link your Google account')
+						this.feedback = t('mail', 'Account created. Please follow the pop-up instructions to link your Google account')
 						try {
 							if (this.isGoogleAccount) {
 								await getUserConsent(
@@ -596,7 +596,7 @@ export default {
 					})
 					if (this.useOauth) {
 						this.loadingMessage = t('mail', 'Awaiting user consent')
-						this.feedback = t('mail', 'Account updated. Please follow the popup instructions to reconnect your Google account')
+						this.feedback = t('mail', 'Account updated. Please follow the pop-up instructions to reconnect your Google account')
 						try {
 							await getUserConsent(
 								this.googleOauthUrl
