@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.3.0-alpha.1 - unreleased
+## 3.3.0-alpha.2 - unreleased
 ### Added
 - Allow a configurable background sync interval
 - Send multiple flags in a single request
@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 - Set app name for mail
 - Rework draft handling front-end
 - Support for selecting messages with crtl key
+- Notification for quota depletion
+- Match recipient labels too
+- Use case-independent wildcard matches for recipients
+- Reduce number of STATUS commands for background mailbox sync
 
 ### Fixed
 - Update interface to match implementation
@@ -26,6 +30,15 @@ All notable changes to this project will be documented in this file.
 - Allow dynamic autoloading for classes added during upgrade
 - Re-open account settings
 - Overlapping of primary menu with recipient
+- The editing state of the go back button
+- URL-encode all parameters to preserve special characters
+- Make nested toolbar working for signature
+- Fix force sending emails
+- Make system address book searchable not just full matches
+- Add preview enhancement job to new accounts joblist
+- Provisioning config caching
+- Mailboxes not being synced due to short circuiting
+- Handle attachments without transfer encoding properly
 
 ### Changed
 - Ethical AI rating
