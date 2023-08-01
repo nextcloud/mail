@@ -34,7 +34,6 @@ use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Quota;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\Notification\INotification;
 
@@ -54,7 +53,7 @@ class QuotaJobTest extends TestCase {
 		// Make sure the job is actually run
 		$this->serviceMock->getParameter('time')
 			->method('getTime')
-			->willReturn(500000);
+			->willReturn(604801); // job interval + 1
 
 		// Set our common argument
 		$this->job->setArgument([
@@ -86,9 +85,8 @@ class QuotaJobTest extends TestCase {
 			'accountId' => 123,
 		]);
 		$this->job->setLastRun(0);
-		$this->job->execute(
+		$this->job->start(
 			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
 		);
 	}
 
@@ -118,9 +116,8 @@ class QuotaJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		$this->job->execute(
+		$this->job->start(
 			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
 		);
 	}
 
@@ -172,9 +169,8 @@ class QuotaJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		$this->job->execute(
+		$this->job->start(
 			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
 		);
 	}
 
@@ -277,9 +273,8 @@ class QuotaJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		$this->job->execute(
+		$this->job->start(
 			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
 		);
 	}
 }
