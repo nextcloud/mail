@@ -51,7 +51,6 @@ OC.L10N.register(
     "Password required" : "Zahtevano je geslo",
     "Testing authentication" : "Poteka overjanje podatkov",
     "Awaiting user consent" : "Čakanje na odziv uporabnika",
-    "Account created. Please follow the popup instructions to link your Google account" : "Račun je ustvarjen. Sledite navodilom za povezovanje računa Google.",
     "Loading account" : "Poteka nalaganje računa",
     "Account updated" : "Račun je posodobljen",
     "IMAP server is not reachable" : "Strežnik IMAP ni dosegljiv",
