@@ -60,8 +60,8 @@ class QuotaJob extends TimedJob {
 		$this->jobList = $jobList;
 		$this->mailManager = $mailManager;
 
-		$this->setInterval(24 * 60 * 60);
-		$this->setTimeSensitivity(self::TIME_SENSITIVE);
+		$this->setInterval(60 * 60 * 24 * 7);
+		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 		$this->notificationManager = $notificationManager;
 	}
 
