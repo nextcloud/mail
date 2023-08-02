@@ -54,6 +54,7 @@ OC.L10N.register(
     "Password required" : "請輸入密碼",
     "Testing authentication" : "正在測試驗證",
     "Awaiting user consent" : "等待使用者同意",
+    "Account created. Please follow the pop-up instructions to link your Google account" : "帳號已建立。請按照彈出的說明連結您的 Google 帳號",
     "Loading account" : "正在載入帳號",
     "Account updated" : "已更新帳號",
     "IMAP server is not reachable" : "IMAP 伺服器無法連線",
