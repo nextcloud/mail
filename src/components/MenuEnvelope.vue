@@ -422,7 +422,7 @@ export default {
 			this.showTagModal = true
 		},
 		onReply(onlySender = false) {
-			this.$store.dispatch('showMessageComposer', {
+			this.$store.dispatch('startComposerSession', {
 				reply: {
 					mode: onlySender ? 'reply' : 'replyAll',
 					data: this.envelope,
