@@ -274,4 +274,11 @@ class OutboxService {
 			}
 		}
 	}
+
+	public function convertDraft(LocalMessage $draftMessage, int $sendAt): LocalMessage {
+		$outboxMessage = clone $draftMessage;
+		$outboxMessage->setType(LocalMessage::TYPE_OUTGOING);
+		$outboxMessage->setSendAt($sendAt);
+		return $this->mapper->update($outboxMessage);
+	}
 }
