@@ -27,10 +27,11 @@
 		:open="open"
 		:show-navigation="true"
 		:additional-trap-elements="trapElements"
+		:title="t('mail', 'Account settings')"
 		@update:open="updateOpen">
 		<AppSettingsSection
-			id="account-settings"
-			:title="t('mail', 'Account settings')">
+			id="alias-settings"
+			:title="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</AppSettingsSection>
 		<AppSettingsSection
