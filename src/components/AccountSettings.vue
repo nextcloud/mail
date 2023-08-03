@@ -27,10 +27,11 @@
 		:open="open"
 		:show-navigation="true"
 		:additional-trap-elements="trapElements"
+		:title="t('mail', 'Account settings')"
 		@update:open="updateOpen">
 		<AppSettingsSection
-			id="account-settings"
-			:title="t('mail', 'Account settings')">
+			id="alias-settings"
+			:title="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</AppSettingsSection>
 		<AppSettingsSection
@@ -215,11 +216,5 @@ h2 {
 }
 .app-settings-section {
 margin-bottom: 45px;
-}
-
-// Fix weird modal glitches on Firefox when toggling autoresponder
-:deep(.modal-container),
-:deep(.app-settings__wrapper) {
-	position: unset !important;
 }
 </style>
