@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.3.0-alpha.2 - unreleased
+## 3.3.0-rc.1 - unreleased
 ### Added
 - Allow a configurable background sync interval
 - Send multiple flags in a single request
@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Match recipient labels too
 - Use case-independent wildcard matches for recipients
 - Reduce number of STATUS commands for background mailbox sync
+- Title to account settings modal
 
 ### Fixed
 - Update interface to match implementation
@@ -39,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - Provisioning config caching
 - Mailboxes not being synced due to short circuiting
 - Handle attachments without transfer encoding properly
+- Account settings modal close button
 
 ### Changed
 - Ethical AI rating
