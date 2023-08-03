@@ -366,6 +366,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'outbox#createFromDraft',
+			'url' => '/api/outbox/from-draft/{id}',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'googleIntegration#configure',
 			'url' => '/api/integration/google',
 			'verb' => 'POST',

@@ -25,10 +25,8 @@ import { generateUrl } from '@nextcloud/router'
 
 import { convertAxiosError } from '../errors/convert'
 
-export async function saveDraft(accountId, data) {
-	const url = generateUrl('/apps/mail/api/drafts', {
-		accountId,
-	})
+export async function saveDraft(data) {
+	const url = generateUrl('/apps/mail/api/drafts')
 
 	try {
 		return (await axios.post(url, data)).data.data

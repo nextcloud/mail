@@ -107,7 +107,7 @@ class LocalMessageMapperTest extends TestCase {
 	 * @depends testFindAllForUser
 	 */
 	public function testFindById(): void {
-		$row = $this->mapper->findById($this->entity->getId(), $this->account->getUserId());
+		$row = $this->mapper->findById($this->entity->getId(), $this->account->getUserId(), LocalMessage::TYPE_OUTGOING);
 
 		$this->assertEquals(LocalMessage::TYPE_OUTGOING, $row->getType());
 		$this->assertEquals(2, $row->getAliasId());
@@ -122,7 +122,7 @@ class LocalMessageMapperTest extends TestCase {
 
 	public function testFindByIdNotFound(): void {
 		$this->expectException(DoesNotExistException::class);
-		$this->mapper->findById(1337, $this->account->getUserId());
+		$this->mapper->findById(1337, $this->account->getUserId(), LocalMessage::TYPE_DRAFT);
 	}
 
 	/**
