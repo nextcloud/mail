@@ -208,7 +208,7 @@ class DraftsService {
 	 * @throws DoesNotExistException
 	 */
 	public function getMessage(int $id, string $userId): LocalMessage {
-		return $this->mapper->findById($id, $userId);
+		return $this->mapper->findById($id, $userId, LocalMessage::TYPE_DRAFT);
 	}
 
 	/**
