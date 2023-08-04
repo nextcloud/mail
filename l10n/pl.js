@@ -62,6 +62,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "Wyskakujące okienko autoryzacji zostało zamknięte",
     "There was an error while setting up your account" : "Wystąpił błąd podczas zakładania konta",
     "Account settings" : "Ustawienia konta",
+    "Aliases" : "Aliasy",
     "Signature" : "Podpis",
     "A signature is added to the text of new messages and replies." : "Podpis jest dodawany do tekstu nowych wiadomości i odpowiedzi.",
     "Writing mode" : "Tryb pisania",

@@ -40,6 +40,7 @@ OC.L10N.register(
     "Connect" : "התחברות",
     "Password required" : "נדרשת ססמה",
     "Account settings" : "הגדרות חשבון",
+    "Aliases" : "כינויים",
     "Signature" : "חתימה",
     "A signature is added to the text of new messages and replies." : "נוספה חתימה לטקסט של הודעות חדשות ותגובות.",
     "Writing mode" : "מצב כתיבה",

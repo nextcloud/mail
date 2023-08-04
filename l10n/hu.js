@@ -62,6 +62,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "Hitelesítési felugró ablak bezárva",
     "There was an error while setting up your account" : "Hiba történt a fiók beállítása során",
     "Account settings" : "Fiókbeállítások",
+    "Aliases" : "Álnevek",
     "Alias to S/MIME certificate mapping" : "Álnév az S/MIME tanúsítvány-hozzárendeléshez",
     "Signature" : "Aláírás",
     "A signature is added to the text of new messages and replies." : "Az aláírás hozzáadásra kerül az új levelekhez és válaszokhoz.",

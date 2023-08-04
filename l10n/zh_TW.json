@@ -64,6 +64,7 @@
     "Authorization pop-up closed" : "已關閉授權彈出式視窗",
     "There was an error while setting up your account" : "設定您的帳號時發生錯誤",
     "Account settings" : "帳號設定",
+    "Aliases" : "別名",
     "Alias to S/MIME certificate mapping" : "別名至 S/MIME 憑證對映",
     "Signature" : "簽章",
     "A signature is added to the text of new messages and replies." : "對新信件與回覆信件內容已新增一個簽名檔",

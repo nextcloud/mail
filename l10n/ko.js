@@ -42,6 +42,7 @@ OC.L10N.register(
     "Account updated" : "계정 업데이트됨",
     "There was an error while setting up your account" : "계정을 설정하는 중 오류가 발생했습니다.",
     "Account settings" : "계정 설정",
+    "Aliases" : "별칭",
     "Signature" : "서명",
     "A signature is added to the text of new messages and replies." : "서명이 새로운 메시지 및 전달 메시지의 텍스트에 추가됩니다.",
     "Writing mode" : "쓰기 모드",

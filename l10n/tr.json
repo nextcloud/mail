@@ -65,6 +65,7 @@
     "Authorization pop-up closed" : "Kimlik doğrulama açılan penceresi kapatıldı",
     "There was an error while setting up your account" : "Hesabınız kurulurken bir sorun çıktı.",
     "Account settings" : "Hesap ayarları",
+    "Aliases" : "Kısaltmalar",
     "Alias to S/MIME certificate mapping" : "S/MIME sertifika eşleştirmesinin kısaltması",
     "Signature" : "İmza",
     "A signature is added to the text of new messages and replies." : "Yeni ileti ve yanıtlar için bir imza eklendi.",

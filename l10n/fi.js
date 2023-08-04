@@ -60,6 +60,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "Valtuutusikkuna suljettu",
     "There was an error while setting up your account" : "Tiliä määrittäessä ilmeni virhe",
     "Account settings" : "Tilin asetukset",
+    "Aliases" : "Aliakset",
     "Signature" : "Allekirjoitus",
     "A signature is added to the text of new messages and replies." : "Allekirjoitus lisätään uusien viestien ja vastausten tekstiosaan.",
     "Writing mode" : "Kirjoitustila",

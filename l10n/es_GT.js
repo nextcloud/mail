@@ -42,6 +42,7 @@ OC.L10N.register(
     "Connect" : "Conectar",
     "Password required" : "Se requiere contraseña",
     "Account settings" : "Ajustes de la cuenta",
+    "Aliases" : "Aliases",
     "Signature" : "Firma",
     "A signature is added to the text of new messages and replies." : "Se ha añadido una firma al texto de los nuevos mensajes y respuestas.",
     "Writing mode" : "Modo de escritura",

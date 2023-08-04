@@ -40,6 +40,7 @@ OC.L10N.register(
     "Password required" : "パスワードが必要です",
     "Loading account" : "アカウントを読み込み中",
     "Account settings" : "アカウント設定",
+    "Aliases" : "別名",
     "Signature" : "署名",
     "A signature is added to the text of new messages and replies." : "署名は、新しいメッセージと返信の本文に追加されます。",
     "Writing mode" : "書き込みモード",

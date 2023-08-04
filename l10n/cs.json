@@ -64,6 +64,7 @@
     "Authorization pop-up closed" : "Vyskakovací okno s autorizací zavřeno",
     "There was an error while setting up your account" : "Při nastavování vašeho účtu došlo k chybě",
     "Account settings" : "Nastavení účtu",
+    "Aliases" : "Alternativní názvy",
     "Alias to S/MIME certificate mapping" : "Alternativní název mapování S/MIME certifikátu",
     "Signature" : "Podpis",
     "A signature is added to the text of new messages and replies." : "Podpis je přidán pod text nových zpráv a odpovědí.",

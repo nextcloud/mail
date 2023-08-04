@@ -67,6 +67,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "Authorisation pop-up closed",
     "There was an error while setting up your account" : "There was an error while setting up your account",
     "Account settings" : "Account settings",
+    "Aliases" : "Aliases",
     "Alias to S/MIME certificate mapping" : "Alias to S/MIME certificate mapping",
     "Signature" : "Signature",
     "A signature is added to the text of new messages and replies." : "A signature is added to the text of new messages and replies.",

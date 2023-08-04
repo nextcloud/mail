@@ -60,6 +60,7 @@
     "Authorization pop-up closed" : "Anmeldungs-Pop-up wurde geschlossen",
     "There was an error while setting up your account" : "Bei der Einrichtung deines Kontos ist ein Fehler aufgetreten.",
     "Account settings" : "Konto-Einstellungen",
+    "Aliases" : "Aliasse",
     "Alias to S/MIME certificate mapping" : "Alias einerm S/MIME-Zertifikat zuordnen",
     "Signature" : "Signatur",
     "A signature is added to the text of new messages and replies." : "Dem Text der Nachrichten und Antworten wird eine Signatur hinzugefügt.",

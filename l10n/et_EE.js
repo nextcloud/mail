@@ -23,6 +23,7 @@ OC.L10N.register(
     "Connecting" : "Ühendamine",
     "Save" : "Salvesta",
     "Connect" : "Ühenda",
+    "Aliases" : "Aliased",
     "Signature" : "Allkiri",
     "Go back" : "Mine tagasi",
     "Email address" : "E-posti aadress",

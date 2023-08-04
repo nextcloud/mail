@@ -63,6 +63,7 @@
     "Authorization pop-up closed" : "Fenêtre d'autorisation fermée",
     "There was an error while setting up your account" : "Une erreur s'est produite lors de la configuration de votre compte",
     "Account settings" : "Paramètres du compte",
+    "Aliases" : "Alias",
     "Alias to S/MIME certificate mapping" : "Correspondance entre l'alias et le certificat S/MIME",
     "Signature" : "Signature",
     "A signature is added to the text of new messages and replies." : "Une signature est ajoutée au texte des nouveaux messages et des réponses.",

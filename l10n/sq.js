@@ -24,6 +24,7 @@ OC.L10N.register(
     "Save" : "Ruaj",
     "Connect" : "Lidhu",
     "Password required" : "Kërkohet fjalëkalimi",
+    "Aliases" : "Emërtimet",
     "Signature" : "Nënshkrimi",
     "Go back" : "Shko prapa",
     "Cancel" : "Anullo",

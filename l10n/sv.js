@@ -42,6 +42,7 @@ OC.L10N.register(
     "Connect" : "Anslut",
     "Password required" : "Lösenord krävs",
     "Account settings" : "Kontoinställningar",
+    "Aliases" : "Alias",
     "Signature" : "Signatur",
     "A signature is added to the text of new messages and replies." : "En signatur läggs till i texten för nya meddelanden och svar.",
     "Writing mode" : "Skrivläge",

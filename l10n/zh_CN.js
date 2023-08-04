@@ -63,6 +63,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "已关闭授权弹窗",
     "There was an error while setting up your account" : "设置您的账户时出错",
     "Account settings" : "账户设置",
+    "Aliases" : "别名",
     "Alias to S/MIME certificate mapping" : "別名到 S/MIME 证书映射",
     "Signature" : "签名",
     "A signature is added to the text of new messages and replies." : "签名已经加入到新邮件及回复邮件的文本中。",

@@ -24,6 +24,7 @@ OC.L10N.register(
     "Save" : "შენახვა",
     "Connect" : "დაკავშირება",
     "Password required" : "საჭიროა პაროლი",
+    "Aliases" : "სხვანაირი სახელი",
     "Signature" : "ხელმოწერა",
     "Go back" : "უკან დაბრუნება",
     "Cancel" : "უარყოფა",

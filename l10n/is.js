@@ -36,6 +36,7 @@ OC.L10N.register(
     "Connect" : "Tengjast",
     "Password required" : "Lykilorðs er krafist",
     "Account settings" : "Stillingar notandaaðgangs",
+    "Aliases" : "Samheiti",
     "Signature" : "Undirskrift",
     "A signature is added to the text of new messages and replies." : "Undirskrift verður bætt við texta nýrra skilaboða og svarpósta.",
     "Writing mode" : "Skrifhamur",

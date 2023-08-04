@@ -24,6 +24,7 @@ OC.L10N.register(
     "Save" : "Guardar",
     "Connect" : "Conectar",
     "Password required" : "Contraseña requerida",
+    "Aliases" : "Aliases",
     "Signature" : "Firma",
     "Go back" : "Regresar",
     "Cancel" : "Cancelar",

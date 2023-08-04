@@ -57,6 +57,7 @@ OC.L10N.register(
     "SMTP connection failed" : "Не удалось установить SMTP соединение",
     "There was an error while setting up your account" : "При настройке вашей учетной записи произошла ошибка",
     "Account settings" : "Параметры учётной записи",
+    "Aliases" : "Псевдонимы",
     "Signature" : "Подпись",
     "A signature is added to the text of new messages and replies." : "Подпись будет добавлена к тексту новых писем и при написании ответов.",
     "Writing mode" : "Режим написания",

@@ -63,6 +63,7 @@
     "Authorization pop-up closed" : "Затворен је искачући прозор за ауторизацију",
     "There was an error while setting up your account" : "Дошло је до грешке током подешавања вашег налога",
     "Account settings" : "Поставке налога",
+    "Aliases" : "Алијаси",
     "Alias to S/MIME certificate mapping" : "Алијас на мапирање S/MIME сертификата",
     "Signature" : "Потпис",
     "A signature is added to the text of new messages and replies." : "Потпис је додат на текст свих нових порука и одговора.",

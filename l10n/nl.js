@@ -42,6 +42,7 @@ OC.L10N.register(
     "Connect" : "Verbinden",
     "Password required" : "Wachtwoord vereist",
     "Account settings" : "Accountinstellingen",
+    "Aliases" : "Aliassen",
     "Signature" : "Handtekening",
     "A signature is added to the text of new messages and replies." : "Een handtekening wordt toegevoegd aan de tekst van nieuwe berichten en antwoorden.",
     "Writing mode" : "Schrijfmodus",

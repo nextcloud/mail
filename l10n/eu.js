@@ -62,6 +62,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "Baimenaren pop-up itxi da",
     "There was an error while setting up your account" : "Errore bat gertatu da zure kontua konfiguratzean",
     "Account settings" : "Kontuaren ezarpenak",
+    "Aliases" : "Aliasak",
     "Alias to S/MIME certificate mapping" : "S/MIME ziurtagiriaren esleipenerako aliasa",
     "Signature" : "Sinadura",
     "A signature is added to the text of new messages and replies." : "Sinadura bat gehitzen zaio mezu berri eta erantzunen testuari.",

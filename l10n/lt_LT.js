@@ -55,6 +55,7 @@ OC.L10N.register(
     "SMTP connection failed" : "SMTP ryšys patyrė nesėkmę",
     "There was an error while setting up your account" : "Nustatant jūsų paskyrą įvyko klaida",
     "Account settings" : "Paskyros nustatymai",
+    "Aliases" : "Pseudonimai",
     "Signature" : "Parašas",
     "A signature is added to the text of new messages and replies." : "Parašas yra pridedamas į naujų ir atsakomųjų laiškų tekstą.",
     "Writing mode" : "Rašymo veiksena",

@@ -67,6 +67,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "Pechouse a xanela emerxente de autorización",
     "There was an error while setting up your account" : "Produciuse un fallo ao axustar a súa conta",
     "Account settings" : "Axustes da conta",
+    "Aliases" : "Alias",
     "Alias to S/MIME certificate mapping" : "Asignación de alias a certificado S/MIME",
     "Signature" : "Sinatura",
     "A signature is added to the text of new messages and replies." : "Engádese unha sinatura ao texto das mensaxes novas e de resposta.",

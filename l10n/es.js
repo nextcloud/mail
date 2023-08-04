@@ -63,6 +63,7 @@ OC.L10N.register(
     "Authorization pop-up closed" : "La ventana emergente de autorización fue cerrada",
     "There was an error while setting up your account" : "Se ha producido un error al configurar tu cuenta",
     "Account settings" : "Ajustes de la cuenta",
+    "Aliases" : "Alias",
     "Alias to S/MIME certificate mapping" : "Alias al mapeo del certificado S/MIME",
     "Signature" : "Firma",
     "A signature is added to the text of new messages and replies." : "Se ha añadido una firma al texto de los nuevos mensajes y respuestas.",

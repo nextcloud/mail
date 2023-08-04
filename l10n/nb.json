@@ -52,6 +52,7 @@
     "SMTP connection failed" : "SMTP tilkobling feilet",
     "There was an error while setting up your account" : "Det oppsto en feil under oppsett av kontoen din",
     "Account settings" : "Kontoinnstillinger",
+    "Aliases" : "Aliaser",
     "Signature" : "Signatur",
     "A signature is added to the text of new messages and replies." : "En signatur legges til teksten til nye meldinger og svar.",
     "Writing mode" : "Skrivemodus",

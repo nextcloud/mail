@@ -47,6 +47,7 @@
     "SMTP connection failed" : "Η σύνδεση SMTP απέτυχε",
     "There was an error while setting up your account" : "Παρουσιάστηκε σφάλμα κατά τη ρύθμιση του λογαριασμού σας",
     "Account settings" : "Ρυθμίσεις λογαριασμού",
+    "Aliases" : "Ψευδώνυμα",
     "Signature" : "Υπογραφή",
     "A signature is added to the text of new messages and replies." : "Μια υπογραφή προστίθεται στο κείμενο των νέων μηνυμάτων και των απαντήσεων.",
     "Writing mode" : "Κατάσταση επεξεργασίας",

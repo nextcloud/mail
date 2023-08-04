@@ -57,6 +57,7 @@ OC.L10N.register(
     "SMTP connection failed" : "SMTP-forbindelse mislykkedes",
     "There was an error while setting up your account" : "Der opstod en fejl under opsætning af din konto",
     "Account settings" : "Kontoindstillinger",
+    "Aliases" : "Aliases",
     "Signature" : "Underskrift",
     "A signature is added to the text of new messages and replies." : "En signatur tilføjes til teksten i nye meddelelser og svar.",
     "Writing mode" : "Skrivemåde",

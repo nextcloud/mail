@@ -57,6 +57,7 @@ OC.L10N.register(
     "SMTP connection failed" : "Pripojenie k SMTP zlyhalo",
     "There was an error while setting up your account" : "Pri nastavovaní vášho účtu sa vyskytla chyba",
     "Account settings" : "Nastavenia účtu",
+    "Aliases" : "Aliasy",
     "Signature" : "Podpis",
     "A signature is added to the text of new messages and replies." : "K textu nových správ a odpovedí sa pridá podpis.",
     "Writing mode" : "Režim písania",

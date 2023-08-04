@@ -34,6 +34,7 @@ OC.L10N.register(
     "Connect" : "Savienoties",
     "Password required" : "Nepieciešama parole",
     "Account settings" : "Konta iestatījumi",
+    "Aliases" : "Aizstājvārdi",
     "Signature" : "Paraksts",
     "Go back" : "Atpakaļ",
     "Cancel" : "Atcelt",

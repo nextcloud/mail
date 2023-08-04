@@ -40,6 +40,7 @@ OC.L10N.register(
     "Connect" : "Poveži",
     "Password required" : "Potrebna zaporka",
     "Account settings" : "Postavke računa",
+    "Aliases" : "Pseudonimi",
     "Signature" : "Potpis",
     "A signature is added to the text of new messages and replies." : "Tekstu novih poruka i odgovora dodaje se potpis.",
     "Writing mode" : "Način pisanja",
