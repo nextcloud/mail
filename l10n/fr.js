@@ -335,7 +335,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Vous essayez d'envoyer à plusieurs destinataires dans les champs To et/ou Cc. Envisagez d'utiliser Bcc pour masquer les adresses des destinataires.",
     "Message discarded" : "Message ignoré",
     "Could not discard message" : "Impossible d'ignorer le message",
-    "No message selected" : "Aucun message sélectionné",
     "Autoresponder off" : "Répondeur automatique désactivé",
     "Autoresponder on" : "Répondeur automatique activé",
     "First day" : "Premier jour",

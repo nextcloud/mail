@@ -333,7 +333,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Está intentando enviar a muchos destinatarios en Para y/o CC. Considera usar CCO para ocultar las direcciones de los destinatarios.",
     "Message discarded" : "Mensaje descartado",
     "Could not discard message" : "No se pudo descartar el mensaje",
-    "No message selected" : "Ningún mensaje seleccionado",
     "Autoresponder off" : "Autorespuestas deshabilitadas",
     "Autoresponder on" : "Autorespuestas habilitadas",
     "First day" : "Primer día",

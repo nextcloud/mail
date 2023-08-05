@@ -111,7 +111,6 @@ OC.L10N.register(
     "Retry" : "Reprovi",
     "Uploading attachments …" : "Alŝutas kunsendaĵojn...",
     "Sending …" : "Sendado...",
-    "No message selected" : "Neniu mesaĝo elektita",
     "Message" : "Mesaĝo",
     "Delete" : "Forigi",
     "Copy to clipboard" : "Kopii tondejen",

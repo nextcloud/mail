@@ -334,7 +334,6 @@
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "V kolonkách Pro a Skrytá kopie se snažíte poslat opravdu mnoha příjemcům. Zvažte použití Skryté kopie a nesdělování tak adres příjemců všem.",
     "Message discarded" : "Zpráva zahozena",
     "Could not discard message" : "Zprávu se nepodařilo zahodit",
-    "No message selected" : "Nevybrána žádná zpráva",
     "Autoresponder off" : "Automatické odpovědi vypnuty",
     "Autoresponder on" : "Automatické odpovědi zapnuty",
     "First day" : "První den",

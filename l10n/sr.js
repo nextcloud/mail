@@ -335,7 +335,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Покушавате да пошаљете поруку на превише примаоца у To и/или Cc. Размотрите употребу Bcc поља да сакријете примаоце.",
     "Message discarded" : "Порука је одбачена",
     "Could not discard message" : "Порука није могла да се одбаци",
-    "No message selected" : "Није одабрана ниједна порука",
     "Autoresponder off" : "Аутоматско слање одговора искључено",
     "Autoresponder on" : "Аутоматско слање одговора укључено",
     "First day" : "Први дан",

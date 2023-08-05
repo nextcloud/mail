@@ -227,7 +227,6 @@ OC.L10N.register(
     "Draft" : "Concept",
     "No sent mailbox configured. Please pick one in the account settings." : "Er is geen map voor verzonden berichten ingesteld. Kies er een in de accountinstellingen.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Je probeert een e-mail te versturen met veel ontvangers in Aan en /of Cc. Overweeg om Bcc te gebruiken om de adressen van de ontvangers voor elkaar te verbergen.",
-    "No message selected" : "Geen bericht geselecteerd",
     "Message" : "Bericht",
     "Oh Snap!" : "O nee!",
     "Delete" : "Verwijderen",

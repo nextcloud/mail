@@ -151,7 +151,6 @@ OC.L10N.register(
     "Retry" : "Reyna aftur",
     "Uploading attachments …" : "Sendi inn viðhengi…",
     "Sending …" : "Sendi ...",
-    "No message selected" : "Engin skilaboð valin",
     "Message" : "Skilaboð",
     "Delete" : "Eyða",
     "Copy to clipboard" : "Afrita á klippispjald",

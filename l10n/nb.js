@@ -260,7 +260,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Du prøver å sende til mange mottakere i Til og/eller Kopi. Vurder å bruke Blindkopi for å skjule mottakeradressene.",
     "Message discarded" : "Meldingen forkastet",
     "Could not discard message" : "Kunne ikke forkaste meldingen",
-    "No message selected" : "Ingen melding valgt",
     "Message" : "Melding",
     "Oh Snap!" : "Oi!",
     "Could not open outbox" : "Kunne ikke åpne utboksen",

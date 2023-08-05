@@ -261,7 +261,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Προσπαθείτε να στείλετε σε πολλούς παραλήπτες σε Προς και/ή Κοιν. Εξετάστε το ενδεχόμενο να χρησιμοποιήσετε Κρυφή κοιν. για να αποκρύψετε τις διευθύνσεις παραληπτών.",
     "Message discarded" : "Το μήνυμα απορρίφθηκε",
     "Could not discard message" : "Δεν ήταν δυνατή η απόρριψη του μηνύματος",
-    "No message selected" : "Κανένα μήνυμα δεν επελέγη",
     "Message" : "Μήνυμα",
     "Could not open outbox" : "Αδυναμία ανοίγματος εξερχομένων",
     "Pending or not sent messages will show up here" : "Εδώ εμφανίζονται μηνύματα που εκκρεμούν ή δεν έχουν σταλεί",

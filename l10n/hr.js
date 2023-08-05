@@ -219,7 +219,6 @@ OC.L10N.register(
     "Send anyway" : "Svejedno pošalji",
     "No sent mailbox configured. Please pick one in the account settings." : "Nije konfiguriran sandučić za poslanu poštu. Odaberite ga u postavkama računa.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Pokušavate poslati poruku velikom broju primatelja koji su navedeni u poljima Za i/ili Cc. Razmislite o korištenju polja Bcc kako adrese primatelja ne bi bile vidljive.",
-    "No message selected" : "Nije odabrana nijedna poruka",
     "Message" : "Poruka",
     "Oh Snap!" : "Oh Snap!",
     "Delete" : "Izbriši",

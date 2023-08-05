@@ -114,7 +114,6 @@ OC.L10N.register(
     "Retry" : "تلاش دوباره",
     "Uploading attachments …" : "درحال بارگذاری پیوستها …",
     "Sending …" : "در حال ارسال ...",
-    "No message selected" : "پیامی انتخاب نشده است",
     "Message" : "پیام",
     "Delete" : "حذف",
     "Copy to clipboard" : "کپی کردن به حافظه موقت",

@@ -279,7 +279,6 @@ OC.L10N.register(
     "No sent mailbox configured. Please pick one in the account settings." : "Ei postilaatikkoa lähetetyille määritetty. Valitse se tilin asetuksista.",
     "Message discarded" : "Viesti hylätty",
     "Could not discard message" : "Viestiä ei voitu hylätä",
-    "No message selected" : "Viestiä ei ole valittu",
     "Autoresponder off" : "Automaattivastaukset pois päältä",
     "Autoresponder on" : "Automaattivastaukset päällä",
     "First day" : "Ensimmäinen päivä",

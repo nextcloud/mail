@@ -303,7 +303,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Próbujesz wysłać do wielu odbiorców w Do i/lub DW. Rozważ użycie UDW, aby ukryć adresy odbiorców.",
     "Message discarded" : "Wiadomość odrzucona",
     "Could not discard message" : "Nie udało się odrzucić wiadomości",
-    "No message selected" : "Nie wybrano żadnej wiadomości",
     "Autoresponder off" : "Automatyczna wiadomość zwrotna wyłączona",
     "Autoresponder on" : "Automatyczna wiadomość zwrotna włączona",
     "First day" : "Pierwszy dzień",

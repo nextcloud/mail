@@ -234,7 +234,6 @@ OC.L10N.register(
     "Failed to save draft" : "Nepavyko įrašyti juodraščio",
     "Message discarded" : "Laiškas atmestas",
     "Could not discard message" : "Nepavyko atmesti laiško",
-    "No message selected" : "Nepasirinktas joks laiškas",
     "Autoresponder off" : "Atsakiklis išjungtas",
     "Autoresponder on" : "Atsakiklis įjungtas",
     "Message" : "Žinutė",

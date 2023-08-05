@@ -184,7 +184,6 @@ OC.L10N.register(
     "Uploading attachments …" : "Đang tải lên các tệp đính kèm …",
     "Sending …" : "Đang gửi …",
     "No sent mailbox configured. Please pick one in the account settings." : "Không có hộp thư đã gửi nào được định cấu hình. Vui lòng chọn một trong cài đặt tài khoản.",
-    "No message selected" : "Không có tin nhắn nào được chọn",
     "Delete" : "Xóa",
     "Contacts with this address" : "Liên hệ với địa chỉ này",
     "Add to Contact" : "Thêm liên hệ",
