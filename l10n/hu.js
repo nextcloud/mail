@@ -328,7 +328,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Sok címzettnek próbál küldeni a Címzett vagy a Másolat mezőben. Fontolja meg a Rejtett másolat használatát a címzettek elrejtéséhez.",
     "Message discarded" : "Üzenet elvetése",
     "Could not discard message" : "Nem sikerült elvetni az üzenetet",
-    "No message selected" : "Nincs kiválasztott üzenet",
     "Autoresponder off" : "Automatikus válaszoló ki",
     "Autoresponder on" : "Automatikus válaszoló be",
     "First day" : "Első nap",

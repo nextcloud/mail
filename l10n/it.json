@@ -234,7 +234,6 @@
     "Draft" : "Bozza",
     "No sent mailbox configured. Please pick one in the account settings." : "Nessuna casella di posta inviata configurata. Scegline una nelle impostazioni dell'account.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Stai tentando di inviare a troppi destinatari in A e/o CC. Considera l'idea di utilizzare CCN per nascondere gli indirizzi dei destinatari.",
-    "No message selected" : "Nessun messaggio selezionato",
     "Message" : "Messaggio",
     "Oh Snap!" : "Accidenti!",
     "Could not open outbox" : "Impossibile aprire la posta in uscita",

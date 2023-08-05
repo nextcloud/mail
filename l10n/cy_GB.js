@@ -70,7 +70,6 @@ OC.L10N.register(
     "Retry" : "Ceisio eto",
     "Uploading attachments …" : "Llwytho atodiadau ...",
     "Sending …" : "Anfon",
-    "No message selected" : "Dim neges wedi'i dewis",
     "Delete" : "Dileu",
     "Add" : "Ychwanegu",
     "Close" : "Cau",

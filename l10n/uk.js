@@ -193,7 +193,6 @@ OC.L10N.register(
     "Uploading attachments …" : "Завантаження вкладень...",
     "Sending …" : "Надсилання...",
     "Draft" : "Чернетка",
-    "No message selected" : "Жодне повідомлення не вибрано",
     "First day" : "Перший день",
     "Last day (optional)" : "Останній день (необов'язково)",
     "Message" : "Повідомлення",

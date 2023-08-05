@@ -280,7 +280,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Вы пытаетесь отправить письмо очень большому количеству получателей, указанных в полях «Кому» или «Коп». Для сокрытия адреса эл. почты получателя, укажите его в поле «Скр. коп.».",
     "Message discarded" : "Внесение изменений отменено",
     "Could not discard message" : "Не удалось отменить внесение изменений",
-    "No message selected" : "Ни одного сообщения не выбрано",
     "Message" : "Сообщение",
     "Oh Snap!" : "Ого!",
     "Could not open outbox" : "Не удалось открыть исходящие",

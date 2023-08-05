@@ -333,7 +333,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "您正在尝试给“收件人”或“抄送”中的许多人发送邮件。考虑使用“密送”来隐藏收件人地址。",
     "Message discarded" : "邮件已丢弃",
     "Could not discard message" : "无法丢弃邮件",
-    "No message selected" : "没有选择消息",
     "Autoresponder off" : "自动回复关闭",
     "Autoresponder on" : "自动回复开启",
     "First day" : "第一天",

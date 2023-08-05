@@ -22,24 +22,36 @@
 <template>
 	<AppContentDetails>
 		<NcEmptyContent
-			:title="t('mail', 'No message selected')">
+			:title="t('mail', 'Welcome to Nextcloud Mail')">
 			<template #icon>
 				<IconMail :size="65" />
 			</template>
 		</NcEmptyContent>
+		<NewMessageButtonHeader />
 	</AppContentDetails>
 </template>
 
 <script>
 import { NcAppContentDetails as AppContentDetails, NcEmptyContent } from '@nextcloud/vue'
 import IconMail from 'vue-material-design-icons/Email'
+import NewMessageButtonHeader from './NewMessageButtonHeader'
 
 export default {
 	name: 'NoMessageSelected',
 	components: {
+		NewMessageButtonHeader,
 		AppContentDetails,
 		NcEmptyContent,
 		IconMail,
 	},
 }
 </script>
+<style lang="scss" scoped>
+::v-deep .refresh__button {
+	display: none !important;
+}
+.header {
+	display: grid !important;
+	justify-content: center !important;
+}
+</style>

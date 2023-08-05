@@ -168,7 +168,6 @@ OC.L10N.register(
     "Retry" : "ניסיון חוזר",
     "Uploading attachments …" : "הקבצים המצורפים מועלים…",
     "Sending …" : "שולח...",
-    "No message selected" : "לא נבחרה הודעה",
     "Message" : "הודעה",
     "Oh Snap!" : "שוד ושבר!",
     "Delete" : "מחיקה",

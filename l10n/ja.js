@@ -188,7 +188,6 @@ OC.L10N.register(
     "Retry" : "再試行",
     "Uploading attachments …" : "添付ファイルをアップロード",
     "Sending …" : "送信中 …",
-    "No message selected" : "メッセージが選択されていません。",
     "Message" : "メッセージ",
     "Oh Snap!" : "おっと！",
     "Could not open outbox" : "送信トレイを開けませんでした",

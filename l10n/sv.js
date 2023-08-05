@@ -223,7 +223,6 @@ OC.L10N.register(
     "Send anyway" : "Skicka ändå",
     "Edit message" : "Redigera meddelande",
     "Draft" : "Utkast",
-    "No message selected" : "Inget meddelande valt",
     "Message" : "Meddelande",
     "Oh Snap!" : "Hoppsan!",
     "Could not open outbox" : "Kunde inte öppna utkorgen",

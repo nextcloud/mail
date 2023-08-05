@@ -332,7 +332,6 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "To eta / edo Cc-n hartzaile askori bidaltzen saiatzen ari zara. Hartzaileen helbideak ezkutatzeko Bcc erabili dezakezu.",
     "Message discarded" : "Mezua bertan behera utzi da",
     "Could not discard message" : "Ezin izan da mezua baztertu",
-    "No message selected" : "Ez da mezurik hautatu",
     "Autoresponder off" : "Autoerantzulea itzalita",
     "Autoresponder on" : "Autoerantzulea piztuta",
     "First day" : "Lehen eguna",

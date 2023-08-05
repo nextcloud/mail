@@ -257,7 +257,6 @@
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Се обидувате да испратите до многу примачи во До и/или Cc. Можете да користите Bcc за да ги скриете адресите на примачите.",
     "Message discarded" : "Пораката е отфрлена",
     "Could not discard message" : "Неможе да се отфрли порака",
-    "No message selected" : "Нема избрана порака",
     "Autoresponder off" : "Исклучен автоматски одговор",
     "Autoresponder on" : "Вклучен автоматски одговор",
     "First day" : "Прв ден",
