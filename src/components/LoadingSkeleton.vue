@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div v-for="i in numberOfLines" :key="i" class="item-list__entry">
-			<div
+			<div v-if="withAvatar"
 				class="item-avatar" />
 			<div class="item__details">
 				<h3>&nbsp;</h3>
