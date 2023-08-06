@@ -335,6 +335,7 @@
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "أنت تحاول الإرسال إلى العديد من المُستَلِمِين في \"إلى\" To و/أو \"نسخة كربونية\" Cc. ضع في اعتبارك إمكانية استخدام \"نسخة مَخْفِيّة الوِجْهَة\" Bcc لإخفاء عناوين المُستَلِمِين.",
     "Message discarded" : "تمّ تَجاهُل الرسالة",
     "Could not discard message" : "تعذّر تَجاهُل الرسالة",
+    "Welcome to Nextcloud Mail" : "أهلاً بكم في \"بريد نكست كلاود\" Nextcloud Mail",
     "Autoresponder off" : "تعطيل المُجِيب الآلي Autoresponde",
     "Autoresponder on" : "تفعيل المُجِيب الآلي Autoresponde",
     "First day" : "أوّل يومٍ",
