@@ -176,7 +176,7 @@ class AccountService {
 	}
 
 	/**
-	 * @return Account[]
+	 * @return MailAccount[]
 	 */
 	public function getAllAcounts(): array {
 		return $this->mapper->getAllAccounts();

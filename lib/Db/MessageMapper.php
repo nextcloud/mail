@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -1411,6 +1412,38 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('structure_analyzed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
 				$qb->expr()->in('mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY),
 			)->orderBy('sent_at', 'ASC');
+
+		return $this->findEntities($select);
+	}
+
+	/**
+	 * @param int $mailboxId
+	 * @param int $before UNIX timestamp (seconds)
+	 *
+	 * @return Message[]
+	 */
+	public function findMessagesKnownSinceBefore(int $mailboxId, int $before): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('m.*')
+			->from($this->getTableName(), 'm')
+			->join('m', 'mail_messages_retention', 'mr', $qb->expr()->eq(
+				'm.message_id',
+				'mr.message_id',
+				IQueryBuilder::PARAM_STR,
+			))
+			->where(
+				$qb->expr()->eq(
+					'm.mailbox_id',
+					$qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+				$qb->expr()->lt(
+					'mr.known_since',
+					$qb->createNamedParameter($before, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+			);
 
 		return $this->findEntities($select);
 	}

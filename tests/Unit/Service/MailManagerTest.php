@@ -36,7 +36,6 @@ use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -163,12 +162,8 @@ class MailManagerTest extends TestCase {
 	public function testDeleteMessageSourceFolderNotFound(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -187,17 +182,15 @@ class MailManagerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setTrashMailboxId(123);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
-			->willReturn($this->createMock(Mailbox::class));
+			->willReturn($mailbox);
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
@@ -222,7 +215,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -262,7 +255,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'Trash')
@@ -759,7 +752,7 @@ class MailManagerTest extends TestCase {
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,
@@ -802,7 +795,7 @@ class MailManagerTest extends TestCase {
 			->method('expunge');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,

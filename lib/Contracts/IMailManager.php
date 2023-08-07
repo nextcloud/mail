@@ -32,6 +32,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Quota;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -142,12 +143,29 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 * @param string $mailboxId
-	 * @param int $messageId
+	 * @param int $messageUid
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function deleteMessage(Account $account, string $mailboxId, int $messageId): void;
+	public function deleteMessage(Account $account, string $mailboxId, int $messageUid): void;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param int $messageUid
+	 * @param Horde_Imap_Client_Socket $client The caller is responsible to close the client.
+	 *
+	 * @throws ServiceException
+	 * @throws ClientException
+	 * @throws TrashMailboxNotSetException If no trash folder is configured for the given account.
+	 */
+	public function deleteMessageWithClient(
+		Account $account,
+		Mailbox $mailbox,
+		int $messageUid,
+		Horde_Imap_Client_Socket $client,
+	): void;
 
 	/**
 	 * Mark all messages of a folder as read

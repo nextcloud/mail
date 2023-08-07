@@ -59,6 +59,7 @@ use OCA\Mail\Listener\HamReportListener;
 use OCA\Mail\Listener\InteractionListener;
 use OCA\Mail\Listener\MailboxesSynchronizedSpecialMailboxesUpdater;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
+use OCA\Mail\Listener\MessageKnownSinceListener;
 use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\OauthTokenRefreshListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
@@ -128,6 +129,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(MessageSentEvent::class, InteractionListener::class);
 		$context->registerEventListener(MessageSentEvent::class, SaveSentMessageListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
+		$context->registerEventListener(NewMessagesSynchronized::class, MessageKnownSinceListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 

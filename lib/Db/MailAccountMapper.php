@@ -151,6 +151,9 @@ class MailAccountMapper extends QBMapper {
 		$delete->executeStatement();
 	}
 
+	/**
+	 * @return MailAccount[]
+	 */
 	public function getAllAccounts(): array {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb
