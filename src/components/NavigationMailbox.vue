@@ -56,6 +56,8 @@
 					:size="20" />
 				<IconDelete v-else-if="mailbox.databaseId === account.trashMailboxId"
 					:size="20" />
+				<IconJunk v-else-if="mailbox.databaseId === account.junkMailboxId"
+					:size="20" />
 				<IconFolderShared v-else-if="mailbox.shared"
 					:size="20" />
 				<IconFolder v-else
@@ -224,6 +226,7 @@ import IconInfo from 'vue-material-design-icons/Information'
 import IconDraft from 'vue-material-design-icons/Pencil'
 import IconArchive from 'vue-material-design-icons/PackageDown'
 import IconInbox from 'vue-material-design-icons/Home'
+import IconJunk from 'vue-material-design-icons/Fire'
 import IconAllInboxes from 'vue-material-design-icons/InboxMultiple'
 import EraserVariant from 'vue-material-design-icons/EraserVariant'
 import ImportantIcon from './icons/ImportantIcon'
@@ -263,6 +266,7 @@ export default {
 		IconFolderShared,
 		IconDraft,
 		IconArchive,
+		IconJunk,
 		IconInbox,
 		EraserVariant,
 		ImportantIcon,

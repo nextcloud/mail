@@ -242,7 +242,9 @@ class AccountsController extends Controller {
 		int $trashMailboxId = null,
 		int $archiveMailboxId = null,
 		bool $signatureAboveQuote = null,
-		int $trashRetentionDays = null): JSONResponse {
+		int $trashRetentionDays = null,
+		int $junkMailboxId = null,
+		bool $moveJunk = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -278,6 +280,13 @@ class AccountsController extends Controller {
 		if ($trashRetentionDays !== null) {
 			// Passing 0 (or lower) disables retention
 			$dbAccount->setTrashRetentionDays($trashRetentionDays <= 0 ? null : $trashRetentionDays);
+		}
+		if ($junkMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $junkMailboxId);
+			$dbAccount->setJunkMailboxId($junkMailboxId);
+		}
+		if ($moveJunk !== null) {
+			$dbAccount->setMoveJunk($moveJunk);
 		}
 		return new JSONResponse(
 			$this->accountService->save($dbAccount)

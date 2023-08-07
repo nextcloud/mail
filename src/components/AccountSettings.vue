@@ -54,7 +54,7 @@
 		<AppSettingsSection id="default-folders" :title=" t('mail', 'Default folders')">
 			<p class="settings-hint">
 				{{
-					t('mail', 'The folders to use for drafts, sent messages, deleted messages and archived messages.')
+					t('mail', 'The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages.')
 				}}
 			</p>
 			<AccountDefaultsSettings :account="account" />
@@ -64,6 +64,9 @@
 				{{ t('mail', 'Days after which messages in Trash will automatically be deleted:') }}
 			</p>
 			<TrashRetentionSettings :account="account" />
+		</AppSettingsSection>
+		<AppSettingsSection id="junk-settings" :title="t('mail', 'Junk settings')">
+			<JunkSettings :account="account" />
 		</AppSettingsSection>
 		<AppSettingsSection
 			v-if="account"
@@ -128,6 +131,7 @@ import SieveFilterForm from './SieveFilterForm'
 import OutOfOfficeForm from './OutOfOfficeForm'
 import CertificateSettings from './CertificateSettings'
 import TrashRetentionSettings from './TrashRetentionSettings'
+import JunkSettings from './JunkSettings'
 
 export default {
 	name: 'AccountSettings',
@@ -145,6 +149,7 @@ export default {
 		OutOfOfficeForm,
 		CertificateSettings,
 		TrashRetentionSettings,
+		JunkSettings,
 	},
 	props: {
 		account: {

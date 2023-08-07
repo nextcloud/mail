@@ -144,4 +144,10 @@ export const getters = {
 	},
 	getNcVersion: (state) => state.preferences?.ncVersion,
 	getAppVersion: (state) => state.preferences?.version,
+	findMailboxBySpecialRole: (state, getters) => (accountId, specialRole) => {
+		return getters.getMailboxes(accountId).find(mailbox => mailbox.specialRole === specialRole)
+	},
+	getInbox: (state, getters) => (accountId) => {
+		return getters.findMailboxBySpecialRole(accountId, 'inbox')
+	},
 }

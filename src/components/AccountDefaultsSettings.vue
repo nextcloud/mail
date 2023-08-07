@@ -41,6 +41,11 @@
 		</p>
 
 		<MailboxInlinePicker v-model="archiveMailbox" :account="account" :disabled="saving" />
+
+		<p>
+			{{ t('mail', 'Junk messages are saved in:') }}
+		</p>
+		<MailboxInlinePicker v-model="junkMailbox" :account="account" :disabled="saving" />
 	</div>
 </template>
 
@@ -166,6 +171,33 @@ export default {
 					})
 				} catch (error) {
 					logger.error('could not set archive mailbox', {
+						error,
+					})
+				} finally {
+					this.saving = false
+				}
+			},
+		},
+		junkMailbox: {
+			get() {
+				const mb = this.$store.getters.getMailbox(this.account.junkMailboxId)
+				if (!mb) {
+					return
+				}
+				return mb.databaseId
+			},
+			async set(junkMailboxId) {
+				logger.debug('setting junk mailbox to ' + junkMailboxId)
+				this.saving = true
+				try {
+					await this.$store.dispatch('patchAccount', {
+						account: this.account,
+						data: {
+							junkMailboxId,
+						},
+					})
+				} catch (error) {
+					logger.error('could not set junk mailbox', {
 						error,
 					})
 				} finally {

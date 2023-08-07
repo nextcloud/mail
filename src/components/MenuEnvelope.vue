@@ -381,8 +381,30 @@ export default {
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
 		},
-		onToggleJunk() {
-			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
+		async onToggleJunk() {
+			const removeEnvelope = await this.$store.dispatch('moveEnvelopeToJunk', this.envelope)
+
+			/**
+			 * moveEnvelopeToJunk returns true if the envelope should be moved to a different mailbox.
+			 *
+			 * Our backend (MessageMapper.move) implemented move as copy and delete.
+			 * The message is copied to another mailbox and gets a new UID; the message in the current folder is deleted.
+			 *
+			 * Trigger the delete event here to open the next envelope and remove the current envelope from the list.
+			 * The delete event bubbles up to MailboxThread.deleteMessage and is forwarded to Mailbox.onDelete to the actual implementation.
+			 *
+			 * In Mailbox.onDelete, fetchNextEnvelopes requires the current envelope to find the next envelope.
+			 * Therefore, it must run before removing the envelope.
+			 */
+
+			if (removeEnvelope) {
+				await this.$emit('delete', this.envelope.databaseId)
+			}
+
+			await this.$store.dispatch('toggleEnvelopeJunk', {
+				envelope: this.envelope,
+				removeEnvelope,
+			})
 		},
 		toggleSelected() {
 			this.$emit('update:selected')

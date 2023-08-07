@@ -961,7 +961,7 @@ export default {
 			}
 		})
 	},
-	async toggleEnvelopeJunk({ commit, getters }, envelope) {
+	async toggleEnvelopeJunk({ commit, getters }, { envelope, removeEnvelope }) {
 		return handleHttpAuthErrors(commit, async () => {
 			// Change immediately and switch back on error
 			const oldState = envelope.flags.$junk
@@ -976,6 +976,10 @@ export default {
 				value: oldState,
 			})
 
+			if (removeEnvelope) {
+				commit('removeEnvelope', { id: envelope.databaseId })
+			}
+
 			try {
 				await setEnvelopeFlags(envelope.databaseId, {
 					$junk: !oldState,
@@ -983,6 +987,10 @@ export default {
 				})
 			} catch (error) {
 				console.error('could not toggle message junk state', error)
+
+				if (removeEnvelope) {
+					commit('addEnvelope', envelope)
+				}
 
 				// Revert change
 				commit('flagEnvelope', {
@@ -1360,5 +1368,29 @@ export default {
 			await updateAccountSmimeCertificate(account.id, smimeCertificateId)
 			commit('patchAccount', { account, data: { smimeCertificateId } })
 		})
+	},
+
+	/**
+	 * Should the envelope moved to the junk (or back to inbox)
+	 *
+	 * @param {object} context Vuex store context
+	 * @param {object} context.getters Vuex store getters
+	 * @param {object} envelope envelope object@
+	 * @return {boolean}
+	 */
+	async moveEnvelopeToJunk({ getters }, envelope) {
+		const account = getters.getAccount(envelope.accountId)
+		if (account.moveJunk === false) {
+			return false
+		}
+
+		if (!envelope.flags.$junk) {
+			// move message to junk
+			return account.junkMailboxId && envelope.mailboxId !== account.junkMailboxId
+		}
+
+		const inbox = getters.getInbox(account.id)
+		// move message to inbox
+		return inbox && envelope.mailboxId !== inbox.databaseId
 	},
 }
