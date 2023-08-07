@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.4.0-alpha.3 - unreleased
+### Added
+- Move messages to junk folder
+- Implement trash retention
+- Don't open first mail by default
+
+### Fixed
+- Add loading skeletons without avatars
+- Return to primary actions if envelope actions are closed with more actions open
+- No message selected message only displayed after 30 seconds on priority inbox
+- Misc errors for emails with empty from array
+- Reply to sender only
+
 ## 3.3.0-rc.1 - unreleased
 ### Added
 - Allow a configurable background sync interval
