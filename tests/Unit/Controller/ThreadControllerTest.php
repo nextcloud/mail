@@ -32,6 +32,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrationsService;
+use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
@@ -51,12 +52,14 @@ class ThreadControllerTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var AiIntegrationsService|MockObject */
-	private $aiIntergrationsService;
-
-
 	/** @var IMailManager|MockObject */
 	private $mailManager;
+
+	/** @var SnoozeService|MockObject */
+	private $snoozeService;
+
+	/** @var AiIntegrationsService|MockObject */
+	private $aiIntergrationsService;
 
 	/** @var ThreadController */
 	private $controller;
@@ -71,8 +74,9 @@ class ThreadControllerTest extends TestCase {
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
 		$this->userId = 'john';
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->aiIntergrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->snoozeService = $this->createMock(SnoozeService::class);
+		$this->aiIntergrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->controller = new ThreadController(
@@ -81,8 +85,9 @@ class ThreadControllerTest extends TestCase {
 			$this->userId,
 			$this->accountService,
 			$this->mailManager,
+			$this->snoozeService,
 			$this->aiIntergrationsService,
-			$this->logger
+			$this->logger,
 		);
 	}
 

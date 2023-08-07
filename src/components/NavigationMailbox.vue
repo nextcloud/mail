@@ -58,6 +58,8 @@
 					:size="20" />
 				<IconJunk v-else-if="mailbox.databaseId === account.junkMailboxId"
 					:size="20" />
+				<AlarmIcon v-else-if="mailbox.name === 'Snoozed'"
+					:size="20" />
 				<IconFolderShared v-else-if="mailbox.shared"
 					:size="20" />
 				<IconFolder v-else
@@ -242,6 +244,7 @@ import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 import { showInfo } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
+import AlarmIcon from 'vue-material-design-icons/Alarm'
 
 export default {
 	name: 'NavigationMailbox',
@@ -272,6 +275,7 @@ export default {
 		ImportantIcon,
 		IconLoading,
 		MoveMailboxModal,
+		AlarmIcon,
 	},
 	directives: {
 		droppableMailbox,

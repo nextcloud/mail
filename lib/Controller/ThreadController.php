@@ -29,6 +29,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrationsService;
+use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -40,6 +41,7 @@ class ThreadController extends Controller {
 	private string $currentUserId;
 	private AccountService $accountService;
 	private IMailManager $mailManager;
+	private SnoozeService $snoozeService;
 	private AiIntegrationsService $aiIntergrationsService;
 	private LoggerInterface $logger;
 
@@ -49,12 +51,14 @@ class ThreadController extends Controller {
 		string $UserId,
 		AccountService $accountService,
 		IMailManager $mailManager,
+		SnoozeService $snoozeService,
 		AiIntegrationsService $aiIntergrationsService,
 		LoggerInterface $logger) {
 		parent::__construct($appName, $request);
 		$this->currentUserId = $UserId;
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
+		$this->snoozeService = $snoozeService;
 		$this->aiIntergrationsService = $aiIntergrationsService;
 		$this->logger = $logger;
 	}
@@ -93,29 +97,25 @@ class ThreadController extends Controller {
 	}
 
 	/**
+	 * Adds a DB Entry for the messages with a wake timestamp
+	 * Moving the messages is done in a separate request
+	 *
 	 * @NoAdminRequired
 	 *
 	 * @param int $id
+	 * @param int $unixTimestamp
 	 *
 	 * @return JSONResponse
-	 * @throws ClientException
-	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function delete(int $id): JSONResponse {
+	public function snooze(int $id, int $unixTimestamp): JSONResponse {
 		try {
-			$message = $this->mailManager->getMessage($this->currentUserId, $id);
-			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
-			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->mailManager->deleteThread(
-			$account,
-			$mailbox,
-			$message->getThreadRootId()
-		);
+		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp);
 
 		return new JSONResponse();
 	}
@@ -155,4 +155,31 @@ class ThreadController extends Controller {
 		return new JSONResponse(['data' => $summary]);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	public function delete(int $id): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$this->mailManager->deleteThread(
+			$account,
+			$mailbox,
+			$message->getThreadRootId()
+		);
+
+		return new JSONResponse();
+	}
 }

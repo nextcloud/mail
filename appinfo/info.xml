@@ -22,7 +22,7 @@ Positive:
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>3.4.0-beta.1</version>
+	<version>3.4.0-beta.2</version>
 	<licence>agpl</licence>
 	<author>Greta Doçi</author>
 	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>
@@ -48,6 +48,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<job>OCA\Mail\BackgroundJob\IMipMessageJob</job>
 		<job>OCA\Mail\BackgroundJob\DraftsJob</job>
 		<job>OCA\Mail\BackgroundJob\TrashRetentionJob</job>
+		<job>OCA\Mail\BackgroundJob\WakeJob</job>
 	</background-jobs>
 	<repair-steps>
 		<post-migration>

@@ -1447,4 +1447,38 @@ class MessageMapper extends QBMapper {
 
 		return $this->findEntities($select);
 	}
+
+	/**
+	 * Finds snoozed messages that are ready to wake since $time
+	 *
+	 * @param int $mailboxId
+	 * @param int $time UNIX timestamp (seconds)
+	 *
+	 * @return Message[]
+	 */
+	public function findMessagesToUnSnooze(int $mailboxId, int $time): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('m.*')
+			->from($this->getTableName(), 'm')
+			->join('m', 'mail_messages_snoozed', 'mr', $qb->expr()->eq(
+				'm.message_id',
+				'mr.message_id',
+				IQueryBuilder::PARAM_STR,
+			))
+			->where(
+				$qb->expr()->eq(
+					'm.mailbox_id',
+					$qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+				$qb->expr()->lt(
+					'mr.snoozed_until',
+					$qb->createNamedParameter($time, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+			);
+
+		return $this->findEntities($select);
+	}
 }

@@ -121,6 +121,16 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$mailAccount->setJunkMailboxId(null);
 			}
 		}
+		if ($mailAccount->getSnoozeMailboxId() === null || !array_key_exists($mailAccount->getSnoozeMailboxId(), $mailboxes)) {
+			try {
+				$snoozeMailbox = $this->findSpecial($mailboxes, 'snooze');
+				$mailAccount->setSnoozeMailboxId($snoozeMailbox->getId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->info("Account " . $account->getId() . " does not have an snooze mailbox");
+
+				$mailAccount->setSnoozeMailboxId(null);
+			}
+		}
 
 		$this->mailAccountMapper->update($mailAccount);
 	}
