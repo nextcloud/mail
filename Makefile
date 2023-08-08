@@ -44,7 +44,7 @@ watch-js:
 dev-setup: install-composer-deps-dev install-npm-deps-dev build-js
 
 start-docker:
-	docker pull christophwurst/imap-devel
+	docker pull ghcr.io/christophwurst/docker-imap-devel
 	docker run --name="ncmailtest" -d \
 	-p 25:25 \
 	-p 143:143 \
@@ -54,7 +54,7 @@ start-docker:
 	-e MAILNAME=mail.domain.tld \
 	-e MAIL_ADDRESS=user@domain.tld \
 	-e MAIL_PASS=mypassword \
-	christophwurst/imap-devel
+	ghcr.io/christophwurst/docker-imap-devel
 
 appstore:
 	krankerl package
