@@ -46,6 +46,8 @@ class RecipientMapperTest extends TestCase {
 	/** @var RecipientMapper */
 	private $mapper;
 
+	private LocalMessageMapper $localMessageMapper;
+
 	/** @var ITimeFactory| MockObject */
 	private $timeFactory;
 
@@ -54,7 +56,6 @@ class RecipientMapperTest extends TestCase {
 
 	/** @var LocalMessage  */
 	private $message;
-
 	/** @var MailAccount */
 	private $account;
 

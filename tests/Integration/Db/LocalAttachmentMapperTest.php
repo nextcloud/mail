@@ -57,6 +57,7 @@ class LocalAttachmentMapperTest extends TestCase {
 	private $user1 = 'user45678';
 	/** @var string  */
 	private $user2 = 'dontFindMe';
+	private array $localMessageIds;
 
 	protected function setUp(): void {
 		parent::setUp();
