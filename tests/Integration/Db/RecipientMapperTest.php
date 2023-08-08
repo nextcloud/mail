@@ -190,7 +190,7 @@ class RecipientMapperTest extends TestCase {
 		$results = $this->mapper->findByLocalMessageId($message->getId());
 		$this->assertCount(1, $results);
 
-		$message = $this->localMessageMapper->findById($message->getId(), $this->getTestAccountUserId());
+		$message = $this->localMessageMapper->findById($message->getId(), $this->getTestAccountUserId(), LocalMessage::TYPE_OUTGOING);
 
 		$pierre = new Recipient();
 		$pierre->setLabel('Pierre');

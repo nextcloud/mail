@@ -32,6 +32,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DraftsService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
@@ -147,6 +148,25 @@ class OutboxController extends Controller {
 		$this->service->saveMessage($account, $message, $to, $cc, $bcc, $attachments);
 
 		return JsonResponse::success($message, Http::STATUS_CREATED);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return JsonResponse
+	 */
+	#[TrapError]
+	public function createFromDraft(DraftsService $draftsService, int $id, int $sendAt = null): JsonResponse {
+		$draftMessage = $draftsService->getMessage($id, $this->userId);
+		// Locate the account to check authorization
+		$this->accountService->find($this->userId, $draftMessage->getAccountId());
+
+		$outboxMessage = $this->service->convertDraft($draftMessage, $sendAt);
+
+		return  JsonResponse::success(
+			$outboxMessage,
+			Http::STATUS_CREATED,
+		);
 	}
 
 	/**

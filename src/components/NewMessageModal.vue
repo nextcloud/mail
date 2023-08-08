@@ -212,7 +212,7 @@ export default {
 					let idToReturn
 					const dataForServer = this.getDataForServer(data, true)
 					if (!id) {
-						const { id } = await saveDraft(data.account, dataForServer)
+						const { id } = await saveDraft(dataForServer)
 						dataForServer.id = id
 						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId })
 						this.canSaveDraft = true
@@ -307,15 +307,24 @@ export default {
 				}
 
 				if (!this.composerData.id) {
-					const { id } = await saveDraft(data.account, dataForServer)
+					// This is a new message
+					const { id } = await saveDraft(dataForServer)
 					dataForServer.id = id
 					await this.$store.dispatch('outbox/enqueueMessage', {
 						message: dataForServer,
 					})
-				} else {
+				} else if (this.composerData.type === 0) {
+					// This is an outbox message
 					dataForServer.id = this.composerData.id
 					await this.$store.dispatch('outbox/updateMessage', {
 						message: dataForServer,
+						id: this.composerData.id,
+					})
+				} else {
+					// This is a draft
+					dataForServer.id = this.composerData.id
+					await this.$store.dispatch('outbox/enqueueFromDraft', {
+						draftMessage: dataForServer,
 						id: this.composerData.id,
 					})
 				}
