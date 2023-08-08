@@ -29,6 +29,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Http\Client\IClientService;
 use OCP\IRequest;
@@ -93,6 +94,7 @@ class ProxyController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @UserRateThrottle(limit=50, period=60)
 	 *
 	 * @param string $src
 	 *
@@ -102,6 +104,7 @@ class ProxyController extends Controller {
 	 *
 	 * @return ProxyDownloadResponse
 	 */
+	#[UserRateLimit(limit: 50, period: 60)]
 	public function proxy(string $src): ProxyDownloadResponse {
 		// close the session to allow parallel downloads
 		$this->session->close();
