@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.2.6 - 2023-08-08
+### Fixed
+- Reply to sender only
+- Account settings modal close button
+
 ## 3.2.5 - 2023-07-31
 ### Fixed
 - Make nested toolbar working for signature editor
