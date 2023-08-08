@@ -73,6 +73,19 @@ export default {
 		return message
 	},
 
+	async enqueueFromDraft({ commit }, { id, draftMessage }) {
+		const message = await OutboxService.enqueueMessageFromDraft(id, draftMessage)
+
+		commit('addMessage', { message })
+
+		// Future drafts/sends after an error should go through outbox logic
+		commit('convertComposerMessageToOutbox', { message }, {
+			root: true,
+		})
+
+		return message
+	},
+
 	async stopMessage({ commit }, { message }) {
 		commit('stopMessage', { message })
 		const updatedMessage = await OutboxService.updateMessage({

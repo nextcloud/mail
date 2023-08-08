@@ -100,16 +100,18 @@ class LocalMessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param LocalMessage::TYPE_* $type
 	 * @throws DoesNotExistException
 	 */
-	public function findById(int $id, string $userId): LocalMessage {
+	public function findById(int $id, string $userId, int $type): LocalMessage {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('m.*')
 			->from('mail_accounts', 'a')
 			->join('a', $this->getTableName(), 'm', $qb->expr()->eq('m.account_id', 'a.id'))
 			->where(
 				$qb->expr()->eq('a.user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR),
-				$qb->expr()->eq('m.id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+				$qb->expr()->eq('m.id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->eq('type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 			);
 		$entity = $this->findEntity($qb);
 		$entity->setAttachments($this->attachmentMapper->findByLocalMessageId($userId, $id));
