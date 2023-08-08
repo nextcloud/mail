@@ -379,6 +379,8 @@
 							{{ t('mail', 'Custom date and time') }}
 						</ActionRadio>
 						<ActionInput v-model="selectedDate"
+							:is-native-picker="true"
+							:min="dateToday"
 							type="datetime-local"
 							:first-day-of-week="firstDayDatetimePicker"
 							:use12h="showAmPm"
@@ -386,9 +388,6 @@
 							:format="'YYYY-MM-DD HH:mm'"
 							icon=""
 							:minute-step="5"
-							:show-second="false"
-							:disabled-date="disabledDatetimepickerDate"
-							:disabled-time="disabledDatetimepickerTime"
 							@change="onChangeSendLater(customSendTime)">
 							{{ t('mail', 'Enter a date') }}
 						</ActionInput>
@@ -681,6 +680,9 @@ export default {
 		},
 		allRecipients() {
 			return this.selectTo.concat(this.selectCc).concat(this.selectBcc)
+		},
+		dateToday() {
+			return new Date(new Date().setDate(new Date().getDate()))
 		},
 		attachmentSizeLimit() {
 			return this.$store.getters.getPreference('attachment-size-limit')
