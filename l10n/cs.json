@@ -71,7 +71,6 @@
     "Writing mode" : "Režim zápisu",
     "Preferred writing mode for new messages and replies." : "Upřednostňovaný režim psaní pro nové zprávy a odpovědi.",
     "Default folders" : "Výchozí složky",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Složky které použít pro koncepty, odeslané, smazané a archivované zprávy.",
     "Autoresponder" : "Automatická odpověď",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatická odpověď na příchozí zprávy. Pokud vám někdo pošle vícero zpráv, tato automatická odpověď bude odeslána nanejvýš co 4 dny.",
     "Please connect to a sieve server first." : "Nejprve se prosím připojte k sieve serveru.",

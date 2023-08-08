@@ -70,7 +70,6 @@ OC.L10N.register(
     "Writing mode" : "编写模式",
     "Preferred writing mode for new messages and replies." : "编写新邮件和回复邮件的首选模式。",
     "Default folders" : "默认文件夹",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "用于草稿、已发送邮件、已删除邮件和存档邮件的文件夹。",
     "Autoresponder" : "自动回复",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自动回复来件信息。如果有人向您发送多条消息，此自动回复最多每 4 天发送一次。",
     "Please connect to a sieve server first." : "请先连接到 sieve 服务器。",

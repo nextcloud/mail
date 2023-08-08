@@ -63,7 +63,6 @@ OC.L10N.register(
     "Writing mode" : "Skrivemåde",
     "Preferred writing mode for new messages and replies." : "Foretrukken skrivemåde for nye meddelelser og svar.",
     "Default folders" : "Standardmapper",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Mapper, der skal benyttes til kladder, sendte meddelser, slettede meddelser og arkiverede meddelser.",
     "Autoresponder" : "Autosvar",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på indgående beskeder. Hvis nogen sender dig flere beskeder, sendes dette automatiske svar højst én gang hver 4. dag.",
     "Please connect to a sieve server first." : "Opret forbindelse til en sieve server først.",

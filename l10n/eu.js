@@ -69,7 +69,6 @@ OC.L10N.register(
     "Writing mode" : "Editatzeko aukera gaituta",
     "Preferred writing mode for new messages and replies." : "Hobetsitako idazteko modua, mezu berri eta erantzunak idazteko.",
     "Default folders" : "Lehenetsitako karpetak",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Zirriborro, bidalitako, ezabatutako eta artxibatutako mezuentzako erabilitako karpeta.",
     "Autoresponder" : "Autoerantzulea",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Sarrerako mezuei erantzun automatikoa. Norbaitek hainbat mezu bidaltzen badizu, erantzun automatizatu hau gehienez 4 egunean behin bidaliko da.",
     "Please connect to a sieve server first." : "Konektatu sieve zerbitzari batera lehenik mesedez.",

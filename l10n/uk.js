@@ -67,7 +67,6 @@ OC.L10N.register(
     "Writing mode" : "Режим редагування",
     "Preferred writing mode for new messages and replies." : "Режим редагування нових повідомлень та відповідей, якому ви віддаєте перевагу.",
     "Default folders" : "Типові каталоги",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Каталоги для чернеток, надісланих повідомлень, видалених повідомлень та архівних повідомлень.",
     "Autoresponder" : "Автовідповідач",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматична відповідь на вхідні повідомлення. Якщо хтось надсилає вам кілька повідомлень, ця автоматична відповідь надсилатиметься щонайбільше раз на 4 дні.",
     "Please connect to a sieve server first." : "Спочатку з'єднайтеся із сервером sieve.",

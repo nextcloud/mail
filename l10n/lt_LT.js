@@ -61,7 +61,6 @@ OC.L10N.register(
     "Writing mode" : "Rašymo veiksena",
     "Preferred writing mode for new messages and replies." : "Pageidaujama rašymo veiksena naujuose laiškuose ir atsakant į laiškus.",
     "Default folders" : "Numatytieji aplankai",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Aplankai, kurie bus naudojami juodraščiams, išsiųstiems laiškams, ištrintiems laiškams ir archyvuotiems laiškams laikyti.",
     "Autoresponder" : "Atsakiklis",
     "Trusted senders" : "Patikimi siuntėjai",
     "Mail server" : "Pašto serveris",

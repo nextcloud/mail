@@ -67,7 +67,6 @@
     "Writing mode" : "Írási mód",
     "Preferred writing mode for new messages and replies." : "Előnyben részesített írási stílus az új levelekhez.",
     "Default folders" : "Alapértelmezett mappák",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "A piszkozatokhoz, az elküldött, a törölt és az archivált levelekhez használandó mappák.",
     "Autoresponder" : "Automatikus válaszoló",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatikus válasz a beérkező üzenetekre. Ha valaki több üzenetet is küld, akkor az automatikus válasz legfeljebb 4 naponta lesz elküldve.",
     "Please connect to a sieve server first." : "Először kapcsolódjon a Sieve-kiszolgálóhoz.",

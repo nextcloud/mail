@@ -74,7 +74,6 @@ OC.L10N.register(
     "Writing mode" : "Modo de escritura",
     "Preferred writing mode for new messages and replies." : "Modo de escritura preferido para novas mensaxes e respostas.",
     "Default folders" : "Cartafoles predeterminados",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Os cartafoles a usar para borradores, mensaxes enviadas, mensaxes eliminadas e mensaxes arquivadas.",
     "Autoresponder" : "Resposta automática",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Resposta automática ás mensaxes entrantes. Se alguén lle envía varias mensaxes, esta resposta automática enviarase como máximo unha vez cada 4 días.",
     "Please connect to a sieve server first." : "Conéctese antes a un servidor de peneira.",

@@ -37,7 +37,6 @@ OC.L10N.register(
     "Aliases" : "Aliasse",
     "Signature" : "Handtekening",
     "Default folders" : "Verstekvouers",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Die voeurs om vir konsepte, verstuurde boodskappe, geskrapte boodskappe en geargiveerde boodskappe te gebruik.",
     "Mail server" : "E-posbediener",
     "Go back" : "Gaan terug",
     "Email address" : "E-posadres",

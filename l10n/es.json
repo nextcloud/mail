@@ -72,7 +72,6 @@
     "Writing mode" : "Modo de escritura",
     "Preferred writing mode for new messages and replies." : "Modo preferido de escritura para nuevos mensajes y respuestas.",
     "Default folders" : "Carpetas predeterminadas",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Carpetas usadas para los borradores, mensajes enviados, mensajes eliminados y mensajes archivados.",
     "Autoresponder" : "Autorespondedor",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Respuesta automatizada a los mensajes entrantes. Si alguien le envía múltiples mensajes, esta respuesta automática se enviará al menos una vez cada 4 días.",
     "Please connect to a sieve server first." : "Por favor conéctese a un servidor sieve primero.",

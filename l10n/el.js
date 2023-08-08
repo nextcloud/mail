@@ -55,7 +55,6 @@ OC.L10N.register(
     "Writing mode" : "Κατάσταση επεξεργασίας",
     "Preferred writing mode for new messages and replies." : "Προτιμώμενη λειτουργία σύνταξης για νέα μηνύματα και απαντήσεις.",
     "Default folders" : "Προεπιλεγμένοι φάκελοι",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Οι φάκελοι που θα χρησιμοποιηθούν για πρόχειρα, απεσταλμένα, διαγραμμένα και αρχειοθετημένα μηνύματα.",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Αυτοματοποιημένη απάντηση σε εισερχόμενα μηνύματα. Εάν κάποιος σας στείλει πολλά μηνύματα, αυτή η αυτοματοποιημένη απάντηση θα αποστέλλεται το πολύ μία φορά κάθε 4 ημέρες.",
     "Trusted senders" : "Έμπιστοι αποστολείς",
     "Mail server" : "Διακομιστής αλληλογραφίας",

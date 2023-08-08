@@ -70,7 +70,6 @@
     "Writing mode" : "Режим писања",
     "Preferred writing mode for new messages and replies." : "Жељени режим писања за нове поруке и одговоре.",
     "Default folders" : "Подразумевани фолдери",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Фолдери који се користе за нацрте, послате поруке, обрисане поруке и архивисане поруке.",
     "Autoresponder" : "Аутоматско слање одговора",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Аутоматско одговарање на долазне поруке. Ако вам неко пошаље неколико порука, овај аутоматизовани одговор ће се слати највише једном у свака 4 дана.",
     "Please connect to a sieve server first." : "Молимо вас да се најпре повежете са сервером сита.",

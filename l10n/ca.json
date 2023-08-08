@@ -67,7 +67,6 @@
     "Writing mode" : "Mode d'escriptura",
     "Preferred writing mode for new messages and replies." : "Mode d'escriptura preferit per a missatges nous i respostes.",
     "Default folders" : "Carpetes per defecte",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Les carpetes que s'utilitzen per als esborranys, els missatges enviats, els missatges suprimits i els missatges arxivats.",
     "Autoresponder" : "Contestador automàtic",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Resposta automàtica als missatges entrants. Si algú t'envia diversos missatges, aquesta resposta automàtica s'enviarà com a màxim un cop cada 4 dies.",
     "Please connect to a sieve server first." : "Connecteu-vos primer a un servidor de filtrar de missatges.",

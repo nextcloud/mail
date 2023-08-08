@@ -63,7 +63,6 @@ OC.L10N.register(
     "Writing mode" : "Режим написания",
     "Preferred writing mode for new messages and replies." : "Предпочтительный режим для создания новых писем и ответов.",
     "Default folders" : "Папки по умолчанию",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Папки черновиков, отправленных и удалённых писем, а также архива сообщений.",
     "Autoresponder" : "Автоответчик",
     "Sieve filter rules" : "Правила sieve фильтра",
     "Trusted senders" : "Доверенные отправители",

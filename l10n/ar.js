@@ -74,7 +74,6 @@ OC.L10N.register(
     "Writing mode" : "وضع الكتابة",
     "Preferred writing mode for new messages and replies." : "وضع الكتابة المفضل للرسائل والردود الجديدة.",
     "Default folders" : "المُجلّدات التلقائية",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "المجلدات المراد استخدامها للمُسوّدات، و الرسائل المرسلة، و الرسائل المحذوفة، و الرسائل المؤرشفة.",
     "Autoresponder" : "المُجيب الآلي Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "الرد الآلي على الرسائل الواردة. إذا أرسل إليك شخص ما عدة رسائل، فسيتم إرسال هذا الرد التلقائي مرة واحدة كل 4 أيام على الأكثر.",
     "Please connect to a sieve server first." : "رجاءً، إتّصل بخادوم الغربال sieve أوّلاً.",

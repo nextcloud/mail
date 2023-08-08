@@ -46,7 +46,6 @@ OC.L10N.register(
     "Writing mode" : "書き込みモード",
     "Preferred writing mode for new messages and replies." : "新しいメッセージと返信に使うお好みの書き込みモード",
     "Default folders" : "デフォルトフォルダー",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "下書き、送信済みメッセージ、削除済みメッセージ、アーカイブ済みメッセージに使用するフォルダーです。",
     "Autoresponder" : "自動返信",
     "Please connect to a sieve server first." : "はじめにsieveサーバーに接続してください。",
     "Mail server" : "メールサーバー",

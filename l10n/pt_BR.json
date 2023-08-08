@@ -72,7 +72,6 @@
     "Writing mode" : "Modo de escrita",
     "Preferred writing mode for new messages and replies." : "Modo de escrita preferido para novas mensagens e respostas.",
     "Default folders" : "Pastas padrão",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "As pastas a serem usadas para rascunhos, mensagens enviadas, mensagens excluídas e mensagens arquivadas.",
     "Autoresponder" : "Resposta automática",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Responder automaticamente mensagens. Se alguém mandar-lhe vários emails, a resposta automática será enviada no máximo uma vez a cada 4 dias.",
     "Please connect to a sieve server first." : "Por favor conecte-se a um servidor sieve primeiro",

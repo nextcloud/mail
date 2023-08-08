@@ -69,7 +69,6 @@ OC.L10N.register(
     "Writing mode" : "Режим на писане",
     "Preferred writing mode for new messages and replies." : "Предпочитан режим на писане за нови съобщения и отговори.",
     "Default folders" : "Папки по подразбиране",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Папките, които ще се използват за чернови, изпратени съобщения, изтрити съобщения и архивирани съобщения.",
     "Autoresponder" : "Автоматичен отговор",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматичен отговор на входящите съобщения. Ако някой ви изпрати няколко съобщения, този автоматичен отговор ще бъде изпращан най-много веднъж на всеки 4 дни.",
     "Please connect to a sieve server first." : "Моля да се свържете първо със сървъра на ситото",

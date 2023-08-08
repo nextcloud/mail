@@ -63,7 +63,6 @@ OC.L10N.register(
     "Writing mode" : "Režim písania",
     "Preferred writing mode for new messages and replies." : "Preferovaný režim písania pre nové správy a odpovede.",
     "Default folders" : "Predvolené priečinky",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Priečinky, ktoré sa majú použiť pre koncepty, odoslané správy, odstránené správy a archivované správy.",
     "Autoresponder" : "Automatická odpoveď",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatická odpoveď na prichádzajúce správy. Ak vám niekto pošle niekoľko správ, táto automatická odpoveď bude odoslaná maximálne raz za 4 dni.",
     "Please connect to a sieve server first." : "Najprv sa pripojte k sieve serveru.",

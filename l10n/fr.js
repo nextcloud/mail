@@ -72,7 +72,6 @@ OC.L10N.register(
     "Writing mode" : "Mode d'écriture",
     "Preferred writing mode for new messages and replies." : "Mode d'écriture préféré pour les nouveaux messages et les réponses.",
     "Default folders" : "Dossiers par défaut",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "Les dossiers à utiliser pour les brouillons, les messages envoyés, les messages supprimés et les messages archivés.",
     "Autoresponder" : "Répondeur automatique",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Réponse automatisée aux messages entrants. Si quelqu'un vous envoie plusieurs messages, cette réponse automatique sera envoyée au maximum une fois tous les 4 jours.",
     "Please connect to a sieve server first." : "Merci de vous connecter d'abord à un serveur Sieve.",

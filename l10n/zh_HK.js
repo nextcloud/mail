@@ -74,7 +74,6 @@ OC.L10N.register(
     "Writing mode" : "書寫模式",
     "Preferred writing mode for new messages and replies." : "新訊息和回覆的首選書寫模式。",
     "Default folders" : "默認資料夾",
-    "The folders to use for drafts, sent messages, deleted messages and archived messages." : "用於存儲草稿，已發送郵件，已刪除郵件和已封存郵件的資料夾。",
     "Autoresponder" : "自動回復程式",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自動回覆收到的訊息。如果有人向您發送多個訊息，此自動回覆最多每 4 天傳送一次。",
     "Please connect to a sieve server first." : "請先連接到篩網伺服器。",
