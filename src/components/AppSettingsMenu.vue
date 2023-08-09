@@ -275,15 +275,24 @@ p.app-settings {
 	background-position: 10px center;
 	text-align: left;
 	margin-top: 6px;
+	width: 100%;
 }
 .app-settings-button.button.primary.new-button {
 	color: var(--color-primary-element-text);
 	//this style will be removed after we migrate also the  'add mail account' to material design
 	padding-left: 34px;
 	gap: 4px;
+	width: fit-content;
 }
 .app-settings-link {
 	text-decoration: underline;
+}
+::v-deep .button-vue__text {
+	text-overflow: clip;
+	white-space: normal;
+}
+::v-deep .button-vue__wrapper {
+	justify-content: flex-start;
 }
 .mailvelope-section {
 	padding-top: 15px;
@@ -300,11 +309,5 @@ p.app-settings {
 			box-shadow: 0 0 0 1px var(--color-primary-element);
 		}
 	}
-}
-.material-design-icon {
-	&.lock-icon {
-		margin-right: 10px;
-	}
-
 }
 </style>
