@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.3.0-rc.1 - unreleased
+## 3.3.0-rc.2 - unreleased
 ### Added
 - Allow a configurable background sync interval
 - Send multiple flags in a single request
@@ -41,6 +41,13 @@ All notable changes to this project will be documented in this file.
 - Mailboxes not being synced due to short circuiting
 - Handle attachments without transfer encoding properly
 - Account settings modal close button
+- Alignment for settings buttons and it's icons
+- Add image proxy rate limit
+- Add native picker for send later
+- Convert drafts to outbox messages before sending
+- Harden outbox/draft message retrieval of shared storage
+- Reply to sender only
+
 
 ### Changed
 - Ethical AI rating
