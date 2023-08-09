@@ -28,6 +28,7 @@ namespace OCA\Mail\Settings;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
+use OCA\Mail\Service\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -49,19 +50,22 @@ class AdminSettings implements ISettings {
 	private GoogleIntegration $googleIntegration;
 	private MicrosoftIntegration $microsoftIntegration;
 	private IConfig $config;
+	private AiIntegrationsService $aiIntegrationsService;
 
 	public function __construct(IInitialStateService $initialStateService,
 		ProvisioningManager $provisioningManager,
 		AntiSpamService $antiSpamService,
 		GoogleIntegration $googleIntegration,
 		MicrosoftIntegration $microsoftIntegration,
-		IConfig $config) {
+		IConfig $config,
+		AiIntegrationsService $aiIntegrationsService) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
 		$this->googleIntegration = $googleIntegration;
 		$this->microsoftIntegration = $microsoftIntegration;
 		$this->config = $config;
+		$this->aiIntegrationsService = $aiIntegrationsService;
 	}
 
 	public function getForm() {
@@ -85,6 +89,19 @@ class AdminSettings implements ISettings {
 			'allow_new_mail_accounts',
 			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
 		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'enabled_thread_summary',
+			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'enabled_llm_backend',
+			$this->aiIntegrationsService->isLlmAvailable()
+		);
+
 		$this->initialStateService->provideLazyInitialState(
 			Application::APP_ID,
 			'ldap_aliases_integration',

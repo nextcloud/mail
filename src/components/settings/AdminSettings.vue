@@ -150,6 +150,20 @@
 				</p>
 			</article>
 		</div>
+		<div v-if="isLlmConfigured"
+			class="app-description">
+			<h3>{{ t('mail', 'Enable thread summary') }}</h3>
+			<article>
+				<p>
+					<NcCheckboxRadioSwitch
+						:checked.sync="enabledThreadSummary"
+						type="switch"
+						@update:checked="updateEnabledThreadSummary">
+						{{ t('mail','Enable thread summaries') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
 		<div class="app-description">
 			<h3>
 				{{
@@ -264,7 +278,7 @@ import {
 	updateProvisioningSettings,
 	provisionAll,
 	updateAllowNewMailAccounts,
-
+	updateEnabledThreadSummary,
 } from '../../service/SettingsService'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
@@ -324,6 +338,8 @@ export default {
 				loading: false,
 			},
 			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
+			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
+			isLlmConfigured: loadState('mail', 'enabled_llm_backend'),
 		}
 	},
 	methods: {
@@ -376,6 +392,9 @@ export default {
 		},
 		async updateAllowNewMailAccounts(checked) {
 			await updateAllowNewMailAccounts(checked)
+		},
+		async updateEnabledThreadSummary(checked) {
+			await updateEnabledThreadSummary(checked)
 		},
 	},
 }

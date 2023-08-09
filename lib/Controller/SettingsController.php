@@ -34,22 +34,29 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IRequest;
+use OCP\TextProcessing\IManager;
+use OCP\TextProcessing\SummaryTaskType;
+use Psr\Container\ContainerInterface;
+
 use function array_merge;
 
 class SettingsController extends Controller {
 	private ProvisioningManager $provisioningManager;
 	private AntiSpamService $antiSpamService;
+	private ContainerInterface $container;
 
 	private IConfig $config;
 
 	public function __construct(IRequest $request,
 		ProvisioningManager $provisioningManager,
 		AntiSpamService $antiSpamService,
-		IConfig $config) {
+		IConfig $config,
+		ContainerInterface $container) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
 		$this->config = $config;
+		$this->container = $container;
 	}
 
 	public function index(): JSONResponse {
@@ -118,5 +125,18 @@ class SettingsController extends Controller {
 
 	public function setAllowNewMailAccounts(bool $allowed) {
 		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
+	}
+
+	public function setEnabledThreadSummary(bool $enabled) {
+		$this->config->setAppValue('mail', 'enabled_thread_summary', $enabled ? 'yes' : 'no');
+	}
+
+	public function isLlmConfigured() {
+		try {
+			$manager = $this->container->get(IManager::class);
+		} catch (\Throwable $e) {
+			return new JSONResponse(['data' => false]);
+		}
+		return new JSONResponse(['data' => in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)]);
 	}
 }
