@@ -34,6 +34,7 @@ use OCA\Mail\Service\AutoConfig\IspDb;
 use OCA\Mail\Service\AutoConfig\MxRecord;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\IRequest;
 use OCP\Security\IRemoteHostValidator;
 use function in_array;
@@ -60,10 +61,12 @@ class AutoConfigController extends Controller {
 	 * @param string $email
 	 *
 	 * @NoAdminRequired
+	 * @UserRateThrottle(limit: 5, period: 60)
 	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[UserRateLimit(limit: 5, period: 60)]
 	public function queryIspdb(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
 		if (!$rfc822Address->valid || !$this->hostValidator->isValid($rfc822Address->host)) {
@@ -78,10 +81,12 @@ class AutoConfigController extends Controller {
 	 * @param string $email
 	 *
 	 * @NoAdminRequired
+	 * @UserRateThrottle(limit: 5, period: 60)
 	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[UserRateLimit(limit: 5, period: 60)]
 	public function queryMx(string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
 		if (!$rfc822Address->valid || !$this->hostValidator->isValid($rfc822Address->host)) {
@@ -98,10 +103,12 @@ class AutoConfigController extends Controller {
 	 * @param int $port
 	 *
 	 * @NoAdminRequired
+	 * @UserRateThrottle(limit: 10, period: 60)
 	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[UserRateLimit(limit: 10, period: 60)]
 	public function testConnectivity(string $host, int $port): JsonResponse {
 		if (!in_array($port, [143, 993, 465, 587])) {
 			return JsonResponse::fail('Port not allowed');
