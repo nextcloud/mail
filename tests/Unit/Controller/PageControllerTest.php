@@ -31,7 +31,7 @@ use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\AiIntegrationsService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
