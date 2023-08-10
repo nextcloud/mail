@@ -242,4 +242,50 @@ class ThreadControllerTest extends TestCase {
 
 		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
 	}
+
+	public function testSummarizeThread(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(1);
+		$this->accountService
+				->expects(self::once())
+				->method('find')
+				->with('john', 1)
+				->willReturn(new Account($mailAccount));
+		$mailbox = new Mailbox();
+		$mailbox->setId(20);
+		$mailbox->setAccountId($mailAccount->getId());
+		$this->mailManager
+			->method('getMailbox')
+			->willReturn($mailbox);
+		$message1 = new Message();
+		$message1->setId(300);
+		$message1->setMailboxId($mailbox->getId());
+		$message1->setPreviewText('message1');
+		$message1->setThreadRootId('some-thread-root-id-1');
+
+		$message2 = new Message();
+		$message2->setId(301);
+		$message2->setMailboxId($mailbox->getId());
+		$message2->setThreadRootId('some-thread-root-id-1');
+
+		$message3 = new Message();
+		$message3->setId(302);
+		$message3->setMailboxId($mailbox->getId());
+		$message3->setThreadRootId('some-thread-root-id-1');
+
+		$this->mailManager
+			->method('getMessage')
+			->willReturn($message1);
+		$this->aiIntergrationsService
+			->expects(self::once())
+			->method('summarizeThread')
+			->willReturn('example summary');
+
+
+		$response = $this->controller->summarize(300);
+		$this->assertEquals(Http::STATUS_OK, $response->getStatus());
+		$this->assertEquals(['data' => 'example summary'], $response->getData());
+
+	}
+
 }
