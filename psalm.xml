@@ -19,6 +19,11 @@
 		<directory name="lib/Vendor" />
     </extraFiles>
 	<issueHandlers>
+		<UndefinedAttributeClass>
+			<errorLevel type="info">
+				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
+			</errorLevel>
+		</UndefinedAttributeClass>
 		<UndefinedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Platforms\MySQLPlatform" />
