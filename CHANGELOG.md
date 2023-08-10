@@ -1,11 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-alpha.3 - unreleased
+## 3.4.0-beta.1 - unreleased
 ### Added
 - Move messages to junk folder
 - Implement trash retention
 - Don't open first mail by default
+- Thread summary ui
 
 ### Fixed
 - Add loading skeletons without avatars
@@ -13,6 +14,11 @@ All notable changes to this project will be documented in this file.
 - No message selected message only displayed after 30 seconds on priority inbox
 - Misc errors for emails with empty from array
 - Reply to sender only
+- Rate limit auto config attempts
+- Alignment for settings buttons and it's icons
+- Add image proxy rate limit
+- Add native picker for send later
+- Convert drafts to outbox messages before sending
 
 ## 3.3.0-rc.1 - unreleased
 ### Added
