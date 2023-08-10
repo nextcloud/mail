@@ -41,6 +41,11 @@
 		</p>
 
 		<MailboxInlinePicker v-model="archiveMailbox" :account="account" :disabled="saving" />
+		<p>
+			{{ t('mail', 'Snoozed messages are moved in:') }}
+		</p>
+
+		<MailboxInlinePicker v-model="snoozeMailbox" :account="account" :disabled="saving" />
 
 		<p>
 			{{ t('mail', 'Junk messages are saved in:') }}
@@ -198,6 +203,33 @@ export default {
 					})
 				} catch (error) {
 					logger.error('could not set junk mailbox', {
+						error,
+					})
+				} finally {
+					this.saving = false
+				}
+			},
+		},
+		snoozeMailbox: {
+			get() {
+				const mb = this.$store.getters.getMailbox(this.account.snoozeMailboxId)
+				if (!mb) {
+					return
+				}
+				return mb.databaseId
+			},
+			async set(snoozeMailboxId) {
+				logger.debug('setting snooze mailbox to ' + snoozeMailboxId)
+				this.saving = true
+				try {
+					await this.$store.dispatch('patchAccount', {
+						account: this.account,
+						data: {
+							snoozeMailboxId,
+						},
+					})
+				} catch (error) {
+					logger.error('could not set snooze mailbox', {
 						error,
 					})
 				} finally {

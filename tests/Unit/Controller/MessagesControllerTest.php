@@ -50,6 +50,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -133,6 +134,8 @@ class MessagesControllerTest extends TestCase {
 	private $clientFactory;
 	private IDkimService $dkimService;
 
+	private SnoozeService $snoozeService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -155,6 +158,7 @@ class MessagesControllerTest extends TestCase {
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->dkimService = $this->createMock(IDkimService::class);
+		$this->snoozeService = $this->createMock(SnoozeService::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -184,6 +188,7 @@ class MessagesControllerTest extends TestCase {
 			$this->smimeService,
 			$this->clientFactory,
 			$this->dkimService,
+			$this->snoozeService,
 		);
 
 		$this->account = $this->createMock(Account::class);

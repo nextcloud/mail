@@ -79,7 +79,8 @@ class MailAccountTest extends TestCase {
 			'quotaPercentage' => 10,
 			'trashRetentionDays' => 60,
 			'junkMailboxId' => null,
-			'moveJunk' => false
+			'moveJunk' => false,
+			'snoozeMailboxId' => null
 		], $a->toJson());
 	}
 
@@ -115,6 +116,7 @@ class MailAccountTest extends TestCase {
 			'trashRetentionDays' => 60,
 			'junkMailboxId' => null,
 			'moveJunk' => false,
+			'snoozeMailboxId' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

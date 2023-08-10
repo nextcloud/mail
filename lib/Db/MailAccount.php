@@ -80,6 +80,8 @@ use OCP\AppFramework\Db\Entity;
  * @method int|null getTrashMailboxId()
  * @method void setArchiveMailboxId(?int $id)
  * @method int|null getArchiveMailboxId()
+ * @method void setSnoozeMailboxId(?int $id)
+ * @method int|null getSnoozeMailboxId()
  * @method bool|null isSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -154,6 +156,9 @@ class MailAccount extends Entity {
 
 	/** @var int|null */
 	protected $archiveMailboxId;
+
+	/** @var int|null */
+	protected $snoozeMailboxId;
 
 	/** @var bool */
 	protected $sieveEnabled = false;
@@ -254,6 +259,7 @@ class MailAccount extends Entity {
 		$this->addType('sentMailboxId', 'integer');
 		$this->addType('trashMailboxId', 'integer');
 		$this->addType('archiveMailboxId', 'integer');
+		$this->addType('snoozeMailboxId', 'integer');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('signatureAboveQuote', 'boolean');
@@ -288,6 +294,7 @@ class MailAccount extends Entity {
 			'sentMailboxId' => $this->getSentMailboxId(),
 			'trashMailboxId' => $this->getTrashMailboxId(),
 			'archiveMailboxId' => $this->getArchiveMailboxId(),
+			'snoozeMailboxId' => $this->getSnoozeMailboxId(),
 			'sieveEnabled' => ($this->isSieveEnabled() === true),
 			'signatureAboveQuote' => ($this->isSignatureAboveQuote() === true),
 			'signatureMode' => $this->getSignatureMode(),

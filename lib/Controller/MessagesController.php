@@ -50,6 +50,7 @@ use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -86,6 +87,7 @@ class MessagesController extends Controller {
 	private SmimeService $smimeService;
 	private IMAPClientFactory $clientFactory;
 	private IDkimService $dkimService;
+	private SnoozeService $snoozeService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -104,7 +106,8 @@ class MessagesController extends Controller {
 		IMailTransmission $mailTransmission,
 		SmimeService $smimeService,
 		IMAPClientFactory $clientFactory,
-		IDkimService $dkimService) {
+		IDkimService $dkimService,
+		SnoozeService $snoozeService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -122,6 +125,7 @@ class MessagesController extends Controller {
 		$this->smimeService = $smimeService;
 		$this->clientFactory = $clientFactory;
 		$this->dkimService = $dkimService;
+		$this->snoozeService = $snoozeService;
 	}
 
 	/**
@@ -375,6 +379,30 @@ class MessagesController extends Controller {
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+		return new JSONResponse();
+	}
+
+	/**
+	 * Adds a DB Entry for the message with a wake timestamp
+	 * Moving the message is done in a separate request
+	 *
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 * @param int $unixTimestamp
+	 *
+	 * @return JSONResponse
+	 */
+	#[TrapError]
+	public function snooze(int $id, int $unixTimestamp): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$this->snoozeService->snoozeMessage($message, $unixTimestamp);
+
 		return new JSONResponse();
 	}
 

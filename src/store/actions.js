@@ -75,6 +75,7 @@ import {
 	removeEnvelopeTag,
 	setEnvelopeFlags,
 	setEnvelopeTag,
+	snoozeMessage,
 	syncEnvelopes,
 	updateEnvelopeTag,
 } from '../service/MessageService'
@@ -1185,6 +1186,12 @@ export default {
 			commit('removeMessage', { id })
 		})
 	},
+	// Only adds DB entry, moving the message is done in a separate request
+	async snoozeMessage({ commit }, { id, unixTimestamp }) {
+		return handleHttpAuthErrors(commit, async () => {
+			await snoozeMessage(id, unixTimestamp)
+		})
+	},
 	async fetchActiveSieveScript({ commit }, { accountId }) {
 		return handleHttpAuthErrors(commit, async () => {
 			const scriptData = await getActiveScript(accountId)
@@ -1272,6 +1279,12 @@ export default {
 				console.error('could not move thread', e)
 				throw e
 			}
+		})
+	},
+	// Only adds DB entry, moving the messages is done in a separate request
+	async snoozeThread({ getters, commit }, { envelope, unixTimestamp }) {
+		return handleHttpAuthErrors(commit, async () => {
+			await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp)
 		})
 	},
 

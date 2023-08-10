@@ -226,6 +226,7 @@ class AccountsController extends Controller {
 	 * @param int|null $sentMailboxId
 	 * @param int|null $trashMailboxId
 	 * @param int|null $archiveMailboxId
+	 * @param int|null $snoozeMailboxId
 	 * @param bool|null $signatureAboveQuote
 	 *
 	 * @return JSONResponse
@@ -241,6 +242,7 @@ class AccountsController extends Controller {
 		int $sentMailboxId = null,
 		int $trashMailboxId = null,
 		int $archiveMailboxId = null,
+		int $snoozeMailboxId = null,
 		bool $signatureAboveQuote = null,
 		int $trashRetentionDays = null,
 		int $junkMailboxId = null,
@@ -264,6 +266,10 @@ class AccountsController extends Controller {
 		if ($archiveMailboxId !== null) {
 			$this->mailManager->getMailbox($this->currentUserId, $archiveMailboxId);
 			$dbAccount->setarchiveMailboxId($archiveMailboxId);
+		}
+		if ($snoozeMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $snoozeMailboxId);
+			$dbAccount->setSnoozeMailboxId($snoozeMailboxId);
 		}
 		if ($editorMode !== null) {
 			$dbAccount->setEditorMode($editorMode);

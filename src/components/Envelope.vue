@@ -81,7 +81,7 @@
 				fill-color="var(--color-primary-element)" />
 		</template>
 		<template #actions>
-			<EnvelopePrimaryActions v-if="!moreActionsOpen">
+			<EnvelopePrimaryActions v-if="!moreActionsOpen && !snoozeOptions">
 				<ActionButton v-if="hasWriteAcl"
 					class="action--primary"
 					:close-after-click="true"
@@ -123,7 +123,7 @@
 					}}
 				</ActionButton>
 			</EnvelopePrimaryActions>
-			<template v-if="!moreActionsOpen">
+			<template v-if="!moreActionsOpen && !snoozeOptions">
 				<ActionText>
 					<template #icon>
 						<ClockOutlineIcon
@@ -165,6 +165,18 @@
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
+				<ActionButton
+					:close-after-click="false"
+					@click="showSnoozeOptions">
+					<template #icon>
+						<AlarmIcon
+							:title="t('mail', 'Snooze')"
+							:size="20" />
+					</template>
+					{{
+						t('mail', 'Snooze')
+					}}
+				</ActionButton>
 				<ActionButton v-if="hasDeleteAcl"
 					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
@@ -194,12 +206,56 @@
 					{{ t('mail', 'Delete thread') }}
 				</ActionButton>
 				<ActionButton :close-after-click="false"
-					@click="moreActionsOpen=true">
+					@click="showMoreActionOptions">
 					<template #icon>
 						<DotsHorizontalIcon
 							:size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
+				</ActionButton>
+			</template>
+			<template v-if="snoozeOptions">
+				<ActionButton
+					:close-after-click="false"
+					@click="snoozeOptions = false">
+					<template #icon>
+						<ChevronLeft
+							:size="20" />
+					</template>
+					{{
+						t('mail', 'Back')
+					}}
+				</ActionButton>
+
+				<NcActionSeparator />
+
+				<ActionButton v-for="option in reminderOptions"
+					:key="option.key"
+					:aria-label="option.ariaLabel"
+					close-after-click
+					@click.stop="onSnooze(option.timestamp)">
+					{{ option.label }}
+				</ActionButton>
+
+				<NcActionSeparator />
+
+				<NcActionInput type="datetime-local"
+					is-native-picker
+					:value="customSnoozeDateTime"
+					:min="new Date()"
+					@change="setCustomSnoozeDateTime">
+					<template #icon>
+						<CalendarClock :size="20" />
+					</template>
+				</NcActionInput>
+
+				<ActionButton :aria-label="t('spreed', 'Set custom snooze')"
+					close-after-click
+					@click.stop="setCustomSnooze(customSnoozeDateTime)">
+					<template #icon>
+						<CheckIcon :size="20" />
+					</template>
+					{{ t('spreed', 'Set custom snooze') }}
 				</ActionButton>
 			</template>
 			<template v-if="moreActionsOpen">
@@ -275,7 +331,13 @@
 	</ListItem>
 </template>
 <script>
-import { NcListItem as ListItem, NcActionButton as ActionButton, NcActionLink as ActionLink, NcActionSeparator as ActionSeparator, NcActionText as ActionText } from '@nextcloud/vue'
+import {
+	NcListItem as ListItem,
+	NcActionButton as ActionButton,
+	NcActionLink as ActionLink,
+	NcActionSeparator as ActionSeparator,
+	NcActionText as ActionText,
+} from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import Avatar from './Avatar'
 import IconCreateEvent from 'vue-material-design-icons/Calendar'
@@ -290,7 +352,7 @@ import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { shortRelativeDatetime, messageDateTime } from '../util/shortRelativeDatetime'
-import { showError } from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 import logger from '../logger'
@@ -317,6 +379,11 @@ import { generateUrl } from '@nextcloud/router'
 import { isPgpText } from '../crypto/pgp'
 import { mailboxHasRights } from '../util/acl'
 import DownloadIcon from 'vue-material-design-icons/Download'
+import NcActionSeparator from '@nextcloud/vue/dist/Components/NcActionSeparator'
+import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
+import CalendarClock from 'vue-material-design-icons/CalendarClock'
+import AlarmIcon from 'vue-material-design-icons/Alarm'
+import moment from '@nextcloud/moment'
 
 export default {
 	name: 'Envelope',
@@ -354,6 +421,10 @@ export default {
 		ActionText,
 		DownloadIcon,
 		ClockOutlineIcon,
+		NcActionSeparator,
+		NcActionInput,
+		CalendarClock,
+		AlarmIcon,
 	},
 	directives: {
 		draggableEnvelope: DraggableEnvelopeDirective,
@@ -399,6 +470,8 @@ export default {
 			showTaskModal: false,
 			showTagModal: false,
 			moreActionsOpen: false,
+			snoozeOptions: false,
+			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
 		}
 	},
 	computed: {
@@ -545,6 +618,52 @@ export default {
 		archiveMailbox() {
 			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
 		},
+		reminderOptions() {
+			const currentDateTime = moment()
+
+			// Same day 18:00 PM (or hidden)
+			const laterTodayTime = (currentDateTime.hour() < 18)
+				? moment().hour(18)
+				: null
+
+			// Tomorrow 08:00 AM
+			const tomorrowTime = moment().add(1, 'days').hour(8)
+
+			// Saturday 08:00 AM (or hidden)
+			const thisWeekendTime = (currentDateTime.day() !== 6 && currentDateTime.day() !== 0)
+				? moment().day(6).hour(8)
+				: null
+
+			// Next Monday 08:00 AM
+			const nextWeekTime = moment().add(1, 'weeks').day(1).hour(8)
+
+			return [
+				{
+					key: 'laterToday',
+					timestamp: this.getTimestamp(laterTodayTime),
+					label: t('spreed', 'Later today – {timeLocale}', { timeLocale: laterTodayTime?.format('LT') }),
+					ariaLabel: t('spreed', 'Set reminder for later today'),
+				},
+				{
+					key: 'tomorrow',
+					timestamp: this.getTimestamp(tomorrowTime),
+					label: t('spreed', 'Tomorrow – {timeLocale}', { timeLocale: tomorrowTime?.format('ddd LT') }),
+					ariaLabel: t('spreed', 'Set reminder for tomorrow'),
+				},
+				{
+					key: 'thisWeekend',
+					timestamp: this.getTimestamp(thisWeekendTime),
+					label: t('spreed', 'This weekend – {timeLocale}', { timeLocale: thisWeekendTime?.format('ddd LT') }),
+					ariaLabel: t('spreed', 'Set reminder for this weekend'),
+				},
+				{
+					key: 'nextWeek',
+					timestamp: this.getTimestamp(nextWeekTime),
+					label: t('spreed', 'Next week – {timeLocale}', { timeLocale: nextWeekTime?.format('ddd LT') }),
+					ariaLabel: t('spreed', 'Set reminder for next week'),
+				},
+			].filter(option => option.timestamp !== null)
+		},
 	},
 	methods: {
 		setSelected(value) {
@@ -633,6 +752,14 @@ export default {
 				}))
 			}
 		},
+		showMoreActionOptions() {
+			this.snoozeOptions = false
+			this.moreActionsOpen = true
+		},
+		showSnoozeOptions() {
+			this.snoozeOptions = true
+			this.moreActionsOpen = false
+		},
 		async onArchive() {
 			// Remove from selection first
 			this.setSelected(false)
@@ -647,6 +774,25 @@ export default {
 			} catch (error) {
 				logger.error('could not archive message', error)
 				showError(t('mail', 'Could not archive message'))
+			}
+		},
+		async onSnooze(timestamp) {
+			// Remove from selection first
+			this.setSelected(false)
+
+			try {
+				await this.$store.dispatch('snoozeThread', {
+					envelope: this.data,
+					unixTimestamp: timestamp / 1000,
+				})
+				await this.$store.dispatch('moveThread', {
+					envelope: this.data,
+					destMailboxId: this.account.snoozeMailboxId,
+				})
+				showSuccess(t('mail', 'Thread was snoozed'))
+			} catch (error) {
+				logger.error('could not snooze thread', error)
+				showError(t('mail', 'Could not snooze thread'))
 			}
 		},
 		async onOpenEditAsNew() {
@@ -672,6 +818,15 @@ export default {
 		},
 		onCloseTagModal() {
 			this.showTagModal = false
+		},
+		getTimestamp(momentObject) {
+			return momentObject?.minute(0).second(0).millisecond(0).valueOf() || null
+		},
+		setCustomSnoozeDateTime(event) {
+			this.customSnoozeDateTime = new Date(event.target.value)
+		},
+		setCustomSnooze() {
+			this.onSnooze(this.customSnoozeDateTime.valueOf())
 		},
 	},
 }
