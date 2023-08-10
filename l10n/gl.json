@@ -162,7 +162,7 @@
     "Choose a file to share as a link" : "Escolla un ficheiro para compartir como ligazón",
     "_{count} attachment_::_{count} attachments_" : ["{count} anexo","{count} anexos"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["O anexo supera o tamaño permitido de {size}. No canto diso lugar, comparta o ficheiro mediante ligazón.","Os anexos superan o tamaño permitido de {size}. No canto diso lugar, comparta os ficheiros mediante ligazón."],
-    "Expand composer" : "Expandir o compositor",
+    "Expand composer" : "Estender o compositor",
     "Close composer" : "Pechar o compositor",
     "Untitled message" : "Mensaxe sen título",
     "Confirm" : "Confirmar",
