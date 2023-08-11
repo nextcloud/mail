@@ -239,14 +239,14 @@ export function moveMessage(id, destFolderId) {
 	})
 }
 
-// Only adds DB entry, moving the message is done in a separate request
-export function snoozeMessage(id, unixTimestamp) {
+export function snoozeMessage(id, unixTimestamp, destMailboxId) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/snooze', {
 		id,
 	})
 
 	return axios.post(url, {
 		unixTimestamp,
+		destMailboxId,
 	})
 }
 

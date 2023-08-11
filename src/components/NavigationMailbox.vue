@@ -58,7 +58,7 @@
 					:size="20" />
 				<IconJunk v-else-if="mailbox.databaseId === account.junkMailboxId"
 					:size="20" />
-				<AlarmIcon v-else-if="mailbox.name === 'Snoozed'"
+				<AlarmIcon v-else-if="mailbox.databaseId === account.snoozeMailboxId"
 					:size="20" />
 				<IconFolderShared v-else-if="mailbox.shared"
 					:size="20" />
