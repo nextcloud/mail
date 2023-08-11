@@ -1,12 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-beta.1 - unreleased
+## 3.4.0-beta.2 - unreleased
 ### Added
-- Move messages to junk folder
-- Implement trash retention
-- Don't open first mail by default
-- Thread summary ui
+- Thread summaries
+- Snooze
+- Trash retention
+- Move junk messages to junk mailbox
 
 ### Fixed
 - Add loading skeletons without avatars
@@ -19,6 +19,9 @@ All notable changes to this project will be documented in this file.
 - Add image proxy rate limit
 - Add native picker for send later
 - Convert drafts to outbox messages before sending
+
+### Changed
+- Don't open first mail by default
 
 ## 3.3.0-rc.1 - unreleased
 ### Added
