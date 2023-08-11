@@ -80,7 +80,7 @@ class ThreadMapper extends QBMapper {
 			->from($this->tableName, 'messages')
 			->where(
 				$qb->expr()->eq('messages.thread_root_id', $qb->createNamedParameter($threadRootId, IQueryBuilder::PARAM_STR)),
-			);
+			)->groupBy('messages.message_id');
 
 		$result = $qb->executeQuery();
 		$rows = array_map(static function (array $row) {
