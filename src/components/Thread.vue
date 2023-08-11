@@ -325,7 +325,6 @@ export default {
 	// so we have to manually set left/right padding to chidren
 	// for 100% to be used
 	box-sizing: content-box !important;
-	height: 44px;
 	width: 100%;
 
 	z-index: 100;
@@ -347,11 +346,14 @@ export default {
 	flex: 1 1 auto;
 	h2,
 	p {
+		padding-bottom: 7px;
+		margin-bottom: 0;
+	}
+
+	p {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		padding-bottom: 7px;
-		margin-bottom: 0;
 	}
 
 	.transparency {
