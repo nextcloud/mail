@@ -17,6 +17,7 @@ OC.L10N.register(
     "Favorite" : "Favorit",
     "Select" : "Select",
     "Edit tags" : "Tags editéieren",
+    "Back" : "Zeréck",
     "Create" : "Erstellen",
     "Comment" : "Kommentar",
     "Choose" : "Auswielen",
@@ -44,7 +45,6 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
-    "Back" : "Zeréck",
     "All" : "All",
     "Favorites" : "Favoriten"
 },

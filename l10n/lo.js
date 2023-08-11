@@ -13,6 +13,7 @@ OC.L10N.register(
     "Unfavorite" : "ລາຍການທີ່ບໍ່ມັກ",
     "Favorite" : "ລາຍການທີ່ມັກ",
     "Select" : "ເລືອກ",
+    "Back" : "ຫຼັງ",
     "Forward" : "ໄປຂ້າງຫນ້າ",
     "Create" : "ສ້າງ",
     "Choose" : "ເລືອກ",
@@ -32,7 +33,6 @@ OC.L10N.register(
     "Remove" : "ຍ້າຍອອກ",
     "General" : "ທົ່ວໄປ",
     "User" : "ຜູ້ໃຊ້",
-    "Back" : "ຫຼັງ",
     "Account connected" : "ບັນຊີທີ່ຕິດພັນ",
     "Favorites" : "ລາຍການທີ່ມັກ"
 },

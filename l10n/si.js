@@ -17,6 +17,7 @@ OC.L10N.register(
     "Favorite" : "ප්‍රියතම",
     "Read" : "කියවීම",
     "Select" : "තෝරන්න",
+    "Back" : "ආපසු",
     "Create" : "සාදන්න",
     "Comment" : "අදහස",
     "Accept" : "පිළිගන්න",
@@ -41,7 +42,6 @@ OC.L10N.register(
     "User" : "පරිශීලක",
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",
-    "Back" : "ආපසු",
     "Archive" : "සංරක්ෂණය",
     "All" : "සියල්ල",
     "Favorites" : "ප්‍රියතම"

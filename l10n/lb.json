@@ -15,6 +15,7 @@
     "Favorite" : "Favorit",
     "Select" : "Select",
     "Edit tags" : "Tags editéieren",
+    "Back" : "Zeréck",
     "Create" : "Erstellen",
     "Comment" : "Kommentar",
     "Choose" : "Auswielen",
@@ -42,7 +43,6 @@
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
-    "Back" : "Zeréck",
     "All" : "All",
     "Favorites" : "Favoriten"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

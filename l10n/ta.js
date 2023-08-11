@@ -12,6 +12,7 @@ OC.L10N.register(
     "Cancel" : "இரத்து செய்க",
     "Favorite" : "விருப்பமான",
     "Select" : "Select",
+    "Back" : "பின்னுக்கு",
     "Create" : "உருவாக்குக",
     "Choose" : "தெரிவுசெய்க ",
     "Other" : "மற்றவை",
@@ -30,7 +31,6 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "ஓம்புனர்",
     "Port" : "துறை ",
-    "Back" : "பின்னுக்கு",
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "All" : "எல்லாம்",
     "Favorites" : "விருப்பங்கள்"

@@ -18,6 +18,7 @@ OC.L10N.register(
     "Read" : "পড়",
     "Select" : "সিলেক্ট",
     "Edit tags" : "ট্যাগ সম্পাদনা",
+    "Back" : "পেছনে যাও",
     "Create" : "তৈরী কর",
     "Comment" : "মন্তব্য",
     "Choose" : "বেছে নিন",
@@ -45,7 +46,6 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
-    "Back" : "পেছনে যাও",
     "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "All" : "সবাই",
     "Favorites" : "প্রিয়জন"
