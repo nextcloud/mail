@@ -21,7 +21,7 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Mail\Service;
+namespace OCA\Mail\Service\AiIntegrations;
 
 use OCA\Mail\Exception\ServiceException;
 use OCP\TextProcessing\IManager;
@@ -35,9 +35,13 @@ class AiIntegrationsService {
 	/** @var ContainerInterface */
 	private ContainerInterface $container;
 
+	/** @var Cache */
+	private Cache $cache;
 
-	public function __construct(ContainerInterface $container) {
+
+	public function __construct(ContainerInterface $container, Cache $cache) {
 		$this->container = $container;
+		$this->cache = $cache;
 	}
 	/**
 	 * @param string $threadId
@@ -59,11 +63,22 @@ class AiIntegrationsService {
 				return $message->getPreviewText();
 			}, $messages);
 
+			$messageIds = array_map(function ($message) {
+				return $message->getMessageId();
+			}, $messages);
+			$cachedSummary = $this->cache->getSummary($messageIds);
+			if($cachedSummary) {
+				return $cachedSummary;
+			}
+
 			$taskPrompt = implode("\n", $messagesBodies);
 			$summaryTask = new Task(SummaryTaskType::class, $taskPrompt, "mail", $currentUserId, $threadId);
 			$manager->runTask($summaryTask);
+			$summary = $summaryTask->getOutput();
 
-			return $summaryTask->getOutput();
+			$this->cache->addSummary($messageIds, $summary);
+
+			return $summary;
 		} else {
 			throw new ServiceException('No language model available for summary');
 		}

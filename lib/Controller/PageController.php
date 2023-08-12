@@ -33,7 +33,7 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\AiIntegrationsService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;

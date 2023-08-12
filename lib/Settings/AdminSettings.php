@@ -28,7 +28,7 @@ namespace OCA\Mail\Settings;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
-use OCA\Mail\Service\AiIntegrationsService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
