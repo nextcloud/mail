@@ -56,7 +56,7 @@ class AiIntegrationsService {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
-			throw new ServiceException('Text processing is not available in your current Nextcloud version', $e);
+			throw new ServiceException('Text processing is not available in your current Nextcloud version', 0, $e);
 		}
 		if(in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)) {
 			$messagesBodies = array_map(function ($message) {
