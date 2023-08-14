@@ -496,4 +496,20 @@ class OutboxServiceTest extends TestCase {
 		$this->expectException(ClientException::class);
 		$this->outboxService->sendMessage($message, $account);
 	}
+
+	public function testConvertToOutboxMessageNoRecipients(): void {
+		$message = new LocalMessage();
+		$message->setId(10);
+		$message->setAccountId(1);
+		$sentAt = $this->time->getTime();
+		$message->setSendAt($sentAt);
+		$message->setSubject('Test');
+		$message->setBody('Test Test Test');
+		$message->setHtml(true);
+		$message->setInReplyToMessageId('abcd');
+		$message->setType(LocalMessage::TYPE_DRAFT);
+
+		$this->expectException(ClientException::class);
+		$this->outboxService->convertDraft($message, $sentAt);
+	}
 }

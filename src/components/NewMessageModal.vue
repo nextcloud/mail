@@ -310,8 +310,9 @@ export default {
 					// This is a new message
 					const { id } = await saveDraft(dataForServer)
 					dataForServer.id = id
-					await this.$store.dispatch('outbox/enqueueMessage', {
-						message: dataForServer,
+					await this.$store.dispatch('outbox/enqueueFromDraft', {
+						draftMessage: dataForServer,
+						id,
 					})
 				} else if (this.composerData.type === 0) {
 					// This is an outbox message
@@ -322,6 +323,7 @@ export default {
 					})
 				} else {
 					// This is a draft
+					await updateDraft(dataForServer)
 					dataForServer.id = this.composerData.id
 					await this.$store.dispatch('outbox/enqueueFromDraft', {
 						draftMessage: dataForServer,

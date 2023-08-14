@@ -151,11 +151,6 @@ class DraftsService {
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 
-		// if this message has a "sent at" datestamp and the type is set as Type Outbox
-		// check for a valid recipient
-		if ($message->getType() === LocalMessage::TYPE_OUTGOING && $toRecipients === []) {
-			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
-		}
 
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
