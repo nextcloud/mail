@@ -1393,17 +1393,21 @@ export default {
 	 */
 	async moveEnvelopeToJunk({ getters }, envelope) {
 		const account = getters.getAccount(envelope.accountId)
-		if (account.moveJunk === false) {
+		if (account.junkMailboxId === null) {
 			return false
 		}
 
 		if (!envelope.flags.$junk) {
 			// move message to junk
-			return account.junkMailboxId && envelope.mailboxId !== account.junkMailboxId
+			return envelope.mailboxId !== account.junkMailboxId
 		}
 
 		const inbox = getters.getInbox(account.id)
+		if (inbox === undefined) {
+			return false
+		}
+
 		// move message to inbox
-		return inbox && envelope.mailboxId !== inbox.databaseId
+		return envelope.mailboxId !== inbox.databaseId
 	},
 }

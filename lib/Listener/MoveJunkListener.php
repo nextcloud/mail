@@ -51,19 +51,20 @@ class MoveJunkListener implements IEventListener {
 		$account = $event->getAccount();
 		$mailAccount = $account->getMailAccount();
 
-		if (!$mailAccount->isMoveJunk()) {
+		$junkMailboxId = $mailAccount->getJunkMailboxId();
+		if ($junkMailboxId === null) {
 			return;
 		}
 
 		$mailbox = $event->getMailbox();
 
-		if ($event->isSet() && $mailAccount->getJunkMailboxId() !== $mailbox->getId()) {
+		if ($event->isSet() && $junkMailboxId !== $mailbox->getId()) {
 			try {
-				$junkMailbox = $this->mailManager->getMailbox($account->getUserId(), $mailAccount->getJunkMailboxId());
+				$junkMailbox = $this->mailManager->getMailbox($account->getUserId(), $junkMailboxId);
 			} catch (ClientException) {
-				$this->logger->debug('move to junk enabled, but junk mailbox does not exist. account_id: {account_id}, junk_mailbox_id: {junk_mailbox_id}', [
+				$this->logger->debug('junk mailbox set, but junk mailbox does not exist. account_id: {account_id}, junk_mailbox_id: {junk_mailbox_id}', [
 					'account_id' => $account->getId(),
-					'junk_mailbox_id' => $mailAccount->getJunkMailboxId(),
+					'junk_mailbox_id' => $junkMailboxId,
 				]);
 				return;
 			}

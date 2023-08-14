@@ -65,9 +65,6 @@
 			</p>
 			<TrashRetentionSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection id="junk-settings" :title="t('mail', 'Junk settings')">
-			<JunkSettings :account="account" />
-		</AppSettingsSection>
 		<AppSettingsSection
 			v-if="account"
 			id="out-of-office-replies"
@@ -131,7 +128,6 @@ import SieveFilterForm from './SieveFilterForm'
 import OutOfOfficeForm from './OutOfOfficeForm'
 import CertificateSettings from './CertificateSettings'
 import TrashRetentionSettings from './TrashRetentionSettings'
-import JunkSettings from './JunkSettings'
 
 export default {
 	name: 'AccountSettings',
@@ -149,7 +145,6 @@ export default {
 		OutOfOfficeForm,
 		CertificateSettings,
 		TrashRetentionSettings,
-		JunkSettings,
 	},
 	props: {
 		account: {

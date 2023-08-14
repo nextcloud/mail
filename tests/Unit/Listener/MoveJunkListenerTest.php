@@ -66,7 +66,6 @@ class MoveJunkListenerTest extends TestCase {
 
 	public function testMoveJunkDisabled(): void {
 		$mailAccount = new MailAccount();
-		$mailAccount->setMoveJunk(false);
 		$account = new Account($mailAccount);
 
 		$event = $this->createMock(MessageFlaggedEvent::class);
@@ -84,7 +83,6 @@ class MoveJunkListenerTest extends TestCase {
 	public function testMoveJunkMailboxNotFound(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setJunkMailboxId(200);
-		$mailAccount->setMoveJunk(true);
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 
@@ -110,7 +108,6 @@ class MoveJunkListenerTest extends TestCase {
 	public function testMoveJunkAlreadyInJunk(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setJunkMailboxId(200);
-		$mailAccount->setMoveJunk(true);
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 
@@ -134,7 +131,6 @@ class MoveJunkListenerTest extends TestCase {
 	public function testMoveJunkFailed(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setJunkMailboxId(200);
-		$mailAccount->setMoveJunk(true);
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 
@@ -168,7 +164,6 @@ class MoveJunkListenerTest extends TestCase {
 	public function testMoveJunkAlreadyInInbox(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setJunkMailboxId(200);
-		$mailAccount->setMoveJunk(true);
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 
@@ -193,7 +188,6 @@ class MoveJunkListenerTest extends TestCase {
 	public function testMoveJunkToInboxFailed(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setJunkMailboxId(200);
-		$mailAccount->setMoveJunk(true);
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 

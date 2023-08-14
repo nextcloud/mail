@@ -245,8 +245,7 @@ class AccountsController extends Controller {
 		int $snoozeMailboxId = null,
 		bool $signatureAboveQuote = null,
 		int $trashRetentionDays = null,
-		int $junkMailboxId = null,
-		bool $moveJunk = null): JSONResponse {
+		int $junkMailboxId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -290,9 +289,6 @@ class AccountsController extends Controller {
 		if ($junkMailboxId !== null) {
 			$this->mailManager->getMailbox($this->currentUserId, $junkMailboxId);
 			$dbAccount->setJunkMailboxId($junkMailboxId);
-		}
-		if ($moveJunk !== null) {
-			$dbAccount->setMoveJunk($moveJunk);
 		}
 		return new JSONResponse(
 			$this->accountService->save($dbAccount)
