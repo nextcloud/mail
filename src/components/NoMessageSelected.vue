@@ -22,7 +22,7 @@
 <template>
 	<AppContentDetails>
 		<NcEmptyContent
-			:title="t('mail', 'Welcome to Nextcloud Mail')">
+			:title="welcomeMessage">
 			<template #icon>
 				<IconMail :size="65" />
 			</template>
@@ -43,6 +43,12 @@ export default {
 		AppContentDetails,
 		NcEmptyContent,
 		IconMail,
+	},
+
+	computed: {
+		welcomeMessage() {
+			return t('mail', 'Welcome to {cloudName} Mail', { cloudName: window?.OC?.theme?.name ?? 'Nextcloud' })
+		},
 	},
 }
 </script>
