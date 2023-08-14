@@ -121,9 +121,6 @@ class DraftsController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
-		if ($sendAt !== null) {
-			$message->setType(LocalMessage::TYPE_OUTGOING);
-		}
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
@@ -175,9 +172,8 @@ class DraftsController extends Controller {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $accountId);
 
-		($sendAt !== null)
-			? $message->setType(LocalMessage::TYPE_OUTGOING)
-			: $message->setType(LocalMessage::TYPE_DRAFT);
+
+		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);
 		$message->setSubject($subject);
