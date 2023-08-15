@@ -118,16 +118,30 @@ export default {
 			}
 
 			const currentMailbox = this.$store.getters.getMailbox(envelope.mailboxId)
-			const trashMailbox = this.$store.getters.getMailboxes(currentMailbox.accountId).find(mailbox => mailbox.specialRole === 'trash')
+			const trashMailbox = this.$store.getters.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
+			const junkMailbox = this.$store.getters.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
 
-			if (trashMailbox === undefined) {
-				return envelopes
+			let limitEnvelopesToCurrentMailbox = false
+			const mailboxesToIgnore = []
+
+			if (trashMailbox !== undefined) {
+				if (currentMailbox.databaseId === trashMailbox.databaseId) {
+					limitEnvelopesToCurrentMailbox = true
+				}
+				mailboxesToIgnore.push(trashMailbox.databaseId)
 			}
 
-			if (currentMailbox.databaseId === trashMailbox.databaseId) {
-				return envelopes.filter(envelope => envelope.mailboxId === trashMailbox.databaseId)
+			if (junkMailbox !== undefined) {
+				if (currentMailbox.databaseId === junkMailbox.databaseId) {
+					limitEnvelopesToCurrentMailbox = true
+				}
+				mailboxesToIgnore.push(junkMailbox.databaseId)
+			}
+
+			if (limitEnvelopesToCurrentMailbox) {
+				return envelopes.filter(envelope => envelope.mailboxId === currentMailbox.databaseId)
 			} else {
-				return envelopes.filter(envelope => envelope.mailboxId !== trashMailbox.databaseId)
+				return envelopes.filter(envelope => !mailboxesToIgnore.includes(envelope.mailboxId))
 			}
 		},
 		threadParticipants() {
