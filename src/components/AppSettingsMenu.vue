@@ -1,9 +1,16 @@
 <template>
 	<div>
-		<router-link v-if="allowNewMailAccounts" to="/setup" class="app-settings-button button primary new-button">
-			<IconAdd :size="20" />
+		<NcButton
+			v-if="allowNewMailAccounts"
+			to="/setup"
+			type="primary"
+			alignment="start"
+			wide>
+			<template #icon>
+				<IconAdd :size="20" />
+			</template>
 			{{ t('mail', 'Add mail account') }}
-		</router-link>
+		</NcButton>
 
 		<p v-if="loadingOptOutSettings" class="app-settings">
 			<IconLoading :size="20" />
@@ -116,7 +123,7 @@
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
 import IconInfo from 'vue-material-design-icons/Information'
 import IconAdd from 'vue-material-design-icons/Plus'
@@ -129,7 +136,7 @@ import SmimeCertificateModal from './smime/SmimeCertificateModal'
 export default {
 	name: 'AppSettingsMenu',
 	components: {
-		ButtonVue,
+		NcButton,
 		KeyboardShortcuts,
 		IconInfo,
 		IconEmail,
@@ -277,13 +284,6 @@ p.app-settings {
 	margin-top: 6px;
 	width: 100%;
 }
-.app-settings-button.button.primary.new-button {
-	color: var(--color-primary-element-text);
-	//this style will be removed after we migrate also the  'add mail account' to material design
-	padding-left: 34px;
-	gap: 4px;
-	width: fit-content;
-}
 .app-settings-link {
 	text-decoration: underline;
 }
@@ -292,7 +292,7 @@ p.app-settings {
 	white-space: normal;
 }
 ::v-deep .button-vue__wrapper {
-	justify-content: flex-start;
+	//justify-content: flex-start;
 }
 .mailvelope-section {
 	padding-top: 15px;
