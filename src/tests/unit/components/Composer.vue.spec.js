@@ -38,6 +38,10 @@ describe('Composer', () => {
 	let store
 
 	beforeEach(() => {
+		Object.defineProperty(window, "firstDay", {
+			value: 0
+		})
+
 		actions = {}
 		getters = {
 			accounts: () => [
