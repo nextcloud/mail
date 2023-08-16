@@ -50,6 +50,7 @@ class DraftsControllerTest extends TestCase {
 	private ITimeFactory $timeFactory;
 	private AccountService $accountService;
 	private DraftsController $controller;
+	private SmimeService $smimeService;
 
 	protected function setUp(): void {
 		parent::setUp();
