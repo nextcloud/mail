@@ -356,6 +356,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "您正在嘗試發送給“收件人”和/或“抄送”中的許多收件人。考慮使用密件抄送（Bcc）隱藏收件人地址。",
     "Message discarded" : "訊息已刪除",
     "Could not discard message" : "無法掉棄訊息",
+    "Welcome to {cloudName} Mail" : "歡迎使用 {cloudName} Mail",
     "Autoresponder off" : "關閉自動回復程式",
     "Autoresponder on" : "開啟自動回復程式",
     "First day" : "第一天",

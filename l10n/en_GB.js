@@ -356,6 +356,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.",
     "Message discarded" : "Message discarded",
     "Could not discard message" : "Could not discard message",
+    "Welcome to {cloudName} Mail" : "Welcome to {cloudName} Mail",
     "Autoresponder off" : "Autoresponder off",
     "Autoresponder on" : "Autoresponder on",
     "First day" : "First day",
