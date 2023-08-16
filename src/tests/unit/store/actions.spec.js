@@ -516,25 +516,8 @@ describe('Vuex store actions', () => {
 		})
 	})
 
-	it('should move message to junk', async() => {
-		context.getters.getAccount.mockReturnValueOnce({
-			moveJunk: true,
-			junkMailboxId: 10
-		})
-
-		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
-			flags: {
-				$junk: false
-			},
-			mailboxId: 1
-		})
-
-		expect(removeEnvelope).toBeTruthy()
-	})
-
 	it('should move message to junk, no mailbox configured', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			moveJunk: true,
 			junkMailboxId: null
 		})
 
@@ -550,7 +533,6 @@ describe('Vuex store actions', () => {
 
 	it('should move message to inbox', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			moveJunk: true,
 			junkMailboxId: 10
 		})
 		context.getters.getInbox.mockReturnValueOnce({
@@ -569,7 +551,6 @@ describe('Vuex store actions', () => {
 
 	it('should move message to inbox, inbox not found', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			moveJunk: true,
 			junkMailboxId: 10
 		})
 		context.getters.getInbox.mockReturnValueOnce(undefined)
@@ -586,7 +567,7 @@ describe('Vuex store actions', () => {
 
 	it('should not move messages', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			moveJunk: false
+			junkMailboxId: null
 		})
 
 		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {

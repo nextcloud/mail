@@ -114,8 +114,6 @@ use OCP\AppFramework\Db\Entity;
  * @method void setTrashRetentionDays(int|null $trashRetentionDays)
  * @method int|null getJunkMailboxId()
  * @method void setJunkMailboxId(?int $id)
- * @method bool isMoveJunk()
- * @method void setMoveJunk(bool $moveJunk)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -191,7 +189,6 @@ class MailAccount extends Entity {
 	protected $trashRetentionDays;
 
 	protected ?int $junkMailboxId = null;
-	protected bool $moveJunk = false;
 
 	/**
 	 * @param array $params
@@ -268,7 +265,6 @@ class MailAccount extends Entity {
 		$this->addType('quotaPercentage', 'integer');
 		$this->addType('trashRetentionDays', 'integer');
 		$this->addType('junkMailboxId', 'integer');
-		$this->addType('moveJunk', 'boolean');
 	}
 
 	/**
@@ -302,7 +298,6 @@ class MailAccount extends Entity {
 			'quotaPercentage' => $this->getQuotaPercentage(),
 			'trashRetentionDays' => $this->getTrashRetentionDays(),
 			'junkMailboxId' => $this->getJunkMailboxId(),
-			'moveJunk' => ($this->isMoveJunk() === true),
 		];
 
 		if (!is_null($this->getOutboundHost())) {
