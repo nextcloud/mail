@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\QBMapper;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
@@ -34,7 +35,7 @@ use OCP\IDBConnection;
  * @template-extends QBMapper<MessageSnooze>
  */
 class MessageSnoozeMapper extends QBMapper {
-	public function __construct(IDBConnection $db) {
+	public function __construct(IDBConnection $db, private ITimeFactory $time) {
 		parent::__construct($db, 'mail_messages_snoozed', MessageSnooze::class);
 	}
 
@@ -56,5 +57,20 @@ class MessageSnoozeMapper extends QBMapper {
 			));
 
 		$delete->executeStatement();
+	}
+
+	/**
+	 * Delete all orphaned entries that should have been unsnoozed a month ago.
+	 * We assume that these messages no longer exist in the snoozed mailbox.
+	 */
+	public function deleteOrphans(): void {
+		$deleteQb = $this->db->getQueryBuilder();
+		$deleteQb->delete($this->getTableName())
+			->where($deleteQb->expr()->lt(
+				'snoozed_until',
+				$deleteQb->createNamedParameter(($this->time->getTime() - (30 * 24 * 3600)), IQueryBuilder::PARAM_INT),
+				IQueryBuilder::PARAM_INT,
+			));
+		$deleteQb->executeStatement();
 	}
 }
