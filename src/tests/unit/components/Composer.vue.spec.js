@@ -38,6 +38,10 @@ describe('Composer', () => {
 	let store
 
 	beforeEach(() => {
+		Object.defineProperty(window, "firstDay", {
+			value: 0
+		})
+
 		actions = {}
 		getters = {
 			accounts: () => [
@@ -63,6 +67,7 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				inReplyToMessageId: 'abc123',
+				isFirstOpen: true,
 			},
 			store,
 			localVue,
@@ -77,6 +82,7 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				inReplyToMessageId: 'abc123',
+				isFirstOpen: true,
 			},
 			store,
 			localVue,
@@ -93,7 +99,8 @@ describe('Composer', () => {
 				inReplyToMessageId: 'abc123',
 				to: [
 					{ label: 'test', email: 'test@domain.tld' },
-				]
+				],
+				isFirstOpen: true,
 			},
 			store,
 			localVue,
@@ -106,6 +113,9 @@ describe('Composer', () => {
 
 	it('should not S/MIME sign messages if there are no certs', () => {
 		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
@@ -124,6 +134,9 @@ describe('Composer', () => {
 
 	it('should S/MIME sign messages if there are certs', () => {
 		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
@@ -142,6 +155,9 @@ describe('Composer', () => {
 
 	it('should not S/MIME encrypt messages if there are no certs', () => {
 		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
@@ -160,6 +176,9 @@ describe('Composer', () => {
 
 	it('should not S/MIME encrypt messages if there are missing recipient certs', () => {
 		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
@@ -181,6 +200,9 @@ describe('Composer', () => {
 
 	it('should S/MIME sign messages if there are certs', () => {
 		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
@@ -202,6 +224,9 @@ describe('Composer', () => {
 
 	it('generate title for submit button', () => {
 		const view = shallowMount(Composer, {
+            propsData: {
+				isFirstOpen: true,
+            },
 			store,
 			localVue,
 		})
@@ -221,6 +246,9 @@ describe('Composer', () => {
 
 	it('generate title for submit button (send later)', () => {
 		const view = shallowMount(Composer, {
+            propsData: {
+                isFirstOpen: true,
+            },
 			store,
 			localVue,
 		})

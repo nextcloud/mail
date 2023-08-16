@@ -65,16 +65,14 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: undefined }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -95,16 +93,14 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: 'x' }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -125,16 +121,14 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: 's' }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -154,7 +148,10 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
@@ -162,11 +159,6 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { myAcls: undefined }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -187,7 +179,10 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
@@ -195,11 +190,6 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { myAcls: 'i' }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -220,7 +210,10 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
@@ -228,11 +221,6 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { myAcls: undefined }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -253,7 +241,10 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
@@ -261,11 +252,6 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -286,16 +272,14 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: 'x' }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -316,17 +300,15 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: undefined }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -346,17 +328,14 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
-
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: 's' }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -376,16 +355,14 @@ describe('ThreadEnvelope', () => {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
 					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: 'te' }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -412,16 +389,14 @@ describe('ThreadEnvelope', () => {
 						hasAttachments: false,
 						draft: false,
 					},
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
 					return { myAcls: 'w' }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -449,7 +424,10 @@ describe('ThreadEnvelope', () => {
 						hasAttachments: false,
 						draft: false,
 					},
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
@@ -457,11 +435,6 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
@@ -488,7 +461,10 @@ describe('ThreadEnvelope', () => {
 						hasAttachments: false,
 						draft: false,
 					},
+					subject: '',
+					dateInt: 1692200926180,
 				},
+				threadSubject: ''
 			},
 			computed: {
 				mailbox() {
@@ -496,11 +472,6 @@ describe('ThreadEnvelope', () => {
 				},
 				archiveMailbox() {
 					return { }
-				},
-			},
-			methods: {
-				filterSubject() {
-					return undefined;
 				},
 			},
 			store,
