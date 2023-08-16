@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db63d1a1c3d4c47b0e5f997c51520b55",
+    "content-hash": "379457e9febd4200b4472c3aafaae0cf",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1951,21 +1951,21 @@
             "time": "2021-12-01T16:22:57+00:00"
         },
         {
-            "name": "html2text/html2text",
-            "version": "4.3.1",
+            "name": "hamza221/html2text",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mtibben/html2text.git",
-                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c"
+                "url": "https://github.com/hamza221/html2text.git",
+                "reference": "77498a184e4bd59698a8daf458addd6d94c8dbf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mtibben/html2text/zipball/61ad68e934066a6f8df29a3d23a6460536d0855c",
-                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c",
+                "url": "https://api.github.com/repos/hamza221/html2text/zipball/77498a184e4bd59698a8daf458addd6d94c8dbf5",
+                "reference": "77498a184e4bd59698a8daf458addd6d94c8dbf5",
                 "shasum": ""
             },
             "require-dev": {
-                "phpunit/phpunit": "~4"
+                "phpunit/phpunit": "~4|^9.0"
             },
             "suggest": {
                 "ext-mbstring": "For best performance",
@@ -1974,10 +1974,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Html2Text\\": [
-                        "src/",
-                        "test/"
-                    ]
+                    "Html2Text\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1986,10 +1983,9 @@
             ],
             "description": "Converts HTML to formatted plain text",
             "support": {
-                "issues": "https://github.com/mtibben/html2text/issues",
-                "source": "https://github.com/mtibben/html2text/tree/4.3.1"
+                "source": "https://github.com/hamza221/html2text/tree/v1.0.0"
             },
-            "time": "2020-04-16T23:44:31+00:00"
+            "time": "2023-08-16T11:30:50+00:00"
         },
         {
             "name": "nextcloud/horde-managesieve",
