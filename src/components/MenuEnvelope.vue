@@ -91,7 +91,8 @@
 				</template>
 				{{ t('mail', 'Move message') }}
 			</ActionButton>
-			<ActionButton :close-after-click="false"
+			<ActionButton v-if="!isSnoozeDisabled"
+				:close-after-click="false"
 				@click="snoozeActionsOpen = true">
 				<template #icon>
 					<AlarmIcon :title="t('mail', 'Snooze')"
@@ -293,6 +294,7 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
 import AlarmIcon from 'vue-material-design-icons/Alarm'
 import logger from '../logger'
 import moment from '@nextcloud/moment'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'MenuEnvelope',
@@ -374,6 +376,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters([
+			'isSnoozeDisabled',
+		]),
 		account() {
 			const accountId = this.envelope.accountId ?? this.mailbox.accountId
 			return this.$store.getters.getAccount(accountId)

@@ -100,6 +100,7 @@ export default new Store({
 				tags: {},
 				tagList: [],
 				isScheduledSendingDisabled: false,
+				isSnoozeDisabled: false,
 				currentUserPrincipal: undefined,
 				googleOauthUrl: null,
 				sieveScript: {},

@@ -236,10 +236,14 @@ class PageController extends Controller {
 			);
 		}
 
-		// Disable scheduled send in frontend if ajax cron is used because it is unreliable
+		// Disable snooze and scheduled send in frontend if ajax cron is used because it is unreliable
 		$cronMode = $this->config->getAppValue('core', 'backgroundjobs_mode', 'ajax');
 		$this->initialStateService->provideInitialState(
 			'disable-scheduled-send',
+			$cronMode === 'ajax',
+		);
+		$this->initialStateService->provideInitialState(
+			'disable-snooze',
 			$cronMode === 'ajax',
 		);
 
