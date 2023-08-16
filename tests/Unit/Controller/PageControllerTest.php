@@ -275,7 +275,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(13))
+		$this->initialState->expects($this->exactly(14))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -288,6 +288,7 @@ class PageControllerTest extends TestCase {
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
 				['disable-scheduled-send', false],
+				['disable-snooze', false],
 				['allow-new-accounts', true],
 				['enabled_thread_summary', false],
 				['smime-certificates', []],

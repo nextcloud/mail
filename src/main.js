@@ -105,6 +105,7 @@ const accounts = loadState('mail', 'accounts', [])
 const tags = loadState('mail', 'tags', [])
 const outboxMessages = loadState('mail', 'outbox-messages')
 const disableScheduledSend = loadState('mail', 'disable-scheduled-send')
+const disableSnooze = loadState('mail', 'disable-snooze')
 const googleOauthUrl = loadState('mail', 'google-oauth-url', null)
 const microsoftOauthUrl = loadState('mail', 'microsoft-oauth-url', null)
 
@@ -128,6 +129,7 @@ tags.forEach(tag => store.commit('addTag', { tag }))
 outboxMessages.forEach(message => store.commit('outbox/addMessage', { message }))
 
 store.commit('setScheduledSendingDisabled', disableScheduledSend)
+store.commit('setSnoozeDisabled', disableSnooze)
 store.commit('setGoogleOauthUrl', googleOauthUrl)
 store.commit('setMicrosoftOauthUrl', microsoftOauthUrl)
 

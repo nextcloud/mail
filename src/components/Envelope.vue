@@ -165,7 +165,7 @@
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
-				<ActionButton
+				<ActionButton v-if="!isSnoozeDisabled"
 					:close-after-click="false"
 					@click="showSnoozeOptions">
 					<template #icon>
@@ -384,6 +384,7 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
 import CalendarClock from 'vue-material-design-icons/CalendarClock'
 import AlarmIcon from 'vue-material-design-icons/Alarm'
 import moment from '@nextcloud/moment'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'Envelope',
@@ -475,6 +476,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters([
+			'isSnoozeDisabled',
+		]),
 		messageLongDate() {
 			return messageDateTime(new Date(this.data.dateInt))
 		},

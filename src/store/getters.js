@@ -115,6 +115,7 @@ export const getters = {
 		return state.tagList.map(tagId => state.tags[tagId])
 	},
 	isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
+	isSnoozeDisabled: (state) => state.isSnoozeDisabled,
 	googleOauthUrl: (state) => state.googleOauthUrl,
 	microsoftOauthUrl: (state) => state.microsoftOauthUrl,
 	getActiveSieveScript: (state) => (accountId) => state.sieveScript[accountId],
