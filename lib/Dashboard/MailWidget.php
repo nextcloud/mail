@@ -45,12 +45,12 @@ use OCP\IUserManager;
 use OCP\Util;
 
 abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
-	private IURLGenerator $urlGenerator;
-	private IUserManager $userManager;
-	private AccountService $accountService;
-	private IMailSearch $mailSearch;
-	private IInitialState $initialState;
-	private ?string $userId;
+	protected IURLGenerator $urlGenerator;
+	protected IUserManager $userManager;
+	protected AccountService $accountService;
+	protected IMailSearch $mailSearch;
+	protected IInitialState $initialState;
+	protected ?string $userId;
 	protected IL10N $l10n;
 
 	public function __construct(IL10N $l10n,
