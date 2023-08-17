@@ -1,12 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-beta.2 - unreleased
+## 3.4.0-beta.3 - unreleased
 ### Added
 - Thread summaries
 - Snooze
 - Trash retention
 - Move junk messages to junk mailbox
+- Exclude envelopes from junk from threading view
+- Remove toggle for move junk
 
 ### Fixed
 - Add loading skeletons without avatars
@@ -19,6 +21,13 @@ All notable changes to this project will be documented in this file.
 - Add image proxy rate limit
 - Add native picker for send later
 - Convert drafts to outbox messages before sending
+- Lost update between last draft and sending a message
+- Force sync of snooze mailbox
+- Add cleanup orphan db entries
+- Deprecation warning for drafts controller test
+- Allow snoozing gmail messages
+- Show full mail subject when mail is open.
+- Modal settings when autoresponder is on
 
 ### Changed
 - Don't open first mail by default
