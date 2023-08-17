@@ -122,11 +122,13 @@ class ImapToDbSynchronizer {
 		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): void {
 		$rebuildThreads = false;
 		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
 		$trashRetentionDays = $account->getMailAccount()->getTrashRetentionDays();
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$syncTrash = $trashMailboxId === $mailbox->getId() && $trashRetentionDays !== null;
+			$syncSnooze = $snoozeMailboxId === $mailbox->getId();
 
-			if (!$syncTrash && !$mailbox->isInbox() && !$mailbox->getSyncInBackground()) {
+			if (!$syncTrash && !$mailbox->isInbox() && !$syncSnooze && !$mailbox->getSyncInBackground()) {
 				$logger->debug("Skipping mailbox sync for " . $mailbox->getId());
 				continue;
 			}
