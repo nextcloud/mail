@@ -276,6 +276,9 @@ class OutboxService {
 	}
 
 	public function convertDraft(LocalMessage $draftMessage, int $sendAt): LocalMessage {
+		if (empty($draftMessage->getRecipients())) {
+			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
+		}
 		$outboxMessage = clone $draftMessage;
 		$outboxMessage->setType(LocalMessage::TYPE_OUTGOING);
 		$outboxMessage->setSendAt($sendAt);

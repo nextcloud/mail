@@ -373,54 +373,6 @@ class DraftsServiceTest extends TestCase {
 		$this->draftsService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 	}
 
-	public function testConvertToOutboxMessageNoRecipients(): void {
-		$message = new LocalMessage();
-		$message->setId(10);
-		$message->setAccountId(1);
-		$message->setSendAt($this->time->getTime());
-		$message->setSubject('Test');
-		$message->setBody('Test Test Test');
-		$message->setHtml(true);
-		$message->setInReplyToMessageId('abcd');
-		$message->setType(LocalMessage::TYPE_OUTGOING);
-		$old = Recipient::fromParams([
-			'label' => 'Pam',
-			'email' => 'BuyMeAnAle@startdewvalley.com',
-			'type' => Recipient::TYPE_TO,
-		]);
-		$message->setRecipients([$old]);
-		$to = [];
-		$cc = [];
-		$bcc = [];
-		$attachments = [['type' => '']];
-		$attachmentIds = [3];
-		$message2 = $message;
-		$message2->setRecipients([]);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
-
-		$this->mapper->expects(self::never())
-			->method('updateWithRecipients')
-			->with($message, [], $cc, $bcc)
-			->willReturn($message2);
-		$this->clientFactory->expects(self::never())
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
-		$this->attachmentService->expects(self::never())
-			->method('handleAttachments')
-			->with($account, $attachments, $client)
-			->willReturn($attachmentIds);
-		$this->attachmentService->expects(self::never())
-			->method('updateLocalMessageAttachments')
-			->with($this->userId, $message2, $attachmentIds);
-
-		$this->expectException(ClientException::class);
-		$this->draftsService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
-	}
-
 	public function testUpdateMessageNoAttachments(): void {
 		$message = new LocalMessage();
 		$message->setId(10);
