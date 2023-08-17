@@ -1186,10 +1186,11 @@ export default {
 			commit('removeMessage', { id })
 		})
 	},
-	// Only adds DB entry, moving the message is done in a separate request
-	async snoozeMessage({ commit }, { id, unixTimestamp }) {
+	async snoozeMessage({ commit }, { id, unixTimestamp, destMailboxId }) {
 		return handleHttpAuthErrors(commit, async () => {
-			await snoozeMessage(id, unixTimestamp)
+			await snoozeMessage(id, unixTimestamp, destMailboxId)
+			commit('removeEnvelope', { id })
+			commit('removeMessage', { id })
 		})
 	},
 	async fetchActiveSieveScript({ commit }, { accountId }) {
@@ -1281,10 +1282,17 @@ export default {
 			}
 		})
 	},
-	// Only adds DB entry, moving the messages is done in a separate request
-	async snoozeThread({ getters, commit }, { envelope, unixTimestamp }) {
+	async snoozeThread({ getters, commit }, { envelope, unixTimestamp, destMailboxId }) {
 		return handleHttpAuthErrors(commit, async () => {
-			await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp)
+			try {
+				await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp, destMailboxId)
+				console.debug('thread snoozed')
+			} catch (e) {
+				commit('addEnvelope', envelope)
+				console.error('could not snooze thread', e)
+				throw e
+			}
+			commit('removeEnvelope', { id: envelope.databaseId })
 		})
 	},
 

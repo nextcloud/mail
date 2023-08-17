@@ -29,6 +29,7 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
@@ -40,7 +41,9 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class SnoozeService {
 
@@ -81,19 +84,121 @@ class SnoozeService {
 		}
 	}
 
+	/**
+	 * @param Message $message
+	 * @param int $unixTimestamp
+	 * @param Account $srcAccount
+	 * @param Mailbox $srcMailbox
+	 * @param Account $dstAccount
+	 * @param Mailbox $dstMailbox
+	 *
+	 * @return void
+	 *
+	 * @throws Throwable
+	 */
+	public function snoozeMessage(
+		Message $message,
+		int $unixTimestamp,
+		Account $srcAccount,
+		Mailbox $srcMailbox,
+		Account $dstAccount,
+		Mailbox $dstMailbox
+	): void {
+		$this->snoozeMessageDB($message, $unixTimestamp);
+
+		try {
+			$this->mailManager->moveMessage(
+				$srcAccount,
+				$srcMailbox->getName(),
+				$message->getUid(),
+				$dstAccount,
+				$dstMailbox->getName()
+			);
+		} catch (Throwable $e) {
+			$this->unSnoozeMessageDB($message);
+			throw $e;
+		}
+	}
+
+	/**
+	 * @param Message $selectedMessage
+	 * @param int $unixTimestamp
+	 * @param Account $srcAccount
+	 * @param Mailbox $srcMailbox
+	 * @param Account $dstAccount
+	 * @param Mailbox $dstMailbox
+	 *
+	 * @return void
+	 *
+	 * @throws Throwable
+	 */
+	public function snoozeThread(
+		Message $selectedMessage,
+		int $unixTimestamp,
+		Account $srcAccount,
+		Mailbox $srcMailbox,
+		Account $dstAccount,
+		Mailbox $dstMailbox
+	):void {
+		$this->snoozeThreadDB($selectedMessage, $unixTimestamp);
+
+		try {
+			$this->mailManager->moveThread(
+				$srcAccount,
+				$srcMailbox,
+				$dstAccount,
+				$dstMailbox,
+				$selectedMessage->getThreadRootId()
+			);
+		} catch (Throwable $e) {
+			$this->unSnoozeThreadDB($selectedMessage);
+			throw $e;
+		}
+
+	}
+
 
 	/**
 	 * Adds a DB entry for the message with a wake timestamp
 	 *
 	 * @param Message $message
 	 * @param int $unixTimestamp
+	 *
 	 * @return void
+	 *
+	 * @throws Exception
 	 */
-	public function snoozeMessage(Message $message, int $unixTimestamp): void {
+	public function snoozeMessageDB(Message $message, int $unixTimestamp): void {
 		$snooze = new MessageSnooze();
 		$snooze->setMessageId($message->getMessageId());
 		$snooze->setSnoozedUntil($unixTimestamp);
-		$this->messageSnoozeMapper->insert($snooze);
+		try {
+			$this->messageSnoozeMapper->insert($snooze);
+		} catch(Exception $e) {
+			if ($e->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+				$messageId = $message->getMessageId();
+				if($messageId === null) {
+					throw $e;
+				}
+				$this->messageSnoozeMapper->deleteByMessageIds(array($messageId));
+				$this->messageSnoozeMapper->insert($snooze);
+			} else {
+				throw $e;
+			}
+		}
+	}
+
+	/**
+	 * Removes the DB entry for the message
+	 *
+	 * @param Message $message
+	 * @return void
+	 */
+	public function unSnoozeMessageDB(Message $message): void {
+		$messageId = $message->getMessageId();
+		if($messageId !== null) {
+			$this->messageSnoozeMapper->deleteByMessageIds(array($messageId));
+		}
 	}
 
 	/**
@@ -101,9 +206,12 @@ class SnoozeService {
 	 *
 	 * @param Message $selectedMessage
 	 * @param int $unixTimestamp
+	 *
 	 * @return void
+	 *
+	 * @throws Exception
 	 */
-	public function snoozeThread(Message $selectedMessage, int $unixTimestamp): void {
+	public function snoozeThreadDB(Message $selectedMessage, int $unixTimestamp): void {
 		$messages = $this->threadMapper->findMessageIdsByThreadRoot(
 			$selectedMessage->getThreadRootId()
 		);
@@ -112,7 +220,40 @@ class SnoozeService {
 			$snooze = new MessageSnooze();
 			$snooze->setMessageId($message['messageId']);
 			$snooze->setSnoozedUntil($unixTimestamp);
-			$this->messageSnoozeMapper->insert($snooze);
+			try {
+				$this->messageSnoozeMapper->insert($snooze);
+			} catch(Exception $e) {
+				if ($e->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
+					$messageId = $message['messageId'];
+					if($messageId === null) {
+						throw $e;
+					}
+					$this->messageSnoozeMapper->deleteByMessageIds(array($messageId));
+					$this->messageSnoozeMapper->insert($snooze);
+				} else {
+					throw $e;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Removes DB entry for the messages
+	 *
+	 * @param Message $selectedMessage
+	 * @return void
+	 */
+	public function unSnoozeThreadDB(Message $selectedMessage): void {
+		$messages = $this->threadMapper->findMessageIdsByThreadRoot(
+			$selectedMessage->getThreadRootId()
+		);
+
+		$messageIdsToDelete = [];
+		foreach ($messages as $message) {
+			$messageIdsToDelete[] = $message['messageId'];
+		}
+		if(count($messageIdsToDelete) > 0) {
+			$this->messageSnoozeMapper->deleteByMessageIds($messageIdsToDelete);
 		}
 	}
 
@@ -144,6 +285,7 @@ class SnoozeService {
 
 		$client = $this->clientFactory->getClient($account);
 		try {
+			$messageIdsToDelete = [];
 			foreach ($messages as $message) {
 				$this->mailManager->moveMessage(
 					$account,
@@ -155,7 +297,14 @@ class SnoozeService {
 
 				//TODO mark message as unread?
 
-				$this->messageSnoozeMapper->deleteByMessageId($message->getMessageId());
+				$messageId = $message->getMessageId();
+				if($messageId !== null) {
+					$messageIdsToDelete[] = $messageId;
+				}
+
+			}
+			if(count($messageIdsToDelete) > 0) {
+				$this->messageSnoozeMapper->deleteByMessageIds($messageIdsToDelete);
 			}
 		} finally {
 			$client->logout();

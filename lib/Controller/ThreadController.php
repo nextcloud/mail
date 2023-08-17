@@ -104,18 +104,25 @@ class ThreadController extends Controller {
 	 *
 	 * @param int $id
 	 * @param int $unixTimestamp
+	 * @param int $destMailboxId
 	 *
 	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function snooze(int $id, int $unixTimestamp): JSONResponse {
+	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
 		try {
 			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
+			$srcMailbox = $this->mailManager->getMailbox($this->currentUserId, $selectedMessage->getMailboxId());
+			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
+			$dstMailbox = $this->mailManager->getMailbox($this->currentUserId, $destMailboxId);
+			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp);
+		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
 
 		return new JSONResponse();
 	}

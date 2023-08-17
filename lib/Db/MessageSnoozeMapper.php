@@ -42,19 +42,15 @@ class MessageSnoozeMapper extends QBMapper {
 	/**
 	 * Deletes DB Entry for a waked message
 	 *
-	 * @param string $messageId
+	 * @param string[] $messageIds
 	 *
 	 * @return void
 	 */
-	public function deleteByMessageId(string $messageId): void {
+	public function deleteByMessageIds(array $messageIds): void {
 		$qb = $this->db->getQueryBuilder();
 
 		$delete = $qb->delete($this->getTableName())
-			->where($qb->expr()->eq(
-				'message_id',
-				$qb->createNamedParameter($messageId, IQueryBuilder::PARAM_STR),
-				IQueryBuilder::PARAM_STR,
-			));
+			->where($qb->expr()->in('message_id', $qb->createNamedParameter($messageIds, IQueryBuilder::PARAM_STR_ARRAY)));
 
 		$delete->executeStatement();
 	}

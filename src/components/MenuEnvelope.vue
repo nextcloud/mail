@@ -499,14 +499,9 @@ export default {
 			logger.info(`snoozing message ${this.envelope.databaseId}`)
 
 			try {
-				// Adds DB entry
 				await this.$store.dispatch('snoozeMessage', {
 					id: this.envelope.databaseId,
 					unixTimestamp: timestamp / 1000,
-				})
-				// Moves message
-				await this.$store.dispatch('moveMessage', {
-					id: this.envelope.databaseId,
 					destMailboxId: this.account.snoozeMailboxId,
 				})
 				showSuccess(t('mail', 'Message was snoozed'))

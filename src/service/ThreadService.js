@@ -26,14 +26,13 @@ export async function moveThread(id, destMailboxId) {
 	}
 }
 
-// Only adds DB entry, moving the messages is done in a separate request
-export async function snoozeThread(id, unixTimestamp) {
+export async function snoozeThread(id, unixTimestamp, destMailboxId) {
 	const url = generateUrl('/apps/mail/api/thread/{id}/snooze', {
 		id,
 	})
 
 	try {
-		return await axios.post(url, { unixTimestamp })
+		return await axios.post(url, { unixTimestamp, destMailboxId })
 	} catch (e) {
 		throw convertAxiosError(e)
 	}
