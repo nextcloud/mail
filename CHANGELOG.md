@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.3.0-rc.2 - unreleased
+## 3.3.0-rc.4 - unreleased
 ### Added
 - Allow a configurable background sync interval
 - Send multiple flags in a single request
@@ -47,6 +47,9 @@ All notable changes to this project will be documented in this file.
 - Convert drafts to outbox messages before sending
 - Harden outbox/draft message retrieval of shared storage
 - Reply to sender only
+- Lost update between last draft and sending a message
+- Modal settings when autoresponder is on
+- Rate limit auto config attempts
 
 
 ### Changed
