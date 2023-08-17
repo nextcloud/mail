@@ -790,6 +790,10 @@ export default {
 			// Remove from selection first
 			this.setSelected(false)
 
+			if (!this.account.snoozeMailboxId) {
+				await this.$store.dispatch('createAndSetSnoozeMailbox', this.account)
+			}
+
 			try {
 				await this.$store.dispatch('snoozeThread', {
 					envelope: this.data,

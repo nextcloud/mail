@@ -104,7 +104,7 @@ import { html, plain, toPlain } from '../util/text'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleHttpAuthErrors } from '../http/sessionExpiryHandler'
-import { showWarning } from '@nextcloud/dialogs'
+import { showError, showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import {
 	buildForwardSubject,
@@ -1417,5 +1417,34 @@ export default {
 
 		// move message to inbox
 		return envelope.mailboxId !== inbox.databaseId
+	},
+	async createAndSetSnoozeMailbox({ getters, dispatch }, account) {
+		const name = 'Snoozed'
+		let snoozeMailboxId
+
+		try {
+			const createMailboxResponse = await dispatch('createMailbox', { account, name })
+			snoozeMailboxId = createMailboxResponse.databaseId
+			logger.info(`mailbox ${name} created as ${snoozeMailboxId}`)
+		} catch (e) {
+			logger.error('could not create mailbox', { e })
+		}
+
+		if (snoozeMailboxId === undefined) {
+			snoozeMailboxId = getters.findMailboxByName(account.id, name).databaseId
+		}
+
+		if (snoozeMailboxId === undefined) {
+			logger.error('Could not create snooze mailbox')
+			showError(t('mail', 'Could not create snooze mailbox'))
+			return
+		}
+
+		await dispatch('patchAccount', {
+			account,
+			data: {
+				snoozeMailboxId,
+			},
+		})
 	},
 }
