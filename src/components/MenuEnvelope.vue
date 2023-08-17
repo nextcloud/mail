@@ -250,7 +250,7 @@
 		<TagModal
 			v-if="showTagModal"
 			:account="account"
-			:envelope="envelope"
+			:envelopes="[this.envelope]"
 			@close="onCloseTagModal" />
 	</div>
 </template>
