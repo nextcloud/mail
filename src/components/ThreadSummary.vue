@@ -1,15 +1,11 @@
 <template>
 	<div class="summary">
 		<div class="summary__header">
-			<div class="summary__header__title">
-				<span class="summary__header__title__brand">
-					<CreationIcon class="summary__header__title__brand__icon" />
+			<div class="summary__header__actions">
+				<span class="summary__header__actions__brand">
+					<CreationIcon class="summary__header__actions__brand__icon" />
 					<p>{{ brand }}</p>
 				</span>
-
-				<h2>{{ t('mail', 'Thread Summary') }}</h2>
-			</div>
-			<div class="summary__header__actions">
 				<NcActions />
 				<NcButton
 					:aria-label=" t('mail', 'Go to latest message')"
@@ -21,6 +17,9 @@
 							:size="20" />
 					</template>
 				</NcButton>
+			</div>
+			<div class="summary__header__title">
+				<h2>{{ t('mail', 'Thread Summary') }}</h2>
 			</div>
 		</div>
 		<div class="summary__body">
@@ -85,8 +84,11 @@ export default {
 
     &__header{
         display: flex;
-        justify-content: space-between;
-        &__title{
+        flex-direction: column;
+        &__actions{
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 10px;
             &__brand{
                 display: flex;
                 align-items: center;
@@ -94,6 +96,7 @@ export default {
                 border-radius: var(--border-radius-pill);
                 width: fit-content;
                 padding-right: 5px;
+                padding-left: 5px;
 
                 &__icon{
                     color:var(--color-primary-element);
@@ -103,5 +106,20 @@ export default {
         }
 
     }
+	@media only screen and (max-width: 600px) {
+		.summary{
+			&__header{
+				flex-direction: column;
+				&__actions{
+					flex-direction: column;
+					&__brand{
+						flex-wrap: nowrap;
+						margin-bottom: 10px;
+					}
+				}
+			}
+		}
+	}
 }
+
 </style>
