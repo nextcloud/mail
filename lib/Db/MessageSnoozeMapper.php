@@ -40,6 +40,39 @@ class MessageSnoozeMapper extends QBMapper {
 	}
 
 	/**
+	 * Returns srcMailboxId (before snooze) for message
+	 * Return null if no entry for message or srcMailboxId is null
+	 *
+	 * @param string $messageId
+	 *
+	 * @return int|null
+	 */
+	public function getSrcMailboxId(string $messageId): ?int {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('src_mailbox_id')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq(
+					'message_id',
+					$qb->createNamedParameter($messageId, IQueryBuilder::PARAM_STR),
+					IQueryBuilder::PARAM_STR
+				),
+				$qb->expr()->isNotNull(
+					'src_mailbox_id'
+				),
+			);
+
+		$result = $select->executeQuery();
+		$row = $result->fetch();
+		$result->closeCursor();
+		if ($row === false) {
+			return null;
+		}
+		return (int)$row['src_mailbox_id'];
+	}
+
+	/**
 	 * Deletes DB Entry for a waked message
 	 *
 	 * @param string[] $messageIds

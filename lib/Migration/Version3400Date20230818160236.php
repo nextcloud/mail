@@ -24,32 +24,34 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Migration;
 
-use OCP\AppFramework\Db\Entity;
+use Closure;
+use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
+use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
-/**
- * @method void setMessageId(string $messageId)
- * @method string getMessageId()
- * @method void setSnoozedUntil(int $snoozeUntil)
- * @method int getSnoozedUntil()
- * @method void setSrcMailboxId(int $srcMailboxId)
- * @method int getSrcMailboxId()
- */
-class MessageSnooze extends Entity {
+class Version3400Date20230818160236 extends SimpleMigrationStep {
 
-	/** @var string */
-	protected $messageId;
+	/**
+	 * @param IOutput $output
+	 * @param Closure(): ISchemaWrapper $schemaClosure
+	 * @param array $options
+	 * @return null|ISchemaWrapper
+	 */
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
+		/** @var ISchemaWrapper $schema */
+		$schema = $schemaClosure();
 
-	/** @var int */
-	protected $snoozedUntil;
+		$snoozeTable = $schema->getTable('mail_messages_snoozed');
+		if (!$snoozeTable->hasColumn('src_mailbox_id')) {
+			$snoozeTable->addColumn('src_mailbox_id', Types::INTEGER, [
+				'notnull' => false,
+				'length' => 20,
+			]);
+		}
 
-	/** @var int */
-	protected $srcMailboxId;
-
-	public function __construct() {
-		$this->addType('messageId', 'string');
-		$this->addType('snoozedUntil', 'integer');
-		$this->addType('srcMailboxId', 'integer');
+		return $schema;
 	}
 }
