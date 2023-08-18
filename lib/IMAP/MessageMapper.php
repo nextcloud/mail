@@ -928,7 +928,26 @@ class MessageMapper {
 			if ($part === null) {
 				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
 			}
+
+
+			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
+			if (!empty($htmlBody)) {
+				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+					$structure->setTransferEncoding($enc);
+					$structure->setContents($htmlBody);
+					$htmlBody = $structure->getContents();
+				}
+				$html = new Html2Text($htmlBody, array('do_links' => 'none','alt_image' => 'hide'));
+				return new MessageStructureData(
+					$hasAttachments,
+					trim($html->getText()),
+					$isImipMessage,
+					$isEncrypted,
+				);
+			}
 			$textBody = $part->getBodyPart($textBodyId);
+
 			if (!empty($textBody)) {
 				$mimeHeaders = $part->getMimeHeader($textBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
@@ -939,24 +958,6 @@ class MessageMapper {
 				return new MessageStructureData(
 					$hasAttachments,
 					$textBody,
-					$isImipMessage,
-					$isEncrypted,
-				);
-			}
-
-			$htmlBody = ($htmlBodyId !== null) ? $part->getBodyPart($htmlBodyId) : null;
-			if (!empty($htmlBody)) {
-				$mimeHeaders = $part->getMimeHeader($htmlBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-					$structure->setTransferEncoding($enc);
-					$structure->setContents($htmlBody);
-					$htmlBody = $structure->getContents();
-				}
-				// TODO:  add 'alt_image' => 'hide' once it's added to the Html2Text package
-				$html = new Html2Text($htmlBody, array('do_links' => 'none',));
-				return new MessageStructureData(
-					$hasAttachments,
-					trim($html->getText()),
 					$isImipMessage,
 					$isEncrypted,
 				);
