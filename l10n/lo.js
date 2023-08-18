@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Personal" : "ສ່ວນບຸກຄົນ",
+    "Mail" : "ຈົດໝາຍ",
     "Name" : "ຊື່",
     "Password" : "ລະຫັດຜ່ານ",
     "None" : "ບໍ່ມີ",

@@ -354,6 +354,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Kime ya da Kopya alanında çok sayıda alıcı bulunan bir ileti göndermeye çalışıyorsunuz. Alıcıların birbirinin adreslerini görmesini engellemek için Gizli Kopya alanını kullanmak isteyebilirsiniz.",
     "Message discarded" : "İleti iptal edildi",
     "Could not discard message" : "İleti iptal edilemedi",
+    "Welcome to {cloudName} Mail" : "{cloudName} Posta uygulamasına hoş geldiniz!",
     "Autoresponder off" : "Otomatik yanıtlayıcı kapalı",
     "Autoresponder on" : "Otomatik yanıtlayıcı açık",
     "First day" : "Başlangıç",
