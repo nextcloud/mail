@@ -498,6 +498,10 @@ export default {
 
 			logger.info(`snoozing message ${this.envelope.databaseId}`)
 
+			if (!this.account.snoozeMailboxId) {
+				await this.$store.dispatch('createAndSetSnoozeMailbox', this.account)
+			}
+
 			try {
 				await this.$store.dispatch('snoozeMessage', {
 					id: this.envelope.databaseId,

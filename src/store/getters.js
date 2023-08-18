@@ -148,6 +148,9 @@ export const getters = {
 	findMailboxBySpecialRole: (state, getters) => (accountId, specialRole) => {
 		return getters.getMailboxes(accountId).find(mailbox => mailbox.specialRole === specialRole)
 	},
+	findMailboxByName: (state, getters) => (accountId, name) => {
+		return getters.getMailboxes(accountId).find(mailbox => mailbox.name === name)
+	},
 	getInbox: (state, getters) => (accountId) => {
 		return getters.findMailboxBySpecialRole(accountId, 'inbox')
 	},
