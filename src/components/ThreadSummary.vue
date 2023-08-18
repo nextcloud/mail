@@ -67,8 +67,11 @@ export default {
 	},
 	methods: {
 		onScroll() {
-			const pane = document.querySelector('.splitpanes__pane-details')
-			pane.scrollTo({ top: pane.scrollHeight, left: 0, behavior: 'smooth' })
+			let container = document.querySelector('.splitpanes__pane-details')
+			if (!container) {
+				container = document.querySelector('.app-content-wrapper--mobile')
+			}
+			container.scrollTo({ top: container.scrollHeight, left: 0, behavior: 'smooth' })
 		},
 	},
 
