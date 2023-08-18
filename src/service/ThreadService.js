@@ -37,3 +37,15 @@ export async function snoozeThread(id, unixTimestamp, destMailboxId) {
 		throw convertAxiosError(e)
 	}
 }
+
+export async function unSnoozeThread(id) {
+	const url = generateUrl('/apps/mail/api/thread/{id}/unsnooze', {
+		id,
+	})
+
+	try {
+		return await axios.post(url, {})
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}

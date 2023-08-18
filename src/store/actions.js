@@ -77,6 +77,7 @@ import {
 	setEnvelopeTag,
 	snoozeMessage,
 	syncEnvelopes,
+	unSnoozeMessage,
 	updateEnvelopeTag,
 } from '../service/MessageService'
 import { moveDraft, updateDraft } from '../service/DraftService'
@@ -1193,6 +1194,13 @@ export default {
 			commit('removeMessage', { id })
 		})
 	},
+	async unSnoozeMessage({ commit }, { id }) {
+		return handleHttpAuthErrors(commit, async () => {
+			await unSnoozeMessage(id)
+			commit('removeEnvelope', { id })
+			commit('removeMessage', { id })
+		})
+	},
 	async fetchActiveSieveScript({ commit }, { accountId }) {
 		return handleHttpAuthErrors(commit, async () => {
 			const scriptData = await getActiveScript(accountId)
@@ -1288,8 +1296,19 @@ export default {
 				await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp, destMailboxId)
 				console.debug('thread snoozed')
 			} catch (e) {
-				commit('addEnvelope', envelope)
 				console.error('could not snooze thread', e)
+				throw e
+			}
+			commit('removeEnvelope', { id: envelope.databaseId })
+		})
+	},
+	async unSnoozeThread({ getters, commit }, { envelope }) {
+		return handleHttpAuthErrors(commit, async () => {
+			try {
+				await ThreadService.unSnoozeThread(envelope.databaseId)
+				console.debug('thread unSnoozed')
+			} catch (e) {
+				console.error('could not unsnooze thread', e)
 				throw e
 			}
 			commit('removeEnvelope', { id: envelope.databaseId })

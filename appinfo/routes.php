@@ -261,6 +261,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#unSnooze',
+			'url' => '/api/messages/{id}/unsnooze',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#mdn',
 			'url' => '/api/messages/{id}/mdn',
 			'verb' => 'POST'
@@ -373,6 +378,11 @@ return [
 		[
 			'name' => 'thread#snooze',
 			'url' => '/api/thread/{id}/snooze',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'thread#unSnooze',
+			'url' => '/api/thread/{id}/unsnooze',
 			'verb' => 'POST'
 		],
 		[

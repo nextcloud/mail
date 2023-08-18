@@ -383,9 +383,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * Adds a DB Entry for the message with a wake timestamp
-	 * Moving the message is done in a separate request
-	 *
 	 * @NoAdminRequired
 	 *
 	 * @param int $id
@@ -409,6 +406,28 @@ class MessagesController extends Controller {
 		}
 
 		$this->snoozeService->snoozeMessage($message, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	public function unSnooze(int $id): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$this->snoozeService->unSnoozeMessage($message, $this->currentUserId);
 
 		return new JSONResponse();
 	}
