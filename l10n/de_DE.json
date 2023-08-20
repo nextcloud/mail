@@ -606,6 +606,7 @@
     "Discard unsaved changes" : "Nicht gespeicherte Änderungen verwerfen",
     "Keep editing message" : "Nachricht weiter bearbeiten",
     "Attachments were not copied. Please add them manually." : "Anhänge konnten nicht kopiert werden. Bitte manuell hinzufügen.",
+    "Could not create snooze mailbox" : "Das Zurückstellen-Postfach konnte nicht erstellt werden",
     "Message sent" : "Nachricht versandt",
     "Could not send message" : "Nachricht kann nicht versandt werden",
     "Could not load {tag}{name}{endtag}" : "Konnte {tag}{name}{endtag} nicht laden",

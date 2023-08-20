@@ -608,6 +608,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "放棄未保存更新",
     "Keep editing message" : "繼續編輯訊息",
     "Attachments were not copied. Please add them manually." : "未複製附件。請手動新增它們。",
+    "Could not create snooze mailbox" : "無法創建暫停郵箱",
     "Message sent" : "已傳送訊息",
     "Could not send message" : "無法發送消息",
     "Could not load {tag}{name}{endtag}" : "無法載入 {tag}{name}{endtag}",

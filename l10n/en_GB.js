@@ -608,6 +608,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Discard unsaved changes",
     "Keep editing message" : "Keep editing message",
     "Attachments were not copied. Please add them manually." : "Attachments were not copied. Please add them manually.",
+    "Could not create snooze mailbox" : "Could not create snooze mailbox",
     "Message sent" : "Message sent",
     "Could not send message" : "Could not send message",
     "Could not load {tag}{name}{endtag}" : "Could not load {tag}{name}{endtag}",

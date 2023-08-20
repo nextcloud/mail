@@ -607,6 +607,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Zahodit neuložené změny",
     "Keep editing message" : "Pokračovat v upravování zprávy",
     "Attachments were not copied. Please add them manually." : "Přílohy nebyly zkopírovány. Přidejte je ručně.",
+    "Could not create snooze mailbox" : "Nepodařilo se vytvořit schránku pro odložené",
     "Message sent" : "Zpráva odeslána",
     "Could not send message" : "Zprávu se nepodařilo odeslat",
     "Could not load {tag}{name}{endtag}" : "Nedaří se načíst {tag}{name}{endtag}",

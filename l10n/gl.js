@@ -608,6 +608,7 @@ OC.L10N.register(
     "Discard unsaved changes" : "Desbotar os cambios non gardados",
     "Keep editing message" : "Seguir editando a mensaxe",
     "Attachments were not copied. Please add them manually." : "Non se copiaron os anexos. Engádaos manualmente.",
+    "Could not create snooze mailbox" : "Non foi posíbel crear a caixa de correo de adiar",
     "Message sent" : "Mensaxe enviada",
     "Could not send message" : "Non foi posíbel enviar a mensaxe",
     "Could not load {tag}{name}{endtag}" : "Non foi posíbel cargar {tag}{name}{endtag}",
