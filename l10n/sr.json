@@ -606,6 +606,7 @@
     "Discard unsaved changes" : "Одбацује измене које нису сачуване",
     "Keep editing message" : "Настави уређивање поруке",
     "Attachments were not copied. Please add them manually." : "Прилози нису копирани. Моломо вас да их ручно додате.",
+    "Could not create snooze mailbox" : "Није могло да се креира сандуче за одлагање",
     "Message sent" : "Порука послата",
     "Could not send message" : "Порука није могла да се пошаље",
     "Could not load {tag}{name}{endtag}" : "Не могу да учитам {tag}{name}{endtag}",
