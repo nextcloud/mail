@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.3.0-rc.4 - unreleased
+## 3.3.0 - 2023-08-21
 ### Added
 - Allow a configurable background sync interval
 - Send multiple flags in a single request
