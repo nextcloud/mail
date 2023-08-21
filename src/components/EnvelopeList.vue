@@ -451,7 +451,7 @@ export default {
 		async markSelectionJunk() {
 			for (const envelope of this.selectedEnvelopes) {
 				if (!envelope.flags.$junk) {
-					this.$store.dispatch('toggleEnvelopeJunk', {
+					await this.$store.dispatch('toggleEnvelopeJunk', {
 						envelope,
 						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
 					})
@@ -459,15 +459,15 @@ export default {
 			}
 			this.unselectAll()
 		},
-		markSelectionNotJunk() {
-			this.selectedEnvelopes.forEach((envelope) => {
+		async markSelectionNotJunk() {
+			for (const envelope of this.selectedEnvelopes) {
 				if (envelope.flags.$junk) {
-					this.$store.dispatch('toggleEnvelopeJunk', {
+					await this.$store.dispatch('toggleEnvelopeJunk', {
 						envelope,
-						removeEnvelope: true,
+						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
 					})
 				}
-			})
+			}
 			this.unselectAll()
 		},
 		favoriteOrUnfavoriteAll() {
