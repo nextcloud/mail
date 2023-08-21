@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.2.7 - 2023-08-21
+### Fixed
+- Rate limit auto config attempts
+- Add image proxy rate limit
+- Add native picker for send later
+
 ## 3.2.6 - 2023-08-08
 ### Fixed
 - Reply to sender only
