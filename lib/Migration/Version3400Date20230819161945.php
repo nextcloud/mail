@@ -28,11 +28,10 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
-use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version3300Date20230801124717 extends SimpleMigrationStep {
+class Version3400Date20230819161945 extends SimpleMigrationStep {
 
 	/**
 	 * @param IOutput $output
@@ -44,30 +43,9 @@ class Version3300Date20230801124717 extends SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		$accountsTable = $schema->getTable('mail_accounts');
-		if (!$accountsTable->hasColumn('trash_retention_days')) {
-			$accountsTable->addColumn('trash_retention_days', Types::INTEGER, [
-				'notnull' => false,
-				'default' => null,
-			]);
-		}
-
-		if (!$schema->hasTable('mail_messages_retention')) {
-			$messagesRetentionTable = $schema->createTable('mail_messages_retention');
-			$messagesRetentionTable->addColumn('id', Types::INTEGER, [
-				'autoincrement' => true,
-				'notnull' => true,
-				'length' => 4,
-			]);
-			$messagesRetentionTable->addColumn('message_id', Types::STRING, [
-				'notnull' => true,
-				'length' => 1024,
-			]);
-			$messagesRetentionTable->addColumn('known_since', Types::INTEGER, [
-				'notnull' => true,
-				'length' => 4,
-			]);
-			$messagesRetentionTable->setPrimaryKey(['id'], 'mail_msg_retention_id_idx');
+		$messagesRetentionTable = $schema->getTable('mail_messages_retention');
+		if ($messagesRetentionTable->hasIndex('mail_msg_retention_msgid_idx')) {
+			$messagesRetentionTable->dropIndex('mail_msg_retention_msgid_idx');
 		}
 
 		return $schema;
