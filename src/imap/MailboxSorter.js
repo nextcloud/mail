@@ -23,7 +23,7 @@ import clone from 'lodash/fp/clone'
 
 const specialRolesOrder = ['all', 'inbox', 'flagged', 'drafts', 'sent', 'archive', 'junk', 'trash']
 
-export const sortMailboxes = (mailboxes) => {
+export const sortMailboxes = (mailboxes, account) => {
 	const c = clone(mailboxes)
 	c.sort((f1, f2) => {
 		if (f1.specialUse.length && f2.specialUse.length) {
@@ -39,6 +39,11 @@ export const sortMailboxes = (mailboxes) => {
 			return -1
 		} else if (f2.specialUse.length) {
 			return 1
+		} else if (f1.databaseId === account.snoozeMailboxId) {
+			// Sort Snoozed mailbox to specialRole mailboxes.
+			// Because this mailbox does not have specialUse,
+			// we need to check the databaseId for snoozeMailboxId
+			return -1
 		} else {
 			return f1.name.localeCompare(f2.name)
 		}
