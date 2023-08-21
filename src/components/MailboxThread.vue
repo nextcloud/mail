@@ -74,6 +74,7 @@ import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButto
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import Vue from 'vue'
+import addressParser from 'address-rfc2822'
 
 import infiniteScroll from '../directives/infinite-scroll'
 import IconInfo from 'vue-material-design-icons/Information'
@@ -269,12 +270,25 @@ export default {
 				return []
 			}
 
-			return [
-				{
-					label: str,
-					email: str,
-				},
-			]
+			let addresses = []
+			try {
+				addresses = addressParser.parse(str)
+			} catch (error) {
+				logger.debug('could not parse string into email addresses', { str, error })
+			}
+
+			return addresses.map(address => {
+				const result = {
+					label: address.name(),
+					email: address.address,
+				}
+
+				if (result.label === '') {
+					result.label = result.email
+				}
+
+				return result
+			})
 		},
 		onUpdateSearchQuery(query) {
 			this.searchQuery = query
