@@ -119,10 +119,10 @@ export default {
 		IconLoading,
 	},
 	props: {
-		envelope: {
-			// The envelope on which this menu will act
+		envelopes: {
+			// The envelopes on which this menu will act
 			required: true,
-			type: Object,
+			type: Array,
 		},
 	},
 	data() {
@@ -167,15 +167,25 @@ export default {
 			this.$emit('close')
 		},
 		isSet(imapLabel) {
-			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).some(tag => tag.imapLabel === imapLabel)
+			return this.envelopes.some(
+				(envelope) => (
+					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
+						tag => tag.imapLabel === imapLabel
+					)
+				)
+			)
 		},
 		addTag(imapLabel) {
 			this.isAdded = true
-			this.$store.dispatch('addEnvelopeTag', { envelope: this.envelope, imapLabel })
+			this.envelopes.forEach((envelope) => {
+				this.$store.dispatch('addEnvelopeTag', { envelope, imapLabel })
+			})
 		},
 		removeTag(imapLabel) {
 			this.isAdded = false
-			this.$store.dispatch('removeEnvelopeTag', { envelope: this.envelope, imapLabel })
+			this.envelopes.forEach((envelope) => {
+				this.$store.dispatch('removeEnvelopeTag', { envelope, imapLabel })
+			})
 		},
 		addTagInput() {
 			this.editing = true

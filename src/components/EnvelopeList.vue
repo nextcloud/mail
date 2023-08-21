@@ -96,6 +96,46 @@
 						}}
 					</ActionButton>
 					<ActionButton
+						v-if="isAtLeastOneSelectedNotJunk"
+						:close-after-click="true"
+						@click.prevent="markSelectionJunk">
+						<template #icon>
+							<AlertOctagonIcon
+								:size="20" />
+						</template>
+						{{
+							n(
+								'mail',
+								'Mark {number} as spam',
+								'Mark {number} as spam',
+								selection.length,
+								{
+									number: selection.length,
+								}
+							)
+						}}
+					</ActionButton>
+					<ActionButton
+						v-if="isAtLeastOneSelectedJunk"
+						:close-after-click="true"
+						@click.prevent="markSelectionNotJunk">
+						<template #icon>
+							<AlertOctagonIcon
+								:size="20" />
+						</template>
+						{{
+							n(
+								'mail',
+								'Mark {number} as not spam',
+								'Mark {number} as not spam',
+								selection.length,
+								{
+									number: selection.length,
+								}
+							)
+						}}
+					</ActionButton>
+					<ActionButton
 						:close-after-click="true"
 						@click.prevent="unselectAll">
 						<template #icon>
@@ -106,6 +146,23 @@
 							'mail',
 							'Unselect {number}',
 							'Unselect {number}',
+							selection.length,
+							{
+								number: selection.length,
+							}
+						) }}
+					</ActionButton>
+					<ActionButton
+						:close-after-click="true"
+						@click.prevent="onOpenTagModal">
+						<template #icon>
+							<TagIcon
+								:size="20" />
+						</template>
+						{{ n(
+							'mail',
+							'Edit tags for {number}',
+							'Edit tags for {number}',
 							selection.length,
 							{
 								number: selection.length,
@@ -200,6 +257,11 @@
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
+		<TagModal
+			v-if="showTagModal"
+			:account="account"
+			:envelopes="selectedEnvelopes"
+			@close="onCloseTagModal" />
 	</div>
 </template>
 
@@ -221,6 +283,9 @@ import { differenceWith } from 'ramda'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import ShareIcon from 'vue-material-design-icons/Share'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
+import TagIcon from 'vue-material-design-icons/Tag'
+import TagModal from './TagModal'
 
 export default {
 	name: 'EnvelopeList',
@@ -236,6 +301,9 @@ export default {
 		MoveModal,
 		OpenInNewIcon,
 		ShareIcon,
+		AlertOctagonIcon,
+		TagIcon,
+		TagModal,
 	},
 	props: {
 		account: {
@@ -274,6 +342,7 @@ export default {
 		return {
 			selection: [],
 			showMoveModal: false,
+			showTagModal: false,
 			lastToggledIndex: undefined,
 		}
 	},
@@ -300,6 +369,18 @@ export default {
 				return !this.$store.getters
 					.getEnvelopeTags(env.databaseId)
 					.some((tag) => tag.imapLabel === '$label1')
+			})
+		},
+		isAtLeastOneSelectedJunk() {
+			// returns true if at least one selected message is marked as junk
+			return this.selectedEnvelopes.some((env) => {
+				return env.flags.$junk
+			})
+		},
+		isAtLeastOneSelectedNotJunk() {
+			// returns true if at least one selected message is not marked as not junk
+			return this.selectedEnvelopes.some((env) => {
+				return !env.flags.$junk
 			})
 		},
 		areAllSelectedFavorite() {
@@ -364,6 +445,28 @@ export default {
 					envelope,
 					addTag: false,
 				})
+			})
+			this.unselectAll()
+		},
+		async markSelectionJunk() {
+			for (const envelope of this.selectedEnvelopes) {
+				if (!envelope.flags.$junk) {
+					this.$store.dispatch('toggleEnvelopeJunk', {
+						envelope,
+						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
+					})
+				}
+			}
+			this.unselectAll()
+		},
+		markSelectionNotJunk() {
+			this.selectedEnvelopes.forEach((envelope) => {
+				if (envelope.flags.$junk) {
+					this.$store.dispatch('toggleEnvelopeJunk', {
+						envelope,
+						removeEnvelope: true,
+					})
+				}
 			})
 			this.unselectAll()
 		},
@@ -472,6 +575,12 @@ export default {
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true
+		},
+		onOpenTagModal() {
+			this.showTagModal = true
+		},
+		onCloseTagModal() {
+			this.showTagModal = false
 		},
 		async forwardSelectedAsAttachment() {
 			await this.$store.dispatch('showMessageComposer', {

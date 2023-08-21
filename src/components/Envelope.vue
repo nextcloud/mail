@@ -325,7 +325,7 @@
 			<TagModal
 				v-if="showTagModal"
 				:account="account"
-				:envelope="data"
+				:envelopes="[data]"
 				@close="onCloseTagModal" />
 		</template>
 	</ListItem>
