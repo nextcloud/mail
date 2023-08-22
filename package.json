@@ -71,7 +71,7 @@
     "ramda": "^0.29.0",
     "raw-loader": "^4.0.2",
     "stream-browserify": "^3.0.0",
-    "stylelint": "^15.10.2",
+    "stylelint": "^15.10.3",
     "util": "^0.12.5",
     "uuid": "^9",
     "v-tooltip": "^2.1.3",
