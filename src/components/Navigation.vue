@@ -226,7 +226,6 @@ to {
 	order: 0 !important;
 }
 :deep(.settings-button) {
-	opacity: .7 !important;
 	font-weight: bold !important;
 	z-index: 1;
 }

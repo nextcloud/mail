@@ -37,7 +37,7 @@
 		:open.sync="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
 		<template #icon>
-			<div class="sidebar-opacity-icon">
+			<div>
 				<ImportantIcon v-if="mailbox.isPriorityInbox"
 					:size="20" />
 				<IconAllInboxes
@@ -699,12 +699,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.sidebar-opacity-icon {
-	opacity: .7;
-	&:hover {
-	opacity: 1;
-	}
-}
 .counter-bubble__counter {
 	max-width: initial;
 }
