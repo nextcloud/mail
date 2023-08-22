@@ -104,7 +104,7 @@ class SnoozeService {
 		Account $dstAccount,
 		Mailbox $dstMailbox
 	): void {
-		$this->snoozeMessageDB($message, $unixTimestamp);
+		$this->snoozeMessageDB($message, $unixTimestamp, $srcMailbox);
 
 		try {
 			$this->mailManager->moveMessage(
@@ -140,7 +140,7 @@ class SnoozeService {
 		Account $dstAccount,
 		Mailbox $dstMailbox
 	):void {
-		$this->snoozeThreadDB($selectedMessage, $unixTimestamp);
+		$this->snoozeThreadDB($selectedMessage, $unixTimestamp, $srcMailbox);
 
 		try {
 			$this->mailManager->moveThread(
@@ -168,10 +168,11 @@ class SnoozeService {
 	 *
 	 * @throws Exception
 	 */
-	public function snoozeMessageDB(Message $message, int $unixTimestamp): void {
+	public function snoozeMessageDB(Message $message, int $unixTimestamp, Mailbox $srcMailbox): void {
 		$snooze = new MessageSnooze();
 		$snooze->setMessageId($message->getMessageId());
 		$snooze->setSnoozedUntil($unixTimestamp);
+		$snooze->setSrcMailboxId($srcMailbox->getId());
 		try {
 			$this->messageSnoozeMapper->insert($snooze);
 		} catch(Exception $e) {
@@ -211,7 +212,7 @@ class SnoozeService {
 	 *
 	 * @throws Exception
 	 */
-	public function snoozeThreadDB(Message $selectedMessage, int $unixTimestamp): void {
+	public function snoozeThreadDB(Message $selectedMessage, int $unixTimestamp, Mailbox $srcMailbox): void {
 		$messages = $this->threadMapper->findMessageIdsByThreadRoot(
 			$selectedMessage->getThreadRootId()
 		);
@@ -220,6 +221,7 @@ class SnoozeService {
 			$snooze = new MessageSnooze();
 			$snooze->setMessageId($message['messageId']);
 			$snooze->setSnoozedUntil($unixTimestamp);
+			$snooze->setSrcMailboxId($srcMailbox->getId());
 			try {
 				$this->messageSnoozeMapper->insert($snooze);
 			} catch(Exception $e) {
@@ -287,12 +289,25 @@ class SnoozeService {
 		try {
 			$messageIdsToDelete = [];
 			foreach ($messages as $message) {
+				$srcMailboxId = $this->messageSnoozeMapper->getSrcMailboxId($message->getMessageId());
+
+				$srcMailboxName = 'INBOX';
+
+				if ($srcMailboxId !== null) {
+					try {
+						$srcMailbox = $this->mailboxMapper->findById($srcMailboxId);
+						$srcMailboxName = $srcMailbox->getName();
+					} catch (DoesNotExistException $e) {
+						// Could not find mailbox, moving back to INBOX
+					}
+				}
+
 				$this->mailManager->moveMessage(
 					$account,
 					$snoozeMailbox->getName(),
 					$message->getUid(),
 					$account,
-					'INBOX'
+					$srcMailboxName
 				);
 
 				//TODO mark message as unread?
