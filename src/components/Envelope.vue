@@ -16,7 +16,7 @@
 		:title="addresses"
 		:details="formatted()"
 		@click="onClick"
-		@click.ctrl="toggleSelected"
+		@click.ctrl.prevent="toggleSelected"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
 		<template #icon>
 			<Star
