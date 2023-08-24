@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-beta.3 - unreleased
+## 3.4.0-beta.4 - unreleased
 ### Added
 - Thread summaries
 - Snooze
@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Move junk messages to junk mailbox
 - Exclude envelopes from junk from threading view
 - Remove toggle for move junk
+- "Mark as spam", "Mark as not spam", "Edit tags" buttons to multiselect menu
+- Parse mailto addresses
 
 ### Fixed
 - Add loading skeletons without avatars
@@ -28,6 +30,15 @@ All notable changes to this project will be documented in this file.
 - Allow snoozing gmail messages
 - Show full mail subject when mail is open.
 - Modal settings when autoresponder is on
+- Added placeholder for new mailbox input
+- Ctr-click on mail list
+- Move the message back to src mailbox on wake
+- Make icon colors more uniform
+- White space on small screen for the threads
+- Sort snooze mailbox as specialUse
+- Scroll to on mobile
+- Thread summary box display on mobile
+- Preview text
 
 ### Changed
 - Don't open first mail by default
