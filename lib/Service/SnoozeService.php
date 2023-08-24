@@ -163,30 +163,26 @@ class SnoozeService {
 	 *
 	 * @param Message $message
 	 * @param int $unixTimestamp
+	 * @param Mailbox $srcMailbox
 	 *
 	 * @return void
 	 *
 	 * @throws Exception
+	 * @throws ServiceException
 	 */
 	public function snoozeMessageDB(Message $message, int $unixTimestamp, Mailbox $srcMailbox): void {
 		$snooze = new MessageSnooze();
 		$snooze->setMessageId($message->getMessageId());
 		$snooze->setSnoozedUntil($unixTimestamp);
 		$snooze->setSrcMailboxId($srcMailbox->getId());
-		try {
-			$this->messageSnoozeMapper->insert($snooze);
-		} catch(Exception $e) {
-			if ($e->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-				$messageId = $message->getMessageId();
-				if($messageId === null) {
-					throw $e;
-				}
-				$this->messageSnoozeMapper->deleteByMessageIds(array($messageId));
-				$this->messageSnoozeMapper->insert($snooze);
-			} else {
-				throw $e;
-			}
+
+		$messageId = $message->getMessageId();
+		if($messageId === null) {
+			throw new ServiceException('Cannot extract messageId from message to snooze.');
 		}
+
+		$this->messageSnoozeMapper->deleteByMessageIds([$messageId]);
+		$this->messageSnoozeMapper->insert($snooze);
 	}
 
 	/**
@@ -198,7 +194,7 @@ class SnoozeService {
 	public function unSnoozeMessageDB(Message $message): void {
 		$messageId = $message->getMessageId();
 		if($messageId !== null) {
-			$this->messageSnoozeMapper->deleteByMessageIds(array($messageId));
+			$this->messageSnoozeMapper->deleteByMessageIds([$messageId]);
 		}
 	}
 
@@ -207,6 +203,7 @@ class SnoozeService {
 	 *
 	 * @param Message $selectedMessage
 	 * @param int $unixTimestamp
+	 * @param Mailbox $srcMailbox
 	 *
 	 * @return void
 	 *
@@ -222,20 +219,11 @@ class SnoozeService {
 			$snooze->setMessageId($message['messageId']);
 			$snooze->setSnoozedUntil($unixTimestamp);
 			$snooze->setSrcMailboxId($srcMailbox->getId());
-			try {
-				$this->messageSnoozeMapper->insert($snooze);
-			} catch(Exception $e) {
-				if ($e->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-					$messageId = $message['messageId'];
-					if($messageId === null) {
-						throw $e;
-					}
-					$this->messageSnoozeMapper->deleteByMessageIds(array($messageId));
-					$this->messageSnoozeMapper->insert($snooze);
-				} else {
-					throw $e;
-				}
-			}
+
+			$messageId = $message['messageId'];
+
+			$this->messageSnoozeMapper->deleteByMessageIds([$messageId]);
+			$this->messageSnoozeMapper->insert($snooze);
 		}
 	}
 
