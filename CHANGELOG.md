@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.3.1 - 2023-08-24
+### Fixed
+- Ctrl-click on mail list
+
 ## 3.3.0 - 2023-08-21
 ### Added
 - Allow a configurable background sync interval
