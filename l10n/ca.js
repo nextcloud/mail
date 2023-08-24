@@ -452,7 +452,7 @@ OC.L10N.register(
     "Go to latest message" : "Vés al darrer missatge",
     "Go to newest message" : "Vés al missatge més recent",
     "Thread Summary" : "Resum del fil",
-    "{name} Assistant" : "{name} Assistent",
+    "{name} Assistant" : "Assistent del {name}",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Desactiveu la retenció de la paperera deixant el camp buit o posant-lo a 0. Només es processaran els correus suprimits després d'activar la retenció de la paperera.",
     "Remove" : "Suprimeix",
     "No senders are trusted at the moment." : "En aquests moments no hi ha cap remitent de confiança.",
