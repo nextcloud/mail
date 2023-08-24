@@ -16,7 +16,7 @@
 		:title="addresses"
 		:details="formatted()"
 		@click="onClick"
-		@click.ctrl="toggleSelected">
+		@click.ctrl.prevent="toggleSelected">
 		<template #icon>
 			<Star
 				v-if="data.flags.flagged"
