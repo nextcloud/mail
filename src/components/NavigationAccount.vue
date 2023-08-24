@@ -83,6 +83,7 @@
 						<IconFolderAdd
 							:size="20" />
 					</template>
+					{{ t('mail', 'Mailbox name') }}
 				</ActionInput>
 				<ActionText v-if="showSaving">
 					<template #icon>
