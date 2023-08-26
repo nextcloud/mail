@@ -307,6 +307,7 @@ OC.L10N.register(
     "Quota" : "Квота",
     "Show only subscribed mailboxes" : "Прикажи само претплаћене сандучиће",
     "Add mailbox" : "Додај сандуче",
+    "Mailbox name" : "Назив сандучета",
     "Saving" : "Чувам",
     "Move up" : "Помери нагоре",
     "Move down" : "Помери надоле",

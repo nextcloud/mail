@@ -307,6 +307,7 @@ OC.L10N.register(
     "Quota" : "Kontingent",
     "Show only subscribed mailboxes" : "Nur abonnierte Postfächer anzeigen",
     "Add mailbox" : "Postfach hinzufügen",
+    "Mailbox name" : "Postfachname",
     "Saving" : "Speichere",
     "Move up" : "Nach oben verschieben",
     "Move down" : "Nach unten verschieben",

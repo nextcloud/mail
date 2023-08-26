@@ -307,6 +307,7 @@ OC.L10N.register(
     "Quota" : "الحصة",
     "Show only subscribed mailboxes" : "إظهار صناديق البريد المشترِكة subscribed mailboxes فقط",
     "Add mailbox" : "أضِف صندوقَ بريدٍ",
+    "Mailbox name" : "اسم صندوق البريد",
     "Saving" : "الحفظ جارٍ ...",
     "Move up" : "نقلٌ للأعلي",
     "Move down" : "نقلٌ للأسفل",

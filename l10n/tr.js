@@ -307,6 +307,7 @@ OC.L10N.register(
     "Quota" : "Kota",
     "Show only subscribed mailboxes" : "Yalnızca abone olunmuş kutular görüntülensin",
     "Add mailbox" : "E-posta kutusu ekle",
+    "Mailbox name" : "E-posta kutusu adı",
     "Saving" : "Kaydediliyor",
     "Move up" : "Yukarı taşı",
     "Move down" : "Aşağı taşı",

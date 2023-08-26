@@ -307,6 +307,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Show only subscribed mailboxes" : "Mostrar apenas as caixas de correio assinadas",
     "Add mailbox" : "Adicionar caixa de correio",
+    "Mailbox name" : "Nome da caixa de correio",
     "Saving" : "Salvando",
     "Move up" : "Mover para cima",
     "Move down" : "Mover para baixo",
