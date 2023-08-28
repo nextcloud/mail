@@ -307,6 +307,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Show only subscribed mailboxes" : "Show only subscribed mailboxes",
     "Add mailbox" : "Add mailbox",
+    "Mailbox name" : "Mailbox name",
     "Saving" : "Saving",
     "Move up" : "Move up",
     "Move down" : "Move down",
