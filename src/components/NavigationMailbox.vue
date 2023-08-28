@@ -67,7 +67,7 @@
 			</div>
 		</template>
 		<!-- actions -->
-		<template slot="actions">
+		<NcActions :container="container">
 			<ActionText
 				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 				:title="mailbox.name">
@@ -190,7 +190,7 @@
 				</template>
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
-		</template>
+		</NcActions>
 		<CounterBubble v-if="showUnreadCounter && subCounter" slot="counter">
 			{{ mailbox.unread }}&nbsp;({{ subCounter }})
 		</CounterBubble>
@@ -214,7 +214,7 @@
 
 <script>
 
-import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActions, NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconEmailCheck from 'vue-material-design-icons/EmailCheck'
 import IconExternal from 'vue-material-design-icons/OpenInNew'
 import IconFolder from 'vue-material-design-icons/Folder'
@@ -249,6 +249,7 @@ import AlarmIcon from 'vue-material-design-icons/Alarm'
 export default {
 	name: 'NavigationMailbox',
 	components: {
+		NcActions,
 		AppNavigationItem,
 		CounterBubble,
 		ActionText,
@@ -437,6 +438,9 @@ export default {
 		},
 		hasClearMailboxAcl() {
 			return mailboxHasRights(this.mailbox, 'te')
+		},
+		container() {
+			return this.$store.getters.getMainContainerSelector()
 		},
 	},
 	mounted() {

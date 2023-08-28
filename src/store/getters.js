@@ -68,6 +68,9 @@ export const getters = {
 				.filter((mailbox) => mailbox.specialRole === specialRole)
 		)
 	},
+	getMainContainerSelector: (state) => () => {
+		return state.mainContainerSelector
+	},
 	showMessageComposer: (state) => {
 		return state.showMessageComposer
 	},

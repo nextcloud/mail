@@ -35,7 +35,8 @@
 			<IconBullet v-else-if="bulletColor" :size="16" :fill-color="bulletColor" />
 		</template>
 		<!-- Actions -->
-		<template #actions>
+		<NcActions
+			:container="container">
 			<template v-if="isDisabled">
 				<ActionText :title="t('mail', 'Provisioned account is disabled')">
 					<template #icon>
@@ -113,7 +114,7 @@
 					{{ t('mail', 'Remove account') }}
 				</ActionButton>
 			</template>
-		</template>
+		</NcActions>
 		<template #extra>
 			<AccountSettings :open="showSettings" :account="account" @update:open="toggleAccountSettings" />
 		</template>
@@ -122,7 +123,7 @@
 
 <script>
 
-import { NcAppNavigationItem as AppNavigationItem, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcActions, NcAppNavigationItem as AppNavigationItem, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 
@@ -141,6 +142,7 @@ import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle'
 export default {
 	name: 'NavigationAccount',
 	components: {
+		NcActions,
 		AppNavigationItem,
 		ActionButton,
 		ActionCheckbox,
@@ -194,6 +196,9 @@ export default {
 		}
 	},
 	computed: {
+		container() {
+			return this.$store.getters.getMainContainerSelector()
+		},
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
