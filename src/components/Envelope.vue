@@ -13,7 +13,7 @@
 		:to="link"
 		:exact="true"
 		:data-envelope-id="data.databaseId"
-		:title="addresses"
+		:name="addresses"
 		:details="formatted()"
 		@click="onClick"
 		@click.ctrl.prevent="toggleSelected"
@@ -52,7 +52,7 @@
 				</p>
 			</div>
 		</template>
-		<template #subtitle>
+		<template #subname>
 			<div class="envelope__subtitle">
 				<Reply v-if="data.flags.answered"
 					class="seen-icon-style"
@@ -170,7 +170,7 @@
 					@click="showSnoozeOptions">
 					<template #icon>
 						<AlarmIcon
-							:title="t('mail', 'Snooze')"
+							:name="t('mail', 'Snooze')"
 							:size="20" />
 					</template>
 					{{

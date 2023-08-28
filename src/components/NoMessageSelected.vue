@@ -22,7 +22,7 @@
 <template>
 	<AppContentDetails>
 		<NcEmptyContent
-			:title="welcomeMessage">
+			:name="welcomeMessage">
 			<template #icon>
 				<IconMail :size="65" />
 			</template>

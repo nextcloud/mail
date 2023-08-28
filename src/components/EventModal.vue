@@ -34,7 +34,7 @@
 					{{ t('mail', 'All day') }}
 				</label>
 			</div>
-			<Multiselect
+			<NcSelect
 				v-model="selectedCalendar"
 				label="displayname"
 				track-by="url"
@@ -49,7 +49,7 @@
 						:display-icon="true"
 						v-bind="option" />
 				</template>
-			</Multiselect>
+			</NcSelect>
 			<br>
 			<button class="primary" @click="onSave">
 				{{ t('mail', 'Create') }}
@@ -60,7 +60,7 @@
 
 <script>
 import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
-import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcMultiselect as Multiselect } from '@nextcloud/vue'
+import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
@@ -74,7 +74,7 @@ export default {
 		CalendarPickerOption,
 		DatetimePicker,
 		Modal,
-		Multiselect,
+		NcSelect,
 	},
 	props: {
 		envelope: {

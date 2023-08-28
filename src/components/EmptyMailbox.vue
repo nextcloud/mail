@@ -1,6 +1,6 @@
 <template>
 	<NcEmptyContent
-		:title="t('mail', 'No messages in this mailbox')">
+		:name="t('mail', 'No messages in this mailbox')">
 		<template #icon>
 			<IconMail :size="65" />
 		</template>

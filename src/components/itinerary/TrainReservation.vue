@@ -12,7 +12,7 @@
 			</div>
 		</div>
 		<div class="connection">
-			<div><TrainIcon :title="t('mail', 'Train')" /></div>
+			<div><TrainIcon :name="t('mail', 'Train')" /></div>
 			<div>{{ trainNumber }}</div>
 			<div><ArrowIcon decorative /></div>
 		</div>

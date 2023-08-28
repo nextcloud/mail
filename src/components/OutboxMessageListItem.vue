@@ -24,13 +24,13 @@
 	<ListItem
 		class="outbox-message"
 		:class="{ selected }"
-		:title="title"
+		:name="title"
 		:details="details"
 		@click="openModal">
 		<template #icon>
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
-		<template #subtitle>
+		<template #subname>
 			{{ subjectForSubtitle }}
 		</template>
 		<template slot="actions">
@@ -40,7 +40,7 @@
 				{{ t('mail', 'Send now') }}
 				<template #icon>
 					<Send
-						:title="t('mail', 'Send now')"
+						:name="t('mail', 'Send now')"
 						:size="20" />
 				</template>
 			</ActionButton>

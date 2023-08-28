@@ -3,7 +3,7 @@
 		<MdnRequest :message="message" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<Actions type="tertiary" :menu-title="t('mail', 'Show images')">
+			<Actions type="tertiary" :menu-name="t('mail', 'Show images')">
 				<ActionButton
 					@click="displayIframe">
 					<template #icon>
@@ -30,7 +30,7 @@
 		<div id="message-container" :class="{scroll: !fullHeight}">
 			<iframe ref="iframe"
 				class="message-frame"
-				:title="t('mail', 'Message frame')"
+				:name="t('mail', 'Message frame')"
 				:src="url"
 				seamless
 				@load="onMessageFrameLoad" />

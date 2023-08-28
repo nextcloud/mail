@@ -1,7 +1,7 @@
 <template>
 	<div class="wrapper">
 		<EmptyContent v-if="hint"
-			:title="hint">
+			:name="hint">
 			<template #icon>
 				<IconLoading :size="20" />
 			</template>

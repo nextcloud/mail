@@ -78,7 +78,7 @@
 				</ButtonVue>
 			</div>
 			<div v-else class="contact-input-wrapper">
-				<Multiselect
+				<NcSelect
 					v-if="selection === ContactSelectionStateEnum.existing"
 					id="contact-selection"
 					ref="contact-selection-label"
@@ -126,7 +126,7 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 
-import { NcUserBubble as UserBubble, NcPopover as Popover, NcMultiselect as Multiselect, NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcUserBubble as UserBubble, NcPopover as Popover, NcSelect, NcButton as ButtonVue } from '@nextcloud/vue'
 
 import IconReply from 'vue-material-design-icons/Reply.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -151,7 +151,7 @@ export default {
 		ButtonVue,
 		UserBubble,
 		Popover,
-		Multiselect,
+		NcSelect,
 		IconReply,
 		IconUser,
 		IconAdd,

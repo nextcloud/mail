@@ -29,7 +29,7 @@
 		</div>
 		<div class="mail-attached--content" @click="$emit('open', $event)">
 			<span class="attachment-name"
-				:title="label">{{ name }}
+				:name="label">{{ name }}
 			</span>
 			<span class="attachment-size">{{ humanReadable(size) }}</span>
 		</div>

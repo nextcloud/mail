@@ -192,7 +192,7 @@
 						@click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
 							<ShareIcon
-								:title="t('mail', 'Forward')"
+								:name="t('mail', 'Forward')"
 								:size="20" />
 						</template>
 						{{ n(

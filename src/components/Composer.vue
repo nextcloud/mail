@@ -6,12 +6,11 @@
 				{{ t('mail', 'From') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Select
+				<NcSelect
 					id="from"
 					:value="selectedAlias"
 					:options="aliases"
-					label="name"
-					track-by="selectId"
+					input-id="select-email-input"
 					:searchable="false"
 					:placeholder="t('mail', 'Select account')"
 					:clear-on-select="false"
@@ -26,7 +25,7 @@
 					<template slot="selected-option" slot-scope="option">
 						{{ formatAliases(option) }}
 					</template>
-				</Select>
+				</NcSelect>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -34,14 +33,13 @@
 				{{ t('mail', 'To') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="to"
+				<NcSelect id="to"
 					ref="toLabel"
 					v-model="selectTo"
 					:class="{'opened': !autoLimit}"
 					:options="selectableRecipients"
 					:taggable="true"
-					label="label"
-					track-by="email"
+					input-id="select-email-input"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:clear-on-select="true"
@@ -70,9 +68,9 @@
 								:avatar-size="24" />
 						</div>
 					</template>
-				</Multiselect>
+				</NcSelect>
 				<button
-					:title="t('mail','Toggle recipients list mode')"
+					:name="t('mail','Toggle recipients list mode')"
 					:class="{'active':!autoLimit}"
 					@click.prevent="toggleViewMode">
 					<UnfoldMoreHorizontal v-if="autoLimit" :size="24" />
@@ -85,13 +83,13 @@
 				{{ t('mail', 'Cc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="cc"
+				<NcSelect id="cc"
 					v-model="selectCc"
 					:class="{'opened': !autoLimit}"
 					:options="selectableRecipients"
 					:taggable="true"
 					label="label"
-					track-by="email"
+					input-id="select-email-input"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:clear-on-select="true"
@@ -113,14 +111,14 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
-								:subtitle="option.email"
+								:name="option.label"
+								:subname="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
 					<span slot="noOptions">{{ t('mail', '') }}</span>
-				</Multiselect>
+				</NcSelect>
 			</div>
 		</div>
 		<div v-if="showBCC" class="composer-fields">
@@ -128,13 +126,13 @@
 				{{ t('mail', 'Bcc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="bcc"
+				<NcSelect id="bcc"
 					v-model="selectBcc"
 					:class="{'opened': !autoLimit}"
 					:options="selectableRecipients"
 					:taggable="true"
 					label="label"
-					track-by="email"
+					input-id="select-email-input"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:show-no-options="false"
@@ -155,14 +153,14 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
-								:subtitle="option.email"
+								:name="option.label"
+								:subname="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
 					<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
-				</Multiselect>
+				</NcSelect>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -238,7 +236,7 @@
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
-						<Download :size="20" :title="t('mail', 'Save draft')" />
+						<Download :size="20" :name="t('mail', 'Save draft')" />
 					</template>
 				</ButtonVue>
 				<ButtonVue v-if="!savingDraft && draftSaved"
@@ -247,7 +245,7 @@
 					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discard-draft')">
 					<template #icon>
-						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
+						<Delete :size="20" :name="t('mail', 'Discard & close draft')" />
 					</template>
 				</ButtonVue>
 			</div>
@@ -292,7 +290,7 @@
 							:close-after-click="false"
 							@click="isMoreActionsOpen=true">
 							<template #icon>
-								<SendClock :size="20" :title="t('mail', 'Send later')" />
+								<SendClock :size="20" :name="t('mail', 'Send later')" />
 							</template>
 							{{
 								t('mail', 'Send later')
@@ -348,7 +346,7 @@
 							@click="isMoreActionsOpen=false">
 							<template #icon>
 								<ChevronLeft
-									:title="t('mail', 'Send later')"
+									:name="t('mail', 'Send later')"
 									:size="20" />
 								{{ t('mail', 'Send later') }}
 							</template>
@@ -411,7 +409,7 @@
 					@click="onSend">
 					<template #icon>
 						<Send
-							:title="submitButtonTitle"
+							:name="submitButtonTitle"
 							:size="20" />
 					</template>
 					{{ submitButtonTitle }}
@@ -428,9 +426,9 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
-import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
-import Delete from 'vue-material-design-icons/Delete.vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcSelect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
+import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments.vue'
 import Download from 'vue-material-design-icons/Download.vue'
 import IconUpload from 'vue-material-design-icons/Upload.vue'
@@ -488,8 +486,7 @@ export default {
 		IconFolder,
 		IconPublic,
 		IconLinkPicker,
-		Multiselect,
-		Select,
+		NcSelect,
 		TextEditor,
 		ListItemIcon,
 		RecipientListItem,

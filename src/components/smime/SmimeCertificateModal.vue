@@ -47,7 +47,7 @@
 									@click="deleteCertificate(certificate.id)">
 									<template #icon>
 										<DeleteIcon
-											:title="t('mail', 'Delete certificate')"
+											:name="t('mail', 'Delete certificate')"
 											:size="20" />
 									</template>
 								</NcButton>
@@ -57,7 +57,7 @@
 				</table>
 				<NcEmptyContent v-if="certificates.length === 0"
 					class="certificate__empty"
-					:title="t('mail', 'No certificate imported yet')" />
+					:name="t('mail', 'No certificate imported yet')" />
 				<div class="certificate-modal__list__actions">
 					<NcButton
 						type="primary"
