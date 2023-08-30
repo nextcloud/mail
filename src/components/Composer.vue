@@ -964,7 +964,14 @@ export default {
 					return alias.id === this.fromAccount && !alias.aliasId
 				})
 			} else {
-				this.selectedAlias = this.aliases[0]
+				const currentAccountId = this.$store.getters.getMailbox(this.$route.params.mailboxId)?.accountId
+				if (currentAccountId) {
+					this.selectedAlias = this.aliases.find((alias) => {
+						return alias.id === currentAccountId
+					})
+				} else {
+					this.selectedAlias = this.aliases[0]
+				}
 			}
 			// Only overwrite editormode if body is empty
 			if (previous === NO_ALIAS_SET && (!this.body || this.body.value === '')) {
