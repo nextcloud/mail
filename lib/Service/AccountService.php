@@ -181,4 +181,21 @@ class AccountService {
 	public function getAllAcounts(): array {
 		return $this->mapper->getAllAccounts();
 	}
+
+	
+	/**
+	 * @param string $currentUserId
+	 * @param int $accountId
+	 * @return bool
+	 */
+
+	public function testAccountConnection(string $currentUserId, int $accountId) :bool {
+		$account = $this->find($currentUserId, $accountId);
+		try {
+			$account->getImapConnection();
+			return true;
+		} catch (ServiceException $e) {
+			return false;
+		}
+	}
 }

@@ -75,6 +75,7 @@
 				:smime-encrypt="composerData.smimeEncrypt"
 				:is-first-open="modalFirstOpen"
 				:request-mdn="composerData.requestMdn"
+				:accounts="accounts"
 				@update:from-account="patchComposerData({ accountId: $event })"
 				@update:from-alias="patchComposerData({ aliasId: $event })"
 				@update:to="patchComposerData({ to: $event })"
@@ -129,6 +130,12 @@ export default {
 		NcActions,
 		NcActionButton,
 		MinimizeIcon,
+	},
+	props: {
+		accounts: {
+			type: Array,
+			required: true,
+		},
 	},
 	data() {
 		return {

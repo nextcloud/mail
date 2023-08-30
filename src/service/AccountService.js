@@ -116,3 +116,12 @@ export const updateSmimeCertificate = async (id, smimeCertificateId) => {
 	const response = await axios.put(url, { smimeCertificateId })
 	return response.data.data
 }
+
+export const testAccountConnection = async (id) => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/test', {
+		id,
+	})
+
+	const resp = await axios.get(url)
+	return resp.data.data
+}
