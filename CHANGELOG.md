@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-beta.4 - unreleased
+## 3.4.0-rc.1 - unreleased
 ### Added
 - Thread summaries
 - Snooze
@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Scroll to on mobile
 - Thread summary box display on mobile
 - Preview text
+- Set from field to current account
 
 ### Changed
 - Don't open first mail by default
