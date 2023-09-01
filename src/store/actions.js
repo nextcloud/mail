@@ -280,7 +280,14 @@ export default {
 				)
 			}
 
+			const updated = Object.assign({}, mailbox)
+			updated.unread = 0
+
 			await markMailboxRead(mailboxId)
+			commit('updateMailbox', {
+				mailbox: updated,
+			})
+
 			dispatch('syncEnvelopes', {
 				accountId,
 				mailboxId,
