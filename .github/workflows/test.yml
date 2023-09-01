@@ -28,7 +28,7 @@ jobs:
         node-version: 'false'
         install: true
     - name: Checkout Mail
-      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+      uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
       with:
         path: nextcloud/apps/mail
     - name: Install dependencies
@@ -121,7 +121,7 @@ jobs:
               database: ${{ matrix.db }}
               node-version: 'false'
           - name: Checkout Mail
-            uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+            uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
             with:
                 path: nextcloud/apps/mail
           - name: Install dependencies
@@ -172,7 +172,7 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+          - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
           - name: Read package.json node and npm engines version
             uses: skjnldsv/read-package-engines-version-actions@0ce2ed60f6df073a62a77c0a4958dd0fc68e32e7 # v2.1
             id: versions
