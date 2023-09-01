@@ -365,6 +365,8 @@
     "Account connected" : "Сметката е поврзана",
     "You can close this window" : "Можете да го затворите овој прозорец",
     "Connect your mail account" : "Поврзете ја вашата е-пошта сметка",
+    "Tomorrow – {timeLocale}" : "Утре – {timeLocale}",
+    "Later today – {timeLocale}" : "Денес покасно – {timeLocale}",
     "Itinerary for {type} is not supported yet" : "Итинерар за {type} сеуште не е поддржан",
     "All" : "Сите",
     "Drafts" : "Шаблони",
