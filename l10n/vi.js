@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Đã đính kèm tin nhắn %s",
     "Important mail" : "Thư quan trọng",
+    "No message found yet" : "Không có tin nhắn nào được tìm thấy",
+    "Set up an account" : "Thiết lập một tài khoản",
     "Unread mail" : "Thư chưa đọc",
     "Important" : "Quan trọng",
     "Work" : "Công việc",
@@ -78,8 +80,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Chọn một tệp để chia sẻ dưới dạng liên kết",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Các tệp đính kèm vượt quá kích thước được cho phép là {size}. Thay vào đó, hãy chia sẻ các tệp qua liên kết."],
     "Confirm" : "Xác nhận",
-    "No message found yet" : "Không có tin nhắn nào được tìm thấy",
-    "Set up an account" : "Thiết lập một tài khoản",
     "No messages in this mailbox" : "Không có thư nào trong hộp thư này",
     "No messages" : "Không có tin nhắn",
     "Draft: " : "Bản nháp: ",

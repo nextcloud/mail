@@ -2,6 +2,8 @@ OC.L10N.register(
     "mail",
     {
     "Important mail" : "重要なメール",
+    "No message found yet" : "メッセージはまだありません",
+    "Set up an account" : "アカウントを設定",
     "Unread mail" : "未読メール",
     "Important" : "重要",
     "Work" : "仕事",
@@ -88,8 +90,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "共有リンクにして送信するファイルを選択",
     "_{count} attachment_::_{count} attachments_" : ["{count} 個の添付ファイル"],
     "Confirm" : "承認",
-    "No message found yet" : "メッセージはまだありません",
-    "Set up an account" : "アカウントを設定",
     "Plain text" : "プレーンテキスト",
     "Rich text" : "リッチテキスト",
     "No messages in this mailbox" : "このメールボックスにメッセージはありません",

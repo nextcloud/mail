@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Messaggio incorporato %s",
     "Important mail" : "Posta importante",
+    "No message found yet" : "Ancora nessun messaggio trovato",
+    "Set up an account" : "Configura un account",
     "Unread mail" : "Messaggio non letto",
     "Important" : "Importante",
     "Work" : "Lavoro",
@@ -106,8 +108,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Scegli un file da condividere come un collegamento",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Gli allegati superano le dimensioni consentite per gli allegati di {size}. Condividere invece il file tramite collegamento.","Gli allegati superano le dimensioni consentite per gli allegati di {size}. Condividere invece i file tramite collegamento.","Gli allegati superano le dimensioni consentite per gli allegati di {size}. Condividere invece i file tramite collegamento."],
     "Confirm" : "Conferma",
-    "No message found yet" : "Ancora nessun messaggio trovato",
-    "Set up an account" : "Configura un account",
     "Plain text" : "Testo semplice",
     "Rich text" : "Testo formattato",
     "No messages in this mailbox" : "Nessun messaggio in questa casella di posta",

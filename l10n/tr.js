@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Gömülü ileti %s",
     "Important mail" : "Önemli e-posta",
+    "No message found yet" : "Henüz bir ileti bulunamadı",
+    "Set up an account" : "Bir hesap ekleyin",
     "Unread mail" : "Okunmamış e-posta",
     "Important" : "Önemli",
     "Work" : "İş",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "Oluşturucuyu kapat",
     "Untitled message" : "Adlandırılmamış ileti",
     "Confirm" : "Onayla",
-    "No message found yet" : "Henüz bir ileti bulunamadı",
-    "Set up an account" : "Bir hesap ekleyin",
     "Plain text" : "Düz metin",
     "Rich text" : "Zengin metin",
     "No messages in this mailbox" : "Bu e-posta kutusunda herhangi bir ileti yok",

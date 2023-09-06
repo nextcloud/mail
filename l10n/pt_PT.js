@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Mensagem embebida %s",
     "Important mail" : "Mensagem importante",
+    "Set up an account" : "Configurar uma conta",
     "Unread mail" : "Mensagem por ler",
     "Important" : "Importante",
     "Work" : "Profissional",
@@ -75,7 +76,6 @@ OC.L10N.register(
     "Send" : "Enviar",
     "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
     "Confirm" : "Confirmar",
-    "Set up an account" : "Configurar uma conta",
     "Plain text" : "Texto simples",
     "No messages" : "Sem mensagens",
     "Draft: " : "Rascunho:",

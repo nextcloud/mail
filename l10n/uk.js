@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Вбудоване повідомлення %s",
     "Important mail" : "Важлива пошта",
+    "Set up an account" : "Створити обліковий запис",
     "Unread mail" : "Непрочитана пошта",
     "Important" : "Важливі",
     "Work" : "Робочий",
@@ -119,7 +120,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Виберіть файл, яким ви поділитеся через посилання",
     "_{count} attachment_::_{count} attachments_" : ["{count} долучений файл","{count} долучені файли","{count} долучених файлів","{count} долучених файлів"],
     "Confirm" : "Підтвердити",
-    "Set up an account" : "Створити обліковий запис",
     "Plain text" : "Простий текст",
     "Rich text" : "Текст з форматуванням",
     "No messages" : "Відсутні повідомлення",

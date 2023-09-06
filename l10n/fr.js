@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Message intégré %s",
     "Important mail" : "E-mail important",
+    "No message found yet" : "Aucun message pour l'instant",
+    "Set up an account" : "Créer un compte",
     "Unread mail" : "E-mails non lus",
     "Important" : "Important",
     "Work" : "Travail",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "Fermer la fenêtre de composition",
     "Untitled message" : "Message sans titre",
     "Confirm" : "Confirmer",
-    "No message found yet" : "Aucun message pour l'instant",
-    "Set up an account" : "Créer un compte",
     "Plain text" : "Texte brut",
     "Rich text" : "Texte riche",
     "No messages in this mailbox" : "Aucun message dans ce dossier",

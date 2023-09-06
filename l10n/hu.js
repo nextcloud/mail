@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Beágyazott üzenet %s",
     "Important mail" : "Fontos levelek",
+    "No message found yet" : "Nem található üzenet",
+    "Set up an account" : "Állítson be egy fiókot",
     "Unread mail" : "Olvasatlan levelek",
     "Important" : "Fontos",
     "Work" : "Munkahelyi",
@@ -156,8 +158,6 @@ OC.L10N.register(
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással.","A melléklet mérete meghaladja a megengedett {size}-os méretet. Inkább ossza meg a fájlt hivatkozással."],
     "Untitled message" : "Névtelen üzenet",
     "Confirm" : "Megerősítés",
-    "No message found yet" : "Nem található üzenet",
-    "Set up an account" : "Állítson be egy fiókot",
     "Plain text" : "Egyszerű szöveg",
     "Rich text" : "Formázott szöveg",
     "No messages in this mailbox" : "Nincs üzenet ebben a postafiókban",

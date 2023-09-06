@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Missatge incrustat %s",
     "Important mail" : "Correu important",
+    "No message found yet" : "Encara no s'ha trobat cap missatge",
+    "Set up an account" : "Configura un compte",
     "Unread mail" : "Correu no llegit",
     "Important" : "Importants",
     "Work" : "Feina",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "Tanca finestra del compositor",
     "Untitled message" : "Missatge sense títol",
     "Confirm" : "Confirma",
-    "No message found yet" : "Encara no s'ha trobat cap missatge",
-    "Set up an account" : "Configura un compte",
     "Plain text" : "Text net",
     "Rich text" : "Text enriquit",
     "No messages in this mailbox" : "No hi ha missatges en aquesta bústia",

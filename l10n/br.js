@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Important mail" : "Postel pouezus",
+    "Set up an account" : "Staliañ ur c'hont",
     "Work" : "Labour",
     "Personal" : "Personel",
     "Mail" : "Postel",
@@ -18,7 +19,6 @@ OC.L10N.register(
     "Cancel" : "Arrest",
     "Send" : "Kas",
     "Confirm" : "Kadarnañ",
-    "Set up an account" : "Staliañ ur c'hont",
     "Unfavorite" : "Digaretañ",
     "Favorite" : "Pennrollañ",
     "Unselect" : "Dizibab",

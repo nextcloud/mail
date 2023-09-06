@@ -1,6 +1,8 @@
 { "translations": {
     "Embedded message %s" : "Innebygd melding %s",
     "Important mail" : "Viktig e-post",
+    "No message found yet" : "Ingen meldinger funnet enda",
+    "Set up an account" : "Sett opp en konto",
     "Unread mail" : "Ulest e-post",
     "Important" : "Viktig",
     "Work" : "Arbeid",
@@ -119,8 +121,6 @@
     "_{count} attachment_::_{count} attachments_" : ["{count} vedlegg","{count} vedlegg"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Vedlegget overskrider den tillatte vedleggsstørrelsen på {size}. Vennligst del filen via lenke i stedet.","Vedleggene overskrider den tillatte vedleggsstørrelsen på {size}. Vennligst del filene via lenke i stedet."],
     "Confirm" : "Bekreft",
-    "No message found yet" : "Ingen meldinger funnet enda",
-    "Set up an account" : "Sett opp en konto",
     "Plain text" : "Ren tekst",
     "Rich text" : "Rik tekst",
     "No messages in this mailbox" : "Ingen meldinger i denne postboksen",

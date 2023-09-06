@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Zapouzdřená zpráva %s",
     "Important mail" : "Důležité e-maily",
+    "No message found yet" : "Zatím nenalezeny žádné zprávy",
+    "Set up an account" : "Nastavit si účet",
     "Unread mail" : "Nepřečtené e-maily",
     "Important" : "Důležité",
     "Work" : "Pracovní",
@@ -168,8 +170,6 @@ OC.L10N.register(
     "Close composer" : "Zavřít dialog psaní",
     "Untitled message" : "Zpráva bez názvu",
     "Confirm" : "Potvrdit",
-    "No message found yet" : "Zatím nenalezeny žádné zprávy",
-    "Set up an account" : "Nastavit si účet",
     "Plain text" : "Neformátovaný text",
     "Rich text" : "Formátovaný text",
     "No messages in this mailbox" : "V této schránce nejsou žádné zprávy",

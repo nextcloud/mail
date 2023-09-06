@@ -1,6 +1,8 @@
 { "translations": {
     "Embedded message %s" : "Ugrađena poruka %s",
     "Important mail" : "Važna pošta",
+    "No message found yet" : "Nije pronađena nijedna poruka",
+    "Set up an account" : "Postavi račun",
     "Unread mail" : "Nepročitana pošta",
     "Important" : "Važno",
     "Work" : "Posao",
@@ -92,8 +94,6 @@
     "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Privitak prekoračuje dopuštenu veličinu privitaka od {size}. Dijelite datoteku putem poveznice.","Privici prekoračuju dopuštenu veličinu privitaka od {size}. Dijelite datoteke putem poveznice.","Privici prekoračuju dopuštenu veličinu privitaka od {size}. Dijelite datoteke putem poveznice."],
     "Confirm" : "Potvrdi",
-    "No message found yet" : "Nije pronađena nijedna poruka",
-    "Set up an account" : "Postavi račun",
     "Plain text" : "Običan tekst",
     "Rich text" : "Bogat tekst",
     "No messages in this mailbox" : "Nema poruka u ovom sandučiću",

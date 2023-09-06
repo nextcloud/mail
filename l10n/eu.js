@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Txertatutako mezua %s",
     "Important mail" : "Posta garrantzitsua",
+    "No message found yet" : "Ez da mezurik aurkitu oraindik.",
+    "Set up an account" : "Konfiguratu kontu bat",
     "Unread mail" : "Irakurri gabeko posta",
     "Important" : "Garrantzitsua",
     "Work" : "Lana",
@@ -158,8 +160,6 @@ OC.L10N.register(
     "Close composer" : "Itxi egilea",
     "Untitled message" : "Izenik gabeko mezua",
     "Confirm" : "Berretsi",
-    "No message found yet" : "Ez da mezurik aurkitu oraindik.",
-    "Set up an account" : "Konfiguratu kontu bat",
     "Plain text" : "Testu arrunta",
     "Rich text" : "Testu aberastua",
     "No messages in this mailbox" : "Mezurik ez postontzi honetan",

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Įterptas laiškas %s",
     "Important mail" : "Svarbūs laiškai",
+    "No message found yet" : "Kol kas nerasta jokių el. laiškų",
+    "Set up an account" : "Nusistatyti paskyrą",
     "Unread mail" : "Neskaitytas paštas",
     "Important" : "Svarbūs",
     "Work" : "Darbas",
@@ -117,8 +119,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Pasirinkite failą, kurį bendrinsite kaip nuorodą",
     "_{count} attachment_::_{count} attachments_" : ["{count} priedas","{count} priedai","{count} priedų","{count} priedas"],
     "Confirm" : "Patvirtinti",
-    "No message found yet" : "Kol kas nerasta jokių el. laiškų",
-    "Set up an account" : "Nusistatyti paskyrą",
     "Plain text" : "Grynasis tekstas",
     "Rich text" : "Raiškusis tekstas",
     "No messages in this mailbox" : "Šioje pašto dėžutėje laiškų nėra",

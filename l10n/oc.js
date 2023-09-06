@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Important mail" : "Mail important",
+    "No message found yet" : "Pas cap de messatge trobat",
     "Unread mail" : "Mail pas legit",
     "Important" : "Important",
     "Work" : "Professional(a)",
@@ -33,7 +34,6 @@ OC.L10N.register(
     "Send" : "Mandar",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
     "Confirm" : "Confirmar",
-    "No message found yet" : "Pas cap de messatge trobat",
     "Favorite" : "Favorit",
     "Read" : "Legit",
     "Select" : "Select",

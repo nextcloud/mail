@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "رسالة مُضمّنة Embedded ـ %s",
     "Important mail" : "بريدٌ هامٌّ",
+    "No message found yet" : "لا توجد أي رسائل حتى الآن",
+    "Set up an account" : "إعداد وتنصيب حساب",
     "Unread mail" : "البريد غير المقروء",
     "Important" : "هامٌّ",
     "Work" : "العمل",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "إغلاق الناظِم composer",
     "Untitled message" : "رسالة بدون عنوان",
     "Confirm" : "تأكيد",
-    "No message found yet" : "لا توجد أي رسائل حتى الآن",
-    "Set up an account" : "إعداد وتنصيب حساب",
     "Plain text" : "نصٌّ جَلِيٌّ plain text",
     "Rich text" : "نصٌّ مُنسَّقٌ rich text",
     "No messages in this mailbox" : "لا توجد رسائل في صندوق البريد هذا",

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Messàgiu incorporadu %s",
     "Important mail" : "Messàgiu de posta importante",
+    "No message found yet" : "Ancora perunu messàgiu agatadu",
+    "Set up an account" : "Imposta unu contu",
     "Unread mail" : "Posta no lèghida",
     "Important" : "Importante",
     "Work" : "Traballu",
@@ -90,8 +92,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Is alligongiados propassant sa mannària permìtida de {size}. Cumpartzi is archìvios cun unu ligòngiu.","Is alligongiados propassant sa mannària permìtida de {size}. Cumpartzi is archìvios cun unu ligòngiu."],
     "Confirm" : "Cunfirma",
-    "No message found yet" : "Ancora perunu messàgiu agatadu",
-    "Set up an account" : "Imposta unu contu",
     "Plain text" : "Testu simple",
     "Rich text" : "Testu formatadu",
     "No messages in this mailbox" : "Perunu messàgiu in custa casella de posta",

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Upotettu viesti %s",
     "Important mail" : "Tärkeä sähköposti",
+    "No message found yet" : "Yhtäkään viestiä ei ole vielä löytynyt",
+    "Set up an account" : "Määritä tili",
     "Unread mail" : "Lukematon sähköposti",
     "Important" : "Tärkeä",
     "Work" : "Työ",
@@ -146,8 +148,6 @@ OC.L10N.register(
     "Close composer" : "Sulje lähetysikkuna",
     "Untitled message" : "Nimetön viesti",
     "Confirm" : "Vahvista",
-    "No message found yet" : "Yhtäkään viestiä ei ole vielä löytynyt",
-    "Set up an account" : "Määritä tili",
     "Plain text" : "Raakateksti",
     "Rich text" : "Rikas teksti",
     "No messages in this mailbox" : "Ei viestejä tässä postilaatikossa",

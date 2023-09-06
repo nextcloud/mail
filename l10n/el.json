@@ -1,6 +1,8 @@
 { "translations": {
     "Embedded message %s" : "Ενσωματωμένο μήνυμα %s",
     "Important mail" : "Σημαντική αλληλογραφία",
+    "No message found yet" : "Δε βρέθηκε μήνυμα ακόμη.",
+    "Set up an account" : "Ρυθμίστε ένα λογαριασμό",
     "Unread mail" : "Μη αναγνωσμένη αλληλογραφία",
     "Important" : "Σημαντικό ",
     "Work" : "Εργασία",
@@ -110,8 +112,6 @@
     "_{count} attachment_::_{count} attachments_" : ["{count} συνημμένo","{count} συνημμένα"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Το συνημμένο υπερβαίνει το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε το αρχείο μέσω συνδέσμου.","Τα συνημμένα υπερβαίνουν το επιτρεπόμενο μέγεθος συνημμένων {size}. Παρακαλούμε διαμοιράστε τα αρχεία μέσω συνδέσμου."],
     "Confirm" : "Επιβεβαίωση",
-    "No message found yet" : "Δε βρέθηκε μήνυμα ακόμη.",
-    "Set up an account" : "Ρυθμίστε ένα λογαριασμό",
     "Plain text" : "Απλό κείμενο",
     "Rich text" : "Εμπλουτισμένο κείμενο",
     "No messages in this mailbox" : "Δεν υπάρχουν μηνύματα σε αυτό το γραμματοκιβώτιο.",

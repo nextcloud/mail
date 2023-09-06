@@ -1,6 +1,8 @@
 { "translations": {
     "Embedded message %s" : "Ingebed bericht %s",
     "Important mail" : "Belangrijke mail",
+    "No message found yet" : "Nog geen berichten gevonden",
+    "Set up an account" : "Maak een account aan",
     "Unread mail" : "Ongelezen mail",
     "Important" : "Belangrijk",
     "Work" : "Werk",
@@ -95,8 +97,6 @@
     "Choose a file to share as a link" : "Kies een bestand om als link te delen",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["De bijlage overschrijdt de toegestane omvang van {size}. Deel de bestanden in plaats daarvan via een link.","De bijlagen overschrijden de toegestane omvang van {size}. Deel de bestanden in plaats daarvan via een link."],
     "Confirm" : "Bevestigen",
-    "No message found yet" : "Nog geen berichten gevonden",
-    "Set up an account" : "Maak een account aan",
     "Plain text" : "Platte tekst",
     "Rich text" : "Rijke tekst",
     "No messages in this mailbox" : "Geen berichten in deze inbak",

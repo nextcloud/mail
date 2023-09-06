@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Eingebettete Nachricht %s",
     "Important mail" : "Wichtige E-Mail",
+    "No message found yet" : "Keine Nachrichten gefunden",
+    "Set up an account" : "Konto einrichten",
     "Unread mail" : "Ungelesene E-Mail",
     "Important" : "Wichtig",
     "Work" : "Arbeit",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "Erstellungsbereich schließen",
     "Untitled message" : "Nachricht ohne Titel",
     "Confirm" : "Bestätigen",
-    "No message found yet" : "Keine Nachrichten gefunden",
-    "Set up an account" : "Konto einrichten",
     "Plain text" : "Klartext",
     "Rich text" : "Rich-Text",
     "No messages in this mailbox" : "Keine Nachrichten in diesem Postfach",

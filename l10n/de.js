@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Eingebettete Nachricht %s",
     "Important mail" : "Wichtige E-Mail",
+    "No message found yet" : "Keine Nachrichten gefunden",
+    "Set up an account" : "Konto einrichten",
     "Unread mail" : "Ungelesene E-Mail",
     "Important" : "Wichtig",
     "Work" : "Arbeit",
@@ -156,8 +158,6 @@ OC.L10N.register(
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Dateien stattdessen über einen Link.","Die Anhänge überschreiten die zulässige Anhangsgröße von {size}. Bitte teile die Dateien stattdessen über einen Link."],
     "Untitled message" : "Nachricht ohne Titel",
     "Confirm" : "Bestätigen",
-    "No message found yet" : "Keine Nachrichten gefunden",
-    "Set up an account" : "Konto einrichten",
     "Plain text" : "Klartext",
     "Rich text" : "Rich-Text",
     "No messages in this mailbox" : "Keine Nachrichten in diesem Postfach",

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Vstavljeno sporočilo %s",
     "Important mail" : "Pomembno sporočilo",
+    "No message found yet" : "Ni še najdenih sporočil",
+    "Set up an account" : "Nastavi račun",
     "Unread mail" : "Neprebrana pošta",
     "Important" : "Pomembno",
     "Work" : "Službeno",
@@ -145,8 +147,6 @@ OC.L10N.register(
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Velikost priloge presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave.","Velikost prilog presega dovoljeno vrednost {size}. Priporočljivo je omogočiti souporabo prek povezave."],
     "Untitled message" : "Nenaslovljeno sporočilo",
     "Confirm" : "Potrdi",
-    "No message found yet" : "Ni še najdenih sporočil",
-    "Set up an account" : "Nastavi račun",
     "Plain text" : "Besedilno",
     "Rich text" : "Obogateno besedilo",
     "No messages in this mailbox" : "V poštnem predalu ni sporočil.",

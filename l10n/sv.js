@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Inbäddat meddelande %s",
     "Important mail" : "Viktig e-post",
+    "No message found yet" : "Inget meddelande har ännu hittats",
+    "Set up an account" : "Skapa ett konto",
     "Unread mail" : "Oläst e-post",
     "Important" : "Viktigt",
     "Work" : "Arbete",
@@ -103,8 +105,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Välj en fil att dela som länk",
     "_{count} attachment_::_{count} attachments_" : ["{count} bilaga","{count} bilagor"],
     "Confirm" : "Bekräfta",
-    "No message found yet" : "Inget meddelande har ännu hittats",
-    "Set up an account" : "Skapa ett konto",
     "Plain text" : "Oformaterad text",
     "Rich text" : "Formaterad text",
     "No messages in this mailbox" : "Inga meddelanden i den här brevlådan",

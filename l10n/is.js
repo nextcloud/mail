@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Ívafin skilaboð %s",
     "Important mail" : "Mikilvægur póstur",
+    "No message found yet" : "Engin skilaboð hafa ennþá fundist",
+    "Set up an account" : "Setja upp notandaaðgang",
     "Unread mail" : "Ólesinn póstur",
     "Important" : "Mikilvægt",
     "Work" : "Vinna",
@@ -73,8 +75,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
     "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli",
     "Confirm" : "Staðfesta",
-    "No message found yet" : "Engin skilaboð hafa ennþá fundist",
-    "Set up an account" : "Setja upp notandaaðgang",
     "Plain text" : "Ósniðinn texti",
     "Rich text" : "Sniðinn texti",
     "No messages" : "Engin skilaboð",

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "پیام درج شده%s",
     "Important mail" : "ایمیل‌های مهم",
+    "No message found yet" : "No message found yet",
+    "Set up an account" : "Set up an account",
     "Unread mail" : "Unread mail",
     "Important" : "مهم",
     "Work" : "کار",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "Close composer",
     "Untitled message" : "Untitled message",
     "Confirm" : "تائید",
-    "No message found yet" : "No message found yet",
-    "Set up an account" : "Set up an account",
     "Plain text" : "متن ساده",
     "Rich text" : "متن غنی",
     "No messages in this mailbox" : "No messages in this mailbox",

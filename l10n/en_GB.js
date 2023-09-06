@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Embedded message %s",
     "Important mail" : "Important mail",
+    "No message found yet" : "No message found yet",
+    "Set up an account" : "Set up an account",
     "Unread mail" : "Unread mail",
     "Important" : "Important",
     "Work" : "Work",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "Close composer",
     "Untitled message" : "Untitled message",
     "Confirm" : "Confirm",
-    "No message found yet" : "No message found yet",
-    "Set up an account" : "Set up an account",
     "Plain text" : "Plain text",
     "Rich text" : "Rich text",
     "No messages in this mailbox" : "No messages in this mailbox",

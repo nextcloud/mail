@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Mensaje incrustado %s",
     "Important mail" : "Correo importante",
+    "No message found yet" : "Aún no se han encontrado mensajes",
+    "Set up an account" : "Configurar una cuenta",
     "Unread mail" : "Correo sin leer",
     "Important" : "Importante",
     "Work" : "Trabajo",
@@ -96,8 +98,6 @@ OC.L10N.register(
     "Choose a file to share as a link" : "Selecciona un archivo para compartir como enlace",
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Los archivos adjuntos exceden el tamaño permitido de {size}. Por favor comparte a través de  un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor envía los archivos mediante un enlace.","Los archivos adjuntos superan el tamaño permitido de {size}. Por favor envía los archivos mediante un enlace."],
     "Confirm" : "Confirmar",
-    "No message found yet" : "Aún no se han encontrado mensajes",
-    "Set up an account" : "Configurar una cuenta",
     "Plain text" : "Texto simple",
     "Rich text" : "Texto enriquecido",
     "No messages in this mailbox" : "No hay mensajes en esta bandeja",

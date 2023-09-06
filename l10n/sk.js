@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Vnorená správa %s",
     "Important mail" : "Dôležitý e-mail",
+    "No message found yet" : "Zatiaľ sa nenašla žiadna správa",
+    "Set up an account" : "Nastaviť si účet",
     "Unread mail" : "Neprečítaná pošta",
     "Important" : "Dôležité",
     "Work" : "Pracovné",
@@ -132,8 +134,6 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} príloha","{count} prílohy","{count} príloh","{count} prílohy"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Príloha prekračuje povolenú veľlkosť {size}. Daný súbor môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu.","Prílohy prekračujú povolenú veľkosť príloh {size}. Dané súbory môžete sprístupniť pomocou odkazu."],
     "Confirm" : "Potvrdiť",
-    "No message found yet" : "Zatiaľ sa nenašla žiadna správa",
-    "Set up an account" : "Nastaviť si účet",
     "Plain text" : "Obyčajný text",
     "Rich text" : "Formátovaný text",
     "No messages in this mailbox" : "V tejto poštovej schránke sa nenachádzajú žiadne správy",

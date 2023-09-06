@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "הודעה מוטמעת %s",
     "Important mail" : "דוא״ל חשוב",
+    "No message found yet" : "לא נמצאו הודעות עדיין",
+    "Set up an account" : "הגדרת חשבון",
     "Unread mail" : "דוא״ל שלא נקרא",
     "Important" : "חשוב",
     "Work" : "עבודה",
@@ -84,8 +86,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
     "Choose a file to share as a link" : "נא לבחור קובץ לשיתוף כקישור",
     "Confirm" : "אימות",
-    "No message found yet" : "לא נמצאו הודעות עדיין",
-    "Set up an account" : "הגדרת חשבון",
     "Plain text" : "טקסט פשוט",
     "Rich text" : "טקסט עשיר",
     "No messages in this mailbox" : "אין הודעות בתיבת הדוא״ל הזאת",

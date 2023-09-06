@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Встроенное сообщение %s",
     "Important mail" : "Важная почта",
+    "No message found yet" : "Сообщений ещё нет",
+    "Set up an account" : "Настроить учётную запись",
     "Unread mail" : "Непрочитанная почта",
     "Important" : "Важное",
     "Work" : "Работа",
@@ -131,8 +133,6 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} вложение","{count} вложения","{count} вложений","{count} вложений"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Размер этого вложения превышает установленный лимит. Опубликуйте этот файл с доступом по ссылке и перешлите ссылку, вместо отправки файла.","Размер этих вложений превышает установленный лимит. Опубликуйте эти файы с доступом по ссылке и перешлите ссылку, вместо отправки файла.","Размер этих вложений превышает установленный лимит. Опубликуйте эти файы с доступом по ссылке и перешлите ссылку, вместо отправки файла.","Размер этих вложений превышает установленный лимит. Опубликуйте эти файы с доступом по ссылке и перешлите ссылку, вместо отправки файла."],
     "Confirm" : "Подтвердить",
-    "No message found yet" : "Сообщений ещё нет",
-    "Set up an account" : "Настроить учётную запись",
     "Plain text" : "Простой текст",
     "Rich text" : "Текст с форматированием",
     "No messages in this mailbox" : "В этой папке нет сообщений",

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "嵌入式消息 %s",
     "Important mail" : "重要邮件",
+    "No message found yet" : "暂无消息",
+    "Set up an account" : "设置一个账户",
     "Unread mail" : "未读邮件",
     "Important" : "重要",
     "Work" : "工作",
@@ -159,8 +161,6 @@ OC.L10N.register(
     "Close composer" : "关闭编辑器",
     "Untitled message" : "未命名信息",
     "Confirm" : "确认",
-    "No message found yet" : "暂无消息",
-    "Set up an account" : "设置一个账户",
     "Plain text" : "纯文本",
     "Rich text" : "富文本",
     "No messages in this mailbox" : "此邮箱中没有邮件",

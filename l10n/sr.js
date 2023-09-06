@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Уграђена порука %s",
     "Important mail" : "Важна пошта",
+    "No message found yet" : "Још нема порука",
+    "Set up an account" : "Подесите налог",
     "Unread mail" : "Непрочитана пошта",
     "Important" : "Важно",
     "Work" : "Посао",
@@ -169,8 +171,6 @@ OC.L10N.register(
     "Close composer" : "Затвори састављач",
     "Untitled message" : "Ненасловљена порука",
     "Confirm" : "Потврди",
-    "No message found yet" : "Још нема порука",
-    "Set up an account" : "Подесите налог",
     "Plain text" : "Обичан текст",
     "Rich text" : "Обогаћени текст",
     "No messages in this mailbox" : "У овом сандучету нема поште",

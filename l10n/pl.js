@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Osadzona wiadomość %s",
     "Important mail" : "Ważna poczta",
+    "No message found yet" : "Nie znaleziono jeszcze wiadomości",
+    "Set up an account" : "Załóż konto",
     "Unread mail" : "Nieprzeczytana wiadomość",
     "Important" : "Ważne",
     "Work" : "Praca",
@@ -138,8 +140,6 @@ OC.L10N.register(
     "_{count} attachment_::_{count} attachments_" : ["{count} załącznik","{count} załączniki","{count} załączników","{count} załączników"],
     "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Załącznik przekracza dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij plik za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników z {size}. Zamiast tego udostępnij pliki za pośrednictwem linku."],
     "Confirm" : "Potwierdź",
-    "No message found yet" : "Nie znaleziono jeszcze wiadomości",
-    "Set up an account" : "Załóż konto",
     "Plain text" : "Zwykły tekst",
     "Rich text" : "Tekst sformatowany",
     "No messages in this mailbox" : "Brak wiadomości w skrzynce pocztowej",

@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Embedded message %s" : "포함된 메시지 %s",
     "Important mail" : "중요 메일",
+    "Set up an account" : "계정 설정",
     "Unread mail" : "읽지 않은 메일",
     "Important" : "중요",
     "Work" : "직장",
@@ -97,7 +98,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "첨부할 파일을 선택하십시오",
     "Choose a file to share as a link" : "공유할 링크 파일을 선택하세요.",
     "Confirm" : "확인",
-    "Set up an account" : "계정 설정",
     "Plain text" : "평문",
     "Rich text" : "서식 있는 텍스트",
     "No messages" : "메시지가 없음",
