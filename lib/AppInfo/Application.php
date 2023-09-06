@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -35,7 +36,9 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\ImportantMailWidget;
+use OCA\Mail\Dashboard\ImportantMailWidgetV2;
 use OCA\Mail\Dashboard\UnreadMailWidget;
+use OCA\Mail\Dashboard\UnreadMailWidgetV2;
 use OCA\Mail\Events\BeforeImapClientCreated;
 use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
@@ -81,6 +84,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\Dashboard\IAPIWidgetV2;
 use OCP\IServerContainer;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
@@ -138,8 +142,14 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleWare(ErrorMiddleware::class);
 		$context->registerMiddleWare(ProvisioningMiddleware::class);
 
-		$context->registerDashboardWidget(ImportantMailWidget::class);
-		$context->registerDashboardWidget(UnreadMailWidget::class);
+		if (interface_exists(IAPIWidgetV2::class)) {
+			$context->registerDashboardWidget(ImportantMailWidgetV2::class);
+			$context->registerDashboardWidget(UnreadMailWidgetV2::class);
+		} else {
+			$context->registerDashboardWidget(ImportantMailWidget::class);
+			$context->registerDashboardWidget(UnreadMailWidget::class);
+		}
+
 		$context->registerSearchProvider(Provider::class);
 
 		$context->registerNotifierService(Notifier::class);

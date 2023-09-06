@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.13.1@086b94371304750d1c673315321a55d15fc59015">
+<files psalm-version="5.14.1@b9d355e0829c397b9b3b47d0c0ed042a8a70284d">
+  <file src="lib/AppInfo/Application.php">
+    <MissingDependency>
+      <code>ImportantMailWidgetV2</code>
+      <code>UnreadMailWidgetV2</code>
+    </MissingDependency>
+    <UndefinedClass>
+      <code>IAPIWidgetV2</code>
+    </UndefinedClass>
+  </file>
   <file src="lib/Cache/Cache.php">
     <UnsupportedPropertyReferenceUsage>
       <code><![CDATA[$d = &$this->_data[$mailbox]]]></code>
@@ -13,9 +22,19 @@
       <code><![CDATA[$slicemap = &$this->_slicemap[$mailbox]]]></code>
     </UnsupportedPropertyReferenceUsage>
   </file>
-  <file src="lib/Rector/ServerGetRector.php">
+  <file src="lib/Dashboard/ImportantMailWidgetV2.php">
+    <MissingDependency>
+      <code>MailWidgetV2</code>
+    </MissingDependency>
+  </file>
+  <file src="lib/Dashboard/MailWidgetV2.php">
     <UndefinedClass>
-      <code>AbstractRector</code>
+      <code>IAPIWidgetV2</code>
     </UndefinedClass>
+  </file>
+  <file src="lib/Dashboard/UnreadMailWidgetV2.php">
+    <MissingDependency>
+      <code>MailWidgetV2</code>
+    </MissingDependency>
   </file>
 </files>
