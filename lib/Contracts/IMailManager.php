@@ -131,6 +131,7 @@ interface IMailManager {
 	 * @param int $uid
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
+	 * @return int the new UID
 	 *
 	 * @throws ServiceException
 	 */
@@ -138,7 +139,7 @@ interface IMailManager {
 		string $sourceFolderId,
 		int $uid,
 		Account $destinationAccount,
-		string $destFolderId);
+		string $destFolderId): int;
 
 	/**
 	 * @param Account $account
@@ -322,10 +323,10 @@ interface IMailManager {
 	 * @param Account $dstAccount
 	 * @param Mailbox $dstMailbox
 	 * @param string $threadRootId
-	 * @return void
+	 * @return int[] the new UIDs
 	 * @throws ServiceException
 	 */
-	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): void;
+	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array;
 
 	/**
 	 * @param Account $account

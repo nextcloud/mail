@@ -112,7 +112,6 @@ class TrashRetentionJob extends TimedJob {
 			return;
 		}
 
-		$processedMessageIds = [];
 		$client = $this->clientFactory->getClient($account);
 		try {
 			foreach ($messages as $message) {
@@ -122,16 +121,13 @@ class TrashRetentionJob extends TimedJob {
 					$message->getUid(),
 					$client,
 				);
-
-				$messageId = $message->getMessageId();
-				if ($messageId !== null) {
-					$processedMessageIds[] = $messageId;
-				}
+				$this->messageRetentionMapper->deleteByMailboxIdAndUid(
+					$message->getMailboxId(),
+					$message->getUid(),
+				);
 			}
 		} finally {
 			$client->logout();
 		}
-
-		$this->messageRetentionMapper->deleteByMessageIds($processedMessageIds);
 	}
 }

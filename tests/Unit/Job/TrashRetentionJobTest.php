@@ -112,6 +112,7 @@ class TrashRetentionJobTest extends TestCase {
 		$account = new Account($dbAccount);
 		$trash = new Mailbox();
 		$message = new Message();
+		$message->setMailboxId(123);
 		$message->setUid(420);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 

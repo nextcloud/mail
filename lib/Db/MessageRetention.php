@@ -29,21 +29,27 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method void setMessageId(string $messageId)
- * @method string getMessageId()
+ * @method void setMailboxId(int $mailboxId)
+ * @method int getMailboxId()
+ * @method void setUid(int $uid)
+ * @method int getUid()
  * @method void setKnownSince(int $knownSince)
  * @method int getKnownSince()
  */
 class MessageRetention extends Entity {
 
-	/** @var string */
-	protected $messageId;
+	/** @var int */
+	protected $mailboxId;
+
+	/** @var int */
+	protected $uid;
 
 	/** @var int */
 	protected $knownSince;
 
 	public function __construct() {
-		$this->addType('messageId', 'string');
+		$this->addType('mailboxId', 'integer');
+		$this->addType('uid', 'integer');
 		$this->addType('knownSince', 'integer');
 	}
 }
