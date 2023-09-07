@@ -67,15 +67,13 @@ class Notifier implements INotifier {
 			// Deal with known subjects
 			case 'quota_depleted':
 				$parameters = $notification->getSubjectParameters();
-				$notification->setRichSubject($l->t('You are reaching your mailbox quota limit for {account}'), [
-					'account' => [
+				$notification->setRichSubject($l->t('You are reaching your mailbox quota limit for {account_email}'), [
+					'account_email' => [
 						'type' => 'highlight',
 						'id' => $parameters['id'],
 						'name' => $parameters['account_email']
 					]
 				]);
-				$notification->setParsedSubject($notification->getRichSubject());
-
 				$messageParameters = $notification->getMessageParameters();
 				$notification->setRichMessage($l->t('You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails.'),
 					[
@@ -85,7 +83,6 @@ class Notifier implements INotifier {
 							'name' => (string)$messageParameters['quota_percentage'] . '%',
 						]
 					]);
-				$notification->setParsedMessage($notification->getParsedMessage());
 				break;
 			default:
 				throw  new \InvalidArgumentException();
