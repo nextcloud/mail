@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-rc.1 - unreleased
+## 3.4.0-rc.2 - unreleased
 ### Added
 - Thread summaries
 - Snooze
@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - Thread summary box display on mobile
 - Preview text
 - Set from field to current account
+- Implement widget item api v2
 
 ### Changed
 - Don't open first mail by default
