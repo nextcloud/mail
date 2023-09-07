@@ -30,7 +30,7 @@
 		<template #icon>
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
-		<template #subname>
+		<template #subtitle>
 			{{ subjectForSubtitle }}
 		</template>
 		<template slot="actions">

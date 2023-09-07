@@ -88,11 +88,11 @@
 						{{ t("mail", "From") }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
+						<NcSelect
 							id="fromId"
 							v-model="searchInFrom"
 							label="label"
-							track-by="email"
+							input-id="seletct-email-input"
 							:options="autocompleteRecipients"
 							:value="searchInFrom"
 							:placeholder="t('mail', 'Select senders')"
@@ -112,11 +112,11 @@
 						{{ t('mail', 'To') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
+						<NcSelect
 							id="toId"
 							v-model="searchInTo"
 							label="label"
-							track-by="email"
+							input-id="select-email-input"
 							:options="autocompleteRecipients"
 							:value="searchInTo"
 							:placeholder="t('mail', 'Select recipients')"
@@ -136,11 +136,11 @@
 						{{ t('mail', 'Cc') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
+						<NcSelect
 							id="ccId"
 							v-model="searchInCc"
 							label="label"
-							track-by="email"
+							input-id="select-email-input"
 							:options="autocompleteRecipients"
 							:value="searchInCc"
 							:placeholder="t('mail', 'Select CC recipients')"
@@ -160,11 +160,11 @@
 						{{ t('mail', 'Bcc') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
+						<NcSelect
 							id="bccId"
 							v-model="searchInBcc"
 							label="label"
-							track-by="email"
+							input-id="select-email-input"
 							:options="autocompleteRecipients"
 							:value="searchInCc"
 							:placeholder="t('mail', 'Select BCC recipients')"
@@ -184,7 +184,7 @@
 						{{ t('mail', 'Tags') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
+						<NcSelect
 							v-if="tags.length > 0"
 							id="tagsId"
 							v-model="selectedTags"
@@ -193,7 +193,7 @@
 							label="displayName"
 							:value="selectedTags"
 							:placeholder="t('mail', 'Select tags')"
-							track-by="displayName"
+							input-id="select-displayName-input"
 							:multiple="true"
 							:auto-limit="false"
 							:close-on-select="false">
@@ -216,7 +216,7 @@
 							<template #option="{ option }">
 								{{ option.displayName }}
 							</template>
-						</NcMultiselect>
+						</NcSelect>
 					</div>
 				</div>
 
@@ -292,12 +292,12 @@
 <script>
 import moment from '@nextcloud/moment'
 
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
-import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect'
+import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import Tune from 'vue-material-design-icons/Tune.vue'
@@ -315,7 +315,7 @@ export default {
 	name: 'SearchMessages',
 	components: {
 		NcModal,
-		NcMultiselect,
+		NcSelect,
 		NcDatetimePicker,
 		NcActions,
 		NcActionButton,

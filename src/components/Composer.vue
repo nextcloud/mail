@@ -1626,5 +1626,8 @@ export default {
 		padding-right: 5px;
 	}
 }
+:deep(v-select select vs--single vs--unsearchable vs--multiple vs--searchable) {
+  width: calc(100% - 50px);
+}
 
 </style>
