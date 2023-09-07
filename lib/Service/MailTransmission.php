@@ -342,7 +342,7 @@ class MailTransmission implements IMailTransmission {
 		try {
 			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
 		} catch (SentMailboxNotSetException $e) {
-			throw new ClientException('Could not send message' . $e->getMessage(), $e->getCode(), $e);
+			throw new ClientException('Could not send message: ' . $e->getMessage(), $e->getCode(), $e);
 		}
 	}
 
