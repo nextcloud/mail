@@ -22,7 +22,7 @@
 
 <template>
 	<NcEmptyContent
-		:name="error"
+		:title="error"
 		:description="message"
 		class="mail-error"
 		:class="{ 'mail-error--auto-margin': autoMargin }">

@@ -46,7 +46,7 @@
 					:aria-label="t('mail', 'Update alias')"
 					native-type="submit"
 					:form="formId"
-					:name="t('mail', 'Update alias')">
+					:title="t('mail', 'Update alias')">
 					<template #icon>
 						<IconLoading v-if="loading" :size="20" />
 						<IconCheck v-else :size="20" />
@@ -60,7 +60,7 @@
 				<NcButton v-if="enableUpdate"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Rename alias')"
-					:name="t('mail', 'Show update alias form')"
+					:title="t('mail', 'Show update alias form')"
 					@click.prevent="showForm = true">
 					<template #icon>
 						<IconRename :size="20" />
@@ -69,7 +69,7 @@
 				<NcButton v-if="enableDelete && !alias.provisioned"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Delete alias')"
-					:name="t('mail', 'Delete alias')"
+					:title="t('mail', 'Delete alias')"
 					@click.prevent="deleteAlias">
 					<template #icon>
 						<IconLoading v-if="loading" :size="20" />

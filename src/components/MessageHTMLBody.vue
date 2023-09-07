@@ -30,7 +30,7 @@
 		<div id="message-container" :class="{scroll: !fullHeight}">
 			<iframe ref="iframe"
 				class="message-frame"
-				:name="t('mail', 'Message frame')"
+				:title="t('mail', 'Message frame')"
 				:src="url"
 				seamless
 				@load="onMessageFrameLoad" />

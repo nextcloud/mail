@@ -15,7 +15,7 @@
 			</div>
 		</div>
 		<div class="connection">
-			<div><AirplaneIcon :name="t('mail', 'Airplane')" /></div>
+			<div><AirplaneIcon :title="t('mail', 'Airplane')" /></div>
 			<div>{{ flightNumber }}</div>
 			<div v-if="reservation">
 				{{ t('mail', 'Reservation {id}', {id: reservation}) }}

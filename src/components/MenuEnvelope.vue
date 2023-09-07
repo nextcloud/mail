@@ -19,10 +19,10 @@
 				@click="onReply">
 				<template #icon>
 					<ReplyAllIcon v-if="hasMultipleRecipients"
-						:name="t('mail', 'Reply all')"
+						:title="t('mail', 'Reply all')"
 						:size="20" />
 					<ReplyIcon v-else
-						:name="t('mail', 'Reply')"
+						:title="t('mail', 'Reply')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Reply') }}
@@ -32,7 +32,7 @@
 				@click="onReply(true)">
 				<template #icon>
 					<ReplyIcon
-						:name="t('mail', 'Reply to sender only')"
+						:title="t('mail', 'Reply to sender only')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Reply to sender only') }}
@@ -41,7 +41,7 @@
 				@click="onForward">
 				<template #icon>
 					<ShareIcon
-						:name="t('mail', 'Forward')"
+						:title="t('mail', 'Forward')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Forward') }}
@@ -51,7 +51,7 @@
 				@click.prevent="onToggleJunk">
 				<template #icon>
 					<AlertOctagonIcon
-						:name="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
+						:title="envelope.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')"
 						:size="20" />
 				</template>
 				{{
@@ -63,7 +63,7 @@
 				@click.prevent="$emit('open-tag-modal')">
 				<template #icon>
 					<TagIcon
-						:name="t('mail', 'Edit tags')"
+						:title="t('mail', 'Edit tags')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Edit tags') }}
@@ -73,7 +73,7 @@
 				@click.prevent="toggleSelected">
 				<template #icon>
 					<CheckIcon
-						:name="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
+						:title="isSelected ? t('mail', 'Unselect') : t('mail', 'Select')"
 						:size="20" />
 				</template>
 				{{
@@ -86,7 +86,7 @@
 				@click.prevent="$emit('open-move-modal')">
 				<template #icon>
 					<OpenInNewIcon
-						:name="t('mail', 'Move message')"
+						:title="t('mail', 'Move message')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Move message') }}
@@ -95,7 +95,7 @@
 				:close-after-click="false"
 				@click="snoozeActionsOpen = true">
 				<template #icon>
-					<AlarmIcon :name="t('mail', 'Snooze')"
+					<AlarmIcon :title="t('mail', 'Snooze')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Snooze') }}
@@ -113,7 +113,7 @@
 				@click="localMoreActionsOpen=true">
 				<template #icon>
 					<DotsHorizontalIcon
-						:name="t('mail', 'More actions')"
+						:title="t('mail', 'More actions')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'More actions') }}
@@ -124,7 +124,7 @@
 				@click="localMoreActionsOpen=false">
 				<template #icon>
 					<ChevronLeft
-						:name="t('mail', 'More actions')"
+						:title="t('mail', 'More actions')"
 						:size="20" />
 					{{ t('mail', 'More actions') }}
 				</template>
@@ -133,7 +133,7 @@
 				@click.prevent="forwardSelectedAsAttachment">
 				<template #icon>
 					<ShareIcon
-						:name="t('mail', 'Forward message as attachment')"
+						:title="t('mail', 'Forward message as attachment')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Forward message as attachment') }}
@@ -142,7 +142,7 @@
 				@click="onOpenEditAsNew">
 				<template #icon>
 					<PlusIcon
-						:name="t('mail', 'Edit as new message')"
+						:title="t('mail', 'Edit as new message')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Edit as new message') }}
@@ -151,7 +151,7 @@
 				@click.prevent="$emit('open-event-modal')">
 				<template #icon>
 					<CalendarBlankIcon
-						:name="t('mail', 'Create event')"
+						:title="t('mail', 'Create event')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Create event') }}
@@ -160,7 +160,7 @@
 				@click.prevent="$emit('open-task-modal')">
 				<template #icon>
 					<TaskIcon
-						:name="t('mail', 'Create task')"
+						:title="t('mail', 'Create task')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Create task') }}
@@ -170,7 +170,7 @@
 				@click.prevent="$emit('show-source-modal')">
 				<template #icon>
 					<InformationIcon
-						:name="t('mail', 'View source')"
+						:title="t('mail', 'View source')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'View source') }}
@@ -189,7 +189,7 @@
 				:close-after-click="true">
 				<template #icon>
 					<DownloadIcon
-						:name="t('mail', 'Download thread data for debugging')"
+						:title="t('mail', 'Download thread data for debugging')"
 						:size="20" />
 				</template>
 				{{ t('mail', 'Download thread data for debugging') }}

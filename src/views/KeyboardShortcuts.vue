@@ -1,7 +1,7 @@
 <template>
 	<Modal
 		size="large"
-		:name="t('mail', 'Keyboard shortcut')"
+		:title="t('mail', 'Keyboard shortcut')"
 		@close="$emit('close')">
 		<h2>{{ t('mail', 'Keyboard shortcuts') }}</h2>
 

@@ -31,7 +31,7 @@
 					<ButtonVue v-if="!account.provisioningId"
 						type="tertiary-no-background"
 						:aria-label="t('mail', 'Go back')"
-						:name="t('mail', 'Change name')"
+						:title="t('mail', 'Change name')"
 						@click="$emit('rename-primary-alias')">
 						<template #icon>
 							<IconRename :size="20" />

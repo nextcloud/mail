@@ -72,7 +72,7 @@
 			<div v-if="outboxMessages.length !== 0" class="outbox__border">
 				<NavigationOutbox class="outbox" />
 			</div>
-			<AppNavigationSettings :name="t('mail', 'Mail settings')">
+			<AppNavigationSettings :title="t('mail', 'Mail settings')">
 				<template #icon>
 					<IconSetting :size="20" />
 				</template>

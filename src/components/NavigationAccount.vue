@@ -26,7 +26,7 @@
 		:id="id"
 		:key="id"
 		:menu-open.sync="menuOpen"
-		:name="account.emailAddress"
+		:title="account.emailAddress"
 		:to="firstMailboxRoute"
 		:exact="true"
 		@update:menuOpen="onMenuToggle">
@@ -37,7 +37,7 @@
 		<!-- Actions -->
 		<template #actions>
 			<template v-if="isDisabled">
-				<ActionText :name="t('mail', 'Provisioned account is disabled')">
+				<ActionText :title="t('mail', 'Provisioned account is disabled')">
 					<template #icon>
 						<IconInfo :size="20" />
 					</template>
@@ -45,7 +45,7 @@
 				</ActionText>
 			</template>
 			<template v-else>
-				<ActionText v-if="!account.isUnified" :name="t('mail', 'Quota')">
+				<ActionText v-if="!account.isUnified" :title="t('mail', 'Quota')">
 					<template #icon>
 						<IconInfo
 							:size="20" />

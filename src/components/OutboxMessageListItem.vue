@@ -24,7 +24,7 @@
 	<ListItem
 		class="outbox-message"
 		:class="{ selected }"
-		:name="title"
+		:title="title"
 		:details="details"
 		@click="openModal">
 		<template #icon>
@@ -40,7 +40,7 @@
 				{{ t('mail', 'Send now') }}
 				<template #icon>
 					<Send
-						:name="t('mail', 'Send now')"
+						:title="t('mail', 'Send now')"
 						:size="20" />
 				</template>
 			</ActionButton>

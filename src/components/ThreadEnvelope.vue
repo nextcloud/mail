@@ -108,7 +108,7 @@
 								:size="20"
 								fill-color="red" />
 						</template>
-						<NcActionText class="smime-text" :name="smimeHeading">
+						<NcActionText class="smime-text" :title="smimeHeading">
 							{{ smimeMessage }}
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
@@ -117,7 +117,7 @@
 						<NcActionButton v-if="inlineMenuSize >= 1 || !moreActionsOpen"
 							:class="{ primary: expanded}"
 							:aria-label="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
-							:name="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
+							:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
 							type="tertiary-no-background"
 							@click="onReply">
 							<template #icon>
@@ -131,7 +131,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-							:name="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
+							:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
 							:close-after-click="true"
 							@click.prevent="onToggleFlagged">
 							<template #icon>
@@ -145,7 +145,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-							:name="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
+							:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
 							:close-after-click="true"
 							@click.prevent="onToggleSeen">
 							<template #icon>
@@ -157,26 +157,26 @@
 						</NcActionButton>
 						<NcActionButton v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
 							:close-after-click="true"
-							:name="t('mail', 'Archive message')"
+							:title="t('mail', 'Archive message')"
 							:disabled="disableArchiveButton"
 							:aria-label="t('mail', 'Archive message')"
 							type="tertiary-no-background"
 							@click.prevent="onArchive">
 							<template #icon>
 								<ArchiveIcon
-									:name="t('mail', 'Archive message')"
+									:title="t('mail', 'Archive message')"
 									:size="20" />
 							</template>
 						</NcActionButton>
 						<NcActionButton v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
 							:close-after-click="true"
-							:name="t('mail', 'Delete message')"
+							:title="t('mail', 'Delete message')"
 							:aria-label="t('mail', 'Delete message')"
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
 							<template #icon>
 								<DeleteIcon
-									:name="t('mail', 'Delete message')"
+									:title="t('mail', 'Delete message')"
 									:size="20" />
 							</template>
 						</NcActionButton>
@@ -236,7 +236,7 @@
 			role="alert" />
 		<ConfirmModal v-if="message && message.unsubscribeUrl && message.isOneClickUnsubscribe && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Unsubscribe')"
-			:name="t('mail', 'Unsubscribe via link')"
+			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="unsubscribeViaOneClick">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
@@ -244,14 +244,14 @@
 		<ConfirmModal v-else-if="message && message.unsubscribeUrl && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Unsubscribe')"
 			:confirm-url="message.unsubscribeUrl"
-			:name="t('mail', 'Unsubscribe via link')"
+			:title="t('mail', 'Unsubscribe via link')"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="showListUnsubscribeConfirmation = false">
 			{{ t('mail', 'Unsubscribing will stop all messages from the mailing list {sender}', { sender: from }) }}
 		</ConfirmModal>
 		<ConfirmModal v-else-if="message && message.unsubscribeMailto && showListUnsubscribeConfirmation"
 			:confirm-text="t('mail', 'Send unsubscribe email')"
-			:name="t('mail', 'Unsubscribe via email')"
+			:title="t('mail', 'Unsubscribe via email')"
 			:disabled="unsubscribing"
 			@cancel="showListUnsubscribeConfirmation = false"
 			@confirm="unsubscribeViaMailto">
