@@ -35,7 +35,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageSnooze;
 use OCA\Mail\Db\MessageSnoozeMapper;
-use OCA\Mail\Db\ThreadMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -56,9 +55,7 @@ class SnoozeService {
 		private MailAccountMapper $accountMapper,
 		private MailboxMapper $mailboxMapper,
 		private IMailManager $mailManager,
-		private ThreadMapper $threadMapper
 	) {
-
 	}
 
 	/**
@@ -104,20 +101,17 @@ class SnoozeService {
 		Account $dstAccount,
 		Mailbox $dstMailbox
 	): void {
-		$this->snoozeMessageDB($message, $unixTimestamp, $srcMailbox);
-
-		try {
-			$this->mailManager->moveMessage(
-				$srcAccount,
-				$srcMailbox->getName(),
-				$message->getUid(),
-				$dstAccount,
-				$dstMailbox->getName()
-			);
-		} catch (Throwable $e) {
-			$this->unSnoozeMessageDB($message);
-			throw $e;
-		}
+		$newUid = $this->mailManager->moveMessage(
+			$srcAccount,
+			$srcMailbox->getName(),
+			$message->getUid(),
+			$dstAccount,
+			$dstMailbox->getName()
+		);
+		$snoozedMessage = clone $message;
+		$snoozedMessage->setMailboxId($dstMailbox->getId());
+		$snoozedMessage->setUid($newUid);
+		$this->snoozeMessageDB($snoozedMessage, $unixTimestamp, $srcMailbox);
 	}
 
 	/**
@@ -139,22 +133,15 @@ class SnoozeService {
 		Mailbox $srcMailbox,
 		Account $dstAccount,
 		Mailbox $dstMailbox
-	):void {
-		$this->snoozeThreadDB($selectedMessage, $unixTimestamp, $srcMailbox);
-
-		try {
-			$this->mailManager->moveThread(
-				$srcAccount,
-				$srcMailbox,
-				$dstAccount,
-				$dstMailbox,
-				$selectedMessage->getThreadRootId()
-			);
-		} catch (Throwable $e) {
-			$this->unSnoozeThreadDB($selectedMessage);
-			throw $e;
-		}
-
+	): void {
+		$newUids = $this->mailManager->moveThread(
+			$srcAccount,
+			$srcMailbox,
+			$dstAccount,
+			$dstMailbox,
+			$selectedMessage->getThreadRootId()
+		);
+		$this->snoozeThreadDB($newUids, $dstMailbox, $unixTimestamp, $srcMailbox);
 	}
 
 
@@ -172,30 +159,17 @@ class SnoozeService {
 	 */
 	public function snoozeMessageDB(Message $message, int $unixTimestamp, Mailbox $srcMailbox): void {
 		$snooze = new MessageSnooze();
-		$snooze->setMessageId($message->getMessageId());
+		$snooze->setMailboxId($message->getMailboxId());
+		$snooze->setUid($message->getUid());
 		$snooze->setSnoozedUntil($unixTimestamp);
 		$snooze->setSrcMailboxId($srcMailbox->getId());
 
-		$messageId = $message->getMessageId();
-		if($messageId === null) {
-			throw new ServiceException('Cannot extract messageId from message to snooze.');
-		}
-
-		$this->messageSnoozeMapper->deleteByMessageIds([$messageId]);
+		// TODO: Update instead of DELETE+INSERT
+		$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
+			$message->getMailboxId(),
+			$message->getUid(),
+		);
 		$this->messageSnoozeMapper->insert($snooze);
-	}
-
-	/**
-	 * Removes the DB entry for the message
-	 *
-	 * @param Message $message
-	 * @return void
-	 */
-	public function unSnoozeMessageDB(Message $message): void {
-		$messageId = $message->getMessageId();
-		if($messageId !== null) {
-			$this->messageSnoozeMapper->deleteByMessageIds([$messageId]);
-		}
 	}
 
 	/**
@@ -209,41 +183,34 @@ class SnoozeService {
 	 *
 	 * @throws Exception
 	 */
-	public function snoozeThreadDB(Message $selectedMessage, int $unixTimestamp, Mailbox $srcMailbox): void {
-		$messages = $this->threadMapper->findMessageIdsByThreadRoot(
-			$selectedMessage->getThreadRootId()
-		);
-
-		foreach ($messages as $message) {
+	public function snoozeThreadDB(array $uids, Mailbox $dstMailbox, int $unixTimestamp, Mailbox $srcMailbox): void {
+		foreach ($uids as $uid) {
 			$snooze = new MessageSnooze();
-			$snooze->setMessageId($message['messageId']);
+			$snooze->setMailboxId($dstMailbox->getId());
+			$snooze->setUid($uid);
 			$snooze->setSnoozedUntil($unixTimestamp);
 			$snooze->setSrcMailboxId($srcMailbox->getId());
 
-			$messageId = $message['messageId'];
-
-			$this->messageSnoozeMapper->deleteByMessageIds([$messageId]);
+			// TODO: Update instead of DELETE+INSERT
+			$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
+				$dstMailbox->getAccountId(),
+				$uid,
+			);
 			$this->messageSnoozeMapper->insert($snooze);
 		}
 	}
 
 	/**
 	 * Removes DB entry for the messages
-	 *
-	 * @param Message $selectedMessage
-	 * @return void
 	 */
-	public function unSnoozeThreadDB(Message $selectedMessage): void {
-		$messages = $this->threadMapper->findMessageIdsByThreadRoot(
-			$selectedMessage->getThreadRootId()
-		);
+	public function unSnoozeThreadDB(Account $account, Message $selectedMessage): void {
+		$messages = $this->messageMapper->findThread($account, $selectedMessage->getThreadRootId());
 
-		$messageIdsToDelete = [];
 		foreach ($messages as $message) {
-			$messageIdsToDelete[] = $message['messageId'];
-		}
-		if(count($messageIdsToDelete) > 0) {
-			$this->messageSnoozeMapper->deleteByMessageIds($messageIdsToDelete);
+			$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
+				$message->getMailboxId(),
+				$message->getUid(),
+			);
 		}
 	}
 
@@ -275,9 +242,11 @@ class SnoozeService {
 
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$messageIdsToDelete = [];
 			foreach ($messages as $message) {
-				$srcMailboxId = $this->messageSnoozeMapper->getSrcMailboxId($message->getMessageId());
+				$srcMailboxId = $this->messageSnoozeMapper->getSrcMailboxId(
+					$message->getMailboxId(),
+					$message->getUid(),
+				);
 
 				$srcMailboxName = 'INBOX';
 
@@ -300,14 +269,10 @@ class SnoozeService {
 
 				//TODO mark message as unread?
 
-				$messageId = $message->getMessageId();
-				if($messageId !== null) {
-					$messageIdsToDelete[] = $messageId;
-				}
-
-			}
-			if(count($messageIdsToDelete) > 0) {
-				$this->messageSnoozeMapper->deleteByMessageIds($messageIdsToDelete);
+				$this->messageSnoozeMapper->deleteByMailboxIdAndUid(
+					$message->getMailboxId(),
+					$message->getUid(),
+				);
 			}
 		} finally {
 			$client->logout();

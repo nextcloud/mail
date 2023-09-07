@@ -47,16 +47,21 @@ class MessageSnoozeMapper extends QBMapper {
 	 *
 	 * @return int|null
 	 */
-	public function getSrcMailboxId(string $messageId): ?int {
+	public function getSrcMailboxId(int $mailboxId, int $uid): ?int {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb->select('src_mailbox_id')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq(
-					'message_id',
-					$qb->createNamedParameter($messageId, IQueryBuilder::PARAM_STR),
-					IQueryBuilder::PARAM_STR
+					'mailbox_id',
+					$qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT
+				),
+				$qb->expr()->eq(
+					'uid',
+					$qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT
 				),
 				$qb->expr()->isNotNull(
 					'src_mailbox_id'
@@ -73,17 +78,24 @@ class MessageSnoozeMapper extends QBMapper {
 	}
 
 	/**
-	 * Deletes DB Entry for a waked message
-	 *
-	 * @param string[] $messageIds
-	 *
-	 * @return void
+	 * Deletes DB Entry for woken message
 	 */
-	public function deleteByMessageIds(array $messageIds): void {
+	public function deleteByMailboxIdAndUid(int $mailboxId, int $uid): void {
 		$qb = $this->db->getQueryBuilder();
 
 		$delete = $qb->delete($this->getTableName())
-			->where($qb->expr()->in('message_id', $qb->createNamedParameter($messageIds, IQueryBuilder::PARAM_STR_ARRAY)));
+			->where(
+				$qb->expr()->eq(
+					'mailbox_id',
+					$qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+				$qb->expr()->eq(
+					'uid',
+					$qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+			);
 
 		$delete->executeStatement();
 	}

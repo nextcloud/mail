@@ -317,17 +317,21 @@ class MessageMapper {
 	 * @param string $sourceFolderId
 	 * @param int $messageId
 	 * @param string $destFolderId
+	 * @return int the new UID
 	 */
 	public function move(Horde_Imap_Client_Base $client,
 		string $sourceFolderId,
 		int $messageId,
-		string $destFolderId): void {
+		string $destFolderId): int {
 		try {
-			$client->copy($sourceFolderId, $destFolderId,
+			$mapping = $client->copy($sourceFolderId, $destFolderId,
 				[
 					'ids' => new Horde_Imap_Client_Ids($messageId),
 					'move' => true,
+					'force_map' => true,
 				]);
+
+			return $mapping[$messageId];
 		} catch (Horde_Imap_Client_Exception $e) {
 			$this->logger->debug($e->getMessage(),
 				[
