@@ -4,7 +4,7 @@
 			:options="{useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto'}"
 			cache-lifetime="0"
 			@changed="onModeChanged">
-			<Tab id="auto" key="auto" :title="t('mail', 'Auto')">
+			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
 				<label for="auto-name">{{ t('mail', 'Name') }}</label>
 				<input
 					id="auto-name"
@@ -36,7 +36,7 @@
 					type="password"
 					@change="clearFeedback">
 			</Tab>
-			<Tab id="manual" key="manual" :title="t('mail', 'Manual')">
+			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
 				<label for="man-name">{{ t('mail', 'Name') }}</label>
 				<input
 					id="man-name"

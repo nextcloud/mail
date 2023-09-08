@@ -26,7 +26,7 @@
 					:open-first="mailbox.specialRole !== 'drafts'" />
 				<template v-else>
 					<div v-show="hasImportantEnvelopes" class="app-content-list-item">
-						<SectionTitle class="important" :title="t('mail', 'Important')" />
+						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
 							<ButtonVue slot="trigger"
 								type="tertiary-no-background"
@@ -53,7 +53,7 @@
 						:bus="bus" />
 					<SectionTitle v-show="hasImportantEnvelopes"
 						class="app-content-list-item other"
-						:title="t('mail', 'Other')" />
+						:name="t('mail', 'Other')" />
 					<Mailbox
 						class="nameother"
 						:account="unifiedAccount"
