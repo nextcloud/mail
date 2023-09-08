@@ -23,12 +23,21 @@
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template chooser](https://github.com/nextcloud/mail/issues/new/choose) so we get the info needed to debug and fix the problem. Thanks!
 
 ## Ethical AI Rating
-### Rating: 🟢
+
+### Priority Inbox
+
+**Rating:** 🟢
 
 Positive:
 * The software for training and inferencing of this model is open source.
 * The model is created and trained on-premises based on the user's own data.
 * The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.
+
+### Thread Summaries (opt-in)
+
+**Rating:** 🟢/🟡/🟡/🔴
+
+The rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 
