@@ -43,57 +43,69 @@ class MessageRetentionMapper extends QBMapper {
 	 *
 	 * @return void
 	 */
-	public function deleteByMessageIds(array $messageIds): void {
+	public function deleteByMailboxIdAndUid(int $mailboxId, int $uid): void {
 		$qb = $this->db->getQueryBuilder();
 
 		$delete = $qb->delete($this->getTableName())
-			->where($qb->expr()->in(
-				'message_id',
-				$qb->createParameter('message_ids'),
-				IQueryBuilder::PARAM_STR_ARRAY,
-			));
-
-		foreach (array_chunk($messageIds, 500) as $messageIdChunk) {
-			$delete->setParameter(
-				'message_ids',
-				$messageIdChunk,
-				IQueryBuilder::PARAM_STR_ARRAY,
+			->where(
+				$qb->expr()->eq(
+					'mailbox_id',
+					$qb->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				),
+				$qb->expr()->eq(
+					'uid',
+					$qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT),
+					IQueryBuilder::PARAM_INT,
+				)
 			);
-			$delete->executeStatement();
-		}
+
+		$delete->executeStatement();
 	}
 
 	/**
 	 * Delete all orphaned extra entries that have no matching message anymore.
+	 *
+	 * @todo if this executes before the sync of the trash mailbox, there are false orphans. delete only *old* orphans?
 	 */
 	public function deleteOrphans(): void {
 		$deleteQb = $this->db->getQueryBuilder();
 		$deleteQb->delete($this->getTableName())
-			->where('id', $deleteQb->expr()->in(
-				'id',
-				$deleteQb->createParameter('ids'),
-				IQueryBuilder::PARAM_INT_ARRAY,
-			));
+			->where(
+				$deleteQb->expr()->eq(
+					'mailbox_id',
+					$deleteQb->createParameter('mailbox_id'),
+					IQueryBuilder::PARAM_INT,
+				),
+				$deleteQb->expr()->eq(
+					'uid',
+					$deleteQb->createParameter('uid'),
+					IQueryBuilder::PARAM_INT,
+				),
+			);
 
 		$selectQb = $this->db->getQueryBuilder();
 		$selectQb->select('mr.id')
 			->from($this->getTableName(), 'mr')
-			->leftJoin('mr', 'mail_messages', 'm', $selectQb->expr()->eq(
-				'm.message_id',
-				'mr.message_id',
-				IQueryBuilder::PARAM_STR,
+			->leftJoin('mr', 'mail_messages', 'm', $selectQb->expr()->andX(
+				$selectQb->expr()->eq(
+					'm.mailbox_id',
+					'mr.mailbox_id',
+					IQueryBuilder::PARAM_INT,
+				),
+				$selectQb->expr()->eq(
+					'm.uid',
+					'mr.uid',
+					IQueryBuilder::PARAM_INT,
+				),
 			))
 			->where($selectQb->expr()->isNull('m.id'));
 		$cursor = $selectQb->executeQuery();
-		$ids = [];
 		while ($row = $cursor->fetch()) {
-			$ids[] = (int)$row['id'];
-		}
-		$cursor->closeCursor();
-
-		foreach (array_chunk($ids, 500) as $idChunk) {
-			$deleteQb->setParameter('ids', $idChunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$deleteQb->setParameter('mailbox_id', $row['m.mailbox_id'], IQueryBuilder::PARAM_INT);
+			$deleteQb->setParameter('uid', $row['m.uid'], IQueryBuilder::PARAM_INT);
 			$deleteQb->executeStatement();
 		}
+		$cursor->closeCursor();
 	}
 }
