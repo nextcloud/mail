@@ -60,23 +60,24 @@ class MessageKnownSinceListenerTest extends TestCase {
 		);
 	}
 
-	public function testHandle() {
+	public function testHandle(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(60);
 		$dbAccount->setTrashMailboxId(420);
 		$account = new Account($dbAccount);
 		$mailbox = $this->createMock(Mailbox::class);
 		$message1 = new Message();
-		$message1->setMessageId('<foobar@local.host>');
+		$message1->setUid(11);
 		$message1->setMailboxId(420);
 		$message2 = new Message();
-		$message2->setMessageId('<foobar2@local.host>');
+		$message2->setUid(12);
 		$message2->setMailboxId(1);
 		$messages = [$message1, $message2];
 		$event = new NewMessagesSynchronized($account, $mailbox, $messages);
 
 		$messageRetention = new MessageRetention();
-		$messageRetention->setMessageId('<foobar@local.host>');
+		$messageRetention->setUid(11);
+		$messageRetention->setMailboxId(420);
 		$messageRetention->setKnownSince(1000);
 
 		$this->timeFactory->expects($this->once())
@@ -89,7 +90,7 @@ class MessageKnownSinceListenerTest extends TestCase {
 		$this->messageKnownSinceListener->handle($event);
 	}
 
-	public function testHandleWithoutRetention() {
+	public function testHandleWithoutRetention(): void {
 		$dbAccount = new MailAccount();
 		$dbAccount->setTrashRetentionDays(null);
 		$dbAccount->setTrashMailboxId(420);

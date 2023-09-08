@@ -1427,10 +1427,17 @@ class MessageMapper extends QBMapper {
 
 		$select = $qb->select('m.*')
 			->from($this->getTableName(), 'm')
-			->join('m', 'mail_messages_retention', 'mr', $qb->expr()->eq(
-				'm.message_id',
-				'mr.message_id',
-				IQueryBuilder::PARAM_STR,
+			->join('m', 'mail_messages_retention', 'mr', $qb->expr()->andX(
+				$qb->expr()->eq(
+					'm.mailbox_id',
+					'mr.mailbox_id',
+					IQueryBuilder::PARAM_INT,
+				),
+				$qb->expr()->eq(
+					'm.uid',
+					'mr.uid',
+					IQueryBuilder::PARAM_INT,
+				),
 			))
 			->where(
 				$qb->expr()->eq(
@@ -1461,10 +1468,17 @@ class MessageMapper extends QBMapper {
 
 		$select = $qb->select('m.*')
 			->from($this->getTableName(), 'm')
-			->join('m', 'mail_messages_snoozed', 'mr', $qb->expr()->eq(
-				'm.message_id',
-				'mr.message_id',
-				IQueryBuilder::PARAM_STR,
+			->join('m', 'mail_messages_snoozed', 'mr', $qb->expr()->andX(
+				$qb->expr()->eq(
+					'm.mailbox_id',
+					'mr.mailbox_id',
+					IQueryBuilder::PARAM_INT,
+				),
+				$qb->expr()->eq(
+					'm.uid',
+					'mr.uid',
+					IQueryBuilder::PARAM_INT,
+				),
 			))
 			->where(
 				$qb->expr()->eq(

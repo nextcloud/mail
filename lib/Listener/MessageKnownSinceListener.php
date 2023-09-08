@@ -66,7 +66,8 @@ class MessageKnownSinceListener implements IEventListener {
 			}
 
 			$retention = new MessageRetention();
-			$retention->setMessageId($message->getMessageId());
+			$retention->setMailboxId($message->getMailboxId());
+			$retention->setUid($message->getUid());
 			$retention->setKnownSince($now);
 			$this->messageRetentionMapper->insert($retention);
 		}

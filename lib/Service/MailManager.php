@@ -281,15 +281,14 @@ class MailManager implements IMailManager {
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 *
-	 * @return void
+	 * @return int
 	 * @throws ServiceException
-	 *
 	 */
 	public function moveMessage(Account $sourceAccount,
 		string $sourceFolderId,
 		int $uid,
 		Account $destinationAccount,
-		string $destFolderId) {
+		string $destFolderId): int {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
 			try {
 				$sourceMailbox = $this->mailboxMapper->find($sourceAccount, $sourceFolderId);
@@ -297,7 +296,7 @@ class MailManager implements IMailManager {
 				throw new ServiceException("Source mailbox $sourceFolderId does not exist", 0, $e);
 			}
 
-			$this->moveMessageOnSameAccount(
+			$newUid = $this->moveMessageOnSameAccount(
 				$sourceAccount,
 				$sourceFolderId,
 				$destFolderId,
@@ -309,6 +308,8 @@ class MailManager implements IMailManager {
 				MessageDeletedEvent::class,
 				new MessageDeletedEvent($sourceAccount, $sourceMailbox, $uid)
 			);
+
+			return $newUid;
 		} else {
 			throw new ServiceException('It is not possible to move across accounts yet');
 		}
@@ -390,17 +391,17 @@ class MailManager implements IMailManager {
 	 * @param string $destFolderId
 	 * @param int $messageId
 	 *
-	 * @return void
+	 * @return int the new UID
 	 * @throws ServiceException
 	 *
 	 */
 	private function moveMessageOnSameAccount(Account $account,
 		string $sourceFolderId,
 		string $destFolderId,
-		int $messageId): void {
+		int $messageId): int {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
+			return $this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
 		} finally {
 			$client->logout();
 		}
@@ -818,7 +819,7 @@ class MailManager implements IMailManager {
 		return $this->tagMapper->update($tag);
 	}
 
-	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): void {
+	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array {
 		$mailAccount = $srcAccount->getMailAccount();
 		$messageInTrash = $srcMailbox->getId() === $mailAccount->getTrashMailboxId();
 
@@ -828,6 +829,7 @@ class MailManager implements IMailManager {
 			$messageInTrash
 		);
 
+		$newUids = [];
 		foreach ($messages as $message) {
 			$this->logger->debug('move message', [
 				'messageId' => $message['messageUid'],
@@ -835,7 +837,7 @@ class MailManager implements IMailManager {
 				'dstMailboxId' => $dstMailbox->getId()
 			]);
 
-			$this->moveMessage(
+			$newUids[] = $this->moveMessage(
 				$srcAccount,
 				$message['mailboxName'],
 				$message['messageUid'],
@@ -843,6 +845,7 @@ class MailManager implements IMailManager {
 				$dstMailbox->getName()
 			);
 		}
+		return $newUids;
 	}
 
 	/**
