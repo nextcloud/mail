@@ -221,6 +221,8 @@ OC.L10N.register(
     "Account connected" : "계정 연결됨",
     "Connect your mail account" : "메일 계정에 연결",
     "To add a mail account, please contact your administrator." : "이메일 계정 추가는 관리자에게 문의하십시오.",
+    "Tomorrow – {timeLocale}" : "내일 – {timeLocale}",
+    "Later today – {timeLocale}" : "오늘 나중 – {timeLocale}",
     "All" : "모두",
     "Drafts" : "임시 보관함",
     "Favorites" : "즐겨찾기",
