@@ -114,7 +114,7 @@
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
 					<NcActions :inline="inlineMenuSize">
-						<NcActionButton
+						<NcActionButton v-if="inlineMenuSize >= 1 || !moreActionsOpen"
 							:class="{ primary: expanded}"
 							:aria-label="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
 							:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
@@ -127,7 +127,7 @@
 									:size="20" />
 							</template>
 						</NcActionButton>
-						<NcActionButton v-if="hasWriteAcl"
+						<NcActionButton v-if="hasWriteAcl && (inlineMenuSize >= 2 || !moreActionsOpen)"
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
@@ -141,7 +141,7 @@
 									:size="20" />
 							</template>
 						</NcActionButton>
-						<NcActionButton v-if="hasSeenAcl"
+						<NcActionButton v-if="hasSeenAcl && (inlineMenuSize >= 3 || !moreActionsOpen)"
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
@@ -155,7 +155,7 @@
 									:size="20" />
 							</template>
 						</NcActionButton>
-						<NcActionButton v-if="showArchiveButton && hasArchiveAcl"
+						<NcActionButton v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
 							:close-after-click="true"
 							:title="t('mail', 'Archive message')"
 							:disabled="disableArchiveButton"
@@ -168,7 +168,7 @@
 									:size="20" />
 							</template>
 						</NcActionButton>
-						<NcActionButton v-if="hasDeleteAcl"
+						<NcActionButton v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
 							:close-after-click="true"
 							:title="t('mail', 'Delete message')"
 							:aria-label="t('mail', 'Delete message')"
@@ -186,6 +186,7 @@
 							:with-reply="false"
 							:with-select="false"
 							:with-show-source="true"
+							:more-actions-open.sync="moreActionsOpen"
 							@delete="$emit('delete',envelope.databaseId)" />
 					</NcActions>
 				</template>
@@ -340,6 +341,7 @@ export default {
 			LOADING_DONE,
 			LOADING_MESSAGE,
 			recomputeMenuSize: 0,
+			moreActionsOpen: false,
 		}
 	},
 	computed: {
@@ -928,5 +930,7 @@ export default {
 	}
 	:deep(.action-button__title) {
 		font-weight: normal;
+		display: inline;
+		align-items: center;
 	}
 </style>

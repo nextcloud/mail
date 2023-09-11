@@ -1,7 +1,7 @@
 <!-- Standard Actions menu for Envelopes -->
 <template>
 	<div>
-		<template v-if="!moreActionsOpen && !snoozeActionsOpen">
+		<template v-if="!localMoreActionsOpen && !snoozeActionsOpen">
 			<ActionButton v-if="hasWriteAcl"
 				class="action--primary"
 				:close-after-click="true"
@@ -101,7 +101,7 @@
 				{{ t('mail', 'Snooze') }}
 			</ActionButton>
 			<ActionButton :close-after-click="false"
-				@click="moreActionsOpen=true">
+				@click="localMoreActionsOpen=true">
 				<template #icon>
 					<DotsHorizontalIcon
 						:title="t('mail', 'More actions')"
@@ -110,9 +110,9 @@
 				{{ t('mail', 'More actions') }}
 			</ActionButton>
 		</template>
-		<template v-if="moreActionsOpen">
+		<template v-if="localMoreActionsOpen">
 			<ActionButton :close-after-click="false"
-				@click="moreActionsOpen=false">
+				@click="localMoreActionsOpen=false">
 				<template #icon>
 					<ChevronLeft
 						:title="t('mail', 'More actions')"
@@ -338,6 +338,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		moreActionsOpen: {
+			type: Boolean,
+			required: false,
+		},
 		isSelected: {
 			// Indicates if the envelope is currently selected
 			type: Boolean,
@@ -369,7 +373,7 @@ export default {
 			showEventModal: false,
 			showTaskModal: false,
 			showTagModal: false,
-			moreActionsOpen: false,
+			localMoreActionsOpen: false,
 			snoozeActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
@@ -479,6 +483,11 @@ export default {
 					ariaLabel: t('spreed', 'Set reminder for next week'),
 				},
 			].filter(option => option.timestamp !== null)
+		},
+	},
+	watch: {
+		localMoreActionsOpen(value) {
+			this.$emit('update:moreActionsOpen', value)
 		},
 	},
 	methods: {
