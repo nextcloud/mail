@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-rc.2 - unreleased
+## 3.4.0-rc.3 - unreleased
 ### Added
 - Thread summaries
 - Snooze
@@ -41,9 +41,11 @@ All notable changes to this project will be documented in this file.
 - Preview text
 - Set from field to current account
 - Implement widget item api v2
+- Make no sent mailbox configured exception readable
 
 ### Changed
 - Don't open first mail by default
+- Update ethical AI rating about thread summaries
 
 ## 3.3.0-rc.1 - unreleased
 ### Added
