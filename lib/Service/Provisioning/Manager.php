@@ -240,7 +240,7 @@ class Manager {
 			}
 
 			try {
-				$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $user->getDisplayName(), $mailAccount->getEmail());
+				$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $this->userManager->getDisplayName($user->getUID()), $mailAccount->getEmail());
 			} catch (\Throwable $e) {
 				$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
 			}
@@ -281,7 +281,7 @@ class Manager {
 		$account->setProvisioningId($config->getId());
 
 		$account->setEmail($config->buildEmail($user));
-		$account->setName($user->getDisplayName());
+		$account->setName($this->userManager->getDisplayName($user->getUID()));
 		$account->setInboundUser($config->buildImapUser($user));
 		$account->setInboundHost($config->getImapHost());
 		$account->setInboundPort($config->getImapPort());

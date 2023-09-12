@@ -51,6 +51,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserManager;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -75,6 +76,7 @@ class PageController extends Controller {
 	private ICredentialstore $credentialStore;
 	private SmimeService $smimeService;
 	private AiIntegrationsService $aiIntegrationsService;
+	private IUserManager $userManager;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -93,7 +95,8 @@ class PageController extends Controller {
 		IEventDispatcher $dispatcher,
 		ICredentialStore $credentialStore,
 		SmimeService     $smimeService,
-		AiIntegrationsService $aiIntegrationsService) {
+		AiIntegrationsService $aiIntegrationsService,
+		IUserManager $userManager, ) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -112,6 +115,7 @@ class PageController extends Controller {
 		$this->credentialStore = $credentialStore;
 		$this->smimeService = $smimeService;
 		$this->aiIntegrationsService = $aiIntegrationsService;
+		$this->userManager = $userManager;
 	}
 
 	/**
@@ -190,7 +194,7 @@ class PageController extends Controller {
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
-			$user->getDisplayName()
+			$this->userManager->getDisplayName($this->currentUserId),
 		);
 		$this->initialStateService->provideInitialState(
 			'prefill_email',

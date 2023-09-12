@@ -47,6 +47,7 @@ use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUser;
+use OCP\IUserManager;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -78,6 +79,9 @@ class PageControllerTest extends TestCase {
 
 	/** @var IUserSession|MockObject */
 	private $userSession;
+
+	/** @var IUserManager|MockObject */
+	private $userManager;
 
 	/** @var IUserPreferences|MockObject */
 	private $preferences;
@@ -112,7 +116,7 @@ class PageControllerTest extends TestCase {
 		parent::setUp();
 
 		$this->appName = 'mail';
-		$this->userId = 'george';
+		$this->userId = 'jane';
 		$this->request = $this->createMock(IRequest::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->config = $this->createMock(IConfig::class);
@@ -129,6 +133,7 @@ class PageControllerTest extends TestCase {
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -149,6 +154,7 @@ class PageControllerTest extends TestCase {
 			$this->credentialStore,
 			$this->smimeService,
 			$this->aiIntegrationsService,
+			$this->userManager,
 		);
 	}
 
@@ -256,11 +262,14 @@ class PageControllerTest extends TestCase {
 				$this->returnValue('yes'),
 				$this->returnValue('no')
 			);
-		$user->expects($this->once())
-			->method('getDisplayName')
-			->will($this->returnValue('Jane Doe'));
+
+
 		$user->method('getUID')
 			->will($this->returnValue('jane'));
+		$this->userManager->expects($this->once())
+		->method('getDisplayName')
+		->with($this->equalTo('jane'))
+		->will($this->returnValue('Jane Doe'));
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
