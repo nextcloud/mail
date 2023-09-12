@@ -81,7 +81,7 @@ export default {
     border: 2px solid var(--color-primary-element);
     border-radius:var( --border-radius-large) ;
     margin: 0 10px 20px 10px;
-    padding: 28px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
 
@@ -98,12 +98,14 @@ export default {
                 background-color: var(--color-primary-light);
                 border-radius: var(--border-radius-pill);
                 width: fit-content;
-                padding-right: 5px;
-                padding-left: 5px;
+                padding-right: 10px;
+				padding-left: 4px;
+				margin: 8px 0 8px 0;
 
                 &__icon{
                     color:var(--color-primary-element);
                     margin-right: 5px;
+					margin-left:5px
                 }
             }
         }
