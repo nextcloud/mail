@@ -59,7 +59,8 @@ class ManagerTest extends TestCase {
 	public function testUpdateProvisionSingleUser() {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
-			'getEmailAddress' => 'bruce.wayne@batman.com'
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce'
 		]);
 		$config = new Provisioning();
 		$config->setId(1);
@@ -83,7 +84,8 @@ class ManagerTest extends TestCase {
 	public function testProvisionSingleUser() {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
-			'getEmailAddress' => 'bruce.wayne@batman.com'
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce'
 		]);
 		$account = new MailAccount();
 		$config = new Provisioning();
@@ -111,7 +113,8 @@ class ManagerTest extends TestCase {
 	public function testUpdateProvisionSingleUserWithWildcard() {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
-			'getEmailAddress' => 'bruce.wayne@batman.com'
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce.wayne'
 		]);
 		$account = new MailAccount();
 		$config = new Provisioning();
@@ -136,7 +139,8 @@ class ManagerTest extends TestCase {
 	public function testProvisionSingleUserWithWildcard() {
 		/** @var IUser|MockObject $user */
 		$user = $this->createConfiguredMock(IUser::class, [
-			'getEmailAddress' => 'bruce.wayne@batman.com'
+			'getEmailAddress' => 'bruce.wayne@batman.com',
+			'getUID' => 'bruce'
 		]);
 		$account = new MailAccount();
 		$config = new Provisioning();
