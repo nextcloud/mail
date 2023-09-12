@@ -97,9 +97,6 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * Adds a DB Entry for the messages with a wake timestamp
-	 * Moving the messages is done in a separate request
-	 *
 	 * @NoAdminRequired
 	 *
 	 * @param int $id
@@ -123,6 +120,28 @@ class ThreadController extends Controller {
 		}
 
 		$this->snoozeService->snoozeThread($selectedMessage, $unixTimestamp, $srcAccount, $srcMailbox, $dstAccount, $dstMailbox);
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	#[TrapError]
+	public function unSnooze(int $id): JSONResponse {
+		try {
+			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$this->snoozeService->unSnoozeThread($selectedMessage, $this->currentUserId);
 
 		return new JSONResponse();
 	}

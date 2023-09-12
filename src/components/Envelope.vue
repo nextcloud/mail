@@ -165,7 +165,7 @@
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
-				<ActionButton v-if="!isSnoozeDisabled"
+				<ActionButton v-if="!isSnoozeDisabled && !isSnoozedMailbox"
 					:close-after-click="false"
 					@click="showSnoozeOptions">
 					<template #icon>
@@ -176,6 +176,15 @@
 					{{
 						t('mail', 'Snooze')
 					}}
+				</ActionButton>
+				<ActionButton v-if="!isSnoozeDisabled && isSnoozedMailbox"
+					:close-after-click="true"
+					@click="onUnSnooze">
+					<template #icon>
+						<AlarmIcon :title="t('mail', 'Unsnooze')"
+							:size="20" />
+					</template>
+					{{ t('mail', 'Unsnooze') }}
 				</ActionButton>
 				<ActionButton v-if="hasDeleteAcl"
 					:close-after-click="true"
@@ -622,6 +631,9 @@ export default {
 		archiveMailbox() {
 			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
 		},
+		isSnoozedMailbox() {
+			return this.mailbox.databaseId === this.account.snoozeMailboxId
+		},
 		reminderOptions() {
 			const currentDateTime = moment()
 
@@ -804,6 +816,20 @@ export default {
 			} catch (error) {
 				logger.error('could not snooze thread', error)
 				showError(t('mail', 'Could not snooze thread'))
+			}
+		},
+		async onUnSnooze() {
+			// Remove from selection first
+			this.setSelected(false)
+
+			try {
+				await this.$store.dispatch('unSnoozeThread', {
+					envelope: this.data,
+				})
+				showSuccess(t('mail', 'Thread was unsnoozed'))
+			} catch (error) {
+				logger.error('Could not unsnooze thread', error)
+				showError(t('mail', 'Could not unsnooze thread'))
 			}
 		},
 		async onOpenEditAsNew() {

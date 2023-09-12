@@ -250,6 +250,14 @@ export function snoozeMessage(id, unixTimestamp, destMailboxId) {
 	})
 }
 
+export function unSnoozeMessage(id) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/unsnooze', {
+		id,
+	})
+
+	return axios.post(url, {})
+}
+
 export async function sendMdn(id, data) {
 	const url = generateUrl('/apps/mail/api/messages/{id}/mdn', {
 		id,

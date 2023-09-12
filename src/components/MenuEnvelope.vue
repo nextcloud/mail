@@ -91,7 +91,7 @@
 				</template>
 				{{ t('mail', 'Move message') }}
 			</ActionButton>
-			<ActionButton v-if="!isSnoozeDisabled"
+			<ActionButton v-if="!isSnoozeDisabled && !isSnoozedMailbox"
 				:close-after-click="false"
 				@click="snoozeActionsOpen = true">
 				<template #icon>
@@ -99,6 +99,15 @@
 						:size="20" />
 				</template>
 				{{ t('mail', 'Snooze') }}
+			</ActionButton>
+			<ActionButton v-if="!isSnoozeDisabled && isSnoozedMailbox"
+				:close-after-click="true"
+				@click="onUnSnooze">
+				<template #icon>
+					<AlarmIcon :title="t('mail', 'Unsnooze')"
+						:size="20" />
+				</template>
+				{{ t('mail', 'Unsnooze') }}
 			</ActionButton>
 			<ActionButton :close-after-click="false"
 				@click="localMoreActionsOpen=true">
@@ -438,6 +447,9 @@ export default {
 		hasDeleteAcl() {
 			return mailboxHasRights(this.mailbox, 'te')
 		},
+		isSnoozedMailbox() {
+			return this.mailbox.databaseId === this.account.snoozeMailboxId
+		},
 		reminderOptions() {
 			const currentDateTime = moment()
 
@@ -521,6 +533,24 @@ export default {
 			} catch (error) {
 				logger.error('Could not snooze message', error)
 				showError(t('mail', 'Could not snooze message'))
+			}
+		},
+		async onUnSnooze() {
+			// Remove from selection first
+			if (this.withSelect) {
+				this.$emit('unselect')
+			}
+
+			logger.info(`unSnoozing message ${this.envelope.databaseId}`)
+
+			try {
+				await this.$store.dispatch('unSnoozeMessage', {
+					id: this.envelope.databaseId,
+				})
+				showSuccess(t('mail', 'Message was unsnoozed'))
+			} catch (error) {
+				logger.error('Could not unsnooze message', error)
+				showError(t('mail', 'Could not unsnooze message'))
 			}
 		},
 		onToggleFlagged() {
