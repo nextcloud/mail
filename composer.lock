@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "755e1a8e01f1c036335bc20b073a7d07",
+    "content-hash": "b8f8373c3dab6761c872fbf1894820e5",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2795,16 +2795,16 @@
     ],
     "packages-dev": [
         {
-            "name": "christophwurst/nextcloud",
+            "name": "nextcloud/ocp",
             "version": "v21.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
+                "url": "https://github.com/nextcloud-deps/ocp.git",
                 "reference": "41e1476b4aed5bce7371895054049eca353729c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/41e1476b4aed5bce7371895054049eca353729c5",
+                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/41e1476b4aed5bce7371895054049eca353729c5",
                 "reference": "41e1476b4aed5bce7371895054049eca353729c5",
                 "shasum": ""
             },
@@ -2828,6 +2828,9 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
+            "support": {
+                "source": "https://github.com/nextcloud-deps/ocp/tree/v21.0.0"
+            },
             "time": "2021-03-01T08:42:25+00:00"
         },
         {
@@ -3243,5 +3246,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
