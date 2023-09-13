@@ -145,7 +145,7 @@ class MessageMapperTest extends TestCase {
 	/**
 	 * Verify we still find the one message of the mailbox if the passed IDs do not exist
 	 */
-	public function testFindNewIdsCoalesence(): void {
+	public function testFindNewIdsCoalescence(): void {
 		$uid = time();
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
