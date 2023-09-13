@@ -536,6 +536,11 @@ export default {
 			required: false,
 			default: () => [],
 		},
+		smartReply: {
+			type: String,
+			required: false,
+			default: undefined,
+		},
 		sendAt: {
 			type: Number,
 			default: undefined,
@@ -1069,6 +1074,9 @@ export default {
 		onEditorReady(editor) {
 			this.bodyVal = editor.getData()
 			this.insertSignature()
+			if (this.smartReply) {
+				this.bus.$emit('append-to-body-at-cursor', this.smartReply)
+			}
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined

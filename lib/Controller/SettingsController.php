@@ -34,8 +34,6 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IRequest;
-use OCP\TextProcessing\IManager;
-use OCP\TextProcessing\SummaryTaskType;
 use Psr\Container\ContainerInterface;
 
 use function array_merge;
@@ -131,12 +129,8 @@ class SettingsController extends Controller {
 		$this->config->setAppValue('mail', 'enabled_thread_summary', $enabled ? 'yes' : 'no');
 	}
 
-	public function isLlmConfigured() {
-		try {
-			$manager = $this->container->get(IManager::class);
-		} catch (\Throwable $e) {
-			return new JSONResponse(['data' => false]);
-		}
-		return new JSONResponse(['data' => in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)]);
+	public function setEnabledSmartReplies(bool $enabled) {
+		$this->config->setAppValue('mail', 'enabled_smart_reply', $enabled ? 'yes' : 'no');
 	}
+
 }

@@ -26,8 +26,11 @@ namespace OCA\Mail\Service\AiIntegrations;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Model\IMAPMessage;
+use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
 use OCP\TextProcessing\Task;
@@ -64,7 +67,7 @@ class AiIntegrationsService {
 	 *
 	 * @throws ServiceException
 	 */
-	public function summarizeThread(Account $account, Mailbox $mailbox, $threadId, array $messages, string $currentUserId): null|string {
+	public function summarizeThread(Account $account, Mailbox $mailbox, string $threadId, array $messages, string $currentUserId): null|string {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
@@ -74,7 +77,7 @@ class AiIntegrationsService {
 			$messageIds = array_map(function ($message) {
 				return $message->getMessageId();
 			}, $messages);
-			$cachedSummary = $this->cache->getSummary($messageIds);
+			$cachedSummary = $this->cache->getValue($this->cache->buildUrlKey($messageIds));
 			if($cachedSummary) {
 				return $cachedSummary;
 			}
@@ -99,7 +102,7 @@ class AiIntegrationsService {
 			$manager->runTask($summaryTask);
 			$summary = $summaryTask->getOutput();
 
-			$this->cache->addSummary($messageIds, $summary);
+			$this->cache->addValue($this->cache->buildUrlKey($messageIds), $summary);
 
 			return $summary;
 		} else {
@@ -107,12 +110,81 @@ class AiIntegrationsService {
 		}
 	}
 
-	public function isLlmAvailable(): bool {
+	/**
+	 * @return string[]
+	 */
+	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): array {
+		try {
+			$manager = $this->container->get(IManager::class);
+		} catch (\Throwable $e) {
+			throw new ServiceException('Text processing is not available in your current Nextcloud version', 0, $e);
+		}
+		if (in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+			$cachedReplies = $this->cache->getValue('smartReplies_'.$message->getId());
+			if ($cachedReplies) {
+				return explode("|", $cachedReplies);
+			}
+			$client = $this->clientFactory->getClient($account);
+			try {
+				$imapMessage = $this->mailManager->getImapMessage(
+					$client,
+					$account,
+					$mailbox,
+					$message->getUid(), true
+				);
+				if (!$this->isPersonalEmail($imapMessage)) {
+					return [];
+				}
+				$messageBody = $imapMessage->getPlainBody();
+
+			} finally {
+				$client->logout();
+			}
+			$prompt = "Suggest 2 replies to the following email. Each reply should be 25 characters max. Separate the replies with  \"| \", like for example  \"Yes! | No, I'm not available \". Do not print anything else. The email contents are : ".$messageBody."";
+			$task = new Task(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
+			$manager->runTask($task);
+			$replies = array_slice(explode("|", $task->getOutput()), 0, 2);
+			$this->cache->addValue('smartReplies_'.$message->getUid(), implode("|", $replies));
+			return $replies;
+			
+		} else {
+			throw new ServiceException('No language model available for smart replies');
+		}
+
+	}
+
+	public function isLlmAvailable(string $taskType): bool {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
 			return false;
 		}
-		return in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true);
+		return in_array($taskType, $manager->getAvailableTaskTypes(), true);
 	}
+
+	private function isPersonalEmail(IMAPMessage $imapMessage): bool {
+
+		if ($imapMessage->isOneClickUnsubscribe() || $imapMessage->getUnsubscribeUrl() !== null) {
+			return false;
+		}
+
+		$commonPatterns = [
+			'noreply', 'no-reply', 'notification', 'donotreply', 'donot-reply','noreply-', 'do-not-reply',
+			'automated', 'donotreply-', 'noreply.', 'noreply_', 'do_not_reply', 'no_reply', 'no-reply',
+			'automated-', 'do_not_reply', 'noreply+'
+		];
+
+		$senderAddress = $imapMessage->getFrom()->first()?->getEmail();
+		
+		if($senderAddress !== null) {
+			foreach ($commonPatterns as $pattern) {
+				if (stripos($senderAddress, $pattern) !== false) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+
 }

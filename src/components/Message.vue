@@ -56,11 +56,30 @@
 			:message="message" />
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
+		<div v-if="smartReplies.length>0" class="reply-buttons">
+			<NcButton type="primary"
+				@click="onReply">
+				<template #icon>
+					<ReplyIcon />
+				</template>
+				Reply
+			</NcButton>
+			<NcButton v-for="(reply,index) in smartReplies"
+				:key="index"
+				type="secondary"
+				@click="onReply(reply)">
+				<template #icon>
+					<ReplyIcon />
+				</template>
+				{{ reply }}
+			</NcButton>
+		</div>
 	</div>
 </template>
 
 <script>
 import { generateUrl } from '@nextcloud/router'
+import { NcButton } from '@nextcloud/vue'
 
 import { html, plain } from '../util/text.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
@@ -71,6 +90,7 @@ import MessageHTMLBody from './MessageHTMLBody.vue'
 import MessagePlainTextBody from './MessagePlainTextBody.vue'
 import Imip from './Imip.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOff.vue'
+import ReplyIcon from 'vue-material-design-icons/Reply.vue'
 
 export default {
 	name: 'Message',
@@ -82,6 +102,8 @@ export default {
 		MessagePlainTextBody,
 		Imip,
 		LockOffIcon,
+		ReplyIcon,
+		NcButton,
 	},
 	props: {
 		envelope: {
@@ -96,6 +118,11 @@ export default {
 			required: false,
 			type: Boolean,
 			default: false,
+		},
+		smartReplies: {
+			required: false,
+			type: Array,
+			default: () => [],
 		},
 	},
 	computed: {
@@ -112,6 +139,11 @@ export default {
 		},
 		itineraries() {
 			return this.message.itineraries ?? []
+		},
+	},
+	methods: {
+		onReply(replyBody = '') {
+			this.$emit('reply', replyBody)
 		},
 	},
 }
@@ -143,5 +175,17 @@ export default {
 		// Fix alignment with message
 		margin-top: -5px;
 	}
+}
+.reply-buttons{
+	display: flex;
+	justify-content: end;
+
+	& > * {
+		margin: 5px;
+		top: 0 !important;
+		left: 0 !important;
+
+	}
+
 }
 </style>

@@ -49,6 +49,7 @@ use OCA\Mail\Http\TrapError;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
@@ -90,6 +91,7 @@ class MessagesController extends Controller {
 	private IDkimService $dkimService;
 	private IUserPreferences $preferences;
 	private SnoozeService $snoozeService;
+	private AiIntegrationsService $aiIntegrationService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -110,7 +112,8 @@ class MessagesController extends Controller {
 		IMAPClientFactory $clientFactory,
 		IDkimService $dkimService,
 		IUserPreferences $preferences,
-		SnoozeService $snoozeService) {
+		SnoozeService $snoozeService,
+		AiIntegrationsService $aiIntegrationService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -130,6 +133,7 @@ class MessagesController extends Controller {
 		$this->dkimService = $dkimService;
 		$this->preferences = $preferences;
 		$this->snoozeService = $snoozeService;
+		$this->aiIntegrationService = $aiIntegrationService;
 	}
 
 	/**
@@ -885,6 +889,34 @@ class MessagesController extends Controller {
 			$message->getUid()
 		);
 		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $messageId
+	 *
+	 * @return JSONResponse
+	 */
+	#[TrapError]
+	public function smartReply(int $messageId):JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		try {
+			$replies = $this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId);
+		} catch (ServiceException $e) {
+			$this->logger->error('Smart reply failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return new JSONResponse([], Http::STATUS_NO_CONTENT);
+		}
+		return new JSONResponse($replies);
+
 	}
 
 	/**

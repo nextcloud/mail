@@ -251,7 +251,7 @@ class PageControllerTest extends TestCase {
 				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(7))
+		$this->config->expects($this->exactly(8))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
@@ -261,6 +261,7 @@ class PageControllerTest extends TestCase {
 				['core', 'backgroundjobs_mode', 'ajax' ],
 				['mail', 'allow_new_mail_accounts', 'yes'],
 				['mail', 'enabled_thread_summary', 'no'],
+				['mail', 'enabled_smart_reply', 'no'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
 				$this->returnValue(''),
@@ -292,7 +293,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(15))
+		$this->initialState->expects($this->exactly(16))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -309,6 +310,7 @@ class PageControllerTest extends TestCase {
 				['disable-snooze', false],
 				['allow-new-accounts', true],
 				['enabled_thread_summary', false],
+				['enabled_smart_reply', false],
 				['smime-certificates', []],
 			);
 

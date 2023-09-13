@@ -214,8 +214,9 @@ export default {
 	 * @param payload.data
 	 * @param payload.forwardedMessages
 	 * @param payload.originalSendAt
+	 * @param payload.smartReply
 	 */
-	startComposerSession(state, { type, data, forwardedMessages, originalSendAt }) {
+	startComposerSession(state, { type, data, forwardedMessages, originalSendAt, smartReply }) {
 		state.composerSessionId = state.nextComposerSessionId
 		state.nextComposerSessionId++
 		state.newMessage = {
@@ -224,6 +225,7 @@ export default {
 			options: {
 				forwardedMessages,
 				originalSendAt,
+				smartReply,
 			},
 			indicatorDisabled: false,
 		}

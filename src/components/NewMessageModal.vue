@@ -80,6 +80,7 @@
 				:forward-from="composerData.forwardFrom"
 				:send-at="composerData.sendAt * 1000"
 				:forwarded-messages="forwardedMessages"
+				:smart-reply="smartReply"
 				:can-save-draft="canSaveDraft"
 				:saving-draft="savingDraft"
 				:draft-saved="draftSaved"
@@ -194,6 +195,9 @@ export default {
 		},
 		forwardedMessages() {
 			return this.composerMessage?.options?.forwardedMessages ?? []
+		},
+		smartReply() {
+			return this.composerData?.smartReply ?? null
 		},
 	},
 	created() {

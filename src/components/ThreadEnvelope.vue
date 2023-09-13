@@ -219,7 +219,9 @@
 			:envelope="envelope"
 			:message="message"
 			:full-height="fullHeight"
-			@load="loading = LOADING_DONE" />
+			:smart-replies="smartReplies"
+			@load="loading = LOADING_DONE"
+			@reply="onReply" />
 		<Error v-else-if="error"
 			:error="error.message || t('mail', 'Not found')"
 			message=""
@@ -264,6 +266,7 @@ import logger from '../logger.js'
 import Message from './Message.vue'
 import MenuEnvelope from './MenuEnvelope.vue'
 import Moment from './Moment.vue'
+import { smartReply } from '../service/AiIntergrationsService.js'
 import { mailboxHasRights } from '../util/acl.js'
 import ReplyIcon from 'vue-material-design-icons/Reply.vue'
 import ReplyAllIcon from 'vue-material-design-icons/ReplyAll.vue'
@@ -290,6 +293,7 @@ import TaskModal from './TaskModal.vue'
 import EventModal from './EventModal.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -375,12 +379,14 @@ export default {
 			LOADING_MESSAGE,
 			recomputeMenuSize: 0,
 			moreActionsOpen: false,
+			smartReplies: [],
 			showSourceModal: false,
 			showMoveModal: false,
 			showEventModal: false,
 			showTaskModal: false,
 			showTagModal: false,
 			rawMessage: '', // Will hold the raw source of the message when requested
+			enabledSmartReply: loadState('mail', 'enabled_smart_reply', false),
 		}
 	},
 	computed: {
@@ -602,6 +608,11 @@ export default {
 			if (this.message && this.message.dkimValid === undefined) {
 				this.fetchDkim()
 			}
+
+			// Fetch smart replies
+			if (this.enabledSmartReply && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole)) {
+				this.smartReplies = await smartReply(this.envelope.databaseId)
+			}
 		},
 		async fetchItineraries() {
 			// Sanity check before actually making the request
@@ -639,11 +650,12 @@ export default {
 			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
 			window.scrollTo({ top })
 		},
-		onReply() {
+		onReply(body = '') {
 			this.$store.dispatch('startComposerSession', {
 				reply: {
 					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
 					data: this.envelope,
+					smartReply: body,
 				},
 			})
 		},

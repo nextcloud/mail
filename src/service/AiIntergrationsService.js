@@ -15,3 +15,16 @@ export const summarizeThread = async (threadId) => {
 		throw convertAxiosError(e)
 	}
 }
+export const smartReply = async (messageId) => {
+	const url = generateUrl('/apps/mail/api/messages/{messageId}/smartreply', {
+		messageId,
+	})
+
+	try {
+		const resp = await axios.get(url)
+		if (resp.status === 204) throw convertAxiosError()
+		return resp.data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}

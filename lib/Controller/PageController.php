@@ -53,6 +53,8 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\TextProcessing\FreePromptTaskType;
+use OCP\TextProcessing\SummaryTaskType;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -276,7 +278,12 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'enabled_thread_summary',
-			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable()
+			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'enabled_smart_reply',
+			$this->config->getAppValue('mail', 'enabled_smart_reply', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
 		);
 
 		$this->initialStateService->provideInitialState(
