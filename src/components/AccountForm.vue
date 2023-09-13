@@ -612,6 +612,8 @@ export default {
 						this.feedback = t('mail', 'SMTP connection failed')
 					} else if (error.message === CONSENT_ABORTED) {
 						this.feedback = t('mail', 'Google authorization popup closed')
+					} else if (error.response?.status === 429) {
+						this.feedback = t('mail', 'Configuration discovery temporarily not available. Please try again later.')
 					} else {
 						this.feedback = t('mail', 'There was an error while setting up your account')
 					}
