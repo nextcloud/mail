@@ -28,6 +28,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Support\PerformanceLogger;
@@ -139,5 +140,29 @@ class MessageMapperTest extends TestCase {
 		$cnt = $result->fetchOne();
 		$result->closeCursor();
 		self::assertEquals(0, $cnt);
+	}
+
+	/**
+	 * Verify we still find the one message of the mailbox if the passed IDs do not exist
+	 */
+	public function testFindNewIdsCoalesence(): void {
+		$uid = time();
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		$qb = $this->db->getQueryBuilder();
+		$insert = $qb->insert($this->mapper->getTableName())
+			->values([
+				'uid' => $qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('TEST'),
+				'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
+			]);
+		$insert->executeStatement();
+		$id = $insert->getLastInsertId();
+
+		$found = $this->mapper->findNewIds($mailbox, [$id + 1]);
+
+		self::assertCount(1, $found);
 	}
 }
