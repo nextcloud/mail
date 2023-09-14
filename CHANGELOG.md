@@ -1,19 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.0-rc.3 - unreleased
+## 3.4.0 - 2023-09-14
 ### Added
 - Thread summaries
-- Snooze
-- Trash retention
-- Move junk messages to junk mailbox
-- Exclude envelopes from junk from threading view
-- Remove toggle for move junk
+- [Snooze](https://docs.nextcloud.com/server/latest/user_manual/en/groupware/mail.html#snooze)
+- [Trash retention](https://docs.nextcloud.com/server/latest/user_manual/en/groupware/mail.html#automatic-trash-deletion)
+- [Move junk messages to junk mailbox](https://docs.nextcloud.com/server/latest/user_manual/en/groupware/mail.html#move-messages-to-junk-folder)
 - "Mark as spam", "Mark as not spam", "Edit tags" buttons to multiselect menu
 - Parse mailto addresses
 
 ### Fixed
 - Add loading skeletons without avatars
+- Exclude envelopes from junk from threading view
 - Return to primary actions if envelope actions are closed with more actions open
 - No message selected message only displayed after 30 seconds on priority inbox
 - Misc errors for emails with empty from array
