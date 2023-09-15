@@ -10,7 +10,6 @@
     "To Do" : "Tarefa pendente",
     "Later" : "Após",
     "Mail" : "Correo",
-    "You are reaching your mailbox quota limit for {account}" : "Está a piques de acadar o límite de cota da súa caixa de correo para {account}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Está a usar o {percentage} do almacenamento da súa caixa de correo. Faga espazo eliminando os correos que non sexan necesarios.",
     "Mails" : "Correos-e",
     "💌 A mail app for Nextcloud" : "💌 Unha aplicación de correo para Nextcloud",

@@ -10,7 +10,6 @@
     "To Do" : "To Do",
     "Later" : "بعدا",
     "Mail" : "ایمیل",
-    "You are reaching your mailbox quota limit for {account}" : "You are reaching your mailbox quota limit for {account}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails.",
     "Mails" : "ایمیل‌ها",
     "💌 A mail app for Nextcloud" : "یک برنامه نامه پستی برای Nextcloud",

@@ -12,7 +12,6 @@ OC.L10N.register(
     "To Do" : "待辦",
     "Later" : "稍後",
     "Mail" : "電子郵件",
-    "You are reaching your mailbox quota limit for {account}" : "您即將達到 {account} 的信箱配額限制",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "您目前使用了信箱儲存空間的 {percentage}。請刪除不必要的電子郵件以釋出空間。",
     "Mails" : "郵件",
     "💌 A mail app for Nextcloud" : "Nextcloud 的郵件應用程式",

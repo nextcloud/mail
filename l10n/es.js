@@ -12,7 +12,6 @@ OC.L10N.register(
     "To Do" : "Por hacer",
     "Later" : "Después",
     "Mail" : "Correo",
-    "You are reaching your mailbox quota limit for {account}" : "Está por alcanzar el límite de cuota de su buzón de correo para {account}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Está actualmente utilizando {percentage} del almacenamiento de su buzón de correo. Por favor, haga algo de espacio eliminando cualquier correo innecesario.",
     "Mails" : "Mails",
     "💌 A mail app for Nextcloud" : "Una app de correo para Nextcloud",

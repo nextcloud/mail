@@ -10,7 +10,6 @@
     "To Do" : "À faire",
     "Later" : "Plus tard",
     "Mail" : "Mail",
-    "You are reaching your mailbox quota limit for {account}" : "Vous avez atteint la limite du quota de votre boîte aux lettres pour {compte}.",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Vous utilisez actuellement {pourcentage} de l'espace de stockage de votre boîte aux lettres. Veuillez faire de la place en supprimant les e-mails inutiles.",
     "Mails" : "E-mails",
     "💌 A mail app for Nextcloud" : "Une application messagerie pour Nextcloud",

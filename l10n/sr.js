@@ -12,7 +12,6 @@ OC.L10N.register(
     "To Do" : "Обавезе",
     "Later" : "После",
     "Mail" : "Пошта",
-    "You are reaching your mailbox quota limit for {account}" : "Достижете ограничење додељене квоте сандучета за {account}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Тренутно користите {percentage} свог простора за сандуче. Молимо вас да ослободите простор брисањем непотребних мејлова.",
     "Mails" : "Поруке е-поште",
     "💌 A mail app for Nextcloud" : "💌 Апликација е-поште за Некстклауд",

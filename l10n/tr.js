@@ -12,7 +12,6 @@ OC.L10N.register(
     "To Do" : "Yapılacak iş",
     "Later" : "Sonra",
     "Mail" : "E-posta",
-    "You are reaching your mailbox quota limit for {account}" : "{account} e-posta kutusunun depolama alanı sınırına yaklaşıyorsunuz",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "E-posta kutunuzun depolama alanını {percentage} kadarını kullanıyorsunuz. Lütfen gereksiz e-postaları silerek biraz yer açın.",
     "Mails" : "E-postalar",
     "💌 A mail app for Nextcloud" : "💌 Nextcloud e-posta uygulaması",

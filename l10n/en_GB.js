@@ -12,7 +12,6 @@ OC.L10N.register(
     "To Do" : "To Do",
     "Later" : "Later",
     "Mail" : "Mail",
-    "You are reaching your mailbox quota limit for {account}" : "You are reaching your mailbox quota limit for {account}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails.",
     "Mails" : "Mails",
     "💌 A mail app for Nextcloud" : "💌 A mail app for Nextcloud",
