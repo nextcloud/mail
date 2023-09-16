@@ -10,6 +10,7 @@
     "To Do" : "مَهَامٌّ",
     "Later" : "لاحقاً",
     "Mail" : "البريد",
+    "You are reaching your mailbox quota limit for {account_email}" : "لقد قاربت على استنفاذ الحصة التخزينية لصندوق بريدك {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "أنت تستخدم الآن {percentage} مع سعة صندوق البريد. قم رجاءً بتفريغ بعض المساحة و ذلك بحذف البريد غير الضروري.",
     "Mails" : "رسائل",
     "💌 A mail app for Nextcloud" : "💌 تطبيق البريد الالكتروني Mail لنكست كلود",

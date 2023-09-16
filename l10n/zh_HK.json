@@ -10,6 +10,7 @@
     "To Do" : "待辦",
     "Later" : "稍後",
     "Mail" : "郵件",
+    "You are reaching your mailbox quota limit for {account_email}" : "您即將達到 {account_email} 的郵箱配額限制",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "您目前使用了郵箱存儲空間的 {percentage} ，請刪除不必要的郵件以釋放空間。",
     "Mails" : "郵件",
     "💌 A mail app for Nextcloud" : "Nextcloud 的郵件應用程式",
