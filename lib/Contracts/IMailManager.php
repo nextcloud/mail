@@ -318,6 +318,19 @@ interface IMailManager {
 	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag;
 
 	/**
+	 * Delete a mail tag
+	 *
+	 * @throws ClientException
+	 */
+	public function deleteTag(int $id, string $userId, array $accounts): Tag;
+
+	/**
+	 * Delete message Tags and untagged messages on Imap
+	 *
+	 * @throws ClientException
+	 */
+	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account): void;
+	/**
 	 * @param Account $srcAccount
 	 * @param Mailbox $srcMailbox
 	 * @param Account $dstAccount

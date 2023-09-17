@@ -79,6 +79,7 @@ import {
 	syncEnvelopes,
 	unSnoozeMessage,
 	updateEnvelopeTag,
+	deleteTag,
 } from '../service/MessageService.js'
 import { moveDraft, updateDraft } from '../service/DraftService.js'
 import * as AliasService from '../service/AliasService.js'
@@ -1267,6 +1268,13 @@ export default {
 			await updateEnvelopeTag(tag.id, displayName, color)
 			commit('updateTag', { tag, displayName, color })
 			logger.debug('tag updated', { tag, displayName, color })
+		})
+	},
+	async deleteTag({ commit }, { tag, accountId }) {
+		return handleHttpAuthErrors(commit, async () => {
+			await deleteTag(tag.id, accountId)
+			commit('deleteTag', { tagId: tag.id })
+			logger.debug('tag deleted', { tag })
 		})
 	},
 	async deleteThread({ getters, commit }, { envelope }) {

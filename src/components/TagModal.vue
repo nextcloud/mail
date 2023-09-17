@@ -21,7 +21,11 @@
   -->
 
 <template>
-	<Modal size="large" @close="onClose">
+	<DeleteTagModal v-if="deleteTagModal"
+		:tag="tagToDelete"
+		:account-id="envelopes[0].accountId"
+		@close="closeDeleteModal" />
+	<Modal v-else size="large" @close="onClose">
 		<div class="modal-content">
 			<h2 class="tag-title">
 				{{ t('mail', 'Add default tags') }}
@@ -29,44 +33,46 @@
 			<TagItem v-for="tag in tags"
 				:key="tag.id"
 				:tag="tag"
-				:envelopes="envelopes" />
+				:envelopes="envelopes"
+				@delete-tag="deleteTag" />
 
 			<h2 class="tag-title">
 				{{ t('mail', 'Add tag') }}
 			</h2>
-		</div>
-		<div class="create-tag">
-			<NcButton v-if="!editing"
-				class="tagButton"
-				@click="addTagInput">
-				<template #icon>
-					<IconAdd :size="20" />
-				</template>
-				{{ t('mail', 'Add tag') }}
-			</NcButton>
-			<ActionInput v-if="editing" @submit="createTag">
-				<template #icon>
-					<IconTag :size="20" />
-				</template>
-			</ActionInput>
-			<ActionText
-				v-if="showSaving">
-				<template #icon>
-					<IconLoading :size="20" />
-				</template>
-				{{ t('mail', 'Saving tag …') }}
-			</ActionText>
+			<div class="create-tag">
+				<NcButton v-if="!editing"
+					class="tagButton"
+					@click="addTagInput">
+					<template #icon>
+						<IconAdd :size="20" />
+					</template>
+					{{ t('mail', 'Add tag') }}
+				</NcButton>
+				<ActionInput v-if="editing" @submit="createTag">
+					<template #icon>
+						<IconTag :size="20" />
+					</template>
+				</ActionInput>
+				<ActionText
+					v-if="showSaving">
+					<template #icon>
+						<IconLoading :size="20" />
+					</template>
+					{{ t('mail', 'Saving tag …') }}
+				</ActionText>
+			</div>
 		</div>
 	</Modal>
 </template>
 
 <script>
-import { NcButton, NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import DeleteTagModal from './DeleteTagModal.vue'
+import TagItem from './TagItem.vue'
 import IconTag from 'vue-material-design-icons/Tag'
 import IconAdd from 'vue-material-design-icons/Plus'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
-import TagItem from './TagItem.vue'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -79,13 +85,14 @@ export default {
 	name: 'TagModal',
 	components: {
 		Modal,
-		NcButton,
 		ActionText,
 		ActionInput,
+		DeleteTagModal,
 		IconTag,
-		IconAdd,
 		IconLoading,
 		TagItem,
+		NcButton,
+		IconAdd,
 	},
 	props: {
 		envelopes: {
@@ -103,6 +110,8 @@ export default {
 			showSaving: false,
 			renameTagLabel: true,
 			renameTagInput: false,
+			deleteTagModal: false,
+			tagToDelete: null,
 			color: randomColor(),
 			editColor: '',
 		}
@@ -135,6 +144,9 @@ export default {
 	methods: {
 		onClose() {
 			this.$emit('close')
+		},
+		closeDeleteModal() {
+			this.deleteTagModal = false
 		},
 		isSet(imapLabel) {
 			return this.envelopes.some(
@@ -214,6 +226,10 @@ export default {
 				this.showSaving = true
 			}
 		},
+		deleteTag(tag) {
+			this.tagToDelete = tag
+			this.deleteTagModal = true
+		},
 
 	},
 }
@@ -234,6 +250,10 @@ export default {
 }
 .tagButton {
 	display: inline-block;
+	margin-left: 10px;
+}
+.tag-title {
+	margin-top: 20px;
 	margin-left: 10px;
 }
 

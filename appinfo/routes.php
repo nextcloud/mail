@@ -136,6 +136,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'tags#delete',
+			'url' => '/api/tags/{accountId}/delete/{id}',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'aliases#updateSignature',
 			'url' => '/api/accounts/{accountId}/aliases/{id}/signature',
 			'verb' => 'PUT'
