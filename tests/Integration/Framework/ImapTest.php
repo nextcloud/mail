@@ -35,6 +35,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\QueryException;
+use OCP\Server;
 use function in_array;
 
 trait ImapTest {
@@ -298,7 +299,7 @@ trait ImapTest {
 	protected function getClient(?MailAccount $account): Horde_Imap_Client_Socket {
 		if ($account !== null) {
 			/** @var IMAPClientFactory $clientFactory */
-			$clientFactory = \OC::$server->query(IMAPClientFactory::class);
+			$clientFactory = Server::get(IMAPClientFactory::class);
 			$client = $clientFactory->getClient(new Account($account));
 		} else {
 			$client = $this->getTestClient();
