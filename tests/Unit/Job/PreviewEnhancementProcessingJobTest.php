@@ -36,7 +36,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\IUser;
 use OCP\IUserManager;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class PreviewEnhancementProcessingJobTest extends TestCase {

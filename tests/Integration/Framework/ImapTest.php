@@ -22,7 +22,6 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;

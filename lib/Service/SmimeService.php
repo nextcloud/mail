@@ -34,7 +34,6 @@ use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Headers_ContentParam_ContentType;
 use Horde_Mime_Part;
-use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;

@@ -8,7 +8,6 @@ use Closure;
 use OCA\Mail\BackgroundJob\MigrateImportantJob;
 use OCA\Mail\Db\MailboxMapper;
 use OCP\BackgroundJob\IJobList;
-use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
