@@ -12,7 +12,7 @@ OC.L10N.register(
     "To Do" : "Offen",
     "Later" : "Später",
     "Mail" : "E-Mail",
-    "You are reaching your mailbox quota limit for {account_email}" : "Sie erreichen Ihr Postfach-Kontingentlimit für {account_email}",
+    "You are reaching your mailbox quota limit for {account_email}" : "Sie erreichen die Grenze Ihres Postfach-Kontingents für {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Sie nutzen derzeit {percentage} Ihres Postfachspeichers. Bitte schaffen Sie etwas Platz, indem Sie nicht benötigte E-Mails löschen.",
     "Mails" : "E-Mails",
     "💌 A mail app for Nextcloud" : "💌 Eine E-Mail-App für Nextcloud",
