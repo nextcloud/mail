@@ -34,6 +34,7 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
@@ -48,6 +49,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\IServerContainer;
 use OCP\IUser;
+use OCP\Server;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -98,27 +100,27 @@ class DraftServiceIntegrationTest extends TestCase {
 
 		$this->user = $this->createTestUser();
 		$this->account = $this->createTestAccount($this->user->getUID());
-		$c = OC::$server->get(ContainerInterface::class);
+		$c = Server::get(ContainerInterface::class);
 		$userContainer = $c->get(IServerContainer::class);
 		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,
-			OC::$server->get(LocalAttachmentMapper::class),
-			OC::$server->get(AttachmentStorage::class),
+			Server::get(LocalAttachmentMapper::class),
+			Server::get(AttachmentStorage::class),
 			$mailManager,
-			OC::$server->get(\OCA\Mail\IMAP\MessageMapper::class),
+			Server::get(MessageMapper::class),
 			new NullLogger()
 		);
 		$this->client = $this->getClient($this->account);
-		$this->mapper = OC::$server->get(LocalMessageMapper::class);
-		$this->transmission = OC::$server->get(IMailTransmission::class);
-		$this->eventDispatcher = OC::$server->get(IEventDispatcher::class);
-		$this->clientFactory = OC::$server->get(IMAPClientFactory::class);
+		$this->mapper = Server::get(LocalMessageMapper::class);
+		$this->transmission = Server::get(IMailTransmission::class);
+		$this->eventDispatcher = Server::get(IEventDispatcher::class);
+		$this->clientFactory = Server::get(IMAPClientFactory::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = OC::$server->getDatabaseConnection();
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->execute();

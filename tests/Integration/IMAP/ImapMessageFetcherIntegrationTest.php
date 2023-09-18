@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\IMAP;
 
-use OC;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
@@ -36,6 +35,7 @@ use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\ICertificateManager;
 use OCP\Security\ICrypto;
+use OCP\Server;
 
 class ImapMessageFetcherIntegrationTest extends TestCase {
 	use ImapTest,
@@ -52,10 +52,10 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 
 		$this->account = $this->createTestAccount();
-		$this->fetcherFactory = OC::$server->get(ImapMessageFetcherFactory::class);
-		$this->certificateMapper = OC::$server->get(SmimeCertificateMapper::class);
-		$this->crypto = OC::$server->get(ICrypto::class);
-		$this->certificateManager = OC::$server->get(ICertificateManager::class);
+		$this->fetcherFactory = Server::get(ImapMessageFetcherFactory::class);
+		$this->certificateMapper = Server::get(SmimeCertificateMapper::class);
+		$this->crypto = Server::get(ICrypto::class);
+		$this->certificateManager = Server::get(ICertificateManager::class);
 
 		$this->certificateManager->addCertificate(
 			file_get_contents(__DIR__ . '/../../data/smime-certs/domain.tld.ca.crt'),

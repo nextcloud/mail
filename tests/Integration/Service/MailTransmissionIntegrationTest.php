@@ -52,6 +52,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 use OCP\Security\ICrypto;
+use OCP\Server;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -81,7 +82,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		/** @var ICrypto $crypo */
 		$crypo = OC::$server->getCrypto();
 		/** @var MailAccountMapper $mapper */
-		$mapper = OC::$server->query(MailAccountMapper::class);
+		$mapper = Server::get(MailAccountMapper::class);
 		$mailAccount = MailAccount::fromParams([
 			'userId' => $this->user->getUID(),
 			'name' => 'Test User',
@@ -100,28 +101,28 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mapper->insert($mailAccount);
 
 		$this->account = new Account($mailAccount);
-		$this->attachmentService = OC::$server->query(IAttachmentService::class);
+		$this->attachmentService = Server::get(IAttachmentService::class);
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
 
 		// Make sure the mailbox preferences are set
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 
 		$this->transmission = new MailTransmission(
 			$userFolder,
 			$this->attachmentService,
-			OC::$server->query(IMailManager::class),
-			OC::$server->query(IMAPClientFactory::class),
-			OC::$server->query(SmtpClientFactory::class),
-			OC::$server->query(IEventDispatcher::class),
-			OC::$server->query(MailboxMapper::class),
-			OC::$server->query(MessageMapper::class),
-			OC::$server->query(LoggerInterface::class),
-			OC::$server->query(PerformanceLogger::class),
-			OC::$server->get(AliasesService::class),
-			OC::$server->get(GroupsIntegration::class),
-			OC::$server->get(SmimeService::class),
+			Server::get(IMailManager::class),
+			Server::get(IMAPClientFactory::class),
+			Server::get(SmtpClientFactory::class),
+			Server::get(IEventDispatcher::class),
+			Server::get(MailboxMapper::class),
+			Server::get(MessageMapper::class),
+			Server::get(LoggerInterface::class),
+			Server::get(PerformanceLogger::class),
+			Server::get(AliasesService::class),
+			Server::get(GroupsIntegration::class),
+			Server::get(SmimeService::class),
 		);
 	}
 
@@ -174,10 +175,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 		/** @var MailboxMapper $mailboxMapper */
-		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$mailboxMapper = Server::get(MailboxMapper::class);
 		$inbox = $mailboxMapper->find($this->account, 'INBOX');
 		$messageInReply = new Message();
 		$messageInReply->setUid($originalUID);
@@ -199,10 +200,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 		/** @var MailboxMapper $mailboxMapper */
-		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$mailboxMapper = Server::get(MailboxMapper::class);
 		$inbox = $mailboxMapper->find($this->account, 'INBOX');
 		$messageInReply = new Message();
 		$messageInReply->setUid($originalUID);
@@ -225,10 +226,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 		/** @var MailboxMapper $mailboxMapper */
-		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$mailboxMapper = Server::get(MailboxMapper::class);
 		$inbox = $mailboxMapper->find($this->account, 'INBOX');
 		$messageInReply = new Message();
 		$messageInReply->setUid($originalUID);
