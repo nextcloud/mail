@@ -7,6 +7,9 @@
 			<span v-if="attachment.type === 'cloud'" class="cloud-attachment-icon">
 				<Cloud :size="16" />
 			</span>
+			<span v-else-if="attachment.type === 'message'">
+				<EmailArrowRightOutlineIcon />
+			</span>
 		</div>
 		<div class="attachment-inner">
 			<span class="new-message-attachment-name">
@@ -15,7 +18,9 @@
 			<span v-if="!attachment.finished" class="attachments-upload-progress">
 				<span class="attachments-upload-progress--bar" :style="&quot;width:&quot; + attachment.percent + &quot;%&quot;" />
 			</span>
-			<span v-else class="new-message-attachment-size">{{ attachment.sizeString }}</span>
+			<span v-else-if="attachment.sizeString" class="new-message-attachment-size">
+				{{ attachment.sizeString }}
+			</span>
 		</div>
 		<button @click="onDelete(attachment)">
 			<Close :size="24" />
@@ -27,12 +32,14 @@
 import { generateUrl } from '@nextcloud/router'
 import Close from 'vue-material-design-icons/Close'
 import Cloud from 'vue-material-design-icons/Cloud'
+import EmailArrowRightOutlineIcon from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 
 export default {
 	name: 'ComposerAttachment',
 	components: {
 		Close,
 		Cloud,
+		EmailArrowRightOutlineIcon,
 	},
 	props: {
 		bus: {

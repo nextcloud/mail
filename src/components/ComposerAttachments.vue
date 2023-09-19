@@ -3,6 +3,7 @@
   - @copyright 2020 Gary Kim <gary@garykim.dev>
   -
   - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -166,6 +167,7 @@ export default {
 		this.bus.$on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.$on('on-add-cloud-attachment', this.onAddCloudAttachment)
 		this.bus.$on('on-add-cloud-attachment-link', this.onAddCloudAttachmentLink)
+		this.bus.$on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.value.map(attachment => {
 			this.attachments.push({
 				id: attachment.id,
@@ -340,6 +342,25 @@ export default {
 			} catch (error) {
 				logger.error('could not choose a file as attachment link', { error })
 			}
+		},
+		/**
+		 * Add a forwarded message as an attachment
+		 *
+		 * @param {object} data Payload
+		 * @param {number} data.id Database id of the message to forward as an attachment
+		 * @param {string} data.fileName File name of the attachment
+		 */
+		onAddMessageAsAttachment({ id, fileName }) {
+			const attachment = {
+				type: 'message',
+				id,
+				fileName,
+			}
+			this.attachments.push({
+				...attachment,
+				finished: true,
+			})
+			this.emitNewAttachments([attachment])
 		},
 		showAttachmentFileSizeWarning(num) {
 			showWarning(n(
