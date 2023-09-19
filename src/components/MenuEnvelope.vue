@@ -591,9 +591,8 @@ export default {
 			this.$emit('update:selected')
 		},
 		async forwardSelectedAsAttachment() {
-			this.forwardedMessages = [this.envelope.databaseId]
-			await this.$store.dispatch('showMessageComposer', {
-				forwardedMessages: this.forwardedMessages,
+			await this.$store.dispatch('startComposerSession', {
+				forwardedMessages: [this.envelope.databaseId],
 			})
 		},
 		async onShowSourceModal() {

@@ -414,7 +414,6 @@
 <script>
 import debounce from 'lodash/fp/debounce'
 import uniqBy from 'lodash/fp/uniqBy'
-import isArray from 'lodash/fp/isArray'
 import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
@@ -910,29 +909,23 @@ export default {
 				})
 			})
 		}
+
 		// Add messages forwarded as attachments
-		let forwards = []
-		if (this.forwardedMessages && !isArray(this.forwardedMessages)) {
-			forwards = [this.forwardedMessages]
-		} else if (this.forwardedMessages && isArray(this.forwardedMessages)) {
-			forwards = this.forwardedMessages
-		}
-		forwards.forEach(id => {
+		for (const id of this.forwardedMessages) {
 			const env = this.$store.getters.getEnvelope(id)
 			if (!env) {
 				// TODO: also happens when the composer page is reloaded
 				showError(t('mail', 'Message {id} could not be found', {
 					id,
 				}))
-				return
+				continue
 			}
 
-			this.attachments.push({
-				displayName: env.subject + '.eml',
+			this.bus.$emit('on-add-message-as-attachment', {
 				id,
-				type: 'message',
+				fileName: env.subject + '.eml',
 			})
-		})
+		}
 
 		// Set custom date and time picker value if initialized with custom send at value
 		if (this.sendAt && this.isSendAtCustom) {

@@ -583,8 +583,8 @@ export default {
 			this.showTagModal = false
 		},
 		async forwardSelectedAsAttachment() {
-			await this.$store.dispatch('showMessageComposer', {
-				forwardedMessages: this.selection,
+			await this.$store.dispatch('startComposerSession', {
+				forwardedMessages: [...this.selection],
 			})
 			this.unselectAll()
 		},
