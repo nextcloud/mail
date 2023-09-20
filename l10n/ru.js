@@ -111,6 +111,7 @@ OC.L10N.register(
     "Discard & close draft" : "Отменить изменения и закрыть черновик",
     "Upload attachment" : "Загрузить файл с ПК",
     "Add attachment from Files" : "Из приложения «Файлы»",
+    "Smart picker" : "Умный подборщик",
     "Send later" : "Отправить позже",
     "Enable formatting" : "Использовать форматирование",
     "Disable formatting" : "Выключить форматирование",
