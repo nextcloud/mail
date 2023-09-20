@@ -72,6 +72,16 @@ interface IMessage {
 	/**
 	 * @return AddressList
 	 */
+	public function getReplyTo(): AddressList;
+
+	/**
+	 * @param AddressList $replyTo
+	 */
+	public function setReplyTo(AddressList $replyTo);
+
+	/**
+	 * @return AddressList
+	 */
 	public function getCC(): AddressList;
 
 	/**

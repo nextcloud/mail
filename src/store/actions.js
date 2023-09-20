@@ -400,7 +400,7 @@ export default {
 					commit('startComposerSession', {
 						data: {
 							accountId: reply.data.accountId,
-							to: reply.data.from,
+							to: original.replyTo !== undefined ? original.replyTo : reply.data.from,
 							cc: [],
 							subject: buildReplySubject(reply.data.subject),
 							body: data.body,
@@ -416,7 +416,7 @@ export default {
 					const recipients = buildReplyRecipients(reply.data, {
 						email: account.emailAddress,
 						label: account.name,
-					})
+					}, original.replyTo)
 					commit('startComposerSession', {
 						data: {
 							accountId: reply.data.accountId,
