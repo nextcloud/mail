@@ -53,7 +53,7 @@
     "address-rfc2822": "^2.1.0",
     "buffer": "^6.0.3",
     "color-convert": "^2.0.1",
-    "core-js": "^3.31.1",
+    "core-js": "^3.32.2",
     "debounce-promise": "^3.1.2",
     "dompurify": "^3.0.5",
     "html-to-text": "^9.0.5",
