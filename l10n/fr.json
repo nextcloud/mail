@@ -297,7 +297,7 @@
     "Moving" : "Déplacement en cours",
     "Moving thread" : "Déplacement du fil de discussion en cours",
     "Moving message" : "Déplacement du message",
-    "Mail settings" : "Paramètres de messagerie",
+    "Mail settings" : "Paramètres de Mail",
     "Provisioned account is disabled" : "Le compte fourni est désactivé",
     "Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn." : "Veuillez vous connecter en utilisant un mot de passe pour activer ce compte. La session actuelle utilise une authentification sans mot de passe, c'est-à-dire via SSO ou WebAuthn.",
     "Quota" : "Quota",
