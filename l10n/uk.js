@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Embedded message %s" : "Вбудоване повідомлення %s",
     "Important mail" : "Важлива пошта",
+    "No message found yet" : "Відсутні повідомлення",
     "Set up an account" : "Створити обліковий запис",
     "Unread mail" : "Непрочитана пошта",
     "Important" : "Важливі",
@@ -140,6 +141,10 @@ OC.L10N.register(
     "Create task" : "Створити завдання",
     "Download message" : "Завантажити повідомлення",
     "Blind copy recipients only" : "Лише отримувачі у прихованій копії",
+    "Set reminder for later today" : "Встановити нагадування на сьогодні пізніше",
+    "Set reminder for tomorrow" : "Встановити нагадування на завтра",
+    "Set reminder for this weekend" : "Встановити нагадування на ці вихідні",
+    "Set reminder for next week" : "Встановити нагадування на наступний тиждень",
     "Forward" : "Переслати",
     "Load more" : "Більше",
     "Report this bug" : "Повідомити про помилку",
