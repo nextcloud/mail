@@ -201,6 +201,27 @@ class MailboxMapper extends QBMapper {
 		return $now;
 	}
 
+	public function lockForSync2(Mailbox $mailbox): int {
+		$now = $this->timeFactory->getTime();
+
+		$lock = $mailbox->getSyncLock();
+		if ($lock !== null && $lock > ($now - Mailbox::LOCK_TIMEOUT)) {
+			// Another process is syncing
+			throw MailboxLockedException::from($mailbox);
+		}
+
+		$mailbox->setSyncLock($now);
+		$this->update($mailbox);
+
+		return $now;
+	}
+
+	public function unlockFromSync(Mailbox $mailbox): void {
+		$mailbox->setSyncLock(null);
+		$this->update($mailbox);
+	}
+
+
 	/**
 	 * @throws MailboxLockedException
 	 */

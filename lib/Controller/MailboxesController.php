@@ -153,10 +153,6 @@ class MailboxesController extends Controller {
 			$syncResponse = $this->syncService->syncMailbox(
 				$account,
 				$mailbox,
-				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-				array_map(static function ($id) {
-					return (int)$id;
-				}, $ids),
 				!$init,
 				$query
 			);

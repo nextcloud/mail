@@ -52,6 +52,10 @@ use function strtolower;
  * @method void setSyncChangedLock(int|null $ts)
  * @method int|null getSyncVanishedLock()
  * @method void setSyncVanishedLock(int|null $ts)
+ * @method string|null getSyncToken()
+ * @method void setSyncToken(string|null $syncToken)
+ * @method int|null getSyncLock()
+ * @method void setSyncLock(int|null $ts)
  * @method string getAttributes()
  * @method void setAttributes(string $attributes)
  * @method string|null getDelimiter()
@@ -80,6 +84,8 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $syncNewLock;
 	protected $syncChangedLock;
 	protected $syncVanishedLock;
+	protected $syncLock;
+	protected $syncToken;
 	protected $attributes;
 	protected $delimiter;
 	protected $messages;
