@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.8 - 2023-09-25
+### Fixed
+- Rate limit auto config attempts
+- Make system address book searchable not just full matches
+- Add preview enhancement job to new accounts joblist
+- Account settings modal close button
+- Show starred messages in Favourites again
+- Mailboxes not being synced due to short circuiting
+
+
 ## 2.2.7 - 2023-06-28
 ### Fixed
 - Truncate email addresses that are more than 244 characters long
