@@ -80,7 +80,7 @@ jobs:
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
           mail-service:
-              image: christophwurst/imap-devel
+              image: ghcr.io/christophwurst/docker-imap-devel:latest
               env:
                   MAILNAME: mail.domain.tld
                   MAIL_ADDRESS: user@domain.tld
