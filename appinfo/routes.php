@@ -106,6 +106,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'accounts#testAccountConnection',
+			'url' => '/api/accounts/{id}/test',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'autoConfig#queryIspdb',
 			'url' => '/api/autoconfig/ispdb/{email}',
 			'verb' => 'GET',

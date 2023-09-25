@@ -8,7 +8,7 @@
 
 		<template v-if="hasComposerSession">
 			<ComposerSessionIndicator @close="onCloseMessageModal" />
-			<NewMessageModal ref="newMessageModal" />
+			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
 	</Content>
 </template>
@@ -20,6 +20,7 @@ import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import '../../css/mail.scss'
 import '../../css/mobile.scss'
 
+import { testAccountConnection } from '../service/AccountService'
 import logger from '../logger'
 import MailboxThread from '../components/MailboxThread'
 import Navigation from '../components/Navigation'
@@ -41,6 +42,7 @@ export default {
 	data() {
 		return {
 			hasComposerSession: false,
+			accounts: null,
 		}
 	},
 	computed: {
@@ -73,6 +75,14 @@ export default {
 
 			this.hasComposerSession = true
 		},
+	},
+	async beforeMount() {
+		const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+		this.accounts = await Promise.all(
+			 accounts.map(async (account) => {
+				return { ...account, connectionStatus: await testAccountConnection(account.id) }
+			}))
+
 	},
 	created() {
 		const accounts = this.$store.getters.accounts

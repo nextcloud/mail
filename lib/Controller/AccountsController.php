@@ -501,4 +501,19 @@ class AccountsController extends Controller {
 		$this->accountService->update($account);
 		return MailJsonResponse::success();
 	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id Account id
+	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 */
+	public function testAccountConnection(int $id) {
+		return new JSONResponse([
+			'data' => $this->accountService->testAccountConnection($this->currentUserId, $id),
+		]);
+	}
+
 }

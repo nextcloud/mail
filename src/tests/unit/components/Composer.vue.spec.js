@@ -68,6 +68,14 @@ describe('Composer', () => {
 			propsData: {
 				inReplyToMessageId: 'abc123',
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			store,
 			localVue,
@@ -83,6 +91,14 @@ describe('Composer', () => {
 			propsData: {
 				inReplyToMessageId: 'abc123',
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			store,
 			localVue,
@@ -101,6 +117,14 @@ describe('Composer', () => {
 					{ label: 'test', email: 'test@domain.tld' },
 				],
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			store,
 			localVue,
@@ -115,6 +139,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -136,6 +168,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -157,6 +197,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -178,6 +226,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -202,6 +258,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			computed: {
 				smimeCertificateForCurrentAlias() {
@@ -226,6 +290,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
             propsData: {
 				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
             },
 			store,
 			localVue,
@@ -248,6 +320,14 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
             propsData: {
                 isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
             },
 			store,
 			localVue,

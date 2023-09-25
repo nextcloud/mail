@@ -6,17 +6,27 @@
 				{{ t('mail', 'From') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect
+				<Select
 					id="from"
 					:value="selectedAlias"
 					:options="aliases"
 					label="name"
 					track-by="selectId"
 					:searchable="false"
-					:custom-label="formatAliases"
 					:placeholder="t('mail', 'Select account')"
 					:clear-on-select="false"
-					@select="onAliasChange" />
+					:append-to-body="false"
+					:selectable="(option)=> {
+						return option.selectable}"
+					@option:selected="onAliasChange">
+					<template slot="option" slot-scope="option">
+						{{ formatAliases(option) }}
+					</template>
+
+					<template slot="selected-option" slot-scope="option">
+						{{ formatAliases(option) }}
+					</template>
+				</Select>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -418,7 +428,7 @@ import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments'
@@ -479,6 +489,7 @@ export default {
 		IconPublic,
 		IconLinkPicker,
 		Multiselect,
+		Select,
 		TextEditor,
 		ListItemIcon,
 		RecipientListItem,
@@ -586,6 +597,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		accounts: {
+			type: Array,
+			required: true,
+		},
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -648,7 +663,7 @@ export default {
 		},
 		aliases() {
 			let cnt = 0
-			const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+			const accounts = this.accounts.filter((a) => !a.isUnified)
 			const aliases = accounts.flatMap((account) => [
 				{
 					id: account.id,
@@ -660,6 +675,7 @@ export default {
 					emailAddress: account.emailAddress,
 					signatureAboveQuote: account.signatureAboveQuote,
 					smimeCertificateId: account.smimeCertificateId,
+					selectable: account.connectionStatus,
 				},
 				account.aliases.map((alias) => {
 					return {
@@ -672,6 +688,7 @@ export default {
 						emailAddress: alias.alias,
 						signatureAboveQuote: account.signatureAboveQuote,
 						smimeCertificateId: alias.smimeCertificateId,
+						selectable: account.connectionStatus,
 					}
 				}),
 			])
@@ -1523,7 +1540,7 @@ export default {
 	min-height: 100px;
 }
 
-:deep(.multiselect .multiselect__tags), .subject {
+:deep(.multiselect .multiselect__tags),:deep( .vs__dropdown-toggle),:deep(.vs__dropdown-menu),  .subject {
 	border: none !important;
 }
 :deep([data-select="create"] .avatardiv--unknown) {
@@ -1533,6 +1550,23 @@ export default {
 	flex-wrap: wrap;
 }
 
+#from{
+	width: 100%;
+	cursor: pointer;
+}
+:deep(.vs__actions){
+	display: none;
+}
+
+:deep(.vs__dropdown-menu){
+	border: 1px solid var(--color-border) !important;
+	padding: 0 !important;
+	border-radius: 0  !important;
+}
+
+:deep(.vs__dropdown-option){
+	border-radius: 0  !important;
+}
 .submit-message.send.primary.icon-confirm-white {
 	color: var(--color-main-background);
 }
