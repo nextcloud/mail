@@ -26,8 +26,13 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCP\TextProcessing\FreePromptTaskType;
@@ -53,6 +58,12 @@ class AiIntegrationsServiceTest extends TestCase {
 	/** @var Cache */
 	private $cache;
 
+	/** @var IMAPClientFactory|MockObject */
+	private $clientFactory;
+
+	/** @var IMailManager|MockObject */
+	private $mailManager;
+
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -64,14 +75,19 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 
 		$this->cache = $this->createMock(Cache::class);
-
+		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->container,
-			$this->cache
+			$this->cache,
+			$this->clientFactory,
+			$this->mailManager
 		);
 	}
 
 	public function testSummarizeThreadNoBackend() {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
 		if($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
@@ -79,12 +95,12 @@ class AiIntegrationsServiceTest extends TestCase {
 				->willReturn([]);
 			$this->expectException(ServiceException::class);
 			$this->expectExceptionMessage('No language model available for summary');
-			$this->aiIntegrationsService->summarizeThread('', [], '');
+			$this->aiIntegrationsService->summarizeThread($account, $mailbox, '', [], '');
 		}
 		$this->container->method('get')->willThrowException(new ServiceException());
 		$this->expectException(ServiceException::class);
 		$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
-		$this->aiIntegrationsService->summarizeThread('', [], '');
+		$this->aiIntegrationsService->summarizeThread($account, $mailbox, '', [], '');
 
 	}
 
@@ -122,6 +138,8 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	public function testCached() {
 		if($this->manager !== null) {
+			$account = new Account(new MailAccount());
+			$mailbox = new Mailbox();
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')
@@ -150,7 +168,7 @@ class AiIntegrationsServiceTest extends TestCase {
 				->with($messageIds)
 				->willReturn('this is a cached summary');
 
-			$this->assertEquals('this is a cached summary', $this->aiIntegrationsService->summarizeThread('some-thread-root-id-1', $messages, 'admin'));
+			$this->assertEquals('this is a cached summary', $this->aiIntegrationsService->summarizeThread($account, $mailbox, 'some-thread-root-id-1', $messages, 'admin'));
 		}
 	}
 }
