@@ -129,7 +129,7 @@
     "postcss": "^8.4.30",
     "postcss-loader": "^4.3.0",
     "sass": "^1.68.0",
-    "sass-loader": "^13.2.2",
+    "sass-loader": "^13.3.2",
     "style-loader": "^3.3.2",
     "svg-inline-loader": "^0.8.2",
     "url-loader": "^4.1.1",
