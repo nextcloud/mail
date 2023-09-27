@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
       - name: Read package.json node and npm engines version
-        uses: skjnldsv/read-package-engines-version-actions@0ce2ed60f6df073a62a77c0a4958dd0fc68e32e7 # v2.1
+        uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
         id: versions
       - name: Set up Nextcloud env
         uses: ChristophWurst/setup-nextcloud@8bc31fe189b3cb3b44122dede08ce39e8932c554 # v0.3.1
