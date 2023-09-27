@@ -34,6 +34,7 @@
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
+import { Mention } from '@ckeditor/ckeditor5-mention'
 import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
@@ -53,12 +54,11 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
 import MailPlugin from '../ckeditor/mail/MailPlugin'
-import Tribute from 'tributejs/dist/tribute.esm.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Components/NcRichText'
 import { emojiSearch, emojiAddRecent } from '@nextcloud/vue/dist/Functions/emoji'
 import { getLanguage } from '@nextcloud/l10n'
-
 import logger from '../logger'
+import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin'
 
 export default {
 	name: 'TextEditor',
@@ -92,7 +92,14 @@ export default {
 		},
 	},
 	data() {
-		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin, QuotePlugin]
+		const plugins = [
+			EssentialsPlugin,
+			ParagraphPlugin,
+			SignaturePlugin,
+			QuotePlugin,
+			PickerPlugin,
+			Mention,
+		]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
@@ -277,85 +284,6 @@ export default {
 				}
 			}, { priority: 'high' })
 			this.editorInstance = editor
-			const linkOptions = {
-				trigger: '/',
-				// Don't use the tribute search function at all
-				// We pass search results as values (see below)
-				lookup: (result, query) => query,
-				// Where to inject the menu popup
-				menuContainer: document.querySelector('.modal-mask'),
-				// Popup mention autocompletion templates
-				menuItemTemplate: item => `<img class="tribute-container-link__item__icon" src="${item.original.icon_url}"> <span class="tribute-container-link__item__label">${item.original.title}</span>`,
-				// Hide if no results
-				noMatchTemplate: () => t('No link provider found'),
-				selectTemplate: this.getLink,
-				// Pass the search results as values
-				values: (text, cb) => cb(searchProvider(text)),
-				// Class added to the menu container
-				containerClass: 'tribute-container-link',
-				// Class added to each list item
-				itemClass: 'tribute-container-link__item',
-			}
-			const emojiOptions = {
-				trigger: ':',
-				// Don't use the tribute search function at all
-				// We pass search results as values (see below)
-				lookup: (result, query) => query,
-				// Where to inject the menu popup
-				menuContainer: document.querySelector('.modal-mask'),
-				// Popup mention autocompletion templates
-				menuItemTemplate: item => {
-					if (this.textSmiles.includes(item.original)) {
-						// Display the raw text string for :), :-D, … for non emoji results,
-						// instead of trying to show an image and their name.
-						return item.original
-					}
-
-					return `<span class="tribute-container-emoji__item__emoji">${item.original.native}</span> :${item.original.short_name}`
-				},
-				// Hide if no results
-				noMatchTemplate: () => t('No emoji found'),
-				// Display raw emoji along with its name
-				selectTemplate: (item) => {
-					if (this.textSmiles.includes(item.original)) {
-						// Replace the selection with the raw text string for :), :-D, … for non emoji results
-						this.editorInstance.execute('delete')
-						this.appendToBodyAtCursor(item.original)
-					}
-
-					emojiAddRecent(item.original)
-					this.editorInstance.execute('delete')
-					this.appendToBodyAtCursor(item.original.native)
-				},
-				// Pass the search results as values
-				values: (text, cb) => {
-					const emojiResults = emojiSearch(text)
-					if (this.textSmiles.includes(':' + text)) {
-						/**
-						 * Prepend text smiles to the search results so that Tribute
-						 * is not interfering with normal writing, aka. "Cocos Island Meme".
-						 * E.g. `:)` and `:-)` got replaced by the flag of Cocos Island,
-						 * when submitting the input with Enter after writing them
-						 */
-						emojiResults.unshift(':' + text)
-					}
-					cb(emojiResults)
-				},
-				// Class added to the menu container
-				containerClass: 'tribute-container-emoji',
-				// Class added to each list item
-				itemClass: 'tribute-container-emoji__item',
-			}
-
-			this.linkTribute = new Tribute(linkOptions)
-			this.emojiTribute = new Tribute(emojiOptions)
-
-			// To solve failing unit test
-			// [Tribute] Must pass in a DOM node or NodeList.
-			if (editor.sourceElement) {
-				this.linkTribute.attach(editor.sourceElement)
-				this.emojiTribute.attach(editor.sourceElement)
-			}
 
 			if (this.focus) {
 				logger.debug('focusing TextEditor')
@@ -399,6 +327,10 @@ export default {
 	cursor: text;
 	margin: 0 !important;
 }
+
+.link-title {
+	color: red;
+}
 </style>
 
 <style>
@@ -408,5 +340,10 @@ https://github.com/ckeditor/ckeditor5/issues/1142
  */
 :root {
 	--ck-z-default: 10000;
-}
+	--ck-color-list-button-on-background: var(--color-primary-element-light);
+	--ck-color-list-background: var(--color-main-background);
+	--ck-color-list-button-hover-background: var(--color-primary-element-light);
+	--ck-balloon-border-width:  0;
+	--ck-color-text: var(--color-text-primary);
+	}
 </style>
