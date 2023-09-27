@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46eca94beabb55bb776a8e2b9e303f54",
+    "content-hash": "7824b6394746115af87722e406ccbade",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1604,16 +1604,16 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v2.0.3",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "436c69db9e0951760ca54b6b123d61c89ab3e918"
+                "reference": "50e4e31adfde7fdb08d815a7dc52c3370596f4e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/436c69db9e0951760ca54b6b123d61c89ab3e918",
-                "reference": "436c69db9e0951760ca54b6b123d61c89ab3e918",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/50e4e31adfde7fdb08d815a7dc52c3370596f4e7",
+                "reference": "50e4e31adfde7fdb08d815a7dc52c3370596f4e7",
                 "shasum": ""
             },
             "require": {
@@ -1621,7 +1621,7 @@
             },
             "require-dev": {
                 "pear/text_diff": "^1.2",
-                "simpletest/simpletest": "dev-master"
+                "simpletest/simpletest": "dev-main"
             },
             "bin": [
                 "bin/pcsstidy"
@@ -1647,9 +1647,9 @@
             "description": "CSSTidy is a CSS minifier",
             "support": {
                 "issues": "https://github.com/Cerdic/CSSTidy/issues",
-                "source": "https://github.com/Cerdic/CSSTidy/tree/v2.0.3"
+                "source": "https://github.com/Cerdic/CSSTidy/tree/v2.1.0"
             },
-            "time": "2022-09-14T13:26:35+00:00"
+            "time": "2023-09-21T08:24:51+00:00"
         },
         {
             "name": "christophwurst/kitinerary",
