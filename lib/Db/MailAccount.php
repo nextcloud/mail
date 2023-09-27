@@ -114,6 +114,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setTrashRetentionDays(int|null $trashRetentionDays)
  * @method int|null getJunkMailboxId()
  * @method void setJunkMailboxId(?int $id)
+ * @method bool getSearchBody()
+ * @method void setSearchBody(bool $searchBody)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -190,6 +192,9 @@ class MailAccount extends Entity {
 
 	protected ?int $junkMailboxId = null;
 
+	/** @var bool */
+	protected $searchBody = false;
+
 	/**
 	 * @param array $params
 	 */
@@ -265,6 +270,7 @@ class MailAccount extends Entity {
 		$this->addType('quotaPercentage', 'integer');
 		$this->addType('trashRetentionDays', 'integer');
 		$this->addType('junkMailboxId', 'integer');
+		$this->addType('searchBody', 'boolean');
 	}
 
 	/**
@@ -298,6 +304,7 @@ class MailAccount extends Entity {
 			'quotaPercentage' => $this->getQuotaPercentage(),
 			'trashRetentionDays' => $this->getTrashRetentionDays(),
 			'junkMailboxId' => $this->getJunkMailboxId(),
+			'searchBody' => $this->getSearchBody(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

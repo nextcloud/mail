@@ -35,12 +35,7 @@ class FilterStringParser {
 		}
 		$tokens = explode(' ', $filter);
 		foreach ($tokens as $token) {
-			if (!$this->parseFilterToken($query, $token)) {
-				$query->addTextToken($token);
-
-				// Always look into the subject as well
-				$query->addSubject($token);
-			}
+			$this->parseFilterToken($query, $token);
 		}
 
 		return $query;
@@ -106,6 +101,9 @@ class FilterStringParser {
 				return true;
 			case 'subject':
 				$query->addSubject($param);
+				return true;
+			case 'body':
+				$query->addBody($param);
 				return true;
 			case 'tags':
 				$tags = explode(',', $param);

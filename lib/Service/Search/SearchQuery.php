@@ -51,6 +51,9 @@ class SearchQuery {
 	private $subjects = [];
 
 	/** @var string[] */
+	private $bodies = [];
+
+	/** @var string[] */
 	private $textTokens = [];
 
 	/** @var array[] */
@@ -154,16 +157,12 @@ class SearchQuery {
 	public function addSubject(string $subject): void {
 		$this->subjects[] = $subject;
 	}
-
-	/**
-	 * @return string[]
-	 */
-	public function getTextTokens(): array {
-		return $this->textTokens;
+	public function getBodies(): array {
+		return $this->bodies;
 	}
 
-	public function addTextToken(string $textToken): void {
-		$this->textTokens[] = $textToken;
+	public function addBody(string $body): void {
+		$this->bodies[] = $body;
 	}
 
 	/**
