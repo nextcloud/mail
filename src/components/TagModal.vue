@@ -26,78 +26,47 @@
 			<h2 class="tag-title">
 				{{ t('mail', 'Add default tags') }}
 			</h2>
-			<div v-for="tag in tags" :key="tag.id" class="tag-group">
-				<button class="tag-group__label"
-					:style="{
-						color: convertHex(tag.color, 1),
-						'background-color': convertHex(tag.color, 0.15)
-					}">
-					{{ tag.displayName }}
-				</button>
-				<Actions :force-menu="true">
-					<ActionButton v-if="renameTagLabel"
-						@click="openEditTag">
-						<template #icon>
-							<IconRename :size="17" />
-						</template>
-						{{ t('mail','Rename tag') }}
-					</ActionButton>
-					<ActionInput v-if="renameTagInput"
-						:value="tag.displayName"
-						@submit="renameTag(tag, $event)">
-						<template #icon>
-							<IconTag :size="20" />
-						</template>
-					</ActionInput>
-					<ActionText
-						v-if="showSaving">
-						<template #icon>
-							<IconLoading :size="20" />
-						</template>
-						{{ t('mail', 'Saving new tag name …') }}
-					</ActionText>
-				</Actions>
-				<button v-if="!isSet(tag.imapLabel)"
-					class="tag-actions"
-					@click="addTag(tag.imapLabel)">
-					{{ t('mail','Set tag') }}
-				</button>
-				<button v-else
-					class="tag-actions"
-					@click="removeTag(tag.imapLabel)">
-					{{ t('mail','Unset tag') }}
-				</button>
-			</div>
+			<TagItem v-for="tag in tags"
+				:key="tag.id"
+				:tag="tag"
+				:envelopes="envelopes" />
+
 			<h2 class="tag-title">
 				{{ t('mail', 'Add tag') }}
 			</h2>
-			<div class="create-tag">
-				<button v-if="!editing"
-					class="tagButton"
-					@click="addTagInput">
-					{{ t('mail', 'Add tag') }}
-				</button>
-				<ActionInput v-if="editing" @submit="createTag">
+		</div>
+		<div class="create-tag">
+			<NcButton v-if="!editing"
+				class="tagButton"
+				@click="addTagInput">
+				<template #icon>
+					<IconAdd :size="20" />
+				</template>
+				{{ t('mail', 'Add tag') }}
+			</NcButton>
+			<ActionInput v-if="editing" @submit="createTag">
+				<template #icon>
 					<IconTag :size="20" />
-				</ActionInput>
-				<ActionText
-					v-if="showSaving">
-					<template #icon>
-						<IconLoading :size="20" />
-					</template>
-					{{ t('mail', 'Saving tag …') }}
-				</ActionText>
-			</div>
+				</template>
+			</ActionInput>
+			<ActionText
+				v-if="showSaving">
+				<template #icon>
+					<IconLoading :size="20" />
+				</template>
+				{{ t('mail', 'Saving tag …') }}
+			</ActionText>
 		</div>
 	</Modal>
 </template>
 
 <script>
-import { NcModal as Modal, NcActions as Actions, NcActionText as ActionText, NcActionInput as ActionInput, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconRename from 'vue-material-design-icons/Pencil'
+import { NcButton, NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconTag from 'vue-material-design-icons/Tag'
+import IconAdd from 'vue-material-design-icons/Plus'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
+import TagItem from './TagItem'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -110,13 +79,13 @@ export default {
 	name: 'TagModal',
 	components: {
 		Modal,
-		Actions,
+		NcButton,
 		ActionText,
 		ActionInput,
-		ActionButton,
-		IconRename,
 		IconTag,
+		IconAdd,
 		IconLoading,
+		TagItem,
 	},
 	props: {
 		envelopes: {
@@ -135,6 +104,7 @@ export default {
 			renameTagLabel: true,
 			renameTagInput: false,
 			color: randomColor(),
+			editColor: '',
 		}
 	},
 	computed: {
@@ -174,18 +144,6 @@ export default {
 					)
 				)
 			)
-		},
-		addTag(imapLabel) {
-			this.isAdded = true
-			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('addEnvelopeTag', { envelope, imapLabel })
-			})
-		},
-		removeTag(imapLabel) {
-			this.isAdded = false
-			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('removeEnvelopeTag', { envelope, imapLabel })
-			})
 		},
 		addTagInput() {
 			this.editing = true
@@ -264,62 +222,12 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.modal-content) {
-	padding: 0 20px 20px 20px;
+	padding: 20px 20px 20px 20px;
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
 :deep(.modal-container) {
 	width: auto !important;
-}
-.tag-title {
-	margin-top: 20px;
-	margin-left: 10px;
-}
-.tag-group {
-	display: block;
-	position: relative;
-	margin: 0 1px;
-	overflow: hidden;
-	left: 4px;
-}
-.tag-actions {
-	background-color: transparent;
-	border: none;
-	float: right;
-	&:hover,
-	&:focus {
-		background-color: var(--color-border-dark);
-	}
-}
-.tag-group__label {
-	z-index: 2;
-	font-weight: bold;
-	border: none;
-	background-color: transparent;
-	padding-left: 10px;
-	padding-right: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 94px;
-}
-.app-navigation-entry-bullet-wrapper {
-	width: 44px;
-	height: 44px;
-	display: inline-block;
-	position: absolute;
-	list-style: none;
-
-	.color0 {
-		width: 30px !important;
-		height: 30px;
-		border-radius: 50%;
-		background-size: 14px;
-		margin-top: -65px;
-		margin-left: 180px;
-		z-index: 2;
-		display: flex;
-		position: relative;
-	}
 }
 .icon-colorpicker {
 	background-image: var(--icon-add-fff);
@@ -329,12 +237,9 @@ export default {
 	margin-left: 10px;
 }
 
-.action-item {
-	right: 8px;
-	float: right;
-}
 .create-tag {
 	list-style: none;
+	margin-bottom:12px;
 }
 @media only screen and (max-width: 512px) {
 	:deep(.modal-container) {
