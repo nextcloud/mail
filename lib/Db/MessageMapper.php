@@ -1209,8 +1209,9 @@ class MessageMapper extends QBMapper {
 		$select = $this->db->getQueryBuilder();
 		$subSelect = $this->db->getQueryBuilder();
 
+		// MIN returns NULL if there are no rows selected, therefore we use COALESCE to ensure 0 is returned in this case
 		$subSelect
-			->select($subSelect->func()->min('sent_at'))
+			->select($subSelect->createFunction('COALESCE(MIN(' . $subSelect->getColumnName('sent_at') . '), 0)'))
 			->from($this->getTableName())
 			->where(
 				$subSelect->expr()->eq('mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
