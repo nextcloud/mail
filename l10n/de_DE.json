@@ -418,6 +418,7 @@
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Ihre Signatur ist größer als 2 MB. Dies kann die Leistung Ihres Editors beeinträchtigen.",
     "Save signature" : "Signatur speichern",
     "Place signature above quoted text" : "Signatur über dem zitierten Text platzieren",
+    "Edit name or color" : "Name oder Farbe bearbeiten",
     "Saving new tag name …" : "Speichere neues Schlagwort …",
     "Set tag" : "Schlagwort setzen",
     "Unset tag" : "Schlagwort entfernen",

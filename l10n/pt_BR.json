@@ -418,6 +418,7 @@
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Sua assinatura é maior que 2 MB. Isso pode afetar o desempenho do seu editor.",
     "Save signature" : "Salvar assinatura",
     "Place signature above quoted text" : "Coloque a assinatura acima do texto citado ",
+    "Edit name or color" : "Editar nome ou cor",
     "Saving new tag name …" : "Salvando novo nome de etiquetas…",
     "Set tag" : "Definir etiqueta",
     "Unset tag" : "Etiqueta não definida",

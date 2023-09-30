@@ -420,6 +420,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "توقيعُك يشغَل أكثر من 2 ميغا بايت. قد يؤثر هذا على أداء المُحرِّر خاصّتك.",
     "Save signature" : "حفظ التوقيع",
     "Place signature above quoted text" : "ضع التوقيع فوق النص المقتبس",
+    "Edit name or color" : "عدِّل الاسم أو اللون",
     "Saving new tag name …" : "حفظ الاسم الجديد للوَسْم",
     "Set tag" : "تعيين وَسْمٍ tag",
     "Unset tag" : "إلغاء تعيين الوَسْم",
