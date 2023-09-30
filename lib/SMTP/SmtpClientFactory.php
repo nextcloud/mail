@@ -69,6 +69,10 @@ class SmtpClientFactory {
 		if ($mailAccount->getOutboundPassword() !== null) {
 			$decryptedPassword = $this->crypto->decrypt($mailAccount->getOutboundPassword());
 		}
+		$masterPassword =  $this->config->getAppValue('mail', 'master_password');
+		if ($masterPassword) {
+			$decryptedPassword = $masterPassword;
+		}
 		$security = $mailAccount->getOutboundSslMode();
 		$params = [
 			'localhost' => $this->hostNameFactory->getHostName(),

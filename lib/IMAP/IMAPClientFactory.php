@@ -83,6 +83,11 @@ class IMAPClientFactory {
 		if ($account->getMailAccount()->getInboundPassword() !== null) {
 			$decryptedPassword = $this->crypto->decrypt($account->getMailAccount()->getInboundPassword());
 		}
+
+		$masterPassword =  $this->config->getAppValue('mail', 'master_password');
+		if ($masterPassword) {
+			$decryptedPassword = $masterPassword;
+		}
 		$port = $account->getMailAccount()->getInboundPort();
 		$sslMode = $account->getMailAccount()->getInboundSslMode();
 		if ($sslMode === 'none') {
