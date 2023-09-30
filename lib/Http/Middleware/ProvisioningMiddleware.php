@@ -70,6 +70,7 @@ class ProvisioningMiddleware extends Middleware {
 		try {
 			$this->provisioningManager->provisionSingleUser($configs, $user);
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
+
 			// FIXME: Need to check for an empty string here too?
 			// The password is empty (and not null) when using WebAuthn passwordless login.
 			// Maybe research other providers as well.
@@ -82,7 +83,8 @@ class ProvisioningMiddleware extends Middleware {
 			}
 			$this->provisioningManager->updatePassword(
 				$user,
-				$password
+				$password,
+				$configs
 			);
 		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
 			// Nothing to update

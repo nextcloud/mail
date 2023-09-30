@@ -182,7 +182,8 @@ export default {
 		 * @return {boolean} True if the account should be disabled
 		 */
 		isDisabled(account) {
-			return this.passwordIsUnavailable && !!account.provisioningId
+
+			return (this.passwordIsUnavailable && !!account.provisioningId) && !!this.$store.getters.masterPasswordEnabled
 		},
 	},
 }

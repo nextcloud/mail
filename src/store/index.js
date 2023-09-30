@@ -103,6 +103,7 @@ export default new Store({
 				isSnoozeDisabled: false,
 				currentUserPrincipal: undefined,
 				googleOauthUrl: null,
+				masterPasswordEnabled: false,
 				sieveScript: {},
 				calendars: [],
 				smimeCertificates: [],
