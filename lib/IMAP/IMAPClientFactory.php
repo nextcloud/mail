@@ -84,7 +84,7 @@ class IMAPClientFactory {
 			$decryptedPassword = $this->crypto->decrypt($account->getMailAccount()->getInboundPassword());
 		}
 
-		$masterPassword =  $this->config->getAppValue('mail', 'master_password');
+		$masterPassword = $this->config->getAppValue('mail', 'master_password');
 		if ($masterPassword) {
 			$decryptedPassword = $masterPassword;
 		}

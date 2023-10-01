@@ -177,7 +177,7 @@ class PageController extends Controller {
 			$passwordIsUnavailable = true;
 		}
 
-		$masterPassword =  $this->config->getAppValue('mail', 'master_password');
+		$masterPassword = $this->config->getAppValue('mail', 'master_password');
 		if ($masterPassword) {
 			$passwordIsUnavailable = false;
 		}
