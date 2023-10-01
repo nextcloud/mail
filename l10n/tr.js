@@ -420,6 +420,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "İmzanız 2 MB boyutundan büyük. Bu durum düzenleyici başarımını olumsuz etkileyebilir.",
     "Save signature" : "İmzayı kaydet",
     "Place signature above quoted text" : "İmza alıntılanan metnin üzerine yerleştirilsin",
+    "Edit name or color" : "Adı ya da rengi düzenle",
     "Saving new tag name …" : "Yeni etiket adı kaydediliyor …",
     "Set tag" : "Etiket koy",
     "Unset tag" : "Etiketi kaldır",

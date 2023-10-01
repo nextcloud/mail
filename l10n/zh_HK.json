@@ -418,6 +418,7 @@
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "您的簽名大於 2 MB。這可能會影響編輯器的性能。",
     "Save signature" : "儲存簽名",
     "Place signature above quoted text" : "將簽名置於引用文字上方",
+    "Edit name or color" : "編輯名字或顏色",
     "Saving new tag name …" : "正在儲存新的標籤名稱……",
     "Set tag" : "設置標籤",
     "Unset tag" : "取消標籤",
