@@ -137,7 +137,7 @@
     "vue-server-renderer": "^2.7.14",
     "vue-template-compiler": "^2.7.14",
     "webpack": "^5.88.2",
-    "webpack-cli": "^5.0.2",
+    "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.9.0"
   }
 }
