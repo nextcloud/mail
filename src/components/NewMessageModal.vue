@@ -30,20 +30,27 @@
 		<Loading v-else-if="sending"
 			:hint="t('mail', 'Sending …')"
 			role="alert" />
-		<EmptyContent v-else-if="warning" :title="t('mail', 'Warning sending your message')" role="alert">
-			<p>{{ warning }}</p>
-			<ButtonVue
-				type="tertiary"
-				:aria-label="t('mail', 'Go back')"
-				@click="warning = undefined">
-				{{ t('mail', 'Go back') }}
-			</ButtonVue>
-			<ButtonVue
-				type="tertiary"
-				:aria-label="t('mail', 'Send anyway')"
-				@click="onForceSend">
-				{{ t('mail', 'Send anyway') }}
-			</ButtonVue>
+		<EmptyContent v-else-if="warning"
+			:title="t('mail', 'Warning sending your message')"
+			class="centered-content"
+			role="alert">
+			<template #description>
+				{{ warning }}
+			</template>
+			<template #action>
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Go back')"
+					@click="warning = undefined">
+					{{ t('mail', 'Go back') }}
+				</ButtonVue>
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Send anyway')"
+					@click="onForceSend">
+					{{ t('mail', 'Send anyway') }}
+				</ButtonVue>
+			</template>
 		</EmptyContent>
 		<template v-else>
 			<NcActions class="minimize-button">
@@ -114,6 +121,7 @@ import { UNDO_DELAY } from '../store/constants'
 import { matchError } from '../errors/match'
 import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError'
 import ManyRecipientsError from '../errors/ManyRecipientsError'
+import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import Loading from './Loading'
 import { mapGetters } from 'vuex'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
@@ -290,7 +298,7 @@ export default {
 				.then(() => logger.debug('attachments uploaded'))
 				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
-		async onSend(data) {
+		async onSend(data, force = false) {
 			logger.debug('sending message', { data })
 
 			await this.attachmentsPromise
@@ -311,6 +319,20 @@ export default {
 				})
 				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
+				}
+
+				if (!force && data.attachments.length === 0) {
+					const lines = toPlain(data.body).value.toLowerCase().split('\n')
+					const wordAttachment = t('mail', 'attachment').toLowerCase()
+					const wordAttached = t('mail', 'attached').toLowerCase()
+					for (const line of lines) {
+						if (line.startsWith('>') || line.startsWith('--')) {
+							break
+						}
+						if (line.includes(wordAttachment) || line.includes(wordAttached)) {
+							throw new AttachmentMissingError()
+						}
+					}
 				}
 
 				if (!this.composerData.id) {
@@ -357,10 +379,18 @@ export default {
 					[ManyRecipientsError.getName()]() {
 						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
 					},
+					// eslint-disable-next-line node/handle-callback-err
 					default(error) {
-						if (error && error.toString) {
-							return error.toString()
-						}
+						return undefined
+					},
+				})
+				this.warning = await matchError(error, {
+					[AttachmentMissingError.getName()]() {
+						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
+					},
+					// eslint-disable-next-line node/handle-callback-err
+					default(error) {
+						return undefined
 					},
 				})
 			} finally {
@@ -380,7 +410,7 @@ export default {
 			}
 		},
 		async onForceSend() {
-			await this.onSend(null, true)
+			await this.onSend(this.cookedComposerData, true)
 		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
