@@ -418,6 +418,7 @@
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Ваш потпис је већи од 2 MB. Ово може да утиче на перформансе вашег едитора.",
     "Save signature" : "Сачувај потпис",
     "Place signature above quoted text" : "Постави потпис изнад цитираног текста",
+    "Edit name or color" : "Уреди назив или боју",
     "Saving new tag name …" : "Чување новог назива ознаке ...",
     "Set tag" : "Постави ознаку",
     "Unset tag" : "Уклони ознаку",

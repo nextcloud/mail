@@ -296,6 +296,7 @@ OC.L10N.register(
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "V kolónkach Pre resp. Kópia sa nachádza príliš veľa príjemcov. Zvážte použitie kolónky Skrytej kópie, pomocou ktorej skryjete e-mailové adresy všetkých príjemcov.",
     "Message discarded" : "Správa bola zrušená",
     "Could not discard message" : "Správu sa nepodarilo zahodiť",
+    "Welcome to {cloudName} Mail" : "Vitajte v {cloudName} pošte",
     "Autoresponder off" : "Automatická odpoveď vypnutá",
     "Autoresponder on" : "Automatická odpoveď zapnutá",
     "First day" : "Prvý deň",

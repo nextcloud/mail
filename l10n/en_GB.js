@@ -420,6 +420,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Your signature is larger than 2 MB. This may affect the performance of your editor.",
     "Save signature" : "Save signature",
     "Place signature above quoted text" : "Place signature above quoted text",
+    "Edit name or color" : "Edit name or color",
     "Saving new tag name …" : "Saving new tag name …",
     "Set tag" : "Set tag",
     "Unset tag" : "Unset tag",
