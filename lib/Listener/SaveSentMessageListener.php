@@ -66,7 +66,7 @@ class SaveSentMessageListener implements IEventListener {
 		if (!($event instanceof MessageSentEvent)) {
 			return;
 		}
-
+		$this->logger->debug('Moving message to SENT mailbox');
 		$sentMailboxId = $event->getAccount()->getMailAccount()->getSentMailboxId();
 		if ($sentMailboxId === null) {
 			$this->logger->warning("No sent mailbox exists, can't save sent message");
@@ -87,12 +87,14 @@ class SaveSentMessageListener implements IEventListener {
 
 		$client = $this->imapClientFactory->getClient($event->getAccount());
 		try {
+			$this->logger->debug('Trying to move message to SENT mailbox');
 			$this->messageMapper->save(
 				$client,
 				$sentMailbox,
 				$event->getMail()
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->debug('Failed moving message to SENT mailbox', ['exception' => $e]);
 			throw new ServiceException('Could not save sent message on IMAP', 0, $e);
 		} finally {
 			$client->logout();

@@ -85,6 +85,7 @@ class DeleteDraftListener implements IEventListener {
 	 * @param Message $draft
 	 */
 	private function deleteDraft(Account $account, Message $draft): void {
+		$this->logger->debug('Deleting draft message');
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$draftsMailbox = $this->getDraftsMailbox($account);

@@ -57,7 +57,7 @@ class AntiAbuseListener implements IEventListener {
 		if (!($event instanceof BeforeMessageSentEvent)) {
 			return;
 		}
-
+		$this->logger->debug('Handle anti abuse protection');
 		$user = $this->userManager->get($event->getAccount()->getUserId());
 		if ($user === null) {
 			$this->logger->error('User {user} for mail account {id} does not exist', [

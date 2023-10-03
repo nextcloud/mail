@@ -72,6 +72,7 @@ class FlagRepliedMessageListener implements IEventListener {
 		if (!($event instanceof MessageSentEvent) || $event->getRepliedToMessageId() === null) {
 			return;
 		}
+		$this->logger->debug('Flagging messages as replied to');
 
 		$messages = $this->dbMessageMapper->findByMessageId($event->getAccount(), $event->getRepliedToMessageId());
 		if ($messages === []) {
@@ -81,6 +82,7 @@ class FlagRepliedMessageListener implements IEventListener {
 		try {
 			$client = $this->imapClientFactory->getClient($event->getAccount());
 			foreach ($messages as $message) {
+				$this->logger->debug('Flagging message as replied to for message id ' . $message->getMessageId());
 				try {
 					$mailbox = $this->mailboxMapper->findById($message->getMailboxId());
 					//ignore read-only mailboxes

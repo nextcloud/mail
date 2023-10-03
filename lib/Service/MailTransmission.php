@@ -154,6 +154,7 @@ class MailTransmission implements IMailTransmission {
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			throw new SentMailboxNotSetException();
 		}
+		$this->logger->debug('Trying to send local message from method sendMessage');
 
 		if ($repliedToMessageId !== null) {
 			$message = $this->buildReplyMessage($account, $messageData, $repliedToMessageId);
@@ -172,6 +173,7 @@ class MailTransmission implements IMailTransmission {
 		$message->setContent($messageData->getBody());
 		$this->handleAttachments($account, $messageData, $message); // only ever going to be local attachments
 
+		$this->logger->debug('Building SMTP transport');
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
 		$headers = [
@@ -191,9 +193,11 @@ class MailTransmission implements IMailTransmission {
 			$headers[Horde_Mime_Mdn::MDN_HEADER] = $message->getFrom()->first()->toHorde();
 		}
 
+		$this->logger->debug('Building horde mime mail object');
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 
+		$this->logger->debug('Building horde mime mail message object');
 		$mimeMessage = new MimeMessage(
 			new DataUriParser()
 		);
@@ -205,23 +209,27 @@ class MailTransmission implements IMailTransmission {
 
 		// TODO: add smimeEncrypt check if implemented
 		if ($messageData->getSmimeSign()) {
+			$this->logger->debug('SMIME signature enabled');
 			if ($messageData->getSmimeCertificateId() === null) {
 				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
 			}
 
 			try {
+				$this->logger->debug('Trying SMIME signature');
 				$certificate = $this->smimeService->findCertificate(
 					$messageData->getSmimeCertificateId(),
 					$account->getUserId(),
 				);
 				$mimePart = $this->smimeService->signMimePart($mimePart, $certificate);
 			} catch (DoesNotExistException $e) {
+				$this->logger->debug('Failed SMIME signature (certificate does not exists)');
 				throw new ServiceException(
 					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
 					$e->getCode(),
 					$e,
 				);
 			} catch (SmimeSignException | ServiceException $e) {
+				$this->logger->debug('Failed SMIME signature (failed to sign mime part)');
 				throw new ServiceException(
 					'Could not send message: Failed to sign MIME part: ' . $e->getMessage(),
 					$e->getCode(),
@@ -231,11 +239,14 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		if ($messageData->getSmimeEncrypt()) {
+			$this->logger->debug('SMIME encryption enabled for user ' . $account->getUserId());
 			if ($messageData->getSmimeCertificateId() === null) {
+				$this->logger->debug('Failed SMIME encryption (certificate id does not exists)');
 				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
 			}
 
 			try {
+				$this->logger->debug('Trying SMIME encryption for user ' . $account->getUserId());
 				$addressList = $messageData->getTo()
 					->merge($messageData->getCc())
 					->merge($messageData->getBcc());
@@ -246,12 +257,14 @@ class MailTransmission implements IMailTransmission {
 
 				$mimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);
 			} catch (DoesNotExistException $e) {
+				$this->logger->debug('Failed SMIME encryption (certificate does not exists)', ['exception' => $e]);
 				throw new ServiceException(
 					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
 					$e->getCode(),
 					$e,
 				);
 			} catch (SmimeEncryptException | ServiceException $e) {
+				$this->logger->debug('Failed SMIME encrypt (failed to encrypt mime part)', ['exception' => $e]);
 				throw new ServiceException(
 					'Could not send message: Failed to encrypt MIME part: ' . $e->getMessage(),
 					$e->getCode(),
@@ -268,8 +281,10 @@ class MailTransmission implements IMailTransmission {
 
 		// Send the message
 		try {
+			$this->logger->debug('Trying to send mime email via SMTP transport');
 			$mail->send($transport, false, false);
 		} catch (Horde_Mime_Exception $e) {
+			$this->logger->debug('Failed sending mime email via SMTP transport', ['exception' => $e]);
 			throw new ServiceException(
 				'Could not send message: ' . $e->getMessage(),
 				$e->getCode(),
@@ -283,6 +298,8 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	public function sendLocalMessage(Account $account, LocalMessage $message): void {
+		$this->logger->debug('Trying to send local message from method sendLocalMessage with id ' . $message->getId());
+
 		$to = new AddressList(
 			array_map(
 				static function ($recipient) {
@@ -336,12 +353,14 @@ class MailTransmission implements IMailTransmission {
 		);
 
 		if ($message->getAliasId() !== null) {
+			$this->logger->debug('Looking for alias with id ' . $message->getAliasId() . ' for message id ' . $message->getId());
 			$alias = $this->aliasesService->find($message->getAliasId(), $account->getUserId());
 		}
 
 		try {
 			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
 		} catch (SentMailboxNotSetException $e) {
+			$this->logger->debug('Failed sending message with id ' . $message->getId(), ['exception' => $e]);
 			throw new ClientException('Could not send message: ' . $e->getMessage(), $e->getCode(), $e);
 		}
 	}
@@ -505,6 +524,7 @@ class MailTransmission implements IMailTransmission {
 	private function buildReplyMessage(Account $account,
 		NewMessageData $messageData,
 		string $repliedToMessageId): IMessage {
+		$this->logger->debug('Building reply IMessage');
 		// Reply
 		$message = $account->newMessage();
 		$message->setSubject($messageData->getSubject());
@@ -515,6 +535,7 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	private function buildNewMessage(Account $account, NewMessageData $messageData): IMessage {
+		$this->logger->debug('Building new IMessage');
 		// New message
 		$message = $account->newMessage();
 		$message->setTo($messageData->getTo());
@@ -531,6 +552,8 @@ class MailTransmission implements IMailTransmission {
 	 * @return void
 	 */
 	private function handleAttachments(Account $account, NewMessageData $messageData, IMessage $message): void {
+		$this->logger->debug('Handle attachments for IMessage');
+
 		foreach ($messageData->getAttachments() as $attachment) {
 			if (isset($attachment['type']) && $attachment['type'] === 'local') {
 				// Adds an uploaded attachment
@@ -559,6 +582,8 @@ class MailTransmission implements IMailTransmission {
 	 * @return int|null
 	 */
 	private function handleLocalAttachment(Account $account, array $attachment, IMessage $message) {
+		$this->logger->debug('Handle Local Message Attachment');
+
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
 			return null;
@@ -584,6 +609,7 @@ class MailTransmission implements IMailTransmission {
 	 * @param IMessage $message
 	 */
 	private function handleForwardedMessageAttachment(Account $account, array $attachment, IMessage $message): void {
+		$this->logger->debug('Handle Forwarded Message Attachment');
 		// Gets original of other message
 		$userId = $account->getMailAccount()->getUserId();
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
@@ -591,12 +617,16 @@ class MailTransmission implements IMailTransmission {
 
 		$client = $this->imapClientFactory->getClient($account);
 		try {
+			$this->logger->debug('Getting full text for forwarded message attachment for user');
 			$fullText = $this->messageMapper->getFullText(
 				$client,
 				$mailbox->getName(),
 				$attachmentMessage->getUid(),
 				$userId
 			);
+		} catch (ServiceException $e) {
+			$this->logger->debug('Failed getting full text for forwarded message attachment', ['exception' => $e ]);
+			throw $e;
 		} finally {
 			$client->logout();
 		}
@@ -615,6 +645,8 @@ class MailTransmission implements IMailTransmission {
 	 * @param IMessage $message
 	 */
 	private function handleEmbeddedMessageAttachments(Account $account, array $attachment, IMessage $message): void {
+		$this->logger->debug('Handle Embedded Message Attachment');
+
 		// Gets original of other message
 		$userId = $account->getMailAccount()->getUserId();
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
@@ -622,12 +654,16 @@ class MailTransmission implements IMailTransmission {
 
 		$client = $this->imapClientFactory->getClient($account);
 		try {
+			$this->logger->debug('Getting full text for embedded message attachment');
 			$fullText = $this->messageMapper->getFullText(
 				$client,
 				$mailbox->getName(),
 				$attachmentMessage->getUid(),
 				$userId
 			);
+		} catch (ServiceException $e) {
+			$this->logger->debug('Failed getting full text for embedded message attachment', ['exception' => $e ]);
+			throw $e;
 		} finally {
 			$client->logout();
 		}
@@ -647,12 +683,14 @@ class MailTransmission implements IMailTransmission {
 	 * @param IMessage $message
 	 */
 	private function handleForwardedAttachment(Account $account, array $attachment, IMessage $message): void {
+		$this->logger->debug('Handle Raw Forwarded Message Attachment for ' . $account->getUserId());
 		// Gets attachment from other message
 		$userId = $account->getMailAccount()->getUserId();
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['messageId']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 		$client = $this->imapClientFactory->getClient($account);
 		try {
+			$this->logger->debug('Trying to get raw forwarded message attachment');
 			$attachments = $this->messageMapper->getRawAttachments(
 				$client,
 				$mailbox->getName(),
@@ -662,6 +700,9 @@ class MailTransmission implements IMailTransmission {
 					$attachment['id']
 				]
 			);
+		} catch (\Exception $e) {
+			$this->logger->debug('Failed getting raw message attachment', ['exception' => $e ]);
+			throw $e;
 		} finally {
 			$client->logout();
 		}
@@ -677,6 +718,8 @@ class MailTransmission implements IMailTransmission {
 	 * @return File|null
 	 */
 	private function handleCloudAttachment(array $attachment, IMessage $message) {
+		$this->logger->debug('Handle cloud message attachment');
+
 		if (!isset($attachment['fileName'])) {
 			$this->logger->warning('ignoring cloud attachment because its fileName is unknown');
 			return null;

@@ -160,6 +160,7 @@ class AttachmentService implements IAttachmentService {
 	}
 
 	public function deleteLocalMessageAttachments(string $userId, int $localMessageId): void {
+		$this->logger->debug('Deleting message attachments for user ' . $userId . ' with message id ' .  $localMessageId);
 		$attachments = $this->mapper->findByLocalMessageId($userId, $localMessageId);
 		// delete db entries
 		$this->mapper->deleteForLocalMessage($userId, $localMessageId);

@@ -62,6 +62,7 @@ class InteractionListener implements IEventListener {
 		if (!($event instanceof MessageSentEvent)) {
 			return;
 		}
+		$this->logger->debug('"Contacted recently" event triggered');
 		if (!class_exists(ContactInteractedWithEvent::class)) {
 			$this->logger->debug(ContactInteractedWithEvent::class . ' does not exist, ignoring the event');
 			return;
@@ -75,7 +76,12 @@ class InteractionListener implements IEventListener {
 			->merge($event->getMessage()->getBCC());
 		foreach ($recipients->iterate() as $recipient) {
 			$interactionEvent = new ContactInteractedWithEvent($user);
-			$email = $recipient->getEmail();
+			try {
+				$email = $recipient->getEmail();
+			} catch (\Exception $e) {
+				$this->logger->debug('Could not convert recipient email');
+				throw $e;
+			}
 			if ($email === null) {
 				// Weird, bot ok
 				continue;

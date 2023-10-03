@@ -110,6 +110,7 @@ class OutboxService {
 	 * @return LocalMessage[]
 	 */
 	public function getMessages(string $userId): array {
+		$this->logger->debug('Getting all messages');
 		return $this->mapper->getAllForUser($userId);
 	}
 
@@ -117,6 +118,7 @@ class OutboxService {
 	 * @throws DoesNotExistException
 	 */
 	public function getMessage(int $id, string $userId): LocalMessage {
+		$this->logger->debug('Getting message with id ' . $id);
 		return $this->mapper->findById($id, $userId, LocalMessage::TYPE_OUTGOING);
 	}
 
@@ -126,6 +128,7 @@ class OutboxService {
 	 * @return void
 	 */
 	public function deleteMessage(string $userId, LocalMessage $message): void {
+		$this->logger->debug('Deleting message, recipients and attachments with message id ' . $message->getId());
 		$this->attachmentService->deleteLocalMessageAttachments($userId, $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
@@ -138,9 +141,11 @@ class OutboxService {
 	 * @throws ServiceException
 	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
+		$this->logger->debug('Sending local message with id ' . $message->getId());
 		try {
 			$this->transmission->sendLocalMessage($account, $message);
 		} catch (ClientException|ServiceException $e) {
+			$this->logger->debug('Failed sending message with id ' . $message->getId());
 			// Mark as failed so the message is not sent repeatedly in background
 			$message->setFailed(true);
 			$this->mapper->update($message);
@@ -163,7 +168,9 @@ class OutboxService {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
+		$this->logger->debug('Saving outbox message');
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
+		$this->logger->debug('Saved message id is ' . $message->getId());
 
 		if ($attachments === []) {
 			$message->setAttachments($attachments);
@@ -194,6 +201,7 @@ class OutboxService {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
+		$this->logger->debug('Updating outbox message');
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
@@ -217,6 +225,7 @@ class OutboxService {
 	 * @return void
 	 */
 	public function handleDraft(Account $account, int $draftId): void {
+		$this->logger->debug('Converting draft to outbox message');
 		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
 		$this->eventDispatcher->dispatch(
 			OutboxMessageCreatedEvent::class,
@@ -228,6 +237,7 @@ class OutboxService {
 	 * @return void
 	 */
 	public function flush(): void {
+		$this->logger->debug('Flushing the outbox');
 		$messages = $this->mapper->findDue(
 			$this->timeFactory->getTime()
 		);
@@ -236,6 +246,7 @@ class OutboxService {
 			return;
 		}
 
+		$this->logger->debug('Flushing the outbox for ' . count($messages) . ' messages');
 		$accountIds = array_unique(array_map(static function ($message) {
 			return $message->getAccountId();
 		}, $messages));
@@ -254,6 +265,7 @@ class OutboxService {
 			try {
 				$account = $accounts[$message->getAccountId()];
 				if ($account === null) {
+					$this->logger->debug('Could not find account for message ' . $message->getId());
 					// Ignore message of non-existent account
 					continue;
 				}
@@ -276,6 +288,7 @@ class OutboxService {
 	}
 
 	public function convertDraft(LocalMessage $draftMessage, int $sendAt): LocalMessage {
+		$this->logger->debug('Converting draft message to outbox message');
 		if (empty($draftMessage->getRecipients())) {
 			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
 		}

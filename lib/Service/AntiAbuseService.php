@@ -69,7 +69,7 @@ class AntiAbuseService {
 			$this->logger->debug('Anti abuse detection is off');
 			return;
 		}
-
+		$this->logger->debug('Anti abuse detection on - checking number of users and rate limit');
 		$this->checkNumberOfRecipients($user, $messageData);
 		$this->checkRateLimits($user, $messageData);
 	}

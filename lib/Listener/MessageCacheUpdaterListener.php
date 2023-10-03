@@ -49,7 +49,9 @@ class MessageCacheUpdaterListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
+		$this->logger->debug('Updating local message cache');
 		if ($event instanceof MessageFlaggedEvent) {
+			$this->logger->debug('Updating regular flags for message uid ' . $event->getUid());
 			$messages = $this->mapper->findByUids($event->getMailbox(), [$event->getUid()]);
 			$message = reset($messages);
 
@@ -62,6 +64,7 @@ class MessageCacheUpdaterListener implements IEventListener {
 
 			$this->mapper->update($message);
 		} elseif ($event instanceof MessageDeletedEvent) {
+			$this->logger->debug('Deleting the local message cache for message uid ' . $event->getMessageId());
 			$this->mapper->deleteByUid(
 				$event->getMailbox(),
 				$event->getMessageId()
