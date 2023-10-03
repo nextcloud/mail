@@ -27,6 +27,7 @@ namespace OCA\Mail\Settings;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Integration\GoogleIntegration;
+use OCA\Mail\Integration\MasterPassword;
 use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
@@ -48,6 +49,7 @@ class AdminSettings implements ISettings {
 	private $antiSpamService;
 
 	private GoogleIntegration $googleIntegration;
+	private MasterPassword $masterPassword;
 	private MicrosoftIntegration $microsoftIntegration;
 	private IConfig $config;
 	private AiIntegrationsService $aiIntegrationsService;
@@ -56,6 +58,7 @@ class AdminSettings implements ISettings {
 		ProvisioningManager $provisioningManager,
 		AntiSpamService $antiSpamService,
 		GoogleIntegration $googleIntegration,
+		MasterPassword $masterPassword,
 		MicrosoftIntegration $microsoftIntegration,
 		IConfig $config,
 		AiIntegrationsService $aiIntegrationsService) {
@@ -63,6 +66,7 @@ class AdminSettings implements ISettings {
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
 		$this->googleIntegration = $googleIntegration;
+		$this->masterPassword = $masterPassword;
 		$this->microsoftIntegration = $microsoftIntegration;
 		$this->config = $config;
 		$this->aiIntegrationsService = $aiIntegrationsService;
@@ -119,6 +123,11 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'google_oauth_redirect_url',
 			$this->googleIntegration->getRedirectUrl(),
+		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'master_password',
+			$this->masterPassword->getMasterPassword(),
 		);
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,

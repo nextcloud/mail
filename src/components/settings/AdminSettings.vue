@@ -197,6 +197,27 @@
 				{{
 					t(
 						'mail',
+						'Master password'
+					)
+				}}
+			</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'Some mail servers (e.g. dovecot and postfix) allow you to specify a master password to use for all users, this can be used to allow SSO users to send and recieve email. We will use this password as a fallback password for users that does not have a password set all ready'
+						)
+					}}
+				</p>
+			</article>
+			<MasterPasswordSettings />
+		</div>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
 						'Gmail integration'
 					)
 				}}
@@ -262,6 +283,7 @@
 <script>
 import Button from '@nextcloud/vue/dist/Components/NcButton'
 import GmailAdminOauthSettings from './GmailAdminOauthSettings'
+import MasterPasswordSettings from './MasterPasswordSettings'
 import logger from '../../logger'
 import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -286,10 +308,11 @@ const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', nu
 const microsoftOauthTenantId = loadState('mail', 'microsoft_oauth_tenant_id', null) ?? undefined
 const microsoftOauthClientId = loadState('mail', 'microsoft_oauth_client_id', null) ?? undefined
 const microsoftOauthRedirectUrl = loadState('mail', 'microsoft_oauth_redirect_url', null)
-
+const masterPassword = loadState('mail', 'master_password', null)
 export default {
 	name: 'AdminSettings',
 	components: {
+		MasterPasswordSettings,
 		GmailAdminOauthSettings,
 		AntiSpamSettings,
 		MicrosoftAdminOauthSettings,
@@ -313,6 +336,7 @@ export default {
 			configs: this.provisioningSettings,
 			googleOauthClientId,
 			googleOauthRedirectUrl,
+			masterPassword,
 			microsoftOauthTenantId,
 			microsoftOauthClientId,
 			microsoftOauthRedirectUrl,

@@ -406,6 +406,16 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'masterPassword#configure',
+			'url' => '/api/integration/masterpassword',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'masterPassword#remove',
+			'url' => '/api/integration/masterpassword',
+			'verb' => 'DELETE',
+		],
+		[
 			'name' => 'googleIntegration#configure',
 			'url' => '/api/integration/google',
 			'verb' => 'POST',
