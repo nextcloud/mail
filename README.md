@@ -60,7 +60,7 @@ Once npm and Node.js are installed, PHP and JavaScript dependencies can be insta
 make dev-setup
 ```
 
-We are also available on [our public Mail development chat](https://cloud.nextcloud.com/call/89474m7g), if you want to join the development discussion. Please report bugs [here on Github](https://github.com/nextcloud/mail/issues/new/choose) and open any questions and support tickets at [the community forum](https://help.nextcloud.com/c/apps/mail).
+We are also available on [our public Mail development chat](https://cloud.nextcloud.com/call/5qb8fujz), if you want to join the development discussion. Please report bugs [here on Github](https://github.com/nextcloud/mail/issues/new/choose) and open any questions and support tickets at [the community forum](https://help.nextcloud.com/c/apps/mail).
 
 ## Documentation
 
