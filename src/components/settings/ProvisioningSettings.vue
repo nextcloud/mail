@@ -199,6 +199,37 @@
 				</div>
 				<div class="settings-group">
 					<div class="group-title">
+						{{ t('mail', 'Master password') }}
+					</div>
+					<div class="group-inputs">
+						<div>
+							<input
+								:id="'mail-master-password-enabled' + setting.id"
+								v-model="masterPasswordEnabled"
+								type="checkbox"
+								class="checkbox">
+							<label :for="'mail-master-password-enabled' + setting.id">
+								{{ t('mail', 'Use master password') }}
+							</label>
+						</div>
+						<div>
+							<input
+								:id="'mail-password-id' + setting.id"
+								v-model="passwordId"
+								type="hidden"
+								required>
+							<input
+								id="mail-master-password"
+								v-model="masterPassword"
+								:disabled="loading"
+								type="password"
+								required>
+							<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+						</div>
+					</div>
+				</div>
+				<div class="settings-group">
+					<div class="group-title">
 						{{ t('mail', 'Sieve') }}
 					</div>
 					<div class="group-inputs">
@@ -397,6 +428,14 @@ export default {
 			required: false,
 			default: true,
 		},
+		passwordId: {
+			type: String,
+			default: '',
+		},
+		masterPassword: {
+			type: String,
+			default: '',
+		},
 	},
 	data() {
 		return {
@@ -411,11 +450,16 @@ export default {
 			smtpPort: this.setting.smtpPort || 587,
 			smtpUser: this.setting.smtpUser || '%USERID%domain.com',
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
+			masterPasswordEnabled: this.setting.masterPasswordEnabled || '',
+			passwordId: this.setting.passwordId || '',
+			masterPassword: this.setting.masterPassword || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
 			sievePort: this.setting.sievePort || '',
 			sieveSslMode: this.setting.sieveSslMode || '',
 			sieveUser: this.setting.sieveUser || '',
+			passwordId: this.passwordId || '',
+			masterPassword: this.masterPassword ? PASSWORD_PLACEHOLDER : '',
 			previewData1: {
 				uid: 'user123',
 				email: '',
@@ -443,11 +487,14 @@ export default {
 				smtpHost: this.smtpHost,
 				smtpPort: this.smtpPort,
 				smtpSslMode: this.smtpSslMode,
+				masterPasswordEnabled: this.masterPasswordEnabled,
 				sieveEnabled: this.sieveEnabled,
 				sieveUser: this.sieveUser,
 				sieveHost: this.sieveHost,
 				sievePort: this.sievePort,
 				sieveSslMode: this.sieveSslMode,
+				passwordId: this.passwordId,
+				masterPassword: this.masterPassword,
 				ldapAliasesProvisioning: this.ldapAliasesProvisioning,
 				ldapAliasesAttribute: this.ldapAliasesAttribute,
 			}
@@ -474,6 +521,9 @@ export default {
 					smtpHost: this.smtpHost,
 					smtpPort: this.smtpPort,
 					smtpSslMode: this.smtpSslMode,
+					masterPasswordEnabled: this.masterPasswordEnabled,
+					passwordId: this.passwordId,
+					masterPassword: this.masterPassword,
 					sieveEnabled: this.sieveEnabled,
 					sieveUser: this.sieveUser,
 					sieveHost: this.sieveHost,

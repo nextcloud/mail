@@ -126,11 +126,6 @@ class AdminSettings implements ISettings {
 		);
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
-			'master_password',
-			$this->masterPassword->getMasterPassword(),
-		);
-		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
 			'microsoft_oauth_tenant_id',
 			$this->microsoftIntegration->getTenantId(),
 		);
