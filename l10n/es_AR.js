@@ -47,6 +47,7 @@ OC.L10N.register(
     "Comment" : "Comentario",
     "Accept" : "Aceptar",
     "Decline" : "Declinar",
+    "More options" : "Más opciones",
     "Choose" : "Elige",
     "Other" : "Otro",
     "Reply" : "Responder",
