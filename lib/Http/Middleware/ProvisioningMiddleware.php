@@ -76,9 +76,14 @@ class ProvisioningMiddleware extends Middleware {
 			// Ref \OCA\Mail\Controller\PageController::index()
 			//     -> inital state for password-is-unavailable
 			if ($password === null) {
-				// Nothing to update, might be passwordless signin
-				$this->logger->debug('No password set for ' . $user->getUID());
-				return;
+				$masterPassword = $this->config->getAppValue('mail', 'master_password');
+				if ($masterPassword) {
+					$password = $masterPassword;
+				} else {
+					// Nothing to update, might be passwordless signin
+					$this->logger->debug('No password set for ' . $user->getUID());
+					return;
+				}
 			}
 			$this->provisioningManager->updatePassword(
 				$user,

@@ -176,12 +176,6 @@ class PageController extends Controller {
 		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
 			$passwordIsUnavailable = true;
 		}
-
-		$masterPassword = $this->config->getAppValue('mail', 'master_password');
-		if ($masterPassword) {
-			$passwordIsUnavailable = false;
-		}
-
 		$this->initialStateService->provideInitialState(
 			'password-is-unavailable',
 			$passwordIsUnavailable,
