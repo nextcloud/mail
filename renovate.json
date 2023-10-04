@@ -106,6 +106,7 @@
 				"@ckeditor/ckeditor5-block-quote",
 				"@ckeditor/ckeditor5-build-balloon",
 				"@ckeditor/ckeditor5-core",
+				"@ckeditor/ckeditor5-dev-utils",
 				"@ckeditor/ckeditor5-editor-balloon",
 				"@ckeditor/ckeditor5-essentials",
 				"@ckeditor/ckeditor5-font",
