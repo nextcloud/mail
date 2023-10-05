@@ -62,8 +62,10 @@ class PreprocessingService {
 			return $mailbox->getId();
 		}, $mailboxes));
 
-
-		$messages = $this->messageMapper->getUnanalyzed($limitTimestamp, $mailboxIds);
+		$messages = [];
+		foreach(array_chunk($mailboxIds, 1000) as $chunk) {
+			$messages = array_merge($messages, $this->messageMapper->getUnanalyzed($limitTimestamp, $chunk));
+		}
 		if ($messages === []) {
 			$this->logger->debug('No structure data to analyse.');
 			return;
