@@ -71,7 +71,7 @@ class ProvisioningMiddleware extends Middleware {
 			$this->provisioningManager->provisionSingleUser($configs, $user);
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
 
-			$mailAccount = $this->provisioningManager->mailAccountMapper->findProvisionedAccount($user);
+			$mailAccount = $this->provisioningManager->getMailAccount($user);
 			$provisioningId = $mailAccount->getProvisioningId();
 			$provisioning = $this->provisioningManager->getConfigById($provisioningId);
 

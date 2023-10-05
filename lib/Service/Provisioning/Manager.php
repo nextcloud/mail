@@ -113,6 +113,10 @@ class Manager {
 		return $provisionings;
 	}
 
+	public function getMailAccount(IUser $user): MailAccount {
+        return $this->mailAccountMapper->findProvisionedAccount($user);
+	}
+
 	public function provision(): int {
 		$cnt = 0;
 		$configs = $this->getConfigs();
