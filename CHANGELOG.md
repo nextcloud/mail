@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.4.1 - 2023-10-05
+### Fixed
+- Forward messages as attachments
+
 ## 3.4.0 - 2023-09-14
 ### Added
 - Thread summaries
