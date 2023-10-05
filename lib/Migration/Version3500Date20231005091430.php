@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Migration;
 
 use Closure;
-use JsonException;
-use OCA\Mail\AppInfo\Application;
 use OCP\DB\ISchemaWrapper;
-use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\Types;
 use OCP\IConfig;
 use OCP\IDBConnection;
