@@ -125,6 +125,9 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSmtpPort((int)$data['smtpPort']);
 		$provisioning->setSmtpSslMode($data['smtpSslMode']);
 
+		$provisioning->setMasterPasswordEnabled((bool)$data['masterPasswordEnabled']);
+		$provisioning->setMasterPassword($data['masterPassword'] ?? '');
+
 		$provisioning->setSieveEnabled((bool)$data['sieveEnabled']);
 		$provisioning->setSieveHost($data['sieveHost'] ?? '');
 		$provisioning->setSieveUser($data['sieveUser'] ?? '');
