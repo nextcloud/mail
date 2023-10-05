@@ -286,6 +286,7 @@ const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', nu
 const microsoftOauthTenantId = loadState('mail', 'microsoft_oauth_tenant_id', null) ?? undefined
 const microsoftOauthClientId = loadState('mail', 'microsoft_oauth_client_id', null) ?? undefined
 const microsoftOauthRedirectUrl = loadState('mail', 'microsoft_oauth_redirect_url', null)
+
 export default {
 	name: 'AdminSettings',
 	components: {

@@ -428,14 +428,6 @@ export default {
 			required: false,
 			default: true,
 		},
-		passwordId: {
-			type: String,
-			default: '',
-		},
-		masterPassword: {
-			type: String,
-			default: '',
-		},
 	},
 	data() {
 		return {
@@ -451,15 +443,12 @@ export default {
 			smtpUser: this.setting.smtpUser || '%USERID%domain.com',
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
 			masterPasswordEnabled: this.setting.masterPasswordEnabled || '',
-			passwordId: this.setting.passwordId || '',
 			masterPassword: this.setting.masterPassword || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
 			sievePort: this.setting.sievePort || '',
 			sieveSslMode: this.setting.sieveSslMode || '',
 			sieveUser: this.setting.sieveUser || '',
-			passwordId: this.passwordId || '',
-			masterPassword: this.masterPassword ? PASSWORD_PLACEHOLDER : '',
 			previewData1: {
 				uid: 'user123',
 				email: '',
@@ -488,13 +477,12 @@ export default {
 				smtpPort: this.smtpPort,
 				smtpSslMode: this.smtpSslMode,
 				masterPasswordEnabled: this.masterPasswordEnabled,
+				masterPassword: this.masterPassword,
 				sieveEnabled: this.sieveEnabled,
 				sieveUser: this.sieveUser,
 				sieveHost: this.sieveHost,
 				sievePort: this.sievePort,
 				sieveSslMode: this.sieveSslMode,
-				passwordId: this.passwordId,
-				masterPassword: this.masterPassword,
 				ldapAliasesProvisioning: this.ldapAliasesProvisioning,
 				ldapAliasesAttribute: this.ldapAliasesAttribute,
 			}
@@ -522,7 +510,6 @@ export default {
 					smtpPort: this.smtpPort,
 					smtpSslMode: this.smtpSslMode,
 					masterPasswordEnabled: this.masterPasswordEnabled,
-					passwordId: this.passwordId,
 					masterPassword: this.masterPassword,
 					sieveEnabled: this.sieveEnabled,
 					sieveUser: this.sieveUser,
