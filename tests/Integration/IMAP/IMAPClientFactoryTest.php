@@ -24,16 +24,21 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Integration\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
-use OC;
+use OC\Memcache\Redis;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\ImapClientRateLimitingDecorator;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
+use OCP\Server;
 use PHPUnit\Framework\MockObject\MockObject;
+use function ltrim;
 
 class IMAPClientFactoryTest extends TestCase {
 	/** @var ICrypto|MockObject */
@@ -47,20 +52,24 @@ class IMAPClientFactoryTest extends TestCase {
 
 	/** @var IMAPClientFactory */
 	private $factory;
+	private IEventDispatcher|MockObject $eventDispatcher;
+	private ITimeFactory|MockObject $timeFactory;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->config = $this->createMock(IConfig::class);
-		$this->cacheFactory = $this->createMock(ICacheFactory::class);
+		$this->cacheFactory = Server::get(ICacheFactory::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->factory = new IMAPClientFactory(
 			$this->crypto,
 			$this->config,
 			$this->cacheFactory,
 			$this->eventDispatcher,
+			$this->timeFactory,
 		);
 	}
 
@@ -75,7 +84,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$mailAccount->setInboundPort(993);
 		$mailAccount->setInboundSslMode('ssl');
 		$mailAccount->setInboundUser('user@domain.tld');
-		$mailAccount->setInboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
+		$mailAccount->setInboundPassword('encrypted');
 		return new Account($mailAccount);
 	}
 
@@ -83,7 +92,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
-			->with($account->getMailAccount()->getInboundPassword())
+			->with('encrypted')
 			->willReturn('mypassword');
 
 		$client = $this->factory->getClient($account);
@@ -95,10 +104,45 @@ class IMAPClientFactoryTest extends TestCase {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
-			->with($account->getMailAccount()->getInboundPassword())
+			->with('encrypted')
 			->willReturn('mypassword');
 
 		$client = $this->factory->getClient($account);
+		$client->login();
+	}
+
+	/**
+	 * @group slow
+	 */
+	public function testRateLimiting(): void {
+		$config = Server::get(IConfig::class);
+		$cacheClass = $config->getSystemValueString('memcache.distributed');
+		if (ltrim($cacheClass, '\\') !== Redis::class) {
+			$this->markTestSkipped('Redis not available. Found ' . $cacheClass);
+		}
+		$account = $this->getTestAccount();
+		$this->crypto->expects($this->once())
+			->method('decrypt')
+			->with('encrypted')
+			->willReturn('notmypassword');
+
+		$client = $this->factory->getClient($account);
+		self::assertInstanceOf(ImapClientRateLimitingDecorator::class, $client);
+		foreach ([1, 2, 3] as $attempts) {
+			try {
+				$client->login();
+				$this->fail("Login #$attempts should cause an exception");
+			} catch (Horde_Imap_Client_Exception $e) {
+				if ($e->getCode() !== Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED) {
+					throw $e;
+				}
+
+				// 🔥 This is fine 🔥
+			}
+		}
+		$this->expectException(Horde_Imap_Client_Exception::class);
+		$this->expectExceptionCode(Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED);
+		$this->expectExceptionMessage('Too many auth attempts');
 		$client->login();
 	}
 }
