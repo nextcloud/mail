@@ -323,7 +323,7 @@ OC.L10N.register(
     "Refresh" : "Freskatu",
     "Error sending your message" : "Errorea zure mezua bidaltzerakoan",
     "Retry" : "Saiatu berriro",
-    "Uploading attachments …" : "Fitxategi erantsiak kargatzen...",
+    "Uploading attachments …" : "Fitxategi erantsiak igotzen...",
     "Sending …" : "Bidaltzen...",
     "Warning sending your message" : "Abisua zure mezua bidaltzerakoan",
     "Send anyway" : "Bidali nolanahi ere",
