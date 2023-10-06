@@ -29,10 +29,16 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Events\BeforeImapClientCreated;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IConfig;
+use OCP\IMemcache;
 use OCP\Security\ICrypto;
+use function hash;
+use function implode;
+use function json_encode;
+use function md5;
 
 class IMAPClientFactory {
 	/** @var ICrypto */
@@ -47,19 +53,18 @@ class IMAPClientFactory {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/**
-	 * @param ICrypto $crypto
-	 * @param IConfig $config
-	 * @param ICacheFactory $cacheFactory
-	 */
+	private ITimeFactory $timeFactory;
+
 	public function __construct(ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
-		IEventDispatcher $eventDispatcher) {
+		IEventDispatcher $eventDispatcher,
+		ITimeFactory $timeFactory) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->eventDispatcher = $eventDispatcher;
+		$this->timeFactory = $timeFactory;
 	}
 
 	/**
@@ -112,6 +117,14 @@ class IMAPClientFactory {
 				$decryptedAccessToken,
 			);
 		}
+		$paramHash = hash(
+			'sha512',
+			implode('-', [
+				$this->config->getSystemValueString('secret'),
+				$account->getId(),
+				json_encode($params)
+			]),
+		);
 		if ($useCache && $this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
 				'backend' => new Cache([
@@ -129,6 +142,10 @@ class IMAPClientFactory {
 		}
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+		}
+		$rateLimitingCache = $this->cacheFactory->createDistributed('mail_imap_ratelimit');
+		if ($rateLimitingCache instanceof IMemcache) {
+			return new ImapClientRateLimitingDecorator($params, $paramHash, $rateLimitingCache, $this->timeFactory);
 		}
 		return new Horde_Imap_Client_Socket($params);
 	}
