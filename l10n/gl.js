@@ -359,6 +359,8 @@ OC.L10N.register(
     "Message saved" : "Mensaxe gardada",
     "Failed to save message" : "Produciuse un fallo ao gardar a mensaxe",
     "Failed to save draft" : "Produciuse un fallo ao gardar o borrador",
+    "attachment" : "anexo",
+    "attached" : "anexado",
     "No sent mailbox configured. Please pick one in the account settings." : "Non foi configurada ningunha caixa de correo enviado. Escolla unha nos axustes da conta.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Está tentando enviar a moitos destinatarios en Para e/ou Cc. Considere usar Cca para agochar os enderezos dos destinatarios.",
     "Message discarded" : "Mensaxe desbotada",
