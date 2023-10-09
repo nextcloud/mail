@@ -34,7 +34,6 @@ use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_ListHeaders;
-use Horde_ListHeaders_Base;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
@@ -523,8 +522,11 @@ class ImapMessageFetcher {
 		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
 		if ($listUnsubscribeHeader !== null) {
 			$listHeaders = new Horde_ListHeaders();
-			/** @var Horde_ListHeaders_Base[] $headers */
 			$headers = $listHeaders->parse($listUnsubscribeHeader->name, $listUnsubscribeHeader->value_single);
+			if (!$headers) {
+				// Unable to parse headers
+				return;
+			}
 			foreach ($headers as $header) {
 				if (str_starts_with($header->url, 'http')) {
 					$this->unsubscribeUrl = $header->url;
