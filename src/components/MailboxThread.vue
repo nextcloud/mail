@@ -167,7 +167,9 @@ export default {
 			return 3
 		},
 		showThread() {
-			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes) && this.$route.name === 'message'
+			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes)
+				&& this.$route.name === 'message'
+				&& this.$route.params.threadId !== 'mailto'
 		},
 		query() {
 			if (this.$route.params.filter === 'starred') {
