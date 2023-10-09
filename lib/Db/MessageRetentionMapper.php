@@ -85,7 +85,7 @@ class MessageRetentionMapper extends QBMapper {
 			);
 
 		$selectQb = $this->db->getQueryBuilder();
-		$selectQb->select('mr.id')
+		$selectQb->select('mr.id', 'mr.uid', 'mr.mailbox_id')
 			->from($this->getTableName(), 'mr')
 			->leftJoin('mr', 'mail_messages', 'm', $selectQb->expr()->andX(
 				$selectQb->expr()->eq(
@@ -102,8 +102,8 @@ class MessageRetentionMapper extends QBMapper {
 			->where($selectQb->expr()->isNull('m.id'));
 		$cursor = $selectQb->executeQuery();
 		while ($row = $cursor->fetch()) {
-			$deleteQb->setParameter('mailbox_id', $row['m.mailbox_id'], IQueryBuilder::PARAM_INT);
-			$deleteQb->setParameter('uid', $row['m.uid'], IQueryBuilder::PARAM_INT);
+			$deleteQb->setParameter('mailbox_id', $row['mailbox_id'], IQueryBuilder::PARAM_INT);
+			$deleteQb->setParameter('uid', $row['uid'], IQueryBuilder::PARAM_INT);
 			$deleteQb->executeStatement();
 		}
 		$cursor->closeCursor();
