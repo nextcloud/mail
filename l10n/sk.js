@@ -204,7 +204,7 @@ OC.L10N.register(
     "Loading messages …" : "Načítavam správy ...",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexovanie správ. U väčších poštových schránok to môže chvíľu trvať.",
     "Choose target mailbox" : "Vyberte cieľovú schránku",
-    "No more submailboxes in here" : "Žadne ďaľšie podschránky",
+    "No more submailboxes in here" : "Žadne ďašie podschránky",
     "Choose" : "Vybrať",
     "Important info" : "Dôležité informácie",
     "Other" : "Iné",
