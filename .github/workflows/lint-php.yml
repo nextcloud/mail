@@ -53,7 +53,7 @@ jobs:
 
     if: always()
 
-    name: php-lint-summary
+    name: lint-summary
 
     steps:
       - name: Summary status
