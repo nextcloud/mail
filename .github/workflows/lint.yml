@@ -89,7 +89,7 @@ jobs:
 
     if: always()
 
-    name: lint-summary
+    name: php-lint-summary
 
     steps:
       - name: XML linter status
