@@ -138,9 +138,6 @@ export default {
 		},
 	},
 	watch: {
-		account() {
-			this.loadEnvelopes()
-		},
 		mailbox() {
 			this.loadEnvelopes()
 				.then(() => {
