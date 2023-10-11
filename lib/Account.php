@@ -36,8 +36,6 @@ namespace OCA\Mail;
 
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
-use Horde_Mail_Transport;
-use Horde_Mail_Transport_Smtphorde;
 use JsonSerializable;
 use OC;
 use OCA\Mail\Cache\Cache;
@@ -203,23 +201,6 @@ class Account implements JsonSerializable {
 	 */
 	public function getUserId() {
 		return $this->account->getUserId();
-	}
-
-	/**
-	 * @deprecated
-	 *
-	 * @return void
-	 *
-	 * @throws ServiceException
-	 */
-	public function testConnectivity(Horde_Mail_Transport $transport): void {
-		// connect to imap
-		$this->getImapConnection();
-
-		// connect to smtp
-		if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
-			$transport->getSMTPObject();
-		}
 	}
 
 	/**
