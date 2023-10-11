@@ -758,10 +758,10 @@ class MessageMapper extends QBMapper {
 			$select->andWhere(
 				$qb->expr()->orX(
 					...array_map(function (string $email) use ($qb) {
-						return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
+						return $qb->expr()->iLike('r1.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getTo()),
 					...array_map(function (string $label) use ($qb) {
-						return $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
+						return $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getTo()),
 				)
 			);
@@ -770,10 +770,10 @@ class MessageMapper extends QBMapper {
 			$select->andWhere(
 				$qb->expr()->orX(
 					...array_map(function (string $email) use ($qb) {
-						return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
+						return $qb->expr()->iLike('r2.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getCc()),
 					...array_map(function (string $label) use ($qb) {
-						return $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
+						return $qb->expr()->iLike('r2.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getCc()),
 				)
 			);
@@ -782,10 +782,10 @@ class MessageMapper extends QBMapper {
 			$select->andWhere(
 				$qb->expr()->orX(
 					...array_map(function (string $email) use ($qb) {
-						return $qb->expr()->iLike('r0.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
+						return $qb->expr()->iLike('r3.email', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($email) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getBcc()),
 					...array_map(function (string $label) use ($qb) {
-						return $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
+						return $qb->expr()->iLike('r3.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getBcc()),
 				)
 			);
