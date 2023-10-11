@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.4.2 - 2023-10-11
+### Fixed
+- Use corresponding table alias for recipient search
+- Rate-limit IMAP auth if the password is wrong
+- LoadEnvelopes being called twice when switching between two accounts
+- Show empty thread view on handler
+- Return if headers couldn't be parsed
+
 ## 3.4.1 - 2023-10-05
 ### Fixed
 - Forward messages as attachments
