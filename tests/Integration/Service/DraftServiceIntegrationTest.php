@@ -120,8 +120,8 @@ class DraftServiceIntegrationTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
-		$this->db = OC::$server->getDatabaseConnection();
-		$qb = $this->db->getQueryBuilder();
+		$db = OC::$server->getDatabaseConnection();
+		$qb = $db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->execute();
 
