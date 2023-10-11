@@ -19,7 +19,7 @@ jobs:
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
-      uses: ChristophWurst/setup-nextcloud@8bc31fe189b3cb3b44122dede08ce39e8932c554 # v0.3.1
+      uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
       with:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
@@ -62,14 +62,17 @@ jobs:
               php-versions: ['8.0']
               nextcloud-versions: ['master']
               db: ['sqlite', 'mysql', 'pgsql']
+              cache: ['nocache']
               include:
                 - php-versions: 8.1
                   nextcloud-versions: stable26
                   db: 'pgsql'
+                  cache: 'nocache'
                 - php-versions: 8.2
                   nextcloud-versions: stable27
                   db: 'sqlite'
-      name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
+                  cache: 'redis'
+      name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
       services:
           mail-service:
               image: ghcr.io/christophwurst/docker-imap-devel:latest
@@ -109,9 +112,18 @@ jobs:
                   --health-interval 10s
                   --health-timeout 5s
                   --health-retries 5
+          redis:
+              image: ghcr.io/nextcloud/continuous-integration-redis:latest
+              options: >-
+                --health-cmd "redis-cli ping"
+                --health-interval 10s
+                --health-timeout 5s
+                --health-retries 5
+              ports:
+                - 6379:6379
       steps:
           - name: Set up Nextcloud env
-            uses: ChristophWurst/setup-nextcloud@8bc31fe189b3cb3b44122dede08ce39e8932c554 # v0.3.1
+            uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
             with:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
@@ -120,6 +132,11 @@ jobs:
               install: true
               database: ${{ matrix.db }}
               node-version: 'false'
+          - name: Configure caching
+            if: ${{ matrix.cache == 'redis' }}
+            run: |
+              php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
+              php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
             uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
             with:
