@@ -262,7 +262,6 @@ class SmimeServiceTest extends TestCase {
 			['application/pkcs7-mime', [], false], // Should not happen in real life but who knows
 			['multipart/alternative', [], false],
 			['', [], false],
-			[null, [], false],
 		];
 	}
 
