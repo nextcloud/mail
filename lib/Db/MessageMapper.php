@@ -751,7 +751,8 @@ class MessageMapper extends QBMapper {
 					...array_map(function (string $label) use ($qb) {
 						return $qb->expr()->iLike('r0.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getFrom()),
-				)
+				),
+				$qb->expr()->eq('r0.type', $qb->createNamedParameter(Recipient::TYPE_FROM, IQueryBuilder::PARAM_INT)),
 			);
 		}
 		if (!empty($query->getTo())) {
@@ -763,7 +764,8 @@ class MessageMapper extends QBMapper {
 					...array_map(function (string $label) use ($qb) {
 						return $qb->expr()->iLike('r1.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getTo()),
-				)
+				),
+				$qb->expr()->eq('r1.type', $qb->createNamedParameter(Recipient::TYPE_TO, IQueryBuilder::PARAM_INT)),
 			);
 		}
 		if (!empty($query->getCc())) {
@@ -775,7 +777,8 @@ class MessageMapper extends QBMapper {
 					...array_map(function (string $label) use ($qb) {
 						return $qb->expr()->iLike('r2.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getCc()),
-				)
+				),
+				$qb->expr()->eq('r2.type', $qb->createNamedParameter(Recipient::TYPE_CC, IQueryBuilder::PARAM_INT)),
 			);
 		}
 		if (!empty($query->getBcc())) {
@@ -787,7 +790,8 @@ class MessageMapper extends QBMapper {
 					...array_map(function (string $label) use ($qb) {
 						return $qb->expr()->iLike('r3.label', $qb->createNamedParameter('%' . $this->db->escapeLikeParameter($label) . '%', IQueryBuilder::PARAM_STR));
 					}, $query->getBcc()),
-				)
+				),
+				$qb->expr()->eq('r3.type', $qb->createNamedParameter(Recipient::TYPE_BCC, IQueryBuilder::PARAM_INT)),
 			);
 		}
 
