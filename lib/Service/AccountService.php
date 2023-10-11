@@ -33,6 +33,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\BackgroundJob\IJobList;
 use function array_map;
@@ -54,12 +55,17 @@ class AccountService {
 	/** @var IJobList */
 	private $jobList;
 
+	/** @var IMAPClientFactory*/
+	private $imapClientFactory;
+
 	public function __construct(MailAccountMapper $mapper,
 		AliasesService $aliasesService,
-		IJobList $jobList) {
+		IJobList $jobList,
+		IMAPClientFactory $imapClientFactory) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
 		$this->jobList = $jobList;
+		$this->imapClientFactory = $imapClientFactory;
 	}
 
 	/**
@@ -192,9 +198,10 @@ class AccountService {
 	public function testAccountConnection(string $currentUserId, int $accountId) :bool {
 		$account = $this->find($currentUserId, $accountId);
 		try {
-			$account->getImapConnection();
+			$client = $this->imapClientFactory->getClient($account);
+			$client->close();
 			return true;
-		} catch (ServiceException $e) {
+		} catch (\Throwable $e) {
 			return false;
 		}
 	}
