@@ -35,7 +35,7 @@ jobs:
 
     if: always()
 
-    name: static-analysis-summary
+    name: static-psalm-analysis-summary
 
     steps:
       - name: Static analysis status
