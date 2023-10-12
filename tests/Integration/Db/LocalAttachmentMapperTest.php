@@ -47,6 +47,9 @@ class LocalAttachmentMapperTest extends TestCase {
 	/** @var LocalAttachmentMapper */
 	private $mapper;
 
+	/** @var LocalMessageMapper */
+	private $localMessageMapper;
+
 	/** @var ITimeFactory|MockObject */
 	private $timeFactory;
 
