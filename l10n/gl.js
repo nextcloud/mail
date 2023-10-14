@@ -422,6 +422,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "A súa sinatura supera os 2 MB. Isto pode afectar ao rendemento do seu editor.",
     "Save signature" : "Gardar a sinatura",
     "Place signature above quoted text" : "Coloque a sinatura enriba do texto citado",
+    "Edit name or color" : "Edita o nome ou a cor",
     "Saving new tag name …" : "Gardando o nome da nova etiqueta…",
     "Set tag" : "Poñer etiquetas",
     "Unset tag" : "Desactivar a etiqueta",

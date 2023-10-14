@@ -460,6 +460,7 @@ OC.L10N.register(
     "Account connected" : "Účet pripojený",
     "Connect your mail account" : "Pripojiť Váš mailový účet",
     "To add a mail account, please contact your administrator." : "Pre pridanie ďalšieho e-mailového účtu kontaktujte administrátora.",
+    "Later today – {timeLocale}" : "Neskôr dnes - {timeLocale}",
     "Itinerary for {type} is not supported yet" : "Itinerár pre {type} zatiaľ nie je podporovaný",
     "All" : "Všetko",
     "Drafts" : "Koncepty",
