@@ -117,6 +117,7 @@ export const getters = {
 	isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
 	isSnoozeDisabled: (state) => state.isSnoozeDisabled,
 	googleOauthUrl: (state) => state.googleOauthUrl,
+	masterPasswordEnabled: (state) => state.masterPasswordEnabled,
 	microsoftOauthUrl: (state) => state.microsoftOauthUrl,
 	getActiveSieveScript: (state) => (accountId) => state.sieveScript[accountId],
 	getCurrentUserPrincipal: (state) => state.currentUserPrincipal,
