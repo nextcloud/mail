@@ -342,6 +342,7 @@
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Váš podpis je väčší ako 2 MB. Môže to ovplyvniť výkon vášho editora.",
     "Save signature" : "Uložiť podpis",
     "Place signature above quoted text" : "Umiestniť podpis nad citovaný text",
+    "Edit name or color" : "Upraviť názov farby",
     "Saving new tag name …" : "Ukladám nový názov štítku ...",
     "An error occurred, unable to rename the tag." : "Vyskytla sa chyba, nie je možné premenovať štítok.",
     "Add default tags" : "Pridať predvolené štítky",
