@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.9 - 2023-10-19
+### Fixed
+- Update vulnerable dependencies
+
 ## 2.2.8 - 2023-09-25
 ### Fixed
 - Rate limit auto config attempts
