@@ -28,7 +28,7 @@ OC.L10N.register(
     "Name" : "Nome",
     "Mail address" : "Enderezo de correo",
     "name@example.org" : "nome@exemplo.org",
-    "Please enter an email of the format name@example.com" : "Introduza un correo co formato nome@exemplo.com",
+    "Please enter an email of the format name@example.com" : "Introduza un correo co formato nome@example.com",
     "Password" : "Contrasinal",
     "Manual" : "Manual",
     "IMAP Settings" : "Axustes IMAP",
