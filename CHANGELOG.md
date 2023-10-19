@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.4.3 - 2023-10-19
+### Fixed
+- Update vulnerable dependencies
+
 ## 3.4.2 - 2023-10-11
 ### Fixed
 - Use corresponding table alias for recipient search
