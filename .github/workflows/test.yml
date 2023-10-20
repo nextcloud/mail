@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0', '8.1', '8.2']
+        php-versions: ['8.0', '8.1', '8.2', '8.3']
         nextcloud-versions: ['master']
         include:
           - php-versions: '8.1'
@@ -72,6 +72,10 @@ jobs:
                   nextcloud-versions: stable27
                   db: 'sqlite'
                   cache: 'redis'
+                - php-versions: 8.3
+                  nextcloud-versions: master
+                  db: 'mysql'
+                  cache: 'nocache'
       name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
       services:
           mail-service:
