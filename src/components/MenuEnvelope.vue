@@ -60,7 +60,7 @@
 			</ActionButton>
 			<ActionButton v-if="hasWriteAcl"
 				:close-after-click="true"
-				@click.prevent="onOpenTagModal">
+				@click.prevent="$emit('open-tag-modal')">
 				<template #icon>
 					<TagIcon
 						:title="t('mail', 'Edit tags')"
@@ -83,7 +83,7 @@
 			<ActionButton
 				v-if="hasDeleteAcl"
 				:close-after-click="true"
-				@click.prevent="onOpenMoveModal">
+				@click.prevent="$emit('open-move-modal')">
 				<template #icon>
 					<OpenInNewIcon
 						:title="t('mail', 'Move message')"
@@ -139,7 +139,7 @@
 				{{ t('mail', 'Edit as new message') }}
 			</ActionButton>
 			<ActionButton :close-after-click="true"
-				@click.prevent="showEventModal = true">
+				@click.prevent="$emit('open-event-modal')">
 				<template #icon>
 					<CalendarBlankIcon
 						:title="t('mail', 'Create event')"
@@ -148,7 +148,7 @@
 				{{ t('mail', 'Create event') }}
 			</ActionButton>
 			<ActionButton :close-after-click="true"
-				@click.prevent="showTaskModal = true">
+				@click.prevent="$emit('open-task-modal')">
 				<template #icon>
 					<TaskIcon
 						:title="t('mail', 'Create task')"
@@ -158,7 +158,7 @@
 			</ActionButton>
 			<ActionButton v-if="withShowSource"
 				:close-after-click="true"
-				@click.prevent="onShowSourceModal">
+				@click.prevent="$emit('show-source-modal')">
 				<template #icon>
 					<InformationIcon
 						:title="t('mail', 'View source')"
@@ -228,40 +228,14 @@
 				{{ t('spreed', 'Set custom snooze') }}
 			</NcActionButton>
 		</template>
-		<Modal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
-			<div class="source-modal-content">
-				<div class="section">
-					<h2>{{ t('mail', 'Message source') }}</h2>
-					<pre class="message-source">{{ rawMessage }}</pre>
-				</div>
-			</div>
-		</Modal>
-		<MoveModal v-if="showMoveModal"
-			:account="account"
-			:envelopes="[envelope]"
-			@move="onMove"
-			@close="onCloseMoveModal" />
-		<EventModal v-if="showEventModal"
-			:envelope="envelope"
-			@close="showEventModal = false" />
-		<TaskModal v-if="showTaskModal"
-			:envelope="envelope"
-			@close="showTaskModal = false" />
-		<TagModal
-			v-if="showTagModal"
-			:account="account"
-			:envelopes="[envelope]"
-			@close="onCloseTagModal" />
 	</div>
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
 import {
 	NcActionButton,
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
-	NcModal as Modal,
 } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import { Base64 } from 'js-base64'
@@ -271,13 +245,10 @@ import CheckIcon from 'vue-material-design-icons/Check'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
 import DownloadIcon from 'vue-material-design-icons/Download'
-import EventModal from './EventModal'
-import TaskModal from './TaskModal'
 import { mailboxHasRights } from '../util/acl'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information'
 import ImportantIcon from './icons/ImportantIcon'
-import MoveModal from './MoveModal'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import PlusIcon from 'vue-material-design-icons/Plus'
 import ReplyIcon from 'vue-material-design-icons/Reply'
@@ -287,7 +258,6 @@ import ShareIcon from 'vue-material-design-icons/Share'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 
 import TagIcon from 'vue-material-design-icons/Tag'
-import TagModal from './TagModal'
 import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
 import NcActionSeparator from '@nextcloud/vue/dist/Components/NcActionSeparator'
 import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
@@ -311,20 +281,15 @@ export default {
 		CheckIcon,
 		DotsHorizontalIcon,
 		DownloadIcon,
-		EventModal,
 		InformationIcon,
-		Modal,
-		MoveModal,
 		OpenInNewIcon,
 		PlusIcon,
 		ReplyIcon,
 		ReplyAllIcon,
 		ShareIcon,
 		TagIcon,
-		TagModal,
 		ImportantIcon,
 		TaskIcon,
-		TaskModal,
 		AlarmIcon,
 	},
 	props: {
@@ -367,12 +332,6 @@ export default {
 	data() {
 		return {
 			debug: window?.OC?.debug || false,
-			rawMessage: '', // Will hold the raw source of the message when requested
-			showSourceModal: false,
-			showMoveModal: false,
-			showEventModal: false,
-			showTaskModal: false,
-			showTagModal: false,
 			localMoreActionsOpen: false,
 			snoozeActionsOpen: false,
 			forwardMessages: this.envelope.databaseId,
@@ -565,34 +524,6 @@ export default {
 				forwardedMessages: [this.envelope.databaseId],
 			})
 		},
-		async onShowSourceModal() {
-			const resp = await axios.get(
-				generateUrl('/apps/mail/api/messages/{id}/source', {
-					id: this.envelope.databaseId,
-				})
-			)
-
-			this.rawMessage = resp.data.source
-			this.showSourceModal = true
-		},
-		onCloseSourceModal() {
-			this.showSourceModal = false
-		},
-		onMove() {
-			this.$emit('move')
-		},
-		onOpenMoveModal() {
-			this.showMoveModal = true
-		},
-		onCloseMoveModal() {
-			this.showMoveModal = false
-		},
-		onOpenEventModal() {
-			this.showEventModal = true
-		},
-		onOpenTagModal() {
-			this.showTagModal = true
-		},
 		onReply(onlySender = false) {
 			this.$store.dispatch('startComposerSession', {
 				reply: {
@@ -600,9 +531,6 @@ export default {
 					data: this.envelope,
 				},
 			})
-		},
-		onCloseTagModal() {
-			this.showTagModal = false
 		},
 		async onOpenEditAsNew() {
 			await this.$store.dispatch('startComposerSession', {
