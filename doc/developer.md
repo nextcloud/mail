@@ -147,7 +147,7 @@ To create a IMAP account for Amy and Bender add to MAIL_ACCOUNTS.
 `32657d7a-582d-103b-83a4-c7ccb54ec103@planetexpress.com,amy 3268b904-582d-103b-83a5-c7ccb54ec103@planetexpress.com,bender`
 
 The password is (for our sample data) the display name in lowercase.
-Note that accounts are seperated by a space.
+Note that accounts are separated by a space.
 
 ### A provisioning configuration for Mail
 
@@ -166,7 +166,7 @@ to a user:
 - Click Add new attribute -> Select mailAlias -> Enter rodriquez@planetexpress.com -> Press Enter -> Click Update Object
 
 Now login to Nextcloud as Bender and go to Mail. See rodriquez@planetexpress.com
-as Alias in the Account settings for the provisoned mail account.
+as Alias in the Account settings for the provisioned mail account.
 
 ## Generate self signed S/MIME CA and user certificates
 
