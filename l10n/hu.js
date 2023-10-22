@@ -460,6 +460,7 @@ OC.L10N.register(
     "Go to latest message" : "Ugrás a legrégebbi üzenethez",
     "Go to newest message" : "Ugrás a legújabb üzenethez",
     "{name} Assistant" : "{name} Asszisztens",
+    "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Tiltsa le a lomtár megőrzését úgy, hogy üresen hagyja a mezőt, vagy állítsa 0-ra. Csak azokat a leveleket dolgozza fel a rendszer, amelyeket a kukák megőrzésének engedélyezése után töröltek.",
     "Remove" : "Eltávolítás",
     "No senders are trusted at the moment." : "Jelenleg egyetlen küldő sem megbízható.",
     "Could not remove trusted sender {sender}" : "Nem sikerült eltávolítani a megbízható küldőt: {sender}",
