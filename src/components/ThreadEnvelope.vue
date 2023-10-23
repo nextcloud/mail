@@ -84,13 +84,13 @@
 					</div>
 				</div>
 				<div class="envelope__header__left__unsubscribe">
-					<ButtonVue
+					<NcActionButton
 						v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
 						type="tertiary"
 						class="envelope__header__unsubscribe"
 						@click="showListUnsubscribeConfirmation = true">
 						{{ t('mail', 'Unsubscribe') }}
-					</ButtonVue>
+					</NcActionButton>
 				</div>
 			</router-link>
 			<div class="right">
@@ -187,8 +187,37 @@
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
-							@delete="$emit('delete',envelope.databaseId)" />
+							@delete="$emit('delete',envelope.databaseId)"
+							@show-source-modal="onShowSourceModal"
+							@open-tag-modal="onOpenTagModal"
+							@open-move-modal="onOpenMoveModal"
+							@open-event-modal="onOpenEventModal"
+							@open-task-modal="onOpenTaskModal" />
 					</NcActions>
+					<NcModal v-if="showSourceModal" class="source-modal" @close="onCloseSourceModal">
+						<div class="source-modal-content">
+							<div class="section">
+								<h2>{{ t('mail', 'Message source') }}</h2>
+								<pre class="message-source">{{ rawMessage }}</pre>
+							</div>
+						</div>
+					</NcModal>
+					<MoveModal v-if="showMoveModal"
+						:account="account"
+						:envelopes="[envelope]"
+						@move="onMove"
+						@close="onCloseMoveModal" />
+					<EventModal v-if="showEventModal"
+						:envelope="envelope"
+						@close="onCloseEventModal" />
+					<TaskModal v-if="showTaskModal"
+						:envelope="envelope"
+						@close="onCloseTaskModal" />
+					<TagModal
+						v-if="showTagModal"
+						:account="account"
+						:envelopes="[envelope]"
+						@close="onCloseTagModal" />
 				</template>
 			</div>
 		</div>
@@ -232,7 +261,7 @@
 </template>
 <script>
 import Avatar from './Avatar'
-import { NcActionButton } from '@nextcloud/vue'
+import { NcActionButton, NcModal } from '@nextcloud/vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
@@ -263,6 +292,12 @@ import { isPgpText } from '../crypto/pgp'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions'
 import NcActionText from '@nextcloud/vue/dist/Components/NcActionText'
 import { unsubscribe } from '../service/ListService'
+import TagModal from './TagModal.vue'
+import MoveModal from './MoveModal.vue'
+import TaskModal from './TaskModal.vue'
+import EventModal from './EventModal.vue'
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -272,6 +307,11 @@ const LOADING_BODY = 2
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		NcModal,
+		EventModal,
+		TaskModal,
+		MoveModal,
+		TagModal,
 		ConfirmModal,
 		Avatar,
 		NcActionButton,
@@ -342,6 +382,12 @@ export default {
 			LOADING_MESSAGE,
 			recomputeMenuSize: 0,
 			moreActionsOpen: false,
+			showSourceModal: false,
+			showMoveModal: false,
+			showEventModal: false,
+			showTaskModal: false,
+			showTagModal: false,
+			rawMessage: '', // Will hold the raw source of the message when requested
 		}
 	},
 	computed: {
@@ -728,6 +774,47 @@ export default {
 				this.unsubscribing = false
 				this.showListUnsubscribeConfirmation = false
 			}
+		},
+		onMove() {
+			this.$emit('move')
+		},
+		onOpenMoveModal() {
+			this.showMoveModal = true
+		},
+		onCloseMoveModal() {
+			this.showMoveModal = false
+		},
+		onOpenEventModal() {
+			this.showEventModal = true
+		},
+		onCloseEventModal() {
+			this.showEventModal = false
+		},
+		onOpenTaskModal() {
+			this.showTaskModal = true
+		},
+		onCloseTaskModal() {
+			this.showTaskModal = false
+		},
+		onOpenTagModal() {
+			this.showTagModal = true
+		},
+		onCloseTagModal() {
+			this.showTagModal = false
+		},
+		async onShowSourceModal() {
+			if (this.rawMessage.length === 0) {
+				const resp = await axios.get(
+					generateUrl('/apps/mail/api/messages/{id}/source', {
+						id: this.envelope.databaseId,
+					})
+				)
+				this.rawMessage = resp.data.source
+			}
+			this.showSourceModal = true
+		},
+		onCloseSourceModal() {
+			this.showSourceModal = false
 		},
 	},
 }
