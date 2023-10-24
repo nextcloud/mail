@@ -278,13 +278,20 @@ class TagMapper extends QBMapper {
 		}
 	}
 
+	/**
+	 * Deletes orphans in the table mail_message_tags.
+	 *
+	 * Also deletes all tags (mail_tags) associated with a user if the user no longer exists.
+	 * Otherwise, the tags will be kept for other mail accounts of the user.
+	 */
 	public function deleteOrphans(): void {
+		// Deletes orphans in the table mail_message_tags
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('mt.id')
-		->from('mail_message_tags', 'mt')
-		->leftJoin('mt', $this->getTableName(), 't', $qb->expr()->eq('t.id', 'mt.tag_id'))
-		->where($qb->expr()->isNull('t.id'));
+		->from('mail_messages', 'm')
+		->rightJoin('m', 'mail_message_tags', 'mt', $qb->expr()->eq('m.message_id', 'mt.imap_message_id'))
+		->where($qb->expr()->isNull('m.message_id'));
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
@@ -293,12 +300,39 @@ class TagMapper extends QBMapper {
 			return $row['id'];
 		}, $rows);
 
-		$deleteQB = $this->db->getQueryBuilder();
-		$deleteQB->delete('mail_message_tags')
-			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
+		$deleteMT = $this->db->getQueryBuilder();
+		$deleteMT->delete('mail_message_tags')
+			->where($deleteMT->expr()->in('id', $deleteMT->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
-			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteQB->executeStatement();
+			$deleteMT->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$deleteMT->executeStatement();
 		}
+
+		// Deletes all tags associated with a user if the user no longer exists
+		$qb2 = $this->db->getQueryBuilder();
+
+		$qb2->select('tags.user_id')
+			->from('mail_tags', 'tags')
+			->leftJoin('tags', 'accounts', 'user', $qb2->expr()->eq('tags.user_id', 'user.uid'))
+			->where($qb2->expr()->isNull('user.uid'))
+			->groupBy('user_id');
+		$result = $qb2->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		$user_ids = array_map(static function (array $row) {
+			return $row['user_id'];
+		}, $rows);
+
+		$deleteT = $this->db->getQueryBuilder();
+		$deleteT->delete('mail_tags')
+			->where(
+				$deleteT->expr()->in('user_id', $deleteT->createParameter('user_ids'), IQueryBuilder::PARAM_STR_ARRAY)
+			);
+		foreach (array_chunk($user_ids, 1000) as $chunk) {
+			$deleteT->setParameter('user_ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$deleteT->executeStatement();
+		}
+
 	}
 }
