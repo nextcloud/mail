@@ -27,6 +27,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\CollectedAddressMapper;
+use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
@@ -38,6 +39,8 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
 class CleanupService {
+	private MailAccountMapper $mailAccountMapper;
+
 	/** @var AliasMapper */
 	private $aliasMapper;
 
@@ -60,7 +63,8 @@ class CleanupService {
 	private PersistenceService $classifierPersistenceService;
 	private ITimeFactory $timeFactory;
 
-	public function __construct(AliasMapper $aliasMapper,
+	public function __construct(MailAccountMapper $mailAccountMapper,
+		AliasMapper $aliasMapper,
 		MailboxMapper $mailboxMapper,
 		MessageMapper $messageMapper,
 		CollectedAddressMapper $collectedAddressMapper,
@@ -77,6 +81,7 @@ class CleanupService {
 		$this->messageRetentionMapper = $messageRetentionMapper;
 		$this->messageSnoozeMapper = $messageSnoozeMapper;
 		$this->classifierPersistenceService = $classifierPersistenceService;
+		$this->mailAccountMapper = $mailAccountMapper;
 		$this->timeFactory = $timeFactory;
 	}
 
@@ -85,6 +90,8 @@ class CleanupService {
 			$this->timeFactory,
 			$logger
 		))->start('clean up');
+		$this->mailAccountMapper->deleteProvisionedOrphanAccounts();
+		$task->step('delete orphan provisioned accounts');
 		$this->aliasMapper->deleteOrphans();
 		$task->step('delete orphan aliases');
 		$this->mailboxMapper->deleteOrphans();
