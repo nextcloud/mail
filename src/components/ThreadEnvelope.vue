@@ -84,13 +84,13 @@
 					</div>
 				</div>
 				<div class="envelope__header__left__unsubscribe">
-					<NcActionButton
+					<NcButton
 						v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
 						type="tertiary"
 						class="envelope__header__unsubscribe"
 						@click="showListUnsubscribeConfirmation = true">
 						{{ t('mail', 'Unsubscribe') }}
-					</NcActionButton>
+					</NcButton>
 				</div>
 			</router-link>
 			<div class="right">
@@ -261,7 +261,7 @@
 </template>
 <script>
 import Avatar from './Avatar'
-import { NcActionButton, NcModal } from '@nextcloud/vue'
+import { NcActionButton, NcButton, NcModal } from '@nextcloud/vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error'
 import importantSvg from '../../img/important.svg'
@@ -315,6 +315,7 @@ export default {
 		ConfirmModal,
 		Avatar,
 		NcActionButton,
+		NcButton,
 		Error,
 		IconFavorite,
 		JunkIcon,
