@@ -65,7 +65,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getEditorMode()
  * @method void setEditorMode(string $editorMode)
  * @method int|null getProvisioningId()
- * @method void setProvisioningId(int $provisioningId)
+ * @method void setProvisioningId(int|null $provisioningId)
  * @method int getOrder()
  * @method void setOrder(int $order)
  * @method bool|null getShowSubscribedOnly()

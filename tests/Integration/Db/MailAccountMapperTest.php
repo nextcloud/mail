@@ -28,10 +28,13 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IDBConnection;
+use function random_int;
 
 /**
  * @group DB
+ * @covers \OCA\Mail\Db\MailAccountMapper
  */
 class MailAccountMapperTest extends TestCase {
 	use DatabaseTransaction;
@@ -105,5 +108,15 @@ class MailAccountMapperTest extends TestCase {
 		$this->assertNotNull($c->getId());
 		$this->assertNotNull($b->getId());
 		$this->assertEquals($b->getId(), $c->getId());
+	}
+
+	public function testDeleteProvisionedOrphans(): void {
+		$this->account->setProvisioningId(random_int(1, 10000));
+		$this->mapper->insert($this->account);
+
+		$this->mapper->deleteProvisionedOrphanAccounts();
+
+		$this->expectException(DoesNotExistException::class);
+		$this->mapper->findById($this->account->getId());
 	}
 }

@@ -151,6 +151,24 @@ class MailAccountMapper extends QBMapper {
 		$delete->executeStatement();
 	}
 
+	public function deleteProvisionedOrphanAccounts(): void {
+		$inner = $this->db->getQueryBuilder()
+			->select('id')
+			->from('mail_provisionings');
+
+		$delete = $this->db->getQueryBuilder();
+		$delete->delete($this->getTableName())
+			->where(
+				$delete->expr()->isNotNull('provisioning_id'),
+				$delete->expr()->notIn(
+					'provisioning_id',
+					$delete->createFunction($inner->getSQL()),
+					IQueryBuilder::PARAM_INT_ARRAY
+				));
+
+		$delete->executeStatement();
+	}
+
 	/**
 	 * @return MailAccount[]
 	 */
