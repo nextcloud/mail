@@ -32,6 +32,7 @@ use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageRetentionMapper;
 use OCA\Mail\Db\MessageSnoozeMapper;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Service\Classification\PersistenceService;
 
 class CleanupService {
 	/** @var AliasMapper */
@@ -53,13 +54,16 @@ class CleanupService {
 
 	private MessageSnoozeMapper $messageSnoozeMapper;
 
+	private PersistenceService $classifierPersistenceService;
+
 	public function __construct(AliasMapper $aliasMapper,
 		MailboxMapper $mailboxMapper,
 		MessageMapper $messageMapper,
 		CollectedAddressMapper $collectedAddressMapper,
 		TagMapper $tagMapper,
 		MessageRetentionMapper $messageRetentionMapper,
-		MessageSnoozeMapper $messageSnoozeMapper) {
+		MessageSnoozeMapper $messageSnoozeMapper,
+		PersistenceService $classifierPersistenceService) {
 		$this->aliasMapper = $aliasMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
@@ -67,6 +71,7 @@ class CleanupService {
 		$this->tagMapper = $tagMapper;
 		$this->messageRetentionMapper = $messageRetentionMapper;
 		$this->messageSnoozeMapper = $messageSnoozeMapper;
+		$this->classifierPersistenceService = $classifierPersistenceService;
 	}
 
 	public function cleanUp(): void {
@@ -78,5 +83,6 @@ class CleanupService {
 		$this->tagMapper->deleteDuplicates();
 		$this->messageRetentionMapper->deleteOrphans();
 		$this->messageSnoozeMapper->deleteOrphans();
+		$this->classifierPersistenceService->cleanUp();
 	}
 }
