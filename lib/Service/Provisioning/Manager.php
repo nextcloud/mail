@@ -113,10 +113,6 @@ class Manager {
 		return $provisionings;
 	}
 
-	public function getMailAccount(IUser $user): MailAccount {
-        return $this->mailAccountMapper->findProvisionedAccount($user);
-	}
-
 	public function provision(): int {
 		$cnt = 0;
 		$configs = $this->getConfigs();
@@ -320,9 +316,17 @@ class Manager {
 		}
 	}
 
-	public function updatePassword(IUser $user, string $password): void {
+	public function updatePassword(IUser $user, string $password, array $provisionings): void {
 		try {
 			$account = $this->mailAccountMapper->findProvisionedAccount($user);
+
+			$provisioning = $this->findMatchingConfig($provisionings, $user);
+			$masterPassword = $provisioning->getMasterPassword();
+			$masterPasswordEnabled = $provisioning->getMasterPasswordEnabled();
+			if ($masterPasswordEnabled && $masterPassword !== null) {
+				$password = $masterPassword;
+				$this->logger->debug('Password set to master password for ' . $user->getUID());
+			}
 
 			if (!empty($account->getInboundPassword())
 				&& $this->crypto->decrypt($account->getInboundPassword()) === $password
