@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7824b6394746115af87722e406ccbade",
+    "content-hash": "36660be32403ae85cdb7b60719a85aa3",
     "packages": [
         {
             "name": "amphp/amp",
@@ -564,16 +564,16 @@
         },
         {
             "name": "arthurhoaro/favicon",
-            "version": "v1.3.3",
+            "version": "v1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArthurHoaro/favicon.git",
-                "reference": "b1acd8b87d6b37e5251fe0559ed488a95078f5b9"
+                "reference": "b5e4a5251c6703ae48d50cb5e3b724d6084a4ddc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/b1acd8b87d6b37e5251fe0559ed488a95078f5b9",
-                "reference": "b1acd8b87d6b37e5251fe0559ed488a95078f5b9",
+                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/b5e4a5251c6703ae48d50cb5e3b724d6084a4ddc",
+                "reference": "b5e4a5251c6703ae48d50cb5e3b724d6084a4ddc",
                 "shasum": ""
             },
             "require": {
@@ -615,10 +615,10 @@
             ],
             "support": {
                 "issues": "https://github.com/ArthurHoaro/favicon/issues",
-                "source": "https://github.com/ArthurHoaro/favicon/tree/v1.3.3",
+                "source": "https://github.com/ArthurHoaro/favicon/tree/v1.3.4",
                 "sources": "https://github.com/ArthurHoaro/favicon"
             },
-            "time": "2021-08-06T05:41:25+00:00"
+            "time": "2023-10-22T00:13:38+00:00"
         },
         {
             "name": "bamarni/composer-bin-plugin",
@@ -4191,7 +4191,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.0 <=8.2",
+        "php": ">=8.0 <=8.3",
         "ext-openssl": "*"
     },
     "platform-dev": [],
