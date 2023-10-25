@@ -58,4 +58,16 @@ class ClassifierMapper extends QBMapper {
 
 		return $this->findEntity($select);
 	}
+
+	public function findHistoric(int $threshold, int $limit) {
+		$qb = $this->db->getQueryBuilder();
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->lte('created_at', $qb->createNamedParameter($threshold, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+			)
+			->orderBy('created_at', 'asc')
+			->setMaxResults($limit);
+		return $this->findEntities($select);
+	}
 }

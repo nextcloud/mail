@@ -210,6 +210,42 @@ class PersistenceService {
 		return $estimator;
 	}
 
+	public function cleanUp(): void {
+		$threshold = $this->timeFactory->getTime() - 2 * 30 * 24 * 60 * 60;
+
+		$classifiers = $this->mapper->findHistoric($threshold, 100);
+		foreach ($classifiers as $classifier) {
+			try {
+				$this->deleteModel($classifier->getId());
+				$this->mapper->delete($classifier);
+			} catch (NotPermittedException $e) {
+				// Log and continue. This is not critical
+				$this->logger->warning('Could not clean-up old classifier', [
+					'id' => $classifier->getId(),
+					'exception' => $e,
+				]);
+			}
+		}
+	}
+
+	/**
+	 * @throws NotPermittedException
+	 */
+	private function deleteModel(int $id): void {
+		$this->logger->debug('Deleting serialized classifier from app data', [
+			'id' => $id,
+		]);
+		try {
+			$modelsFolder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
+			$modelFile = $modelsFolder->getFile((string) $id);
+			$modelFile->delete();
+		} catch (NotFoundException $e) {
+			$this->logger->debug("Classifier model $id does not exist", [
+				'exception' => $e,
+			]);
+		}
+	}
+
 	private function getCacheKey(int $id): string {
 		return "mail_classifier_$id";
 	}
