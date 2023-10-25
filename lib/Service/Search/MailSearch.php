@@ -165,7 +165,7 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
-		if (empty($query->getTextTokens())) {
+		if (empty($query->getBodies())) {
 			return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit);
 		}
 

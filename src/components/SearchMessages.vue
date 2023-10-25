@@ -36,15 +36,29 @@
 			</h2>
 			<div class="modal-inner--content">
 				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t('mail','Search term') }}
+					<label class="modal-inner--label" for="subjectId">
+						{{ t('mail','Subject') }}
 					</label>
 					<div class="modal-inner--container">
 						<input
-							v-model="modalQuery"
+							id="subjectId"
+							v-model="searchInSubject"
 							type="text"
 							class="search-input"
-							:placeholder="t('mail', 'Search in mailbox')">
+							:placeholder="t('mail', 'Search subject')">
+					</div>
+				</div>
+				<div class="modal-inner--field">
+					<label class="modal-inner--label" for="bodyId">
+						{{ t('mail','Body') }}
+					</label>
+					<div class="modal-inner--container">
+						<input
+							id="bodyId"
+							v-model="searchInMessageBody"
+							type="text"
+							class="search-input"
+							:placeholder="t('mail', 'Search body')">
 					</div>
 				</div>
 				<div class="modal-inner--field">
@@ -316,10 +330,13 @@ export default {
 			type: Object,
 			required: true,
 		},
+		accountId: {
+			type: Number,
+			required: true,
+		},
 	},
 	data() {
 		return {
-			modalQuery: '',
 			query: '',
 			debouncedSearchQuery: debouncePromise(this.sendQueryEvent, 700),
 			autocompleteRecipients: [],
@@ -329,8 +346,8 @@ export default {
 			searchInTo: null,
 			searchInCc: null,
 			searchInBcc: null,
-			searchInSubject: true,
-			searchInMessageBody: false,
+			searchInSubject: null,
+			searchInMessageBody: null,
 			searchFlags: [],
 			hasAttachments: false,
 			startDate: null,
@@ -360,13 +377,17 @@ export default {
 				return val !== ''
 			}).length > 0
 		},
+		searchBody() {
+			return this.$store.getters.getAccount(this.accountId)?.searchBody
+		},
 		filterData() {
 			return {
 				to: this.searchInTo !== null && this.searchInTo.length > 0 ? this.searchInTo[0].email : '',
 				from: this.searchInFrom !== null && this.searchInFrom.length > 0 ? this.searchInFrom[0].email : '',
 				cc: this.searchInCc !== null && this.searchInCc.length > 0 ? this.searchInCc[0].email : '',
 				bcc: this.searchInBcc !== null && this.searchInBcc.length > 0 ? this.searchInBcc[0].email : '',
-				subject: this.searchInSubject && this.query.length > 1 ? this.query : '',
+				subject: this.searchInSubject !== null && this.searchInSubject.length > 1 ? this.searchInSubject : '',
+				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
 				tags: this.selectedTags.length > 0 ? this.selectedTags.map(item => item.id) : '',
 				flags: this.searchFlags.length > 0 ? this.searchFlags.map(item => item) : '',
 				start: this.prepareStart(),
@@ -377,7 +398,13 @@ export default {
 		searchQuery() {
 			let _search = ''
 			Object.entries(this.filterData).filter(([key, val]) => {
-				if (val !== '' && val !== null) {
+				if (key === 'body') {
+					val.split(' ').forEach((word) => {
+						if (word !== '' && val !== null) {
+							_search += `${key}:${encodeURI(word)} `
+						}
+					})
+				} else if (val !== '' && val !== null) {
 					_search += `${key}:${encodeURI(val)} `
 				}
 				return val
@@ -388,9 +415,8 @@ export default {
 	},
 	watch: {
 		query() {
-			if (this.query !== this.modalQuery) {
-				this.modalQuery = this.query
-			}
+			this.searchInMessageBody = this.searchBody ? this.query : null
+			this.searchInSubject = this.query
 			this.debouncedSearchQuery()
 		},
 	},
@@ -410,11 +436,7 @@ export default {
 		closeSearchModal() {
 			this.moreSearchActions = false
 			this.$nextTick(() => {
-				if (this.query !== this.modalQuery) {
-					this.query = this.modalQuery
-				} else {
-					this.sendQueryEvent()
-				}
+				this.sendQueryEvent()
 			})
 
 		},
@@ -440,8 +462,8 @@ export default {
 			this.searchInTo = null
 			this.searchInCc = null
 			this.searchInBcc = null
-			this.searchInSubject = true
-			this.searchInMessageBody = false
+			this.searchInSubject = null
+			this.searchInMessageBody = null
 			this.searchFlags = []
 			this.startDate = null
 			this.endDate = null

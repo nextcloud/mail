@@ -112,6 +112,9 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
+		<AppSettingsSection id="mailbox_search" :title="t('mail', 'Mailbox search')">
+			<SearchSettings :account="account" />
+		</AppSettingsSection>
 	</AppSettingsDialog>
 </template>
 
@@ -127,6 +130,7 @@ import SieveAccountForm from './SieveAccountForm'
 import SieveFilterForm from './SieveFilterForm'
 import OutOfOfficeForm from './OutOfOfficeForm'
 import CertificateSettings from './CertificateSettings'
+import SearchSettings from './SearchSettings'
 import TrashRetentionSettings from './TrashRetentionSettings'
 import logger from '../logger'
 
@@ -146,6 +150,7 @@ export default {
 		OutOfOfficeForm,
 		CertificateSettings,
 		TrashRetentionSettings,
+		SearchSettings,
 	},
 	props: {
 		account: {
