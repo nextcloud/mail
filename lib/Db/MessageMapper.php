@@ -966,6 +966,18 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
+		if (!empty($query->getStart())) {
+			$select->andWhere(
+				$qb->expr()->gte('m.sent_at', $qb->createNamedParameter($query->getStart()), IQueryBuilder::PARAM_INT)
+			);
+		}
+
+		if (!empty($query->getEnd())) {
+			$select->andWhere(
+				$qb->expr()->lte('m.sent_at', $qb->createNamedParameter($query->getEnd()), IQueryBuilder::PARAM_INT)
+			);
+		}
+
 		if ($query->getCursor() !== null) {
 			$select->andWhere(
 				$qb->expr()->lt('m.sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))

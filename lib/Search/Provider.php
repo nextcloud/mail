@@ -79,11 +79,15 @@ class Provider implements IProvider {
 	}
 
 	public function search(IUser $user, ISearchQuery $query): SearchResult {
+		return $this->searchByFilter($user, $query, $query->getTerm());
+	}
+
+	protected function searchByFilter(IUser $user, ISearchQuery $query, string $filter): SearchResult {
 		$cursor = $query->getCursor();
 		$messages = $this->mailSearch->findMessagesGlobally(
 			$user,
-			$query->getTerm(),
-			empty($cursor) ? null : ((int) $cursor),
+			$filter,
+			empty($cursor) ? null : ((int)$cursor),
 			$query->getLimit()
 		);
 
