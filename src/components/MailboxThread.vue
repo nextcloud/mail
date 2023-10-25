@@ -4,6 +4,7 @@
 			:class="{ header__button: !showThread || !isMobile }">
 			<SearchMessages v-if="!showThread || !isMobile"
 				:mailbox="mailbox"
+				:account-id="account.accountId"
 				@search-changed="onUpdateSearchQuery" />
 			<AppContentList
 				v-infinite-scroll="onScroll"

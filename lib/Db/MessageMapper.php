@@ -836,9 +836,17 @@ class MessageMapper extends QBMapper {
 
 		// createParameter
 		if ($uids !== null) {
-			$select->andWhere(
-				$qb->expr()->in('m.uid', $qb->createParameter('uids'))
-			);
+			// In the case of body+subject search we need a combination of both results,
+			// thus the orWhere in every other case andWhere should do the job.
+			if(!empty($query->getSubjects())) {
+				$select->orWhere(
+					$qb->expr()->in('m.uid', $qb->createParameter('uids'))
+				);
+			} else {
+				$select->andWhere(
+					$qb->expr()->in('m.uid', $qb->createParameter('uids'))
+				);
+			}
 		}
 		foreach ($query->getFlags() as $flag) {
 			$select->andWhere($qb->expr()->eq('m.' . $this->flagToColumnName($flag), $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));

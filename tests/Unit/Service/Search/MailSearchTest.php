@@ -184,8 +184,8 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncChangedToken('def');
 		$mailbox->setSyncVanishedToken('ghi');
 		$query = new SearchQuery();
-		$query->addTextToken('my');
-		$query->addTextToken('search');
+		$query->addBody('my');
+		$query->addBody('search');
 		$this->filterStringParser->expects($this->once())
 			->method('parse')
 			->with('my search')
