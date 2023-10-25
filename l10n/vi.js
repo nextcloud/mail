@@ -188,6 +188,7 @@ OC.L10N.register(
     "Contacts with this address" : "Liên hệ với địa chỉ này",
     "Add to Contact" : "Thêm liên hệ",
     "New Contact" : "ĐỊa chỉ liên hệ mới",
+    "Copy to clipboard" : "Sao chép vào clipboard",
     "Contact name …" : "Tên người liên hệ …",
     "Add" : "Thêm",
     "Close" : "Đóng",

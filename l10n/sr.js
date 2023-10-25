@@ -202,7 +202,7 @@ OC.L10N.register(
     "Download message" : "Преузми поруку",
     "Blind copy recipients only" : "Само примаоци невидљиве копије",
     "No subject" : "Нема наслова",
-    "Set reminder for later today" : "Поставља подсетник касније дана",
+    "Set reminder for later today" : "Поставља подсетник касније данас",
     "Set reminder for tomorrow" : "Поставља подсетник за сутра",
     "Set reminder for this weekend" : "Поставља подсетник за овај викенд",
     "Set reminder for next week" : "Поставља подсетник за наредну недељу",
