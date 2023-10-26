@@ -237,6 +237,7 @@ OC.L10N.register(
     "Contact name …" : "Naam contactpersoon ...",
     "Add" : "Toevoegen",
     "Close" : "Sluit",
+    "Body" : "Body",
     "Tags" : "Tags",
     "Select tags" : "Kies tags",
     "Clear" : "Terug",

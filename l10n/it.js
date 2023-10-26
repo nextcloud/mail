@@ -249,6 +249,7 @@ OC.L10N.register(
     "Contact name …" : "Nome contatto …",
     "Add" : "Aggiungi",
     "Close" : "Chiudi",
+    "Body" : "Corpo",
     "Tags" : "Etichette",
     "Select tags" : "Seleziona etichette",
     "Clear" : "Pulisci",

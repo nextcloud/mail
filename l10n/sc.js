@@ -222,6 +222,7 @@ OC.L10N.register(
     "Contact name …" : "Nùmene de su cuntatu ...",
     "Add" : "Agiunghe",
     "Close" : "Serra",
+    "Body" : "Corpus",
     "Tags" : "Etichetas",
     "Select tags" : "Seletziona etichetas",
     "Clear" : "Lìmpia",

@@ -307,7 +307,6 @@ OC.L10N.register(
     "Search in mailbox" : "Барај во сандачето",
     "Close" : "Затвори",
     "Search parameters" : "Параметри за пребарување",
-    "Search term" : "Пребарувај термин",
     "Pick a start date" : "Избери почетен датум",
     "Pick an end date" : "Избери краен датум",
     "Select senders" : "Избери испраќачи",

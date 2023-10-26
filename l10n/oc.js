@@ -62,6 +62,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Copiar dins lo quichapapièrs",
     "Add" : "Apondre",
     "Close" : "Tampar",
+    "Body" : "Còs",
     "Tags" : "Etiquetas",
     "Clear" : "Escafar",
     "Search" : "Recercar",

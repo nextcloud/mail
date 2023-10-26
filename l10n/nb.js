@@ -278,6 +278,7 @@ OC.L10N.register(
     "Contact name …" : "Kontakt navn ...",
     "Add" : "Legg til",
     "Close" : "Lukk",
+    "Body" : "Kropp",
     "Tags" : "Merkelapper",
     "Select tags" : "Velg merkelapper",
     "Clear" : "Tøm",

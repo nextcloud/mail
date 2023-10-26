@@ -33,6 +33,7 @@ OC.L10N.register(
     "Message" : "පණිවිඩය",
     "Add" : "එකතු කරන්න",
     "Close" : "වසන්න",
+    "Body" : "අන්තර්ගතය",
     "Search" : "සොයන්න",
     "Date" : "දිනය",
     "Disabled" : "අබල කර ඇත",

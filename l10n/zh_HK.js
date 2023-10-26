@@ -390,7 +390,7 @@ OC.L10N.register(
     "Search in mailbox" : "在郵箱中搜尋",
     "Close" : "關閉",
     "Search parameters" : "在參數中搜尋",
-    "Search term" : "搜尋字詞",
+    "Body" : "內文",
     "Pick a start date" : "挑選開始日期",
     "Pick an end date" : "挑選結束日期",
     "Select senders" : "選擇寄件人",

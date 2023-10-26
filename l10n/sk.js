@@ -327,7 +327,7 @@ OC.L10N.register(
     "Search in mailbox" : "Vyhľadať v schránke",
     "Close" : "Zatvoriť",
     "Search parameters" : "Parametre vyhľadávania",
-    "Search term" : "Hľadaný výraz",
+    "Body" : "Telo",
     "Pick a start date" : "Vyberte počiatočný dátum",
     "Pick an end date" : "Vyberte konečný dátum",
     "Select senders" : "Vyberte odosielateľov",

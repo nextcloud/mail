@@ -347,7 +347,6 @@ OC.L10N.register(
     "Search in mailbox" : "Търсене в пощенската кутия",
     "Close" : "Затваряне",
     "Search parameters" : "Параметри на търсенето",
-    "Search term" : "Термин за търсене",
     "Pick a start date" : "Избор на начална дата",
     "Pick an end date" : "Избор на крайна дата",
     "Select senders" : "Избор на податели",

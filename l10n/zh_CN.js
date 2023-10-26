@@ -355,7 +355,7 @@ OC.L10N.register(
     "Search in mailbox" : "在邮箱中搜索",
     "Close" : "关闭",
     "Search parameters" : "搜索参数",
-    "Search term" : "关键字",
+    "Body" : "主体",
     "Pick a start date" : "选择开始时间",
     "Pick an end date" : "选择结束时间",
     "Select senders" : "选择发件人",

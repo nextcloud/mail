@@ -229,6 +229,7 @@ OC.L10N.register(
     "Contact name …" : "Naziv kontakta…",
     "Add" : "Dodaj",
     "Close" : "Zatvori",
+    "Body" : "Tijelo",
     "Tags" : "Oznake",
     "Select tags" : "Odaberite oznake",
     "Clear" : "Izbriši",

@@ -374,7 +374,7 @@ OC.L10N.register(
     "Search in mailbox" : "Bilatu postontzian",
     "Close" : "Itxi",
     "Search parameters" : "Bilaketa parametroak",
-    "Search term" : "Bilaketa terminoa",
+    "Body" : "Gorputza",
     "Pick a start date" : "Aukeratu hasiera-data",
     "Pick an end date" : "Aukeratu amaiera-data",
     "Select senders" : "Hautatu bidaltzaileak",

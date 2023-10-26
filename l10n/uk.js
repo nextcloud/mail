@@ -204,6 +204,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Копіювати до буферу обміну ",
     "Add" : "Додати",
     "Close" : "Закрити",
+    "Body" : "Тіло",
     "Tags" : "Мітки",
     "Select tags" : "Виберіть мітки",
     "Clear" : "Очистити",

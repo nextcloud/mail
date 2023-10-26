@@ -390,7 +390,6 @@ OC.L10N.register(
     "Search in mailbox" : "البحث في صندوق البريد",
     "Close" : "إغلاق",
     "Search parameters" : "بحث البارامترات",
-    "Search term" : "البحث عن عنصر",
     "Pick a start date" : "إختّر تاريخ بداية",
     "Pick an end date" : "إختَر تاريخ نهاية",
     "Select senders" : "حدّد المُرسِلِين",

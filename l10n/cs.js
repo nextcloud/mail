@@ -389,7 +389,7 @@ OC.L10N.register(
     "Search in mailbox" : "Hledat ve schránce",
     "Close" : "Zavřít",
     "Search parameters" : "Parametry hledání",
-    "Search term" : "Hledat pojem",
+    "Body" : "Těle textu",
     "Pick a start date" : "Vybrat datum začátku",
     "Pick an end date" : "Vybrat datum konce",
     "Select senders" : "Vybrat odesilatele",

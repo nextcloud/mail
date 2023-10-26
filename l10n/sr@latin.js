@@ -30,6 +30,7 @@ OC.L10N.register(
     "Delete" : "Delete",
     "Add" : "Dodaj",
     "Close" : "Zatvori",
+    "Body" : "Telo",
     "Tags" : "Oznake",
     "Search" : "Search",
     "Date" : "Date",

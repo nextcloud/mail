@@ -199,6 +199,7 @@ OC.L10N.register(
     "Contact name …" : "連絡先の名前…",
     "Add" : "追加",
     "Close" : "閉じる",
+    "Body" : "本文",
     "Tags" : "タグ",
     "Select tags" : "タグを選択",
     "Clear" : "クリア",

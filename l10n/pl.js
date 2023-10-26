@@ -327,7 +327,7 @@ OC.L10N.register(
     "Search in mailbox" : "Szukaj w skrzynce pocztowej",
     "Close" : "Zamknij",
     "Search parameters" : "Wyszukaj parametry",
-    "Search term" : "Szukany termin",
+    "Body" : "Treść",
     "Pick a start date" : "Wybierz datę rozpoczęcia",
     "Pick an end date" : "Wybierz datę zakończenia",
     "Tags" : "Etykiety",
