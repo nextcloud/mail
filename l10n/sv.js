@@ -241,7 +241,7 @@ OC.L10N.register(
     "Search in mailbox" : "Sök i brevlådan",
     "Close" : "Stäng",
     "Search parameters" : "Sökparametrar",
-    "Search term" : "Sökterm",
+    "Body" : "Textyta",
     "Tags" : "Taggar",
     "Select tags" : "Välj taggar",
     "Clear" : "Rensa",

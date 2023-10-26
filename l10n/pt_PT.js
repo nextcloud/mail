@@ -157,6 +157,7 @@ OC.L10N.register(
     "Contact name …" : "Nome do contacto...",
     "Add" : "Adicionar",
     "Close" : "Fechar",
+    "Body" : "Corpo",
     "Tags" : "Etiquetas",
     "Clear" : "Limpar",
     "Search" : "Pesquisar",

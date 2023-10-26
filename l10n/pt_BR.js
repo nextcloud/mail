@@ -387,7 +387,7 @@ OC.L10N.register(
     "Search in mailbox" : "Procurar na caixa de e-mail",
     "Close" : "Fechar",
     "Search parameters" : "Parâmetros de busca",
-    "Search term" : "Termo de busca",
+    "Body" : "Corpo",
     "Pick a start date" : "Escolha uma data de início",
     "Pick an end date" : "Escolha uma data de fim",
     "Select senders" : "Selecione remetentes",

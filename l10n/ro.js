@@ -121,6 +121,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Copiază în clipboard",
     "Add" : "Adaugă",
     "Close" : "Închide",
+    "Body" : "Corp",
     "Tags" : "Etichete",
     "Clear" : "Șterge ",
     "Search" : "Caută",

@@ -324,6 +324,7 @@ OC.L10N.register(
     "Copied email address to clipboard" : "Sähköpostiosoite kopioitu leikepöydälle",
     "Could not copy email address to clipboard" : "Sähköpostiosoitetta ei voitu kopioida leikepöydälle",
     "Close" : "Sulje",
+    "Body" : "Sisältö",
     "Pick a start date" : "Valitse aloituspäivä",
     "Pick an end date" : "Valitse päättymispäivä",
     "Tags" : "Tunnisteet",

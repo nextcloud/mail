@@ -390,7 +390,7 @@ OC.L10N.register(
     "Search in mailbox" : "Search in mailbox",
     "Close" : "Close",
     "Search parameters" : "Search parameters",
-    "Search term" : "Search term",
+    "Body" : "Body",
     "Pick a start date" : "Pick a start date",
     "Pick an end date" : "Pick an end date",
     "Select senders" : "Select senders",

@@ -274,7 +274,7 @@ OC.L10N.register(
     "Search in mailbox" : "Søg i postkasse",
     "Close" : "Luk",
     "Search parameters" : "Søgeparametre",
-    "Search term" : "Søgeterm",
+    "Body" : "Krop",
     "Pick a start date" : "Vælg en startdato",
     "Pick an end date" : "Vælg en slutdato",
     "Tags" : "Mærker",

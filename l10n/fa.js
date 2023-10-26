@@ -375,7 +375,7 @@ OC.L10N.register(
     "Search in mailbox" : "Search in mailbox",
     "Close" : "بسته",
     "Search parameters" : "Search parameters",
-    "Search term" : "Search term",
+    "Body" : "متن",
     "Pick a start date" : "Pick a start date",
     "Pick an end date" : "Pick an end date",
     "Select senders" : "Select senders",

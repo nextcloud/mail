@@ -375,7 +375,7 @@ OC.L10N.register(
     "Search in mailbox" : "Cercar a la bústia d'entrada",
     "Close" : "Tanca",
     "Search parameters" : "Cerca paràmetres",
-    "Search term" : "Terme de cerca",
+    "Body" : "Cos",
     "Pick a start date" : "Tria una data d'inici",
     "Pick an end date" : "Tria una data de fi",
     "Select senders" : "Selecciona remitents",

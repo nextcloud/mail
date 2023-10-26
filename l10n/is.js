@@ -156,6 +156,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Afrita á klippispjald",
     "Add" : "Bæta við",
     "Close" : "Loka",
+    "Body" : "Meginmál",
     "Tags" : "Merki",
     "Select tags" : "Veldu merki",
     "Clear" : "Hreinsa",

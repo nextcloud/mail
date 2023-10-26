@@ -362,7 +362,7 @@ OC.L10N.register(
     "Search in mailbox" : "Искать в почтовом ящике",
     "Close" : "Закрыть",
     "Search parameters" : "Параметры поиска",
-    "Search term" : "Поисковый запрос",
+    "Body" : "Тело",
     "Pick a start date" : "Выберите дату начала",
     "Pick an end date" : "Выберите дату окончания",
     "Select senders" : "Выберите отправителей",

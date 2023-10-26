@@ -174,6 +174,7 @@ OC.L10N.register(
     "Copy to clipboard" : "העתקה ללוח הגזירים",
     "Add" : "הוספה",
     "Close" : "סגירה",
+    "Body" : "גוף",
     "Tags" : "תגיות",
     "Select tags" : "בחירת תגיות",
     "Clear" : "פינוי",

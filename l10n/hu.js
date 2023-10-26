@@ -386,7 +386,7 @@ OC.L10N.register(
     "Search in mailbox" : "Keresés a postaládában",
     "Close" : "Bezárás",
     "Search parameters" : "Keresési paraméterek",
-    "Search term" : "Kifejezés keresése",
+    "Body" : "Törzs",
     "Pick a start date" : "Válasszon kezdési dátumot",
     "Pick an end date" : "Válasszon befejezési dátumot",
     "Select senders" : "Válasszon feladókat",
