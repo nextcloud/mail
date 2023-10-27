@@ -65,10 +65,10 @@ import prop from 'lodash/fp/prop'
 import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 import IconCheck from 'vue-material-design-icons/Check'
 
-import Avatar from '../components/Avatar'
-import { fetchEnvelopes } from '../service/MessageService'
-import logger from '../logger'
-import { fetchAll } from '../service/MailboxService'
+import Avatar from '../components/Avatar.vue'
+import { fetchEnvelopes } from '../service/MessageService.js'
+import logger from '../logger.js'
+import { fetchAll } from '../service/MailboxService.js'
 
 const accounts = loadState('mail', 'mail-accounts')
 const orderByDateInt = orderBy(prop('dateInt'), 'desc')

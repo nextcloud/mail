@@ -116,11 +116,11 @@
 
 <script>
 import { NcDatetimePicker as DatetimePicker, NcButton as Button } from '@nextcloud/vue'
-import TextEditor from './TextEditor'
+import TextEditor from './TextEditor.vue'
 import CheckIcon from 'vue-material-design-icons/Check'
-import { buildOutOfOfficeSieveScript, parseOutOfOfficeState } from '../util/outOfOffice'
-import logger from '../logger'
-import { html, plain, toHtml, toPlain } from '../util/text'
+import { buildOutOfOfficeSieveScript, parseOutOfOfficeState } from '../util/outOfOffice.js'
+import logger from '../logger.js'
+import { html, plain, toHtml, toPlain } from '../util/text.js'
 
 export default {
 	name: 'OutOfOfficeForm',

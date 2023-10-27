@@ -19,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import mutations from '../../../store/mutations'
+import mutations from '../../../store/mutations.js'
 import {
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
-} from '../../../store/constants'
+} from '../../../store/constants.js'
 
 describe('Vuex store mutations', () => {
 	it('adds an account with no mailboxes', () => {

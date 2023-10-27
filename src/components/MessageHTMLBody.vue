@@ -41,14 +41,14 @@
 <script>
 import { iframeResizer } from 'iframe-resizer'
 import PrintScout from 'printscout'
-import { trustSender } from '../service/TrustedSenderService'
+import { trustSender } from '../service/TrustedSenderService.js'
 import { NcActionButton as ActionButton, NcActions as Actions } from '@nextcloud/vue'
 import IconImage from 'vue-material-design-icons/ImageSizeSelectActual'
 import IconMail from 'vue-material-design-icons/Email'
 import IconDomain from 'vue-material-design-icons/Domain'
 
-import logger from '../logger'
-import MdnRequest from './MdnRequest'
+import logger from '../logger.js'
+import MdnRequest from './MdnRequest.vue'
 const scout = new PrintScout()
 
 export default {

@@ -58,17 +58,17 @@
 
 <script>
 import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
-import Avatar from './Avatar'
+import Avatar from './Avatar.vue'
 import IconDelete from 'vue-material-design-icons/Delete'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
-import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
+import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
 import moment from '@nextcloud/moment'
-import logger from '../logger'
+import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { matchError } from '../errors/match'
-import { html, plain } from '../util/text'
+import { matchError } from '../errors/match.js'
+import { html, plain } from '../util/text.js'
 import Send from 'vue-material-design-icons/Send'
-import { UNDO_DELAY } from '../store/constants'
+import { UNDO_DELAY } from '../store/constants.js'
 
 export default {
 	name: 'OutboxMessageListItem',

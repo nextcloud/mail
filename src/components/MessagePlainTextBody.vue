@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MdnRequest from './MdnRequest'
+import MdnRequest from './MdnRequest.vue'
 const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {

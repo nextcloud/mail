@@ -153,10 +153,10 @@
 import { mapGetters } from 'vuex'
 import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import logger from '../../logger'
+import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
 import DeleteIcon from 'vue-material-design-icons/Delete'
-import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12'
+import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
 
 const TYPE_PKCS12 = 'pkcs12'
 const TYPE_PEM = 'pem'

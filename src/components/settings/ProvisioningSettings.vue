@@ -360,8 +360,8 @@
 	</div>
 </template>
 <script>
-import logger from '../../logger'
-import ProvisionPreview from './ProvisionPreview'
+import logger from '../../logger.js'
+import ProvisionPreview from './ProvisionPreview.vue'
 import { loadState } from '@nextcloud/initial-state'
 import Button from '@nextcloud/vue/dist/Components/NcButton'
 

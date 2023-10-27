@@ -49,12 +49,12 @@
 
 <script>
 import { NcAppContent as AppContent, NcAppContentList as AppContentList } from '@nextcloud/vue'
-import LoadingSkeleton from './LoadingSkeleton'
-import Error from './Error'
-import EmptyMailbox from './EmptyMailbox'
-import OutboxMessageContent from './OutboxMessageContent'
-import OutboxMessageListItem from './OutboxMessageListItem'
-import logger from '../logger'
+import LoadingSkeleton from './LoadingSkeleton.vue'
+import Error from './Error.vue'
+import EmptyMailbox from './EmptyMailbox.vue'
+import OutboxMessageContent from './OutboxMessageContent.vue'
+import OutboxMessageListItem from './OutboxMessageListItem.vue'
+import logger from '../logger.js'
 
 export default {
 	name: 'Outbox',

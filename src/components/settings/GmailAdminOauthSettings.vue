@@ -48,8 +48,8 @@
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
-import { configure, unlink } from '../../service/GoogleIntegrationService'
-import logger from '../../logger'
+import { configure, unlink } from '../../service/GoogleIntegrationService.js'
+import logger from '../../logger.js'
 
 const PASSWORD_PLACEHOLDER = '*****'
 

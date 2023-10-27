@@ -20,12 +20,12 @@
  *
  */
 
-import * as OutboxService from '../../service/OutboxService'
-import logger from '../../logger'
+import * as OutboxService from '../../service/OutboxService.js'
+import logger from '../../logger.js'
 import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-import { html, plain } from '../../util/text'
-import { UNDO_DELAY } from '../constants'
+import { html, plain } from '../../util/text.js'
+import { UNDO_DELAY } from '../constants.js'
 
 export default {
 	async fetchMessages({ getters, commit }) {

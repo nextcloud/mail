@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isPgpgMessage, isPgpText } from '../../../crypto/pgp'
-import { html, plain } from '../../../util/text'
+import { isPgpgMessage, isPgpText } from '../../../crypto/pgp.js'
+import { html, plain } from '../../../util/text.js'
 
 describe('pgp', () => {
 	it('detects non-pgp messages', () => {

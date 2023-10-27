@@ -25,7 +25,7 @@
 
 <script>
 import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
-import logger from '../logger'
+import logger from '../logger.js'
 
 export default {
 	name: 'NavigationAccountExpandCollapse',

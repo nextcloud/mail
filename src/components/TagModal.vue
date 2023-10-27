@@ -66,7 +66,7 @@ import IconTag from 'vue-material-design-icons/Tag'
 import IconAdd from 'vue-material-design-icons/Plus'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
-import TagItem from './TagItem'
+import TagItem from './TagItem.vue'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)

@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import { getMailvelope } from '../crypto/mailvelope'
-import MdnRequest from './MdnRequest'
+import { getMailvelope } from '../crypto/mailvelope.js'
+import MdnRequest from './MdnRequest.vue'
 
 export default {
 	name: 'MessageEncryptedBody',

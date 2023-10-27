@@ -1,6 +1,6 @@
-import store from '../../../store'
-import logger from '../../../logger'
-import dragEventBus from '../util/dragEventBus'
+import store from '../../../store/index.js'
+import logger from '../../../logger.js'
+import dragEventBus from '../util/dragEventBus.js'
 
 export class DroppableMailbox {
 

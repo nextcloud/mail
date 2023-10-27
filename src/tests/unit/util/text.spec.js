@@ -20,7 +20,7 @@
  *
  */
 
-import { detect, html, plain, toPlain } from '../../../util/text'
+import { detect, html, plain, toPlain } from '../../../util/text.js'
 
 describe('text', () => {
 	describe('toPlain', () => {

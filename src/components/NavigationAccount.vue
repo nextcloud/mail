@@ -126,9 +126,9 @@ import { NcAppNavigationItem as AppNavigationItem, NcActionButton as ActionButto
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
 
-import { calculateAccountColor } from '../util/AccountColor'
-import logger from '../logger'
-import { fetchQuota } from '../service/AccountService'
+import { calculateAccountColor } from '../util/AccountColor.js'
+import logger from '../logger.js'
+import { fetchQuota } from '../service/AccountService.js'
 import IconInfo from 'vue-material-design-icons/Information'
 import IconSettings from 'vue-material-design-icons/Cog'
 import IconFolderAdd from 'vue-material-design-icons/Folder'
@@ -146,7 +146,7 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		ActionText,
-		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings'),
+		AccountSettings: () => import(/* webpackChunkName: "account-settings" */ './AccountSettings.vue'),
 		IconInfo,
 		IconSettings,
 		IconFolderAdd,

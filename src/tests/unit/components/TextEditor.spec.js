@@ -23,11 +23,11 @@ import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import Nextcloud from '../../../mixins/Nextcloud'
-import TextEditor from '../../../components/TextEditor'
-import VirtualTestEditor from '../../virtualtesteditor'
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import TextEditor from '../../../components/TextEditor.vue'
+import VirtualTestEditor from '../../virtualtesteditor.js'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import MailPlugin from '../../../ckeditor/mail/MailPlugin'
+import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 
 const localVue = createLocalVue()
 

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { handleHttpAuthErrors } from '../../../http/sessionExpiryHandler'
+import { handleHttpAuthErrors } from '../../../http/sessionExpiryHandler.js'
 
 describe('sessionExpiryHandler', () => {
 	it('does not influence successful requests', async () => {

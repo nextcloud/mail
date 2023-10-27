@@ -98,8 +98,8 @@
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
 import IconRename from 'vue-material-design-icons/Pencil'
-import logger from '../logger'
-import AliasForm from './AliasForm'
+import logger from '../logger.js'
+import AliasForm from './AliasForm.vue'
 
 export default {
 	name: 'AliasSettings',

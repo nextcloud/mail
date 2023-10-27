@@ -34,7 +34,7 @@
 <script>
 import { NcAppContentDetails as AppContentDetails, NcEmptyContent } from '@nextcloud/vue'
 import IconMail from 'vue-material-design-icons/Email'
-import NewMessageButtonHeader from './NewMessageButtonHeader'
+import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 export default {
 	name: 'NoMessageSelected',

@@ -20,7 +20,7 @@
  *
  */
 
-import { randomId } from '../../../util/randomId'
+import { randomId } from '../../../util/randomId.js'
 
 describe('util/randomId test suite', () => {
 	it('should generate hex strings', () => {

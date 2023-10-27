@@ -39,9 +39,9 @@ import moment from '@nextcloud/moment'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import TrainIcon from 'vue-material-design-icons/Train'
 
-import CalendarImport from './CalendarImport'
-import { importCalendarEvent } from '../../service/DAVService'
-import logger from '../../logger'
+import CalendarImport from './CalendarImport.vue'
+import { importCalendarEvent } from '../../service/DAVService.js'
+import logger from '../../logger.js'
 
 export default {
 	name: 'TrainReservation',

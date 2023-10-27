@@ -268,24 +268,24 @@
 <script>
 import { NcActions as Actions, NcActionButton as ActionButton } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
-import Envelope from './Envelope'
+import Envelope from './Envelope.vue'
 import IconDelete from 'vue-material-design-icons/Delete'
-import ImportantIcon from './icons/ImportantIcon'
+import ImportantIcon from './icons/ImportantIcon.vue'
 import IconSelect from 'vue-material-design-icons/CloseThick'
 import AddIcon from 'vue-material-design-icons/Plus'
 import IconFavorite from 'vue-material-design-icons/Star'
-import logger from '../logger'
-import MoveModal from './MoveModal'
-import { matchError } from '../errors/match'
+import logger from '../logger.js'
+import MoveModal from './MoveModal.vue'
+import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
-	from '../errors/NoTrashMailboxConfiguredError'
+	from '../errors/NoTrashMailboxConfiguredError.js'
 import { differenceWith } from 'ramda'
-import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
+import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
 import ShareIcon from 'vue-material-design-icons/Share'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
 import TagIcon from 'vue-material-design-icons/Tag'
-import TagModal from './TagModal'
+import TagModal from './TagModal.vue'
 
 export default {
 	name: 'EnvelopeList',

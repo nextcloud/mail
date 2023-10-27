@@ -66,10 +66,10 @@
 import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcMultiselect as Multiselect } from '@nextcloud/vue'
 import jstz from 'jstz'
 
-import logger from '../logger'
+import logger from '../logger.js'
 import ICAL from 'ical.js'
 import Task from '../task.js'
-import CalendarPickerOption from './CalendarPickerOption'
+import CalendarPickerOption from './CalendarPickerOption.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
 

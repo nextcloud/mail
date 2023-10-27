@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VirtualTestEditor from '../../virtualtesteditor'
+import VirtualTestEditor from '../../virtualtesteditor.js'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import MailPlugin from '../../../ckeditor/mail/MailPlugin'
+import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 
 describe('MailPlugin', () => {
 

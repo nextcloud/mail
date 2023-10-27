@@ -84,15 +84,15 @@
 
 <script>
 import { NcAppNavigation as AppNavigation, NcAppNavigationSettings as AppNavigationSettings, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
-import NewMessageButtonHeader from './NewMessageButtonHeader'
+import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
-import NavigationAccount from './NavigationAccount'
-import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
-import NavigationMailbox from './NavigationMailbox'
-import NavigationOutbox from './NavigationOutbox'
+import NavigationAccount from './NavigationAccount.vue'
+import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse.vue'
+import NavigationMailbox from './NavigationMailbox.vue'
+import NavigationOutbox from './NavigationOutbox.vue'
 import IconSetting from 'vue-material-design-icons/Cog'
-import AppSettingsMenu from '../components/AppSettingsMenu'
-import { UNIFIED_ACCOUNT_ID } from '../store/constants'
+import AppSettingsMenu from '../components/AppSettingsMenu.vue'
+import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
 
 export default {
 	name: 'Navigation',

@@ -50,9 +50,9 @@ import md5 from 'md5'
 import moment from '@nextcloud/moment'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 
-import CalendarImport from './CalendarImport'
-import { importCalendarEvent } from '../../service/DAVService'
-import logger from '../../logger'
+import CalendarImport from './CalendarImport.vue'
+import { importCalendarEvent } from '../../service/DAVService.js'
+import logger from '../../logger.js'
 
 export default {
 	name: 'FlightReservation',

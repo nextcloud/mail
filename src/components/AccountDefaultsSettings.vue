@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import logger from '../logger'
-import MailboxInlinePicker from './MailboxInlinePicker'
+import logger from '../logger.js'
+import MailboxInlinePicker from './MailboxInlinePicker.vue'
 
 export default {
 	name: 'AccountDefaultsSettings',

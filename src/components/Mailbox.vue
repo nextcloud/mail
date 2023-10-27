@@ -47,23 +47,23 @@
 </template>
 
 <script>
-import EmptyMailbox from './EmptyMailbox'
-import EnvelopeList from './EnvelopeList'
-import LoadingSkeleton from './LoadingSkeleton'
-import Error from './Error'
+import EmptyMailbox from './EmptyMailbox.vue'
+import EnvelopeList from './EnvelopeList.vue'
+import LoadingSkeleton from './LoadingSkeleton.vue'
+import Error from './Error.vue'
 import { findIndex, propEq } from 'ramda'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
-import Loading from './Loading'
-import logger from '../logger'
-import MailboxLockedError from '../errors/MailboxLockedError'
-import MailboxNotCachedError from '../errors/MailboxNotCachedError'
-import { matchError } from '../errors/match'
-import { wait } from '../util/wait'
-import { mailboxHasRights } from '../util/acl'
-import EmptyMailboxSection from './EmptyMailboxSection'
+import Loading from './Loading.vue'
+import logger from '../logger.js'
+import MailboxLockedError from '../errors/MailboxLockedError.js'
+import MailboxNotCachedError from '../errors/MailboxNotCachedError.js'
+import { matchError } from '../errors/match.js'
+import { wait } from '../util/wait.js'
+import { mailboxHasRights } from '../util/acl.js'
+import EmptyMailboxSection from './EmptyMailboxSection.vue'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
-	from '../errors/NoTrashMailboxConfiguredError'
+	from '../errors/NoTrashMailboxConfiguredError.js'
 
 export default {
 	name: 'Mailbox',

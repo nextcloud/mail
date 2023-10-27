@@ -71,9 +71,9 @@
 </template>
 
 <script>
-import logger from '../logger'
-import TextEditor from './TextEditor'
-import { detect, toHtml } from '../util/text'
+import logger from '../logger.js'
+import TextEditor from './TextEditor.vue'
+import { detect, toHtml } from '../util/text.js'
 import Vue from 'vue'
 
 import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'

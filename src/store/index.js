@@ -27,11 +27,11 @@ import {
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 	PRIORITY_INBOX_ID,
-} from './constants'
-import actions from './actions'
-import { getters } from './getters'
-import mutations from './mutations'
-import outbox from './outbox'
+} from './constants.js'
+import actions from './actions.js'
+import { getters } from './getters.js'
+import mutations from './mutations.js'
+import outbox from './outbox/index.js'
 
 Vue.use(Vuex)
 
