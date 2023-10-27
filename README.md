@@ -41,6 +41,11 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 
+## Maintainers
+
+* [Christoph Wurst](https://github.com/ChristophWurst)
+* [Nextcloud Groupware team](https://github.com/nextcloud/groupware/#members)
+
 ## Installation
 
 The app is distributed through the [app store](https://apps.nextcloud.com/apps/mail) and you can install it [right from your Nextcloud installation](https://docs.nextcloud.com/server/stable/admin_manual/apps_management.html).
