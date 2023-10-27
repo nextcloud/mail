@@ -37,10 +37,7 @@
 				<template #icon>
 					<IconDetails :size="20" />
 				</template>
-				{{ t('mail', 'Contacts with this address') }}:
-				<span>
-					{{ contactsWithEmailComputed }}
-				</span>
+				{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
 			</ButtonVue>
 			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
 				<ButtonVue
