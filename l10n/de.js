@@ -356,7 +356,7 @@ OC.L10N.register(
     "Search in mailbox" : "Im Postfach suchen",
     "Close" : "Schließen",
     "Search parameters" : "Suchparameter",
-    "Body" : "Benötigt keine Übersetzung. Hier wird nur die formelle Übersetzung verwendet (de_DE).",
+    "Body" : "Inhalt",
     "Pick a start date" : "Startdatum wählen",
     "Pick an end date" : "Enddatum wählen",
     "Select senders" : "Absender wählen",
