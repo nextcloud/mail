@@ -31,7 +31,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	]]></description>
 	<version>3.5.0-alpha.2</version>
 	<licence>agpl</licence>
-	<author>Greta Doçi</author>
+	<author>Christoph Wurst</author>
 	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>
 	<namespace>Mail</namespace>
 	<documentation>
