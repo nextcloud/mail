@@ -23,7 +23,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AiIntegrations;
 
+use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
 use OCP\TextProcessing\Task;
@@ -38,10 +42,18 @@ class AiIntegrationsService {
 	/** @var Cache */
 	private Cache $cache;
 
+	/** @var IMAPClientFactory */
+	private IMAPClientFactory $clientFactory;
 
-	public function __construct(ContainerInterface $container, Cache $cache) {
+	/** @var IMailManager  */
+	private IMailManager $mailManager;
+
+
+	public function __construct(ContainerInterface $container, Cache $cache, IMAPClientFactory $clientFactory, IMailManager $mailManager) {
 		$this->container = $container;
 		$this->cache = $cache;
+		$this->clientFactory = $clientFactory;
+		$this->mailManager = $mailManager;
 	}
 	/**
 	 * @param string $threadId
@@ -52,23 +64,34 @@ class AiIntegrationsService {
 	 *
 	 * @throws ServiceException
 	 */
-	public function summarizeThread(string $threadId, array $messages, string $currentUserId): null|string {
+	public function summarizeThread(Account $account, Mailbox $mailbox, $threadId, array $messages, string $currentUserId): null|string {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
 			throw new ServiceException('Text processing is not available in your current Nextcloud version', 0, $e);
 		}
 		if(in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)) {
-			$messagesBodies = array_map(function ($message) {
-				return $message->getPreviewText();
-			}, $messages);
-
 			$messageIds = array_map(function ($message) {
 				return $message->getMessageId();
 			}, $messages);
 			$cachedSummary = $this->cache->getSummary($messageIds);
 			if($cachedSummary) {
 				return $cachedSummary;
+			}
+			$client = $this->clientFactory->getClient($account);
+			try {
+				$messagesBodies = array_map(function ($message) use ($client, $account, $mailbox) {
+					$imapMessage = $this->mailManager->getImapMessage(
+						$client,
+						$account,
+						$mailbox,
+						$message->getUid(), true
+					);
+					return $imapMessage->getPlainBody();
+				}, $messages);
+
+			} finally {
+				$client->logout();
 			}
 
 			$taskPrompt = implode("\n", $messagesBodies);

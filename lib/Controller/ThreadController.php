@@ -167,6 +167,8 @@ class ThreadController extends Controller {
 		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
 		try {
 			$summary = $this->aiIntergrationsService->summarizeThread(
+				$account,
+				$mailbox,
 				$message->getThreadRootId(),
 				$thread,
 				$this->currentUserId,
