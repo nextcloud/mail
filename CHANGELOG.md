@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.4.4 - unreleased
+
+### Bug Fixes
+
+- Prevent modals from closing automatically
+- Unsubscribe button style
+- Clean up mail_message_tags and mail_tags
+- Delete historic data
+- Show contact names again
+- Use message bodies for thread summary
+- Calendar event color picker
+
 ## 3.4.3 - 2023-10-19
 ### Fixed
 - Update vulnerable dependencies
