@@ -196,7 +196,7 @@ input {
 	padding: 0 !important;
 }
 :deep(.multiselect__single) {
-	margin-left: -18px;
+	margin-left: -8px;
 	width: 100px;
 }
 :deep(.multiselect__tags) {
