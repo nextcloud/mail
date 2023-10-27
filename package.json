@@ -114,7 +114,7 @@
     "babel-loader-exclude-node-modules-except": "^1.2.1",
     "css-loader": "^6.8.1",
     "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3",
+    "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-standard": "^4.1.0",
