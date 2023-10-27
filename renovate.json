@@ -48,6 +48,18 @@
 			]
 		},
 		{
+			"description": "Ignore Vue 3",
+			"matchManagers": ["npm"],
+			"matchPackageNames": ["vue"],
+			"allowedVersions": "<3.0"
+		},
+		{
+			"description": "Ignore Vue 3",
+			"matchManagers": ["npm"],
+			"matchPackageNames": ["vue-router"],
+			"allowedVersions": "<4.0"
+		},
+		{
 			"description": "Request PHP reviews",
 			"matchManagers": ["composer"],
 			"reviewers": [
