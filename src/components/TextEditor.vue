@@ -34,6 +34,7 @@
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
+import { Mention } from '@ckeditor/ckeditor5-mention'
 import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
@@ -53,10 +54,11 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
 import MailPlugin from '../ckeditor/mail/MailPlugin'
-
+import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Components/NcRichText'
+import { emojiSearch, emojiAddRecent } from '@nextcloud/vue/dist/Functions/emoji'
 import { getLanguage } from '@nextcloud/l10n'
-
 import logger from '../logger'
+import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin'
 
 export default {
 	name: 'TextEditor',
@@ -90,7 +92,14 @@ export default {
 		},
 	},
 	data() {
-		const plugins = [EssentialsPlugin, ParagraphPlugin, SignaturePlugin, QuotePlugin]
+		const plugins = [
+			EssentialsPlugin,
+			ParagraphPlugin,
+			SignaturePlugin,
+			QuotePlugin,
+			PickerPlugin,
+			Mention,
+		]
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
@@ -131,6 +140,9 @@ export default {
 		}
 
 		return {
+			linkTribute: null,
+			emojiTribute: null,
+			textSmiles: [],
 			ready: false,
 			editor: Editor,
 			config: {
@@ -140,6 +152,20 @@ export default {
 					items: toolbar,
 				},
 				language: 'en',
+				mention: {
+					feeds: [
+						{
+							marker: ':',
+							feed: this.getEmoji,
+							itemRenderer: this.customEmojiRenderer,
+						},
+						{
+							marker: '/',
+							feed: this.getLink,
+							itemRenderer: this.customLinkRenderer,
+						},
+					],
+				},
 			},
 		}
 	},
@@ -147,6 +173,65 @@ export default {
 		this.loadEditorTranslations(getLanguage())
 	},
 	methods: {
+		getLink(text) {
+			const results = searchProvider(text)
+			if (results.length === 1 && !results[0].title.toLowerCase().includes(text.toLowerCase())) {
+				return []
+			}
+			return results
+		},
+		getEmoji(text) {
+			const emojiResults = emojiSearch(text)
+			if (this.textSmiles.includes(':' + text)) {
+
+				emojiResults.unshift(':' + text)
+			}
+			return emojiResults
+		},
+		 customEmojiRenderer(item) {
+			const itemElement = document.createElement('span')
+
+			itemElement.classList.add('custom-item')
+			itemElement.id = `mention-list-item-id-${item.colons}`
+			itemElement.textContent = `${item.native} `
+			itemElement.style.width = '100%'
+			itemElement.style.borderRadius = '8px'
+			itemElement.style.padding = '4px 8px'
+			itemElement.style.display = 'block'
+
+			const usernameElement = document.createElement('span')
+
+			usernameElement.classList.add('custom-item-username')
+			usernameElement.textContent = item.colons
+
+			itemElement.appendChild(usernameElement)
+
+			return itemElement
+		},
+		customLinkRenderer(item) {
+			const itemElement = document.createElement('span')
+			itemElement.classList.add('link-container')
+			itemElement.style.width = '100%'
+			itemElement.style.borderRadius = '8px'
+			itemElement.style.padding = '4px 8px'
+			itemElement.style.display = 'block'
+
+			const icon = document.createElement('img')
+			icon.style.width = '20px'
+			icon.style.marginRight = '1em'
+			icon.style.filter = 'var(--background-invert-if-dark)'
+			icon.classList.add('link-icon')
+			icon.src = `${item.icon_url} `
+
+			const usernameElement = document.createElement('span')
+
+			usernameElement.classList.add('link-title')
+			usernameElement.textContent = `${item.title} `
+			itemElement.appendChild(icon)
+			itemElement.appendChild(usernameElement)
+
+			return itemElement
+		},
 		async loadEditorTranslations(language) {
 			if (language === 'en') {
 				// The default, nothing to fetch
@@ -178,6 +263,26 @@ export default {
 		 */
 		onEditorReady(editor) {
 			logger.debug('TextEditor is ready', { editor })
+
+			editor.commands.get('mention')?.on('execute', (event, data) => {
+				event.stop()
+				const eventData = data[0]
+				const item = eventData.mention
+				if (eventData.marker === ':') {
+					emojiAddRecent(item)
+					this.editorInstance.execute('insertItem', item.native, ':')
+				}
+				if (eventData.marker === '/') {
+					getLinkWithPicker(item.id)
+						.then((link) => {
+							this.editorInstance.execute('insertItem', link, '/')
+							this.editorInstance.editing.view.focus()
+						})
+						.catch((error) => {
+							console.debug('Smart picker promise rejected:', error)
+						})
+				}
+			}, { priority: 'high' })
 			this.editorInstance = editor
 
 			if (this.focus) {
@@ -215,13 +320,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 :deep(a) {
 	color: #07d;
 }
 :deep(p) {
 	cursor: text;
 	margin: 0 !important;
+}
+
+.link-title {
+	color: red;
 }
 </style>
 
@@ -232,5 +340,10 @@ https://github.com/ckeditor/ckeditor5/issues/1142
  */
 :root {
 	--ck-z-default: 10000;
-}
+	--ck-color-list-button-on-background: var(--color-primary-element-light);
+	--ck-color-list-background: var(--color-main-background);
+	--ck-color-list-button-hover-background: var(--color-primary-element-light);
+	--ck-balloon-border-width:  0;
+	--ck-color-text: var(--color-text-primary);
+	}
 </style>
