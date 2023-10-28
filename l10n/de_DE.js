@@ -407,7 +407,7 @@ OC.L10N.register(
     "Clear" : "Leeren",
     "Search" : "Suchen",
     "Date" : "Datum",
-    "Enable mail body search" : "Nachrichtentext durchsuchen aktivieren",
+    "Enable mail body search" : "Durchsuchen des Nachrichtentextes aktivieren",
     "Disabled" : "Deaktiviert",
     "Enabled" : "Aktiviert",
     "Sieve Host" : "Sieve-Host",
