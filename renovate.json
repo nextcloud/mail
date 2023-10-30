@@ -126,6 +126,7 @@
 				"@ckeditor/ckeditor5-image",
 				"@ckeditor/ckeditor5-link",
 				"@ckeditor/ckeditor5-list",
+				"@ckeditor/ckeditor5-mention",
 				"@ckeditor/ckeditor5-paragraph",
 				"@ckeditor/ckeditor5-remove-format",
 				"@ckeditor/ckeditor5-theme-lark",
