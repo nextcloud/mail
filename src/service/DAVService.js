@@ -19,13 +19,13 @@
 
 import curry from 'lodash/fp/curry'
 import ical from 'ical.js'
-import { getClient } from '../dav/client'
+import { getClient } from '../dav/client.js'
 import Axios from '@nextcloud/axios'
 
-import Logger from '../logger'
+import Logger from '../logger.js'
 import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
-import { uidToHexColor } from '../util/calendarColor'
+import { uidToHexColor } from '../util/calendarColor.js'
 
 const canWrite = (properties) => {
 	let acls = properties?.acl?.ace

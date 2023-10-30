@@ -2,9 +2,9 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { curry } from 'ramda'
 
-import { parseErrorResponse } from '../http/ErrorResponseParser'
-import { convertAxiosError } from '../errors/convert'
-import SyncIncompleteError from '../errors/SyncIncompleteError'
+import { parseErrorResponse } from '../http/ErrorResponseParser.js'
+import { convertAxiosError } from '../errors/convert.js'
+import SyncIncompleteError from '../errors/SyncIncompleteError.js'
 
 const amendEnvelopeWithIds = curry((accountId, envelope) => ({
 	accountId,

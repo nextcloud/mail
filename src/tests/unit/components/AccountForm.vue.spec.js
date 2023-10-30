@@ -23,15 +23,15 @@ import { testConnectivity, queryIspdb, queryMx } from '../../../service/AutoConf
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vuex from 'vuex'
 
-import AccountForm from '../../../components/AccountForm'
-import Nextcloud from '../../../mixins/Nextcloud'
+import AccountForm from '../../../components/AccountForm.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 
 localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
-jest.mock('../../../service/AutoConfigService')
+jest.mock('../../../service/AutoConfigService.js')
 
 describe('AccountForm', () => {
 

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { matchError } from '../../../errors/match'
+import { matchError } from '../../../errors/match.js'
 
 describe('match', () => {
 	it('throws an error when nothing matches', (done) => {

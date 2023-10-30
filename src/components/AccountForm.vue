@@ -263,13 +263,13 @@ import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/
 import IconCheck from 'vue-material-design-icons/Check'
 import { translate as t } from '@nextcloud/l10n'
 
-import logger from '../logger'
+import logger from '../logger.js'
 import {
 	queryIspdb,
 	queryMx,
 	testConnectivity,
-} from '../service/AutoConfigService'
-import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth'
+} from '../service/AutoConfigService.js'
+import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 
 export default {
 	name: 'AccountForm',

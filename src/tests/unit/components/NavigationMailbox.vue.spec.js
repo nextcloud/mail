@@ -22,8 +22,8 @@
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vuex from 'vuex'
 
-import NavigationMailbox from '../../../components/NavigationMailbox'
-import Nextcloud from '../../../mixins/Nextcloud'
+import NavigationMailbox from '../../../components/NavigationMailbox.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 

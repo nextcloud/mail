@@ -43,7 +43,7 @@ import {
 	where,
 } from 'ramda'
 
-import { savePreference } from '../service/PreferenceService'
+import { savePreference } from '../service/PreferenceService.js'
 import {
 	create as createAccount,
 	deleteAccount,
@@ -53,7 +53,7 @@ import {
 	update as updateAccount,
 	updateSignature,
 	updateSmimeCertificate as updateAccountSmimeCertificate,
-} from '../service/AccountService'
+} from '../service/AccountService.js'
 import {
 	create as createMailbox,
 	clearMailbox,
@@ -61,7 +61,7 @@ import {
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
 	patchMailbox,
-} from '../service/MailboxService'
+} from '../service/MailboxService.js'
 import {
 	createEnvelopeTag,
 	deleteMessage,
@@ -79,46 +79,46 @@ import {
 	syncEnvelopes,
 	unSnoozeMessage,
 	updateEnvelopeTag,
-} from '../service/MessageService'
-import { moveDraft, updateDraft } from '../service/DraftService'
-import * as AliasService from '../service/AliasService'
-import logger from '../logger'
-import { normalizedEnvelopeListId } from './normalization'
-import { showNewMessagesNotification } from '../service/NotificationService'
-import { matchError } from '../errors/match'
-import SyncIncompleteError from '../errors/SyncIncompleteError'
-import MailboxLockedError from '../errors/MailboxLockedError'
-import { wait } from '../util/wait'
+} from '../service/MessageService.js'
+import { moveDraft, updateDraft } from '../service/DraftService.js'
+import * as AliasService from '../service/AliasService.js'
+import logger from '../logger.js'
+import { normalizedEnvelopeListId } from './normalization.js'
+import { showNewMessagesNotification } from '../service/NotificationService.js'
+import { matchError } from '../errors/match.js'
+import SyncIncompleteError from '../errors/SyncIncompleteError.js'
+import MailboxLockedError from '../errors/MailboxLockedError.js'
+import { wait } from '../util/wait.js'
 import {
 	getActiveScript,
 	updateAccount as updateSieveAccount,
 	updateActiveScript,
-} from '../service/SieveService'
-import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants'
-import * as ThreadService from '../service/ThreadService'
+} from '../service/SieveService.js'
+import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants.js'
+import * as ThreadService from '../service/ThreadService.js'
 import {
 	getPrioritySearchQueries,
 	priorityImportantQuery,
 	priorityOtherQuery,
-} from '../util/priorityInbox'
-import { html, plain, toPlain } from '../util/text'
+} from '../util/priorityInbox.js'
+import { html, plain, toPlain } from '../util/text.js'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { handleHttpAuthErrors } from '../http/sessionExpiryHandler'
+import { handleHttpAuthErrors } from '../http/sessionExpiryHandler.js'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import {
 	buildForwardSubject,
 	buildRecipients as buildReplyRecipients,
 	buildReplySubject,
-} from '../ReplyBuilder'
+} from '../ReplyBuilder.js'
 import DOMPurify from 'dompurify'
 import {
 	getCurrentUserPrincipal,
 	initializeClientForUserView,
 	findAll,
-} from '../service/caldavService'
-import * as SmimeCertificateService from '../service/SmimeCertificateService'
+} from '../service/caldavService.js'
+import * as SmimeCertificateService from '../service/SmimeCertificateService.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 

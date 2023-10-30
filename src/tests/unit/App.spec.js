@@ -21,15 +21,15 @@
 
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import App from '../../App'
-import Nextcloud from '../../mixins/Nextcloud'
+import App from '../../App.vue'
+import Nextcloud from '../../mixins/Nextcloud.js'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
-jest.mock('../../service/AutoConfigService')
+jest.mock('../../service/AutoConfigService.js')
 
 describe('App', () => {
 

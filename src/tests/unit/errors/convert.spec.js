@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { convertAxiosError } from '../../../errors/convert'
+import { convertAxiosError } from '../../../errors/convert.js'
 
 describe('convert error', () => {
 	it('ignores errors without a response', () => {

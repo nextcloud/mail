@@ -20,12 +20,12 @@ import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import '../../css/mail.scss'
 import '../../css/mobile.scss'
 
-import { testAccountConnection } from '../service/AccountService'
-import logger from '../logger'
-import MailboxThread from '../components/MailboxThread'
-import Navigation from '../components/Navigation'
-import Outbox from '../components/Outbox'
-import ComposerSessionIndicator from '../components/ComposerSessionIndicator'
+import { testAccountConnection } from '../service/AccountService.js'
+import logger from '../logger.js'
+import MailboxThread from '../components/MailboxThread.vue'
+import Navigation from '../components/Navigation.vue'
+import Outbox from '../components/Outbox.vue'
+import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
 import { mapGetters } from 'vuex'
 
 export default {

@@ -21,7 +21,7 @@
 
 import { translate as t } from '@nextcloud/l10n'
 
-import logger from '../logger'
+import logger from '../logger.js'
 
 export const CONSENT_ABORTED = 'OAUTH_CONSENT_ABORTED'
 

@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import logger from '../logger'
-import { isPgpgMessage } from '../crypto/pgp'
+import logger from '../logger.js'
+import { isPgpgMessage } from '../crypto/pgp.js'
 
 export default {
 	name: 'MailvelopeEditor',

@@ -80,9 +80,9 @@
 	</div>
 </template>
 <script>
-import logger from '../../logger'
+import logger from '../../logger.js'
 import { loadState } from '@nextcloud/initial-state'
-import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService'
+import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import Button from '@nextcloud/vue/dist/Components/NcButton'
 import IconUpload from 'vue-material-design-icons/Upload'

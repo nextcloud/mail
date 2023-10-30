@@ -23,7 +23,7 @@
 import moment from '@nextcloud/moment'
 import negate from 'lodash/fp/negate'
 
-import { html } from './util/text'
+import { html } from './util/text.js'
 
 /**
  * @param {Text} original original

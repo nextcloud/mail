@@ -21,9 +21,9 @@
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 
-import Nextcloud from '../../../mixins/Nextcloud'
-import Thread from '../../../components/Thread'
-import Vuex from 'vuex';
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import Thread from '../../../components/Thread.vue'
+import Vuex from 'vuex'
 
 const localVue = createLocalVue()
 

@@ -29,11 +29,11 @@
 <script>
 import once from 'lodash/fp/once'
 
-import { getUserCalendars } from '../service/DAVService'
-import logger from '../logger'
-import EventReservation from './itinerary/EventReservation'
-import FlightReservation from './itinerary/FlightReservation'
-import TrainReservation from './itinerary/TrainReservation'
+import { getUserCalendars } from '../service/DAVService.js'
+import logger from '../logger.js'
+import EventReservation from './itinerary/EventReservation.vue'
+import FlightReservation from './itinerary/FlightReservation.vue'
+import TrainReservation from './itinerary/TrainReservation.vue'
 
 const getUserCalendarsOnce = once(getUserCalendars)
 

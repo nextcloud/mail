@@ -38,11 +38,11 @@
 
 <script>
 
-import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService'
+import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
 import { NcButton as ButtonVue } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop'
 import sortBy from 'lodash/fp/sortBy'
-import logger from '../logger'
+import logger from '../logger.js'
 import { showError } from '@nextcloud/dialogs'
 
 const sortByEmail = sortBy(prop('email'))

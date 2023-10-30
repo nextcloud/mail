@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VirtualTestEditor from '../../virtualtesteditor'
+import VirtualTestEditor from '../../virtualtesteditor.js'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import PickerPlugin from '../../../ckeditor/smartpicker/PickerPlugin'
+import PickerPlugin from '../../../ckeditor/smartpicker/PickerPlugin.js'
 
 
 describe('PickerPlugin', () => {
@@ -34,7 +34,7 @@ describe('PickerPlugin', () => {
 				initialData: text,
 				plugins: [ParagraphPlugin, PickerPlugin],
 			})
-			
+
 			editor.model.change(writer => {
 				writer.setSelection(editor.model.document.getRoot(), 'end')
 			})

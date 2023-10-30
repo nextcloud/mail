@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Logger from '../logger'
+import Logger from '../logger.js'
 
 export default {
 	name: 'SearchSettings',

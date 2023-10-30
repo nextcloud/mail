@@ -22,10 +22,10 @@
 
 import { defaultTo, head, prop, sortBy } from 'ramda'
 
-import { UNIFIED_ACCOUNT_ID } from './constants'
-import { normalizedEnvelopeListId } from './normalization'
-import { getCalendarHome } from '../service/caldavService'
-import toCalendar from './calendar'
+import { UNIFIED_ACCOUNT_ID } from './constants.js'
+import { normalizedEnvelopeListId } from './normalization.js'
+import { getCalendarHome } from '../service/caldavService.js'
+import toCalendar from './calendar.js'
 
 export const getters = {
 	getPreference: (state) => (key, def) => {

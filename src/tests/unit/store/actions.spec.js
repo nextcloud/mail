@@ -28,9 +28,9 @@ import * as MessageService from '../../../service/MessageService'
 import * as NotificationService from '../../../service/NotificationService'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants'
 
-jest.mock('../../../service/MailboxService')
-jest.mock('../../../service/MessageService')
-jest.mock('../../../service/NotificationService')
+jest.mock('../../../service/MailboxService.js')
+jest.mock('../../../service/MessageService.js')
+jest.mock('../../../service/NotificationService.js')
 
 const mockEnvelope = curry((mailboxId, uid) => ({
 	mailboxId,

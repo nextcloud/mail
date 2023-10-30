@@ -28,10 +28,10 @@
 import { NcContent as Content, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import { loadState } from '@nextcloud/initial-state'
 
-import AccountForm from '../components/AccountForm'
+import AccountForm from '../components/AccountForm.vue'
 import IconMail from 'vue-material-design-icons/Email'
-import Navigation from '../components/Navigation'
-import logger from '../logger'
+import Navigation from '../components/Navigation.vue'
+import logger from '../logger.js'
 
 export default {
 	name: 'Setup',

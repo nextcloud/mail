@@ -24,8 +24,8 @@ import {
 	buildRecipients,
 	buildReplyBody,
 	buildReplySubject,
-} from '../../ReplyBuilder'
-import { html, plain } from '../../util/text'
+} from '../../ReplyBuilder.js'
+import { html, plain } from '../../util/text.js'
 
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {

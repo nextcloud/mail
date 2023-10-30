@@ -20,7 +20,7 @@
  *
  */
 
-import {mailboxHasRights} from '../../../util/acl'
+import {mailboxHasRights} from '../../../util/acl.js'
 
 describe('acl', () => {
 	describe('mailboxHasRights', () => {

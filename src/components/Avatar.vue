@@ -34,8 +34,8 @@
 
 <script>
 import BaseAvatar from '@nextcloud/vue/dist/Components/NcAvatar'
-import { fetchAvatarUrlMemoized } from '../service/AvatarService'
-import logger from '../logger'
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
+import logger from '../logger.js'
 
 export default {
 	name: 'Avatar',

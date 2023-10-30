@@ -64,14 +64,14 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 
-import { html, plain } from '../util/text'
-import { isPgpgMessage } from '../crypto/pgp'
-import Itinerary from './Itinerary'
-import MessageAttachments from './MessageAttachments'
-import MessageEncryptedBody from './MessageEncryptedBody'
-import MessageHTMLBody from './MessageHTMLBody'
-import MessagePlainTextBody from './MessagePlainTextBody'
-import Imip from './Imip'
+import { html, plain } from '../util/text.js'
+import { isPgpgMessage } from '../crypto/pgp.js'
+import Itinerary from './Itinerary.vue'
+import MessageAttachments from './MessageAttachments.vue'
+import MessageEncryptedBody from './MessageEncryptedBody.vue'
+import MessageHTMLBody from './MessageHTMLBody.vue'
+import MessagePlainTextBody from './MessagePlainTextBody.vue'
+import Imip from './Imip.vue'
 import LockOffIcon from 'vue-material-design-icons/LockOff'
 
 export default {

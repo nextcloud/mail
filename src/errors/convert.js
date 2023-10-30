@@ -20,14 +20,14 @@
  *
  */
 
-import MailboxLockedError from './MailboxLockedError'
-import MailboxNotCachedError from './MailboxNotCachedError'
-import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError'
-import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError'
-import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError'
-import CouldNotConnectError from './CouldNotConnectError'
-import ManageSieveError from './ManageSieveError'
-import ManyRecipientsError from './ManyRecipientsError'
+import MailboxLockedError from './MailboxLockedError.js'
+import MailboxNotCachedError from './MailboxNotCachedError.js'
+import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError.js'
+import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError.js'
+import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError.js'
+import CouldNotConnectError from './CouldNotConnectError.js'
+import ManageSieveError from './ManageSieveError.js'
+import ManyRecipientsError from './ManyRecipientsError.js'
 
 const map = {
 	'OCA\\Mail\\Exception\\DraftsMailboxNotSetException': NoDraftsMailboxConfiguredError,

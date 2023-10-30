@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { sortMailboxes } from '../../../imap/MailboxSorter'
+import { sortMailboxes } from '../../../imap/MailboxSorter.js'
 
 describe('mailboxSorter', () => {
 	it('sorts ordinary mailboxes', () => {

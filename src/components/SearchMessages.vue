@@ -305,9 +305,9 @@ import Close from 'vue-material-design-icons/Close'
 import Magnify from 'vue-material-design-icons/Magnify'
 
 import debouncePromise from 'debounce-promise'
-import { findRecipient } from '../service/AutocompleteService'
+import { findRecipient } from '../service/AutocompleteService.js'
 import uniqBy from 'lodash/fp/uniqBy'
-import { hiddenTags } from './tags'
+import { hiddenTags } from './tags.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 

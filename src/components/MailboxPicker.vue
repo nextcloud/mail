@@ -74,8 +74,8 @@ import IconTrash from 'vue-material-design-icons/Delete'
 import IconFolder from 'vue-material-design-icons/Folder'
 
 import { translate as t } from '@nextcloud/l10n'
-import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
-import { mailboxHasRights } from '../util/acl'
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxPicker',

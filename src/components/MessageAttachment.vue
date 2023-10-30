@@ -96,10 +96,10 @@ import IconAdd from 'vue-material-design-icons/Plus'
 import IconArrow from 'vue-material-design-icons/ArrowLeft'
 import IconSave from 'vue-material-design-icons/Folder'
 import IconDownload from 'vue-material-design-icons/Download'
-import Logger from '../logger'
+import Logger from '../logger.js'
 
-import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService'
-import { getUserCalendars, importCalendarEvent } from '../service/DAVService'
+import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService.js'
+import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
 
 export default {
 	name: 'MessageAttachment',

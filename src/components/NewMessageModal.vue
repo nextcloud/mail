@@ -114,18 +114,18 @@ import {
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
-import logger from '../logger'
-import { toPlain, toHtml, plain } from '../util/text'
-import Composer from './Composer'
-import { UNDO_DELAY } from '../store/constants'
-import { matchError } from '../errors/match'
-import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError'
-import ManyRecipientsError from '../errors/ManyRecipientsError'
+import logger from '../logger.js'
+import { toPlain, toHtml, plain } from '../util/text.js'
+import Composer from './Composer.vue'
+import { UNDO_DELAY } from '../store/constants.js'
+import { matchError } from '../errors/match.js'
+import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError.js'
+import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import AttachmentMissingError from '../errors/AttachmentMissingError.js'
-import Loading from './Loading'
+import Loading from './Loading.vue'
 import { mapGetters } from 'vuex'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
-import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService'
+import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 
 export default {
 	name: 'NewMessageModal',

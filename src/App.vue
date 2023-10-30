@@ -30,9 +30,9 @@ import { mapGetters } from 'vuex'
 import { showError } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
-import logger from './logger'
-import { matchError } from './errors/match'
-import MailboxLockedError from './errors/MailboxLockedError'
+import logger from './logger.js'
+import { matchError } from './errors/match.js'
+import MailboxLockedError from './errors/MailboxLockedError.js'
 
 export default {
 	name: 'App',

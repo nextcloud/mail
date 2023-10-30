@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { translate } from '../../../i18n/MailboxTranslator'
+import { translate } from '../../../i18n/MailboxTranslator.js'
 
 describe('MailboxTranslator', () => {
 	it('translates the inbox', () => {

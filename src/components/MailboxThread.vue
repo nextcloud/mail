@@ -73,23 +73,23 @@
 import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
-import SectionTitle from './SectionTitle'
+import SectionTitle from './SectionTitle.vue'
 import Vue from 'vue'
 import addressParser from 'address-rfc2822'
 
-import infiniteScroll from '../directives/infinite-scroll'
+import infiniteScroll from '../directives/infinite-scroll.js'
 import IconInfo from 'vue-material-design-icons/Information'
-import logger from '../logger'
-import Mailbox from './Mailbox'
-import SearchMessages from './SearchMessages'
-import NoMessageSelected from './NoMessageSelected'
-import Thread from './Thread'
-import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
+import logger from '../logger.js'
+import Mailbox from './Mailbox.vue'
+import SearchMessages from './SearchMessages.vue'
+import NoMessageSelected from './NoMessageSelected.vue'
+import Thread from './Thread.vue'
+import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
-} from '../util/priorityInbox'
-import { detect, html } from '../util/text'
+} from '../util/priorityInbox.js'
+import { detect, html } from '../util/text.js'
 
 const START_MAILBOX_DEBOUNCE = 5 * 1000
 

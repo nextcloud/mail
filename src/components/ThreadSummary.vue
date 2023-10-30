@@ -35,7 +35,7 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions'
 import CreationIcon from 'vue-material-design-icons/Creation'
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown'
-import LoadingSkeleton from './LoadingSkeleton'
+import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {
 	name: 'ThreadSummary',

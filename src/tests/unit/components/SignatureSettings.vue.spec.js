@@ -21,8 +21,8 @@
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vuex from 'vuex'
-import Nextcloud from '../../../mixins/Nextcloud'
-import SignatureSettings from '../../../components/SignatureSettings'
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import SignatureSettings from '../../../components/SignatureSettings.vue'
 
 const localVue = createLocalVue()
 

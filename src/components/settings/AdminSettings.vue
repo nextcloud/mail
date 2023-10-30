@@ -261,13 +261,13 @@
 
 <script>
 import Button from '@nextcloud/vue/dist/Components/NcButton'
-import GmailAdminOauthSettings from './GmailAdminOauthSettings'
-import logger from '../../logger'
-import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings'
+import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
+import logger from '../../logger.js'
+import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import ProvisioningSettings from './ProvisioningSettings'
-import AntiSpamSettings from './AntiSpamSettings'
+import ProvisioningSettings from './ProvisioningSettings.vue'
+import AntiSpamSettings from './AntiSpamSettings.vue'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconSettings from 'vue-material-design-icons/Cog'
 import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
@@ -279,7 +279,7 @@ import {
 	provisionAll,
 	updateAllowNewMailAccounts,
 	updateEnabledThreadSummary,
-} from '../../service/SettingsService'
+} from '../../service/SettingsService.js'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
 const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', null)

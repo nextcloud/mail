@@ -19,15 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VirtualTestEditor from '../../virtualtesteditor'
+import VirtualTestEditor from '../../virtualtesteditor.js'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import SignaturePlugin from '../../../ckeditor/signature/SignaturePlugin'
-import QuotePlugin from '../../../ckeditor/quote/QuotePlugin'
+import SignaturePlugin from '../../../ckeditor/signature/SignaturePlugin.js'
+import QuotePlugin from '../../../ckeditor/quote/QuotePlugin.js'
 
 import {
 	TRIGGER_CHANGE_ALIAS,
 	TRIGGER_EDITOR_READY,
-} from '../../../ckeditor/signature/InsertSignatureCommand'
+} from '../../../ckeditor/signature/InsertSignatureCommand.js'
 
 describe('SignaturePlugin', () => {
 

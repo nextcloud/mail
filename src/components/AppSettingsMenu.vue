@@ -122,9 +122,9 @@ import IconInfo from 'vue-material-design-icons/Information'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconEmail from 'vue-material-design-icons/Email'
 import IconLock from 'vue-material-design-icons/Lock'
-import Logger from '../logger'
-import KeyboardShortcuts from '../views/KeyboardShortcuts'
-import SmimeCertificateModal from './smime/SmimeCertificateModal'
+import Logger from '../logger.js'
+import KeyboardShortcuts from '../views/KeyboardShortcuts.vue'
+import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 
 export default {
 	name: 'AppSettingsMenu',

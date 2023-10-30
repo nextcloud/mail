@@ -73,10 +73,10 @@ import { basename } from '@nextcloud/paths'
 import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { generateUrl } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
-import { saveAttachmentsToFiles } from '../service/AttachmentService'
+import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
-import MessageAttachment from './MessageAttachment'
-import Logger from '../logger'
+import MessageAttachment from './MessageAttachment.vue'
+import Logger from '../logger.js'
 
 import Download from 'vue-material-design-icons/Download'
 import CloudDownload from 'vue-material-design-icons/CloudDownload'

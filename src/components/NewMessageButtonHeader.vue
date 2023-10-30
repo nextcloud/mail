@@ -34,7 +34,7 @@ import { NcButton as Button } from '@nextcloud/vue'
 import IconAdd from 'vue-material-design-icons/Plus'
 import IconRefresh from 'vue-material-design-icons/Refresh'
 import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
-import logger from '../logger'
+import logger from '../logger.js'
 
 export default {
 	name: 'NewMessageButtonHeader',

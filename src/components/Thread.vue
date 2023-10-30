@@ -61,14 +61,14 @@ import { prop, uniqBy } from 'ramda'
 import debounce from 'lodash/fp/debounce'
 import { loadState } from '@nextcloud/initial-state'
 
-import { summarizeThread } from '../service/AiIntergrationsService'
-import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
-import Loading from './Loading'
-import logger from '../logger'
-import Error from './Error'
-import RecipientBubble from './RecipientBubble'
-import ThreadEnvelope from './ThreadEnvelope'
-import ThreadSummary from './ThreadSummary'
+import { summarizeThread } from '../service/AiIntergrationsService.js'
+import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory.js'
+import Loading from './Loading.vue'
+import logger from '../logger.js'
+import Error from './Error.vue'
+import RecipientBubble from './RecipientBubble.vue'
+import ThreadEnvelope from './ThreadEnvelope.vue'
+import ThreadSummary from './ThreadSummary.vue'
 
 export default {
 	name: 'Thread',

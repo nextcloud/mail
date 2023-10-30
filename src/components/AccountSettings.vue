@@ -119,20 +119,20 @@
 </template>
 
 <script>
-import AccountForm from '../components/AccountForm'
-import EditorSettings from '../components/EditorSettings'
-import AccountDefaultsSettings from '../components/AccountDefaultsSettings'
-import SignatureSettings from '../components/SignatureSettings'
-import AliasSettings from '../components/AliasSettings'
+import AccountForm from '../components/AccountForm.vue'
+import EditorSettings from '../components/EditorSettings.vue'
+import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
+import SignatureSettings from '../components/SignatureSettings.vue'
+import AliasSettings from '../components/AliasSettings.vue'
 import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
-import TrustedSenders from './TrustedSenders'
-import SieveAccountForm from './SieveAccountForm'
-import SieveFilterForm from './SieveFilterForm'
-import OutOfOfficeForm from './OutOfOfficeForm'
-import CertificateSettings from './CertificateSettings'
-import SearchSettings from './SearchSettings'
-import TrashRetentionSettings from './TrashRetentionSettings'
-import logger from '../logger'
+import TrustedSenders from './TrustedSenders.vue'
+import SieveAccountForm from './SieveAccountForm.vue'
+import SieveFilterForm from './SieveFilterForm.vue'
+import OutOfOfficeForm from './OutOfOfficeForm.vue'
+import CertificateSettings from './CertificateSettings.vue'
+import SearchSettings from './SearchSettings.vue'
+import TrashRetentionSettings from './TrashRetentionSettings.vue'
+import logger from '../logger.js'
 
 export default {
 	name: 'AccountSettings',

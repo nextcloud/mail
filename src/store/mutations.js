@@ -26,9 +26,9 @@ import orderBy from 'lodash/fp/orderBy'
 import uniq from 'lodash/fp/uniq'
 import Vue from 'vue'
 
-import { sortMailboxes } from '../imap/MailboxSorter'
-import { normalizedEnvelopeListId } from './normalization'
-import { UNIFIED_ACCOUNT_ID } from './constants'
+import { sortMailboxes } from '../imap/MailboxSorter.js'
+import { normalizedEnvelopeListId } from './normalization.js'
+import { UNIFIED_ACCOUNT_ID } from './constants.js'
 
 const transformMailboxName = (account, mailbox) => {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account

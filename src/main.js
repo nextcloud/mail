@@ -31,11 +31,11 @@ import './directives/drag-and-drop/styles/drag-and-drop.scss'
 import VueShortKey from 'vue-shortkey'
 import vToolTip from 'v-tooltip'
 
-import App from './App'
-import Nextcloud from './mixins/Nextcloud'
-import router from './router'
-import store from './store'
-import { fixAccountId } from './service/AccountService'
+import App from './App.vue'
+import Nextcloud from './mixins/Nextcloud.js'
+import router from './router.js'
+import store from './store/index.js'
+import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
 
 // eslint-disable-next-line camelcase

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getClient } from '../dav/client'
+import { getClient } from '../dav/client.js'
 
 export async function getFileSize(path) {
 	const response = await getClient('files').stat(path, {

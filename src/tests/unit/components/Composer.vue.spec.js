@@ -23,8 +23,8 @@
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vuex from 'vuex'
 
-import Composer from '../../../components/Composer'
-import Nextcloud from '../../../mixins/Nextcloud'
+import Composer from '../../../components/Composer.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 

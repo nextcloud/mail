@@ -24,7 +24,7 @@ import {
 	getPrioritySearchQueries,
 	priorityImportantQuery,
 	priorityOtherQuery,
-} from '../../../util/priorityInbox'
+} from '../../../util/priorityInbox.js'
 
 describe('priorityInbox', () => {
 	it('has correct query constants', () => {

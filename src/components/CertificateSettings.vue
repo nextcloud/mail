@@ -51,10 +51,10 @@
 
 <script>
 import { NcMultiselect as Multiselect, NcButton as Button } from '@nextcloud/vue'
-import { compareSmimeCertificates } from '../util/smime'
+import { compareSmimeCertificates } from '../util/smime.js'
 import { mapGetters } from 'vuex'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import Logger from '../logger'
+import Logger from '../logger.js'
 import moment from '@nextcloud/moment'
 
 export default {

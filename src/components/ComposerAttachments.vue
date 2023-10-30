@@ -68,10 +68,10 @@ import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
 import Vue from 'vue'
 
-import logger from '../logger'
-import { getFileData } from '../service/FileService'
-import { shareFile } from '../service/FileSharingService'
-import { uploadLocalAttachment } from '../service/AttachmentService'
+import logger from '../logger.js'
+import { getFileData } from '../service/FileService.js'
+import { shareFile } from '../service/FileSharingService.js'
+import { uploadLocalAttachment } from '../service/AttachmentService.js'
 
 import ComposerAttachment from './ComposerAttachment.vue'
 

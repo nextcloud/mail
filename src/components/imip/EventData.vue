@@ -66,7 +66,7 @@ import CalendarIcon from 'vue-material-design-icons/Calendar'
 import MapMarkerIcon from 'vue-material-design-icons/MapMarker'
 import { getReadableTimezoneName } from '@nextcloud/calendar-js'
 import moment from '@nextcloud/moment'
-import { removeMailtoPrefix } from '../../util/eventAttendee'
+import { removeMailtoPrefix } from '../../util/eventAttendee.js'
 
 /**
  * Check whether two dates are on the exact same day, month and year.
