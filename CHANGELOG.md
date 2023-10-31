@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.4 - unreleased
+## 3.4.4 - 2023-10-31
 
 ### Bug Fixes
 
