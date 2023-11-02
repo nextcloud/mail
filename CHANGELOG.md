@@ -1,6 +1,29 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.0 – unreleased
+### Added
+- Emoji picker via : symbol
+- Smart picker integration via / symbol
+- Searching message bodies in advanced search
+- Warning about missing attachments
+- PHP8.3 support
+- Performance improvements through caching
+- Performance improvements of the dashboard widgets
+### Changed
+- Updated and new translations
+- App store screenshot
+### Fixed
+- Calendar event color picker
+- Thread summaries using preview text instead of full body text
+- Showing contact name in thread header
+- Stale and unused ML data in database and on storage
+- Unsubscribe button style
+- Modals closing automatically
+- Recipient searches in advanced search (to vs cc vs bcc)
+- Internal rate-limiting for wrong passwords to prevent IMAP locking
+- Double mailbox sync when navigating across two accounts
+
 ## 3.4.0-rc.1 - unreleased
 ### Added
 - Thread summaries
