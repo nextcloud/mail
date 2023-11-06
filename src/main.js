@@ -82,6 +82,10 @@ store.commit('savePreference', {
 	key: 'collect-data',
 	value: getPreferenceFromPage('collect-data'),
 })
+store.commit('savePreference', {
+	key: 'search-priority-body',
+	value: getPreferenceFromPage('search-priority-body'),
+})
 const startMailboxId = getPreferenceFromPage('start-mailbox-id')
 store.commit('savePreference', {
 	key: 'start-mailbox-id',

@@ -5,6 +5,19 @@
 			{{ t('mail', 'Add mail account') }}
 		</router-link>
 
+		<p v-if="loadingPrioritySettings" class="app-settings">
+			{{ prioritySettingsText }}
+		</p>
+		<p v-else class="app-settings">
+			<input
+				id="priority-inbox-toggle"
+				class="checkbox"
+				type="checkbox"
+				:checked="searchPriorityBody"
+				@change="onToggleSearchPriorityBody">
+			<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
+		</p>
+
 		<p v-if="loadingOptOutSettings" class="app-settings">
 			<IconLoading :size="20" />
 			{{ optOutSettingsText }}
@@ -141,6 +154,8 @@ export default {
 	data() {
 		return {
 			loadingAvatarSettings: false,
+			prioritySettingsText: t('mail', 'Search in the body of messages in priority Inbox'),
+			loadingPrioritySettings: false,
 			// eslint-disable-next-line
 			optOutSettingsText: t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'),
 			loadingOptOutSettings: false,
@@ -155,6 +170,9 @@ export default {
 		}
 	},
 	computed: {
+		searchPriorityBody() {
+			return this.$store.getters.getPreference('search-priority-body', 'false') === 'true'
+		},
 		useBottomReplies() {
 			return this.$store.getters.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -197,6 +215,20 @@ export default {
 				.then(() => {
 					this.loadingAvatarSettings = false
 				})
+		},
+		async onToggleSearchPriorityBody(e) {
+			this.loadingPrioritySettings = true
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'search-priority-body',
+						value: e.target.checked ? 'true' : 'false',
+					})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+			} finally {
+				this.loadingPrioritySettings = false
+			}
 		},
 		onToggleCollectData(e) {
 			this.loadingOptOutSettings = true
