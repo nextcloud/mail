@@ -12,6 +12,14 @@
 				@click="openEditTag">
 				{{ t('mail','Edit name or color') }}
 			</NcActionButton>
+			<NcActionButton v-if="!tag.isDefaultTag"
+				@click="deleteTag">
+				<template #icon>
+					<DeleteIcon :size="20" />
+				</template>
+				{{ t('mail','Delete tag') }}
+			</NcActionButton>
+
 			<ActionInput v-if="renameTagInput"
 				:value="tag.displayName"
 				@submit="renameTag(tag, $event)" />
@@ -46,6 +54,8 @@
 <script>
 import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showInfo } from '@nextcloud/dialogs'
+import DeleteIcon from 'vue-material-design-icons/Delete'
+
 export default {
 	name: 'TagItem',
 	components: {
@@ -55,6 +65,7 @@ export default {
 		ActionText,
 		ActionInput,
 		IconLoading,
+		DeleteIcon,
 	},
 	props: {
 		tag: {
@@ -79,6 +90,10 @@ export default {
 		}
 	},
 	methods: {
+		deleteTag() {
+			this.removeTag(this.tag.imapLabel)
+			this.$emit('delete-tag', this.tag)
+		},
 		async updateColor(newColor) {
 			this.editColor = newColor
 			this.showSaving = false
@@ -179,10 +194,6 @@ export default {
 		display: flex;
 		position: relative;
 	}
-}
-.tag-title {
-	margin-top: 20px;
-	margin-left: 10px;
 }
 .tag-group {
 	display: block;

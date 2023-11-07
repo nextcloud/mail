@@ -36,6 +36,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
@@ -99,6 +100,9 @@ class MailManager implements IMailManager {
 	/** @var TagMapper */
 	private $tagMapper;
 
+	/** @var MessageTagsMapper */
+	private $messageTagsMapper;
+
 	/** @var ThreadMapper */
 	private $threadMapper;
 
@@ -111,6 +115,7 @@ class MailManager implements IMailManager {
 		IEventDispatcher $eventDispatcher,
 		LoggerInterface $logger,
 		TagMapper $tagMapper,
+		MessageTagsMapper $messageTagsMapper,
 		ThreadMapper $threadMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
@@ -121,6 +126,7 @@ class MailManager implements IMailManager {
 		$this->eventDispatcher = $eventDispatcher;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
+		$this->messageTagsMapper = $messageTagsMapper;
 		$this->threadMapper = $threadMapper;
 	}
 
@@ -493,7 +499,37 @@ class MailManager implements IMailManager {
 			)
 		);
 	}
+	public function tagMessageWithClient(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox, array $messages, Tag $tag, bool $value):void {
 
+		if ($this->isPermflagsEnabled($client, $account, $mailbox->getName()) === true) {
+			$messageIds = array_map(static function (Message $message) {
+				return $message->getUid();
+			}, $messages);
+			try {
+				if ($value) {
+					// imap keywords and flags work the same way
+					$this->imapMessageMapper->addFlag($client, $mailbox, $messageIds, $tag->getImapLabel());
+				} else {
+					$this->imapMessageMapper->removeFlag($client, $mailbox, $messageIds, $tag->getImapLabel());
+				}
+			} catch (Horde_Imap_Client_Exception $e) {
+				throw new ServiceException(
+					"Could not set message keyword on IMAP: " . $e->getMessage(),
+					$e->getCode(),
+					$e
+				);
+			}
+			if ($value) {
+				foreach ($messages as $message) {
+					$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+				}
+			} else {
+				foreach ($messages as $message) {
+					$this->tagMapper->untagMessage($tag, $message->getMessageId());
+				}
+			}
+		}
+	}
 	/**
 	 * Tag (flag) a message on IMAP
 	 *
@@ -819,6 +855,53 @@ class MailManager implements IMailManager {
 		return $this->tagMapper->update($tag);
 	}
 
+	public function deleteTag(int $id, string $userId, array $accounts) :Tag {
+		try {
+			$tag = $this->tagMapper->getTagForUser($id, $userId);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException('Tag not found', 0, $e);
+		}
+
+		foreach ($accounts as $account) {
+			$this->deleteTagForAccount($id, $userId, $tag, $account);
+		}
+		return $this->tagMapper->delete($tag);
+	}
+
+	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account) :void {
+		try {
+			$messageTags = $this->messageTagsMapper->getMessagesByTag($id);
+			$messages = array_merge(... array_map(function ($messageTag) use ($account) {
+				return $this->getByMessageId($account, $messageTag->getImapMessageId());
+			}, array_values($messageTags)));
+		} catch (DoesNotExistException $e) {
+			throw new ClientException('Messages not found', 0, $e);
+		}
+
+		$client = $this->imapClientFactory->getClient($account);
+
+		foreach ($messageTags as $messageTag) {
+			$this->messageTagsMapper->delete($messageTag);
+		}
+		$groupedMessages = [];
+		foreach ($messages as $message) {
+			$mailboxId = $message->getMailboxId();
+			if (array_key_exists($mailboxId, $groupedMessages)) {
+				$groupedMessages[$mailboxId][] = $message;
+			} else {
+				$groupedMessages[$mailboxId] = [$message];
+			}
+		}
+		try {
+			foreach ($groupedMessages as $mailboxId => $messages) {
+				$mailbox = $this->getMailbox($userId, $mailboxId);
+				$this->tagMessageWithClient($client, $account, $mailbox, $messages, $tag, false);
+			}
+		} finally {
+			$client->logout();
+		}
+		
+	}
 	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array {
 		$mailAccount = $srcAccount->getMailAccount();
 		$messageInTrash = $srcMailbox->getId() === $mailAccount->getTrashMailboxId();

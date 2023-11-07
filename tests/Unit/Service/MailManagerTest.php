@@ -33,6 +33,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
@@ -80,8 +81,13 @@ class MailManagerTest extends TestCase {
 	/** @var MockObject|TagMapper */
 	private $tagMapper;
 
+	/** @var MessageTagsMapper|MockObject */
+	private $messageTagsMapper;
+
 	/** @var ThreadMapper|MockObject */
 	private $threadMapper;
+
+	
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -95,6 +101,7 @@ class MailManagerTest extends TestCase {
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->tagMapper = $this->createMock(TagMapper::class);
+		$this->messageTagsMapper = $this->createMock(MessageTagsMapper::class);
 		$this->threadMapper = $this->createMock(ThreadMapper::class);
 
 		$this->manager = new MailManager(
@@ -107,6 +114,7 @@ class MailManagerTest extends TestCase {
 			$this->eventDispatcher,
 			$this->logger,
 			$this->tagMapper,
+			$this->messageTagsMapper,
 			$this->threadMapper
 		);
 	}
