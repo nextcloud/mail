@@ -48,7 +48,7 @@
 					</template>
 					{{ t('mail', 'Add tag') }}
 				</NcButton>
-				<ActionInput v-if="editing" @submit="createTag">
+				<ActionInput v-if="editing" @submit="createTag" :disabled="showSaving">
 					<template #icon>
 						<IconTag :size="20" />
 					</template>
