@@ -163,6 +163,8 @@ export default {
 		},
 		async createTag(event) {
 			this.editing = true
+			if (this.showSaving) return
+
 			const displayName = event.target.querySelector('input[type=text]').value
 			if (displayName.toLowerCase() in hiddenTags) {
 				showError(this.t('mail', 'Tag name is a hidden system tag'))
@@ -172,6 +174,7 @@ export default {
 				showError(this.t('mail', 'Tag already exists'))
 				return
 			}
+			if(displayName !== null && displayName !== '') this.showSaving = true
 			try {
 				await this.$store.dispatch('createTag', {
 					displayName,
