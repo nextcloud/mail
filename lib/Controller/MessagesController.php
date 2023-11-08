@@ -39,6 +39,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -87,6 +88,7 @@ class MessagesController extends Controller {
 	private SmimeService $smimeService;
 	private IMAPClientFactory $clientFactory;
 	private IDkimService $dkimService;
+	private IUserPreferences $preferences;
 	private SnoozeService $snoozeService;
 
 	public function __construct(string $appName,
@@ -107,6 +109,7 @@ class MessagesController extends Controller {
 		SmimeService $smimeService,
 		IMAPClientFactory $clientFactory,
 		IDkimService $dkimService,
+		IUserPreferences $preferences,
 		SnoozeService $snoozeService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -125,6 +128,7 @@ class MessagesController extends Controller {
 		$this->smimeService = $smimeService;
 		$this->clientFactory = $clientFactory;
 		$this->dkimService = $dkimService;
+		$this->preferences = $preferences;
 		$this->snoozeService = $snoozeService;
 	}
 
@@ -153,12 +157,14 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->logger->debug("loading messages of folder <$mailboxId>");
+		$this->logger->debug("loading messages of mailbox <$mailboxId>");
 
+		$order = $this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest') === 'newest' ? 'DESC': 'ASC';
 		return new JSONResponse(
 			$this->mailSearch->findMessages(
 				$account,
 				$mailbox,
+				$order,
 				$filter === '' ? null : $filter,
 				$cursor,
 				$limit

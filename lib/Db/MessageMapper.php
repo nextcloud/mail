@@ -29,6 +29,7 @@ namespace OCA\Mail\Db;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\FlagExpression;
@@ -700,7 +701,7 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return int[]
 	 */
-	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, ?int $limit, array $uids = null): array {
+	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, array $uids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		if ($this->needDistinct($query)) {
@@ -828,9 +829,13 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-		if ($query->getCursor() !== null) {
+		if ($query->getCursor() !== null && $sortOrder === IMailSearch::ORDER_NEWEST_FIRST) {
 			$select->andWhere(
 				$qb->expr()->lt('m.sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))
+			);
+		} elseif ($query->getCursor() !== null && $sortOrder === IMailSearch::ORDER_OLDEST_FIRST) {
+			$select->andWhere(
+				$qb->expr()->gt('m.sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))
 			);
 		}
 
@@ -861,7 +866,11 @@ class MessageMapper extends QBMapper {
 
 		$select->andWhere($qb->expr()->isNull('m2.id'));
 
-		$select->orderBy('m.sent_at', 'desc');
+		if ($sortOrder === 'ASC') {
+			$select->orderBy('sent_at', $sortOrder);
+		} else {
+			$select->orderBy('sent_at', 'DESC');
+		}
 
 		if ($limit !== null) {
 			$select->setMaxResults($limit);
@@ -876,9 +885,10 @@ class MessageMapper extends QBMapper {
 			}, array_chunk($uids, 1000));
 		}
 
-		return array_map(static function (Message $message) {
+		$result = array_map(static function (Message $message) {
 			return $message->getId();
 		}, $this->findEntities($select));
+		return $result;
 	}
 
 	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, array $uids = null): array {
@@ -1115,21 +1125,21 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param string $userId
 	 * @param int[] $ids
+	 * @param string $sortOrder
 	 *
 	 * @return Message[]
 	 */
-	public function findByIds(string $userId, array $ids): array {
+	public function findByIds(string $userId, array $ids, string $sortOrder): array {
 		if ($ids === []) {
 			return [];
 		}
-
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->in('id', $qb->createParameter('ids'))
 			)
-			->orderBy('sent_at', 'desc');
+			->orderBy('sent_at', $sortOrder);
 
 		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
@@ -1215,14 +1225,19 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param Mailbox $mailbox
 	 * @param array $ids
+	 * @param int|null $lastMessageTimestamp
+	 * @param IMailSearch::ORDER_* $sortOrder
+	 *
 	 * @return int[]
 	 */
-	public function findNewIds(Mailbox $mailbox, array $ids): array {
+	public function findNewIds(Mailbox $mailbox, array $ids, ?int $lastMessageTimestamp, string $sortOrder): array {
 		$select = $this->db->getQueryBuilder();
 		$subSelect = $this->db->getQueryBuilder();
 
 		$subSelect
-			->select($subSelect->func()->min('sent_at'))
+			->select($sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
+				$subSelect->func()->min('sent_at') :
+				$subSelect->func()->max('sent_at'))
 			->from($this->getTableName())
 			->where(
 				$subSelect->expr()->eq('mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
@@ -1234,20 +1249,31 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
+				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
+				$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
 		);
+		$wheres = [$select->expr()->eq('m.mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
+			$select->expr()->andX($subSelect->expr()->notIn('m.id', $select->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)),
+			$select->expr()->isNull('m2.id'),
+		];
+		if ($sortOrder === IMailSearch::ORDER_NEWEST_FIRST) {
+			$wheres[] = $select->expr()->gt('m.sent_at', $select->createFunction('(' . $subSelect->getSQL() . ')'), IQueryBuilder::PARAM_INT);
+		} else {
+			$wheres[] = $select->expr()->lt('m.sent_at', $select->createFunction('(' . $subSelect->getSQL() . ')'), IQueryBuilder::PARAM_INT);
+		}
+
+		if ($lastMessageTimestamp !== null && $sortOrder === IMailSearch::ORDER_OLDEST_FIRST) {
+			// Don't consider old "new messages" as new when their UID has already been seen before
+			$wheres[] = $select->expr()->lt('m.sent_at', $select->createNamedParameter($lastMessageTimestamp, IQueryBuilder::PARAM_INT));
+		}
 
 		$select
-			->select('m.id')
+			->select(['m.id', 'm.sent_at'])
 			->from($this->getTableName(), 'm')
 			->leftJoin('m', $this->getTableName(), 'm2', $selfJoin)
-			->where(
-				$select->expr()->eq('m.mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
-				$select->expr()->andX($subSelect->expr()->notIn('m.id', $select->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)),
-				$select->expr()->isNull('m2.id'),
-				$select->expr()->gt('m.sent_at', $select->createFunction('(' . $subSelect->getSQL() . ')'), IQueryBuilder::PARAM_INT)
-			)
-			->orderBy('m.sent_at', 'desc');
+			->where(...$wheres)
+			->orderBy('m.sent_at', $sortOrder === IMailSearch::ORDER_NEWEST_FIRST ? 'desc' : 'asc');
 
 		$results = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {

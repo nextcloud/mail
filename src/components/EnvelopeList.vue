@@ -236,7 +236,7 @@
 		</transition>
 		<transition-group name="list">
 			<Envelope
-				v-for="(env, index) in envelopes"
+				v-for="(env, index) in sortedEnvelops"
 				:key="env.databaseId"
 				:data="env"
 				:mailbox="mailbox"
@@ -347,6 +347,18 @@ export default {
 		}
 	},
 	computed: {
+		sortOrder() {
+			return this.$store.getters.getPreference('sort-order', 'newest')
+		},
+
+		sortedEnvelops() {
+			if (this.sortOrder === 'oldest') {
+				return [...this.envelopes].sort((a, b) => {
+					return a.dateInt < b.dateInt ? -1 : 1
+				})
+			}
+			return [...this.envelopes]
+		},
 		selectMode() {
 			// returns true when in selection mode (where the user selects several emails at once)
 			return this.selection.length > 0
@@ -388,15 +400,15 @@ export default {
 			return this.selectedEnvelopes.every((env) => env.flags.flagged === true)
 		},
 		selectedEnvelopes() {
-			return this.envelopes.filter((env) => this.selection.includes(env.databaseId))
+			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
 		},
 		hasMultipleAccounts() {
-			const mailboxIds = this.envelopes.map(envelope => envelope.mailboxId)
+			const mailboxIds = this.sortedEnvelops.map(envelope => envelope.mailboxId)
 			return Array.from(new Set(mailboxIds)).length > 1
 		},
 	},
 	watch: {
-		envelopes(newVal, oldVal) {
+		sortedEnvelops(newVal, oldVal) {
 			// Unselect vanished envelopes
 			const newIds = newVal.map((env) => env.databaseId)
 			this.selection = this.selection.filter((id) => newIds.includes(id))
@@ -484,7 +496,7 @@ export default {
 			let nextEnvelopeToNavigate
 			let isAllSelected
 
-			if (this.selectedEnvelopes.length === this.envelopes.length) {
+			if (this.selectedEnvelopes.length === this.sortedEnvelops.length) {
 				isAllSelected = true
 			} else {
 				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) =>
@@ -493,7 +505,7 @@ export default {
 				// one of threads is selected
 				if (indexSelectedEnvelope !== -1) {
 					const lastSelectedEnvelope = this.selectedEnvelopes[this.selectedEnvelopes.length - 1]
-					const diff = this.envelopes.filter(envelope => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
+					const diff = this.sortedEnvelops.filter(envelope => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
 					const lastIndex = diff.indexOf(lastSelectedEnvelope)
 					nextEnvelopeToNavigate = diff[lastIndex === 0 ? 1 : lastIndex - 1]
 				}
@@ -563,12 +575,12 @@ export default {
 			const end = Math.max(this.lastToggledIndex, index)
 			const selected = this.selection.includes(envelope.databaseId)
 			for (let i = start; i <= end; i++) {
-				this.setEnvelopeSelected(this.envelopes[i], !selected)
+				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
 			}
 			this.lastToggledIndex = index
 		},
 		unselectAll() {
-			this.envelopes.forEach((env) => {
+			this.sortedEnvelops.forEach((env) => {
 				env.flags.selected = false
 			})
 			this.selection = []

@@ -112,6 +112,29 @@
 		</ButtonVue>
 		<SmimeCertificateModal v-if="displaySmimeCertificateModal"
 			@close="displaySmimeCertificateModal = false" />
+		<h2 class="section-title">
+			Sorting
+		</h2>
+		<div class="sorting">
+			<CheckboxRadioSwitch
+				class="sorting__switch"
+				:checked="sortOrder"
+				value="newest"
+				name="order_radio"
+				type="radio"
+				@update:checked="onSortByDate">
+				{{ t('mail', 'Newest') }}
+			</CheckboxRadioSwitch>
+			<CheckboxRadioSwitch
+				class="sorting__switch"
+				:checked="sortOrder"
+				value="oldest"
+				name="order_radio"
+				type="radio"
+				@update:checked="onSortByDate">
+				{{ t('mail', 'Oldest') }}
+			</CheckboxRadioSwitch>
+		</div>
 
 		<p class="mailvelope-section">
 			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
@@ -129,7 +152,7 @@
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch as CheckboxRadioSwitch } from '@nextcloud/vue'
 
 import IconInfo from 'vue-material-design-icons/Information'
 import IconAdd from 'vue-material-design-icons/Plus'
@@ -150,6 +173,7 @@ export default {
 		IconLoading,
 		IconLock,
 		SmimeCertificateModal,
+		CheckboxRadioSwitch,
 	},
 	data() {
 		return {
@@ -167,6 +191,7 @@ export default {
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
 			displaySmimeCertificateModal: false,
+			sortOrder: 'newest',
 		}
 	},
 	computed: {
@@ -188,6 +213,9 @@ export default {
 		allowNewMailAccounts() {
 			return this.$store.getters.getPreference('allow-new-accounts', true)
 		},
+	},
+	mounted() {
+		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
 	},
 	methods: {
 		onToggleButtonReplies(e) {
@@ -242,6 +270,23 @@ export default {
 				.then(() => {
 					this.loadingOptOutSettings = false
 				})
+		},
+		async onSortByDate(e) {
+			const previousValue = this.sortOrder
+			try {
+				this.sortOrder = e
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'sort-order',
+						value: e,
+					})
+				this.$store.commit('removeAllEnvelopes')
+
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+				this.sortOrder = previousValue
+				showError(t('mail', 'Could not update preference'))
+			}
 		},
 		async onToggleAutoTagging(e) {
 			this.toggleAutoTagging = true
@@ -340,6 +385,23 @@ p.app-settings {
 		&:hover {
 			box-shadow: 0 0 0 1px var(--color-primary-element);
 		}
+	}
+}
+.material-design-icon {
+	&.lock-icon {
+		margin-right: 10px;
+	}
+
+}
+.section-title {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+.sorting {
+	display: flex;
+	width: 100%;
+	&__switch{
+		width: 50%;
 	}
 }
 </style>

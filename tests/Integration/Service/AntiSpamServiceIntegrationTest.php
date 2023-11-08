@@ -92,6 +92,7 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			null,
+			null,
 			false
 		);
 

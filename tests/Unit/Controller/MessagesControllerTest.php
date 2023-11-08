@@ -36,6 +36,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Tag;
@@ -134,6 +135,8 @@ class MessagesControllerTest extends TestCase {
 	private $clientFactory;
 	private IDkimService $dkimService;
 
+	/** @var MockObject|IUserPreferences */
+	private $userPreferences;
 	private SnoozeService $snoozeService;
 
 	protected function setUp(): void {
@@ -158,6 +161,7 @@ class MessagesControllerTest extends TestCase {
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->dkimService = $this->createMock(IDkimService::class);
+		$this->userPreferences = $this->createMock(IUserPreferences::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
@@ -188,6 +192,7 @@ class MessagesControllerTest extends TestCase {
 			$this->smimeService,
 			$this->clientFactory,
 			$this->dkimService,
+			$this->userPreferences,
 			$this->snoozeService,
 		);
 

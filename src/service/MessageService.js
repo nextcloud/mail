@@ -62,7 +62,7 @@ export const fetchThread = async (id) => {
 	return resp.data
 }
 
-export async function syncEnvelopes(accountId, id, ids, query, init = false) {
+export async function syncEnvelopes(accountId, id, ids, lastMessageTimestamp, query, init = false, sortOrder) {
 	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync', {
 		id,
 	})
@@ -70,8 +70,10 @@ export async function syncEnvelopes(accountId, id, ids, query, init = false) {
 	try {
 		const response = await axios.post(url, {
 			ids,
-			query,
+			lastMessageTimestamp,
 			init,
+			sortOrder,
+			query,
 		})
 
 		if (response.status === 202) {

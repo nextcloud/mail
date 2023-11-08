@@ -31,7 +31,7 @@ import {
 	filter,
 	flatten,
 	gt,
-	head,
+	lt,
 	identity,
 	last,
 	map,
@@ -133,7 +133,13 @@ const findIndividualMailboxes = curry((getMailboxes, specialRole) =>
 	)
 )
 
-const combineEnvelopeLists = pipe(flatten, orderBy(prop('dateInt'), 'desc'))
+const combineEnvelopeLists = (sortOrder) => {
+	if (sortOrder === 'oldest') {
+		return pipe(flatten, orderBy(prop('dateInt'), 'asc'))
+	}
+
+	return pipe(flatten, orderBy(prop('dateInt'), 'desc'))
+}
 
 export default {
 	savePreference({ commit, getters }, { key, value }) {
@@ -533,8 +539,8 @@ export default {
 			const envelope = await fetchEnvelope(accountId, id)
 			// Only commit if not undefined (not found)
 			if (envelope) {
-				commit('addEnvelope', {
-					envelope,
+				commit('addEnvelopes', {
+					envelopes: [envelope],
 				})
 			}
 
@@ -561,16 +567,14 @@ export default {
 				const fetchUnifiedEnvelopes = pipe(
 					findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
 					fetchIndividualLists,
-					andThen(combineEnvelopeLists),
+					andThen(combineEnvelopeLists(getters.getPreference('sort-order'))),
 					andThen(sliceToPage),
 					andThen(
-						tap(
-							map((envelope) =>
-								commit('addEnvelope', {
-									envelope,
-									query,
-								})
-							)
+						tap((envelopes) =>
+							commit('addEnvelopes', {
+								envelopes,
+								query,
+							})
 						)
 					)
 				)
@@ -581,17 +585,15 @@ export default {
 			return pipe(
 				fetchEnvelopes,
 				andThen(
-					tap(
-						map((envelope) =>
-							commit('addEnvelope', {
-								query,
-								envelope,
-								addToUnifiedMailboxes,
-							})
-						)
+					tap((envelopes) =>
+						commit('addEnvelopes', {
+							query,
+							envelopes,
+							addToUnifiedMailboxes,
+						})
 					)
 				)
-			)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE)
+			)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, getters.getPreference('sort-order'))
 		})
 	},
 	async fetchNextEnvelopePage({ commit, getters, dispatch }, { mailboxId, query }) {
@@ -618,29 +620,38 @@ export default {
 				if (cursor === undefined) {
 					throw new Error('Unified list has no tail')
 				}
+				const newestFirst = getters.getPreference('sort-order') === 'newest'
 				const nextLocalUnifiedEnvelopes = pipe(
 					findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
 					map(getIndivisualLists(query)),
-					combineEnvelopeLists,
+					combineEnvelopeLists(getters.getPreference('sort-order')),
 					filter(
 						where({
-							dateInt: gt(cursor),
+							dateInt: newestFirst ? gt(cursor) : lt(cursor),
 						})
 					),
 					slice(0, quantity)
 				)
 				// We know the next envelopes based on local data
 				// We have to fetch individual envelopes only if it ends in the known
-				// next fetch. If it ended before, there is no data to fetch anyway. If
-				// it ends after, we have all the relevant data already
+				// next fetch. If it ends after, we have all the relevant data already.
 				const needsFetch = curry((query, nextEnvelopes, mb) => {
 					const c = individualCursor(query, mb)
-					return nextEnvelopes.length < quantity || c >= head(nextEnvelopes).dateInt || c <= last(nextEnvelopes).dateInt
+					if (nextEnvelopes.length < quantity) {
+						return true
+					}
+
+					if (getters.getPreference('sort-order') === 'newest') {
+						return c >= last(nextEnvelopes).dateInt
+					} else {
+						return c <= last(nextEnvelopes).dateInt
+					}
 				})
 
 				const mailboxesToFetch = (accounts) =>
 					pipe(
 						findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
+						tap(mbs => console.info('individual mailboxes', mbs)),
 						filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts)))
 					)(accounts)
 				const mbs = mailboxesToFetch(getters.accounts)
@@ -665,7 +676,7 @@ export default {
 								query,
 								quantity,
 								rec: false,
-								addToUnifiedMailboxes: false,
+								addToUnifiedMailboxes: true,
 							})
 						)
 					)(mbs)
@@ -673,12 +684,11 @@ export default {
 
 				const envelopes = nextLocalUnifiedEnvelopes(getters.accounts)
 				logger.debug('next unified page can be built locally and consists of ' + envelopes.length + ' envelopes', { addToUnifiedMailboxes })
-				envelopes.map((envelope) =>
-					commit('addEnvelope', {
-						query,
-						envelope,
-					})
-				)
+				commit('addEnvelopes', {
+					query,
+					envelopes,
+					addToUnifiedMailboxes,
+				})
 				return envelopes
 			}
 
@@ -697,18 +707,16 @@ export default {
 				return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 			}
 
-			return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity).then((envelopes) => {
+			return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, getters.getPreference('sort-order')).then((envelopes) => {
 				logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 					envelopes,
 					addToUnifiedMailboxes,
 				})
-				envelopes.forEach((envelope) =>
-					commit('addEnvelope', {
-						query,
-						envelope,
-						addToUnifiedMailboxes,
-					})
-				)
+				commit('addEnvelopes', {
+					query,
+					envelopes,
+					addToUnifiedMailboxes,
+				})
 				return envelopes
 			})
 		})
@@ -768,18 +776,20 @@ export default {
 			}
 
 			const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
-			logger.debug(`mailbox sync of ${mailboxId} (${query}) has ${ids.length} known IDs`)
-			return syncEnvelopes(mailbox.accountId, mailboxId, ids, query, init)
+			const lastTimestamp = getters.getPreference('sort-order') === 'newest' ? null : getters.getEnvelopes(mailboxId, query)[0]?.dateInt
+			logger.debug(`mailbox sync of ${mailboxId} (${query}) has ${ids.length} known IDs. ${lastTimestamp} is the last known message timestamp`, { mailbox })
+			return syncEnvelopes(mailbox.accountId, mailboxId, ids, lastTimestamp, query, init, getters.getPreference('sort-order'))
 				.then((syncData) => {
 					logger.debug(`mailbox ${mailboxId} (${query}) synchronized, ${syncData.newMessages.length} new, ${syncData.changedMessages.length} changed and ${syncData.vanishedMessages.length} vanished messages`)
 
 					const unifiedMailbox = getters.getUnifiedMailbox(mailbox.specialRole)
 
+					commit('addEnvelopes', {
+						envelopes: syncData.newMessages,
+						query,
+					})
+
 					syncData.newMessages.forEach((envelope) => {
-						commit('addEnvelope', {
-							envelope,
-							query,
-						})
 						if (unifiedMailbox) {
 							commit('updateEnvelope', {
 								envelope,
@@ -999,7 +1009,7 @@ export default {
 				console.error('could not toggle message junk state', error)
 
 				if (removeEnvelope) {
-					commit('addEnvelope', envelope)
+					commit('addEnvelopes', [envelope])
 				}
 
 				// Revert change
@@ -1119,7 +1129,7 @@ export default {
 				console.error('could not delete message', err)
 				const envelope = getters.getEnvelope(id)
 				if (envelope) {
-					commit('addEnvelope', { envelope })
+					commit('addEnvelopes', { envelopes: [envelope] })
 				} else {
 					logger.error('could not find envelope', { id })
 				}
@@ -1285,7 +1295,7 @@ export default {
 				await ThreadService.deleteThread(envelope.databaseId)
 				console.debug('thread removed')
 			} catch (e) {
-				commit('addEnvelope', envelope)
+				commit('addEnvelopes', { envelopes: [envelope] })
 				console.error('could not delete thread', e)
 				throw e
 			}
@@ -1299,7 +1309,7 @@ export default {
 				await ThreadService.moveThread(envelope.databaseId, destMailboxId)
 				console.debug('thread removed')
 			} catch (e) {
-				commit('addEnvelope', envelope)
+				commit('addEnvelopes', { envelopes: [envelope] })
 				console.error('could not move thread', e)
 				throw e
 			}
@@ -1311,6 +1321,7 @@ export default {
 				await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp, destMailboxId)
 				console.debug('thread snoozed')
 			} catch (e) {
+				commit('addEnvelopes', { envelopes: [envelope] })
 				console.error('could not snooze thread', e)
 				throw e
 			}

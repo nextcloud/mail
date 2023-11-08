@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Sync;
 
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -111,7 +112,9 @@ class SyncService {
 		Mailbox $mailbox,
 		int $criteria,
 		array $knownIds = null,
+		?int $lastMessageTimestamp,
 		bool $partialOnly,
+		string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST,
 		string $filter = null): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
@@ -133,6 +136,8 @@ class SyncService {
 			$account,
 			$mailbox,
 			$knownIds ?? [],
+			$lastMessageTimestamp,
+			$sortOrder,
 			$query
 		);
 	}
@@ -150,24 +155,26 @@ class SyncService {
 	private function getDatabaseSyncChanges(Account $account,
 		Mailbox $mailbox,
 		array $knownIds,
+		?int $lastMessageTimestamp,
+		string $sortOrder,
 		?SearchQuery $query): Response {
 		if ($knownIds === []) {
 			$newIds = $this->messageMapper->findAllIds($mailbox);
 		} else {
-			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds);
+			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds, $lastMessageTimestamp, $sortOrder);
 		}
-
+		$order = $sortOrder === 'oldest' ? IMailSearch::ORDER_OLDEST_FIRST : IMailSearch::ORDER_NEWEST_FIRST;
 		if ($query !== null) {
 			// Filter new messages to those that also match the current filter
 			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
-			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $newUids);
+			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $newUids);
 		}
 		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
 			$changedUids = $this->messageMapper->findUidsForIds($mailbox, $knownIds);
-			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $changedUids);
+			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $changedUids);
 		} else {
 			$changedIds = $knownIds;
 		}

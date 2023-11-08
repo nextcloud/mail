@@ -34,6 +34,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUser;
 
 interface IMailSearch {
+	public const ORDER_NEWEST_FIRST = 'DESC';
+	public const ORDER_OLDEST_FIRST = 'ASC';
 	/**
 	 * @throws DoesNotExistException
 	 * @throws ClientException
@@ -46,6 +48,7 @@ interface IMailSearch {
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
+	 * @param string $sortOrder
 	 * @param string|null $filter
 	 * @param int|null $cursor
 	 * @param int|null $limit
@@ -57,6 +60,7 @@ interface IMailSearch {
 	 */
 	public function findMessages(Account $account,
 		Mailbox $mailbox,
+		string $sortOrder,
 		?string $filter,
 		?int $cursor,
 		?int $limit): array;

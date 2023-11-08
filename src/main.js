@@ -66,6 +66,12 @@ store.commit('savePreference', {
 	key: 'ncVersion',
 	value: loadState('mail', 'ncVersion'),
 })
+
+store.commit('savePreference', {
+	key: 'sort-order',
+	value: loadState('mail', 'sort-order', 'newest'),
+})
+
 store.commit('savePreference', {
 	key: 'attachment-size-limit',
 	value: Number.parseInt(getPreferenceFromPage('attachment-size-limit'), 10),

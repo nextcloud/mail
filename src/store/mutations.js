@@ -279,34 +279,39 @@ export default {
 		Vue.set(state.newMessage, 'type', 'outbox')
 		Vue.set(state.newMessage.data, 'id', message.id)
 	},
-	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
-		normalizeTags(state, envelope)
-		const mailbox = state.mailboxes[envelope.mailboxId]
-		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
-		Vue.set(envelope, 'accountId', mailbox.accountId)
-
-		const idToDateInt = (id) => state.envelopes[id].dateInt
-		const orderByDateInt = orderBy(idToDateInt, 'desc')
-
-		const listId = normalizedEnvelopeListId(query)
-		const existing = mailbox.envelopeLists[listId] || []
-		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(appendOrReplaceEnvelopeId(state, existing, envelope))))
-
-		if (!addToUnifiedMailboxes) {
+	addEnvelopes(state, { query, envelopes, addToUnifiedMailboxes = true }) {
+		if (envelopes.length === 0) {
 			return
 		}
-		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
-		unifiedAccount.mailboxes
-			.map((mbId) => state.mailboxes[mbId])
-			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
-			.forEach((mailbox) => {
-				const existing = mailbox.envelopeLists[listId] || []
-				Vue.set(
-					mailbox.envelopeLists,
-					listId,
-					uniq(orderByDateInt(appendOrReplaceEnvelopeId(state, existing, envelope)))
-				)
-			})
+
+		const mailbox = state.mailboxes[envelopes[0].mailboxId]
+		const idToDateInt = (id) => state.envelopes[id].dateInt
+
+		const listId = normalizedEnvelopeListId(query)
+		const orderByDateInt = orderBy(idToDateInt, state.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
+
+		envelopes.forEach((envelope) => {
+			const existing = mailbox.envelopeLists[listId] || []
+			normalizeTags(state, envelope)
+			Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
+			Vue.set(envelope, 'accountId', mailbox.accountId)
+			Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(appendOrReplaceEnvelopeId(state, existing, envelope))))
+			if (!addToUnifiedMailboxes) {
+				return
+			}
+			const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
+			unifiedAccount.mailboxes
+				.map((mbId) => state.mailboxes[mbId])
+				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
+				.forEach((mailbox) => {
+					const existing = mailbox.envelopeLists[listId] || []
+					Vue.set(
+						mailbox.envelopeLists,
+						listId,
+						uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+					)
+				})
+		})
 	},
 	updateEnvelope(state, { envelope }) {
 		const existing = state.envelopes[envelope.databaseId]
@@ -410,6 +415,11 @@ export default {
 	},
 	removeEnvelopes(state, { id }) {
 		Vue.set(state.mailboxes[id], 'envelopeLists', [])
+	},
+	removeAllEnvelopes(state) {
+		Object.keys(state.mailboxes).forEach(id => {
+			Vue.set(state.mailboxes[id], 'envelopeLists', [])
+		  })
 	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)

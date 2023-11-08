@@ -94,6 +94,7 @@ class MailSearchTest extends TestCase {
 		$this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			null,
 			null,
 			null
@@ -109,6 +110,7 @@ class MailSearchTest extends TestCase {
 		$this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			null,
 			null,
 			null
@@ -128,6 +130,7 @@ class MailSearchTest extends TestCase {
 		$messages = $this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			null,
 			null,
 			null
@@ -166,6 +169,7 @@ class MailSearchTest extends TestCase {
 		$messages = $this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			'my search',
 			null,
 			null
@@ -207,6 +211,7 @@ class MailSearchTest extends TestCase {
 		$messages = $this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			'my search',
 			null,
 			null
