@@ -258,6 +258,7 @@ OC.L10N.register(
     "Signature …" : "Handtekening ...",
     "Save signature" : "Handtekening opslaan",
     "Place signature above quoted text" : "Plaats handtekening boven de aangehaalde tekst",
+    "Delete tag" : "Verwijderen tag",
     "Saving new tag name …" : "Sla nieuw tag op ...",
     "An error occurred, unable to rename the tag." : "Er is een fout opgetreden, kan tag niet hernoemen",
     "Add default tags" : "Voeg standaard tags toe",

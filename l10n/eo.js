@@ -128,6 +128,7 @@ OC.L10N.register(
     "Custom" : "Propra",
     "Signature …" : "Subskribo …",
     "Save signature" : "Konservi subskribon",
+    "Delete tag" : "Forigi etikedon",
     "Tag already exists" : "La etikedo jam ekzistas",
     "Not found" : "Ne trovita",
     "Remove" : "Forigi",

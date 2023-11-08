@@ -290,6 +290,7 @@ OC.L10N.register(
     "Sieve User" : "Χρήστης Sieve",
     "Signature …" : "Υπογραφή...",
     "Save signature" : "Αποθήκευση υπογραφής",
+    "Delete tag" : "Διαγραφή ετικέτας",
     "Saving new tag name …" : "Αποθήκευση νέου ονόματος ετικέτας…",
     "An error occurred, unable to rename the tag." : "Παρουσιάστηκε σφάλμα, δεν ήταν δυνατή η μετονομασία της ετικέτας.",
     "Add default tags" : "Προσθήκη προεπιλεγμένων ετικετών",

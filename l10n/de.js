@@ -388,6 +388,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Deine Signatur ist größer als 2 MB. Dies kann die Leistung deines Editors beeinträchtigen.",
     "Save signature" : "Signatur speichern",
     "Place signature above quoted text" : "Signatur über dem zitierten Text platzieren",
+    "Delete tag" : "Schlagwort löschen",
     "Saving new tag name …" : "Speichere neues Schlagwort …",
     "Set tag" : "Schlagwort setzen",
     "Unset tag" : "Schlagwort entfernen",

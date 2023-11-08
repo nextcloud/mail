@@ -393,6 +393,7 @@ OC.L10N.register(
     "Save signature" : "Сохранить подпись",
     "Place signature above quoted text" : "Размещать подпись над цитируемым текстом",
     "Edit name or color" : "Отредактируйте название или цвет",
+    "Delete tag" : "Удалить метку",
     "Saving new tag name …" : "Сохранение нового названия метки…",
     "Set tag" : "Установить тег",
     "Unset tag" : "Неустановленный тег",

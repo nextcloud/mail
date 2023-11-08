@@ -420,6 +420,7 @@ OC.L10N.register(
     "Save signature" : "Salvar assinatura",
     "Place signature above quoted text" : "Coloque a assinatura acima do texto citado ",
     "Edit name or color" : "Editar nome ou cor",
+    "Delete tag" : "Excluir tag",
     "Saving new tag name …" : "Salvando novo nome de etiquetas…",
     "Set tag" : "Definir etiqueta",
     "Unset tag" : "Etiqueta não definida",

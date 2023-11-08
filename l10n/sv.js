@@ -255,6 +255,7 @@ OC.L10N.register(
     "Signature …" : "Signatur …",
     "Save signature" : "Spara signatur",
     "Place signature above quoted text" : "Placera signaturen ovanför citerad text",
+    "Delete tag" : "Radera tagg",
     "An error occurred, unable to rename the tag." : "Ett fel uppstod, kunde inte byta taggens namn.",
     "Add default tags" : "Lägg till standardtaggar",
     "Add tag" : "Lägg till tagg",

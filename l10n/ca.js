@@ -407,6 +407,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "La teva signatura supera els 2 MB. Això pot afectar el rendiment del vostre editor.",
     "Save signature" : "Desa la signatura",
     "Place signature above quoted text" : "Col·loqueu la signatura a sobre del text citat",
+    "Delete tag" : "Suprimeix etiqueta",
     "Saving new tag name …" : "S'està desant el nou nom de l'etiqueta …",
     "Set tag" : "Definiu etiqueta",
     "Unset tag" : "Desactiveu etiqueta",

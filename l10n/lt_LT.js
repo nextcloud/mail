@@ -265,6 +265,7 @@ OC.L10N.register(
     "Signature …" : "Parašas…",
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Jūsų parašas yra didesnis nei 2 MB. Tai gali paveikti redaktoriaus našumą.",
     "Save signature" : "Įrašyti parašą",
+    "Delete tag" : "Ištrinti žymę",
     "An error occurred, unable to rename the tag." : "Įvyko klaida, nepavyko pervadinti žymės.",
     "Add tag" : "Pridėti žymę",
     "Saving tag …" : "Įrašoma žymė…",

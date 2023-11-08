@@ -270,6 +270,7 @@ OC.L10N.register(
     "Signature …" : "Firma...",
     "Save signature" : "Salva firma",
     "Place signature above quoted text" : "Posiziona la firma sopra il testo citato",
+    "Delete tag" : "Elimina etichetta",
     "Saving new tag name …" : "Salvataggio nuovo nome della etichetta...",
     "An error occurred, unable to rename the tag." : "Si è verificato un errore, impossibile rinominare l'etichetta.",
     "Add default tags" : "Aggiungi etichette predefiniti",

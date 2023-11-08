@@ -427,6 +427,7 @@ OC.L10N.register(
     "Save signature" : "İmzayı kaydet",
     "Place signature above quoted text" : "İmza alıntılanan metnin üzerine yerleştirilsin",
     "Edit name or color" : "Adı ya da rengi düzenle",
+    "Delete tag" : "Etiketi sil",
     "Saving new tag name …" : "Yeni etiket adı kaydediliyor …",
     "Set tag" : "Etiket koy",
     "Unset tag" : "Etiketi kaldır",

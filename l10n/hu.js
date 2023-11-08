@@ -419,6 +419,7 @@ OC.L10N.register(
     "Save signature" : "Aláírás mentése",
     "Place signature above quoted text" : "Az aláírás az idézett szöveg fölé helyezése",
     "Edit name or color" : "Név vagy szín szerkesztése",
+    "Delete tag" : "Címke törlése",
     "Saving new tag name …" : "Új címkenév mentése…",
     "Set tag" : "Címke beállítása",
     "Unset tag" : "Címke eltávolítása",

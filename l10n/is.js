@@ -167,6 +167,7 @@ OC.L10N.register(
     "Custom" : "Sérsniðið",
     "Signature …" : "Undirskrift …",
     "Save signature" : "Vista undirskrift",
+    "Delete tag" : "Eyða merki",
     "Add tag" : "Bæta við merki",
     "Tag already exists" : "Merki er þegar til",
     "Not found" : "Fannst ekki",

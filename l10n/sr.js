@@ -427,6 +427,7 @@ OC.L10N.register(
     "Save signature" : "Сачувај потпис",
     "Place signature above quoted text" : "Постави потпис изнад цитираног текста",
     "Edit name or color" : "Уреди назив или боју",
+    "Delete tag" : "Обриши ознаку",
     "Saving new tag name …" : "Чување новог назива ознаке ...",
     "Set tag" : "Постави ознаку",
     "Unset tag" : "Уклони ознаку",

@@ -359,6 +359,7 @@ OC.L10N.register(
     "Save signature" : "Uložiť podpis",
     "Place signature above quoted text" : "Umiestniť podpis nad citovaný text",
     "Edit name or color" : "Upraviť názov farby",
+    "Delete tag" : "Zmazať štítok",
     "Saving new tag name …" : "Ukladám nový názov štítku ...",
     "An error occurred, unable to rename the tag." : "Vyskytla sa chyba, nie je možné premenovať štítok.",
     "Add default tags" : "Pridať predvolené štítky",

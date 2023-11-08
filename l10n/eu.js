@@ -407,6 +407,7 @@ OC.L10N.register(
     "Save signature" : "Gorde sinadura",
     "Place signature above quoted text" : "Jarri sinadura aipatutako testuaren gainean",
     "Edit name or color" : "Editatu izena edo kolorea",
+    "Delete tag" : "Ezabatu etiketa",
     "Saving new tag name …" : "Etiketa-izen berria gordetzen ...",
     "Set tag" : "Ezarri etiketa",
     "Unset tag" : "Ezarri gabeko etiketa",

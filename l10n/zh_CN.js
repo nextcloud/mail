@@ -386,6 +386,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "您的签名大于 2 MB。这可能会影响编辑器的性能。",
     "Save signature" : "保存签名",
     "Place signature above quoted text" : "把签名放在引用文本上方",
+    "Delete tag" : "删除标签",
     "Saving new tag name …" : "正在保存新的标签名称 ...",
     "Set tag" : "设置标签",
     "Unset tag" : "取消设置标签",

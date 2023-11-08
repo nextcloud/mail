@@ -349,6 +349,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Allekirjoituksesi koko on yli kaksi megatavua. Tämä saattaa vaikuttaa muokkaimen suorituskykyyn.",
     "Save signature" : "Tallenna allekirjoitus",
     "Place signature above quoted text" : "Aseta allekirjoitus lainatun tekstin yläpuolelle",
+    "Delete tag" : "Poista tunniste",
     "Saving new tag name …" : "Tallennetaan uuden tunnisteen nimeä…",
     "An error occurred, unable to rename the tag." : "Tapahtui virhe, tunnistetta ei voitu nimetä uudelleen.",
     "Add default tags" : "Lisää oletustunnisteet",
