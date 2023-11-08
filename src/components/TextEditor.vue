@@ -194,11 +194,6 @@ export default {
 			itemElement.classList.add('custom-item')
 			itemElement.id = `mention-list-item-id-${item.colons}`
 			itemElement.textContent = `${item.native} `
-			itemElement.style.width = '100%'
-			itemElement.style.borderRadius = '8px'
-			itemElement.style.padding = '4px 8px'
-			itemElement.style.display = 'block'
-
 			const usernameElement = document.createElement('span')
 
 			usernameElement.classList.add('custom-item-username')
@@ -211,15 +206,8 @@ export default {
 		customLinkRenderer(item) {
 			const itemElement = document.createElement('span')
 			itemElement.classList.add('link-container')
-			itemElement.style.width = '100%'
-			itemElement.style.borderRadius = '8px'
-			itemElement.style.padding = '4px 8px'
-			itemElement.style.display = 'block'
 
 			const icon = document.createElement('img')
-			icon.style.width = '20px'
-			icon.style.marginRight = '1em'
-			icon.style.filter = 'var(--background-invert-if-dark)'
 			icon.classList.add('link-icon')
 			icon.src = `${item.icon_url} `
 
@@ -327,10 +315,6 @@ export default {
 	cursor: text;
 	margin: 0 !important;
 }
-
-.link-title {
-	color: red;
-}
 </style>
 
 <style>
@@ -338,12 +322,42 @@ export default {
 Overwrite the default z-index for CKEditor
 https://github.com/ckeditor/ckeditor5/issues/1142
  */
+ .ck .ck-reset {
+	background: var(--color-main-background) !important;
+ }
+ .custom-item-username {
+	color: var(--color-main-text) !important;
+ }
+ .link-title{
+	color: var(--color-main-text) !important;
+ }
+ .link-icon{
+	width : 20px !important;
+	margin-right : 1em !important;
+	filter : var(--background-invert-if-dark);
+ }
+ .custom-item {
+	width : 100% !important;
+	border-radius : 8px !important;
+	padding : 4px 8px !important;
+	display :block;
+	background:var(--color-main-background)!important;
+ }
+ .custom-item:hover {
+	background:var(--color-primary-element-light)!important;
+ }
+ .link-container{
+	border-radius :8px !important;
+	padding :4px 8px !important;
+	display : block;
+	width : 100% !important;
+	background:var(--color-main-background)!important;
+ }
+ .link-container:hover {
+	background:var(--color-primary-element-light)!important;
+ }
 :root {
 	--ck-z-default: 10000;
-	--ck-color-list-button-on-background: var(--color-primary-element-light);
-	--ck-color-list-background: var(--color-main-background);
-	--ck-color-list-button-hover-background: var(--color-primary-element-light);
 	--ck-balloon-border-width:  0;
-	--ck-color-text: var(--color-text-primary);
 	}
 </style>
