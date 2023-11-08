@@ -378,7 +378,7 @@ export default {
 			}).length > 0
 		},
 		searchBody() {
-			return this.$store.getters.getAccount(this.accountId)?.searchBody
+			return this.$store.getters.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.$store.getters.getPreference('search-priority-body', 'false') === 'true')
 		},
 		filterData() {
 			return {
