@@ -217,7 +217,8 @@ class ProvisioningMiddlewareTest extends TestCase {
 			->method('updatePassword')
 			->with(
 				$user,
-				'123456'
+				'123456',
+				$configs
 			);
 
 		$this->middleware->beforeController(

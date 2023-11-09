@@ -489,6 +489,9 @@ export default {
 	setGoogleOauthUrl(state, url) {
 		state.googleOauthUrl = url
 	},
+	setMasterPasswordEnabled(state, value) {
+		state.masterPasswordEnabled = value
+	},
 	setMicrosoftOauthUrl(state, url) {
 		state.microsoftOauthUrl = url
 	},

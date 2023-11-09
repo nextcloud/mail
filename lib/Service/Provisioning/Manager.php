@@ -316,9 +316,23 @@ class Manager {
 		}
 	}
 
-	public function updatePassword(IUser $user, string $password): void {
+	/**
+	 * @param Provisioning[] $provisionings
+	 */
+	public function updatePassword(IUser $user, string $password, array $provisionings): void {
 		try {
 			$account = $this->mailAccountMapper->findProvisionedAccount($user);
+
+			$provisioning = $this->findMatchingConfig($provisionings, $user);
+			if ($provisioning === null) {
+				return;
+			}
+			$masterPassword = $provisioning->getMasterPassword();
+			$masterPasswordEnabled = $provisioning->getMasterPasswordEnabled();
+			if ($masterPasswordEnabled && $masterPassword !== null) {
+				$password = $masterPassword;
+				$this->logger->debug('Password set to master password for ' . $user->getUID());
+			}
 
 			if (!empty($account->getInboundPassword())
 				&& $this->crypto->decrypt($account->getInboundPassword()) === $password

@@ -199,6 +199,32 @@
 				</div>
 				<div class="settings-group">
 					<div class="group-title">
+						{{ t('mail', 'Master password') }}
+					</div>
+					<div class="group-inputs">
+						<div>
+							<input
+								:id="'mail-master-password-enabled' + setting.id"
+								v-model="masterPasswordEnabled"
+								type="checkbox"
+								class="checkbox">
+							<label :for="'mail-master-password-enabled' + setting.id">
+								{{ t('mail', 'Use master password') }}
+							</label>
+						</div>
+						<div>
+							<input
+								id="mail-master-password"
+								v-model="masterPassword"
+								:disabled="loading"
+								type="password"
+								required>
+							<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+						</div>
+					</div>
+				</div>
+				<div class="settings-group">
+					<div class="group-title">
 						{{ t('mail', 'Sieve') }}
 					</div>
 					<div class="group-inputs">
@@ -411,6 +437,8 @@ export default {
 			smtpPort: this.setting.smtpPort || 587,
 			smtpUser: this.setting.smtpUser || '%USERID%domain.com',
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
+			masterPasswordEnabled: this.setting.masterPasswordEnabled || '',
+			masterPassword: this.setting.masterPassword || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
 			sievePort: this.setting.sievePort || '',
@@ -443,6 +471,8 @@ export default {
 				smtpHost: this.smtpHost,
 				smtpPort: this.smtpPort,
 				smtpSslMode: this.smtpSslMode,
+				masterPasswordEnabled: this.masterPasswordEnabled,
+				masterPassword: this.masterPassword,
 				sieveEnabled: this.sieveEnabled,
 				sieveUser: this.sieveUser,
 				sieveHost: this.sieveHost,
@@ -474,6 +504,8 @@ export default {
 					smtpHost: this.smtpHost,
 					smtpPort: this.smtpPort,
 					smtpSslMode: this.smtpSslMode,
+					masterPasswordEnabled: this.masterPasswordEnabled,
+					masterPassword: this.masterPassword,
 					sieveEnabled: this.sieveEnabled,
 					sieveUser: this.sieveUser,
 					sieveHost: this.sieveHost,
