@@ -796,18 +796,32 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
+		$textOrs = [];
 		if (!empty($query->getSubjects())) {
-			$select->andWhere(
-				$qb->expr()->orX(
-					...array_map(function (string $subject) use ($qb) {
-						return $qb->expr()->iLike(
-							'm.subject',
-							$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
-							IQueryBuilder::PARAM_STR
-						);
-					}, $query->getSubjects())
-				)
+			$textOrs[] = $qb->expr()->orX(
+				...array_map(function (string $subject) use ($qb) {
+					return $qb->expr()->iLike(
+						'm.subject',
+						$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
+						IQueryBuilder::PARAM_STR
+					);
+				}, $query->getSubjects())
 			);
+		}
+		// createParameter
+		if ($uids !== null) {
+			// In the case of body+subject search we need a combination of both results,
+			// thus the orWhere in every other case andWhere should do the job.
+			if(!empty($query->getSubjects())) {
+				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter('uids'));
+			} else {
+				$select->andWhere(
+					$qb->expr()->in('m.uid', $qb->createParameter('uids'))
+				);
+			}
+		}
+		if (!empty($textOrs)) {
+			$select->andWhere($qb->expr()->orX(...$textOrs));
 		}
 
 		if (!empty($query->getStart())) {
@@ -839,20 +853,6 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-		// createParameter
-		if ($uids !== null) {
-			// In the case of body+subject search we need a combination of both results,
-			// thus the orWhere in every other case andWhere should do the job.
-			if(!empty($query->getSubjects())) {
-				$select->orWhere(
-					$qb->expr()->in('m.uid', $qb->createParameter('uids'))
-				);
-			} else {
-				$select->andWhere(
-					$qb->expr()->in('m.uid', $qb->createParameter('uids'))
-				);
-			}
-		}
 		foreach ($query->getFlags() as $flag) {
 			$select->andWhere($qb->expr()->eq('m.' . $this->flagToColumnName($flag), $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
 		}
