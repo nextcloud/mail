@@ -5,11 +5,14 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Emoji picker via : symbol
 - Smart picker integration via / symbol
-- Searching message bodies in advanced search
+- Searching message bodies in advanced search and priority inbox (opt-in)
+- Change sort order
 - Warning about missing attachments
+- Delete tags
 - PHP8.3 support
 - Performance improvements through caching
 - Performance improvements of the dashboard widgets
+- Master password for provisioned accounts
 ### Changed
 - Updated and new translations
 - App store screenshot
@@ -23,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Recipient searches in advanced search (to vs cc vs bcc)
 - Internal rate-limiting for wrong passwords to prevent IMAP locking
 - Double mailbox sync when navigating across two accounts
+- Duplicated tags
 
 ## 3.4.0-rc.1 - unreleased
 ### Added
