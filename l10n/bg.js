@@ -377,6 +377,7 @@ OC.L10N.register(
     "Your signature is larger than 2 MB. This may affect the performance of your editor." : "Подписът ви е по-голям от 2 MB. Това може да се отрази на работата на  вашия редактор.",
     "Save signature" : "Запис на подпис",
     "Place signature above quoted text" : "Поставяне на подпис над цитирания текст",
+    "Delete tag" : "Изтрий таг",
     "Saving new tag name …" : "Запазва се името на нов етикет …",
     "Set tag" : "Задаване на етикет",
     "Unset tag" : "Отмяна на етикет",
