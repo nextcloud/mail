@@ -48,7 +48,7 @@
 					</template>
 					{{ t('mail', 'Add tag') }}
 				</NcButton>
-				<ActionInput v-if="editing" @submit="createTag">
+				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
 					<template #icon>
 						<IconTag :size="20" />
 					</template>
@@ -163,6 +163,10 @@ export default {
 		},
 		async createTag(event) {
 			this.editing = true
+			if (this.showSaving) {
+				return
+			}
+
 			const displayName = event.target.querySelector('input[type=text]').value
 			if (displayName.toLowerCase() in hiddenTags) {
 				showError(this.t('mail', 'Tag name is a hidden system tag'))
@@ -171,6 +175,9 @@ export default {
 			if (this.$store.getters.getTags.some(tag => tag.displayName === displayName)) {
 				showError(this.t('mail', 'Tag already exists'))
 				return
+			}
+			if (displayName !== null && displayName !== '') {
+				this.showSaving = true
 			}
 			try {
 				await this.$store.dispatch('createTag', {
