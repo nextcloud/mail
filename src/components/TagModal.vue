@@ -163,7 +163,9 @@ export default {
 		},
 		async createTag(event) {
 			this.editing = true
-			if (this.showSaving) return
+			if (this.showSaving) {
+				return
+			}
 
 			const displayName = event.target.querySelector('input[type=text]').value
 			if (displayName.toLowerCase() in hiddenTags) {
