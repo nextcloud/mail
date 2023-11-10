@@ -73,6 +73,8 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Χρησιμοποιήστε Gravatar και favicon avatars",
     "Register as application for mail links" : "Εγγραφή ως εφαρμογή για συνδέσμους αλληλογραφίας",
     "Show keyboard shortcuts" : "Εμφάνιση συντομεύσεων πληκτρολογίου",
+    "Newest" : "Νεότερο",
+    "Oldest" : "Παλαιότερο",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Να επιτρέπεται στην εφαρμογή να συλλέγει δεδομένα σχετικά με την δραστηριότητά σας. Με βάση αυτά τα δεδομένα, η εφαρμογή θα προσαρμοστεί στις προτιμήσεις σας. Τα δεδομένα θα αποθηκευτούν μόνο τοπικά.",
     "Put my text to the bottom of a reply instead of on top of it." : "Το κείμενό μου στο κάτω μέρος μιας απάντησης αντί στο επάνω μέρος της.",
     "Automatically classify importance of new email" : "Αυτόματη ταξινόμηση σπουδαιότητας νέων email",

@@ -79,6 +79,8 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Bruk Gravatar- og favikon-avatarer",
     "Register as application for mail links" : "Registrer som applikasjon for e-postlenker",
     "Show keyboard shortcuts" : "Vis tastatursnarveier",
+    "Newest" : "Nyeste",
+    "Oldest" : "Eldst",
     "Looking for a way to encrypt your emails?" : "Leter du etter en måte å kryptere e-postene dine på?",
     "Install Mailvelope browser extension here" : "Installer Mailvelope nettleserutvidelse her",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Tillat at appen samler inn data om interaksjonene dine. Basert på disse dataene vil appen tilpasse seg dine preferanser. Dataene vil kun bli lagret lokalt.",

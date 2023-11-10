@@ -105,6 +105,8 @@ OC.L10N.register(
     "Register as application for mail links" : "E-posta bağlantıları uygulaması olarak ata",
     "Show keyboard shortcuts" : "Kısayol tuşlarını görüntüle",
     "Manage S/MIME certificates" : "S/MIME sertifikaları yönetimi",
+    "Newest" : "En yeni",
+    "Oldest" : "En eski",
     "Looking for a way to encrypt your emails?" : "E-postalarınızı şifreleyecek bir yöntem mi arıyorsunuz?",
     "Install Mailvelope browser extension here" : "Buradan Mailvelope tarayıcı uzantısını kurun",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Uygulamanın etkileşimleriniz ile ilgili veri toplamasına izin verin. Uygulama bu verilere göre ayarlarınızı değiştirir. Veriler yalnızca yerel olarak saklanır ve başka bir yere aktarılmaz.",

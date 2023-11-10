@@ -84,6 +84,8 @@
     "Register as application for mail links" : "Rekisteröi sovellukseksi mail-linkeille",
     "Show keyboard shortcuts" : "Näytä pikanäppäimet",
     "Manage S/MIME certificates" : "Hallitse S/MIME-varmenteita",
+    "Newest" : "Uusimmat",
+    "Oldest" : "Vanhimmat",
     "Looking for a way to encrypt your emails?" : "Etsitkö tapaa salata sähköpostisi?",
     "Install Mailvelope browser extension here" : "Asenna Mailvelope-selainlaajennus täältä",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Salli sovelluksen kerätä tietoa vuorovaikutuksestasi. Tämän tiedon perusteella sovellus sopeutuu mieltymyksiisi. Nämä tiedot talletetaan vain paikallisesti.",

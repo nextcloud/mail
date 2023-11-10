@@ -103,6 +103,8 @@
     "Register as application for mail links" : "Register as application for mail links",
     "Show keyboard shortcuts" : "Show keyboard shortcuts",
     "Manage S/MIME certificates" : "Manage S/MIME certificates",
+    "Newest" : "Newest",
+    "Oldest" : "Oldest",
     "Looking for a way to encrypt your emails?" : "Looking for a way to encrypt your emails?",
     "Install Mailvelope browser extension here" : "Install Mailvelope browser extension here",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.",

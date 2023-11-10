@@ -75,6 +75,8 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Naudoti Gravatar ir svetainių piktogramų avatarus",
     "Register as application for mail links" : "Registruoti kaip pašto nuorodų programėlę",
     "Show keyboard shortcuts" : "Rodyti sparčiuosius klavišus",
+    "Newest" : "Naujausios",
+    "Oldest" : "Seniausios",
     "Looking for a way to encrypt your emails?" : "Ieškote būdo šifruoti el. laiškus?",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Leisti programėlei rinkti duomenis apie jūsų sąveikas. Remiantis šiais duomenimis, programėlė prisitaikys prie jūsų nuostatų. Duomenys bus laikomi tik vietoje.",
     "Could not update preference" : "Nepavyko atnaujinti nuostatos",

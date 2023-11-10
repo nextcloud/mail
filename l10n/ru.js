@@ -102,6 +102,8 @@ OC.L10N.register(
     "Register as application for mail links" : "Зарегистрировать в качестве приложения для обработки почтовых ссылок",
     "Show keyboard shortcuts" : "Показать справку о комбинациях клавиш",
     "Manage S/MIME certificates" : "Управление сертификатами S/MIME",
+    "Newest" : "Более новые",
+    "Oldest" : "Более старые",
     "Looking for a way to encrypt your emails?" : "Необходимо использовать шифрование электронных писем?",
     "Install Mailvelope browser extension here" : "Установите расширение для браузера Mailvelope здесь",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Разрешить приложению собирать данные о взаимодействии.  Основываясь на этих данных, приложение адаптируется к вашим предпочтениям. Данные будут храниться только локально.",

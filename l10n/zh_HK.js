@@ -105,6 +105,8 @@ OC.L10N.register(
     "Register as application for mail links" : "註冊為處理郵件連結的應用程式",
     "Show keyboard shortcuts" : "顯示鍵盤快捷鍵",
     "Manage S/MIME certificates" : "管理 S/MIME 證書",
+    "Newest" : "最新",
+    "Oldest" : "最舊",
     "Looking for a way to encrypt your emails?" : "正在尋找加密電子郵件的方法嗎？",
     "Install Mailvelope browser extension here" : "在此安裝 Mailvelope 瀏覽器擴充套件",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "允許應用程式蒐集關於您互動的資料。以此資料為基礎，應用程式將會適應您的偏好設定。資料將只會儲存在本機。",
