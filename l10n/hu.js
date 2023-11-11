@@ -550,6 +550,8 @@ OC.L10N.register(
     "Host" : "Kiszolgáló",
     "Port" : "Port",
     "SMTP" : "SMTP",
+    "Master password" : "Mesterjelszó",
+    "Use master password" : "Mesterjelszó használata",
     "Sieve" : "Levélszűrő",
     "Enable sieve integration" : "Levélszűrő integráció engedélyezése",
     "LDAP aliases integration" : "LDAP álnevek integrációja",

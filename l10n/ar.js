@@ -566,6 +566,8 @@ OC.L10N.register(
     "Host" : "المضيف",
     "Port" : "المنفذ",
     "SMTP" : "SMTP",
+    "Master password" : "كلمة المرور الرئيسية",
+    "Use master password" : "إستعمِل كلمة المرور الرئيسية",
     "Sieve" : "تطبيق \"الغربال\" Sieve ",
     "Enable sieve integration" : "تمكين مُكاملة تطبيق \"الغربال\" Sieve ",
     "LDAP aliases integration" : "مُكاملة الأسماء المستعارة aliases لـ LDAP",

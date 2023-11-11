@@ -566,6 +566,8 @@ OC.L10N.register(
     "Host" : "Домаћин",
     "Port" : "Порт",
     "SMTP" : "SMTP",
+    "Master password" : "Мастер лозинка",
+    "Use master password" : "Користи се мастер лозинка",
     "Sieve" : "Сито",
     "Enable sieve integration" : "Укључи интеграцију сита",
     "LDAP aliases integration" : "Интеграција LDAP алијаса",

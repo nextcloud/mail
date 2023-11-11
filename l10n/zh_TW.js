@@ -566,6 +566,8 @@ OC.L10N.register(
     "Host" : "主機",
     "Port" : "連接埠",
     "SMTP" : "SMTP",
+    "Master password" : "主控密碼",
+    "Use master password" : "使用主控密碼",
     "Sieve" : "過濾",
     "Enable sieve integration" : "啟用過濾整合",
     "LDAP aliases integration" : "LDAP 別名整合",

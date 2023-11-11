@@ -566,6 +566,8 @@ OC.L10N.register(
     "Host" : "Host",
     "Port" : "Port",
     "SMTP" : "SMTP",
+    "Master password" : "Hauptpasswort",
+    "Use master password" : "Hauptpasswort benutzen",
     "Sieve" : "Sieve",
     "Enable sieve integration" : "Sieve-Einbindung aktivieren",
     "LDAP aliases integration" : "LDAP-Alias-Integration",
