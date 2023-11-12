@@ -228,6 +228,7 @@ OC.L10N.register(
     "Send anyway" : "Skicka ändå",
     "Edit message" : "Redigera meddelande",
     "Draft" : "Utkast",
+    "First day" : "Första dagen",
     "Message" : "Meddelande",
     "Oh Snap!" : "Hoppsan!",
     "Could not open outbox" : "Kunde inte öppna utkorgen",
