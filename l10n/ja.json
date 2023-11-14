@@ -190,6 +190,7 @@
     "Retry" : "再試行",
     "Uploading attachments …" : "添付ファイルをアップロード",
     "Sending …" : "送信中 …",
+    "First day" : "初日",
     "Message" : "メッセージ",
     "Oh Snap!" : "おっと！",
     "Could not open outbox" : "送信トレイを開けませんでした",
