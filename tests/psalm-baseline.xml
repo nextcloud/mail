@@ -2,6 +2,7 @@
 <files psalm-version="5.14.1@b9d355e0829c397b9b3b47d0c0ed042a8a70284d">
   <file src="lib/AppInfo/Application.php">
     <MissingDependency>
+      <code>FilteringProvider</code>
       <code>ImportantMailWidgetV2</code>
       <code>UnreadMailWidgetV2</code>
     </MissingDependency>

@@ -70,6 +70,7 @@ use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Notification\Notifier;
+use OCA\Mail\Search\FilteringProvider;
 use OCA\Mail\Search\Provider;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
@@ -86,9 +87,11 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Dashboard\IAPIWidgetV2;
 use OCP\IServerContainer;
+use OCP\Search\IFilteringProvider;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
 use Psr\Container\ContainerInterface;
+use function interface_exists;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -150,7 +153,11 @@ class Application extends App implements IBootstrap {
 			$context->registerDashboardWidget(UnreadMailWidget::class);
 		}
 
-		$context->registerSearchProvider(Provider::class);
+		if (interface_exists(IFilteringProvider::class)) {
+			$context->registerSearchProvider(FilteringProvider::class);
+		} else {
+			$context->registerSearchProvider(Provider::class);
+		}
 
 		$context->registerNotifierService(Notifier::class);
 
