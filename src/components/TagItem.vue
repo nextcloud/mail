@@ -91,7 +91,6 @@ export default {
 	},
 	methods: {
 		deleteTag() {
-			this.removeTag(this.tag.imapLabel)
 			this.$emit('delete-tag', this.tag)
 		},
 		async updateColor(newColor) {

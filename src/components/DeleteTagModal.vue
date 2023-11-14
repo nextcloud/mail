@@ -39,6 +39,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+		envelopes: {
+			// The envelopes on which this menu will act
+			required: true,
+			type: Array,
+		},
 		accountId: {
 			type: Number,
 			required: true,
@@ -53,9 +58,15 @@ export default {
 		onClose() {
 			this.$emit('close')
 		},
+		removeTag(imapLabel) {
+			this.envelopes.forEach((envelope) => {
+				this.$store.dispatch('removeEnvelopeTag', { envelope, imapLabel })
+			})
+		},
 		async deleteTag() {
 			this.deleting = true
 			try {
+				this.removeTag(this.tag.imapLabel)
 				await this.$store.dispatch('deleteTag', {
 					tag: this.tag,
 					accountId: this.accountId,
