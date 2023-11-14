@@ -66,7 +66,7 @@ jobs:
         run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
       - name: Set up php ${{ env.PHP_VERSION }}
-        uses: shivammathur/setup-php@7fdd3ece872ec7ec4c098ae5ab7637d5e0a96067 # v2
+        uses: shivammathur/setup-php@a36e1e52ff4a1c9e9c9be31551ee4712a6cb6bd0 # v2
         with:
           php-version: ${{ env.PHP_VERSION }}
           coverage: none
