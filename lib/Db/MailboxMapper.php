@@ -92,7 +92,7 @@ class MailboxMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())),
-				$qb->expr()->eq('name', $qb->createNamedParameter($name))
+				$qb->expr()->eq('name_hash', $qb->createNamedParameter(md5($name)))
 			);
 
 		try {

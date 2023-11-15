@@ -254,6 +254,7 @@ class MailboxSync {
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$mailbox->setMyAcls($folder->getMyAcls());
 		$mailbox->setShared($this->isMailboxShared($namespaces, $mailbox));
+		$mailbox->setNameHash(md5($folder->getMailbox()));
 		return $this->mailboxMapper->insert($mailbox);
 	}
 
