@@ -23,6 +23,7 @@
 <template>
 	<DeleteTagModal v-if="deleteTagModal"
 		:tag="tagToDelete"
+		:envelopes="envelopes"
 		:account-id="envelopes[0].accountId"
 		@close="closeDeleteModal" />
 	<Modal v-else size="large" @close="onClose">
