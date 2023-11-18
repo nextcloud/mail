@@ -243,6 +243,8 @@ OC.L10N.register(
     "Close" : "Stäng",
     "Search parameters" : "Sökparametrar",
     "Body" : "Textyta",
+    "Pick a start date" : "Välj ett startdatum",
+    "Pick an end date" : "Välj ett slutdatum",
     "Tags" : "Taggar",
     "Select tags" : "Välj taggar",
     "Clear" : "Rensa",
