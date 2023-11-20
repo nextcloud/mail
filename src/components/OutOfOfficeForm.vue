@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<!-- Wait until sieve script has been fetched before showing form. -->
-	<form v-if="sieveScriptData" class="form" @submit.prevent="submit">
+	<form class="form" @submit.prevent="submit">
 		<div class="form__multi-row">
 			<fieldset class="form__fieldset">
 				<input
@@ -30,8 +29,8 @@
 					class="radio"
 					type="radio"
 					name="enabled"
-					:checked="!enabled"
-					@change="enabled = false">
+					:checked="enabled === OOO_DISABLED"
+					@change="enabled = OOO_DISABLED">
 				<label for="ooo-disabled">{{ t('mail', 'Autoresponder off') }}</label>
 			</fieldset>
 
@@ -41,60 +40,82 @@
 					class="radio"
 					type="radio"
 					name="enabled"
-					:checked="enabled"
-					@change="enabled = true">
+					:checked="enabled === OOO_ENABLED"
+					@change="enabled = OOO_ENABLED">
 				<label for="ooo-enabled">{{ t('mail', 'Autoresponder on') }}</label>
 			</fieldset>
-		</div>
 
-		<div class="form__multi-row">
-			<fieldset class="form__fieldset">
-				<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
-				<DatetimePicker
-					id="ooo-first-day"
-					v-model="firstDay"
-					:disabled="!enabled" />
-			</fieldset>
-
-			<fieldset class="form__fieldset">
-				<div class="form__fieldset__label">
-					<input
-						id="ooo-enable-last-day"
-						v-model="enableLastDay"
-						type="checkbox"
-						:disabled="!enabled">
-					<label for="ooo-enable-last-day">
-						{{ t('mail', 'Last day (optional)') }}
-					</label>
-				</div>
-				<DatetimePicker
-					id="ooo-last-day"
-					v-model="lastDay"
-					:disabled="!enabled || !enableLastDay" />
+			<fieldset v-if="hasPersonalAbsenceSettings" class="form__fieldset">
+				<input
+					id="ooo-follow-system"
+					class="radio"
+					type="radio"
+					name="enabled"
+					:checked="enabled === OOO_FOLLOW_SYSTEM"
+					@change="enabled = OOO_FOLLOW_SYSTEM">
+				<label for="ooo-follow-system">{{ t('mail', 'Autoresponder follows system settings') }}</label>
 			</fieldset>
 		</div>
 
-		<fieldset class="form__fieldset">
-			<label for="ooo-subject">{{ t('mail', 'Subject') }}</label>
-			<input
-				id="ooo-subject"
-				v-model="subject"
-				type="text"
-				:disabled="!enabled">
-			<p class="form__fieldset__description">
-				{{ t('mail', '${subject} will be replaced with the subject of the message you are responding to') }}
-			</p>
-		</fieldset>
+		<template v-if="followingSystem">
+			<p>{{ t('mail', 'The autoresponder follows your personal absence period settings.') }}</p>
+			<Button :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
+				<template #icon>
+					<OpenInNewIcon :size="20" />
+				</template>
+				{{ t('mail', 'Edit absence settings') }}
+			</Button>
+		</template>
+		<template v-else>
+			<div class="form__multi-row">
+				<fieldset class="form__fieldset">
+					<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
+					<DatetimePicker
+						id="ooo-first-day"
+						v-model="firstDay"
+						:disabled="!enabled" />
+				</fieldset>
 
-		<fieldset class="form__fieldset">
-			<label for="ooo-message">{{ t('mail', 'Message') }}</label>
-			<TextEditor
-				id="ooo-message"
-				v-model="message"
-				:html="false"
-				:disabled="!enabled"
-				:bus="{ '$on': () => { /* noop */ } }" />
-		</fieldset>
+				<fieldset class="form__fieldset">
+					<div class="form__fieldset__label">
+						<input
+							id="ooo-enable-last-day"
+							v-model="enableLastDay"
+							type="checkbox"
+							:disabled="!enabled">
+						<label for="ooo-enable-last-day">
+							{{ t('mail', 'Last day (optional)') }}
+						</label>
+					</div>
+					<DatetimePicker
+						id="ooo-last-day"
+						v-model="lastDay"
+						:disabled="!enabled || !enableLastDay" />
+				</fieldset>
+			</div>
+
+			<fieldset class="form__fieldset">
+				<label for="ooo-subject">{{ t('mail', 'Subject') }}</label>
+				<input
+					id="ooo-subject"
+					v-model="subject"
+					type="text"
+					:disabled="followingSystem">
+				<p class="form__fieldset__description">
+					{{ t('mail', '${subject} will be replaced with the subject of the message you are responding to') }}
+				</p>
+			</fieldset>
+
+			<fieldset class="form__fieldset">
+				<label for="ooo-message">{{ t('mail', 'Message') }}</label>
+				<TextEditor
+					id="ooo-message"
+					v-model="message"
+					:html="false"
+					:disabled="followingSystem"
+					:bus="{ '$on': () => { /* noop */ } }" />
+			</fieldset>
+		</template>
 
 		<p v-if="errorMessage">
 			{{ t('mail', 'Oh Snap!') }}
@@ -118,9 +139,15 @@
 import { NcDatetimePicker as DatetimePicker, NcButton as Button } from '@nextcloud/vue'
 import TextEditor from './TextEditor.vue'
 import CheckIcon from 'vue-material-design-icons/Check'
-import { buildOutOfOfficeSieveScript, parseOutOfOfficeState } from '../util/outOfOffice.js'
-import logger from '../logger.js'
 import { html, plain, toHtml, toPlain } from '../util/text.js'
+import { loadState } from '@nextcloud/initial-state'
+import { generateUrl } from '@nextcloud/router'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
+
+const OOO_DISABLED = 'disabled'
+const OOO_ENABLED = 'enabled'
+const OOO_FOLLOW_SYSTEM = 'system'
 
 export default {
 	name: 'OutOfOfficeForm',
@@ -129,6 +156,7 @@ export default {
 		TextEditor,
 		Button,
 		CheckIcon,
+		OpenInNewIcon,
 	},
 	props: {
 		account: {
@@ -137,8 +165,14 @@ export default {
 		},
 	},
 	data() {
+		const nextcloudVersion = parseInt(OC.config.version.split('.')[0])
+		const enableSystemOutOfOffice = loadState('mail', 'enable-system-out-of-office', false)
+
 		return {
-			enabled: false,
+			OOO_DISABLED,
+			OOO_ENABLED,
+			OOO_FOLLOW_SYSTEM,
+			enabled: this.account.outOfOfficeFollowsSystem ? OOO_FOLLOW_SYSTEM : OOO_DISABLED,
 			enableLastDay: false,
 			firstDay: new Date(),
 			lastDay: null,
@@ -146,6 +180,8 @@ export default {
 			message: '',
 			loading: false,
 			errorMessage: '',
+			hasPersonalAbsenceSettings: nextcloudVersion >= 28 && enableSystemOutOfOffice,
+			personalAbsenceSettingsUrl: generateUrl('/settings/user/availability'),
 		}
 	},
 	computed: {
@@ -153,35 +189,19 @@ export default {
 		 * @return {boolean}
 		 */
 		valid() {
+			if (this.followingSystem) {
+				return true
+			}
+
+			if (this.enabled === OOO_DISABLED) {
+				return true
+			}
+
 			return !!(this.firstDay
 				&& (!this.enableLastDay || (this.enableLastDay && this.lastDay))
 				&& (!this.enableLastDay || (this.lastDay >= this.firstDay))
 				&& this.subject
 				&& this.message)
-		},
-
-		/**
-		 * @return {{script: string, scriptName: string}|undefined}
-		 */
-		sieveScriptData() {
-			return this.$store.getters.getActiveSieveScript(this.account.id)
-		},
-
-		/**
-		 * @return {object|undefined}
-		 */
-		parsedState() {
-			if (!this.sieveScriptData?.script) {
-				return undefined
-			}
-
-			try {
-				return parseOutOfOfficeState(this.sieveScriptData.script).data
-			} catch (error) {
-				logger.warn('Failed to parse OOO state', { error })
-			}
-
-			return undefined
 		},
 
 		/**
@@ -198,20 +218,15 @@ export default {
 				 ...this.account.aliases,
 			 ].map(({ name, alias }) => `${name} <${alias}>`)
 		},
+
+		/**
+		 * @return {boolean}
+		 */
+		followingSystem() {
+			return this.hasPersonalAbsenceSettings && this.enabled === OOO_FOLLOW_SYSTEM
+		},
 	},
 	watch: {
-		parsedState: {
-			immediate: true,
-			handler(state) {
-				state ??= {}
-				this.enabled = !!state.enabled ?? false
-				this.firstDay = state.start ?? new Date()
-				this.lastDay = state.end ?? null
-				this.enableLastDay = !!this.lastDay
-				this.subject = state.subject ?? ''
-				this.message = toHtml(plain(state.message ?? '')).value
-			},
-		},
 		enableLastDay(enableLastDay) {
 			if (enableLastDay) {
 				this.lastDay = new Date(this.firstDay)
@@ -235,37 +250,61 @@ export default {
 			this.lastDay.setDate(firstDay.getDate() + diffDays)
 		},
 	},
+	async mounted() {
+		await this.fetchState()
+	},
 	methods: {
+		async fetchState() {
+			const { state } = await OutOfOfficeService.fetch(this.account.id)
+
+			if (this.account.outOfOfficeFollowsSystem) {
+				this.enabled = OOO_FOLLOW_SYSTEM
+			} else {
+				this.enabled = state.enabled ? OOO_ENABLED : OOO_DISABLED
+			}
+			if (state.enabled) {
+				this.firstDay = state.start ? new Date(state.start) : new Date()
+				this.lastDay = state.end ? new Date(state.end) : null
+			}
+			this.enableLastDay = !!this.lastDay
+			this.subject = state.subject
+			this.message = toHtml(plain(state.message)).value
+		},
 		async submit() {
 			this.loading = true
 			this.errorMessage = ''
 
-			const state = parseOutOfOfficeState(this.sieveScriptData.script)
-			const originalScript = state.sieveScript
-
-			const enrichedScript = buildOutOfOfficeSieveScript(originalScript, {
-				enabled: this.enabled,
-				start: this.firstDay,
-				end: this.lastDay,
-				subject: this.subject,
-				message: toPlain(html(this.message)).value, // CKEditor always returns html data
-				allowedRecipients: this.aliases,
-			})
-
 			try {
-				await this.$store.dispatch('updateActiveSieveScript', {
-					accountId: this.account.id,
-					scriptData: {
-						...this.sieveScriptData,
-						script: enrichedScript,
-					},
-				})
+				if (this.followingSystem) {
+					await OutOfOfficeService.followSystem(this.account.id)
+					this.$store.commit('patchAccount', {
+						account: this.account,
+						data: {
+							outOfOfficeFollowsSystem: true,
+						},
+					})
+				} else {
+					await OutOfOfficeService.update(this.account.id, {
+						enabled: this.enabled === OOO_ENABLED,
+						start: this.firstDay,
+						end: this.lastDay,
+						subject: this.subject,
+						message: toPlain(html(this.message)).value, // CKEditor always returns html data
+						allowedRecipients: this.aliases,
+					})
+					this.$store.commit('patchAccount', {
+						account: this.account,
+						data: {
+							outOfOfficeFollowsSystem: false,
+						},
+					})
+				}
+				await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
 			} catch (error) {
 				this.errorMessage = error.message
 			} finally {
 				this.loading = false
 			}
-
 		},
 	},
 }

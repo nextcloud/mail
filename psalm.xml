@@ -47,6 +47,9 @@
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
+				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" />
+				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" />
+				<referencedClass name="OCP\User\IAvailabilityCoordinator" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
