@@ -450,7 +450,21 @@ return [
 			'url' => '/api/drafts/move/{id}',
 			'verb' => 'POST',
 		],
-
+		[
+			'name' => 'outOfOffice#getState',
+			'url' => '/api/out-of-office/{accountId}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'outOfOffice#update',
+			'url' => '/api/out-of-office/{accountId}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'outOfOffice#followSystem',
+			'url' => '/api/out-of-office/{accountId}/follow-system',
+			'verb' => 'POST',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

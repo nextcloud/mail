@@ -48,6 +48,7 @@ class MailAccountTest extends TestCase {
 		$a->setOrder(13);
 		$a->setQuotaPercentage(10);
 		$a->setTrashRetentionDays(60);
+		$a->setOutOfOfficeFollowsSystem(true);
 
 		$this->assertEquals([
 			'id' => 12345,
@@ -80,7 +81,8 @@ class MailAccountTest extends TestCase {
 			'trashRetentionDays' => 60,
 			'junkMailboxId' => null,
 			'snoozeMailboxId' => null,
-			'searchBody' => false
+			'searchBody' => false,
+			'outOfOfficeFollowsSystem' => true,
 		], $a->toJson());
 	}
 
@@ -116,7 +118,8 @@ class MailAccountTest extends TestCase {
 			'trashRetentionDays' => 60,
 			'junkMailboxId' => null,
 			'snoozeMailboxId' => null,
-			'searchBody' => false
+			'searchBody' => false,
+			'outOfOfficeFollowsSystem' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

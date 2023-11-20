@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -25,11 +26,10 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use Horde\ManageSieve\Exception;
-use OCA\Mail\Account;
 use OCA\Mail\Controller\SieveController;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
+use OCA\Mail\Sieve\NamedSieveScript;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -129,56 +129,23 @@ class SieveControllerTest extends TestCase {
 	}
 
 	public function testGetActiveScript(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setSieveEnabled(true);
-		$mailAccount->setSieveHost('localhost');
-		$mailAccount->setSievePort(4190);
-		$mailAccount->setSieveUser('user');
-		$mailAccount->setSievePassword('password');
-		$mailAccount->setSieveSslMode('');
-
-		$accountService = $this->serviceMock->getParameter('accountService');
-		$accountService->expects($this->once())
-			->method('find')
+		$sieveService = $this->serviceMock->getParameter('sieveService');
+		$sieveService->expects($this->once())
+			->method('getActiveScript')
 			->with('1', 2)
-			->willReturn(new Account($mailAccount));
+			->willReturn(new NamedSieveScript('nextcloud', '# foo bar'));
 
 		$response = $this->sieveController->getActiveScript(2);
 
 		$this->assertEquals(200, $response->getStatus());
-		$this->assertEquals(['scriptName' => '', 'script' => ''], $response->getData());
-	}
-
-	public function testGetActiveScriptNoSieve(): void {
-		$this->expectException(ClientException::class);
-		$this->expectExceptionMessage('ManageSieve is disabled');
-
-		$mailAccount = new MailAccount();
-		$mailAccount->setSieveEnabled(false);
-
-		$accountService = $this->serviceMock->getParameter('accountService');
-		$accountService->expects($this->once())
-			->method('find')
-			->with('1', 2)
-			->willReturn(new Account($mailAccount));
-
-		$this->sieveController->getActiveScript(2);
+		$this->assertEquals(['scriptName' => 'nextcloud', 'script' => '# foo bar'], $response->getData());
 	}
 
 	public function testUpdateActiveScript(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setSieveEnabled(true);
-		$mailAccount->setSieveHost('localhost');
-		$mailAccount->setSievePort(4190);
-		$mailAccount->setSieveUser('user');
-		$mailAccount->setSievePassword('password');
-		$mailAccount->setSieveSslMode('');
-
-		$accountService = $this->serviceMock->getParameter('accountService');
-		$accountService->expects($this->once())
-			->method('find')
-			->with('1', 2)
-			->willReturn(new Account($mailAccount));
+		$sieveService = $this->serviceMock->getParameter('sieveService');
+		$sieveService->expects($this->once())
+			->method('updateActiveScript')
+			->with('1', 2, 'sieve script');
 
 		$response = $this->sieveController->updateActiveScript(2, 'sieve script');
 

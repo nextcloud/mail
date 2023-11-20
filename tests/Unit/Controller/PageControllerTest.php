@@ -50,6 +50,7 @@ use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class PageControllerTest extends TestCase {
@@ -112,6 +113,9 @@ class PageControllerTest extends TestCase {
 
 	private SmimeService $smimeService;
 
+	/** @var ContainerInterface|MockObject */
+	private $container;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -134,6 +138,7 @@ class PageControllerTest extends TestCase {
 		$this->credentialStore = $this->createMock(ICredentialStore::class);
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
+		$this->container = $this->createMock(ContainerInterface::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -155,6 +160,7 @@ class PageControllerTest extends TestCase {
 			$this->smimeService,
 			$this->aiIntegrationsService,
 			$this->userManager,
+			$this->container,
 		);
 	}
 

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.14.1@b9d355e0829c397b9b3b47d0c0ed042a8a70284d">
   <file src="lib/AppInfo/Application.php">
+    <InvalidArgument>
+      <code>OutOfOfficeListener::class</code>
+      <code>OutOfOfficeListener::class</code>
+    </InvalidArgument>
     <MissingDependency>
       <code>FilteringProvider</code>
       <code>ImportantMailWidgetV2</code>
@@ -37,5 +41,17 @@
     <MissingDependency>
       <code>MailWidgetV2</code>
     </MissingDependency>
+  </file>
+  <file src="lib/Listener/OutOfOfficeListener.php">
+    <InvalidTemplateParam>
+      <code>IEventListener</code>
+    </InvalidTemplateParam>
+    <MoreSpecificImplementedParamType>
+      <code>$event</code>
+    </MoreSpecificImplementedParamType>
+    <UndefinedDocblockClass>
+      <code>OutOfOfficeListener</code>
+      <code>OutOfOfficeListener</code>
+    </UndefinedDocblockClass>
   </file>
 </files>
