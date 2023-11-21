@@ -201,6 +201,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#getPdf',
+			'url' => '/api/messages/{id}/attachment/{attachmentId}/convert',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#downloadAttachments',
 			'url' => '/api/messages/{id}/attachments',
 			'verb' => 'GET'

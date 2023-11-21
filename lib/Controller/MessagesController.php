@@ -33,6 +33,7 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
+use OCA\EmailViewer\Service\ConversionService;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailManager;
@@ -90,6 +91,7 @@ class MessagesController extends Controller {
 	private IDkimService $dkimService;
 	private IUserPreferences $preferences;
 	private SnoozeService $snoozeService;
+	private ConversionService $conversionService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -110,7 +112,8 @@ class MessagesController extends Controller {
 		IMAPClientFactory $clientFactory,
 		IDkimService $dkimService,
 		IUserPreferences $preferences,
-		SnoozeService $snoozeService) {
+		SnoozeService $snoozeService,
+		ConversionService $conversionService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -130,6 +133,7 @@ class MessagesController extends Controller {
 		$this->dkimService = $dkimService;
 		$this->preferences = $preferences;
 		$this->snoozeService = $snoozeService;
+		$this->conversionService = $conversionService;
 	}
 
 	/**
@@ -293,7 +297,40 @@ class MessagesController extends Controller {
 		$response->cacheFor(24 * 60 * 60, false, true);
 		return $response;
 	}
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function getPdf(int $id, string $attachmentId): Response {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
 
+		$attachment = $this->mailManager->getMailAttachment(
+			$account,
+			$mailbox,
+			$message,
+			$attachmentId,
+		);
+		$uid = uniqid('', true);
+		$tmpPath = sys_get_temp_dir() . "/eml2pdfSource_$uid.pdf"; // Create a temp file with .pdf extension
+
+		$handle = fopen($tmpPath, 'w'); // Open the file for writing
+		fwrite($handle, $attachment->getContent()); // Write some content
+		fclose($handle); // Close the file handle
+
+		$path = $this->conversionService->convert($tmpPath);
+		$content = file_get_contents($path);
+		return new AttachmentDownloadResponse(
+			$content,
+			'attachment.pdf',
+			'application/pdf'
+		);
+	}
 	/**
 	 * @NoAdminRequired
 	 * @param int $id
@@ -895,11 +932,19 @@ class MessagesController extends Controller {
 	 */
 	private function enrichDownloadUrl(int $id,
 		array $attachment) {
-		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
-			[
-				'id' => $id,
-				'attachmentId' => $attachment['id'],
-			]);
+		if($attachment['mime'] === "message/rfc822") {
+			$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.getPdf',
+				[
+					'id' => $id,
+					'attachmentId' => $attachment['id'],
+				]);
+		} else {
+			$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
+				[
+					'id' => $id,
+					'attachmentId' => $attachment['id'],
+				]);
+		}
 		$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);

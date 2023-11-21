@@ -119,7 +119,7 @@ export default {
 				filename: attachment.downloadUrl,
 				source: attachment.downloadUrl,
 				basename: basename(attachment.downloadUrl),
-				mime: attachment.mime,
+				mime: attachment.mime === 'message/rfc822' ? 'application/pdf' : attachment.mime,
 				etag: 'fixme',
 				hasPreview: false,
 				fileid: parseInt(attachment.id, 10),
