@@ -30,7 +30,7 @@
 		"christophwurst/kitinerary-bin": "^0.4",
 		"christophwurst/kitinerary-flatpak": "^0.3",
 		"christophwurst/kitinerary-sys": "^0.2.1",
-		"ezyang/htmlpurifier": "4.16.0",
+		"ezyang/htmlpurifier": "4.17.0",
 		"gravatarphp/gravatar": "dev-master#6b9f6a45477ce48285738d9d0c3f0dbf97abe263",
 		"hamza221/html2text": "^1.0",
 		"nextcloud/horde-managesieve": "^1.0",
