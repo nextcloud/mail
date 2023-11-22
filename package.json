@@ -66,7 +66,7 @@
     "md5": "^2.3.0",
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "node-forge": "^1.3.1",
-    "p-limit": "^4.0.0",
+    "p-limit": "^5.0.0",
     "printscout": "2.0.3",
     "process": "^0.11.10",
     "ramda": "^0.29.1",
