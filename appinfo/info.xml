@@ -47,7 +47,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 	<screenshot>https://user-images.githubusercontent.com/12728974/266270227-86b99bbb-03ea-468b-8408-e248e1730bed.png</screenshot>
 	<dependencies>
 		<php min-version="8.0" max-version="8.3" />
-		<nextcloud min-version="26" max-version="28" />
+		<nextcloud min-version="26" max-version="29" />
 	</dependencies>
 	<background-jobs>
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
