@@ -363,6 +363,7 @@ OC.L10N.register(
     "Favorites" : "Favorite",
     "Sent" : "Trimis",
     "Trash" : "Gunoi",
+    "Error while sharing file" : "Eroare la partajarea fișierului",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Discard changes" : "Anulează modificările",
     "Discard unsaved changes" : "Anulează modificările nesalvate",
