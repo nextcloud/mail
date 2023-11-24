@@ -116,6 +116,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setJunkMailboxId(?int $id)
  * @method bool getSearchBody()
  * @method void setSearchBody(bool $searchBody)
+ * @method bool|null getOooFollowsSystem()
+ * @method void setOooFollowsSystem(bool $oooFollowsSystem)
  */
 class MailAccount extends Entity {
 	public const SIGNATURE_MODE_PLAIN = 0;
@@ -195,6 +197,9 @@ class MailAccount extends Entity {
 	/** @var bool */
 	protected $searchBody = false;
 
+	/** @var bool|null */
+	protected $oooFollowsSystem;
+
 	/**
 	 * @param array $params
 	 */
@@ -249,6 +254,9 @@ class MailAccount extends Entity {
 		if (isset($params['trashRetentionDays'])) {
 			$this->setTrashRetentionDays($params['trashRetentionDays']);
 		}
+		if (isset($params['outOfOfficeFollowsSystem'])) {
+			$this->setOutOfOfficeFollowsSystem($params['outOfOfficeFollowsSystem']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
@@ -271,6 +279,15 @@ class MailAccount extends Entity {
 		$this->addType('trashRetentionDays', 'integer');
 		$this->addType('junkMailboxId', 'integer');
 		$this->addType('searchBody', 'boolean');
+		$this->addType('oooFollowsSystem', 'boolean');
+	}
+
+	public function getOutOfOfficeFollowsSystem(): bool {
+		return $this->getOooFollowsSystem() === true;
+	}
+
+	public function setOutOfOfficeFollowsSystem(bool $outOfOfficeFollowsSystem): void {
+		$this->setOooFollowsSystem($outOfOfficeFollowsSystem);
 	}
 
 	/**
@@ -305,6 +322,7 @@ class MailAccount extends Entity {
 			'trashRetentionDays' => $this->getTrashRetentionDays(),
 			'junkMailboxId' => $this->getJunkMailboxId(),
 			'searchBody' => $this->getSearchBody(),
+			'outOfOfficeFollowsSystem' => $this->getOutOfOfficeFollowsSystem(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

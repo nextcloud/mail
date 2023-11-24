@@ -66,6 +66,7 @@ use OCA\Mail\Listener\MessageKnownSinceListener;
 use OCA\Mail\Listener\MoveJunkListener;
 use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\OauthTokenRefreshListener;
+use OCA\Mail\Listener\OutOfOfficeListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCA\Mail\Listener\UserDeletedListener;
@@ -88,6 +89,8 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Dashboard\IAPIWidgetV2;
 use OCP\IServerContainer;
 use OCP\Search\IFilteringProvider;
+use OCP\User\Events\OutOfOfficeEndedEvent;
+use OCP\User\Events\OutOfOfficeStartedEvent;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
 use Psr\Container\ContainerInterface;
@@ -141,6 +144,13 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(NewMessagesSynchronized::class, MessageKnownSinceListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+
+		// TODO: drop condition if nextcloud < 28 is not supported anymore
+		if (class_exists(OutOfOfficeStartedEvent::class)
+		 && class_exists(OutOfOfficeEndedEvent::class)) {
+			$context->registerEventListener(OutOfOfficeStartedEvent::class, OutOfOfficeListener::class);
+			$context->registerEventListener(OutOfOfficeEndedEvent::class, OutOfOfficeListener::class);
+		}
 
 		$context->registerMiddleWare(ErrorMiddleware::class);
 		$context->registerMiddleWare(ProvisioningMiddleware::class);

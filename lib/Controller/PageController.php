@@ -53,6 +53,9 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\User\IAvailabilityCoordinator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function class_exists;
@@ -77,6 +80,7 @@ class PageController extends Controller {
 	private SmimeService $smimeService;
 	private AiIntegrationsService $aiIntegrationsService;
 	private IUserManager $userManager;
+	private ?IAvailabilityCoordinator $availabilityCoordinator;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -96,7 +100,8 @@ class PageController extends Controller {
 		ICredentialStore $credentialStore,
 		SmimeService     $smimeService,
 		AiIntegrationsService $aiIntegrationsService,
-		IUserManager $userManager, ) {
+		IUserManager $userManager,
+		ContainerInterface $container) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -116,6 +121,12 @@ class PageController extends Controller {
 		$this->smimeService = $smimeService;
 		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
+
+		try {
+			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
+		} catch (ContainerExceptionInterface $e) {
+			$this->availabilityCoordinator = null;
+		}
 	}
 
 	/**
@@ -174,7 +185,7 @@ class PageController extends Controller {
 			'sort-order',
 			$this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest')
 		);
-		
+
 		try {
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
 			$passwordIsUnavailable = $password === null || $password === '';
@@ -276,6 +287,13 @@ class PageController extends Controller {
 				$this->smimeService->findAllCertificates($user->getUID()),
 			),
 		);
+
+		if ($this->availabilityCoordinator !== null) {
+			$this->initialStateService->provideInitialState(
+				'enable-system-out-of-office',
+				$this->availabilityCoordinator->isEnabled(),
+			);
+		}
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
