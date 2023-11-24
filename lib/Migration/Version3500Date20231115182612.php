@@ -52,7 +52,7 @@ class Version3500Date20231115182612 extends SimpleMigrationStep {
 
 		$mailboxesTable = $schema->getTable('mail_mailboxes');
 		if (!$mailboxesTable->hasColumn('name_hash')) {
-			$mailboxesTable->addColumn('name_hash', Types::STRING);
+			$mailboxesTable->addColumn('name_hash', Types::STRING, ['notnull' => false]);
 		}
 
 		return $schema;
@@ -83,7 +83,7 @@ class Version3500Date20231115182612 extends SimpleMigrationStep {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->select(['id', 'name'])
 			->from('mail_mailboxes')
-			->where($qb->expr()->emptyString('name_hash'));
+			->where($qb->expr()->isNull('name_hash'));
 		$mailboxes = $qb->executeQuery();
 
 		$updateQb = $this->connection->getQueryBuilder();
