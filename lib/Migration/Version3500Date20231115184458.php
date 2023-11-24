@@ -56,6 +56,11 @@ class Version3500Date20231115184458 extends SimpleMigrationStep {
 			$mailboxesTable->addUniqueIndex(['account_id', 'name_hash'], $indexNew);
 		}
 
+		$nameHashColumn = $mailboxesTable->getColumn('name_hash');
+		if (!$nameHashColumn->getNotnull()) {
+			$nameHashColumn->setNotnull(true);
+		}
+
 		return $schema;
 	}
 }
