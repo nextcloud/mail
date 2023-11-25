@@ -74,6 +74,7 @@ OC.L10N.register(
     "Send" : "Senda",
     "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
     "Choose a file to share as a link" : "Veldu skrá til að deila sem tengli",
+    "_{count} attachment_::_{count} attachments_" : ["{count} viðhengi","{count} viðhengi"],
     "Confirm" : "Staðfesta",
     "Plain text" : "Ósniðinn texti",
     "Rich text" : "Sniðinn texti",
