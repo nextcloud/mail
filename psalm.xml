@@ -47,9 +47,12 @@
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
-				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" />
-				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" />
-				<referencedClass name="OCP\User\IAvailabilityCoordinator" />
+				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeChangedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeClearedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\IAvailabilityCoordinator" /><!-- 28+ -->
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
@@ -61,6 +64,11 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
+				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeChangedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeClearedEvent" /><!-- 28+ -->
 			</errorLevel>
 		</UndefinedDocblockClass>
 		<UndefinedFunction>
