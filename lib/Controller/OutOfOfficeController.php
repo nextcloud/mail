@@ -56,6 +56,7 @@ class OutOfOfficeController extends Controller {
 	) {
 		parent::__construct(Application::APP_ID, $request);
 
+		// TODO: inject directly if support for nextcloud < 28 is dropped
 		try {
 			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
 		} catch (ContainerExceptionInterface) {
