@@ -8,6 +8,7 @@
 			<div class="composer-fields--custom">
 				<NcSelect
 					id="from"
+					label="name"
 					:value="selectedAlias"
 					:options="aliases"
 					input-id="select-email-input"
@@ -36,6 +37,7 @@
 				<NcSelect id="to"
 					ref="toLabel"
 					v-model="selectTo"
+					label="label"
 					:class="{'opened': !autoLimit}"
 					:options="selectableRecipients"
 					:taggable="true"
@@ -58,7 +60,7 @@
 							:option="option"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
 					</template>
-					<template #option="{ option }">
+					<template #option="option">
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
@@ -107,7 +109,7 @@
 							:option="option"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
 					</template>
-					<template #option="{ option }">
+					<template #option="option">
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
@@ -149,7 +151,7 @@
 							:option="option"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
 					</template>
-					<template #option="{ option }">
+					<template #option="option">
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
@@ -1547,7 +1549,7 @@ export default {
 	flex-wrap: wrap;
 }
 
-#from{
+#from {
 	width: 100%;
 	cursor: pointer;
 }
