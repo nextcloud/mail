@@ -374,6 +374,7 @@ OC.L10N.register(
     "Welcome to {cloudName} Mail" : "Vítejte v {cloudName} Poště",
     "Autoresponder off" : "Automatické odpovědi vypnuty",
     "Autoresponder on" : "Automatické odpovědi zapnuty",
+    "Edit absence settings" : "Upravit nastavení nepřítomnosti",
     "First day" : "První den",
     "Last day (optional)" : "Poslední den (nepovinné)",
     "${subject} will be replaced with the subject of the message you are responding to" : "${subject} bude nahrazeno předmětem správy na kterou odpovídáte",
