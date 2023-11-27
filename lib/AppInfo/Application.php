@@ -89,7 +89,10 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Dashboard\IAPIWidgetV2;
 use OCP\IServerContainer;
 use OCP\Search\IFilteringProvider;
+use OCP\User\Events\OutOfOfficeChangedEvent;
+use OCP\User\Events\OutOfOfficeClearedEvent;
 use OCP\User\Events\OutOfOfficeEndedEvent;
+use OCP\User\Events\OutOfOfficeScheduledEvent;
 use OCP\User\Events\OutOfOfficeStartedEvent;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
@@ -147,9 +150,16 @@ class Application extends App implements IBootstrap {
 
 		// TODO: drop condition if nextcloud < 28 is not supported anymore
 		if (class_exists(OutOfOfficeStartedEvent::class)
-		 && class_exists(OutOfOfficeEndedEvent::class)) {
+			&& class_exists(OutOfOfficeEndedEvent::class)
+			&& class_exists(OutOfOfficeChangedEvent::class)
+			&& class_exists(OutOfOfficeClearedEvent::class)
+			&& class_exists(OutOfOfficeScheduledEvent::class)
+		) {
 			$context->registerEventListener(OutOfOfficeStartedEvent::class, OutOfOfficeListener::class);
 			$context->registerEventListener(OutOfOfficeEndedEvent::class, OutOfOfficeListener::class);
+			$context->registerEventListener(OutOfOfficeChangedEvent::class, OutOfOfficeListener::class);
+			$context->registerEventListener(OutOfOfficeClearedEvent::class, OutOfOfficeListener::class);
+			$context->registerEventListener(OutOfOfficeScheduledEvent::class, OutOfOfficeListener::class);
 		}
 
 		$context->registerMiddleWare(ErrorMiddleware::class);

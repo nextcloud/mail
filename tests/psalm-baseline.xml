@@ -4,6 +4,9 @@
     <InvalidArgument>
       <code>OutOfOfficeListener::class</code>
       <code>OutOfOfficeListener::class</code>
+      <code>OutOfOfficeListener::class</code>
+      <code>OutOfOfficeListener::class</code>
+      <code>OutOfOfficeListener::class</code>
     </InvalidArgument>
     <MissingDependency>
       <code>FilteringProvider</code>
@@ -49,9 +52,5 @@
     <MoreSpecificImplementedParamType>
       <code>$event</code>
     </MoreSpecificImplementedParamType>
-    <UndefinedDocblockClass>
-      <code>OutOfOfficeListener</code>
-      <code>OutOfOfficeListener</code>
-    </UndefinedDocblockClass>
   </file>
 </files>
