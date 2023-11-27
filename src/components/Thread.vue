@@ -186,7 +186,7 @@ export default {
 	},
 	methods: {
 		async updateSummary() {
-			if (this.thread.length < 2 || !this.enabledThreadSummary) return
+			if (this.thread.length <= 2 || !this.enabledThreadSummary) return
 
 			this.summaryLoading = true
 			try {
