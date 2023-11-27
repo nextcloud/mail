@@ -122,9 +122,10 @@ class PageController extends Controller {
 		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
 
+		// TODO: inject directly if support for nextcloud < 28 is dropped
 		try {
 			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface) {
 			$this->availabilityCoordinator = null;
 		}
 	}
