@@ -374,6 +374,8 @@ OC.L10N.register(
     "Welcome to {cloudName} Mail" : "Vítejte v {cloudName} Poště",
     "Autoresponder off" : "Automatické odpovědi vypnuty",
     "Autoresponder on" : "Automatické odpovědi zapnuty",
+    "Autoresponder follows system settings" : "Automatický odpovídač následuje nastavení systému",
+    "The autoresponder follows your personal absence period settings." : "Automatický odpovídač následuje vaše osobní nastavení období nepřítomnosti",
     "Edit absence settings" : "Upravit nastavení nepřítomnosti",
     "First day" : "První den",
     "Last day (optional)" : "Poslední den (nepovinné)",

@@ -154,6 +154,7 @@ OC.L10N.register(
     "Retry" : "Reyna aftur",
     "Uploading attachments …" : "Sendi inn viðhengi…",
     "Sending …" : "Sendi ...",
+    "First day" : "Fyrsta dag",
     "Message" : "Skilaboð",
     "Delete" : "Eyða",
     "Copy to clipboard" : "Afrita á klippispjald",
