@@ -219,6 +219,7 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 94px;
+	filter: var(--background-invert-if-dark)
 }
 .action-item {
 	right: 8px;
