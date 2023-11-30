@@ -29,8 +29,8 @@ import Vuex from 'vuex';
 const localVue = createLocalVue()
 const $route = {
 	params: {
-		id: 1
-	}
+		id: 1,
+	},
 }
 
 localVue.use(Vuex)
@@ -67,13 +67,13 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 				account: {sentMailboxId:'1'},
 				mailbox: {
 					myAcls: undefined,
 					databaseId:'3',
-					specialRole:''
+					specialRole:'',
 				},
 			},
 			store,
@@ -98,7 +98,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			store,
@@ -123,7 +123,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			store,
@@ -147,7 +147,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			computed: {
@@ -177,7 +177,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			computed: {
@@ -207,7 +207,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			computed: {
@@ -237,7 +237,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			computed: {
@@ -267,7 +267,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			store,
@@ -293,7 +293,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 
 				},
 			},
@@ -318,7 +318,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 
 				},
 			},
@@ -338,12 +338,12 @@ describe('Envelope', () => {
 				mailbox: {
 					specialRole:'',
 					databaseId:'3',
-					sentMailboxId:'1'
+					sentMailboxId:'1',
 				},
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			store,
@@ -367,7 +367,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			store,
@@ -391,7 +391,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			store,
@@ -415,7 +415,7 @@ describe('Envelope', () => {
 				data: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 				},
 			},
 			store,

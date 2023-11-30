@@ -39,7 +39,7 @@ describe('Composer', () => {
 
 	beforeEach(() => {
 		Object.defineProperty(window, "firstDay", {
-			value: 0
+			value: 0,
 		})
 
 		actions = {}
@@ -151,7 +151,7 @@ describe('Composer', () => {
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
-				}
+				},
 			},
 			store,
 			localVue,
@@ -180,7 +180,7 @@ describe('Composer', () => {
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return { foo: 'bar' }
-				}
+				},
 			},
 			store,
 			localVue,
@@ -209,7 +209,7 @@ describe('Composer', () => {
 			computed: {
 				smimeCertificateForCurrentAlias() {
 					return undefined
-				}
+				},
 			},
 			store,
 			localVue,
@@ -241,7 +241,7 @@ describe('Composer', () => {
 				},
 				missingSmimeCertificatesForRecipients() {
 					return ['john@foo.bar']
-				}
+				},
 			},
 			store,
 			localVue,
@@ -273,7 +273,7 @@ describe('Composer', () => {
 				},
 				missingSmimeCertificatesForRecipients() {
 					return []
-				}
+				},
 			},
 			store,
 			localVue,

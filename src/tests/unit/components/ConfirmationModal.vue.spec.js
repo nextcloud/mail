@@ -44,7 +44,7 @@ describe('ConfirmationModal', () => {
 	it('renders with custom button text', () => {
 		const view = shallowMount(ConfirmationModal, {
 			propsData: {
-				confirmText: 'Subscribe'
+				confirmText: 'Subscribe',
 			},
 			localVue,
 		})

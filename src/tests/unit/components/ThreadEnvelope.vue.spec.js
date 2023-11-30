@@ -64,11 +64,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -92,11 +92,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -120,11 +120,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -147,11 +147,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -178,11 +178,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -209,11 +209,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -240,11 +240,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -271,11 +271,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -299,12 +299,12 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -327,11 +327,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -354,11 +354,11 @@ describe('ThreadEnvelope', () => {
 				envelope: {
 					accountId: 123,
 					from: [{email:'info@test.com'}],
-					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false, },
+					flags: { seen:false, flagged:false, $junk:false, answered:false, hasAttachments:false, draft:false },
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -392,7 +392,7 @@ describe('ThreadEnvelope', () => {
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -427,7 +427,7 @@ describe('ThreadEnvelope', () => {
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
@@ -464,7 +464,7 @@ describe('ThreadEnvelope', () => {
 					subject: '',
 					dateInt: 1692200926180,
 				},
-				threadSubject: ''
+				threadSubject: '',
 			},
 			computed: {
 				mailbox() {
