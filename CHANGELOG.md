@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.4.5 – 2023-12-30
+### Fixed
+- Log performance of slow clean-up jobs
+
 ## 3.4.4 - 2023-10-31
 
 ### Bug Fixes
