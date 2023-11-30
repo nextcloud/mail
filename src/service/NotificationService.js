@@ -80,6 +80,9 @@ const getNotificationBody = (messages) => {
 		return t('mail', '{from}\n{subject}', {
 			from: from.join(),
 			subject: messages[0].subject,
+		}, undefined, {
+			escape: false,
+			sanitize: false,
 		})
 	} else {
 		return n('mail', '%n new message \nfrom {from}', '%n new messages \nfrom {from}', messages.length, {
