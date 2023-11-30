@@ -29,7 +29,7 @@ import { NcContent as Content, NcAppContent as AppContent, NcEmptyContent as Emp
 import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm.vue'
-import IconMail from 'vue-material-design-icons/Email'
+import IconMail from 'vue-material-design-icons/Email.vue'
 import Navigation from '../components/Navigation.vue'
 import logger from '../logger.js'
 

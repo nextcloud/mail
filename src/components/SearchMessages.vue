@@ -292,21 +292,21 @@
 <script>
 import moment from '@nextcloud/moment'
 
-import NcModal from '@nextcloud/vue/dist/Components/NcModal'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
-import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch
-	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import Tune from 'vue-material-design-icons/Tune'
-import Close from 'vue-material-design-icons/Close'
-import Magnify from 'vue-material-design-icons/Magnify'
+	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import Tune from 'vue-material-design-icons/Tune.vue'
+import Close from 'vue-material-design-icons/Close.vue'
+import Magnify from 'vue-material-design-icons/Magnify.vue'
 
 import debouncePromise from 'debounce-promise'
 import { findRecipient } from '../service/AutocompleteService.js'
-import uniqBy from 'lodash/fp/uniqBy'
+import uniqBy from 'lodash/fp/uniqBy.js'
 import { hiddenTags } from './tags.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)

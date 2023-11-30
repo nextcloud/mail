@@ -54,7 +54,7 @@
 <script>
 import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showInfo } from '@nextcloud/dialogs'
-import DeleteIcon from 'vue-material-design-icons/Delete'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 
 export default {
 	name: 'TagItem',

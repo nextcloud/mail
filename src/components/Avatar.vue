@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import BaseAvatar from '@nextcloud/vue/dist/Components/NcAvatar'
+import BaseAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 import logger from '../logger.js'
 

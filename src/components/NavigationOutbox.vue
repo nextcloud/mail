@@ -43,7 +43,7 @@
 
 <script>
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
-import IconOutbox from 'vue-material-design-icons/InboxArrowUp'
+import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
 
 export default {
 	name: 'NavigationOutbox',

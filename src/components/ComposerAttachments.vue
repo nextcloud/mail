@@ -57,13 +57,13 @@
 </template>
 
 <script>
-import map from 'lodash/fp/map'
-import trimStart from 'lodash/fp/trimCharsStart'
+import map from 'lodash/fp/map.js'
+import trimStart from 'lodash/fp/trimCharsStart.js'
 import { getRequestToken } from '@nextcloud/auth'
 import { formatFileSize } from '@nextcloud/files'
-import prop from 'lodash/fp/prop'
+import prop from 'lodash/fp/prop.js'
 import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
-import sumBy from 'lodash/fp/sumBy'
+import sumBy from 'lodash/fp/sumBy.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
 import Vue from 'vue'
@@ -75,8 +75,8 @@ import { uploadLocalAttachment } from '../service/AttachmentService.js'
 
 import ComposerAttachment from './ComposerAttachment.vue'
 
-import ChevronDown from 'vue-material-design-icons/ChevronDown'
-import ChevronUp from 'vue-material-design-icons/ChevronUp'
+import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
+import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 
 const mimes = [
 	'image/gif',

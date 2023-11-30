@@ -26,7 +26,7 @@
 
 <script>
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 export default {
 	name: 'SieveFilterForm',
 	components: {

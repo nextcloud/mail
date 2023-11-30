@@ -260,7 +260,7 @@
 import { Tab, Tabs } from 'vue-tabs-component'
 import { mapGetters } from 'vuex'
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from '../logger.js'

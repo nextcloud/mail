@@ -21,9 +21,9 @@
  */
 
 import { curry } from 'ramda'
-import escapeRegExp from 'lodash/fp/escapeRegExp'
-import orderBy from 'lodash/fp/orderBy'
-import uniq from 'lodash/fp/uniq'
+import escapeRegExp from 'lodash/fp/escapeRegExp.js'
+import orderBy from 'lodash/fp/orderBy.js'
+import uniq from 'lodash/fp/uniq.js'
 import Vue from 'vue'
 
 import { sortMailboxes } from '../imap/MailboxSorter.js'

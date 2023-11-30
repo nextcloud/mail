@@ -90,7 +90,7 @@ import NavigationAccount from './NavigationAccount.vue'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse.vue'
 import NavigationMailbox from './NavigationMailbox.vue'
 import NavigationOutbox from './NavigationOutbox.vue'
-import IconSetting from 'vue-material-design-icons/Cog'
+import IconSetting from 'vue-material-design-icons/Cog.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
 

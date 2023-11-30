@@ -77,7 +77,7 @@ import { detect, toHtml } from '../util/text.js'
 import Vue from 'vue'
 
 import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {
 	name: 'SignatureSettings',

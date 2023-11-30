@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import curry from 'lodash/fp/curry'
+import curry from 'lodash/fp/curry.js'
 import moment from '@nextcloud/moment'
 
 export const shortDatetime = curry((ref, date) => {

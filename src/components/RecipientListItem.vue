@@ -14,7 +14,7 @@
 
 <script>
 import { NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
-import Close from 'vue-material-design-icons/Close'
+import Close from 'vue-material-design-icons/Close.vue'
 export default {
 	name: 'RecipientListItem',
 	components: {

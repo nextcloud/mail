@@ -31,9 +31,9 @@
 
 <script>
 import { NcButton as Button } from '@nextcloud/vue'
-import IconAdd from 'vue-material-design-icons/Plus'
-import IconRefresh from 'vue-material-design-icons/Refresh'
-import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconRefresh from 'vue-material-design-icons/Refresh.vue'
+import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import logger from '../logger.js'
 
 export default {
