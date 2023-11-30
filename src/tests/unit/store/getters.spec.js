@@ -214,15 +214,15 @@ describe('Vuex store getters', () => {
 				{
 					name: 'Trash',
 					specialRole: 'trash',
-				}
-			]
+				},
+			],
 		}
 
 		const result = getters.findMailboxBySpecialRole(state, mockedGetters)('100', 'inbox')
 
 		expect(result).toEqual({
 			name: 'INBOX',
-			specialRole: 'inbox'
+			specialRole: 'inbox',
 		});
 	})
 
@@ -240,8 +240,8 @@ describe('Vuex store getters', () => {
 				{
 					name: 'Trash',
 					specialRole: 'trash',
-				}
-			]
+				},
+			],
 		}
 
 		const result = getters.findMailboxBySpecialRole(state, mockedGetters)('100', 'drafts')

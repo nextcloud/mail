@@ -82,7 +82,7 @@ describe('Vuex store mutations', () => {
 					delimiter: '.',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
 		expect(state).toEqual({
@@ -225,7 +225,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
 		expect(state).toEqual({
@@ -311,7 +311,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
 		expect(state).toEqual({

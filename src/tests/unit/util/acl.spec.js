@@ -35,7 +35,7 @@ describe('acl', () => {
 
 		it('allow when right included', () => {
 			const mailbox = {
-				myAcls: 'lrwstipekxa'
+				myAcls: 'lrwstipekxa',
 			}
 
 			const actual = mailboxHasRights(mailbox, 'l')
@@ -45,7 +45,7 @@ describe('acl', () => {
 
 		it('deny when right not included', () => {
 			const mailbox = {
-				myAcls: 'lrw'
+				myAcls: 'lrw',
 			}
 
 			const actual = mailboxHasRights(mailbox, 'iw')

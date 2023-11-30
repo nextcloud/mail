@@ -39,7 +39,7 @@ describe('Thread', () => {
 		actions = {
 			fetchThread: () => {
 				return []
-			}
+			},
 		},
 		getters = {
 			getEnvelope: () => (id) => {
@@ -102,7 +102,7 @@ describe('Thread', () => {
 							from: [],
 							to: [],
 							cc: [],
-						}
+						},
 					]
 				}
 				if (threadRootId === '456-789-123') {
@@ -151,7 +151,7 @@ describe('Thread', () => {
 							from: [],
 							to: [],
 							cc: [],
-						}
+						},
 					]
 				}
 				return []
@@ -198,13 +198,13 @@ describe('Thread', () => {
 						{
 							databaseId: 10,
 							name: 'INBOX',
-							specialRole: 'inbox'
+							specialRole: 'inbox',
 						},
 						{
 							databaseId: 11,
 							name: 'Test',
-							specialRole: ''
-						}
+							specialRole: '',
+						},
 					]
 				}
 				if (accountId === 200) {
@@ -212,27 +212,27 @@ describe('Thread', () => {
 						{
 							databaseId: 20,
 							name: 'INBOX',
-							specialRole: 'inbox'
+							specialRole: 'inbox',
 						},
 						{
 							databaseId: 21,
 							name: 'Test',
-							specialRole: ''
+							specialRole: '',
 						},
 						{
 							databaseId: 22,
 							name: 'Trash',
-							specialRole: 'trash'
+							specialRole: 'trash',
 						},
 						{
 							databaseId: 23,
 							name: 'Junk',
-							specialRole: 'junk'
-						}
+							specialRole: 'junk',
+						},
 					]
 				}
 				return []
-			}
+			},
 		}
 		store = new Vuex.Store({
 			actions,
@@ -245,9 +245,9 @@ describe('Thread', () => {
 			mocks: {
 				$route: {
 					params: {
-						threadId: 100
-					}
-				}
+						threadId: 100,
+					},
+				},
 			},
 			store,
 			localVue,
@@ -261,9 +261,9 @@ describe('Thread', () => {
 			mocks: {
 				$route: {
 					params: {
-						threadId: 200
-					}
-				}
+						threadId: 200,
+					},
+				},
 			},
 			store,
 			localVue,
@@ -277,9 +277,9 @@ describe('Thread', () => {
 			mocks: {
 				$route: {
 					params: {
-						threadId: 300
-					}
-				}
+						threadId: 300,
+					},
+				},
 			},
 			store,
 			localVue,
@@ -293,9 +293,9 @@ describe('Thread', () => {
 			mocks: {
 				$route: {
 					params: {
-						threadId: 301
-					}
-				}
+						threadId: 301,
+					},
+				},
 			},
 			store,
 			localVue,
@@ -311,9 +311,9 @@ describe('Thread', () => {
 			mocks: {
 				$route: {
 					params: {
-						threadId: 302
-					}
-				}
+						threadId: 302,
+					},
+				},
 			},
 			store,
 			localVue,
