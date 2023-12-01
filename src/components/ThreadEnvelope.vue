@@ -74,14 +74,8 @@
 							{{ isEncrypted ? t('mail', 'Encrypted message') : envelope.previewText }}
 						</span>
 					</div>
-					<div v-for="tag in tags"
-						:key="tag.id"
-						class="tag-group">
-						<div class="tag-group__bg"
-							:style="{'background-color': tag.color}" />
-						<span class="tag-group__label"
-							:style="{color: tag.color}">{{ tag.displayName }} </span>
-					</div>
+					<TagGroup :tags="tags"
+						class="envelope__header__left__sender-subject-tags__tags" />
 				</div>
 				<div class="envelope__header__left__unsubscribe">
 					<NcButton
@@ -298,6 +292,7 @@ import TaskModal from './TaskModal.vue'
 import EventModal from './EventModal.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import TagGroup from "./TagGroup.vue";
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -307,6 +302,7 @@ const LOADING_BODY = 2
 export default {
 	name: 'ThreadEnvelope',
 	components: {
+		TagGroup,
 		NcModal,
 		EventModal,
 		TaskModal,
@@ -822,14 +818,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	.sender {
-		margin-left: 8px;
-
-		&__email{
-			color: var(--color-text-maxcontrast);
-		}
-	}
-
 	.right {
 		display: flex;
 		flex-direction: row;
@@ -953,10 +941,20 @@ export default {
 				color: var(--color-text-maxcontrast);
 			}
 			&__left__sender-subject-tags {
-				text-overflow: ellipsis;
-				overflow: hidden;
-				white-space: nowrap;
 				width: 100%;
+
+				.sender {
+					margin-left: 8px;
+
+					&__email{
+						color: var(--color-text-maxcontrast);
+					}
+				}
+				.sender, .sender__email, .subline {
+					text-overflow: ellipsis;
+					overflow: hidden;
+					white-space: nowrap;
+				}
 			}
 		}
 
@@ -986,31 +984,6 @@ export default {
 	}
 	.left:not(.seen) {
 		font-weight: bold;
-	}
-	.tag-group__label {
-		margin: 0 7px;
-		z-index: 2;
-		font-size: calc(var(--default-font-size) * 0.8);
-		font-weight: bold;
-		padding-left: 2px;
-		padding-right: 2px;
-	}
-	.tag-group__bg {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		left: 0;
-		opacity: 15%;
-	}
-	.tag-group {
-		display: inline-block;
-		border: 1px solid transparent;
-		border-radius: var(--border-radius-pill);
-		position: relative;
-		margin: 0 1px;
-		overflow: hidden;
-		left: 4px;
 	}
 	.smime-text {
 		// same as padding-right on action-text styling

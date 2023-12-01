@@ -31,7 +31,7 @@
 			<h2 class="tag-title">
 				{{ t('mail', 'Add default tags') }}
 			</h2>
-			<TagItem v-for="tag in tags"
+			<TagEditor v-for="tag in tags"
 				:key="tag.id"
 				:tag="tag"
 				:envelopes="envelopes"
@@ -69,7 +69,7 @@
 <script>
 import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
 import DeleteTagModal from './DeleteTagModal.vue'
-import TagItem from './TagItem.vue'
+import TagEditor from './TagEditor.vue'
 import IconTag from 'vue-material-design-icons/Tag'
 import IconAdd from 'vue-material-design-icons/Plus'
 import { showError, showInfo } from '@nextcloud/dialogs'
@@ -91,7 +91,7 @@ export default {
 		DeleteTagModal,
 		IconTag,
 		IconLoading,
-		TagItem,
+		TagEditor,
 		NcButton,
 		IconAdd,
 	},

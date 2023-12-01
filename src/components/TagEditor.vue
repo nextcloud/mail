@@ -1,12 +1,6 @@
 <template>
-	<div class="tag-group">
-		<button class="tag-group__label"
-			:style="{
-				color: convertHex(tag.color, 1),
-				'background-color': convertHex(tag.color, 0.15)
-			}">
-			{{ tag.displayName }}
-		</button>
+	<div class="tag-editor">
+		<Tag class="tag-editor__tag" :label="tag.displayName" :color="tag.color" />
 		<Actions :force-menu="true">
 			<NcActionButton v-if="renameTagLabel"
 				@click="openEditTag">
@@ -56,8 +50,10 @@ import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as Ac
 import { showInfo } from '@nextcloud/dialogs'
 import DeleteIcon from 'vue-material-design-icons/Delete'
 
+import Tag from './Tag.vue'
+
 export default {
-	name: 'TagItem',
+	name: 'TagEditor',
 	components: {
 		NcColorPicker,
 		Actions,
@@ -66,6 +62,7 @@ export default {
 		ActionInput,
 		IconLoading,
 		DeleteIcon,
+		Tag,
 	},
 	props: {
 		tag: {
@@ -194,7 +191,7 @@ export default {
 		position: relative;
 	}
 }
-.tag-group {
+.tag-editor {
 	display: block;
 	position: relative;
 	margin: 0 1px;
@@ -208,18 +205,6 @@ export default {
 	&:focus {
 		background-color: var(--color-border-dark);
 	}
-}
-.tag-group__label {
-	z-index: 2;
-	font-weight: bold;
-	border: none;
-	background-color: transparent;
-	padding-left: 10px;
-	padding-right: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 94px;
-	filter: var(--background-invert-if-dark)
 }
 .action-item {
 	right: 8px;

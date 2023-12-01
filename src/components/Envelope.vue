@@ -311,14 +311,7 @@
 			</template>
 		</template>
 		<template #extra>
-			<div v-for="tag in tags"
-				:key="tag.id"
-				class="tag-group">
-				<div class="tag-group__bg"
-					:style="{'background-color': tag.color}" />
-				<span class="tag-group__label"
-					:style="{color: tag.color}">{{ tag.displayName }} </span>
-			</div>
+			<TagGroup :tags="tags" />
 			<MoveModal v-if="showMoveModal"
 				:account="account"
 				:envelopes="[data]"
@@ -381,6 +374,7 @@ import PlusIcon from 'vue-material-design-icons/Plus'
 import TagIcon from 'vue-material-design-icons/Tag'
 import TagModal from './TagModal.vue'
 import EventModal from './EventModal.vue'
+import TagGroup from './TagGroup.vue'
 import TaskModal from './TaskModal.vue'
 import EnvelopePrimaryActions from './EnvelopePrimaryActions.vue'
 import { hiddenTags } from './tags.js'
@@ -417,6 +411,7 @@ export default {
 		MoveModal,
 		OpenInNewIcon,
 		PlusIcon,
+		TagGroup,
 		TagIcon,
 		TagModal,
 		Star,
@@ -983,31 +978,6 @@ export default {
 }
 :deep(.list-item__extra) {
 	margin-left: 41px !important;
-}
-.tag-group__label {
-	margin: 0 7px;
-	z-index: 2;
-	font-size: calc(var(--default-font-size) * 0.8);
-	font-weight: bold;
-	padding-left: 2px;
-	padding-right: 2px;
-}
-.tag-group__bg {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	opacity: 15%;
-}
-.tag-group {
-	display: inline-block;
-	border: 1px solid transparent;
-	border-radius: var(--border-radius-pill);
-	position: relative;
-	margin: 0 1px;
-	overflow: hidden;
-	left: 4px;
 }
 .list-item__wrapper:deep() {
 	list-style: none;
