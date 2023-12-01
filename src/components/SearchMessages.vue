@@ -478,6 +478,7 @@ export default {
 .search-messages {
 	min-height: 52px;
 	margin: 3px 0 0 52px;
+	padding-right: 4px; /* matches .app-content-list */
 	border-right: 1px solid var(--color-border);
 	position: relative;
 	display: flex;
@@ -486,8 +487,7 @@ export default {
 	z-index: 1;
 
 	input {
-		width: calc(100% - 45px);
-		margin: 4px 6px;
+		flex-grow: 1;
 	}
 
 	.action-item--single {
