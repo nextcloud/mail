@@ -23,7 +23,8 @@
 	<div class="tag"
 		:class="{ 'tag--small': small }"
 		:style="{ 'background-color': convertHex(color, 0.2) }">
-		<span class="tag__label">{{ label }}</span>
+		<span class="tag__label"
+			:style="{ 'color': convertHex(color, 0.8) }">{{ label }}</span>
 	</div>
 </template>
 
@@ -72,6 +73,7 @@ export default {
 	&__label {
 		font-size: var(--default-font-size);
 		font-weight: bold;
+		filter: brightness(0.3);
 	}
 
 	&--small {

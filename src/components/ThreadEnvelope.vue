@@ -292,7 +292,7 @@ import TaskModal from './TaskModal.vue'
 import EventModal from './EventModal.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import TagGroup from "./TagGroup.vue";
+import TagGroup from './TagGroup.vue'
 
 // Ternary loading state
 const LOADING_DONE = 0

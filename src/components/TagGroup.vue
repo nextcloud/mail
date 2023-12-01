@@ -36,7 +36,7 @@ import Tag from './Tag.vue'
 export default {
 	name: 'TagGroup',
 	components: {
-		Tag
+		Tag,
 	},
 	props: {
 		tags: {
