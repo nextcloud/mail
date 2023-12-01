@@ -1,5 +1,5 @@
 <template>
-	<div class="multiselect__tag multiselect__tag--recipient">
+	<div class="multiselect__tag multiselect__tag--recipient" :title="option.email">
 		<ListItemIcon
 			:no-margin="true"
 			:title="option.label"
