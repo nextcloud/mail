@@ -3,7 +3,7 @@
 		v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
-			envelopeId: data.databaseId,
+			databaseId: data.databaseId,
 			draggableLabel,
 			selectedEnvelopes,
 			isDraggable,
