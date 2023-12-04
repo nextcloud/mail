@@ -155,6 +155,7 @@ OC.L10N.register(
     "Comment" : "Коментар",
     "Accept" : "Прийняти",
     "Decline" : "Відхилити",
+    "More options" : "Більше варіантів",
     "Could not open mailbox" : "Неможливо відкрити поштову скриньку",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Індексування повідомлень. Ця дія може забрати більше часу для поштових скриньок з великим обсягом повідомлень.",
     "Choose" : "Вибрати",
