@@ -21,7 +21,7 @@
 		<NcActions>
 			<NcActionButton @click="moreSearchActions = true">
 				<template #icon>
-					<Tune :size="24" />
+					<Tune :size="20" />
 				</template>
 				{{ t("mail", "Search parameters") }}
 			</NcActionButton>
@@ -652,9 +652,9 @@ export default {
 	background: var(--color-error);
 	position: absolute;
 	z-index: 10;
-	right: 9px;
+	right: 12px;
 	border-radius: 50%;
-	top: 10px;
+	top: 12px;
 }
 .mx-datepicker {
 	width:100%;
