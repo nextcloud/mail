@@ -332,8 +332,6 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	color: var(--color-main-text) !important;
  }
  .link-icon{
-	width : 20px !important;
-	margin-right : 1em !important;
 	filter : var(--background-invert-if-dark);
  }
  .custom-item {
