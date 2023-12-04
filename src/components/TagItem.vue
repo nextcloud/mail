@@ -10,33 +10,34 @@
 		<Actions :force-menu="true">
 			<NcActionButton v-if="renameTagLabel"
 				@click="openEditTag">
+				<template #icon>
+					<IconEdit :size="22" />
+				</template>
 				{{ t('mail','Edit name or color') }}
 			</NcActionButton>
-			<NcActionButton v-if="!tag.isDefaultTag"
-				@click="deleteTag">
-				<template #icon>
-					<DeleteIcon :size="20" />
-				</template>
-				{{ t('mail','Delete tag') }}
-			</NcActionButton>
-
+			<NcColorPicker v-if="!renameTagLabel"
+				class="app-navigation-entry-bullet-wrapper"
+				:value="`#${tag.color}`"
+				@input="updateColor">
+				<div :style="{ backgroundColor: tag.color }" class="color0 app-navigation-entry-bullet" />
+			</NcColorPicker>
 			<ActionInput v-if="renameTagInput"
 				:value="tag.displayName"
 				@submit="renameTag(tag, $event)" />
 			<ActionText
 				v-if="showSaving">
 				<template #icon>
-					<IconLoading :size="20" />
+					<IconLoading :size="22" />
 				</template>
 				{{ t('mail', 'Saving new tag name …') }}
 			</ActionText>
-
-			<NcColorPicker
-				class="app-navigation-entry-bullet-wrapper"
-				:value="`#${tag.color}`"
-				@input="updateColor">
-				<div :style="{ backgroundColor: tag.color }" class="color0 app-navigation-entry-bullet" />
-			</NcColorPicker>
+			<NcActionButton v-if="!tag.isDefaultTag || !renameTagLabel"
+				@click="deleteTag">
+				<template #icon>
+					<DeleteIcon :size="22" />
+				</template>
+				{{ t('mail','Delete tag') }}
+			</NcActionButton>
 		</Actions>
 		<button v-if="!isSet(tag.imapLabel)"
 			class="tag-actions"
@@ -55,6 +56,7 @@
 import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { showInfo } from '@nextcloud/dialogs'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import IconEdit from 'vue-material-design-icons/Pencil.vue'
 
 export default {
 	name: 'TagItem',
@@ -66,6 +68,7 @@ export default {
 		ActionInput,
 		IconLoading,
 		DeleteIcon,
+		IconEdit,
 	},
 	props: {
 		tag: {
@@ -181,12 +184,12 @@ export default {
 	display: inline-block;
 	position: fixed;
 	list-style: none;
-	top: 15px;
-	left: 7px;
+	top: 18px;
+	left: 15px;
 
 	.color0 {
-		width: 30px !important;
-		height: 30px;
+		width: 22px !important;
+		height: 22px;
 		border-radius: 50%;
 		background-size: 14px;
 		z-index: 2;
@@ -225,6 +228,6 @@ export default {
 	float: right;
 }
 :deep(.input-field) {
-	margin-top: -5px;
+	margin-top: 3px;
 }
 </style>
