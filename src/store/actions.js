@@ -22,8 +22,8 @@
  *
  */
 
-import flatMapDeep from 'lodash/fp/flatMapDeep'
-import orderBy from 'lodash/fp/orderBy'
+import flatMapDeep from 'lodash/fp/flatMapDeep.js'
+import orderBy from 'lodash/fp/orderBy.js'
 import {
 	andThen,
 	complement,

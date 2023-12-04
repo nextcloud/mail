@@ -20,7 +20,7 @@
  */
 
 import { curry, prop, range, reverse } from 'ramda'
-import orderBy from 'lodash/fp/orderBy'
+import orderBy from 'lodash/fp/orderBy.js'
 
 import actions from '../../../store/actions'
 import * as MailboxService from '../../../service/MailboxService'

@@ -78,10 +78,10 @@ import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 import MessageAttachment from './MessageAttachment.vue'
 import Logger from '../logger.js'
 
-import Download from 'vue-material-design-icons/Download'
-import CloudDownload from 'vue-material-design-icons/CloudDownload'
-import ChevronDown from 'vue-material-design-icons/ChevronDown'
-import ChevronUp from 'vue-material-design-icons/ChevronUp'
+import Download from 'vue-material-design-icons/Download.vue'
+import CloudDownload from 'vue-material-design-icons/CloudDownload.vue'
+import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
+import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 
 export default {
 	name: 'MessageAttachments',

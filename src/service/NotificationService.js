@@ -21,7 +21,7 @@
  *
  */
 
-import uniq from 'lodash/fp/uniq'
+import uniq from 'lodash/fp/uniq.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
 

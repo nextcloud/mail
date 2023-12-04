@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import debounce from 'lodash/fp/debounce'
+import debounce from 'lodash/fp/debounce.js'
 
 export default {
 	name: 'TrashRetentionSettings',

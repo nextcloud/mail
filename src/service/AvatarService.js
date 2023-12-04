@@ -20,7 +20,7 @@
  *
  */
 
-import memoize from 'lodash/fp/memoize'
+import memoize from 'lodash/fp/memoize.js'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 

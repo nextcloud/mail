@@ -70,8 +70,8 @@
 import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagItem from './TagItem.vue'
-import IconTag from 'vue-material-design-icons/Tag'
-import IconAdd from 'vue-material-design-icons/Plus'
+import IconTag from 'vue-material-design-icons/Tag.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
 

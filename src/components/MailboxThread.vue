@@ -72,13 +72,13 @@
 <script>
 import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
 
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import SectionTitle from './SectionTitle.vue'
 import Vue from 'vue'
 import addressParser from 'address-rfc2822'
 
 import infiniteScroll from '../directives/infinite-scroll.js'
-import IconInfo from 'vue-material-design-icons/Information'
+import IconInfo from 'vue-material-design-icons/Information.vue'
 import logger from '../logger.js'
 import Mailbox from './Mailbox.vue'
 import SearchMessages from './SearchMessages.vue'

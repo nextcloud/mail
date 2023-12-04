@@ -31,10 +31,10 @@
 	</div>
 </template>
 <script>
-import NcButton from '@nextcloud/vue/dist/Components/NcButton'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions'
-import CreationIcon from 'vue-material-design-icons/Creation'
-import ArrowDownIcon from 'vue-material-design-icons/ArrowDown'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import CreationIcon from 'vue-material-design-icons/Creation.vue'
+import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {

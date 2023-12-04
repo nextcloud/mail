@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import AirplaneIcon from 'vue-material-design-icons/Airplane'
-import ArrowIcon from 'vue-material-design-icons/ArrowRight'
+import AirplaneIcon from 'vue-material-design-icons/Airplane.vue'
+import ArrowIcon from 'vue-material-design-icons/ArrowRight.vue'
 import ical from 'ical.js'
 import md5 from 'md5'
 import moment from '@nextcloud/moment'

@@ -72,7 +72,7 @@ import MessageEncryptedBody from './MessageEncryptedBody.vue'
 import MessageHTMLBody from './MessageHTMLBody.vue'
 import MessagePlainTextBody from './MessagePlainTextBody.vue'
 import Imip from './Imip.vue'
-import LockOffIcon from 'vue-material-design-icons/LockOff'
+import LockOffIcon from 'vue-material-design-icons/LockOff.vue'
 
 export default {
 	name: 'Message',

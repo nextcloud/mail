@@ -58,7 +58,7 @@ import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '
 import { showError } from '@nextcloud/dialogs'
 
 import { prop, uniqBy } from 'ramda'
-import debounce from 'lodash/fp/debounce'
+import debounce from 'lodash/fp/debounce.js'
 import { loadState } from '@nextcloud/initial-state'
 
 import { summarizeThread } from '../service/AiIntergrationsService.js'

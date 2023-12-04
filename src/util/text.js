@@ -20,7 +20,7 @@
  *
  */
 
-import isString from 'lodash/fp/isString'
+import isString from 'lodash/fp/isString.js'
 import { curry } from 'ramda'
 import { convert } from 'html-to-text'
 

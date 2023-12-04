@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import once from 'lodash/fp/once'
+import once from 'lodash/fp/once.js'
 
 import { getUserCalendars } from '../service/DAVService.js'
 import logger from '../logger.js'

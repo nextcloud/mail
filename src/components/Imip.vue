@@ -132,8 +132,8 @@
 <script>
 import EventData from './imip/EventData.vue'
 import { NcButton as Button, NcMultiselect as Multiselect } from '@nextcloud/vue'
-import CloseIcon from 'vue-material-design-icons/Close'
-import CalendarIcon from 'vue-material-design-icons/Calendar'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
 import { mapGetters } from 'vuex'
 import { removeMailtoPrefix } from '../util/eventAttendee.js'

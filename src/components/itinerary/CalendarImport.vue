@@ -41,7 +41,7 @@
 
 import { NcActions as Actions, NcActionButton as ActionButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 
-import IconAdd from 'vue-material-design-icons/Plus'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import ical from 'ical.js'
 import moment from '@nextcloud/moment'
 

@@ -155,7 +155,7 @@ import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/v
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
-import DeleteIcon from 'vue-material-design-icons/Delete'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
 
 const TYPE_PKCS12 = 'pkcs12'

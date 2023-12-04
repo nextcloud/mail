@@ -15,7 +15,7 @@
 
 <script>
 import { NcContent as Content } from '@nextcloud/vue'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 
 import '../../css/mail.scss'
 import '../../css/mobile.scss'

@@ -21,7 +21,7 @@
 
 import * as webdav from 'webdav'
 import axios from '@nextcloud/axios'
-import memoize from 'lodash/fp/memoize'
+import memoize from 'lodash/fp/memoize.js'
 import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
 

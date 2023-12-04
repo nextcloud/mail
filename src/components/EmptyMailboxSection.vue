@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import IconMail from 'vue-material-design-icons/Email'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
+import IconMail from 'vue-material-design-icons/Email.vue'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 export default {
 	name: 'EmptyMailboxSection',
 	components: {

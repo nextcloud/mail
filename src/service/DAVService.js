@@ -17,7 +17,7 @@
  *
  */
 
-import curry from 'lodash/fp/curry'
+import curry from 'lodash/fp/curry.js'
 import ical from 'ical.js'
 import { getClient } from '../dav/client.js'
 import Axios from '@nextcloud/axios'

@@ -138,7 +138,7 @@
 <script>
 import { NcDatetimePicker as DatetimePicker, NcButton as Button } from '@nextcloud/vue'
 import TextEditor from './TextEditor.vue'
-import CheckIcon from 'vue-material-design-icons/Check'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
 import { html, plain, toHtml, toPlain } from '../util/text.js'
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
