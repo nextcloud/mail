@@ -347,6 +347,11 @@ export default {
 .information-icon {
 	opacity: .7;
 }
+@media only screen and (max-width: 1024px) {
+	.information-icon {
+		margin-bottom: 20px;
+	}
+}
 .header__button {
 	display: flex;
 	flex: 1 0 0;
