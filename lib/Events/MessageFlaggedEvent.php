@@ -30,7 +30,6 @@ use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
 class MessageFlaggedEvent extends Event {
-
 	/** @var Account */
 	private $account;
 
@@ -47,10 +46,10 @@ class MessageFlaggedEvent extends Event {
 	private $set;
 
 	public function __construct(Account $account,
-								Mailbox $mailbox,
-								int $uid,
-								string $flag,
-								bool $set) {
+		Mailbox $mailbox,
+		int $uid,
+		string $flag,
+		bool $set) {
 		parent::__construct();
 		$this->account = $account;
 		$this->mailbox = $mailbox;

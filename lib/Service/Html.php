@@ -35,10 +35,10 @@ use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
-use OCA\Mail\Service\HtmlPurify\TransformStyleURLs;
 use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
 use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
+use OCA\Mail\Service\HtmlPurify\TransformStyleURLs;
 use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -52,7 +52,6 @@ use Youthweb\UrlLinker\UrlLinker;
 require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
 
 class Html {
-
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -72,6 +71,11 @@ class Html {
 		$linker = new UrlLinker([
 			'allowFtpAddresses' => true,
 			'allowUpperCaseUrlSchemes' => false,
+			'htmlLinkCreator' => static function ($url) {
+				// Render full url for the link description. Otherwise, potentially malicious query
+				// params might be hidden.
+				return sprintf('<a href="%1$s">%1$s</a>', htmlspecialchars($url));
+			},
 		]);
 		$data = $linker->linkUrlsAndEscapeHtml($data);
 
@@ -147,7 +151,14 @@ class Html {
 		$uri = $config->getDefinition('URI');
 		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator, $this->request), $config);
 
-		HTMLPurifier_URISchemeRegistry::instance()->register('cid', new CidURIScheme());
+		$uriSchemeRegistry = HTMLPurifier_URISchemeRegistry::instance();
+		$uriSchemeRegistry->register('cid', new CidURIScheme());
+
+		$uriSchemaData = new \HTMLPurifier_URIScheme_data();
+		$uriSchemaData->allowed_types['image/bmp'] = true;
+		$uriSchemaData->allowed_types['image/tiff'] = true;
+		$uriSchemaData->allowed_types['image/webp'] = true;
+		$uriSchemeRegistry->register('data', $uriSchemaData);
 
 		$purifier = new HTMLPurifier($config);
 

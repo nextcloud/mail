@@ -31,6 +31,7 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OCA\Mail\Db\TrustedSenderMapper;
 use OCP\IDBConnection;
 use OCP\IUser;
+use OCP\Server;
 
 class TrustedSenderMapperTest extends TestCase {
 	use DatabaseTransaction, TestUser;
@@ -48,7 +49,7 @@ class TrustedSenderMapperTest extends TestCase {
 		parent::setUp();
 
 		/** @var IDBConnection $db */
-		$this->db = \OC::$server->get(IDBConnection::class);
+		$this->db = Server::get(IDBConnection::class);
 		$this->user = $this->createTestUser();
 
 		$this->mapper = new TrustedSenderMapper(
@@ -70,7 +71,7 @@ class TrustedSenderMapperTest extends TestCase {
 				'user_id' => $qb->createNamedParameter($uid),
 				'email' => $qb->createNamedParameter('christoph@next.cloud'),
 			])
-			->execute();
+			->executeStatement();
 
 		$exists = $this->mapper->exists($uid, "christoph@next.cloud");
 
@@ -87,7 +88,7 @@ class TrustedSenderMapperTest extends TestCase {
 				'type' => $qb->createNamedParameter('domain'),
 
 			])
-			->execute();
+			->executeStatement();
 
 		$exists = $this->mapper->exists($uid, "christoph@next.cloud");
 
@@ -109,7 +110,7 @@ class TrustedSenderMapperTest extends TestCase {
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
 				$qb->expr()->eq('email', $qb->createNamedParameter("christoph@next.cloud"))
 			);
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		$this->assertCount(1, $rows);
@@ -124,14 +125,14 @@ class TrustedSenderMapperTest extends TestCase {
 				'email' => $qb->createNamedParameter('christoph@next.cloud'),
 				'type' => $qb->createNamedParameter('individual'),
 			])
-			->execute();
+			->executeStatement();
 		$qb->insert('mail_trusted_senders')
 			->values([
 				'user_id' => $qb->createNamedParameter($uid),
 				'email' => $qb->createNamedParameter('next.cloud'),
 				'type' => $qb->createNamedParameter('domain'),
 			])
-			->execute();
+			->executeStatement();
 
 		$this->mapper->remove(
 			$uid,
@@ -147,7 +148,7 @@ class TrustedSenderMapperTest extends TestCase {
 				$qb->expr()->eq('email', $qb->createNamedParameter("christoph@next.cloud")),
 				$qb->expr()->eq('type', $qb->createNamedParameter("individual"))
 			);
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		$this->assertEmpty($rows);
@@ -162,14 +163,14 @@ class TrustedSenderMapperTest extends TestCase {
 				'email' => $qb->createNamedParameter('christoph@next.cloud'),
 				'type' => $qb->createNamedParameter('individual'),
 			])
-			->execute();
+			->executeStatement();
 		$qb->insert('mail_trusted_senders')
 			->values([
 				'user_id' => $qb->createNamedParameter($uid),
 				'email' => $qb->createNamedParameter('next.cloud'),
 				'type' => $qb->createNamedParameter('domain'),
 			])
-			->execute();
+			->executeStatement();
 
 		$this->mapper->remove(
 			$uid,
@@ -185,7 +186,7 @@ class TrustedSenderMapperTest extends TestCase {
 				$qb->expr()->eq('email', $qb->createNamedParameter("next.cloud")),
 				$qb->expr()->eq('type', $qb->createNamedParameter("domain"))
 			);
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 		$this->assertEmpty($rows);

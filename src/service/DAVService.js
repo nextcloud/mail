@@ -17,15 +17,15 @@
  *
  */
 
-import curry from 'lodash/fp/curry'
+import curry from 'lodash/fp/curry.js'
 import ical from 'ical.js'
-import { getClient } from '../dav/client'
+import { getClient } from '../dav/client.js'
 import Axios from '@nextcloud/axios'
 
-import Logger from '../logger'
+import Logger from '../logger.js'
 import { generateRemoteUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
-import { uidToHexColor } from '../util/calendarColor'
+import { uidToHexColor } from '../util/calendarColor.js'
 
 const canWrite = (properties) => {
 	let acls = properties?.acl?.ace
@@ -62,9 +62,9 @@ const getCalendarData = (calendar) => {
 }
 
 /**
- * @returns {Promise}
+ * @return {Promise}
  */
-export const getUserCalendars = async() => {
+export const getUserCalendars = async () => {
 	const response = await getClient('calendars')
 		.getDirectoryContents('/', {
 			data: `<?xml version="1.0"?>
@@ -149,9 +149,9 @@ const splitCalendar = (data) => {
 }
 
 /**
- * @param {String} url the url
- * @param {Object} data the data
- * @returns {Promise}
+ * @param {string} url the url
+ * @param {object} data the data
+ * @return {Promise}
  */
 export const importCalendarEvent = curry((url, data) => {
 	Logger.debug('importing events into calendar', {

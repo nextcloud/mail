@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -26,15 +27,16 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
+use OCA\Mail\Db\MessageTagsMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Db\ThreadMapper;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -49,7 +51,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class MailManagerTest extends TestCase {
-
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 
@@ -80,8 +81,13 @@ class MailManagerTest extends TestCase {
 	/** @var MockObject|TagMapper */
 	private $tagMapper;
 
+	/** @var MessageTagsMapper|MockObject */
+	private $messageTagsMapper;
+
 	/** @var ThreadMapper|MockObject */
 	private $threadMapper;
+
+	
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -95,6 +101,7 @@ class MailManagerTest extends TestCase {
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->tagMapper = $this->createMock(TagMapper::class);
+		$this->messageTagsMapper = $this->createMock(MessageTagsMapper::class);
 		$this->threadMapper = $this->createMock(ThreadMapper::class);
 
 		$this->manager = new MailManager(
@@ -107,6 +114,7 @@ class MailManagerTest extends TestCase {
 			$this->eventDispatcher,
 			$this->logger,
 			$this->tagMapper,
+			$this->messageTagsMapper,
 			$this->threadMapper
 		);
 	}
@@ -143,7 +151,7 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($client), $this->equalTo($account), $this->equalTo('new'))
 			->willReturn($folder);
 		$this->folderMapper->expects($this->once())
-			->method('getFoldersStatus')
+			->method('fetchFolderAcls')
 			->with($this->equalTo([$folder]));
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
@@ -162,12 +170,8 @@ class MailManagerTest extends TestCase {
 	public function testDeleteMessageSourceFolderNotFound(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -186,17 +190,15 @@ class MailManagerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setTrashMailboxId(123);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
-			->willReturn($this->createMock(Mailbox::class));
+			->willReturn($mailbox);
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
@@ -221,7 +223,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -261,7 +263,7 @@ class MailManagerTest extends TestCase {
 		$trash = new Mailbox();
 		$trash->setName('Trash');
 		$this->eventDispatcher->expects($this->exactly(2))
-			->method('dispatch');
+			->method('dispatchTyped');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'Trash')
@@ -351,13 +353,9 @@ class MailManagerTest extends TestCase {
 			'mdnsent' => [\Horde_Imap_Client::FLAG_MDNSENT],
 		];
 
-		$this->imapClientFactory->expects($this->any())
-			->method('getClient')
-			->willReturn($client);
-
 		//standard flags
 		foreach ($flags as $k => $flag) {
-			$this->assertEquals($this->manager->filterFlags($account, $k, 'INBOX'), $flags[$k]);
+			$this->assertEquals($this->manager->filterFlags($client, $account, $k, 'INBOX'), $flags[$k]);
 		}
 	}
 
@@ -365,53 +363,40 @@ class MailManagerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
-		$this->imapClientFactory->expects($this->any())
-		->method('getClient')
-		->willReturn($client);
-
-		$this->assertEquals([], $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT, 'INBOX'));
+		$this->assertEquals([], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
 
 	public function testSetFilterFlagsImportant() {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
 		$client->expects($this->once())
 			->method('status')
 			->willReturn(['permflags' => [ "11" => "\*" ]]);
 
-		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($account, Tag::LABEL_IMPORTANT, 'INBOX'));
+		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
 
 	public function testIsPermflagsEnabledTrue(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
 		$client->expects($this->once())
 			->method('status')
 			->willReturn(['permflags' => [ "11" => "\*"] ]);
 
-		$this->assertTrue($this->manager->isPermflagsEnabled($account, 'INBOX'));
+		$this->assertTrue($this->manager->isPermflagsEnabled($client, $account, 'INBOX'));
 	}
 
 	public function testIsPermflagsEnabledFalse(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
 		$client->expects($this->once())
 			->method('status')
 			->willReturn([]);
 
-		$this->assertFalse($this->manager->isPermflagsEnabled($account, 'INBOX'));
+		$this->assertFalse($this->manager->isPermflagsEnabled($client, $account, 'INBOX'));
 	}
 
 	public function testRemoveFlag(): void {
@@ -535,12 +520,17 @@ class MailManagerTest extends TestCase {
 
 	public function testGetMailAttachments(): void {
 		$account = $this->createMock(Account::class);
+		$account->expects($this->once())
+			->method('getUserId')
+			->willReturn('user');
 		$attachments = [
-			[
-				'content' => 'abcdefg',
-				'name' => 'cat.png',
-				'size' => ''
-			]
+			new Attachment(
+				null,
+				'cat.png',
+				'image/png',
+				'abcdefg',
+				7
+			),
 		];
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = new Mailbox();
@@ -770,7 +760,7 @@ class MailManagerTest extends TestCase {
 			->method('move');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,
@@ -813,7 +803,7 @@ class MailManagerTest extends TestCase {
 			->method('expunge');
 		$this->eventDispatcher
 			->expects(self::exactly(4))
-			->method('dispatch');
+			->method('dispatchTyped');
 
 		$this->manager->deleteThread(
 			$account,

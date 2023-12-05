@@ -33,7 +33,6 @@ use OCA\Mail\Service\Avatar\Downloader;
 use OCP\IURLGenerator;
 
 class AvatarService implements IAvatarService {
-
 	/** @var AvatarCache */
 	private $cache;
 
@@ -61,11 +60,11 @@ class AvatarService implements IAvatarService {
 	 * @param IUserPreferences $preferences
 	 */
 	public function __construct(CompositeAvatarSource $source,
-								Downloader $downloader,
-								AvatarCache $cache,
-								IURLGenerator $urlGenerator,
-								AvatarFactory $avatarFactory,
-								IUserPreferences $preferences) {
+		Downloader $downloader,
+		AvatarCache $cache,
+		IURLGenerator $urlGenerator,
+		AvatarFactory $avatarFactory,
+		IUserPreferences $preferences) {
 		$this->source = $source;
 		$this->cache = $cache;
 		$this->urlGenerator = $urlGenerator;

@@ -32,14 +32,10 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
-use OCA\Mail\Events\MessageDeletedEvent;
-use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Listener\DeleteDraftListener;
-use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -48,7 +44,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class DeleteDraftListenerTest extends TestCase {
-
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 
@@ -192,69 +187,6 @@ class DeleteDraftListenerTest extends TestCase {
 			->method('error');
 		$this->eventDispatcher->expects($this->never())
 			->method('dispatchTyped');
-
-		$this->listener->handle($event);
-	}
-
-	public function testHandleMessageSentEvent(): void {
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
-		$mailAccount = new MailAccount();
-		$mailAccount->setDraftsMailboxId(123);
-		$account->method('getMailAccount')->willReturn($mailAccount);
-		/** @var NewMessageData|MockObject $newMessageData */
-		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
-		/** @var IMessage|MockObject $message */
-		$message = $this->createMock(IMessage::class);
-		/** @var \Horde_Mime_Mail|MockObject $mail */
-		$mail = $this->createMock(\Horde_Mime_Mail::class);
-		$draft = new Message();
-		$uid = 123;
-		$draft->setUid($uid);
-		$event = new MessageSentEvent(
-			$account,
-			$newMessageData,
-			$repliedMessageData,
-			$draft,
-			$message,
-			$mail
-		);
-		/** @var \Horde_Imap_Client_Socket|MockObject $client */
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
-		$mailbox = new Mailbox();
-		$mailbox->setName('Drafts');
-		$this->mailboxMapper->expects($this->once())
-			->method('findById')
-			->with(123)
-			->willReturn($mailbox);
-		$this->messageMapper->expects($this->once())
-			->method('addFlag')
-			->with(
-				$client,
-				$mailbox,
-				[$uid],
-				\Horde_Imap_Client::FLAG_DELETED
-			);
-		$client->expects($this->once())
-			->method('expunge')
-			->with('Drafts');
-		$this->logger->expects($this->never())
-			->method('error');
-
-		$messageDeletedEvent = new MessageDeletedEvent(
-			$account,
-			$mailbox,
-			$draft->getUid()
-		);
-		$this->eventDispatcher->expects($this->once())
-			->method('dispatchTyped')
-			->with($messageDeletedEvent);
 
 		$this->listener->handle($event);
 	}

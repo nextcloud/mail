@@ -4,7 +4,7 @@
   - @author Julius Härtl <jus@bitgrid.net>
   - @author Richard Steinmetz <richard@steinmetz.cloud>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -33,7 +33,7 @@
 				:main-text="itemMainText(item)"
 				:sub-text="itemSubText(item)">
 				<template #avatar>
-					<Avatar v-if="item.from"
+					<Avatar v-if="item.from && item.from.length"
 						:email="item.from[0].email"
 						:display-name="item.from[0].label"
 						:disable-tooltip="true"
@@ -42,9 +42,11 @@
 			</DashboardWidgetItem>
 		</template>
 		<template #empty-content>
-			<EmptyContent id="mail--empty-content" icon="icon-checkmark">
-				<template #desc>
-					{{ t('mail', 'No message found yet') }}
+			<EmptyContent id="mail--empty-content" :title="t('mail', 'No message found yet')">
+				<template #icon>
+					<IconCheck :size="65" />
+				</template>
+				<template #action>
 					<div class="no-account">
 						<a v-if="accounts.length === 0" :href="accountSetupUrl" class="button">{{ t('mail', 'Set up an account') }}</a>
 					</div>
@@ -58,14 +60,15 @@
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl, imagePath } from '@nextcloud/router'
 import { DashboardWidget, DashboardWidgetItem } from '@nextcloud/vue-dashboard'
-import orderBy from 'lodash/fp/orderBy'
-import prop from 'lodash/fp/prop'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import orderBy from 'lodash/fp/orderBy.js'
+import prop from 'lodash/fp/prop.js'
+import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 
-import Avatar from '../components/Avatar'
-import { fetchEnvelopes } from '../service/MessageService'
-import logger from '../logger'
-import { fetchAll } from '../service/MailboxService'
+import Avatar from '../components/Avatar.vue'
+import { fetchEnvelopes } from '../service/MessageService.js'
+import logger from '../logger.js'
+import { fetchAll } from '../service/MailboxService.js'
 
 const accounts = loadState('mail', 'mail-accounts')
 const orderByDateInt = orderBy(prop('dateInt'), 'desc')
@@ -77,6 +80,7 @@ export default {
 		DashboardWidget,
 		DashboardWidgetItem,
 		EmptyContent,
+		IconCheck,
 	},
 	props: {
 		query: {
@@ -103,7 +107,7 @@ export default {
 		},
 	},
 	async mounted() {
-		const accountInboxes = await Promise.all(this.accounts.map(async(account) => {
+		const accountInboxes = await Promise.all(this.accounts.map(async (account) => {
 			logger.debug('account', {
 				account,
 			})
@@ -122,8 +126,9 @@ export default {
 			inboxes,
 		})
 
-		await Promise.all(inboxes.map(async(mailbox) => {
+		await Promise.all(inboxes.map(async (mailbox) => {
 			const messages = await fetchEnvelopes(mailbox.accountId, mailbox.databaseId, this.query, undefined, 10)
+			messages.forEach(message => { message.id = message.databaseId })
 			this.messages = this.messages !== null ? [...this.messages, ...messages] : messages
 			this.fetchedAccounts++
 		}))
@@ -132,7 +137,7 @@ export default {
 	},
 	methods: {
 		itemMainText(item) {
-			return item.from ? item.from[0].label : ''
+			return item.from && item.from.length ? item.from[0].label : ''
 		},
 		itemSubText(item) {
 			return item.subject
@@ -156,7 +161,7 @@ export default {
 	margin-top: 5vh;
 	margin-right: 5px;
 }
-.unread ::v-deep .item__details {
+.unread :deep(.item__details) {
 	font-weight: bold;
 }
 </style>

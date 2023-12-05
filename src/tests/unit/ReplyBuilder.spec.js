@@ -3,7 +3,7 @@
  *
  * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,8 +24,8 @@ import {
 	buildRecipients,
 	buildReplyBody,
 	buildReplySubject,
-} from '../../ReplyBuilder'
-import { html, plain } from '../../util/text'
+} from '../../ReplyBuilder.js'
+import { html, plain } from '../../util/text.js'
 
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {
@@ -34,8 +34,8 @@ describe('ReplyBuilder', () => {
 		const replyBodyTop = buildReplyBody(body)
 		const replyBodyBottom = buildReplyBody(body, undefined, undefined, false)
 
-		expect(replyBodyTop).to.deep.equal(html('<p></p><p></p><div class="quote"><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers</div>'))
-		expect(replyBodyBottom).to.deep.equal(html('<div class="quote"><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers</div><p></p><p></p>'))
+		expect(replyBodyTop).toEqual(html('<p></p><p></p><div class="quote"><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers</div>'))
+		expect(replyBodyBottom).toEqual(html('<div class="quote"><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers</div><p></p><p></p>'))
 	})
 
 	it('creates a reply body', () => {
@@ -59,8 +59,8 @@ describe('ReplyBuilder', () => {
 			false
 		)
 
-		expect(replyBodyTop.value.startsWith(html('<p></p><p></p><div class="quote">"Test User" test@user.ru – November 5, 2018 ').value)).to.be.true
-		expect(replyBodyBottom.value.endsWith(html('<p></p><p></p>').value)).to.be.true
+		expect(replyBodyTop.value.startsWith(html('<p></p><p></p><div class="quote">"Test User" test@user.ru – November 5, 2018 ').value)).toEqual(true)
+		expect(replyBodyBottom.value.endsWith(html('<p></p><p></p>').value)).toEqual(true)
 	})
 
 	let envelope
@@ -81,7 +81,7 @@ describe('ReplyBuilder', () => {
 		const rawL2 = l2.map((a) => a.email)
 		rawL1.sort()
 		rawL2.sort()
-		expect(rawL1).to.deep.equal(rawL2)
+		expect(rawL1).toEqual(rawL2)
 	}
 
 	// b -> a to a -as b
@@ -245,7 +245,7 @@ describe('ReplyBuilder', () => {
 
 		const replySubject = buildReplySubject(orig)
 
-		expect(replySubject).to.equal('Re: Hello')
+		expect(replySubject).toEqual('Re: Hello')
 	})
 
 	it("does not stack subject re:'s", () => {
@@ -253,6 +253,6 @@ describe('ReplyBuilder', () => {
 
 		const replySubject = buildReplySubject(orig)
 
-		expect(replySubject).to.equal('Re: Hello')
+		expect(replySubject).toEqual('Re: Hello')
 	})
 })

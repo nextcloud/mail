@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
@@ -38,7 +39,6 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -46,7 +46,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class SaveSentMessageListenerTest extends TestCase {
-
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 
@@ -93,8 +92,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -104,7 +101,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail
@@ -125,8 +122,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -136,7 +131,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail
@@ -161,8 +156,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -172,7 +165,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail
@@ -189,7 +182,7 @@ class SaveSentMessageListenerTest extends TestCase {
 				$mailbox,
 				$mail
 			)
-			->willThrowException(new \Horde_Imap_Client_Exception());
+			->willThrowException(new Horde_Imap_Client_Exception('', 0));
 		$this->expectException(ServiceException::class);
 
 		$this->listener->handle($event);
@@ -203,8 +196,6 @@ class SaveSentMessageListenerTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -214,7 +205,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			$draft,
 			$message,
 			$mail

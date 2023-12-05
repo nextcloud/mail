@@ -30,22 +30,20 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCP\EventDispatcher\Event;
 
 /**
  * @psalm-immutable
  */
 class MessageSentEvent extends Event {
-
 	/** @var Account */
 	private $account;
 
 	/** @var NewMessageData */
 	private $newMessageData;
 
-	/** @var null|RepliedMessageData */
-	private $repliedMessageData;
+	/** @var null|string */
+	private $repliedToMessageId;
 
 	/** @var Message|null */
 	private $draft;
@@ -57,15 +55,15 @@ class MessageSentEvent extends Event {
 	private $mail;
 
 	public function __construct(Account $account,
-								NewMessageData $newMessageData,
-								?RepliedMessageData $repliedMessageData,
-								?Message $draft,
-								IMessage $message,
-								Horde_Mime_Mail $mail) {
+		NewMessageData $newMessageData,
+		?string $repliedToMessageId,
+		?Message $draft,
+		IMessage $message,
+		Horde_Mime_Mail $mail) {
 		parent::__construct();
 		$this->account = $account;
 		$this->newMessageData = $newMessageData;
-		$this->repliedMessageData = $repliedMessageData;
+		$this->repliedToMessageId = $repliedToMessageId;
 		$this->draft = $draft;
 		$this->message = $message;
 		$this->mail = $mail;
@@ -79,8 +77,8 @@ class MessageSentEvent extends Event {
 		return $this->newMessageData;
 	}
 
-	public function getRepliedMessageData(): ?RepliedMessageData {
-		return $this->repliedMessageData;
+	public function getRepliedToMessageId(): ?string {
+		return $this->repliedToMessageId;
 	}
 
 	public function getDraft(): ?Message {

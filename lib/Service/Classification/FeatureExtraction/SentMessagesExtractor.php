@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -28,11 +29,11 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\StatisticsDao;
+use RuntimeException;
 use function array_map;
 use function array_unique;
 
 class SentMessagesExtractor implements IExtractor {
-
 	/** @var StatisticsDao */
 	private $statisticsDao;
 
@@ -47,12 +48,12 @@ class SentMessagesExtractor implements IExtractor {
 	}
 
 	public function prepare(Account $account,
-							array $incomingMailboxes,
-							array $outgoingMailboxes,
-							array $messages): void {
-		$senders = array_unique(array_map(function (Message $message) {
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): void {
+		$senders = array_unique(array_map(static function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
-		}, array_filter($messages, function (Message $message) {
+		}, array_filter($messages, static function (Message $message) {
 			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
 		})));
 
@@ -60,12 +61,18 @@ class SentMessagesExtractor implements IExtractor {
 		$this->messagesSent = $this->statisticsDao->getMessagesSentToGrouped($outgoingMailboxes, $senders);
 	}
 
-	public function extract(string $email): float {
+	public function extract(Message $message): array {
+		$sender = $message->getFrom()->first();
+		if ($sender === null) {
+			throw new RuntimeException("This should not happen");
+		}
+		$email = $sender->getEmail();
+
 		if (($messagesSentTotal = $this->messagesSentTotal) === 0) {
 			// Prevent div by 0
-			return 0;
+			return [0];
 		}
 
-		return ($this->messagesSent[$email] ?? 0) / $messagesSentTotal;
+		return [($this->messagesSent[$email] ?? 0) / $messagesSentTotal];
 	}
 }

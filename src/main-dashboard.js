@@ -4,7 +4,7 @@
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,9 +25,9 @@ import Vue from 'vue'
 import { getRequestToken } from '@nextcloud/auth'
 import { generateFilePath } from '@nextcloud/router'
 
-import Nextcloud from './mixins/Nextcloud'
-import DashboardImportant from './views/DashboardImportant'
-import DashboardUnread from './views/DashboardUnread'
+import Nextcloud from './mixins/Nextcloud.js'
+import DashboardImportant from './views/DashboardImportant.vue'
+import DashboardUnread from './views/DashboardUnread.vue'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())

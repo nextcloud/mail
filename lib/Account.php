@@ -14,6 +14,7 @@
  * @author Thomas I <thomas@oatr.be>
  * @author Thomas Mueller <thomas.mueller@tmit.eu>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -34,11 +35,7 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
-use Horde_Mail_Rfc822_List;
-use Horde_Mail_Transport;
-use Horde_Mail_Transport_Smtphorde;
 use JsonSerializable;
 use OC;
 use OCA\Mail\Cache\Cache;
@@ -47,12 +44,13 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
+use OCA\Mail\Service\Quota;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
+use ReturnTypeWillChange;
 
 class Account implements JsonSerializable {
-
 	/** @var MailAccount */
 	private $account;
 
@@ -167,7 +165,7 @@ class Account implements JsonSerializable {
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
 					"Could not connect to IMAP host $host:$port: " . $e->getMessage(),
-					(int) $e->getCode(),
+					$e->getCode(),
 					$e
 				);
 			}
@@ -175,23 +173,7 @@ class Account implements JsonSerializable {
 		return $this->client;
 	}
 
-	/**
-	 * @deprecated
-	 * @param string $folderId
-	 * @return Mailbox
-	 *
-	 * @throws ServiceException
-	 */
-	public function getMailbox($folderId) {
-		return new Mailbox(
-			$this->getImapConnection(),
-			new Horde_Imap_Client_Mailbox($folderId)
-		);
-	}
-
-	/**
-	 * @return array
-	 */
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->account->toJson();
 	}
@@ -210,10 +192,7 @@ class Account implements JsonSerializable {
 		return $sslMode;
 	}
 
-	/**
-	 * @return string|Horde_Mail_Rfc822_List
-	 */
-	public function getEmail() {
+	public function getEmail(): string {
 		return $this->account->getEmail();
 	}
 
@@ -225,28 +204,25 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * @deprecated
-	 *
-	 * @return void
-	 *
-	 * @throws ServiceException
-	 */
-	public function testConnectivity(Horde_Mail_Transport $transport): void {
-		// connect to imap
-		$this->getImapConnection();
-
-		// connect to smtp
-		if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
-			$transport->getSMTPObject();
-		}
-	}
-
-	/**
 	 * Factory method for creating new messages
 	 *
 	 * @return IMessage
 	 */
 	public function newMessage() {
 		return new Message();
+	}
+
+	/**
+	 * Set the quota percentage
+	 * @param Quota $quota
+	 * @return void
+	 */
+	public function calculateAndSetQuotaPercentage(Quota $quota): void {
+		$percentage = (int)round($quota->getUsage() / $quota->getLimit() * 100);
+		$this->account->setQuotaPercentage($percentage);
+	}
+
+	public function getQuotaPercentage(): ?int {
+		return $this->account->getQuotaPercentage();
 	}
 }

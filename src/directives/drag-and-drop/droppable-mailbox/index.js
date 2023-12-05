@@ -1,4 +1,4 @@
-import { DroppableMailbox } from './droppable-mailbox'
+import { DroppableMailbox } from './droppable-mailbox.js'
 
 let instance
 

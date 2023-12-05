@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getClient } from '../dav/client'
+import { getClient } from '../dav/client.js'
 
 export async function getFileSize(path) {
 	const response = await getClient('files').stat(path, {
@@ -34,4 +34,23 @@ export async function getFileSize(path) {
 	})
 
 	return response?.data?.props?.size
+}
+
+export async function getFileData(path) {
+	const response = await getClient('files').stat(path, {
+		data: `<?xml version="1.0"?>
+			<d:propfind
+			xmlns:d="DAV:"
+			xmlns:oc="http://owncloud.org/ns"
+			xmlns:nc="http://nextcloud.org/ns">
+				<d:prop>
+					<oc:size />
+					<oc:fileid />
+					<nc:has-preview />
+				</d:prop>
+			</d:propfind>`,
+		details: true,
+	})
+
+	return response?.data?.props
 }

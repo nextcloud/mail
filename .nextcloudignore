@@ -13,6 +13,7 @@ codecov.yml
 .gitignore
 .hg
 /issue_template.md
+/jest.config.js
 /.jscsrc
 /.jshintignore
 /.jshintrc
@@ -28,10 +29,13 @@ codecov.yml
 /phpunit*xml
 /postcss.config.js
 /psalm.xml
+/rector.php
+/renovate.json
 /screenshots
 /src
 /tests
 .travis.yml
 /vendor/bin
 /vendor-bin
+/vendor/cerdic/css-tidy/css_optimiser.php
 /webpack.*

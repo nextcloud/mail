@@ -42,22 +42,15 @@ class ExportAccountThreads extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 	private const OPTION_REDACT = 'redact';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ISecureRandom */
-	private $random;
-
-	/** @var IHasher */
-	private $hasher;
-
-	/** @var MessageMapper */
-	private $messageMapper;
+	private AccountService $accountService;
+	private ISecureRandom $random;
+	private IHasher $hasher;
+	private MessageMapper $messageMapper;
 
 	public function __construct(AccountService $service,
-								ISecureRandom $random,
-								IHasher $hasher,
-								MessageMapper $messageMapper) {
+		ISecureRandom $random,
+		IHasher $hasher,
+		MessageMapper $messageMapper) {
 		parent::__construct();
 
 		$this->accountService = $service;
@@ -87,9 +80,9 @@ class ExportAccountThreads extends Command {
 		if ($input->getOption(self::OPTION_REDACT)) {
 			$salt = $this->random->generate(32);
 			$output->writeln(json_encode(
-				array_map(function (DatabaseMessage $message) use ($salt) {
+				array_map(static function (DatabaseMessage $message) use ($salt) {
 					return $message->redact(
-						function (string $str) use ($salt) {
+						static function (string $str) use ($salt) {
 							return hash('md5', $str . $salt) . "@redacted";
 						}
 					);

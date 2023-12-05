@@ -26,10 +26,10 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
+use OCP\Server;
 use Psr\Log\NullLogger;
 
 trait ImapTestAccount {
-
 	/**
 	 * @return string
 	 */
@@ -42,12 +42,12 @@ trait ImapTestAccount {
 	 *
 	 * @return MailAccount
 	 */
-	public function createTestAccount() {
+	public function createTestAccount(string $userId = null) {
 		/* @var $accountService AccountService */
-		$accountService = OC::$server->query(AccountService::class);
+		$accountService = Server::get(AccountService::class);
 
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId($this->getTestAccountUserId());
+		$mailAccount->setUserId($userId ?? $this->getTestAccountUserId());
 		$mailAccount->setName('Tester');
 		$mailAccount->setEmail('user@domain.tld');
 		$mailAccount->setInboundHost('127.0.0.1');
@@ -64,7 +64,7 @@ trait ImapTestAccount {
 		$acc = $accountService->save($mailAccount);
 
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync(new Account($mailAccount), new NullLogger());
 
 		return $acc;

@@ -31,21 +31,15 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use Psr\Log\LoggerInterface;
 
 class AddressCollector {
-
 	/** @var CollectedAddressMapper */
 	private $mapper;
-
-	/** @var string */
-	private $userId;
 
 	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(CollectedAddressMapper $mapper,
-								?string $UserId,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
-		$this->userId = $UserId;
 		$this->logger = $logger;
 	}
 
@@ -54,24 +48,26 @@ class AddressCollector {
 	 *
 	 * Duplicates are ignored
 	 *
+	 * @param string $userId
 	 * @param AddressList $addressList
 	 *
 	 * @return void
 	 */
-	public function addAddresses(AddressList $addressList): void {
+	public function addAddresses(string $userId, AddressList $addressList): void {
 		$this->logger->debug("collecting " . count($addressList) . " email addresses");
 		foreach ($addressList->iterate() as $address) {
 			/* @var $address Address */
-			$this->saveAddress($address);
+			$this->saveAddress($userId, $address);
 		}
 	}
 
 	/**
+	 * @param string $userId
 	 * @param Address $address
 	 *
 	 * @return void
 	 */
-	private function saveAddress(Address $address): void {
+	private function saveAddress(string $userId, Address $address): void {
 		try {
 			$hordeAddress = $address->toHorde();
 			if (!$hordeAddress->valid) {
@@ -82,11 +78,11 @@ class AddressCollector {
 			$this->logger->debug("<" . $address->getEmail() . "> is not a valid RFC822 mail address");
 			return;
 		}
-		if ($address->getEmail() !== null && !$this->mapper->exists($this->userId, $address->getEmail())) {
+		if ($address->getEmail() !== null && !$this->mapper->exists($userId, $address->getEmail())) {
 			$this->logger->debug("saving new address <{$address->getEmail()}>");
 
 			$entity = new CollectedAddress();
-			$entity->setUserId($this->userId);
+			$entity->setUserId($userId);
 			if ($address->getLabel() !== $address->getEmail()) {
 				$entity->setDisplayName($address->getLabel());
 			}
@@ -101,9 +97,9 @@ class AddressCollector {
 	 * @param string $term
 	 * @return CollectedAddress[]
 	 */
-	public function searchAddress(string $term): array {
+	public function searchAddress(string $userId, string $term): array {
 		$this->logger->debug("searching for collected address <$term>");
-		$result = $this->mapper->findMatching($this->userId, $term);
+		$result = $this->mapper->findMatching($userId, $term);
 		$this->logger->debug("found " . count($result) . " matches in collected addresses");
 		return $result;
 	}

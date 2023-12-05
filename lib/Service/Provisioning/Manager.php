@@ -34,6 +34,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\ICacheFactory;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\LDAP\ILDAPProvider;
@@ -42,7 +43,7 @@ use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
 class Manager {
-
+	public const MAIL_PROVISIONINGS = 'mail_provisionings';
 	/** @var IUserManager */
 	private $userManager;
 
@@ -67,14 +68,18 @@ class Manager {
 	/** @var TagMapper */
 	private $tagMapper;
 
+	/** @var ICacheFactory */
+	private $cacheFactory;
+
 	public function __construct(IUserManager $userManager,
-								ProvisioningMapper $provisioningMapper,
-								MailAccountMapper $mailAccountMapper,
-								ICrypto $crypto,
-								ILDAPProviderFactory $ldapProviderFactory,
-								AliasMapper $aliasMapper,
-								LoggerInterface $logger,
-								TagMapper $tagMapper) {
+		ProvisioningMapper $provisioningMapper,
+		MailAccountMapper $mailAccountMapper,
+		ICrypto $crypto,
+		ILDAPProviderFactory $ldapProviderFactory,
+		AliasMapper $aliasMapper,
+		LoggerInterface $logger,
+		TagMapper $tagMapper,
+		ICacheFactory $cacheFactory) {
 		$this->userManager = $userManager;
 		$this->provisioningMapper = $provisioningMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -83,6 +88,7 @@ class Manager {
 		$this->aliasMapper = $aliasMapper;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
+		$this->cacheFactory = $cacheFactory;
 	}
 
 	public function getConfigById(int $provisioningId): ?Provisioning {
@@ -90,7 +96,21 @@ class Manager {
 	}
 
 	public function getConfigs(): array {
-		return $this->provisioningMapper->getAll();
+		$cache = null;
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+			$cached = $cache->get('provisionings_all');
+			if ($cached !== null) {
+				return unserialize($cached, ['allowed_classes' => [Provisioning::class]]);
+			}
+		}
+
+		$provisionings = $this->provisioningMapper->getAll();
+		// let's cache the provisionings for 5 minutes
+		if ($cache !== null) {
+			$cache->set('provisionings_all', serialize($provisionings), 60 * 5);
+		}
+		return $provisionings;
 	}
 
 	public function provision(): int {
@@ -110,12 +130,7 @@ class Manager {
 	 * A alias is orphaned if not listed in newAliases anymore
 	 * (=> the provisioning configuration does contain it anymore)
 	 *
-	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
-	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
-	 *
-	 * @TODO: Change throws to \OCP\DB\Exception once Mail requires Nextcloud 21 or above
-	 *
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
 	private function deleteOrphanedAliases(string $userId, int $accountId, array $newAliases): void {
 		$existingAliases = $this->aliasMapper->findAll($accountId, $userId);
@@ -129,15 +144,14 @@ class Manager {
 	/**
 	 * Create new aliases for the given account.
 	 *
-	 * Exception for Nextcloud 20: \Doctrine\DBAL\DBALException
-	 * Exception for Nextcloud 21 and newer: \OCP\DB\Exception
-	 *
-	 * @TODO: Change throws to \OCP\DB\Exception once Mail requires Nextcloud 21 or above
-	 *
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
-	private function createNewAliases(string $userId, int $accountId, array $newAliases, string $displayName): void {
+	private function createNewAliases(string $userId, int $accountId, array $newAliases, string $displayName, string $accountEmail): void {
 		foreach ($newAliases as $newAlias) {
+			if ($newAlias === $accountEmail) {
+				continue; // skip alias when identical to account email
+			}
+
 			try {
 				$this->aliasMapper->findByAlias($newAlias, $userId);
 			} catch (DoesNotExistException $e) {
@@ -226,7 +240,7 @@ class Manager {
 			}
 
 			try {
-				$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $user->getDisplayName());
+				$this->createNewAliases($user->getUID(), $mailAccount->getId(), $provisioning->getAliases(), $this->userManager->getDisplayName($user->getUID()), $mailAccount->getEmail());
 			} catch (\Throwable $e) {
 				$this->logger->warning('Creating new aliases failed', ['exception' => $e]);
 			}
@@ -237,20 +251,29 @@ class Manager {
 
 	/**
 	 * @throws ValidationException
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
-	public function newProvisioning(array $data): void {
+	public function newProvisioning(array $data): Provisioning {
 		$provisioning = $this->provisioningMapper->validate($data);
-		$this->provisioningMapper->insert($provisioning);
+		$provisioning = $this->provisioningMapper->insert($provisioning);
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+			$cache->clear();
+		}
+		return $provisioning;
 	}
 
 	/**
 	 * @throws ValidationException
-	 * @throws \Exception
+	 * @throws \OCP\DB\Exception
 	 */
 	public function updateProvisioning(array $data): void {
 		$provisioning = $this->provisioningMapper->validate($data);
 		$this->provisioningMapper->update($provisioning);
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+			$cache->clear();
+		}
 	}
 
 	private function updateAccount(IUser $user, MailAccount $account, Provisioning $config): MailAccount {
@@ -258,7 +281,7 @@ class Manager {
 		$account->setProvisioningId($config->getId());
 
 		$account->setEmail($config->buildEmail($user));
-		$account->setName($user->getDisplayName());
+		$account->setName($this->userManager->getDisplayName($user->getUID()));
 		$account->setInboundUser($config->buildImapUser($user));
 		$account->setInboundHost($config->getImapHost());
 		$account->setInboundPort($config->getImapPort());
@@ -287,11 +310,29 @@ class Manager {
 	public function deprovision(Provisioning $provisioning): void {
 		$this->mailAccountMapper->deleteProvisionedAccounts($provisioning->getId());
 		$this->provisioningMapper->delete($provisioning);
+		if ($this->cacheFactory->isAvailable()) {
+			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+			$cache->clear();
+		}
 	}
 
-	public function updatePassword(IUser $user, string $password): void {
+	/**
+	 * @param Provisioning[] $provisionings
+	 */
+	public function updatePassword(IUser $user, string $password, array $provisionings): void {
 		try {
 			$account = $this->mailAccountMapper->findProvisionedAccount($user);
+
+			$provisioning = $this->findMatchingConfig($provisionings, $user);
+			if ($provisioning === null) {
+				return;
+			}
+			$masterPassword = $provisioning->getMasterPassword();
+			$masterPasswordEnabled = $provisioning->getMasterPasswordEnabled();
+			if ($masterPasswordEnabled && $masterPassword !== null) {
+				$password = $masterPassword;
+				$this->logger->debug('Password set to master password for ' . $user->getUID());
+			}
 
 			if (!empty($account->getInboundPassword())
 				&& $this->crypto->decrypt($account->getInboundPassword()) === $password

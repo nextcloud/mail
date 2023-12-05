@@ -31,8 +31,10 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|MessageFlaggedEvent>
+ */
 class HamReportListener implements IEventListener {
-
 	/** @var LoggerInterface */
 	private $logger;
 
@@ -40,7 +42,7 @@ class HamReportListener implements IEventListener {
 	private $antiSpamService;
 
 	public function __construct(LoggerInterface $logger,
-								AntiSpamService $antiSpamService) {
+		AntiSpamService $antiSpamService) {
 		$this->logger = $logger;
 		$this->antiSpamService = $antiSpamService;
 	}

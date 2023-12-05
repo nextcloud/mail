@@ -44,7 +44,6 @@ class AddressCollectorTest extends TestCase {
 
 		$this->collector = new AddressCollector(
 			$this->mapper,
-			$this->userId,
 			$this->logger
 		);
 	}
@@ -81,7 +80,7 @@ class AddressCollectorTest extends TestCase {
 				[$address2]
 			);
 
-		$this->collector->addAddresses($addressList);
+		$this->collector->addAddresses($this->userId, $addressList);
 	}
 
 	public function testAddDuplicateAddresses() {
@@ -97,7 +96,7 @@ class AddressCollectorTest extends TestCase {
 		$this->mapper->expects($this->never())
 			->method('insert');
 
-		$this->collector->addAddresses($addressList);
+		$this->collector->addAddresses($this->userId, $addressList);
 	}
 
 	public function testSearchAddress() {
@@ -109,7 +108,7 @@ class AddressCollectorTest extends TestCase {
 			->with($this->userId, $term)
 			->will($this->returnValue($mapperResult));
 
-		$result = $this->collector->searchAddress($term);
+		$result = $this->collector->searchAddress($this->userId, $term);
 
 		$this->assertequals($mapperResult, $result);
 	}

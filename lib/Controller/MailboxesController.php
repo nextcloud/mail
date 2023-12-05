@@ -26,47 +26,41 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Service\Sync\SyncService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class MailboxesController extends Controller {
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/**  @var IMailManager */
-	private $mailManager;
-
-	/** @var SyncService */
-	private $syncService;
+	private AccountService $accountService;
+	private ?string $currentUserId;
+	private IMailManager $mailManager;
+	private SyncService $syncService;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
-	 * @param string $UserId
+	 * @param string|null $UserId
 	 * @param IMailManager $mailManager
 	 * @param SyncService $syncService
 	 */
 	public function __construct(string $appName,
-								IRequest $request,
-								AccountService $accountService,
-								?string $UserId,
-								IMailManager $mailManager,
-								SyncService $syncService) {
+		IRequest $request,
+		AccountService $accountService,
+		?string $UserId,
+		IMailManager $mailManager,
+		SyncService $syncService) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
@@ -77,7 +71,6 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $accountId
 	 *
@@ -86,6 +79,7 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function index(int $accountId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
@@ -100,17 +94,17 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $name
 	 *
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function patch(int $id,
-						  ?string $name = null,
-						  ?bool $subscribed = null,
-						  ?bool $syncInBackground = null): JSONResponse {
+		?string $name = null,
+		?bool $subscribed = null,
+		?bool $syncInBackground = null): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
@@ -140,7 +134,6 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param int[] $ids
@@ -152,19 +145,23 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function sync(int $id, array $ids = [], bool $init = false, string $query = null): JSONResponse {
+	#[TrapError]
+	public function sync(int $id, array $ids = [], ?int $lastMessageTimestamp = null, bool $init = false, string $sortOrder = 'newest', string $query = null): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		$order = $sortOrder === 'newest' ? IMailSearch::ORDER_NEWEST_FIRST: IMailSearch::ORDER_OLDEST_FIRST;
 
 		try {
 			$syncResponse = $this->syncService->syncMailbox(
 				$account,
 				$mailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-				array_map(function ($id) {
+				array_map(static function ($id) {
 					return (int)$id;
 				}, $ids),
+				$lastMessageTimestamp,
 				!$init,
+				$order,
 				$query
 			);
 		} catch (MailboxNotCachedException $e) {
@@ -178,7 +175,6 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -186,6 +182,7 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function clearCache(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -196,7 +193,6 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -204,6 +200,7 @@ class MailboxesController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function markAllAsRead(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -215,7 +212,6 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -224,6 +220,7 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function stats(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		return new JSONResponse($mailbox->getStats());
@@ -231,28 +228,36 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
+	 *
+	 *
+	 * @return never
 	 */
+	#[TrapError]
 	public function show() {
 		throw new NotImplemented();
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
+	 *
+	 *
+	 * @return never
 	 */
+	#[TrapError]
 	public function update() {
 		throw new NotImplemented();
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
-	 * @throws ClientException
+	 *
+	 * @return JSONResponse
 	 * @throws ServiceException
+	 * @throws ClientException
 	 */
-	public function create(int $accountId, string $name) {
+	#[TrapError]
+	public function create(int $accountId, string $name): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		return new JSONResponse($this->mailManager->createMailbox($account, $name));
@@ -260,7 +265,6 @@ class MailboxesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -268,11 +272,31 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
 		$this->mailManager->deleteMailbox($account, $mailbox);
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @throws \OCP\AppFramework\Db\DoesNotExistException
+	 */
+	#[TrapError]
+	public function clearMailbox(int $id): JSONResponse {
+		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+
+		$this->mailManager->clearMailbox($account, $mailbox);
 		return new JSONResponse();
 	}
 }

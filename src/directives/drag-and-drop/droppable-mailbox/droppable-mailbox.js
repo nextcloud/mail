@@ -1,6 +1,6 @@
-import store from '../../../store'
-import logger from '../../../logger'
-import dragEventBus from '../util/dragEventBus'
+import store from '../../../store/index.js'
+import logger from '../../../logger.js'
+import dragEventBus from '../util/dragEventBus.js'
 
 export class DroppableMailbox {
 
@@ -22,8 +22,8 @@ export class DroppableMailbox {
 	}
 
 	registerListeners(el) {
-		dragEventBus.$on('dragStart', this.onDragStart.bind(this))
-		dragEventBus.$on('dragEnd', this.onDragEnd.bind(this))
+		dragEventBus.$on('drag-start', this.onDragStart.bind(this))
+		dragEventBus.$on('drag-end', this.onDragEnd.bind(this))
 
 		// event listeners need to be attached to the first child element
 		// (a button or an anchor tag) instead of the root el, because there
@@ -34,8 +34,8 @@ export class DroppableMailbox {
 	}
 
 	removeListeners(el) {
-		dragEventBus.$off('dragStart', this.onDragStart)
-		dragEventBus.$off('dragEnd', this.onDragEnd)
+		dragEventBus.$off('drag-start', this.onDragStart)
+		dragEventBus.$off('drag-end', this.onDragEnd)
 
 		el.firstChild.removeEventListener('dragover', this.onDragOver)
 		el.firstChild.removeEventListener('dragleave', this.onDragLeave)
@@ -96,31 +96,31 @@ export class DroppableMailbox {
 
 		this.setInitialAttributes()
 		const envelopesBeingDragged = JSON.parse(event.dataTransfer.getData('text'))
-		dragEventBus.$emit('envelopesDropped', { envelopes: envelopesBeingDragged })
+		dragEventBus.$emit('envelopes-dropped', { envelopes: envelopesBeingDragged })
 
 		try {
 			const processedEnvelopes = envelopesBeingDragged.map(async envelope => {
-				const processed = await this.processDroppedItem(parseInt(envelope.envelopeId))
+				const processed = await this.processDroppedItem(envelope)
 				return processed
 			})
 			await Promise.all(processedEnvelopes)
 		} catch (error) {
 			logger.error('could not process dropped messages', error)
 		} finally {
-			dragEventBus.$emit('envelopesMoved', {
+			dragEventBus.$emit('envelopes-moved', {
 				mailboxId: this.options.mailboxId,
 				movedEnvelopes: envelopesBeingDragged,
 			})
 		}
 	}
 
-	async processDroppedItem(envelopeId) {
-		const item = document.querySelector(`[data-envelope-id="${envelopeId}"]`)
+	async processDroppedItem(envelope) {
+		const item = document.querySelector(`[data-envelope-id="${envelope.databaseId}"]`)
 		item.setAttribute('draggable-envelope', 'pending')
 
 		try {
-			await store.dispatch('moveMessage', {
-				id: envelopeId,
+			await store.dispatch('moveThread', {
+				envelope,
 				destMailboxId: this.options.mailboxId,
 			})
 		} catch (error) {

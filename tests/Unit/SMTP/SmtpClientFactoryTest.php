@@ -26,19 +26,18 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Smtp;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SmtpClientFactoryTest extends TestCase {
-
 	/** @var IConfig|MockObject */
 	private $config;
 

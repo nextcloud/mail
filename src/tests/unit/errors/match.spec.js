@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { matchError } from '../../../errors/match'
+import { matchError } from '../../../errors/match.js'
 
 describe('match', () => {
 	it('throws an error when nothing matches', (done) => {
@@ -35,7 +35,7 @@ describe('match', () => {
 		const error = new Error('henlo')
 
 		matchError(error, map).then((result) => {
-			expect(expect(result).to.equal(3))
+			expect(expect(result).toEqual(3))
 			done()
 		})
 	})
@@ -49,7 +49,7 @@ describe('match', () => {
 		error.name = 'MyErr'
 
 		matchError(error, map).then((result) => {
-			expect(expect(result).to.equal(2))
+			expect(expect(result).toEqual(2))
 			done()
 		})
 	})

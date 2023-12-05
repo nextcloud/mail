@@ -3,7 +3,7 @@
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,16 +21,16 @@
  */
 
 import moment from '@nextcloud/moment'
-import negate from 'lodash/fp/negate'
+import negate from 'lodash/fp/negate.js'
 
-import { html } from './util/text'
+import { html } from './util/text.js'
 
 /**
  * @param {Text} original original
  * @param {object} from from
- * @param {Number} date date
+ * @param {number} date date
  * @param {boolean} replyOnTop put reply on top?
- * @returns {Text}
+ * @return {Text}
  */
 export const buildReplyBody = (original, from, date, replyOnTop = true) => {
 	const startEnd = '<p></p><p></p>'

@@ -1,4 +1,4 @@
-import { DraggableEnvelope } from './draggable-envelope'
+import { DraggableEnvelope } from './draggable-envelope.js'
 
 let instances = []
 

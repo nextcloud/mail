@@ -24,15 +24,14 @@
 
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Avatar\AddressbookSource;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\ContactsIntegration;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AddressbookSourceTest extends TestCase {
-
 	/** @var ContactsIntegration|PHPUnit_Framework_MockObject_MockObject */
 	private $ci;
 

@@ -30,7 +30,6 @@ namespace OCA\Mail\Service\Avatar;
  * Composition of all avatar sources for easier usage
  */
 class CompositeAvatarSource {
-
 	/** @var IAvatarSource[] */
 	private $sources;
 
@@ -38,8 +37,7 @@ class CompositeAvatarSource {
 		AddressbookSource $addressbookSource,
 		BimiSource $bimiSource,
 		FaviconSource $faviconSource,
-		GravatarSource $gravatarSource
-	) {
+		GravatarSource $gravatarSource) {
 		// This determines the priority of known sources
 		$this->sources = [
 			$addressbookSource,

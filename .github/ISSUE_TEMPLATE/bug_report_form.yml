@@ -1,0 +1,94 @@
+name: "Bug"
+description: "Have you encountered a bug? Submit a report and help us improve Nextcloud Mail"
+labels: ["bug", "0. to triage"]
+body:
+- type: textarea
+  id: reproduce
+  attributes:
+      label: Steps to reproduce
+      description: |
+          Describe the steps to reproduce the bug.
+          The better your description is _(go 'here', click 'there'...)_ the fastest you'll get an _(accurate)_ answer.
+      value: |
+          1.
+          2.
+          3.
+  validations:
+      required: true
+- type: textarea
+  id: Expected-behavior
+  attributes:
+      label: Expected behavior
+      description: |
+          Tell us what should happen
+  validations:
+      required: true
+- type: textarea
+  id: actual-behavior
+  attributes:
+      label: Actual behavior
+      description: Tell us what happens instead
+  validations:
+      required: true
+- type: input
+  id: mail-app-version
+  attributes:
+      label: Mail app version
+      description: |
+          See apps admin page, e.g. 0.5.3
+- type: input
+  id: mail-server-service
+  attributes:
+      label: Mailserver or service
+      description: |
+          e.g. Outlook, Yahoo, Gmail, Exchange...
+- type: input
+  id: system
+  attributes:
+      label: Operating system
+      description: |
+          Write down the operating system where Nextcloud Mail app is installed.
+- type: dropdown
+  id: php
+  attributes:
+      label: PHP engine version
+      description: |
+          Select PHP engine version serving Nextcloud Server.
+          _Describe in the "Additional info" section if you chose "Other"._
+      options:
+          - "PHP 7.4"
+          - "PHP 8.0"
+          - "PHP 8.1"
+          - "PHP 8.2"
+          - "Other"
+- type: dropdown
+  id: webserver
+  attributes:
+      label: Web server
+      description: |
+          Select Webserver serving Nextcloud Server.
+          _Describe in the "Additional info" section if you chose "Other"._
+      options:
+          - "Apache (supported)"
+          - "Nginx"
+          - "Lighttpd"
+          - "Other"
+- type: dropdown
+  id: database
+  attributes:
+      label: Database
+      description: |
+          Select Database engine serving Nextcloud Server.
+          _Describe in the "Additional info" section if you chose "Other"._
+      options:
+          - "MySQL"
+          - "MariaDB"
+          - "PostgreSQL"
+          - "SQLite"
+          - "Oracle"
+          - "Other"
+- type: textarea
+  id: additional-info
+  attributes:
+      label: Additional info
+      description: Any additional information related to the issue (ex. browser console errors, software versions).

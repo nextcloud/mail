@@ -19,21 +19,62 @@
 		<directory name="lib/Vendor" />
     </extraFiles>
 	<issueHandlers>
+		<UndefinedAttributeClass>
+			<errorLevel type="info">
+				<referencedClass name="OCP\AppFramework\Http\Attribute\UserRateLimit" />
+			</errorLevel>
+		</UndefinedAttributeClass>
 		<UndefinedClass>
 			<errorLevel type="suppress">
+				<referencedClass name="Doctrine\DBAL\Platforms\MySQLPlatform" />
+				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQL94Platform" />
+				<referencedClass name="Doctrine\DBAL\Platforms\SqlitePlatform" />
+				<referencedClass name="Doctrine\DBAL\Types\Type" />
+				<referencedClass name="Doctrine\DBAL\Types\Types" />
+				<referencedClass name="IPLib\Factory" />
+				<referencedClass name="IPLib\Address\IPv6" />
 				<referencedClass name="OC" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Psr\Http\Client\ClientExceptionInterface" />
+				<referencedClass name="Symfony\Component\HttpFoundation\IpUtils" />
+				<referencedClass name="Symfony\Component\Console\Command\Command" />
+				<referencedClass name="Symfony\Component\Console\Input\InputArgument" />
+				<referencedClass name="Symfony\Component\Console\Input\InputInterface" />
+				<referencedClass name="Symfony\Component\Console\Input\InputOption" />
+				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
+				<referencedClass name="OCP\Search\IFilteringProvider" /><!-- 28+ -->
+				<referencedClass name="OCP\TextProcessing\IManager" />
+				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
+				<referencedClass name="OCP\TextProcessing\Task" />
+				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
+				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeChangedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeClearedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\IAvailabilityCoordinator" /><!-- 28+ -->
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Driver\Statement" />
+				<referencedClass name="Doctrine\DBAL\Platforms\AbstractPlatform" />
 				<referencedClass name="Doctrine\DBAL\Schema\Schema" />
 				<referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
+				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
+				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeChangedEvent" /><!-- 28+ -->
+				<referencedClass name="OCP\User\Events\OutOfOfficeClearedEvent" /><!-- 28+ -->
 			</errorLevel>
 		</UndefinedDocblockClass>
+		<UndefinedFunction>
+			<errorLevel type="suppress">
+				<referencedFunction name="str_contains" />
+			</errorLevel>
+		</UndefinedFunction>
 	</issueHandlers>
 </psalm>

@@ -24,10 +24,9 @@
 
 namespace OCA\Mail\Tests\Integration\Service;
 
-use Horde_Imap_Client;
-use OC;
-use OCA\Mail\Account;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client;
+use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
@@ -35,6 +34,7 @@ use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
+use OCP\Server;
 
 class AntiSpamServiceIntegrationTest extends TestCase {
 	use ImapTest,
@@ -45,29 +45,31 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 
 	public function setUp():void {
 		parent::setUp();
-		$this->service = OC::$server->get(AntiSpamService::class);
+		$this->service = Server::get(AntiSpamService::class);
 		$this->service->setSpamEmail('spam@domain.tld');
 		$this->service->setHamEmail('notspam@domain.tld');
 	}
 
 	public function tearDown(): void {
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 		$this->service->deleteConfig();
 	}
 
 	public function testFlagJunkWithSpamReportActive(): void {
 		// First, set up account and retrieve sync token
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 		$account = $this->createTestAccount();
 
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->get(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		/** @var ImapMessageMapper $imapMessageMapper */
-		$imapMessageMapper = OC::$server->get(ImapMessageMapper::class);
+		$imapMessageMapper = Server::get(ImapMessageMapper::class);
 		/** @var MessageMapper $messageMapper */
-		$messageMapper = OC::$server->get(MessageMapper::class);
+		$messageMapper = Server::get(MessageMapper::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -89,6 +91,7 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 			new Account($account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			null,
 			null,
 			false
 		);

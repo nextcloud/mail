@@ -3,7 +3,7 @@
  *
  * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,7 @@
  *
  */
 
-import { detect, html, plain, toPlain } from '../../../util/text'
+import { detect, html, plain, toPlain } from '../../../util/text.js'
 
 describe('text', () => {
 	describe('toPlain', () => {
@@ -30,7 +30,34 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
+		})
+
+		it('removes leading line breaks', () => {
+			const source = html('<br><br><br>hello world')
+			const expected = plain('hello world')
+
+			const actual = toPlain(source)
+
+			expect(actual).toEqual(expected)
+		})
+
+		it('removes trailing line breaks', () => {
+			const source = html('hello world<br><br><br>')
+			const expected = plain('hello world')
+
+			const actual = toPlain(source)
+
+			expect(actual).toEqual(expected)
+		})
+
+		it('removes trailing spaces of each line', () => {
+			const source = html('line1   <br>line2 <br>line3')
+			const expected = plain('line1\nline2\nline3')
+
+			const actual = toPlain(source)
+
+			expect(actual).toEqual(expected)
 		})
 
 		it('breaks on divs', () => {
@@ -38,16 +65,25 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(plain('one\ntwo'))
+			expect(actual).toEqual(plain('one\ntwo'))
 		})
 
-		it('produces a line break for each ending div element', () => {
-			const source = html('<div>' + '    <div>' + '        line1' + '    </div>' + '</div>' + '<div>line2</div>')
-			const expected = plain(' line1\n\nline2')
+		it('merges spaces at the beginning of a line', () => {
+			const source = html('<div>   <div>  line1</div></div>')
+			const expected = plain(' line1')
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
+		})
+
+		it('produces a line break for each ending div element', () => {
+			const source = html('<div><div>line1</div></div><div>line3</div>')
+			const expected = plain('line1\n\nline3')
+
+			const actual = toPlain(source)
+
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts blocks to text', () => {
@@ -56,7 +92,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts paragraph to text', () => {
@@ -65,16 +101,54 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
-		it('converts paragraphs to text', () => {
+		it('produces a single line break between paragraphs', () => {
 			const source = html('<p>hello</p><p>world</p>')
 			const expected = plain('hello\nworld')
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
+		})
+
+		it('produces a single line break between a div and a paragraph', () => {
+			const source = html('<div>hello</div><p>world</p>')
+			const expected = plain('hello\nworld')
+
+			const actual = toPlain(source)
+
+			expect(actual).toEqual(expected)
+		})
+
+		it('produces a single line break after each block element', () => {
+			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+			const source = html(
+				selectors
+					.map(tag => `<${tag}>foobar</${tag}>`)
+					.join('')
+			)
+			const expected = plain(selectors.map(tag => 'foobar').join('\n'))
+
+			const actual = toPlain(source)
+
+			expect(actual).toEqual(expected)
+		})
+
+		it('produces exactly one line break for each closing block element', () => {
+			const selectors = ['p', 'div', 'header', 'footer', 'form', 'article', 'aside', 'main', 'nav', 'section']
+			const source = html(
+				selectors
+					.map(tag => `<${tag}><${tag}>foobar</${tag}></${tag}>`)
+					.join('')
+			)
+			const expected = plain(selectors.map(tag => 'foobar').join('\n\n'))
+
+			const actual = toPlain(source)
+
+
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts lists to text', () => {
@@ -83,7 +157,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('converts deeply nested elements to text', () => {
@@ -96,7 +170,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('does not leak internal redirection URLs', () => {
@@ -105,7 +179,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 
 		it('preserves quotes', () => {
@@ -131,7 +205,7 @@ describe('text', () => {
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).toEqual(expected)
 		})
 	})
 
@@ -141,7 +215,7 @@ describe('text', () => {
 
 			const detected = detect(text)
 
-			expect(detected).to.deep.equal(plain(text))
+			expect(detected).toEqual(plain(text))
 		})
 
 		it('detects html', () => {
@@ -149,7 +223,7 @@ describe('text', () => {
 
 			const detected = detect(text)
 
-			expect(detected).to.deep.equal(html(text))
+			expect(detected).toEqual(html(text))
 		})
 	})
 })

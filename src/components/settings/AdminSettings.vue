@@ -3,7 +3,7 @@
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -107,12 +107,24 @@
 			}}
 		</h3>
 		<p>
-			<button class="config-button icon-add" @click="addNew=true">
+			<Button
+				class="config-button"
+				:aria-label="t('mail', 'Add new config')"
+				@click="addNew=true">
+				<template #icon>
+					<IconAdd :size="20" />
+				</template>
 				{{ t('mail', 'Add new config') }}
-			</button>
-			<button class="config-button icon-settings" @click="provisionAll">
+			</Button>
+			<Button
+				class="config-button"
+				:aria-label="t('mail', 'Provision all accounts')"
+				@click="provisionAll">
+				<template #icon>
+					<IconSettings :size="20" />
+				</template>
 				{{ t('mail', 'Provision all accounts') }}
-			</button>
+			</Button>
 			<ProvisioningSettings v-if="addNew"
 				:key="formKey"
 				:setting="preview"
@@ -125,6 +137,33 @@
 				:submit="saveSettings"
 				:disable="deleteProvisioning" />
 		</p>
+		<div class="app-description">
+			<h3>{{ t('mail', 'Allow additional mail accounts') }}</h3>
+			<article>
+				<p>
+					<NcCheckboxRadioSwitch
+						:checked.sync="allowNewMailAccounts"
+						type="switch"
+						@update:checked="updateAllowNewMailAccounts">
+						{{ t('mail','Allow additional Mail accounts from User Settings') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
+		<div v-if="isLlmConfigured"
+			class="app-description">
+			<h3>{{ t('mail', 'Enable thread summary') }}</h3>
+			<article>
+				<p>
+					<NcCheckboxRadioSwitch
+						:checked.sync="enabledThreadSummary"
+						type="switch"
+						@update:checked="updateEnabledThreadSummary">
+						{{ t('mail','Enable thread summaries') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
 		<div class="app-description">
 			<h3>
 				{{
@@ -153,28 +192,113 @@
 			</article>
 			<AntiSpamSettings />
 		</div>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
+						'Gmail integration'
+					)
+				}}
+			</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'Gmail allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection or Google accounts that use two-factor authentication and app passwords.'
+						)
+					}}
+				</p>
+				<p>
+					{{
+						t(
+							'mail',
+							'You have to register a new Client ID for a "Web application" in the Google Cloud console. Add the URL {url} as authorized redirect URI.',
+							{
+								url: googleOauthRedirectUrl,
+							}
+						)
+					}}
+				</p>
+			</article>
+			<GmailAdminOauthSettings :client-id="googleOauthClientId" />
+		</div>
+		<div class="app-description">
+			<h3>
+				{{
+					t(
+						'mail',
+						'Microsoft integration'
+					)
+				}}
+			</h3>
+			<article>
+				<p>
+					{{
+						t(
+							'mail',
+							'Microsoft allows users to access their email via IMAP. For security reasons this access is only possible with an OAuth 2.0 connection.'
+						)
+					}}
+				</p>
+				<p>
+					{{
+						t(
+							'mail',
+							'You have to register a new app in the Microsoft Azure Active Directory portal. Add the URL {url} as redirect URI.',
+							{
+								url: microsoftOauthRedirectUrl,
+							}
+						)
+					}}
+				</p>
+			</article>
+			<MicrosoftAdminOauthSettings :tenant-id="microsoftOauthTenantId" :client-id="microsoftOauthClientId" />
+		</div>
 	</SettingsSection>
 </template>
 
 <script>
-import logger from '../../logger'
+import Button from '@nextcloud/vue/dist/Components/NcButton.js'
+import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
+import logger from '../../logger.js'
+import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import ProvisioningSettings from './ProvisioningSettings'
-import AntiSpamSettings from './AntiSpamSettings'
-import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
+import { loadState } from '@nextcloud/initial-state'
+import ProvisioningSettings from './ProvisioningSettings.vue'
+import AntiSpamSettings from './AntiSpamSettings.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconSettings from 'vue-material-design-icons/Cog.vue'
+import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection.js'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import {
 	disableProvisioning,
 	createProvisioningSettings,
 	updateProvisioningSettings,
 	provisionAll,
+	updateAllowNewMailAccounts,
+	updateEnabledThreadSummary,
+} from '../../service/SettingsService.js'
 
-} from '../../service/SettingsService'
+const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
+const googleOauthRedirectUrl = loadState('mail', 'google_oauth_redirect_url', null)
+const microsoftOauthTenantId = loadState('mail', 'microsoft_oauth_tenant_id', null) ?? undefined
+const microsoftOauthClientId = loadState('mail', 'microsoft_oauth_client_id', null) ?? undefined
+const microsoftOauthRedirectUrl = loadState('mail', 'microsoft_oauth_redirect_url', null)
+
 export default {
 	name: 'AdminSettings',
 	components: {
+		GmailAdminOauthSettings,
 		AntiSpamSettings,
+		MicrosoftAdminOauthSettings,
 		ProvisioningSettings,
 		SettingsSection,
+		Button,
+		IconAdd,
+		IconSettings,
+		NcCheckboxRadioSwitch,
 	},
 	props: {
 		provisioningSettings: {
@@ -187,6 +311,11 @@ export default {
 			addNew: false,
 			formKey: Math.random(),
 			configs: this.provisioningSettings,
+			googleOauthClientId,
+			googleOauthRedirectUrl,
+			microsoftOauthTenantId,
+			microsoftOauthClientId,
+			microsoftOauthRedirectUrl,
 			preview: {
 				provisioningDomain: '',
 				emailTemplate: '',
@@ -208,6 +337,9 @@ export default {
 				},
 				loading: false,
 			},
+			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
+			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
+			isLlmConfigured: loadState('mail', 'enabled_llm_backend'),
 		}
 	},
 	methods: {
@@ -222,8 +354,9 @@ export default {
 		},
 		async saveNewSettings(settings) {
 			try {
-				await createProvisioningSettings(settings)
-				this.configs.unshift(settings)
+				const config = await createProvisioningSettings(settings)
+				logger.info('new provisioning config saved', { config })
+				this.configs.unshift(config)
 				this.addNew = false
 				this.resetForm()
 				showSuccess(t('mail', 'Saved config for "{domain}"', { domain: settings.provisioningDomain }))
@@ -231,7 +364,6 @@ export default {
 				showError(t('mail', 'Could not save provisioning setting'))
 				logger.error('Could not save provisioning setting', { error })
 			}
-
 		},
 		resetForm() {
 			this.formKey = Math.random()
@@ -258,18 +390,21 @@ export default {
 				logger.error('Could not delete provisioning config', { error })
 			}
 		},
+		async updateAllowNewMailAccounts(checked) {
+			await updateAllowNewMailAccounts(checked)
+		},
+		async updateEnabledThreadSummary(checked) {
+			await updateEnabledThreadSummary(checked)
+		},
 	},
 }
 </script>
 <style lang="scss" scoped>
-	.app-description {
+.app-description {
 		margin-bottom: 24px;
 	}
-	.config-button {
-		line-height: 24px;
-		padding-left: 48px;
-		padding-top: 6px;
-		padding-bottom: 6px;
-		background-position: 24px;
-	}
+.config-button {
+	display: inline-block;
+	margin-inline: 4px;
+}
 </style>

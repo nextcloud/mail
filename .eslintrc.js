@@ -10,5 +10,8 @@ module.exports = {
 		t: true,
 		__webpack_public_path__: true,
 		__webpack_nonce__: true,
-	}
+	},
+	rules: {
+		'jsdoc/require-jsdoc': 'off',
+	},
 }

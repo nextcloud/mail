@@ -24,10 +24,10 @@
 
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use PHPUnit_Framework_MockObject_MockObject;

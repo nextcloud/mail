@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Dashboard;
 
 class UnreadMailWidget extends MailWidget {
-
 	/**
 	 * @inheritDoc
 	 */
@@ -40,5 +39,12 @@ class UnreadMailWidget extends MailWidget {
 	 */
 	public function getTitle(): string {
 		return $this->l10n->t('Unread mail');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getSearchFilter(): string {
+		return 'is:unread';
 	}
 }

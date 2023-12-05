@@ -19,8 +19,17 @@
 
 import Command from '@ckeditor/ckeditor5-core/src/command'
 
+export const TRIGGER_CHANGE_ALIAS = 'change_alias'
+export const TRIGGER_EDITOR_READY = 'editor_ready'
+
 export default class InsertSignatureCommand extends Command {
 
+	/**
+	 * Remove a signature element
+	 *
+	 * @param {module:core/editor/editor~Editor} editor instance
+	 * @param {module:engine/model/writer~Writer} writer instance
+	 */
 	removeSignatureElement(editor, writer) {
 		// Create a range spanning over the entire root content:
 		const range = editor.model.createRangeIn(
@@ -36,11 +45,12 @@ export default class InsertSignatureCommand extends Command {
 	}
 
 	/**
+	 * Insert a signature element
 	 *
-	 * @param {*} editor the editor instance
-	 * @param {*} writer the writer instance
-	 * @param {string} signature the signature text
-	 * @param {boolean} signatureAboveQuote the signature position: above/below the quoted text
+	 * @param {module:core/editor/editor~Editor} editor instance
+	 * @param {module:engine/model/writer~Writer} writer instance
+	 * @param {string} signature text
+	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
 	 */
 	insertSignatureElement(editor, writer, signature, signatureAboveQuote) {
 		// Skip empty signature
@@ -69,26 +79,33 @@ export default class InsertSignatureCommand extends Command {
 			writer.append(writer.createElement('paragraph'), signatureElement)
 		}
 
-		const signaturePosition = signatureAboveQuote ? this.findPositionAboveQuote(editor, writer) : writer.createPositionAt(editor.model.document.getRoot(), 'end')
+		const signaturePosition = this.findPosition(editor, writer, signatureAboveQuote)
 		editor.model.insertContent(signatureElement, signaturePosition)
 	}
 
 	/**
+	 * Find a position to insert the signature element.
 	 *
-	 * @param {*} editor the editor instance
-	 * @param {*} writer the writer instance
-	 * @returns {*} the position above the quoted text; position 1 if no quote found
+	 * If signatureAboveQuote and a quote element exist the position
+	 * above the quoted text otherwise the end of the document.
+	 *
+	 * @param {module:core/editor/editor~Editor} editor instance
+	 * @param {module:engine/model/writer~Writer} writer instance
+	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
+	 * @return {module:engine/model/position~Position} position instance
 	 */
-	findPositionAboveQuote(editor, writer) {
-		// Create a range spanning over the entire root content:
-		const range = editor.model.createRangeIn(
-			editor.model.document.getRoot()
-		)
+	findPosition(editor, writer, signatureAboveQuote) {
+		if (signatureAboveQuote) {
+			// Create a range spanning over the entire root content:
+			const range = editor.model.createRangeIn(
+				editor.model.document.getRoot()
+			)
 
-		// Iterate over all items in this range:
-		for (const value of range.getWalker({ shallow: true })) {
-			if (value.item.is('element') && value.item.name === 'quote') {
-				return writer.createPositionBefore(value.item)
+			// Iterate over all items in this range:
+			for (const value of range.getWalker({ shallow: true })) {
+				if (value.item.is('element') && value.item.name === 'quote') {
+					return writer.createPositionBefore(value.item)
+				}
 			}
 		}
 
@@ -96,12 +113,59 @@ export default class InsertSignatureCommand extends Command {
 	}
 
 	/**
-	 * @param {*} param0 the signature text and position
+	 * Check if a signature element exist
+	 *
+	 * @param {module:core/editor/editor~Editor} editor instance
+	 * @return {boolean}
 	 */
-	execute({ signature, signatureAboveQuote }) {
+	hasSignatureElement(editor) {
+		// Create a range spanning over the entire root content:
+		const range = editor.model.createRangeIn(
+			editor.model.document.getRoot()
+		)
+
+		// Iterate over all items in this range:
+		for (const value of range.getWalker({ shallow: true })) {
+			if (value.item.is('element')) {
+				if (value.item.name === 'quote') {
+					continue
+				}
+				if (value.item.name === 'signature') {
+					return true
+				}
+			}
+		}
+
+		return false
+	}
+
+	/**
+	 * @param {string} trigger TRIGGER_CHANGE_ALIAS or TRIGGER_EDITOR_READY
+	 * @param {string} signature text
+	 * @param {boolean} signatureAboveQuote signature position: above/below the quoted text
+	 */
+	execute(trigger, signature, signatureAboveQuote) {
 		this.editor.model.change(writer => {
-			this.removeSignatureElement(this.editor, writer)
-			this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
+			/**
+			 * TRIGGER_CHANGE_ALIAS:
+			 * Current signature is replaced.
+			 *
+			 * Use case: User selects a different alias.
+			 *
+			 * TRIGGER_EDITOR_READY:
+			 * Insert signature if non exist.
+			 *
+			 * Use case: Write new message, Modify signature, Save draft, Close Editor, Open editor
+			 */
+
+			if (trigger === TRIGGER_CHANGE_ALIAS) {
+				this.removeSignatureElement(this.editor, writer)
+				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
+			}
+
+			if (trigger === TRIGGER_EDITOR_READY && !this.hasSignatureElement(this.editor)) {
+				this.insertSignatureElement(this.editor, writer, signature, signatureAboveQuote)
+			}
 		})
 	}
 

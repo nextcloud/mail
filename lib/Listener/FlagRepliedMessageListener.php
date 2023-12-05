@@ -28,8 +28,8 @@ namespace OCA\Mail\Listener;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -37,8 +37,10 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|MessageSentEvent>
+ */
 class FlagRepliedMessageListener implements IEventListener {
-
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 
@@ -51,45 +53,62 @@ class FlagRepliedMessageListener implements IEventListener {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var DbMessageMapper */
+	private $dbMessageMapper;
+
 	public function __construct(IMAPClientFactory $imapClientFactory,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $mapper,
-								LoggerInterface $logger) {
+		MailboxMapper     $mailboxMapper,
+		DbMessageMapper   $dbMessageMapper,
+		MessageMapper     $mapper,
+		LoggerInterface   $logger) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
+		$this->dbMessageMapper = $dbMessageMapper;
 		$this->messageMapper = $mapper;
 		$this->logger = $logger;
 	}
 
 	public function handle(Event $event): void {
-		if (!($event instanceof MessageSentEvent) || $event->getRepliedMessageData() === null) {
+		if (!($event instanceof MessageSentEvent) || $event->getRepliedToMessageId() === null) {
 			return;
 		}
 
-		try {
-			$mailbox = $this->mailboxMapper->findById(
-				$event->getRepliedMessageData()->getMessage()->getMailboxId()
-			);
-		} catch (DoesNotExistException | ServiceException $e) {
-			$this->logger->warning('Could not flag the message in reply to: ' . $e, [
-				'exception' => $e,
-			]);
-			// Not critical -> continue
+		$messages = $this->dbMessageMapper->findByMessageId($event->getAccount(), $event->getRepliedToMessageId());
+		if ($messages === []) {
 			return;
 		}
 
 		try {
 			$client = $this->imapClientFactory->getClient($event->getAccount());
-			$this->messageMapper->addFlag(
-				$client,
-				$mailbox,
-				[$event->getRepliedMessageData()->getMessage()->getUid()],
-				Horde_Imap_Client::FLAG_ANSWERED
-			);
-		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->warning('Could not flag replied message: ' . $e, [
-				'exception' => $e,
-			]);
+			foreach ($messages as $message) {
+				try {
+					$mailbox = $this->mailboxMapper->findById($message->getMailboxId());
+					//ignore read-only mailboxes
+					if ($mailbox->getMyAcls() !== null && !strpos($mailbox->getMyAcls(), "w")) {
+						continue;
+					}
+					// ignore drafts and sent
+					if ($mailbox->isSpecialUse('sent') || $mailbox->isSpecialUse('drafts')) {
+						continue;
+					}
+					// Mark all other mailboxes that contain the message with the same imap message id as replied
+					$this->messageMapper->addFlag(
+						$client,
+						$mailbox,
+						[$message->getUid()],
+						Horde_Imap_Client::FLAG_ANSWERED
+					);
+				} catch (DoesNotExistException | Horde_Imap_Client_Exception $e) {
+					$this->logger->warning('Could not flag replied message: ' . $e, [
+						'exception' => $e,
+					]);
+				}
+
+				$message->setFlagAnswered(true);
+				$this->dbMessageMapper->update($message);
+			}
+		} finally {
+			$client->logout();
 		}
 	}
 }

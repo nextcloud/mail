@@ -46,6 +46,9 @@ class MailAccountTest extends TestCase {
 		$a->setEditorMode('html');
 		$a->setProvisioningId(null);
 		$a->setOrder(13);
+		$a->setQuotaPercentage(10);
+		$a->setTrashRetentionDays(60);
+		$a->setOutOfOfficeFollowsSystem(true);
 
 		$this->assertEquals([
 			'id' => 12345,
@@ -69,8 +72,17 @@ class MailAccountTest extends TestCase {
 			'draftsMailboxId' => null,
 			'sentMailboxId' => null,
 			'trashMailboxId' => null,
+			'archiveMailboxId' => null,
 			'sieveEnabled' => false,
 			'signatureAboveQuote' => false,
+			'signatureMode' => null,
+			'smimeCertificateId' => null,
+			'quotaPercentage' => 10,
+			'trashRetentionDays' => 60,
+			'junkMailboxId' => null,
+			'snoozeMailboxId' => null,
+			'searchBody' => false,
+			'outOfOfficeFollowsSystem' => true,
 		], $a->toJson());
 	}
 
@@ -97,8 +109,17 @@ class MailAccountTest extends TestCase {
 			'draftsMailboxId' => null,
 			'sentMailboxId' => null,
 			'trashMailboxId' => null,
+			'archiveMailboxId' => null,
 			'sieveEnabled' => false,
-			'signatureAboveQuote' => false
+			'signatureAboveQuote' => false,
+			'signatureMode' => null,
+			'smimeCertificateId' => null,
+			'quotaPercentage' => null,
+			'trashRetentionDays' => 60,
+			'junkMailboxId' => null,
+			'snoozeMailboxId' => null,
+			'searchBody' => false,
+			'outOfOfficeFollowsSystem' => false,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

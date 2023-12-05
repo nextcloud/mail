@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
  * @author Thomas Mueller <thomas.mueller@tmit.eu>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -31,27 +32,19 @@ namespace OCA\Mail\Model;
 
 use Exception;
 use Horde_Imap_Client;
-use Horde_Imap_Client_Data_Envelope;
-use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_DateTime;
-use Horde_Imap_Client_Fetch_Query;
-use Horde_Imap_Client_Ids;
-use Horde_Imap_Client_Mailbox;
-use Horde_Imap_Client_Socket;
-use Horde_Mime_Headers;
 use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Part;
 use JsonSerializable;
-use OC;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Service\Html;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
+use ReturnTypeWillChange;
 use function in_array;
 use function mb_convert_encoding;
 use function mb_strcut;
@@ -60,73 +53,95 @@ use function trim;
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
 
-	/**
-	 * @var string[]
-	 */
-	private $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
+	private Html $htmlService;
 
-	/** @var Html|null */
-	private $htmlService;
+	/** @var string[] */
+	private array $flags;
 
-	/**
-	 * @param Horde_Imap_Client_Socket|null $conn
-	 * @param Horde_Imap_Client_Mailbox|string $mailBox
-	 * @param int $messageId
-	 * @param Horde_Imap_Client_Data_Fetch|null $fetch
-	 * @param bool $loadHtmlMessage
-	 * @param Html|null $htmlService
-	 *
-	 * @throws DoesNotExistException
-	 */
-	public function __construct($conn,
-								$mailBox,
-								int $messageId,
-								Horde_Imap_Client_Data_Fetch $fetch = null,
-								bool $loadHtmlMessage = false,
-								Html $htmlService = null) {
-		$this->conn = $conn;
-		$this->mailBox = $mailBox;
-		$this->messageId = $messageId;
-		$this->loadHtmlMessage = $loadHtmlMessage;
+	private int $messageId;
+	private string $realMessageId;
+	private AddressList $from;
+	private AddressList $to;
+	private AddressList $cc;
+	private AddressList $bcc;
+	private AddressList $replyTo;
+	private string $subject;
+	public string $plainMessage;
+	public string $htmlMessage;
+	public array $attachments;
+	public array $inlineAttachments;
+	private bool $hasAttachments;
+	public array $scheduling;
+	private bool $hasHtmlMessage;
+	private Horde_Imap_Client_DateTime $imapDate;
+	private string $rawReferences;
+	private string $dispositionNotificationTo;
+	private bool $hasDkimSignature;
+	private ?string $unsubscribeUrl;
+	private bool $isOneClickUnsubscribe;
+	private ?string $unsubscribeMailto;
+	private string $rawInReplyTo;
+	private bool $isEncrypted;
+	private bool $isSigned;
+	private bool $signatureIsValid;
 
+	public function __construct(int $uid,
+		string $messageId,
+		array $flags,
+		AddressList $from,
+		AddressList $to,
+		AddressList $cc,
+		AddressList $bcc,
+		AddressList $replyTo,
+		string $subject,
+		string $plainMessage,
+		string $htmlMessage,
+		bool $hasHtmlMessage,
+		array $attachments,
+		array $inlineAttachments,
+		bool $hasAttachments,
+		array $scheduling,
+		Horde_Imap_Client_DateTime $imapDate,
+		string $rawReferences,
+		string $dispositionNotificationTo,
+		bool $hasDkimSignature,
+		?string $unsubscribeUrl,
+		bool $isOneClickUnsubscribe,
+		?string $unsubscribeMailto,
+		string $rawInReplyTo,
+		bool $isEncrypted,
+		bool $isSigned,
+		bool $signatureIsValid,
+		Html $htmlService) {
+		$this->messageId = $uid;
+		$this->realMessageId = $messageId;
+		$this->flags = $flags;
+		$this->from = $from;
+		$this->to = $to;
+		$this->cc = $cc;
+		$this->bcc = $bcc;
+		$this->replyTo = $replyTo;
+		$this->subject = $subject;
+		$this->plainMessage = $plainMessage;
+		$this->htmlMessage = $htmlMessage;
+		$this->hasHtmlMessage = $hasHtmlMessage;
+		$this->attachments = $attachments;
+		$this->inlineAttachments = $inlineAttachments;
+		$this->hasAttachments = $hasAttachments;
+		$this->scheduling = $scheduling;
+		$this->imapDate = $imapDate;
+		$this->rawReferences = $rawReferences;
+		$this->dispositionNotificationTo = $dispositionNotificationTo;
+		$this->hasDkimSignature = $hasDkimSignature;
+		$this->unsubscribeUrl = $unsubscribeUrl;
+		$this->isOneClickUnsubscribe = $isOneClickUnsubscribe;
+		$this->unsubscribeMailto = $unsubscribeMailto;
+		$this->rawInReplyTo = $rawInReplyTo;
+		$this->isEncrypted = $isEncrypted;
+		$this->isSigned = $isSigned;
+		$this->signatureIsValid = $signatureIsValid;
 		$this->htmlService = $htmlService;
-		if (is_null($htmlService)) {
-			$urlGenerator = OC::$server->getURLGenerator();
-			$request = OC::$server->getRequest();
-			$this->htmlService = new Html($urlGenerator, $request);
-		}
-
-		if ($fetch === null) {
-			$this->loadMessageBodies();
-		} else {
-			$this->fetch = $fetch;
-		}
 	}
-
-	// output all the following:
-	public $header = null;
-	public $htmlMessage = '';
-	public $plainMessage = '';
-	public $attachments = [];
-	public $inlineAttachments = [];
-	private $loadHtmlMessage = false;
-	private $hasHtmlMessage = false;
-
-	/**
-	 * @var Horde_Imap_Client_Socket
-	 */
-	private $conn;
-
-	/**
-	 * @var Horde_Imap_Client_Mailbox
-	 */
-	private $mailBox;
-	private $messageId;
-
-	/**
-	 * @var Horde_Imap_Client_Data_Fetch
-	 */
-	private $fetch;
 
 	public static function generateMessageId(): string {
 		return Horde_Mime_Headers_MessageId::create('nextcloud-mail-generated')->value;
@@ -136,7 +151,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return int
 	 */
 	public function getUid(): int {
-		return $this->fetch->getUid();
+		return $this->messageId;
 	}
 
 	/**
@@ -144,17 +159,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return array
 	 */
 	public function getFlags(): array {
-		$flags = $this->fetch->getFlags();
 		return [
-			'seen' => in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
-			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags),
-			'answered' => in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
-			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),
-			'draft' => in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
-			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
-			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure()),
-			'mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true),
-			'important' => in_array(Tag::LABEL_IMPORTANT, $flags, true)
+			'seen' => in_array(Horde_Imap_Client::FLAG_SEEN, $this->flags),
+			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $this->flags),
+			'answered' => in_array(Horde_Imap_Client::FLAG_ANSWERED, $this->flags),
+			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $this->flags),
+			'draft' => in_array(Horde_Imap_Client::FLAG_DRAFT, $this->flags),
+			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $this->flags),
+			'hasAttachments' => $this->hasAttachments,
+			'mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $this->flags, true),
+			'important' => in_array(Tag::LABEL_IMPORTANT, $this->flags, true)
 		];
 	}
 
@@ -171,42 +185,20 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('Not implemented');
 	}
 
-	/**
-	 * @return Horde_Imap_Client_Data_Envelope
-	 */
-	public function getEnvelope() {
-		return $this->fetch->getEnvelope();
-	}
-
 	private function getRawReferences(): string {
-		/** @var Horde_Mime_Headers $headers */
-		$headers = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-		$header = $headers->getHeader('references');
-		if ($header === null) {
-			return '';
-		}
-		return $header->value_single;
+		return $this->rawReferences;
 	}
 
 	private function getRawInReplyTo(): string {
-		return $this->fetch->getEnvelope()->in_reply_to;
+		return $this->rawInReplyTo;
 	}
 
 	public function getDispositionNotificationTo(): string {
-		/** @var Horde_Mime_Headers $headers */
-		$headers = $this->fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-		$header = $headers->getHeader('disposition-notification-to');
-		if ($header === null) {
-			return '';
-		}
-		return $header->value_single;
+		return $this->dispositionNotificationTo;
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getFrom(): AddressList {
-		return AddressList::fromHorde($this->getEnvelope()->from);
+		return $this->from;
 	}
 
 	/**
@@ -220,11 +212,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('IMAP message is immutable');
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getTo(): AddressList {
-		return AddressList::fromHorde($this->getEnvelope()->to);
+		return $this->to;
 	}
 
 	/**
@@ -238,11 +227,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('IMAP message is immutable');
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getCC(): AddressList {
-		return AddressList::fromHorde($this->getEnvelope()->cc);
+		return $this->cc;
 	}
 
 	/**
@@ -256,11 +242,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('IMAP message is immutable');
 	}
 
-	/**
-	 * @return AddressList
-	 */
 	public function getBCC(): AddressList {
-		return AddressList::fromHorde($this->getEnvelope()->bcc);
+		return $this->bcc;
 	}
 
 	/**
@@ -274,27 +257,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('IMAP message is immutable');
 	}
 
-	/**
-	 * Get the ID if available
-	 *
-	 * @return string
-	 */
 	public function getMessageId(): string {
-		return $this->getEnvelope()->message_id;
+		return $this->realMessageId;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getSubject(): string {
-		// Try a soft conversion first (some installations, eg: Alpine linux,
-		// have issues with the '//IGNORE' option)
-		$subject = $this->getEnvelope()->subject;
-		$utf8 = iconv('UTF-8', 'UTF-8', $subject);
-		if ($utf8 !== false) {
-			return $utf8;
-		}
-		return iconv("UTF-8", "UTF-8//IGNORE", $subject);
+		return $this->subject;
 	}
 
 	/**
@@ -308,161 +276,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('IMAP message is immutable');
 	}
 
-	/**
-	 * @return Horde_Imap_Client_DateTime
-	 */
 	public function getSentDate(): Horde_Imap_Client_DateTime {
-		return $this->fetch->getImapDate();
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getSize(): int {
-		return $this->fetch->getSize();
-	}
-
-	/**
-	 * @param Horde_Mime_Part $part
-	 *
-	 * @return bool
-	 */
-	private function hasAttachments($part) {
-		foreach ($part->getParts() as $p) {
-			if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
-				return true;
-			}
-			if ($this->hasAttachments($p)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private function loadMessageBodies(): void {
-		$fetch_query = new Horde_Imap_Client_Fetch_Query();
-		$fetch_query->envelope();
-		$fetch_query->structure();
-		$fetch_query->flags();
-		$fetch_query->size();
-		$fetch_query->imapDate();
-		$fetch_query->headerText([
-			'cache' => true,
-			'peek' => true,
-		]);
-
-		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$ids = new Horde_Imap_Client_Ids($this->messageId);
-		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
-		/** @var Horde_Imap_Client_Data_Fetch $fetch */
-		$fetch = $headers[$this->messageId];
-		if (is_null($fetch)) {
-			throw new DoesNotExistException("This email ($this->messageId) can't be found. Probably it was deleted from the server recently. Please reload.");
-		}
-
-		// set $this->fetch to get to, from ...
-		$this->fetch = $fetch;
-
-		// analyse the body part
-		$structure = $fetch->getStructure();
-
-		// debugging below
-		$structure_type = $structure->getPrimaryType();
-		if ($structure_type === 'multipart') {
-			$i = 1;
-			foreach ($structure->getParts() as $p) {
-				$this->getPart($p, $i++);
-			}
-		} else {
-			if (!is_null($structure->findBody())) {
-				// get the body from the server
-				$partId = (int)$structure->findBody();
-				$this->getPart($structure->getPart($partId), $partId);
-			}
-		}
-	}
-
-	/**
-	 * @param Horde_Mime_Part $p
-	 * @param mixed $partNo
-	 *
-	 * @throws DoesNotExistException
-	 *
-	 * @return void
-	 */
-	private function getPart(Horde_Mime_Part $p, $partNo): void {
-		// Regular attachments
-		if ($p->isAttachment() || $p->getType() === 'message/rfc822') {
-			$this->attachments[] = [
-				'id' => $p->getMimeId(),
-				'messageId' => $this->messageId,
-				'fileName' => $p->getName(),
-				'mime' => $p->getType(),
-				'size' => $p->getBytes(),
-				'cid' => $p->getContentId(),
-				'disposition' => $p->getDisposition()
-			];
-			return;
-		}
-
-		// Inline attachments
-		// Horde doesn't consider parts with content-disposition set to inline as
-		// attachment so we need to use another way to get them.
-		// We use these inline attachments to render a message's html body in $this->getHtmlBody()
-		$filename = $p->getName();
-		if ($p->getType() === 'message/rfc822' || isset($filename)) {
-			if (in_array($filename, $this->attachmentsToIgnore)) {
-				return;
-			}
-			$this->inlineAttachments[] = [
-				'id' => $p->getMimeId(),
-				'messageId' => $this->messageId,
-				'fileName' => $filename,
-				'mime' => $p->getType(),
-				'size' => $p->getBytes(),
-				'cid' => $p->getContentId()
-			];
-			return;
-		}
-
-		if ($p->getPrimaryType() === 'multipart') {
-			$this->handleMultiPartMessage($p, $partNo);
-			return;
-		}
-
-		if ($p->getType() === 'text/plain') {
-			$this->handleTextMessage($p, $partNo);
-			return;
-		}
-
-		if ($p->getType() === 'text/calendar') {
-			$this->attachments[] = [
-				'id' => $p->getMimeId(),
-				'messageId' => $this->messageId,
-				'fileName' => $p->getName() ?? 'calendar.ics',
-				'mime' => $p->getType(),
-				'size' => $p->getBytes(),
-				'cid' => $p->getContentId(),
-				'disposition' => $p->getDisposition()
-			];
-			return;
-		}
-
-		if ($p->getType() === 'text/html') {
-			$this->handleHtmlMessage($p, $partNo);
-			return;
-		}
-
-		// EMBEDDED MESSAGE
-		// Many bounce notifications embed the original message as type 2,
-		// but AOL uses type 1 (multipart), which is not handled here.
-		// There are no PHP functions to parse embedded messages,
-		// so this just appends the raw source to the main message.
-		if ($p[0] === 'message') {
-			$data = $this->loadBodyData($p, $partNo);
-			$this->plainMessage .= trim($data) . "\n\n";
-		}
+		return $this->imapDate;
 	}
 
 	/**
@@ -472,7 +287,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	public function getFullMessage(int $id): array {
 		$mailBody = $this->plainMessage;
-
 		$data = $this->jsonSerialize();
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
@@ -489,10 +303,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $data;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'uid' => $this->getUid(),
 			'messageId' => $this->getMessageId(),
@@ -505,6 +317,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'flags' => $this->getFlags(),
 			'hasHtmlBody' => $this->hasHtmlMessage,
 			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
+			'hasDkimSignature' => $this->hasDkimSignature,
+			'unsubscribeUrl' => $this->unsubscribeUrl,
+			'isOneClickUnsubscribe' => $this->isOneClickUnsubscribe,
+			'unsubscribeMailto' => $this->unsubscribeMailto,
+			'scheduling' => $this->scheduling,
 		];
 	}
 
@@ -518,7 +335,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'id' => $id,
 		], function ($cid) {
 			$match = array_filter($this->inlineAttachments,
-				function ($a) use ($cid) {
+				static function ($a) use ($cid) {
 					return $a['cid'] === $cid;
 				});
 			$match = array_shift($match);
@@ -534,93 +351,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	public function getPlainBody(): string {
 		return $this->plainMessage;
-	}
-
-	/**
-	 * @param Horde_Mime_Part $part
-	 * @param mixed $partNo
-	 *
-	 * @throws DoesNotExistException
-	 *
-	 * @return void
-	 */
-	private function handleMultiPartMessage(Horde_Mime_Part $part, $partNo): void {
-		$i = 1;
-		foreach ($part->getParts() as $p) {
-			$this->getPart($p, "$partNo.$i");
-			$i++;
-		}
-	}
-
-	/**
-	 * @param Horde_Mime_Part $p
-	 * @param mixed $partNo
-	 *
-	 * @throws DoesNotExistException
-	 *
-	 * @return void
-	 */
-	private function handleTextMessage(Horde_Mime_Part $p, $partNo): void {
-		$data = $this->loadBodyData($p, $partNo);
-		$this->plainMessage .= trim($data) . "\n\n";
-	}
-
-	/**
-	 * @param Horde_Mime_Part $p
-	 * @param mixed $partNo
-	 *
-	 * @throws DoesNotExistException
-	 *
-	 * @return void
-	 */
-	private function handleHtmlMessage(Horde_Mime_Part $p, $partNo): void {
-		$this->hasHtmlMessage = true;
-		if ($this->loadHtmlMessage) {
-			$data = $this->loadBodyData($p, $partNo);
-			$this->htmlMessage .= $data . "<br><br>";
-		}
-	}
-
-	/**
-	 * @param Horde_Mime_Part $p
-	 * @param mixed $partNo
-	 *
-	 * @return string
-	 * @throws DoesNotExistException
-	 * @throws Exception
-	 */
-	private function loadBodyData(Horde_Mime_Part $p, $partNo): string {
-		// DECODE DATA
-		$fetch_query = new Horde_Imap_Client_Fetch_Query();
-		$ids = new Horde_Imap_Client_Ids($this->messageId);
-
-		$fetch_query->bodyPart($partNo, [
-			'peek' => true
-		]);
-		$fetch_query->bodyPartSize($partNo);
-		$fetch_query->mimeHeader($partNo, [
-			'peek' => true
-		]);
-
-		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
-		/* @var $fetch Horde_Imap_Client_Data_Fetch */
-		$fetch = $headers[$this->messageId];
-		if (is_null($fetch)) {
-			throw new DoesNotExistException("Mail body for this mail($this->messageId) could not be loaded");
-		}
-
-		$mimeHeaders = $fetch->getMimeHeader($partNo, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-		if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-			$p->setTransferEncoding($enc);
-		}
-
-		$data = $fetch->getBodyPart($partNo);
-
-		$p->setContents($data);
-		$data = $p->getContents();
-
-		$data = mb_convert_encoding($data, 'UTF-8', $p->getCharset());
-		return $data;
 	}
 
 	public function getContent(): string {
@@ -696,6 +426,39 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('not implemented');
 	}
 
+	public function getReplyTo(): AddressList {
+		return $this->replyTo;
+	}
+
+	/**
+	 * @param string $id
+	 *
+	 * @return void
+	 */
+	public function setReplyTo(string $id) {
+		throw new Exception('not implemented');
+	}
+
+	public function isEncrypted(): bool {
+		return $this->isEncrypted;
+	}
+
+	public function isSigned(): bool {
+		return $this->isSigned;
+	}
+
+	public function isSignatureValid(): bool {
+		return $this->signatureIsValid;
+	}
+
+	public function getUnsubscribeUrl(): ?string {
+		return $this->unsubscribeUrl;
+	}
+
+	public function isOneClickUnsubscribe(): bool {
+		return $this->isOneClickUnsubscribe;
+	}
+
 	/**
 	 * Cast all values from an IMAP message into the correct DB format
 	 *
@@ -727,7 +490,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setSubject(mb_strcut($this->getSubject(), 0, 255));
 		$msg->setSentAt($this->getSentDate()->getTimestamp());
 
-		$flags = $this->fetch->getFlags();
+		$flags = $this->flags;
 		$msg->setFlagAnswered(in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags, true));
 		$msg->setFlagDeleted(in_array(Horde_Imap_Client::FLAG_DELETED, $flags, true));
 		$msg->setFlagDraft(in_array(Horde_Imap_Client::FLAG_DRAFT, $flags, true));
@@ -743,6 +506,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagImportant(in_array('$important', $flags, true) || in_array('$labelimportant', $flags, true) || in_array(Tag::LABEL_IMPORTANT, $flags, true));
 		$msg->setFlagAttachments(false);
 		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
+		if ($this->scheduling !== []) {
+			$msg->setImipMessage(true);
+		}
 
 		$allowed = [
 			Horde_Imap_Client::FLAG_ANSWERED,
@@ -759,11 +525,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		];
 
 		// remove all standard IMAP flags from $filters
-		$tags = array_filter($flags, function ($flag) use ($allowed) {
+		$tags = array_filter($flags, static function ($flag) use ($allowed) {
 			return in_array($flag, $allowed, true) === false;
 		});
 
-		if (empty($tags) === true) {
+		if (($tags === []) === true) {
 			return $msg;
 		}
 		// cast all leftover $flags to be used as tags

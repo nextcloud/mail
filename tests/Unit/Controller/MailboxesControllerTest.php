@@ -23,22 +23,21 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
-use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Service\Sync\SyncService;
-use PHPUnit\Framework\MockObject\MockObject;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\Service\AccountService;
-use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MailboxesControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName = 'mail';
 
@@ -136,10 +135,11 @@ class MailboxesControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	public function testStats() {
+	public function testStats(): void {
 		$mailbox = new Mailbox();
 		$mailbox->setUnseen(10);
 		$mailbox->setMessages(42);
+		$mailbox->setMyAcls(null);
 		$this->mailManager->expects($this->once())
 			->method('getMailbox')
 			->with('john', 13)
@@ -147,7 +147,7 @@ class MailboxesControllerTest extends TestCase {
 
 		$response = $this->controller->stats(13);
 
-		$stats = new MailboxStats(42, 10);
+		$stats = new MailboxStats(42, 10, null);
 		$expected = new JSONResponse($stats);
 		$this->assertEquals($expected, $response);
 	}

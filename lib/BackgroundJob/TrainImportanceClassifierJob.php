@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -35,24 +36,18 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 class TrainImportanceClassifierJob extends TimedJob {
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ImportanceClassifier */
-	private $classifier;
-
-	/** @var IJobList */
-	private $jobList;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private ImportanceClassifier $classifier;
+	private IJobList $jobList;
+	private IUserPreferences $preferences;
+	private LoggerInterface $logger;
 
 	public function __construct(ITimeFactory $time,
-								AccountService $accountService,
-								ImportanceClassifier $classifier,
-								IJobList $jobList,
-								LoggerInterface $logger) {
+		AccountService $accountService,
+		ImportanceClassifier $classifier,
+		IJobList $jobList,
+		IUserPreferences $preferences,
+		LoggerInterface $logger) {
 		parent::__construct($time);
 
 		$this->accountService = $accountService;
@@ -60,9 +55,14 @@ class TrainImportanceClassifierJob extends TimedJob {
 		$this->jobList = $jobList;
 		$this->logger = $logger;
 
-		$this->setInterval(3600);
+		$this->setInterval(24 * 60 * 60);
+		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
+		$this->preferences = $preferences;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function run($argument) {
 		$accountId = (int)$argument['accountId'];
 
@@ -77,6 +77,10 @@ class TrainImportanceClassifierJob extends TimedJob {
 		$dbAccount = $account->getMailAccount();
 		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
 			$this->logger->info("Ignoring cron training for provisioned account that has no password set yet");
+			return;
+		}
+		if ($this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
+			$this->logger->debug("classification is turned off for account $accountId");
 			return;
 		}
 

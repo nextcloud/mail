@@ -31,7 +31,6 @@ use OCA\Mail\Support\HostNameFactory;
 use OCP\Util;
 
 class HostNameFactoryTest extends TestCase {
-
 	/** @var HostNameFactory */
 	private $factory;
 

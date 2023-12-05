@@ -29,7 +29,6 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 
 class AutoCompleteService {
-
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 
@@ -45,13 +44,13 @@ class AutoCompleteService {
 		$this->addressCollector = $ac;
 	}
 
-	public function findMatches(string $term): array {
-		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
+	public function findMatches(string $userId, string $term): array {
+		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($userId, $term);
 		$recipientGroups = $this->groupsIntegration->getMatchingGroups($term);
-		$fromCollector = $this->addressCollector->searchAddress($term);
+		$fromCollector = $this->addressCollector->searchAddress($userId, $term);
 
 		// Convert collected addresses into same format as CI creates
-		$recipientsFromCollector = array_map(function (CollectedAddress $address) {
+		$recipientsFromCollector = array_map(static function (CollectedAddress $address) {
 			return [
 				'id' => $address->getId(),
 				'label' => $address->getDisplayName(),

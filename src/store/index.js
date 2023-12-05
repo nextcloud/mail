@@ -2,8 +2,9 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,75 +21,97 @@
  */
 
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 
 import {
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 	PRIORITY_INBOX_ID,
-} from './constants'
-import actions from './actions'
-import { getters } from './getters'
-import mutations from './mutations'
+} from './constants.js'
+import actions from './actions.js'
+import { getters } from './getters.js'
+import mutations from './mutations.js'
+import outbox from './outbox/index.js'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+export default new Store({
 	strict: process.env.NODE_ENV !== 'production',
-	state: {
-		preferences: {},
-		accounts: {
-			[UNIFIED_ACCOUNT_ID]: {
-				id: UNIFIED_ACCOUNT_ID,
-				accountId: UNIFIED_ACCOUNT_ID,
-				isUnified: true,
-				mailboxes: [PRIORITY_INBOX_ID, UNIFIED_INBOX_ID],
-				collapsed: false,
-				emailAddress: '',
-				name: '',
-				showSubscribedOnly: false,
-				signatureAboveQuote: false,
+	modules: {
+		root: {
+			namespaced: false,
+			state: {
+				isExpiredSession: false,
+				preferences: {},
+				accounts: {
+					[UNIFIED_ACCOUNT_ID]: {
+						id: UNIFIED_ACCOUNT_ID,
+						accountId: UNIFIED_ACCOUNT_ID,
+						isUnified: true,
+						mailboxes: [PRIORITY_INBOX_ID, UNIFIED_INBOX_ID],
+						aliases: [],
+						collapsed: false,
+						emailAddress: '',
+						name: '',
+						showSubscribedOnly: false,
+						signatureAboveQuote: false,
+					},
+				},
+				accountList: [UNIFIED_ACCOUNT_ID],
+				allAccountSettings: [],
+				mailboxes: {
+					[UNIFIED_INBOX_ID]: {
+						id: UNIFIED_INBOX_ID,
+						databaseId: UNIFIED_INBOX_ID,
+						accountId: 0,
+						attributes: ['\\subscribed'],
+						isUnified: true,
+						path: '',
+						specialUse: ['inbox'],
+						specialRole: 'inbox',
+						unread: 0,
+						mailboxes: [],
+						envelopeLists: {},
+						name: 'UNIFIED INBOX',
+					},
+					[PRIORITY_INBOX_ID]: {
+						id: PRIORITY_INBOX_ID,
+						databaseId: PRIORITY_INBOX_ID,
+						accountId: 0,
+						attributes: ['\\subscribed'],
+						isPriorityInbox: true,
+						path: '',
+						specialUse: ['inbox'],
+						specialRole: 'inbox',
+						unread: 0,
+						mailboxes: [],
+						envelopeLists: {},
+						name: 'PRIORITY INBOX',
+					},
+				},
+				envelopes: {},
+				messages: {},
+				newMessage: undefined,
+				showMessageComposer: false,
+				composerMessageIsSaved: false,
+				composerSessionId: undefined,
+				nextComposerSessionId: 1,
+				autocompleteEntries: [],
+				tags: {},
+				tagList: [],
+				isScheduledSendingDisabled: false,
+				isSnoozeDisabled: false,
+				currentUserPrincipal: undefined,
+				googleOauthUrl: null,
+				masterPasswordEnabled: false,
+				sieveScript: {},
+				calendars: [],
+				smimeCertificates: [],
 			},
+			getters,
+			mutations,
+			actions,
 		},
-		accountList: [UNIFIED_ACCOUNT_ID],
-		allAccountSettings: [],
-		mailboxes: {
-			[UNIFIED_INBOX_ID]: {
-				id: UNIFIED_INBOX_ID,
-				databaseId: UNIFIED_INBOX_ID,
-				accountId: 0,
-				attributes: ['\\subscribed'],
-				isUnified: true,
-				path: '',
-				specialUse: ['inbox'],
-				specialRole: 'inbox',
-				unread: 0,
-				mailboxes: [],
-				envelopeLists: {},
-				name: 'UNIFIED INBOX',
-			},
-			[PRIORITY_INBOX_ID]: {
-				id: PRIORITY_INBOX_ID,
-				databaseId: PRIORITY_INBOX_ID,
-				accountId: 0,
-				attributes: ['\\subscribed'],
-				isPriorityInbox: true,
-				path: '',
-				specialUse: ['inbox'],
-				specialRole: 'inbox',
-				unread: 0,
-				mailboxes: [],
-				envelopeLists: {},
-				name: 'PRIORITY INBOX',
-			},
-		},
-		envelopes: {},
-		messages: {},
-		autocompleteEntries: [],
-		tags: {},
-		tagList: [],
+		outbox,
 	},
-	getters,
-	mutations,
-	actions,
 })

@@ -16,6 +16,8 @@ DROP TABLE oc_mail_classifiers;
 DROP TABLE oc_mail_trusted_senders;
 DROP TABLE oc_mail_tags;
 DROP TABLE oc_mail_message_tags;
+DROP TABLE oc_mail_provisionings;
+DROP TABLE oc_mail_local_messages;
 ```
 
 ## Enable CKEditor Inspector
@@ -145,7 +147,7 @@ To create a IMAP account for Amy and Bender add to MAIL_ACCOUNTS.
 `32657d7a-582d-103b-83a4-c7ccb54ec103@planetexpress.com,amy 3268b904-582d-103b-83a5-c7ccb54ec103@planetexpress.com,bender`
 
 The password is (for our sample data) the display name in lowercase.
-Note that accounts are seperated by a space.
+Note that accounts are separated by a space.
 
 ### A provisioning configuration for Mail
 
@@ -164,5 +166,74 @@ to a user:
 - Click Add new attribute -> Select mailAlias -> Enter rodriquez@planetexpress.com -> Press Enter -> Click Update Object
 
 Now login to Nextcloud as Bender and go to Mail. See rodriquez@planetexpress.com
-as Alias in the Account settings for the provisoned mail account.
+as Alias in the Account settings for the provisioned mail account.
 
+## Generate self signed S/MIME CA and user certificates
+
+You may use the following script to generate a CA and multiple user certificates. It has to be invoked with 2 parameters: the user name and the domain.
+
+**Example:** Run the following command to generate a certificate for user@imap.localhost:
+```sh
+sh gen-smime-cert.sh user imap.localhost
+```
+
+You will be prompted for a password that is used to encrypt the PKCS12 (.p12) file.
+
+The certificate and key will be placed in the current directory:
+- `user@imap.localhost.crt`: PEM encoded certificate
+- `user@imap.localhost.key`: PEM encoded private key
+- `user@imap.localhost.crt`: PKCS12 encoded certificate and private key for usage in desktop clients
+
+### gen-smime-cert.sh
+
+```sh
+#!/bin/sh
+
+# Generate an S/MIME certificate for user@domain.
+
+usage () {
+    echo "Usage: $(basename "$0") <user> <domain>"
+    echo 'This will generate an S/MIME certificate for user@domain.'
+    echo 'The CA certificate is generated automatically if not present (ca.key, ca.crt).'
+}
+
+[ -z "$2" ] && usage && exit 1
+
+common_name="$1"
+email_address="$common_name"@"$2"
+
+# Generate CA key and certificate if not present
+if [ ! -f ca.key ] || [ ! -f ca.crt ]; then
+    openssl genrsa -out ca.key 4096
+    openssl req \
+        -new \
+        -x509 \
+        -key ca.key \
+        -out ca.crt \
+        -days 3650 \
+        -subj "/CN=0 S\\/MIME CA"
+fi
+
+# Generate client certificate
+openssl genrsa -out "$email_address".key 4096
+openssl req \
+    -new \
+    -x509 \
+    -key "$email_address".key \
+    -out "$email_address".crt \
+    -CA ca.crt \
+    -CAkey ca.key \
+    -days 365 \
+    -subj "/CN=$common_name/emailAddress=$email_address" \
+    -set_serial 0x"$(openssl rand -hex 16)" \
+    -addext basicConstraints=critical,CA:FALSE \
+    -addext keyUsage=critical,digitalSignature,keyEncipherment \
+    -addext "subjectAltName=email:$email_address"
+
+# Export an encrypted PKCS12 (.p12) file
+openssl pkcs12 \
+    -export \
+    -in "$email_address".crt \
+    -inkey "$email_address".key \
+    -out "$email_address".p12
+```

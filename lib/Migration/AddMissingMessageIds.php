@@ -34,7 +34,6 @@ use function method_exists;
 use function sprintf;
 
 class AddMissingMessageIds implements IRepairStep {
-
 	/** @var MessageMapper */
 	private $mapper;
 
@@ -42,7 +41,7 @@ class AddMissingMessageIds implements IRepairStep {
 	private $logger;
 
 	public function __construct(MessageMapper $mapper,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}
@@ -69,7 +68,7 @@ class AddMissingMessageIds implements IRepairStep {
 		}
 
 		$toFix = $this->mapper->findWithEmptyMessageId();
-		if (empty($toFix)) {
+		if ($toFix === []) {
 			return;
 		}
 		$output->info(sprintf('%d messages need an update', count($toFix)));

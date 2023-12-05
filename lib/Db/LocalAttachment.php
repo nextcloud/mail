@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Luc Calaresu <dev@calaresu.com>
@@ -24,6 +26,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 
 /**
  * @method string getUserId()
@@ -32,11 +35,12 @@ use OCP\AppFramework\Db\Entity;
  * @method void setFileName(string $fileName)
  * @method string getMimeType()
  * @method void setMimeType(string $mimeType)
- * @method int getCreatedAt()
+ * @method int|null getCreatedAt()
  * @method void setCreatedAt(int $createdAt)
+ * @method int|null getLocalMessageId()
+ * @method void setLocalMessageId(int $localMessageId)
  */
 class LocalAttachment extends Entity implements JsonSerializable {
-
 	/** @var string */
 	protected $userId;
 
@@ -46,13 +50,21 @@ class LocalAttachment extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $mimeType;
 
-	/** @var mixed */
+	/** @var int|null */
 	protected $createdAt;
 
+	/** @var int|null */
+	protected $localMessageId;
+
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->id,
+			'type' => 'local',
 			'fileName' => $this->fileName,
+			'mimeType' => $this->mimeType,
+			'createdAt' => $this->createdAt,
+			'localMessageId' => $this->localMessageId
 		];
 	}
 }

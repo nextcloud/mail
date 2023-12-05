@@ -29,7 +29,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface;
 
 class PerformanceLogger {
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -37,7 +36,7 @@ class PerformanceLogger {
 	private $logger;
 
 	public function __construct(ITimeFactory $timeFactory,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->timeFactory = $timeFactory;
 		$this->logger = $logger;
 	}

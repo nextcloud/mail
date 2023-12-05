@@ -6,11 +6,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
-use OCP\Migration\SimpleMigrationStep;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version1050Date20200624101359 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -23,14 +23,14 @@ class Version1050Date20200624101359 extends SimpleMigrationStep {
 
 		$messagesTable = $schema->getTable('mail_messages');
 		$messagesTable->getColumn('message_id')->setLength(1023);
-		$messagesTable->addColumn('references', 'text', [
+		$messagesTable->addColumn('references', Types::TEXT, [
 			'notnull' => false,
 		]);
-		$messagesTable->addColumn('in_reply_to', 'string', [
+		$messagesTable->addColumn('in_reply_to', Types::STRING, [
 			'notnull' => false,
 			'length' => 1023,
 		]);
-		$messagesTable->addColumn('thread_root_id', 'string', [
+		$messagesTable->addColumn('thread_root_id', Types::STRING, [
 			'notnull' => false,
 			'length' => 1023,
 		]);

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MdnRequest from './MdnRequest'
+import MdnRequest from './MdnRequest.vue'
 const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {
@@ -69,13 +69,22 @@ export default {
 <style lang="scss">
 .quoted-text {
 	color: var(--color-text-maxcontrast)
+
+	summary {
+		cursor: pointer
+	}
 }
 </style>
 <style lang="scss" scoped>
-#mail-content, .mail-signature {
+.message-container,
+.mail-signature {
 	white-space: pre-wrap;
 }
 .mail-signature, .quoted {
 	color: var(--color-text-maxcontrast)
+
+	summary {
+		cursor: pointer
+	}
 }
 </style>

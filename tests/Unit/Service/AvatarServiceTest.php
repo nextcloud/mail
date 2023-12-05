@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
@@ -34,7 +35,6 @@ use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
 use OCA\Mail\Service\Avatar\IAvatarSource;
 use OCA\Mail\Service\AvatarService;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;

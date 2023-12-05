@@ -29,6 +29,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Http\Client\IClientService;
 use OCP\IRequest;
@@ -36,27 +37,20 @@ use OCP\ISession;
 use OCP\IURLGenerator;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
+use function file_get_contents;
 
 class ProxyController extends Controller {
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var ISession */
-	private $session;
-
-	/** @var IClientService */
-	private $clientService;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private IURLGenerator $urlGenerator;
+	private ISession $session;
+	private IClientService $clientService;
+	private LoggerInterface $logger;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								IURLGenerator $urlGenerator,
-								ISession $session,
-								IClientService $clientService,
-								LoggerInterface $logger) {
+		IRequest $request,
+		IURLGenerator $urlGenerator,
+		ISession $session,
+		IClientService $clientService,
+		LoggerInterface $logger) {
 		parent::__construct($appName, $request);
 		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;
@@ -100,6 +94,7 @@ class ProxyController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @UserRateThrottle(limit=50, period=60)
 	 *
 	 * @param string $src
 	 *
@@ -109,9 +104,16 @@ class ProxyController extends Controller {
 	 *
 	 * @return ProxyDownloadResponse
 	 */
+	#[UserRateLimit(limit: 50, period: 60)]
 	public function proxy(string $src): ProxyDownloadResponse {
 		// close the session to allow parallel downloads
 		$this->session->close();
+
+		// If strict cookies are set it means we come from the same domain so no open redirect
+		if (!$this->request->passesStrictCookieCheck()) {
+			$content = file_get_contents(__DIR__ . '/../../img/blocked-image.png');
+			return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+		}
 
 		$client = $this->clientService->newClient();
 		try {

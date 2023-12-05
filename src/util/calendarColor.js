@@ -3,7 +3,7 @@
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,8 +26,8 @@ import convert from 'color-convert'
 /**
  * Generates a hex color based on RGB string
  *
- * @param {String} uid The string to generate a color from
- * @returns {string} The hex color
+ * @param {string} uid The string to generate a color from
+ * @return {string} The hex color
  */
 export function uidToHexColor(uid) {
 	const color = uidToColor(uid)
@@ -112,7 +112,7 @@ function mixPalette(steps, color1, color2) {
  * 3 colors * 6 will result in 18 generated colors
  *
  * @param {number} [steps=6] Number of steps to go from a color to another
- * @returns {Object[]}
+ * @return {object[]}
  */
 function GenColors(steps) {
 	if (!steps) {

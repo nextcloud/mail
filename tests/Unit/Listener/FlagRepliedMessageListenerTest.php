@@ -30,6 +30,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -42,7 +43,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class FlagRepliedMessageListenerTest extends TestCase {
-
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 
@@ -58,17 +58,22 @@ class FlagRepliedMessageListenerTest extends TestCase {
 	/** @var FlagRepliedMessageListener */
 	private $listener;
 
+	/** @var DbMessageMapper|MockObject */
+	private $dbMessageMapper;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
+		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new FlagRepliedMessageListener(
 			$this->imapClientFactory,
 			$this->mailboxMapper,
+			$this->dbMessageMapper,
 			$this->messageMapper,
 			$this->logger
 		);
@@ -101,10 +106,12 @@ class FlagRepliedMessageListenerTest extends TestCase {
 			$message,
 			$mail
 		);
+		$this->dbMessageMapper->expects($this->never())
+			->method('findByMessageId');
 		$this->mailboxMapper->expects($this->never())
 			->method('find');
 		$this->logger->expects($this->never())
-			->method('error');
+			->method('warning');
 
 		$this->listener->handle($event);
 	}
@@ -125,7 +132,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'<abc123@123.com>',
 			$draft,
 			$message,
 			$mail
@@ -133,8 +140,15 @@ class FlagRepliedMessageListenerTest extends TestCase {
 		$messageInReply = new Message();
 		$messageInReply->setUid(321);
 		$messageInReply->setMailboxId(654);
+		$messageInReply->setMessageId('abc123@123.com');
 		$repliedMessageData->method('getMessage')
 			->willReturn($messageInReply);
+		$this->dbMessageMapper->expects($this->once())
+			->method('findByMessageId')
+			->with(
+				$event->getAccount(),
+				'<abc123@123.com>'
+			)->willReturn([$messageInReply]);
 		$mailbox = new Mailbox();
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
@@ -154,7 +168,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 				\Horde_Imap_Client::FLAG_ANSWERED
 			);
 		$this->logger->expects($this->never())
-			->method('error');
+			->method('warning');
 
 		$this->listener->handle($event);
 	}

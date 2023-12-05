@@ -24,12 +24,12 @@
 
 namespace OCA\Mail\Tests\Integration\Service;
 
-use ChristophWurst\Nextcloud\Testing\TestUser;
-use OC;
-use OCA\Mail\Contracts\IAvatarService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestUser;
+use OCA\Mail\Contracts\IAvatarService;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use OCP\Server;
 
 class AvatarServiceIntegrationTest extends TestCase {
 	use TestUser;
@@ -40,7 +40,7 @@ class AvatarServiceIntegrationTest extends TestCase {
 
 	private function clearCache() {
 		/* @var $cacheFactory ICacheFactory */
-		$cacheFactory = OC::$server->query(ICacheFactory::class);
+		$cacheFactory = Server::get(ICacheFactory::class);
 		/* @var $cache ICache */
 		$cache = $cacheFactory->createDistributed('mail.avatars');
 		$cache->clear();
@@ -50,11 +50,14 @@ class AvatarServiceIntegrationTest extends TestCase {
 		parent::setUp();
 
 		$this->clearCache();
-		$this->service = OC::$server->query(IAvatarService::class);
+		$this->service = Server::get(IAvatarService::class);
 	}
 
-	public function testChristophsFavicon() {
-		$avatar = $this->service->getAvatar('christoph@winzerhof-wurst.at', 'jan');
-		$this->assertNull($avatar); // There is none
+	public function testJansGravatar() {
+		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');
+		$this->assertNotNull($avatar);
+		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar->getUrl());
+		$image = $this->service->getAvatarImage('hey@jancborchardt.net', 'john');
+		$this->assertNotNull($image);
 	}
 }

@@ -35,7 +35,6 @@ use OCP\Migration\IRepairStep;
 use function sprintf;
 
 class AddMissingDefaultTags implements IRepairStep {
-
 	/** @var TagMapper */
 	private $tagMapper;
 
@@ -44,7 +43,7 @@ class AddMissingDefaultTags implements IRepairStep {
 
 
 	public function __construct(MailAccountMapper $accountMapper,
-								TagMapper $tagMapper) {
+		TagMapper $tagMapper) {
 		$this->accountMapper = $accountMapper;
 		$this->tagMapper = $tagMapper;
 	}
@@ -53,6 +52,9 @@ class AddMissingDefaultTags implements IRepairStep {
 		return 'Restore default tags that are missing';
 	}
 
+	/**
+	 * @return void
+	 */
 	public function run(IOutput $output) {
 		$output->info('Looking up default tags');
 		$accounts = $this->accountMapper->getAllAccounts();

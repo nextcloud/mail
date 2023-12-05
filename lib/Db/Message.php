@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -29,6 +30,7 @@ use Horde_Mail_Rfc822_Identification;
 use JsonSerializable;
 use OCA\Mail\AddressList;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 use function in_array;
 use function json_decode;
 use function json_encode;
@@ -75,6 +77,14 @@ use function json_encode;
  * @method null|string getPreviewText()
  * @method void setUpdatedAt(int $time)
  * @method int getUpdatedAt()
+ * @method bool isImipMessage()
+ * @method void setImipMessage(bool $imipMessage)
+ * @method bool isImipProcessed()
+ * @method void setImipProcessed(bool $imipProcessed)
+ * @method bool isImipError()
+ * @method void setImipError(bool $imipError)
+ * @method bool|null isEncrypted()
+ * @method void setEncrypted(bool|null $encrypted)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -84,8 +94,8 @@ class Message extends Entity implements JsonSerializable {
 		'flagged',
 		'seen',
 		'forwarded',
-		'junk',
-		'notjunk',
+		'$junk',
+		'$notjunk',
 		'mdnsent',
 		Tag::LABEL_IMPORTANT,
 		'$important' // @todo remove this when we have removed all references on IMAP to $important @link https://github.com/nextcloud/mail/issues/25
@@ -113,6 +123,14 @@ class Message extends Entity implements JsonSerializable {
 	protected $flagImportant = false;
 	protected $flagMdnsent;
 	protected $previewText;
+	protected $imipMessage = false;
+	protected $imipProcessed = false;
+	protected $imipError = false;
+
+	/**
+	 * @var bool|null
+	 */
+	protected $encrypted;
 
 	/** @var AddressList */
 	private $from;
@@ -151,6 +169,10 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('flagImportant', 'boolean');
 		$this->addType('flagMdnsent', 'boolean');
 		$this->addType('updatedAt', 'integer');
+		$this->addType('imipMessage', 'boolean');
+		$this->addType('imipProcessed', 'boolean');
+		$this->addType('imipError', 'boolean');
+		$this->addType('encrypted', 'boolean');
 	}
 
 	/**
@@ -173,11 +195,13 @@ class Message extends Entity implements JsonSerializable {
 	}
 
 	public function setThreadRootId(?string $messageId): void {
-		$this->setMessageIdFieldIfNotEmpty('threadRootId', $messageId);
+		$threadRootId = (!empty($messageId)) ? '<' . rtrim(ltrim($messageId, '<'), '>') . '>' : $this->getMessageId();
+		$parsed = new Horde_Mail_Rfc822_Identification($threadRootId);
+		$this->setter('threadRootId', [$parsed->ids[0] ?? $this->getMessageId()]);
 	}
 
 	private function setMessageIdFieldIfNotEmpty(string $field, ?string $id): void {
-		$id = ($id !== null) ? '<' . rtrim(ltrim($id, '<'), '>') . '>' : null;
+		$id = (!empty($id)) ? '<' . rtrim(ltrim($id, '<'), '>') . '>' : null;
 		$parsed = new Horde_Mail_Rfc822_Identification($id);
 		$this->setter($field, [$parsed->ids[0] ?? null]);
 	}
@@ -252,6 +276,9 @@ class Message extends Entity implements JsonSerializable {
 		$this->bcc = $bcc;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function setFlag(string $flag, bool $value = true) {
 		if (!in_array($flag, self::MUTABLE_FLAGS, true)) {
 			// Ignore
@@ -259,6 +286,10 @@ class Message extends Entity implements JsonSerializable {
 		}
 		if ($flag === Tag::LABEL_IMPORTANT) {
 			$this->setFlagImportant($value);
+		} elseif ($flag === '$junk') {
+			$this->setFlagJunk($value);
+		} elseif ($flag === '$notjunk') {
+			$this->setFlagNotjunk($value);
 		} else {
 			$this->setter(
 				$this->columnToProperty("flag_$flag"),
@@ -267,11 +298,12 @@ class Message extends Entity implements JsonSerializable {
 		}
 	}
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$tags = $this->getTags();
 		$indexed = array_combine(
 			array_map(
-				function (Tag $tag) {
+				static function (Tag $tag) {
 					return $tag->getImapLabel();
 				}, $tags),
 			$tags
@@ -291,7 +323,8 @@ class Message extends Entity implements JsonSerializable {
 				'forwarded' => ($this->getFlagForwarded() === true),
 				'hasAttachments' => ($this->getFlagAttachments() ?? false),
 				'important' => ($this->getFlagImportant() === true),
-				'junk' => ($this->getFlagJunk() === true),
+				'$junk' => ($this->getFlagJunk() === true),
+				'$notjunk' => ($this->getFlagNotjunk() === true),
 				'mdnsent' => ($this->getFlagMdnsent() === true),
 			],
 			'tags' => $indexed,
@@ -304,6 +337,9 @@ class Message extends Entity implements JsonSerializable {
 			'inReplyTo' => $this->getInReplyTo(),
 			'references' => empty($this->getReferences()) ? null: json_decode($this->getReferences(), true),
 			'threadRootId' => $this->getThreadRootId(),
+			'imipMessage' => $this->isImipMessage(),
+			'previewText' => $this->getPreviewText(),
+			'encrypted' => ($this->isEncrypted() === true),
 		];
 	}
 }

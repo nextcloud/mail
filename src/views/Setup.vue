@@ -1,38 +1,53 @@
 <template>
 	<Content app-name="mail">
 		<Navigation v-if="hasAccounts" />
-		<div id="emptycontent">
-			<div class="icon-mail" />
-			<h2>{{ t('mail', 'Connect your mail account') }}</h2>
-			<AccountForm :display-name="displayName" :email="email" :save="onSave">
-				<template v-if="error" #feedback class="warning">
-					{{ error }}
-				</template>
-			</AccountForm>
-		</div>
+		<AppContent>
+			<div class="mail-empty-content">
+				<EmptyContent v-if="allowNewMailAccounts" :title="t('mail', 'Connect your mail account')">
+					<template #icon>
+						<IconMail :size="65" />
+					</template>
+					<template #action>
+						<AccountForm :display-name="displayName"
+							:email="email"
+							:error.sync="error"
+							@account-created="onAccountCreated" />
+					</template>
+				</EmptyContent>
+				<EmptyContent v-else :title="t('mail', 'To add a mail account, please contact your administrator.')">
+					<template #icon>
+						<IconMail :size="65" />
+					</template>
+				</EmptyContent>
+			</div>
+		</AppContent>
 	</Content>
 </template>
 
 <script>
-import Content from '@nextcloud/vue/dist/Components/Content'
+import { NcContent as Content, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import { loadState } from '@nextcloud/initial-state'
-import { translate as t } from '@nextcloud/l10n'
 
-import AccountForm from '../components/AccountForm'
-import Navigation from '../components/Navigation'
-import logger from '../logger'
+import AccountForm from '../components/AccountForm.vue'
+import IconMail from 'vue-material-design-icons/Email.vue'
+import Navigation from '../components/Navigation.vue'
+import logger from '../logger.js'
 
 export default {
 	name: 'Setup',
 	components: {
+		AppContent,
 		AccountForm,
 		Content,
+		EmptyContent,
+		IconMail,
 		Navigation,
 	},
 	data() {
 		return {
 			displayName: loadState('mail', 'prefill_displayName'),
 			email: loadState('mail', 'prefill_email'),
+			allowNewMailAccounts: loadState('mail', 'allow-new-accounts', true),
 			error: null,
 		}
 	},
@@ -42,35 +57,18 @@ export default {
 		},
 	},
 	methods: {
-		onSave(data) {
-			this.error = null
-
-			return this.$store
-				.dispatch('createAccount', data)
-				.then((account) => {
-					logger.info('account successfully created, redirecting …')
-					this.$router.push({
-						name: 'home',
-					})
-
-					return account
-				})
-				.catch((error) => {
-					logger.error('Could not create account', { error })
-
-					if (error?.data?.message) {
-						this.error = error.data.message
-					} else {
-						this.error = t('mail', 'Unexpected error during account creation')
-					}
-				})
+		onAccountCreated() {
+			logger.info('account successfully created, redirecting …')
+			this.$router.push({
+				name: 'home',
+			})
 		},
 	},
 }
 </script>
 
 <style>
-#emptycontent {
-	margin-top: 10vh;
+.mail-empty-content {
+	margin: 0 auto;
 }
 </style>

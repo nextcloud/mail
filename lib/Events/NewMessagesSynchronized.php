@@ -31,7 +31,6 @@ use OCA\Mail\Db\Message;
 use OCP\EventDispatcher\Event;
 
 class NewMessagesSynchronized extends Event {
-
 	/** @var Account */
 	private $account;
 
@@ -47,8 +46,8 @@ class NewMessagesSynchronized extends Event {
 	 * @param Message[] $messages
 	 */
 	public function __construct(Account $account,
-								Mailbox $mailbox,
-								array $messages) {
+		Mailbox $mailbox,
+		array $messages) {
 		parent::__construct();
 		$this->account = $account;
 		$this->mailbox = $mailbox;

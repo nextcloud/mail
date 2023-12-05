@@ -36,8 +36,6 @@ use Psr\Log\LoggerInterface;
  * @template-extends QBMapper<Provisioning>
  */
 class ProvisioningMapper extends QBMapper {
-
-
 	/** @var LoggerInterface */
 	private $logger;
 
@@ -126,6 +124,11 @@ class ProvisioningMapper extends QBMapper {
 		$provisioning->setSmtpHost($data['smtpHost']);
 		$provisioning->setSmtpPort((int)$data['smtpPort']);
 		$provisioning->setSmtpSslMode($data['smtpSslMode']);
+
+		$provisioning->setMasterPasswordEnabled((bool)($data['masterPasswordEnabled'] ?? false));
+		if (isset($data['masterPassword']) && $data['masterPassword'] !== Provisioning::MASTER_PASSWORD_PLACEHOLDER) {
+			$provisioning->setMasterPassword($data['masterPassword']);
+		}
 
 		$provisioning->setSieveEnabled((bool)$data['sieveEnabled']);
 		$provisioning->setSieveHost($data['sieveHost'] ?? '');

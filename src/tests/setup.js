@@ -2,8 +2,9 @@
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,24 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require('jsdom-global')()
-const chai = require('chai')
-const sinonChai = require('sinon-chai')
-
-chai.use(sinonChai)
-global.expect = chai.expect
-// https://github.com/vuejs/vue-test-utils/issues/936
-// better fix for "TypeError: Super expression must either be null or
-// a function" than pinning an old version of prettier.
-//
-// https://github.com/vuejs/vue-cli/issues/2128#issuecomment-453109575
-window.Date = Date
-
-// Fix for jsdom https://github.com/developit/preact/issues/444
-global.SVGElement = global.Element
+import { readFileSync } from 'fs'
+import { join } from 'path'
 
 global.OC = {
 	getLocale: () => 'en',
+	getLanguage: () => 'en_US',
 	L10N: {
 		translate: (app, string) => {
 			if (app !== 'mail') {
@@ -46,4 +35,38 @@ global.OC = {
 		},
 	},
 	isUserAdmin: () => false,
+}
+
+/**
+ * @param {string} path Path to file relative to src/tests/data/
+ * @return {Buffer} File contents
+ */
+global.readTestDataRaw = function(path) {
+	path = join('src', 'tests', 'data', path)
+	return readFileSync(path)
+}
+
+/**
+ * @param {string} path Path to file relative to src/tests/data/
+ * @return {string} File contents
+ */
+global.readTestData = function(path) {
+	return readTestDataRaw(path).toString('utf-8')
+}
+
+/**
+ * Convert a Buffer to an ArrayBuffer
+ *
+ * https://stackoverflow.com/a/12101012
+ *
+ * @param {Buffer} buffer
+ * @return {ArrayBuffer}
+ */
+global.toArrayBuffer = function(buffer) {
+	const arrayBuffer = new ArrayBuffer(buffer.length)
+	const view = new Uint8Array(arrayBuffer)
+	for (let i = 0; i < buffer.length; ++i) {
+		view[i] = buffer[i]
+	}
+	return arrayBuffer
 }

@@ -28,6 +28,7 @@ namespace OCA\Mail\Db;
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
 use OCP\IUser;
+use ReturnTypeWillChange;
 
 /**
  * @method string getProvisioningDomain()
@@ -50,6 +51,10 @@ use OCP\IUser;
  * @method void setSmtpPort(int $smtpPort)
  * @method string getSmtpSslMode()
  * @method void setSmtpSslMode(string $smtpSslMode)
+ * @method bool|null getMasterPasswordEnabled()
+ * @method void setMasterPasswordEnabled(bool $masterPasswordEnabled)
+ * @method string|null getMasterPassword()
+ * @method void setMasterPassword(string $masterPassword)
  * @method bool|null getSieveEnabled()
  * @method void setSieveEnabled(bool $sieveEnabled)
  * @method string|null getSieveHost()
@@ -69,6 +74,7 @@ use OCP\IUser;
  */
 class Provisioning extends Entity implements JsonSerializable {
 	public const WILDCARD = '*';
+	public const MASTER_PASSWORD_PLACEHOLDER = '********';
 
 	protected $provisioningDomain;
 	protected $emailTemplate;
@@ -80,6 +86,8 @@ class Provisioning extends Entity implements JsonSerializable {
 	protected $smtpHost;
 	protected $smtpPort;
 	protected $smtpSslMode;
+	protected $masterPasswordEnabled;
+	protected $masterPassword;
 	protected $sieveEnabled;
 	protected $sieveUser;
 	protected $sieveHost;
@@ -92,14 +100,14 @@ class Provisioning extends Entity implements JsonSerializable {
 	public function __construct() {
 		$this->addType('imapPort', 'integer');
 		$this->addType('smtpPort', 'integer');
+		$this->addType('masterPasswordEnabled', 'boolean');
+		$this->addType('masterPassword', 'string');
 		$this->addType('sieveEnabled', 'boolean');
 		$this->addType('sievePort', 'integer');
 		$this->addType('ldapAliasesProvisioning', 'boolean');
 	}
 
-	/**
-	 * @return array
-	 */
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),
@@ -113,6 +121,8 @@ class Provisioning extends Entity implements JsonSerializable {
 			'smtpHost' => $this->getSmtpHost(),
 			'smtpPort' => $this->getSmtpPort(),
 			'smtpSslMode' => $this->getSmtpSslMode(),
+			'masterPasswordEnabled' => $this->getMasterPasswordEnabled(),
+			'masterPassword' => !empty($this->getMasterPassword()) ? self::MASTER_PASSWORD_PLACEHOLDER : null,
 			'sieveEnabled' => $this->getSieveEnabled(),
 			'sieveUser' => $this->getSieveUser(),
 			'sieveHost' => $this->getSieveHost(),

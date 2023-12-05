@@ -29,18 +29,22 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
-use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\Service\SmimeService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
@@ -48,6 +52,7 @@ use OCA\Mail\Tests\Integration\TestCase;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 use OCP\Security\ICrypto;
+use OCP\Server;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -71,12 +76,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 		parent::setUp();
 
 		$this->resetImapAccount();
+		$this->disconnectImapAccount();
 		$this->user = $this->createTestUser();
 
 		/** @var ICrypto $crypo */
 		$crypo = OC::$server->getCrypto();
 		/** @var MailAccountMapper $mapper */
-		$mapper = OC::$server->query(MailAccountMapper::class);
+		$mapper = Server::get(MailAccountMapper::class);
 		$mailAccount = MailAccount::fromParams([
 			'userId' => $this->user->getUID(),
 			'name' => 'Test User',
@@ -95,33 +101,29 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mapper->insert($mailAccount);
 
 		$this->account = new Account($mailAccount);
-		$this->attachmentService = OC::$server->query(IAttachmentService::class);
+		$this->attachmentService = Server::get(IAttachmentService::class);
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
 
 		// Make sure the mailbox preferences are set
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 
 		$this->transmission = new MailTransmission(
 			$userFolder,
-			OC::$server->query(AccountService::class),
 			$this->attachmentService,
-			OC::$server->query(IMailManager::class),
-			OC::$server->query(IMAPClientFactory::class),
-			OC::$server->query(SmtpClientFactory::class),
-			OC::$server->query(IEventDispatcher::class),
-			OC::$server->query(MailboxMapper::class),
-			OC::$server->query(MessageMapper::class),
-			OC::$server->query(LoggerInterface::class),
-			OC::$server->query(PerformanceLogger::class)
+			Server::get(IMailManager::class),
+			Server::get(IMAPClientFactory::class),
+			Server::get(SmtpClientFactory::class),
+			Server::get(IEventDispatcher::class),
+			Server::get(MailboxMapper::class),
+			Server::get(MessageMapper::class),
+			Server::get(LoggerInterface::class),
+			Server::get(PerformanceLogger::class),
+			Server::get(AliasesService::class),
+			Server::get(GroupsIntegration::class),
+			Server::get(SmimeService::class),
 		);
-	}
-
-	protected function tearDown(): void {
-		if ($this->client !== null) {
-			$this->client->logout();
-		}
 	}
 
 	public function testSendMail() {
@@ -173,10 +175,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 		/** @var MailboxMapper $mailboxMapper */
-		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$mailboxMapper = Server::get(MailboxMapper::class);
 		$inbox = $mailboxMapper->find($this->account, 'INBOX');
 		$messageInReply = new Message();
 		$messageInReply->setUid($originalUID);
@@ -184,8 +186,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$messageInReply->setMailboxId($inbox->getId());
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$reply = new RepliedMessageData($this->account, $messageInReply);
-		$this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage($message, $messageInReply->getMessageId());
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -199,10 +200,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 		/** @var MailboxMapper $mailboxMapper */
-		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$mailboxMapper = Server::get(MailboxMapper::class);
 		$inbox = $mailboxMapper->find($this->account, 'INBOX');
 		$messageInReply = new Message();
 		$messageInReply->setUid($originalUID);
@@ -211,7 +212,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $messageInReply);
-		$this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage($message, $messageInReply->getMessageId());
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -225,10 +226,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 		/** @var MailboxSync $mbSync */
-		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync = Server::get(MailboxSync::class);
 		$mbSync->sync($this->account, new NullLogger(), true);
 		/** @var MailboxMapper $mailboxMapper */
-		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$mailboxMapper = Server::get(MailboxMapper::class);
 		$inbox = $mailboxMapper->find($this->account, 'INBOX');
 		$messageInReply = new Message();
 		$messageInReply->setUid($originalUID);
@@ -237,7 +238,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'Re: reply test', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $messageInReply);
-		$this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage($message, $messageInReply->getMessageId());
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -263,5 +264,24 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->transmission->saveDraft($message2, $previous);
 
 		$this->assertMessageCount(1, 'Drafts');
+	}
+
+	public function testSendLocalMessage(): void {
+		$localMessage = new LocalMessage();
+		$to = new Recipient();
+		$to->setLabel('Penny');
+		$to->setEmail('library@stardewvalley.edu');
+		$to->setType(Recipient::TYPE_TO);
+		$localMessage->setType(LocalMessage::TYPE_OUTGOING);
+		$localMessage->setSubject('hello');
+		$localMessage->setBody('This is a test');
+		$localMessage->setHtml(false);
+		$localMessage->setRecipients([$to]);
+		$localMessage->setAttachments([]);
+
+		$this->transmission->sendLocalMessage($this->account, $localMessage);
+
+		$this->assertMailboxExists('Sent');
+		$this->assertMessageCount(1, 'Sent');
 	}
 }

@@ -40,8 +40,10 @@ use function in_array;
 use function json_decode;
 use function strtolower;
 
+/**
+ * @template-implements IEventListener<Event|MailboxesSynchronizedEvent>
+ */
 class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
-
 	/** @var MailAccountMapper */
 	private $mailAccountMapper;
 
@@ -52,8 +54,8 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 	private $logger;
 
 	public function __construct(MailAccountMapper $mailAccountMapper,
-								MailboxMapper $mailboxMapper,
-								LoggerInterface $logger) {
+		MailboxMapper $mailboxMapper,
+		LoggerInterface $logger) {
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->logger = $logger;
@@ -100,13 +102,42 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 				$mailAccount->setTrashMailboxId(null);
 			}
 		}
+		if ($mailAccount->getArchiveMailboxId() === null || !array_key_exists($mailAccount->getArchiveMailboxId(), $mailboxes)) {
+			try {
+				$archiveMailbox = $this->findSpecial($mailboxes, 'archive');
+				$mailAccount->setArchiveMailboxId($archiveMailbox->getId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->info("Account " . $account->getId() . " does not have an archive mailbox");
+
+				$mailAccount->setArchiveMailboxId(null);
+			}
+		}
+		if ($mailAccount->getJunkMailboxId() === null || !array_key_exists($mailAccount->getJunkMailboxId(), $mailboxes)) {
+			try {
+				$junkMailbox = $this->findSpecial($mailboxes, 'junk');
+				$mailAccount->setJunkMailboxId($junkMailbox->getId());
+			} catch (DoesNotExistException) {
+				$this->logger->info("Account " . $account->getId() . " does not have an junk mailbox");
+				$mailAccount->setJunkMailboxId(null);
+			}
+		}
+		if ($mailAccount->getSnoozeMailboxId() === null || !array_key_exists($mailAccount->getSnoozeMailboxId(), $mailboxes)) {
+			try {
+				$snoozeMailbox = $this->findSpecial($mailboxes, 'snooze');
+				$mailAccount->setSnoozeMailboxId($snoozeMailbox->getId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->info("Account " . $account->getId() . " does not have an snooze mailbox");
+
+				$mailAccount->setSnoozeMailboxId(null);
+			}
+		}
 
 		$this->mailAccountMapper->update($mailAccount);
 	}
 
 	private function indexMailboxes(array $mailboxes): array {
 		return array_combine(
-			array_map(function (Mailbox $mb): int {
+			array_map(static function (Mailbox $mb) : int {
 				return $mb->getId();
 			}, $mailboxes),
 			$mailboxes

@@ -35,7 +35,6 @@ use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class ProvisioningMiddleware extends Middleware {
-
 	/** @var IUserSession */
 	private $userSession;
 
@@ -49,9 +48,9 @@ class ProvisioningMiddleware extends Middleware {
 	private $logger;
 
 	public function __construct(IUserSession $userSession,
-								ICredentialStore $credentialStore,
-								ProvisioningManager $provisioningManager,
-								LoggerInterface $logger) {
+		ICredentialStore $credentialStore,
+		ProvisioningManager $provisioningManager,
+		LoggerInterface $logger) {
 		$this->userSession = $userSession;
 		$this->credentialStore = $credentialStore;
 		$this->provisioningManager = $provisioningManager;
@@ -65,14 +64,27 @@ class ProvisioningMiddleware extends Middleware {
 			return;
 		}
 		$configs = $this->provisioningManager->getConfigs();
-		if (empty($configs)) {
-			return null;
+		if ($configs === []) {
+			return;
 		}
 		try {
 			$this->provisioningManager->provisionSingleUser($configs, $user);
+			$password = $this->credentialStore->getLoginCredentials()->getPassword();
+
+			// FIXME: Need to check for an empty string here too?
+			// The password is empty (and not null) when using WebAuthn passwordless login.
+			// Maybe research other providers as well.
+			// Ref \OCA\Mail\Controller\PageController::index()
+			//     -> inital state for password-is-unavailable
+			if ($password === null) {
+				// Nothing to update, might be passwordless signin
+				$this->logger->debug('No password set for ' . $user->getUID());
+				return;
+			}
 			$this->provisioningManager->updatePassword(
 				$user,
-				$this->credentialStore->getLoginCredentials()->getPassword()
+				$password,
+				$configs
 			);
 		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
 			// Nothing to update

@@ -38,6 +38,9 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|NewMessagesSynchronized>
+ */
 class NewMessageClassificationListener implements IEventListener {
 	private const EXEMPT_FROM_CLASSIFICATION = [
 		Horde_Imap_Client::SPECIALUSE_ARCHIVE,
@@ -63,10 +66,10 @@ class NewMessageClassificationListener implements IEventListener {
 	private $preferences;
 
 	public function __construct(ImportanceClassifier $classifier,
-								TagMapper $tagMapper,
-								LoggerInterface $logger,
-								IMailManager $mailManager,
-								IUserPreferences $preferences) {
+		TagMapper $tagMapper,
+		LoggerInterface $logger,
+		IMailManager $mailManager,
+		IUserPreferences $preferences) {
 		$this->classifier = $classifier;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
@@ -95,9 +98,9 @@ class NewMessageClassificationListener implements IEventListener {
 
 		// if this is a message that's been flagged / tagged as important before, we don't want to reclassify it again.
 		$doNotReclassify = $this->tagMapper->getTaggedMessageIdsForMessages(
-						$event->getMessages(),
-						$event->getAccount()->getUserId(),
-						Tag::LABEL_IMPORTANT
+			$event->getMessages(),
+			$event->getAccount()->getUserId(),
+			Tag::LABEL_IMPORTANT
 		);
 		$messages = array_filter($messages, static function ($message) use ($doNotReclassify) {
 			return ($message->getFlagImportant() === false || in_array($message->getMessageId(), $doNotReclassify, true));
@@ -116,7 +119,6 @@ class NewMessageClassificationListener implements IEventListener {
 		try {
 			$predictions = $this->classifier->classifyImportance(
 				$event->getAccount(),
-				$event->getMailbox(),
 				$messages
 			);
 

@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Migration;
 
 use OCP\DB\ISchemaWrapper;
-use OCP\Migration\SimpleMigrationStep;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version0100Date20180825194217 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -46,66 +46,66 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_accounts')) {
 			$table = $schema->createTable('mail_accounts');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$table->addColumn('user_id', 'string', [
+			$table->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 			]);
-			$table->addColumn('name', 'string', [
+			$table->addColumn('name', Types::STRING, [
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('email', 'string', [
+			$table->addColumn('email', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
 				'default' => '',
 			]);
-			$table->addColumn('inbound_host', 'string', [
+			$table->addColumn('inbound_host', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
 			]);
-			$table->addColumn('inbound_port', 'string', [
+			$table->addColumn('inbound_port', Types::STRING, [
 				'notnull' => true,
 				'length' => 6,
 				'default' => '',
 			]);
-			$table->addColumn('inbound_ssl_mode', 'string', [
+			$table->addColumn('inbound_ssl_mode', Types::STRING, [
 				'notnull' => true,
 				'length' => 10,
 				'default' => '',
 			]);
-			$table->addColumn('inbound_user', 'string', [
+			$table->addColumn('inbound_user', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
 			]);
-			$table->addColumn('inbound_password', 'string', [
+			$table->addColumn('inbound_password', Types::STRING, [
 				'notnull' => true,
 				'length' => 2048,
 				'default' => '',
 			]);
-			$table->addColumn('outbound_host', 'string', [
+			$table->addColumn('outbound_host', Types::STRING, [
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('outbound_port', 'string', [
+			$table->addColumn('outbound_port', Types::STRING, [
 				'notnull' => false,
 				'length' => 6,
 			]);
-			$table->addColumn('outbound_ssl_mode', 'string', [
+			$table->addColumn('outbound_ssl_mode', Types::STRING, [
 				'notnull' => false,
 				'length' => 10,
 			]);
-			$table->addColumn('outbound_user', 'string', [
+			$table->addColumn('outbound_user', Types::STRING, [
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('outbound_password', 'string', [
+			$table->addColumn('outbound_password', Types::STRING, [
 				'notnull' => false,
 				'length' => 2048,
 			]);
@@ -115,21 +115,21 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_coll_addresses')) {
 			$table = $schema->createTable('mail_coll_addresses');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$table->addColumn('user_id', 'string', [
+			$table->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
 			]);
-			$table->addColumn('email', 'string', [
+			$table->addColumn('email', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
 			]);
-			$table->addColumn('display_name', 'string', [
+			$table->addColumn('display_name', Types::STRING, [
 				'notnull' => false,
 				'length' => 255,
 			]);
@@ -140,21 +140,21 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_aliases')) {
 			$table = $schema->createTable('mail_aliases');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$table->addColumn('account_id', 'integer', [
+			$table->addColumn('account_id', Types::INTEGER, [
 				'notnull' => true,
 				'length' => 4,
 				'default' => 0,
 			]);
-			$table->addColumn('name', 'string', [
+			$table->addColumn('name', Types::STRING, [
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('alias', 'string', [
+			$table->addColumn('alias', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
 			]);
@@ -163,22 +163,22 @@ class Version0100Date20180825194217 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('mail_attachments')) {
 			$table = $schema->createTable('mail_attachments');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', Types::INTEGER, [
 				'autoincrement' => true,
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$table->addColumn('user_id', 'string', [
+			$table->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
 			]);
-			$table->addColumn('file_name', 'string', [
+			$table->addColumn('file_name', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
 				'default' => '',
 			]);
-			$table->addColumn('created_at', 'integer', [
+			$table->addColumn('created_at', Types::INTEGER, [
 				'notnull' => true,
 				'length' => 4,
 				'default' => 0,

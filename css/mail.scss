@@ -5,11 +5,17 @@
 }
 
 .emptycontent {
-	margin-top: 0px;
+	margin-top: 24px;
 	margin-bottom: 10px;
-}
-.emptycontent > h2 {
-	padding-top: 20px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .container {
@@ -304,23 +310,6 @@
 	opacity: .5;
 }
 
-/* icons */
-@include icon-black-white('inbox', 'mail', 1);
-@include icon-black-white('important', 'mail', 1);
-
-.icon-flagged {
-	@include icon-color('star', 'mail', $color-black);
-}
-
-@include icon-black-white('drafts', 'mail', 1);
-@include icon-black-white('sent', 'mail', 1);
-@include icon-black-white('archive', 'mail', 1);
-@include icon-black-white('junk', 'mail', 1);
-@include icon-black-white('trash', 'mail', 1);
-@include icon-black-white('reply', 'mail', 1);
-@include icon-black-white('reply-all', 'mail', 1);
-@include icon-black-white('forward', 'mail', 1);
-
 // FIXES for core apps.scss
 
 .app-navigation {
@@ -360,7 +349,7 @@
 				&,
 				> a {
 					opacity: 1;
-					box-shadow: inset 2px 0 $color-primary;
+					box-shadow: inset 2px 0 var(--color-primary-element);
 				}
 			}
 

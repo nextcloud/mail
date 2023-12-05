@@ -3,7 +3,7 @@
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { translate } from '../../../i18n/MailboxTranslator'
+import { translate } from '../../../i18n/MailboxTranslator.js'
 
 describe('MailboxTranslator', () => {
 	it('translates the inbox', () => {
@@ -30,7 +30,7 @@ describe('MailboxTranslator', () => {
 
 		const name = translate(mailbox)
 
-		expect(name).to.equal('Inbox')
+		expect(name).toEqual('Inbox')
 	})
 
 	it('does not translate an arbitrary mailbox', () => {
@@ -42,6 +42,6 @@ describe('MailboxTranslator', () => {
 
 		const name = translate(mailbox)
 
-		expect(name).to.equal('Newsletters')
+		expect(name).toEqual('Newsletters')
 	})
 })

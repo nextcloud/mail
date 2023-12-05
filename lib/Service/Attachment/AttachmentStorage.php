@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Attachment;
 
-use Exception;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
 use OCP\Files\IAppData;
@@ -34,7 +33,6 @@ use OCP\Files\SimpleFS\ISimpleFolder;
 use Throwable;
 
 class AttachmentStorage {
-
 	/** @var IAppData */
 	private $appData;
 
@@ -93,6 +91,24 @@ class AttachmentStorage {
 	}
 
 	/**
+	 * Copy uploaded file content to a app data file
+	 *
+	 * @param string $userId
+	 * @param int $attachmentId
+	 *
+	 * @return void
+	 * @throws NotFoundException|NotPermittedException
+	 */
+	public function saveContent(string $userId, int $attachmentId, string $fileContent): void {
+		$folder = $this->getAttachmentFolder($userId);
+		$file = $folder->newFile((string) $attachmentId);
+		$file->putContent($fileContent);
+	}
+
+
+
+
+	/**
 	 * @param string $userId
 	 * @param int $attachmentId
 	 * @return ISimpleFile
@@ -109,6 +125,12 @@ class AttachmentStorage {
 	}
 
 	public function delete(string $userId, int $attachmentId): void {
-		throw new Exception('not implemented');
+		$folder = $this->getAttachmentFolder($userId);
+		try {
+			$file = $folder->getFile((string)$attachmentId);
+		} catch (NotFoundException $e) {
+			return;
+		}
+		$file->delete();
 	}
 }

@@ -37,8 +37,12 @@ class AutoCompleteControllerTest extends TestCase {
 		$this->service = $this->getMockBuilder('OCA\Mail\Service\AutoCompletion\AutoCompleteService')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->controller = new AutoCompleteController('mail', $this->request,
-			$this->service);
+		$this->controller = new AutoCompleteController(
+			'mail',
+			$this->request,
+			$this->service,
+			'testuser'
+		);
 	}
 
 	public function testAutoComplete() {
@@ -51,11 +55,14 @@ class AutoCompleteControllerTest extends TestCase {
 
 		$this->service->expects($this->once())
 			->method('findMatches')
-			->with($this->equalTo($term))
-			->will($this->returnValue($result));
+			->with(
+				'testuser',
+				$this->equalTo($term)
+			)
+			->willReturn($result);
 
 		$response = $this->controller->index($term);
 
-		$this->assertEquals(new JSONResponse($result), $response);
+		$this->assertEquals((new JSONResponse($result))->getData(), $response->getData());
 	}
 }

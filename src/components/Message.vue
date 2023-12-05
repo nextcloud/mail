@@ -2,8 +2,9 @@
   - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -23,13 +24,30 @@
 	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail','Message body')">
-		<div v-if="message.itineraries.length > 0" class="message-itinerary">
-			<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
+		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
+			class="invalid-signature-warning">
+			<LockOffIcon
+				:size="20"
+				fill-color="red"
+				class="invalid-signature-warning__icon" />
+			<p>
+				{{ t('mail', 'Warning: The S/MIME signature of this message is  unverified. The sender might be impersonating someone!') }}
+			</p>
+		</div>
+		<div v-if="itineraries.length > 0" class="message-itinerary">
+			<Itinerary :entries="itineraries" :message-id="message.messageId" />
+		</div>
+		<div v-if="message.scheduling.length > 0" class="message-imip">
+			<Imip
+				v-for="scheduling in message.scheduling"
+				:key="scheduling.id"
+				:scheduling="scheduling" />
 		</div>
 		<MessageHTMLBody v-if="message.hasHtmlBody"
 			:url="htmlUrl"
 			:message="message"
-			:full-height="fullHeight" />
+			:full-height="fullHeight"
+			@load="$emit('load', $event)" />
 		<MessageEncryptedBody v-else-if="isEncrypted"
 			:body="message.body"
 			:from="from"
@@ -46,13 +64,15 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 
-import { html, plain } from '../util/text'
-import { isPgpgMessage } from '../crypto/pgp'
-import Itinerary from './Itinerary'
-import MessageAttachments from './MessageAttachments'
-import MessageEncryptedBody from './MessageEncryptedBody'
-import MessageHTMLBody from './MessageHTMLBody'
-import MessagePlainTextBody from './MessagePlainTextBody'
+import { html, plain } from '../util/text.js'
+import { isPgpgMessage } from '../crypto/pgp.js'
+import Itinerary from './Itinerary.vue'
+import MessageAttachments from './MessageAttachments.vue'
+import MessageEncryptedBody from './MessageEncryptedBody.vue'
+import MessageHTMLBody from './MessageHTMLBody.vue'
+import MessagePlainTextBody from './MessagePlainTextBody.vue'
+import Imip from './Imip.vue'
+import LockOffIcon from 'vue-material-design-icons/LockOff.vue'
 
 export default {
 	name: 'Message',
@@ -62,6 +82,8 @@ export default {
 		MessageEncryptedBody,
 		MessageHTMLBody,
 		MessagePlainTextBody,
+		Imip,
+		LockOffIcon,
 	},
 	props: {
 		envelope: {
@@ -90,6 +112,9 @@ export default {
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
 		},
+		itineraries() {
+			return this.message.itineraries ?? []
+		},
 	},
 }
 </script>
@@ -98,5 +123,27 @@ export default {
 .v-popover > .trigger > .action-item {
 	border-radius: 22px;
 	background-color: var(--color-background-darker);
+}
+
+.message-imip {
+	padding: 5px 10px;
+}
+
+.invalid-signature-warning {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+
+	border: solid 2px var(--color-border);
+	border-radius: var(--border-radius-large);
+	border-color: var(--color-warning);
+
+	margin: 5px 10px;
+	padding: 10px;
+
+	&__icon {
+		// Fix alignment with message
+		margin-top: -5px;
+	}
 }
 </style>

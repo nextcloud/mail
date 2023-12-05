@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Search;
 
 class FlagExpression {
-
 	/**
 	 * @var string
 	 * @psalm-var "and"|"or"

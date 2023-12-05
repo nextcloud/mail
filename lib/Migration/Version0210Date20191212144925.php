@@ -27,11 +27,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version0210Date20191212144925 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -43,7 +43,7 @@ class Version0210Date20191212144925 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$accountsTable = $schema->getTable('mail_accounts');
-		$accountsTable->addColumn('order', 'integer', [
+		$accountsTable->addColumn('order', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 			'default' => 1,

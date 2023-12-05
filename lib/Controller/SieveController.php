@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -28,59 +29,47 @@ use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
-use OCA\Mail\Service\AccountService;
+use OCA\Mail\Http\JsonResponse as MailJsonResponse;
+use OCA\Mail\Http\TrapError;
+use OCA\Mail\Service\SieveService;
 use OCA\Mail\Sieve\SieveClientFactory;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
+use OCP\Security\IRemoteHostValidator;
+use Psr\Log\LoggerInterface;
 
 class SieveController extends Controller {
+	private MailAccountMapper $mailAccountMapper;
+	private SieveClientFactory $sieveClientFactory;
+	private string $currentUserId;
+	private ICrypto $crypto;
+	private IRemoteHostValidator $hostValidator;
+	private LoggerInterface $logger;
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var SieveClientFactory */
-	private $sieveClientFactory;
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var ICrypto */
-	private $crypto;
-
-	/**
-	 * AccountsController constructor.
-	 *
-	 * @param IRequest $request
-	 * @param string $UserId
-	 * @param AccountService $accountService
-	 * @param MailAccountMapper $mailAccountMapper
-	 * @param SieveClientFactory $sieveClientFactory
-	 * @param ICrypto $crypto
-	 */
 	public function __construct(IRequest $request,
-								string $UserId,
-								AccountService $accountService,
-								MailAccountMapper $mailAccountMapper,
-								SieveClientFactory $sieveClientFactory,
-								ICrypto $crypto
+		string $UserId,
+		MailAccountMapper $mailAccountMapper,
+		SieveClientFactory $sieveClientFactory,
+		ICrypto $crypto,
+		IRemoteHostValidator $hostValidator,
+		LoggerInterface $logger,
+		private SieveService $sieveService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;
-		$this->accountService = $accountService;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->sieveClientFactory = $sieveClientFactory;
 		$this->crypto = $crypto;
+		$this->hostValidator = $hostValidator;
+		$this->logger = $logger;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id account id
 	 *
@@ -88,26 +77,19 @@ class SieveController extends Controller {
 	 *
 	 * @throws CouldNotConnectException
 	 * @throws ClientException
+	 * @throws ManagesieveException
 	 */
+	#[TrapError]
 	public function getActiveScript(int $id): JSONResponse {
-		$sieve = $this->getClient($id);
-
-		$scriptName = $sieve->getActive();
-		if ($scriptName === null) {
-			$script = '';
-		} else {
-			$script = $sieve->getScript($scriptName);
-		}
-
+		$activeScript = $this->sieveService->getActiveScript($this->currentUserId, $id);
 		return new JSONResponse([
-			'scriptName' => $scriptName,
-			'script' => $script,
+			'scriptName' => $activeScript->getName(),
+			'script' => $activeScript->getScript(),
 		]);
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id account id
 	 * @param string $script
@@ -116,20 +98,21 @@ class SieveController extends Controller {
 	 *
 	 * @throws ClientException
 	 * @throws CouldNotConnectException
-	 * @throws ManagesieveException
 	 */
+	#[TrapError]
 	public function updateActiveScript(int $id, string $script): JSONResponse {
-		$sieve = $this->getClient($id);
-
-		$scriptName = $sieve->getActive() ?? 'nextcloud';
-		$sieve->installScript($scriptName, $script, true);
+		try {
+			$this->sieveService->updateActiveScript($this->currentUserId, $id, $script);
+		} catch (ManagesieveException $e) {
+			$this->logger->error('Installing sieve script failed: ' . $e->getMessage(), ['app' => 'mail', 'exception' => $e]);
+			return new JSONResponse(data: ['message' => $e->getMessage()], statusCode: Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
 
 		return new JSONResponse();
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id account id
 	 * @param bool $sieveEnabled
@@ -144,14 +127,26 @@ class SieveController extends Controller {
 	 * @throws CouldNotConnectException
 	 * @throws DoesNotExistException
 	 */
+	#[TrapError]
 	public function updateAccount(int $id,
-								  bool $sieveEnabled,
-								  string $sieveHost,
-								  int $sievePort,
-								  string $sieveUser,
-								  string $sievePassword,
-								  string $sieveSslMode
+		bool $sieveEnabled,
+		string $sieveHost,
+		int $sievePort,
+		string $sieveUser,
+		string $sievePassword,
+		string $sieveSslMode
 	): JSONResponse {
+		if (!$this->hostValidator->isValid($sieveHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'ManageSieve',
+					'host' => $sieveHost,
+					'port' => $sievePort,
+				],
+				Http::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
 		$mailAccount = $this->mailAccountMapper->find($this->currentUserId, $id);
 
 		if ($sieveEnabled === false) {
@@ -179,7 +174,7 @@ class SieveController extends Controller {
 		try {
 			$this->sieveClientFactory->createClient($sieveHost, $sievePort, $sieveUser, $sievePassword, $sieveSslMode);
 		} catch (ManagesieveException $e) {
-			throw CouldNotConnectException::create($e, 'ManageSieve', $sieveHost, $sievePort);
+			throw new CouldNotConnectException($e, 'ManageSieve', $sieveHost, $sievePort);
 		}
 
 		$mailAccount->setSieveEnabled(true);
@@ -191,29 +186,5 @@ class SieveController extends Controller {
 
 		$this->mailAccountMapper->save($mailAccount);
 		return new JSONResponse(['sieveEnabled' => $mailAccount->isSieveEnabled()]);
-	}
-
-	/**
-	 * @param int $id
-	 *
-	 * @return \Horde\ManageSieve
-	 *
-	 * @throws ClientException
-	 * @throws CouldNotConnectException
-	 */
-	protected function getClient(int $id): \Horde\ManageSieve {
-		$account = $this->accountService->find($this->currentUserId, $id);
-
-		if (!$account->getMailAccount()->isSieveEnabled()) {
-			throw new CouldNotConnectException('ManageSieve is disabled.');
-		}
-
-		try {
-			$sieve = $this->sieveClientFactory->getClient($account);
-		} catch (ManagesieveException $e) {
-			throw CouldNotConnectException::create($e, 'ManageSieve', $account->getMailAccount()->getSieveHost(), $account->getMailAccount()->getSievePort());
-		}
-
-		return $sieve;
 	}
 }

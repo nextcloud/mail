@@ -22,9 +22,12 @@
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\BackgroundJob\IJobList;
@@ -32,7 +35,6 @@ use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AccountServiceTest extends TestCase {
-
 	/** @var string */
 	private $user = 'herbert';
 
@@ -57,6 +59,12 @@ class AccountServiceTest extends TestCase {
 	/** @var IJobList|MockObject */
 	private $jobList;
 
+	/** @var IMAPClientFactory|MockObject */
+	private $imapClientFactory;
+
+	/** @var Horde_Imap_Client_Socket|MockObject */
+	private $client;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -64,14 +72,17 @@ class AccountServiceTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->jobList = $this->createMock(IJobList::class);
+		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->accountService = new AccountService(
 			$this->mapper,
 			$this->aliasesService,
-			$this->jobList
+			$this->jobList,
+			$this->imapClientFactory
 		);
 
 		$this->account1 = $this->createMock(MailAccount::class);
 		$this->account2 = $this->createMock(MailAccount::class);
+		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 	}
 
 	public function testFindByUserId() {
@@ -179,5 +190,32 @@ class AccountServiceTest extends TestCase {
 			->with($mailAccount);
 
 		$this->accountService->updateSignature($id, $uid, $signature);
+	}
+	public function testAccountsFailedConnection() {
+		$accountId = 1;
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willThrowException(new ClientException());
+		$this->mapper->expects($this->once())
+		->method('find')
+		->with($this->user, $accountId)
+		->willReturn($this->account1);
+		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
+		$this->assertFalse($connected);
+	}
+	public function testAccountsSuccesfulConnection() {
+		$accountId = 1;
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($this->client);
+		$this->client->expects($this->once())
+		->method('close')
+		->willReturn(null);
+		$this->mapper->expects($this->once())
+		->method('find')
+		->with($this->user, $accountId)
+		->willReturn($this->account1);
+		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
+		$this->assertTrue($connected);
 	}
 }

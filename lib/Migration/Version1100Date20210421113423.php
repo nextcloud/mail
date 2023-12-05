@@ -27,11 +27,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1100Date20210421113423 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -45,7 +45,7 @@ class Version1100Date20210421113423 extends SimpleMigrationStep {
 
 		$accountsTable = $schema->getTable('mail_accounts');
 
-		$accountsTable->addColumn('signature_above_quote', 'boolean', [
+		$accountsTable->addColumn('signature_above_quote', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);

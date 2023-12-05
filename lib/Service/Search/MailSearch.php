@@ -43,7 +43,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IUser;
 
 class MailSearch implements IMailSearch {
-
 	/** @var FilterStringParser */
 	private $filterStringParser;
 
@@ -63,11 +62,11 @@ class MailSearch implements IMailSearch {
 	private $timeFactory;
 
 	public function __construct(FilterStringParser $filterStringParser,
-								MailboxMapper $mailboxMapper,
-								ImapSearchProvider $imapSearchProvider,
-								MessageMapper $messageMapper,
-								PreviewEnhancer $previewEnhancer,
-								ITimeFactory $timeFactory) {
+		MailboxMapper $mailboxMapper,
+		ImapSearchProvider $imapSearchProvider,
+		MessageMapper $messageMapper,
+		PreviewEnhancer $previewEnhancer,
+		ITimeFactory $timeFactory) {
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapSearchProvider = $imapSearchProvider;
@@ -77,14 +76,14 @@ class MailSearch implements IMailSearch {
 	}
 
 	public function findMessage(Account $account,
-								Mailbox $mailbox,
-								Message $message): Message {
+		Mailbox $mailbox,
+		Message $message): Message {
 		$processed = $this->previewEnhancer->process(
 			$account,
 			$mailbox,
 			[$message]
 		);
-		if (empty($processed)) {
+		if ($processed === []) {
 			throw new DoesNotExistException("Message does not exist");
 		}
 		return $processed[0];
@@ -93,6 +92,7 @@ class MailSearch implements IMailSearch {
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
+	 * @param string $sortOrder
 	 * @param string|null $filter
 	 * @param int|null $cursor
 	 * @param int|null $limit
@@ -103,10 +103,11 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessages(Account $account,
-								 Mailbox $mailbox,
-								 ?string $filter,
-								 ?int $cursor,
-								 ?int $limit): array {
+		Mailbox $mailbox,
+		string $sortOrder,
+		?string $filter,
+		?int $cursor,
+		?int $limit): array {
 		if ($mailbox->hasLocks($this->timeFactory->getTime())) {
 			throw MailboxLockedException::from($mailbox);
 		}
@@ -131,7 +132,8 @@ class MailSearch implements IMailSearch {
 			$account,
 			$mailbox,
 			$this->messageMapper->findByIds($account->getUserId(),
-				$this->getIdsLocally($account, $mailbox, $query, $limit)
+				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
+				$sortOrder,
 			)
 		);
 	}
@@ -147,16 +149,17 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessagesGlobally(IUser $user,
-								 ?string $filter,
-								 ?int $cursor,
-								 ?int $limit): array {
+		?string $filter,
+		?int $cursor,
+		?int $limit): array {
 		$query = $this->filterStringParser->parse($filter);
 		if ($cursor !== null) {
 			$query->setCursor($cursor);
 		}
 
 		return $this->messageMapper->findByIds($user->getUID(),
-			$this->getIdsGlobally($user, $query, $limit)
+			$this->getIdsGlobally($user, $query, $limit),
+			'DESC'
 		);
 	}
 
@@ -165,9 +168,9 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
-	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
-		if (empty($query->getTextTokens())) {
-			return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit);
+	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
+		if (empty($query->getBodies())) {
+			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
 		}
 
 		$fromImap = $this->imapSearchProvider->findMatches(
@@ -175,7 +178,7 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			$query
 		);
-		return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit, $fromImap);
+		return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit, $fromImap);
 	}
 
 	/**

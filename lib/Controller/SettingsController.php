@@ -32,23 +32,31 @@ use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 use OCP\IRequest;
+use OCP\TextProcessing\IManager;
+use OCP\TextProcessing\SummaryTaskType;
+use Psr\Container\ContainerInterface;
+
 use function array_merge;
 
 class SettingsController extends Controller {
+	private ProvisioningManager $provisioningManager;
+	private AntiSpamService $antiSpamService;
+	private ContainerInterface $container;
 
-	/** @var ProvisioningManager */
-	private $provisioningManager;
-
-	/** @var AntiSpamService */
-	private $antiSpamService;
+	private IConfig $config;
 
 	public function __construct(IRequest $request,
-								ProvisioningManager $provisioningManager,
-								AntiSpamService $antiSpamService) {
+		ProvisioningManager $provisioningManager,
+		AntiSpamService $antiSpamService,
+		IConfig $config,
+		ContainerInterface $container) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
+		$this->config = $config;
+		$this->container = $container;
 	}
 
 	public function index(): JSONResponse {
@@ -63,14 +71,14 @@ class SettingsController extends Controller {
 
 	public function createProvisioning(array $data): JSONResponse {
 		try {
-			$this->provisioningManager->newProvisioning($data);
+			return new JSONResponse(
+				$this->provisioningManager->newProvisioning($data)
+			);
 		} catch (ValidationException $e) {
 			return HttpJsonResponse::fail([$e->getFields()]);
 		} catch (\Exception $e) {
 			return HttpJsonResponse::fail([$e->getMessage()]);
 		}
-
-		return new JSONResponse([]);
 	}
 
 	public function updateProvisioning(int $id, array $data): JSONResponse {
@@ -113,5 +121,22 @@ class SettingsController extends Controller {
 	public function deleteAntiSpamEmail(): JSONResponse {
 		$this->antiSpamService->deleteConfig();
 		return new JSONResponse([]);
+	}
+
+	public function setAllowNewMailAccounts(bool $allowed) {
+		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
+	}
+
+	public function setEnabledThreadSummary(bool $enabled) {
+		$this->config->setAppValue('mail', 'enabled_thread_summary', $enabled ? 'yes' : 'no');
+	}
+
+	public function isLlmConfigured() {
+		try {
+			$manager = $this->container->get(IManager::class);
+		} catch (\Throwable $e) {
+			return new JSONResponse(['data' => false]);
+		}
+		return new JSONResponse(['data' => in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)]);
 	}
 }

@@ -32,8 +32,10 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event>
+ */
 class MessageCacheUpdaterListener implements IEventListener {
-
 	/** @var MessageMapper */
 	private $mapper;
 
@@ -41,7 +43,7 @@ class MessageCacheUpdaterListener implements IEventListener {
 	private $logger;
 
 	public function __construct(MessageMapper $mapper,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}

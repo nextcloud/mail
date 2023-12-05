@@ -4,6 +4,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Christoph Wurst <wurst.christoph@gmail.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -29,13 +30,11 @@ use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Mailbox;
 
 /**
  * @group IMAP
  */
 abstract class AbstractTest extends TestCase {
-
 	/** @var Account */
 	private static $account;
 
@@ -78,23 +77,6 @@ abstract class AbstractTest extends TestCase {
 	}
 
 	/**
-	 * @param string $name
-	 * @return Mailbox
-	 */
-	public function createMailBox($name) {
-		try {
-			$this->getTestAccount()->getMailbox($name);
-			$this->deleteMailbox($name);
-		} catch (Exception $e) {
-			// Ignore mailbox not found
-		}
-
-		$mailbox = $this->getTestAccount()->createMailbox($name);
-		self::$createdMailboxes[$name] = $mailbox;
-		return $mailbox;
-	}
-
-	/**
 	 * @return Account
 	 */
 	protected function getTestAccount() {
@@ -125,24 +107,5 @@ abstract class AbstractTest extends TestCase {
 	 */
 	protected function assertMailBoxNotExists($name) {
 		$this->assertFalse($this->existsMailBox($name));
-	}
-
-	protected function createTestMessage(
-	Mailbox $mailbox, $subject = 'Don\'t panic!',
-		$contents = 'Don\'t forget your towel', $from = 'someone@there.com',
-		$to = 'me@here.com'
-	) {
-		$message = "From: $from
-Subject: $subject
-To: $to
-Message-ID: <20150415133206.Horde.M8uzSs0lxFX6uUE2sc6_rw5@localhost>
-User-Agent: Horde Application Framework 5
-Date: Wed, 15 Apr 2015 13:32:06 +0000
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
-MIME-Version: 1.0
-
-
-$contents";
-		$mailbox->saveMessage($message);
 	}
 }

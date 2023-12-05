@@ -125,17 +125,22 @@
 			{{ t('mail', 'Oh Snap!') }}
 			{{ errorMessage }}
 		</p>
-		<input type="submit"
-			class="primary"
+		<ButtonVue type="primary"
 			:disabled="loading"
-			:value="submitButtonText"
+			:aria-label="t('mail', 'Save sieve settings')"
 			@click.prevent="onSubmit">
+			{{ t('mail', 'Save sieve settings') }}
+		</ButtonVue>
 	</form>
 </template>
 
 <script>
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 export default {
 	name: 'SieveAccountForm',
+	components: {
+		ButtonVue,
+	},
 	props: {
 		account: {
 			type: Object,
@@ -155,7 +160,6 @@ export default {
 			loading: false,
 			useImapCredentials: !this.account.sieveUser,
 			errorMessage: '',
-			submitButtonText: t('mail', 'Save sieve settings'),
 		}
 	},
 	methods: {
@@ -179,6 +183,11 @@ export default {
 					account: this.account,
 					data: this.sieveConfig,
 				})
+				if (this.sieveConfig.sieveEnabled) {
+					await this.$store.dispatch('fetchActiveSieveScript', {
+						accountId: this.account.id,
+					})
+				}
 			} catch (error) {
 				this.errorMessage = error.message
 			}

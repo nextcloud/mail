@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -46,6 +48,7 @@ class CreateAccountTest extends TestCase {
 		'smtp-ssl-mode',
 		'smtp-user',
 		'smtp-password',
+		'auth-method',
 	];
 
 	protected function setUp(): void {
@@ -72,8 +75,12 @@ class CreateAccountTest extends TestCase {
 		$actual = $this->command->getDefinition()->getArguments();
 
 		foreach ($actual as $actArg) {
-			$this->assertTrue($actArg->isRequired());
-			$this->assertTrue(in_array($actArg->getName(), $this->args));
+			if ($actArg->getName() === 'auth-method') {
+				self::assertFalse($actArg->isRequired());
+			} else {
+				self::assertTrue($actArg->isRequired());
+			}
+			self::assertTrue(in_array($actArg->getName(), $this->args));
 		}
 	}
 
@@ -98,7 +105,7 @@ class CreateAccountTest extends TestCase {
 		$input = $this->createMock(InputInterface::class);
 		$input->method('getArgument')
 			->willReturnCallback(function ($arg) use ($data) {
-				return $data[$arg];
+				return $data[$arg] ?? null;
 			});
 		$output = $this->createMock(OutputInterface::class);
 		$output->expects($this->once())

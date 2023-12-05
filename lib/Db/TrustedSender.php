@@ -27,6 +27,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 
 /**
  * @method setEmail(string $email): void
@@ -37,7 +38,6 @@ use OCP\AppFramework\Db\Entity;
  * @method getType(): string
  */
 class TrustedSender extends Entity implements JsonSerializable {
-
 	/** @var string */
 	protected $email;
 
@@ -47,6 +47,7 @@ class TrustedSender extends Entity implements JsonSerializable {
 	/** @var string */
 	protected $type;
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->id,

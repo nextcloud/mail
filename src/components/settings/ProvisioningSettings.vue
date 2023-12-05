@@ -3,7 +3,7 @@
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -199,6 +199,32 @@
 				</div>
 				<div class="settings-group">
 					<div class="group-title">
+						{{ t('mail', 'Master password') }}
+					</div>
+					<div class="group-inputs">
+						<div>
+							<input
+								:id="'mail-master-password-enabled' + setting.id"
+								v-model="masterPasswordEnabled"
+								type="checkbox"
+								class="checkbox">
+							<label :for="'mail-master-password-enabled' + setting.id">
+								{{ t('mail', 'Use master password') }}
+							</label>
+						</div>
+						<div>
+							<input
+								id="mail-master-password"
+								v-model="masterPassword"
+								:disabled="loading"
+								type="password"
+								required>
+							<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
+						</div>
+					</div>
+				</div>
+				<div class="settings-group">
+					<div class="group-title">
 						{{ t('mail', 'Sieve') }}
 					</div>
 					<div class="group-inputs">
@@ -314,18 +340,29 @@
 				<div class="settings-group">
 					<div class="group-title" />
 					<div class="group-inputs">
-						<input
-							class="button config-button icon-upload"
-							type="submit"
-							:disabled="loading"
-							:value="t('mail', 'Save Config')">
-						<input
+						<Button
+							class="config-button save-config"
+							:aria-label="t('mail', 'Save Config')"
+							type="secondary"
+							native-type="submit"
+							:disabled="loading">
+							<template #icon>
+								<IconUpload :size="20" />
+							</template>
+							{{ t('mail', 'Save Config') }}
+						</Button>
+						<Button
 							v-if="deleteButton"
-							type="button"
-							class="button config-button icon-delete"
+							type="secondary"
+							class="config-button"
+							:aria-label="t('mail', 'Unprovision & Delete Config')"
 							:disabled="loading"
-							:value="t('mail', 'Unprovision & Delete Config')"
 							@click="disableConfig()">
+							<template #icon>
+								<IconDelete :size="20" />
+							</template>
+							{{ t('mail', 'Unprovision & Delete Config') }}
+						</Button>
 						<br>
 						<small>{{
 							t('mail', '* %USERID% and %EMAIL% will be replaced with the user\'s UID and email')
@@ -349,16 +386,23 @@
 	</div>
 </template>
 <script>
-import logger from '../../logger'
-import ProvisionPreview from './ProvisionPreview'
+import logger from '../../logger.js'
+import ProvisionPreview from './ProvisionPreview.vue'
 import { loadState } from '@nextcloud/initial-state'
+import Button from '@nextcloud/vue/dist/Components/NcButton.js'
+
+import IconUpload from 'vue-material-design-icons/Upload.vue'
+import IconDelete from 'vue-material-design-icons/Delete.vue'
 
 const ldapAliasesIntegration = loadState('mail', 'ldap_aliases_integration', false)
 
 export default {
 	name: 'ProvisioningSettings',
 	components: {
+		Button,
 		ProvisionPreview,
+		IconUpload,
+		IconDelete,
 	},
 	props: {
 		setting: {
@@ -393,6 +437,8 @@ export default {
 			smtpPort: this.setting.smtpPort || 587,
 			smtpUser: this.setting.smtpUser || '%USERID%domain.com',
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
+			masterPasswordEnabled: this.setting.masterPasswordEnabled || '',
+			masterPassword: this.setting.masterPassword || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
 			sievePort: this.setting.sievePort || '',
@@ -425,6 +471,8 @@ export default {
 				smtpHost: this.smtpHost,
 				smtpPort: this.smtpPort,
 				smtpSslMode: this.smtpSslMode,
+				masterPasswordEnabled: this.masterPasswordEnabled,
+				masterPassword: this.masterPassword,
 				sieveEnabled: this.sieveEnabled,
 				sieveUser: this.sieveUser,
 				sieveHost: this.sieveHost,
@@ -456,6 +504,8 @@ export default {
 					smtpHost: this.smtpHost,
 					smtpPort: this.smtpPort,
 					smtpSslMode: this.smtpSslMode,
+					masterPasswordEnabled: this.masterPasswordEnabled,
+					masterPassword: this.masterPassword,
 					sieveEnabled: this.sieveEnabled,
 					sieveUser: this.sieveUser,
 					sieveHost: this.sieveHost,
@@ -515,11 +565,7 @@ export default {
 			min-width: 200px;
 		}
 		.config-button {
-			line-height: 24px;
-			padding-left: 48px;
-			padding-top: 6px;
-			padding-bottom: 6px;
-			background-position: 24px;
+			display: inline-block;
 		}
 	}
 }
@@ -551,5 +597,8 @@ form {
 	label {
 		color: var(--color-text-maxcontrast);
 	}
+}
+.save-config {
+	margin-right: 6px;
 }
 </style>

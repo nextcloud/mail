@@ -3,7 +3,7 @@
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -45,9 +45,9 @@ import md5 from 'md5'
 import moment from '@nextcloud/moment'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 
-import CalendarImport from './CalendarImport'
-import { importCalendarEvent } from '../../service/DAVService'
-import logger from '../../logger'
+import CalendarImport from './CalendarImport.vue'
+import { importCalendarEvent } from '../../service/DAVService.js'
+import logger from '../../logger.js'
 
 export default {
 	name: 'EventReservation',

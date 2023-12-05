@@ -3,7 +3,7 @@
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import clone from 'lodash/fp/clone'
+import clone from 'lodash/fp/clone.js'
 
 const specialRolesOrder = ['all', 'inbox', 'flagged', 'drafts', 'sent', 'archive', 'junk', 'trash']
 
-export const sortMailboxes = (mailboxes) => {
+export const sortMailboxes = (mailboxes, account) => {
 	const c = clone(mailboxes)
 	c.sort((f1, f2) => {
 		if (f1.specialUse.length && f2.specialUse.length) {
@@ -39,6 +39,11 @@ export const sortMailboxes = (mailboxes) => {
 			return -1
 		} else if (f2.specialUse.length) {
 			return 1
+		} else if (f1.databaseId === account.snoozeMailboxId) {
+			// Sort Snoozed mailbox to specialRole mailboxes.
+			// Because this mailbox does not have specialUse,
+			// we need to check the databaseId for snoozeMailboxId
+			return -1
 		} else {
 			return f1.name.localeCompare(f2.name)
 		}

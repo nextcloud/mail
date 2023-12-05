@@ -24,16 +24,15 @@
 
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OCA\Mail\Service\Avatar\Downloader;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class DownloaderTest extends TestCase {
-
 	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
 	private $clientService;
 

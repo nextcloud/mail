@@ -35,7 +35,6 @@ use function in_array;
 use function reset;
 
 class FolderMapper {
-
 	/**
 	 * This is a temporary workaround for when the sieve folder is a subfolder of
 	 * INBOX. Once "#386 Subfolders and Dovecot" has been resolved, we can go back
@@ -55,49 +54,42 @@ class FolderMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
-							   string $pattern = '*'): array {
+		string $pattern = '*'): array {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
 		]);
-
-		return array_filter(array_map(function (array $mailbox) use ($account, $client) {
-			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
-				// This is a special folder that must not be shown
-				return null;
+		$toPersist = array_filter($mailboxes, function (array $mailbox) {
+			$attributes = array_flip(array_map('strtolower', $mailbox['attributes']));
+			if (isset($attributes['\\nonexistent'])) {
+				// Ignore mailbox that does not exist, similar to \Horde_Imap_Client::MBOX_SUBSCRIBED_EXISTS mode
+				return false;
 			}
-
-			try {
-				$client->status($mailbox["mailbox"]);
-			} catch (Horde_Imap_Client_Exception $e) {
-				// ignore folders which cause errors on access
-				// (i.e. server-side system I/O errors)
-				if (in_array($e->getCode(), [
-					Horde_Imap_Client_Exception::UNSPECIFIED,
-				], true)) {
-					return null;
-				}
-			}
-
+			// This is a special folder that must not be shown
+			return !in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true);
+		});
+		return array_map(static function (array $mailbox) use ($account) {
 			return new Folder(
 				$account->getId(),
 				$mailbox['mailbox'],
 				$mailbox['attributes'],
-				$mailbox['delimiter']
+				$mailbox['delimiter'],
+				null,
 			);
-		}, $mailboxes));
+		}, $toPersist);
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
-								 Account $account,
-								 string $name): Folder {
+		Account $account,
+		string $name): Folder {
 		$client->createMailbox($name);
 
 		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
+			'status' => Horde_Imap_Client::STATUS_ALL,
 		]);
 		$mb = reset($list);
 
@@ -105,7 +97,13 @@ class FolderMapper {
 			throw new ServiceException("Created mailbox does not exist");
 		}
 
-		return new Folder($account->getId(), $mb['mailbox'], $mb['attributes'], $mb['delimiter']);
+		return new Folder(
+			$account->getId(),
+			$mb['mailbox'],
+			$mb['attributes'],
+			$mb['delimiter'],
+			$mb['status'],
+		);
 	}
 
 	/**
@@ -116,20 +114,17 @@ class FolderMapper {
 	 *
 	 * @return void
 	 */
-	public function getFoldersStatus(array $folders,
-									 Horde_Imap_Client_Socket $client): void {
-		$mailboxes = array_map(function (Folder $folder) {
-			return $folder->getMailbox();
-		}, array_filter($folders, function (Folder $folder) {
-			return !in_array('\noselect', $folder->getAttributes());
-		}));
-
-		$status = $client->status($mailboxes);
+	public function fetchFolderAcls(array $folders,
+		Horde_Imap_Client_Socket $client): void {
+		$hasAcls = $client->capability->query('ACL');
 
 		foreach ($folders as $folder) {
-			if (isset($status[$folder->getMailbox()])) {
-				$folder->setStatus($status[$folder->getMailbox()]);
+			$acls = null;
+			if ($hasAcls && !in_array('\\noselect', array_map('strtolower', $folder->getAttributes()), true)) {
+				$acls = (string)$client->getMyACLRights($folder->getMailbox());
 			}
+
+			$folder->setMyAcls($acls);
 		}
 	}
 
@@ -139,16 +134,20 @@ class FolderMapper {
 	 *
 	 * @throws Horde_Imap_Client_Exception
 	 *
-	 * @return MailboxStats
+	 * @return MailboxStats[]
 	 */
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
-											 string $mailbox): MailboxStats {
-		$status = $client->status($mailbox);
+		array $mailboxes): array {
+		$multiStatus = $client->status($mailboxes);
 
-		return new MailboxStats(
-			$status['messages'],
-			$status['unseen']
-		);
+		$statuses = [];
+		foreach ($multiStatus as $mailbox => $status) {
+			$statuses[$mailbox] = new MailboxStats(
+				$status['messages'],
+				$status['unseen'],
+			);
+		}
+		return $statuses;
 	}
 
 	/**
@@ -159,8 +158,8 @@ class FolderMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function renameFolder(Horde_Imap_Client_Socket $client,
-								 string $oldName,
-								 string $newName): void {
+		string $oldName,
+		string $newName): void {
 		$client->renameMailbox($oldName, $newName);
 	}
 
@@ -204,7 +203,7 @@ class FolderMapper {
 			strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
 		];
 
-		$attributes = array_map(function ($n) {
+		$attributes = array_map(static function ($n) {
 			return strtolower($n);
 		}, $folder->getAttributes());
 

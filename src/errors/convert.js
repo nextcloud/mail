@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,16 +17,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import MailboxLockedError from './MailboxLockedError'
-import MailboxNotCachedError from './MailboxNotCachedError'
-import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError'
-import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError'
-import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError'
-import CouldNotConnectError from './CouldNotConnectError'
-import ManageSieveError from './ManageSieveError'
-import ManyRecipientsError from './ManyRecipientsError'
+import MailboxLockedError from './MailboxLockedError.js'
+import MailboxNotCachedError from './MailboxNotCachedError.js'
+import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError.js'
+import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError.js'
+import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError.js'
+import CouldNotConnectError from './CouldNotConnectError.js'
+import ManageSieveError from './ManageSieveError.js'
+import ManyRecipientsError from './ManyRecipientsError.js'
 
 const map = {
 	'OCA\\Mail\\Exception\\DraftsMailboxNotSetException': NoDraftsMailboxConfiguredError,
@@ -40,8 +41,8 @@ const map = {
 }
 
 /**
- * @param {Object} axiosError the axios Error
- * @returns {Error}
+ * @param {object} axiosError the axios Error
+ * @return {Error}
  */
 export const convertAxiosError = (axiosError) => {
 	if (!('response' in axiosError)) {

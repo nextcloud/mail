@@ -27,6 +27,7 @@ namespace OCA\Mail\Db;
 
 use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use ReturnTypeWillChange;
 
 /**
  * @method string getUserId()
@@ -56,9 +57,8 @@ class Tag extends Entity implements JsonSerializable {
 	public function __construct() {
 		$this->addType('isDefaultTag', 'boolean');
 	}
-	/**
-	 * @return array
-	 */
+
+	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getId(),

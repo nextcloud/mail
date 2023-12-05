@@ -23,32 +23,40 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class AutoCompleteController extends Controller {
-
-	/** @var AutoCompleteService */
-	private $service;
+	private AutoCompleteService $service;
+	private ?string $userId;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								AutoCompleteService $service) {
+		IRequest $request,
+		AutoCompleteService $service,
+		?string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
+		$this->userId = $userId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $term
+	 *
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function index(string $term): JSONResponse {
-		return new JSONResponse($this->service->findMatches($term));
+		if ($this->userId === null) {
+			return new JSONResponse([]);
+		}
+
+		return (new JSONResponse($this->service->findMatches($this->userId, $term)))
+			->cacheFor(5 * 60, false, true);
 	}
 }

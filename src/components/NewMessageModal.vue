@@ -1,181 +1,502 @@
+
 <template>
 	<Modal
+		v-if="showMessageComposer"
 		size="normal"
-		:title="t('mail', 'New message')"
-		@close="$emit('close')">
-		<Composer v-if="!fetchingTemplateMessage"
-			:from-account="composerData.accountId"
-			:to="composerData.to"
-			:cc="composerData.cc"
-			:bcc="composerData.bcc"
-			:subject="composerData.subject"
-			:body="composerData.body"
-			:draft="saveDraft"
-			:send="sendMessage"
-			:forwarded-messages="forwardedMessages" />
+		:title="modalTitle"
+		:additional-trap-elements="toolbarElements"
+		@close="$event.type === 'click' ? onClose() : onMinimize()">
+		<EmptyContent v-if="error"
+			:title="t('mail', 'Error sending your message')"
+			class="centered-content"
+			role="alert">
+			<p>{{ error }}</p>
+			<template #action>
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Go back')"
+					@click="error = undefined">
+					{{ t('mail', 'Go back') }}
+				</ButtonVue>
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Retry')"
+					@click="onSend">
+					{{ t('mail', 'Retry') }}
+				</ButtonVue>
+			</template>
+		</EmptyContent>
+		<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
+		<Loading v-else-if="sending"
+			:hint="t('mail', 'Sending …')"
+			role="alert" />
+		<EmptyContent v-else-if="warning"
+			:title="t('mail', 'Warning sending your message')"
+			class="centered-content"
+			role="alert">
+			<template #description>
+				{{ warning }}
+			</template>
+			<template #action>
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Go back')"
+					@click="warning = undefined">
+					{{ t('mail', 'Go back') }}
+				</ButtonVue>
+				<ButtonVue
+					type="tertiary"
+					:aria-label="t('mail', 'Send anyway')"
+					@click="onForceSend">
+					{{ t('mail', 'Send anyway') }}
+				</ButtonVue>
+			</template>
+		</EmptyContent>
+		<template v-else>
+			<NcActions class="minimize-button">
+				<NcActionButton :aria-label="t('mail', 'Minimize composer')" @click="onMinimize">
+					<template #icon>
+						<MinimizeIcon :size="20" />
+					</template>
+				</NcActionButton>
+			</NcActions>
+			<Composer ref="composer"
+				:from-account="composerData.accountId"
+				:from-alias="composerData.aliasId"
+				:to="composerData.to"
+				:cc="composerData.cc"
+				:bcc="composerData.bcc"
+				:subject="composerData.subject"
+				:attachments-data="composerData.attachments"
+				:body="composerData.body"
+				:editor-body="convertEditorBody(composerData)"
+				:in-reply-to-message-id="composerData.inReplyToMessageId"
+				:reply-to="composerData.replyTo"
+				:forward-from="composerData.forwardFrom"
+				:send-at="composerData.sendAt * 1000"
+				:forwarded-messages="forwardedMessages"
+				:can-save-draft="canSaveDraft"
+				:saving-draft="savingDraft"
+				:draft-saved="draftSaved"
+				:smime-sign="composerData.smimeSign"
+				:smime-encrypt="composerData.smimeEncrypt"
+				:is-first-open="modalFirstOpen"
+				:request-mdn="composerData.requestMdn"
+				:accounts="accounts"
+				@update:from-account="patchComposerData({ accountId: $event })"
+				@update:from-alias="patchComposerData({ aliasId: $event })"
+				@update:to="patchComposerData({ to: $event })"
+				@update:cc="patchComposerData({ cc: $event })"
+				@update:bcc="patchComposerData({ bcc: $event })"
+				@update:subject="patchComposerData({ subject: $event })"
+				@update:attachments-data="patchComposerData({ attachments: $event })"
+				@update:editor-body="patchComposerData({ editorBody: $event })"
+				@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
+				@update:smime-sign="patchComposerData({ smimeSign: $event })"
+				@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
+				@update:request-mdn="patchComposerData({ requestMdn: $event })"
+				@draft="onDraft"
+				@discard-draft="discardDraft"
+				@upload-attachment="onAttachmentUploading"
+				@send="onSend"
+				@show-toolbar="handleShow" />
+		</template>
 	</Modal>
 </template>
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import logger from '../logger'
-import { detect, html, plain, toPlain } from '../util/text'
-import { saveDraft, sendMessage } from '../service/MessageService'
-import Composer from './Composer'
-import { showWarning } from '@nextcloud/dialogs'
-import Axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import {
+	NcButton as ButtonVue,
+	NcEmptyContent as EmptyContent,
+	NcModal as Modal,
+	NcActions,
+	NcActionButton,
+} from '@nextcloud/vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
+
+import logger from '../logger.js'
+import { toPlain, toHtml, plain } from '../util/text.js'
+import Composer from './Composer.vue'
+import { UNDO_DELAY } from '../store/constants.js'
+import { matchError } from '../errors/match.js'
+import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError.js'
+import ManyRecipientsError from '../errors/ManyRecipientsError.js'
+import AttachmentMissingError from '../errors/AttachmentMissingError.js'
+import Loading from './Loading.vue'
+import { mapGetters } from 'vuex'
+import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
+import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
+
 export default {
 	name: 'NewMessageModal',
 	components: {
-		Modal,
+		ButtonVue,
 		Composer,
+		EmptyContent,
+		Loading,
+		Modal,
+		NcActions,
+		NcActionButton,
+		MinimizeIcon,
 	},
 	props: {
-		forwardedMessages: {
+		accounts: {
 			type: Array,
-			required: false,
-			default: () => [],
-		},
-		templateMessageId: {
-			type: Number,
-			required: false,
-			default: undefined,
+			required: true,
 		},
 	},
 	data() {
 		return {
+			toolbarElements: undefined,
 			original: undefined,
-			originalBody: undefined,
-			fetchingTemplateMessage: true,
+			draftsPromise: Promise.resolve(),
+			attachmentsPromise: Promise.resolve(),
+			canSaveDraft: true,
+			savingDraft: false,
+			draftSaved: false,
+			uploadingAttachments: false,
+			sending: false,
+			error: undefined,
+			warning: undefined,
+			modalFirstOpen: true,
+			cookedComposerData: undefined,
+			changed: false,
 		}
 	},
 	computed: {
+		...mapGetters(['showMessageComposer']),
+		modalTitle() {
+			if (this.composerMessage.type === 'outbox') {
+				return t('mail', 'Edit message')
+			}
+			if (this.composerData.draftId !== undefined) {
+				return t('mail', 'Draft')
+			}
+			if (this.composerData.replyTo) {
+				return t('mail', 'Reply')
+			}
+			if (this.composerData.forwardFrom) {
+				return t('mail', 'Forward')
+			}
+			return t('mail', 'New message')
+		},
+		composerMessage() {
+			return this.$store.getters.composerMessage
+		},
 		composerData() {
-			logger.debug('composing a new message or handling a mailto link', {
-				threadId: this.$route.params.threadId,
-			})
-
-			let accountId
-			// Only preselect an account when we're not in a unified mailbox
-			if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
-				accountId = parseInt(this.$route.params.accountId, 10)
-			}
-			if (this.templateMessageId !== undefined) {
-				if (this.original.attachments.length) {
-					showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
-				}
-
-				return {
-					accountId: this.original.accountId,
-					to: this.original.to,
-					cc: this.original.cc,
-					subject: this.original.subject,
-					body: this.originalBody,
-					originalBody: this.originalBody,
-				}
-			}
-
-			return {
-				accountId,
-				to: this.stringToRecipients(this.$route.query.to),
-				cc: this.stringToRecipients(this.$route.query.cc),
-				subject: this.$route.query.subject || '',
-				body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
-			}
+			return this.$store.getters.composerMessage?.data ?? {}
+		},
+		forwardedMessages() {
+			return this.composerMessage?.options?.forwardedMessages ?? []
 		},
 	},
 	created() {
-		this.fetchOriginalMessage()
+		const id = this.composerData?.id
+		if (id) {
+			this.draftsPromise = Promise.resolve(id)
+		}
+	},
+	async mounted() {
+		await this.$nextTick()
+		this.updateCookedComposerData()
 	},
 	methods: {
-		stringToRecipients(str) {
-			if (str === undefined) {
-				return []
-			}
-
-			return [
-				{
-					label: str,
-					email: str,
-				},
-			]
+		handleShow(element) {
+			this.toolbarElements = [element]
 		},
-		async saveDraft(data) {
-			if (data.draftId === undefined && this.draft) {
-				logger.debug('draft data does not have a draftId, adding one', {
-					draft: this.draft,
-					data,
-					id: this.draft.databaseId,
-				})
-				data.draftId = this.draft.databaseId
+		toHtml,
+		plain,
+		/**
+		 * @param data Message data
+		 * @param {object=} opts Options
+		 * @param {boolean=} opts.showToast Show a toast after saving
+		 * @return {Promise<number>} Draft id promise
+		 */
+		// TODO: when there's no draft is saved, Cloing wont move ie case 2 doesn't work
+		onDraft(data, { showToast = false } = {}) {
+			if (!this.composerMessage) {
+				logger.info('Ignoring draft because there is no message anymore', { data })
+				return this.draftsPromise
 			}
-			const dataForServer = {
+			this.changed = true
+
+			this.draftsPromise = this.draftsPromise.then(async (id) => {
+				this.savingDraft = true
+				this.draftSaved = false
+				try {
+					let idToReturn
+					const dataForServer = this.getDataForServer(data, true)
+					if (!id) {
+						const { id } = await saveDraft(dataForServer)
+						dataForServer.id = id
+						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId })
+						this.canSaveDraft = true
+						this.draftSaved = true
+
+						idToReturn = id
+					} else {
+						dataForServer.id = id
+						await updateDraft(dataForServer)
+						this.canSaveDraft = true
+						this.draftSaved = true
+						idToReturn = id
+					}
+
+					this.$store.commit('setComposerMessageSaved', true)
+
+					if (showToast) {
+						if (this.composerMessage.type === 'outbox') {
+							showSuccess(t('mail', 'Message saved'))
+						} else {
+							showSuccess(t('mail', 'Draft saved'))
+						}
+					}
+
+					if (idToReturn !== undefined) {
+						return idToReturn
+					}
+				} catch (error) {
+					logger.error('Could not save draft', { error })
+					this.canSaveDraft = false
+					this.$store.commit('setComposerIndicatorDisabled', false)
+
+					if (showToast) {
+						if (this.composerMessage.type === 'outbox') {
+							showError(t('mail', 'Failed to save message'))
+						} else {
+							showError(t('mail', 'Failed to save draft'))
+						}
+					}
+				} finally {
+					this.savingDraft = false
+				}
+			})
+
+			return this.draftsPromise
+		},
+		getDataForServer(data) {
+			return {
 				...data,
+				id: data.id,
+				accountId: data.accountId,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+				editorBody: data.body.value,
+				to: data.to,
+				cc: data.cc,
+				bcc: data.bcc,
+				attachments: data.attachments,
+				aliasId: data.aliasId,
+				inReplyToMessageId: data.inReplyToMessageId,
+				sendAt: data.sendAt,
+				draftId: this.composerData?.draftId,
 			}
-			const { id } = await saveDraft(data.account, dataForServer)
-
-			// Remove old draft envelope
-			this.$store.commit('removeEnvelope', { id: data.draftId })
-			this.$store.commit('removeMessage', { id: data.draftId })
-
-			// Fetch new draft envelope
-			await this.$store.dispatch('fetchEnvelope', id)
-
-			return id
 		},
-		async sendMessage(data) {
+		onAttachmentUploading(done, data) {
+			this.attachmentsPromise = this.attachmentsPromise
+				.then(done)
+				.then(() => this.onDraft(data))
+				.then(() => logger.debug('attachments uploaded'))
+				.catch((error) => logger.error('could not upload attachments', { error }))
+		},
+		async onSend(data, force = false) {
 			logger.debug('sending message', { data })
-			const dataForServer = {
-				...data,
-				body: data.isHtml ? data.body.value : toPlain(data.body).value,
-			}
-			await sendMessage(data.account, dataForServer)
 
-			// Remove old draft envelope
-			this.$store.commit('removeEnvelope', { id: data.draftId })
-			this.$store.commit('removeMessage', { id: data.draftId })
+			await this.attachmentsPromise
+			this.uploadingAttachments = false
+			this.sending = true
+			try {
+				const now = new Date().getTime()
+				for (const attachment of data.attachments) {
+					if (!attachment.type) {
+						// todo move to backend: https://github.com/nextcloud/mail/issues/6227
+						attachment.type = 'local'
+					}
+				}
+				const dataForServer = this.getDataForServer({
+					...data,
+					id: await this.draftsPromise,
+					sendAt: data.sendAt ? data.sendAt : Math.floor((now + UNDO_DELAY) / 1000),
+				})
+				if (dataForServer.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
+					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
+				}
+
+				if (!force && data.attachments.length === 0) {
+					const lines = toPlain(data.body).value.toLowerCase().split('\n')
+					const wordAttachment = t('mail', 'attachment').toLowerCase()
+					const wordAttached = t('mail', 'attached').toLowerCase()
+					for (const line of lines) {
+						if (line.startsWith('>') || line.startsWith('--')) {
+							break
+						}
+						if (line.includes(wordAttachment) || line.includes(wordAttached)) {
+							throw new AttachmentMissingError()
+						}
+					}
+				}
+
+				if (!this.composerData.id) {
+					// This is a new message
+					const { id } = await saveDraft(dataForServer)
+					dataForServer.id = id
+					await this.$store.dispatch('outbox/enqueueFromDraft', {
+						draftMessage: dataForServer,
+						id,
+					})
+				} else if (this.composerData.type === 0) {
+					// This is an outbox message
+					dataForServer.id = this.composerData.id
+					await this.$store.dispatch('outbox/updateMessage', {
+						message: dataForServer,
+						id: this.composerData.id,
+					})
+				} else {
+					// This is a draft
+					await updateDraft(dataForServer)
+					dataForServer.id = this.composerData.id
+					await this.$store.dispatch('outbox/enqueueFromDraft', {
+						draftMessage: dataForServer,
+						id: this.composerData.id,
+					})
+				}
+
+				if (!data.sendAt || data.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
+					// Awaiting here would keep the modal open for a long time and thus block the user
+					this.$store.dispatch('outbox/sendMessageWithUndo', { id: dataForServer.id })
+				}
+				if (dataForServer.id) {
+					// Remove old draft envelope
+					this.$store.commit('removeMessage', { id: dataForServer.id })
+				}
+				await this.$store.dispatch('stopComposerSession')
+				this.$emit('close')
+			} catch (error) {
+				logger.error('could not send message', { error })
+				this.error = await matchError(error, {
+					[NoSentMailboxConfiguredError.getName()]() {
+						return t('mail', 'No sent mailbox configured. Please pick one in the account settings.')
+					},
+					[ManyRecipientsError.getName()]() {
+						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
+					},
+					// eslint-disable-next-line node/handle-callback-err
+					default(error) {
+						return undefined
+					},
+				})
+				this.warning = await matchError(error, {
+					[AttachmentMissingError.getName()]() {
+						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
+					},
+					// eslint-disable-next-line node/handle-callback-err
+					default(error) {
+						return undefined
+					},
+				})
+			} finally {
+				this.sending = false
+			}
+
+			// Sync sent mailbox when it's currently open
+			const account = this.$store.getters.getAccount(data.accountId)
+			if (account && parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
+				setTimeout(() => {
+					this.$store.dispatch('syncEnvelopes', {
+						mailboxId: account.sentMailboxId,
+						query: '',
+						init: false,
+					})
+				}, 500)
+			}
 		},
-		async fetchOriginalMessage() {
-			if (this.templateMessageId === undefined) {
-				this.fetchingTemplateMessage = false
-				return
+		async onForceSend() {
+			await this.onSend(this.cookedComposerData, true)
+		},
+		recipientToRfc822(recipient) {
+			if (recipient.email === recipient.label) {
+				// From mailto or sender without proper label
+				return recipient.email
+			} else if (recipient.label === '') {
+				// Invalid label
+				return recipient.email
+			} else if (recipient.email.search(/^[a-zA-Z]+:/) === 0) {
+				// Group integration
+				return recipient.email
+			} else {
+				// Proper layout with label
+				return `"${recipient.label}" <${recipient.email}>`
 			}
-			this.loading = true
-			this.error = undefined
-			this.errorMessage = ''
+		},
+		async discardDraft() {
+			let id = await this.draftsPromise
+			const isOutbox = this.composerMessage.type === 'outbox'
+			if (isOutbox) {
+				id = this.composerMessage.data.id
+			}
 
-			logger.debug(`fetching original message ${this.templateMessageId}`)
+			// It's safe to stop the session and ultimately destroy this component as only data
+			// local this this function is accessed afterwards
+			await this.$store.dispatch('stopComposerSession')
 
 			try {
-				const message = await this.$store.dispatch('fetchMessage', this.templateMessageId)
-				logger.debug('original message fetched', { message })
-				this.original = message
-
-				let body = plain(message.body || '')
-				if (message.hasHtmlBody) {
-					logger.debug('original message has HTML body')
-					const resp = await Axios.get(
-						generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
-							Id: this.templateMessageId,
-						})
-					)
-
-					body = html(resp.data)
+				if (isOutbox) {
+					await this.$store.dispatch('outbox/deleteMessage', { id })
+				} else {
+					deleteDraft(id)
 				}
-				this.originalBody = body
+				showSuccess(t('mail', 'Message discarded'))
 			} catch (error) {
-				logger.error('could not load original message ' + this.templateMessageId, { error })
-				if (error.isError) {
-					this.errorMessage = t('mail', 'Could not load original message')
-					this.error = error
-					this.loading = false
-				}
-			} finally {
-				this.loading = false
+				logger.error('Could not discard draft', { error })
+				showError(t('mail', 'Could not discard message'))
 			}
-			this.fetchingTemplateMessage = false
+		},
+		convertEditorBody(composerData) {
+			if (composerData.editorBody) {
+				return composerData.editorBody
+			}
+			if (!composerData.body) {
+				return ''
+			}
+			return toHtml(composerData.body).value
+		},
+		updateCookedComposerData() {
+			if (!this.$refs.composer) {
+				// Composer is not rendered yet
+				return
+			}
+
+			// Extract data to save drafts while the composer is not rendered.
+			// This is hacky but there is no other way for now.
+			this.cookedComposerData = this.$refs.composer.getMessageData()
+		},
+		async patchComposerData(data) {
+			this.changed = true
+			this.updateCookedComposerData()
+			await this.$store.dispatch('patchComposerData', data)
+		},
+		async onMinimize() {
+			this.modalFirstOpen = false
+
+			await this.$store.dispatch('closeMessageComposer')
+			if (!this.$store.getters.composerMessageIsSaved && this.changed) {
+				await this.onDraft(this.cookedComposerData, { showToast: true })
+			}
+
+		},
+		async onClose() {
+			this.$store.commit('setComposerIndicatorDisabled', true)
+			await this.onMinimize()
+
+			// End the session only if all unsaved changes have been saved
+			if (this.canSaveDraft && ((this.changed && this.draftSaved) || !this.changed)) {
+				logger.debug('Closing composer session due to close button click')
+				await this.$store.dispatch('stopComposerSession', {
+					restoreOriginalSendAt: true,
+					moveToImap: this.changed,
+					id: this.composerData.id,
+				})
+
+			}
 		},
 	},
 }
@@ -184,16 +505,22 @@ export default {
 
 <style lang="scss" scoped>
 @media only screen and (max-width: 600px) {
-	::v-deep .modal-container {
+	:deep(.modal-container) {
 		max-width: 80%;
 	}
 }
-::v-deep .modal-container {
-	width: 80%;
-	min-height: 60%;
-}
-::v-deep .modal-wrapper .modal-container {
+:deep(.modal-wrapper .modal-container) {
 	overflow-y: auto !important;
 	overflow-x: auto !important;
+	// from original Modal max-height
+	height: 90%;
+	// Max editor + modal height
+	max-height: 700px !important;
+}
+
+.minimize-button {
+	position: absolute;
+	right: 49px;
+	top: 4px;
 }
 </style>

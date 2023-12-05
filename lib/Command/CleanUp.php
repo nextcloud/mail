@@ -24,19 +24,22 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\CleanupService;
+use OCA\Mail\Support\ConsoleLoggerDecorator;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CleanUp extends Command {
+	private CleanupService $cleanupService;
+	private LoggerInterface $logger;
 
-	/** @var CleanupService */
-	private $cleanupService;
-
-	public function __construct(CleanupService $cleanupService) {
+	public function __construct(CleanupService $cleanupService,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->cleanupService = $cleanupService;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -48,7 +51,9 @@ class CleanUp extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		$this->cleanupService->cleanUp();
+		$logger = new ConsoleLoggerDecorator($this->logger, $output);
+
+		$this->cleanupService->cleanUp($logger);
 
 		return 0;
 	}

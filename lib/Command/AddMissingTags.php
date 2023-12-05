@@ -25,8 +25,8 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\TagMapper;
-use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Db\DoesNotExistException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -36,18 +36,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AddMissingTags extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var MailAccountMapper */
-	private $mapper;
+	private LoggerInterface $logger;
+	private TagMapper $tagMapper;
+	private MailAccountMapper $mapper;
 
 	public function __construct(MailAccountMapper $mapper,
-								TagMapper $tagMapper,
-								LoggerInterface $logger) {
+		TagMapper $tagMapper,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->mapper = $mapper;
@@ -70,7 +65,7 @@ class AddMissingTags extends Command {
 		if ($accountId === 0) {
 			$accounts = $this->mapper->getAllAccounts();
 			$output->writeln(sprintf('%d accounts to check found', count($accounts)));
-			if (empty($accounts)) {
+			if ($accounts === []) {
 				$output->writeLn('<error>No accounts exist</error>');
 				return 1;
 			}

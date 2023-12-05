@@ -3,9 +3,18 @@
 ## Installation
 
 In your Nextcloud, simply navigate to »Apps«, choose the category »Social & Communication«, find the Mail app and enable it.
-Then open the Mail app from the app menu. Put in your mail account credentials and off you go!
+Then open the Mail app from the app menu.
 
 ## Configuration
+
+### Local IMAP and SMTP servers
+
+By default, Nextcloud does not allow local hostnames and IP addresses as remote servers. This includes IMAP, SMTP and Sieve servers
+like `localhost`, `mx.local` and `10.0.0.3`. This check can be disabled with via config/config.php
+
+```php
+'allow_local_remote_servers' => true,
+```
 
 ### Attachment size limit
 
@@ -33,6 +42,14 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 'app.mail.sieve.timeout' => 2
 ```
 
+### Background sync interval
+
+Configure how often Mail keeps users' mailboxes updated in the background in seconds. Defaults to 3600.
+
+```php
+'app.mail.background-sync-interval' => 7200,
+```
+
 ### Use php-mail for sending mail
 You can use the php-mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
@@ -43,6 +60,37 @@ Turn off TLS verfication for IMAP/SMTP. This happens globally for all accounts a
 ```php
 'app.mail.verify-tls-peer' => false
 ```
+
+### Anti-abuse alerts
+
+The app can write alerts to the logs when users send messages to a high number of recipients or sends a high number of messages for a short period of time. These events might indicate that the account is abused for sending spam messages.
+
+To enable anti-abuse alerts, you'll have to set a few configuration options [via occ](https://docs.nextcloud.com/server/stable/admin_manual/configuration_server/occ_command.html).
+
+```bash
+# Turn alerts on
+occ config:app:set mail abuse_detection --value=on
+# Turn alerts off
+occ config:app:set mail abuse_detection --value=off
+
+# Alert when 50 or more recipients are used for one single message
+occ config:app:set mail abuse_number_of_recipients_per_message_threshold --value=50
+
+# Alerts can be configured for three intervals: 15m, 1h and 1d
+# Alert when more than 10 messages are sent in 15 minutes
+occ config:app:set mail abuse_number_of_messages_per_15m --value=10
+# Alert when more than 30 messages are sent in one hour
+occ config:app:set mail abuse_number_of_messages_per_1h --value=30
+# Alert when more than 100 messages are sent in one day
+occ config:app:set mail abuse_number_of_messages_per_1d --value=100
+```
+
+## Google OAuth
+
+This app can allow users to connect their Google accounts with OAuth. This makes it possible to use accounts without 2FA or app password.
+
+1) [Create authorization credentials](https://developers.google.com/identity/protocols/oauth2/web-server#prerequisites). You will receive a client ID and a client secret.
+2) Open the Nextcloud settings page. Navigate to *Groupware* and scroll down to *Gmail integration*. Enter and save the client ID and client secret.
 
 ## Troubleshooting
 
@@ -57,6 +105,32 @@ Make sure to remove any sensitive data before posting it publicly. Reset log lev
 ### Database insert problems on MySQL
 
 If Mail fails to insert new rows for messages (`oc_mail_messages`), recipients (`oc_mail_recipients`) or similar tables, you are possibly not using the 4 byte support. See [the Nextcloud Admin Manual](https://docs.nextcloud.com/server/stable/admin_manual/configuration_database/mysql_4byte_support.html) on how to update your database configuration.
+
+### Timeout and other connectivity issues
+
+You can use OpenSSL to test and benchmark the connection from your Nextcloud host to the IMAP/SMTP host.
+
+```bash
+openssl s_time -connect imap.domain.tld:993
+```
+
+The output should look similar to this:
+
+```
+Collecting connection statistics for 30 seconds
+***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+483 connections in 0.94s; 513.83 connections/user sec, bytes read 0
+483 connections in 31 real seconds, 0 bytes read per connection
+
+
+Now timing with session id reuse.
+starting
+*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+497 connections in 0.97s; 512.37 connections/user sec, bytes read 0
+497 connections in 31 real seconds, 0 bytes read per connection
+```
 
 ### Get account IDs
 
@@ -85,7 +159,7 @@ In this example, `1393` is the *account ID*.
 To troubleshoot synchronization or threading problems it's helpful to run the sync from the command line while the user does not use the web interface (reduces chances of a conflict):
 
 ```bash
-php -f occ mail:account:sync 1393
+php -f occ mail:account:sync -vvv 1393
 ```
 
 1393 represents the [account ID](#get-account-ids).

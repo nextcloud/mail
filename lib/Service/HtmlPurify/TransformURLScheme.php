@@ -51,9 +51,9 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	private $messageParameters;
 
 	public function __construct(array $messageParameters,
-								Closure $mapCidToAttachmentId,
-								IURLGenerator $urlGenerator,
-								IRequest $request) {
+		Closure $mapCidToAttachmentId,
+		IURLGenerator $urlGenerator,
+		IRequest $request) {
 		$this->messageParameters = $messageParameters;
 		$this->mapCidToAttachmentId = $mapCidToAttachmentId;
 		$this->urlGenerator = $urlGenerator;
@@ -70,7 +70,6 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 */
 	public function filter(&$uri, $config, $context) {
 		/** @var \HTMLPurifier_Context $context */
-		/** @var \HTMLPurifier_Config $config */
 
 		if ($uri->scheme === null) {
 			$uri->scheme = 'https';

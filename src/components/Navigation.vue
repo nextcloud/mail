@@ -2,8 +2,9 @@
   - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -21,27 +22,27 @@
 
 <template>
 	<AppNavigation>
-		<AppNavigationNew
-			:text="t('mail', 'New message')"
-			button-id="mail_new_message"
-			button-class="icon-add"
-			role="complementary"
-			@click="onNewMessage" />
-		<NewMessageModal v-if="showNewMessage" @close="showNewMessage = false" />
-		<button v-if="currentMailbox"
-			class="button icon-history"
-			:disabled="refreshing"
-			@click="refreshMailbox" />
+		<NewMessageButtonHeader />
 		<template #list>
-			<ul id="accounts-list">
-				<template v-for="group in menu">
-					<NavigationAccount
-						v-if="group.account"
-						:key="group.account.id"
-						:account="group.account"
-						:first-mailbox="group.mailboxes[0]"
-						:is-first="isFirst(group.account)"
-						:is-last="isLast(group.account)" />
+			<!-- Special mailboxes first -->
+			<NavigationMailbox
+				v-for="mailbox in unifiedMailboxes"
+				:key="'mailbox-' + mailbox.databaseId"
+				:account="unifiedAccount"
+				:mailbox="mailbox" />
+			<AppNavigationSpacer />
+
+			<!-- All other mailboxes grouped by their account -->
+			<template v-for="group in menu">
+				<NavigationAccount
+					v-if="group.account"
+					:key="group.account.id"
+					:account="group.account"
+					:first-mailbox="group.mailboxes[0]"
+					:is-first="isFirst(group.account)"
+					:is-last="isLast(group.account)"
+					:is-disabled="isDisabled(group.account)" />
+				<template v-if="!isDisabled(group.account)">
 					<template v-for="item in group.mailboxes">
 						<NavigationMailbox
 							v-show="
@@ -65,10 +66,16 @@
 						:account="group.account" />
 					<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 				</template>
-			</ul>
+			</template>
 		</template>
 		<template #footer>
-			<AppNavigationSettings :title="t('mail', 'Settings')">
+			<div v-if="outboxMessages.length !== 0" class="outbox__border">
+				<NavigationOutbox class="outbox" />
+			</div>
+			<AppNavigationSettings :title="t('mail', 'Mail settings')">
+				<template #icon>
+					<IconSetting :size="20" />
+				</template>
 				<AppSettingsMenu />
 			</AppNavigationSettings>
 		</template>
@@ -76,62 +83,71 @@
 </template>
 
 <script>
-import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
-import AppNavigationSettings
-	from '@nextcloud/vue/dist/Components/AppNavigationSettings'
-import AppNavigationSpacer
-	from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
+import { NcAppNavigation as AppNavigation, NcAppNavigationSettings as AppNavigationSettings, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
+import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
-import logger from '../logger'
-import NavigationAccount from './NavigationAccount'
-import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
-import NavigationMailbox from './NavigationMailbox'
-
-import AppSettingsMenu from '../components/AppSettingsMenu'
-import NewMessageModal from './NewMessageModal'
+import NavigationAccount from './NavigationAccount.vue'
+import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse.vue'
+import NavigationMailbox from './NavigationMailbox.vue'
+import NavigationOutbox from './NavigationOutbox.vue'
+import IconSetting from 'vue-material-design-icons/Cog.vue'
+import AppSettingsMenu from '../components/AppSettingsMenu.vue'
+import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
 
 export default {
 	name: 'Navigation',
 	components: {
 		AppNavigation,
-		AppNavigationNew,
 		AppNavigationSettings,
 		AppNavigationSpacer,
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
-		NewMessageModal,
+		NavigationOutbox,
+		NewMessageButtonHeader,
+		IconSetting,
 	},
 	data() {
 		return {
 			refreshing: false,
-			showNewMessage: false,
 		}
 	},
 	computed: {
 		menu() {
-			return this.$store.getters.accounts.map((account) => {
-				const mailboxes = this.$store.getters.getMailboxes(account.id)
-				const nonSpecialRoleMailboxes = mailboxes.filter(
-					(mailbox) => this.isCollapsed(account, mailbox)
-				)
-				const isCollapsible = nonSpecialRoleMailboxes.length > 1
+			return this.$store.getters.accounts
+				.filter(account => account.id !== UNIFIED_ACCOUNT_ID)
+				.map(account => {
+					const mailboxes = this.$store.getters.getMailboxes(account.id)
+					const nonSpecialRoleMailboxes = mailboxes.filter(
+						(mailbox) => this.isCollapsed(account, mailbox)
+					)
+					const isCollapsible = nonSpecialRoleMailboxes.length > 1
 
-				return {
-					id: account.id,
-					account,
-					mailboxes,
-					isCollapsible,
-				}
-			})
+					return {
+						id: account.id,
+						account,
+						mailboxes,
+						isCollapsible,
+					}
+				})
 		},
-		currentMailbox() {
-			if (this.$route.name === 'message' || this.$route.name === 'mailbox') {
-				return this.$store.getters.getMailbox(this.$route.params.mailboxId)
-			}
-			return undefined
+		unifiedAccount() {
+			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
+		},
+		unifiedMailboxes() {
+			return this.$store.getters.getMailboxes(UNIFIED_ACCOUNT_ID)
+		},
+		/**
+		 * Whether the current session is using passwordless authentication.
+		 *
+		 * @return {boolean}
+		 */
+		passwordIsUnavailable() {
+			return this.$store.getters.getPreference('password-is-unavailable', false)
+		},
+		outboxMessages() {
+			return this.$store.getters['outbox/getAllMessages']
 		},
 	},
 	methods: {
@@ -150,9 +166,6 @@ export default {
 
 			return true
 		},
-		onNewMessage() {
-			this.showNewMessage = true
-		},
 		isFirst(account) {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[1]
@@ -161,20 +174,16 @@ export default {
 			const accounts = this.$store.getters.accounts
 			return account === accounts[accounts.length - 1]
 		},
-		async refreshMailbox() {
-			if (this.refreshing === true) {
-				logger.debug('already sync\'ing mailbox.. aborting')
-				return
-			}
-			this.refreshing = true
-			try {
-				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.currentMailbox.databaseId })
-				logger.debug('Current mailbox is sync\'ing ')
-			} catch (error) {
-				logger.error('could not sync current mailbox', { error })
-			} finally {
-				this.refreshing = false
-			}
+		/**
+		 * Disable provisioned accounts when no password is available.
+		 * Loading messages of those accounts will fail and an endless spinner will be shown.
+		 *
+		 * @param {object} account Account object
+		 * @return {boolean} True if the account should be disabled
+		 */
+		isDisabled(account) {
+
+			return (this.passwordIsUnavailable && !!account.provisioningId) && !!this.$store.getters.masterPasswordEnabled
 		},
 	},
 }
@@ -202,7 +211,7 @@ export default {
 		animation: rotation 2s linear;
 	}
 }
-::v-deep .app-navigation-new button {
+:deep(.app-navigation-new button) {
 	width: 240px !important;
 	height: 44px;
 }
@@ -217,4 +226,21 @@ to {
 .app-navigation-spacer {
 	order: 0 !important;
 }
+:deep(.settings-button) {
+	font-weight: bold !important;
+	z-index: 1;
+}
+.outbox {
+	margin-left: 6px;
+	width: auto;
+	&__border {
+		border-top: 1px solid var(--color-background-darker);
+	}
+	:deep(.app-navigation-entry) {
+		&.active {
+			background-color: transparent !important;
+		}
+	}
+}
+
 </style>

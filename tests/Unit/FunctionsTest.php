@@ -23,10 +23,12 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\mail\tests\Unit;
+namespace OCA\Mail\Tests\Unit;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Ids;
 use function OCA\Mail\array_flat_map;
+use function OCA\Mail\chunk_uid_sequence;
 
 class FunctionsTest extends TestCase {
 	public function testFlatMapEmpty(): void {
@@ -61,5 +63,36 @@ class FunctionsTest extends TestCase {
 			],
 			$result
 		);
+	}
+
+	public function testChunkEmptyUidRange(): void {
+		$uids = [];
+
+		$chunks = chunk_uid_sequence($uids, 100);
+
+		self::assertEquals([], $chunks);
+	}
+
+	public function testChunkShortByteRange(): void {
+		$uids = [100, 101]; // 100:101 -> 7 chars
+
+		$chunks = chunk_uid_sequence($uids, 10);
+
+		self::assertEquals([
+			new Horde_Imap_Client_Ids('100:101'),
+		], $chunks);
+	}
+
+	public function testChunkLongByteRange(): void {
+		$uids = [100, 101, 103, 105, 106, 201, 203, 204]; // 100:101, 103, 105:106, 201, 203:2.3 -> 35 chars
+
+		$chunks = chunk_uid_sequence($uids, 10);
+
+		self::assertEquals([
+			new Horde_Imap_Client_Ids('100:101'),
+			new Horde_Imap_Client_Ids('103, 105'),
+			new Horde_Imap_Client_Ids('106, 201'),
+			new Horde_Imap_Client_Ids('203:204'),
+		], $chunks);
 	}
 }

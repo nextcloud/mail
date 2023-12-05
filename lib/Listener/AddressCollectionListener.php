@@ -33,8 +33,10 @@ use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
+/**
+ * @template-implements IEventListener<Event|MessageSentEvent>
+ */
 class AddressCollectionListener implements IEventListener {
-
 	/** @var IUserPreferences */
 	private $preferences;
 
@@ -45,8 +47,8 @@ class AddressCollectionListener implements IEventListener {
 	private $logger;
 
 	public function __construct(IUserPreferences $preferences,
-								AddressCollector $collector,
-								LoggerInterface $logger) {
+		AddressCollector $collector,
+		LoggerInterface $logger) {
 		$this->collector = $collector;
 		$this->logger = $logger;
 		$this->preferences = $preferences;
@@ -68,7 +70,7 @@ class AddressCollectionListener implements IEventListener {
 				->merge($message->getCC())
 				->merge($message->getBCC());
 
-			$this->collector->addAddresses($addresses);
+			$this->collector->addAddresses($event->getAccount()->getUserId(), $addresses);
 		} catch (Throwable $e) {
 			$this->logger->warning('Error while collecting mail addresses: ' . $e, [
 				'exception' => $e,

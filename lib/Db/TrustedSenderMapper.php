@@ -28,6 +28,9 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
+/**
+ * @template-extends QBMapper<TrustedSender>
+ */
 class TrustedSenderMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_trusted_senders');
@@ -54,10 +57,9 @@ class TrustedSenderMapper extends QBMapper {
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid))
 			);
 
-		/** @var TrustedSender[] $rows */
 		$rows = $this->findEntities($select);
 
-		return !empty($rows);
+		return $rows !== [];
 	}
 
 	public function create(string $uid, string $email, string $type): void {
@@ -70,7 +72,7 @@ class TrustedSenderMapper extends QBMapper {
 				'type' => $qb->createNamedParameter($type),
 			]);
 
-		$insert->execute();
+		$insert->executeStatement();
 	}
 
 	public function remove(string $uid, string $email, string $type): void {
@@ -83,7 +85,7 @@ class TrustedSenderMapper extends QBMapper {
 				$qb->expr()->eq('type', $qb->createNamedParameter($type))
 			);
 
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
 	/**

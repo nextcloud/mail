@@ -3,7 +3,7 @@
  *
  * @author 2021 Silvio Zimmer <silvio.zimmer@die-kinderwelt.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This code is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License, version 3,
@@ -32,7 +32,7 @@ export default class Quote extends Plugin {
 		const schema = this.editor.model.schema
 
 		schema.register('quote', {
-			inheritAllFrom: '$block',
+			inheritAllFrom: '$container',
 		})
 	}
 

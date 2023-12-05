@@ -27,11 +27,10 @@ use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\DB\ISchemaWrapper;
 use OCP\IDBConnection;
-use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version0110Date20180825201241 extends SimpleMigrationStep {
-
 	/** @var IDBConnection */
 	protected $connection;
 
@@ -46,6 +45,8 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 	 * @param IOutput $output
 	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
+	 *
+	 * @return void
 	 */
 	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
@@ -55,16 +56,15 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 			return;
 		}
 
-		/** @var IDBConnection $connection */
 		$connection = $this->connection;
 
 		// add method to overwrite tableName / entityClass
 		$collectedAdressesMapper = new class($connection) extends CollectedAddressMapper {
-			public function setTableName(string $tableName) {
+			public function setTableName(string $tableName): void {
 				$this->tableName = $tableName;
 			}
 
-			public function setEntityClass(string $entityClass) {
+			public function setEntityClass(string $entityClass): void {
 				$this->entityClass = $entityClass;
 			}
 		};
@@ -110,11 +110,14 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * Insert collected addresses to new table
+	 * 	 * Insert collected addresses to new table
+	 * 	 *
 	 *
 	 * @param CollectedAddress $address
+	 *
+	 * @return void
 	 */
-	private function insertAddress(CollectedAddress $address) {
+	private function insertAddress(CollectedAddress $address): void {
 		$this->connection->getQueryBuilder()
 			->insert('mail_coll_addresses')
 			->values([
@@ -129,6 +132,6 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 				$address->getEmail(),
 				$address->getDisplayName()
 			])
-			->execute();
+			->executeStatement();
 	}
 }

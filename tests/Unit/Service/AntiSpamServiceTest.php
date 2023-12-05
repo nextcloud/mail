@@ -26,17 +26,16 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AntiSpamService;
 use OCP\IConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AntiSpamServiceTest extends TestCase {
-
 	/** @var AntiSpamService */
 	private $service;
 

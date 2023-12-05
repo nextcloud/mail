@@ -6,11 +6,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1050Date20200923180030 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -23,7 +23,7 @@ class Version1050Date20200923180030 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$accountsTable = $schema->getTable('mail_mailboxes');
-		$accountsTable->addColumn('sync_in_background', 'boolean', [
+		$accountsTable->addColumn('sync_in_background', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);

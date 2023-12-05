@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Address;
 use OCA\Mail\Events\MessageSentEvent;
 use OCP\Contacts\Events\ContactInteractedWithEvent;
 use OCP\EventDispatcher\Event;
@@ -35,8 +34,10 @@ use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 use function class_exists;
 
+/**
+ * @template-implements IEventListener<Event|MessageSentEvent>
+ */
 class InteractionListener implements IEventListener {
-
 	/** @var IEventDispatcher */
 	private $dispatcher;
 
@@ -47,8 +48,8 @@ class InteractionListener implements IEventListener {
 	private $logger;
 
 	public function __construct(IEventDispatcher $dispatcher,
-								IUserSession $userSession,
-								LoggerInterface $logger) {
+		IUserSession $userSession,
+		LoggerInterface $logger) {
 		$this->dispatcher = $dispatcher;
 		$this->userSession = $userSession;
 		$this->logger = $logger;
@@ -73,7 +74,6 @@ class InteractionListener implements IEventListener {
 			->merge($event->getMessage()->getCC())
 			->merge($event->getMessage()->getBCC());
 		foreach ($recipients->iterate() as $recipient) {
-			/** @var Address $recipient */
 			$interactionEvent = new ContactInteractedWithEvent($user);
 			$email = $recipient->getEmail();
 			if ($email === null) {

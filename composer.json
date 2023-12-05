@@ -1,65 +1,63 @@
 {
-	"repositories": [
-		{
-			"type": "pear",
-			"url": "https://pear.horde.org"
-		},
-		{
-			"type": "vcs",
-			"url": "https://github.com/kwi-dk/UrlLinker",
-			"branch": "bleeding"
-		}
-	],
 	"config": {
 		"platform": {
-			"php": "7.3"
+			"php": "8.0"
 		},
-		"sort-packages": true
+		"sort-packages": true,
+		"allow-plugins": {
+			"bamarni/composer-bin-plugin": true
+		},
+		"optimize-autoloader": true,
+		"autoloader-suffix": "Mail"
 	},
 	"require": {
-		"php": ">=7.3",
-		"arthurhoaro/favicon": "^1.2",
-		"bamarni/composer-bin-plugin": "^1.4",
-		"cerdic/css-tidy": "v1.7.3",
+		"php": ">=8.0 <=8.3",
+		"ext-openssl": "*",
+		"arthurhoaro/favicon": "^2.0.0",
+		"bamarni/composer-bin-plugin": "^1.8.2",
+		"bytestream/horde-exception": "^2.2.0",
+		"bytestream/horde-imap-client": "^2.33.1",
+		"bytestream/horde-mail": "^2.7.1",
+		"bytestream/horde-mime": "^2.13.0",
+		"bytestream/horde-stream": "^1.7.1",
+		"bytestream/horde-stringprep": "^1.2.1",
+		"bytestream/horde-support": "^2.4.0",
+		"bytestream/horde-text-filter": "^2.5.0",
+		"bytestream/horde-text-flowed": "^2.1",
+		"bytestream/horde-util": "^2.7.0",
+		"cerdic/css-tidy": "v2.1.0",
 		"christophwurst/kitinerary": "^0.2",
-		"christophwurst/kitinerary-bin": "^0.2",
-		"christophwurst/kitinerary-flatpak": "^0.2",
-		"christophwurst/kitinerary-sys": "^0.1.0",
-		"ezyang/htmlpurifier": "4.13.0",
-		"gravatarphp/gravatar": "^2.0",
-		"pear-pear.horde.org/horde_date": "^2.4.1@stable",
-		"pear-pear.horde.org/horde_exception": "^2.0.8@stable",
-		"pear-pear.horde.org/horde_imap_client": "^2.29.16@stable",
-		"pear-pear.horde.org/horde_mail": "^2.6.4@stable",
-		"pear-pear.horde.org/horde_managesieve": "^1.0",
-		"pear-pear.horde.org/horde_mime": "^2.11.0@stable",
-		"pear-pear.horde.org/horde_nls": "^2.2.1@stable",
-		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
-		"pear-pear.horde.org/horde_stream": "^1.6.3@stable",
-		"pear-pear.horde.org/horde_stringprep": "^1.0",
-		"pear-pear.horde.org/horde_support": "^2.2.0@stable",
-		"pear-pear.horde.org/horde_text_filter": "^2.3.5@stable",
-		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
-		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
+		"christophwurst/kitinerary-bin": "^0.4",
+		"christophwurst/kitinerary-flatpak": "^0.3",
+		"christophwurst/kitinerary-sys": "^0.2.1",
+		"ezyang/htmlpurifier": "4.17.0",
+		"gravatarphp/gravatar": "dev-master#6b9f6a45477ce48285738d9d0c3f0dbf97abe263",
+		"hamza221/html2text": "^1.0",
+		"nextcloud/horde-managesieve": "^1.0",
+		"nextcloud/horde-smtp": "^1.0.2",
+		"phpmailer/dkimvalidator": "^0.3.0",
 		"psr/log": "^1",
-		"rubix/ml": "0.4.1",
-		"sabberworm/php-css-parser": "^8.3",
-		"youthweb/urllinker": "^1.3"
+		"rubix/ml": "2.4.0",
+		"sabberworm/php-css-parser": "^8.4.0",
+		"youthweb/urllinker": "^2.0"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "v20.0.7",
-		"psalm/phar": "^4.6",
+		"nextcloud/ocp": "dev-stable26",
+		"psalm/phar": "^5.14.1",
 		"roave/security-advisories": "dev-master"
 	},
 	"autoload": {
 		"files": [
 			"lib/functions.php"
-		]
+		],
+		"psr-4": {
+			"OCA\\Mail\\": "lib/"
+		}
 	},
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
-		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
+		"lint": "find . -name \\*.php -not -path './vendor*/*' -print0 | xargs -0 -n1 php -l",
 		"psalm": "psalm.phar",
 		"psalm:fix": "psalm.phar --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
 		"post-install-cmd": [
@@ -72,6 +70,7 @@
 			"\"vendor/bin/mozart\" compose",
 			"composer dump-autoload"
 		],
+		"rector": "rector process",
 		"test:integration": "phpunit -c tests/phpunit.integration.xml --fail-on-warning",
 		"test:integration:dev": "phpunit -c tests/phpunit.integration.xml --no-coverage --order-by=defects --stop-on-defect --fail-on-warning --stop-on-error --stop-on-failure",
 		"test:unit": "phpunit -c tests/phpunit.unit.xml --fail-on-warning",

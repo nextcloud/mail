@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Account;
-use Psr\Log\LoggerInterface;
-use OCA\Mail\Service\AccountService;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,14 +36,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DeleteAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;

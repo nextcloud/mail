@@ -26,12 +26,12 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Threading;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 use function array_map;
 use function array_merge;
 use function json_decode;
 
 class DatabaseMessage extends Message implements JsonSerializable {
-
 	/** @var int */
 	private $databaseId;
 
@@ -42,10 +42,10 @@ class DatabaseMessage extends Message implements JsonSerializable {
 	private $dirty = false;
 
 	public function __construct(int $databaseId,
-								string $subject,
-								string $id,
-								array $references,
-								?string $threadRootId) {
+		string $subject,
+		string $id,
+		array $references,
+		?string $threadRootId) {
 		parent::__construct($subject, $id, $references);
 
 		$this->databaseId = $databaseId;
@@ -53,11 +53,11 @@ class DatabaseMessage extends Message implements JsonSerializable {
 	}
 
 	public static function fromRowData(int $id,
-									   string $subject,
-									   ?string $messageId,
-									   ?string $references,
-									   ?string $inReplyTo,
-									   ?string $threadRootId): self {
+		string $subject,
+		?string $messageId,
+		?string $references,
+		?string $inReplyTo,
+		?string $threadRootId): self {
 		$referencesForThreading = $references !== null ? json_decode($references, true) : [];
 		if (!empty($inReplyTo)) {
 			$referencesForThreading[] = $inReplyTo;
@@ -97,18 +97,20 @@ class DatabaseMessage extends Message implements JsonSerializable {
 			$this->databaseId,
 			$this->hasReSubject() ? "Re: " . $hash($this->getSubject()) : $hash($this->getSubject()),
 			$hash($this->getId()),
-			array_map(function (string $ref) use ($hash) {
+			array_map(static function (string $ref) use ($hash) {
 				return $hash($ref);
 			}, $this->getReferences()),
 			$this->threadRootId === null ? null : $hash($this->threadRootId)
 		);
 	}
 
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return array_merge(
 			parent::jsonSerialize(),
 			[
 				'databaseId' => $this->databaseId,
+				'threadRootId' => $this->getThreadRootId(),
 			]
 		);
 	}

@@ -59,7 +59,7 @@ class ThreadMapper extends QBMapper {
 			}
 		}
 
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$rows = array_map(static function (array $row) {
 			return [
 				'messageUid' => (int)$row[0],
@@ -70,4 +70,5 @@ class ThreadMapper extends QBMapper {
 
 		return $rows;
 	}
+
 }

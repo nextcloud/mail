@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -33,7 +33,7 @@ describe('mailvelope', () => {
 
 		const mailvelope = await getMailvelope()
 
-		expect(mailvelope).to.deep.equal(window.mailvelope)
+		expect(mailvelope).toEqual(window.mailvelope)
 	})
 
 	it('loads dynamically', async() => {
@@ -44,6 +44,6 @@ describe('mailvelope', () => {
 		window.dispatchEvent(new Event('mailvelope'))
 
 		const mailvelope = await p
-		expect(mailvelope).to.deep.equal(window.mailvelope)
+		expect(mailvelope).toEqual(window.mailvelope)
 	})
 })

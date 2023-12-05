@@ -2,8 +2,9 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,20 +21,16 @@
  */
 
 import { curry } from 'ramda'
-import escapeRegExp from 'lodash/fp/escapeRegExp'
-import orderBy from 'lodash/fp/orderBy'
-import uniq from 'lodash/fp/uniq'
+import escapeRegExp from 'lodash/fp/escapeRegExp.js'
+import orderBy from 'lodash/fp/orderBy.js'
+import uniq from 'lodash/fp/uniq.js'
 import Vue from 'vue'
 
-import { sortMailboxes } from '../imap/MailboxSorter'
-import { normalizedEnvelopeListId } from './normalization'
-import { UNIFIED_ACCOUNT_ID } from './constants'
+import { sortMailboxes } from '../imap/MailboxSorter.js'
+import { normalizedEnvelopeListId } from './normalization.js'
+import { UNIFIED_ACCOUNT_ID } from './constants.js'
 
-const addMailboxToState = curry((state, account, mailbox) => {
-	mailbox.accountId = account.id
-	mailbox.mailboxes = []
-	Vue.set(mailbox, 'envelopeLists', {})
-
+const transformMailboxName = (account, mailbox) => {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
 	const nameWithoutPrefix = account.personalNamespace
 		? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
@@ -57,25 +54,36 @@ const addMailboxToState = curry((state, account, mailbox) => {
 		mailbox.displayName = nameWithoutPrefix
 		mailbox.path = ''
 	}
+}
+
+const addMailboxToState = curry((state, account, mailbox) => {
+	mailbox.accountId = account.id
+	mailbox.mailboxes = []
+	Vue.set(mailbox, 'envelopeLists', {})
+
+	transformMailboxName(account, mailbox)
 
 	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
-	const parent = Object.values(state.mailboxes).find(mb => mb.name === mailbox.path)
+	const parent = Object.values(state.mailboxes)
+		.filter(mb => mb.accountId === account.id)
+		.find(mb => mb.name === mailbox.path)
 	if (mailbox.path === '' || !parent) {
 		account.mailboxes.push(mailbox.databaseId)
 	} else {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
+
 })
 
 const sortAccounts = (accounts) => {
 	accounts.sort((a1, a2) => a1.order - a2.order)
 	return accounts
 }
-
 /**
  * Convert envelope tag objects to references and add new tags to global list.
- * @param {Object} state vuex state
- * @param {Object} envelope envelope with tag objects
+ *
+ * @param {object} state vuex state
+ * @param {object} envelope envelope with tag objects
  */
 const normalizeTags = (state, envelope) => {
 	if (Array.isArray(envelope.tags)) {
@@ -98,9 +106,33 @@ const normalizeTags = (state, envelope) => {
 	Vue.set(envelope, 'tags', tags)
 }
 
+/**
+ * Append or replace an envelope id for an existing message list
+ *
+ * If the given thread root id exist the message is replaced
+ * otherwise appended
+ *
+ * @param {object} state vuex state
+ * @param {Array} existing list of envelope ids for a message list
+ * @param {object} envelope envelope with tag objects
+ * @return {Array} list of envelope ids
+ */
+const appendOrReplaceEnvelopeId = (state, existing, envelope) => {
+	const index = existing.findIndex((id) => state.envelopes[id].threadRootId === envelope.threadRootId)
+	if (index === -1) {
+		existing.push(envelope.databaseId)
+	} else {
+		existing[index] = envelope.databaseId
+	}
+	return existing
+}
+
 export default {
 	savePreference(state, { key, value }) {
 		Vue.set(state.preferences, key, value)
+	},
+	setSessionExpired(state) {
+		Vue.set(state, 'isExpiredSession', true)
 	},
 	addAccount(state, account) {
 		account.collapsed = account.collapsed ?? true
@@ -112,8 +144,9 @@ export default {
 		)
 
 		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
-		const mailboxes = sortMailboxes(account.mailboxes || [])
+		const mailboxes = sortMailboxes(account.mailboxes || [], account)
 		Vue.set(account, 'mailboxes', [])
+		Vue.set(account, 'aliases', account.aliases ?? [])
 		mailboxes.map(addMailboxToState(state, account))
 	},
 	editAccount(state, account) {
@@ -150,6 +183,8 @@ export default {
 		addMailboxToState(state, account, mailbox)
 	},
 	updateMailbox(state, { mailbox }) {
+		const account = state.accounts[mailbox.accountId]
+		transformMailboxName(account, mailbox)
 		Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
 	},
 	removeMailbox(state, { id }) {
@@ -170,32 +205,113 @@ export default {
 		}
 		removeRec(account)
 	},
-	addEnvelope(state, { query, envelope, addToUnifiedMailboxes = true }) {
-		normalizeTags(state, envelope)
-		const mailbox = state.mailboxes[envelope.mailboxId]
-		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
-		Vue.set(envelope, 'accountId', mailbox.accountId)
-		const listId = normalizedEnvelopeListId(query)
-		const existing = mailbox.envelopeLists[listId] || []
-		const idToDateInt = (id) => state.envelopes[id].dateInt
-		const orderByDateInt = orderBy(idToDateInt, 'desc')
-		Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(existing.concat([envelope.databaseId]))))
-
-		if (!addToUnifiedMailboxes) {
+	/**
+	 * Start a new composer session and open the modal.
+	 *
+	 * @param {object} state Vuex state
+	 * @param {object} payload Data for the new message
+	 * @param payload.type
+	 * @param payload.data
+	 * @param payload.forwardedMessages
+	 * @param payload.originalSendAt
+	 */
+	startComposerSession(state, { type, data, forwardedMessages, originalSendAt }) {
+		state.composerSessionId = state.nextComposerSessionId
+		state.nextComposerSessionId++
+		state.newMessage = {
+			type,
+			data,
+			options: {
+				forwardedMessages,
+				originalSendAt,
+			},
+			indicatorDisabled: false,
+		}
+		state.composerMessageIsSaved = false
+		state.showMessageComposer = true
+	},
+	/**
+	 * Stop current composer session and close the modal.
+	 * This discards all data from the current message.
+	 *
+	 * @param {object} state Vuex state
+	 */
+	stopComposerSession(state) {
+		state.composerSessionId = undefined
+		state.newMessage = undefined
+		state.showMessageComposer = false
+	},
+	/**
+	 * Show composer modal if there is an ongoing session.
+	 *
+	 * @param {object} state Vuex state
+	 */
+	showMessageComposer(state) {
+		if (state.composerSessionId) {
+			state.showMessageComposer = true
+		}
+	},
+	/**
+	 * Hide composer modal without ending the current session.
+	 *
+	 * @param {object} state Vuex state
+	 */
+	hideMessageComposer(state) {
+		state.showMessageComposer = false
+	},
+	setComposerMessageSaved(state, saved) {
+		state.composerMessageIsSaved = saved
+	},
+	patchComposerData(state, data) {
+		state.newMessage.data = {
+			...state.newMessage.data,
+			...data,
+		}
+	},
+	setComposerIndicatorDisabled(state, disabled) {
+		state.newMessage.indicatorDisabled = disabled
+	},
+	convertComposerMessageToOutbox(state, { message }) {
+		if (!state.newMessage) {
+			// If the message is dispatched in the background there is no newMessage data in state
 			return
 		}
-		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
-		unifiedAccount.mailboxes
-			.map((mbId) => state.mailboxes[mbId])
-			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
-			.forEach((mailbox) => {
-				const existing = mailbox.envelopeLists[listId] || []
-				Vue.set(
-					mailbox.envelopeLists,
-					listId,
-					uniq(orderByDateInt(existing.concat([envelope.databaseId])))
-				)
-			})
+		Vue.set(state.newMessage, 'type', 'outbox')
+		Vue.set(state.newMessage.data, 'id', message.id)
+	},
+	addEnvelopes(state, { query, envelopes, addToUnifiedMailboxes = true }) {
+		if (envelopes.length === 0) {
+			return
+		}
+
+		const mailbox = state.mailboxes[envelopes[0].mailboxId]
+		const idToDateInt = (id) => state.envelopes[id].dateInt
+
+		const listId = normalizedEnvelopeListId(query)
+		const orderByDateInt = orderBy(idToDateInt, state.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
+
+		envelopes.forEach((envelope) => {
+			const existing = mailbox.envelopeLists[listId] || []
+			normalizeTags(state, envelope)
+			Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
+			Vue.set(envelope, 'accountId', mailbox.accountId)
+			Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(appendOrReplaceEnvelopeId(state, existing, envelope))))
+			if (!addToUnifiedMailboxes) {
+				return
+			}
+			const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
+			unifiedAccount.mailboxes
+				.map((mbId) => state.mailboxes[mbId])
+				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
+				.forEach((mailbox) => {
+					const existing = mailbox.envelopeLists[listId] || []
+					Vue.set(
+						mailbox.envelopeLists,
+						listId,
+						uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+					)
+				})
+		})
 	},
 	updateEnvelope(state, { envelope }) {
 		const existing = state.envelopes[envelope.databaseId]
@@ -221,6 +337,10 @@ export default {
 	addTag(state, { tag }) {
 		Vue.set(state.tags, tag.id, tag)
 		state.tagList.push(tag.id)
+	},
+	deleteTag(state, { tagId }) {
+		state.tagList = state.tagList.filter((id) => id !== tagId)
+		Vue.delete(state.tags, tagId)
 	},
 	addEnvelopeTag(state, { envelope, tagId }) {
 		Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
@@ -293,8 +413,30 @@ export default {
 
 		Vue.delete(state.envelopes, id)
 	},
+	removeEnvelopes(state, { id }) {
+		Vue.set(state.mailboxes[id], 'envelopeLists', [])
+	},
+	removeAllEnvelopes(state) {
+		Object.keys(state.mailboxes).forEach(id => {
+			Vue.set(state.mailboxes[id], 'envelopeLists', [])
+		  })
+	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
+	},
+	addMessageItineraries(state, { id, itineraries }) {
+		const message = state.messages[id]
+		if (!message) {
+			return
+		}
+		Vue.set(message, 'itineraries', itineraries)
+	},
+	addMessageDkim(state, { id, result }) {
+		const message = state.messages[id]
+		if (!message) {
+			return
+		}
+		Vue.set(message, 'dkimValid', result.valid)
 	},
 	addEnvelopeThread(state, { id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists
@@ -328,5 +470,38 @@ export default {
 	},
 	setMailboxUnreadCount(state, { id, unread }) {
 		Vue.set(state.mailboxes[id], 'unread', unread ?? 0)
+	},
+	setScheduledSendingDisabled(state, value) {
+		state.isScheduledSendingDisabled = value
+	},
+	setSnoozeDisabled(state, value) {
+		state.isSnoozeDisabled = value
+	},
+	setActiveSieveScript(state, { accountId, scriptData }) {
+		Vue.set(state.sieveScript, accountId, scriptData)
+	},
+	setCurrentUserPrincipal(state, { currentUserPrincipal }) {
+		state.currentUserPrincipal = currentUserPrincipal
+	},
+	addCalendar(state, { calendar }) {
+		state.calendars = [...state.calendars, calendar]
+	},
+	setGoogleOauthUrl(state, url) {
+		state.googleOauthUrl = url
+	},
+	setMasterPasswordEnabled(state, value) {
+		state.masterPasswordEnabled = value
+	},
+	setMicrosoftOauthUrl(state, url) {
+		state.microsoftOauthUrl = url
+	},
+	setSmimeCertificates(state, certificates) {
+		state.smimeCertificates = certificates
+	},
+	deleteSmimeCertificate(state, { id }) {
+		state.smimeCertificates = state.smimeCertificates.filter(cert => cert.id !== id)
+	},
+	addSmimeCertificate(state, { certificate }) {
+		state.smimeCertificates = [...state.smimeCertificates, certificate]
 	},
 }

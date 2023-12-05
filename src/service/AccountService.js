@@ -13,7 +13,7 @@ export const create = (data) => {
 
 	return axios
 		.post(url, data)
-		.then((resp) => resp.data)
+		.then((resp) => resp.data.data)
 		.then(fixAccountId)
 		.catch((e) => {
 			if (e.response && e.response.status === 400) {
@@ -42,8 +42,15 @@ export const update = (data) => {
 
 	return axios
 		.put(url, data)
-		.then((resp) => resp.data)
+		.then((resp) => resp.data.data)
 		.then(fixAccountId)
+		.catch((e) => {
+			if (e.response && e.response.status === 400) {
+				throw e.response.data
+			}
+
+			throw e
+		})
 }
 
 export const updateSignature = (account, signature) => {
@@ -74,7 +81,7 @@ export const fetch = (id) => {
 	return axios.get(url).then((resp) => fixAccountId(resp.data))
 }
 
-export const fetchQuota = async(id) => {
+export const fetchQuota = async (id) => {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/quota', {
 		id,
 	})
@@ -99,4 +106,22 @@ export const deleteAccount = (id) => {
 	})
 
 	return axios.delete(url).then((resp) => fixAccountId(resp.data))
+}
+
+export const updateSmimeCertificate = async (id, smimeCertificateId) => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/smime-certificate', {
+		id,
+	})
+
+	const response = await axios.put(url, { smimeCertificateId })
+	return response.data.data
+}
+
+export const testAccountConnection = async (id) => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/test', {
+		id,
+	})
+
+	const resp = await axios.get(url)
+	return resp.data.data
 }

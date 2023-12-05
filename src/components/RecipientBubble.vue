@@ -3,7 +3,7 @@
   -
   - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -20,32 +20,62 @@
   -->
 
 <template>
-	<Popover trigger="click" class="contact-popover">
+	<Popover ref="popover" trigger="click" class="contact-popover">
 		<UserBubble slot="trigger"
 			:display-name="label"
 			:avatar-image="avatarUrlAbsolute"
-			@click="onClickOpenContactDialog">
-			<span class="user-bubble-email">{{ email }}</span>
-		</UserBubble>
+			@click="onClickOpenContactDialog" />
 		<div class="contact-wrapper">
-			<div v-if="contactsWithEmail && contactsWithEmail.length > 0" class="contact-existing">
-				<span class="icon-details">
-					{{ t('mail', 'Contacts with this address') }}:
-				</span>
-				<span>
-					{{ contactsWithEmailComputed }}
-				</span>
-			</div>
-			<div v-if="selection === ContactSelectionStateEnum.select">
-				<a class="icon-reply" @click="onClickReply">
-					<span class="action-label">{{ t('mail', 'Reply') }}</span>
-				</a>
-				<a class="icon-user" @click="selection = ContactSelectionStateEnum.existing">
-					<span class="action-label">{{ t('mail', 'Add to Contact') }}</span>
-				</a>
-				<a class="icon-add" @click="selection = ContactSelectionStateEnum.new">
-					<span class="action-label">{{ t('mail', 'New Contact') }}</span>
-				</a>
+			<p class="contact-popover__email">
+				{{ email }}
+			</p>
+			<ButtonVue
+				v-if="contactsWithEmail && contactsWithEmail.length > 0"
+				type="tertiary-no-background"
+				:aria-label="t('mail', 'Contacts with this address')"
+				class="contact-existing">
+				<template #icon>
+					<IconDetails :size="20" />
+				</template>
+				{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
+			</ButtonVue>
+			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
+				<ButtonVue
+					:aria-label="t('mail', 'Reply')"
+					type="tertiary-no-background"
+					@click="onClickReply">
+					<template #icon>
+						<IconReply :size="20" />
+					</template>
+					{{ t('mail', 'Reply') }}
+				</ButtonVue>
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Add to Contact')"
+					@click="selection = ContactSelectionStateEnum.existing">
+					<template #icon>
+						<IconUser :size="20" />
+					</template>
+					{{ t('mail', 'Add to Contact') }}
+				</ButtonVue>
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'New Contact')"
+					@click="selection = ContactSelectionStateEnum.new">
+					<template #icon>
+						<IconAdd :size="20" />
+					</template>
+					{{ t('mail', 'New Contact') }}
+				</ButtonVue>
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Copy to clipboard')"
+					@click="onClickCopyToClipboard">
+					<template #icon>
+						<IconClipboard :size="20" />
+					</template>
+					{{ t('mail', 'Copy to clipboard') }}
+				</ButtonVue>
 			</div>
 			<div v-else class="contact-input-wrapper">
 				<Multiselect
@@ -67,17 +97,27 @@
 				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
 			</div>
 			<div v-if="selection !== ContactSelectionStateEnum.select">
-				<a class="icon-close" type="button" @click="selection = ContactSelectionStateEnum.select">
+				<ButtonVue
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Go back')"
+					@click="selection = ContactSelectionStateEnum.select">
+					<template #icon>
+						<IconClose :size="20" />
+					</template>
 					{{ t('mail', 'Go back') }}
-				</a>
-				<a
+				</ButtonVue>
+
+				<ButtonVue
 					v-close-popover
 					:disabled="addButtonDisabled"
-					class="icon-checkmark"
-					type="button"
+					type="tertiary-no-background"
+					:aria-label="t('mail', 'Add')"
 					@click="onClickAddToContact">
+					<template #icon>
+						<IconCheck :size="20" />
+					</template>
 					{{ t('mail', 'Add') }}
-				</a>
+				</ButtonVue>
 			</div>
 		</div>
 	</Popover>
@@ -85,14 +125,21 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import UserBubble from '@nextcloud/vue/dist/Components/UserBubble'
-import Popover from '@nextcloud/vue/dist/Components/Popover'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
-import { fetchAvatarUrlMemoized } from '../service/AvatarService'
-import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService'
-import uniqBy from 'lodash/fp/uniqBy'
+import { NcUserBubble as UserBubble, NcPopover as Popover, NcMultiselect as Multiselect, NcButton as ButtonVue } from '@nextcloud/vue'
+
+import IconReply from 'vue-material-design-icons/Reply.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconClipboard from 'vue-material-design-icons/ClipboardText.vue'
+import IconDetails from 'vue-material-design-icons/Information.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconUser from 'vue-material-design-icons/Account.vue'
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
+import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService.js'
+import uniqBy from 'lodash/fp/uniqBy.js'
 import debouncePromise from 'debounce-promise'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 
 const debouncedSearch = debouncePromise(autoCompleteByName, 500)
 
@@ -101,9 +148,17 @@ const ContactSelectionStateEnum = Object.freeze({ new: 1, existing: 2, select: 3
 export default {
 	name: 'RecipientBubble',
 	components: {
+		ButtonVue,
 		UserBubble,
 		Popover,
 		Multiselect,
+		IconReply,
+		IconUser,
+		IconAdd,
+		IconClose,
+		IconClipboard,
+		IconDetails,
+		IconCheck,
 	},
 	props: {
 		email: {
@@ -167,6 +222,14 @@ export default {
 		this.newContactName = this.label
 	},
 	methods: {
+		async onClickCopyToClipboard() {
+			try {
+				await navigator.clipboard.writeText(this.email)
+				showSuccess(t('mail', 'Copied email address to clipboard'))
+			} catch (e) {
+				showError(t('mail', 'Could not copy email address to clipboard'))
+			}
+		},
 		onClickReply() {
 			this.$router.push({
 				name: 'message',
@@ -215,12 +278,17 @@ export default {
 .user-bubble__title {
 	max-width: 30vw;
 }
-.user-bubble-email {
-	margin: 10px;
-}
 
+.contact-menu {
+	display: flex;
+	flex-wrap: wrap;
+}
 .contact-popover {
 	display: inline-block;
+
+	&__email {
+		text-align: center;
+	}
 }
 .contact-wrapper {
 	padding:10px;
@@ -241,37 +309,11 @@ export default {
 		width: 100%;
 	}
 }
-.icon-user,
-.icon-reply,
-.icon-checkmark,
-.icon-close,
-.icon-add {
-	height: 44px;
-	min-width: 44px;
-	margin: 0;
-	padding: 9px 18px 10px 32px;
-}
-@media only screen and (min-width: 600px) {
-	.icon-user,
-	.icon-reply,
-	.icon-checkmark,
-	.icon-close,
-	.icon-add {
-		background-position: 12px center;
-	}
-}
-.icon-add {
-	display: revert;
-    vertical-align: revert;
-}
-.contact-existing {
-	margin-bottom: 10px;
-	font-size: small;
-	.icon-details {
-		padding-left: 34px;
-		background-position: 10px center;
-		text-align: left;
-	}
-}
 
+.contact-existing {
+	font-size: small !important;
+}
+:deep(.button-vue__text) {
+	font-weight: normal !important;
+}
 </style>

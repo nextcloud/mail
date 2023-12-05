@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Matthias Rella <mrella@pisys.eu>
  *
@@ -22,17 +24,16 @@
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Service\Group\ContactsGroupService;
-use OCA\Mail\Service\GroupsIntegration;
-use OCA\Mail\Service\Group\NextcloudGroupService;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\Group\ContactsGroupService;
+use OCA\Mail\Service\Group\NextcloudGroupService;
+use OCA\Mail\Service\GroupsIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class GroupsIntegrationTest extends TestCase {
-
-	/** @var NextcloudGroupService|MockObject */
-	private $groupService1;
-
+	private NextcloudGroupService|MockObject $groupService1;
+	private NextcloudGroupService|MockObject $groupService2;
 	/** @var GroupsIntegration */
 	private $groupsIntegration;
 
@@ -53,7 +54,7 @@ class GroupsIntegrationTest extends TestCase {
 		);
 	}
 
-	public function testGetMatchingGroups() {
+	public function testGetMatchingGroups(): void {
 		$term = 'te'; // searching for: John Doe
 		$searchResult1 = [
 			[
@@ -61,52 +62,45 @@ class GroupsIntegrationTest extends TestCase {
 				'name' => "first test group"
 			]
 		];
-
 		$this->groupService1->expects($this->once())
 			->method('search')
 			->with($term)
-			->will($this->returnValue($searchResult1));
+			->willReturn($searchResult1);
 
-		$expected = [
-			[
-				'id' => 'namespace1:testgroup',
-				'label' => 'first test group (Namespace1)',
-				'email' => 'namespace1:testgroup',
-				'photo' => null,
-			]
-		];
 		$actual = $this->groupsIntegration->getMatchingGroups($term);
 
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals(
+			[
+				[
+					'id' => 'namespace1:testgroup',
+					'label' => 'first test group (Namespace1)',
+					'email' => 'namespace1:testgroup',
+					'photo' => null,
+				]
+			],
+			$actual
+		);
 	}
 
-	public function testExpandNone() {
-		$recipients = "john@doe.com,alice@smith.net";
-		$members = [
-			[
-				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
-			],
-			[
-				'id' => 'mary',
-				'name' => 'Mary',
-				'email' => 'mary@smith.net'
-			]
+	public function testExpandNone(): void {
+		$recipients = [
+			Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+			Recipient::fromParams(['label' => 'alice@smith.net', 'email' => 'alice@smith.net']),
 		];
 		$this->groupService1->expects($this->never())
-			->method('getUsers')
-			->willReturn($members);
+			->method('getUsers');
 
-		$expected = $recipients;
+		$expanded = $this->groupsIntegration->expand($recipients);
 
-		$actual = $this->groupsIntegration->expand($recipients);
-
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($recipients, $expanded);
 	}
 
-	public function testExpand() {
-		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
+	public function testExpand(): void {
+		$recipients = [
+			Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+			Recipient::fromParams(['label' => 'testgroup (namespace1)', 'email' => 'namespace1:testgroup']),
+			Recipient::fromParams(['label' => 'alice@smith.net', 'email' => 'alice@smith.net']),
+		];
 		$members = [
 			[
 				'id' => 'bob',
@@ -123,15 +117,25 @@ class GroupsIntegrationTest extends TestCase {
 			->method('getUsers')
 			->willReturn($members);
 
-		$expected = "john@doe.com,bob@smith.net,mary@smith.net,alice@smith.net";
+		$expanded = $this->groupsIntegration->expand($recipients);
 
-		$actual = $this->groupsIntegration->expand($recipients);
-
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals(
+			[
+				Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+				Recipient::fromParams(['label' => 'Bobby', 'email' => 'bob@smith.net']),
+				Recipient::fromParams(['label' => 'Mary', 'email' => 'mary@smith.net']),
+				Recipient::fromParams(['label' => 'alice@smith.net', 'email' => 'alice@smith.net']),
+			],
+			$expanded
+		);
 	}
 
-	public function testExpand2() {
-		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
+	public function testExpandUmlauts(): void {
+		$recipients = [
+			Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+			Recipient::fromParams(['label' => 'ümlaut (namespace1)', 'email' => 'namespace1:ümlaut']),
+			Recipient::fromParams(['label' => 'alice@smith.net', 'email' => 'alice@smith.net']),
+		];
 		$members = [
 			[
 				'id' => 'bob',
@@ -148,40 +152,24 @@ class GroupsIntegrationTest extends TestCase {
 			->method('getUsers')
 			->willReturn($members);
 
-		$expected = "john@doe.com,bob@smith.net,mary@smith.net,alice@smith.net";
+		$expanded = $this->groupsIntegration->expand($recipients);
 
-		$actual = $this->groupsIntegration->expand($recipients);
-
-		$this->assertEquals($expected, $actual);
-	}
-
-	public function testExpandUmlauts() {
-		$recipients = "john@doe.com,namespace1:ümlaut";
-		$members = [
+		$this->assertEquals(
 			[
-				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
+				Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+				Recipient::fromParams(['label' => 'Bobby', 'email' => 'bob@smith.net']),
+				Recipient::fromParams(['label' => 'Mary', 'email' => 'mary@smith.net']),
+				Recipient::fromParams(['label' => 'alice@smith.net', 'email' => 'alice@smith.net']),
 			],
-			[
-				'id' => 'mary',
-				'name' => 'Mary',
-				'email' => 'mary@smith.net'
-			]
-		];
-		$this->groupService1->expects($this->once())
-			->method('getUsers')
-			->willReturn($members);
-
-		$expected = "john@doe.com,bob@smith.net,mary@smith.net";
-
-		$actual = $this->groupsIntegration->expand($recipients);
-
-		$this->assertEquals($expected, $actual);
+			$expanded
+		);
 	}
 
-	public function testExpandSpace() {
-		$recipients = "john@doe.com,namespace1:test group";
+	public function testExpandSpace(): void {
+		$recipients = [
+			Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+			Recipient::fromParams(['label' => 'test group (namespace1)', 'email' => 'namespace1:test group']),
+		];
 		$members = [
 			[
 				'id' => 'bob',
@@ -199,36 +187,54 @@ class GroupsIntegrationTest extends TestCase {
 			->with('test group')
 			->willReturn($members);
 
-		$expected = "john@doe.com,bob@smith.net,mary@smith.net";
+		$expanded = $this->groupsIntegration->expand($recipients);
 
-		$actual = $this->groupsIntegration->expand($recipients);
-
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals(
+			[
+				Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+				Recipient::fromParams(['label' => 'Bobby', 'email' => 'bob@smith.net']),
+				Recipient::fromParams(['label' => 'Mary', 'email' => 'mary@smith.net']),
+			],
+			$expanded
+		);
 	}
 
-	public function testExpandEmpty() {
-		$this->expectException(ServiceException::class);
-		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
-		$members = [
+	public function testExpandEmpty(): void {
+		$recipients = [
+			Recipient::fromParams(['label' => 'testgroup (namespace1)', 'email' => 'namespace1:testgroup']),
 		];
+		$members = [];
 		$this->groupService1->expects($this->once())
 			->method('getUsers')
 			->willReturn($members);
+		$this->expectException(ServiceException::class);
+
 		$this->groupsIntegration->expand($recipients);
 	}
 
-	public function testExpandWrong() {
-		$recipients = "john@doe.com,nons:testgroup,alice@smith.net";
-		$expected = "john@doe.com,nons:testgroup,alice@smith.net";
+	public function testExpandWrong(): void {
+		$recipients = [
+			Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+			Recipient::fromParams(['label' => 'testgroup (nons)', 'email' => 'nons:testgroup']),
+		];
 
 		$actual = $this->groupsIntegration->expand($recipients);
 
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals(
+			[
+				Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+				Recipient::fromParams(['label' => 'testgroup (nons)', 'email' => 'nons:testgroup']),
+			],
+			$actual
+		);
 	}
 
-	public function testExpandWrong2() {
+	public function testExpandWrong2(): void {
+		$recipients = [
+			Recipient::fromParams(['label' => 'John Doe', 'email' => 'john@doe.com']),
+			Recipient::fromParams(['label' => 'nogroup (namespace1)', 'email' => 'namespace1:nogroup']),
+		];
 		$this->expectException(ServiceException::class);
-		$recipients = "john@doe.com,namespace1:nogroup,alice@smith.net";
 
 		$this->groupsIntegration->expand($recipients);
 	}

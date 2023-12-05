@@ -40,27 +40,21 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
+use function memory_get_usage;
 
 class SyncAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const OPTION_FORCE = 'force';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var ImapToDbSynchronizer */
-	private $syncService;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private MailboxSync $mailboxSync;
+	private ImapToDbSynchronizer $syncService;
+	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								MailboxSync $mailboxSync,
-								ImapToDbSynchronizer $messageSync,
-								LoggerInterface $logger) {
+		MailboxSync $mailboxSync,
+		ImapToDbSynchronizer $messageSync,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
@@ -113,7 +107,8 @@ class SyncAccount extends Command {
 				throw $e;
 			}
 
-			$output->writeln("Batch of new messages sync'ed");
+			$mbs = (int)(memory_get_usage() / 1024 / 1024);
+			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . "MB of memory in use</info>");
 			$this->sync($account, $force, $output);
 		}
 	}

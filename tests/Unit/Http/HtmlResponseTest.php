@@ -26,7 +26,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\HtmlResponse;
 
 class HtmlResponseTest extends TestCase {
-
 	/**
 	 * @dataProvider providesResponseData
 	 * @param $content

@@ -25,21 +25,20 @@ namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 
 interface IMailTransmission {
-
 	/**
 	 * Send a new message or reply to an existing one
 	 *
 	 * @param NewMessageData $messageData
-	 * @param RepliedMessageData|null $replyData
+	 * @param string|null $repliedToMessageId
 	 * @param Alias|null $alias
 	 * @param Message|null $draft
 	 *
@@ -47,9 +46,27 @@ interface IMailTransmission {
 	 * @throws ServiceException
 	 */
 	public function sendMessage(NewMessageData $messageData,
-								RepliedMessageData $replyData = null,
-								Alias $alias = null,
-								Message $draft = null): void;
+		string $repliedToMessageId = null,
+		Alias $alias = null,
+		Message $draft = null): void;
+
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @return void
+	 */
+	public function sendLocalMessage(Account $account, LocalMessage $message): void;
+
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @return void
+	 */
+	public function saveLocalDraft(Account $account, LocalMessage $message): void;
 
 	/**
 	 * Save a message draft

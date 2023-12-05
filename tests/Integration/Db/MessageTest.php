@@ -84,6 +84,45 @@ class MessageTest extends TestCase {
 		$message->setThreadRootId(null);
 
 		$this->assertEquals($expected, $message->getMessageId());
-		$this->assertNull($message->getThreadRootId());
+		$this->assertNotNull($message->getThreadRootId());
+		$this->assertEquals($expected, $message->getThreadRootId());
+	}
+
+	public function testThreadrootIdSet(): void {
+		$expected = '<abc@123.com>';
+		$message = new Message();
+
+		$message->setMessageId($expected);
+		$message->setThreadRootId('<cde789@test.com>');
+
+		$this->assertEquals($expected, $message->getMessageId());
+		$this->assertNotNull($message->getThreadRootId());
+		$this->assertEquals('<cde789@test.com>', $message->getThreadRootId());
+	}
+
+	public function testThreadrootIdEmptyString(): void {
+		$expected = '<abc@123.com>';
+		$message = new Message();
+
+		$message->setMessageId($expected);
+		$message->setThreadRootId('');
+
+		$this->assertEquals($expected, $message->getMessageId());
+		$this->assertNotNull($message->getThreadRootId());
+		$this->assertEquals($expected, $message->getThreadRootId());
+	}
+
+	public function testSetInReplyToEmpty(): void {
+		$expected = '<abc@123.com>';
+		$message = new Message();
+
+		$message->setMessageId($expected);
+		$message->setThreadRootId('');
+		$message->setInReplyTo('');
+
+		$this->assertEquals($expected, $message->getMessageId());
+		$this->assertNotNull($message->getThreadRootId());
+		$this->assertEquals($expected, $message->getThreadRootId());
+		$this->assertNull($message->getInReplyTo());
 	}
 }

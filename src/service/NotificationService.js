@@ -2,8 +2,9 @@
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,18 +18,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import uniq from 'lodash/fp/uniq'
+import uniq from 'lodash/fp/uniq.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
 
-import Logger from '../logger'
+import Logger from '../logger.js'
 
 /**
  * @todo use Notification.requestPermission().then once all browsers support promise API
- *
- * @returns {Promise}
+ * @return {Promise}
  */
 const request = () => {
 	if (!('Notification' in window)) {
@@ -45,13 +46,17 @@ const request = () => {
 	return Notification.requestPermission()
 }
 
-const showNotification = (title, body, icon) => {
-	request().then(() => {
-		if (document.querySelector(':focus') !== null) {
-			Logger.debug('browser is active. notification request is ignored')
+const showNotification = async (title, body, icon) => {
+	try {
+		await request()
+	} catch (error) {
+		// User denied permission
+		return
+	}
 
-		}
-	})
+	if (document.querySelector(':focus') !== null) {
+		Logger.debug('browser is active. notification request is ignored')
+	}
 
 	const notification = new Notification(title, {
 		body,
@@ -75,6 +80,9 @@ const getNotificationBody = (messages) => {
 		return t('mail', '{from}\n{subject}', {
 			from: from.join(),
 			subject: messages[0].subject,
+		}, undefined, {
+			escape: false,
+			sanitize: false,
 		})
 	} else {
 		return n('mail', '%n new message \nfrom {from}', '%n new messages \nfrom {from}', messages.length, {

@@ -26,16 +26,15 @@ declare(strict_types=1);
 namespace OCA\Mail\Integration\KItinerary;
 
 use ChristophWurst\KItinerary\Adapter;
+use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Exception\KItineraryRuntimeException;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Itinerary;
 use ChristophWurst\KItinerary\ItineraryExtractor as Extractor;
-use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use Psr\Log\LoggerInterface;
 
 class ItineraryExtractor {
-
 	/** @var BinaryAdapter */
 	private $binAdapter;
 
@@ -52,9 +51,9 @@ class ItineraryExtractor {
 	private $adapter;
 
 	public function __construct(BinaryAdapter $binAdapter,
-								FlatpakAdapter $flatpakAdapter,
-								SysAdapter $sysAdapter,
-								LoggerInterface $logger) {
+		FlatpakAdapter $flatpakAdapter,
+		SysAdapter $sysAdapter,
+		LoggerInterface $logger) {
 		$this->binAdapter = $binAdapter;
 		$this->flatpakAdapter = $flatpakAdapter;
 		$this->sysAdapter = $sysAdapter;
@@ -81,7 +80,7 @@ class ItineraryExtractor {
 			$this->adapter = $this->findAvailableAdapter() ?? false;
 		}
 		if ($this->adapter === false) {
-			$this->logger->warning('KItinerary binary adapter is not available, can\'t extract information');
+			$this->logger->info('KItinerary binary adapter is not available, can\'t extract information');
 
 			return new Itinerary();
 		}

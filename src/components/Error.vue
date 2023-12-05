@@ -2,8 +2,9 @@
   - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -20,23 +21,37 @@
   -->
 
 <template>
-	<div class="emptycontent">
-		<h2>{{ error }}</h2>
-		<p>{{ message }}</p>
-		<p v-if="data && data.debug">
-			<a class="button"
-				:href="reportUrl"
-				target="_blank"
-				rel="noopener">{{ t('mail', 'Report this bug') }}</a>
-		</p>
-	</div>
+	<NcEmptyContent
+		:title="error"
+		:description="message"
+		class="mail-error"
+		:class="{ 'mail-error--auto-margin': autoMargin }">
+		<template #icon>
+			<AlertCircleIcon :size="24" />
+		</template>
+		<template v-if="data && data.debug" #action>
+			<NcButton
+				:aria-label="t('mail', 'Report this bug')"
+				:href="reportUrl">
+				{{ t('mail', 'Report this bug') }}
+			</NcButton>
+		</template>
+	</NcEmptyContent>
 </template>
 
 <script>
-import { getReportUrl } from '../util/CrashReport'
+import { getReportUrl } from '../util/CrashReport.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import AlertCircleIcon from 'vue-material-design-icons/AlertCircle.vue'
 
 export default {
 	name: 'Error',
+	components: {
+		NcEmptyContent,
+		NcButton,
+		AlertCircleIcon,
+	},
 	props: {
 		error: {
 			type: String,
@@ -50,6 +65,10 @@ export default {
 			type: Object,
 			default: () => undefined,
 		},
+		autoMargin: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		reportUrl() {
@@ -58,3 +77,11 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.mail-error {
+	&--auto-margin {
+		margin: auto 0;
+	}
+}
+</style>

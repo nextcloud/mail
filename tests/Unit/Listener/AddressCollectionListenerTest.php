@@ -43,7 +43,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class AddressCollectionListenerTest extends TestCase {
-
 	/** @var IUserPreferences|MockObject */
 	private $preferences;
 
@@ -118,7 +117,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			'abc123',
 			null,
 			$message,
 			$mail
@@ -134,11 +133,14 @@ class AddressCollectionListenerTest extends TestCase {
 			->willReturn(new AddressList([Address::fromRaw('bcc', 'bcc@email')]));
 		$this->addressCollector->expects($this->once())
 			->method('addAddresses')
-			->with($this->equalTo(new AddressList([
-				Address::fromRaw('to', 'to@email'),
-				Address::fromRaw('cc', 'cc@email'),
-				Address::fromRaw('bcc', 'bcc@email'),
-			])));
+			->with(
+				'test',
+				$this->equalTo(new AddressList([
+					Address::fromRaw('to', 'to@email'),
+					Address::fromRaw('cc', 'cc@email'),
+					Address::fromRaw('bcc', 'bcc@email'),
+				]))
+			);
 		$this->logger->expects($this->never())->method($this->anything());
 
 		$this->listener->handle($event);

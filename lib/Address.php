@@ -28,6 +28,7 @@ namespace OCA\Mail;
 
 use Horde_Mail_Rfc822_Address;
 use JsonSerializable;
+use ReturnTypeWillChange;
 
 /**
  * @psalm-immutable
@@ -99,10 +100,8 @@ class Address implements JsonSerializable {
 		return $this->wrapped;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function jsonSerialize(): array {
+	#[ReturnTypeWillChange]
+	public function jsonSerialize() {
 		return [
 			'label' => $this->getLabel(),
 			'email' => $this->getEmail(),

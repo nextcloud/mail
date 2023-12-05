@@ -34,7 +34,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class ItineraryExtractorTest extends TestCase {
-
 	/** @var BinaryAdapter|MockObject */
 	private $binaryAdapter;
 
