@@ -94,6 +94,7 @@ OC.L10N.register(
     "Back" : "Til baka",
     "Edit as new message" : "Breyta sem nýjum skilaboðum",
     "Create event" : "Búa til atburð",
+    "Create task" : "Búa til verkefni",
     "Blind copy recipients only" : "Einungis viðtakendur dulinna afrita",
     "No trash mailbox configured" : "Ekkert ruslpósthólf er stillt",
     "Could not delete message" : "Gat ekki eytt skilaboðum",
