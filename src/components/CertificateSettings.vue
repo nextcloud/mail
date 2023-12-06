@@ -22,22 +22,18 @@
 
 <template>
 	<div>
-		<Multiselect
-			:allow-empty="false"
+		<Select
 			:options="aliases"
-			:searchable="false"
 			:value="alias"
 			:placeholder="t('mail', 'Select an alias')"
 			label="name"
-			track-by="id"
 			@select="handleAlias" />
-		<Multiselect
+		<Select
 			v-if="alias !== null"
 			v-model="savedCertificate"
 			:options="smimeCertOptions"
 			:searchable="false"
 			label="label"
-			track-by="id"
 			@select="selectCertificate" />
 		<Button
 			type="primary"
@@ -50,7 +46,7 @@
 </template>
 
 <script>
-import { NcMultiselect as Multiselect, NcButton as Button } from '@nextcloud/vue'
+import { NcSelect as Select, NcButton as Button } from '@nextcloud/vue'
 import { compareSmimeCertificates } from '../util/smime.js'
 import { mapGetters } from 'vuex'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -60,7 +56,7 @@ import moment from '@nextcloud/moment'
 export default {
 	name: 'CertificateSettings',
 	components: {
-		Multiselect,
+		Select,
 		Button,
 	},
 	props: {

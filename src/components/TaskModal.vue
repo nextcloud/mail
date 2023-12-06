@@ -36,7 +36,7 @@
 					{{ t('mail', 'All day') }}
 				</label>
 			</div>
-			<Multiselect
+			<Select
 				v-model="selectedCalendar"
 				label="displayname"
 				track-by="url"
@@ -53,7 +53,7 @@
 						v-bind="option" />
 				</template>
 				<span slot="noOptions">{{ t('mail', 'No calendars with task list support') }}</span>
-			</Multiselect>
+			</Select>
 			<br>
 			<button class="primary" :disabled="disabled" @click="onSave">
 				{{ t('mail', 'Create') }}
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcMultiselect as Multiselect } from '@nextcloud/vue'
+import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcSelect as Select } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import logger from '../logger.js'
@@ -72,15 +72,17 @@ import Task from '../task.js'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
+import { S } from 'vue-tabs-component'
 
 export default {
 	name: 'TaskModal',
 	components: {
-		CalendarPickerOption,
-		DatetimePicker,
-		Modal,
-		Multiselect,
-	},
+    CalendarPickerOption,
+    DatetimePicker,
+    Modal,
+    Select,
+    S
+},
 	props: {
 		envelope: {
 			type: Object,

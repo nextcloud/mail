@@ -64,7 +64,7 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
@@ -72,7 +72,7 @@
 					</template>
 				</Multiselect>
 				<button
-					:title="t('mail','Toggle recipients list mode')"
+					:name="t('mail','Toggle recipients list mode')"
 					:class="{'active':!autoLimit}"
 					@click.prevent="toggleViewMode">
 					<UnfoldMoreHorizontal v-if="autoLimit" :size="24" />
@@ -113,7 +113,7 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
@@ -128,7 +128,7 @@
 				{{ t('mail', 'Bcc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="bcc"
+				<Select id="bcc"
 					v-model="selectBcc"
 					:class="{'opened': !autoLimit}"
 					:options="selectableRecipients"
@@ -155,14 +155,14 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
 					<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
-				</Multiselect>
+				</Select>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -428,7 +428,7 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import ComposerAttachments from './ComposerAttachments.vue'

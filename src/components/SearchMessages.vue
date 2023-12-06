@@ -28,7 +28,7 @@
 		</NcActions>
 		<NcModal
 			v-if="moreSearchActions"
-			:title="t('mail', 'Search parameters')"
+			:name="t('mail', 'Search parameters')"
 			class="search-modal"
 			@close="closeSearchModal">
 			<h2 class="modal-title">

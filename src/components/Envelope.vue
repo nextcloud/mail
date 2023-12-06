@@ -13,7 +13,7 @@
 		:to="link"
 		:exact="true"
 		:data-envelope-id="data.databaseId"
-		:title="addresses"
+		:name="addresses"
 		:details="formatted()"
 		@click="onClick"
 		@click.ctrl.prevent="toggleSelected"

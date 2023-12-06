@@ -66,13 +66,11 @@
 				class="imip__more-options__row imip__more-options__row--calendar">
 				<label for="targetCalendarPickerId">{{ t('mail', 'Save to') }}</label>
 				<div class="imip__more-options__row--calendar__multiselect">
-					<Multiselect
+					<Select
 						v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
 						label="displayname"
-						track-by="url"
-						:allow-empty="false"
 						:options="calendarsForPicker">
 						<template #option="{option}">
 							<CalendarPickerOption v-bind="option" />
@@ -80,7 +78,7 @@
 						<template #singleLabel="{option}">
 							<CalendarPickerOption :display-icon="true" v-bind="option" />
 						</template>
-					</Multiselect>
+					</Select>
 				</div>
 			</div>
 			<div class="imip__more-options__row imip__more-options__row--comment">
@@ -131,7 +129,7 @@
 
 <script>
 import EventData from './imip/EventData.vue'
-import { NcButton as Button, NcMultiselect as Multiselect } from '@nextcloud/vue'
+import { NcButton as Button, NcSelect as Select } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
@@ -187,7 +185,7 @@ export default {
 		CloseIcon,
 		CalendarIcon,
 		CalendarPickerOption,
-		Multiselect,
+		Select,
 	},
 	props: {
 		scheduling: {

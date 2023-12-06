@@ -24,7 +24,7 @@
 	<ListItem
 		class="outbox-message"
 		:class="{ selected }"
-		:title="title"
+		:name="title"
 		:details="details"
 		@click="openModal">
 		<template #icon>

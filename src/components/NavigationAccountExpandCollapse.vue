@@ -20,7 +20,7 @@
   -->
 
 <template>
-	<AppNavigationItem :title="title" @click="toggleCollapse" />
+	<AppNavigationItem :name="title" @click="toggleCollapse" />
 </template>
 
 <script>
