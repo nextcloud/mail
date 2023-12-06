@@ -20,7 +20,7 @@
   -->
 
 <template>
-	<div>
+	<div :class="{'empty-content':!hasMessages && !loadingEnvelopes}">
 		<Error v-if="error"
 			:error="t('mail', 'Could not open mailbox')"
 			message=""
@@ -498,5 +498,8 @@ export default {
 		margin-top: 0;
 		margin-bottom: 8px;
 	}
+}
+.empty-content {
+	height: 100%;
 }
 </style>

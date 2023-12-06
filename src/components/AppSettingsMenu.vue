@@ -1,10 +1,10 @@
 <template>
 	<div class="app-settings">
 		<NcAppSettingsDialog id="app-settings-dialog"
-			:title="t('mail', 'Mail settings')"
+			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:open.sync="showSettings">
-			<NcAppSettingsSection id="account-settings" :title="t('mail', 'Account creation')">
+			<NcAppSettingsSection id="account-settings" :name="t('mail', 'Account creation')">
 				<NcButton v-if="allowNewMailAccounts"
 					type="primary"
 					to="/setup"
@@ -16,7 +16,7 @@
 					{{ t('mail', 'Add mail account') }}
 				</NcButton>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="body-settings" :title="t('mail', 'Activate body search')">
+			<NcAppSettingsSection id="body-settings" :name="t('mail', 'Activate body search')">
 				<p v-if="loadingPrioritySettings" class="app-settings">
 					{{ prioritySettingsText }}
 				</p>
@@ -29,7 +29,7 @@
 					<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
 				</p>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="data-settings" :title="t('mail', 'Data collection consent')">
+			<NcAppSettingsSection id="data-settings" :name="t('mail', 'Data collection consent')">
 				<p class="settings-hint">
 					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
 				</p>
@@ -46,7 +46,7 @@
 					<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
 				</p>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="autotagging-settings" :title="t('mail', 'Auto tagging text')">
+			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Auto tagging text')">
 				<p v-if="toggleAutoTagging" class="app-settings">
 					<IconLoading :size="20" />
 					{{ autoTaggingText }}
@@ -60,10 +60,10 @@
 					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
 				</p>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
+			<NcAppSettingsSection id="trusted-sender" :name="t('mail', 'Trusted senders')">
 				<TrustedSenders />
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="gravatar-settings" :title="t('mail', 'Gravatar settings')">
+			<NcAppSettingsSection id="gravatar-settings" :name="t('mail', 'Gravatar settings')">
 				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 					<IconLoading :size="20" />
 					{{ t('mail', 'Use Gravatar and favicon avatars') }}
@@ -77,7 +77,7 @@
 					<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
 				</p>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="reply-settings" :title="t('mail', 'Reply text position')">
+			<NcAppSettingsSection id="reply-settings" :name="t('mail', 'Reply text position')">
 				<p v-if="loadingReplySettings" class="app-settings reply-settings">
 					<IconLoading :size="20" />
 					{{ replySettingsText }}
@@ -91,7 +91,7 @@
 					<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
 				</p>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="mailto-settings" :title="t('mail', 'Mailto')">
+			<NcAppSettingsSection id="mailto-settings" :name="t('mail', 'Mailto')">
 				<p class="settings-hint">
 					{{ t('mail', 'Register as application for mail links') }}
 				</p>
@@ -105,7 +105,7 @@
 					{{ t('mail', 'Register') }}
 				</NcButton>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="smime-settings" :title="t('mail', 'S/MIME')">
+			<NcAppSettingsSection id="smime-settings" :name="t('mail', 'S/MIME')">
 				<NcButton class="app-settings-button"
 					type="secondary"
 					:aria-label="t('mail', 'Manage S/MIME certificates')"
@@ -118,7 +118,7 @@
 				<SmimeCertificateModal v-if="displaySmimeCertificateModal"
 					@close="displaySmimeCertificateModal = false" />
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="sorting-settings" :title="t('mail', 'Sorting')">
+			<NcAppSettingsSection id="sorting-settings" :name="t('mail', 'Sorting')">
 				<div class="sorting">
 					<CheckboxRadioSwitch class="sorting__switch"
 						:checked="sortOrder"
@@ -138,7 +138,7 @@
 					</CheckboxRadioSwitch>
 				</div>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="mailvelope-settings" :title="t('mail', 'Mailvelope')">
+			<NcAppSettingsSection id="mailvelope-settings" :name="t('mail', 'Mailvelope')">
 				<p class="mailvelope-section">
 					{{ t('mail', 'Looking for a way to encrypt your emails?') }}
 				</p>
@@ -149,7 +149,7 @@
 				</a>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="keyboard-settings"
-				:title="t('mail', 'Keyboard')">
+				:name="t('mail', 'Keyboard')">
 				<dl>
 					<div>
 						<dt><kbd>C</kbd></dt>
@@ -406,7 +406,6 @@ p.app-settings {
 	background-position: 10px center;
 	text-align: left;
 	margin-top: 6px;
-	width: 100%;
 }
 .app-settings-button.button.primary.new-button {
 	color: var(--color-primary-element-text);

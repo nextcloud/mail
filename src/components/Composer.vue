@@ -6,13 +6,14 @@
 				{{ t('mail', 'From') }}
 			</label>
 			<div class="composer-fields--custom">
-				<SelectVue id="from"
+				<NcSelect id="from"
 					:value="selectedAlias"
 					:options="aliases"
 					label="name"
 					:get-option-key="(option)=>option.selectId"
 					:searchable="false"
 					:placeholder="t('mail', 'Select account')"
+					:aria-label-combobox="t('mail', 'Select account')"
 					:clear-on-select="false"
 					:append-to-body="false"
 					:selectable="(option)=> {
@@ -25,7 +26,7 @@
 					<template slot="selected-option" slot-scope="option">
 						{{ formatAliases(option) }}
 					</template>
-				</SelectVue>
+				</NcSelect>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -33,41 +34,46 @@
 				{{ t('mail', 'To') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="to"
+				<NcSelect id="to"
 					ref="toLabel"
-					v-model="selectTo"
-					:class="{'opened': !autoLimit}"
-					:options="selectableRecipients"
+					:value="selectTo"
+					:options="selectableRecipients.filter(reciptient=>!selectTo.some(to=>to.email===reciptient.email))"
 					:taggable="true"
 					label="label"
-					track-by="email"
+					:aria-label-combobox="t('mail', 'Select recipient')"
+					:filter-by="(option, label, search)=>filterOption(option, label, search,'to')"
 					:multiple="true"
-					:placeholder="t('mail', 'Contact or email address …')"
-					:clear-on-select="true"
-					:close-on-select="false"
-					:show-no-options="false"
-					:preserve-search="true"
-					:hide-selected="true"
+					:close-on-select="true"
+					:clear-search-on-select="true"
 					:loading="loadingIndicatorTo"
-					:auto-limit="autoLimit"
-					:options-limit="30"
+					:reducible="true"
+					:clearable="true"
+					:no-wrap="false"
 					@input="saveDraftDebounced"
-					@tag="onNewToAddr"
-					@search-change="onAutocomplete($event, 'to')">
-					<template #tag="{ option }">
+					@option:selecting="onNewToAddr"
+					@search="onAutocomplete($event, 'to')">
+					<template #search="{ events, attributes }">
+						<input :placeholder="t('mail', 'Contact or email address …')"
+							type="search"
+							class="vs__search"
+							v-bind="attributes"
+							v-on="events">
+					</template>
+					<template #selected-option-container="{option}">
 						<RecipientListItem :option="option"
+							class="vs__selected selected"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
 					</template>
-					<template #option="{ option }">
+					<template #option="option">
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon :no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
-				</Multiselect>
+				</NcSelect>
 				<button :title="t('mail','Toggle recipients list mode')"
 					:class="{'active':!autoLimit}"
 					@click.prevent="toggleViewMode">
@@ -81,40 +87,49 @@
 				{{ t('mail', 'Cc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="cc"
-					v-model="selectCc"
-					:class="{'opened': !autoLimit}"
-					:options="selectableRecipients"
+				<NcSelect id="cc"
+					ref="toLabel"
+					:value="selectCc"
+					:class="{'opened': !autoLimit,'select':true}"
+					:options="selectableRecipients.filter(reciptient=>!selectCc.some(cc=>cc.email===reciptient.email))"
+					:no-wrap="false"
+					:filter-by="(option, label, search)=>filterOption(option, label, search,'cc')"
 					:taggable="true"
 					label="label"
-					track-by="email"
+					:close-on-select="true"
+
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
-					:clear-on-select="true"
-					:show-no-options="false"
-					:preserve-search="true"
+					:aria-label-combobox="t('mail', 'Contact or email address …')"
+					:clear-search-on-select="true"
 					:loading="loadingIndicatorCc"
-					:auto-limit="autoLimit"
-					:hide-selected="true"
-					:options-limit="30"
+					:reducible="true"
+					:clearable="true"
 					@input="saveDraftDebounced"
-					@tag="onNewCcAddr"
-					@search-change="onAutocomplete($event, 'cc')">
-					<template #tag="{ option }">
+					@option:selecting="onNewCcAddr"
+					@search="onAutocomplete($event, 'cc')">
+					<template #search="{ events, attributes }">
+						<input :placeholder="t('mail', 'Contact or email address …')"
+							type="search"
+							class="vs__search"
+							v-bind="attributes"
+							v-on="events">
+					</template>
+					<template #selected-option-container="{option}">
 						<RecipientListItem :option="option"
+							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
 					</template>
-					<template #option="{ option }">
+					<template #option="option">
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon :no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
-					<span slot="noOptions">{{ t('mail', '') }}</span>
-				</Multiselect>
+				</NcSelect>
 			</div>
 		</div>
 		<div v-if="showBCC" class="composer-fields">
@@ -122,39 +137,49 @@
 				{{ t('mail', 'Bcc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="bcc"
-					v-model="selectBcc"
-					:class="{'opened': !autoLimit}"
-					:options="selectableRecipients"
+				<NcSelect id="bcc"
+					ref="toLabel"
+					:value="selectBcc"
+					:class="{'opened': !autoLimit,'select':true}"
+					:no-wrap="false"
+					:filter-by="(option, label, search)=>filterOption(option, label, search,'bcc')"
+					:options="selectableRecipients.filter(reciptient=>!selectBcc.some(bcc=>bcc.email===reciptient.email))"
 					:taggable="true"
 					label="label"
-					track-by="email"
+					:close-on-select="true"
+
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
-					:show-no-options="false"
-					:clear-on-select="true"
-					:preserve-search="true"
+					:aria-label-combobox="t('mail', 'Contact or email address …')"
+					:clear-search-on-select="true"
+					:reset-on-options-change="true"
 					:loading="loadingIndicatorBcc"
-					:hide-selected="true"
-					:options-limit="30"
+					:clearable="true"
 					@input="saveDraftDebounced"
-					@tag="onNewBccAddr"
-					@search-change="onAutocomplete($event, 'bcc')">
-					<template #tag="{ option }">
+					@option:selecting="onNewBccAddr"
+					@search="onAutocomplete($event, 'bcc')">
+					<template #search="{ events, attributes }">
+						<input :placeholder="t('mail', 'Contact or email address …')"
+							type="search"
+							class="vs__search"
+							v-bind="attributes"
+							v-on="events">
+					</template>
+					<template #selected-option-container="{option}">
 						<RecipientListItem :option="option"
+							class="vs__selected"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
 					</template>
-					<template #option="{ option }">
+					<template #option="option">
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon :no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
-					<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
-				</Multiselect>
+				</NcSelect>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -410,7 +435,7 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as SelectVue, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcSelect, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
@@ -471,8 +496,7 @@ export default {
 		IconFolder,
 		IconPublic,
 		IconLinkPicker,
-		Multiselect,
-		SelectVue,
+		NcSelect,
 		TextEditor,
 		ListItemIcon,
 		RecipientListItem,
@@ -692,9 +716,9 @@ export default {
 			return this.$store.getters.getPreference('attachment-size-limit')
 		},
 		selectableRecipients() {
-			return this.newRecipients
+			return uniqBy('email')(this.newRecipients
 				.concat(this.autocompleteRecipients)
-				.map((recipient) => ({ ...recipient, label: recipient.label || recipient.email }))
+				.map((recipient) => ({ ...recipient, label: recipient.label || recipient.email })))
 		},
 		isForward() {
 			return this.forwardFrom !== undefined
@@ -950,6 +974,19 @@ export default {
 		closePicker() {
 			this.isPickerOpen = false
 		},
+		filterOption(option, label, search, list) {
+			let select = []
+			if (list === 'to') {
+				select = this.selectTo
+			} else if (list === 'cc') {
+				select = this.selectCc
+
+			} else if (list === 'bcc') {
+				select = this.selectBcc
+			}
+
+			return (label || '').toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) > -1 && !select.some((item) => item.email === option.email)
+		},
 		setAlias() {
 			const previous = this.selectedAlias
 			if (this.fromAccount && this.fromAlias) {
@@ -1180,15 +1217,16 @@ export default {
 			this.onNewAddr(addr, this.selectBcc)
 		},
 		onNewAddr(addr, list) {
-			// Autocomplete search results are passed as objects
+			if (list.some((recipient) => recipient.email === addr)) {
+				return
+			}
 			let res = addr
-			if (typeof addr === 'string') {
+			if (!this.allRecipients.some((recipient) => recipient.email === addr)) {
 				res = {
-					label: addr, // TODO: parse if possible
-					email: addr, // TODO: parse if possible
+					...addr,
+					email: addr.label,
 				}
 			}
-
 			this.newRecipients.push(res)
 			list.push(res)
 			this.saveDraftDebounced()
@@ -1346,24 +1384,14 @@ export default {
 	position: sticky;
 	background: linear-gradient(rgba(255, 255, 255, 0), var(--color-main-background-translucent) 50%);
 }
-
 .composer-fields {
+	flex-wrap: nowrap;
 	display: flex;
 	border-top: 1px solid var(--color-border);
 	align-items: flex-start;
 
 	label {
 		padding: 11px 20px 11px 0;
-	}
-
-	:deep(.multiselect--multiple .multiselect__tags) {
-		display: grid;
-		grid-template-columns: calc(100% - 18px) 18px 100%;
-
-		.multiselect__limit {
-			margin-right: 0;
-			margin-left: 8px
-		}
 	}
 
 	:deep(.multiselect__content-wrapper) {
@@ -1373,17 +1401,6 @@ export default {
 		& li > span::before {
 			display: none
 		}
-	}
-
-	:deep(.multiselect__input) {
-		position: relative !important;
-		top: 0;
-		grid-column-start: 1;
-		grid-column-end: 3;
-	}
-
-	:deep(.multiselect--active input:focus-visible) {
-		box-shadow: none;
 	}
 
 	:deep(.multiselect__tags) {
@@ -1428,7 +1445,7 @@ export default {
 	.composer-fields--custom {
 		display: flex;
 		align-items: flex-start;
-		flex-wrap: wrap;
+		justify-content: space-between;
 		padding-top: 2px;
 		width: calc(100% - 120px);
 
@@ -1445,13 +1462,16 @@ export default {
 			opacity: 1;
 		}
 
-		.multiselect {
+		&.__select {
 			width: calc(100% - 150px);
+			margin-right: 12px;
 		}
-	}
-
-	.multiselect {
-		margin-right: 12px;
+		.vs__search{
+			width: 100%;
+		}
+		.v-select{
+			flex-grow: 0.95;
+		}
 	}
 
 	.subject {
@@ -1605,6 +1625,9 @@ export default {
 
 .composer-actions-draft-status {
 	padding-left: 10px;
+}
+:deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
+	width: 100%;
 }
 
 @media only screen and (max-width: 580px) {

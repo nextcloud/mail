@@ -156,6 +156,7 @@ export default {
 	}
 
 	&__actions {
+		display: flex;
 		flex-shrink: 0;
 	}
 }

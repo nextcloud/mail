@@ -103,7 +103,7 @@
 								:size="20"
 								fill-color="red" />
 						</template>
-						<NcActionText class="smime-text" :title="smimeHeading">
+						<NcActionText class="smime-text" :name="smimeHeading">
 							{{ smimeMessage }}
 						</NcActionText>
 						<!-- TODO: display information about signer and/or CA certificate -->
@@ -112,7 +112,7 @@
 						<NcActionButton v-if="inlineMenuSize >= 1 || !moreActionsOpen"
 							:class="{ primary: expanded}"
 							:aria-label="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
-							:title="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
+							:name="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
 							type="tertiary-no-background"
 							@click="onReply">
 							<template #icon>
@@ -126,7 +126,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
-							:title="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
+							:name="envelope.flags.flagged ? t('mail', 'Mark as unfavorite') : t('mail', 'Mark as favorite')"
 							:close-after-click="true"
 							@click.prevent="onToggleFlagged">
 							<template #icon>
@@ -140,7 +140,7 @@
 							type="tertiary-no-background"
 							class="action--primary"
 							:aria-label="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
-							:title="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
+							:name="envelope.flags.seen ? t('mail', 'Mark as unread') : t('mail', 'Mark as read')"
 							:close-after-click="true"
 							@click.prevent="onToggleSeen">
 							<template #icon>
@@ -152,7 +152,7 @@
 						</NcActionButton>
 						<NcActionButton v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
 							:close-after-click="true"
-							:title="t('mail', 'Archive message')"
+							:name="t('mail', 'Archive message')"
 							:disabled="disableArchiveButton"
 							:aria-label="t('mail', 'Archive message')"
 							type="tertiary-no-background"
@@ -164,7 +164,7 @@
 						</NcActionButton>
 						<NcActionButton v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
 							:close-after-click="true"
-							:title="t('mail', 'Delete message')"
+							:name="t('mail', 'Delete message')"
 							:aria-label="t('mail', 'Delete message')"
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
@@ -1020,7 +1020,7 @@ export default {
 		// same as padding-right on action-text styling
 		padding-left: 14px;
 	}
-	:deep(.action-button__title) {
+	:deep(.action-button__name) {
 		font-weight: normal;
 		display: inline;
 		align-items: center;

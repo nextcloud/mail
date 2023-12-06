@@ -30,14 +30,15 @@
 				{{ t("mail", "Place signature above quoted text") }}
 			</label>
 		</div>
-		<Multiselect v-if="identities.length > 1"
+		<NcSelect v-if="identities.length > 1"
 			:allow-empty="false"
 			:options="identities"
+			:aria-label-combobox="t('mail','Select an alias')"
 			:searchable="false"
 			:value="identity"
 			label="label"
 			track-by="id"
-			@select="changeIdentity" />
+			@option:selected="changeIdentity" />
 		<TextEditor v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
@@ -72,14 +73,14 @@ import TextEditor from './TextEditor.vue'
 import { detect, toHtml } from '../util/text.js'
 import mitt from 'mitt'
 
-import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcSelect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
-		Multiselect,
+		NcSelect,
 		ButtonVue,
 		IconLoading,
 		IconCheck,

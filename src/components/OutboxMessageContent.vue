@@ -1,5 +1,5 @@
 <template>
-	<NcEmptyContent :title="t('mail', 'Pending or not sent messages will show up here')">
+	<NcEmptyContent :name="t('mail', 'Pending or not sent messages will show up here')" class="empty-content">
 		<template #icon>
 			<IconMail :size="65" />
 		</template>
@@ -20,5 +20,8 @@ export default {
 </script>
 
 <style scoped>
-
+.empty-content{
+	height: 100%;
+	display: flex;
+}
 </style>

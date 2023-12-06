@@ -21,11 +21,11 @@
   -->
 
 <template>
-	<BaseAvatar v-if="loading || !hasAvatar"
+	<NcAvatar v-if="loading || !hasAvatar"
 		:display-name="displayName"
 		:size="size"
 		:disable-tooltip="disableTooltip" />
-	<BaseAvatar v-else
+	<NcAvatar v-else
 		:display-name="displayName"
 		:url="avatarUrl"
 		:size="size"
@@ -33,14 +33,14 @@
 </template>
 
 <script>
-import BaseAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
+import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 import logger from '../logger.js'
 
 export default {
 	name: 'Avatar',
 	components: {
-		BaseAvatar,
+		NcAvatar,
 	},
 	props: {
 		displayName: {

@@ -55,7 +55,7 @@
 				</table>
 				<NcEmptyContent v-if="certificates.length === 0"
 					class="certificate__empty"
-					:title="t('mail', 'No certificate imported yet')" />
+					:name="t('mail', 'No certificate imported yet')" />
 				<div class="certificate-modal__list__actions">
 					<NcButton type="primary"
 						:aria-label="t('mail', 'Import certificate')"
@@ -249,6 +249,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.empty-content{
+	height: 100%;
+	display: flex;
+}
 .certificate-modal {
 	padding: 20px;
 
