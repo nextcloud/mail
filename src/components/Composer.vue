@@ -34,17 +34,17 @@
 				{{ t('mail', 'To') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="to"
+				<Select id="to"
 					ref="toLabel"
 					v-model="selectTo"
-					:class="{'opened': !autoLimit}"
+					:class="{'opened': !autoLimit, 'composer-fields--custom__select':true}"
 					:options="selectableRecipients"
 					:taggable="true"
 					label="label"
 					track-by="email"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
-					:clear-on-select="true"
+					:clear-search-on-select="true"
 					:close-on-select="false"
 					:show-no-options="false"
 					:preserve-search="true"
@@ -53,9 +53,9 @@
 					:auto-limit="autoLimit"
 					:options-limit="30"
 					@input="saveDraftDebounced"
-					@tag="onNewToAddr"
-					@search-change="onAutocomplete($event, 'to')">
-					<template #tag="{ option }">
+					@option:created="onNewToAddr"
+					@search="onAutocomplete($event, 'to')">
+					<template #selected-option="{ option }">
 						<RecipientListItem
 							:option="option"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
@@ -70,7 +70,7 @@
 								:avatar-size="24" />
 						</div>
 					</template>
-				</Multiselect>
+				</Select>
 				<button
 					:name="t('mail','Toggle recipients list mode')"
 					:class="{'active':!autoLimit}"
@@ -85,9 +85,9 @@
 				{{ t('mail', 'Cc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="cc"
+				<Select id="cc"
 					v-model="selectCc"
-					:class="{'opened': !autoLimit}"
+					:class="{'opened': !autoLimit, 'composer-fields--custom__select':true}"
 					:options="selectableRecipients"
 					:taggable="true"
 					label="label"
@@ -103,8 +103,8 @@
 					:options-limit="30"
 					@input="saveDraftDebounced"
 					@tag="onNewCcAddr"
-					@search-change="onAutocomplete($event, 'cc')">
-					<template #tag="{ option }">
+					@search="onAutocomplete($event, 'cc')">
+					<template #selected-option="{ option }">
 						<RecipientListItem
 							:option="option"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
@@ -119,8 +119,8 @@
 								:avatar-size="24" />
 						</div>
 					</template>
-					<span slot="noOptions">{{ t('mail', '') }}</span>
-				</Multiselect>
+					<span slot="no-options">{{ t('mail', '') }}</span>
+				</Select>
 			</div>
 		</div>
 		<div v-if="showBCC" class="composer-fields">
@@ -130,7 +130,7 @@
 			<div class="composer-fields--custom">
 				<Select id="bcc"
 					v-model="selectBcc"
-					:class="{'opened': !autoLimit}"
+					:class="{'opened': !autoLimit, 'composer-fields--custom__select':true}"
 					:options="selectableRecipients"
 					:taggable="true"
 					label="label"
@@ -488,7 +488,6 @@ export default {
 		IconFolder,
 		IconPublic,
 		IconLinkPicker,
-		Multiselect,
 		Select,
 		TextEditor,
 		ListItemIcon,
@@ -1454,13 +1453,10 @@ export default {
 			opacity: 1;
 		}
 
-		.multiselect {
+		&.__select {
 			width: calc(100% - 150px);
+			margin-right: 12px;
 		}
-	}
-
-	.multiselect {
-		margin-right: 12px;
 	}
 
 	.subject {

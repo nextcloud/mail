@@ -52,7 +52,7 @@
 				</p>
 			</div>
 		</template>
-		<template #subtitle>
+		<template #subname>
 			<div class="envelope__subtitle">
 				<Reply v-if="data.flags.answered"
 					class="seen-icon-style"

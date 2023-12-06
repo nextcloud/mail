@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcSelect as Select } from '@nextcloud/vue'
+import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect as Select } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import logger from '../logger.js'
@@ -77,12 +77,12 @@ import { S } from 'vue-tabs-component'
 export default {
 	name: 'TaskModal',
 	components: {
-    CalendarPickerOption,
-    DatetimePicker,
-    Modal,
-    Select,
-    S
-},
+		CalendarPickerOption,
+		DatetimePicker,
+		Modal,
+		Select,
+		S,
+	},
 	props: {
 		envelope: {
 			type: Object,

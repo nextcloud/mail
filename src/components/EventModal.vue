@@ -58,7 +58,7 @@
 
 <script>
 import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
-import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcSelect as Select } from '@nextcloud/vue'
+import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect as Select } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
