@@ -34,8 +34,7 @@
 
 		<div class="composer-session__actions">
 			<NcActions>
-				<NcActionButton
-					:aria-label="t('mail', 'Expand composer')"
+				<NcActionButton :aria-label="t('mail', 'Expand composer')"
 					:disabled="disabled"
 					@click.stop="onShowComposer">
 					<template #icon>

@@ -26,8 +26,7 @@
 		:aria-label="t('mail','Message body')">
 		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
-			<LockOffIcon
-				:size="20"
+			<LockOffIcon :size="20"
 				fill-color="red"
 				class="invalid-signature-warning__icon" />
 			<p>
@@ -38,8 +37,7 @@
 			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
 		<div v-if="message.scheduling.length > 0" class="message-imip">
-			<Imip
-				v-for="scheduling in message.scheduling"
+			<Imip v-for="scheduling in message.scheduling"
 				:key="scheduling.id"
 				:scheduling="scheduling" />
 		</div>

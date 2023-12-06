@@ -1,6 +1,5 @@
 <template>
-	<Modal
-		size="large"
+	<Modal size="large"
 		:title="t('mail', 'Keyboard shortcut')"
 		@close="$emit('close')">
 		<h2>{{ t('mail', 'Keyboard shortcuts') }}</h2>

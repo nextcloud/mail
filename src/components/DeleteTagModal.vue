@@ -28,7 +28,7 @@
 </template>
 <script>
 import { showSuccess, showInfo } from '@nextcloud/dialogs'
-import ConfirmationModal from './ConfirmationModal'
+import ConfirmationModal from './ConfirmationModal.vue'
 export default {
 	name: 'DeleteTagModal',
 	components: {

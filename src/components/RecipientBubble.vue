@@ -29,8 +29,7 @@
 			<p class="contact-popover__email">
 				{{ email }}
 			</p>
-			<ButtonVue
-				v-if="contactsWithEmail && contactsWithEmail.length > 0"
+			<ButtonVue v-if="contactsWithEmail && contactsWithEmail.length > 0"
 				type="tertiary-no-background"
 				:aria-label="t('mail', 'Contacts with this address')"
 				class="contact-existing">
@@ -40,8 +39,7 @@
 				{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
 			</ButtonVue>
 			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
-				<ButtonVue
-					:aria-label="t('mail', 'Reply')"
+				<ButtonVue :aria-label="t('mail', 'Reply')"
 					type="tertiary-no-background"
 					@click="onClickReply">
 					<template #icon>
@@ -49,8 +47,7 @@
 					</template>
 					{{ t('mail', 'Reply') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'Add to Contact')"
 					@click="selection = ContactSelectionStateEnum.existing">
 					<template #icon>
@@ -58,8 +55,7 @@
 					</template>
 					{{ t('mail', 'Add to Contact') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'New Contact')"
 					@click="selection = ContactSelectionStateEnum.new">
 					<template #icon>
@@ -67,8 +63,7 @@
 					</template>
 					{{ t('mail', 'New Contact') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'Copy to clipboard')"
 					@click="onClickCopyToClipboard">
 					<template #icon>
@@ -78,8 +73,7 @@
 				</ButtonVue>
 			</div>
 			<div v-else class="contact-input-wrapper">
-				<Select
-					v-if="selection === ContactSelectionStateEnum.existing"
+				<NcSelect v-if="selection === ContactSelectionStateEnum.existing"
 					id="contact-selection"
 					ref="contact-selection-label"
 					v-model="selectedContact"
@@ -97,8 +91,7 @@
 				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
 			</div>
 			<div v-if="selection !== ContactSelectionStateEnum.select">
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'Go back')"
 					@click="selection = ContactSelectionStateEnum.select">
 					<template #icon>
@@ -107,8 +100,7 @@
 					{{ t('mail', 'Go back') }}
 				</ButtonVue>
 
-				<ButtonVue
-					v-close-popover
+				<ButtonVue v-close-popover
 					:disabled="addButtonDisabled"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Add')"
@@ -126,7 +118,7 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 
-import { NcUserBubble as UserBubble, NcPopover as Popover, NcSelect as Select, NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcUserBubble as UserBubble, NcPopover as Popover, NcSelect, NcButton as ButtonVue } from '@nextcloud/vue'
 
 import IconReply from 'vue-material-design-icons/Reply.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
@@ -151,7 +143,7 @@ export default {
 		ButtonVue,
 		UserBubble,
 		Popover,
-		Select,
+		NcSelect,
 		IconReply,
 		IconUser,
 		IconAdd,

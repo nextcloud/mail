@@ -21,19 +21,16 @@
   -->
 
 <template>
-	<AppNavigationItem
-		id="navigation-outbox"
+	<AppNavigationItem id="navigation-outbox"
 		key="navigation-outbox"
 		:name="t('mail', 'Outbox')"
 		:to="to">
 		<template #icon>
-			<IconOutbox
-				class="outbox-opacity-icon"
+			<IconOutbox class="outbox-opacity-icon"
 				:size="20" />
 		</template>
 		<template #counter>
-			<CounterBubble
-				v-if="count"
+			<CounterBubble v-if="count"
 				class="navigation-outbox__unread-counter">
 				{{ count }}
 			</CounterBubble>

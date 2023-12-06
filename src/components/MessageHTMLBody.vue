@@ -4,8 +4,7 @@
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content" style="color: #000000">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 			<Actions type="tertiary" :menu-title="t('mail', 'Show images')">
-				<ActionButton
-					@click="displayIframe">
+				<ActionButton @click="displayIframe">
 					<template #icon>
 						<IconImage :size="20" />
 					</template>

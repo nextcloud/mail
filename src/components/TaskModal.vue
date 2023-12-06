@@ -26,34 +26,29 @@
 			<label for="note">Description:</label>
 			<textarea id="note" v-model="note" rows="7" />
 			<div class="all-day">
-				<input
-					id="allDay"
+				<input id="allDay"
 					v-model="isAllDay"
 					type="checkbox"
 					class="checkbox">
-				<label
-					for="allDay">
+				<label for="allDay">
 					{{ t('mail', 'All day') }}
 				</label>
 			</div>
-			<Select
-				v-model="selectedCalendar"
+			<NcSelect v-model="selectedCalendar"
 				label="displayname"
 				track-by="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:allow-empty="false"
 				:options="calendars">
 				<template #option="{option}">
-					<CalendarPickerOption
-						v-bind="option" />
+					<CalendarPickerOption v-bind="option" />
 				</template>
 				<template #singleLabel="{option}">
-					<CalendarPickerOption
-						:display-icon="option.displayIcon"
+					<CalendarPickerOption :display-icon="option.displayIcon"
 						v-bind="option" />
 				</template>
 				<span slot="noOptions">{{ t('mail', 'No calendars with task list support') }}</span>
-			</Select>
+			</NcSelect>
 			<br>
 			<button class="primary" :disabled="disabled" @click="onSave">
 				{{ t('mail', 'Create') }}
@@ -63,7 +58,7 @@
 </template>
 
 <script>
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect as Select } from '@nextcloud/vue'
+import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import logger from '../logger.js'
@@ -72,7 +67,6 @@ import Task from '../task.js'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
-import { S } from 'vue-tabs-component'
 
 export default {
 	name: 'TaskModal',
@@ -80,8 +74,7 @@ export default {
 		CalendarPickerOption,
 		DatetimePicker,
 		Modal,
-		Select,
-		S,
+		NcSelect,
 	},
 	props: {
 		envelope: {

@@ -1,12 +1,10 @@
 <template>
 	<div class="multiselect__tag multiselect__tag--recipient" :title="option.email">
-		<ListItemIcon
-			:no-margin="true"
+		<ListItemIcon :no-margin="true"
 			:name="option.label"
 			:url="option.photo"
 			:avatar-size="24" />
-		<Close
-			class="delete-recipient"
+		<Close class="delete-recipient"
 			:size="20"
 			@click.prevent="removeRecipient(option)" />
 	</div>

@@ -9,8 +9,7 @@
 			{{ prioritySettingsText }}
 		</p>
 		<p v-else class="app-settings">
-			<input
-				id="priority-inbox-toggle"
+			<input id="priority-inbox-toggle"
 				class="checkbox"
 				type="checkbox"
 				:checked="searchPriorityBody"
@@ -23,8 +22,7 @@
 			{{ optOutSettingsText }}
 		</p>
 		<p v-else class="app-settings">
-			<input
-				id="data-collection-toggle"
+			<input id="data-collection-toggle"
 				class="checkbox"
 				type="checkbox"
 				:checked="useDataCollection"
@@ -37,8 +35,7 @@
 			{{ autoTaggingText }}
 		</p>
 		<p v-else class="app-settings">
-			<input
-				id="auto-tagging-toggle"
+			<input id="auto-tagging-toggle"
 				class="checkbox"
 				type="checkbox"
 				:checked="useAutoTagging"
@@ -51,8 +48,7 @@
 			{{ t('mail', 'Use Gravatar and favicon avatars') }}
 		</p>
 		<p v-else class="app-settings">
-			<input
-				id="gravatar-enabled"
+			<input id="gravatar-enabled"
 				class="checkbox"
 				type="checkbox"
 				:checked="useExternalAvatars"
@@ -65,8 +61,7 @@
 			{{ replySettingsText }}
 		</p>
 		<p v-else class="app-settings">
-			<input
-				id="bottom-reply-enabled"
+			<input id="bottom-reply-enabled"
 				class="checkbox"
 				type="checkbox"
 				:checked="useBottomReplies"
@@ -75,8 +70,7 @@
 		</p>
 
 		<p>
-			<ButtonVue
-				type="secondary"
+			<ButtonVue type="secondary"
 				class="app-settings-button"
 				:aria-label="t('mail', 'Register as application for mail links')"
 				@click="registerProtocolHandler">
@@ -87,8 +81,7 @@
 			</ButtonVue>
 		</p>
 
-		<ButtonVue
-			class="app-settings-button"
+		<ButtonVue class="app-settings-button"
 			type="secondary"
 			:aria-label="t('mail', 'Show keyboard shortcuts')"
 			@click.prevent.stop="showKeyboardShortcuts"
@@ -100,8 +93,7 @@
 		</ButtonVue>
 		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
 
-		<ButtonVue
-			class="app-settings-button"
+		<ButtonVue class="app-settings-button"
 			type="secondary"
 			:aria-label="t('mail', 'Manage S/MIME certificates')"
 			@click.prevent.stop="displaySmimeCertificateModal = true">
@@ -116,8 +108,7 @@
 			Sorting
 		</h2>
 		<div class="sorting">
-			<CheckboxRadioSwitch
-				class="sorting__switch"
+			<CheckboxRadioSwitch class="sorting__switch"
 				:checked="sortOrder"
 				value="newest"
 				name="order_radio"
@@ -125,8 +116,7 @@
 				@update:checked="onSortByDate">
 				{{ t('mail', 'Newest') }}
 			</CheckboxRadioSwitch>
-			<CheckboxRadioSwitch
-				class="sorting__switch"
+			<CheckboxRadioSwitch class="sorting__switch"
 				:checked="sortOrder"
 				value="oldest"
 				name="order_radio"
@@ -139,8 +129,7 @@
 		<p class="mailvelope-section">
 			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
 		</p>
-		<a
-			href="https://www.mailvelope.com/"
+		<a href="https://www.mailvelope.com/"
 			target="_blank"
 			rel="noopener noreferrer">
 			{{ t('mail', 'Install Mailvelope browser extension here') }}

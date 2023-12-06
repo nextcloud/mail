@@ -1,6 +1,5 @@
 <template>
-	<Treeselect
-		ref="Treeselect"
+	<Treeselect ref="Treeselect"
 		v-model="selected"
 		:options="mailboxes"
 		:multiple="false"

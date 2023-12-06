@@ -22,8 +22,7 @@
 <template>
 	<div class="section">
 		<div>
-			<input
-				id="signature-above-quote-toggle"
+			<input id="signature-above-quote-toggle"
 				v-model="signatureAboveQuote"
 				type="checkbox"
 				class="checkbox">
@@ -31,8 +30,7 @@
 				{{ t("mail", "Place signature above quoted text") }}
 			</label>
 		</div>
-		<Select
-			v-if="identities.length > 1"
+		<NcSelect v-if="identities.length > 1"
 			:allow-empty="false"
 			:options="identities"
 			:searchable="false"
@@ -40,8 +38,7 @@
 			label="label"
 			track-by="id"
 			@option:selected="changeIdentity" />
-		<TextEditor
-			v-model="signature"
+		<TextEditor v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
 			:bus="bus"
@@ -49,8 +46,7 @@
 		<p v-if="isLargeSignature" class="warning-large-signature">
 			{{ t('mail', 'Your signature is larger than 2 MB. This may affect the performance of your editor.') }}
 		</p>
-		<ButtonVue
-			type="primary"
+		<ButtonVue type="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save signature')"
 			@click="saveSignature">
@@ -76,14 +72,14 @@ import TextEditor from './TextEditor.vue'
 import { detect, toHtml } from '../util/text.js'
 import Vue from 'vue'
 
-import { NcSelect as Select, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcSelect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
-		Select,
+		NcSelect,
 		ButtonVue,
 		IconLoading,
 		IconCheck,

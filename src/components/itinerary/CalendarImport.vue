@@ -24,8 +24,7 @@
 		<template #icon>
 			<IconAdd :size="20" />
 		</template>
-		<ActionButton
-			v-for="(calendar, idx) in cals"
+		<ActionButton v-for="(calendar, idx) in cals"
 			:key="idx"
 			@click="onImport(calendar)">
 			<template #icon>

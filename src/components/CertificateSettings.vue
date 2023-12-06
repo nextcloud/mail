@@ -22,31 +22,28 @@
 
 <template>
 	<div>
-		<Select
-			:options="aliases"
+		<NcSelect :options="aliases"
 			:value="alias"
 			:placeholder="t('mail', 'Select an alias')"
 			label="name"
 			@select="handleAlias" />
-		<Select
-			v-if="alias !== null"
+		<NcSelect v-if="alias !== null"
 			v-model="savedCertificate"
 			:options="smimeCertOptions"
 			:searchable="false"
 			label="label"
 			@select="selectCertificate" />
-		<Button
-			type="primary"
+		<NcButton type="primary"
 			:disabled="certificate === null"
 			:aria-label="t('mail', 'Update Certificate')"
 			@click="updateSmimeCertificate">
 			{{ t('mail', 'Update Certificate') }}
-		</Button>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import { NcSelect as Select, NcButton as Button } from '@nextcloud/vue'
+import { NcSelect, NcButton } from '@nextcloud/vue'
 import { compareSmimeCertificates } from '../util/smime.js'
 import { mapGetters } from 'vuex'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -56,8 +53,8 @@ import moment from '@nextcloud/moment'
 export default {
 	name: 'CertificateSettings',
 	components: {
-		Select,
-		Button,
+		NcSelect,
+		NcButton,
 	},
 	props: {
 		account: {
@@ -148,7 +145,7 @@ export default {
 				}).catch((error) => {
 					Logger.error('could not update account Smime ceritificate', { error })
 					showError(t('mail', 'Could not update certificate'))
-				}
+				},
 				)
 			} else {
 				await this.$store.dispatch('updateAlias', {
@@ -162,7 +159,7 @@ export default {
 				}).catch((error) => {
 					Logger.error('could not update alias Smime ceritificate', { error })
 					showError(t('mail', 'Could not update certificate'))
-				}
+				},
 				)
 			}
 

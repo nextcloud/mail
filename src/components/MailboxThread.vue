@@ -6,8 +6,7 @@
 				:mailbox="mailbox"
 				:account-id="account.accountId"
 				@search-changed="onUpdateSearchQuery" />
-			<AppContentList
-				v-infinite-scroll="onScroll"
+			<AppContentList v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
 				class="envelope-list"
 				infinite-scroll-immediate-check="false"
@@ -17,8 +16,7 @@
 				role="heading"
 				:aria-level="2"
 				@shortkey.native="onShortcut">
-				<Mailbox
-					v-if="!mailbox.isPriorityInbox"
+				<Mailbox v-if="!mailbox.isPriorityInbox"
 					:account="account"
 					:mailbox="mailbox"
 					:search-query="query"
@@ -54,8 +52,7 @@
 					<SectionTitle v-show="hasImportantEnvelopes"
 						class="app-content-list-item other"
 						:name="t('mail', 'Other')" />
-					<Mailbox
-						class="nameother"
+					<Mailbox class="nameother"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
 						:search-query="appendToSearch(priorityOtherQuery)"

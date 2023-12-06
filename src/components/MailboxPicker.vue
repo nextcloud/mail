@@ -8,8 +8,7 @@
 				<div @click.prevent="onClickHome">
 					<IconInbox :size="20" />
 				</div>
-				<div
-					v-for="(box, index) in mailboxCrumbs"
+				<div v-for="(box, index) in mailboxCrumbs"
 					:key="box.databaseId"
 					class="level">
 					<IconBreadcrumb :size="20" />
@@ -20,22 +19,17 @@
 			</span>
 			<div class="mailbox-list">
 				<ul v-if="filteredMailboxes.length > 0">
-					<li
-						v-for="box in filteredMailboxes "
+					<li v-for="box in filteredMailboxes "
 						:key="box.databaseId"
 						@click.prevent="onClickMailbox(box)">
 						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
-						<IconDraft
-							v-else-if="box.specialRole === 'drafts'"
+						<IconDraft v-else-if="box.specialRole === 'drafts'"
 							:size="20" />
-						<IconSent
-							v-else-if="box.specialRole === 'sent'"
+						<IconSent v-else-if="box.specialRole === 'sent'"
 							:size="20" />
-						<IconArchive
-							v-else-if="box.specialRole === 'archive'"
+						<IconArchive v-else-if="box.specialRole === 'archive'"
 							:size="20" />
-						<IconTrash
-							v-else-if="box.specialRole === 'trash'"
+						<IconTrash v-else-if="box.specialRole === 'trash'"
 							:size="20" />
 						<IconFolder v-else
 							:size="20" />
@@ -49,8 +43,7 @@
 				<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 			</div>
 			<div class="buttons">
-				<ButtonVue
-					type="primary"
+				<ButtonVue type="primary"
 					:disabled="loading || (!allowRoot && !selectedMailboxId)"
 					:aria-label="loading ? labelSelectLoading : labelSelect"
 					@click="onSelect">

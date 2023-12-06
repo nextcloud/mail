@@ -20,8 +20,7 @@
   -->
 
 <template>
-	<SettingsSection
-		:title="t( 'mail', 'Mail app')"
+	<SettingsSection :title="t( 'mail', 'Mail app')"
 		:description="t( 'mail', 'The mail app allows users to read mails on their IMAP accounts.')">
 		<p>
 			{{
@@ -107,24 +106,22 @@
 			}}
 		</h3>
 		<p>
-			<Button
-				class="config-button"
+			<NcButton class="config-button"
 				:aria-label="t('mail', 'Add new config')"
 				@click="addNew=true">
 				<template #icon>
 					<IconAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add new config') }}
-			</Button>
-			<Button
-				class="config-button"
+			</NcButton>
+			<NcButton class="config-button"
 				:aria-label="t('mail', 'Provision all accounts')"
 				@click="provisionAll">
 				<template #icon>
 					<IconSettings :size="20" />
 				</template>
 				{{ t('mail', 'Provision all accounts') }}
-			</Button>
+			</NcButton>
 			<ProvisioningSettings v-if="addNew"
 				:key="formKey"
 				:setting="preview"
@@ -141,8 +138,7 @@
 			<h3>{{ t('mail', 'Allow additional mail accounts') }}</h3>
 			<article>
 				<p>
-					<NcCheckboxRadioSwitch
-						:checked.sync="allowNewMailAccounts"
+					<NcCheckboxRadioSwitch :checked.sync="allowNewMailAccounts"
 						type="switch"
 						@update:checked="updateAllowNewMailAccounts">
 						{{ t('mail','Allow additional Mail accounts from User Settings') }}
@@ -155,8 +151,7 @@
 			<h3>{{ t('mail', 'Enable thread summary') }}</h3>
 			<article>
 				<p>
-					<NcCheckboxRadioSwitch
-						:checked.sync="enabledThreadSummary"
+					<NcCheckboxRadioSwitch :checked.sync="enabledThreadSummary"
 						type="switch"
 						@update:checked="updateEnabledThreadSummary">
 						{{ t('mail','Enable thread summaries') }}
@@ -260,7 +255,7 @@
 </template>
 
 <script>
-import Button from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import GmailAdminOauthSettings from './GmailAdminOauthSettings.vue'
 import logger from '../../logger.js'
 import MicrosoftAdminOauthSettings from './MicrosoftAdminOauthSettings.vue'
@@ -295,7 +290,7 @@ export default {
 		MicrosoftAdminOauthSettings,
 		ProvisioningSettings,
 		SettingsSection,
-		Button,
+		NcButton,
 		IconAdd,
 		IconSettings,
 		NcCheckboxRadioSwitch,

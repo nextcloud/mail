@@ -24,8 +24,7 @@
 			<ActionInput v-if="renameTagInput"
 				:value="tag.displayName"
 				@submit="renameTag(tag, $event)" />
-			<ActionText
-				v-if="showSaving">
+			<ActionText v-if="showSaving">
 				<template #icon>
 					<IconLoading :size="22" />
 				</template>
@@ -157,9 +156,9 @@ export default {
 			return this.envelopes.some(
 				(envelope) => (
 					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
-						tag => tag.imapLabel === imapLabel
+						tag => tag.imapLabel === imapLabel,
 					)
-				)
+				),
 			)
 		},
 		addTag(imapLabel) {

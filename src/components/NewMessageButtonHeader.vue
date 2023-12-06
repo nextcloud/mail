@@ -1,7 +1,6 @@
 <template>
 	<div class="header">
-		<Button
-			:aria-label="t('mail', 'New message')"
+		<NcButton :aria-label="t('mail', 'New message')"
 			type="primary"
 			class="new-message-button"
 			button-id="mail_new_message"
@@ -12,8 +11,8 @@
 				<IconAdd :size="20" />
 			</template>
 			{{ t('mail', 'New message') }}
-		</Button>
-		<Button v-if="currentMailbox"
+		</NcButton>
+		<NcButton v-if="currentMailbox"
 			:aria-label="t('mail', 'Refresh')"
 			type="tertiary-no-background"
 			class="refresh__button"
@@ -25,12 +24,12 @@
 				<IconLoading v-if="refreshing"
 					:size="20" />
 			</template>
-		</Button>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import { NcButton as Button } from '@nextcloud/vue'
+import { NcButton } from '@nextcloud/vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconRefresh from 'vue-material-design-icons/Refresh.vue'
 import IconLoading from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
@@ -39,7 +38,7 @@ import logger from '../logger.js'
 export default {
 	name: 'NewMessageButtonHeader',
 	components: {
-		Button,
+		NcButton,
 		IconAdd,
 		IconRefresh,
 		IconLoading,

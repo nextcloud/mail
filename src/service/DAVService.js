@@ -172,8 +172,8 @@ export const importCalendarEvent = curry((url, data) => {
 						headers: {
 							'Content-Type': 'text/calendar; charset=utf-8',
 						},
-					})
-				)
+					}),
+				),
 			)
 		}
 	})

@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<AppNavigationItem
-		v-if="visible"
+	<AppNavigationItem v-if="visible"
 		:id="id"
 		:key="id"
 		:menu-open.sync="menuOpen"
@@ -47,41 +46,34 @@
 			<template v-else>
 				<ActionText v-if="!account.isUnified" :name="t('mail', 'Quota')">
 					<template #icon>
-						<IconInfo
-							:size="20" />
+						<IconInfo :size="20" />
 					</template>
 					{{ quotaText }}
 				</ActionText>
-				<ActionButton
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click="showAccountSettings"
 					@shortkey="toggleAccountSettings">
 					<template #icon>
-						<IconSettings
-							:size="20" />
+						<IconSettings :size="20" />
 					</template>
 					{{ t('mail', 'Account settings') }}
 				</ActionButton>
-				<ActionCheckbox
-					:checked="account.showSubscribedOnly"
+				<ActionCheckbox :checked="account.showSubscribedOnly"
 					:disabled="savingShowOnlySubscribed"
 					@update:checked="changeShowSubscribedOnly">
 					{{ t('mail', 'Show only subscribed mailboxes') }}
 				</ActionCheckbox>
 				<ActionButton v-if="!editing" @click="openCreateMailbox">
 					<template #icon>
-						<IconFolderAdd
-							:size="20" />
+						<IconFolderAdd :size="20" />
 					</template>
 					{{ t('mail', 'Add mailbox') }}
 				</ActionButton>
-				<ActionInput
-					v-if="editing"
+				<ActionInput v-if="editing"
 					:value.sync="createMailboxName"
 					@submit.prevent.stop="createMailbox">
 					<template #icon>
-						<IconFolderAdd
-							:size="20" />
+						<IconFolderAdd :size="20" />
 					</template>
 					{{ t('mail', 'Mailbox name') }}
 				</ActionInput>
@@ -93,22 +85,19 @@
 				</ActionText>
 				<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
 					<template #icon>
-						<MenuUp
-							:size="20" />
+						<MenuUp :size="20" />
 					</template>
 					{{ t('mail', 'Move up') }}
 				</ActionButton>
 				<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
 					<template #icon>
-						<MenuDown
-							:size="20" />
+						<MenuDown :size="20" />
 					</template>
 					{{ t('mail', 'Move down') }}
 				</ActionButton>
 				<ActionButton v-if="!account.provisioningId" @click="removeAccount">
 					<template #icon>
-						<IconDelete
-							:size="20" />
+						<IconDelete :size="20" />
 					</template>
 					{{ t('mail', 'Remove account') }}
 				</ActionButton>
@@ -279,7 +268,7 @@ export default {
 							.catch((error) => logger.error('could not delete account', { error }))
 					}
 					this.loading.delete = false
-				}
+				},
 			)
 		},
 		changeAccountOrderUp() {

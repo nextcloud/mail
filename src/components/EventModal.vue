@@ -24,30 +24,25 @@
 					:timezone-id="endTimezoneId" />
 			</div>
 			<div class="all-day">
-				<input
-					id="allDay"
+				<input id="allDay"
 					v-model="isAllDay"
 					type="checkbox"
 					class="checkbox">
-				<label
-					for="allDay">
+				<label for="allDay">
 					{{ t('mail', 'All day') }}
 				</label>
 			</div>
-			<Select
-				v-model="selectedCalendar"
+			<NcSelect v-model="selectedCalendar"
 				label="displayname"
 				:options="calendars">
 				<template #option="{option}">
-					<CalendarPickerOption
-						v-bind="option" />
+					<CalendarPickerOption v-bind="option" />
 				</template>
 				<template #singleLabel="{option}">
-					<CalendarPickerOption
-						:display-icon="true"
+					<CalendarPickerOption :display-icon="true"
 						v-bind="option" />
 				</template>
-			</Select>
+			</NcSelect>
 			<br>
 			<button class="primary" @click="onSave">
 				{{ t('mail', 'Create') }}
@@ -58,7 +53,7 @@
 
 <script>
 import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
-import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect as Select } from '@nextcloud/vue'
+import { NcDateTimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
@@ -72,7 +67,7 @@ export default {
 		CalendarPickerOption,
 		DatetimePicker,
 		Modal,
-		Select,
+		NcSelect,
 	},
 	props: {
 		envelope: {
@@ -159,7 +154,7 @@ export default {
 
 				await importCalendarEvent(
 					this.selectedCalendar.url,
-					calendar.toICS()
+					calendar.toICS(),
 				)
 
 				showSuccess(t('mail', 'Event created'))

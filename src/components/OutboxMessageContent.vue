@@ -1,6 +1,5 @@
 <template>
-	<NcEmptyContent
-		:name="t('mail', 'Pending or not sent messages will show up here')">
+	<NcEmptyContent :name="t('mail', 'Pending or not sent messages will show up here')">
 		<template #icon>
 			<IconMail :size="65" />
 		</template>

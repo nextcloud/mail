@@ -22,8 +22,7 @@
 
 <template>
 	<div class="imip">
-		<div
-			v-if="isRequest"
+		<div v-if="isRequest"
 			class="imip__type">
 			<template v-if="existingEventFetched">
 				<span v-if="wasProcessed && existingParticipationStatus === ACCEPTED">
@@ -43,14 +42,12 @@
 				</span>
 			</template>
 		</div>
-		<div
-			v-else-if="isReply"
+		<div v-else-if="isReply"
 			class="imip__type">
 			<CalendarIcon :size="20" />
 			<span>{{ replyStatusMessage }}</span>
 		</div>
-		<div
-			v-else-if="isCancel"
+		<div v-else-if="isCancel"
 			class="imip__type">
 			<CloseIcon :size="20" fill-color="red" />
 			<span>{{ t('mail', 'This event was cancelled') }}</span>
@@ -61,13 +58,11 @@
 		<div v-if="showMoreOptions" class="imip__more-options">
 			<!-- Hide calendar picker if editing an existing event (e.g. an internal event is
 			 shared by default and thus existing even if the attendee didn't react yet). -->
-			<div
-				v-if="!isExistingEvent"
+			<div v-if="!isExistingEvent"
 				class="imip__more-options__row imip__more-options__row--calendar">
 				<label for="targetCalendarPickerId">{{ t('mail', 'Save to') }}</label>
 				<div class="imip__more-options__row--calendar__multiselect">
-					<Select
-						v-if="calendarsForPicker.length > 1"
+					<NcSelect v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
 						label="displayname"
@@ -78,7 +73,7 @@
 						<template #singleLabel="{option}">
 							<CalendarPickerOption :display-icon="true" v-bind="option" />
 						</template>
-					</Select>
+					</NcSelect>
 				</div>
 			</div>
 			<div class="imip__more-options__row imip__more-options__row--comment">
@@ -88,37 +83,32 @@
 		</div>
 
 		<template v-if="isRequest && userIsAttendee">
-			<div
-				v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
+			<div v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
 				class="imip__actions imip__actions--buttons">
-				<Button
-					type="secondary"
+				<NcButton type="secondary"
 					:loading="loading"
 					:aria-label="t('mail', 'Accept')"
 					@click="accept">
 					{{ t('mail', 'Accept') }}
-				</Button>
-				<Button
-					type="tertiary"
+				</NcButton>
+				<NcButton type="tertiary"
 					:loading="loading"
 					:aria-label="t('mail', 'Decline')"
 					@click="decline">
 					{{ t('mail', 'Decline') }}
-				</Button>
-				<Button
-					type="tertiary"
+				</NcButton>
+				<NcButton type="tertiary"
 					:loading="loading"
 					:aria-label="t('mail', 'Tentatively accept')"
 					@click="acceptTentatively">
 					{{ t('mail', 'Tentatively accept') }}
-				</Button>
-				<Button
-					v-if="!showMoreOptions"
+				</NcButton>
+				<NcButton v-if="!showMoreOptions"
 					type="tertiary"
 					:aria-label="t('mail', 'More options')"
 					@click="showMoreOptions = true">
 					{{ t('mail', 'More options') }}
-				</Button>
+				</NcButton>
 			</div>
 			<p v-else-if="!eventIsInFuture" class="imip__actions imip__actions--hint">
 				{{ t('mail', 'This event is in the past.') }}
@@ -129,7 +119,7 @@
 
 <script>
 import EventData from './imip/EventData.vue'
-import { NcButton as Button, NcSelect as Select } from '@nextcloud/vue'
+import { NcButton, NcSelect } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
@@ -181,11 +171,11 @@ export default {
 	name: 'Imip',
 	components: {
 		EventData,
-		Button,
+		NcButton,
 		CloseIcon,
 		CalendarIcon,
 		CalendarPickerOption,
-		Select,
+		NcSelect,
 	},
 	props: {
 		scheduling: {

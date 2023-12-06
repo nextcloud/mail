@@ -74,7 +74,7 @@ export default {
 				await trustSender(
 					sender.email,
 					sender.type,
-					false
+					false,
 				)
 			} catch (error) {
 				logger.error(`Could not remove trusted sender ${sender.email}`, {

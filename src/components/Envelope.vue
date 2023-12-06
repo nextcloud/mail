@@ -1,6 +1,5 @@
 <template>
-	<ListItem
-		v-draggable-envelope="{
+	<ListItem v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
 			databaseId: data.databaseId,
@@ -19,21 +18,18 @@
 		@click.ctrl.prevent="toggleSelected"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
 		<template #icon>
-			<Star
-				v-if="data.flags.flagged"
+			<Star v-if="data.flags.flagged"
 				fill-color="#f9cf3d"
 				:size="18"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-			<div
-				v-if="isImportant"
+			<div v-if="isImportant"
 				class="app-content-list-item-star svg icon-important"
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleImportant() : false"
 				v-html="importantSvg" />
-			<JunkIcon
-				v-if="data.flags.$junk"
+			<JunkIcon v-if="data.flags.$junk"
 				:size="18"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="data.flags.$junk ? 'true' : 'false'"
@@ -45,8 +41,7 @@
 						class="checkbox"
 						type="checkbox"
 						:checked="selected">
-					<label
-						:for="`select-checkbox-${data.uid}`"
+					<label :for="`select-checkbox-${data.uid}`"
 						@click.exact.prevent="toggleSelected"
 						@click.shift.prevent="onSelectMultiple" />
 				</p>
@@ -115,8 +110,7 @@
 					:close-after-click="true"
 					@click.prevent="onToggleImportant">
 					<template #icon>
-						<ImportantIcon
-							:size="24" />
+						<ImportantIcon :size="24" />
 					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -126,8 +120,7 @@
 			<template v-if="!moreActionsOpen && !snoozeOptions">
 				<ActionText>
 					<template #icon>
-						<ClockOutlineIcon
-							:size="20" />
+						<ClockOutlineIcon :size="20" />
 					</template>
 					{{
 						messageLongDate
@@ -138,19 +131,16 @@
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
 					<template #icon>
-						<AlertOctagonIcon
-							:size="20" />
+						<AlertOctagonIcon :size="20" />
 					</template>
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</ActionButton>
-				<ActionButton
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="toggleSelected">
 					<template #icon>
-						<CheckIcon
-							:size="20" />
+						<CheckIcon :size="20" />
 					</template>
 					{{
 						selected ? t('mail', 'Unselect') : t('mail', 'Select')
@@ -160,8 +150,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
 					<template #icon>
-						<TagIcon
-							:size="20" />
+						<TagIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
@@ -169,8 +158,7 @@
 					:close-after-click="false"
 					@click="showSnoozeOptions">
 					<template #icon>
-						<AlarmIcon
-							:title="t('mail', 'Snooze')"
+						<AlarmIcon :title="t('mail', 'Snooze')"
 							:size="20" />
 					</template>
 					{{
@@ -190,8 +178,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
-						<OpenInNewIcon
-							:size="20" />
+						<OpenInNewIcon :size="20" />
 					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
@@ -200,8 +187,7 @@
 					:disabled="disableArchiveButton"
 					@click.prevent="onArchive">
 					<template #icon>
-						<ArchiveIcon
-							:size="20" />
+						<ArchiveIcon :size="20" />
 					</template>
 					{{ t('mail', 'Archive thread') }}
 				</ActionButton>
@@ -209,27 +195,23 @@
 					:close-after-click="true"
 					@click.prevent="onDelete">
 					<template #icon>
-						<DeleteIcon
-							:size="20" />
+						<DeleteIcon :size="20" />
 					</template>
 					{{ t('mail', 'Delete thread') }}
 				</ActionButton>
 				<ActionButton :close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
-						<DotsHorizontalIcon
-							:size="20" />
+						<DotsHorizontalIcon :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
 			</template>
 			<template v-if="snoozeOptions">
-				<ActionButton
-					:close-after-click="false"
+				<ActionButton :close-after-click="false"
 					@click="snoozeOptions = false">
 					<template #icon>
-						<ChevronLeft
-							:size="20" />
+						<ChevronLeft :size="20" />
 					</template>
 					{{
 						t('mail', 'Back')
@@ -271,37 +253,32 @@
 				<ActionButton :close-after-click="false"
 					@click="moreActionsOpen=false">
 					<template #icon>
-						<ChevronLeft
-							:size="20" />
+						<ChevronLeft :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenEditAsNew">
 					<template #icon>
-						<PlusIcon
-							:size="20" />
+						<PlusIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit as new message') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
-						<IconCreateEvent
-							:size="20" />
+						<IconCreateEvent :size="20" />
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
-						<TaskIcon
-							:size="20" />
+						<TaskIcon :size="20" />
 					</template>
 					{{ t('mail', 'Create task') }}
 				</ActionButton>
-				<ActionLink
-					:close-after-click="true"
+				<ActionLink :close-after-click="true"
 					:href="exportMessageLink">
 					<template #icon>
 						<DownloadIcon :size="20" />
@@ -331,8 +308,7 @@
 			<TaskModal v-if="showTaskModal"
 				:envelope="data"
 				@close="showTaskModal = false" />
-			<TagModal
-				v-if="showTagModal"
+			<TagModal v-if="showTagModal"
 				:account="account"
 				:envelopes="[data]"
 				@close="onCloseTagModal" />
@@ -575,7 +551,7 @@ export default {
 		},
 		tags() {
 			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter(
-				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
+				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 		},
 		draggableLabel() {

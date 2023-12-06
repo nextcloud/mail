@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<ListItem
-		class="outbox-message"
+	<ListItem class="outbox-message"
 		:class="{ selected }"
 		:name="title"
 		:details="details"
@@ -34,18 +33,15 @@
 			{{ subjectForSubtitle }}
 		</template>
 		<template slot="actions">
-			<ActionButton
-				:close-after-click="true"
+			<ActionButton :close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
 				<template #icon>
-					<Send
-						:title="t('mail', 'Send now')"
+					<Send :title="t('mail', 'Send now')"
 						:size="20" />
 				</template>
 			</ActionButton>
-			<ActionButton
-				:close-after-click="true"
+			<ActionButton :close-after-click="true"
 				@click="deleteMessage">
 				<template #icon>
 					<IconDelete :size="20" />
