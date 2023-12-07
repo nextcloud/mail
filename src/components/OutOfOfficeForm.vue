@@ -70,7 +70,7 @@
 			<div class="form__multi-row">
 				<fieldset class="form__fieldset">
 					<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
-					<DatetimePicker
+					<DateTimePicker
 						id="ooo-first-day"
 						v-model="firstDay"
 						:disabled="!enabled" />
@@ -87,7 +87,7 @@
 							{{ t('mail', 'Last day (optional)') }}
 						</label>
 					</div>
-					<DatetimePicker
+					<DateTimePicker
 						id="ooo-last-day"
 						v-model="lastDay"
 						:disabled="!enabled || !enableLastDay" />
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { NcDatetimePicker as DatetimePicker, NcButton as Button } from '@nextcloud/vue'
+import { NcDateTimePicker as DateTimePicker, NcButton as Button } from '@nextcloud/vue'
 import TextEditor from './TextEditor.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import { html, plain, toHtml, toPlain } from '../util/text.js'
@@ -152,7 +152,7 @@ const OOO_FOLLOW_SYSTEM = 'system'
 export default {
 	name: 'OutOfOfficeForm',
 	components: {
-		DatetimePicker,
+		DateTimePicker,
 		TextEditor,
 		Button,
 		CheckIcon,

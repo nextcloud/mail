@@ -6,7 +6,7 @@
 				<input v-model="eventTitle" type="text">
 			</div>
 			<div class="dateTimePicker">
-				<DatetimePicker v-model="startDate"
+				<DateTimePicker v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
 					:minute-step="5"
@@ -14,7 +14,7 @@
 					:type="datePickerType"
 					:show-timezone-select="true"
 					:timezone-id="startTimezoneId" />
-				<DatetimePicker v-model="endDate"
+				<DateTimePicker v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
 					:minute-step="5"
@@ -60,7 +60,7 @@
 
 <script>
 import { createEvent, getTimezoneManager, DateTimeValue, TextProperty } from '@nextcloud/calendar-js'
-import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
+import { NcDateTimePicker as DateTimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
@@ -72,7 +72,7 @@ export default {
 	name: 'EventModal',
 	components: {
 		CalendarPickerOption,
-		DatetimePicker,
+		DateTimePicker,
 		Modal,
 		NcSelect,
 	},

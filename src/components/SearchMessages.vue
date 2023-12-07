@@ -63,7 +63,7 @@
 				</div>
 				<div class="modal-inner--field">
 					<label class="modal-inner--label" for="fromId">
-						{{ t("mail", "Date") }}
+						{{ t('mail', 'Date') }}
 					</label>
 					<div class="modal-inner--container range">
 						<div class="modal-inner-inline">
@@ -190,14 +190,14 @@
 							v-model="selectedTags"
 							class="multiselect-search-tags"
 							:options="tags"
-							label="displayName"
+							label="name"
 							:value="selectedTags"
 							:placeholder="t('mail', 'Select tags')"
-							input-id="select-displayName-input"
+							input-id="select-label-input"
 							:multiple="true"
 							:auto-limit="false"
 							:close-on-select="false">
-							<template #tag="{ option }">
+							<template #tag="option">
 								<div class="tag-group__search">
 									<div
 										class="tag-group__bg"
@@ -213,7 +213,7 @@
 									</div>
 								</div>
 							</template>
-							<template #option="{ option }">
+							<template #option="option">
 								{{ option.displayName }}
 							</template>
 						</NcSelect>
@@ -292,9 +292,9 @@
 <script>
 import moment from '@nextcloud/moment'
 
-import NcModal from '@nextcloud/vue/dist/Components/NcModal'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect'
-import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton'

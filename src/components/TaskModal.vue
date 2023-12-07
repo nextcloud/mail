@@ -6,7 +6,7 @@
 				<input v-model="taskTitle" type="text">
 			</div>
 			<div class="all-day">
-				<DatetimePicker v-model="startDate"
+				<DateTimePicker v-model="startDate"
 					:format="dateFormat"
 					:clearable="false"
 					:minute-step="5"
@@ -14,7 +14,7 @@
 					:type="datePickerType"
 					:show-timezone-select="true"
 					:timezone-id="startTimezoneId" />
-				<DatetimePicker v-model="endDate"
+				<DateTimePicker v-model="endDate"
 					:format="dateFormat"
 					:clearable="false"
 					:minute-step="5"
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { NcDatetimePicker as DatetimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
+import { NcDateTimePicker as DateTimePicker, NcModal as Modal, NcSelect } from '@nextcloud/vue'
 import jstz from 'jstz'
 
 import logger from '../logger.js'
@@ -77,7 +77,7 @@ export default {
 	name: 'TaskModal',
 	components: {
 		CalendarPickerOption,
-		DatetimePicker,
+		DateTimePicker,
 		Modal,
 		NcSelect,
 	},

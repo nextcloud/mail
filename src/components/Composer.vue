@@ -61,7 +61,7 @@
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
 					</template>
 					<template #option="option">
-						<div class="multiselect__tag multiselect__tag-custom">
+						<div class="select__tag select__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
 								:title="option.label"
@@ -110,10 +110,10 @@
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
 					</template>
 					<template #option="option">
-						<div class="multiselect__tag multiselect__tag-custom">
+						<div class="select__tag select__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:name="option.label"
+								:title="option.label"
 								:subname="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
@@ -152,7 +152,7 @@
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
 					</template>
 					<template #option="option">
-						<div class="multiselect__tag multiselect__tag-custom">
+						<div class="select__tag select__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
 								:name="option.label"
@@ -392,7 +392,7 @@
 							:is-native-picker="true"
 							:min="dateToday"
 							type="datetime-local"
-							:first-day-of-week="firstDayDatetimePicker"
+							:first-day-of-week="firstDayDateTimePicker"
 							:use12h="showAmPm"
 							:formatter="formatter"
 							:format="'YYYY-MM-DD HH:mm'"
@@ -638,7 +638,7 @@ export default {
 			isMoreActionsOpen: false,
 			selectedDate,
 			sendAtVal: this.sendAt,
-			firstDayDatetimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
+			firstDayDateTimePicker: getFirstDay() === 0 ? 7 : getFirstDay(),
 			formatter: {
 				stringify: (date) => {
 					return date ? moment(date).format('LLL') : ''
@@ -1247,7 +1247,7 @@ export default {
 		 * @param {Date} date The date to compare to
 		 * @return {boolean}
 		 */
-		disabledDatetimepickerDate(date) {
+		disabledDateTimePickerDate(date) {
 			const minimumDate = new Date()
 			// Make it one sec before midnight so it shows the next full day as available
 			minimumDate.setHours(0, 0, 0)
@@ -1262,7 +1262,7 @@ export default {
 		 * @param {Date} date The date to compare to
 		 * @return {boolean}
 		 */
-		disabledDatetimepickerTime(date) {
+		disabledDateTimePickerTime(date) {
 			const now = new Date()
 			const minimumDate = new Date(now.getTime())
 			return date.getTime() <= minimumDate
@@ -1364,17 +1364,17 @@ export default {
 		padding: 11px 20px 11px 0;
 	}
 
-	:deep(.multiselect--multiple .multiselect__tags) {
+	:deep(.select--multiple .select__tags) {
 		display: grid;
 		grid-template-columns: calc(100% - 18px) 18px 100%;
 
-		.multiselect__limit {
+		.select__limit {
 			margin-right: 0;
 			margin-left: 8px
 		}
 	}
 
-	:deep(.multiselect__content-wrapper) {
+	:deep(.select__content-wrapper) {
 		border-bottom: 1px solid var(--color-border);
 		margin-top: 0;
 
@@ -1383,18 +1383,18 @@ export default {
 		}
 	}
 
-	:deep(.multiselect__input) {
+	:deep(.select__input) {
 		position: relative !important;
 		top: 0;
 		grid-column-start: 1;
 		grid-column-end: 3;
 	}
 
-	:deep(.multiselect--active input:focus-visible) {
+	:deep(.select--active input:focus-visible) {
 		box-shadow: none;
 	}
 
-	:deep(.multiselect__tags) {
+	:deep(.select__tags) {
 		box-sizing: border-box;
 		height: auto;
 	}
@@ -1403,14 +1403,14 @@ export default {
 		margin-right: 102px; /* for the modal close and minimize buttons */
 	}
 
-	.multiselect.multiselect--multiple::after {
+	.select.select--multiple::after {
 		position: absolute;
 		right: 0;
 		top: auto;
 		bottom: 8px
 	}
 
-	.multiselect__tag {
+	.select__tag {
 		position: relative;
 	}
 
@@ -1418,13 +1418,13 @@ export default {
 		border-top: none;
 		padding-top: 10px;
 
-		& > .multiselect {
+		& > .select {
 			max-width: none;
 			min-height: auto;
 		}
 	}
 
-	.multiselect,
+	.select,
 	input,
 	TextEditor {
 		flex-grow: 1;
@@ -1453,12 +1453,12 @@ export default {
 			opacity: 1;
 		}
 
-		.multiselect {
+		.select {
 			width: calc(100% - 150px);
 		}
 	}
 
-	.multiselect {
+	.select {
 		margin-right: 12px;
 	}
 
@@ -1539,13 +1539,13 @@ export default {
 	min-height: 100px;
 }
 
-:deep(.multiselect .multiselect__tags),:deep( .vs__dropdown-toggle),:deep(.vs__dropdown-menu),  .subject {
+:deep(.select .select__tags),:deep( .vs__dropdown-toggle),:deep(.vs__dropdown-menu),  .subject {
 	border: none !important;
 }
 :deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
+:deep(.select.opened .select__tags .select__tags-wrap) {
 	flex-wrap: wrap;
 }
 
