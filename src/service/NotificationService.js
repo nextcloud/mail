@@ -64,6 +64,8 @@ const showNotification = async (title, body, icon) => {
 	})
 	notification.onclick = () => {
 		window.focus()
+		// Close the notification when clicked
+		notification.close()
 	}
 }
 
