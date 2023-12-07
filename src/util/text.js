@@ -187,7 +187,7 @@ export const toPlain = (text) => {
 			.replace(/^\n+/, '') // trim leading line breaks
 			.replace(/\n+$/, '') // trim trailing line breaks
 			.replace(/ +$/gm, '') // trim trailing spaces of each line
-			.replace(/^--$/gm, '-- ') // hack to create the correct email signature separator
+			.replace(/^--$/gm, '-- '), // hack to create the correct email signature separator
 	)
 }
 

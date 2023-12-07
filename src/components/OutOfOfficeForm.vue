@@ -24,8 +24,7 @@
 	<form class="form" @submit.prevent="submit">
 		<div class="form__multi-row">
 			<fieldset class="form__fieldset">
-				<input
-					id="ooo-disabled"
+				<input id="ooo-disabled"
 					class="radio"
 					type="radio"
 					name="enabled"
@@ -35,8 +34,7 @@
 			</fieldset>
 
 			<fieldset class="form__fieldset">
-				<input
-					id="ooo-enabled"
+				<input id="ooo-enabled"
 					class="radio"
 					type="radio"
 					name="enabled"
@@ -46,8 +44,7 @@
 			</fieldset>
 
 			<fieldset v-if="hasPersonalAbsenceSettings" class="form__fieldset">
-				<input
-					id="ooo-follow-system"
+				<input id="ooo-follow-system"
 					class="radio"
 					type="radio"
 					name="enabled"
@@ -59,27 +56,25 @@
 
 		<template v-if="followingSystem">
 			<p>{{ t('mail', 'The autoresponder follows your personal absence period settings.') }}</p>
-			<Button :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
+			<ButtonVue :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
 				<template #icon>
 					<OpenInNewIcon :size="20" />
 				</template>
 				{{ t('mail', 'Edit absence settings') }}
-			</Button>
+			</ButtonVue>
 		</template>
 		<template v-else>
 			<div class="form__multi-row">
 				<fieldset class="form__fieldset">
 					<label for="ooo-first-day">{{ t('mail', 'First day') }}</label>
-					<DatetimePicker
-						id="ooo-first-day"
+					<DatetimePicker id="ooo-first-day"
 						v-model="firstDay"
 						:disabled="!enabled" />
 				</fieldset>
 
 				<fieldset class="form__fieldset">
 					<div class="form__fieldset__label">
-						<input
-							id="ooo-enable-last-day"
+						<input id="ooo-enable-last-day"
 							v-model="enableLastDay"
 							type="checkbox"
 							:disabled="!enabled">
@@ -87,8 +82,7 @@
 							{{ t('mail', 'Last day (optional)') }}
 						</label>
 					</div>
-					<DatetimePicker
-						id="ooo-last-day"
+					<DatetimePicker id="ooo-last-day"
 						v-model="lastDay"
 						:disabled="!enabled || !enableLastDay" />
 				</fieldset>
@@ -96,8 +90,7 @@
 
 			<fieldset class="form__fieldset">
 				<label for="ooo-subject">{{ t('mail', 'Subject') }}</label>
-				<input
-					id="ooo-subject"
+				<input id="ooo-subject"
 					v-model="subject"
 					type="text"
 					:disabled="followingSystem">
@@ -108,8 +101,7 @@
 
 			<fieldset class="form__fieldset">
 				<label for="ooo-message">{{ t('mail', 'Message') }}</label>
-				<TextEditor
-					id="ooo-message"
+				<TextEditor id="ooo-message"
 					v-model="message"
 					:html="false"
 					:disabled="followingSystem"
@@ -122,8 +114,7 @@
 			{{ errorMessage }}
 		</p>
 
-		<Button
-			type="primary"
+		<ButtonVue type="primary"
 			native-type="submit"
 			:aria-label="t('mail', 'Save autoresponder')"
 			:disabled="loading || !valid">
@@ -131,12 +122,12 @@
 				<CheckIcon :size="20" />
 			</template>
 			{{ t('mail', 'Save autoresponder') }}
-		</Button>
+		</ButtonVue>
 	</form>
 </template>
 
 <script>
-import { NcDatetimePicker as DatetimePicker, NcButton as Button } from '@nextcloud/vue'
+import { NcDatetimePicker as DatetimePicker, NcButton as ButtonVue } from '@nextcloud/vue'
 import TextEditor from './TextEditor.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import { html, plain, toHtml, toPlain } from '../util/text.js'
@@ -154,7 +145,7 @@ export default {
 	components: {
 		DatetimePicker,
 		TextEditor,
-		Button,
+		ButtonVue,
 		CheckIcon,
 		OpenInNewIcon,
 	},

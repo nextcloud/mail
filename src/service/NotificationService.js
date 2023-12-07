@@ -95,6 +95,6 @@ export const showNewMessagesNotification = (messages) => {
 	showNotification(
 		t('mail', 'Nextcloud Mail'),
 		getNotificationBody(messages),
-		generateFilePath('mail', 'img', 'mail-notification.png')
+		generateFilePath('mail', 'img', 'mail-notification.png'),
 	)
 }

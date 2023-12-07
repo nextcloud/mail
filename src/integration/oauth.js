@@ -29,7 +29,7 @@ export async function getUserConsent(redirectUrl) {
 	const ssoWindow = window.open(
 		redirectUrl,
 		t('mail', 'Connect OAUTH2 account'),
-		'toolbar=no, menubar=no, width=600, height=700'
+		'toolbar=no, menubar=no, width=600, height=700',
 	)
 	ssoWindow.focus()
 	await new Promise((resolve, reject) => {

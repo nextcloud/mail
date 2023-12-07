@@ -35,8 +35,7 @@
 		</div>
 		<Actions :boundaries-element="boundariesElement">
 			<template v-if="!showCalendarPopover">
-				<ActionButton
-					v-if="isCalendarEvent"
+				<ActionButton v-if="isCalendarEvent"
 					class="attachment-import calendar"
 					:disabled="loadingCalendars"
 					@click.stop="loadCalendars">
@@ -46,16 +45,14 @@
 					</template>
 					{{ t('mail', 'Import into calendar') }}
 				</ActionButton>
-				<ActionButton
-					class="attachment-download"
+				<ActionButton class="attachment-download"
 					@click="download">
 					<template #icon>
 						<IconDownload :size="20" />
 					</template>
 					{{ t('mail', 'Download attachment') }}
 				</ActionButton>
-				<ActionButton
-					class="attachment-save-to-cloud"
+				<ActionButton class="attachment-save-to-cloud"
 					:disabled="savingToCloud"
 					@click.stop="saveToCloud">
 					<template #icon>
@@ -66,8 +63,7 @@
 				</ActionButton>
 			</template>
 			<template v-else>
-				<ActionButton
-					@click="closeCalendarPopover">
+				<ActionButton @click="closeCalendarPopover">
 					<template #icon>
 						<IconArrow :size="20" />
 					</template>

@@ -24,29 +24,24 @@
 					:timezone-id="endTimezoneId" />
 			</div>
 			<div class="all-day">
-				<input
-					id="allDay"
+				<input id="allDay"
 					v-model="isAllDay"
 					type="checkbox"
 					class="checkbox">
-				<label
-					for="allDay">
+				<label for="allDay">
 					{{ t('mail', 'All day') }}
 				</label>
 			</div>
-			<Multiselect
-				v-model="selectedCalendar"
+			<Multiselect v-model="selectedCalendar"
 				label="displayname"
 				track-by="url"
 				:allow-empty="false"
 				:options="calendars">
 				<template #option="{option}">
-					<CalendarPickerOption
-						v-bind="option" />
+					<CalendarPickerOption v-bind="option" />
 				</template>
 				<template #singleLabel="{option}">
-					<CalendarPickerOption
-						:display-icon="true"
+					<CalendarPickerOption :display-icon="true"
 						v-bind="option" />
 				</template>
 			</Multiselect>
@@ -161,7 +156,7 @@ export default {
 
 				await importCalendarEvent(
 					this.selectedCalendar.url,
-					calendar.toICS()
+					calendar.toICS(),
 				)
 
 				showSuccess(t('mail', 'Event created'))

@@ -1,11 +1,9 @@
 <template>
 	<div class="calendar-picker-option">
-		<div
-			class="calendar-picker-option__color-indicator"
+		<div class="calendar-picker-option__color-indicator"
 			:style="{ backgroundColor: color }" />
 
-		<span
-			class="calendar-picker-option__label">
+		<span class="calendar-picker-option__label">
 			{{ displayname }}
 		</span>
 		<span :class="displayIcon ? 'icon-caret-dark' : ''" />

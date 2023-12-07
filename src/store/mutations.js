@@ -140,7 +140,7 @@ export default {
 		Vue.set(
 			state,
 			'accountList',
-			sortAccounts(state.accountList.concat([account.id]).map((id) => state.accounts[id])).map((a) => a.id)
+			sortAccounts(state.accountList.concat([account.id]).map((id) => state.accounts[id])).map((a) => a.id),
 		)
 
 		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
@@ -160,7 +160,7 @@ export default {
 		Vue.set(
 			state,
 			'accountList',
-			sortAccounts(state.accountList.map((id) => state.accounts[id])).map((a) => a.id)
+			sortAccounts(state.accountList.map((id) => state.accounts[id])).map((a) => a.id),
 		)
 	},
 	toggleAccountCollapsed(state, accountId) {
@@ -308,7 +308,7 @@ export default {
 					Vue.set(
 						mailbox.envelopeLists,
 						listId,
-						uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+						uniq(orderByDateInt(existing.concat([envelope.databaseId]))),
 					)
 				})
 		})
@@ -392,7 +392,7 @@ export default {
 							mailbox.databaseId,
 							id,
 							listId,
-							list
+							list,
 						)
 						continue
 					}

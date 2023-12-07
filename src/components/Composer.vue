@@ -6,8 +6,7 @@
 				{{ t('mail', 'From') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Select
-					id="from"
+				<SelectVue id="from"
 					:value="selectedAlias"
 					:options="aliases"
 					label="name"
@@ -26,7 +25,7 @@
 					<template slot="selected-option" slot-scope="option">
 						{{ formatAliases(option) }}
 					</template>
-				</Select>
+				</SelectVue>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -56,14 +55,12 @@
 					@tag="onNewToAddr"
 					@search-change="onAutocomplete($event, 'to')">
 					<template #tag="{ option }">
-						<RecipientListItem
-							:option="option"
+						<RecipientListItem :option="option"
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
 					</template>
 					<template #option="{ option }">
 						<div class="multiselect__tag multiselect__tag-custom">
-							<ListItemIcon
-								:no-margin="true"
+							<ListItemIcon :no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
@@ -71,8 +68,7 @@
 						</div>
 					</template>
 				</Multiselect>
-				<button
-					:title="t('mail','Toggle recipients list mode')"
+				<button :title="t('mail','Toggle recipients list mode')"
 					:class="{'active':!autoLimit}"
 					@click.prevent="toggleViewMode">
 					<UnfoldMoreHorizontal v-if="autoLimit" :size="24" />
@@ -105,14 +101,12 @@
 					@tag="onNewCcAddr"
 					@search-change="onAutocomplete($event, 'cc')">
 					<template #tag="{ option }">
-						<RecipientListItem
-							:option="option"
+						<RecipientListItem :option="option"
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
 					</template>
 					<template #option="{ option }">
 						<div class="multiselect__tag multiselect__tag-custom">
-							<ListItemIcon
-								:no-margin="true"
+							<ListItemIcon :no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
@@ -147,14 +141,12 @@
 					@tag="onNewBccAddr"
 					@search-change="onAutocomplete($event, 'bcc')">
 					<template #tag="{ option }">
-						<RecipientListItem
-							:option="option"
+						<RecipientListItem :option="option"
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
 					</template>
 					<template #option="{ option }">
 						<div class="multiselect__tag multiselect__tag-custom">
-							<ListItemIcon
-								:no-margin="true"
+							<ListItemIcon :no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
@@ -169,8 +161,7 @@
 			<label for="subject" class="subject-label hidden-visually">
 				{{ t('mail', 'Subject') }}
 			</label>
-			<input
-				id="subject"
+			<input id="subject"
 				v-model="subjectVal"
 				type="text"
 				name="subject"
@@ -198,8 +189,7 @@
 		</div>
 		<div class="composer-fields message-editor">
 			<!--@keypress="onBodyKeyPress"-->
-			<TextEditor
-				v-if="!encrypt"
+			<TextEditor v-if="!encrypt"
 				ref="editor"
 				:key="editorMode"
 				:value="bodyVal"
@@ -212,8 +202,7 @@
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@show-toolbar="handleShow" />
-			<MailvelopeEditor
-				v-else
+			<MailvelopeEditor v-else
 				ref="mailvelopeEditor"
 				:value="bodyVal"
 				:recipients="allRecipients"
@@ -287,8 +276,7 @@
 								t('mail', 'Smart picker')
 							}}
 						</ActionButton>
-						<ActionButton
-							v-if="!isScheduledSendingDisabled"
+						<ActionButton v-if="!isScheduledSendingDisabled"
 							:close-after-click="false"
 							@click="isMoreActionsOpen=true">
 							<template #icon>
@@ -298,24 +286,21 @@
 								t('mail', 'Send later')
 							}}
 						</ActionButton>
-						<ActionButton
-							v-if="!encrypt && editorPlainText"
+						<ActionButton v-if="!encrypt && editorPlainText"
 							@click="setEditorModeHtml()">
 							<template #icon>
 								<IconHtml :size="20" />
 							</template>
 							{{ t('mail', 'Enable formatting') }}
 						</ActionButton>
-						<ActionButton
-							v-if="!encrypt && !editorPlainText"
+						<ActionButton v-if="!encrypt && !editorPlainText"
 							@click="setEditorModeText()">
 							<template #icon>
 								<IconClose :size="20" />
 							</template>
 							{{ t('mail', 'Disable formatting') }}
 						</ActionButton>
-						<ActionCheckbox
-							:checked="requestMdnVal"
+						<ActionCheckbox :checked="requestMdnVal"
 							@check="requestMdnVal = true"
 							@uncheck="requestMdnVal = false">
 							{{ t('mail', 'Request a read receipt') }}
@@ -333,8 +318,7 @@
 							@uncheck="wantsSmimeEncrypt = false">
 							{{ t('mail', 'Encrypt message with S/MIME') }}
 						</ActionCheckbox>
-						<ActionCheckbox
-							v-if="mailvelope.available"
+						<ActionCheckbox v-if="mailvelope.available"
 							:checked="encrypt"
 							:disabled="wantsSmimeEncrypt"
 							@change="isActionsOpen = false"
@@ -347,8 +331,7 @@
 						<ActionButton :close-after-click="false"
 							@click="isMoreActionsOpen=false">
 							<template #icon>
-								<ChevronLeft
-									:title="t('mail', 'Send later')"
+								<ChevronLeft :title="t('mail', 'Send later')"
 									:size="20" />
 								{{ t('mail', 'Send later') }}
 							</template>
@@ -410,8 +393,7 @@
 					:aria-label="submitButtonTitle"
 					@click="onSend">
 					<template #icon>
-						<Send
-							:title="submitButtonTitle"
+						<Send :title="submitButtonTitle"
 							:size="20" />
 					</template>
 					{{ submitButtonTitle }}
@@ -428,7 +410,7 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as SelectVue, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 import ComposerAttachments from './ComposerAttachments.vue'
@@ -489,7 +471,7 @@ export default {
 		IconPublic,
 		IconLinkPicker,
 		Multiselect,
-		Select,
+		SelectVue,
 		TextEditor,
 		ListItemIcon,
 		RecipientListItem,
@@ -1006,14 +988,14 @@ export default {
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.replyTo.from[0],
 					this.replyTo.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
+					this.$store.getters.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else if (this.forwardFrom && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.forwardFrom.from[0],
 					this.forwardFrom.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
+					this.$store.getters.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else {
 				body = this.bodyVal
@@ -1070,7 +1052,7 @@ export default {
 			this.$refs.editor.editorExecute('insertSignature',
 				trigger,
 				toHtml(detect(this.selectedAlias.signature)).value,
-				this.selectedAlias.signatureAboveQuote
+				this.selectedAlias.signatureAboveQuote,
 			)
 
 			this.changeSignature = false

@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<NcEmptyContent
-		:title="error"
+	<NcEmptyContent :title="error"
 		:description="message"
 		class="mail-error"
 		:class="{ 'mail-error--auto-margin': autoMargin }">
@@ -30,8 +29,7 @@
 			<AlertCircleIcon :size="24" />
 		</template>
 		<template v-if="data && data.debug" #action>
-			<NcButton
-				:aria-label="t('mail', 'Report this bug')"
+			<NcButton :aria-label="t('mail', 'Report this bug')"
 				:href="reportUrl">
 				{{ t('mail', 'Report this bug') }}
 			</NcButton>

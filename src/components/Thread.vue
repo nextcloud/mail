@@ -2,8 +2,7 @@
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
-		<Error
-			v-else-if="error"
+		<Error v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>

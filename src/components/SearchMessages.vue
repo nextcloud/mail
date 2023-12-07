@@ -1,7 +1,6 @@
 <template>
 	<div class="search-messages">
-		<input
-			v-model="query"
+		<input v-model="query"
 			type="text"
 			class="search-messages--input"
 			:placeholder="t('mail', 'Search in mailbox')">
@@ -14,8 +13,7 @@
 			</template>
 		</NcButton>
 
-		<span
-			v-if="filterChanged"
+		<span v-if="filterChanged"
 			class="filter-changed" />
 
 		<NcActions>
@@ -26,8 +24,7 @@
 				{{ t("mail", "Search parameters") }}
 			</NcActionButton>
 		</NcActions>
-		<NcModal
-			v-if="moreSearchActions"
+		<NcModal v-if="moreSearchActions"
 			:title="t('mail', 'Search parameters')"
 			class="search-modal"
 			@close="closeSearchModal">
@@ -40,8 +37,7 @@
 						{{ t('mail','Subject') }}
 					</label>
 					<div class="modal-inner--container">
-						<input
-							id="subjectId"
+						<input id="subjectId"
 							v-model="searchInSubject"
 							type="text"
 							class="search-input"
@@ -53,8 +49,7 @@
 						{{ t('mail','Body') }}
 					</label>
 					<div class="modal-inner--container">
-						<input
-							id="bodyId"
+						<input id="bodyId"
 							v-model="searchInMessageBody"
 							type="text"
 							class="search-input"
@@ -67,15 +62,13 @@
 					</label>
 					<div class="modal-inner--container range">
 						<div class="modal-inner-inline">
-							<NcDatetimePicker
-								v-model="startDate"
+							<NcDatetimePicker v-model="startDate"
 								type="date"
 								:placeholder="t('mail', 'Pick a start date')"
 								confirm />
 						</div>
 						<div class="modal-inner-inline">
-							<NcDatetimePicker
-								v-model="endDate"
+							<NcDatetimePicker v-model="endDate"
 								type="date"
 								:disabled="startDate === null"
 								:placeholder="t('mail', 'Pick an end date')"
@@ -88,8 +81,7 @@
 						{{ t("mail", "From") }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
-							id="fromId"
+						<NcMultiselect id="fromId"
 							v-model="searchInFrom"
 							label="label"
 							track-by="email"
@@ -112,8 +104,7 @@
 						{{ t('mail', 'To') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
-							id="toId"
+						<NcMultiselect id="toId"
 							v-model="searchInTo"
 							label="label"
 							track-by="email"
@@ -136,8 +127,7 @@
 						{{ t('mail', 'Cc') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
-							id="ccId"
+						<NcMultiselect id="ccId"
 							v-model="searchInCc"
 							label="label"
 							track-by="email"
@@ -160,8 +150,7 @@
 						{{ t('mail', 'Bcc') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
-							id="bccId"
+						<NcMultiselect id="bccId"
 							v-model="searchInBcc"
 							label="label"
 							track-by="email"
@@ -184,8 +173,7 @@
 						{{ t('mail', 'Tags') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect
-							v-if="tags.length > 0"
+						<NcMultiselect v-if="tags.length > 0"
 							id="tagsId"
 							v-model="selectedTags"
 							class="multiselect-search-tags"
@@ -199,15 +187,13 @@
 							:close-on-select="false">
 							<template #tag="{ option }">
 								<div class="tag-group__search">
-									<div
-										class="tag-group__bg"
+									<div class="tag-group__bg"
 										:style="
 											'background-color:' +
 												(option.color !== '#fff'
 													? option.color
 													: '#333')" />
-									<div
-										class="tag-group__label"
+									<div class="tag-group__label"
 										:style="'color:' + option.color">
 										{{ option.displayName }}
 									</div>
@@ -226,8 +212,7 @@
 					</label>
 					<div class="modal-inner--container marked-as">
 						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
+							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
 								value="is_important"
 								name="flags[]"
 								type="checkbox">
@@ -235,8 +220,7 @@
 							</NcCheckboxRadioSwitch>
 						</div>
 						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
+							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
 								value="starred"
 								name="flags[]"
 								type="checkbox">
@@ -244,8 +228,7 @@
 							</NcCheckboxRadioSwitch>
 						</div>
 						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
+							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
 								value="unread"
 								name="flags[]"
 								type="checkbox">
@@ -253,8 +236,7 @@
 							</NcCheckboxRadioSwitch>
 						</div>
 						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch
-								:checked.sync="searchFlags"
+							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
 								value="attachments"
 								name="flags[]"
 								type="checkbox">
@@ -265,8 +247,7 @@
 				</div>
 
 				<div class="modal-inner-field--right">
-					<NcButton
-						class="button-reset-filter"
+					<NcButton class="button-reset-filter"
 						:aria-label="t('mail', 'Clear')"
 						@click="resetFilter()">
 						<template #icon>
@@ -274,8 +255,7 @@
 						</template>
 						{{ t('mail', 'Clear') }}
 					</NcButton>
-					<NcButton
-						type="primary"
+					<NcButton type="primary"
 						:aria-label="t('mail', 'Search')"
 						@click="closeSearchModal()">
 						<template #icon>
@@ -449,7 +429,7 @@ export default {
 			}
 			debouncedSearch(term).then(results => {
 				this.autocompleteRecipients = uniqBy('email')(
-					this.autocompleteRecipients.concat(results)
+					this.autocompleteRecipients.concat(results),
 				)
 			})
 		},

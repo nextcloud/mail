@@ -65,7 +65,7 @@ export const getters = {
 		return head(
 			state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
 				.map((id) => state.mailboxes[id])
-				.filter((mailbox) => mailbox.specialRole === specialRole)
+				.filter((mailbox) => mailbox.specialRole === specialRole),
 		)
 	},
 	showMessageComposer: (state) => {
@@ -93,7 +93,7 @@ export const getters = {
 	getEnvelopesByThreadRootId: (state) => (accountId, threadRootId) => {
 		return sortBy(
 			prop('dateInt'),
-			Object.values(state.envelopes).filter(envelope => envelope.accountId === accountId && envelope.threadRootId === threadRootId)
+			Object.values(state.envelopes).filter(envelope => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
 		)
 	},
 	getMessage: (state) => (id) => {

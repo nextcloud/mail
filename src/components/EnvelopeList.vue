@@ -26,13 +26,11 @@
 					}}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton
-						v-if="isAtLeastOneSelectedUnimportant"
+					<ActionButton v-if="isAtLeastOneSelectedUnimportant"
 						:close-after-click="true"
 						@click.prevent="markSelectionImportant">
 						<template #icon>
-							<ImportantIcon
-								:size="20" />
+							<ImportantIcon :size="20" />
 						</template>
 						{{
 							n(
@@ -46,13 +44,11 @@
 							)
 						}}
 					</ActionButton>
-					<ActionButton
-						v-if="isAtLeastOneSelectedImportant"
+					<ActionButton v-if="isAtLeastOneSelectedImportant"
 						:close-after-click="true"
 						@click.prevent="markSelectionUnimportant">
 						<template #icon>
-							<ImportantIcon
-								:size="20" />
+							<ImportantIcon :size="20" />
 						</template>
 						{{
 							n(
@@ -66,12 +62,10 @@
 							)
 						}}
 					</ActionButton>
-					<ActionButton
-						:close-after-click="true"
+					<ActionButton :close-after-click="true"
 						@click.prevent="favoriteOrUnfavoriteAll">
 						<template #icon>
-							<IconFavorite
-								:size="20" />
+							<IconFavorite :size="20" />
 						</template>
 						{{
 							areAllSelectedFavorite
@@ -95,13 +89,11 @@
 								)
 						}}
 					</ActionButton>
-					<ActionButton
-						v-if="isAtLeastOneSelectedNotJunk"
+					<ActionButton v-if="isAtLeastOneSelectedNotJunk"
 						:close-after-click="true"
 						@click.prevent="markSelectionJunk">
 						<template #icon>
-							<AlertOctagonIcon
-								:size="20" />
+							<AlertOctagonIcon :size="20" />
 						</template>
 						{{
 							n(
@@ -115,13 +107,11 @@
 							)
 						}}
 					</ActionButton>
-					<ActionButton
-						v-if="isAtLeastOneSelectedJunk"
+					<ActionButton v-if="isAtLeastOneSelectedJunk"
 						:close-after-click="true"
 						@click.prevent="markSelectionNotJunk">
 						<template #icon>
-							<AlertOctagonIcon
-								:size="20" />
+							<AlertOctagonIcon :size="20" />
 						</template>
 						{{
 							n(
@@ -135,12 +125,10 @@
 							)
 						}}
 					</ActionButton>
-					<ActionButton
-						:close-after-click="true"
+					<ActionButton :close-after-click="true"
 						@click.prevent="unselectAll">
 						<template #icon>
-							<IconSelect
-								:size="20" />
+							<IconSelect :size="20" />
 						</template>
 						{{ n(
 							'mail',
@@ -152,12 +140,10 @@
 							}
 						) }}
 					</ActionButton>
-					<ActionButton
-						:close-after-click="true"
+					<ActionButton :close-after-click="true"
 						@click.prevent="onOpenTagModal">
 						<template #icon>
-							<TagIcon
-								:size="20" />
+							<TagIcon :size="20" />
 						</template>
 						{{ n(
 							'mail',
@@ -169,13 +155,11 @@
 							}
 						) }}
 					</ActionButton>
-					<ActionButton
-						v-if="!account.isUnified"
+					<ActionButton v-if="!account.isUnified"
 						:close-after-click="true"
 						@click.prevent="onOpenMoveModal">
 						<template #icon>
-							<OpenInNewIcon
-								:size="20" />
+							<OpenInNewIcon :size="20" />
 						</template>
 						{{ n(
 							'mail',
@@ -187,12 +171,10 @@
 							}
 						) }}
 					</ActionButton>
-					<ActionButton
-						:close-after-click="true"
+					<ActionButton :close-after-click="true"
 						@click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
-							<ShareIcon
-								:title="t('mail', 'Forward')"
+							<ShareIcon :title="t('mail', 'Forward')"
 								:size="20" />
 						</template>
 						{{ n(
@@ -205,12 +187,10 @@
 							}
 						) }}
 					</ActionButton>
-					<ActionButton
-						:close-after-click="true"
+					<ActionButton :close-after-click="true"
 						@click.prevent="deleteAllSelected">
 						<template #icon>
-							<IconDelete
-								:size="20" />
+							<IconDelete :size="20" />
 						</template>
 						{{
 							n(
@@ -226,8 +206,7 @@
 						}}
 					</ActionButton>
 				</Actions>
-				<MoveModal
-					v-if="showMoveModal"
+				<MoveModal v-if="showMoveModal"
 					:account="account"
 					:envelopes="selectedEnvelopes"
 					:move-thread="true"
@@ -235,8 +214,7 @@
 			</div>
 		</transition>
 		<transition-group name="list">
-			<Envelope
-				v-for="(env, index) in sortedEnvelops"
+			<Envelope v-for="(env, index) in sortedEnvelops"
 				:key="env.databaseId"
 				:data="env"
 				:mailbox="mailbox"
@@ -247,8 +225,7 @@
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)" />
-			<div
-				v-if="loadMoreButton && !loadingMore"
+			<div v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
 				@click="$emit('load-more')">
@@ -257,8 +234,7 @@
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
-		<TagModal
-			v-if="showTagModal"
+		<TagModal v-if="showTagModal"
 			:account="account"
 			:envelopes="selectedEnvelopes"
 			@close="onCloseTagModal" />

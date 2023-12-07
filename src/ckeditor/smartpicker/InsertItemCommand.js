@@ -17,7 +17,7 @@
  *
  */
 
-import Command from '@ckeditor/ckeditor5-core/src/command'
+import Command from '@ckeditor/ckeditor5-core/src/command.js'
 export default class InsertItemCommand extends Command {
 
 	/**
@@ -36,7 +36,7 @@ export default class InsertItemCommand extends Command {
 
 		const range = editor.model.createRange(
 			currentPosition.getShiftedBy(-5),
-			currentPosition
+			currentPosition,
 		)
 
 		// Iterate over all items in this range:

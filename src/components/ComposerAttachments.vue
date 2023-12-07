@@ -38,8 +38,7 @@
 				hide: isToggle,
 				active: !isToggle && hasNextLine,
 			}">
-			<ComposerAttachment
-				v-for="attachment in attachments"
+			<ComposerAttachment v-for="attachment in attachments"
 				ref="attachments"
 				:key="attachment.id"
 				:bus="bus"
@@ -370,7 +369,7 @@ export default {
 				num,
 				{
 					size: formatFileSize(this.uploadSizeLimit),
-				}
+				},
 			))
 		},
 		onDelete(attachment) {
@@ -398,7 +397,7 @@ export default {
 						return a.id !== val.id
 					}
 
-				})
+				}),
 			)
 		},
 		appendToBodyAtCursor(toAppend) {
