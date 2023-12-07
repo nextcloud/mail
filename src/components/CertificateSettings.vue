@@ -29,7 +29,7 @@
 			:value="alias"
 			:placeholder="t('mail', 'Select an alias')"
 			label="name"
-			track-by="id"
+			input-id="select-id"
 			@select="handleAlias" />
 		<NcSelect
 			v-if="alias !== null"
@@ -37,7 +37,7 @@
 			:options="smimeCertOptions"
 			:searchable="false"
 			label="label"
-			track-by="id"
+			input-id="select-id"
 			@select="selectCertificate" />
 		<Button
 			type="primary"

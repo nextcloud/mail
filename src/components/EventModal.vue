@@ -37,7 +37,7 @@
 			<NcSelect
 				v-model="selectedCalendar"
 				label="displayname"
-				track-by="url"
+				input-id="select-url"
 				:allow-empty="false"
 				:options="calendars">
 				<template #option="{option}">

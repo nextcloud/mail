@@ -39,7 +39,7 @@
 			<NcSelect
 				v-model="selectedCalendar"
 				label="displayname"
-				track-by="url"
+				input-id="select-url"
 				:placeholder="t('mail', 'Select calendar')"
 				:allow-empty="false"
 				:options="calendars">

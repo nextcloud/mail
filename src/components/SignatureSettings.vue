@@ -38,7 +38,7 @@
 			:searchable="false"
 			:value="identity"
 			label="label"
-			track-by="id"
+			input-id="select-id"
 			@select="changeIdentity" />
 		<TextEditor
 			v-model="signature"

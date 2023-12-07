@@ -71,7 +71,7 @@
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
 						label="displayname"
-						track-by="url"
+						input-id="select-url"
 						:allow-empty="false"
 						:options="calendarsForPicker">
 						<template #option="{option}">

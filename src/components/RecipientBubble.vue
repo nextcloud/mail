@@ -86,7 +86,7 @@
 					:options="selectableContacts"
 					:taggable="true"
 					label="label"
-					track-by="label"
+					input-id="select-label"
 					:multiple="false"
 					:placeholder="t('name', 'Contact name …')"
 					:clear-on-select="false"
