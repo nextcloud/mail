@@ -17,7 +17,7 @@
  *
  */
 
-import Command from '@ckeditor/ckeditor5-core/src/command'
+import Command from '@ckeditor/ckeditor5-core/src/command.js'
 
 export const TRIGGER_CHANGE_ALIAS = 'change_alias'
 export const TRIGGER_EDITOR_READY = 'editor_ready'
@@ -33,7 +33,7 @@ export default class InsertSignatureCommand extends Command {
 	removeSignatureElement(editor, writer) {
 		// Create a range spanning over the entire root content:
 		const range = editor.model.createRangeIn(
-			editor.model.document.getRoot()
+			editor.model.document.getRoot(),
 		)
 
 		// Iterate over all items in this range:
@@ -98,7 +98,7 @@ export default class InsertSignatureCommand extends Command {
 		if (signatureAboveQuote) {
 			// Create a range spanning over the entire root content:
 			const range = editor.model.createRangeIn(
-				editor.model.document.getRoot()
+				editor.model.document.getRoot(),
 			)
 
 			// Iterate over all items in this range:
@@ -121,7 +121,7 @@ export default class InsertSignatureCommand extends Command {
 	hasSignatureElement(editor) {
 		// Create a range spanning over the entire root content:
 		const range = editor.model.createRangeIn(
-			editor.model.document.getRoot()
+			editor.model.document.getRoot(),
 		)
 
 		// Iterate over all items in this range:

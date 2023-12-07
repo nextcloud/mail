@@ -63,8 +63,7 @@
 		</ul>
 
 		<div v-if="!account.provisioningId">
-			<ButtonVue
-				v-if="!showForm"
+			<ButtonVue v-if="!showForm"
 				type="primary"
 				:aria-label="t('mail', 'Add alias')"
 				@click="showForm = true">

@@ -1,7 +1,5 @@
-
 <template>
-	<Modal
-		v-if="showMessageComposer"
+	<Modal v-if="showMessageComposer"
 		size="normal"
 		:title="modalTitle"
 		:additional-trap-elements="toolbarElements"
@@ -12,14 +10,12 @@
 			role="alert">
 			<p>{{ error }}</p>
 			<template #action>
-				<ButtonVue
-					type="tertiary"
+				<ButtonVue type="tertiary"
 					:aria-label="t('mail', 'Go back')"
 					@click="error = undefined">
 					{{ t('mail', 'Go back') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary"
+				<ButtonVue type="tertiary"
 					:aria-label="t('mail', 'Retry')"
 					@click="onSend">
 					{{ t('mail', 'Retry') }}
@@ -38,14 +34,12 @@
 				{{ warning }}
 			</template>
 			<template #action>
-				<ButtonVue
-					type="tertiary"
+				<ButtonVue type="tertiary"
 					:aria-label="t('mail', 'Go back')"
 					@click="warning = undefined">
 					{{ t('mail', 'Go back') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary"
+				<ButtonVue type="tertiary"
 					:aria-label="t('mail', 'Send anyway')"
 					@click="onForceSend">
 					{{ t('mail', 'Send anyway') }}
@@ -379,7 +373,7 @@ export default {
 					[ManyRecipientsError.getName()]() {
 						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
 					},
-					// eslint-disable-next-line node/handle-callback-err
+					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
 						return undefined
 					},
@@ -388,7 +382,7 @@ export default {
 					[AttachmentMissingError.getName()]() {
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
 					},
-					// eslint-disable-next-line node/handle-callback-err
+					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
 						return undefined
 					},

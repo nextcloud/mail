@@ -17,7 +17,7 @@
  *
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin'
+import Plugin from '@ckeditor/ckeditor5-core/src/plugin.js'
 import InsertSignatureCommand from './InsertSignatureCommand.js'
 
 export default class Signature extends Plugin {
@@ -28,7 +28,7 @@ export default class Signature extends Plugin {
 
 		this.editor.commands.add(
 			'insertSignature',
-			new InsertSignatureCommand(this.editor)
+			new InsertSignatureCommand(this.editor),
 		)
 	}
 

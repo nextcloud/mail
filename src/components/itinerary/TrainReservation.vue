@@ -112,7 +112,7 @@ export default {
 						trainNr: this.data.reservationFor.trainNumber,
 						depStation: this.data.reservationFor.departureStation.name,
 						arrStation: this.data.reservationFor.arrivalStation.name,
-					})
+					}),
 				)
 			} else {
 				event.updatePropertyWithValue(
@@ -120,7 +120,7 @@ export default {
 					t('mail', 'Train from {depStation} to {arrStation}', {
 						depStation: this.data.reservationFor.departureStation.name,
 						arrStation: this.data.reservationFor.arrivalStation.name,
-					})
+					}),
 				)
 			}
 

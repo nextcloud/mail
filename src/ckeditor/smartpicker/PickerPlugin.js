@@ -17,14 +17,14 @@
  *
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin'
+import Plugin from '@ckeditor/ckeditor5-core/src/plugin.js'
 import InsertItemCommand from './InsertItemCommand.js'
 export default class PickerPlugin extends Plugin {
 
 	init() {
 		this.editor.commands.add(
 			'insertItem',
-			new InsertItemCommand(this.editor)
+			new InsertItemCommand(this.editor),
 		)
 	}
 

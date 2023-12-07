@@ -23,8 +23,7 @@
 	<div v-if="attachments.length > 0" class="mail-message-attachments" :class="hasNextLine ? 'has-next-line' : ''">
 		<div class="mail-message-attachments--wrapper" :class="(hasNextLine === true && isToggled === true) ? 'hide' : ''">
 			<div class="attachments">
-				<MessageAttachment
-					v-for="(attachment, idx) in attachments"
+				<MessageAttachment v-for="(attachment, idx) in attachments"
 					:id="attachment.id"
 					ref="attachments"
 					:key="attachment.id"

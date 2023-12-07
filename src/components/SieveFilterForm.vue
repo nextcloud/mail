@@ -1,7 +1,6 @@
 <template>
 	<div class="section">
-		<textarea
-			id="sieve-text-area"
+		<textarea id="sieve-text-area"
 			v-model="script"
 			v-shortkey.avoid
 			rows="20"
@@ -10,8 +9,7 @@
 			{{ t('mail', 'Oh Snap!') }}
 			{{ errorMessage }}
 		</p>
-		<ButtonVue
-			type="primary"
+		<ButtonVue type="primary"
 			:disabled="loading"
 			:aria-label="t('mail', 'Save sieve script')"
 			@click="saveActiveScript">

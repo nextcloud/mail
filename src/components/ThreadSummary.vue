@@ -7,14 +7,12 @@
 					<p>{{ brand }}</p>
 				</span>
 				<NcActions />
-				<NcButton
-					:aria-label=" t('mail', 'Go to latest message')"
+				<NcButton :aria-label=" t('mail', 'Go to latest message')"
 					type="secondary"
 					@click="onScroll">
 					{{ t('mail', 'Go to newest message') }}
 					<template #icon>
-						<ArrowDownIcon
-							:size="20" />
+						<ArrowDownIcon :size="20" />
 					</template>
 				</NcButton>
 			</div>

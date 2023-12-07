@@ -122,7 +122,7 @@ export default {
 					flightNr: this.flightNumber,
 					depAirport: this.data.reservationFor.departureAirport.iataCode,
 					arrAirport: this.data.reservationFor.arrivalAirport.iataCode,
-				})
+				}),
 			)
 
 			CalendarImport.addIcalTimeProperty(event, this.data.reservationFor.departureTime, 'DTSTART')

@@ -1,5 +1,5 @@
-import dragEventBus from '../util/dragEventBus'
-import defer from 'lodash/defer'
+import dragEventBus from '../util/dragEventBus.js'
+import defer from 'lodash/defer.js'
 
 export class DraggableEnvelope {
 

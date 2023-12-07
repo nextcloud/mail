@@ -54,8 +54,7 @@
 						<IconTag :size="20" />
 					</template>
 				</ActionInput>
-				<ActionText
-					v-if="showSaving">
+				<ActionText v-if="showSaving">
 					<template #icon>
 						<IconLoading :size="20" />
 					</template>
@@ -153,9 +152,9 @@ export default {
 			return this.envelopes.some(
 				(envelope) => (
 					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
-						tag => tag.imapLabel === imapLabel
+						tag => tag.imapLabel === imapLabel,
 					)
-				)
+				),
 			)
 		},
 		addTagInput() {

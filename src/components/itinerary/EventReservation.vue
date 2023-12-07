@@ -117,7 +117,7 @@ export default {
 					// https://www.kanzaki.com/docs/ical/geo.html
 					event.updatePropertyWithValue(
 						'GEO',
-						`${this.data.reservationFor.location.geo.latitude};${this.data.reservationFor.location.geo.longitude}`
+						`${this.data.reservationFor.location.geo.latitude};${this.data.reservationFor.location.geo.longitude}`,
 					)
 				}
 			}

@@ -20,8 +20,7 @@
   -->
 
 <template>
-	<AppNavigationItem
-		v-if="visible"
+	<AppNavigationItem v-if="visible"
 		:id="genId(mailbox)"
 		:key="genId(mailbox)"
 		v-droppable-mailbox="{
@@ -40,11 +39,9 @@
 			<div>
 				<ImportantIcon v-if="mailbox.isPriorityInbox"
 					:size="20" />
-				<IconAllInboxes
-					v-else-if="mailbox.id === UNIFIED_INBOX_ID"
+				<IconAllInboxes v-else-if="mailbox.id === UNIFIED_INBOX_ID"
 					:size="20" />
-				<IconInbox
-					v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
+				<IconInbox v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
 					:size="20" />
 				<IconFavorite v-else-if="filter === 'starred'"
 					:size="20" />
@@ -68,69 +65,56 @@
 		</template>
 		<!-- actions -->
 		<template slot="actions">
-			<ActionText
-				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
+			<ActionText v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 				:title="mailbox.name">
 				<template #icon>
-					<IconInfo
-						:title="statsText"
+					<IconInfo :title="statsText"
 						:size="20" />
 				</template>
 				{{ statsText }}
 			</ActionText>
 
-			<ActionButton
-				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasSeenAcl"
+			<ActionButton v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasSeenAcl"
 				:title="t('mail', 'Mark all as read')"
 				:disabled="loadingMarkAsRead"
 				@click="markAsRead">
 				<template #icon>
-					<IconEmailCheck
-						:size="20" />
+					<IconEmailCheck :size="20" />
 				</template>
 				{{ t('mail', 'Mark all messages of this mailbox as read') }}
 			</ActionButton>
-			<ActionButton
-				v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
+			<ActionButton v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
-					<IconFolderAdd
-						:size="20" />
+					<IconFolderAdd :size="20" />
 				</template>
 				{{ t('mail', 'Add submailbox') }}
 			</ActionButton>
-			<ActionInput
-				v-if="editing"
+			<ActionInput v-if="editing"
 				:value.sync="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
-					<IconFolderAdd
-						:size="20" />
+					<IconFolderAdd :size="20" />
 				</template>
 			</ActionInput>
-			<ActionButton
-				v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
+			<ActionButton v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
 				@click.prevent.stop="openRenameInput">
 				<template #icon>
-					<IconFolderRename
-						:size="20" />
+					<IconFolderRename :size="20" />
 				</template>
 				{{ t('mail', 'Edit name') }}
 			</ActionButton>
-			<ActionInput
-				v-if="renameInput"
+			<ActionInput v-if="renameInput"
 				:value.sync="mailboxName"
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
-					<IconFolderRename
-						:title="t('mail', 'Edit name')"
+					<IconFolderRename :title="t('mail', 'Edit name')"
 						:size="20" />
 				</template>
 			</ActionInput>
 			<ActionText v-if="showSaving">
 				<template #icon>
-					<IconLoading
-						:size="20" />
+					<IconLoading :size="20" />
 				</template>
 				{{ t('mail', 'Saving') }}
 			</ActionText>
@@ -139,41 +123,35 @@
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
 				<template #icon>
-					<IconExternal
-						:size="20" />
+					<IconExternal :size="20" />
 				</template>
 				{{ t('mail', 'Move mailbox') }}
 			</ActionButton>
-			<ActionButton
-				v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
+			<ActionButton v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
 				:title="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
 				@click="clearCache">
 				<template #icon>
-					<IconFolderSync
-						:size="20" />
+					<IconFolderSync :size="20" />
 				</template>
 				{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
 			</ActionButton>
 
-			<ActionCheckbox
-				v-if="notVirtual"
+			<ActionCheckbox v-if="notVirtual"
 				:checked="isSubscribed"
 				:disabled="changeSubscription"
 				@update:checked="changeFolderSubscription">
 				{{ t('mail', 'Subscribed') }}
 			</ActionCheckbox>
 
-			<ActionCheckbox
-				v-if="notVirtual && notInbox"
+			<ActionCheckbox v-if="notVirtual && notInbox"
 				:checked="mailbox.syncInBackground"
 				:disabled="changingSyncInBackground"
 				@update:checked="changeSyncInBackground">
 				{{ t('mail', 'Sync in background') }}
 			</ActionCheckbox>
 
-			<ActionButton
-				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasClearMailboxAcl"
+			<ActionButton v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasClearMailboxAcl"
 				:close-after-click="true"
 				@click="clearMailbox">
 				<template #icon>
@@ -185,8 +163,7 @@
 			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
 				@click="deleteMailbox">
 				<template #icon>
-					<IconDelete
-						:size="20" />
+					<IconDelete :size="20" />
 				</template>
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
@@ -204,8 +181,7 @@
 				@close="onCloseMoveModal" />
 		</template>
 		<!-- submailboxes -->
-		<NavigationMailbox
-			v-for="subMailbox in subMailboxes"
+		<NavigationMailbox v-for="subMailbox in subMailboxes"
 			:key="genId(subMailbox)"
 			:account="account"
 			:mailbox="subMailbox" />
@@ -369,7 +345,7 @@ export default {
 						{
 							total: this.mailboxStats.total,
 							unread: this.mailboxStats.unread,
-						}
+						},
 					)
 				}
 			}
@@ -595,7 +571,7 @@ export default {
 							})
 							.catch((error) => logger.error('could not clear mailbox', { error }))
 					}
-				}
+				},
 			)
 		},
 		deleteMailbox() {
@@ -627,7 +603,7 @@ export default {
 							})
 							.catch((error) => logger.error('could not delete mailbox', { error }))
 					}
-				}
+				},
 			)
 		},
 		async renameMailbox() {

@@ -19,7 +19,7 @@
  *
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin'
+import Plugin from '@ckeditor/ckeditor5-core/src/plugin.js'
 
 export default class Quote extends Plugin {
 

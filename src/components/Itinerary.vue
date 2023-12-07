@@ -1,20 +1,17 @@
 <template>
 	<div>
 		<template v-for="(entry, idx) in entries">
-			<EventReservation
-				v-if="entry['@type'] === 'EventReservation'"
+			<EventReservation v-if="entry['@type'] === 'EventReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
 				:message-id="messageId" />
-			<FlightReservation
-				v-else-if="entry['@type'] === 'FlightReservation'"
+			<FlightReservation v-else-if="entry['@type'] === 'FlightReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
 				:message-id="messageId" />
-			<TrainReservation
-				v-else-if="entry['@type'] === 'TrainReservation'"
+			<TrainReservation v-else-if="entry['@type'] === 'TrainReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"

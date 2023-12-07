@@ -41,8 +41,7 @@
 			</div>
 		</div>
 
-		<div
-			v-if="location"
+		<div v-if="location"
 			class="event-data__row event-data__row--location">
 			<MapMarkerIcon class="event-data__row__icon" :size="20" />
 			<span>{{ location }}</span>

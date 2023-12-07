@@ -32,29 +32,25 @@
 					:display-name="envelope.from[0].label"
 					:disable-tooltip="true"
 					:size="40" />
-				<div
-					v-if="isImportant"
+				<div v-if="isImportant"
 					class="app-content-list-item-star icon-important"
 					:data-starred="isImportant ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleImportant() : false"
 					v-html="importantSvg" />
-				<IconFavorite
-					v-if="envelope.flags.flagged"
+				<IconFavorite v-if="envelope.flags.flagged"
 					fill-color="#f9cf3d"
 					:size="18"
 					class="app-content-list-item-star favorite-icon-style"
 					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-				<JunkIcon
-					v-if="envelope.flags.$junk"
+				<JunkIcon v-if="envelope.flags.$junk"
 					:size="18"
 					class="app-content-list-item-star junk-icon-style"
 					:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 
-			<router-link
-				:to="route"
+			<router-link :to="route"
 				event=""
 				class="left"
 				:class="{seen: envelope.flags.seen}"
@@ -84,8 +80,7 @@
 					</div>
 				</div>
 				<div class="envelope__header__left__unsubscribe">
-					<NcButton
-						v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
+					<NcButton v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
 						type="tertiary"
 						class="envelope__header__unsubscribe"
 						@click="showListUnsubscribeConfirmation = true">
@@ -163,8 +158,7 @@
 							type="tertiary-no-background"
 							@click.prevent="onArchive">
 							<template #icon>
-								<ArchiveIcon
-									:title="t('mail', 'Archive message')"
+								<ArchiveIcon :title="t('mail', 'Archive message')"
 									:size="20" />
 							</template>
 						</NcActionButton>
@@ -175,8 +169,7 @@
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
 							<template #icon>
-								<DeleteIcon
-									:title="t('mail', 'Delete message')"
+								<DeleteIcon :title="t('mail', 'Delete message')"
 									:size="20" />
 							</template>
 						</NcActionButton>
@@ -213,8 +206,7 @@
 					<TaskModal v-if="showTaskModal"
 						:envelope="envelope"
 						@close="onCloseTaskModal" />
-					<TagModal
-						v-if="showTagModal"
+					<TagModal v-if="showTagModal"
 						:account="account"
 						:envelopes="[envelope]"
 						@close="onCloseTagModal" />
@@ -443,7 +435,7 @@ export default {
 		},
 		tags() {
 			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter(
-				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
+				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 		},
 		hasChangedSubject() {
@@ -808,7 +800,7 @@ export default {
 				const resp = await axios.get(
 					generateUrl('/apps/mail/api/messages/{id}/source', {
 						id: this.envelope.databaseId,
-					})
+					}),
 				)
 				this.rawMessage = resp.data.source
 			}
