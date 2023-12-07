@@ -30,6 +30,9 @@ export class DraggableEnvelope {
 	}
 
 	onDragStart(event) {
+		if (!this.options.isDraggable) {
+			return
+		}
 		const { accountId, mailboxId, selectedEnvelopes } = this.options
 
 		event.dataTransfer.clearData()
@@ -42,20 +45,20 @@ export class DraggableEnvelope {
 				envelopes.push({
 					accountId,
 					mailboxId,
-					envelopeId: envelope.databaseId,
+					databaseId: envelope.databaseId,
 					draggableLabel: `${envelope.subject} (${envelope.from[0].label})`,
 				})
 			})
 		} else {
 			// handle single dragged item
-			const { envelopeId, draggableLabel } = this.options
-			envelopes.push({ accountId, mailboxId, envelopeId, draggableLabel })
+			const { databaseId, draggableLabel } = this.options
+			envelopes.push({ accountId, mailboxId, databaseId, draggableLabel })
 		}
 
 		event.dataTransfer.setData('text/plain', JSON.stringify(envelopes))
 		this.attachGhost({ event, envelopes })
 
-		dragEventBus.$emit('dragStart', {
+		dragEventBus.$emit('drag-start', {
 			accountId,
 			mailboxId,
 			itemCount: envelopes.length,
@@ -63,7 +66,7 @@ export class DraggableEnvelope {
 	}
 
 	onDragEnd(event) {
-		dragEventBus.$emit('dragEnd', { accountId: this.options.accountId })
+		dragEventBus.$emit('drag-end', { accountId: this.options.accountId })
 	}
 
 	attachGhost({ event, envelopes }) {

@@ -3,7 +3,7 @@
  *
  * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,8 +24,8 @@ import {
 	buildRecipients,
 	buildReplyBody,
 	buildReplySubject,
-} from '../../ReplyBuilder'
-import { html, plain } from '../../util/text'
+} from '../../ReplyBuilder.js'
+import { html, plain } from '../../util/text.js'
 
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {

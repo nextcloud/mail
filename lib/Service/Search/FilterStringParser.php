@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Search;
 
+use function urldecode;
+
 class FilterStringParser {
 	public function parse(?string $filter): SearchQuery {
 		$query = new SearchQuery();
@@ -33,12 +35,7 @@ class FilterStringParser {
 		}
 		$tokens = explode(' ', $filter);
 		foreach ($tokens as $token) {
-			if (!$this->parseFilterToken($query, $token)) {
-				$query->addTextToken($token);
-
-				// Always look into the subject as well
-				$query->addSubject($token);
-			}
+			$this->parseFilterToken($query, $token);
 		}
 
 		return $query;
@@ -49,14 +46,18 @@ class FilterStringParser {
 			return false;
 		}
 
-		[$type, $param] = explode(':', $token);
+		[$type, $encodedParam] = explode(':', $token);
+		$param = urldecode($encodedParam);
 		$type = strtolower($type);
 		$flagMap = [
 			'answered' => Flag::is(Flag::ANSWERED),
 			'read' => Flag::is(Flag::SEEN),
-			'starred' => Flag::is(Flag::FLAGGED),
 			'unread' => Flag::not(Flag::SEEN),
+			'starred' => Flag::is(Flag::FLAGGED),
 			'important' => Flag::is(Flag::IMPORTANT),
+			'is_important' => FlagExpression::and(
+				Flag::is(Flag::IMPORTANT)
+			)
 		];
 
 		switch ($type) {
@@ -69,49 +70,17 @@ class FilterStringParser {
 					return true;
 				}
 				if ($param === 'pi-important') {
-					// We assume this is about 'is' and not 'not'
-					// imp && ~read
 					$query->addFlagExpression(
 						FlagExpression::and(
 							Flag::is(Flag::IMPORTANT),
-							Flag::not(Flag::SEEN)
-						)
-					);
-
-					return true;
-				}
-				if ($param === 'pi-starred') {
-					// We assume this is about 'is' and not 'not'
-					// fav /\ (~imp \/ (imp /\ read))
-					$query->addFlagExpression(
-						FlagExpression::and(
-							Flag::is(Flag::FLAGGED),
-							FlagExpression::or(
-								Flag::not(Flag::IMPORTANT),
-								FlagExpression::and(
-									Flag::is(Flag::IMPORTANT),
-									Flag::is(Flag::SEEN)
-								)
-							)
 						)
 					);
 
 					return true;
 				}
 				if ($param === 'pi-other') {
-					// We assume this is about 'is' and not 'not'
-					// ~fav && (~imp || (imp && read))
-					$query->addFlagExpression(
-						FlagExpression::and(
-							Flag::not(Flag::FLAGGED),
-							FlagExpression::or(
-								Flag::not(Flag::IMPORTANT),
-								FlagExpression::and(
-									Flag::is(Flag::IMPORTANT),
-									Flag::is(Flag::SEEN)
-								)
-							)
-						)
+					$query->addFlag(
+						Flag::not(Flag::IMPORTANT),
 					);
 
 					return true;
@@ -132,6 +101,41 @@ class FilterStringParser {
 				return true;
 			case 'subject':
 				$query->addSubject($param);
+				return true;
+			case 'body':
+				$query->addBody($param);
+				return true;
+			case 'tags':
+				$tags = explode(',', $param);
+				$query->setTags($tags);
+				return true;
+			case 'start':
+				if (!empty($param)) {
+					$query->setStart($param);
+				}
+				return true;
+			case 'end':
+				if (!empty($param)) {
+					$query->setEnd($param);
+				}
+				return true;
+			case 'flags':
+				$flagArray = explode(',', $param);
+				foreach ($flagArray as $flagItem) {
+					if (array_key_exists($flagItem, $flagMap)) {
+						/** @var Flag $flag */
+						$flag = $flagMap[$flagItem];
+						if ($flag instanceof Flag) {
+							$query->addFlag($flag);
+						} elseif ($flag instanceof FlagExpression) {
+							$query->addFlagExpression($flag);
+						}
+					} elseif ($flagItem === 'attachments') {
+						$query->setHasAttachments(true);
+					}
+				}
+
+
 				return true;
 		}
 

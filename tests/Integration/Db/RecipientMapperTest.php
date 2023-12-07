@@ -46,6 +46,8 @@ class RecipientMapperTest extends TestCase {
 	/** @var RecipientMapper */
 	private $mapper;
 
+	private LocalMessageMapper $localMessageMapper;
+
 	/** @var ITimeFactory| MockObject */
 	private $timeFactory;
 
@@ -54,7 +56,6 @@ class RecipientMapperTest extends TestCase {
 
 	/** @var LocalMessage  */
 	private $message;
-
 	/** @var MailAccount */
 	private $account;
 
@@ -73,11 +74,11 @@ class RecipientMapperTest extends TestCase {
 
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$qb2 = $this->db->getQueryBuilder();
 		$delete2 = $qb2->delete($this->localMessageMapper->getTableName());
-		$delete2->execute();
+		$delete2->executeStatement();
 
 		$this->account = $this->createTestAccount();
 
@@ -190,7 +191,7 @@ class RecipientMapperTest extends TestCase {
 		$results = $this->mapper->findByLocalMessageId($message->getId());
 		$this->assertCount(1, $results);
 
-		$message = $this->localMessageMapper->findById($message->getId(), $this->getTestAccountUserId());
+		$message = $this->localMessageMapper->findById($message->getId(), $this->getTestAccountUserId(), LocalMessage::TYPE_OUTGOING);
 
 		$pierre = new Recipient();
 		$pierre->setLabel('Pierre');

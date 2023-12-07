@@ -1,4 +1,4 @@
-@media only screen and (max-width: $breakpoint-mobile) {
+@media only screen and (max-width: var(--breakpoint-mobile)) {
 	.app-content-list {
 		max-width: 100vw;
 	}

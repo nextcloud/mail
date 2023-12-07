@@ -45,6 +45,16 @@ export async function enqueueMessage(message) {
 	const { data } = await axios.post(url, message)
 	return data.data
 }
+
+export async function enqueueMessageFromDraft(id, message) {
+	const url = generateUrl('/apps/mail/api/outbox/from-draft/{id}', {
+		id,
+	})
+
+	const { data } = await axios.post(url, message)
+	return data.data
+}
+
 export async function updateMessage(message, id) {
 	const url = generateUrl('/apps/mail/api/outbox/{id}', {
 		id,

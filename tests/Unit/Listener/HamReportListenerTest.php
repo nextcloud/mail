@@ -37,7 +37,6 @@ use OCA\Mail\Listener\SpamReportListener;
 use OCP\EventDispatcher\Event;
 
 class HamReportListenerTest extends TestCase {
-
 	/** @var ServiceMockObject */
 	private $serviceMock;
 

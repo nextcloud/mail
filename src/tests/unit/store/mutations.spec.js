@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import mutations from '../../../store/mutations'
+import mutations from '../../../store/mutations.js'
 import {
 	PRIORITY_INBOX_ID,
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
-} from '../../../store/constants'
+} from '../../../store/constants.js'
 
 describe('Vuex store mutations', () => {
 	it('adds an account with no mailboxes', () => {
@@ -82,7 +82,7 @@ describe('Vuex store mutations', () => {
 					delimiter: '.',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
 		expect(state).toEqual({
@@ -225,7 +225,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
 		expect(state).toEqual({
@@ -311,7 +311,7 @@ describe('Vuex store mutations', () => {
 					specialRole: 'archive',
 				},
 			],
-			aliases: []
+			aliases: [],
 		})
 
 		expect(state).toEqual({
@@ -668,17 +668,18 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -710,6 +711,7 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -732,29 +734,30 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes:[ {
 				mailboxId: 27,
 				databaseId: 12346,
 				id: 124,
 				subject: 'henlo 2',
 				uid: 322,
 				threadRootId: '234-567-890',
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -796,6 +799,7 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -824,16 +828,17 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				subject: 'henlo',
 				uid: 321,
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -872,6 +877,7 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -1076,11 +1082,12 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes:[ {
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
@@ -1096,7 +1103,7 @@ describe('Vuex store mutations', () => {
 						isDefaultTag: true,
 					},
 				},
-			},
+			}],
 		})
 
 		expect(state).toEqual({
@@ -1139,6 +1146,7 @@ describe('Vuex store mutations', () => {
 					isDefaultTag: true,
 				},
 			},
+			preferences:{'sort-order': 'newest'} ,
 		})
 	})
 
@@ -1456,32 +1464,33 @@ describe('Vuex store mutations', () => {
 			},
 			tagList: [],
 			tags: {},
+			preferences:{'sort-order': 'newest'} ,
 		}
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes: [{
 				mailboxId: 27,
 				databaseId: 12345,
 				id: 123,
 				subject: 'henlo',
 				uid: 321,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
 
 		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)
 
-		mutations.addEnvelope(state, {
+		mutations.addEnvelopes(state, {
 			query: undefined,
-			envelope: {
+			envelopes:[ {
 				mailboxId: 27,
 				databaseId: 12347,
 				id: 234,
 				subject: 'henlo',
 				uid: 432,
 				threadRootId: '123-456-789',
-			},
+			}],
 		})
 
 		expect(state.mailboxes[27].envelopeLists[''].length).toEqual(1)

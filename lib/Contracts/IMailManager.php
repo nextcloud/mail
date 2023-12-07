@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -25,24 +26,25 @@ namespace OCA\Mail\Contracts;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Quota;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailManager {
-
 	/**
 	 * @param string $uid
 	 * @param int $id
 	 *
 	 * @return Mailbox
 	 *
-	 * @throws DoesNotExistException
+	 * @throws ClientException
 	 */
 	public function getMailbox(string $uid, int $id): Mailbox;
 
@@ -84,6 +86,7 @@ interface IMailManager {
 	public function getMessage(string $uid, int $id): Message;
 
 	/**
+	 * @param Horde_Imap_Client_Socket $client
 	 * @param Account $account
 	 * @param string $mailbox
 	 * @param int $uid
@@ -92,9 +95,13 @@ interface IMailManager {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getSource(Account $account, string $mailbox, int $uid): ?string;
+	public function getSource(Horde_Imap_Client_Socket $client,
+		Account $account,
+		string $mailbox,
+		int $uid): ?string;
 
 	/**
+	 * @param Horde_Imap_Client_Socket $client
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param int $uid
@@ -104,10 +111,11 @@ interface IMailManager {
 	 *
 	 * @throws ServiceException
 	 */
-	public function getImapMessage(Account $account,
-								   Mailbox $mailbox,
-								   int $uid,
-								   bool $loadBody = false): IMAPMessage;
+	public function getImapMessage(Horde_Imap_Client_Socket $client,
+		Account $account,
+		Mailbox $mailbox,
+		int $uid,
+		bool $loadBody = false): IMAPMessage;
 
 	/**
 	 * @param Account $account
@@ -123,24 +131,42 @@ interface IMailManager {
 	 * @param int $uid
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
+	 * @return int the new UID
 	 *
 	 * @throws ServiceException
 	 */
 	public function moveMessage(Account $sourceAccount,
-								string $sourceFolderId,
-								int $uid,
-								Account $destinationAccount,
-								string $destFolderId);
+		string $sourceFolderId,
+		int $uid,
+		Account $destinationAccount,
+		string $destFolderId): int;
 
 	/**
 	 * @param Account $account
 	 * @param string $mailboxId
-	 * @param int $messageId
+	 * @param int $messageUid
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function deleteMessage(Account $account, string $mailboxId, int $messageId): void;
+	public function deleteMessage(Account $account, string $mailboxId, int $messageUid): void;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param int $messageUid
+	 * @param Horde_Imap_Client_Socket $client The caller is responsible to close the client.
+	 *
+	 * @throws ServiceException
+	 * @throws ClientException
+	 * @throws TrashMailboxNotSetException If no trash folder is configured for the given account.
+	 */
+	public function deleteMessageWithClient(
+		Account $account,
+		Mailbox $mailbox,
+		int $messageUid,
+		Horde_Imap_Client_Socket $client,
+	): void;
 
 	/**
 	 * Mark all messages of a folder as read
@@ -220,8 +246,8 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function updateSubscription(Account $account,
-									   Mailbox $mailbox,
-									   bool $subscribed): Mailbox;
+		Mailbox $mailbox,
+		bool $subscribed): Mailbox;
 
 	/**
 	 * @param Mailbox $mailbox
@@ -232,15 +258,24 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function enableMailboxBackgroundSync(Mailbox $mailbox,
-												bool $syncInBackground): Mailbox;
+		bool $syncInBackground): Mailbox;
 
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param Message $message
-	 * @return array
+	 * @return Attachment[]
 	 */
 	public function getMailAttachments(Account $account, Mailbox $mailbox, Message $message) : array;
+
+	/**
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
+	 * @param string $attachmentId
+	 * @return Attachment
+	 */
+	public function getMailAttachment(Account $account, Mailbox $mailbox, Message $message, string $attachmentId): Attachment;
 
 	/**
 	 * @param string $imapLabel
@@ -283,15 +318,28 @@ interface IMailManager {
 	public function updateTag(int $id, string $displayName, string $color, string $userId): Tag;
 
 	/**
+	 * Delete a mail tag
+	 *
+	 * @throws ClientException
+	 */
+	public function deleteTag(int $id, string $userId, array $accounts): Tag;
+
+	/**
+	 * Delete message Tags and untagged messages on Imap
+	 *
+	 * @throws ClientException
+	 */
+	public function deleteTagForAccount(int $id, string $userId, Tag $tag, Account $account): void;
+	/**
 	 * @param Account $srcAccount
 	 * @param Mailbox $srcMailbox
 	 * @param Account $dstAccount
 	 * @param Mailbox $dstMailbox
 	 * @param string $threadRootId
-	 * @return void
+	 * @return int[] the new UIDs
 	 * @throws ServiceException
 	 */
-	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): void;
+	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array;
 
 	/**
 	 * @param Account $account

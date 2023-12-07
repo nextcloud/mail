@@ -29,7 +29,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleLoggerDecorator implements LoggerInterface {
-
 	/** @var LoggerInterface */
 	private $inner;
 
@@ -37,7 +36,7 @@ class ConsoleLoggerDecorator implements LoggerInterface {
 	private $consoleOutput;
 
 	public function __construct(LoggerInterface $inner,
-								OutputInterface $consoleOutput) {
+		OutputInterface $consoleOutput) {
 		$this->inner = $inner;
 		$this->consoleOutput = $consoleOutput;
 	}

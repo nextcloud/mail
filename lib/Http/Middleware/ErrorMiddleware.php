@@ -32,38 +32,32 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
+use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
+use ReflectionMethod;
 use Throwable;
 
 class ErrorMiddleware extends Middleware {
-
 	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var IConfig */
 	private $config;
 
-	/** @var IControllerMethodReflector */
-	private $reflector;
-
 	/**
 	 * @param IConfig $config
 	 * @param LoggerInterface $logger
-	 * @param IControllerMethodReflector $reflector
 	 */
 	public function __construct(IConfig $config,
-								LoggerInterface $logger,
-								IControllerMethodReflector $reflector) {
+		LoggerInterface $logger) {
 		$this->config = $config;
 		$this->logger = $logger;
-		$this->reflector = $reflector;
 	}
 
 	/**
@@ -75,7 +69,9 @@ class ErrorMiddleware extends Middleware {
 	 * @throws Exception
 	 */
 	public function afterException($controller, $methodName, Exception $exception) {
-		if (!$this->reflector->hasAnnotation('TrapError')) {
+		$reflectionMethod = new ReflectionMethod($controller, $methodName);
+		$attributes = $reflectionMethod->getAttributes(TrapError::class);
+		if ($attributes === []) {
 			return parent::afterException($controller, $methodName, $exception);
 		}
 

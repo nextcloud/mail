@@ -35,7 +35,6 @@ use OCP\Util;
  * make it mockable in tests.
  */
 class HostNameFactory {
-
 	/**
 	 * Determine the host's name (without any port numbers)
 	 *

@@ -31,7 +31,6 @@ use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
 class DraftSavedEvent extends Event {
-
 	/** @var Account */
 	private $account;
 
@@ -42,8 +41,8 @@ class DraftSavedEvent extends Event {
 	private $draft;
 
 	public function __construct(Account $account,
-								NewMessageData $newMessageData,
-								?Message $draft) {
+		NewMessageData $newMessageData,
+		?Message $draft) {
 		parent::__construct();
 		$this->account = $account;
 		$this->newMessageData = $newMessageData;

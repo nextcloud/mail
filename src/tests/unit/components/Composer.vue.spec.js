@@ -2,8 +2,9 @@
  * @copyright 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -22,8 +23,8 @@
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vuex from 'vuex'
 
-import Composer from '../../../components/Composer'
-import Nextcloud from '../../../mixins/Nextcloud'
+import Composer from '../../../components/Composer.vue'
+import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 
@@ -37,6 +38,10 @@ describe('Composer', () => {
 	let store
 
 	beforeEach(() => {
+		Object.defineProperty(window, "firstDay", {
+			value: 0,
+		})
+
 		actions = {}
 		getters = {
 			accounts: () => [
@@ -50,6 +55,7 @@ describe('Composer', () => {
 			getPreference: () => (key, fallback) => fallback,
 			getAccount: () => ({}),
 			isScheduledSendingDisabled: () => false,
+			getSmimeCertificates: () => [],
 		}
 		store = new Vuex.Store({
 			actions,
@@ -61,8 +67,15 @@ describe('Composer', () => {
 		const view = shallowMount(Composer, {
 			propsData: {
 				inReplyToMessageId: 'abc123',
-				draft: jest.fn(),
-				send: jest.fn(),
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
 			},
 			store,
 			localVue,
@@ -72,5 +85,267 @@ describe('Composer', () => {
 
 		expect(composerData.inReplyToMessageId).toEqual('abc123')
 	})
+
+	it('disabled the send button', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				inReplyToMessageId: 'abc123',
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			store,
+			localVue,
+		})
+
+		const canSend = view.vm.canSend
+
+		expect(canSend).toEqual(false)
+	})
+
+	it('enables the send button if data is entered', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				inReplyToMessageId: 'abc123',
+				to: [
+					{ label: 'test', email: 'test@domain.tld' },
+				],
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			store,
+			localVue,
+		})
+
+		const canSend = view.vm.canSend
+
+		expect(canSend).toEqual(true)
+	})
+
+	it('should not S/MIME sign messages if there are no certs', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return undefined
+				},
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeSign = false
+		expect(view.vm.shouldSmimeSign).toEqual(false)
+
+		view.vm.wantsSmimeSign = true
+		expect(view.vm.shouldSmimeSign).toEqual(false)
+	})
+
+	it('should S/MIME sign messages if there are certs', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return { foo: 'bar' }
+				},
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeSign = true
+		expect(view.vm.shouldSmimeSign).toEqual(true)
+
+		view.vm.wantsSmimeSign = false
+		expect(view.vm.shouldSmimeSign).toEqual(false)
+	})
+
+	it('should not S/MIME encrypt messages if there are no certs', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return undefined
+				},
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeEncrypt = false
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+	})
+
+	it('should not S/MIME encrypt messages if there are missing recipient certs', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return { foo: 'bar' }
+				},
+				missingSmimeCertificatesForRecipients() {
+					return ['john@foo.bar']
+				},
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeEncrypt = false
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+	})
+
+	it('should S/MIME sign messages if there are certs', () => {
+		const view = shallowMount(Composer, {
+			propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+			},
+			computed: {
+				smimeCertificateForCurrentAlias() {
+					return { foo: 'bar' }
+				},
+				missingSmimeCertificatesForRecipients() {
+					return []
+				},
+			},
+			store,
+			localVue,
+		})
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.shouldSmimeEncrypt).toEqual(true)
+
+		view.vm.wantsSmimeEncrypt = false
+		expect(view.vm.shouldSmimeEncrypt).toEqual(false)
+	})
+
+	it('generate title for submit button', () => {
+		const view = shallowMount(Composer, {
+            propsData: {
+				isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+            },
+			store,
+			localVue,
+		})
+
+
+		expect(view.vm.submitButtonTitle).toEqual('Send')
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with S/MIME and send')
+
+		view.vm.wantsSmimeEncrypt = false
+		view.vm.mailvelope.available = true
+		view.vm.encrypt = true
+
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send')
+	})
+
+	it('generate title for submit button (send later)', () => {
+		const view = shallowMount(Composer, {
+            propsData: {
+                isFirstOpen: true,
+				accounts: [
+					{
+						id: 123,
+						editorMode: 'plaintext',
+						isUnified: false,
+						aliases: [],
+					},
+				],
+            },
+			store,
+			localVue,
+		})
+
+		view.vm.sendAtVal = '2023-01-01 14:00'
+
+		expect(view.vm.submitButtonTitle).toEqual('Send later Jan 1, 02:00 PM')
+
+		view.vm.wantsSmimeEncrypt = true
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with S/MIME and send later Jan 1, 02:00 PM')
+
+		view.vm.wantsSmimeEncrypt = false
+		view.vm.mailvelope.available = true
+		view.vm.encrypt = true
+
+		expect(view.vm.submitButtonTitle).toEqual('Encrypt with Mailvelope and send later Jan 1, 02:00 PM')
+	})
+
 
 })

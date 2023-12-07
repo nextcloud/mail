@@ -1,21 +1,32 @@
 <template>
-	<div v-if="state === STATES.EDITING" class="message-composer">
-		<div class="composer-fields mail-account">
+	<div class="message-composer">
+		<NcReferencePickerModal v-if="isPickerAvailable && isPickerOpen" @submit="onPicked" @cancel="closePicker" />
+		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect
+				<Select
 					id="from"
 					:value="selectedAlias"
 					:options="aliases"
 					label="name"
 					track-by="selectId"
 					:searchable="false"
-					:custom-label="formatAliases"
 					:placeholder="t('mail', 'Select account')"
 					:clear-on-select="false"
-					@select="onAliasChange" />
+					:append-to-body="false"
+					:selectable="(option)=> {
+						return option.selectable}"
+					@option:selected="onAliasChange">
+					<template slot="option" slot-scope="option">
+						{{ formatAliases(option) }}
+					</template>
+
+					<template slot="selected-option" slot-scope="option">
+						{{ formatAliases(option) }}
+					</template>
+				</Select>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -40,7 +51,8 @@
 					:hide-selected="true"
 					:loading="loadingIndicatorTo"
 					:auto-limit="autoLimit"
-					@input="callSaveDraft(true, getMessageData)"
+					:options-limit="30"
+					@input="saveDraftDebounced"
 					@tag="onNewToAddr"
 					@search-change="onAutocomplete($event, 'to')">
 					<template #tag="{ option }">
@@ -54,6 +66,7 @@
 								:no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
+								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
@@ -87,7 +100,8 @@
 					:loading="loadingIndicatorCc"
 					:auto-limit="autoLimit"
 					:hide-selected="true"
-					@input="callSaveDraft(true, getMessageData)"
+					:options-limit="30"
+					@input="saveDraftDebounced"
 					@tag="onNewCcAddr"
 					@search-change="onAutocomplete($event, 'cc')">
 					<template #tag="{ option }">
@@ -101,6 +115,7 @@
 								:no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
+								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
@@ -127,7 +142,8 @@
 					:preserve-search="true"
 					:loading="loadingIndicatorBcc"
 					:hide-selected="true"
-					@input="callSaveDraft(true, getMessageData)"
+					:options-limit="30"
+					@input="saveDraftDebounced"
 					@tag="onNewBccAddr"
 					@search-change="onAutocomplete($event, 'bcc')">
 					<template #tag="{ option }">
@@ -141,6 +157,7 @@
 								:no-margin="true"
 								:title="option.label"
 								:subtitle="option.email"
+								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
@@ -160,12 +177,19 @@
 				class="subject"
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
-				@input="callSaveDraft(true, getMessageData)">
+				@input="saveDraftDebounced">
 		</div>
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
 		</div>
-		<div v-if="mailvelope.keysMissing.length" class="warning noreply-warning">
+		<div v-if="wantsSmimeEncrypt && missingSmimeCertificatesForRecipients.length" class="warning noreply-warning">
+			{{
+				t('mail', 'The following recipients do not have a S/MIME certificate: {recipients}.', {
+					recipients: missingSmimeCertificatesForRecipients.join(', '),
+				})
+			}}
+		</div>
+		<div v-if="encrypt && mailvelope.keysMissing.length" class="warning noreply-warning">
 			{{
 				t('mail', 'The following recipients do not have a PGP key: {recipients}.', {
 					recipients: mailvelope.keysMissing.join(', '),
@@ -175,78 +199,92 @@
 		<div class="composer-fields message-editor">
 			<!--@keypress="onBodyKeyPress"-->
 			<TextEditor
-				v-if="!encrypt && editorPlainText"
-				key="editor-plain"
-				v-model="bodyVal"
+				v-if="!encrypt"
+				ref="editor"
+				:key="editorMode"
+				:value="bodyVal"
+				:html="!editorPlainText"
 				name="body"
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
-				:focus="isReply"
+				:focus="isReply || !isFirstOpen"
 				:bus="bus"
-				@input="onEditorInputText" />
-			<TextEditor
-				v-else-if="!encrypt && !editorPlainText"
-				key="editor-rich"
-				v-model="bodyVal"
-				:html="true"
-				name="body"
-				class="message-body"
-				:placeholder="t('mail', 'Write message …')"
-				:focus="isReply"
-				:bus="bus"
-				@input="onEditorInputText" />
+				@input="onEditorInput"
+				@ready="onEditorReady"
+				@show-toolbar="handleShow" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
-				v-model="bodyVal"
+				:value="bodyVal"
 				:recipients="allRecipients"
 				:quoted-text="body"
-				:is-reply-or-forward="isReply || isForward" />
+				:is-reply-or-forward="isReply || isForward"
+				@input="onEditorInput" />
 		</div>
 		<ComposerAttachments v-model="attachments"
 			:bus="bus"
 			:upload-size-limit="attachmentSizeLimit"
-			@upload="onAttachmentsUploading" />
+			@upload="$emit('upload-attachment', $event, getMessageData())" />
 		<div class="composer-actions-right composer-actions">
 			<div class="composer-actions--primary-actions">
 				<p class="composer-actions-draft-status">
-					<span v-if="savingDraft === true" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
+					<span v-if="savingDraft" class="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 					<span v-else-if="!canSaveDraft" class="draft-status">{{ t('mail', 'Error saving draft') }}</span>
-					<span v-else-if="savingDraft === false" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
+					<span v-else-if="draftSaved" class="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
-				<VButton v-if="!savingDraft && !canSaveDraft"
+				<ButtonVue v-if="!savingDraft && !canSaveDraft"
 					class="button"
 					type="tertiary"
-					@click="onSave">
+					:aria-label="t('mail', 'Save draft')"
+					@click="saveDraft">
 					<template #icon>
 						<Download :size="20" :title="t('mail', 'Save draft')" />
 					</template>
-				</VButton>
-				<VButton v-if="savingDraft === false"
+				</ButtonVue>
+				<ButtonVue v-if="!savingDraft && draftSaved"
 					class="button"
 					type="tertiary"
-					@click="discardDraft">
+					:aria-label="t('mail', 'Discard & close draft')"
+					@click="$emit('discard-draft')">
 					<template #icon>
 						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
 					</template>
-				</VButton>
+				</ButtonVue>
 			</div>
 			<div class="composer-actions--secondary-actions">
-				<Actions>
+				<Actions :open.sync="isActionsOpen"
+					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
-						<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
+						<ActionButton @click="onAddLocalAttachment">
+							<template #icon>
+								<IconUpload :size="20" />
+							</template>
 							{{
 								t('mail', 'Upload attachment')
 							}}
 						</ActionButton>
-						<ActionButton icon="icon-folder" @click="onAddCloudAttachment">
+						<ActionButton @click="onAddCloudAttachment">
+							<template #icon>
+								<IconFolder :size="20" />
+							</template>
 							{{
 								t('mail', 'Add attachment from Files')
 							}}
 						</ActionButton>
-						<ActionButton :disabled="encrypt" icon="icon-public" @click="onAddCloudAttachmentLink">
+						<ActionButton :disabled="encrypt" @click="onAddCloudAttachmentLink">
+							<template #icon>
+								<IconPublic :size="20" />
+							</template>
 							{{
 								addShareLink
+							}}
+						</ActionButton>
+						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
+							<template #icon>
+								<IconLinkPicker :size="20" />
+							</template>
+							{{
+								t('mail', 'Smart picker')
 							}}
 						</ActionButton>
 						<ActionButton
@@ -260,22 +298,46 @@
 								t('mail', 'Send later')
 							}}
 						</ActionButton>
-						<ActionCheckbox
-							:checked="!encrypt && !editorPlainText"
-							:disabled="encrypt"
-							@check="editorMode = 'html'"
-							@uncheck="editorMode = 'plaintext'">
+						<ActionButton
+							v-if="!encrypt && editorPlainText"
+							@click="setEditorModeHtml()">
+							<template #icon>
+								<IconHtml :size="20" />
+							</template>
 							{{ t('mail', 'Enable formatting') }}
-						</ActionCheckbox>
+						</ActionButton>
+						<ActionButton
+							v-if="!encrypt && !editorPlainText"
+							@click="setEditorModeText()">
+							<template #icon>
+								<IconClose :size="20" />
+							</template>
+							{{ t('mail', 'Disable formatting') }}
+						</ActionButton>
 						<ActionCheckbox
-							:checked="requestMdn"
-							@check="requestMdn = true"
-							@uncheck="requestMdn = false">
+							:checked="requestMdnVal"
+							@check="requestMdnVal = true"
+							@uncheck="requestMdnVal = false">
 							{{ t('mail', 'Request a read receipt') }}
+						</ActionCheckbox>
+						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
+							:checked="wantsSmimeSign"
+							@check="wantsSmimeSign = true"
+							@uncheck="wantsSmimeSign = false">
+							{{ t('mail', 'Sign message with S/MIME') }}
+						</ActionCheckbox>
+						<ActionCheckbox v-if="smimeCertificateForCurrentAlias"
+							:checked="wantsSmimeEncrypt"
+							:disabled="encrypt"
+							@check="wantsSmimeEncrypt = true"
+							@uncheck="wantsSmimeEncrypt = false">
+							{{ t('mail', 'Encrypt message with S/MIME') }}
 						</ActionCheckbox>
 						<ActionCheckbox
 							v-if="mailvelope.available"
 							:checked="encrypt"
+							:disabled="wantsSmimeEncrypt"
+							@change="isActionsOpen = false"
 							@check="encrypt = true"
 							@uncheck="encrypt = false">
 							{{ t('mail', 'Encrypt message with Mailvelope') }}
@@ -295,7 +357,6 @@
 							name="sendLater"
 							:checked="!sendAtVal"
 							class="send-action-radio"
-							@update:checked="sendAtVal = undefined"
 							@change="onChangeSendLater(undefined)">
 							{{ t('mail', 'Send now') }}
 						</ActionRadio>
@@ -303,7 +364,6 @@
 							name="sendLater"
 							:checked="isSendAtTomorrowMorning"
 							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateTomorrowMorning"
 							@change="onChangeSendLater(dateTomorrowMorning)">
 							{{ t('mail', 'Tomorrow morning') }} - {{ convertToLocalDate(dateTomorrowMorning) }}
 						</ActionRadio>
@@ -311,7 +371,6 @@
 							name="sendLater"
 							:checked="isSendAtTomorrowAfternoon"
 							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateTomorrowAfternoon"
 							@change="onChangeSendLater(dateTomorrowAfternoon)">
 							{{ t('mail', 'Tomorrow afternoon') }} - {{ convertToLocalDate(dateTomorrowAfternoon) }}
 						</ActionRadio>
@@ -319,7 +378,6 @@
 							name="sendLater"
 							:checked="isSendAtMondayMorning"
 							class="send-action-radio send-action-radio--multiline"
-							@update:checked="sendAtVal = dateMondayMorning"
 							@change="onChangeSendLater(dateMondayMorning)">
 							{{ t('mail', 'Monday morning') }} - {{ convertToLocalDate(dateMondayMorning) }}
 						</ActionRadio>
@@ -327,11 +385,12 @@
 							class="send-action-radio"
 							:checked="isSendAtCustom"
 							:value="customSendTime"
-							@update:checked="sendAtVal = customSendTime"
 							@change="onChangeSendLater(customSendTime)">
 							{{ t('mail', 'Custom date and time') }}
 						</ActionRadio>
 						<ActionInput v-model="selectedDate"
+							:is-native-picker="true"
+							:min="dateToday"
 							type="datetime-local"
 							:first-day-of-week="firstDayDatetimePicker"
 							:use12h="showAmPm"
@@ -339,126 +398,77 @@
 							:format="'YYYY-MM-DD HH:mm'"
 							icon=""
 							:minute-step="5"
-							:show-second="false"
-							:disabled-date="disabledDatetimepickerDate"
-							:disabled-time="disabledDatetimepickerTime"
 							@change="onChangeSendLater(customSendTime)">
 							{{ t('mail', 'Enter a date') }}
 						</ActionInput>
 					</template>
 				</Actions>
 
-				<button :disabled="!canSend"
-					class="button primary send-button"
-					type="submit"
+				<ButtonVue :disabled="!canSend"
+					native-type="submit"
+					type="primary"
+					:aria-label="submitButtonTitle"
 					@click="onSend">
-					<Send
-						:title="submitButtonTitle"
-						:size="20" />
+					<template #icon>
+						<Send
+							:title="submitButtonTitle"
+							:size="20" />
+					</template>
 					{{ submitButtonTitle }}
-				</button>
+				</ButtonVue>
 			</div>
 		</div>
 	</div>
-	<Loading v-else-if="state === STATES.UPLOADING" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-	<Loading v-else-if="state === STATES.SENDING"
-		:hint="t('mail', 'Sending …')"
-		role="alert"
-		class="sending-hint" />
-	<EmptyContent v-else-if="state === STATES.ERROR" class="centered-content" role="alert">
-		<h2>{{ t('mail', 'Error sending your message') }}</h2>
-		<p v-if="errorText">
-			{{ errorText }}
-		</p>
-		<button class="button" @click="state = STATES.EDITING">
-			{{ t('mail', 'Go back') }}
-		</button>
-		<button class="button primary" @click="onSend">
-			{{ t('mail', 'Retry') }}
-		</button>
-	</EmptyContent>
-	<div v-else-if="state === STATES.WARNING" class="emptycontent" role="alert">
-		<h2>{{ t('mail', 'Warning sending your message') }}</h2>
-		<p v-if="errorText">
-			{{ errorText }}
-		</p>
-		<button class="button primary" @click="state = STATES.EDITING">
-			{{ t('mail', 'Go back') }}
-		</button>
-		<button class="button" @click="onForceSend">
-			{{ t('mail', 'Send anyway') }}
-		</button>
-	</div>
-	<EmptyContent v-else icon="icon-checkmark">
-		<h2>{{ sendAtVal ? t('mail', 'Message will be sent at') + ' ' + convertToLocalDate(sendAtVal) : t('mail', 'Message sent!') }}</h2>
-	</EmptyContent>
 </template>
 
 <script>
-import debounce from 'lodash/fp/debounce'
-import uniqBy from 'lodash/fp/uniqBy'
-import isArray from 'lodash/fp/isArray'
-import trimStart from 'lodash/fp/trimCharsStart'
+import debounce from 'lodash/fp/debounce.js'
+import uniqBy from 'lodash/fp/uniqBy.js'
+import trimStart from 'lodash/fp/trimCharsStart.js'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionRadio from '@nextcloud/vue/dist/Components/ActionRadio'
-import Button from '@nextcloud/vue/dist/Components/Button'
-import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
-import Delete from 'vue-material-design-icons/Delete'
-import ComposerAttachments from './ComposerAttachments'
-import Download from 'vue-material-design-icons/Download'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import ListItemIcon from '@nextcloud/vue/dist/Components/ListItemIcon'
-import RecipientListItem from './RecipientListItem'
-import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal'
-import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal'
-import { showError } from '@nextcloud/dialogs'
-import { translate as t, getCanonicalLocale, getFirstDay, getLocale } from '@nextcloud/l10n'
+
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
+import Delete from 'vue-material-design-icons/Delete.vue'
+import ComposerAttachments from './ComposerAttachments.vue'
+import Download from 'vue-material-design-icons/Download.vue'
+import IconUpload from 'vue-material-design-icons/Upload.vue'
+import IconFolder from 'vue-material-design-icons/Folder.vue'
+import IconPublic from 'vue-material-design-icons/Link.vue'
+import IconLinkPicker from 'vue-material-design-icons/Shape.vue'
+import RecipientListItem from './RecipientListItem.vue'
+import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
+import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
+import IconHtml from 'vue-material-design-icons/ImageSizeSelectActual.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import { showError, showWarning } from '@nextcloud/dialogs'
+import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 
-import { findRecipient } from '../service/AutocompleteService'
-import { detect, html, plain, toHtml, toPlain } from '../util/text'
-import Loading from './Loading'
-import logger from '../logger'
-import TextEditor from './TextEditor'
-import { buildReplyBody } from '../ReplyBuilder'
-import MailvelopeEditor from './MailvelopeEditor'
-import { getMailvelope } from '../crypto/mailvelope'
-import { isPgpgMessage } from '../crypto/pgp'
-import { matchError } from '../errors/match'
-import NoSentMailboxConfiguredError
-	from '../errors/NoSentMailboxConfiguredError'
-import NoDraftsMailboxConfiguredError
-	from '../errors/NoDraftsMailboxConfiguredError'
-import ManyRecipientsError
-	from '../errors/ManyRecipientsError'
+import { findRecipient } from '../service/AutocompleteService.js'
+import { detect, html, plain, toHtml, toPlain } from '../util/text.js'
+import logger from '../logger.js'
+import TextEditor from './TextEditor.vue'
+import { buildReplyBody } from '../ReplyBuilder.js'
+import MailvelopeEditor from './MailvelopeEditor.vue'
+import { getMailvelope } from '../crypto/mailvelope.js'
+import { isPgpgMessage } from '../crypto/pgp.js'
 
-import Send from 'vue-material-design-icons/Send'
-import SendClock from 'vue-material-design-icons/SendClock'
+import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichText.js'
+
+import Send from 'vue-material-design-icons/Send.vue'
+import SendClock from 'vue-material-design-icons/SendClock.vue'
 import moment from '@nextcloud/moment'
 import { mapGetters } from 'vuex'
+import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand.js'
+import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
 const NO_ALIAS_SET = -1
 
 Vue.use(Autosize)
-
-const STATES = Object.seal({
-	EDITING: 0,
-	UPLOADING: 1,
-	SENDING: 2,
-	ERROR: 3,
-	WARNING: 4,
-	FINISHED: 5,
-	DISCARDING: 6,
-	DISCARDED: 7,
-})
 
 export default {
 	name: 'Composer',
@@ -469,26 +479,36 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		ActionRadio,
-		VButton: Button,
+		ButtonVue,
 		ComposerAttachments,
 		ChevronLeft,
 		Delete,
 		Download,
-		Loading,
+		IconUpload,
+		IconFolder,
+		IconPublic,
+		IconLinkPicker,
 		Multiselect,
+		Select,
 		TextEditor,
-		EmptyContent,
 		ListItemIcon,
 		RecipientListItem,
 		Send,
 		SendClock,
 		UnfoldMoreHorizontal,
 		UnfoldLessHorizontal,
+		IconHtml,
+		IconClose,
+		NcReferencePickerModal,
 	},
 	props: {
 		fromAccount: {
 			type: Number,
 			default: () => undefined,
+		},
+		fromAlias: {
+			type: Number,
+			default: undefined,
 		},
 		to: {
 			type: Array,
@@ -513,18 +533,6 @@ export default {
 		editorBody: {
 			type: String,
 			default: '',
-		},
-		draftId: {
-			type: Number,
-			default: undefined,
-		},
-		draft: {
-			type: Function,
-			required: true,
-		},
-		send: {
-			type: Function,
-			required: true,
 		},
 		inReplyToMessageId: {
 			type: String,
@@ -553,15 +561,48 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		error: {
+			type: String,
+			default: undefined,
+		},
+		canSaveDraft: {
+			type: Boolean,
+			default: false,
+		},
+		uploadingAttachments: {
+			type: Boolean,
+			default: false,
+		},
+		savingDraft: {
+			type: Boolean,
+			default: false,
+		},
+		draftSaved: {
+			type: Boolean,
+			default: false,
+		},
+		smimeSign: {
+			type: Boolean,
+			default: false,
+		},
+		smimeEncrypt: {
+			type: Boolean,
+			default: false,
+		},
+		isFirstOpen: {
+			type: Boolean,
+			required: true,
+		},
+		requestMdn: {
+			type: Boolean,
+			default: false,
+		},
+		accounts: {
+			type: Array,
+			required: true,
+		},
 	},
 	data() {
-		let bodyVal = this.editorBody
-		if (bodyVal.length === 0) {
-			// an empty body (e.g "") does not trigger an onInput event.
-			// but to append the signature a onInput event is required.
-			bodyVal = '<p></p><p></p>'
-		}
-
 		// Set default custom date time picker value to now + 1 hour
 		const selectedDate = new Date()
 		selectedDate.setHours(selectedDate.getHours() + 1)
@@ -573,17 +614,10 @@ export default {
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal,
+			bodyVal: this.editorBody,
 			attachments: this.attachmentsData,
-			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
-			draftsPromise: Promise.resolve(this.draftId),
-			attachmentsPromise: Promise.resolve(),
-			canSaveDraft: true,
-			savingDraft: undefined,
-			saveDraftDebounced: debounce(10 * 1000, this.saveDraft),
-			state: STATES.EDITING,
-			errorText: undefined,
-			STATES,
+			noReply: this.to.some((to) => to.email?.startsWith('noreply@') || to.email?.startsWith('no-reply@')),
+			saveDraftDebounced: debounce(5 * 1000, this.saveDraft),
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
@@ -594,13 +628,14 @@ export default {
 				keyRing: undefined,
 				keysMissing: [],
 			},
-			editorMode: (this.body?.format !== 'html') ? 'plaintext' : 'html',
+			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
-			requestMdn: false,
-			appendSignature: true,
+			requestMdnVal: this.requestMdn,
+			changeSignature: false,
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
+			isActionsOpen: false,
 			isMoreActionsOpen: false,
 			selectedDate,
 			sendAtVal: this.sendAt,
@@ -614,16 +649,21 @@ export default {
 				},
 			},
 			autoLimit: true,
-			editorInputTextReady: false,
+			wantsSmimeSign: this.smimeSign,
+			wantsSmimeEncrypt: this.smimeEncrypt,
+			isPickerOpen: false,
 		}
 	},
 	computed: {
 		...mapGetters([
 			'isScheduledSendingDisabled',
 		]),
+		isPickerAvailable() {
+			return parseInt(this.$store.getters.getNcVersion) >= 26
+		},
 		aliases() {
 			let cnt = 0
-			const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+			const accounts = this.accounts.filter((a) => !a.isUnified)
 			const aliases = accounts.flatMap((account) => [
 				{
 					id: account.id,
@@ -634,6 +674,8 @@ export default {
 					name: account.name,
 					emailAddress: account.emailAddress,
 					signatureAboveQuote: account.signatureAboveQuote,
+					smimeCertificateId: account.smimeCertificateId,
+					selectable: account.connectionStatus,
 				},
 				account.aliases.map((alias) => {
 					return {
@@ -645,6 +687,8 @@ export default {
 						name: alias.name,
 						emailAddress: alias.alias,
 						signatureAboveQuote: account.signatureAboveQuote,
+						smimeCertificateId: alias.smimeCertificateId,
+						selectable: account.connectionStatus,
 					}
 				}),
 			])
@@ -652,6 +696,9 @@ export default {
 		},
 		allRecipients() {
 			return this.selectTo.concat(this.selectCc).concat(this.selectBcc)
+		},
+		dateToday() {
+			return new Date(new Date().setDate(new Date().getDate()))
 		},
 		attachmentSizeLimit() {
 			return this.$store.getters.getPreference('attachment-size-limit')
@@ -668,6 +715,10 @@ export default {
 			return this.replyTo !== undefined
 		},
 		canSend() {
+			if (this.wantsSmimeEncrypt && (!this.smimeCertificateForCurrentAlias || this.missingSmimeCertificatesForRecipients.length)) {
+				return false
+			}
+
 			if (this.encrypt && this.mailvelope.keysMissing.length) {
 				return false
 			}
@@ -675,17 +726,27 @@ export default {
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
 		},
 		editorPlainText() {
-			return this.editorMode === 'plaintext'
+			return this.editorMode === EDITOR_MODE_TEXT
 		},
 		submitButtonTitle() {
+			if (this.wantsSmimeEncrypt) {
+				if (this.sendAtVal) {
+					return t('mail', 'Encrypt with S/MIME and send later') + ` ${this.convertToLocalDate(this.sendAtVal)}`
+				}
+				return t('mail', 'Encrypt with S/MIME and send')
+			}
+
+			if (this.mailvelope.available && this.encrypt) {
+				if (this.sendAtVal) {
+					return t('mail', 'Encrypt with Mailvelope and send later') + ` ${this.convertToLocalDate(this.sendAtVal)}`
+				}
+				return t('mail', 'Encrypt with Mailvelope and send')
+			}
+
 			if (this.sendAtVal) {
 				return t('mail', 'Send later') + ` ${this.convertToLocalDate(this.sendAtVal)}`
 			}
-			if (!this.mailvelope.available) {
-				return t('mail', 'Send')
-			}
-
-			return this.encrypt ? t('mail', 'Encrypt and send') : t('mail', 'Send unencrypted')
+			return t('mail', 'Send')
 		},
 		dateTomorrowMorning() {
 			const today = new Date()
@@ -713,22 +774,81 @@ export default {
 			return timeFormat.indexOf('a') !== -1
 		},
 		isSendAtTomorrowMorning() {
-			return this.sendAtVal
-				&& Math.floor(this.dateTomorrowMorning / 1000) === Math.floor(this.sendAtVal / 1000)
+			if (this.sendAtVal && Math.floor(this.dateTomorrowMorning / 1000) === Math.floor(this.sendAtVal / 1000)) {
+				return true
+			} else {
+				return false
+			}
 		},
 		isSendAtTomorrowAfternoon() {
-			return this.sendAtVal
-				&& Math.floor(this.dateTomorrowAfternoon / 1000) === Math.floor(this.sendAtVal / 1000)
+			if (this.sendAtVal && Math.floor(this.dateTomorrowAfternoon / 1000) === Math.floor(this.sendAtVal / 1000)) {
+				return true
+			} else {
+				return false
+			}
 		},
 		isSendAtMondayMorning() {
-			return this.sendAtVal
-				&& Math.floor(this.dateMondayMorning / 1000) === Math.floor(this.sendAtVal / 1000)
+			if (this.sendAtVal && Math.floor(this.dateMondayMorning / 1000) === Math.floor(this.sendAtVal / 1000)) {
+				return true
+			} else {
+				return false
+			}
 		},
 		isSendAtCustom() {
-			return this.sendAtVal
-				&& !this.isSendAtTomorrowMorning
-				&& !this.isSendAtTomorrowAfternoon
-				&& !this.isSendAtMondayMorning
+			if (this.sendAtVal && !this.isSendAtTomorrowMorning && !this.isSendAtTomorrowAfternoon && !this.isSendAtMondayMorning) {
+				return true
+			} else {
+				return false
+			}
+		},
+
+		/**
+		 * The S/MIME certificate object of the current alias/account.
+		 *
+		 * @return {object|undefined} S/MIME certificate of current account or alias if one is selected
+		 */
+		smimeCertificateForCurrentAlias() {
+			if (this.selectedAlias === NO_ALIAS_SET) {
+				return undefined
+			}
+
+			return this.smimeCertificateForAlias(this.selectedAlias)
+		},
+
+		/**
+		 * Whether the outgoing message should be signed with S/MIME.
+		 *
+		 * @return {boolean} True if the message should be signed
+		 */
+		shouldSmimeSign() {
+			return this.wantsSmimeSign && !!this.smimeCertificateForCurrentAlias
+		},
+
+		/**
+		 * Whether the outgoing message should be encrypted with S/MIME.
+		 *
+		 * @return {boolean} True if the message should be encrypted
+		 */
+		shouldSmimeEncrypt() {
+			return this.wantsSmimeEncrypt && !!this.smimeCertificateForCurrentAlias && this.missingSmimeCertificatesForRecipients.length === 0
+		},
+
+		/**
+		 * Return a list of recipients without a matching S/MIME certificate.
+		 *
+		 * @return {Array} Recipients without matching certificate
+		 */
+		missingSmimeCertificatesForRecipients() {
+			const missingCertificates = []
+
+			this.allRecipients.forEach((recipient) => {
+				const recipientCertificate = this.$store.getters.getSmimeCertificateByEmail(recipient.email)
+				if (!recipientCertificate) {
+					missingCertificates.push(recipient.email)
+				}
+			})
+
+			return missingCertificates
 		},
 	},
 	watch: {
@@ -753,14 +873,35 @@ export default {
 				this.onAliasChange(newAlias)
 			}
 		},
-		editorMode() {
-			this.appendSignature = true
+		selectTo(val) {
+			this.$emit('update:to', val)
 		},
-		bodyVal() {
-			if (this.body.value === '') {
-				this.appendSignature = true
-			}
-			this.handleAppendSignature()
+		selectCc(val) {
+			this.$emit('update:cc', val)
+		},
+		selectBcc(val) {
+			this.$emit('update:bcc', val)
+		},
+		subjectVal(val) {
+			this.$emit('update:subject', val)
+		},
+		bodyVal(val) {
+			this.$emit('update:editor-body', val)
+		},
+		attachments(val) {
+			this.$emit('update:attachments-data', val)
+		},
+		sendAtVal(val) {
+			this.$emit('update:send-at', val)
+		},
+		wantsSmimeSign(val) {
+			this.$emit('update:smime-sign', val)
+		},
+		wantsSmimeEncrypt(val) {
+			this.$emit('update:smime-encrypt', val)
+		},
+		requestMdnVal(val) {
+			this.$emit('update:request-mdn', val)
 		},
 	},
 	async beforeMount() {
@@ -769,8 +910,8 @@ export default {
 		await this.onMailvelopeLoaded(await getMailvelope())
 	},
 	mounted() {
-		if (!this.isReply) {
-			this.$refs.toLabel.$el.focus()
+		if (!this.isReply && this.isFirstOpen) {
+			this.$nextTick(() => this.$refs.toLabel.$el.focus())
 		}
 
 		// Add attachments in case of forward
@@ -785,29 +926,23 @@ export default {
 				})
 			})
 		}
+
 		// Add messages forwarded as attachments
-		let forwards = []
-		if (this.forwardedMessages && !isArray(this.forwardedMessages)) {
-			forwards = [this.forwardedMessages]
-		} else if (this.forwardedMessages && isArray(this.forwardedMessages)) {
-			forwards = this.forwardedMessages
-		}
-		forwards.forEach(id => {
+		for (const id of this.forwardedMessages) {
 			const env = this.$store.getters.getEnvelope(id)
 			if (!env) {
 				// TODO: also happens when the composer page is reloaded
 				showError(t('mail', 'Message {id} could not be found', {
 					id,
 				}))
-				return
+				continue
 			}
 
-			this.attachments.push({
-				displayName: env.subject + '.eml',
+			this.bus.$emit('on-add-message-as-attachment', {
 				id,
-				type: 'message',
+				fileName: env.subject + '.eml',
 			})
-		})
+		}
 
 		// Set custom date and time picker value if initialized with custom send at value
 		if (this.sendAt && this.isSendAtCustom) {
@@ -818,12 +953,35 @@ export default {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
+		handleShow(event) {
+			this.$emit('show-toolbar', event)
+		},
+		openPicker() {
+			this.isPickerOpen = true
+		},
+		closePicker() {
+			this.isPickerOpen = false
+		},
 		setAlias() {
 			const previous = this.selectedAlias
-			if (this.fromAccount) {
-				this.selectedAlias = this.aliases.find((alias) => alias.id === this.fromAccount)
+			if (this.fromAccount && this.fromAlias) {
+				this.selectedAlias = this.aliases.find((alias) => {
+					return alias.id === this.fromAccount && alias.aliasId === this.fromAlias
+				})
+			} else if (this.fromAccount) {
+				// Default alias of account: aliasId === null
+				this.selectedAlias = this.aliases.find((alias) => {
+					return alias.id === this.fromAccount && !alias.aliasId
+				})
 			} else {
-				this.selectedAlias = this.aliases[0]
+				const currentAccountId = this.$store.getters.getMailbox(this.$route.params.mailboxId)?.accountId
+				if (currentAccountId) {
+					this.selectedAlias = this.aliases.find((alias) => {
+						return alias.id === currentAccountId
+					})
+				} else {
+					this.selectedAlias = this.aliases[0]
+				}
 			}
 			// Only overwrite editormode if body is empty
 			if (previous === NO_ALIAS_SET && (!this.body || this.body.value === '')) {
@@ -841,16 +999,16 @@ export default {
 			this.mailvelope.keysMissing = recipients.filter((r) => keysValid[r] === false)
 		},
 		initBody() {
-			/** @var {Text} body **/
+			/** @member {Text} body */
 			let body
-			if (this.replyTo) {
+			if (this.replyTo && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.replyTo.from[0],
 					this.replyTo.dateInt,
 					this.$store.getters.getPreference('reply-mode', 'top') === 'top'
 				).value
-			} else if (this.forwardFrom) {
+			} else if (this.forwardFrom && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.forwardFrom.from[0],
@@ -862,7 +1020,7 @@ export default {
 			}
 			this.bodyVal = html(body).value
 		},
-		getMessageData(id) {
+		getMessageData() {
 			return {
 				// TODO: Rename account to accountId
 				account: this.selectedAlias.id,
@@ -871,87 +1029,63 @@ export default {
 				to: this.selectTo,
 				cc: this.selectCc,
 				bcc: this.selectBcc,
-				draftId: id,
 				subject: this.subjectVal,
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				inReplyToMessageId: this.inReplyToMessageId ?? (this.replyTo ? this.replyTo.messageId : undefined),
-				isHtml: !this.editorPlainText,
-				requestMdn: this.requestMdn,
+				isHtml: !this.encrypt && !this.editorPlainText,
+				requestMdn: this.requestMdnVal,
 				sendAt: this.sendAtVal ? Math.floor(this.sendAtVal / 1000) : undefined,
+				smimeSign: this.shouldSmimeSign,
+				smimeEncrypt: this.shouldSmimeEncrypt,
+				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
 			}
 		},
-		saveDraft(data) {
-			this.savingDraft = true
-			this.draftsPromise = this.draftsPromise
-				.then((id) => {
-					const draftData = data(id)
-					if (
-						!id
-						&& !draftData.subject
-						&& !draftData.body
-						&& !draftData.cc
-						&& !draftData.bcc
-						&& !draftData.to
-						&& !draftData.sendAt
-					) {
-						// this might happen after a call to reset()
-						// where the text input gets reset as well
-						// and fires an input event
-						logger.debug('Nothing substantial to save, ignoring draft save')
-						this.savingDraft = false
-						return id
-					}
-					return this.draft(draftData)
-				})
-				.then((uid) => {
-					// It works (again)
-					this.canSaveDraft = true
+		saveDraft() {
+			const draftData = this.getMessageData()
+			if (draftData.subject === ''
+				&& draftData.body?.value === ''
+				&& draftData.cc.length === 0
+				&& draftData.bcc.length === 0
+				&& draftData.to.length === 0
+				&& draftData.sendAt === undefined) {
+				// this might happen after a call to reset()
+				// where the text input gets reset as well
+				// and fires an input event
+				logger.debug('Nothing substantial to save, ignoring draft save')
+				return
+			}
 
-					return uid
-				})
-				.catch(async(error) => {
-					await matchError(error, {
-						[NoDraftsMailboxConfiguredError.getName()]() {
-							return false
-						},
-						default() {
-							return true
-						},
-					})
-					this.canSaveDraft = false
-				})
-				.then((uid) => {
-					this.savingDraft = false
-					return uid
-				})
-			return this.draftsPromise
+			this.$emit('draft', draftData)
 		},
-		callSaveDraft(withDebounce, ...args) {
-			if (withDebounce) {
-				return this.saveDraftDebounced(...args)
+		insertSignature() {
+			let trigger
+
+			if (this.changeSignature) {
+				trigger = TRIGGER_CHANGE_ALIAS
 			} else {
-				return this.saveDraft(...args)
+				trigger = TRIGGER_EDITOR_READY
 			}
+
+			this.$refs.editor.editorExecute('insertSignature',
+				trigger,
+				toHtml(detect(this.selectedAlias.signature)).value,
+				this.selectedAlias.signatureAboveQuote
+			)
+
+			this.changeSignature = false
 		},
-		onSave() {
-			this.callSaveDraft(false, this.getMessageData)
+		onPicked(content) {
+			this.closePicker()
+			this.bus.$emit('append-to-body-at-cursor', content)
 		},
-		handleAppendSignature() {
-			if (this.appendSignature) {
-				const signatureValue = toHtml(detect(this.selectedAlias.signature)).value
-				this.bus.$emit('insertSignature', signatureValue, this.selectedAlias.signatureAboveQuote)
-				this.appendSignature = false
-			}
+		onEditorInput(text) {
+			this.bodyVal = text
+			this.saveDraftDebounced()
 		},
-		// needs to bypass an input event of the first initialisation, because of:
-		// an empty body (e.g "") does not trigger an onInput event.
-		// but to append the signature a onInput event is required.
-		onEditorInputText() {
-			if (this.editorInputTextReady) {
-				this.callSaveDraft(true, this.getMessageData)
-			}
-			this.editorInputTextReady = true
+		onEditorReady(editor) {
+			this.bodyVal = editor.getData()
+			this.insertSignature()
 		},
 		onChangeSendLater(value) {
 			this.sendAtVal = value ? Number.parseInt(value, 10) : undefined
@@ -968,19 +1102,45 @@ export default {
 		onAliasChange(alias) {
 			logger.debug('changed alias', { alias })
 			this.selectedAlias = alias
-			this.appendSignature = true
-			this.handleAppendSignature()
+			this.changeSignature = true
+
+			this.$emit('update:from-account', alias.id)
+			if (alias.aliasId) {
+				this.$emit('update:from-alias', alias.aliasId)
+			}
+
+			if (this.wantsSmimeSign || this.wantsSmimeEncrypt) {
+				if (!this.smimeCertificateForAlias(alias)) {
+					this.wantsSmimeSign = false
+					this.wantsSmimeEncrypt = false
+					showWarning(t('mail', 'Sign or Encrypt with S/MIME was selected, but we don\'t have a certificate for the selected alias. The message will not be signed or encrypted.'))
+				}
+			}
+
+			/**
+			 * Alias change may change the editor mode as well.
+			 *
+			 * As editorMode is the key for the TextEditor component a change will destroy the current instance
+			 * and the signature for the alias is inserted via onEditorReady event.
+			 *
+			 * Otherwise (when editorMode is the same) call insertSignature directly.
+			 */
+			if (this.editorMode === EDITOR_MODE_TEXT && alias.editorMode === EDITOR_MODE_HTML) {
+				this.editorMode = EDITOR_MODE_HTML
+			} else {
+				this.insertSignature()
+			}
 		},
 		onAddLocalAttachment() {
-			this.bus.$emit('onAddLocalAttachment')
-			this.callSaveDraft(true, this.getMessageData)
+			this.bus.$emit('on-add-local-attachment')
+			this.saveDraftDebounced()
 		},
 		onAddCloudAttachment() {
-			this.bus.$emit('onAddCloudAttachment')
-			this.callSaveDraft(true, this.getMessageData)
+			this.bus.$emit('on-add-cloud-attachment')
+			this.saveDraftDebounced()
 		},
 		onAddCloudAttachmentLink() {
-			this.bus.$emit('onAddCloudAttachmentLink')
+			this.bus.$emit('on-add-cloud-attachment-link')
 		},
 		onAutocomplete(term, loadingIndicator) {
 			if (term === undefined || term === '') {
@@ -997,15 +1157,16 @@ export default {
 				} else if (loadingIndicator === 'bcc') {
 					this.loadingIndicatorBcc = false
 				}
+
+				// Search results might not have labels
+				for (const result of results) {
+					if (!result.label) {
+						result.label = result.email
+					}
+				}
+
 				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
-		},
-		onAttachmentsUploading(uploaded) {
-			this.attachmentsPromise = this.attachmentsPromise
-				.then(() => uploaded)
-				.then(() => this.callSaveDraft(true, this.getMessageData))
-				.catch((error) => logger.error('could not upload attachments', { error }))
-				.then(() => logger.debug('attachments uploaded'))
 		},
 		async onMailvelopeLoaded(mailvelope) {
 			this.encrypt = isPgpgMessage(this.body)
@@ -1028,13 +1189,18 @@ export default {
 			this.onNewAddr(addr, this.selectBcc)
 		},
 		onNewAddr(addr, list) {
-			const res = {
-				label: addr, // TODO: parse if possible
-				email: addr, // TODO: parse if possible
+			// Autocomplete search results are passed as objects
+			let res = addr
+			if (typeof addr === 'string') {
+				res = {
+					label: addr, // TODO: parse if possible
+					email: addr, // TODO: parse if possible
+				}
 			}
+
 			this.newRecipients.push(res)
 			list.push(res)
-			this.callSaveDraft(true, this.getMessageData)
+			this.saveDraftDebounced()
 		},
 		async onSend(_, force = false) {
 			if (this.encrypt) {
@@ -1042,77 +1208,32 @@ export default {
 				await this.$refs.mailvelopeEditor.pull()
 			}
 
-			this.state = STATES.UPLOADING
-
-			await this.attachmentsPromise
-				.then(() => (this.state = STATES.SENDING))
-				.then(() => this.draftsPromise)
-				.then(this.getMessageData)
-				.then((data) => this.send({ ...data, force }))
-				.then(() => logger.info('message sent'))
-				.then(() => (this.state = STATES.FINISHED))
-				.catch(async(error) => {
-					logger.error('could not send message', { error });
-					[this.errorText, this.state] = await matchError(error, {
-						[NoSentMailboxConfiguredError.getName()]() {
-							return [t('mail', 'No sent mailbox configured. Please pick one in the account settings.'), STATES.ERROR]
-						},
-						[ManyRecipientsError.getName()]() {
-							return [t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.'), STATES.WARNING]
-						},
-						default(error) {
-							if (error && error.toString) {
-								return [error.toString(), STATES.ERROR]
-							}
-						},
-					})
-				})
-
-			// Sync sent mailbox when it's currently open
-			const account = this.$store.getters.getAccount(this.selectedAlias.id)
-			if (parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
-				setTimeout(() => {
-					this.$store.dispatch('syncEnvelopes', {
-						mailboxId: account.sentMailboxId,
-						query: '',
-						init: false,
-					})
-				}, 500)
-			}
-		},
-		async onForceSend() {
-			await this.onSend(null, true)
+			this.$emit('send', {
+				...this.getMessageData(),
+				force,
+			})
 		},
 		reset() {
-			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
 			this.selectTo = []
 			this.selectCc = []
 			this.selectBcc = []
 			this.subjectVal = ''
 			this.bodyVal = '<p></p><p></p>'
 			this.attachments = []
-			this.errorText = undefined
-			this.state = STATES.EDITING
 			this.autocompleteRecipients = []
 			this.newRecipients = []
-			this.requestMdn = false
-			this.appendSignature = true
-			this.savingDraft = undefined
+			this.requestMdnVal = false
+			this.changeSignature = false
 			this.sendAtVal = undefined
 
 			this.setAlias()
 			this.initBody()
-			Vue.nextTick(() => {
-				// toLabel may not be on the DOM yet
-				// (because "Message sent" is shown)
-				// so we defer the focus call
-				this.$refs.toLabel.$el.focus()
-			})
 		},
 		/**
 		 * Format aliases for the Multiselect
-		 * @param {Object} alias the alias to format
-		 * @returns {string}
+		 *
+		 * @param {object} alias the alias to format
+		 * @return {string}
 		 */
 		formatAliases(alias) {
 			if (!alias.name) {
@@ -1121,15 +1242,11 @@ export default {
 
 			return `${alias.name} <${alias.emailAddress}>`
 		},
-		async discardDraft() {
-			const id = await this.draftsPromise
-			this.$emit('discard-draft', id)
-		},
 		/**
 		 * Whether the date is acceptable
 		 *
 		 * @param {Date} date The date to compare to
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		disabledDatetimepickerDate(date) {
 			const minimumDate = new Date()
@@ -1144,7 +1261,7 @@ export default {
 		 * Whether the time for date is acceptable
 		 *
 		 * @param {Date} date The date to compare to
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		disabledDatetimepickerTime(date) {
 			const now = new Date()
@@ -1187,6 +1304,39 @@ export default {
 			this.showCC = !(this.showCC && this.selectCc.length === 0 && this.autoLimit)
 			this.showBCC = !(this.showBCC && this.selectBcc.length === 0 && this.autoLimit)
 		},
+		setEditorModeHtml() {
+			this.editorMode = EDITOR_MODE_HTML
+		},
+		setEditorModeText() {
+			OC.dialogs.confirmDestructive(
+				t('mail', 'Any existing formatting (for example bold, italic, underline or inline images) will be removed.'),
+				t('mail', 'Turn off formatting'),
+				{
+					type: OC.dialogs.YES_NO_BUTTONS,
+					confirm: t('mail', 'Turn off and remove formatting'),
+					confirmClasses: 'error',
+					cancel: t('mail', 'Keep formatting'),
+				},
+				(decision) => {
+					if (decision) {
+						this.editorMode = EDITOR_MODE_TEXT
+					}
+				},
+			)
+		},
+		/**
+		 * The S/MIME certificate object for an alias/account.
+		 *
+		 * @param {object} alias object
+		 * @return {object|undefined} S/MIME certificate of account or alias if one is selected
+		 */
+		smimeCertificateForAlias(alias) {
+			const certificateId = alias.smimeCertificateId
+			if (!certificateId) {
+				return undefined
+			}
+			return this.$store.getters.getSmimeCertificate(certificateId)
+		},
 	},
 }
 </script>
@@ -1211,11 +1361,54 @@ export default {
 	border-top: 1px solid var(--color-border);
 	align-items: flex-start;
 
+	label {
+		padding: 11px 20px 11px 0;
+	}
+
+	:deep(.multiselect--multiple .multiselect__tags) {
+		display: grid;
+		grid-template-columns: calc(100% - 18px) 18px 100%;
+
+		.multiselect__limit {
+			margin-right: 0;
+			margin-left: 8px
+		}
+	}
+
+	:deep(.multiselect__content-wrapper) {
+		border-bottom: 1px solid var(--color-border);
+		margin-top: 0;
+
+		& li > span::before {
+			display: none
+		}
+	}
+
+	:deep(.multiselect__input) {
+		position: relative !important;
+		top: 0;
+		grid-column-start: 1;
+		grid-column-end: 3;
+	}
+
+	:deep(.multiselect--active input:focus-visible) {
+		box-shadow: none;
+	}
+
+	:deep(.multiselect__tags) {
+		box-sizing: border-box;
+		height: auto;
+	}
+
+	&__from {
+		margin-right: 102px; /* for the modal close and minimize buttons */
+	}
+
 	.multiselect.multiselect--multiple::after {
-		position:absolute;
+		position: absolute;
 		right: 0;
 		top: auto;
-		bottom:8px
+		bottom: 8px
 	}
 
 	.multiselect__tag {
@@ -1245,17 +1438,19 @@ export default {
 		display: flex;
 		align-items: flex-start;
 		flex-wrap: wrap;
-		padding-top:5px;
+		padding-top: 2px;
 		width: calc(100% - 120px);
 
 		button {
 			margin-top: 0;
+			margin-bottom: 0;
 			background-color: transparent;
-			border:none;
-			opacity: 0.5
+			border: none;
+			opacity: 0.5;
+			padding: 10px 16px;
 		}
 
-		button.active,button:active {
+		button.active, button:active {
 			opacity: 1;
 		}
 
@@ -1267,18 +1462,32 @@ export default {
 	.multiselect {
 		margin-right: 12px;
 	}
-}
 
-.subject {
-	font-size: 20px;
-	font-weight: bold;
-	margin: 0;
-	padding: 24px 20px;
-}
+	.subject {
+		font-size: 15px;
+		font-weight: bold;
+		margin: 3px 0 !important;
+		padding: 0 12px !important;
 
-.warning-box {
-	padding: 5px 12px;
-	border-radius: 0;
+		&:focus-visible {
+			box-shadow: none !important;
+		}
+	}
+
+	.message-body {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+		padding: 12px;
+
+		// Fix contenteditable not becoming focused upon clichint within it's
+		// boundaries in safari
+		-webkit-user-select: text;
+		user-select: text;
+	}
 }
 
 // Make composer editor expand
@@ -1287,24 +1496,11 @@ export default {
 	min-height: 0;
 }
 
-.message-body {
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	border: none !important;
-	outline: none !important;
-	box-shadow: none !important;
-	padding-top: 12px;
-	padding-bottom: 12px;
-	padding-left: 20px;
-}
-
 .draft-status {
 	padding: 2px;
 	opacity: 0.5;
 	font-size: small;
 	display: block;
-
 }
 
 .from-label,
@@ -1344,29 +1540,39 @@ export default {
 	min-height: 100px;
 }
 
-::v-deep .multiselect .multiselect__tags {
+:deep(.multiselect .multiselect__tags),:deep( .vs__dropdown-toggle),:deep(.vs__dropdown-menu),  .subject {
 	border: none !important;
 }
-::v-deep [data-select="create"] .avatardiv--unknown {
+:deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-::v-deep .multiselect.opened .multiselect__tags .multiselect__tags-wrap {
+:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
 	flex-wrap: wrap;
 }
 
+#from{
+	width: 100%;
+	cursor: pointer;
+}
+:deep(.vs__actions){
+	display: none;
+}
+
+:deep(.vs__dropdown-menu){
+	border: 1px solid var(--color-border) !important;
+	padding: 0 !important;
+	border-radius: 0  !important;
+}
+
+:deep(.vs__dropdown-option){
+	border-radius: 0  !important;
+}
 .submit-message.send.primary.icon-confirm-white {
 	color: var(--color-main-background);
-}
-.sending-hint {
-	height: 50px;
-	margin-top: 50px;
 }
 .button {
 	background-color: transparent;
 	border: none;
-}
-.send-action-radio {
-	padding: 5px 0 5px 0;
 }
 .send-button {
 	display: flex;
@@ -1396,7 +1602,8 @@ export default {
 .composer-actions--secondary-actions {
 	display: flex;
 	flex-direction: row;
-	padding: 5px;
+	padding: 12px;
+	gap: 5px;
 }
 .composer-actions--primary-actions .button {
 	padding: 2px;

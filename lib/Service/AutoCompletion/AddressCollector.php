@@ -31,7 +31,6 @@ use OCA\Mail\Db\CollectedAddressMapper;
 use Psr\Log\LoggerInterface;
 
 class AddressCollector {
-
 	/** @var CollectedAddressMapper */
 	private $mapper;
 
@@ -39,7 +38,7 @@ class AddressCollector {
 	private $logger;
 
 	public function __construct(CollectedAddressMapper $mapper,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}

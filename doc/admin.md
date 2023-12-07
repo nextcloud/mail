@@ -7,6 +7,15 @@ Then open the Mail app from the app menu.
 
 ## Configuration
 
+### Local IMAP and SMTP servers
+
+By default, Nextcloud does not allow local hostnames and IP addresses as remote servers. This includes IMAP, SMTP and Sieve servers
+like `localhost`, `mx.local` and `10.0.0.3`. This check can be disabled with via config/config.php
+
+```php
+'allow_local_remote_servers' => true,
+```
+
 ### Attachment size limit
 
 Admins can prevent users from attaching large attachments to their emails. Users will be asked to use link shares instead.
@@ -31,6 +40,14 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 #### Sieve timeout
 ```php
 'app.mail.sieve.timeout' => 2
+```
+
+### Background sync interval
+
+Configure how often Mail keeps users' mailboxes updated in the background in seconds. Defaults to 3600.
+
+```php
+'app.mail.background-sync-interval' => 7200,
 ```
 
 ### Use php-mail for sending mail
@@ -67,6 +84,13 @@ occ config:app:set mail abuse_number_of_messages_per_1h --value=30
 # Alert when more than 100 messages are sent in one day
 occ config:app:set mail abuse_number_of_messages_per_1d --value=100
 ```
+
+## Google OAuth
+
+This app can allow users to connect their Google accounts with OAuth. This makes it possible to use accounts without 2FA or app password.
+
+1) [Create authorization credentials](https://developers.google.com/identity/protocols/oauth2/web-server#prerequisites). You will receive a client ID and a client secret.
+2) Open the Nextcloud settings page. Navigate to *Groupware* and scroll down to *Gmail integration*. Enter and save the client ID and client secret.
 
 ## Troubleshooting
 

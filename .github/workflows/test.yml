@@ -1,11 +1,5 @@
 name: Test
-
-on:
-  pull_request:
-  push:
-    branches:
-      - main
-      - stable*
+on: pull_request
 
 permissions:
   contents: read
@@ -15,36 +9,28 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0']
-        nextcloud-versions: ['stable22', 'stable23']
+        php-versions: ['8.0', '8.1', '8.2', '8.3']
+        nextcloud-versions: ['master']
         include:
-            - php-versions: 7.4
-              nextcloud-versions: stable24
-            - php-versions: 8.1
-              nextcloud-versions: master
-            - php-versions: 8.2
-              nextcloud-versions: master
+          - php-versions: '8.1'
+            nextcloud-versions: 'stable26'
+          - php-versions: '8.1'
+            nextcloud-versions: 'stable27'
+          - php-versions: '8.2'
+            nextcloud-versions: 'stable28'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
-    - name: Set up php${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@master
+    - name: Set up Nextcloud env
+      uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
       with:
+        nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
-        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
-        coverage: xdebug
-    - name: Checkout Nextcloud
-      run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
-    - name: Patch version check for nightly PHP
-      if: ${{ matrix.php-versions == '8.2' }}
-      run: echo "<?php" > nextcloud/lib/versioncheck.php
-    - name: Install Nextcloud
-      run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
-    - name: Fix php-parser on stable20 incompatibility with phpunit 9.3+
-      if: ${{ matrix.nextcloud-versions == 'stable20' }}
-      working-directory: nextcloud/3rdparty
-      run: composer require nikic/php-parser:4.10
+        php-coverage: 'xdebug'
+        patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+        node-version: 'false'
+        install: true
     - name: Checkout Mail
-      uses: actions/checkout@v3
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       with:
         path: nextcloud/apps/mail
     - name: Install dependencies
@@ -63,9 +49,10 @@ jobs:
       env:
         XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@v3.1.0
+      uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
       if: ${{ always() && matrix.php-versions == '8.0' }}
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
         flags: unittests
         fail_ci_if_error: true
@@ -77,23 +64,28 @@ jobs:
               php-versions: ['8.0']
               nextcloud-versions: ['master']
               db: ['sqlite', 'mysql', 'pgsql']
+              cache: ['nocache']
               include:
-                - php-versions: 7.4
-                  nextcloud-versions: stable22
-                  db: 'mysql'
-                - php-versions: 8.0
-                  nextcloud-versions: stable23
-                  db: 'mysql'
                 - php-versions: 8.1
-                  nextcloud-versions: stable24
+                  nextcloud-versions: stable26
                   db: 'pgsql'
+                  cache: 'nocache'
                 - php-versions: 8.2
-                  nextcloud-versions: master
+                  nextcloud-versions: stable27
                   db: 'sqlite'
-      name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
+                  cache: 'redis'
+                - php-versions: 8.3
+                  nextcloud-versions: stable28
+                  db: 'mysql'
+                  cache: 'redis'
+                - php-versions: 8.3
+                  nextcloud-versions: master
+                  db: 'mysql'
+                  cache: 'nocache'
+      name: ${{ matrix.nextcloud-versions }} w/ php${{ matrix.php-versions }}-${{ matrix.db }}-${{ matrix.cache }} integration tests
       services:
           mail-service:
-              image: christophwurst/imap-devel
+              image: ghcr.io/christophwurst/docker-imap-devel:latest
               env:
                   MAILNAME: mail.domain.tld
                   MAIL_ADDRESS: user@domain.tld
@@ -104,7 +96,7 @@ jobs:
                   - 993:993
                   - 4190:4190
           mysql-service:
-              image: mariadb:10.5
+              image: ghcr.io/nextcloud/continuous-integration-mariadb-10.11:latest
               env:
                   MYSQL_ROOT_PASSWORD: my-secret-pw
                   MYSQL_DATABASE: nextcloud
@@ -118,7 +110,7 @@ jobs:
                   --health-timeout=5s
                   --health-retries=3
           postgres-service:
-              image: postgres
+              image: ghcr.io/nextcloud/continuous-integration-postgres-15:latest
               env:
                   POSTGRES_USER: nextcloud
                   POSTGRES_DB: nextcloud
@@ -130,22 +122,33 @@ jobs:
                   --health-interval 10s
                   --health-timeout 5s
                   --health-retries 5
+          redis:
+              image: ghcr.io/nextcloud/continuous-integration-redis:latest
+              options: >-
+                --health-cmd "redis-cli ping"
+                --health-interval 10s
+                --health-timeout 5s
+                --health-retries 5
+              ports:
+                - 6379:6379
       steps:
-          - name: Set up php${{ matrix.php-versions }}
-            uses: shivammathur/setup-php@master
+          - name: Set up Nextcloud env
+            uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
             with:
-                php-version: ${{ matrix.php-versions }}
-                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip,gmp
-                coverage: xdebug
-          - name: Checkout Nextcloud
-            run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
-          - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.2' }}
-            run: echo "<?php" > nextcloud/lib/versioncheck.php
-          - name: Install Nextcloud
-            run: php -f nextcloud/occ maintenance:install --database-host 127.0.0.1 --database-name nextcloud --database-user nextcloud --database-pass nextcloud --admin-user admin --admin-pass admin --database ${{ matrix.db }}
+              nextcloud-version: ${{ matrix.nextcloud-versions }}
+              php-version: ${{ matrix.php-versions }}
+              php-coverage: 'xdebug'
+              patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+              install: true
+              database: ${{ matrix.db }}
+              node-version: 'false'
+          - name: Configure caching
+            if: ${{ matrix.cache == 'redis' }}
+            run: |
+              php -f nextcloud/occ config:system:set memcache.local --value='\OC\Memcache\Redis'
+              php -f nextcloud/occ config:system:set memcache.distributed --value='\OC\Memcache\Redis'
           - name: Checkout Mail
-            uses: actions/checkout@v3
+            uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
             with:
                 path: nextcloud/apps/mail
           - name: Install dependencies
@@ -185,9 +188,10 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@v3.1.0
+            uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
+              token: ${{ secrets.CODECOV_TOKEN }}
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
               flags: integrationtests
               fail_ci_if_error: true
@@ -195,14 +199,41 @@ jobs:
       runs-on: ubuntu-latest
       name: Front-end unit tests
       steps:
-          - uses: actions/checkout@v3
-          - name: Set up Node
-            uses: actions/setup-node@v3
+          - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+          - name: Read package.json node and npm engines version
+            uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
+            id: versions
             with:
-                node-version: 14.x
+              fallbackNode: '^14'
+              fallbackNpm: '^7'
+          - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
+            uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
+            with:
+              node-version: ${{ steps.versions.outputs.nodeVersion }}
+          - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
+            run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
           - name: npm install
             run: npm install
           - name: run tests
             run: npm run test:unit
       env:
           CI: true
+
+  summary:
+    runs-on: ubuntu-latest
+    needs:
+      - unit-tests
+      - integration-tests
+      - frontend-unit-test
+
+    if: always()
+
+    name: test-summary
+
+    steps:
+      - name: Unit test status
+        run: if ${{ needs.unit-tests.result != 'success' && needs.unit-tests.result != 'skipped' }}; then exit 1; fi
+      - name: Integration test status
+        run: if ${{ needs.integration-tests.result != 'success' && needs.integration-tests.result != 'skipped' }}; then exit 1; fi
+      - name: Frontend unit test status
+        run: if ${{ needs.frontend-unit-test.result != 'success' && needs.frontend-unit-test.result != 'skipped' }}; then exit 1; fi

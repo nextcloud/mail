@@ -36,7 +36,6 @@ use function array_combine;
 use function array_map;
 
 class ImportanceRulesClassifier {
-
 	/** @var ImportantMessagesExtractor */
 	private $importantMessagesExtractor;
 
@@ -50,9 +49,9 @@ class ImportanceRulesClassifier {
 	private $sentMessagesExtractor;
 
 	public function __construct(ImportantMessagesExtractor $importantMessagesExtractor,
-								ReadMessagesExtractor $readMessagesExtractor,
-								RepliedMessagesExtractor $repliedMessagesExtractor,
-								SentMessagesExtractor $sentMessagesExtractor) {
+		ReadMessagesExtractor $readMessagesExtractor,
+		RepliedMessagesExtractor $repliedMessagesExtractor,
+		SentMessagesExtractor $sentMessagesExtractor) {
 		$this->importantMessagesExtractor = $importantMessagesExtractor;
 		$this->readMessagesExtractor = $readMessagesExtractor;
 		$this->repliedMessagesExtractor = $repliedMessagesExtractor;
@@ -68,16 +67,16 @@ class ImportanceRulesClassifier {
 	 * @return bool[]
 	 */
 	public function classifyImportance(Account $account,
-									   array $incomingMailboxes,
-									   array $outgoingMailboxes,
-									   array $messages): array {
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): array {
 		$this->importantMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		$this->readMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		$this->repliedMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 		$this->sentMessagesExtractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
 		return array_combine(
-			array_map(function (Message $m) {
+			array_map(static function (Message $m) {
 				return $m->getUid();
 			}, $messages),
 			array_map(function (Message $m) {
@@ -86,10 +85,10 @@ class ImportanceRulesClassifier {
 					return false;
 				}
 
-				return $this->importantMessagesExtractor->extract($from->getEmail()) > 0.3
-					|| $this->readMessagesExtractor->extract($from->getEmail()) > 0.7
-					|| $this->repliedMessagesExtractor->extract($from->getEmail()) > 0.1
-					|| $this->sentMessagesExtractor->extract($from->getEmail()) > 0.1;
+				return $this->importantMessagesExtractor->extract($m) > 0.3
+					|| $this->readMessagesExtractor->extract($m) > 0.7
+					|| $this->repliedMessagesExtractor->extract($m) > 0.1
+					|| $this->sentMessagesExtractor->extract($m) > 0.1;
 			}, $messages)
 		);
 	}

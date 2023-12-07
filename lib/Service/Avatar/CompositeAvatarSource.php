@@ -30,13 +30,12 @@ namespace OCA\Mail\Service\Avatar;
  * Composition of all avatar sources for easier usage
  */
 class CompositeAvatarSource {
-
 	/** @var IAvatarSource[] */
 	private $sources;
 
 	public function __construct(AddressbookSource $addressbookSource,
-								FaviconSource $faviconSource,
-								GravatarSource $gravatarSource) {
+		FaviconSource $faviconSource,
+		GravatarSource $gravatarSource) {
 		// This determines the priority of known sources
 		$this->sources = [
 			$addressbookSource,

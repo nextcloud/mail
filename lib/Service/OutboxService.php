@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\ILocalMailboxService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
@@ -39,13 +38,12 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class OutboxService implements ILocalMailboxService {
-
+class OutboxService {
 	/** @var IMailTransmission */
 	private $transmission;
 
@@ -74,14 +72,14 @@ class OutboxService implements ILocalMailboxService {
 	private $logger;
 
 	public function __construct(IMailTransmission  $transmission,
-								LocalMessageMapper $mapper,
-								AttachmentService  $attachmentService,
-								IEventDispatcher    $eventDispatcher,
-								IMAPClientFactory $clientFactory,
-								IMailManager $mailManager,
-								AccountService $accountService,
-								ITimeFactory $timeFactory,
-								LoggerInterface $logger) {
+		LocalMessageMapper $mapper,
+		AttachmentService  $attachmentService,
+		IEventDispatcher    $eventDispatcher,
+		IMAPClientFactory $clientFactory,
+		IMailManager $mailManager,
+		AccountService $accountService,
+		ITimeFactory $timeFactory,
+		LoggerInterface $logger) {
 		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
@@ -99,7 +97,7 @@ class OutboxService implements ILocalMailboxService {
 	 * @return Recipient[]
 	 */
 	private static function convertToRecipient(array $recipients, int $type): array {
-		return array_map(function ($recipient) use ($type) {
+		return array_map(static function ($recipient) use ($type) {
 			$r = new Recipient();
 			$r->setType($type);
 			$r->setLabel($recipient['label'] ?? $recipient['email']);
@@ -119,14 +117,26 @@ class OutboxService implements ILocalMailboxService {
 	 * @throws DoesNotExistException
 	 */
 	public function getMessage(int $id, string $userId): LocalMessage {
-		return $this->mapper->findById($id, $userId);
+		return $this->mapper->findById($id, $userId, LocalMessage::TYPE_OUTGOING);
 	}
 
+	/**
+	 * @param string $userId
+	 * @param LocalMessage $message
+	 * @return void
+	 */
 	public function deleteMessage(string $userId, LocalMessage $message): void {
 		$this->attachmentService->deleteLocalMessageAttachments($userId, $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
 
+	/**
+	 * @param LocalMessage $message
+	 * @param Account $account
+	 * @return void
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
 		try {
 			$this->transmission->sendLocalMessage($account, $message);
@@ -140,11 +150,25 @@ class OutboxService implements ILocalMailboxService {
 		$this->mapper->deleteWithRecipients($message);
 	}
 
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @param array<int, string[]> $to
+	 * @param array<int, string[]> $cc
+	 * @param array<int, string[]> $bcc
+	 * @param array $attachments
+	 * @return LocalMessage
+	 */
 	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
+
+		if ($attachments === []) {
+			$message->setAttachments($attachments);
+			return $message;
+		}
 
 		$client = $this->clientFactory->getClient($account);
 		try {
@@ -157,11 +181,25 @@ class OutboxService implements ILocalMailboxService {
 		return $message;
 	}
 
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @param array<int, string[]> $to
+	 * @param array<int, string[]> $cc
+	 * @param array<int, string[]> $bcc
+	 * @param array $attachments
+	 * @return LocalMessage
+	 */
 	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
+
+		if ($attachments === []) {
+			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));
+			return $message;
+		}
 
 		$client = $this->clientFactory->getClient($account);
 		try {
@@ -173,6 +211,11 @@ class OutboxService implements ILocalMailboxService {
 		return $message;
 	}
 
+	/**
+	 * @param Account $account
+	 * @param int $draftId
+	 * @return void
+	 */
 	public function handleDraft(Account $account, int $draftId): void {
 		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
 		$this->eventDispatcher->dispatch(
@@ -181,16 +224,19 @@ class OutboxService implements ILocalMailboxService {
 		);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function flush(): void {
 		$messages = $this->mapper->findDue(
 			$this->timeFactory->getTime()
 		);
 
-		if (empty($messages)) {
+		if ($messages === []) {
 			return;
 		}
 
-		$accountIds = array_unique(array_map(function ($message) {
+		$accountIds = array_unique(array_map(static function ($message) {
 			return $message->getAccountId();
 		}, $messages));
 
@@ -227,5 +273,15 @@ class OutboxService implements ILocalMailboxService {
 				]);
 			}
 		}
+	}
+
+	public function convertDraft(LocalMessage $draftMessage, int $sendAt): LocalMessage {
+		if (empty($draftMessage->getRecipients())) {
+			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
+		}
+		$outboxMessage = clone $draftMessage;
+		$outboxMessage->setType(LocalMessage::TYPE_OUTGOING);
+		$outboxMessage->setSendAt($sendAt);
+		return $this->mapper->update($outboxMessage);
 	}
 }

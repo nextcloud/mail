@@ -63,6 +63,6 @@ class AutoCompleteControllerTest extends TestCase {
 
 		$response = $this->controller->index($term);
 
-		$this->assertEquals(new JSONResponse($result), $response);
+		$this->assertEquals((new JSONResponse($result))->getData(), $response->getData());
 	}
 }

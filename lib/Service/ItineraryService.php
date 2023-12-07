@@ -40,6 +40,8 @@ use function count;
 use function json_encode;
 
 class ItineraryService {
+	private const CACHE_PREFIX = 'mail_itinerary';
+	private const CACHE_TTL = 7 * 24 * 3600;
 
 	/** @var IMAPClientFactory */
 	private $clientFactory;
@@ -57,19 +59,19 @@ class ItineraryService {
 	private $logger;
 
 	public function __construct(IMAPClientFactory $clientFactory,
-								MessageMapper $messageMapper,
-								ItineraryExtractor $extractor,
-								ICacheFactory $cacheFactory,
-								LoggerInterface $logger) {
+		MessageMapper $messageMapper,
+		ItineraryExtractor $extractor,
+		ICacheFactory $cacheFactory,
+		LoggerInterface $logger) {
 		$this->clientFactory = $clientFactory;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
-		$this->cache = $cacheFactory->createLocal();
+		$this->cache = $cacheFactory->createLocal(self::CACHE_PREFIX);
 		$this->logger = $logger;
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
-		return 'mail_itinerary_' . $account->getId() . '_' . $mailbox->getName() . '_' . $id;
+		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
 	}
 
 	public function getCached(Account $account, Mailbox $mailbox, int $id): ?Itinerary {
@@ -88,7 +90,7 @@ class ItineraryService {
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$itinerary = new Itinerary();
-			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id);
+			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id, $account->getUserId());
 			if ($htmlBody !== null) {
 				$itinerary = $itinerary->merge(
 					$this->extractor->extract($htmlBody)
@@ -97,7 +99,7 @@ class ItineraryService {
 			} else {
 				$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
 			}
-			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id);
+			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id, $account->getUserId());
 		} finally {
 			$client->logout();
 		}
@@ -113,7 +115,7 @@ class ItineraryService {
 		$this->logger->debug('Reduced ' . count($itinerary) . ' itinerary entries to ' . count($final) . ' entries');
 
 		$cache_key = $this->buildCacheKey($account, $mailbox, $id);
-		$this->cache->set($cache_key, json_encode($final));
+		$this->cache->set($cache_key, json_encode($final), self::CACHE_TTL);
 
 		return $final;
 	}

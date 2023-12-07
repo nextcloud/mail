@@ -35,7 +35,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class ThreadBuilderTest extends TestCase {
-
 	/** @var PerformanceLogger|MockObject */
 	private $performanceLogger;
 
@@ -467,6 +466,29 @@ class ThreadBuilderTest extends TestCase {
 						],
 						[
 							'id' => 'id3',
+							'children' => [],
+						],
+					],
+				],
+			],
+			$this->abstract($result)
+		);
+	}
+
+	public function testWithVirtualParent(): void {
+		$messages = [
+			new Message('AW: s1', 'id2', ['id1']),
+		];
+
+		$result = $this->builder->build($messages, $this->logger);
+
+		$this->assertEquals(
+			[
+				[
+					'id' => null,
+					'children' => [
+						[
+							'id' => 'id2',
 							'children' => [],
 						],
 					],

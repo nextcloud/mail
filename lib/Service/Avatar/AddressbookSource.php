@@ -31,7 +31,6 @@ use OCA\Mail\Service\ContactsIntegration;
  * as avatar source
  */
 class AddressbookSource implements IAvatarSource {
-
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 

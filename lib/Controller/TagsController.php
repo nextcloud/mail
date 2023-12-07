@@ -26,30 +26,34 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\TrapError;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class TagsController extends Controller {
+	private string $currentUserId;
+	private IMailManager $mailManager;
 
-	/** @var string */
-	private $currentUserId;
+	private AccountService $accountService;
 
-	/** @var IMailManager */
-	private $mailManager;
 
 	public function __construct(IRequest $request,
-								string $UserId,
-								IMailManager $mailManager
+		string $UserId,
+		IMailManager $mailManager,
+		AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->currentUserId = $UserId;
 		$this->mailManager = $mailManager;
+		$this->accountService = $accountService;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $displayName
 	 * @param string $color
@@ -57,6 +61,7 @@ class TagsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function create(string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);
@@ -67,7 +72,6 @@ class TagsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $displayName
@@ -76,12 +80,29 @@ class TagsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function update(int $id, string $displayName, string $color): JSONResponse {
 		$this->validateDisplayName($displayName);
 		$this->validateColor($color);
 
 		$tag = $this->mailManager->updateTag($id, $displayName, $color, $this->currentUserId);
 		return new JSONResponse($tag);
+	}
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @throws ClientException
+	 */
+	#[TrapError]
+	public function delete(int $id, int $accountId): JSONResponse {
+		try {
+			$accounts = $this->accountService->findByUserId($this->currentUserId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		$this->mailManager->deleteTag($id, $this->currentUserId, $accounts);
+
+		return new JSONResponse([$id]);
 	}
 
 	/**

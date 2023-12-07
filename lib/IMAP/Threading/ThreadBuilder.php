@@ -31,7 +31,6 @@ use function array_key_exists;
 use function count;
 
 class ThreadBuilder {
-
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 
@@ -85,7 +84,6 @@ class ThreadBuilder {
 		$idTable = [];
 
 		foreach ($messages as $message) {
-			/** @var Message $message */
 			// Step 1.A
 			$container = $idTable[$message->getId()] ?? null;
 			if ($container !== null && !$container->hasMessage()) {
@@ -99,7 +97,7 @@ class ThreadBuilder {
 			foreach ($message->getReferences() as $reference) {
 				$refContainer = $idTable[$reference] ?? null;
 				if ($refContainer === null) {
-					$refContainer = $idTable[$reference] = Container::empty();
+					$refContainer = $idTable[$reference] = Container::empty($reference);
 				}
 				if (!$refContainer->hasParent()
 					&& !($parent !== null && !$parent->hasAncestor($refContainer))
@@ -128,7 +126,7 @@ class ThreadBuilder {
 	 */
 	private function buildRootContainer(array $idTable): Container {
 		$rootContainer = Container::empty();
-		foreach ($idTable as $id => $container) {
+		foreach ($idTable as $container) {
 			if (!$container->hasParent()) {
 				$container->setParent($rootContainer);
 			}
@@ -136,12 +134,8 @@ class ThreadBuilder {
 		return $rootContainer;
 	}
 
-	/**
-	 * @param Container $container
-	 */
 	private function pruneContainers(Container $root): void {
-		/** @var Container $container */
-		foreach ($root->getChildren() as $id => $container) {
+		foreach ($root->getChildren() as $container) {
 			// Step 4.A
 			if (!$container->hasMessage() && !$container->hasChildren()) {
 				$container->unlink();
@@ -150,7 +144,7 @@ class ThreadBuilder {
 
 			// Step 4.B
 			if (!$container->hasMessage() && $container->hasChildren()) {
-				if (!$container->getParent()->isRoot() && count($container->getChildren()) > 1) {
+				if (!$container->getParent()->isRoot() && count($container->getChildren()) > 0) {
 					// Do not promote
 					continue;
 				}

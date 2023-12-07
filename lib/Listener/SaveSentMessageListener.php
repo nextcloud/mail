@@ -36,8 +36,10 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|MessageSentEvent>
+ */
 class SaveSentMessageListener implements IEventListener {
-
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
@@ -51,9 +53,9 @@ class SaveSentMessageListener implements IEventListener {
 	private $logger;
 
 	public function __construct(MailboxMapper $mailboxMapper,
-								IMAPClientFactory $imapClientFactory,
-								MessageMapper $messageMapper,
-								LoggerInterface $logger) {
+		IMAPClientFactory $imapClientFactory,
+		MessageMapper $messageMapper,
+		LoggerInterface $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->messageMapper = $messageMapper;

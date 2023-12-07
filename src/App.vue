@@ -2,8 +2,9 @@
  - @copyright Copyright (c) 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  -
  - @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ - @author Richard Steinmetz <richard@steinmetz.cloud>
  -
- - @license GNU AGPL version 3 or any later version
+ - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
  - it under the terms of the GNU Affero General Public License as
@@ -25,18 +26,53 @@
 </template>
 
 <script>
-import logger from './logger'
-import { matchError } from './errors/match'
-import MailboxLockedError from './errors/MailboxLockedError'
+import { mapGetters } from 'vuex'
+import { showError } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+
+import logger from './logger.js'
+import { matchError } from './errors/match.js'
+import MailboxLockedError from './errors/MailboxLockedError.js'
 
 export default {
 	name: 'App',
-	mounted() {
+	computed: {
+		...mapGetters([
+			'isExpiredSession',
+		]),
+		hasMailAccounts() {
+			return !!this.$store.getters.accounts.find((account) => !account.isUnified)
+		},
+	},
+	watch: {
+		isExpiredSession(expired) {
+			if (expired) {
+				showError(t('mail', 'Your session has expired. The page will be reloaded.'), {
+					onRemove: () => {
+						this.reload()
+					},
+				})
+			}
+		},
+	},
+	async mounted() {
+		// Redirect to setup page if no accounts are configured
+		if (!this.hasMailAccounts) {
+			this.$router.replace({
+				name: 'setup',
+			})
+		}
+
 		this.sync()
+		await this.$store.dispatch('fetchCurrentUserPrincipal')
+		await this.$store.dispatch('loadCollections')
 	},
 	methods: {
+		reload() {
+			window.location.reload()
+		},
 		sync() {
-			setTimeout(async() => {
+			setTimeout(async () => {
 				try {
 					await this.$store.dispatch('syncInboxes')
 

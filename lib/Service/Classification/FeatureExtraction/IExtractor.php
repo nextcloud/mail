@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -30,7 +31,6 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 
 interface IExtractor {
-
 	/**
 	 * Initialize any data that is used for all messages and return whether the
 	 * extractor is applicable for this account
@@ -41,16 +41,16 @@ interface IExtractor {
 	 * @param Message[] $messages
 	 */
 	public function prepare(Account $account,
-							array $incomingMailboxes,
-							array $outgoingMailboxes,
-							array $messages): void;
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): void;
 
 	/**
-	 * Return the feature value for the given sender address
+	 * Return the feature value for the given message
 	 *
-	 * @param string $email
+	 * @param Message $message
 	 *
-	 * @return float
+	 * @return float[]
 	 */
-	public function extract(string $email): float;
+	public function extract(Message $message): array;
 }

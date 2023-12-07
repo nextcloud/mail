@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,7 @@
  */
 
 import { curry, prop, range, reverse } from 'ramda'
-import orderBy from 'lodash/fp/orderBy'
+import orderBy from 'lodash/fp/orderBy.js'
 
 import actions from '../../../store/actions'
 import * as MailboxService from '../../../service/MailboxService'
@@ -28,9 +28,9 @@ import * as MessageService from '../../../service/MessageService'
 import * as NotificationService from '../../../service/NotificationService'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants'
 
-jest.mock('../../../service/MailboxService')
-jest.mock('../../../service/MessageService')
-jest.mock('../../../service/NotificationService')
+jest.mock('../../../service/MailboxService.js')
+jest.mock('../../../service/MessageService.js')
+jest.mock('../../../service/NotificationService.js')
 
 const mockEnvelope = curry((mailboxId, uid) => ({
 	mailboxId,
@@ -47,10 +47,13 @@ describe('Vuex store actions', () => {
 			dispatch: jest.fn(),
 			getters: {
 				accounts: [],
+				getAccount: jest.fn(),
+				getInbox: jest.fn(),
 				getMailbox: jest.fn(),
 				getMailboxes: jest.fn(),
 				getEnvelope: jest.fn(),
 				getEnvelopes: jest.fn(),
+				getPreference: jest.fn(),
 			},
 		}
 	})
@@ -194,13 +197,13 @@ describe('Vuex store actions', () => {
 			query: undefined,
 			addToUnifiedMailboxes: false,
 		})
-		expect(context.commit).toBeCalledWith('addEnvelope', {
-			envelope: {
+		expect(context.commit).toBeCalledWith('addEnvelopes', {
+			envelopes: [{
 				databaseId: 123,
 				mailboxId: 21,
 				uid: 321,
 				subject: 'msg1',
-			},
+			}],
 			query: undefined,
 		})
 	})
@@ -511,5 +514,69 @@ describe('Vuex store actions', () => {
 			// Here we expect notifications
 			expect(NotificationService.showNewMessagesNotification).toHaveBeenCalled
 		})
+	})
+
+	it('should move message to junk, no mailbox configured', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			junkMailboxId: null,
+		})
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: false,
+			},
+			mailboxId: 1,
+		})
+
+		expect(removeEnvelope).toBeFalsy()
+	})
+
+	it('should move message to inbox', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			junkMailboxId: 10,
+		})
+		context.getters.getInbox.mockReturnValueOnce({
+			databaseId: 1,
+		})
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: true,
+			},
+			mailboxId: 10,
+		})
+
+		expect(removeEnvelope).toBeTruthy()
+	})
+
+	it('should move message to inbox, inbox not found', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			junkMailboxId: 10,
+		})
+		context.getters.getInbox.mockReturnValueOnce(undefined)
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: true,
+			},
+			mailboxId: 10,
+		})
+
+		expect(removeEnvelope).toBeFalsy()
+	})
+
+	it('should not move messages', async() => {
+		context.getters.getAccount.mockReturnValueOnce({
+			junkMailboxId: null,
+		})
+
+		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+			flags: {
+				$junk: true,
+			},
+			mailboxId: 10,
+		})
+
+		expect(removeEnvelope).toBeFalsy()
 	})
 })

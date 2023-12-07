@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import logger from '../logger'
-import MailboxPicker from './MailboxPicker'
+import logger from '../logger.js'
+import MailboxPicker from './MailboxPicker.vue'
 
 export default {
 	name: 'MoveModal',

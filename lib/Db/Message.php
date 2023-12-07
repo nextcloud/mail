@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -76,6 +77,14 @@ use function json_encode;
  * @method null|string getPreviewText()
  * @method void setUpdatedAt(int $time)
  * @method int getUpdatedAt()
+ * @method bool isImipMessage()
+ * @method void setImipMessage(bool $imipMessage)
+ * @method bool isImipProcessed()
+ * @method void setImipProcessed(bool $imipProcessed)
+ * @method bool isImipError()
+ * @method void setImipError(bool $imipError)
+ * @method bool|null isEncrypted()
+ * @method void setEncrypted(bool|null $encrypted)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -114,6 +123,14 @@ class Message extends Entity implements JsonSerializable {
 	protected $flagImportant = false;
 	protected $flagMdnsent;
 	protected $previewText;
+	protected $imipMessage = false;
+	protected $imipProcessed = false;
+	protected $imipError = false;
+
+	/**
+	 * @var bool|null
+	 */
+	protected $encrypted;
 
 	/** @var AddressList */
 	private $from;
@@ -152,6 +169,10 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('flagImportant', 'boolean');
 		$this->addType('flagMdnsent', 'boolean');
 		$this->addType('updatedAt', 'integer');
+		$this->addType('imipMessage', 'boolean');
+		$this->addType('imipProcessed', 'boolean');
+		$this->addType('imipError', 'boolean');
+		$this->addType('encrypted', 'boolean');
 	}
 
 	/**
@@ -282,7 +303,7 @@ class Message extends Entity implements JsonSerializable {
 		$tags = $this->getTags();
 		$indexed = array_combine(
 			array_map(
-				function (Tag $tag) {
+				static function (Tag $tag) {
 					return $tag->getImapLabel();
 				}, $tags),
 			$tags
@@ -316,6 +337,9 @@ class Message extends Entity implements JsonSerializable {
 			'inReplyTo' => $this->getInReplyTo(),
 			'references' => empty($this->getReferences()) ? null: json_decode($this->getReferences(), true),
 			'threadRootId' => $this->getThreadRootId(),
+			'imipMessage' => $this->isImipMessage(),
+			'previewText' => $this->getPreviewText(),
+			'encrypted' => ($this->isEncrypted() === true),
 		];
 	}
 }

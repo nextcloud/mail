@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Luc Calaresu <dev@calaresu.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -43,7 +44,6 @@ use OCP\Files\NotPermittedException;
 use Psr\Log\LoggerInterface;
 
 class AttachmentService implements IAttachmentService {
-
 	/** @var LocalAttachmentMapper */
 	private $mapper;
 
@@ -71,11 +71,11 @@ class AttachmentService implements IAttachmentService {
 	 * @param Folder $userFolder
 	 */
 	public function __construct($userFolder,
-								LocalAttachmentMapper $mapper,
-								AttachmentStorage $storage,
-								IMailManager $mailManager,
-								MessageMapper $imapMessageMapper,
-								LoggerInterface $logger) {
+		LocalAttachmentMapper $mapper,
+		AttachmentStorage $storage,
+		IMailManager $mailManager,
+		MessageMapper $imapMessageMapper,
+		LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
 		$this->mailManager = $mailManager;
@@ -107,11 +107,6 @@ class AttachmentService implements IAttachmentService {
 		return $attachment;
 	}
 
-	/**
-	 * @param string $userId
-	 * @param UploadedFile $file
-	 * @return LocalAttachment
-	 */
 	public function addFileFromString(string $userId, string $name, string $mime, string $fileContents): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
@@ -124,7 +119,7 @@ class AttachmentService implements IAttachmentService {
 		} catch (NotFoundException|NotPermittedException $e) {
 			// Clean-up
 			$this->mapper->delete($persisted);
-			throw new UploadException($e->getMessage(), (int)$e->getCode(), $e);
+			throw new UploadException($e->getMessage(), $e->getCode(), $e);
 		}
 
 		return $attachment;
@@ -188,7 +183,7 @@ class AttachmentService implements IAttachmentService {
 	 * @return LocalAttachment[]
 	 */
 	public function saveLocalMessageAttachments(string $userId, int $messageId, array $attachmentIds): array {
-		if (empty($attachmentIds)) {
+		if ($attachmentIds === []) {
 			return [];
 		}
 		$this->mapper->saveLocalMessageAttachments($userId, $messageId, $attachmentIds);
@@ -200,7 +195,7 @@ class AttachmentService implements IAttachmentService {
 	 */
 	public function updateLocalMessageAttachments(string $userId, LocalMessage $message, array $newAttachmentIds): array {
 		// no attachments any more. Delete any old ones and we're done
-		if (empty($newAttachmentIds)) {
+		if ($newAttachmentIds === []) {
 			$this->deleteLocalMessageAttachments($userId, $message->getId());
 			return [];
 		}
@@ -216,12 +211,12 @@ class AttachmentService implements IAttachmentService {
 		}, $message->getAttachments());
 
 		$add = array_diff($newAttachmentIds, $oldAttachmentIds);
-		if (!empty($add)) {
+		if ($add !== []) {
 			$this->mapper->saveLocalMessageAttachments($userId, $message->getId(), $add);
 		}
 
 		$delete = array_diff($oldAttachmentIds, $newAttachmentIds);
-		if (!empty($delete)) {
+		if ($delete !== []) {
 			$this->deleteLocalMessageAttachmentsById($userId, $message->getId(), $delete);
 		}
 
@@ -236,7 +231,7 @@ class AttachmentService implements IAttachmentService {
 	public function handleAttachments(Account $account, array $attachments, \Horde_Imap_Client_Socket $client): array {
 		$attachmentIds = [];
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			return $attachmentIds;
 		}
 
@@ -280,7 +275,8 @@ class AttachmentService implements IAttachmentService {
 		$fullText = $this->messageMapper->getFullText(
 			$client,
 			$mailbox->getName(),
-			$attachmentMessage->getUid()
+			$attachmentMessage->getUid(),
+			$account->getUserId()
 		);
 
 		// detect mime type
@@ -318,12 +314,13 @@ class AttachmentService implements IAttachmentService {
 			$client,
 			$mailbox->getName(),
 			(int)$attachment['uid'],
+			$account->getUserId(),
 			[
 				$attachment['id'] ?? []
 			]
 		);
 
-		if (empty($attachments)) {
+		if ($attachments === []) {
 			return null;
 		}
 

@@ -29,11 +29,11 @@ namespace OCA\Mail\Migration;
 use Closure;
 use Doctrine\DBAL\Schema\Table;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1120Date20220223094709 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -44,40 +44,40 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$localMessageTable = $schema->createTable('mail_local_messages');
-		$localMessageTable->addColumn('id', 'integer', [
+		$localMessageTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$localMessageTable->addColumn('type', 'integer', [
+		$localMessageTable->addColumn('type', Types::INTEGER, [
 			'notnull' => true,
 			'unsigned' => true,
 			'length' => 1,
 		]);
-		$localMessageTable->addColumn('account_id', 'integer', [
+		$localMessageTable->addColumn('account_id', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$localMessageTable->addColumn('alias_id', 'integer', [
+		$localMessageTable->addColumn('alias_id', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);
-		$localMessageTable->addColumn('send_at', 'integer', [
+		$localMessageTable->addColumn('send_at', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4
 		]);
-		$localMessageTable->addColumn('subject', 'text', [
+		$localMessageTable->addColumn('subject', Types::TEXT, [
 			'notnull' => true,
 			'length' => 255
 		]);
-		$localMessageTable->addColumn('body', 'text', [
+		$localMessageTable->addColumn('body', Types::TEXT, [
 			'notnull' => true
 		]);
-		$localMessageTable->addColumn('html', 'boolean', [
+		$localMessageTable->addColumn('html', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$localMessageTable->addColumn('in_reply_to_message_id', 'text', [
+		$localMessageTable->addColumn('in_reply_to_message_id', Types::TEXT, [
 			'notnull' => false,
 			'length' => 1023,
 		]);
@@ -85,7 +85,7 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 
 		/** @var Table $recipientsTable */
 		$recipientsTable = $schema->getTable('mail_recipients');
-		$recipientsTable->addColumn('local_message_id', 'integer', [
+		$recipientsTable->addColumn('local_message_id', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);
@@ -95,7 +95,7 @@ class Version1120Date20220223094709 extends SimpleMigrationStep {
 		$recipientsTable->addForeignKeyConstraint($localMessageTable, ['local_message_id'], ['id'], ['onDelete' => 'CASCADE']);
 
 		$attachmentsTable = $schema->getTable('mail_attachments');
-		$attachmentsTable->addColumn('local_message_id', 'integer', [
+		$attachmentsTable->addColumn('local_message_id', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);

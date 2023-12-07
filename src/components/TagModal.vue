@@ -2,8 +2,9 @@
   - @copyright 2021 Greta Doci <gretadoci@gmail.com>
   -
   - @author 2021 Greta Doci <gretadoci@gmail.com>
+  - @author 2022 Jonas Sulzer <jonas@violoncello.ch>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -20,59 +21,44 @@
   -->
 
 <template>
-	<Modal size="large" @close="onClose">
+	<DeleteTagModal v-if="deleteTagModal"
+		:tag="tagToDelete"
+		:envelopes="envelopes"
+		:account-id="envelopes[0].accountId"
+		@close="closeDeleteModal" />
+	<Modal v-else size="large" @close="onClose">
 		<div class="modal-content">
 			<h2 class="tag-title">
 				{{ t('mail', 'Add default tags') }}
 			</h2>
-			<div v-for="tag in tags" :key="tag.id" class="tag-group">
-				<button class="tag-group__label"
-					:style="{
-						color: convertHex(tag.color, 1),
-						'background-color': convertHex(tag.color, 0.15)
-					}">
-					{{ tag.displayName }}
-				</button>
-				<Actions :force-menu="true">
-					<ActionButton v-if="renameTagLabel"
-						icon="icon-rename"
-						@click="openEditTag">
-						{{ t('mail','Rename tag') }}
-					</ActionButton>
-					<ActionInput v-if="renameTagInput"
-						icon="icon-tag"
-						:value="tag.displayName"
-						@submit="renameTag(tag, $event)" />
-					<ActionText
-						v-if="showSaving"
-						icon="icon-loading-small">
-						{{ t('mail', 'Saving new tag name …') }}
-					</ActionText>
-				</Actions>
-				<button v-if="!isSet(tag.imapLabel)"
-					class="tag-actions"
-					@click="addTag(tag.imapLabel)">
-					{{ t('mail','Set') }}
-				</button>
-				<button v-else
-					class="tag-actions"
-					@click="removeTag(tag.imapLabel)">
-					{{ t('mail','Unset') }}
-				</button>
-			</div>
+			<TagItem v-for="tag in tags"
+				:key="tag.id"
+				:tag="tag"
+				:envelopes="envelopes"
+				@delete-tag="deleteTag" />
+
 			<h2 class="tag-title">
 				{{ t('mail', 'Add tag') }}
 			</h2>
 			<div class="create-tag">
-				<button v-if="!editing"
+				<NcButton v-if="!editing"
 					class="tagButton"
 					@click="addTagInput">
+					<template #icon>
+						<IconAdd :size="20" />
+					</template>
 					{{ t('mail', 'Add tag') }}
-				</button>
-				<ActionInput v-if="editing" icon="icon-tag" @submit="createTag" />
+				</NcButton>
+				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
+					<template #icon>
+						<IconTag :size="20" />
+					</template>
+				</ActionInput>
 				<ActionText
-					v-if="showSaving"
-					icon="icon-loading-small">
+					v-if="showSaving">
+					<template #icon>
+						<IconLoading :size="20" />
+					</template>
 					{{ t('mail', 'Saving tag …') }}
 				</ActionText>
 			</div>
@@ -81,12 +67,13 @@
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
-import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
+import DeleteTagModal from './DeleteTagModal.vue'
+import TagItem from './TagItem.vue'
+import IconTag from 'vue-material-design-icons/Tag.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import { showError, showInfo } from '@nextcloud/dialogs'
+import { hiddenTags } from './tags.js'
 
 function randomColor() {
 	let randomHexColor = ((1 << 24) * Math.random() | 0).toString(16)
@@ -99,16 +86,20 @@ export default {
 	name: 'TagModal',
 	components: {
 		Modal,
-		Actions,
 		ActionText,
 		ActionInput,
-		ActionButton,
+		DeleteTagModal,
+		IconTag,
+		IconLoading,
+		TagItem,
+		NcButton,
+		IconAdd,
 	},
 	props: {
-		envelope: {
-			// The envelope on which this menu will act
+		envelopes: {
+			// The envelopes on which this menu will act
 			required: true,
-			type: Object,
+			type: Array,
 		},
 	},
 	data() {
@@ -120,12 +111,15 @@ export default {
 			showSaving: false,
 			renameTagLabel: true,
 			renameTagInput: false,
+			deleteTagModal: false,
+			tagToDelete: null,
 			color: randomColor(),
+			editColor: '',
 		}
 	},
 	computed: {
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1').sort((a, b) => {
+			return this.$store.getters.getTags.filter((tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -144,10 +138,7 @@ export default {
 				if (!this.isSet(a.imapLabel) && this.isSet(b.imapLabel)) {
 					return 1
 				}
-				if (a.displayName < b.displayName) {
-					return 1
-				}
-				return -1
+				return a.displayName.localeCompare(b.displayName)
 			})
 		},
 	},
@@ -155,16 +146,17 @@ export default {
 		onClose() {
 			this.$emit('close')
 		},
+		closeDeleteModal() {
+			this.deleteTagModal = false
+		},
 		isSet(imapLabel) {
-			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).some(tag => tag.imapLabel === imapLabel)
-		},
-		addTag(imapLabel) {
-			this.isAdded = true
-			this.$store.dispatch('addEnvelopeTag', { envelope: this.envelope, imapLabel })
-		},
-		removeTag(imapLabel) {
-			this.isAdded = false
-			this.$store.dispatch('removeEnvelopeTag', { envelope: this.envelope, imapLabel })
+			return this.envelopes.some(
+				(envelope) => (
+					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
+						tag => tag.imapLabel === imapLabel
+					)
+				)
+			)
 		},
 		addTagInput() {
 			this.editing = true
@@ -172,10 +164,21 @@ export default {
 		},
 		async createTag(event) {
 			this.editing = true
+			if (this.showSaving) {
+				return
+			}
+
 			const displayName = event.target.querySelector('input[type=text]').value
+			if (displayName.toLowerCase() in hiddenTags) {
+				showError(this.t('mail', 'Tag name is a hidden system tag'))
+				return
+			}
 			if (this.$store.getters.getTags.some(tag => tag.displayName === displayName)) {
 				showError(this.t('mail', 'Tag already exists'))
 				return
+			}
+			if (displayName !== null && displayName !== '') {
+				this.showSaving = true
 			}
 			try {
 				await this.$store.dispatch('createTag', {
@@ -231,6 +234,10 @@ export default {
 				this.showSaving = true
 			}
 		},
+		deleteTag(tag) {
+			this.tagToDelete = tag
+			this.deleteTagModal = true
+		},
 
 	},
 }
@@ -238,63 +245,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .modal-content {
-	padding: 0 20px 20px 20px;
+:deep(.modal-content) {
+	padding: 20px 20px 20px 20px;
 	max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
-::v-deep .modal-container {
+:deep(.modal-container) {
 	width: auto !important;
-}
-.tag-title {
-	margin-top: 20px;
-	margin-left: 10px;
-}
-.tag-group {
-	display: block;
-	position: relative;
-	margin: 0 1px;
-	overflow: hidden;
-	left: 4px;
-}
-.tag-actions {
-	background-color: transparent;
-	border: none;
-	float: right;
-	&:hover,
-	&:focus {
-		background-color: var(--color-border-dark);
-	}
-}
-.tag-group__label {
-	z-index: 2;
-	font-weight: bold;
-	border: none;
-	background-color: transparent;
-	padding-left: 10px;
-	padding-right: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 94px;
-}
-.app-navigation-entry-bullet-wrapper {
-	width: 44px;
-	height: 44px;
-	display: inline-block;
-	position: absolute;
-	list-style: none;
-
-	.color0 {
-		width: 30px !important;
-		height: 30px;
-		border-radius: 50%;
-		background-size: 14px;
-		margin-top: -65px;
-		margin-left: 180px;
-		z-index: 2;
-		display: flex;
-		position: relative;
-	}
 }
 .icon-colorpicker {
 	background-image: var(--icon-add-fff);
@@ -303,21 +260,17 @@ export default {
 	display: inline-block;
 	margin-left: 10px;
 }
-::v-deep .action-input {
-	margin-left: -31px;
+.tag-title {
+	margin-top: 20px;
+	margin-left: 10px;
 }
-::v-deep .icon-tag {
-	background-image: none;
-}
-.action-item {
-	right: 8px;
-	float: right;
-}
+
 .create-tag {
 	list-style: none;
+	margin-bottom:12px;
 }
 @media only screen and (max-width: 512px) {
-	::v-deep .modal-container {
+	:deep(.modal-container) {
 	top: 100px !important;
 	max-height: calc(100vh - 170px) !important
 	}

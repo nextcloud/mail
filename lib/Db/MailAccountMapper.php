@@ -37,7 +37,6 @@ use OCP\IUser;
  * @template-extends QBMapper<MailAccount>
  */
 class MailAccountMapper extends QBMapper {
-
 	/**
 	 * @param IDBConnection $db
 	 */
@@ -137,7 +136,7 @@ class MailAccountMapper extends QBMapper {
 		$delete = $qb->delete($this->getTableName())
 			->where($qb->expr()->eq('provisioning_id', $qb->createNamedParameter($provisioningId, IQueryBuilder::PARAM_INT)));
 
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
 	public function deleteProvisionedAccountsByUid(string $uid): void {
@@ -149,9 +148,12 @@ class MailAccountMapper extends QBMapper {
 				$qb->expr()->isNotNull('provisioning_id')
 			);
 
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
+	/**
+	 * @return MailAccount[]
+	 */
 	public function getAllAccounts(): array {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb

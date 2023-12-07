@@ -31,6 +31,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
@@ -42,8 +43,10 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|DraftSavedEvent|OutboxMessageCreatedEvent|DraftMessageCreatedEvent>
+ */
 class DeleteDraftListener implements IEventListener {
-
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 
@@ -60,10 +63,10 @@ class DeleteDraftListener implements IEventListener {
 	private $eventDispatcher;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								LoggerInterface $logger,
-								IEventDispatcher $eventDispatcher) {
+		MailboxMapper $mailboxMapper,
+		MessageMapper $messageMapper,
+		LoggerInterface $logger,
+		IEventDispatcher $eventDispatcher) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
@@ -72,7 +75,7 @@ class DeleteDraftListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent) && $event->getDraft() !== null) {
+		if (($event instanceof DraftSavedEvent || $event instanceof OutboxMessageCreatedEvent || $event instanceof DraftMessageCreatedEvent) && $event->getDraft() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraft());
 		}
 	}

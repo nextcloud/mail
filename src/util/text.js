@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,9 +17,10 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import isString from 'lodash/fp/isString'
+import isString from 'lodash/fp/isString.js'
 import { curry } from 'ramda'
 import { convert } from 'html-to-text'
 
@@ -35,7 +36,7 @@ class Text {
 
 	/**
 	 * @param {Text} other other
-	 * @returns {Text}
+	 * @return {Text}
 	 */
 	append(other) {
 		if (this.format !== other.format) {
@@ -50,7 +51,6 @@ class Text {
 /**
  * @param {string} format
  * @param {string} value
- *
  * @return {object}
  */
 const wrap = curry((format, value) => {
@@ -95,20 +95,20 @@ const isFormat = curry((format, text) => {
 /**
  * @function
  * @param {Text} text
- * @return {bool}
+ * @return bool
  */
 export const isPlain = isFormat('plain')
 
 /**
  * @function
  * @param {Text} text
- * @return {bool}
+ * @return bool
  */
 export const isHtml = isFormat('html')
 
 /**
  * @param {Text} text text
- * @returns {Text}
+ * @return {Text}
  */
 export const toPlain = (text) => {
 	if (text.format === 'plain') {
@@ -193,7 +193,7 @@ export const toPlain = (text) => {
 
 /**
  * @param {Text} text text
- * @returns {Text}
+ * @return {Text}
  */
 export const toHtml = (text) => {
 	if (text.format === 'html') {

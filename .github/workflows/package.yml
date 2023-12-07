@@ -1,11 +1,5 @@
 name: Packaging
-
-on:
-    pull_request:
-    push:
-        branches:
-            - main
-            - stable*
+on: pull_request
 
 permissions:
   contents: read
@@ -16,26 +10,19 @@ jobs:
     name: Build release tarball
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set up Node
-        uses: actions/setup-node@v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - name: Read package.json node and npm engines version
+        uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
+        id: versions
+      - name: Set up Nextcloud env
+        uses: ChristophWurst/setup-nextcloud@fc0790385c175d97e88a7cb0933490de6e990374 # v0.3.2
         with:
-          node-version: 14.x
-      - name: Set up npm
-        run: npm install -g npm@7
-      - name: Set up php$
-        uses: shivammathur/setup-php@master
-        with:
-          php-version: 7.4
-          extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
-          coverage: none
-      - name: Install Krankerl
-        run: |
-          wget https://github.com/ChristophWurst/krankerl/releases/download/v0.13.0/krankerl_0.13.0_amd64.deb
-          sudo dpkg -i krankerl_0.13.0_amd64.deb
+          node-version: ${{ steps.versions.outputs.nodeVersion }}
+          npm-version: ${{ steps.versions.outputs.npmVersion }}
+          tools: 'krankerl'
       - name: Package app
         run: krankerl package
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
         with:
           path: build/artifacts/mail.tar.gz
           if-no-files-found: error

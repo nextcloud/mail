@@ -23,9 +23,6 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @template-extends QBMapper<Mailbox>
- */
 namespace OCA\Mail\Db;
 
 use OCA\Mail\Account;
@@ -35,18 +32,21 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\QueryBuilder\IQueryFunction;
 use OCP\IDBConnection;
 use function array_map;
 
+/**
+ * @template-extends QBMapper<Mailbox>
+ */
 class MailboxMapper extends QBMapper {
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
 	public function __construct(IDBConnection $db,
-								ITimeFactory $timeFactory) {
+		ITimeFactory $timeFactory) {
 		parent::__construct($db, 'mail_mailboxes');
 		$this->timeFactory = $timeFactory;
 	}
@@ -74,7 +74,7 @@ class MailboxMapper extends QBMapper {
 		$qb->select('id')
 			->from($this->getTableName());
 
-		$cursor = $qb->execute();
+		$cursor = $qb->executeQuery();
 		while ($row = $cursor->fetch()) {
 			yield (int)$row['id'];
 		}
@@ -92,7 +92,7 @@ class MailboxMapper extends QBMapper {
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())),
-				$qb->expr()->eq('name', $qb->createNamedParameter($name))
+				$qb->expr()->eq('name_hash', $qb->createNamedParameter(md5($name)))
 			);
 
 		try {
@@ -105,7 +105,6 @@ class MailboxMapper extends QBMapper {
 
 	/**
 	 * @param int $id
-	 * @param string $uid
 	 *
 	 * @return Mailbox
 	 *
@@ -128,6 +127,23 @@ class MailboxMapper extends QBMapper {
 			throw new ServiceException("The impossible has happened", 42, $e);
 		}
 	}
+
+	/**
+	 * @return Mailbox[]
+	 *
+	 * @throws Exception
+	 */
+	public function findByIds(array $ids): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->in('id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+			);
+		return $this->findEntities($select);
+	}
+
 
 	/**
 	 * @param int $id
@@ -176,7 +192,7 @@ class MailboxMapper extends QBMapper {
 				$query->expr()->eq('id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 				$this->eqOrNull($query, $attr, $lock, IQueryBuilder::PARAM_INT)
 			);
-		if ($query->execute() === 0) {
+		if ($query->executeStatement() === 0) {
 			// Another process just started syncing
 
 			throw MailboxLockedException::from($mailbox);
@@ -213,10 +229,6 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Mailbox $mailbox
-	 * @param IQueryBuilder $query
-	 * @param int|null $value
-	 *
 	 * @return string|IQueryFunction
 	 */
 	private function eqOrNull(IQueryBuilder $query, string $column, ?int $value, int $type) {
@@ -250,8 +262,8 @@ class MailboxMapper extends QBMapper {
 			->from($this->getTableName(), 'm')
 			->leftJoin('m', 'mail_accounts', 'a', $qb1->expr()->eq('m.account_id', 'a.id'))
 			->where($qb1->expr()->isNull('a.id'));
-		$result = $idsQuery->execute();
-		$ids = array_map(function (array $row) {
+		$result = $idsQuery->executeQuery();
+		$ids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();
@@ -261,7 +273,7 @@ class MailboxMapper extends QBMapper {
 			->where($qb2->expr()->in('id', $qb2->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$query = $qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$query->execute();
+			$query->executeStatement();
 		}
 	}
 
@@ -279,8 +291,8 @@ class MailboxMapper extends QBMapper {
 					$qb->expr()->eq('flag_important', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
 				);
 
-		$cursor = $query->execute();
-		$uids = array_map(function (array $row) {
+		$cursor = $query->executeQuery();
+		$uids = array_map(static function (array $row) {
 			return (int)$row['uid'];
 		}, $cursor->fetchAll());
 		$cursor->closeCursor();

@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import logger from '../logger'
-import { sendMdn } from '../service/MessageService'
+import logger from '../logger.js'
+import { sendMdn } from '../service/MessageService.js'
 import { showError } from '@nextcloud/dialogs'
 
 export default {

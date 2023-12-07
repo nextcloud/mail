@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -29,14 +30,13 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
-use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
+use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\IMAP\MessageMapper;
-use function array_chunk;
 use function array_merge;
+use function OCA\Mail\chunk_uid_sequence;
 
 class Synchronizer {
-
 	/**
 	 * This determines how many UIDs we send to IMAP for a check of changed or
 	 * vanished messages. The number needs a balance between good performance
@@ -44,7 +44,7 @@ class Synchronizer {
 	 * shown to cause IMAP errors for some accounts where the UID list can't be
 	 * compressed much by Horde.
 	 */
-	private const UID_CHUNK_SIZE = 10000;
+	private const UID_CHUNK_MAX_BYTES = 10000;
 
 	/** @var MessageMapper */
 	private $messageMapper;
@@ -65,8 +65,9 @@ class Synchronizer {
 	 * @throws MailboxDoesNotSupportModSequencesException
 	 */
 	public function sync(Horde_Imap_Client_Base $imapClient,
-						 Request $request,
-						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
+		Request $request,
+		string $userId,
+		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
 		try {
 			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
@@ -96,11 +97,11 @@ class Synchronizer {
 			throw $e;
 		}
 
-		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($newUids));
-		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), new Horde_Imap_Client_Ids($changedUids));
+		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $newUids, $userId);
+		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $changedUids, $userId);
 		$vanishedMessageUids = $vanishedUids;
 
-		return new Response($newMessages, $changedMessages, $vanishedMessageUids);
+		return new Response($newMessages, $changedMessages, $vanishedMessageUids, null);
 	}
 
 	/**
@@ -127,19 +128,26 @@ class Synchronizer {
 	 * @return array
 	 */
 	private function getChangedMessageUids(Horde_Imap_Client_Base $imapClient, Horde_Imap_Client_Mailbox $mailbox, Request $request): array {
-		$changedUids = array_merge(
+		if ($imapClient->capability->isEnabled('QRESYNC')) {
+			return $imapClient->sync($mailbox, $request->getToken(), [
+				'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
+			])->flagsuids->ids;
+		}
+
+		// Without QRESYNC we need to specify the known ids and in oder to avoid
+		// overly long IMAP commands they have to be chunked.
+		return array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				function (array $uids) use ($imapClient, $mailbox, $request) {
+				static function (Horde_Imap_Client_Ids $uids) use ($imapClient, $mailbox, $request) {
 					return $imapClient->sync($mailbox, $request->getToken(), [
 						'criteria' => Horde_Imap_Client::SYNC_FLAGSUIDS,
-						'ids' => new Horde_Imap_Client_Ids($uids),
+						'ids' => $uids,
 					])->flagsuids->ids;
 				},
-				array_chunk($request->getUids(), self::UID_CHUNK_SIZE)
+				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
 			)
 		);
-		return $changedUids;
 	}
 
 	/**
@@ -150,16 +158,24 @@ class Synchronizer {
 	 * @return array
 	 */
 	private function getVanishedMessageUids(Horde_Imap_Client_Base $imapClient, Horde_Imap_Client_Mailbox $mailbox, Request $request): array {
+		if ($imapClient->capability->isEnabled('QRESYNC')) {
+			return $imapClient->sync($mailbox, $request->getToken(), [
+				'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			])->vanisheduids->ids;
+		}
+
+		// Without QRESYNC we need to specify the known ids and in oder to avoid
+		// overly long IMAP commands they have to be chunked.
 		$vanishedUids = array_merge(
 			[], // for php<7.4 https://www.php.net/manual/en/function.array-merge.php
 			...array_map(
-				function (array $uids) use ($imapClient, $mailbox, $request) {
+				static function (Horde_Imap_Client_Ids $uids) use ($imapClient, $mailbox, $request) {
 					return $imapClient->sync($mailbox, $request->getToken(), [
 						'criteria' => Horde_Imap_Client::SYNC_VANISHEDUIDS,
-						'ids' => new Horde_Imap_Client_Ids($uids),
+						'ids' => $uids,
 					])->vanisheduids->ids;
 				},
-				array_chunk($request->getUids(), self::UID_CHUNK_SIZE)
+				chunk_uid_sequence($request->getUids(), self::UID_CHUNK_MAX_BYTES)
 			)
 		);
 		return $vanishedUids;

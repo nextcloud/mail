@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Matthias Rella <mrella@pisys.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -29,8 +30,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use Exception;
 use Horde_Imap_Client;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Mailbox;
@@ -38,6 +39,8 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
+use OCA\Mail\Http\TrapError;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
@@ -46,50 +49,40 @@ use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
 
 class AccountsController extends Controller {
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IL10N */
-	private $l10n;
-
-	/** @var AliasesService */
-	private $aliasesService;
-
-	/** @var IMailTransmission */
-	private $mailTransmission;
-
-	/** @var SetupService */
-	private $setup;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var SyncService */
-	private $syncService;
+	private AccountService $accountService;
+	private string $currentUserId;
+	private LoggerInterface $logger;
+	private IL10N $l10n;
+	private AliasesService $aliasesService;
+	private IMailTransmission $mailTransmission;
+	private SetupService $setup;
+	private IMailManager $mailManager;
+	private SyncService $syncService;
+	private IConfig $config;
+	private IRemoteHostValidator $hostValidator;
+	private MailboxSync $mailboxSync;
 
 	public function __construct(string $appName,
-								   IRequest $request,
-								   AccountService $accountService,
-								   $UserId,
-								   LoggerInterface $logger,
-								   IL10N $l10n,
-								   AliasesService $aliasesService,
-								   IMailTransmission $mailTransmission,
-								   SetupService $setup,
-								   IMailManager $mailManager,
-								   SyncService $syncService
+		IRequest $request,
+		AccountService $accountService,
+		$UserId,
+		LoggerInterface $logger,
+		IL10N $l10n,
+		AliasesService $aliasesService,
+		IMailTransmission $mailTransmission,
+		SetupService $setup,
+		IMailManager $mailManager,
+		SyncService $syncService,
+		IConfig $config,
+		IRemoteHostValidator $hostValidator,
+		MailboxSync $mailboxSync
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -101,14 +94,17 @@ class AccountsController extends Controller {
 		$this->setup = $setup;
 		$this->mailManager = $mailManager;
 		$this->syncService = $syncService;
+		$this->config = $config;
+		$this->hostValidator = $hostValidator;
+		$this->mailboxSync = $mailboxSync;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function index(): JSONResponse {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 
@@ -123,25 +119,23 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function show(int $id): JSONResponse {
 		return new JSONResponse($this->accountService->find($this->currentUserId, $id));
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string $accountName
 	 * @param string $emailAddress
-	 * @param string $password
 	 * @param string $imapHost
 	 * @param int $imapPort
 	 * @param string $imapSslMode
@@ -152,60 +146,77 @@ class AccountsController extends Controller {
 	 * @param string $smtpSslMode
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
-	 * @param bool $autoDetect
+	 * @param string $authMethod
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function update(int $id,
-						   bool $autoDetect,
-						   string $accountName,
-						   string $emailAddress,
-						   string $password = null,
-						   string $imapHost = null,
-						   int $imapPort = null,
-						   string $imapSslMode = null,
-						   string $imapUser = null,
-						   string $imapPassword = null,
-						   string $smtpHost = null,
-						   int $smtpPort = null,
-						   string $smtpSslMode = null,
-						   string $smtpUser = null,
-						   string $smtpPassword = null): JSONResponse {
+		string $accountName,
+		string $emailAddress,
+		string $imapHost = null,
+		int $imapPort = null,
+		string $imapSslMode = null,
+		string $imapUser = null,
+		string $imapPassword = null,
+		string $smtpHost = null,
+		int $smtpPort = null,
+		string $smtpSslMode = null,
+		string $smtpUser = null,
+		string $smtpPassword = null,
+		string $authMethod = 'password'): JSONResponse {
 		try {
 			// Make sure the account actually exists
 			$this->accountService->find($this->currentUserId, $id);
 		} catch (ClientException $e) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
+		if (!$this->hostValidator->isValid($imapHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'IMAP',
+					'host' => $imapHost,
+					'port' => $imapPort,
+				],
+			);
+		}
+		if (!$this->hostValidator->isValid($smtpHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'SMTP',
+					'host' => $smtpHost,
+					'port' => $smtpPort,
+				],
+			);
+		}
 
-		$account = null;
-		$errorMessage = null;
 		try {
-			if ($autoDetect) {
-				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
-			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
-			}
-		} catch (Exception $ex) {
-			$errorMessage = $ex->getMessage();
-		}
+			return MailJsonResponse::success(
+				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, $id)
+			);
+		} catch (CouldNotConnectException $e) {
+			$data = [
+				'error' => $e->getReason(),
+				'service' => $e->getService(),
+				'host' => $e->getHost(),
+				'port' => $e->getPort(),
+			];
 
-		if (is_null($account)) {
-			if ($autoDetect) {
-				throw new ClientException($this->l10n->t('Auto detect failed. Please use manual mode.'));
-			} else {
-				$this->logger->error('Updating account failed: ' . $errorMessage);
-				throw new ClientException($this->l10n->t('Updating account failed: ') . $errorMessage);
-			}
+			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
+			return MailJsonResponse::fail($data);
+		} catch (ServiceException $e) {
+			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+			return MailJsonResponse::error('Could not create account');
 		}
-
-		return new JSONResponse($account);
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string|null $editorMode
@@ -214,20 +225,28 @@ class AccountsController extends Controller {
 	 * @param int|null $draftsMailboxId
 	 * @param int|null $sentMailboxId
 	 * @param int|null $trashMailboxId
+	 * @param int|null $archiveMailboxId
+	 * @param int|null $snoozeMailboxId
 	 * @param bool|null $signatureAboveQuote
 	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function patchAccount(int $id,
-								 string $editorMode = null,
-								 int $order = null,
-								 bool $showSubscribedOnly = null,
-								 int $draftsMailboxId = null,
-								 int $sentMailboxId = null,
-								 int $trashMailboxId = null,
-								 bool $signatureAboveQuote = null): JSONResponse {
+		string $editorMode = null,
+		int $order = null,
+		bool $showSubscribedOnly = null,
+		int $draftsMailboxId = null,
+		int $sentMailboxId = null,
+		int $trashMailboxId = null,
+		int $archiveMailboxId = null,
+		int $snoozeMailboxId = null,
+		bool $signatureAboveQuote = null,
+		int $trashRetentionDays = null,
+		int $junkMailboxId = null,
+		bool $searchBody = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -244,6 +263,14 @@ class AccountsController extends Controller {
 			$this->mailManager->getMailbox($this->currentUserId, $trashMailboxId);
 			$dbAccount->setTrashMailboxId($trashMailboxId);
 		}
+		if ($archiveMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $archiveMailboxId);
+			$dbAccount->setarchiveMailboxId($archiveMailboxId);
+		}
+		if ($snoozeMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $snoozeMailboxId);
+			$dbAccount->setSnoozeMailboxId($snoozeMailboxId);
+		}
 		if ($editorMode !== null) {
 			$dbAccount->setEditorMode($editorMode);
 		}
@@ -256,14 +283,24 @@ class AccountsController extends Controller {
 		if ($signatureAboveQuote !== null) {
 			$dbAccount->setSignatureAboveQuote($signatureAboveQuote);
 		}
+		if ($trashRetentionDays !== null) {
+			// Passing 0 (or lower) disables retention
+			$dbAccount->setTrashRetentionDays($trashRetentionDays <= 0 ? null : $trashRetentionDays);
+		}
+		if ($junkMailboxId !== null) {
+			$this->mailManager->getMailbox($this->currentUserId, $junkMailboxId);
+			$dbAccount->setJunkMailboxId($junkMailboxId);
+		}
+		if($searchBody !== null) {
+			$dbAccount->setSearchBody($searchBody);
+		}
 		return new JSONResponse(
-			$this->accountService->save($dbAccount)->toJson()
+			$this->accountService->save($dbAccount)
 		);
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 * @param string|null $signature
@@ -273,6 +310,7 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	#[TrapError]
 	public function updateSignature(int $id, string $signature = null): JSONResponse {
 		$this->accountService->updateSignature($id, $this->currentUserId, $signature);
 		return new JSONResponse();
@@ -280,7 +318,6 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param int $id
 	 *
@@ -288,6 +325,7 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function destroy(int $id): JSONResponse {
 		$this->accountService->delete($this->currentUserId, $id);
 		return new JSONResponse();
@@ -295,32 +333,63 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $accountName
 	 * @param string $emailAddress
-	 * @param string $password
-	 * @param string $imapHost
-	 * @param int $imapPort
-	 * @param string $imapSslMode
-	 * @param string $imapUser
-	 * @param string $imapPassword
-	 * @param string $smtpHost
-	 * @param int $smtpPort
-	 * @param string $smtpSslMode
-	 * @param string $smtpUser
-	 * @param string $smtpPassword
-	 * @param bool $autoDetect
+	 * @param string|null $imapHost
+	 * @param int|null $imapPort
+	 * @param string|null $imapSslMode
+	 * @param string|null $imapUser
+	 * @param string|null $imapPassword
+	 * @param string|null $smtpHost
+	 * @param int|null $smtpPort
+	 * @param string|null $smtpSslMode
+	 * @param string|null $smtpUser
+	 * @param string|null $smtpPassword
+	 * @param string $authMethod
 	 *
 	 * @return JSONResponse
 	 */
-	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
+	#[TrapError]
+	public function create(string $accountName,
+		string $emailAddress,
+		string $imapHost = null,
+		int $imapPort = null,
+		string $imapSslMode = null,
+		string $imapUser = null,
+		?string $imapPassword = null,
+		string $smtpHost = null,
+		int $smtpPort = null,
+		string $smtpSslMode = null,
+		string $smtpUser = null,
+		?string $smtpPassword = null,
+		string $authMethod = 'password'): JSONResponse {
+		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
+			$this->logger->info('Creating account disabled by admin.');
+			return MailJsonResponse::error('Could not create account');
+		}
+		if (!$this->hostValidator->isValid($imapHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'IMAP',
+					'host' => $imapHost,
+					'port' => $imapPort,
+				],
+			);
+		}
+		if (!$this->hostValidator->isValid($smtpHost)) {
+			return MailJsonResponse::fail(
+				[
+					'error' => 'CONNECTION_ERROR',
+					'service' => 'SMTP',
+					'host' => $smtpHost,
+					'port' => $smtpPort,
+				],
+			);
+		}
 		try {
-			if ($autoDetect) {
-				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
-			} else {
-				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
-			}
+			$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod);
 		} catch (CouldNotConnectException $e) {
 			$data = [
 				'error' => $e->getReason(),
@@ -330,48 +399,43 @@ class AccountsController extends Controller {
 			];
 
 			$this->logger->info('Creating account failed: ' . $e->getMessage(), $data);
-			return \OCA\Mail\Http\JsonResponse::fail($data);
+			return MailJsonResponse::fail($data);
 		} catch (ServiceException $e) {
 			$this->logger->error('Creating account failed: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
-			return \OCA\Mail\Http\JsonResponse::error('Could not create account');
+			return MailJsonResponse::error('Could not create account');
 		}
-
-		if (is_null($account)) {
-			return \OCA\Mail\Http\JsonResponse::fail([
-				'error' => 'AUTOCONFIG_FAILED',
-				'message' => $this->l10n->t('Auto detect failed. Please use manual mode.'),
-			]);
+		if ($authMethod != 'xoauth2') {
+			try {
+				$this->mailboxSync->sync($account, $this->logger);
+			} catch (ServiceException $e) {
+				$this->logger->error('Failed syncing the newly created account' . $e->getMessage(), [
+					'exception' => $e,
+				]);
+			}
 		}
-
-		return \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
+		return MailJsonResponse::success(
+			$account, Http::STATUS_CREATED
+		);
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
-	 *
-	 * @param int $id
-	 * @param string $subject
-	 * @param string $body
-	 * @param string $to
-	 * @param string $cc
-	 * @param string $bcc
-	 * @param int $uid
 	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
 	 */
+	#[TrapError]
 	public function draft(int $id,
-						  string $subject,
-						  string $body,
-						  string $to,
-						  string $cc,
-						  string $bcc,
-						  bool $isHtml = true,
-						  int $draftId = null): JSONResponse {
+		string $subject,
+		string $body,
+		string $to,
+		string $cc,
+		string $bcc,
+		bool $isHtml = true,
+		int $draftId = null): JSONResponse {
 		if ($draftId === null) {
 			$this->logger->info("Saving a new draft in account <$id>");
 		} else {
@@ -397,6 +461,7 @@ class AccountsController extends Controller {
 				$draftsMailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 				[],
+				null,
 				false
 			);
 			return new JSONResponse([
@@ -423,6 +488,37 @@ class AccountsController extends Controller {
 		if ($quota === null) {
 			return MailJsonResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
 		}
-		return MailJsonResponse::success($quota);
+		return MailJsonResponse::success($quota)->cacheFor(5 * 60, false, true);
 	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id Account id
+	 * @param ?int $smimeCertificateId
+	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 */
+	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {
+		$account = $this->accountService->find($this->currentUserId, $id)->getMailAccount();
+		$account->setSmimeCertificateId($smimeCertificateId);
+		$this->accountService->update($account);
+		return MailJsonResponse::success();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id Account id
+	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 */
+	public function testAccountConnection(int $id) {
+		return new JSONResponse([
+			'data' => $this->accountService->testAccountConnection($this->currentUserId, $id),
+		]);
+	}
+
 }

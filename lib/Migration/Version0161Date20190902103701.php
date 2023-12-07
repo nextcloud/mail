@@ -26,12 +26,12 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\IDBConnection;
-use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version0161Date20190902103701 extends SimpleMigrationStep {
-
 	/** @var IDBConnection */
 	protected $connection;
 
@@ -51,40 +51,40 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$mailboxTable = $schema->createTable('mail_mailboxes');
-		$mailboxTable->addColumn('id', 'integer', [
+		$mailboxTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
 			'length' => 20,
 		]);
-		$mailboxTable->addColumn('name', 'string', [
+		$mailboxTable->addColumn('name', Types::STRING, [
 			'notnull' => true,
 			'length' => 255,
 		]);
-		$mailboxTable->addColumn('account_id', 'integer', [
+		$mailboxTable->addColumn('account_id', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$mailboxTable->addColumn('sync_token', 'string', [
+		$mailboxTable->addColumn('sync_token', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
-		$mailboxTable->addColumn('attributes', 'string', [
+		$mailboxTable->addColumn('attributes', Types::STRING, [
 			'length' => 255,
 			'default' => '[]',
 		]);
-		$mailboxTable->addColumn('delimiter', 'string', [
+		$mailboxTable->addColumn('delimiter', Types::STRING, [
 			'notnull' => true,
 			'length' => 1,
 		]);
-		$mailboxTable->addColumn('messages', 'integer', [
+		$mailboxTable->addColumn('messages', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$mailboxTable->addColumn('unseen', 'integer', [
+		$mailboxTable->addColumn('unseen', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$mailboxTable->addColumn('selectable', 'boolean', [
+		$mailboxTable->addColumn('selectable', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => true,
 		]);
@@ -106,6 +106,6 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 		$update = $this->connection->getQueryBuilder();
 		$update->update('mail_accounts')
 			->set('last_mailbox_sync', $update->createNamedParameter(0));
-		$update->execute();
+		$update->executeStatement();
 	}
 }

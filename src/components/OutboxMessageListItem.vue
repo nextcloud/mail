@@ -3,7 +3,7 @@
   -
   - @author Richard Steinmetz <richard@steinmetz.cloud>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -28,9 +28,6 @@
 		:details="details"
 		@click="openModal">
 		<template #icon>
-			<div
-				class="account-color"
-				:style="{'background-color': accountColor}" />
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
 		<template #subtitle>
@@ -38,7 +35,6 @@
 		</template>
 		<template slot="actions">
 			<ActionButton
-				icon="icon-checkmark"
 				:close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
@@ -49,9 +45,11 @@
 				</template>
 			</ActionButton>
 			<ActionButton
-				icon="icon-delete"
 				:close-after-click="true"
 				@click="deleteMessage">
+				<template #icon>
+					<IconDelete :size="20" />
+				</template>
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</template>
@@ -59,19 +57,18 @@
 </template>
 
 <script>
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import Avatar from './Avatar'
-import { calculateAccountColor } from '../util/AccountColor'
+import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
+import Avatar from './Avatar.vue'
+import IconDelete from 'vue-material-design-icons/Delete.vue'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
-import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin'
+import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
 import moment from '@nextcloud/moment'
-import logger from '../logger'
+import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { matchError } from '../errors/match'
-import { html, plain } from '../util/text'
-import Send from 'vue-material-design-icons/Send'
-import { UNDO_DELAY } from '../store/constants'
+import { matchError } from '../errors/match.js'
+import { html, plain } from '../util/text.js'
+import Send from 'vue-material-design-icons/Send.vue'
+import { UNDO_DELAY } from '../store/constants.js'
 
 export default {
 	name: 'OutboxMessageListItem',
@@ -79,6 +76,7 @@ export default {
 		ListItem,
 		Avatar,
 		ActionButton,
+		IconDelete,
 		Send,
 	},
 	mixins: [
@@ -93,10 +91,6 @@ export default {
 	computed: {
 		selected() {
 			return this.$route.params.messageId === this.message.id
-		},
-		accountColor() {
-			const account = this.$store.getters.getAccount(this.message.accountId)
-			return calculateAccountColor(account?.emailAddress ?? '')
 		},
 		title() {
 			const recipientToString = recipient => recipient.label
@@ -117,7 +111,8 @@ export default {
 		},
 		/**
 		 * Subject of message or "No Subject".
-		 * @returns {string}
+		 *
+		 * @return {string}
 		 */
 		subjectForSubtitle() {
 			// We have to use || here (instead of ??) because the subject might be '', null
@@ -151,7 +146,7 @@ export default {
 			await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id })
 		},
 		async openModal() {
-			await this.$store.dispatch('showMessageComposer', {
+			await this.$store.dispatch('startComposerSession', {
 				type: 'outbox',
 				data: {
 					...this.message,

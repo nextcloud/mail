@@ -27,6 +27,7 @@ use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_Address;
+use Horde_Mime_Headers;
 use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
@@ -34,10 +35,10 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\QueryException;
+use OCP\Server;
 use function in_array;
 
 trait ImapTest {
-
 	/**  @var Horde_Imap_Client_Socket */
 	private $client;
 
@@ -139,10 +140,16 @@ trait ImapTest {
 		$headers = [
 			'From' => new Horde_Mail_Rfc822_Address($message->getFrom()),
 			'To' => new Horde_Mail_Rfc822_Address($message->getTo()),
-			'Cc' => new Horde_Mail_Rfc822_Address($message->getCc()),
-			'Bcc' => new Horde_Mail_Rfc822_Address($message->getBcc()),
-			'Subject' => $message->getSubject(),
 		];
+		if ($message->getCc() !== null) {
+			$headers['Cc'] = new Horde_Mail_Rfc822_Address($message->getCc());
+		}
+		if ($message->getBcc() !== null) {
+			$headers['Bcc'] = new Horde_Mail_Rfc822_Address($message->getBcc());
+		}
+		if ($message->getSubject() !== null) {
+			$headers['Subject'] = $message->getSubject();
+		}
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
@@ -158,6 +165,33 @@ trait ImapTest {
 			return $client->append($mailbox, [
 				[
 					'data' => $data,
+				]
+			])->ids[0];
+		} finally {
+			$client->logout();
+		}
+	}
+
+	/**
+	 * @param string $mailbox
+	 * @param string $mimeText
+	 * @param MailAccount|null $account
+	 * @return int Uid of the new message
+	 */
+	public function saveMimeMessage(string $mailbox, string $mimeText, ?MailAccount $account = null): int {
+		$headers = Horde_Mime_Headers::parseHeaders($mimeText);
+		$mimePart = Horde_Mime_Part::parseMessage($mimeText);
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		$mail->setBasePart($mimePart);
+
+		$data = $mail->getRaw(false);
+		$client = $this->getClient($account);
+		try {
+			return $client->append($mailbox, [
+				[
+					'data' => $mimeText,
 				]
 			])->ids[0];
 		} finally {
@@ -265,7 +299,7 @@ trait ImapTest {
 	protected function getClient(?MailAccount $account): Horde_Imap_Client_Socket {
 		if ($account !== null) {
 			/** @var IMAPClientFactory $clientFactory */
-			$clientFactory = \OC::$server->query(IMAPClientFactory::class);
+			$clientFactory = Server::get(IMAPClientFactory::class);
 			$client = $clientFactory->getClient(new Account($account));
 		} else {
 			$client = $this->getTestClient();

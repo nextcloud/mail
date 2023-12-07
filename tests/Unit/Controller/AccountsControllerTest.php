@@ -31,6 +31,7 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\SetupService;
@@ -38,13 +39,14 @@ use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\Security\IRemoteHostValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class AccountsControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 
@@ -87,6 +89,14 @@ class AccountsControllerTest extends TestCase {
 	/** @var SyncService|MockObject */
 	private $syncService;
 
+	/** @var MailboxSync|MockObject */
+	private $mailboxSync;
+
+	/** @var IConfig|(IConfig&MockObject)|MockObject */
+	private IConfig|MockObject $config;
+	/** @var IRemoteHostValidator|MockObject */
+	private $hostValidator;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -101,6 +111,10 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService = $this->createMock(SetupService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
+		$this->mailboxSync = $this->createMock(mailboxSync::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->hostValidator = $this->createMock(IRemoteHostValidator::class);
+		$this->hostValidator->method('isValid')->willReturn(true);
 
 		$this->controller = new AccountsController(
 			$this->appName,
@@ -113,7 +127,10 @@ class AccountsControllerTest extends TestCase {
 			$this->transmission,
 			$this->setupService,
 			$this->mailManager,
-			$this->syncService
+			$this->syncService,
+			$this->config,
+			$this->hostValidator,
+			$this->mailboxSync,
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
@@ -213,74 +230,11 @@ class AccountsControllerTest extends TestCase {
 		$this->controller->destroy($this->accountId);
 	}
 
-	public function testCreateAutoDetectSuccess(): void {
-		$email = 'john@example.com';
-		$password = '123456';
-		$accountName = 'John Doe';
-		$account = $this->createMock(Account::class);
-		$this->setupService->expects(self::once())
-			->method('createNewAutoconfiguredAccount')
-			->with($accountName, $email, $password)
-			->willReturn($account);
-
-		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
-			null, null, true);
-
-		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
-
-		self::assertEquals($expectedResponse, $response);
-	}
-
-	public function testCreateAutoDetectFailure(): void {
-		$email = 'john@example.com';
-		$password = '123456';
-		$accountName = 'John Doe';
-		$this->setupService->expects(self::once())
-			->method('createNewAutoconfiguredAccount')
-			->with($accountName, $email, $password)
-			->willThrowException(new ClientException());
-		$this->expectException(ClientException::class);
-
-		$this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
-			null, null, true);
-	}
-
-	public function testUpdateAutoDetectSuccess(): void {
-		$email = 'john@example.com';
-		$password = '123456';
-		$accountName = 'John Doe';
-		$account = $this->createMock(Account::class);
-		$this->setupService->expects(self::once())
-			->method('createNewAutoconfiguredAccount')
-			->with($accountName, $email, $password)
-			->willReturn($account);
-
-		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
-			null, null, true);
-
-		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
-
-		self::assertEquals($expectedResponse, $response);
-	}
-
-	public function testUpdateAutoDetectFailure(): void {
-		$email = 'john@example.com';
-		$password = '123456';
-		$accountName = 'John Doe';
-		$this->setupService->expects(self::once())
-			->method('createNewAutoconfiguredAccount')
-			->with($accountName, $email, $password)
-			->willThrowException(new ClientException());
-		$this->expectException(ClientException::class);
-
-		$this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
-			null, null, true);
-	}
-
 	public function testCreateManualSuccess(): void {
-		$autoDetect = false;
+		$this->config->expects(self::once())
+			->method('getAppValue')
+			->willReturn('yes');
 		$email = 'user@domain.tld';
-		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
 		$imapPort = 993;
@@ -295,20 +249,46 @@ class AccountsControllerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
 			->willReturn($account);
 
-		$response = $this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 
 		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
 
 		self::assertEquals($expectedResponse, $response);
 	}
+
+	public function testCreateManualNotAllowed(): void {
+		$email = 'user@domain.tld';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = 993;
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = 465;
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$this->config->expects(self::once())
+			->method('getAppValue')
+			->willReturn('no');
+		$this->logger->expects(self::once())
+			->method('info');
+		$this->setupService->expects(self::never())
+			->method('createNewAccount');
+
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::error('Could not create account');
+		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
+
+		self::assertEquals($expectedResponse, $response);
+	}
+
 
 	public function testCreateManualFailure(): void {
-		$autoDetect = false;
 		$email = 'user@domain.tld';
-		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
 		$imapPort = 993;
@@ -322,18 +302,16 @@ class AccountsControllerTest extends TestCase {
 		$smtpPassword = 'mypassword';
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
 			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
-		$this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+		$this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, 'password');
 	}
 
 	public function testUpdateManualSuccess(): void {
-		$autoDetect = false;
 		$id = 135;
 		$email = 'user@domain.tld';
-		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
 		$imapPort = 993;
@@ -348,21 +326,19 @@ class AccountsControllerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
 			->willReturn($account);
 
-		$response = $this->controller->update($id, $autoDetect, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
+		$response = $this->controller->update($id, $accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 
-		$expectedResponse = new JSONResponse($account);
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account);
 
 		self::assertEquals($expectedResponse, $response);
 	}
 
 	public function testUpdateManualFailure(): void {
-		$autoDetect = false;
 		$id = 135;
 		$email = 'user@domain.tld';
-		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
 		$imapPort = 993;
@@ -376,11 +352,11 @@ class AccountsControllerTest extends TestCase {
 		$smtpPassword = 'mypassword';
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
-			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
 			->willThrowException(new ClientException());
 		$this->expectException(ClientException::class);
 
-		$this->controller->update($id, $autoDetect, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
+		$this->controller->update($id, $accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 	}
 
 	public function draftDataProvider(): array {

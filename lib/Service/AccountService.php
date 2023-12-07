@@ -25,18 +25,20 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
+use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
+use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\BackgroundJob\IJobList;
 use function array_map;
 
 class AccountService {
-
 	/** @var MailAccountMapper */
 	private $mapper;
 
@@ -53,12 +55,17 @@ class AccountService {
 	/** @var IJobList */
 	private $jobList;
 
+	/** @var IMAPClientFactory*/
+	private $imapClientFactory;
+
 	public function __construct(MailAccountMapper $mapper,
-								AliasesService $aliasesService,
-								IJobList $jobList) {
+		AliasesService $aliasesService,
+		IJobList $jobList,
+		IMAPClientFactory $imapClientFactory) {
 		$this->mapper = $mapper;
 		$this->aliasesService = $aliasesService;
 		$this->jobList = $jobList;
+		$this->imapClientFactory = $imapClientFactory;
 	}
 
 	/**
@@ -67,7 +74,7 @@ class AccountService {
 	 */
 	public function findByUserId(string $currentUserId): array {
 		if ($this->accounts === null) {
-			return $this->accounts = array_map(function ($a) {
+			return $this->accounts = array_map(static function ($a) {
 				return new Account($a);
 			}, $this->mapper->findByUserId($currentUserId));
 		}
@@ -149,8 +156,14 @@ class AccountService {
 		// Insert background jobs for this account
 		$this->jobList->add(SyncJob::class, ['accountId' => $newAccount->getId()]);
 		$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $newAccount->getId()]);
+		$this->jobList->add(PreviewEnhancementProcessingJob::class, ['accountId' => $newAccount->getId()]);
+		$this->jobList->add(QuotaJob::class, ['accountId' => $newAccount->getId()]);
 
 		return $newAccount;
+	}
+
+	public function update(MailAccount $account): MailAccount {
+		return $this->mapper->update($account);
 	}
 
 	/**
@@ -166,5 +179,30 @@ class AccountService {
 		$mailAccount = $account->getMailAccount();
 		$mailAccount->setSignature($signature);
 		$this->mapper->save($mailAccount);
+	}
+
+	/**
+	 * @return MailAccount[]
+	 */
+	public function getAllAcounts(): array {
+		return $this->mapper->getAllAccounts();
+	}
+
+	
+	/**
+	 * @param string $currentUserId
+	 * @param int $accountId
+	 * @return bool
+	 */
+
+	public function testAccountConnection(string $currentUserId, int $accountId) :bool {
+		$account = $this->find($currentUserId, $accountId);
+		try {
+			$client = $this->imapClientFactory->getClient($account);
+			$client->close();
+			return true;
+		} catch (\Throwable $e) {
+			return false;
+		}
 	}
 }

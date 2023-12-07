@@ -2,6 +2,7 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -43,7 +44,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class AttachmentServiceTest extends TestCase {
-
 	/** @var LocalAttachmentMapper|MockObject */
 	private $mapper;
 
@@ -328,7 +328,7 @@ class AttachmentServiceTest extends TestCase {
 			->willReturn($mailbox);
 		$this->messageMapper->expects(self::once())
 			->method('getFullText')
-			->with($client, $mailbox->getName(), $message->getUid())
+			->with($client, $mailbox->getName(), $message->getUid(), $userId)
 			->willReturn('sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds');
 		$this->mapper->expects($this->once())
 			->method('insert')

@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@owncloud.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -24,44 +25,49 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
-use OCP\IL10N;
-use OCP\IRequest;
-use OCA\Mail\Db\Tag;
-use OCA\Mail\Account;
-use OCA\Mail\Mailbox;
-use OCP\Files\Folder;
-use ReflectionObject;
-use OCP\IURLGenerator;
-use OCA\Mail\Attachment;
-use OCP\AppFramework\Http;
-use OCA\Mail\Model\Message;
-use Psr\Log\LoggerInterface;
-use OCA\Mail\Http\HtmlResponse;
-use OCA\Mail\Model\IMAPMessage;
-use OCP\Files\IMimeTypeDetector;
+use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Socket;
 use OC\AppFramework\Http\Request;
-use OCA\Mail\Service\MailManager;
-use OCA\Mail\Contracts\IMailSearch;
+use OC\Security\CSP\ContentSecurityPolicyNonceManager;
+use OCA\Mail\Account;
+use OCA\Mail\Attachment;
+use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Controller\MessagesController;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\Tag;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Http\AttachmentDownloadResponse;
+use OCA\Mail\Http\HtmlResponse;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ItineraryService;
-use OCP\AppFramework\Http\ZipResponse;
-use OCA\Mail\Exception\ClientException;
-use OCP\AppFramework\Http\JSONResponse;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Contracts\IMailTransmission;
-use OCP\AppFramework\Utility\ITimeFactory;
-use OCA\Mail\Controller\MessagesController;
-use PHPUnit\Framework\MockObject\MockObject;
-use OCA\Mail\Contracts\ITrustedSenderService;
-use OCA\Mail\Http\AttachmentDownloadResponse;
-use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OC\Security\CSP\ContentSecurityPolicyNonceManager;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\ZipResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
+use OCP\IL10N;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use ReflectionObject;
 
 class MessagesControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 
@@ -98,9 +104,6 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|Account */
 	private $account;
 
-	/** @var MockObject|Mailbox */
-	private $mailbox;
-
 	/** @var MockObject|Message */
 	private $message;
 
@@ -125,6 +128,17 @@ class MessagesControllerTest extends TestCase {
 	/** @var ITimeFactory */
 	private $oldFactory;
 
+	/** @var MockObject|SmimeService */
+	private $smimeService;
+
+	/** @var MockObject|IMAPClientFactory  */
+	private $clientFactory;
+	private IDkimService $dkimService;
+
+	/** @var MockObject|IUserPreferences */
+	private $userPreferences;
+	private SnoozeService $snoozeService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -144,6 +158,11 @@ class MessagesControllerTest extends TestCase {
 		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
 		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
 		$this->mailTransmission = $this->createMock(IMailTransmission::class);
+		$this->smimeService = $this->createMock(SmimeService::class);
+		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->dkimService = $this->createMock(IDkimService::class);
+		$this->userPreferences = $this->createMock(IUserPreferences::class);
+		$this->snoozeService = $this->createMock(SnoozeService::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -169,11 +188,15 @@ class MessagesControllerTest extends TestCase {
 			$this->urlGenerator,
 			$this->nonceManager,
 			$this->trustedSenderService,
-			$this->mailTransmission
+			$this->mailTransmission,
+			$this->smimeService,
+			$this->clientFactory,
+			$this->dkimService,
+			$this->userPreferences,
+			$this->snoozeService,
 		);
 
 		$this->account = $this->createMock(Account::class);
-		$this->mailbox = $this->createMock(Mailbox::class);
 		$this->message = $this->createMock(IMAPMessage::class);
 		$this->attachment = $this->createMock(Attachment::class);
 	}
@@ -185,7 +208,7 @@ class MessagesControllerTest extends TestCase {
 		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
 	}
 
-	public function testGetHtmlBody() {
+	public function testGetHtmlBody(): void {
 		$accountId = 17;
 		$mailboxId = 13;
 		$folderId = 'testfolder';
@@ -211,11 +234,16 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$imapMessage = $this->createMock(IMAPMessage::class);
 		$this->mailManager->expects($this->exactly(2))
 			->method('getImapMessage')
-			->with($this->account, $mailbox, 123, true)
+			->with($client, $this->account, $mailbox, 123, true)
 			->willReturn($imapMessage);
+		$this->clientFactory->expects($this->exactly(2))
+			->method('getClient')
+			->with($this->account)
+			->willReturn($client);
 
 		$expectedPlainResponse = HtmlResponse::plain('');
 		$expectedPlainResponse->cacheFor(3600);
@@ -244,7 +272,9 @@ class MessagesControllerTest extends TestCase {
 		$policy->disallowFontDomain('\'self\'');
 		$policy->disallowMediaDomain('\'self\'');
 		$expectedPlainResponse->setContentSecurityPolicy($policy);
+		$expectedPlainResponse->cacheFor(60 * 60, false, true);
 		$expectedRichResponse->setContentSecurityPolicy($policy);
+		$expectedRichResponse->cacheFor(60 * 60, false, true);
 
 		$actualPlainResponse = $this->controller->getHtmlBody($messageId, true);
 		$actualRichResponse = $this->controller->getHtmlBody($messageId, false);
@@ -278,19 +308,16 @@ class MessagesControllerTest extends TestCase {
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachment')
+			->with($this->account, $mailbox, $message, $attachmentId)
+			->will($this->returnValue($this->attachment));
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->willReturn($this->mailbox);
-		$this->mailbox->expects($this->once())
-			->method('getAttachment')
-			->with($uid, $attachmentId)
-			->will($this->returnValue($this->attachment));
 		$this->attachment->expects($this->once())
-			->method('getContents')
+			->method('getContent')
 			->will($this->returnValue($contents));
 		$this->attachment->expects($this->any())
 			->method('getName')
@@ -333,13 +360,9 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->with('INBOX')
-			->will($this->returnValue($this->mailbox));
-		$this->mailbox->expects($this->once())
-			->method('getAttachment')
-			->with($uid, $attachmentId)
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachment')
+			->with($this->account, $mailbox, $message, $attachmentId)
 			->will($this->returnValue($this->attachment));
 		$this->attachment->expects($this->once())
 			->method('getName')
@@ -360,7 +383,7 @@ class MessagesControllerTest extends TestCase {
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
-			->method('getContents')
+			->method('getContent')
 			->will($this->returnValue('abcdefg'));
 
 		$expected = new JSONResponse();
@@ -386,6 +409,7 @@ class MessagesControllerTest extends TestCase {
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->mailManager->expects($this->once())
 			->method('getMessage')
 			->with($this->userId, $id)
@@ -398,24 +422,11 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->with('INBOX')
-			->will($this->returnValue($this->mailbox));
-		$this->mailbox->expects($this->once())
-			->method('getMessage')
-			->with($uid)
-			->will($this->returnValue($this->message));
-		$this->message->attachments = [
-			[
-				'id' => $attachmentId
-			]
-		];
 
-		$this->mailbox->expects($this->once())
-			->method('getAttachment')
-			->with($uid, $attachmentId)
-			->will($this->returnValue($this->attachment));
+		$this->mailManager->expects($this->once())
+			->method('getMailAttachments')
+			->with($this->account, $mailbox, $message)
+			->will($this->returnValue([$this->attachment]));
 		$this->attachment->expects($this->once())
 			->method('getName')
 			->with()
@@ -435,7 +446,7 @@ class MessagesControllerTest extends TestCase {
 			->method('putContent')
 			->with('abcdefg');
 		$this->attachment->expects($this->once())
-			->method('getContents')
+			->method('getContent')
 			->will($this->returnValue('abcdefg'));
 
 		$expected = new JSONResponse();
@@ -460,11 +471,13 @@ class MessagesControllerTest extends TestCase {
 		$mailbox->setName('INBOX');
 		$mailbox->setAccountId($accountId);
 		$attachments = [
-			[
-				'content' => 'abcdefg',
-				'name' => 'cat.png',
-				'size' => ''
-			]
+			new Attachment(
+				null,
+				'cat.png',
+				'image/png',
+				'abcdefg',
+				7,
+			),
 		];
 
 		$this->mailManager->expects($this->once())
@@ -494,10 +507,10 @@ class MessagesControllerTest extends TestCase {
 
 		$zip = new ZipResponse($this->request, 'attachments');
 		foreach ($attachments as $attachment) {
-			$fileName = $attachment['name'];
+			$fileName = $attachment->getName();
 			$fh = fopen("php://temp", 'r+');
-			fputs($fh, $attachment['content']);
-			$size = (int)$attachment['size'];
+			fputs($fh, $attachment->getContent());
+			$size = $attachment->getSize();
 			rewind($fh);
 			$zip->addResource($fh, $fileName, $size);
 		}
@@ -1068,5 +1081,93 @@ class MessagesControllerTest extends TestCase {
 			->method('getThread');
 
 		$this->controller->getThread($id);
+	}
+
+	public function testExport() {
+		$accountId = 17;
+		$mailboxId = 13;
+		$folderId = 'testfolder';
+		$messageId = 4321;
+		$this->account
+			->method('getId')
+			->willReturn($accountId);
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$message = new \OCA\Mail\Db\Message();
+		$message->setMailboxId($mailboxId);
+		$message->setUid(123);
+		$message->setSubject('core/master has new results');
+		$mailbox->setAccountId($accountId);
+		$mailbox->setName($folderId);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMessage')
+			->with($this->userId, $messageId)
+			->willReturn($message);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMailbox')
+			->with($this->userId, $mailboxId)
+			->willReturn($mailbox);
+		$this->accountService->expects($this->exactly(1))
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$source = file_get_contents(__DIR__ . '/../../data/mail-message-123.txt');
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getSource')
+			->with($client, $this->account, $folderId, 123)
+			->willReturn($source);
+		$this->clientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+
+		$expectedResponse = new AttachmentDownloadResponse(
+			$source,
+			'core/master has new results.eml',
+			'message/rfc822'
+		);
+		$actualResponse = $this->controller->export($messageId);
+
+		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testGetDkim() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(100);
+		$mailAccount->setUserId($this->userId);
+		$account = new Account($mailAccount);
+
+		$mailbox = new \OCA\Mail\Db\Mailbox();
+		$mailbox->setId(4);
+		$mailbox->setAccountId($account->getId());
+		$mailbox->setName('FooBar');
+
+		$message = new \OCA\Mail\Db\Message();
+		$message->setId(4448);
+		$message->setMailboxId($mailbox->getId());
+		$message->setUid(123);
+		$message->setSubject('core/master has new results');
+
+
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMessage')
+			->with($this->userId, $message->getId())
+			->willReturn($message);
+		$this->mailManager->expects($this->exactly(1))
+			->method('getMailbox')
+			->with($this->userId, $mailbox->getId())
+			->willReturn($mailbox);
+		$this->accountService->expects($this->exactly(1))
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($account->getId()))
+			->will($this->returnValue($account));
+		$this->dkimService->expects($this->exactly(1))
+			->method('validate')
+			->with($account, $mailbox, $message->getUid())
+			->willReturn(true);
+
+		$actualResponse = $this->controller->getDkim($message->getId());
+
+		$this->assertInstanceOf(JSONResponse::class, $actualResponse);
+		$this->assertEquals(['valid' => true], $actualResponse->getData());
 	}
 }

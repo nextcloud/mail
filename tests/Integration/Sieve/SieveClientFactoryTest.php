@@ -25,16 +25,15 @@ namespace OCA\Mail\Tests\Integration\Sieve;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde\ManageSieve;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Sieve\SieveClientFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
+use OCP\Server;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SieveClientFactoryTest extends TestCase {
-
 	/** @var ICrypto|MockObject */
 	private $crypto;
 
@@ -79,7 +78,7 @@ class SieveClientFactoryTest extends TestCase {
 		$mailAccount->setInboundPort(993);
 		$mailAccount->setInboundSslMode('ssl');
 		$mailAccount->setInboundUser('user@domain.tld');
-		$mailAccount->setInboundPassword(OC::$server->get(ICrypto::class)->encrypt('mypassword'));
+		$mailAccount->setInboundPassword(Server::get(ICrypto::class)->encrypt('mypassword'));
 		$mailAccount->setSieveHost('127.0.0.1');
 		$mailAccount->setSievePort(4190);
 		$mailAccount->setSieveSslMode('');

@@ -3,7 +3,7 @@
   -
   - @author Anna Larch <anna@nextcloud.com>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -51,17 +51,28 @@
 							name="ham"
 							type="email">
 						<br>
-						<input
+						<Button
+							type="secondary"
+							:aria-label="t('mail', 'Save')"
 							:disabled="loading"
-							:value="t('mail', 'Save')"
-							class="button config-button icon-upload"
-							type="submit">
-						<input
+							native-type="submit"
+							class="config-button">
+							<template #icon>
+								<IconUpload :size="20" />
+							</template>
+							{{ t('mail', 'Save') }}
+						</Button>
+						<Button
 							:disabled="loading"
-							:value="t('mail', 'Reset')"
-							class="button config-button icon-delete"
-							type="button"
+							:aria-label="t('mail', 'Reset')"
+							class="config-button"
+							type="secondary"
 							@click="resetForm()">
+							<template #icon>
+								<IconDelete :size="20" />
+							</template>
+							{{ t('mail', 'Reset') }}
+						</Button>
 					</div>
 				</div>
 			</form>
@@ -69,15 +80,23 @@
 	</div>
 </template>
 <script>
-import logger from '../../logger'
+import logger from '../../logger.js'
 import { loadState } from '@nextcloud/initial-state'
-import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService'
+import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import Button from '@nextcloud/vue/dist/Components/NcButton.js'
+import IconUpload from 'vue-material-design-icons/Upload.vue'
+import IconDelete from 'vue-material-design-icons/Delete.vue'
 
 const email = loadState('mail', 'antispam_setting', '[]')
 
 export default {
 	name: 'AntiSpamSettings',
+	components: {
+		Button,
+		IconUpload,
+		IconDelete,
+	},
 	data() {
 		return {
 			email,
@@ -141,16 +160,10 @@ export default {
 	.group-inputs {
 		margin: 10px;
 		flex-grow: 1;
-
-		input[type='text'] {
-			min-width: 200px;
-		}
 		.config-button {
-			line-height: 24px;
-			padding-left: 48px;
-			padding-top: 6px;
-			padding-bottom: 6px;
-			background-position: 24px;
+			display: inline-block;
+			margin-top: 10px;
+			margin-inline: 4px;
 		}
 	}
 }

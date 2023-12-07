@@ -1,11 +1,25 @@
 <template>
 	<div>
-		<router-link to="/setup" class="icon-add-white app-settings-button button primary new-button">
+		<router-link v-if="allowNewMailAccounts" to="/setup" class="app-settings-button button primary new-button">
+			<IconAdd :size="20" />
 			{{ t('mail', 'Add mail account') }}
 		</router-link>
 
+		<p v-if="loadingPrioritySettings" class="app-settings">
+			{{ prioritySettingsText }}
+		</p>
+		<p v-else class="app-settings">
+			<input
+				id="priority-inbox-toggle"
+				class="checkbox"
+				type="checkbox"
+				:checked="searchPriorityBody"
+				@change="onToggleSearchPriorityBody">
+			<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
+		</p>
+
 		<p v-if="loadingOptOutSettings" class="app-settings">
-			<span class="icon-loading-small" />
+			<IconLoading :size="20" />
 			{{ optOutSettingsText }}
 		</p>
 		<p v-else class="app-settings">
@@ -19,7 +33,7 @@
 		</p>
 
 		<p v-if="toggleAutoTagging" class="app-settings">
-			<span class="icon-loading-small" />
+			<IconLoading :size="20" />
 			{{ autoTaggingText }}
 		</p>
 		<p v-else class="app-settings">
@@ -33,7 +47,7 @@
 		</p>
 
 		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
-			<span class="icon-loading-small" />
+			<IconLoading :size="20" />
 			{{ t('mail', 'Use Gravatar and favicon avatars') }}
 		</p>
 		<p v-else class="app-settings">
@@ -47,7 +61,7 @@
 		</p>
 
 		<p v-if="loadingReplySettings" class="app-settings reply-settings">
-			<span class="icon-loading-small" />
+			<IconLoading :size="20" />
 			{{ replySettingsText }}
 		</p>
 		<p v-else class="app-settings">
@@ -61,30 +75,76 @@
 		</p>
 
 		<p>
-			<button class="icon-mail app-settings-button" @click="registerProtocolHandler">
+			<ButtonVue
+				type="secondary"
+				class="app-settings-button"
+				:aria-label="t('mail', 'Register as application for mail links')"
+				@click="registerProtocolHandler">
+				<template #icon>
+					<IconEmail :size="20" />
+				</template>
 				{{ t('mail', 'Register as application for mail links') }}
-			</button>
+			</ButtonVue>
 		</p>
 
-		<button
-			class="icon-details app-settings-button"
+		<ButtonVue
+			class="app-settings-button"
+			type="secondary"
+			:aria-label="t('mail', 'Show keyboard shortcuts')"
 			@click.prevent.stop="showKeyboardShortcuts"
 			@shortkey="toggleKeyboardShortcuts">
+			<template #icon>
+				<IconInfo :size="20" />
+			</template>
 			{{ t('mail', 'Show keyboard shortcuts') }}
-		</button>
+		</ButtonVue>
 		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
+
+		<ButtonVue
+			class="app-settings-button"
+			type="secondary"
+			:aria-label="t('mail', 'Manage S/MIME certificates')"
+			@click.prevent.stop="displaySmimeCertificateModal = true">
+			<template #icon>
+				<IconLock :size="20" />
+			</template>
+			{{ t('mail', 'Manage S/MIME certificates') }}
+		</ButtonVue>
+		<SmimeCertificateModal v-if="displaySmimeCertificateModal"
+			@close="displaySmimeCertificateModal = false" />
+		<h2 class="section-title">
+			Sorting
+		</h2>
+		<div class="sorting">
+			<CheckboxRadioSwitch
+				class="sorting__switch"
+				:checked="sortOrder"
+				value="newest"
+				name="order_radio"
+				type="radio"
+				@update:checked="onSortByDate">
+				{{ t('mail', 'Newest') }}
+			</CheckboxRadioSwitch>
+			<CheckboxRadioSwitch
+				class="sorting__switch"
+				:checked="sortOrder"
+				value="oldest"
+				name="order_radio"
+				type="radio"
+				@update:checked="onSortByDate">
+				{{ t('mail', 'Oldest') }}
+			</CheckboxRadioSwitch>
+		</div>
 
 		<p class="mailvelope-section">
 			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
-
-			<a
-				class="icon-password button app-settings-button"
-				href="https://www.mailvelope.com/"
-				target="_blank"
-				rel="noopener noreferrer">
-				{{ t('mail', 'Install Mailvelope browser extension') }}
-			</a>
 		</p>
+		<a
+			href="https://www.mailvelope.com/"
+			target="_blank"
+			rel="noopener noreferrer">
+			{{ t('mail', 'Install Mailvelope browser extension here') }}
+		</a>
 	</div>
 </template>
 
@@ -92,17 +152,34 @@
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 
-import Logger from '../logger'
-import KeyboardShortcuts from '../views/KeyboardShortcuts'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch as CheckboxRadioSwitch } from '@nextcloud/vue'
+
+import IconInfo from 'vue-material-design-icons/Information.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconEmail from 'vue-material-design-icons/Email.vue'
+import IconLock from 'vue-material-design-icons/Lock.vue'
+import Logger from '../logger.js'
+import KeyboardShortcuts from '../views/KeyboardShortcuts.vue'
+import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 
 export default {
 	name: 'AppSettingsMenu',
 	components: {
+		ButtonVue,
 		KeyboardShortcuts,
+		IconInfo,
+		IconEmail,
+		IconAdd,
+		IconLoading,
+		IconLock,
+		SmimeCertificateModal,
+		CheckboxRadioSwitch,
 	},
 	data() {
 		return {
 			loadingAvatarSettings: false,
+			prioritySettingsText: t('mail', 'Search in the body of messages in priority Inbox'),
+			loadingPrioritySettings: false,
 			// eslint-disable-next-line
 			optOutSettingsText: t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'),
 			loadingOptOutSettings: false,
@@ -113,9 +190,14 @@ export default {
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
+			displaySmimeCertificateModal: false,
+			sortOrder: 'newest',
 		}
 	},
 	computed: {
+		searchPriorityBody() {
+			return this.$store.getters.getPreference('search-priority-body', 'false') === 'true'
+		},
 		useBottomReplies() {
 			return this.$store.getters.getPreference('reply-mode', 'top') === 'bottom'
 		},
@@ -128,6 +210,12 @@ export default {
 		useAutoTagging() {
 			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
 		},
+		allowNewMailAccounts() {
+			return this.$store.getters.getPreference('allow-new-accounts', true)
+		},
+	},
+	mounted() {
+		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
 	},
 	methods: {
 		onToggleButtonReplies(e) {
@@ -156,6 +244,20 @@ export default {
 					this.loadingAvatarSettings = false
 				})
 		},
+		async onToggleSearchPriorityBody(e) {
+			this.loadingPrioritySettings = true
+			try {
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'search-priority-body',
+						value: e.target.checked ? 'true' : 'false',
+					})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+			} finally {
+				this.loadingPrioritySettings = false
+			}
+		},
 		onToggleCollectData(e) {
 			this.loadingOptOutSettings = true
 
@@ -168,6 +270,23 @@ export default {
 				.then(() => {
 					this.loadingOptOutSettings = false
 				})
+		},
+		async onSortByDate(e) {
+			const previousValue = this.sortOrder
+			try {
+				this.sortOrder = e
+				await this.$store
+					.dispatch('savePreference', {
+						key: 'sort-order',
+						value: e,
+					})
+				this.$store.commit('removeAllEnvelopes')
+
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+				this.sortOrder = previousValue
+				showError(t('mail', 'Could not update preference'))
+			}
 		},
 		async onToggleAutoTagging(e) {
 			this.toggleAutoTagging = true
@@ -220,7 +339,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-p.app-settings span.icon-loading-small {
+p.app-settings span.loading-icon {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 5px 0;
@@ -229,17 +348,28 @@ p.app-settings {
 	padding: 10px 0;
 }
 .app-settings-button {
-	display: block;
-
-	padding-left: 34px;
+	display: inline-flex;
 	background-position: 10px center;
 	text-align: left;
+	margin-top: 6px;
+	width: 100%;
 }
 .app-settings-button.button.primary.new-button {
-	color: var(--color-main-background);
+	color: var(--color-primary-element-text);
+	//this style will be removed after we migrate also the  'add mail account' to material design
+	padding-left: 34px;
+	gap: 4px;
+	width: fit-content;
 }
 .app-settings-link {
 	text-decoration: underline;
+}
+::v-deep .button-vue__text {
+	text-overflow: clip;
+	white-space: normal;
+}
+::v-deep .button-vue__wrapper {
+	justify-content: flex-start;
 }
 .mailvelope-section {
 	padding-top: 15px;
@@ -248,7 +378,30 @@ p.app-settings {
 		display: flex;
 		align-items: center;
 		line-height: normal;
-		min-height: 34px;
+		min-height: 44px;
+		font-size: unset;
+
+		&:focus-visible,
+		&:hover {
+			box-shadow: 0 0 0 1px var(--color-primary-element);
+		}
+	}
+}
+.material-design-icon {
+	&.lock-icon {
+		margin-right: 10px;
+	}
+
+}
+.section-title {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+.sorting {
+	display: flex;
+	width: 100%;
+	&__switch{
+		width: 50%;
 	}
 }
 </style>

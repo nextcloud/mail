@@ -32,8 +32,10 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|BeforeMessageSentEvent>
+ */
 class AntiAbuseListener implements IEventListener {
-
 	/** @var IUserManager */
 	private $userManager;
 
@@ -44,8 +46,8 @@ class AntiAbuseListener implements IEventListener {
 	private $logger;
 
 	public function __construct(IUserManager $userManager,
-								AntiAbuseService $service,
-								LoggerInterface $logger) {
+		AntiAbuseService $service,
+		LoggerInterface $logger) {
 		$this->service = $service;
 		$this->userManager = $userManager;
 		$this->logger = $logger;

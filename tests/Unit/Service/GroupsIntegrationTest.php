@@ -25,17 +25,15 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Recipient;
-use OCA\Mail\Service\Group\ContactsGroupService;
-use OCA\Mail\Service\GroupsIntegration;
-use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\Group\ContactsGroupService;
+use OCA\Mail\Service\Group\NextcloudGroupService;
+use OCA\Mail\Service\GroupsIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class GroupsIntegrationTest extends TestCase {
-
-	/** @var NextcloudGroupService|MockObject */
-	private $groupService1;
-
+	private NextcloudGroupService|MockObject $groupService1;
+	private NextcloudGroupService|MockObject $groupService2;
 	/** @var GroupsIntegration */
 	private $groupsIntegration;
 

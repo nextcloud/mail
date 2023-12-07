@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Service\AutoConfig\IspDb;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
@@ -33,7 +34,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class IspDbTest extends TestCase {
-
 	/** @var IClientService|MockObject */
 	private $clientService;
 
@@ -80,11 +80,12 @@ class IspDbTest extends TestCase {
 
 		$ispDb = new IspDb($this->clientService, $this->logger);
 
-		$providers = $ispDb->query('gmx.com', 'test@gmx.com');
+		$email = new Horde_Mail_Rfc822_Address('test@gmx.com');
+		$configuration = $ispDb->query('gmx.com', $email);
 
-		$this->assertEquals('GMX Freemail', $providers['displayName']);
-		$this->assertCount(2, $providers['imap']);
-		$this->assertCount(2, $providers['smtp']);
+		self::assertNotNull($configuration);
+		self::assertNotNull($configuration->getImapConfig());
+		self::assertNotNull($configuration->getSmtpConfig());
 	}
 
 	public function testQueryOutlook(): void {
@@ -106,11 +107,12 @@ class IspDbTest extends TestCase {
 
 		$ispDb = new IspDb($this->clientService, $this->logger);
 
-		$providers = $ispDb->query('outlook.com', 'test@outlook.com');
+		$email = new Horde_Mail_Rfc822_Address('test@outlook.com');
+		$configuration = $ispDb->query('outlook.com', $email);
 
-		$this->assertEquals('Microsoft', $providers['displayName']);
-		$this->assertCount(1, $providers['imap']);
-		$this->assertCount(1, $providers['smtp']);
+		self::assertNotNull($configuration);
+		self::assertNotNull($configuration->getImapConfig());
+		self::assertNotNull($configuration->getSmtpConfig());
 	}
 
 	public function testQueryPosteo(): void {
@@ -123,10 +125,11 @@ class IspDbTest extends TestCase {
 
 		$ispDb = new IspDb($this->clientService, $this->logger);
 
-		$providers = $ispDb->query('posteo.org', 'test@postdeo.org');
+		$email = new Horde_Mail_Rfc822_Address('test@postdeo.org');
+		$configuration = $ispDb->query('posteo.org', $email);
 
-		$this->assertEquals('Posteo', $providers['displayName']);
-		$this->assertCount(1, $providers['imap']);
-		$this->assertCount(1, $providers['smtp']);
+		self::assertNotNull($configuration);
+		self::assertNotNull($configuration->getImapConfig());
+		self::assertNotNull($configuration->getSmtpConfig());
 	}
 }

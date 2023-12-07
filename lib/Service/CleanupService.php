@@ -29,10 +29,15 @@ use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Db\MessageRetentionMapper;
+use OCA\Mail\Db\MessageSnoozeMapper;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Service\Classification\PersistenceService;
+use OCA\Mail\Support\PerformanceLogger;
+use OCP\AppFramework\Utility\ITimeFactory;
+use Psr\Log\LoggerInterface;
 
 class CleanupService {
-
 	/** @var AliasMapper */
 	private $aliasMapper;
 
@@ -48,24 +53,56 @@ class CleanupService {
 	/** @var TagMapper */
 	private $tagMapper;
 
+	private MessageRetentionMapper $messageRetentionMapper;
+
+	private MessageSnoozeMapper $messageSnoozeMapper;
+
+	private PersistenceService $classifierPersistenceService;
+	private ITimeFactory $timeFactory;
+
 	public function __construct(AliasMapper $aliasMapper,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								CollectedAddressMapper $collectedAddressMapper,
-								TagMapper $tagMapper) {
+		MailboxMapper $mailboxMapper,
+		MessageMapper $messageMapper,
+		CollectedAddressMapper $collectedAddressMapper,
+		TagMapper $tagMapper,
+		MessageRetentionMapper $messageRetentionMapper,
+		MessageSnoozeMapper $messageSnoozeMapper,
+		PersistenceService $classifierPersistenceService,
+		ITimeFactory $timeFactory) {
 		$this->aliasMapper = $aliasMapper;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->collectedAddressMapper = $collectedAddressMapper;
 		$this->tagMapper = $tagMapper;
+		$this->messageRetentionMapper = $messageRetentionMapper;
+		$this->messageSnoozeMapper = $messageSnoozeMapper;
+		$this->classifierPersistenceService = $classifierPersistenceService;
+		$this->timeFactory = $timeFactory;
 	}
 
-	public function cleanUp(): void {
+	public function cleanUp(LoggerInterface $logger): void {
+		$task = (new PerformanceLogger(
+			$this->timeFactory,
+			$logger
+		))->start('clean up');
 		$this->aliasMapper->deleteOrphans();
+		$task->step('delete orphan aliases');
 		$this->mailboxMapper->deleteOrphans();
+		$task->step('delete orphan mailboxes');
 		$this->messageMapper->deleteOrphans();
+		$task->step('delete orphan messages');
 		$this->collectedAddressMapper->deleteOrphans();
+		$task->step('delete orphan collected addresses');
 		$this->tagMapper->deleteOrphans();
+		$task->step('delete orphan tags');
 		$this->tagMapper->deleteDuplicates();
+		$task->step('delete duplicate tags');
+		$this->messageRetentionMapper->deleteOrphans();
+		$task->step('delete expired messages');
+		$this->messageSnoozeMapper->deleteOrphans();
+		$task->step('delete orphan snoozes');
+		$this->classifierPersistenceService->cleanUp();
+		$task->step('delete orphan classifiers');
+		$task->end();
 	}
 }

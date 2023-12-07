@@ -34,7 +34,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
 
 interface IMailTransmission {
-
 	/**
 	 * Send a new message or reply to an existing one
 	 *
@@ -47,9 +46,9 @@ interface IMailTransmission {
 	 * @throws ServiceException
 	 */
 	public function sendMessage(NewMessageData $messageData,
-								string $repliedToMessageId = null,
-								Alias $alias = null,
-								Message $draft = null): void;
+		string $repliedToMessageId = null,
+		Alias $alias = null,
+		Message $draft = null): void;
 
 	/**
 	 * @param Account $account
@@ -59,6 +58,15 @@ interface IMailTransmission {
 	 * @return void
 	 */
 	public function sendLocalMessage(Account $account, LocalMessage $message): void;
+
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @return void
+	 */
+	public function saveLocalDraft(Account $account, LocalMessage $message): void;
 
 	/**
 	 * Save a message draft

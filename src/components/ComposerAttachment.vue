@@ -1,11 +1,14 @@
 <template>
-	<li class="list-item--attachment" :class="{'error' : attachment.error }">
+	<li class="composer-attachment" :class="{'composer-attachment--with-error' : attachment.error }">
 		<div class="attachment-preview">
 			<img v-if="attachment.imageBlobURL !== false" :src="attachment.imageBlobURL" class="attachment-preview-image">
 			<img v-else-if="attachment.hasPreview" :src="previewURL" class="attachment-preview-image">
 			<img v-else :src="getIcon" class="attachment-preview-image">
 			<span v-if="attachment.type === 'cloud'" class="cloud-attachment-icon">
 				<Cloud :size="16" />
+			</span>
+			<span v-else-if="attachment.type === 'message'">
+				<EmailArrowRightOutlineIcon />
 			</span>
 		</div>
 		<div class="attachment-inner">
@@ -15,7 +18,9 @@
 			<span v-if="!attachment.finished" class="attachments-upload-progress">
 				<span class="attachments-upload-progress--bar" :style="&quot;width:&quot; + attachment.percent + &quot;%&quot;" />
 			</span>
-			<span v-else class="new-message-attachment-size">{{ attachment.sizeString }}</span>
+			<span v-else-if="attachment.sizeString" class="new-message-attachment-size">
+				{{ attachment.sizeString }}
+			</span>
 		</div>
 		<button @click="onDelete(attachment)">
 			<Close :size="24" />
@@ -25,14 +30,16 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import Close from 'vue-material-design-icons/Close'
-import Cloud from 'vue-material-design-icons/Cloud'
+import Close from 'vue-material-design-icons/Close.vue'
+import Cloud from 'vue-material-design-icons/Cloud.vue'
+import EmailArrowRightOutlineIcon from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 
 export default {
 	name: 'ComposerAttachment',
 	components: {
 		Close,
 		Cloud,
+		EmailArrowRightOutlineIcon,
 	},
 	props: {
 		bus: {
@@ -80,7 +87,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.list-item--attachment {
+.composer-attachment {
 	width: calc(50% - 20px);
     box-sizing: border-box;
     display: flex;
@@ -89,7 +96,7 @@ export default {
     margin: 10px;
     flex-wrap: wrap;
 
-	&.error {
+	&--with-error {
 		color:red;
 		opacity: 0.5;
 	}
@@ -137,10 +144,6 @@ export default {
 		border: none;
 		margin: 6px -2px 0 0;
 	}
-}
-
-a.list-item {
-	width:auto !important;
 }
 
 .attachments-upload-progress {

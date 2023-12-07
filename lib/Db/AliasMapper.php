@@ -24,7 +24,6 @@ use function array_map;
  * @template-extends QBMapper<Alias>
  */
 class AliasMapper extends QBMapper {
-
 	/**
 	 * @param IDBConnection $db
 	 */
@@ -95,7 +94,6 @@ class AliasMapper extends QBMapper {
 
 	/**
 	 * @param int $accountId the account whose aliases will be deleted
-	 * @param string $currentUserId the user that is currently logged in
 	 *
 	 * @return void
 	 */
@@ -106,7 +104,7 @@ class AliasMapper extends QBMapper {
 			->delete($this->getTableName())
 			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($accountId)));
 
-		$query->execute();
+		$query->executeStatement();
 	}
 
 	/**
@@ -129,7 +127,7 @@ class AliasMapper extends QBMapper {
 				$qb->expr()->isNotNull('provisioning_id')
 			);
 
-		$qb->execute();
+		$qb->executeStatement();
 	}
 
 	public function deleteOrphans(): void {
@@ -138,8 +136,8 @@ class AliasMapper extends QBMapper {
 			->from($this->getTableName(), 'a')
 			->leftJoin('a', 'mail_accounts', 'ac', $qb1->expr()->eq('a.account_id', 'ac.id'))
 			->where($qb1->expr()->isNull('ac.id'));
-		$result = $idsQuery->execute();
-		$ids = array_map(function (array $row) {
+		$result = $idsQuery->executeQuery();
+		$ids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();
@@ -151,7 +149,7 @@ class AliasMapper extends QBMapper {
 			);
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$qb2->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$qb2->execute();
+			$qb2->executeStatement();
 		}
 	}
 }

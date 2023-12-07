@@ -33,7 +33,6 @@ use OCP\EventDispatcher\Event;
  * @psalm-immutable
  */
 class OutboxMessageCreatedEvent extends Event {
-
 	/** @var Account */
 	private $account;
 
@@ -41,7 +40,7 @@ class OutboxMessageCreatedEvent extends Event {
 	private $draft;
 
 	public function __construct(Account $account,
-								Message $draft) {
+		Message $draft) {
 		parent::__construct();
 		$this->account = $account;
 		$this->draft = $draft;

@@ -30,7 +30,6 @@ use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
 class MessageDeletedEvent extends Event {
-
 	/** @var Account */
 	private $account;
 
@@ -41,8 +40,8 @@ class MessageDeletedEvent extends Event {
 	private $messageId;
 
 	public function __construct(Account $account,
-								Mailbox $mailbox,
-								int $messageId) {
+		Mailbox $mailbox,
+		int $messageId) {
 		parent::__construct();
 		$this->account = $account;
 		$this->mailbox = $mailbox;

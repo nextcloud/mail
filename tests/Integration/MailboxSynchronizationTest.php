@@ -25,7 +25,6 @@ namespace OCA\Mail\Tests\Integration;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;
-use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
@@ -34,6 +33,7 @@ use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 use OCP\IRequest;
+use OCP\Server;
 
 class MailboxSynchronizationTest extends TestCase {
 	use ImapTest,
@@ -53,11 +53,11 @@ class MailboxSynchronizationTest extends TestCase {
 
 		$this->foldersController = new MailboxesController(
 			'mail',
-			OC::$server->get(IRequest::class),
-			OC::$server->get(AccountService::class),
+			Server::get(IRequest::class),
+			Server::get(AccountService::class),
 			$this->getTestAccountUserId(),
-			OC::$server->get(IMailManager::class),
-			OC::$server->get(SyncService::class)
+			Server::get(IMailManager::class),
+			Server::get(SyncService::class)
 		);
 
 		$this->account = $this->createTestAccount('user12345');
@@ -70,9 +70,8 @@ class MailboxSynchronizationTest extends TestCase {
 	}
 
 	public function testSyncEmptyMailbox() {
-
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -82,18 +81,20 @@ class MailboxSynchronizationTest extends TestCase {
 			}
 		}
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		$syncService->syncMailbox(
 			new Account($this->account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 
 		$jsonResponse = $this->foldersController->sync(
 			$inbox->getId(),
-			[]
+			[],
+			null
 		);
 
 		$data = $jsonResponse->getData()->jsonSerialize();
@@ -108,9 +109,9 @@ class MailboxSynchronizationTest extends TestCase {
 
 	public function testSyncNewMessage() {
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->get(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -124,6 +125,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		// Second, put a new message into the mailbox
@@ -135,7 +137,8 @@ class MailboxSynchronizationTest extends TestCase {
 
 		$jsonResponse = $this->foldersController->sync(
 			$inbox->getId(),
-			[]
+			[],
+			null
 		);
 
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
@@ -148,7 +151,7 @@ class MailboxSynchronizationTest extends TestCase {
 
 	public function testSyncChangedMessage() {
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->get(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
@@ -156,7 +159,7 @@ class MailboxSynchronizationTest extends TestCase {
 			->finish();
 		$uid = $this->saveMessage($mailbox, $message, $this->account);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -170,6 +173,7 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		$this->flagMessage($mailbox, $uid, $this->account);
@@ -179,7 +183,8 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox->getId(),
 			[
 				$id
-			]);
+			],
+			null);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		self::assertCount(0, $syncJson['newMessages']);
@@ -195,7 +200,7 @@ class MailboxSynchronizationTest extends TestCase {
 			->finish();
 		$uid = $this->saveMessage($mailbox, $message, $this->account);
 		/** @var IMailManager $mailManager */
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$mailBoxes = $mailManager->getMailboxes(new Account($this->account));
 		$inbox = null;
 		foreach ($mailBoxes as $mailBox) {
@@ -205,12 +210,13 @@ class MailboxSynchronizationTest extends TestCase {
 			}
 		}
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->get(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		$syncService->syncMailbox(
 			new Account($this->account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		$this->deleteMessage($mailbox, $uid, $this->account);
@@ -219,12 +225,13 @@ class MailboxSynchronizationTest extends TestCase {
 			$inbox->getId(),
 			[
 				$uid // This will only work if UID and database ID are equal (1 on a clean setup), otherwise this fails
-			]);
+			],
+			null);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		self::assertCount(0, $syncJson['newMessages']);
 		// TODO: deleted messages are flagged as changed? could be a testing-only issue
 		// self::assertCount(0, $syncJson['changedMessages']);
-//		self::assertCount(1, $syncJson['vanishedMessages'], 'Message does not show as vanished, possibly because UID and ID are mixed up above.');
+		//		self::assertCount(1, $syncJson['vanishedMessages'], 'Message does not show as vanished, possibly because UID and ID are mixed up above.');
 	}
 }

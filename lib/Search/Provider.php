@@ -39,7 +39,6 @@ use OCP\Search\SearchResultEntry;
 use function array_map;
 
 class Provider implements IProvider {
-
 	/** @var IMailSearch */
 	private $mailSearch;
 
@@ -53,9 +52,9 @@ class Provider implements IProvider {
 	private $urlGenerator;
 
 	public function __construct(IMailSearch $mailSearch,
-								IL10N $l10n,
-								IDateTimeFormatter $dateTimeFormatter,
-								IURLGenerator $urlGenerator) {
+		IL10N $l10n,
+		IDateTimeFormatter $dateTimeFormatter,
+		IURLGenerator $urlGenerator) {
 		$this->mailSearch = $mailSearch;
 		$this->l10n = $l10n;
 		$this->dateTimeFormatter = $dateTimeFormatter;
@@ -80,11 +79,15 @@ class Provider implements IProvider {
 	}
 
 	public function search(IUser $user, ISearchQuery $query): SearchResult {
+		return $this->searchByFilter($user, $query, $query->getTerm());
+	}
+
+	protected function searchByFilter(IUser $user, ISearchQuery $query, string $filter): SearchResult {
 		$cursor = $query->getCursor();
 		$messages = $this->mailSearch->findMessagesGlobally(
 			$user,
-			$query->getTerm(),
-			empty($cursor) ? null : ((int) $cursor),
+			$filter,
+			empty($cursor) ? null : ((int)$cursor),
 			$query->getLimit()
 		);
 

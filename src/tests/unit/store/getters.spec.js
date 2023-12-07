@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -31,6 +31,7 @@ describe('Vuex store getters', () => {
 
 	beforeEach(() => {
 		state = {
+			isExpiredSession: false,
 			accountList: [],
 			accounts: {},
 			mailboxes: {},
@@ -38,10 +39,16 @@ describe('Vuex store getters', () => {
 			messages: {},
 			tagList: [],
 			tags: {},
+			calendars: [],
 		}
 		bindGetters = () => mapObjIndexed(bindGetterToState(getters, state), getters)
 	})
 
+	it('gets session expiry', () => {
+		const getters = bindGetters()
+
+		expect(getters.isExpiredSession).toEqual(false)
+	})
 	it('gets all accounts', () => {
 		state.accountList.push('13')
 		state.accounts[13] = {
@@ -191,5 +198,54 @@ describe('Vuex store getters', () => {
 
 		const envelopesB = getters.getEnvelopesByThreadRootId('345-678-901')
 		expect(envelopesB.length).toEqual(0)
+	})
+
+	it('find mailbox by special role: inbox', () => {
+		const mockedGetters = {
+			getMailboxes: () => [
+				{
+					name: 'Test',
+					specialRole: 0,
+				},
+				{
+					name: 'INBOX',
+					specialRole: 'inbox',
+				},
+				{
+					name: 'Trash',
+					specialRole: 'trash',
+				},
+			],
+		}
+
+		const result = getters.findMailboxBySpecialRole(state, mockedGetters)('100', 'inbox')
+
+		expect(result).toEqual({
+			name: 'INBOX',
+			specialRole: 'inbox',
+		});
+	})
+
+	it('find mailbox by special role: undefined', () => {
+		const mockedGetters = {
+			getMailboxes: () => [
+				{
+					name: 'Test',
+					specialRole: 0,
+				},
+				{
+					name: 'INBOX',
+					specialRole: 'inbox',
+				},
+				{
+					name: 'Trash',
+					specialRole: 'trash',
+				},
+			],
+		}
+
+		const result = getters.findMailboxBySpecialRole(state, mockedGetters)('100', 'drafts')
+
+		expect(result).toEqual(undefined);
 	})
 })

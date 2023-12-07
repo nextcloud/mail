@@ -11,10 +11,27 @@
 - **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 - **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.
 - **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
+
+## Ethical AI Rating
+
+### Priority Inbox
+
+Positive:
+* The software for training and inferencing of this model is open source.
+* The model is created and trained on-premises based on the user's own data.
+* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.
+
+### Thread Summaries (opt-in)
+
+**Rating:** 🟢/🟡/🟠/🔴
+
+The rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.
+
+Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>1.14.0-alpha.3</version>
+	<version>3.6.0-alpha.3</version>
 	<licence>agpl</licence>
-	<author>Greta Doçi</author>
+	<author>Christoph Wurst</author>
 	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>
 	<namespace>Mail</namespace>
 	<documentation>
@@ -27,14 +44,18 @@
 	<website>https://github.com/nextcloud/mail#readme</website>
 	<bugs>https://github.com/nextcloud/mail/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/mail.git</repository>
-	<screenshot>https://user-images.githubusercontent.com/1374172/79554966-278e1600-809f-11ea-82ea-7a0d72a2704f.png</screenshot>
+	<screenshot>https://user-images.githubusercontent.com/12728974/266270227-86b99bbb-03ea-468b-8408-e248e1730bed.png</screenshot>
 	<dependencies>
-		<php min-version="7.4" max-version="8.1" />
-		<nextcloud min-version="22" max-version="25" />
+		<php min-version="8.0" max-version="8.3" />
+		<nextcloud min-version="26" max-version="29" />
 	</dependencies>
 	<background-jobs>
 		<job>OCA\Mail\BackgroundJob\CleanupJob</job>
 		<job>OCA\Mail\BackgroundJob\OutboxWorkerJob</job>
+		<job>OCA\Mail\BackgroundJob\IMipMessageJob</job>
+		<job>OCA\Mail\BackgroundJob\DraftsJob</job>
+		<job>OCA\Mail\BackgroundJob\TrashRetentionJob</job>
+		<job>OCA\Mail\BackgroundJob\WakeJob</job>
 	</background-jobs>
 	<repair-steps>
 		<post-migration>
@@ -56,9 +77,11 @@
 		<command>OCA\Mail\Command\DiagnoseAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
 		<command>OCA\Mail\Command\ExportAccountThreads</command>
+		<command>OCA\Mail\Command\PredictImportance</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
-		<command>OCA\Mail\Command\TrainAccount</command>
 		<command>OCA\Mail\Command\Thread</command>
+		<command>OCA\Mail\Command\TrainAccount</command>
+		<command>OCA\Mail\Command\UpdateAccount</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>

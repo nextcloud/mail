@@ -29,7 +29,6 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 class Quota implements JsonSerializable {
-
 	/** @var int */
 	private $usage;
 
@@ -37,7 +36,7 @@ class Quota implements JsonSerializable {
 	private $limit;
 
 	public function __construct(int $usage,
-								int $limit) {
+		int $limit) {
 		$this->usage = $usage;
 		$this->limit = $limit;
 	}

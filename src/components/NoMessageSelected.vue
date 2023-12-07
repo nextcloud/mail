@@ -3,7 +3,7 @@
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -21,36 +21,43 @@
 
 <template>
 	<AppContentDetails>
-		<div id="emptycontent">
-			<div class="icon icon-mail" />
-			<h2>{{ t('mail', 'No message selected') }}</h2>
-			<p />
-		</div>
+		<NcEmptyContent
+			:title="welcomeMessage">
+			<template #icon>
+				<IconMail :size="65" />
+			</template>
+		</NcEmptyContent>
+		<NewMessageButtonHeader />
 	</AppContentDetails>
 </template>
 
 <script>
-import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
+import { NcAppContentDetails as AppContentDetails, NcEmptyContent } from '@nextcloud/vue'
+import IconMail from 'vue-material-design-icons/Email.vue'
+import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 export default {
 	name: 'NoMessageSelected',
 	components: {
+		NewMessageButtonHeader,
 		AppContentDetails,
+		NcEmptyContent,
+		IconMail,
+	},
+
+	computed: {
+		welcomeMessage() {
+			return t('mail', 'Welcome to {cloudName} Mail', { cloudName: window?.OC?.theme?.name ?? 'Nextcloud' })
+		},
 	},
 }
 </script>
-
-<style scoped>
-.icon {
-	height: 64px;
-	width: 64px;
-	margin: 0 auto 15px;
-	background-size: 64px;
-	opacity: 0.4;
+<style lang="scss" scoped>
+::v-deep .refresh__button {
+	display: none !important;
 }
-
-h2,
-p {
-	text-align: center;
+.header {
+	display: grid !important;
+	justify-content: center !important;
 }
 </style>

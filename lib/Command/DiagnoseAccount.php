@@ -42,18 +42,13 @@ use function sort;
 class DiagnoseAccount extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var IMAPClientFactory */
-	private $clientFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private IMAPClientFactory $clientFactory;
+	private LoggerInterface $logger;
 
 	public function __construct(AccountService $service,
-								IMAPClientFactory $clientFactory,
-								LoggerInterface $logger) {
+		IMAPClientFactory $clientFactory,
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
@@ -107,8 +102,10 @@ class DiagnoseAccount extends Command {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	private function printCapabilitiesStats(OutputInterface $output,
-											Horde_Imap_Client_Socket $imapClient): void {
+		Horde_Imap_Client_Socket $imapClient): void {
 		$output->writeln("IMAP capabilities:");
+		// Once logged in more capabilities are advertised
+		$imapClient->login();
 		$capabilities = array_keys(
 			json_decode(
 				$imapClient->capability->serialize(),
@@ -129,11 +126,11 @@ class DiagnoseAccount extends Command {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	protected function printMailboxesMessagesStats(OutputInterface $output,
-												   Horde_Imap_Client_Socket $imapClient): void {
+		Horde_Imap_Client_Socket $imapClient): void {
 		$mailboxes = $imapClient->listMailboxes('*', Horde_Imap_Client::MBOX_ALL, [
 			'flat' => true,
 		]);
-		$messages = array_reduce($mailboxes, function (int $c, Horde_Imap_Client_Mailbox $mb) use ($imapClient) {
+		$messages = array_reduce($mailboxes, static function (int $c, Horde_Imap_Client_Mailbox $mb) use ($imapClient) {
 			$status = $imapClient->status($mb, Horde_Imap_Client::STATUS_MESSAGES);
 			return $c + $status['messages'];
 		}, 0);

@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -38,7 +39,6 @@ use function array_merge;
 use function array_reduce;
 
 class PreviewEnhancer {
-
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 
@@ -52,9 +52,9 @@ class PreviewEnhancer {
 	private $logger;
 
 	public function __construct(IMAPClientFactory $clientFactory,
-								ImapMapper $imapMapper,
-								DbMapper $dbMapper,
-								LoggerInterface $logger) {
+		ImapMapper $imapMapper,
+		DbMapper $dbMapper,
+		LoggerInterface $logger) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
@@ -67,7 +67,7 @@ class PreviewEnhancer {
 	 * @return Message[]
 	 */
 	public function process(Account $account, Mailbox $mailbox, array $messages): array {
-		$needAnalyze = array_reduce($messages, function (array $carry, Message $message) {
+		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do
 				return $carry;
@@ -76,7 +76,7 @@ class PreviewEnhancer {
 			return array_merge($carry, [$message->getUid()]);
 		}, []);
 
-		if (empty($needAnalyze)) {
+		if ($needAnalyze === []) {
 			// Nothing to enhance
 			return $messages;
 		}
@@ -99,17 +99,18 @@ class PreviewEnhancer {
 			$client->logout();
 		}
 
-		return $this->mapper->updatePreviewDataBulk(...array_map(function (Message $message) use ($data) {
+		return $this->mapper->updatePreviewDataBulk(...array_map(static function (Message $message) use ($data) {
 			if (!array_key_exists($message->getUid(), $data)) {
 				// Nothing to do
 				return $message;
 			}
 
-			/** @var MessageStructureData $structureData */
 			$structureData = $data[$message->getUid()];
 			$message->setFlagAttachments($structureData->hasAttachments());
 			$message->setPreviewText($structureData->getPreviewText());
 			$message->setStructureAnalyzed(true);
+			$message->setImipMessage($structureData->isImipMessage());
+			$message->setEncrypted($structureData->isEncrypted());
 
 			return $message;
 		}, $messages));

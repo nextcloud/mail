@@ -2,8 +2,9 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2022 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,26 +21,27 @@
  */
 
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 
 import {
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
 	PRIORITY_INBOX_ID,
-} from './constants'
-import actions from './actions'
-import { getters } from './getters'
-import mutations from './mutations'
-import outbox from './outbox'
+} from './constants.js'
+import actions from './actions.js'
+import { getters } from './getters.js'
+import mutations from './mutations.js'
+import outbox from './outbox/index.js'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+export default new Store({
 	strict: process.env.NODE_ENV !== 'production',
 	modules: {
 		root: {
 			namespaced: false,
 			state: {
+				isExpiredSession: false,
 				preferences: {},
 				accounts: {
 					[UNIFIED_ACCOUNT_ID]: {
@@ -90,10 +92,21 @@ export default new Vuex.Store({
 				envelopes: {},
 				messages: {},
 				newMessage: undefined,
+				showMessageComposer: false,
+				composerMessageIsSaved: false,
+				composerSessionId: undefined,
+				nextComposerSessionId: 1,
 				autocompleteEntries: [],
 				tags: {},
 				tagList: [],
 				isScheduledSendingDisabled: false,
+				isSnoozeDisabled: false,
+				currentUserPrincipal: undefined,
+				googleOauthUrl: null,
+				masterPasswordEnabled: false,
+				sieveScript: {},
+				calendars: [],
+				smimeCertificates: [],
 			},
 			getters,
 			mutations,

@@ -32,8 +32,10 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserDeletedEvent;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|UserDeletedEvent>
+ */
 class UserDeletedListener implements IEventListener {
-
 	/** @var AccountService */
 	private $accountService;
 
@@ -41,7 +43,7 @@ class UserDeletedListener implements IEventListener {
 	private $logger;
 
 	public function __construct(AccountService $accountService,
-								LoggerInterface $logger) {
+		LoggerInterface $logger) {
 		$this->accountService = $accountService;
 		$this->logger = $logger;
 	}

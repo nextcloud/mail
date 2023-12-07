@@ -43,7 +43,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailSearchTest extends TestCase {
-
 	/** @var FilterStringParser|MockObject */
 	private $filterStringParser;
 
@@ -95,6 +94,7 @@ class MailSearchTest extends TestCase {
 		$this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			null,
 			null,
 			null
@@ -110,6 +110,7 @@ class MailSearchTest extends TestCase {
 		$this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			null,
 			null,
 			null
@@ -129,6 +130,7 @@ class MailSearchTest extends TestCase {
 		$messages = $this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			null,
 			null,
 			null
@@ -167,6 +169,7 @@ class MailSearchTest extends TestCase {
 		$messages = $this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			'my search',
 			null,
 			null
@@ -185,8 +188,8 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncChangedToken('def');
 		$mailbox->setSyncVanishedToken('ghi');
 		$query = new SearchQuery();
-		$query->addTextToken('my');
-		$query->addTextToken('search');
+		$query->addBody('my');
+		$query->addBody('search');
 		$this->filterStringParser->expects($this->once())
 			->method('parse')
 			->with('my search')
@@ -208,6 +211,7 @@ class MailSearchTest extends TestCase {
 		$messages = $this->search->findMessages(
 			$account,
 			$mailbox,
+			'DESC',
 			'my search',
 			null,
 			null

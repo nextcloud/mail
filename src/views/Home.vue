@@ -5,21 +5,28 @@
 		<MailboxThread v-else-if="activeAccount"
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
-		<NewMessageModal
-			v-if="$store.getters.showMessageComposer"
-			@close="onCloseModal" />
+
+		<template v-if="hasComposerSession">
+			<ComposerSessionIndicator @close="onCloseMessageModal" />
+			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
+		</template>
 	</Content>
 </template>
 
 <script>
-import Content from '@nextcloud/vue/dist/Components/Content'
+import { NcContent as Content } from '@nextcloud/vue'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
-import logger from '../logger'
-import MailboxThread from '../components/MailboxThread'
-import NewMessageModal from '../components/NewMessageModal'
-import Navigation from '../components/Navigation'
-import Outbox from '../components/Outbox'
+import '../../css/mail.scss'
+import '../../css/mobile.scss'
+
+import { testAccountConnection } from '../service/AccountService.js'
+import logger from '../logger.js'
+import MailboxThread from '../components/MailboxThread.vue'
+import Navigation from '../components/Navigation.vue'
+import Outbox from '../components/Outbox.vue'
+import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'Home',
@@ -27,11 +34,19 @@ export default {
 		Content,
 		MailboxThread,
 		Navigation,
-		NewMessageModal,
+		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),
 		Outbox,
+		ComposerSessionIndicator,
 	},
 	mixins: [isMobile],
+	data() {
+		return {
+			hasComposerSession: false,
+			accounts: null,
+		}
+	},
 	computed: {
+		...mapGetters(['composerSessionId']),
 		activeAccount() {
 			return this.$store.getters.getAccount(this.activeMailbox?.accountId)
 		},
@@ -42,10 +57,50 @@ export default {
 			return this.buildMenu()
 		},
 	},
+	watch: {
+		async composerSessionId(id) {
+			// Session was closed or discarded
+			if (!id) {
+				this.hasComposerSession = false
+				return
+			}
+
+			// A new session is replacing the old session.  Fully reset the NewMessageModal
+			// component in this case and wait for the template to fully render before showing the
+			// modal again.
+			if (this.hasComposerSession) {
+				this.hasComposerSession = false
+				await this.$nextTick()
+			}
+
+			this.hasComposerSession = true
+		},
+	},
+	async beforeMount() {
+		const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+		this.accounts = await Promise.all(
+			 accounts.map(async (account) => {
+				return { ...account, connectionStatus: await testAccountConnection(account.id) }
+			}))
+
+	},
 	created() {
 		const accounts = this.$store.getters.accounts
+		let startMailboxId = this.$store.getters.getPreference('start-mailbox-id')
+		if (startMailboxId && !this.$store.getters.getMailbox(startMailboxId)) {
+			// The start ID is set but the mailbox doesn't exist anymore
+			startMailboxId = null
+		}
 
-		if (this.$route.name === 'home' && accounts.length > 1) {
+		if (this.$route.name === 'home' && accounts.length > 1 && startMailboxId) {
+			logger.debug('Loading start mailbox', { id: startMailboxId })
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: startMailboxId,
+				},
+			})
+		} else if (this.$route.name === 'home' && accounts.length > 1) {
 			// Show first account
 			const firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one mailbox
@@ -103,8 +158,8 @@ export default {
 				},
 			})
 		},
-		async onCloseModal(opts) {
-			await this.$store.dispatch('closeMessageComposer', opts ?? {})
+		async onCloseMessageModal() {
+			await this.$refs.newMessageModal.onClose()
 		},
 	},
 }
@@ -112,12 +167,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .app-content-details {
+:deep(.app-content-details) {
 	margin: 0 auto;
 	max-width: 900px;
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 100%;
-	min-width: 0;
+	min-width: 70%;
+}
+// Align the appNavigation toggle with the apps header toolbar
+:deep(button.app-navigation-toggle) {
+	top: 8px;
 }
 </style>

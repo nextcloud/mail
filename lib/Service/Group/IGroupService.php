@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Group;
 
 interface IGroupService {
-
 	/**
 	 * Search the service's groups.
 	 *

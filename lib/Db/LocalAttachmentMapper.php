@@ -35,7 +35,6 @@ use Throwable;
  * @template-extends QBMapper<LocalAttachment>
  */
 class LocalAttachmentMapper extends QBMapper {
-
 	/**
 	 * @param IDBConnection $db
 	 */
@@ -61,7 +60,7 @@ class LocalAttachmentMapper extends QBMapper {
 	 * @return LocalAttachment[]
 	 */
 	public function findByLocalMessageIds(array $localMessageIds): array {
-		if (empty($localMessageIds)) {
+		if ($localMessageIds === []) {
 			return [];
 		}
 		$qb = $this->db->getQueryBuilder();
@@ -98,7 +97,7 @@ class LocalAttachmentMapper extends QBMapper {
 			$qb->delete($this->getTableName())
 				->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
 				->andWhere($qb->expr()->eq('local_message_id', $qb->createNamedParameter($localMessageId), IQueryBuilder::PARAM_INT));
-			$qb->execute();
+			$qb->executeStatement();
 			$this->db->commit();
 		} catch (Throwable $e) {
 			$this->db->rollBack();
@@ -120,7 +119,7 @@ class LocalAttachmentMapper extends QBMapper {
 				->andWhere(
 					$qb->expr()->in('id', $qb->createNamedParameter($attachmentIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 				);
-			$qb->execute();
+			$qb->executeStatement();
 			$this->db->commit();
 		} catch (Throwable $e) {
 			$this->db->rollBack();

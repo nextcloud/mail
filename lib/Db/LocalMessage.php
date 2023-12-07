@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2022 Anna Larch <anna@nextcloud.com>
  *
  * @author 2022 Anna Larch <anna@nextcloud.com>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -37,8 +38,8 @@ use function array_filter;
  * @method void setAccountId(int $accountId)
  * @method int|null getAliasId()
  * @method void setAliasId(?int $aliasId)
- * @method int getSendAt()
- * @method void setSendAt(int $sendAt)
+ * @method int|null getSendAt()
+ * @method void setSendAt(?int $sendAt)
  * @method string getSubject()
  * @method void setSubject(string $subject)
  * @method string getBody()
@@ -51,6 +52,14 @@ use function array_filter;
  * @method void setFailed(bool $failed)
  * @method string|null getInReplyToMessageId()
  * @method void setInReplyToMessageId(?string $inReplyToId)
+ * @method int|null getUpdatedAt()
+ * @method setUpdatedAt(?int $updatedAt)
+ * @method bool|null getSmimeSign()
+ * @method setSmimeSign(bool $smimeSign)
+ * @method int|null getSmimeCertificateId()
+ * @method setSmimeCertificateId(?int $smimeCertificateId)
+ * @method bool|null getSmimeEncrypt()
+ * @method setSmimeEncrypt (bool $smimeEncryt)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -95,6 +104,18 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool|null */
 	protected $failed;
 
+	/** @var int|null */
+	protected $updatedAt;
+
+	/** @var bool|null */
+	protected $smimeSign;
+
+	/** @var int|null */
+	protected $smimeCertificateId;
+
+	/** @var bool|null */
+	protected $smimeEncrypt;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -102,6 +123,10 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('sendAt', 'integer');
 		$this->addType('html', 'boolean');
 		$this->addType('failed', 'boolean');
+		$this->addType('updatedAt', 'integer');
+		$this->addType('smimeSign', 'boolean');
+		$this->addType('smimeCertificateId', 'integer');
+		$this->addType('smimeEncrypt', 'boolean');
 	}
 
 	#[ReturnTypeWillChange]
@@ -112,6 +137,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'accountId' => $this->getAccountId(),
 			'aliasId' => $this->getAliasId(),
 			'sendAt' => $this->getSendAt(),
+			'updatedAt' => $this->getUpdatedAt(),
 			'subject' => $this->getSubject(),
 			'body' => $this->getBody(),
 			'editorBody' => $this->getEditorBody(),
@@ -119,26 +145,29 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_FROM;
 				})
 			),
 			'to' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_TO;
 				})
 			),
 			'cc' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_CC;
 				})
 			),
 			'bcc' => array_values(
-				array_filter($this->getRecipients(), function (Recipient $recipient) {
+				array_filter($this->getRecipients(), static function (Recipient $recipient) {
 					return $recipient->getType() === Recipient::TYPE_BCC;
 				})
 			),
 			'failed' => $this->isFailed() === true,
+			'smimeCertificateId' => $this->getSmimeCertificateId(),
+			'smimeSign' => $this->getSmimeSign() === true,
+			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
 		];
 	}
 

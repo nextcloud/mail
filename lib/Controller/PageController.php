@@ -27,77 +27,81 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\SmimeService;
+use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Authentication\Exceptions\CredentialsUnavailableException;
+use OCP\Authentication\Exceptions\PasswordUnavailableException;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
+use OCP\Collaboration\Reference\RenderReferenceEvent;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\User\IAvailabilityCoordinator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function class_exists;
+use function http_build_query;
 use function json_decode;
 
 class PageController extends Controller {
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var IConfig */
-	private $config;
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var AliasesService */
-	private $aliasesService;
-
-	/** @var string */
-	private $currentUserId;
-
-	/** @var IUserSession */
-	private $userSession;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var TagMapper */
-	private $tagMapper;
-
-	/** @var IInitialState */
-	private $initialStateService;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var OutboxService */
-	private $outboxService;
+	private IURLGenerator $urlGenerator;
+	private IConfig $config;
+	private AccountService $accountService;
+	private AliasesService $aliasesService;
+	private ?string $currentUserId;
+	private IUserSession $userSession;
+	private IUserPreferences $preferences;
+	private IMailManager $mailManager;
+	private TagMapper $tagMapper;
+	private IInitialState $initialStateService;
+	private LoggerInterface $logger;
+	private OutboxService $outboxService;
+	private IEventDispatcher $dispatcher;
+	private ICredentialstore $credentialStore;
+	private SmimeService $smimeService;
+	private AiIntegrationsService $aiIntegrationsService;
+	private IUserManager $userManager;
+	private ?IAvailabilityCoordinator $availabilityCoordinator;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								IURLGenerator $urlGenerator,
-								IConfig $config,
-								AccountService $accountService,
-								AliasesService $aliasesService,
-								?string $UserId,
-								IUserSession $userSession,
-								IUserPreferences $preferences,
-								IMailManager $mailManager,
-								TagMapper $tagMapper,
-								IInitialState $initialStateService,
-								LoggerInterface $logger,
-								OutboxService $outboxService) {
+		IRequest $request,
+		IURLGenerator $urlGenerator,
+		IConfig $config,
+		AccountService $accountService,
+		AliasesService $aliasesService,
+		?string          $UserId,
+		IUserSession     $userSession,
+		IUserPreferences $preferences,
+		IMailManager     $mailManager,
+		TagMapper        $tagMapper,
+		IInitialState    $initialStateService,
+		LoggerInterface  $logger,
+		OutboxService    $outboxService,
+		IEventDispatcher $dispatcher,
+		ICredentialStore $credentialStore,
+		SmimeService     $smimeService,
+		AiIntegrationsService $aiIntegrationsService,
+		IUserManager $userManager,
+		ContainerInterface $container) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -112,6 +116,18 @@ class PageController extends Controller {
 		$this->initialStateService = $initialStateService;
 		$this->logger = $logger;
 		$this->outboxService = $outboxService;
+		$this->dispatcher = $dispatcher;
+		$this->credentialStore = $credentialStore;
+		$this->smimeService = $smimeService;
+		$this->aiIntegrationsService = $aiIntegrationsService;
+		$this->userManager = $userManager;
+
+		// TODO: inject directly if support for nextcloud < 28 is dropped
+		try {
+			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
+		} catch (ContainerExceptionInterface) {
+			$this->availabilityCoordinator = null;
+		}
 	}
 
 	/**
@@ -121,9 +137,18 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index(): TemplateResponse {
+		if (class_exists(LoadViewer::class)) {
+			$this->dispatcher->dispatchTyped(new LoadViewer());
+		}
+
 		$this->initialStateService->provideInitialState(
 			'debug',
 			$this->config->getSystemValue('debug', false)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'ncVersion',
+			$this->config->getSystemValue('version', '0.0.0')
 		);
 
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
@@ -157,6 +182,22 @@ class PageController extends Controller {
 			$this->tagMapper->getAllTagsForUser($this->currentUserId)
 		);
 
+		$this->initialStateService->provideInitialState(
+			'sort-order',
+			$this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest')
+		);
+
+		try {
+			$password = $this->credentialStore->getLoginCredentials()->getPassword();
+			$passwordIsUnavailable = $password === null || $password === '';
+		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
+			$passwordIsUnavailable = true;
+		}
+		$this->initialStateService->provideInitialState(
+			'password-is-unavailable',
+			$passwordIsUnavailable,
+		);
+
 		$user = $this->userSession->getUser();
 		$response = new TemplateResponse($this->appName, 'index',
 			[
@@ -165,11 +206,13 @@ class PageController extends Controller {
 				'external-avatars' => $this->preferences->getPreference($this->currentUserId, 'external-avatars', 'true'),
 				'reply-mode' => $this->preferences->getPreference($this->currentUserId, 'reply-mode', 'top'),
 				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
+				'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
+				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 				'tag-classified-messages' => $this->preferences->getPreference($this->currentUserId, 'tag-classified-messages', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
-			$user->getDisplayName()
+			$this->userManager->getDisplayName($this->currentUserId),
 		);
 		$this->initialStateService->provideInitialState(
 			'prefill_email',
@@ -180,18 +223,83 @@ class PageController extends Controller {
 			'outbox-messages',
 			$this->outboxService->getMessages($user->getUID())
 		);
+		$googleOauthclientId = $this->config->getAppValue(Application::APP_ID, 'google_oauth_client_id');
+		if (!empty($googleOauthclientId)) {
+			$this->initialStateService->provideInitialState(
+				'google-oauth-url',
+				'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query([
+					'client_id' => $googleOauthclientId,
+					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.googleIntegration.oauthRedirect'),
+					'response_type' => 'code',
+					'prompt' => 'consent',
+					'state' => '_accountId_', // Replaced by frontend
+					'scope' => 'https://mail.google.com/',
+					'access_type' => 'offline',
+					'login_hint' => '_email_', // Replaced by frontend
+				]),
+			);
+		}
+		$microsoftOauthClientId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_id');
+		$microsoftOauthTenantId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_tenant_id', 'common');
+		if (!empty($microsoftOauthClientId) && !empty($microsoftOauthTenantId)) {
+			$this->initialStateService->provideInitialState(
+				'microsoft-oauth-url',
+				"https://login.microsoftonline.com/$microsoftOauthTenantId/oauth2/v2.0/authorize?" . http_build_query([
+					'client_id' => $microsoftOauthClientId,
+					'redirect_uri' => $this->urlGenerator->linkToRouteAbsolute('mail.microsoftIntegration.oauthRedirect'),
+					'response_type' => 'code',
+					'response_mode' => 'query',
+					'prompt' => 'consent',
+					'state' => '_accountId_', // Replaced by frontend
+					'scope' => 'offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send',
+					'access_type' => 'offline',
+					'login_hint' => '_email_', // Replaced by frontend
+				]),
+			);
+		}
 
-		// Disable scheduled send in frontend if ajax cron is used because it is unreliable
+		// Disable snooze and scheduled send in frontend if ajax cron is used because it is unreliable
 		$cronMode = $this->config->getAppValue('core', 'backgroundjobs_mode', 'ajax');
 		$this->initialStateService->provideInitialState(
 			'disable-scheduled-send',
 			$cronMode === 'ajax',
 		);
+		$this->initialStateService->provideInitialState(
+			'disable-snooze',
+			$cronMode === 'ajax',
+		);
+
+		$this->initialStateService->provideInitialState(
+			'allow-new-accounts',
+			$this->config->getAppValue('mail', 'allow_new_mail_accounts', 'yes') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
+			'enabled_thread_summary',
+			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable()
+		);
+
+		$this->initialStateService->provideInitialState(
+			'smime-certificates',
+			array_map(
+				function (SmimeCertificate $certificate) {
+					return $this->smimeService->enrichCertificate($certificate);
+				},
+				$this->smimeService->findAllCertificates($user->getUID()),
+			),
+		);
+
+		if ($this->availabilityCoordinator !== null) {
+			$this->initialStateService->provideInitialState(
+				'enable-system-out-of-office',
+				$this->availabilityCoordinator->isEnabled(),
+			);
+		}
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$response->setContentSecurityPolicy($csp);
-
+		$this->dispatcher->dispatchTyped(new RenderReferenceEvent());
 		return $response;
 	}
 
@@ -295,7 +403,7 @@ class PageController extends Controller {
 		}
 
 		array_walk($params,
-			function (&$value, $key) {
+			static function (&$value, $key) {
 				$value = "$key=" . urlencode($value);
 			});
 		$name = '?' . implode('&', $params);

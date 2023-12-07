@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -95,9 +96,34 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'accounts#updateSmimeCertificate',
+			'url' => '/api/accounts/{id}/smime-certificate',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'accounts#getQuota',
 			'url' => '/api/accounts/{id}/quota',
 			'verb' => 'GET'
+		],
+		[
+			'name' => 'accounts#testAccountConnection',
+			'url' => '/api/accounts/{id}/test',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'autoConfig#queryIspdb',
+			'url' => '/api/autoconfig/ispdb/{email}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'autoConfig#queryMx',
+			'url' => '/api/autoconfig/mx/{email}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'autoConfig#testConnectivity',
+			'url' => '/api/autoconfig/test',
+			'verb' => 'GET',
 		],
 		[
 			'name' => 'tags#create',
@@ -108,6 +134,11 @@ return [
 			'name' => 'tags#update',
 			'url' => '/api/tags/{id}',
 			'verb' => 'PUT'
+		],
+		[
+			'name' => 'tags#delete',
+			'url' => '/api/tags/{accountId}/delete/{id}',
+			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'aliases#updateSignature',
@@ -150,6 +181,11 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'mailboxes#clearMailbox',
+			'url' => '/api/mailboxes/{id}/clear',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'mailboxes#markAllAsRead',
 			'url' => '/api/mailboxes/{id}/read',
 			'verb' => 'POST'
@@ -158,11 +194,6 @@ return [
 			'name' => 'mailboxes#stats',
 			'url' => '/api/mailboxes/{id}/stats',
 			'verb' => 'GET'
-		],
-		[
-			'name' => 'mailboxes#clearMailbox',
-			'url' => '/api/mailboxes/{id}/clear',
-			'verb' => 'POST'
 		],
 		[
 			'name' => 'messages#downloadAttachment',
@@ -190,8 +221,18 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#getDkim',
+			'url' => '/api/messages/{id}/dkim',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#getSource',
 			'url' => '/api/messages/{id}/source',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'messages#export',
+			'url' => '/api/messages/{id}/export',
 			'verb' => 'GET'
 		],
 		[
@@ -222,6 +263,16 @@ return [
 		[
 			'name' => 'messages#move',
 			'url' => '/api/messages/{id}/move',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'messages#snooze',
+			'url' => '/api/messages/{id}/snooze',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'messages#unSnooze',
+			'url' => '/api/messages/{id}/unsnooze',
 			'verb' => 'POST'
 		],
 		[
@@ -285,6 +336,16 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'settings#setAllowNewMailAccounts',
+			'url' => '/api/settings/allownewaccounts',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'settings#setEnabledThreadSummary',
+			'url' => '/api/settings/threadsummary',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'
@@ -325,19 +386,96 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'thread#snooze',
+			'url' => '/api/thread/{id}/snooze',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'thread#unSnooze',
+			'url' => '/api/thread/{id}/unsnooze',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'thread#summarize',
+			'url' => '/api/thread/{id}/summary',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'outbox#send',
 			'url' => '/api/outbox/{id}',
 			'verb' => 'POST'
+		],
+		[
+			'name' => 'outbox#createFromDraft',
+			'url' => '/api/outbox/from-draft/{id}',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'googleIntegration#configure',
+			'url' => '/api/integration/google',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'googleIntegration#unlink',
+			'url' => '/api/integration/google',
+			'verb' => 'DELETE',
+		],
+		[
+			'name' => 'googleIntegration#oauthRedirect',
+			'url' => '/integration/google-auth',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'microsoftIntegration#configure',
+			'url' => '/api/integration/microsoft',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'microsoftIntegration#unlink',
+			'url' => '/api/integration/microsoft',
+			'verb' => 'DELETE',
+		],
+		[
+			'name' => 'microsoftIntegration#oauthRedirect',
+			'url' => '/integration/microsoft-auth',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'list#unsubscribe',
+			'url' => '/api/list/unsubscribe/{id}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'drafts#move',
+			'url' => '/api/drafts/move/{id}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'outOfOffice#getState',
+			'url' => '/api/out-of-office/{accountId}',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'outOfOffice#update',
+			'url' => '/api/out-of-office/{accountId}',
+			'verb' => 'POST',
+		],
+		[
+			'name' => 'outOfOffice#followSystem',
+			'url' => '/api/out-of-office/{accountId}/follow-system',
+			'verb' => 'POST',
 		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
 		'aliases' => ['url' => '/api/accounts/{accountId}/aliases'],
 		'autoComplete' => ['url' => '/api/autoComplete'],
+		'drafts' => ['url' => '/api/drafts'],
 		'localAttachments' => ['url' => '/api/attachments'],
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
+		'smimeCertificates' => ['url' => '/api/smime/certificates'],
 	]
 ];

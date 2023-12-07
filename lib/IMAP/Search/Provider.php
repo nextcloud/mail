@@ -35,7 +35,6 @@ use OCA\Mail\Service\Search\SearchQuery;
 use function array_reduce;
 
 class Provider {
-
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 
@@ -48,8 +47,8 @@ class Provider {
 	 * @throws ServiceException
 	 */
 	public function findMatches(Account $account,
-								Mailbox $mailbox,
-								SearchQuery $searchQuery): array {
+		Mailbox $mailbox,
+		SearchQuery $searchQuery): array {
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$fetchResult = $client->search(
@@ -74,9 +73,9 @@ class Provider {
 	 */
 	private function convertMailQueryToHordeQuery(SearchQuery $searchQuery): Horde_Imap_Client_Search_Query {
 		return array_reduce(
-			$searchQuery->getTextTokens(),
-			function (Horde_Imap_Client_Search_Query $query, string $textToken) {
-				$query->text($textToken, false);
+			$searchQuery->getBodies(),
+			static function (Horde_Imap_Client_Search_Query $query, string $textToken) {
+				$query->text($textToken, true);
 				return $query;
 			},
 			new Horde_Imap_Client_Search_Query()

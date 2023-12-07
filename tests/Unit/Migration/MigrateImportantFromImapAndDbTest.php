@@ -30,14 +30,13 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDbTest extends TestCase {
-
 	/** @var MockObject */
 	private $clientFactory;
 
@@ -107,7 +106,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 	public function testMigrateImportantOnImapExceptionGetFlagged() {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$e = new Horde_Imap_Client_Exception('');
+		$e = new Horde_Imap_Client_Exception('', 0);
 
 		$this->messageMapper->expects($this->once())
 			->method('getFlagged')
@@ -126,7 +125,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setName('INBOX');
-		$e = new Horde_Imap_Client_Exception('');
+		$e = new Horde_Imap_Client_Exception('', 0);
 		$uids = [1,2,3];
 
 		$this->messageMapper->expects($this->once())
@@ -187,7 +186,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(1);
 		$mailbox->setName('INBOX');
-		$e = new Horde_Imap_Client_Exception('');
+		$e = new Horde_Imap_Client_Exception('', 0);
 		$uids = [1,2,3];
 
 		$this->mailboxMapper->expects($this->once())

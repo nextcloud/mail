@@ -4,7 +4,7 @@
   - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
   - @author 2021 Richard Steinmetz <richard@steinmetz.cloud>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import BaseAvatar from '@nextcloud/vue/dist/Components/Avatar'
-import { fetchAvatarUrlMemoized } from '../service/AvatarService'
-import logger from '../logger'
+import BaseAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
+import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
+import logger from '../logger.js'
 
 export default {
 	name: 'Avatar',

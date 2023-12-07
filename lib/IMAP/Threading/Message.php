@@ -31,7 +31,6 @@ use function str_replace;
 use function strpos;
 
 class Message implements JsonSerializable {
-
 	/** @var string */
 	private $subject;
 
@@ -45,8 +44,8 @@ class Message implements JsonSerializable {
 	 * @param string[] $references
 	 */
 	public function __construct(string $subject,
-								string $id,
-								array $references) {
+		string $id,
+		array $references) {
 		$this->subject = $subject;
 		$this->id = $id;
 		$this->references = $references;

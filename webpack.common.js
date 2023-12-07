@@ -3,6 +3,7 @@ const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
 const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
+const { ProvidePlugin } = require('webpack')
 
 function getPostCssConfig(ckEditorOpts) {
 	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
@@ -18,6 +19,12 @@ const plugins = [
 		language: 'en',
 	}),
 	new VueLoaderPlugin(),
+	new ProvidePlugin({
+		// Make a global `process` variable that points to the `process` package,
+		// because the `util` package expects there to be a global variable named `process`.
+		// Thanks to https://stackoverflow.com/a/65018686/14239942
+		process: 'process/browser.js',
+	}),
 ]
 
 module.exports = {
@@ -25,6 +32,7 @@ module.exports = {
 		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
 		dashboard: path.join(__dirname, 'src/main-dashboard.js'),
 		mail: path.join(__dirname, 'src/main.js'),
+		oauthpopup: path.join(__dirname, 'src/main-oauth-popup.js'),
 		settings: path.join(__dirname, 'src/main-settings'),
 		htmlresponse: path.join(__dirname, 'src/html-response.js'),
 	},
@@ -32,9 +40,6 @@ module.exports = {
 		path: path.resolve(__dirname, 'js'),
 		chunkFilename: 'mail.[name].[contenthash].js',
 		publicPath: '/js/',
-	},
-	node: {
-		fs: 'empty',
 	},
 	module: {
 		rules: [
@@ -102,5 +107,10 @@ module.exports = {
 	resolve: {
 		extensions: ['*', '.js', '.vue', '.json'],
 		symlinks: false,
+		fallback: {
+			buffer: require.resolve('buffer/'),
+			stream: require.resolve('stream-browserify'),
+			util: require.resolve('util/'),
+		},
 	},
 }

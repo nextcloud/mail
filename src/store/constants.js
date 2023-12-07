@@ -3,7 +3,7 @@
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,3 +26,5 @@ export const UNIFIED_INBOX_ID = 'unified'
 export const PRIORITY_INBOX_ID = 'priority'
 export const PAGE_SIZE = 20
 export const UNDO_DELAY = TOAST_UNDO_TIMEOUT
+export const EDITOR_MODE_HTML = 'richtext'
+export const EDITOR_MODE_TEXT = 'plaintext'

@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Namespace_List;
 use Horde_Imap_Client_Socket;
 use OC\AppFramework\Utility\TimeFactory;
 use OCA\Mail\Account;
@@ -37,16 +39,16 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
-use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\MailboxSync;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
 class MailboxSyncTest extends TestCase {
-
 	/** @var MailboxMapper|MockObject */
 	private $mailboxMapper;
 
@@ -67,6 +69,8 @@ class MailboxSyncTest extends TestCase {
 
 	/** @var IEventDispatcher|MockObject */
 	private $dispatcher;
+	/** @var IDBConnection|(IDBConnection&MockObject)|MockObject */
+	private IDBConnection|MockObject $dbConnection;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -77,6 +81,7 @@ class MailboxSyncTest extends TestCase {
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->dispatcher = $this->createMock(IEventDispatcher::class);
+		$this->dbConnection = $this->createMock(IDBConnection::class);
 
 		$this->sync = new MailboxSync(
 			$this->mailboxMapper,
@@ -84,7 +89,8 @@ class MailboxSyncTest extends TestCase {
 			$this->mailAccountMapper,
 			$this->imapClientFactory,
 			$this->timeFactory,
-			$this->dispatcher
+			$this->dispatcher,
+			$this->dbConnection,
 		);
 	}
 
@@ -101,7 +107,7 @@ class MailboxSyncTest extends TestCase {
 		$this->sync->sync($account, new NullLogger());
 	}
 
-	public function testSync() {
+	public function testSync(): void {
 		$account = $this->createMock(Account::class);
 		$mailAccount = new MailAccount();
 		$mailAccount->setLastMailboxSync(0);
@@ -114,7 +120,70 @@ class MailboxSyncTest extends TestCase {
 			->willReturn($client);
 		$client->expects($this->once())
 			->method('getNamespaces')
-			->willThrowException(new Horde_Imap_Client_Exception());
+			->willThrowException(new Horde_Imap_Client_Exception('', 0));
+		$folders = [
+			$this->createMock(Folder::class),
+			$this->createMock(Folder::class),
+		];
+		$status = [
+			'unseen' => 10,
+			'messages' => 42,
+		];
+		$folders[0]->method('getStatus')->willReturn($status);
+		$folders[0]->method('getMailbox')->willReturn('mb1');
+		$folders[1]->method('getStatus')->willReturn($status);
+		$folders[1]->method('getMailbox')->willReturn('mb2');
+		$this->folderMapper->expects($this->once())
+			->method('getFolders')
+			->with($account, $client)
+			->willReturn($folders);
+		$this->folderMapper->expects($this->once())
+			->method('getFoldersStatusAsObject')
+			->with($client, self::equalToCanonicalizing(['mb1', 'mb2',]))
+			->willReturn([
+				'mb1' => new MailboxStats(1, 2),
+				'mb2' => new MailboxStats(1, 2),
+			]);
+		$this->folderMapper->expects($this->once())
+			->method('detectFolderSpecialUse')
+			->with($folders);
+		$this->mailboxMapper->expects(self::exactly(2))
+			->method('insert')
+			->willReturnArgument(0);
+		$this->mailboxMapper->expects(self::exactly(2))
+			->method('update')
+			->willReturnArgument(0);
+		$this->dispatcher
+			->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->equalTo(new MailboxesSynchronizedEvent($account)));
+
+		$this->sync->sync($account, new NullLogger());
+	}
+
+	public function testSyncShared(): void {
+		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setLastMailboxSync(0);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$this->timeFactory->method('getTime')->willReturn(100000);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$personal = new Horde_Imap_Client_Data_Namespace();
+		$personal->name = '';
+		$personal->type = Horde_Imap_Client_Data_Namespace::NS_PERSONAL;
+		$shared = new Horde_Imap_Client_Data_Namespace();
+		$shared->name = 'Shared/';
+		$shared->type = Horde_Imap_Client_Data_Namespace::NS_OTHER;
+		$client->expects($this->once())
+			->method('getNamespaces')
+			->willReturn(new Horde_Imap_Client_Namespace_List([
+				$personal,
+				$shared,
+			]));
 		$folders = [
 			$this->createMock(Folder::class),
 			$this->createMock(Folder::class),
@@ -125,35 +194,50 @@ class MailboxSyncTest extends TestCase {
 		];
 		$folders[0]->method('getStatus')->willReturn($status);
 		$folders[1]->method('getStatus')->willReturn($status);
+		$folders[0]->method('getMailbox')->willReturn('INBOX');
+		$folders[1]->method('getMailbox')->willReturn('Shared/Foo');
 		$this->folderMapper->expects($this->once())
 			->method('getFolders')
 			->with($account, $client)
 			->willReturn($folders);
+		$inbox = new Mailbox();
+		$inbox->setId(101);
+		$inbox->setName('INBOX');
+		$sharedMailbox = new Mailbox();
+		$sharedMailbox->setId(102);
+		$sharedMailbox->setName('Shared/Foo');
+		$this->mailboxMapper->expects(self::once())
+			->method('findAll')
+			->with($account)
+			->willReturn([$inbox, $sharedMailbox]);
 		$this->folderMapper->expects($this->once())
-			->method('detectFolderSpecialUse')
-			->with($folders);
-		$this->dispatcher
-			->expects($this->once())
-			->method('dispatchTyped')
-			->with($this->equalTo(new MailboxesSynchronizedEvent($account)));
+			->method('getFoldersStatusAsObject')
+			->with($client, [$inbox->getName(), $sharedMailbox->getName()])
+			->willReturn([
+				$inbox->getName() => new MailboxStats(1, 2),
+				$sharedMailbox->getName() => new MailboxStats(0, 0),
+			]);
+		$this->mailboxMapper->expects(self::exactly(4))
+			->method('update')
+			->willReturnArgument(0);
 
 		$this->sync->sync($account, new NullLogger());
 	}
 
-	public function testSyncStats() {
+	public function testSyncStats(): void {
 		$account = $this->createMock(Account::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->with($account)
 			->willReturn($client);
-		$stats = new MailboxStats(42, 10);
+		$stats = new MailboxStats(42, 10, null);
 		$mailbox = new Mailbox();
 		$mailbox->setName('mailbox');
 		$this->folderMapper->expects($this->once())
 			->method('getFoldersStatusAsObject')
-			->with($client, $mailbox->getName())
-			->willReturn($stats);
+			->with($client, [$mailbox->getName()])
+			->willReturn(['mailbox' => $stats]);
 		$this->mailboxMapper->expects($this->once())
 			->method('update')
 			->with($mailbox);

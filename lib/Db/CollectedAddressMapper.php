@@ -31,7 +31,6 @@ use function array_map;
  * @template-extends QBMapper<CollectedAddress>
  */
 class CollectedAddressMapper extends QBMapper {
-
 	/**
 	 * @param IDBConnection $db
 	 */
@@ -81,7 +80,7 @@ class CollectedAddressMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select($qb->func()->count())
 			->from($this->getTableName());
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 
 		$count = (int)$result->fetchColumn();
 		$result->closeCursor();
@@ -116,8 +115,8 @@ class CollectedAddressMapper extends QBMapper {
 			->from($this->getTableName(), 'c')
 			->leftJoin('c', 'mail_accounts', 'a', $qb1->expr()->eq('c.user_id', 'a.user_id'))
 			->where($qb1->expr()->isNull('a.id'));
-		$result = $idsQuery->execute();
-		$ids = array_map(function (array $row) {
+		$result = $idsQuery->executeQuery();
+		$ids = array_map(static function (array $row) {
 			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();
@@ -128,7 +127,7 @@ class CollectedAddressMapper extends QBMapper {
 			->where($qb2->expr()->in('id', $qb2->createParameter('ids')));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$query->execute();
+			$query->executeStatement();
 		}
 	}
 }

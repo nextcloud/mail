@@ -3,7 +3,9 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
+ *
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,17 +26,16 @@ import Vue from 'vue'
 import { getRequestToken } from '@nextcloud/auth'
 import { sync } from 'vuex-router-sync'
 import { generateFilePath } from '@nextcloud/router'
-import '@nextcloud/dialogs/styles/toast.scss'
+import '@nextcloud/dialogs/dist/index.css'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
 import VueShortKey from 'vue-shortkey'
-import VTooltip from 'v-tooltip'
-import VueClipboard from 'vue-clipboard2'
+import vToolTip from 'v-tooltip'
 
-import App from './App'
-import Nextcloud from './mixins/Nextcloud'
-import router from './router'
-import store from './store'
-import { fixAccountId } from './service/AccountService'
+import App from './App.vue'
+import Nextcloud from './mixins/Nextcloud.js'
+import router from './router.js'
+import store from './store/index.js'
+import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
 
 // eslint-disable-next-line camelcase
@@ -46,9 +47,8 @@ sync(store, router)
 
 Vue.mixin(Nextcloud)
 
-Vue.use(VueShortKey, { prevent: ['input', 'div'] })
-Vue.use(VTooltip)
-Vue.use(VueClipboard)
+Vue.use(VueShortKey, { prevent: ['input', 'div', 'textarea'] })
+Vue.use(vToolTip)
 
 const getPreferenceFromPage = (key) => {
 	const elem = document.getElementById(key)
@@ -62,6 +62,16 @@ store.commit('savePreference', {
 	key: 'debug',
 	value: loadState('mail', 'debug', false),
 })
+store.commit('savePreference', {
+	key: 'ncVersion',
+	value: loadState('mail', 'ncVersion'),
+})
+
+store.commit('savePreference', {
+	key: 'sort-order',
+	value: loadState('mail', 'sort-order', 'newest'),
+})
+
 store.commit('savePreference', {
 	key: 'attachment-size-limit',
 	value: Number.parseInt(getPreferenceFromPage('attachment-size-limit'), 10),
@@ -79,8 +89,25 @@ store.commit('savePreference', {
 	value: getPreferenceFromPage('collect-data'),
 })
 store.commit('savePreference', {
+	key: 'search-priority-body',
+	value: getPreferenceFromPage('search-priority-body'),
+})
+const startMailboxId = getPreferenceFromPage('start-mailbox-id')
+store.commit('savePreference', {
+	key: 'start-mailbox-id',
+	value: startMailboxId ? parseInt(startMailboxId, 10) : null,
+})
+store.commit('savePreference', {
 	key: 'tag-classified-messages',
 	value: getPreferenceFromPage('tag-classified-messages'),
+})
+store.commit('savePreference', {
+	key: 'allow-new-accounts',
+	value: loadState('mail', 'allow-new-accounts', true),
+})
+store.commit('savePreference', {
+	key: 'password-is-unavailable',
+	value: loadState('mail', 'password-is-unavailable', false),
 })
 
 const accountSettings = loadState('mail', 'account-settings')
@@ -88,6 +115,9 @@ const accounts = loadState('mail', 'accounts', [])
 const tags = loadState('mail', 'tags', [])
 const outboxMessages = loadState('mail', 'outbox-messages')
 const disableScheduledSend = loadState('mail', 'disable-scheduled-send')
+const disableSnooze = loadState('mail', 'disable-snooze')
+const googleOauthUrl = loadState('mail', 'google-oauth-url', null)
+const microsoftOauthUrl = loadState('mail', 'microsoft-oauth-url', null)
 
 accounts.map(fixAccountId).forEach((account) => {
 	const settings = accountSettings.find(settings => settings.accountId === account.id)
@@ -109,9 +139,17 @@ tags.forEach(tag => store.commit('addTag', { tag }))
 outboxMessages.forEach(message => store.commit('outbox/addMessage', { message }))
 
 store.commit('setScheduledSendingDisabled', disableScheduledSend)
+store.commit('setSnoozeDisabled', disableSnooze)
+store.commit('setGoogleOauthUrl', googleOauthUrl)
+store.commit('setMicrosoftOauthUrl', microsoftOauthUrl)
 
+const smimeCertificates = loadState('mail', 'smime-certificates', [])
+store.commit('setSmimeCertificates', smimeCertificates)
+
+/* eslint-disable vue/match-component-file-name */
 export default new Vue({
 	el: '#content',
+	name: 'Mail',
 	router,
 	store,
 	render: (h) => h(App),

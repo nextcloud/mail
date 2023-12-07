@@ -3,7 +3,7 @@
  *
  * @author 2022 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,12 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import Nextcloud from '../../../mixins/Nextcloud'
-import TextEditor from '../../../components/TextEditor'
+import Nextcloud from '../../../mixins/Nextcloud.js'
+import TextEditor from '../../../components/TextEditor.vue'
+import VirtualTestEditor from '../../virtualtesteditor.js'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import MailPlugin from '../../../ckeditor/mail/MailPlugin.js'
 
 const localVue = createLocalVue()
 
@@ -38,9 +41,80 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue()
+				bus: new Vue(),
 			},
 		})
 	})
+
+	it('throw when editor not ready', async() => {
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			propsData: {
+				value: 'bonjour',
+				bus: new Vue(),
+			},
+		})
+
+		const error = new Error(
+			'Impossible to execute a command before editor is ready.')
+		expect(() => wrapper.vm.editorExecute('insertSignature', {})).
+			toThrowError(error)
+	})
+
+	it('emit event on input', async() => {
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			propsData: {
+				value: 'bonjour',
+				bus: new Vue(),
+			},
+		})
+
+		wrapper.vm.onEditorInput('bonjour bonjour')
+
+		expect(wrapper.emitted().input[0]).toBeTruthy()
+		expect(wrapper.emitted().input[0]).toEqual(['bonjour bonjour'])
+	})
+
+	it('emit event on ready', async() => {
+		const wrapper = shallowMount(TextEditor, {
+			localVue,
+			propsData: {
+				value: 'bonjour',
+				bus: new Vue(),
+			},
+		})
+
+		const editor = await VirtualTestEditor.create({
+			initialData: '<p>bonjour bonjour</p>',
+			plugins: [ParagraphPlugin],
+		})
+
+		wrapper.vm.onEditorReady(editor)
+
+		expect(wrapper.emitted().ready[0]).toBeTruthy()
+	})
+
+	it('register conversion to add margin: 0px to every <p> element',
+		async() => {
+			const wrapper = shallowMount(TextEditor, {
+				localVue,
+				propsData: {
+					value: '',
+					bus: new Vue(),
+				},
+			})
+
+			const editor = await VirtualTestEditor.create({
+				initialData: '<p>bonjour bonjour</p>',
+				plugins: [ParagraphPlugin, MailPlugin],
+			})
+
+			wrapper.vm.onEditorReady(editor)
+
+			expect(wrapper.emitted().ready[0]).toBeTruthy()
+			expect(wrapper.emitted().ready[0][0].getData()).
+				toEqual('<p style="margin:0;">bonjour bonjour</p>')
+		})
 
 })

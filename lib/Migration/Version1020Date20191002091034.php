@@ -7,11 +7,10 @@ namespace OCA\Mail\Migration;
 use Closure;
 use OCP\DB\ISchemaWrapper;
 use OCP\IDBConnection;
-use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version1020Date20191002091034 extends SimpleMigrationStep {
-
 	/** @var IDBConnection */
 	protected $connection;
 

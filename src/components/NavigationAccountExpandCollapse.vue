@@ -3,7 +3,7 @@
   -
   - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import logger from '../logger'
+import { NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
+import logger from '../logger.js'
 
 export default {
 	name: 'NavigationAccountExpandCollapse',
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .app-navigation-entry__title {
+:deep(.app-navigation-entry__title) {
 	color: var(--color-text-maxcontrast);
 }
 </style>

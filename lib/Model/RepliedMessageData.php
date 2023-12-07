@@ -32,7 +32,6 @@ use OCA\Mail\Db\Message;
  * @psalm-immutable
  */
 class RepliedMessageData {
-
 	/** @var Account */
 	private $account;
 

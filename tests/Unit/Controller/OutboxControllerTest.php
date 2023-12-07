@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @author Anna Larch <anna.larch@gmx.net>
  *
  * @copyright 2022 Anna Larch <anna.larch@gmx.net>
+ * @copyright 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -36,11 +37,30 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\DB\Exception;
 use OCP\IRequest;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class OutboxControllerTest extends TestCase {
+	private string $appName;
+
+	/** @var OutboxService&MockObject */
+	private $service;
+
+	private string $userId;
+
+	/** @var IRequest&MockObject */
+	private $request;
+
+	/** @var AccountService&MockObject */
+	private $accountService;
+
+	/** @var SmimeService&MockObject  */
+	private $smimeService;
+
+	private OutboxController $controller;
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -49,13 +69,15 @@ class OutboxControllerTest extends TestCase {
 		$this->userId = 'john';
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
+		$this->smimeService = $this->createMock(SmimeService::class);
 
 		$this->controller = new OutboxController(
 			$this->appName,
 			$this->userId,
 			$this->request,
 			$this->service,
-			$this->accountService
+			$this->accountService,
+			$this->smimeService,
 		);
 	}
 
@@ -98,8 +120,6 @@ class OutboxControllerTest extends TestCase {
 			->method('getMessage')
 			->with($message->getId(), $this->userId)
 			->willReturn($message);
-		$this->accountService->expects(self::once())
-			->method('find');
 
 		$expected = JsonResponse::success($message);
 		$actual = $this->controller->show($message->getId());
@@ -115,27 +135,8 @@ class OutboxControllerTest extends TestCase {
 			->method('getMessage')
 			->with($message->getId(), $this->userId)
 			->willThrowException(new DoesNotExistException(''));
-		$this->accountService->expects(self::never())
-			->method('find');
 
 		$this->expectException(DoesNotExistException::class);
-		$this->controller->show($message->getId());
-	}
-
-	public function testShowAccountNotFound(): void {
-		$message = new LocalMessage();
-		$message->setId(1);
-		$message->setAccountId(1);
-
-		$this->service->expects(self::once())
-			->method('getMessage')
-			->with($message->getId(), $this->userId)
-			->willReturn($message);
-		$this->accountService->expects(self::once())
-			->method('find')
-			->willThrowException(new ClientException('', 400));
-
-		$this->expectException(ClientException::class);
 		$this->controller->show($message->getId());
 	}
 
@@ -273,6 +274,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
@@ -294,6 +297,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
 			$to,
 			$cc,
 			[],
@@ -314,6 +319,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
@@ -333,6 +340,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
 			$to,
 			$cc,
 			[],
@@ -351,6 +360,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
@@ -370,6 +381,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
 			$to,
 			$cc,
 			[],
@@ -389,6 +402,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setFailed(false);
@@ -417,6 +432,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
 			false,
 			$to,
 			$cc,
@@ -438,6 +455,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setFailed(false);
@@ -461,6 +480,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
 			false,
 			$to,
 			$cc,
@@ -482,6 +503,8 @@ class OutboxControllerTest extends TestCase {
 		$message->setBody('message');
 		$message->setEditorBody('<p>message</p>');
 		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
 		$message->setFailed(false);
@@ -510,6 +533,8 @@ class OutboxControllerTest extends TestCase {
 			$message->getBody(),
 			'<p>message</p>',
 			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
 			false,
 			$to,
 			$cc,
@@ -517,6 +542,103 @@ class OutboxControllerTest extends TestCase {
 			[],
 			$message->getAliasId(),
 			$message->getInReplyToMessageId()
+		);
+	}
+
+	public function testCreateValidateCertificateId(): void {
+		$message = new LocalMessage();
+		$message->setAccountId(1);
+		$message->setAliasId(2);
+		$message->setSubject('subject');
+		$message->setBody('message');
+		$message->setEditorBody('<p>message</p>');
+		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
+		$message->setInReplyToMessageId('abc');
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
+		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
+
+
+		$this->smimeService
+			->method('findCertificate')
+			->willThrowException(new DoesNotExistException('No such certificate'));
+		$account = new Account(new MailAccount());
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $message->getAccountId())
+			->willReturn($account);
+
+		$this->expectException(DoesNotExistException::class);
+		$this->controller->create(
+			$message->getAccountId(),
+			$message->getSubject(),
+			$message->getBody(),
+			'<p>message</p>',
+			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
+			$to,
+			$cc,
+			[],
+			[],
+			null,
+			$message->getAliasId(),
+			$message->getInReplyToMessageId(),
+			100
+		);
+	}
+
+	public function testUpdateValidateCertificateId(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setAccountId(1);
+		$message->setAliasId(2);
+		$message->setSubject('subject');
+		$message->setBody('message');
+		$message->setEditorBody('<p>message</p>');
+		$message->setHtml(true);
+		$message->setSmimeSign(false);
+		$message->setSmimeEncrypt(false);
+		$message->setInReplyToMessageId('abc');
+		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setFailed(false);
+		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
+		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
+
+
+		$this->smimeService
+			->method('findCertificate')
+			->willThrowException(new DoesNotExistException('No such certificate'));
+		$this->service->expects(self::once())
+			->method('getMessage')
+			->with($message->getId(), $this->userId)
+			->willReturn($message);
+		$account = new Account(new MailAccount());
+		$this->accountService->expects(self::once())
+			->method('find')
+			->with($this->userId, $message->getAccountId())
+			->willReturn($account);
+
+		$this->expectException(DoesNotExistException::class);
+		$this->controller->update(
+			$message->getId(),
+			$message->getAccountId(),
+			$message->getSubject(),
+			$message->getBody(),
+			'<p>message</p>',
+			$message->isHtml(),
+			$message->getSmimeSign(),
+			$message->getSmimeEncrypt(),
+			false,
+			$to,
+			$cc,
+			[],
+			[],
+			$message->getAliasId(),
+			$message->getInReplyToMessageId(),
+			100
 		);
 	}
 }

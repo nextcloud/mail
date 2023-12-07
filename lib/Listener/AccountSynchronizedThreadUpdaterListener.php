@@ -36,6 +36,9 @@ use OCP\EventDispatcher\IEventListener;
 use function array_chunk;
 use function iterator_to_array;
 
+/**
+ * @template-implements IEventListener<Event|SynchronizationEvent>
+ */
 class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private const WRITE_IDS_CHUNK_SIZE = 500;
 
@@ -46,7 +49,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	private $builder;
 
 	public function __construct(MessageMapper $mapper,
-								ThreadBuilder $builder) {
+		ThreadBuilder $builder) {
 		$this->mapper = $mapper;
 		$this->builder = $builder;
 	}
@@ -63,8 +66,9 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		}
 
 		$accountId = $event->getAccount()->getId();
+		$logger->debug("Building threads for account $accountId");
 		$messages = $this->mapper->findThreadingData($event->getAccount());
-		$logger->debug("Account $accountId has " . count($messages) . " messages for threading");
+		$logger->debug("Account $accountId has " . count($messages) . " messages with threading information");
 		$threads = $this->builder->build($messages, $logger);
 		$logger->debug("Account $accountId has " . count($threads) . " threads");
 		/** @var DatabaseMessage[] $flattened */
@@ -84,7 +88,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	 * @psalm-return Generator<int, DatabaseMessage>
 	 */
 	private function flattenThreads(array $threads,
-									?string $threadId = null): Generator {
+		?string $threadId = null): Generator {
 		foreach ($threads as $thread) {
 			if (($message = $thread->getMessage()) !== null) {
 				/** @var DatabaseMessage $message */
@@ -101,7 +105,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 
 			yield from $this->flattenThreads(
 				$thread->getChildren(),
-				$threadId ?? ($message === null ? null : $message->getId())
+				$threadId ?? ($message === null ? $thread->getId() : $message->getId())
 			);
 		}
 	}

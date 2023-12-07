@@ -35,40 +35,29 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
+use OCP\IConfig;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
-use function defined;
-use function method_exists;
+use function max;
 use function sprintf;
 
 class SyncJob extends TimedJob {
-
-	/** @var IUserManager */
-	private $userManager;
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ImapToDbSynchronizer */
-	private $syncService;
-
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IJobList */
-	private $jobList;
+	private IUserManager $userManager;
+	private AccountService $accountService;
+	private ImapToDbSynchronizer $syncService;
+	private MailboxSync $mailboxSync;
+	private LoggerInterface $logger;
+	private IJobList $jobList;
 
 	public function __construct(ITimeFactory $time,
-								IUserManager $userManager,
-								AccountService $accountService,
-								MailboxSync $mailboxSync,
-								ImapToDbSynchronizer $syncService,
-								LoggerInterface $logger,
-								IJobList $jobList) {
+		IUserManager $userManager,
+		AccountService $accountService,
+		MailboxSync $mailboxSync,
+		ImapToDbSynchronizer $syncService,
+		LoggerInterface $logger,
+		IJobList $jobList,
+		IConfig $config) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -78,13 +67,13 @@ class SyncJob extends TimedJob {
 		$this->logger = $logger;
 		$this->jobList = $jobList;
 
-		$this->setInterval(3600);
-		/**
-		 * @todo remove checks with 24+
-		 */
-		if (defined('\OCP\BackgroundJob\IJob::TIME_SENSITIVE') && method_exists($this, 'setTimeSensitivity')) {
-			$this->setTimeSensitivity(self::TIME_SENSITIVE);
-		}
+		$this->setInterval(
+			max(
+				5 * 60,
+				$config->getSystemValueInt('app.mail.background-sync-interval', 3600)
+			),
+		);
+		$this->setTimeSensitivity(self::TIME_SENSITIVE);
 	}
 
 	/**

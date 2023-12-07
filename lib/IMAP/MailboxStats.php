@@ -30,28 +30,18 @@ use JsonSerializable;
 use ReturnTypeWillChange;
 
 class MailboxStats implements JsonSerializable {
-
-	/** @var int */
-	private $total;
-
-	/** @var int */
-	private $unread;
+	private int $total;
+	private int $unread;
 
 	public function __construct(int $total, int $unread) {
 		$this->total = $total;
 		$this->unread = $unread;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getTotal(): int {
 		return $this->total;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getUnread(): int {
 		return $this->unread;
 	}

@@ -17,10 +17,34 @@
 * **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * **📑 Message threads!** Now we have proper grouping of message threads.
 * **🗄️ Mailbox management!** You can edit, delete, add submailboxes and more.
-* **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
+* **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://www.horde.org) libraries.
 * **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template chooser](https://github.com/nextcloud/mail/issues/new/choose) so we get the info needed to debug and fix the problem. Thanks!
+
+## Ethical AI Rating
+
+### Priority Inbox
+
+**Rating:** 🟢
+
+Positive:
+* The software for training and inferencing of this model is open source.
+* The model is created and trained on-premises based on the user's own data.
+* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.
+
+### Thread Summaries (opt-in)
+
+**Rating:** 🟢/🟡/🟡/🔴
+
+The rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.
+
+Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
+
+## Maintainers
+
+* [Christoph Wurst](https://github.com/ChristophWurst)
+* [Nextcloud Groupware team](https://github.com/nextcloud/groupware/#members)
 
 ## Installation
 
@@ -41,7 +65,7 @@ Once npm and Node.js are installed, PHP and JavaScript dependencies can be insta
 make dev-setup
 ```
 
-We are also available on [our public Mail development chat](https://cloud.nextcloud.com/call/89474m7g), if you want to join the development discussion. Please report bugs [here on Github](https://github.com/nextcloud/mail/issues/new/choose) and open any questions and support tickets at [the community forum](https://help.nextcloud.com/c/apps/mail).
+We are also available on [our public Mail development chat](https://cloud.nextcloud.com/call/5qb8fujz), if you want to join the development discussion. Please report bugs [here on Github](https://github.com/nextcloud/mail/issues/new/choose) and open any questions and support tickets at [the community forum](https://help.nextcloud.com/c/apps/mail).
 
 ## Documentation
 

@@ -29,13 +29,13 @@ namespace OCA\Mail\SMTP;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
+use Horde_Smtp_Password_Xoauth2;
 use OCA\Mail\Account;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
 class SmtpClientFactory {
-
 	/** @var IConfig */
 	private $config;
 
@@ -46,8 +46,8 @@ class SmtpClientFactory {
 	private $hostNameFactory;
 
 	public function __construct(IConfig $config,
-								ICrypto $crypto,
-								HostNameFactory $hostNameFactory) {
+		ICrypto $crypto,
+		HostNameFactory $hostNameFactory) {
 		$this->config = $config;
 		$this->crypto = $crypto;
 		$this->hostNameFactory = $hostNameFactory;
@@ -65,13 +65,15 @@ class SmtpClientFactory {
 			return new Horde_Mail_Transport_Mail();
 		}
 
-		$password = $mailAccount->getOutboundPassword();
-		$password = $this->crypto->decrypt($password);
+		$decryptedPassword = null;
+		if ($mailAccount->getOutboundPassword() !== null) {
+			$decryptedPassword = $this->crypto->decrypt($mailAccount->getOutboundPassword());
+		}
 		$security = $mailAccount->getOutboundSslMode();
 		$params = [
 			'localhost' => $this->hostNameFactory->getHostName(),
 			'host' => $mailAccount->getOutboundHost(),
-			'password' => $password,
+			'password' => $decryptedPassword,
 			'port' => $mailAccount->getOutboundPort(),
 			'username' => $mailAccount->getOutboundUser(),
 			'secure' => $security === 'none' ? false : $security,
@@ -83,6 +85,15 @@ class SmtpClientFactory {
 				],
 			],
 		];
+		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
+			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+
+			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
+			$params['xoauth2_token'] = new Horde_Smtp_Password_Xoauth2(
+				$account->getEmail(),
+				$decryptedAccessToken,
+			);
+		}
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
 		}

@@ -38,7 +38,6 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LocalAttachmentMapperTest extends TestCase {
-
 	/** @var IDBConnection */
 	private $db;
 
@@ -47,6 +46,9 @@ class LocalAttachmentMapperTest extends TestCase {
 
 	/** @var LocalAttachmentMapper */
 	private $mapper;
+
+	/** @var LocalMessageMapper */
+	private $localMessageMapper;
 
 	/** @var ITimeFactory|MockObject */
 	private $timeFactory;
@@ -58,6 +60,7 @@ class LocalAttachmentMapperTest extends TestCase {
 	private $user1 = 'user45678';
 	/** @var string  */
 	private $user2 = 'dontFindMe';
+	private array $localMessageIds;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -75,7 +78,7 @@ class LocalAttachmentMapperTest extends TestCase {
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 
 		$attachment1 = LocalAttachment::fromParams([
 			'fileName' => 'slimes_in_the_mines.jpeg',

@@ -6,11 +6,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1080Date20201119084820 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -22,16 +22,16 @@ class Version1080Date20201119084820 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$table = $schema->createTable('mail_trusted_senders');
-		$table->addColumn('id', 'integer', [
+		$table->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$table->addColumn('email', 'string', [
+		$table->addColumn('email', Types::STRING, [
 			'notnull' => true,
 			'length' => 255,
 		]);
-		$table->addColumn('user_id', 'string', [
+		$table->addColumn('user_id', Types::STRING, [
 			'notnull' => true,
 			'length' => 64,
 		]);

@@ -96,6 +96,46 @@
 						}}
 					</ActionButton>
 					<ActionButton
+						v-if="isAtLeastOneSelectedNotJunk"
+						:close-after-click="true"
+						@click.prevent="markSelectionJunk">
+						<template #icon>
+							<AlertOctagonIcon
+								:size="20" />
+						</template>
+						{{
+							n(
+								'mail',
+								'Mark {number} as spam',
+								'Mark {number} as spam',
+								selection.length,
+								{
+									number: selection.length,
+								}
+							)
+						}}
+					</ActionButton>
+					<ActionButton
+						v-if="isAtLeastOneSelectedJunk"
+						:close-after-click="true"
+						@click.prevent="markSelectionNotJunk">
+						<template #icon>
+							<AlertOctagonIcon
+								:size="20" />
+						</template>
+						{{
+							n(
+								'mail',
+								'Mark {number} as not spam',
+								'Mark {number} as not spam',
+								selection.length,
+								{
+									number: selection.length,
+								}
+							)
+						}}
+					</ActionButton>
+					<ActionButton
 						:close-after-click="true"
 						@click.prevent="unselectAll">
 						<template #icon>
@@ -106,6 +146,23 @@
 							'mail',
 							'Unselect {number}',
 							'Unselect {number}',
+							selection.length,
+							{
+								number: selection.length,
+							}
+						) }}
+					</ActionButton>
+					<ActionButton
+						:close-after-click="true"
+						@click.prevent="onOpenTagModal">
+						<template #icon>
+							<TagIcon
+								:size="20" />
+						</template>
+						{{ n(
+							'mail',
+							'Edit tags for {number}',
+							'Edit tags for {number}',
 							selection.length,
 							{
 								number: selection.length,
@@ -178,12 +235,8 @@
 			</div>
 		</transition>
 		<transition-group name="list">
-			<div id="list-refreshing"
-				key="loading"
-				class="icon-loading-small"
-				:class="{refreshing: refreshing}" />
 			<Envelope
-				v-for="(env, index) in envelopes"
+				v-for="(env, index) in sortedEnvelops"
 				:key="env.databaseId"
 				:data="env"
 				:mailbox="mailbox"
@@ -192,43 +245,53 @@
 				:has-multiple-accounts="hasMultipleAccounts"
 				:selected-envelopes="selectedEnvelopes"
 				@delete="$emit('delete', env.databaseId)"
-				@update:selected="onEnvelopeSelectToggle(env, index, ...$event)"
+				@update:selected="onEnvelopeSelectToggle(env, index, $event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
-				@click="$emit('loadMore')">
+				@click="$emit('load-more')">
+				<AddIcon :size="20" />
 				{{ t('mail', 'Load more') }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
+		<TagModal
+			v-if="showTagModal"
+			:account="account"
+			:envelopes="selectedEnvelopes"
+			@close="onCloseTagModal" />
 	</div>
 </template>
 
 <script>
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { NcActions as Actions, NcActionButton as ActionButton } from '@nextcloud/vue'
 import { showError } from '@nextcloud/dialogs'
-import Envelope from './Envelope'
-import IconDelete from 'vue-material-design-icons/Delete'
-import ImportantIcon from './icons/ImportantIcon'
-import IconSelect from 'vue-material-design-icons/CloseThick'
-import IconFavorite from 'vue-material-design-icons/Star'
-import logger from '../logger'
-import MoveModal from './MoveModal'
-import { matchError } from '../errors/match'
+import Envelope from './Envelope.vue'
+import IconDelete from 'vue-material-design-icons/Delete.vue'
+import ImportantIcon from './icons/ImportantIcon.vue'
+import IconSelect from 'vue-material-design-icons/CloseThick.vue'
+import AddIcon from 'vue-material-design-icons/Plus.vue'
+import IconFavorite from 'vue-material-design-icons/Star.vue'
+import logger from '../logger.js'
+import MoveModal from './MoveModal.vue'
+import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError
-	from '../errors/NoTrashMailboxConfiguredError'
+	from '../errors/NoTrashMailboxConfiguredError.js'
 import { differenceWith } from 'ramda'
-import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
-import ShareIcon from 'vue-material-design-icons/Share'
+import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import ShareIcon from 'vue-material-design-icons/Share.vue'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
+import TagIcon from 'vue-material-design-icons/Tag.vue'
+import TagModal from './TagModal.vue'
 
 export default {
 	name: 'EnvelopeList',
 	components: {
 		Actions,
+		AddIcon,
 		ActionButton,
 		Envelope,
 		IconDelete,
@@ -238,6 +301,9 @@ export default {
 		MoveModal,
 		OpenInNewIcon,
 		ShareIcon,
+		AlertOctagonIcon,
+		TagIcon,
+		TagModal,
 	},
 	props: {
 		account: {
@@ -276,10 +342,23 @@ export default {
 		return {
 			selection: [],
 			showMoveModal: false,
+			showTagModal: false,
 			lastToggledIndex: undefined,
 		}
 	},
 	computed: {
+		sortOrder() {
+			return this.$store.getters.getPreference('sort-order', 'newest')
+		},
+
+		sortedEnvelops() {
+			if (this.sortOrder === 'oldest') {
+				return [...this.envelopes].sort((a, b) => {
+					return a.dateInt < b.dateInt ? -1 : 1
+				})
+			}
+			return [...this.envelopes]
+		},
 		selectMode() {
 			// returns true when in selection mode (where the user selects several emails at once)
 			return this.selection.length > 0
@@ -304,20 +383,32 @@ export default {
 					.some((tag) => tag.imapLabel === '$label1')
 			})
 		},
+		isAtLeastOneSelectedJunk() {
+			// returns true if at least one selected message is marked as junk
+			return this.selectedEnvelopes.some((env) => {
+				return env.flags.$junk
+			})
+		},
+		isAtLeastOneSelectedNotJunk() {
+			// returns true if at least one selected message is not marked as not junk
+			return this.selectedEnvelopes.some((env) => {
+				return !env.flags.$junk
+			})
+		},
 		areAllSelectedFavorite() {
 			// returns false if at least one selected message has not been favorited yet
 			return this.selectedEnvelopes.every((env) => env.flags.flagged === true)
 		},
 		selectedEnvelopes() {
-			return this.envelopes.filter((env) => this.selection.includes(env.databaseId))
+			return this.sortedEnvelops.filter((env) => this.selection.includes(env.databaseId))
 		},
 		hasMultipleAccounts() {
-			const mailboxIds = this.envelopes.map(envelope => envelope.mailboxId)
+			const mailboxIds = this.sortedEnvelops.map(envelope => envelope.mailboxId)
 			return Array.from(new Set(mailboxIds)).length > 1
 		},
 	},
 	watch: {
-		envelopes(newVal, oldVal) {
+		sortedEnvelops(newVal, oldVal) {
 			// Unselect vanished envelopes
 			const newIds = newVal.map((env) => env.databaseId)
 			this.selection = this.selection.filter((id) => newIds.includes(id))
@@ -328,10 +419,10 @@ export default {
 		},
 	},
 	mounted() {
-		dragEventBus.$on('envelopesDropped', this.unselectAll)
+		dragEventBus.$on('envelopes-dropped', this.unselectAll)
 	},
 	beforeDestroy() {
-		dragEventBus.$off('envelopesDropped', this.unselectAll)
+		dragEventBus.$off('envelopes-dropped', this.unselectAll)
 	},
 	methods: {
 		isEnvelopeSelected(idx) {
@@ -369,6 +460,28 @@ export default {
 			})
 			this.unselectAll()
 		},
+		async markSelectionJunk() {
+			for (const envelope of this.selectedEnvelopes) {
+				if (!envelope.flags.$junk) {
+					await this.$store.dispatch('toggleEnvelopeJunk', {
+						envelope,
+						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
+					})
+				}
+			}
+			this.unselectAll()
+		},
+		async markSelectionNotJunk() {
+			for (const envelope of this.selectedEnvelopes) {
+				if (envelope.flags.$junk) {
+					await this.$store.dispatch('toggleEnvelopeJunk', {
+						envelope,
+						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
+					})
+				}
+			}
+			this.unselectAll()
+		},
 		favoriteOrUnfavoriteAll() {
 			const favFlag = !this.areAllSelectedFavorite
 			this.selectedEnvelopes.forEach((envelope) => {
@@ -383,7 +496,7 @@ export default {
 			let nextEnvelopeToNavigate
 			let isAllSelected
 
-			if (this.selectedEnvelopes.length === this.envelopes.length) {
+			if (this.selectedEnvelopes.length === this.sortedEnvelops.length) {
 				isAllSelected = true
 			} else {
 				const indexSelectedEnvelope = this.selectedEnvelopes.findIndex((selectedEnvelope) =>
@@ -392,13 +505,13 @@ export default {
 				// one of threads is selected
 				if (indexSelectedEnvelope !== -1) {
 					const lastSelectedEnvelope = this.selectedEnvelopes[this.selectedEnvelopes.length - 1]
-					const diff = this.envelopes.filter(envelope => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
+					const diff = this.sortedEnvelops.filter(envelope => envelope === lastSelectedEnvelope || !this.selectedEnvelopes.includes(envelope))
 					const lastIndex = diff.indexOf(lastSelectedEnvelope)
 					nextEnvelopeToNavigate = diff[lastIndex === 0 ? 1 : lastIndex - 1]
 				}
 			}
 
-			await Promise.all(this.selectedEnvelopes.map(async(envelope) => {
+			await Promise.all(this.selectedEnvelopes.map(async (envelope) => {
 				logger.info(`deleting thread ${envelope.threadRootId}`)
 				await this.$store.dispatch('deleteThread', {
 					envelope,
@@ -462,12 +575,12 @@ export default {
 			const end = Math.max(this.lastToggledIndex, index)
 			const selected = this.selection.includes(envelope.databaseId)
 			for (let i = start; i <= end; i++) {
-				this.setEnvelopeSelected(this.envelopes[i], !selected)
+				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
 			}
 			this.lastToggledIndex = index
 		},
 		unselectAll() {
-			this.envelopes.forEach((env) => {
+			this.sortedEnvelops.forEach((env) => {
 				env.flags.selected = false
 			})
 			this.selection = []
@@ -475,9 +588,15 @@ export default {
 		onOpenMoveModal() {
 			this.showMoveModal = true
 		},
+		onOpenTagModal() {
+			this.showTagModal = true
+		},
+		onCloseTagModal() {
+			this.showTagModal = false
+		},
 		async forwardSelectedAsAttachment() {
-			await this.$store.dispatch('showMessageComposer', {
-				forwardedMessages: this.selection,
+			await this.$store.dispatch('startComposerSession', {
+				forwardedMessages: [...this.selection],
 			})
 			this.unselectAll()
 		},
@@ -500,6 +619,11 @@ div {
 	margin-top: 10px;
 	cursor: pointer;
 	color: var(--color-text-maxcontrast);
+	display: inline-flex;
+	gap: 15px;
+}
+.plus-icon {
+	margin-left: 20px;
 }
 
 .multiselect-header {
@@ -522,30 +646,9 @@ div {
 }
 
 /* TODO: put this in core icons.css as general rule for buttons with icons */
-#load-more-mail-messages.icon-loading-small {
+#load-more-mail-messages {
 	padding-left: 32px;
 	background-position: 9px center;
-}
-
-#list-refreshing {
-	position: absolute;
-	left: calc(50% - 8px);
-	overflow: hidden;
-	padding: 12px;
-	background-color: var(--color-main-background);
-	z-index: 1;
-	border-radius: var(--border-radius-pill);
-	border: 1px solid var(--color-border);
-	top: -24px;
-	opacity: 0;
-	transition-property: top, opacity;
-	transition-duration: 0.5s;
-	transition-timing-function: ease-in-out;
-
-	&.refreshing {
-		top: 4px;
-		opacity: 1;
-	}
 }
 
 .multiselect-header-enter-active,

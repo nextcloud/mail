@@ -28,11 +28,10 @@ export default {
 	align-items: center;
 	flex-direction: column;
 	padding: 10px 10px 0 10px;
-}
 
-.list-item-content__actions--primary .action--primary .action-button__text {
-	font-size: 14px;
-	margin-top: -8px;
+	.material-design-icon {
+		margin-bottom: -15px;
+	}
 }
 
 .list-item-content__actions--primary .action--primary .action-button__text,

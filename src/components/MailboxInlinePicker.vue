@@ -10,6 +10,7 @@
 <script>
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { mailboxHasRights } from '../util/acl.js'
 
 export default {
 	name: 'MailboxInlinePicker',
@@ -27,7 +28,7 @@ export default {
 		},
 		value: {
 			type: Number,
-			required: false,
+			default: undefined,
 		},
 	},
 	data() {
@@ -56,6 +57,7 @@ export default {
 			} else {
 				mailboxes = this.$store.getters.getSubMailboxes(mailboxId)
 			}
+			mailboxes = mailboxes.filter(mailbox => mailboxHasRights(mailbox, 'i'))
 			return mailboxes.map((mailbox) => {
 				 return {
 					id: mailbox.databaseId,
@@ -78,9 +80,26 @@ export default {
 }
 .vue-treeselect--searchable .vue-treeselect__input-container {
 	padding-left: 0;
+	background-color: var(--color-main-background)
 }
 input.vue-treeselect__input {
 	margin: 0;
 	padding: 0;
 }
+.vue-treeselect__menu {
+	background: var(--color-main-background);
+}
+.vue-treeselect--single .vue-treeselect__option--selected {
+	background: var(--color-primary-element-light);
+	border-radius: var(--border-radius-large);
+}
+.vue-treeselect__option.vue-treeselect__option--highlight,
+.vue-treeselect__option:hover,
+.vue-treeselect__option:focus {
+	border-radius: var(--border-radius-large);
+	}
+.vue-treeselect__placeholder, .vue-treeselect__single-value {
+	line-height: 44px;
+}
+
 </style>

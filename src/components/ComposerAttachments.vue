@@ -3,8 +3,9 @@
   - @copyright 2020 Gary Kim <gary@garykim.dev>
   -
   - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author Richard Steinmetz <richard@steinmetz.cloud>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -22,14 +23,21 @@
 
 <template>
 	<div class="new-message-attachments">
-		<div v-if="hasNextLine" class="message-attachments-count" @click="isToggle = !isToggle">
+		<div v-if="hasNextLine"
+			class="new-message-attachments--counter"
+			:class="{ 'new-message-attachments--counter--with-errors': hasAttachmentErrors }"
+			@click="isToggle = !isToggle">
 			<span>
 				{{ n('mail', '{count} attachment', '{count} attachments', attachments.length, { count: attachments.length }) }} ({{ formatBytes(totalSizeOfUpload()) }})
 			</span>
 			<ChevronUp v-if="isToggle" :size="24" />
 			<ChevronDown v-if="!isToggle" :size="24" />
 		</div>
-		<ul class="new-message-attachments--list" :class="isToggle ? 'hide' : (hasNextLine ? 'active' : '')">
+		<ul class="new-message-attachments--list"
+			:class="{
+				hide: isToggle,
+				active: !isToggle && hasNextLine,
+			}">
 			<ComposerAttachment
 				v-for="attachment in attachments"
 				ref="attachments"
@@ -49,26 +57,26 @@
 </template>
 
 <script>
-import map from 'lodash/fp/map'
-import trimStart from 'lodash/fp/trimCharsStart'
+import map from 'lodash/fp/map.js'
+import trimStart from 'lodash/fp/trimCharsStart.js'
 import { getRequestToken } from '@nextcloud/auth'
 import { formatFileSize } from '@nextcloud/files'
-import prop from 'lodash/fp/prop'
+import prop from 'lodash/fp/prop.js'
 import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
-import sumBy from 'lodash/fp/sumBy'
+import sumBy from 'lodash/fp/sumBy.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
 import Vue from 'vue'
 
-import logger from '../logger'
-import { getFileData } from '../service/FileService'
-import { shareFile } from '../service/FileSharingService'
-import { uploadLocalAttachment } from '../service/AttachmentService'
+import logger from '../logger.js'
+import { getFileData } from '../service/FileService.js'
+import { shareFile } from '../service/FileSharingService.js'
+import { uploadLocalAttachment } from '../service/AttachmentService.js'
 
 import ComposerAttachment from './ComposerAttachment.vue'
 
-import ChevronDown from 'vue-material-design-icons/ChevronDown'
-import ChevronUp from 'vue-material-design-icons/ChevronUp'
+import ChevronDown from 'vue-material-design-icons/ChevronDown.vue'
+import ChevronUp from 'vue-material-design-icons/ChevronUp.vue'
 
 const mimes = [
 	'image/gif',
@@ -110,6 +118,9 @@ export default {
 		}
 	},
 	computed: {
+		hasAttachmentErrors() {
+			return this.attachments.some(attachment => attachment.error)
+		},
 		uploadProgress() {
 			let uploaded = 0
 			let total = 0
@@ -153,9 +164,10 @@ export default {
 		},
 	},
 	created() {
-		this.bus.$on('onAddLocalAttachment', this.onAddLocalAttachment)
-		this.bus.$on('onAddCloudAttachment', this.onAddCloudAttachment)
-		this.bus.$on('onAddCloudAttachmentLink', this.onAddCloudAttachmentLink)
+		this.bus.$on('on-add-local-attachment', this.onAddLocalAttachment)
+		this.bus.$on('on-add-cloud-attachment', this.onAddCloudAttachment)
+		this.bus.$on('on-add-cloud-attachment-link', this.onAddCloudAttachmentLink)
+		this.bus.$on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.value.map(attachment => {
 			this.attachments.push({
 				id: attachment.id,
@@ -249,15 +261,7 @@ export default {
 							})
 						})
 						.then(({ file, id }) => {
-							logger.info('uploaded')
-							this.attachments.some((attachment, i) => {
-								if (attachment.displayName === file.name) {
-									this.attachments[i].id = id
-									this.attachments[i].finished = true
-									return true
-								}
-								return false
-							})
+							logger.info('local attachment uploaded', { file, id })
 
 							this.emitNewAttachments([{
 								fileName: file.name,
@@ -268,7 +272,7 @@ export default {
 							}])
 						})
 				} catch (error) {
-
+					logger.error('Could not upload file', { file, error })
 				}
 			}, e.target.files)
 
@@ -339,6 +343,25 @@ export default {
 				logger.error('could not choose a file as attachment link', { error })
 			}
 		},
+		/**
+		 * Add a forwarded message as an attachment
+		 *
+		 * @param {object} data Payload
+		 * @param {number} data.id Database id of the message to forward as an attachment
+		 * @param {string} data.fileName File name of the attachment
+		 */
+		onAddMessageAsAttachment({ id, fileName }) {
+			const attachment = {
+				type: 'message',
+				id,
+				fileName,
+			}
+			this.attachments.push({
+				...attachment,
+				finished: true,
+			})
+			this.emitNewAttachments([attachment])
+		},
 		showAttachmentFileSizeWarning(num) {
 			showWarning(n(
 				'mail',
@@ -379,7 +402,7 @@ export default {
 			)
 		},
 		appendToBodyAtCursor(toAppend) {
-			this.bus.$emit('appendToBodyAtCursor', toAppend)
+			this.bus.$emit('append-to-body-at-cursor', toAppend)
 		},
 		formatBytes(bytes, decimals = 2) {
 			if (bytes === 0) return '0 B'
@@ -422,7 +445,19 @@ export default {
 <style scoped lang="scss">
 
 .new-message-attachments {
-	ul.new-message-attachments--list {
+	&--counter {
+		color: var(--color-text-maxcontrast);
+		padding: 10px 20px;
+		cursor:pointer;
+		display:flex;
+		align-items: center;
+
+		&--with-errors {
+			color:red;
+		}
+	}
+
+	&--list {
 		display: flex;
 		flex-wrap: wrap;
 		// 2 and a half attachment height
@@ -440,14 +475,6 @@ export default {
 			overflow: auto;
 			max-height: 287px;
 		}
-	}
-
-	.message-attachments-count {
-		color: var(--color-text-maxcontrast);
-		padding: 10px 20px;
-		cursor:pointer;
-		display:flex;
-		align-items: center;
 	}
 }
 </style>

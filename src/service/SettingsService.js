@@ -3,7 +3,7 @@
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -67,4 +67,21 @@ export const setAntiSpamEmail = (email) => {
 export const deleteAntiSpamEmail = () => {
 	return axios.delete(generateUrl('/apps/mail/api/settings/antispam'))
 		.then((resp) => resp.data)
+}
+
+export const updateAllowNewMailAccounts = (allowed) => {
+	const url = generateUrl('/apps/mail/api/settings/allownewaccounts')
+	const data = {
+		allowed,
+	}
+	return axios.post(url, data).then((resp) => resp.data)
+}
+
+export const updateEnabledThreadSummary = async (enabled) => {
+	const url = generateUrl('/apps/mail/api/settings/threadsummary')
+	const data = {
+		enabled,
+	}
+	const resp = await axios.put(url, data)
+	return resp.data
 }

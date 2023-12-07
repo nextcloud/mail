@@ -29,7 +29,6 @@ namespace OCA\Mail\BackgroundJob;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
-use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 
 use OCA\Mail\Exception\ServiceException;
@@ -42,33 +41,21 @@ use OCP\BackgroundJob\QueuedJob;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantJob extends QueuedJob {
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MailAccountMapper */
-	private $mailAccountMapper;
-
-	/** @var MailManager */
-	private $mailManager;
-
-	/** @var MigrateImportantFromImapAndDb */
-	private $migration;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var IMAPClientFactory  */
-	private $imapClientFactory;
+	private MailboxMapper $mailboxMapper;
+	private MailAccountMapper $mailAccountMapper;
+	private MailManager $mailManager;
+	private MigrateImportantFromImapAndDb $migration;
+	private LoggerInterface $logger;
+	private IMAPClientFactory $imapClientFactory;
 
 	public function __construct(MailboxMapper $mailboxMapper,
-								MailAccountMapper $mailAccountMapper,
-								MailManager $mailManager,
-								MigrateImportantFromImapAndDb $migration,
-								LoggerInterface $logger,
-								ITimeFactory $timeFactory,
-								IMAPClientFactory $imapClientFactory
-								) {
+		MailAccountMapper $mailAccountMapper,
+		MailManager $mailManager,
+		MigrateImportantFromImapAndDb $migration,
+		LoggerInterface $logger,
+		ITimeFactory $timeFactory,
+		IMAPClientFactory $imapClientFactory
+	) {
 		parent::__construct($timeFactory);
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
@@ -86,7 +73,6 @@ class MigrateImportantJob extends QueuedJob {
 	public function run($argument) {
 		$mailboxId = (int)$argument['mailboxId'];
 		try {
-			/** @var Mailbox $mailbox*/
 			$mailbox = $this->mailboxMapper->findById($mailboxId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Could not find mailbox <' . $mailboxId . '>');

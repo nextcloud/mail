@@ -25,24 +25,23 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use function array_map;
-use function array_chunk;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IL10N;
+use function array_chunk;
+use function array_map;
 
 /**
  * @template-extends QBMapper<Tag>
  */
 class TagMapper extends QBMapper {
-
 	/** @var IL10N */
 	private $l10n;
 
 	public function __construct(IDBConnection $db,
-								IL10N $l10n) {
+		IL10N $l10n) {
 		parent::__construct($db, 'mail_tags');
 		$this->l10n = $l10n;
 	}
@@ -69,9 +68,9 @@ class TagMapper extends QBMapper {
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-					$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT)),
-					$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
-				);
+				$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT)),
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+			);
 		return $this->findEntity($qb);
 	}
 
@@ -83,8 +82,8 @@ class TagMapper extends QBMapper {
 		$qb->select('*')
 			->from($this->getTableName())
 			->where(
-					$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
-				);
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId))
+			);
 		return $this->findEntities($qb);
 	}
 
@@ -104,7 +103,7 @@ class TagMapper extends QBMapper {
 		$qb->insert('mail_message_tags')
 		   ->setValue('imap_message_id', $qb->createNamedParameter($messageId))
 		   ->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
-		$qb->execute();
+		$qb->executeStatement();
 	}
 
 	/**
@@ -117,7 +116,7 @@ class TagMapper extends QBMapper {
 		$qb->delete('mail_message_tags')
 			->where($qb->expr()->eq('imap_message_id', $qb->createNamedParameter($messageId)))
 			->andWhere($qb->expr()->eq('tag_id', $qb->createNamedParameter($tag->getId())));
-		$qb->execute();
+		$qb->executeStatement();
 	}
 
 	/**
@@ -126,7 +125,7 @@ class TagMapper extends QBMapper {
 	 * @return Tag[][]
 	 */
 	public function getAllTagsForMessages(array $messages, string $userId): array {
-		$ids = array_map(function (Message $message) {
+		$ids = array_map(static function (Message $message) {
 			return $message->getMessageId();
 		}, $messages);
 
@@ -142,7 +141,7 @@ class TagMapper extends QBMapper {
 
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
-			$queryResult = $tagsQuery->execute();
+			$queryResult = $tagsQuery->executeQuery();
 
 			while (($row = $queryResult->fetch()) !== false) {
 				$messageId = $row['imap_message_id'];
@@ -153,7 +152,7 @@ class TagMapper extends QBMapper {
 				// Construct a Tag instance but omit any other joined columns
 				$tags[$messageId][] = Tag::fromRow(array_filter(
 					$row,
-					function (string $key) {
+					static function (string $key) {
 						return $key !== 'imap_message_id';
 					},
 					ARRAY_FILTER_USE_KEY
@@ -188,7 +187,7 @@ class TagMapper extends QBMapper {
 		$messageIds = [];
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$tagsQuery->setParameter('ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
-			$queryResult = $tagsQuery->execute();
+			$queryResult = $tagsQuery->executeQuery();
 
 			while (($row = $queryResult->fetch()) !== false) {
 				$messageIds[] = $row['imap_message_id'];
@@ -216,36 +215,36 @@ class TagMapper extends QBMapper {
 			$tag->setImapLabel('$label' . $i);
 			$tag->setUserId($account->getUserId());
 			switch ($i) {
-					case 1:
-						$tag->setDisplayName($this->l10n->t('Important'));
-						$tag->setColor('#FF7A66');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 2:
-						$tag->setDisplayName($this->l10n->t('Work'));
-						$tag->setColor('#31CC7C');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 3:
-						$tag->setDisplayName($this->l10n->t('Personal'));
-						$tag->setColor('#A85BF7');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 4:
-						$tag->setDisplayName($this->l10n->t('To Do'));
-						$tag->setColor('#317CCC');
-						$tag->setIsDefaultTag(true);
-						break;
-					case 5:
-						$tag->setDisplayName($this->l10n->t('Later'));
-						$tag->setColor('#B4A443');
-						$tag->setIsDefaultTag(true);
-						break;
+				case 1:
+					$tag->setDisplayName($this->l10n->t('Important'));
+					$tag->setColor('#FF7A66');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 2:
+					$tag->setDisplayName($this->l10n->t('Work'));
+					$tag->setColor('#31CC7C');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 3:
+					$tag->setDisplayName($this->l10n->t('Personal'));
+					$tag->setColor('#A85BF7');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 4:
+					$tag->setDisplayName($this->l10n->t('To Do'));
+					$tag->setColor('#317CCC');
+					$tag->setIsDefaultTag(true);
+					break;
+				case 5:
+					$tag->setDisplayName($this->l10n->t('Later'));
+					$tag->setColor('#B4A443');
+					$tag->setIsDefaultTag(true);
+					break;
 			}
 			$tags[] = $tag;
 		}
 		$dbTags = $this->getAllTagsForUser($account->getUserId());
-		$toInsert = array_udiff($tags, $dbTags, function (Tag $a, Tag $b) {
+		$toInsert = array_udiff($tags, $dbTags, static function (Tag $a, Tag $b) {
 			return strcmp($a->getImapLabel(), $b->getImapLabel());
 		});
 		foreach ($toInsert as $entity) {
@@ -261,12 +260,12 @@ class TagMapper extends QBMapper {
 			$qb->expr()->gt('mt1.id', 'mt2.id'),
 			$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
 			$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
-			)
+		)
 		);
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
-		$ids = array_unique(array_map(function ($row) {
+		$ids = array_unique(array_map(static function ($row) {
 			return $row['id'];
 		}, $rows));
 
@@ -275,31 +274,65 @@ class TagMapper extends QBMapper {
 			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
 			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteQB->execute();
+			$deleteQB->executeStatement();
 		}
 	}
 
+	/**
+	 * Deletes orphans in the table mail_message_tags.
+	 *
+	 * Also deletes all tags (mail_tags) associated with a user if the user no longer exists.
+	 * Otherwise, the tags will be kept for other mail accounts of the user.
+	 */
 	public function deleteOrphans(): void {
+		// Deletes orphans in the table mail_message_tags
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('mt.id')
-		->from('mail_message_tags', 'mt')
-		->leftJoin('mt', $this->getTableName(), 't', $qb->expr()->eq('t.id', 'mt.tag_id'))
-		->where($qb->expr()->isNull('t.id'));
-		$result = $qb->execute();
+		->from('mail_messages', 'm')
+		->rightJoin('m', 'mail_message_tags', 'mt', $qb->expr()->eq('m.message_id', 'mt.imap_message_id'))
+		->where($qb->expr()->isNull('m.message_id'));
+		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 
-		$ids = array_map(function (array $row) {
+		$ids = array_map(static function (array $row) {
 			return $row['id'];
 		}, $rows);
 
-		$deleteQB = $this->db->getQueryBuilder();
-		$deleteQB->delete('mail_message_tags')
-			->where($deleteQB->expr()->in('id', $deleteQB->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
+		$deleteMT = $this->db->getQueryBuilder();
+		$deleteMT->delete('mail_message_tags')
+			->where($deleteMT->expr()->in('id', $deleteMT->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY));
 		foreach (array_chunk($ids, 1000) as $chunk) {
-			$deleteQB->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteQB->execute();
+			$deleteMT->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$deleteMT->executeStatement();
 		}
+
+		// Deletes all tags associated with a user if the user no longer exists
+		$qb2 = $this->db->getQueryBuilder();
+
+		$qb2->select('tags.user_id')
+			->from('mail_tags', 'tags')
+			->leftJoin('tags', 'accounts', 'user', $qb2->expr()->eq('tags.user_id', 'user.uid'))
+			->where($qb2->expr()->isNull('user.uid'))
+			->groupBy('user_id');
+		$result = $qb2->executeQuery();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		$user_ids = array_map(static function (array $row) {
+			return $row['user_id'];
+		}, $rows);
+
+		$deleteT = $this->db->getQueryBuilder();
+		$deleteT->delete('mail_tags')
+			->where(
+				$deleteT->expr()->in('user_id', $deleteT->createParameter('user_ids'), IQueryBuilder::PARAM_STR_ARRAY)
+			);
+		foreach (array_chunk($user_ids, 1000) as $chunk) {
+			$deleteT->setParameter('user_ids', $chunk, IQueryBuilder::PARAM_STR_ARRAY);
+			$deleteT->executeStatement();
+		}
+
 	}
 }

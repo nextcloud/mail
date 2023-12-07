@@ -31,11 +31,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ExportAccount extends Command {
 	public const ARGUMENT_USER_ID = 'user-id';
 
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ICrypto */
-	private $crypto;
+	private AccountService $accountService;
+	private ICrypto $crypto;
 
 	public function __construct(AccountService $service, ICrypto $crypto) {
 		parent::__construct();
@@ -62,6 +59,7 @@ class ExportAccount extends Command {
 			$output->writeln("<info>Account " . $account->getId() . ":</info>");
 			$output->writeln("- E-Mail: " . $account->getEmail());
 			$output->writeln("- Name: " . $account->getName());
+			$output->writeln("- Provision: " . ($account->getMailAccount()->getProvisioningId() ? "set" : "none"). " ID: " . ($account->getMailAccount()->getProvisioningId() ? $account->getMailAccount()->getProvisioningId():"N/A"));
 			$output->writeln("- IMAP user: " . $account->getMailAccount()->getInboundUser());
 			$output->writeln("- IMAP host: " . $account->getMailAccount()->getInboundHost() . ":" . $account->getMailAccount()->getInboundPort() . ", security: " . $account->getMailAccount()->getInboundSslMode());
 			$output->writeln("- SMTP user: " . $account->getMailAccount()->getOutboundUser());

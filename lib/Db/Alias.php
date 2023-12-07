@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Jakob Sack <mail@jakobsack.de>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -38,8 +39,14 @@ use ReturnTypeWillChange;
  * @method string|null getSignature()
  * @method void setProvisioningId(int $provisioningId)
  * @method int|null getProvisioningId()
+ * @method int getSignatureMode()
+ * @method void setSignatureMode(int $signatureMode)
+ * @method int|null getSmimeCertificateId()
+ * @method void setSmimeCertificateId(int|null $smimeCertificateId)
  */
 class Alias extends Entity implements JsonSerializable {
+	public const SIGNATURE_MODE_PLAIN = MailAccount::SIGNATURE_MODE_PLAIN;
+	public const SIGNATURE_MODE_HTML = MailAccount::SIGNATURE_MODE_HTML;
 
 	/** @var int */
 	protected $accountId;
@@ -56,11 +63,19 @@ class Alias extends Entity implements JsonSerializable {
 	/** @var int|null */
 	protected $provisioningId;
 
+	/** @var integer */
+	protected $signatureMode;
+
+	/** @var int|null */
+	protected $smimeCertificateId;
+
 	public function __construct() {
 		$this->addType('accountId', 'int');
 		$this->addType('name', 'string');
 		$this->addType('alias', 'string');
 		$this->addType('provisioningId', 'int');
+		$this->addType('signatureMode', 'int');
+		$this->addType('smimeCertificateId', 'int');
 	}
 
 	public function isProvisioned(): bool {
@@ -75,6 +90,8 @@ class Alias extends Entity implements JsonSerializable {
 			'alias' => $this->getAlias(),
 			'signature' => $this->getSignature(),
 			'provisioned' => $this->isProvisioned(),
+			'signatureMode' => $this->getSignatureMode(),
+			'smimeCertificateId' => $this->getSmimeCertificateId(),
 		];
 	}
 }

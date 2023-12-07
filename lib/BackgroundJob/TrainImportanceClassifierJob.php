@@ -34,32 +34,20 @@ use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
 use Throwable;
-use function defined;
-use function method_exists;
 
 class TrainImportanceClassifierJob extends TimedJob {
-
-	/** @var AccountService */
-	private $accountService;
-
-	/** @var ImportanceClassifier */
-	private $classifier;
-
-	/** @var IJobList */
-	private $jobList;
-
-	/** @var IUserPreferences */
-	private $preferences;
-
-	/** @var LoggerInterface */
-	private $logger;
+	private AccountService $accountService;
+	private ImportanceClassifier $classifier;
+	private IJobList $jobList;
+	private IUserPreferences $preferences;
+	private LoggerInterface $logger;
 
 	public function __construct(ITimeFactory $time,
-								AccountService $accountService,
-								ImportanceClassifier $classifier,
-								IJobList $jobList,
-								IUserPreferences $preferences,
-								LoggerInterface $logger) {
+		AccountService $accountService,
+		ImportanceClassifier $classifier,
+		IJobList $jobList,
+		IUserPreferences $preferences,
+		LoggerInterface $logger) {
 		parent::__construct($time);
 
 		$this->accountService = $accountService;
@@ -68,12 +56,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 		$this->logger = $logger;
 
 		$this->setInterval(24 * 60 * 60);
-		/**
-		 * @todo remove checks with 24+
-		 */
-		if (defined('\OCP\BackgroundJob\IJob::TIME_INSENSITIVE') && method_exists($this, 'setTimeSensitivity')) {
-			$this->setTimeSensitivity(self::TIME_INSENSITIVE);
-		}
+		$this->setTimeSensitivity(self::TIME_INSENSITIVE);
 		$this->preferences = $preferences;
 	}
 

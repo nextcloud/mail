@@ -32,7 +32,6 @@ use OCA\Mail\Tests\Integration\TestCase;
 use OCP\AppFramework\Http\JSONResponse;
 
 class SettingsControllerTest extends TestCase {
-
 	/** @var ServiceMockObject */
 	private $mock;
 
@@ -55,6 +54,18 @@ class SettingsControllerTest extends TestCase {
 		$response = $this->controller->provision();
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
+	}
+
+	public function testCreateProvisioning(): void {
+		$provisioning = new Provisioning();
+		$this->mock->getParameter('provisioningManager')
+			->expects(self::once())
+			->method('newProvisioning')
+			->willReturn($provisioning);
+
+		$response = $this->controller->createProvisioning([]);
+
+		self::assertEquals(new JSONResponse($provisioning), $response);
 	}
 
 	public function testDeprovision() {

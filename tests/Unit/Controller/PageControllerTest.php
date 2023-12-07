@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -30,23 +31,29 @@ use OCA\Mail\Controller\PageController;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUser;
+use OCP\IUserManager;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class PageControllerTest extends TestCase {
-
 	/** @var string */
 	private $appName;
 
@@ -65,11 +72,17 @@ class PageControllerTest extends TestCase {
 	/** @var AccountService|MockObject */
 	private $accountService;
 
+	/** @var AiIntegrationsService|MockObject */
+	private $aiIntegrationsService;
+
 	/** @var AliasesService|MockObject */
 	private $aliasesService;
 
 	/** @var IUserSession|MockObject */
 	private $userSession;
+
+	/** @var IUserManager|MockObject */
+	private $userManager;
 
 	/** @var IUserPreferences|MockObject */
 	private $preferences;
@@ -89,18 +102,30 @@ class PageControllerTest extends TestCase {
 	/** @var OutboxService|MockObject */
 	private $outboxService;
 
+	/** @var IEventDispatcher|MockObject */
+	private $eventDispatcher;
+
+	/** @var ICredentialStore|MockObject */
+	private $credentialStore;
+
 	/** @var PageController */
 	private $controller;
+
+	private SmimeService $smimeService;
+
+	/** @var ContainerInterface|MockObject */
+	private $container;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->appName = 'mail';
-		$this->userId = 'george';
+		$this->userId = 'jane';
 		$this->request = $this->createMock(IRequest::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->accountService = $this->createMock(AccountService::class);
+		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
@@ -109,6 +134,11 @@ class PageControllerTest extends TestCase {
 		$this->initialState = $this->createMock(IInitialState::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->outboxService = $this->createMock(OutboxService::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
+		$this->credentialStore = $this->createMock(ICredentialStore::class);
+		$this->smimeService = $this->createMock(SmimeService::class);
+		$this->userManager = $this->createMock(IUserManager::class);
+		$this->container = $this->createMock(ContainerInterface::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -124,7 +154,13 @@ class PageControllerTest extends TestCase {
 			$this->tagMapper,
 			$this->initialState,
 			$this->logger,
-			$this->outboxService
+			$this->outboxService,
+			$this->eventDispatcher,
+			$this->credentialStore,
+			$this->smimeService,
+			$this->aiIntegrationsService,
+			$this->userManager,
+			$this->container,
 		);
 	}
 
@@ -132,13 +168,16 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(5))
+		$this->preferences->expects($this->exactly(8))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
+				[$this->userId, 'sort-order', 'newest', 'newest'],
 				[$this->userId, 'external-avatars', 'true', 'true'],
 				[$this->userId, 'reply-mode', 'top', 'bottom'],
 				[$this->userId, 'collect-data', 'true', 'true'],
+				[$this->userId, 'search-priority-body', 'false', 'false'],
+				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'tag-classified-messages', 'true', 'true'],
 			]);
 		$this->accountService->expects($this->once())
@@ -209,49 +248,80 @@ class PageControllerTest extends TestCase {
 			->method('getSystemValue')
 			->willReturnMap([
 				['debug', false, true],
+				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(2))
+		$this->config->expects($this->exactly(7))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
-				['core', 'backgroundjobs_mode', 'ajax' ]
+				['mail', 'google_oauth_client_id' ],
+				['mail', 'microsoft_oauth_client_id' ],
+				['mail', 'microsoft_oauth_tenant_id' ],
+				['core', 'backgroundjobs_mode', 'ajax' ],
+				['mail', 'allow_new_mail_accounts', 'yes'],
+				['mail', 'enabled_thread_summary', 'no'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
-				$this->returnValue('cron')
+				$this->returnValue(''),
+				$this->returnValue(''),
+				$this->returnValue(''),
+				$this->returnValue('cron'),
+				$this->returnValue('yes'),
+				$this->returnValue('no')
 			);
-		$user->expects($this->once())
-			->method('getDisplayName')
-			->will($this->returnValue('Jane Doe'));
+
+
 		$user->method('getUID')
 			->will($this->returnValue('jane'));
+		$this->userManager->expects($this->once())
+		->method('getDisplayName')
+		->with($this->equalTo('jane'))
+		->will($this->returnValue('Jane Doe'));
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->exactly(8))
+
+		$loginCredentials = $this->createMock(ICredentials::class);
+		$loginCredentials->expects($this->once())
+			->method('getPassword')
+			->willReturn(null);
+		$this->credentialStore->expects($this->once())
+			->method('getLoginCredentials')
+			->willReturn($loginCredentials);
+
+		$this->initialState->expects($this->exactly(15))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
+				['ncVersion', '26.0.0'],
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],
+				['sort-order', 'newest'],
+				['password-is-unavailable', true],
 				['prefill_displayName', 'Jane Doe'],
 				['prefill_email', 'jane@doe.cz'],
 				['outbox-messages', []],
-				['disable-scheduled-send', false]
+				['disable-scheduled-send', false],
+				['disable-snooze', false],
+				['allow-new-accounts', true],
+				['enabled_thread_summary', false],
+				['smime-certificates', []],
 			);
 
-		$expected = new TemplateResponse($this->appName, 'index',
-			[
-				'attachment-size-limit' => 123,
-				'external-avatars' => 'true',
-				'reply-mode' => 'bottom',
-				'app-version' => '1.2.3',
-				'collect-data' => 'true',
-				'tag-classified-messages' => 'true',
-			]);
+		$expected = new TemplateResponse($this->appName, 'index', [
+			'attachment-size-limit' => 123,
+			'external-avatars' => 'true',
+			'reply-mode' => 'bottom',
+			'app-version' => '1.2.3',
+			'collect-data' => 'true',
+			'start-mailbox-id' => '123',
+			'tag-classified-messages' => 'true',
+			'search-priority-body' => 'false',
+		]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$expected->setContentSecurityPolicy($csp);

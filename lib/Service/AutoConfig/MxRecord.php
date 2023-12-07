@@ -26,7 +26,6 @@ namespace OCA\Mail\Service\AutoConfig;
 use Psr\Log\LoggerInterface;
 
 class MxRecord {
-
 	/** @var LoggerInterface */
 	private $logger;
 
@@ -36,25 +35,23 @@ class MxRecord {
 
 	/**
 	 * @param $host
-	 * @return false|array
+	 * @return string[]
 	 */
 	public function query(string $host) {
 		if (getmxrr($host, $mxRecords, $mxWeight) === false) {
 			$this->logger->debug("no MX records for host <$host> found");
-			return false;
+			return [];
 		}
-		$mxRecords = array_filter($mxRecords, function ($record) {
+		$mxRecords = array_filter($mxRecords, static function ($record) {
 			return !empty($record);
 		});
+		$this->logger->debug("found " . count($mxRecords) . " MX records for host <$host>");
 		if (empty(($mxRecords))) {
-			$this->logger->debug("all records for <$host>'s MX are empty");
-			return false;
+			return [];
 		}
 
-		$this->logger->debug("found " . count($mxRecords) . " MX records for host <$host>");
-
 		// TODO: sort by weight
-		return $mxRecords;
+		return $this->sanitizedRecords($mxRecords);
 	}
 
 	private function stripSubdomain(string $domain): string {
@@ -66,7 +63,7 @@ class MxRecord {
 		return $second . '.' . $top;
 	}
 
-	public function getSanitizedRecords(array $mxHosts): array {
+	private function sanitizedRecords(array $mxHosts): array {
 		return array_unique(array_merge($mxHosts, array_map([$this, 'stripSubdomain'], $mxHosts)));
 	}
 }

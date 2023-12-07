@@ -51,6 +51,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\IServerContainer;
 use OCP\IUser;
+use OCP\Server;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -101,27 +102,27 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 		$this->user = $this->createTestUser();
 		$this->account = $this->createTestAccount($this->user->getUID());
-		$c = OC::$server->get(ContainerInterface::class);
+		$c = Server::get(ContainerInterface::class);
 		$userContainer = $c->get(IServerContainer::class);
 		$this->userFolder = $userContainer->getUserFolder($this->account->getUserId());
-		$mailManager = OC::$server->get(IMailManager::class);
+		$mailManager = Server::get(IMailManager::class);
 		$this->attachmentService = new AttachmentService(
 			$this->userFolder,
-			OC::$server->get(LocalAttachmentMapper::class),
-			OC::$server->get(AttachmentStorage::class),
+			Server::get(LocalAttachmentMapper::class),
+			Server::get(AttachmentStorage::class),
 			$mailManager,
-			OC::$server->get(\OCA\Mail\IMAP\MessageMapper::class),
+			Server::get(\OCA\Mail\IMAP\MessageMapper::class),
 			new NullLogger()
 		);
 		$this->client = $this->getClient($this->account);
-		$this->mapper = OC::$server->get(LocalMessageMapper::class);
-		$this->transmission = OC::$server->get(IMailTransmission::class);
-		$this->eventDispatcher = OC::$server->get(IEventDispatcher::class);
-		$this->clientFactory = OC::$server->get(IMAPClientFactory::class);
-		$this->accountService = OC::$server->get(AccountService::class);
-		$this->timeFactory = OC::$server->get(ITimeFactory::class);
+		$this->mapper = Server::get(LocalMessageMapper::class);
+		$this->transmission = Server::get(IMailTransmission::class);
+		$this->eventDispatcher = Server::get(IEventDispatcher::class);
+		$this->clientFactory = Server::get(IMAPClientFactory::class);
+		$this->accountService = Server::get(AccountService::class);
+		$this->timeFactory = Server::get(ITimeFactory::class);
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = OC::$server->getDatabaseConnection();
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->execute();
@@ -213,19 +214,20 @@ class OutboxServiceIntegrationTest extends TestCase {
 			->finish();
 		$newUid = $this->saveMessage($inbox->__toString(), $imapMessage, $this->account);
 		/** @var MailboxMapper $mailBoxMapper */
-		$mailBoxMapper = OC::$server->query(MailboxMapper::class);
+		$mailBoxMapper = Server::get(MailboxMapper::class);
 		$dbInbox = $mailBoxMapper->find(new Account($this->account), $inbox->__toString());
 		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
+		$syncService = Server::get(SyncService::class);
 		$syncService->syncMailbox(
 			new Account($this->account),
 			$dbInbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
+			null,
 			false
 		);
 		/** @var MessageMapper $messageMapper */
-		$messageMapper = OC::$server->query(MessageMapper::class);
+		$messageMapper = Server::get(MessageMapper::class);
 		$dbMessages = $messageMapper->findByUids($dbInbox, [$newUid]);
 		$attachments = [
 			[

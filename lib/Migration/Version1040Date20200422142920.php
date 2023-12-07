@@ -6,11 +6,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1040Date20200422142920 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -23,81 +23,81 @@ class Version1040Date20200422142920 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$messagesTable = $schema->createTable('mail_messages');
-		$messagesTable->addColumn('id', 'integer', [
+		$messagesTable->addColumn('id', Types::INTEGER, [
 			'autoincrement' => true,
 			'notnull' => true,
 			'length' => 20,
 		]);
-		$messagesTable->addColumn('uid', 'integer', [
+		$messagesTable->addColumn('uid', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$messagesTable->addColumn('message_id', 'string', [
+		$messagesTable->addColumn('message_id', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
-		$messagesTable->addColumn('mailbox_id', 'integer', [
+		$messagesTable->addColumn('mailbox_id', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 20,
 		]);
-		$messagesTable->addColumn('subject', 'string', [
+		$messagesTable->addColumn('subject', Types::STRING, [
 			'notnull' => true,
 			'length' => 255,
 			'default' => '',
 		]);
-		$messagesTable->addColumn('sent_at', 'integer', [
+		$messagesTable->addColumn('sent_at', Types::INTEGER, [
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$messagesTable->addColumn('flag_answered', 'boolean', [
+		$messagesTable->addColumn('flag_answered', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_deleted', 'boolean', [
+		$messagesTable->addColumn('flag_deleted', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_draft', 'boolean', [
+		$messagesTable->addColumn('flag_draft', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_flagged', 'boolean', [
+		$messagesTable->addColumn('flag_flagged', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_seen', 'boolean', [
+		$messagesTable->addColumn('flag_seen', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_forwarded', 'boolean', [
+		$messagesTable->addColumn('flag_forwarded', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_junk', 'boolean', [
+		$messagesTable->addColumn('flag_junk', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_notjunk', 'boolean', [
+		$messagesTable->addColumn('flag_notjunk', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_attachments', 'boolean', [
+		$messagesTable->addColumn('flag_attachments', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('flag_important', 'boolean', [
+		$messagesTable->addColumn('flag_important', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('structure_analyzed', 'boolean', [
+		$messagesTable->addColumn('structure_analyzed', Types::BOOLEAN, [
 			'notnull' => false,
 			'default' => false,
 		]);
-		$messagesTable->addColumn('preview_text', 'string', [
+		$messagesTable->addColumn('preview_text', Types::STRING, [
 			'notnull' => false,
 			'length' => 255,
 		]);
-		$messagesTable->addColumn('updated_at', 'integer', [
+		$messagesTable->addColumn('updated_at', Types::INTEGER, [
 			'notnull' => false,
 			'length' => 4,
 		]);

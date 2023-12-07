@@ -26,7 +26,6 @@ namespace OCA\Mail;
 use Horde_Imap_Client_Mailbox;
 
 class Folder {
-
 	/** @var int */
 	private $accountId;
 
@@ -39,19 +38,26 @@ class Folder {
 	/** @var string */
 	private $delimiter;
 
-	/** @var array */
+	/** @var null|array */
 	private $status;
 
 	/** @var string[] */
 	private $specialUse;
 
-	public function __construct(int $accountId, Horde_Imap_Client_Mailbox $mailbox, array $attributes, ?string $delimiter) {
+	private ?string $myAcls;
+
+	public function __construct(int $accountId,
+		Horde_Imap_Client_Mailbox $mailbox,
+		array $attributes,
+		?string $delimiter,
+		?array $status) {
 		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
 		$this->delimiter = $delimiter;
-		$this->status = [];
+		$this->status = $status;
 		$this->specialUse = [];
+		$this->myAcls = null;
 	}
 
 	/**
@@ -70,9 +76,9 @@ class Folder {
 	}
 
 	/**
-	 * @return array
+	 * @return null|array
 	 */
-	public function getStatus(): array {
+	public function getStatus(): ?array {
 		return $this->status;
 	}
 
@@ -99,5 +105,13 @@ class Folder {
 	 */
 	public function getSpecialUse() {
 		return $this->specialUse;
+	}
+
+	public function setMyAcls(?string $acls) {
+		$this->myAcls = $acls;
+	}
+
+	public function getMyAcls(): ?string {
+		return $this->myAcls;
 	}
 }

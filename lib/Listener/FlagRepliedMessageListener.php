@@ -37,8 +37,10 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @template-implements IEventListener<Event|MessageSentEvent>
+ */
 class FlagRepliedMessageListener implements IEventListener {
-
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 
@@ -55,10 +57,10 @@ class FlagRepliedMessageListener implements IEventListener {
 	private $dbMessageMapper;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
-								MailboxMapper     $mailboxMapper,
-								DbMessageMapper   $dbMessageMapper,
-								MessageMapper     $mapper,
-								LoggerInterface   $logger) {
+		MailboxMapper     $mailboxMapper,
+		DbMessageMapper   $dbMessageMapper,
+		MessageMapper     $mapper,
+		LoggerInterface   $logger) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->dbMessageMapper = $dbMessageMapper;
@@ -72,7 +74,7 @@ class FlagRepliedMessageListener implements IEventListener {
 		}
 
 		$messages = $this->dbMessageMapper->findByMessageId($event->getAccount(), $event->getRepliedToMessageId());
-		if (empty($messages)) {
+		if ($messages === []) {
 			return;
 		}
 
@@ -81,8 +83,12 @@ class FlagRepliedMessageListener implements IEventListener {
 			foreach ($messages as $message) {
 				try {
 					$mailbox = $this->mailboxMapper->findById($message->getMailboxId());
+					//ignore read-only mailboxes
+					if ($mailbox->getMyAcls() !== null && !strpos($mailbox->getMyAcls(), "w")) {
+						continue;
+					}
 					// ignore drafts and sent
-					if ($mailbox->getSpecialUse() === '["sent"]' || $mailbox->getSpecialUse() === '["drafts"]') {
+					if ($mailbox->isSpecialUse('sent') || $mailbox->isSpecialUse('drafts')) {
 						continue;
 					}
 					// Mark all other mailboxes that contain the message with the same imap message id as replied

@@ -34,6 +34,7 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use function time;
 
 class MessageMapperTest extends TestCase {
 	use DatabaseTransaction;
@@ -61,7 +62,7 @@ class MessageMapperTest extends TestCase {
 		$qb = $this->db->getQueryBuilder();
 
 		$delete = $qb->delete($this->mapper->getTableName());
-		$delete->execute();
+		$delete->executeStatement();
 	}
 
 	public function testResetInReplyTo() : void {
@@ -78,7 +79,7 @@ class MessageMapperTest extends TestCase {
 					'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
 					'in_reply_to' => $qb->createNamedParameter('<>')
 				]);
-			$insert->execute();
+			$insert->executeStatement();
 		}, range(1, 10));
 
 		array_map(function ($i) {
@@ -92,7 +93,7 @@ class MessageMapperTest extends TestCase {
 					'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
 					'in_reply_to' => $qb->createNamedParameter('<abc@dgf.com>')
 				]);
-			$insert->execute();
+			$insert->executeStatement();
 		}, range(11, 20));
 
 		$result = $this->mapper->resetInReplyTo();
@@ -106,9 +107,37 @@ class MessageMapperTest extends TestCase {
 				$qb2->expr()->like('in_reply_to', $qb2->createNamedParameter("<>", IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			);
 
-		$result = $select->execute();
+		$result = $select->executeQuery();
 		$rows = $result->fetchAll();
 
 		$this->assertEmpty($rows);
+	}
+
+	public function testResetPreviewDataFlag(): void {
+		$uid = time();
+		$qb = $this->db->getQueryBuilder();
+		$insert = $qb->insert($this->mapper->getTableName())
+			->values([
+				'uid' => $qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT),
+				'message_id' => $qb->createNamedParameter('<abc@123.com>'),
+				'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+				'subject' => $qb->createNamedParameter('TEST'),
+				'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
+			]);
+		$insert->executeStatement();
+
+		$this->mapper->resetPreviewDataFlag();
+
+		$qb2 = $this->db->getQueryBuilder();
+		$result = $qb2->select($qb2->func()->count('*'))
+			->from($this->mapper->getTableName())
+			->where(
+				$qb2->expr()->eq('uid', $qb2->createNamedParameter($uid, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb2->expr()->eq('structure_analyzed', $qb2->createNamedParameter(true, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL)
+			)
+			->executeQuery();
+		$cnt = $result->fetchOne();
+		$result->closeCursor();
+		self::assertEquals(0, $cnt);
 	}
 }

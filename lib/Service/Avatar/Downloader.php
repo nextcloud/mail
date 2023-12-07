@@ -32,7 +32,6 @@ use function is_resource;
 use function stream_get_contents;
 
 class Downloader {
-
 	/** @var IClientService */
 	private $clientService;
 

@@ -165,11 +165,6 @@ class Message implements IMessage {
 		return $this->inReplyTo;
 	}
 
-	/**
-	 * @param IMessage $message
-	 *
-	 * @return void
-	 */
 	public function setInReplyTo(string $id) {
 		$this->inReplyTo = $id;
 	}

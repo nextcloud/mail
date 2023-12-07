@@ -40,7 +40,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class ProvisioningMiddlewareTest extends TestCase {
-
 	/** @var IUserSession|MockObject */
 	private $userSession;
 
@@ -218,7 +217,8 @@ class ProvisioningMiddlewareTest extends TestCase {
 			->method('updatePassword')
 			->with(
 				$user,
-				'123456'
+				'123456',
+				$configs
 			);
 
 		$this->middleware->beforeController(

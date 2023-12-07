@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -26,7 +27,6 @@ namespace OCA\Mail\Service;
 use Horde_Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
-use Horde_Imap_Client_DateTime;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Mail_Transport_Null;
@@ -38,7 +38,6 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
-use Horde_Text_Filter;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -60,10 +59,13 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeEncryptException;
+use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -75,6 +77,7 @@ use function array_filter;
 use function array_map;
 
 class MailTransmission implements IMailTransmission {
+	private SmimeService $smimeService;
 
 	/** @var Folder */
 	private $userFolder;
@@ -116,17 +119,18 @@ class MailTransmission implements IMailTransmission {
 	 * @param Folder $userFolder
 	 */
 	public function __construct($userFolder,
-								IAttachmentService $attachmentService,
-								IMailManager $mailManager,
-								IMAPClientFactory $imapClientFactory,
-								SmtpClientFactory $smtpClientFactory,
-								IEventDispatcher $eventDispatcher,
-								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								LoggerInterface $logger,
-								PerformanceLogger $performanceLogger,
-								AliasesService $aliasesService,
-								GroupsIntegration $groupsIntegration) {
+		IAttachmentService $attachmentService,
+		IMailManager $mailManager,
+		IMAPClientFactory $imapClientFactory,
+		SmtpClientFactory $smtpClientFactory,
+		IEventDispatcher $eventDispatcher,
+		MailboxMapper $mailboxMapper,
+		MessageMapper $messageMapper,
+		LoggerInterface $logger,
+		PerformanceLogger $performanceLogger,
+		AliasesService $aliasesService,
+		GroupsIntegration $groupsIntegration,
+		SmimeService $smimeService) {
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
 		$this->mailManager = $mailManager;
@@ -139,12 +143,13 @@ class MailTransmission implements IMailTransmission {
 		$this->performanceLogger = $performanceLogger;
 		$this->aliasesService = $aliasesService;
 		$this->groupsIntegration = $groupsIntegration;
+		$this->smimeService = $smimeService;
 	}
 
 	public function sendMessage(NewMessageData $messageData,
-								?string $repliedToMessageId = null,
-								Alias $alias = null,
-								Message $draft = null): void {
+		?string $repliedToMessageId = null,
+		Alias $alias = null,
+		Message $draft = null): void {
 		$account = $messageData->getAccount();
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			throw new SentMailboxNotSetException();
@@ -188,17 +193,74 @@ class MailTransmission implements IMailTransmission {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		if ($messageData->isHtml()) {
-			$mail->setHtmlBody($message->getContent(), null, false);
-			$mail->setBody(Horde_Text_Filter::filter($message->getContent(), 'Html2text', ['callback' => [$this, 'htmlToTextCallback']]));
-		} else {
-			$mail->setBody($message->getContent());
+
+		$mimeMessage = new MimeMessage(
+			new DataUriParser()
+		);
+		$mimePart = $mimeMessage->build(
+			$messageData->isHtml(),
+			$message->getContent(),
+			$message->getAttachments()
+		);
+
+		// TODO: add smimeEncrypt check if implemented
+		if ($messageData->getSmimeSign()) {
+			if ($messageData->getSmimeCertificateId() === null) {
+				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
+			}
+
+			try {
+				$certificate = $this->smimeService->findCertificate(
+					$messageData->getSmimeCertificateId(),
+					$account->getUserId(),
+				);
+				$mimePart = $this->smimeService->signMimePart($mimePart, $certificate);
+			} catch (DoesNotExistException $e) {
+				throw new ServiceException(
+					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			} catch (SmimeSignException | ServiceException $e) {
+				throw new ServiceException(
+					'Could not send message: Failed to sign MIME part: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			}
 		}
 
-		// Append local attachments
-		foreach ($message->getAttachments() as $attachment) {
-			$mail->addMimePart($attachment);
+		if ($messageData->getSmimeEncrypt()) {
+			if ($messageData->getSmimeCertificateId() === null) {
+				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
+			}
+
+			try {
+				$addressList = $messageData->getTo()
+					->merge($messageData->getCc())
+					->merge($messageData->getBcc());
+				$certificates = $this->smimeService->findCertificatesByAddressList($addressList, $account->getUserId());
+
+				$senderCertificate = $this->smimeService->findCertificate($messageData->getSmimeCertificateId(), $account->getUserId());
+				$certificates[] = $senderCertificate;
+
+				$mimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);
+			} catch (DoesNotExistException $e) {
+				throw new ServiceException(
+					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			} catch (SmimeEncryptException | ServiceException $e) {
+				throw new ServiceException(
+					'Could not send message: Failed to encrypt MIME part: ' . $e->getMessage(),
+					$e->getCode(),
+					$e,
+				);
+			}
 		}
+
+		$mail->setBasePart($mimePart);
 
 		$this->eventDispatcher->dispatchTyped(
 			new BeforeMessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
@@ -210,7 +272,7 @@ class MailTransmission implements IMailTransmission {
 		} catch (Horde_Mime_Exception $e) {
 			throw new ServiceException(
 				'Could not send message: ' . $e->getMessage(),
-				(int) $e->getCode(),
+				$e->getCode(),
 				$e
 			);
 		}
@@ -251,7 +313,7 @@ class MailTransmission implements IMailTransmission {
 				}))
 			)
 		);
-		$attachments = array_map(function (LocalAttachment $attachment) {
+		$attachments = array_map(static function (LocalAttachment $attachment) {
 			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
 			return [
 				'type' => 'local',
@@ -266,7 +328,11 @@ class MailTransmission implements IMailTransmission {
 			$message->getSubject(),
 			$message->getBody(),
 			$attachments,
-			$message->isHtml()
+			$message->isHtml(),
+			false,
+			$message->getSmimeCertificateId(),
+			$message->getSmimeSign() ?? false,
+			$message->getSmimeEncrypt() ?? false,
 		);
 
 		if ($message->getAliasId() !== null) {
@@ -276,27 +342,78 @@ class MailTransmission implements IMailTransmission {
 		try {
 			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
 		} catch (SentMailboxNotSetException $e) {
-			throw new ClientException('Could not send message' . $e->getMessage(), (int)$e->getCode(), $e);
+			throw new ClientException('Could not send message: ' . $e->getMessage(), $e->getCode(), $e);
 		}
 	}
 
-	/**
-	 * A callback for Horde_Text_Filter.
-	 *
-	 * The purpose of this callback is to overwrite the default behaviour
-	 * of html2text filter to convert <p>Hello</p> => Hello\n\n with
-	 * <p>Hello</p> => Hello\n.
-	 *
-	 * @param \DOMDocument $doc
-	 * @param \DOMNode $node
-	 * @return string|null non-null, add this text to the output and skip further processing of the node.
-	 */
-	public function htmlToTextCallback(\DOMDocument $doc, \DOMNode $node) {
-		if ($node instanceof \DOMElement && strtolower($node->tagName) === 'p') {
-			return $node->textContent . "\n";
+	public function saveLocalDraft(Account $account, LocalMessage $message): void {
+		$messageData = $this->getNewMessageData($message, $account);
+
+		$perfLogger = $this->performanceLogger->start('save local draft');
+
+		$account = $messageData->getAccount();
+		$imapMessage = $account->newMessage();
+		$imapMessage->setTo($messageData->getTo());
+		$imapMessage->setSubject($messageData->getSubject());
+		$from = new AddressList([
+			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+		]);
+		$imapMessage->setFrom($from);
+		$imapMessage->setCC($messageData->getCc());
+		$imapMessage->setBcc($messageData->getBcc());
+		$imapMessage->setContent($messageData->getBody());
+
+		// build mime body
+		$headers = [
+			'From' => $imapMessage->getFrom()->first()->toHorde(),
+			'To' => $imapMessage->getTo()->toHorde(),
+			'Cc' => $imapMessage->getCC()->toHorde(),
+			'Bcc' => $imapMessage->getBCC()->toHorde(),
+			'Subject' => $imapMessage->getSubject(),
+			'Date' => Horde_Mime_Headers_Date::create(),
+		];
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		if ($message->isHtml()) {
+			$mail->setHtmlBody($imapMessage->getContent());
+		} else {
+			$mail->setBody($imapMessage->getContent());
+		}
+		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
+		$perfLogger->step('build local draft message');
+
+		// 'Send' the message
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$transport = new Horde_Mail_Transport_Null();
+			$mail->send($transport, false, false);
+			$perfLogger->step('create IMAP draft message');
+			// save the message in the drafts folder
+			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+			if ($draftsMailboxId === null) {
+				throw new ClientException('No drafts mailbox configured');
+			}
+			$draftsMailbox = $this->mailboxMapper->findById($draftsMailboxId);
+			$this->messageMapper->save(
+				$client,
+				$draftsMailbox,
+				$mail,
+				[Horde_Imap_Client::FLAG_DRAFT]
+			);
+			$perfLogger->step('save local draft message on IMAP');
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
+		} catch (Horde_Exception $e) {
+			throw new ServiceException('Could not save draft message', 0, $e);
+		} finally {
+			$client->logout();
 		}
 
-		return null;
+		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, $messageData, null));
+		$perfLogger->step('emit post local draft save event');
+
+		$perfLogger->end();
 	}
 
 	/**
@@ -386,8 +503,8 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	private function buildReplyMessage(Account $account,
-									   NewMessageData $messageData,
-									   string $repliedToMessageId): IMessage {
+		NewMessageData $messageData,
+		string $repliedToMessageId): IMessage {
 		// Reply
 		$message = $account->newMessage();
 		$message->setSubject($messageData->getSubject());
@@ -477,7 +594,8 @@ class MailTransmission implements IMailTransmission {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
 				$mailbox->getName(),
-				$attachmentMessage->getUid()
+				$attachmentMessage->getUid(),
+				$userId
 			);
 		} finally {
 			$client->logout();
@@ -507,7 +625,8 @@ class MailTransmission implements IMailTransmission {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
 				$mailbox->getName(),
-				$attachmentMessage->getUid()
+				$attachmentMessage->getUid(),
+				$userId
 			);
 		} finally {
 			$client->logout();
@@ -538,6 +657,7 @@ class MailTransmission implements IMailTransmission {
 				$client,
 				$mailbox->getName(),
 				$attachmentMessage->getUid(),
+				$userId,
 				[
 					$attachment['id']
 				]
@@ -601,7 +721,6 @@ class MailTransmission implements IMailTransmission {
 			throw new ServiceException('Message "' .$message->getId() . '" not found.');
 		}
 
-		/** @var Horde_Imap_Client_DateTime $imapDate */
 		$imapDate = $fetchResults[0]->getImapDate();
 		/** @var Horde_Mime_Headers $headers */
 		$mdnHeaders = $fetchResults[0]->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
@@ -645,5 +764,61 @@ class MailTransmission implements IMailTransmission {
 		} catch (Horde_Mime_Exception $e) {
 			throw new ServiceException('Unable to send mdn for message "' . $message->getId() . '" caused by: ' . $e->getMessage(), 0, $e);
 		}
+	}
+
+	/**
+	 * @param LocalMessage $message
+	 * @param Account $account
+	 * @return NewMessageData
+	 */
+	private function getNewMessageData(LocalMessage $message, Account $account): NewMessageData {
+		$to = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_TO;
+				}))
+			)
+		);
+
+		$cc = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_CC;
+				}))
+			)
+		);
+		$bcc = new AddressList(
+			array_map(
+				static function ($recipient) {
+					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
+				},
+				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
+					return $recipient->getType() === Recipient::TYPE_BCC;
+				}))
+			)
+		);
+		$attachments = array_map(function (LocalAttachment $attachment) {
+			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
+			return [
+				'type' => 'local',
+				'id' => $attachment->getId(),
+			];
+		}, $message->getAttachments());
+		return new NewMessageData(
+			$account,
+			$to,
+			$cc,
+			$bcc,
+			$message->getSubject(),
+			$message->getBody(),
+			$attachments,
+			$message->isHtml()
+		);
 	}
 }

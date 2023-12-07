@@ -22,38 +22,43 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 class SimpleMessage {
-
 	/** @var string */
 	private $from;
 
 	/** @var string */
 	private $to;
 
-	/** @var string */
+	/** @var string|null */
 	private $cc;
 
-	/** @var string */
+	/** @var string|null */
 	private $bcc;
 
-	/** @var string */
+	/** @var string|null */
 	private $date;
 
-	/** @var string */
+	/** @var string|null */
 	private $subject;
 
-	/** @var string */
+	/** @var string|null */
 	private $body;
 
 	/**
 	 * @param string $from
 	 * @param string $to
-	 * @param string $cc
-	 * @param string $bcc
+	 * @param string|null $cc
+	 * @param string|null $bcc
 	 * @param string $date
 	 * @param string $subject
 	 * @param string $body
 	 */
-	public function __construct($from, $to, $cc, $bcc, $date, $subject, $body) {
+	public function __construct(string $from,
+		string $to,
+		?string $cc,
+		?string $bcc,
+		?string $date,
+		?string $subject,
+		?string $body) {
 		$this->from = $from;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -63,52 +68,31 @@ class SimpleMessage {
 		$this->body = $body;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getFrom() {
+	public function getFrom(): string {
 		return $this->from;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getTo() {
+	public function getTo(): string {
 		return $this->to;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getCc() {
+	public function getCc(): ?string {
 		return $this->cc;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getBcc() {
+	public function getBcc(): ?string {
 		return $this->bcc;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getDate() {
+	public function getDate(): ?string {
 		return $this->date;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getSubject() {
+	public function getSubject(): ?string {
 		return $this->subject;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getBody() {
+	public function getBody(): ?string {
 		return $this->body;
 	}
 }

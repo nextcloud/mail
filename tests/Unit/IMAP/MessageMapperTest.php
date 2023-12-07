@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -31,28 +32,40 @@ use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\IMAP\ImapMessageFetcher;
+use OCA\Mail\IMAP\ImapMessageFetcherFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use function range;
 
 class MessageMapperTest extends TestCase {
-
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var MessageMapper */
 	private $mapper;
 
+	/** @var SmimeService|MockObject */
+	private $sMimeService;
+
+	/** @var ImapMessageFetcherFactory|MockObject */
+	private $imapMessageFactory;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->sMimeService = $this->createMock(SmimeService::class);
+		$this->imapMessageFactory = $this->createMock(ImapMessageFetcherFactory::class);
 
 		$this->mapper = new MessageMapper(
-			$this->logger
+			$this->logger,
+			$this->sMimeService,
+			$this->imapMessageFactory,
 		);
 	}
 
@@ -61,6 +74,13 @@ class MessageMapperTest extends TestCase {
 		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
 		$ids = [1, 3];
+		$userId = 'user';
+		$loadBody = false;
+
+		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
+		$imapMessageFetcher2 = $this->createMock(ImapMessageFetcher::class);
+		$message1 = $this->createMock(IMAPMessage::class);
+		$message2 = $this->createMock(IMAPMessage::class);
 
 		$fetchResults = new Horde_Imap_Client_Fetch_Results();
 		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
@@ -70,18 +90,148 @@ class MessageMapperTest extends TestCase {
 			->willReturn($fetchResults);
 		$fetchResults[0] = $fetchResult1;
 		$fetchResults[1] = $fetchResult2;
+		$fetchResult1->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
+		$fetchResult2->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
 		$fetchResult1->method('getUid')
 			->willReturn(1);
 		$fetchResult2->method('getUid')
 			->willReturn(3);
-		$message1 = new IMAPMessage($imapClient, $mailbox, 1, $fetchResult1);
-		$message2 = new IMAPMessage($imapClient, $mailbox, 3, $fetchResult2);
+		$this->imapMessageFactory->expects(self::exactly(2))
+			->method('build')
+			->willReturnMap([
+				[1, $mailbox, $imapClient, $userId, $imapMessageFetcher1],
+				[3, $mailbox, $imapClient, $userId, $imapMessageFetcher2],
+			]);
+
+		$imapMessageFetcher1->expects(self::once())
+			->method('withBody')
+			->with($loadBody)
+			->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
+			->method('fetchMessage')
+			->with($fetchResult1)
+			->willReturn($message1);
+		$imapMessageFetcher2->expects(self::once())
+			->method('withBody')
+			->with($loadBody)
+			->willReturnSelf();
+		$imapMessageFetcher2->expects(self::once())
+			->method('fetchMessage')
+			->with($fetchResult2)
+			->willReturn($message2);
+
 		$expected = [
 			$message1,
 			$message2,
 		];
 
-		$result = $this->mapper->findByIds($imapClient, $mailbox, new Horde_Imap_Client_Ids($ids));
+		$result = $this->mapper->findByIds(
+			$imapClient,
+			$mailbox,
+			new Horde_Imap_Client_Ids($ids),
+			$userId,
+			$loadBody
+		);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	public function testGetByIdsWithManyMessages(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$ids = range(1, 10000, 2);
+		$userId = 'user';
+		$loadBody = false;
+		$fetchResults = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$fetchResult2 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$imapClient->expects(self::exactly(3))
+			->method('fetch')
+			->willReturnOnConsecutiveCalls(
+				$fetchResults,
+				$fetchResults,
+				$fetchResults
+			);
+		$fetchResults[0] = $fetchResult1;
+		$fetchResults[1] = $fetchResult2;
+		$fetchResult1->method('getUid')
+			->willReturn(1);
+		$fetchResult2->method('getUid')
+			->willReturn(3);
+
+		$this->mapper->findByIds(
+			$imapClient,
+			$mailbox,
+			$ids,
+			$userId,
+			$loadBody
+		);
+	}
+
+	public function testGetByIdsWithEmpty(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$ids = [1, 3];
+		$userId = 'user';
+		$loadBody = false;
+
+		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
+		$message1 = $this->createMock(IMAPMessage::class);
+
+		$fetchResults = new Horde_Imap_Client_Fetch_Results();
+		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$fetchResult2 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
+		$imapClient->expects(self::once())
+			->method('fetch')
+			->willReturn($fetchResults);
+		$fetchResults[0] = $fetchResult1;
+		$fetchResults[1] = $fetchResult2;
+		$fetchResult1->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(true);
+		$fetchResult2->expects(self::once())
+			->method('exists')
+			->with(Horde_Imap_Client::FETCH_ENVELOPE)
+			->willReturn(false);
+		$fetchResult1->method('getUid')
+			->willReturn(1);
+		$fetchResult2->expects(self::never())
+			->method('getUid');
+		$this->imapMessageFactory->expects(self::once())
+			->method('build')
+			->willReturnMap([
+				[1, $mailbox, $imapClient, $userId, $imapMessageFetcher1],
+			]);
+
+		$imapMessageFetcher1->expects(self::once())
+			->method('withBody')
+			->with($loadBody)
+			->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
+			->method('fetchMessage')
+			->with($fetchResult1)
+			->willReturn($message1);
+
+		$expected = [
+			$message1
+		];
+
+		$result = $this->mapper->findByIds(
+			$imapClient,
+			$mailbox,
+			new Horde_Imap_Client_Ids($ids),
+			$userId,
+			$loadBody
+		);
 
 		$this->assertEquals($expected, $result);
 	}
@@ -117,7 +267,8 @@ class MessageMapperTest extends TestCase {
 			5000,
 			0,
 			$this->createMock(LoggerInterface::class),
-			$this->createMock(PerformanceLoggerTask::class)
+			$this->createMock(PerformanceLoggerTask::class),
+			'user'
 		);
 
 		$this->assertSame(
@@ -188,7 +339,8 @@ class MessageMapperTest extends TestCase {
 			5000,
 			0,
 			$this->createMock(LoggerInterface::class),
-			$this->createMock(PerformanceLoggerTask::class)
+			$this->createMock(PerformanceLoggerTask::class),
+			'user'
 		);
 
 		self::assertTrue($result['all']);
@@ -252,7 +404,8 @@ class MessageMapperTest extends TestCase {
 			5000,
 			300,
 			$this->createMock(LoggerInterface::class),
-			$this->createMock(PerformanceLoggerTask::class)
+			$this->createMock(PerformanceLoggerTask::class),
+			'user'
 		);
 
 		self::assertTrue($result['all']);
@@ -323,7 +476,8 @@ class MessageMapperTest extends TestCase {
 			5000,
 			92000,
 			$this->createMock(LoggerInterface::class),
-			$this->createMock(PerformanceLoggerTask::class)
+			$this->createMock(PerformanceLoggerTask::class),
+			'user'
 		);
 
 		// This chunk returns 8k messages, when we only expected 5k. So the process
@@ -364,7 +518,8 @@ class MessageMapperTest extends TestCase {
 			5000,
 			99999,
 			$this->createMock(LoggerInterface::class),
-			$this->createMock(PerformanceLoggerTask::class)
+			$this->createMock(PerformanceLoggerTask::class),
+			'user'
 		);
 
 		self::assertTrue($result['all']);

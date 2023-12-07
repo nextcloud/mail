@@ -6,11 +6,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1050Date20200921141700 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -22,7 +22,7 @@ class Version1050Date20200921141700 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 
 		$accountsTable = $schema->getTable('mail_attachments');
-		$accountsTable->addColumn('mime_type', 'string', [
+		$accountsTable->addColumn('mime_type', Types::STRING, [
 			'notnull' => false,
 			'length' => 255, // RFC 4288 defines max size
 		]);

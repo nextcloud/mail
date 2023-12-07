@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2023 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -65,7 +66,6 @@ use function json_encode;
  * as important.
  */
 class ImportanceClassifier {
-
 	/**
 	 * Mailbox special uses to exclude from the training
 	 */
@@ -118,18 +118,22 @@ class ImportanceClassifier {
 	/** @var ImportanceRulesClassifier */
 	private $rulesClassifier;
 
+	private LoggerInterface $logger;
+
 	public function __construct(MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
-								CompositeExtractor $extractor,
-								PersistenceService $persistenceService,
-								PerformanceLogger $performanceLogger,
-								ImportanceRulesClassifier $rulesClassifier) {
+		MessageMapper $messageMapper,
+		CompositeExtractor $extractor,
+		PersistenceService $persistenceService,
+		PerformanceLogger $performanceLogger,
+		ImportanceRulesClassifier $rulesClassifier,
+		LoggerInterface $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
 		$this->persistenceService = $persistenceService;
 		$this->performanceLogger = $performanceLogger;
 		$this->rulesClassifier = $rulesClassifier;
+		$this->logger = $logger;
 	}
 
 	private function filterMessageHasSenderEmail(Message $message): bool {
@@ -160,14 +164,14 @@ class ImportanceClassifier {
 		$logger->debug('found ' . count($outgoingMailboxes) . ' outgoing mailbox(es)');
 		$perf->step('find outgoing mailboxes');
 
-		$mailboxIds = array_map(function (Mailbox $mailbox) {
+		$mailboxIds = array_map(static function (Mailbox $mailbox) {
 			return $mailbox->getId();
 		}, $incomingMailboxes);
 		$messages = array_filter(
 			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
-		$importantMessages = array_filter($messages, function (Message $message) {
+		$importantMessages = array_filter($messages, static function (Message $message) {
 			return ($message->getFlagImportant() === true);
 		});
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
@@ -191,7 +195,7 @@ class ImportanceClassifier {
 		$validationSet = array_slice($dataSet, 0, $validationThreshold);
 		$trainingSet = array_slice($dataSet, $validationThreshold);
 		$logger->debug('data set split into ' . count($trainingSet) . ' training and ' . count($validationSet) . ' validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
-		if (empty($validationSet) || empty($trainingSet)) {
+		if ($validationSet === [] || $trainingSet === []) {
 			$logger->info('not enough messages to train a classifier');
 			$perf->end();
 			return;
@@ -228,7 +232,7 @@ class ImportanceClassifier {
 	 * @return Mailbox[]
 	 */
 	private function getIncomingMailboxes(Account $account): array {
-		return array_filter($this->mailboxMapper->findAll($account), function (Mailbox $mailbox) {
+		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
 					return false;
@@ -270,9 +274,9 @@ class ImportanceClassifier {
 	 * @return array
 	 */
 	private function getFeaturesAndImportance(Account $account,
-											  array $incomingMailboxes,
-											  array $outgoingMailboxes,
-											  array $messages): array {
+		array $incomingMailboxes,
+		array $outgoingMailboxes,
+		array $messages): array {
 		$this->extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
 		return array_map(function (Message $message) {
@@ -282,7 +286,7 @@ class ImportanceClassifier {
 			}
 
 			return [
-				'features' => $this->extractor->extract($sender->getEmail()),
+				'features' => $this->extractor->extract($message),
 				'label' => $message->getFlagImportant() ? self::LABEL_IMPORTANT : self::LABEL_NOT_IMPORTANT,
 				'sender' => $sender->getEmail(),
 			];
@@ -291,14 +295,21 @@ class ImportanceClassifier {
 
 	/**
 	 * @param Account $account
-	 * @param Mailbox $mailbox
 	 * @param Message[] $messages
 	 *
 	 * @return bool[]
 	 * @throws ServiceException
 	 */
-	public function classifyImportance(Account $account, Mailbox $mailbox, array $messages): array {
-		$estimator = $this->persistenceService->loadLatest($account);
+	public function classifyImportance(Account $account, array $messages): array {
+		$estimator = null;
+		try {
+			$estimator = $this->persistenceService->loadLatest($account);
+		} catch (ServiceException $e) {
+			$this->logger->warning('Failed to load importance classifier: ' . $e->getMessage(), [
+				'exception' => $e,
+			]);
+		}
+
 		if ($estimator === null) {
 			$predictions = $this->rulesClassifier->classifyImportance(
 				$account,
@@ -307,10 +318,10 @@ class ImportanceClassifier {
 				$messages
 			);
 			return array_combine(
-				array_map(function (Message $m) {
+				array_map(static function (Message $m) {
 					return $m->getUid();
 				}, $messages),
-				array_map(function (Message $m) use ($predictions) {
+				array_map(static function (Message $m) use ($predictions) {
 					return ($predictions[$m->getUid()] ?? false) === true;
 				}, $messages)
 			);
@@ -327,10 +338,10 @@ class ImportanceClassifier {
 			Unlabeled::build(array_column($features, 'features'))
 		);
 		return array_combine(
-			array_map(function (Message $m) {
+			array_map(static function (Message $m) {
 				return $m->getUid();
 			}, $messagesWithSender),
-			array_map(function ($p) {
+			array_map(static function ($p) {
 				return $p === self::LABEL_IMPORTANT;
 			}, $predictions)
 		);
@@ -354,9 +365,9 @@ class ImportanceClassifier {
 	 * @throws ClassifierTrainingException
 	 */
 	private function validateClassifier(Estimator $estimator,
-										array $trainingSet,
-										array $validationSet,
-										LoggerInterface $logger): Classifier {
+		array $trainingSet,
+		array $validationSet,
+		LoggerInterface $logger): Classifier {
 		/** @var float[] $predictedValidationLabel */
 		$predictedValidationLabel = $estimator->predict(Unlabeled::build(
 			array_column($validationSet, 'features')
@@ -369,7 +380,7 @@ class ImportanceClassifier {
 		);
 		$recallImportant = $report['classes'][self::LABEL_IMPORTANT]['recall'] ?? 0;
 		$precisionImportant = $report['classes'][self::LABEL_IMPORTANT]['precision'] ?? 0;
-		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1_score'] ?? 0;
+		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1 score'] ?? 0;
 
 		/**
 		 * What we care most is the percentage of messages classified as important in relation to the truly important messages

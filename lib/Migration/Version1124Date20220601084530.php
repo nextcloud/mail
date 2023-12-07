@@ -25,11 +25,11 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
 class Version1124Date20220601084530 extends SimpleMigrationStep {
-
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -42,7 +42,7 @@ class Version1124Date20220601084530 extends SimpleMigrationStep {
 
 		$localMessageTable = $schema->getTable('mail_local_messages');
 		if (!$localMessageTable->hasColumn('editor_body')) {
-			$localMessageTable->addColumn('editor_body', 'text', [
+			$localMessageTable->addColumn('editor_body', Types::TEXT, [
 				'notnull' => false,
 			]);
 		}

@@ -3,7 +3,7 @@
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isPgpgMessage } from '../../../crypto/pgp'
-import { html, plain } from '../../../util/text'
+import { isPgpgMessage, isPgpText } from '../../../crypto/pgp.js'
+import { html, plain } from '../../../util/text.js'
 
 describe('pgp', () => {
 	it('detects non-pgp messages', () => {
@@ -43,6 +43,22 @@ describe('pgp', () => {
 		const message = plain('-----BEGIN PGP MESSAGE-----\nVersion: Mailvelope v4.3.1')
 
 		const isPgp = isPgpgMessage(message)
+
+		expect(isPgp).toEqual(true)
+	})
+
+	it('detects non-pgp text', () => {
+		const text = 'Hi Alice'
+
+		const isPgp = isPgpText(text)
+
+		expect(isPgp).toEqual(false)
+	})
+
+	it('detects a pgp text', () => {
+		const message = '-----BEGIN PGP MESSAGE-----\nVersion: Mailvelope v4.3.1'
+
+		const isPgp = isPgpText(message)
 
 		expect(isPgp).toEqual(true)
 	})

@@ -3,7 +3,7 @@
   -
   - @author 2020 Greta Doci <gretadoci@gmail.com>
   -
-  - @license GNU AGPL version 3 or any later version
+  - @license AGPL-3.0-or-later
   -
   - This program is free software: you can redistribute it and/or modify
   - it under the terms of the GNU Affero General Public License as
@@ -25,10 +25,12 @@
 			:key="sender.email">
 			{{ sender.email }}
 			{{ senderType(sender.type) }}
-			<button class="button"
+			<ButtonVue type="tertiary"
+				class="button"
+				:aria-label="t('mail','Remove')"
 				@click="removeSender(sender)">
 				{{ t('mail','Remove') }}
-			</button>
+			</ButtonVue>
 		</div>
 		<span v-if="!sortedSenders.length"> {{ t('mail', 'No senders are trusted at the moment.') }}</span>
 	</div>
@@ -36,16 +38,20 @@
 
 <script>
 
-import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService'
-import prop from 'lodash/fp/prop'
-import sortBy from 'lodash/fp/sortBy'
-import logger from '../logger'
+import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
+import prop from 'lodash/fp/prop.js'
+import sortBy from 'lodash/fp/sortBy.js'
+import logger from '../logger.js'
 import { showError } from '@nextcloud/dialogs'
 
 const sortByEmail = sortBy(prop('email'))
 
 export default {
 	name: 'TrustedSenders',
+	components: {
+		ButtonVue,
+	},
 
 	data() {
 		return {
@@ -95,5 +101,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.button-vue:deep() {
+	display: inline-block !important;
+}
 </style>

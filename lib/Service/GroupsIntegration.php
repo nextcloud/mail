@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Db\Recipient;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Group\ContactsGroupService;
 use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
-use OCA\Mail\Exception\ServiceException;
 use function array_map;
 use function mb_strlen;
 use function mb_strpos;
@@ -35,7 +35,6 @@ use function mb_substr;
 use function OCA\Mail\array_flat_map;
 
 class GroupsIntegration {
-
 	/**
 	 * The services to get groups from
 	 *
@@ -102,13 +101,13 @@ class GroupsIntegration {
 						$recipient->getEmail(),
 						mb_strlen($this->servicePrefix($service))
 					);
-					$members = array_filter($service->getUsers($groupId), function (array $member) {
+					$members = array_filter($service->getUsers($groupId), static function (array $member) {
 						return !empty($member['email']);
 					});
-					if (empty($members)) {
+					if ($members === []) {
 						throw new ServiceException($groupId . " ({$service->getNamespace()}) has no members with email addresses");
 					}
-					return array_map(function (array $member) use ($recipient) {
+					return array_map(static function (array $member) use ($recipient) {
 						return Recipient::fromParams([
 							'messageId' => $recipient->getMessageId(),
 							'type' => $recipient->getType(),

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\ContactIntegration\ContactIntegrationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -30,13 +31,11 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class ContactIntegrationController extends Controller {
-
-	/** @var ContactIntegrationService */
-	private $service;
+	private ContactIntegrationService $service;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								ContactIntegrationService $service) {
+		IRequest $request,
+		ContactIntegrationService $service) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
@@ -44,23 +43,23 @@ class ContactIntegrationController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $mail
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function match(string $mail): JSONResponse {
-		return new JSONResponse($this->service->findMatches($mail));
+		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $uid
 	 * @param string $mail
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function addMail(string $uid = null, string $mail = null): JSONResponse {
 		$res = $this->service->addEMailToContact($uid, $mail);
 		if ($res === null) {
@@ -71,12 +70,8 @@ class ContactIntegrationController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
-	 *
-	 * @param string $name
-	 * @param string $mail
-	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function newContact(string $contactName = null, string $mail = null): JSONResponse {
 		$res = $this->service->newContact($contactName, $mail);
 		if ($res === null) {
@@ -87,13 +82,13 @@ class ContactIntegrationController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @TrapError
 	 *
 	 * @param string $term
 	 * @return JSONResponse
 	 */
+	#[TrapError]
 	public function autoComplete(string $term): JSONResponse {
 		$res = $this->service->autoComplete($term);
-		return new JSONResponse($res);
+		return (new JSONResponse($res))->cacheFor(60 * 60, false, true);
 	}
 }
