@@ -126,7 +126,7 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 
-import { NcUserBubble as UserBubble, NcPopover as Popover, NcMultiselect as Multiselect, NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcUserBubble as UserBubble, NcPopover as Popover, NcSelect as Select, NcButton as ButtonVue } from '@nextcloud/vue'
 
 import IconReply from 'vue-material-design-icons/Reply'
 import IconAdd from 'vue-material-design-icons/Plus'
@@ -151,7 +151,7 @@ export default {
 		ButtonVue,
 		UserBubble,
 		Popover,
-		Multiselect,
+		Select,
 		IconReply,
 		IconUser,
 		IconAdd,

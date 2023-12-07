@@ -34,7 +34,7 @@
 				{{ t('mail', 'To') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="to"
+				<Select id="to"
 					ref="toLabel"
 					v-model="selectTo"
 					:class="{'opened': !autoLimit}"
@@ -70,7 +70,7 @@
 								:avatar-size="24" />
 						</div>
 					</template>
-				</Multiselect>
+				</Select>
 				<button
 					:title="t('mail','Toggle recipients list mode')"
 					:class="{'active':!autoLimit}"
@@ -428,7 +428,7 @@ import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 
-import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcMultiselect as Multiselect, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
+import { NcActions as Actions, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionRadio as ActionRadio, NcButton as ButtonVue, NcSelect as Select, NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
 import Delete from 'vue-material-design-icons/Delete'
 import ComposerAttachments from './ComposerAttachments.vue'
@@ -488,7 +488,6 @@ export default {
 		IconFolder,
 		IconPublic,
 		IconLinkPicker,
-		Multiselect,
 		Select,
 		TextEditor,
 		ListItemIcon,

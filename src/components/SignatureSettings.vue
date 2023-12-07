@@ -31,14 +31,13 @@
 				{{ t("mail", "Place signature above quoted text") }}
 			</label>
 		</div>
-		<Multiselect
+		<Select
 			v-if="identities.length > 1"
-			:allow-empty="false"
 			:options="identities"
 			:searchable="false"
 			:value="identity"
 			label="label"
-			track-by="id"
+			input-id="id"
 			@select="changeIdentity" />
 		<TextEditor
 			v-model="signature"
@@ -76,14 +75,14 @@ import TextEditor from './TextEditor.vue'
 import { detect, toHtml } from '../util/text.js'
 import Vue from 'vue'
 
-import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcSelect as Select, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check'
 
 export default {
 	name: 'SignatureSettings',
 	components: {
 		TextEditor,
-		Multiselect,
+		Select,
 		ButtonVue,
 		IconLoading,
 		IconCheck,
