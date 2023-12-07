@@ -176,8 +176,9 @@ export default {
 				showError(this.t('mail', 'Tag already exists'))
 				return
 			}
-			if (displayName !== null && displayName !== '') {
-				this.showSaving = true
+			if (displayName.trim() === '') {
+				showError(this.t('mail', 'Tag name cannot be empty'))
+				return
 			}
 			try {
 				await this.$store.dispatch('createTag', {
