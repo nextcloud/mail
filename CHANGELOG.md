@@ -1,7 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.4.5 – 2023-12-30
+## 3.4.6 – 2023-12-07
+### Fixed
+- UI element sizing and position
+- Encoding of web notifications
+- Synchronization with QRESYNC
+
+## 3.4.5 – 2023-11-30
 ### Fixed
 - Log performance of slow clean-up jobs
 
