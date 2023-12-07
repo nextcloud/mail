@@ -27,6 +27,11 @@ All notable changes to this project will be documented in this file.
 - Internal rate-limiting for wrong passwords to prevent IMAP locking
 - Double mailbox sync when navigating across two accounts
 - Duplicated tags
+- Thread summaries for threads of three messages
+- Synchronization with QRESYNC
+- Web notification encoding
+- UI element alignment
+- Exclude PGP signatures as attachments
 
 ## 3.4.0-rc.1 - unreleased
 ### Added
