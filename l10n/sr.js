@@ -446,6 +446,7 @@ OC.L10N.register(
     "Saving tag …" : "Чување ознаке ...",
     "Tag name is a hidden system tag" : "Назив ознаке је скривена системска ознака",
     "Tag already exists" : "Ознака већ постоји",
+    "Tag name cannot be empty" : "Назив ознаке не може бити празан",
     "An error occurred, unable to create the tag." : "Дошло је до грешке, ознака не може да се креира.",
     "Select calendar" : "Изаберите календар",
     "No calendars with task list support" : "Нема календара са подршком за листу задатака",

@@ -446,6 +446,7 @@ OC.L10N.register(
     "Saving tag …" : "جارٍ حفظ الوَسْم ...",
     "Tag name is a hidden system tag" : "اسم الوَسْم هو وَسْمٌ نِظَامِيٌّ مَخْفِيٌّ hidden system tag",
     "Tag already exists" : "الوَسْمُ موجود سلفاً",
+    "Tag name cannot be empty" : "اسم السِّمَة لا يمكن أن يكون فارغاً",
     "An error occurred, unable to create the tag." : "حدث خطأ. يتعذّر إنشاء الوَسْم",
     "Select calendar" : "إختر التقويم",
     "No calendars with task list support" : "لا توجد تقاويم مع دعم قائمة المهام",

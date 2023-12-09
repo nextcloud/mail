@@ -444,6 +444,7 @@
     "Saving tag …" : "正在儲存標籤……",
     "Tag name is a hidden system tag" : "標籤名稱為隱藏的系統標籤",
     "Tag already exists" : "標籤已經存在",
+    "Tag name cannot be empty" : "標籤名稱不可為空白",
     "An error occurred, unable to create the tag." : "遇到錯誤，無法建立標籤。",
     "Select calendar" : "選取日曆",
     "No calendars with task list support" : "沒有支援工作清單的日曆",

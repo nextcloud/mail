@@ -446,6 +446,7 @@ OC.L10N.register(
     "Saving tag …" : "Speichere Schlagwort …",
     "Tag name is a hidden system tag" : "Schlagwortname ist ein verstecktes System-Schlagwort",
     "Tag already exists" : "Schlagwort existiert bereits",
+    "Tag name cannot be empty" : "Schlagwort darf nicht leer sein",
     "An error occurred, unable to create the tag." : "Es ist ein Fehler aufgetreten, das Schlagwort kann nicht erstellt werden.",
     "Select calendar" : "Kalender auswählen",
     "No calendars with task list support" : "Keine Kalender mit Aufgabenlistenunterstützung",
