@@ -446,6 +446,7 @@ OC.L10N.register(
     "Saving tag …" : "Etiket kaydediliyor …",
     "Tag name is a hidden system tag" : "Etiket adı sistem tarafından kullanılan bir gizli ad",
     "Tag already exists" : "Etiket zaten var",
+    "Tag name cannot be empty" : "Etiket adı boş olamaz",
     "An error occurred, unable to create the tag." : "Etiket eklenirken bir sorun çıktı.",
     "Select calendar" : "Takvim seçin",
     "No calendars with task list support" : "Görev listesi olan bir takvim yok",
