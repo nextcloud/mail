@@ -86,13 +86,13 @@
 				<template #icon>
 					<IconFolderRename :size="20" />
 				</template>
-				{{ t('mail', 'Edit name') }}
+				{{ t('mail', 'Rename') }}
 			</ActionButton>
 			<ActionInput v-if="renameInput"
 				:value.sync="mailboxName"
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
-					<IconFolderRename :title="t('mail', 'Edit name')"
+					<IconFolderRename :title="t('mail', 'Rename')"
 						:size="20" />
 				</template>
 			</ActionInput>
