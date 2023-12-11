@@ -111,12 +111,12 @@ class OutOfOfficeState implements JsonSerializable {
 
 		$start = $this->getStart();
 		if ($start) {
-			$json['start'] = $start->format('Y-m-d');
+			$json['start'] = $start->format('c');
 		}
 
 		$end = $this->getEnd();
 		if ($end) {
-			$json['end'] = $end->format('Y-m-d');
+			$json['end'] = $end->format('c');
 		}
 
 		$json['subject'] = $this->getSubject();
