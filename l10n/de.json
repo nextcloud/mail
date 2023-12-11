@@ -61,7 +61,7 @@
     "Account updated" : "Konto aktualisiert",
     "IMAP server is not reachable" : "IMAP-Server ist nicht erreichbar.",
     "SMTP server is not reachable" : "SMTP-Server ist nicht erreichbar.",
-    "IMAP username or password is wrong" : "Falscher IMAP-Benutzername oder Passwort.",
+    "IMAP username or password is wrong" : "Falscher IMAP-Benutzername oder Passwort",
     "SMTP username or password is wrong" : "SMTP-Benutzername oder Passwort ist falsch.",
     "IMAP connection failed" : "IMAP-Verbindung fehlgeschlagen",
     "SMTP connection failed" : "SMTP-Verbindung fehlgeschlagen",
