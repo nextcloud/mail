@@ -284,13 +284,13 @@ export default {
 			return
 		}
 
-		const mailbox = state.mailboxes[envelopes[0].mailboxId]
 		const idToDateInt = (id) => state.envelopes[id].dateInt
 
 		const listId = normalizedEnvelopeListId(query)
 		const orderByDateInt = orderBy(idToDateInt, state.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
 
 		envelopes.forEach((envelope) => {
+			const mailbox = state.mailboxes[envelope.mailboxId]
 			const existing = mailbox.envelopeLists[listId] || []
 			normalizeTags(state, envelope)
 			Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
