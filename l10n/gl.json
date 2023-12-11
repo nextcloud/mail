@@ -444,6 +444,7 @@
     "Saving tag …" : "Gardando etiqueta…",
     "Tag name is a hidden system tag" : "O nome da etiqueta é unha etiqueta agochada do sistema",
     "Tag already exists" : "Xa existe a etiqueta",
+    "Tag name cannot be empty" : "O nome da etiqueta non pode estar baleiro",
     "An error occurred, unable to create the tag." : "Produciuse un erro, non é posíbel crear a etiqueta.",
     "Select calendar" : "Seleccionar calendario",
     "No calendars with task list support" : "Novo calendario con compatibilidade con lista de tarefas",

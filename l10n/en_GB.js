@@ -446,6 +446,7 @@ OC.L10N.register(
     "Saving tag …" : "Saving tag …",
     "Tag name is a hidden system tag" : "Tag name is a hidden system tag",
     "Tag already exists" : "Tag already exists",
+    "Tag name cannot be empty" : "Tag name cannot be empty",
     "An error occurred, unable to create the tag." : "An error occurred, unable to create the tag.",
     "Select calendar" : "Select calendar",
     "No calendars with task list support" : "No calendars with task list support",
