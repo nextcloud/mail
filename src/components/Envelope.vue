@@ -69,7 +69,7 @@
 			</div>
 			<div v-if="data.encrypted || data.previewText"
 				class="envelope__preview-text">
-				{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText }}
+				{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
 			</div>
 		</template>
 		<template #indicator>
