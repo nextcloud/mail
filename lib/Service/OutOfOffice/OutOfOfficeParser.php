@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\OutOfOffice;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use JsonException;
 use OCA\Mail\Exception\OutOfOfficeParserException;
 
@@ -39,6 +40,12 @@ class OutOfOfficeParser {
 
 	private const STATE_COPY = 0;
 	private const STATE_SKIP = 1;
+
+	private DateTimeZone $utc;
+
+	public function __construct() {
+		$this->utc = new DateTimeZone('UTC');
+	}
 
 	/**
 	 * @throws OutOfOfficeParserException
@@ -124,9 +131,9 @@ class OutOfOfficeParser {
 		$formattedStart = $this->formatDateForSieve($state->getStart());
 		if ($state->getEnd() !== null) {
 			$formattedEnd = $this->formatDateForSieve($state->getEnd());
-			$condition = "allof(currentdate :value \"ge\" \"date\" \"$formattedStart\", currentdate :value \"le\" \"date\" \"$formattedEnd\")";
+			$condition = "allof(currentdate :value \"ge\" \"iso8601\" \"$formattedStart\", currentdate :value \"le\" \"iso8601\" \"$formattedEnd\")";
 		} else {
-			$condition = "currentdate :value \"ge\" \"date\" \"$formattedStart\"";
+			$condition = "currentdate :value \"ge\" \"iso8601\" \"$formattedStart\"";
 		}
 
 		$escapedSubject = $this->escapeStringForSieve($state->getSubject());
@@ -191,7 +198,7 @@ class OutOfOfficeParser {
 	}
 
 	private function formatDateForSieve(DateTimeImmutable $date): string {
-		return $date->format('Y-m-d');
+		return $date->setTimezone($this->utc)->format('Y-m-d\TH:i:s\Z');
 	}
 
 	private function escapeStringForSieve(string $subject): string {
