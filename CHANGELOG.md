@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.5.0 – unreleased
+## 3.5.0 – 2023-12-12
 ### Added
 - Emoji picker via : symbol
 - Smart picker integration via / symbol
