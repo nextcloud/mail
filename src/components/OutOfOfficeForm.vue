@@ -172,6 +172,7 @@ export default {
 			OOO_DISABLED,
 			OOO_ENABLED,
 			OOO_FOLLOW_SYSTEM,
+			initialized: false,
 			enabled: this.account.outOfOfficeFollowsSystem ? OOO_FOLLOW_SYSTEM : OOO_DISABLED,
 			enableLastDay: false,
 			firstDay: new Date(),
@@ -228,6 +229,10 @@ export default {
 	},
 	watch: {
 		enableLastDay(enableLastDay) {
+			if (!this.initialized) {
+				return
+			}
+
 			if (enableLastDay) {
 				this.lastDay = new Date(this.firstDay)
 				this.lastDay.setDate(this.lastDay.getDate() + 6)
@@ -236,6 +241,10 @@ export default {
 			}
 		},
 		firstDay(firstDay, previousFirstDay) {
+			if (!this.initialized) {
+				return
+			}
+
 			if (!this.enableLastDay) {
 				return
 			}
@@ -252,6 +261,7 @@ export default {
 	},
 	async mounted() {
 		await this.fetchState()
+		this.initialized = true
 	},
 	methods: {
 		async fetchState() {
@@ -262,11 +272,18 @@ export default {
 			} else {
 				this.enabled = state.enabled ? OOO_ENABLED : OOO_DISABLED
 			}
-			if (state.enabled) {
-				this.firstDay = state.start ? new Date(state.start) : new Date()
-				this.lastDay = state.end ? new Date(state.end) : null
+
+			if (state.enabled && state.start) {
+				this.firstDay = new Date(state.start)
 			}
-			this.enableLastDay = !!this.lastDay
+			if (state.enabled && state.end) {
+				this.lastDay = new Date(state.end)
+				// FIXME: The dav automation adds 23:59 and mail adds 24:00 hours to the last day.
+				//        Subtract 23 hours to get the actual date.
+				this.lastDay.setHours(this.lastDay.getHours() - 23, 0, 0, 0)
+				this.enableLastDay = true
+			}
+
 			this.subject = state.subject
 			this.message = toHtml(plain(state.message)).value
 		},
@@ -284,14 +301,26 @@ export default {
 						},
 					})
 				} else {
+					const firstDay = new Date(this.firstDay)
+					firstDay.setHours(0, 0, 0, 0)
+
+					let lastDay = null
+					if (this.lastDay) {
+						// Add 24 hours to the last day to include the whole day
+						lastDay = new Date(this.lastDay)
+						lastDay.setHours(24, 0, 0, 0)
+					}
+
+					// Date.toISOString() always returns the date in UTC
 					await OutOfOfficeService.update(this.account.id, {
 						enabled: this.enabled === OOO_ENABLED,
-						start: this.firstDay,
-						end: this.lastDay,
+						start: firstDay.toISOString(),
+						end: lastDay?.toISOString() ?? null,
 						subject: this.subject,
 						message: toPlain(html(this.message)).value, // CKEditor always returns html data
 						allowedRecipients: this.aliases,
 					})
+
 					this.$store.commit('patchAccount', {
 						account: this.account,
 						data: {
