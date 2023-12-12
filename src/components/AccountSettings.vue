@@ -83,9 +83,6 @@
 					:account="account" />
 			</div>
 		</AppSettingsSection>
-		<AppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
-			<TrustedSenders />
-		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
 			id="mail-server"
 			:title="t('mail', 'Mail server')">
@@ -119,7 +116,6 @@ import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import SignatureSettings from '../components/SignatureSettings.vue'
 import AliasSettings from '../components/AliasSettings.vue'
 import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
-import TrustedSenders from './TrustedSenders.vue'
 import SieveAccountForm from './SieveAccountForm.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
 import OutOfOfficeForm from './OutOfOfficeForm.vue'
@@ -133,7 +129,6 @@ export default {
 	components: {
 		SieveAccountForm,
 		SieveFilterForm,
-		TrustedSenders,
 		AccountForm,
 		AliasSettings,
 		EditorSettings,

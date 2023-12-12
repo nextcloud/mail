@@ -67,18 +67,23 @@
 			<div v-if="outboxMessages.length !== 0" class="outbox__border">
 				<NavigationOutbox class="outbox" />
 			</div>
-			<AppNavigationSettings :title="t('mail', 'Mail settings')">
-				<template #icon>
-					<IconSetting :size="20" />
-				</template>
-				<AppSettingsMenu />
-			</AppNavigationSettings>
+			<div class="mail-settings">
+				<NcButton class="mail-settings__button"
+					:close-after-click="true"
+					@click="showMailSettings">
+					<template #icon>
+						<IconSetting :size="20" />
+					</template>
+					{{ t('mail', 'Mail settings') }}
+				</NcButton>
+			</div>
 		</template>
+		<AppSettingsMenu :open.sync="showSettings" />
 	</AppNavigation>
 </template>
 
 <script>
-import { NcAppNavigation as AppNavigation, NcAppNavigationSettings as AppNavigationSettings, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
+import { NcButton, NcAppNavigation as AppNavigation, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 import NavigationAccount from './NavigationAccount.vue'
@@ -92,8 +97,8 @@ import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
 export default {
 	name: 'Navigation',
 	components: {
+		NcButton,
 		AppNavigation,
-		AppNavigationSettings,
 		AppNavigationSpacer,
 		AppSettingsMenu,
 		NavigationAccount,
@@ -106,6 +111,7 @@ export default {
 	data() {
 		return {
 			refreshing: false,
+			showSettings: false,
 		}
 	},
 	computed: {
@@ -146,6 +152,9 @@ export default {
 		},
 	},
 	methods: {
+		showMailSettings() {
+			this.showSettings = true
+		},
 		isCollapsed(account, mailbox) {
 			if (mailbox.specialRole === 'inbox') {
 				// INBOX is always visible
@@ -235,6 +244,15 @@ to {
 		&.active {
 			background-color: transparent !important;
 		}
+	}
+}
+.mail-settings {
+	padding: calc(var(--default-grid-baseline, 4px) * 2);
+
+	&__button {
+		width: 100% !important;
+		justify-content: start !important;
+
 	}
 }
 
