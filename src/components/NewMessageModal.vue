@@ -1,6 +1,6 @@
 <template>
 	<Modal v-if="showMessageComposer"
-		size="normal"
+		:size="largerModal ? 'large' : 'normal'"
 		:title="modalTitle"
 		:additional-trap-elements="toolbarElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
@@ -10,16 +10,16 @@
 			role="alert">
 			<p>{{ error }}</p>
 			<template #action>
-				<ButtonVue type="tertiary"
+				<NcButton type="tertiary"
 					:aria-label="t('mail', 'Go back')"
 					@click="error = undefined">
 					{{ t('mail', 'Go back') }}
-				</ButtonVue>
-				<ButtonVue type="tertiary"
+				</NcButton>
+				<NcButton type="tertiary"
 					:aria-label="t('mail', 'Retry')"
 					@click="onSend">
 					{{ t('mail', 'Retry') }}
-				</ButtonVue>
+				</NcButton>
 			</template>
 		</EmptyContent>
 		<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
@@ -34,26 +34,37 @@
 				{{ warning }}
 			</template>
 			<template #action>
-				<ButtonVue type="tertiary"
+				<NcButton type="tertiary"
 					:aria-label="t('mail', 'Go back')"
 					@click="warning = undefined">
 					{{ t('mail', 'Go back') }}
-				</ButtonVue>
-				<ButtonVue type="tertiary"
+				</NcButton>
+				<NcButton type="tertiary"
 					:aria-label="t('mail', 'Send anyway')"
 					@click="onForceSend">
 					{{ t('mail', 'Send anyway') }}
-				</ButtonVue>
+				</NcButton>
 			</template>
 		</EmptyContent>
 		<template v-else>
-			<NcActions class="minimize-button">
-				<NcActionButton :aria-label="t('mail', 'Minimize composer')" @click="onMinimize">
-					<template #icon>
-						<MinimizeIcon :size="20" />
-					</template>
-				</NcActionButton>
-			</NcActions>
+			<NcButton class="maximize-button"
+				type="tertiary-no-background"
+				:aria-label="t('mail', 'Maximize composer')"
+				@click="onMaximize">
+				<template #icon>
+					<MaximizeIcon v-if="!largerModal" :size="20" />
+					<DefaultComposerIcon v-else :size="20" />
+				</template>
+			</NcButton>
+			<NcButton class="minimize-button"
+				type="tertiary-no-background"
+				:aria-label="t('mail', 'Minimize composer')"
+				@click="onMinimize">
+				<template #icon>
+					<MinimizeIcon :size="20" />
+				</template>
+			</NcButton>
+
 			<Composer ref="composer"
 				:from-account="composerData.accountId"
 				:from-alias="composerData.aliasId"
@@ -99,11 +110,9 @@
 </template>
 <script>
 import {
-	NcButton as ButtonVue,
+	NcButton,
 	NcEmptyContent as EmptyContent,
 	NcModal as Modal,
-	NcActions,
-	NcActionButton,
 } from '@nextcloud/vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
@@ -119,19 +128,21 @@ import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import Loading from './Loading.vue'
 import { mapGetters } from 'vuex'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
+import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
+import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 
 export default {
 	name: 'NewMessageModal',
 	components: {
-		ButtonVue,
+		NcButton,
 		Composer,
 		EmptyContent,
 		Loading,
 		Modal,
-		NcActions,
-		NcActionButton,
 		MinimizeIcon,
+		MaximizeIcon,
+		DefaultComposerIcon,
 	},
 	props: {
 		accounts: {
@@ -155,10 +166,11 @@ export default {
 			modalFirstOpen: true,
 			cookedComposerData: undefined,
 			changed: false,
+			largerModal: false,
 		}
 	},
 	computed: {
-		...mapGetters(['showMessageComposer']),
+		...mapGetters(['showMessageComposer', 'getPreference']),
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')
@@ -193,8 +205,28 @@ export default {
 	async mounted() {
 		await this.$nextTick()
 		this.updateCookedComposerData()
+		await this.openModalSize()
 	},
 	methods: {
+		async openModalSize() {
+			try {
+				const sizePreference = this.$store.getters.getPreference('modalSize')
+				this.largerModal = sizePreference === 'large'
+			} catch (error) {
+				console.error('Error getting modal size preference', error)
+			}
+		},
+		async onMaximize() {
+			this.largerModal = !this.largerModal
+			try {
+				await this.$store.dispatch('savePreference', {
+					key: 'modalSize',
+					value: this.largerModal ? 'large' : 'normal',
+				})
+			} catch (error) {
+				console.error('Failed to save preference', error)
+			}
+		},
 		handleShow(element) {
 			this.toolbarElements = [element]
 		},
@@ -503,6 +535,7 @@ export default {
 		max-width: 80%;
 	}
 }
+
 :deep(.modal-wrapper .modal-container) {
 	overflow-y: auto !important;
 	overflow-x: auto !important;
@@ -513,8 +546,17 @@ export default {
 }
 
 .minimize-button {
+	float: right;
 	position: absolute;
-	right: 49px;
 	top: 4px;
+	right: 63px;
+}
+
+.maximize-button {
+	float: right;
+	position: absolute;
+	top: 4px;
+	right: 33px;
+
 }
 </style>
