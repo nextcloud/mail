@@ -63,7 +63,7 @@
 			<NcAppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
 				<TrustedSenders />
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="gavatar-settings" :title="t('mail', 'Gavatar settings')">
+			<NcAppSettingsSection id="gravatar-settings" :title="t('mail', 'Gravatar settings')">
 				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 					<IconLoading :size="20" />
 					{{ t('mail', 'Use Gravatar and favicon avatars') }}
