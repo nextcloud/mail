@@ -32,7 +32,7 @@
 		:allow-collapse="true"
 		:menu-open.sync="menuOpen"
 		:force-menu="true"
-		:title="title"
+		:name="title"
 		:to="to"
 		:open.sync="showSubMailboxes"
 		@update:menuOpen="onMenuToggle">
@@ -70,10 +70,10 @@
 		<template slot="actions">
 			<ActionText
 				v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
-				:title="mailbox.name">
+				:name="mailbox.name">
 				<template #icon>
 					<IconInfo
-						:title="statsText"
+						:name="statsText"
 						:size="20" />
 				</template>
 				{{ statsText }}
@@ -81,7 +81,7 @@
 
 			<ActionButton
 				v-if="mailbox.specialRole !== 'flagged' && !account.isUnified && hasSeenAcl"
-				:title="t('mail', 'Mark all as read')"
+				:name="t('mail', 'Mark all as read')"
 				:disabled="loadingMarkAsRead"
 				@click="markAsRead">
 				<template #icon>
@@ -123,7 +123,7 @@
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
 					<IconFolderRename
-						:title="t('mail', 'Edit name')"
+						:name="t('mail', 'Edit name')"
 						:size="20" />
 				</template>
 			</ActionInput>
@@ -146,7 +146,7 @@
 			</ActionButton>
 			<ActionButton
 				v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
-				:title="t('mail', 'Clear cache')"
+				:name="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
 				@click="clearCache">
 				<template #icon>

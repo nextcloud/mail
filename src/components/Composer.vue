@@ -64,7 +64,7 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
@@ -85,7 +85,7 @@
 				{{ t('mail', 'Cc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="cc"
+				<Select id="cc"
 					v-model="selectCc"
 					:class="{'opened': !autoLimit}"
 					:options="selectableRecipients"
@@ -113,14 +113,14 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
 					<span slot="noOptions">{{ t('mail', '') }}</span>
-				</Multiselect>
+				</Select>
 			</div>
 		</div>
 		<div v-if="showBCC" class="composer-fields">
@@ -128,13 +128,13 @@
 				{{ t('mail', 'Bcc') }}
 			</label>
 			<div class="composer-fields--custom">
-				<Multiselect id="bcc"
+				<Select id="bcc"
 					v-model="selectBcc"
 					:class="{'opened': !autoLimit}"
 					:options="selectableRecipients"
 					:taggable="true"
 					label="label"
-					track-by="email"
+					input-id="email"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:show-no-options="false"
@@ -155,14 +155,14 @@
 						<div class="multiselect__tag multiselect__tag-custom">
 							<ListItemIcon
 								:no-margin="true"
-								:title="option.label"
+								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
 					</template>
 					<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
-				</Multiselect>
+				</Select>
 			</div>
 		</div>
 		<div class="composer-fields">
@@ -238,7 +238,7 @@
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
-						<Download :size="20" :title="t('mail', 'Save draft')" />
+						<Download :size="20" :name="t('mail', 'Save draft')" />
 					</template>
 				</ButtonVue>
 				<ButtonVue v-if="!savingDraft && draftSaved"
@@ -247,7 +247,7 @@
 					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discard-draft')">
 					<template #icon>
-						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
+						<Delete :size="20" :name="t('mail', 'Discard & close draft')" />
 					</template>
 				</ButtonVue>
 			</div>
@@ -292,7 +292,7 @@
 							:close-after-click="false"
 							@click="isMoreActionsOpen=true">
 							<template #icon>
-								<SendClock :size="20" :title="t('mail', 'Send later')" />
+								<SendClock :size="20" :name="t('mail', 'Send later')" />
 							</template>
 							{{
 								t('mail', 'Send later')
@@ -348,7 +348,7 @@
 							@click="isMoreActionsOpen=false">
 							<template #icon>
 								<ChevronLeft
-									:title="t('mail', 'Send later')"
+									:name="t('mail', 'Send later')"
 									:size="20" />
 								{{ t('mail', 'Send later') }}
 							</template>
@@ -411,7 +411,7 @@
 					@click="onSend">
 					<template #icon>
 						<Send
-							:title="submitButtonTitle"
+							:name="submitButtonTitle"
 							:size="20" />
 					</template>
 					{{ submitButtonTitle }}

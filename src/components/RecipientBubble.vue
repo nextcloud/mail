@@ -78,7 +78,7 @@
 				</ButtonVue>
 			</div>
 			<div v-else class="contact-input-wrapper">
-				<Multiselect
+				<Select
 					v-if="selection === ContactSelectionStateEnum.existing"
 					id="contact-selection"
 					ref="contact-selection-label"
@@ -86,7 +86,7 @@
 					:options="selectableContacts"
 					:taggable="true"
 					label="label"
-					track-by="label"
+					input-id="label"
 					:multiple="false"
 					:placeholder="t('name', 'Contact name …')"
 					:clear-on-select="false"

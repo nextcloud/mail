@@ -24,7 +24,7 @@
 	<AppNavigationItem
 		id="navigation-outbox"
 		key="navigation-outbox"
-		:title="t('mail', 'Outbox')"
+		:name="t('mail', 'Outbox')"
 		:to="to">
 		<template #icon>
 			<IconOutbox

@@ -2,7 +2,7 @@
 	<div class="multiselect__tag multiselect__tag--recipient">
 		<ListItemIcon
 			:no-margin="true"
-			:title="option.label"
+			:name="option.label"
 			:url="option.photo"
 			:avatar-size="24" />
 		<Close

@@ -13,7 +13,7 @@
 		:to="link"
 		:exact="true"
 		:data-envelope-id="data.databaseId"
-		:title="addresses"
+		:name="addresses"
 		:details="formatted()"
 		@click="onClick"
 		@click.ctrl.prevent="toggleSelected"
@@ -170,7 +170,7 @@
 					@click="showSnoozeOptions">
 					<template #icon>
 						<AlarmIcon
-							:title="t('mail', 'Snooze')"
+							:name="t('mail', 'Snooze')"
 							:size="20" />
 					</template>
 					{{
@@ -181,7 +181,7 @@
 					:close-after-click="true"
 					@click="onUnSnooze">
 					<template #icon>
-						<AlarmIcon :title="t('mail', 'Unsnooze')"
+						<AlarmIcon :name="t('mail', 'Unsnooze')"
 							:size="20" />
 					</template>
 					{{ t('mail', 'Unsnooze') }}
