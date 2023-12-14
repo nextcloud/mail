@@ -96,6 +96,7 @@ OC.L10N.register(
     "Trusted senders" : "Expeditori de încredere",
     "Use Gravatar and favicon avatars" : "Folosiți avataruri Gravatar și favicon",
     "Register as application for mail links" : "Înregistrează ca aplicație pentru\nlink-urile de mail",
+    "Register" : "Înregistrează-te",
     "Show keyboard shortcuts" : "Arată scurtături",
     "Manage S/MIME certificates" : "Administrează certificatele  S/MIME",
     "Newest" : "Cele mai recente",

@@ -28,6 +28,7 @@ OC.L10N.register(
     "Go back" : "Mine tagasi",
     "Email address" : "E-posti aadress",
     "Cancel" : "Loobu",
+    "Register" : "Registreeru",
     "From" : "Saatja",
     "To" : "Saaja",
     "Subject" : "Teema",

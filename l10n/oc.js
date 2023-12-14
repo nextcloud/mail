@@ -28,6 +28,8 @@ OC.L10N.register(
     "Go back" : "Revenir en arrière",
     "Email address" : "Adreça mail",
     "Cancel" : "Anullar",
+    "Register" : "S'inscriure",
+    "Keyboard" : "Clavièr",
     "From" : "De",
     "Write message …" : "Escriure un messatge…",
     "Monday morning" : "Diluns matin",

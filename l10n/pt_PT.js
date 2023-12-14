@@ -55,6 +55,7 @@ OC.L10N.register(
     "Trusted senders" : "Remetentes confiáveis",
     "Use Gravatar and favicon avatars" : "Usar Gravatar e favicon avatars",
     "Register as application for mail links" : "Registar como aplicação para ligações de correio",
+    "Register" : "Registar",
     "Show keyboard shortcuts" : "Mostrar atalhos de teclado",
     "From" : "De",
     "Select account" : "Seleccionar uma conta",

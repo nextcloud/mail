@@ -29,6 +29,7 @@ OC.L10N.register(
     "Go back" : "Shko prapa",
     "Cancel" : "Anullo",
     "Add mail account" : "Shto llogarinë e postës elektronike",
+    "Register" : "Regjistrohu",
     "Select account" : "Përzgjidhni llogari",
     "Subject" : "Temë",
     "Upload attachment" : "Ngarko bashkëngjitje",

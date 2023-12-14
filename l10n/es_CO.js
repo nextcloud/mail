@@ -30,6 +30,7 @@ OC.L10N.register(
     "Cancel" : "Cancelar",
     "Add mail account" : "Agregar cuenta de correo",
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",
+    "Register" : "Registrar",
     "Select account" : "Selecciona la cuenta",
     "Subject" : "Asunto",
     "Upload attachment" : "Cargar adjunto",

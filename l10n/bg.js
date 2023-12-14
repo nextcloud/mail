@@ -93,6 +93,8 @@ OC.L10N.register(
     "Trusted senders" : "Доверени податели",
     "Use Gravatar and favicon avatars" : "Използване на аватари тип Gravatar и favicon",
     "Register as application for mail links" : "Регистрирайте се като приложение за пощенски връзки",
+    "Register" : "Регистрация",
+    "Keyboard" : "Клавиатура",
     "Show keyboard shortcuts" : "Показване на клавишни комбинации",
     "Manage S/MIME certificates" : "Управление на S/MIME сертификати",
     "Newest" : "Най-новият",

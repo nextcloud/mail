@@ -54,6 +54,7 @@ OC.L10N.register(
     "Trusted senders" : "Người gửi đáng tin cậy",
     "Use Gravatar and favicon avatars" : "Sử dụng hình đại diện Gravatar và favicon",
     "Register as application for mail links" : "Đăng ký làm ứng dụng cho các liên kết gửi thư",
+    "Register" : "Đăng ký",
     "Show keyboard shortcuts" : "Hiển thị phím tắt",
     "Put my text to the bottom of a reply instead of on top of it." : "Đặt văn bản ở cuối thư trả lời thay vì ở đầu thư.",
     "From" : "Từ",

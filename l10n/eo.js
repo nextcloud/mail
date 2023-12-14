@@ -45,6 +45,7 @@ OC.L10N.register(
     "Add mail account" : "Aldoni retpoŝtan konton",
     "Use Gravatar and favicon avatars" : "Uzi servon „Gravatar“ kaj avatarojn en retpaĝsimbolo",
     "Register as application for mail links" : "Registriĝi kiel programeto por retpoŝtligiloj",
+    "Register" : "Registriĝi",
     "Show keyboard shortcuts" : "Montri klavarajn ŝparvojojn",
     "From" : "De",
     "Select account" : "Elekti konton",

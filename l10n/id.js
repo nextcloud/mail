@@ -21,6 +21,7 @@ OC.L10N.register(
     "Email address" : "Alamat surel",
     "Cancel" : "Membatalkan",
     "Add mail account" : "Tambahkan akun surel",
+    "Register" : "Daftar",
     "Show keyboard shortcuts" : "Tampilkan pintasan papan kunci",
     "Subject" : "Subjek",
     "Upload attachment" : "Unggah lampiran",

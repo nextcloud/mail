@@ -33,6 +33,7 @@ OC.L10N.register(
     "Cancel" : "Diddymu",
     "Add mail account" : "Ychwanegu cyfrif post",
     "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
+    "Register" : "Cofrestru",
     "Show keyboard shortcuts" : "Dangos llwybrau byr bysellfwrdd",
     "Subject" : "Pwnc",
     "Saving draft …" : "Yn cadw drafft …",

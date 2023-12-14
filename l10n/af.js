@@ -42,6 +42,7 @@ OC.L10N.register(
     "Email address" : "E-posadres",
     "Cancel" : "Kanselleer",
     "Add mail account" : "Voeg posrekening toe",
+    "Register" : "Registreer",
     "Update Certificate" : "Werk sertifikaat by",
     "No certificate" : "Geen sertifikaat",
     "Certificate updated" : "Sertifikaat bygewerk",

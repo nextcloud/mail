@@ -30,6 +30,7 @@ OC.L10N.register(
     "Cancel" : "უარყოფა",
     "Add mail account" : "საფოსტო ანგარიშის დამატება",
     "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები",
+    "Register" : "რეგისტრაცია",
     "Select account" : "აირჩიეთ ანგარიში",
     "Subject" : "სათაური",
     "Upload attachment" : "დანართის ატვირთვა",

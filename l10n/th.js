@@ -19,6 +19,7 @@ OC.L10N.register(
     "Change name" : "เปลี่ยนชื่อ",
     "Email address" : "ที่อยู่อีเมล",
     "Cancel" : "ยกเลิก",
+    "Register" : "ลงทะเบียน",
     "Send" : "ส่ง",
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
     "Confirm" : "ยืนยัน",

@@ -30,6 +30,7 @@ OC.L10N.register(
     "Change name" : "Cambiar nombre",
     "Cancel" : "Cancelar",
     "Add mail account" : "Agregar cuenta de correo",
+    "Register" : "Registrar",
     "Select account" : "Seleccione la cuenta",
     "Subject" : "Asunto",
     "Add attachment from Files" : "Agregar adjunto desde Archivos",
