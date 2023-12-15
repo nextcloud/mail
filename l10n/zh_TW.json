@@ -105,6 +105,7 @@
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "允許應用程式蒐集關於您互動的資料。以此資料為基礎，應用程式將會適應您的偏好設定。資料將只會儲存在本機。",
     "Auto tagging text" : "自動標記文字",
     "Trusted senders" : "信任的寄件者",
+    "Gravatar settings" : "Gravatar 設定",
     "Use Gravatar and favicon avatars" : "使用個人化大頭貼與網站圖示",
     "Reply text position" : "回覆文字位置",
     "Mailto" : "寄送地址",

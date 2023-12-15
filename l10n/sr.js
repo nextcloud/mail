@@ -107,6 +107,7 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Дозволи апликацији до прикупи податке о Вашој интеракцији са њом. На основу ових података, апликација ће се прилагодити Вашим преференцама. Подаци ће бити ускладиштени само локално.",
     "Auto tagging text" : "Аутоматско означавање текста",
     "Trusted senders" : "Пошиљаоци којима се верује",
+    "Gravatar settings" : "Gravatar подешавања",
     "Use Gravatar and favicon avatars" : "Користи Граватар и аватаре favicon-а",
     "Reply text position" : "Позиција текста одговора",
     "Mailto" : "Пошаљи за",

@@ -107,6 +107,7 @@ OC.L10N.register(
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Erlauben Sie der App, Daten über Ihre Interaktionen zu sammeln. Basierend auf diesen Daten passt sich die App an Ihre Vorlieben an. Die Daten werden nur lokal gespeichert.",
     "Auto tagging text" : "Text automatisch verschlagworten",
     "Trusted senders" : "Vertrauenswürdige Absender",
+    "Gravatar settings" : "Gravatar Einstellungen",
     "Use Gravatar and favicon avatars" : "Gravatar- und Favicon-Avatare verwenden",
     "Reply text position" : "Position des Antworttextes",
     "Mailto" : "Mailto",
