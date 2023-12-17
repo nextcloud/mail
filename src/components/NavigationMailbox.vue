@@ -34,6 +34,7 @@
 		:title="title"
 		:to="to"
 		:open.sync="showSubMailboxes"
+		:class="{ subMailBoxCounter: showSubMailboxes }"
 		@update:menuOpen="onMenuToggle">
 		<template #icon>
 			<div>
@@ -677,5 +678,11 @@ export default {
 <style lang="scss" scoped>
 .counter-bubble__counter {
 	max-width: initial;
+}
+</style>
+
+<style lang="scss">
+.subMailBoxCounter .app-navigation-entry__counter-wrapper {
+	margin-right: 0;
 }
 </style>
