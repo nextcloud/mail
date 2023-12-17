@@ -507,15 +507,10 @@ class MessageMapper extends QBMapper {
 				$query->setParameter('flag_attachments', $message->getFlagAttachments(), $message->getFlagAttachments() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_BOOL);
 				$previewText = null;
 				if ($message->getPreviewText() !== null) {
-					$previewText = mb_strcut(mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8'), 0, 255);
-
-						$convertedText = mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8');
+					$convertedText = mb_convert_encoding($message->getPreviewText(), 'UTF-8', 'UTF-8');
 					//converting the spaces is necessary for ltrim to work
 					$previewText = mb_strcut(ltrim(preg_replace('/\s/u', ' ', $convertedText)), 0, 255);
 
-					// Make sure modifications are visible when these objects are used right away
-					$message->setPreviewText($previewText);
-					$previewText = ltrim(preg_replace('/\s/u', ' ', $previewText));
 					// Make sure modifications are visible when these objects are used right away
 					$message->setPreviewText($previewText);
 				}
