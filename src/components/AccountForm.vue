@@ -25,13 +25,14 @@
 				</p>
 				<label for="auto-password"
 					:class="{ 'account-form__label': hasPasswordAlternatives, 'account-form__label--required': !hasPasswordAlternatives }">{{ t('mail', 'Password') }}</label>
-				<input id="auto-password"
-					v-model="autoConfig.password"
+
+				<NcPasswordField id="auto-password"
+					:value.sync="autoConfig.password"
 					:disabled="loading"
-					:placeholder="t('mail', 'Password')"
-					:required="!hasPasswordAlternatives"
 					type="password"
-					@change="clearFeedback">
+					:label="t('mail', 'Password')"
+					:required="!hasPasswordAlternatives"
+					@change="clearFeedback" />
 			</Tab>
 			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
 				<label for="man-name">{{ t('mail', 'Name') }}</label>
@@ -114,14 +115,14 @@
 					required
 					@change="clearFeedback">
 				<label v-if="!useOauth" for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
-				<input v-if="!useOauth"
+				<NcPasswordField v-if="!useOauth"
 					id="man-imap-password"
-					v-model="manualConfig.imapPassword"
 					type="password"
-					:placeholder="t('mail', 'IMAP Password')"
+					:value.sync="manualConfig.imapPassword"
+					:label="t('mail', 'IMAP Password')"
 					:disabled="loading"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 
 				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
 				<label for="man-smtp-host" class="account-form__label--required">{{ t('mail', 'SMTP Host') }}</label>
@@ -186,14 +187,14 @@
 					required
 					@change="clearFeedback">
 				<label v-if="!useOauth" for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
-				<input v-if="!useOauth"
+				<NcPasswordField v-if="!useOauth"
 					id="man-smtp-password"
-					v-model="manualConfig.smtpPassword"
 					type="password"
-					:placeholder="t('mail', 'SMTP Password')"
+					:value.sync="manualConfig.smtpPassword"
+					:lable="t('mail', 'SMTP Password')"
 					:disabled="loading"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 			</Tab>
 		</Tabs>
 		<div v-if="isGoogleAccount && !googleOauthUrl" class="account-form__google-sso">
@@ -236,7 +237,7 @@
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
 import { mapGetters } from 'vuex'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcPasswordField } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { translate as t } from '@nextcloud/l10n'
 
@@ -251,6 +252,7 @@ import { CONSENT_ABORTED, getUserConsent } from '../integration/oauth.js'
 export default {
 	name: 'AccountForm',
 	components: {
+		NcPasswordField,
 		Tab,
 		Tabs,
 		ButtonVue,
@@ -303,6 +305,7 @@ export default {
 				smtpPassword: '',
 			},
 			feedback: null,
+			password: '',
 		}
 	},
 	computed: {
