@@ -105,19 +105,6 @@
 					{{ t('mail', 'Register') }}
 				</NcButton>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="keyboard-settings" :title="t('mail', 'Keyboard')">
-				<NcButton class="app-settings-button"
-					type="secondary"
-					:aria-label="t('mail', 'Show keyboard shortcuts')"
-					@click.prevent.stop="showKeyboardShortcuts"
-					@shortkey="toggleKeyboardShortcuts">
-					<template #icon>
-						<IconInfo :size="20" />
-					</template>
-					{{ t('mail', 'Show keyboard shortcuts') }}
-				</NcButton>
-				<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
-			</NcAppSettingsSection>
 			<NcAppSettingsSection id="smime-settings" :title="t('mail', 'S/MIME')">
 				<NcButton class="app-settings-button"
 					type="secondary"
@@ -161,6 +148,54 @@
 					{{ t('mail', 'Install Mailvelope browser extension by clicking here') }}
 				</a>
 			</NcAppSettingsSection>
+			<NcAppSettingsSection id="keyboard-settings"
+				:title="t('mail', 'Keyboard')"
+				@close="closeKeyboardShortcuts">
+				<dl>
+					<div>
+						<dt><kbd>C</kbd></dt>
+						<dd>{{ t('mail', 'Compose new message') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>←</kbd></dt>
+						<dd>{{ t('mail', 'Newer message') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>→</kbd></dt>
+						<dd>{{ t('mail', 'Older message') }}</dd>
+					</div>
+
+					<div>
+						<dt><kbd>S</kbd></dt>
+						<dd>{{ t('mail', 'Toggle star') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>U</kbd></dt>
+						<dd>{{ t('mail', 'Toggle unread') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>A</kbd></dt>
+						<dd>{{ t('mail', 'Archive') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>Del</kbd></dt>
+						<dd>{{ t('mail', 'Delete') }}</dd>
+					</div>
+
+					<div>
+						<dt><kbd>Ctrl</kbd> + <kbd>F</kbd></dt>
+						<dd>{{ t('mail', 'Search') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt>
+						<dd>{{ t('mail', 'Send') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>R</kbd></dt>
+						<dd>{{ t('mail', 'Refresh') }}</dd>
+					</div>
+				</dl>
+			</NcAppSettingsSection>
 		</NcAppSettingsDialog>
 	</div>
 </template>
@@ -171,12 +206,10 @@ import { showError } from '@nextcloud/dialogs'
 
 import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch as CheckboxRadioSwitch } from '@nextcloud/vue'
 
-import IconInfo from 'vue-material-design-icons/Information.vue'
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
 import Logger from '../logger.js'
-import KeyboardShortcuts from '../views/KeyboardShortcuts.vue'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import TrustedSenders from './TrustedSenders.vue'
 
@@ -185,8 +218,6 @@ export default {
 	components: {
 		TrustedSenders,
 		NcButton,
-		KeyboardShortcuts,
-		IconInfo,
 		IconEmail,
 		IconAdd,
 		IconLoading,
@@ -213,7 +244,6 @@ export default {
 			// eslint-disable-next-line
 			replySettingsText: t('mail', 'Put my text to the bottom of a reply instead of on top of it.'),
 			loadingReplySettings: false,
-			displayKeyboardShortcuts: false,
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
@@ -358,24 +388,6 @@ export default {
 					Logger.error('could not register protocol handler', { err })
 				}
 			}
-		},
-		/**
-		 * Show the keyboard shortcuts overview
-		 */
-		showKeyboardShortcuts() {
-			this.displayKeyboardShortcuts = true
-		},
-		/**
-		 * Hide the keyboard shortcuts overview
-		 */
-		closeKeyboardShortcuts() {
-			this.displayKeyboardShortcuts = false
-		},
-		/**
-		 * Toggles the keyboard shortcuts overview
-		 */
-		toggleKeyboardShortcuts() {
-			this.displayKeyboardShortcuts = !this.displayKeyboardShortcuts
 		},
 	},
 }
