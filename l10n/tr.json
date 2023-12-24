@@ -44,7 +44,7 @@
     "SMTP Port" : "SMTP bağlantı noktası",
     "SMTP User" : "SMTP kullanıcı adı",
     "SMTP Password" : "SMTP parolası",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Google hesabının bu uygulamayla çalışması için Google iki adımlı doğrulamasını etkinleştirmeniz ve bir uygulama parolası üretmeniz gerekir.",
+    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "Google hesabının bu uygulamayla çalışması için Google iki adımlı doğrulamasını etkinleştirmeniz ve bir uygulama parolası oluşturmanız gerekir.",
     "Connecting" : "Bağlantı kuruluyor",
     "Reconnect Google account" : "Google hesabını yeniden bağla",
     "Sign in with Google" : "Google ile oturum açın",
