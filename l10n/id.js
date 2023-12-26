@@ -73,6 +73,7 @@ OC.L10N.register(
     "Add tag" : "Tambahkan tag",
     "Tag already exists" : "Tag sudah ada",
     "Unsubscribe" : "Berhenti berlangganan",
+    "Mark as unread" : "Tandai belum dibaca",
     "Mark as read" : "tandai sudah dibaca",
     "Remove" : "Buang",
     "(organizer)" : "(penyelenggara)",
