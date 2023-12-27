@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\Db;
 
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
@@ -38,6 +39,8 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class LocalAttachmentMapperTest extends TestCase {
+	use DatabaseTransaction;
+
 	/** @var IDBConnection */
 	private $db;
 
