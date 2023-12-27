@@ -7,14 +7,12 @@
 					<p>{{ brand }}</p>
 				</span>
 				<NcActions />
-				<NcButton
-					:aria-label=" t('mail', 'Go to latest message')"
+				<NcButton :aria-label=" t('mail', 'Go to latest message')"
 					type="secondary"
 					@click="onScroll">
 					{{ t('mail', 'Go to newest message') }}
 					<template #icon>
-						<ArrowDownIcon
-							:size="20" />
+						<ArrowDownIcon :size="20" />
 					</template>
 				</NcButton>
 			</div>
@@ -31,10 +29,10 @@
 	</div>
 </template>
 <script>
-import NcButton from '@nextcloud/vue/dist/Components/NcButton'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions'
-import CreationIcon from 'vue-material-design-icons/Creation'
-import ArrowDownIcon from 'vue-material-design-icons/ArrowDown'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import CreationIcon from 'vue-material-design-icons/Creation.vue'
+import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {

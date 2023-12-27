@@ -1,150 +1,202 @@
 <template>
-	<div>
-		<router-link v-if="allowNewMailAccounts" to="/setup" class="app-settings-button button primary new-button">
-			<IconAdd :size="20" />
-			{{ t('mail', 'Add mail account') }}
-		</router-link>
+	<div class="app-settings">
+		<NcAppSettingsDialog id="app-settings-dialog"
+			:title="t('mail', 'Mail settings')"
+			:show-navigation="true"
+			:open.sync="showSettings">
+			<NcAppSettingsSection id="account-settings" :title="t('mail', 'Account creation')">
+				<NcButton v-if="allowNewMailAccounts"
+					type="primary"
+					to="/setup"
+					:aria-label="t('mail', 'Add mail account')"
+					class="app-settings-button">
+					<template #icon>
+						<IconAdd :size="20" />
+					</template>
+					{{ t('mail', 'Add mail account') }}
+				</NcButton>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="body-settings" :title="t('mail', 'Activate body search')">
+				<p v-if="loadingPrioritySettings" class="app-settings">
+					{{ prioritySettingsText }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="priority-inbox-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="searchPriorityBody"
+						@change="onToggleSearchPriorityBody">
+					<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
+				</p>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="data-settings" :title="t('mail', 'Data collection consent')">
+				<p class="settings-hint">
+					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
+				</p>
+				<p v-if="loadingOptOutSettings" class="app-settings">
+					<IconLoading :size="20" />
+					{{ optOutSettingsText }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="data-collection-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="useDataCollection"
+						@change="onToggleCollectData">
+					<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
+				</p>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="autotagging-settings" :title="t('mail', 'Auto tagging text')">
+				<p v-if="toggleAutoTagging" class="app-settings">
+					<IconLoading :size="20" />
+					{{ autoTaggingText }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="auto-tagging-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="useAutoTagging"
+						@change="onToggleAutoTagging">
+					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
+				</p>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
+				<TrustedSenders />
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="gravatar-settings" :title="t('mail', 'Gravatar settings')">
+				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
+					<IconLoading :size="20" />
+					{{ t('mail', 'Use Gravatar and favicon avatars') }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="gravatar-enabled"
+						class="checkbox"
+						type="checkbox"
+						:checked="useExternalAvatars"
+						@change="onToggleExternalAvatars">
+					<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
+				</p>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="reply-settings" :title="t('mail', 'Reply text position')">
+				<p v-if="loadingReplySettings" class="app-settings reply-settings">
+					<IconLoading :size="20" />
+					{{ replySettingsText }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="bottom-reply-enabled"
+						class="checkbox"
+						type="checkbox"
+						:checked="useBottomReplies"
+						@change="onToggleButtonReplies">
+					<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
+				</p>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="mailto-settings" :title="t('mail', 'Mailto')">
+				<p class="settings-hint">
+					{{ t('mail', 'Register as application for mail links') }}
+				</p>
+				<NcButton type="secondary"
+					class="app-settings-button"
+					:aria-label="t('mail', 'Register as application for mail links')"
+					@click="registerProtocolHandler">
+					<template #icon>
+						<IconEmail :size="20" />
+					</template>
+					{{ t('mail', 'Register') }}
+				</NcButton>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="smime-settings" :title="t('mail', 'S/MIME')">
+				<NcButton class="app-settings-button"
+					type="secondary"
+					:aria-label="t('mail', 'Manage S/MIME certificates')"
+					@click.prevent.stop="displaySmimeCertificateModal = true">
+					<template #icon>
+						<IconLock :size="20" />
+					</template>
+					{{ t('mail', 'Manage S/MIME certificates') }}
+				</NcButton>
+				<SmimeCertificateModal v-if="displaySmimeCertificateModal"
+					@close="displaySmimeCertificateModal = false" />
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="sorting-settings" :title="t('mail', 'Sorting')">
+				<div class="sorting">
+					<CheckboxRadioSwitch class="sorting__switch"
+						:checked="sortOrder"
+						value="newest"
+						name="order_radio"
+						type="radio"
+						@update:checked="onSortByDate">
+						{{ t('mail', 'Newest') }}
+					</CheckboxRadioSwitch>
+					<CheckboxRadioSwitch class="sorting__switch"
+						:checked="sortOrder"
+						value="oldest"
+						name="order_radio"
+						type="radio"
+						@update:checked="onSortByDate">
+						{{ t('mail', 'Oldest') }}
+					</CheckboxRadioSwitch>
+				</div>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="mailvelope-settings" :title="t('mail', 'Mailvelope')">
+				<p class="mailvelope-section">
+					{{ t('mail', 'Looking for a way to encrypt your emails?') }}
+				</p>
+				<a href="https://www.mailvelope.com/"
+					target="_blank"
+					rel="noopener noreferrer">
+					{{ t('mail', 'Install Mailvelope browser extension by clicking here') }}
+				</a>
+			</NcAppSettingsSection>
+			<NcAppSettingsSection id="keyboard-settings"
+				:title="t('mail', 'Keyboard')"
+				@close="closeKeyboardShortcuts">
+				<dl>
+					<div>
+						<dt><kbd>C</kbd></dt>
+						<dd>{{ t('mail', 'Compose new message') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>←</kbd></dt>
+						<dd>{{ t('mail', 'Newer message') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>→</kbd></dt>
+						<dd>{{ t('mail', 'Older message') }}</dd>
+					</div>
 
-		<p v-if="loadingPrioritySettings" class="app-settings">
-			{{ prioritySettingsText }}
-		</p>
-		<p v-else class="app-settings">
-			<input
-				id="priority-inbox-toggle"
-				class="checkbox"
-				type="checkbox"
-				:checked="searchPriorityBody"
-				@change="onToggleSearchPriorityBody">
-			<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
-		</p>
+					<div>
+						<dt><kbd>S</kbd></dt>
+						<dd>{{ t('mail', 'Toggle star') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>U</kbd></dt>
+						<dd>{{ t('mail', 'Toggle unread') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>A</kbd></dt>
+						<dd>{{ t('mail', 'Archive') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>Del</kbd></dt>
+						<dd>{{ t('mail', 'Delete') }}</dd>
+					</div>
 
-		<p v-if="loadingOptOutSettings" class="app-settings">
-			<IconLoading :size="20" />
-			{{ optOutSettingsText }}
-		</p>
-		<p v-else class="app-settings">
-			<input
-				id="data-collection-toggle"
-				class="checkbox"
-				type="checkbox"
-				:checked="useDataCollection"
-				@change="onToggleCollectData">
-			<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
-		</p>
-
-		<p v-if="toggleAutoTagging" class="app-settings">
-			<IconLoading :size="20" />
-			{{ autoTaggingText }}
-		</p>
-		<p v-else class="app-settings">
-			<input
-				id="auto-tagging-toggle"
-				class="checkbox"
-				type="checkbox"
-				:checked="useAutoTagging"
-				@change="onToggleAutoTagging">
-			<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
-		</p>
-
-		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
-			<IconLoading :size="20" />
-			{{ t('mail', 'Use Gravatar and favicon avatars') }}
-		</p>
-		<p v-else class="app-settings">
-			<input
-				id="gravatar-enabled"
-				class="checkbox"
-				type="checkbox"
-				:checked="useExternalAvatars"
-				@change="onToggleExternalAvatars">
-			<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
-		</p>
-
-		<p v-if="loadingReplySettings" class="app-settings reply-settings">
-			<IconLoading :size="20" />
-			{{ replySettingsText }}
-		</p>
-		<p v-else class="app-settings">
-			<input
-				id="bottom-reply-enabled"
-				class="checkbox"
-				type="checkbox"
-				:checked="useBottomReplies"
-				@change="onToggleButtonReplies">
-			<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
-		</p>
-
-		<p>
-			<ButtonVue
-				type="secondary"
-				class="app-settings-button"
-				:aria-label="t('mail', 'Register as application for mail links')"
-				@click="registerProtocolHandler">
-				<template #icon>
-					<IconEmail :size="20" />
-				</template>
-				{{ t('mail', 'Register as application for mail links') }}
-			</ButtonVue>
-		</p>
-
-		<ButtonVue
-			class="app-settings-button"
-			type="secondary"
-			:aria-label="t('mail', 'Show keyboard shortcuts')"
-			@click.prevent.stop="showKeyboardShortcuts"
-			@shortkey="toggleKeyboardShortcuts">
-			<template #icon>
-				<IconInfo :size="20" />
-			</template>
-			{{ t('mail', 'Show keyboard shortcuts') }}
-		</ButtonVue>
-		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
-
-		<ButtonVue
-			class="app-settings-button"
-			type="secondary"
-			:aria-label="t('mail', 'Manage S/MIME certificates')"
-			@click.prevent.stop="displaySmimeCertificateModal = true">
-			<template #icon>
-				<IconLock :size="20" />
-			</template>
-			{{ t('mail', 'Manage S/MIME certificates') }}
-		</ButtonVue>
-		<SmimeCertificateModal v-if="displaySmimeCertificateModal"
-			@close="displaySmimeCertificateModal = false" />
-		<h2 class="section-title">
-			Sorting
-		</h2>
-		<div class="sorting">
-			<CheckboxRadioSwitch
-				class="sorting__switch"
-				:checked="sortOrder"
-				value="newest"
-				name="order_radio"
-				type="radio"
-				@update:checked="onSortByDate">
-				{{ t('mail', 'Newest') }}
-			</CheckboxRadioSwitch>
-			<CheckboxRadioSwitch
-				class="sorting__switch"
-				:checked="sortOrder"
-				value="oldest"
-				name="order_radio"
-				type="radio"
-				@update:checked="onSortByDate">
-				{{ t('mail', 'Oldest') }}
-			</CheckboxRadioSwitch>
-		</div>
-
-		<p class="mailvelope-section">
-			{{ t('mail', 'Looking for a way to encrypt your emails?') }}
-		</p>
-		<a
-			href="https://www.mailvelope.com/"
-			target="_blank"
-			rel="noopener noreferrer">
-			{{ t('mail', 'Install Mailvelope browser extension here') }}
-		</a>
+					<div>
+						<dt><kbd>Ctrl</kbd> + <kbd>F</kbd></dt>
+						<dd>{{ t('mail', 'Search') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt>
+						<dd>{{ t('mail', 'Send') }}</dd>
+					</div>
+					<div>
+						<dt><kbd>R</kbd></dt>
+						<dd>{{ t('mail', 'Refresh') }}</dd>
+					</div>
+				</dl>
+			</NcAppSettingsSection>
+		</NcAppSettingsDialog>
 	</div>
 </template>
 
@@ -152,28 +204,34 @@
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch as CheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch as CheckboxRadioSwitch } from '@nextcloud/vue'
 
-import IconInfo from 'vue-material-design-icons/Information'
-import IconAdd from 'vue-material-design-icons/Plus'
-import IconEmail from 'vue-material-design-icons/Email'
-import IconLock from 'vue-material-design-icons/Lock'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconEmail from 'vue-material-design-icons/Email.vue'
+import IconLock from 'vue-material-design-icons/Lock.vue'
 import Logger from '../logger.js'
-import KeyboardShortcuts from '../views/KeyboardShortcuts.vue'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
+import TrustedSenders from './TrustedSenders.vue'
 
 export default {
 	name: 'AppSettingsMenu',
 	components: {
-		ButtonVue,
-		KeyboardShortcuts,
-		IconInfo,
+		TrustedSenders,
+		NcButton,
 		IconEmail,
 		IconAdd,
 		IconLoading,
 		IconLock,
 		SmimeCertificateModal,
 		CheckboxRadioSwitch,
+		NcAppSettingsDialog,
+		NcAppSettingsSection,
+	},
+	props: {
+		open: {
+			required: true,
+			type: Boolean,
+		},
 	},
 	data() {
 		return {
@@ -181,17 +239,17 @@ export default {
 			prioritySettingsText: t('mail', 'Search in the body of messages in priority Inbox'),
 			loadingPrioritySettings: false,
 			// eslint-disable-next-line
-			optOutSettingsText: t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'),
+			optOutSettingsText: t('mail', 'Activate'),
 			loadingOptOutSettings: false,
 			// eslint-disable-next-line
 			replySettingsText: t('mail', 'Put my text to the bottom of a reply instead of on top of it.'),
 			loadingReplySettings: false,
-			displayKeyboardShortcuts: false,
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			toggleAutoTagging: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
+			showSettings: false,
 		}
 	},
 	computed: {
@@ -214,10 +272,25 @@ export default {
 			return this.$store.getters.getPreference('allow-new-accounts', true)
 		},
 	},
+	watch: {
+		showSettings(value) {
+			if (!value) {
+				this.$emit('update:open', value)
+			}
+		},
+		async open(value) {
+			if (value) {
+				await this.onOpen()
+			}
+		},
+	},
 	mounted() {
 		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
 	},
 	methods: {
+		async onOpen() {
+			this.showSettings = true
+		},
 		onToggleButtonReplies(e) {
 			this.loadingReplySettings = true
 
@@ -316,24 +389,6 @@ export default {
 				}
 			}
 		},
-		/**
-		 * Show the keyboard shortcuts overview
-		 */
-		showKeyboardShortcuts() {
-			this.displayKeyboardShortcuts = true
-		},
-		/**
-		 * Hide the keyboard shortcuts overview
-		 */
-		closeKeyboardShortcuts() {
-			this.displayKeyboardShortcuts = false
-		},
-		/**
-		 * Toggles the keyboard shortcuts overview
-		 */
-		toggleKeyboardShortcuts() {
-			this.displayKeyboardShortcuts = !this.displayKeyboardShortcuts
-		},
 	},
 }
 </script>
@@ -403,5 +458,13 @@ p.app-settings {
 	&__switch{
 		width: 50%;
 	}
+}
+.mail-creation-button {
+	width: 100%;
+}
+.settings-hint {
+	margin-top: -12px;
+	margin-bottom: 6px;
+	color: var(--color-text-maxcontrast);
 }
 </style>

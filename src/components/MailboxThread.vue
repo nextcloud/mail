@@ -6,8 +6,7 @@
 				:mailbox="mailbox"
 				:account-id="account.accountId"
 				@search-changed="onUpdateSearchQuery" />
-			<AppContentList
-				v-infinite-scroll="onScroll"
+			<AppContentList v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
 				class="envelope-list"
 				infinite-scroll-immediate-check="false"
@@ -17,8 +16,7 @@
 				role="heading"
 				:aria-level="2"
 				@shortkey.native="onShortcut">
-				<Mailbox
-					v-if="!mailbox.isPriorityInbox"
+				<Mailbox v-if="!mailbox.isPriorityInbox"
 					:account="account"
 					:mailbox="mailbox"
 					:search-query="query"
@@ -54,8 +52,7 @@
 					<SectionTitle v-show="hasImportantEnvelopes"
 						class="app-content-list-item other"
 						:name="t('mail', 'Other')" />
-					<Mailbox
-						class="nameother"
+					<Mailbox class="nameother"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
 						:search-query="appendToSearch(priorityOtherQuery)"
@@ -72,13 +69,13 @@
 <script>
 import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButton as ButtonVue, NcPopover as Popover } from '@nextcloud/vue'
 
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import SectionTitle from './SectionTitle.vue'
 import Vue from 'vue'
 import addressParser from 'address-rfc2822'
 
 import infiniteScroll from '../directives/infinite-scroll.js'
-import IconInfo from 'vue-material-design-icons/Information'
+import IconInfo from 'vue-material-design-icons/Information.vue'
 import logger from '../logger.js'
 import Mailbox from './Mailbox.vue'
 import SearchMessages from './SearchMessages.vue'
@@ -346,6 +343,11 @@ export default {
 }
 .information-icon {
 	opacity: .7;
+}
+@media only screen and (max-width: 1024px) {
+	.information-icon {
+		margin-bottom: 20px;
+	}
 }
 .header__button {
 	display: flex;

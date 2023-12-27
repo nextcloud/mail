@@ -35,8 +35,7 @@
 					<div class="group-inputs">
 						<label for="mail-antispam-email-spam"> {{ t('mail', '"Mark as Spam" Email Address') }}* </label>
 						<br>
-						<input
-							id="mail-antispam-email-spam"
+						<input id="mail-antispam-email-spam"
 							v-model="email.spam"
 							:disabled="loading"
 							name="spam"
@@ -44,15 +43,13 @@
 						<br>
 						<label for="mail-antispam-email-ham"> {{ t('mail', '"Mark Not Junk" Email Address') }}* </label>
 						<br>
-						<input
-							id="mail-antispam-email-ham"
+						<input id="mail-antispam-email-ham"
 							v-model="email.ham"
 							:disabled="loading"
 							name="ham"
 							type="email">
 						<br>
-						<Button
-							type="secondary"
+						<ButtonVue type="secondary"
 							:aria-label="t('mail', 'Save')"
 							:disabled="loading"
 							native-type="submit"
@@ -61,9 +58,8 @@
 								<IconUpload :size="20" />
 							</template>
 							{{ t('mail', 'Save') }}
-						</Button>
-						<Button
-							:disabled="loading"
+						</ButtonVue>
+						<ButtonVue :disabled="loading"
 							:aria-label="t('mail', 'Reset')"
 							class="config-button"
 							type="secondary"
@@ -72,7 +68,7 @@
 								<IconDelete :size="20" />
 							</template>
 							{{ t('mail', 'Reset') }}
-						</Button>
+						</ButtonVue>
 					</div>
 				</div>
 			</form>
@@ -84,16 +80,16 @@ import logger from '../../logger.js'
 import { loadState } from '@nextcloud/initial-state'
 import { setAntiSpamEmail, deleteAntiSpamEmail } from '../../service/SettingsService.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import Button from '@nextcloud/vue/dist/Components/NcButton'
-import IconUpload from 'vue-material-design-icons/Upload'
-import IconDelete from 'vue-material-design-icons/Delete'
+import ButtonVue from '@nextcloud/vue/dist/Components/NcButton.js'
+import IconUpload from 'vue-material-design-icons/Upload.vue'
+import IconDelete from 'vue-material-design-icons/Delete.vue'
 
 const email = loadState('mail', 'antispam_setting', '[]')
 
 export default {
 	name: 'AntiSpamSettings',
 	components: {
-		Button,
+		ButtonVue,
 		IconUpload,
 		IconDelete,
 	},

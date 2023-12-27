@@ -26,14 +26,12 @@
 			message=""
 			role="alert" />
 		<LoadingSkeleton v-else-if="loadingEnvelopes" :number-of-lines="20" />
-		<Loading
-			v-else-if="loadingCacheInitialization"
+		<Loading v-else-if="loadingCacheInitialization"
 			:hint="t('mail', 'Loading messages …')"
 			:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')" />
 		<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 		<EmptyMailbox v-else-if="!hasMessages" key="empty" />
-		<EnvelopeList
-			v-else
+		<EnvelopeList v-else
 			:account="account"
 			:mailbox="mailbox"
 			:search-query="searchQuery"
@@ -52,7 +50,7 @@ import EnvelopeList from './EnvelopeList.vue'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 import Error from './Error.vue'
 import { findIndex, propEq } from 'ramda'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import Loading from './Loading.vue'
 import logger from '../logger.js'
 import MailboxLockedError from '../errors/MailboxLockedError.js'
@@ -376,7 +374,7 @@ export default {
 					logger.error('could not flag envelope via shortkey', {
 						env,
 						error,
-					})
+					}),
 				)
 				break
 			case 'refresh':
@@ -393,7 +391,7 @@ export default {
 					logger.error('could not mark envelope as seen/unseen via shortkey', {
 						env,
 						error,
-					})
+					}),
 				)
 
 				break

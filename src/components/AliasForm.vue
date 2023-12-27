@@ -83,9 +83,9 @@
 
 <script>
 import { NcButton, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconDelete from 'vue-material-design-icons/Delete'
-import IconRename from 'vue-material-design-icons/Pencil'
-import IconCheck from 'vue-material-design-icons/Check'
+import IconDelete from 'vue-material-design-icons/Delete.vue'
+import IconRename from 'vue-material-design-icons/Pencil.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {
 	name: 'AliasForm',

@@ -21,24 +21,20 @@
   -->
 
 <template>
-	<AppContent
-		pane-config-key="mail"
+	<AppContent pane-config-key="mail"
 		:show-details="isMessageShown"
 		@update:showDetails="hideMessage">
 		<OutboxMessageContent />
 		<!-- List -->
 		<template #list>
 			<AppContentList>
-				<Error
-					v-if="error"
+				<Error v-if="error"
 					:error="t('mail', 'Could not open outbox')"
 					message=""
 					role="alert" />
-				<LoadingSkeleton
-					v-else-if="loading" />
+				<LoadingSkeleton v-else-if="loading" />
 				<EmptyMailbox v-else-if="messages.length === 0" />
-				<OutboxMessageListItem
-					v-for="message in messages"
+				<OutboxMessageListItem v-for="message in messages"
 					v-else
 					:key="message.id"
 					:message="message" />

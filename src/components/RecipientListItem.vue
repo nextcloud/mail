@@ -1,12 +1,10 @@
 <template>
-	<div class="multiselect__tag multiselect__tag--recipient">
-		<ListItemIcon
-			:no-margin="true"
+	<div class="multiselect__tag multiselect__tag--recipient" :title="option.email">
+		<ListItemIcon :no-margin="true"
 			:title="option.label"
 			:url="option.photo"
 			:avatar-size="24" />
-		<Close
-			class="delete-recipient"
+		<Close class="delete-recipient"
 			:size="20"
 			@click.prevent="removeRecipient(option)" />
 	</div>
@@ -14,7 +12,7 @@
 
 <script>
 import { NcListItemIcon as ListItemIcon } from '@nextcloud/vue'
-import Close from 'vue-material-design-icons/Close'
+import Close from 'vue-material-design-icons/Close.vue'
 export default {
 	name: 'RecipientListItem',
 	components: {

@@ -28,7 +28,7 @@ export function saveAttachmentToFiles(id, attachmentId, directory) {
 		{
 			id,
 			attachmentId,
-		}
+		},
 	)
 
 	return Axios.post(url, {

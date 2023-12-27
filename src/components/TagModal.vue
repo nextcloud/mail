@@ -54,8 +54,7 @@
 						<IconTag :size="20" />
 					</template>
 				</ActionInput>
-				<ActionText
-					v-if="showSaving">
+				<ActionText v-if="showSaving">
 					<template #icon>
 						<IconLoading :size="20" />
 					</template>
@@ -70,8 +69,8 @@
 import { NcModal as Modal, NcActionText as ActionText, NcActionInput as ActionInput, NcLoadingIcon as IconLoading, NcButton } from '@nextcloud/vue'
 import DeleteTagModal from './DeleteTagModal.vue'
 import TagEditor from './TagEditor.vue'
-import IconTag from 'vue-material-design-icons/Tag'
-import IconAdd from 'vue-material-design-icons/Plus'
+import IconTag from 'vue-material-design-icons/Tag.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
 import { showError, showInfo } from '@nextcloud/dialogs'
 import { hiddenTags } from './tags.js'
 
@@ -153,9 +152,9 @@ export default {
 			return this.envelopes.some(
 				(envelope) => (
 					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
-						tag => tag.imapLabel === imapLabel
+						tag => tag.imapLabel === imapLabel,
 					)
-				)
+				),
 			)
 		},
 		addTagInput() {
@@ -177,8 +176,9 @@ export default {
 				showError(this.t('mail', 'Tag already exists'))
 				return
 			}
-			if (displayName !== null && displayName !== '') {
-				this.showSaving = true
+			if (displayName.trim() === '') {
+				showError(this.t('mail', 'Tag name cannot be empty'))
+				return
 			}
 			try {
 				await this.$store.dispatch('createTag', {

@@ -170,7 +170,7 @@ export default {
 				}, {
 					timeout: UNDO_DELAY,
 					close: true,
-				}
+				},
 			)
 
 			setTimeout(async () => {

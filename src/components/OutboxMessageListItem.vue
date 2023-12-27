@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<ListItem
-		class="outbox-message"
+	<ListItem class="outbox-message"
 		:class="{ selected }"
 		:title="title"
 		:details="details"
@@ -34,18 +33,15 @@
 			{{ subjectForSubtitle }}
 		</template>
 		<template slot="actions">
-			<ActionButton
-				:close-after-click="true"
+			<ActionButton :close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
 				<template #icon>
-					<Send
-						:title="t('mail', 'Send now')"
+					<Send :title="t('mail', 'Send now')"
 						:size="20" />
 				</template>
 			</ActionButton>
-			<ActionButton
-				:close-after-click="true"
+			<ActionButton :close-after-click="true"
 				@click="deleteMessage">
 				<template #icon>
 					<IconDelete :size="20" />
@@ -59,7 +55,7 @@
 <script>
 import { NcListItem as ListItem, NcActionButton as ActionButton } from '@nextcloud/vue'
 import Avatar from './Avatar.vue'
-import IconDelete from 'vue-material-design-icons/Delete'
+import IconDelete from 'vue-material-design-icons/Delete.vue'
 import { getLanguage, translate as t } from '@nextcloud/l10n'
 import OutboxAvatarMixin from '../mixins/OutboxAvatarMixin.js'
 import moment from '@nextcloud/moment'
@@ -67,7 +63,7 @@ import logger from '../logger.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match.js'
 import { html, plain } from '../util/text.js'
-import Send from 'vue-material-design-icons/Send'
+import Send from 'vue-material-design-icons/Send.vue'
 import { UNDO_DELAY } from '../store/constants.js'
 
 export default {

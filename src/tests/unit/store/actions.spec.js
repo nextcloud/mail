@@ -20,7 +20,7 @@
  */
 
 import { curry, prop, range, reverse } from 'ramda'
-import orderBy from 'lodash/fp/orderBy'
+import orderBy from 'lodash/fp/orderBy.js'
 
 import actions from '../../../store/actions'
 import * as MailboxService from '../../../service/MailboxService'
@@ -518,14 +518,14 @@ describe('Vuex store actions', () => {
 
 	it('should move message to junk, no mailbox configured', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			junkMailboxId: null
+			junkMailboxId: null,
 		})
 
 		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
 			flags: {
-				$junk: false
+				$junk: false,
 			},
-			mailboxId: 1
+			mailboxId: 1,
 		})
 
 		expect(removeEnvelope).toBeFalsy()
@@ -533,17 +533,17 @@ describe('Vuex store actions', () => {
 
 	it('should move message to inbox', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			junkMailboxId: 10
+			junkMailboxId: 10,
 		})
 		context.getters.getInbox.mockReturnValueOnce({
-			databaseId: 1
+			databaseId: 1,
 		})
 
 		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
 			flags: {
-				$junk: true
+				$junk: true,
 			},
-			mailboxId: 10
+			mailboxId: 10,
 		})
 
 		expect(removeEnvelope).toBeTruthy()
@@ -551,15 +551,15 @@ describe('Vuex store actions', () => {
 
 	it('should move message to inbox, inbox not found', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			junkMailboxId: 10
+			junkMailboxId: 10,
 		})
 		context.getters.getInbox.mockReturnValueOnce(undefined)
 
 		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
 			flags: {
-				$junk: true
+				$junk: true,
 			},
-			mailboxId: 10
+			mailboxId: 10,
 		})
 
 		expect(removeEnvelope).toBeFalsy()
@@ -567,14 +567,14 @@ describe('Vuex store actions', () => {
 
 	it('should not move messages', async() => {
 		context.getters.getAccount.mockReturnValueOnce({
-			junkMailboxId: null
+			junkMailboxId: null,
 		})
 
 		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
 			flags: {
-				$junk: true
+				$junk: true,
 			},
-			mailboxId: 10
+			mailboxId: 10,
 		})
 
 		expect(removeEnvelope).toBeFalsy()

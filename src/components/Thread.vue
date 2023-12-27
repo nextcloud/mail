@@ -2,8 +2,7 @@
 	<AppContentDetails id="mail-message">
 		<!-- Show outer loading screen only if we have no data about the thread -->
 		<Loading v-if="loading && thread.length === 0" :hint="t('mail', 'Loading thread')" />
-		<Error
-			v-else-if="error"
+		<Error v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage" />
 		<template v-else>
@@ -58,7 +57,7 @@ import { NcAppContentDetails as AppContentDetails, NcPopover as Popover } from '
 import { showError } from '@nextcloud/dialogs'
 
 import { prop, uniqBy } from 'ramda'
-import debounce from 'lodash/fp/debounce'
+import debounce from 'lodash/fp/debounce.js'
 import { loadState } from '@nextcloud/initial-state'
 
 import { summarizeThread } from '../service/AiIntergrationsService.js'

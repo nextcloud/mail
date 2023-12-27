@@ -21,19 +21,16 @@
   -->
 
 <template>
-	<AppNavigationItem
-		id="navigation-outbox"
+	<AppNavigationItem id="navigation-outbox"
 		key="navigation-outbox"
 		:title="t('mail', 'Outbox')"
 		:to="to">
 		<template #icon>
-			<IconOutbox
-				class="outbox-opacity-icon"
+			<IconOutbox class="outbox-opacity-icon"
 				:size="20" />
 		</template>
 		<template #counter>
-			<CounterBubble
-				v-if="count"
+			<CounterBubble v-if="count"
 				class="navigation-outbox__unread-counter">
 				{{ count }}
 			</CounterBubble>
@@ -43,7 +40,7 @@
 
 <script>
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
-import IconOutbox from 'vue-material-design-icons/InboxArrowUp'
+import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
 
 export default {
 	name: 'NavigationOutbox',

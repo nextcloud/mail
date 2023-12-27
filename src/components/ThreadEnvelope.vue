@@ -32,29 +32,25 @@
 					:display-name="envelope.from[0].label"
 					:disable-tooltip="true"
 					:size="40" />
-				<div
-					v-if="isImportant"
+				<div v-if="isImportant"
 					class="app-content-list-item-star icon-important"
 					:data-starred="isImportant ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleImportant() : false"
 					v-html="importantSvg" />
-				<IconFavorite
-					v-if="envelope.flags.flagged"
+				<IconFavorite v-if="envelope.flags.flagged"
 					fill-color="#f9cf3d"
 					:size="18"
 					class="app-content-list-item-star favorite-icon-style"
 					:data-starred="envelope.flags.flagged ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-				<JunkIcon
-					v-if="envelope.flags.$junk"
+				<JunkIcon v-if="envelope.flags.$junk"
 					:size="18"
 					class="app-content-list-item-star junk-icon-style"
 					:data-starred="envelope.flags.$junk ? 'true' : 'false'"
 					@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			</div>
 
-			<router-link
-				:to="route"
+			<router-link :to="route"
 				event=""
 				class="left"
 				:class="{seen: envelope.flags.seen}"
@@ -78,8 +74,7 @@
 						class="envelope__header__left__sender-subject-tags__tags" />
 				</div>
 				<div class="envelope__header__left__unsubscribe">
-					<NcButton
-						v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
+					<NcButton v-if="message && message.dkimValid && (message.unsubscribeUrl || message.unsubscribeMailto)"
 						type="tertiary"
 						class="envelope__header__unsubscribe"
 						@click="showListUnsubscribeConfirmation = true">
@@ -157,8 +152,7 @@
 							type="tertiary-no-background"
 							@click.prevent="onArchive">
 							<template #icon>
-								<ArchiveIcon
-									:title="t('mail', 'Archive message')"
+								<ArchiveIcon :title="t('mail', 'Archive message')"
 									:size="20" />
 							</template>
 						</NcActionButton>
@@ -169,8 +163,7 @@
 							type="tertiary-no-background"
 							@click.prevent="onDelete">
 							<template #icon>
-								<DeleteIcon
-									:title="t('mail', 'Delete message')"
+								<DeleteIcon :title="t('mail', 'Delete message')"
 									:size="20" />
 							</template>
 						</NcActionButton>
@@ -207,8 +200,7 @@
 					<TaskModal v-if="showTaskModal"
 						:envelope="envelope"
 						@close="onCloseTaskModal" />
-					<TagModal
-						v-if="showTagModal"
+					<TagModal v-if="showTagModal"
 						:account="account"
 						:envelopes="[envelope]"
 						@close="onCloseTagModal" />
@@ -259,7 +251,7 @@ import { NcActionButton, NcButton, NcModal } from '@nextcloud/vue'
 import ConfirmModal from './ConfirmationModal.vue'
 import Error from './Error.vue'
 import importantSvg from '../../img/important.svg'
-import IconFavorite from 'vue-material-design-icons/Star'
+import IconFavorite from 'vue-material-design-icons/Star.vue'
 import JunkIcon from './icons/JunkIcon.vue'
 import MessageLoadingSkeleton from './MessageLoadingSkeleton.vue'
 import logger from '../logger.js'
@@ -267,24 +259,24 @@ import Message from './Message.vue'
 import MenuEnvelope from './MenuEnvelope.vue'
 import Moment from './Moment.vue'
 import { mailboxHasRights } from '../util/acl.js'
-import ReplyIcon from 'vue-material-design-icons/Reply'
-import ReplyAllIcon from 'vue-material-design-icons/ReplyAll'
-import StarOutline from 'vue-material-design-icons/StarOutline'
-import DeleteIcon from 'vue-material-design-icons/Delete'
-import ArchiveIcon from 'vue-material-design-icons/PackageDown'
-import EmailUnread from 'vue-material-design-icons/Email'
-import EmailRead from 'vue-material-design-icons/EmailOpen'
-import LockIcon from 'vue-material-design-icons/Lock'
-import LockPlusIcon from 'vue-material-design-icons/LockPlus'
-import LockOffIcon from 'vue-material-design-icons/LockOff'
+import ReplyIcon from 'vue-material-design-icons/Reply.vue'
+import ReplyAllIcon from 'vue-material-design-icons/ReplyAll.vue'
+import StarOutline from 'vue-material-design-icons/StarOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import ArchiveIcon from 'vue-material-design-icons/PackageDown.vue'
+import EmailUnread from 'vue-material-design-icons/Email.vue'
+import EmailRead from 'vue-material-design-icons/EmailOpen.vue'
+import LockIcon from 'vue-material-design-icons/Lock.vue'
+import LockPlusIcon from 'vue-material-design-icons/LockPlus.vue'
+import LockOffIcon from 'vue-material-design-icons/LockOff.vue'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
 import { hiddenTags } from './tags.js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match.js'
 import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredError.js'
 import { isPgpText } from '../crypto/pgp.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions'
-import NcActionText from '@nextcloud/vue/dist/Components/NcActionText'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionText from '@nextcloud/vue/dist/Components/NcActionText.js'
 import { unsubscribe } from '../service/ListService.js'
 import TagModal from './TagModal.vue'
 import MoveModal from './MoveModal.vue'
@@ -439,7 +431,7 @@ export default {
 		},
 		tags() {
 			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter(
-				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
+				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 		},
 		hasChangedSubject() {
@@ -804,7 +796,7 @@ export default {
 				const resp = await axios.get(
 					generateUrl('/apps/mail/api/messages/{id}/source', {
 						id: this.envelope.databaseId,
-					})
+					}),
 				)
 				this.rawMessage = resp.data.source
 			}

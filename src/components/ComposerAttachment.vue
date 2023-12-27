@@ -30,8 +30,8 @@
 
 <script>
 import { generateUrl } from '@nextcloud/router'
-import Close from 'vue-material-design-icons/Close'
-import Cloud from 'vue-material-design-icons/Cloud'
+import Close from 'vue-material-design-icons/Close.vue'
+import Cloud from 'vue-material-design-icons/Cloud.vue'
 import EmailArrowRightOutlineIcon from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 
 export default {

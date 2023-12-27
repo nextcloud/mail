@@ -1,9 +1,8 @@
 <template>
-	<ListItem
-		v-draggable-envelope="{
+	<ListItem v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
-			envelopeId: data.databaseId,
+			databaseId: data.databaseId,
 			draggableLabel,
 			selectedEnvelopes,
 			isDraggable,
@@ -19,21 +18,18 @@
 		@click.ctrl.prevent="toggleSelected"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
 		<template #icon>
-			<Star
-				v-if="data.flags.flagged"
+			<Star v-if="data.flags.flagged"
 				fill-color="#f9cf3d"
 				:size="18"
 				class="app-content-list-item-star favorite-icon-style"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
-			<div
-				v-if="isImportant"
+			<div v-if="isImportant"
 				class="app-content-list-item-star svg icon-important"
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleImportant() : false"
 				v-html="importantSvg" />
-			<JunkIcon
-				v-if="data.flags.$junk"
+			<JunkIcon v-if="data.flags.$junk"
 				:size="18"
 				class="app-content-list-item-star junk-icon-style"
 				:data-starred="data.flags.$junk ? 'true' : 'false'"
@@ -45,8 +41,7 @@
 						class="checkbox"
 						type="checkbox"
 						:checked="selected">
-					<label
-						:for="`select-checkbox-${data.uid}`"
+					<label :for="`select-checkbox-${data.uid}`"
 						@click.exact.prevent="toggleSelected"
 						@click.shift.prevent="onSelectMultiple" />
 				</p>
@@ -69,7 +64,7 @@
 			</div>
 			<div v-if="data.encrypted || data.previewText"
 				class="envelope__preview-text">
-				{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText }}
+				{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
 			</div>
 		</template>
 		<template #indicator>
@@ -115,8 +110,7 @@
 					:close-after-click="true"
 					@click.prevent="onToggleImportant">
 					<template #icon>
-						<ImportantIcon
-							:size="24" />
+						<ImportantIcon :size="24" />
 					</template>
 					{{
 						isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
@@ -126,8 +120,7 @@
 			<template v-if="!moreActionsOpen && !snoozeOptions">
 				<ActionText>
 					<template #icon>
-						<ClockOutlineIcon
-							:size="20" />
+						<ClockOutlineIcon :size="20" />
 					</template>
 					{{
 						messageLongDate
@@ -138,19 +131,16 @@
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
 					<template #icon>
-						<AlertOctagonIcon
-							:size="20" />
+						<AlertOctagonIcon :size="20" />
 					</template>
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 					}}
 				</ActionButton>
-				<ActionButton
-					:close-after-click="true"
+				<ActionButton :close-after-click="true"
 					@click.prevent="toggleSelected">
 					<template #icon>
-						<CheckIcon
-							:size="20" />
+						<CheckIcon :size="20" />
 					</template>
 					{{
 						selected ? t('mail', 'Unselect') : t('mail', 'Select')
@@ -160,8 +150,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
 					<template #icon>
-						<TagIcon
-							:size="20" />
+						<TagIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
@@ -169,8 +158,7 @@
 					:close-after-click="false"
 					@click="showSnoozeOptions">
 					<template #icon>
-						<AlarmIcon
-							:title="t('mail', 'Snooze')"
+						<AlarmIcon :title="t('mail', 'Snooze')"
 							:size="20" />
 					</template>
 					{{
@@ -190,8 +178,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
-						<OpenInNewIcon
-							:size="20" />
+						<OpenInNewIcon :size="20" />
 					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
@@ -200,8 +187,7 @@
 					:disabled="disableArchiveButton"
 					@click.prevent="onArchive">
 					<template #icon>
-						<ArchiveIcon
-							:size="20" />
+						<ArchiveIcon :size="20" />
 					</template>
 					{{ t('mail', 'Archive thread') }}
 				</ActionButton>
@@ -209,27 +195,23 @@
 					:close-after-click="true"
 					@click.prevent="onDelete">
 					<template #icon>
-						<DeleteIcon
-							:size="20" />
+						<DeleteIcon :size="20" />
 					</template>
 					{{ t('mail', 'Delete thread') }}
 				</ActionButton>
 				<ActionButton :close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
-						<DotsHorizontalIcon
-							:size="20" />
+						<DotsHorizontalIcon :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
 			</template>
 			<template v-if="snoozeOptions">
-				<ActionButton
-					:close-after-click="false"
+				<ActionButton :close-after-click="false"
 					@click="snoozeOptions = false">
 					<template #icon>
-						<ChevronLeft
-							:size="20" />
+						<ChevronLeft :size="20" />
 					</template>
 					{{
 						t('mail', 'Back')
@@ -271,37 +253,32 @@
 				<ActionButton :close-after-click="false"
 					@click="moreActionsOpen=false">
 					<template #icon>
-						<ChevronLeft
-							:size="20" />
+						<ChevronLeft :size="20" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenEditAsNew">
 					<template #icon>
-						<PlusIcon
-							:size="20" />
+						<PlusIcon :size="20" />
 					</template>
 					{{ t('mail', 'Edit as new message') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
-						<IconCreateEvent
-							:size="20" />
+						<IconCreateEvent :size="20" />
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
-						<TaskIcon
-							:size="20" />
+						<TaskIcon :size="20" />
 					</template>
 					{{ t('mail', 'Create task') }}
 				</ActionButton>
-				<ActionLink
-					:close-after-click="true"
+				<ActionLink :close-after-click="true"
 					:href="exportMessageLink">
 					<template #icon>
 						<DownloadIcon :size="20" />
@@ -324,8 +301,7 @@
 			<TaskModal v-if="showTaskModal"
 				:envelope="data"
 				@close="showTaskModal = false" />
-			<TagModal
-				v-if="showTagModal"
+			<TagModal v-if="showTagModal"
 				:account="account"
 				:envelopes="[data]"
 				@close="onCloseTagModal" />
@@ -340,16 +316,16 @@ import {
 	NcActionSeparator as ActionSeparator,
 	NcActionText as ActionText,
 } from '@nextcloud/vue'
-import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon'
+import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
 import Avatar from './Avatar.vue'
-import IconCreateEvent from 'vue-material-design-icons/Calendar'
-import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline'
-import CheckIcon from 'vue-material-design-icons/Check'
-import ChevronLeft from 'vue-material-design-icons/ChevronLeft'
-import DeleteIcon from 'vue-material-design-icons/Delete'
-import ArchiveIcon from 'vue-material-design-icons/PackageDown'
-import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline'
-import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal'
+import IconCreateEvent from 'vue-material-design-icons/Calendar.vue'
+import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import ArchiveIcon from 'vue-material-design-icons/PackageDown.vue'
+import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
+import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import importantSvg from '../../img/important.svg'
 import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope/index.js'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder.js'
@@ -360,18 +336,18 @@ import NoTrashMailboxConfiguredError
 import logger from '../logger.js'
 import { matchError } from '../errors/match.js'
 import MoveModal from './MoveModal.vue'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
-import StarOutline from 'vue-material-design-icons/StarOutline'
-import Star from 'vue-material-design-icons/Star'
-import Reply from 'vue-material-design-icons/Reply'
-import EmailRead from 'vue-material-design-icons/EmailOpen'
-import EmailUnread from 'vue-material-design-icons/Email'
-import IconAttachment from 'vue-material-design-icons/Paperclip'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import StarOutline from 'vue-material-design-icons/StarOutline.vue'
+import Star from 'vue-material-design-icons/Star.vue'
+import Reply from 'vue-material-design-icons/Reply.vue'
+import EmailRead from 'vue-material-design-icons/EmailOpen.vue'
+import EmailUnread from 'vue-material-design-icons/Email.vue'
+import IconAttachment from 'vue-material-design-icons/Paperclip.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
-import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle'
+import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle.vue'
 import JunkIcon from './icons/JunkIcon.vue'
-import PlusIcon from 'vue-material-design-icons/Plus'
-import TagIcon from 'vue-material-design-icons/Tag'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import TagIcon from 'vue-material-design-icons/Tag.vue'
 import TagModal from './TagModal.vue'
 import EventModal from './EventModal.vue'
 import TagGroup from './TagGroup.vue'
@@ -381,11 +357,11 @@ import { hiddenTags } from './tags.js'
 import { generateUrl } from '@nextcloud/router'
 import { isPgpText } from '../crypto/pgp.js'
 import { mailboxHasRights } from '../util/acl.js'
-import DownloadIcon from 'vue-material-design-icons/Download'
-import NcActionSeparator from '@nextcloud/vue/dist/Components/NcActionSeparator'
-import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput'
-import CalendarClock from 'vue-material-design-icons/CalendarClock'
-import AlarmIcon from 'vue-material-design-icons/Alarm'
+import DownloadIcon from 'vue-material-design-icons/Download.vue'
+import NcActionSeparator from '@nextcloud/vue/dist/Components/NcActionSeparator.js'
+import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
+import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
+import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import moment from '@nextcloud/moment'
 import { mapGetters } from 'vuex'
 
@@ -570,7 +546,7 @@ export default {
 		},
 		tags() {
 			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter(
-				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags)
+				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 		},
 		draggableLabel() {

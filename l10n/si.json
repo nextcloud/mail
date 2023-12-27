@@ -10,6 +10,8 @@
     "Signature" : "අත්සන",
     "Go back" : "ආපසු යන්න",
     "Cancel" : "අවලංගු කරන්න",
+    "Archive" : "සංරක්ෂණය",
+    "Search" : "සොයන්න",
     "Send" : "යවන්න",
     "Confirm" : "තහවුරු කරන්න",
     "Favorite" : "ප්‍රියතම",
@@ -32,7 +34,6 @@
     "Add" : "එකතු කරන්න",
     "Close" : "වසන්න",
     "Body" : "අන්තර්ගතය",
-    "Search" : "සොයන්න",
     "Date" : "දිනය",
     "Disabled" : "අබල කර ඇත",
     "Enabled" : "සබල කර ඇත",
@@ -41,7 +42,6 @@
     "User" : "පරිශීලක",
     "Host" : " ධාරකය",
     "Certificate" : "සහතිකය",
-    "Archive" : "සංරක්ෂණය",
     "All" : "සියල්ල",
     "Favorites" : "ප්‍රියතම"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

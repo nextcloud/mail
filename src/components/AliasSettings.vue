@@ -63,8 +63,7 @@
 		</ul>
 
 		<div v-if="!account.provisioningId">
-			<ButtonVue
-				v-if="!showForm"
+			<ButtonVue v-if="!showForm"
 				type="primary"
 				:aria-label="t('mail', 'Add alias')"
 				@click="showForm = true">
@@ -96,8 +95,8 @@
 
 <script>
 import { NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check'
-import IconRename from 'vue-material-design-icons/Pencil'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconRename from 'vue-material-design-icons/Pencil.vue'
 import logger from '../logger.js'
 import AliasForm from './AliasForm.vue'
 

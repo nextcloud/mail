@@ -21,7 +21,7 @@
  */
 
 import moment from '@nextcloud/moment'
-import negate from 'lodash/fp/negate'
+import negate from 'lodash/fp/negate.js'
 
 import { html } from './util/text.js'
 

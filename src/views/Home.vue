@@ -1,5 +1,5 @@
 <template>
-	<Content app-name="mail">
+	<NcContent app-name="mail">
 		<Navigation />
 		<Outbox v-if="$route.name === 'outbox'" />
 		<MailboxThread v-else-if="activeAccount"
@@ -10,12 +10,12 @@
 			<ComposerSessionIndicator @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
-	</Content>
+	</NcContent>
 </template>
 
 <script>
-import { NcContent as Content } from '@nextcloud/vue'
-import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
+import { NcContent } from '@nextcloud/vue'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 
 import '../../css/mail.scss'
 import '../../css/mobile.scss'
@@ -31,7 +31,7 @@ import { mapGetters } from 'vuex'
 export default {
 	name: 'Home',
 	components: {
-		Content,
+		NcContent,
 		MailboxThread,
 		Navigation,
 		NewMessageModal: () => import(/* webpackChunkName: "new-message-modal" */ '../components/NewMessageModal.vue'),

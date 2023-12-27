@@ -29,13 +29,11 @@
 		:additional-trap-elements="trapElements"
 		:title="t('mail', 'Account settings')"
 		@update:open="updateOpen">
-		<AppSettingsSection
-			id="alias-settings"
+		<AppSettingsSection id="alias-settings"
 			:title="t('mail', 'Aliases')">
 			<AliasSettings :account="account" @rename-primary-alias="scrollToAccountSettings" />
 		</AppSettingsSection>
-		<AppSettingsSection
-			id="certificate-settings"
+		<AppSettingsSection id="certificate-settings"
 			:title="t('mail', 'Alias to S/MIME certificate mapping')">
 			<CertificateSettings :account="account" />
 		</AppSettingsSection>
@@ -65,8 +63,7 @@
 			</p>
 			<TrashRetentionSettings :account="account" />
 		</AppSettingsSection>
-		<AppSettingsSection
-			v-if="account"
+		<AppSettingsSection v-if="account"
 			id="out-of-office-replies"
 			:title="t('mail', 'Autoresponder')">
 			<p class="settings-hint">
@@ -81,21 +78,16 @@
 			id="sieve-filter"
 			:title="t('mail', 'Sieve filter rules')">
 			<div id="sieve-filter">
-				<SieveFilterForm
-					:key="account.accountId"
+				<SieveFilterForm :key="account.accountId"
 					ref="sieveFilterForm"
 					:account="account" />
 			</div>
-		</AppSettingsSection>
-		<AppSettingsSection id="trusted-sender" :title="t('mail', 'Trusted senders')">
-			<TrustedSenders />
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
 			id="mail-server"
 			:title="t('mail', 'Mail server')">
 			<div id="mail-settings">
-				<AccountForm
-					:key="account.accountId"
+				<AccountForm :key="account.accountId"
 					ref="accountForm"
 					:display-name="displayName"
 					:email="email"
@@ -106,8 +98,7 @@
 			id="sieve-settings"
 			:title="t('mail', 'Sieve filter server')">
 			<div id="sieve-settings">
-				<SieveAccountForm
-					:key="account.accountId"
+				<SieveAccountForm :key="account.accountId"
 					ref="sieveAccountForm"
 					:account="account" />
 			</div>
@@ -125,7 +116,6 @@ import AccountDefaultsSettings from '../components/AccountDefaultsSettings.vue'
 import SignatureSettings from '../components/SignatureSettings.vue'
 import AliasSettings from '../components/AliasSettings.vue'
 import { NcAppSettingsDialog as AppSettingsDialog, NcAppSettingsSection as AppSettingsSection } from '@nextcloud/vue'
-import TrustedSenders from './TrustedSenders.vue'
 import SieveAccountForm from './SieveAccountForm.vue'
 import SieveFilterForm from './SieveFilterForm.vue'
 import OutOfOfficeForm from './OutOfOfficeForm.vue'
@@ -139,7 +129,6 @@ export default {
 	components: {
 		SieveAccountForm,
 		SieveFilterForm,
-		TrustedSenders,
 		AccountForm,
 		AliasSettings,
 		EditorSettings,

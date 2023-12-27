@@ -21,7 +21,7 @@
  *
  */
 
-import uniq from 'lodash/fp/uniq'
+import uniq from 'lodash/fp/uniq.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { generateFilePath } from '@nextcloud/router'
 
@@ -64,6 +64,8 @@ const showNotification = async (title, body, icon) => {
 	})
 	notification.onclick = () => {
 		window.focus()
+		// Close the notification when clicked
+		notification.close()
 	}
 }
 
@@ -80,6 +82,9 @@ const getNotificationBody = (messages) => {
 		return t('mail', '{from}\n{subject}', {
 			from: from.join(),
 			subject: messages[0].subject,
+		}, undefined, {
+			escape: false,
+			sanitize: false,
 		})
 	} else {
 		return n('mail', '%n new message \nfrom {from}', '%n new messages \nfrom {from}', messages.length, {
@@ -92,6 +97,6 @@ export const showNewMessagesNotification = (messages) => {
 	showNotification(
 		t('mail', 'Nextcloud Mail'),
 		getNotificationBody(messages),
-		generateFilePath('mail', 'img', 'mail-notification.png')
+		generateFilePath('mail', 'img', 'mail-notification.png'),
 	)
 }

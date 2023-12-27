@@ -29,8 +29,7 @@
 			<p class="contact-popover__email">
 				{{ email }}
 			</p>
-			<ButtonVue
-				v-if="contactsWithEmail && contactsWithEmail.length > 0"
+			<ButtonVue v-if="contactsWithEmail && contactsWithEmail.length > 0"
 				type="tertiary-no-background"
 				:aria-label="t('mail', 'Contacts with this address')"
 				class="contact-existing">
@@ -40,8 +39,7 @@
 				{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
 			</ButtonVue>
 			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
-				<ButtonVue
-					:aria-label="t('mail', 'Reply')"
+				<ButtonVue :aria-label="t('mail', 'Reply')"
 					type="tertiary-no-background"
 					@click="onClickReply">
 					<template #icon>
@@ -49,8 +47,7 @@
 					</template>
 					{{ t('mail', 'Reply') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'Add to Contact')"
 					@click="selection = ContactSelectionStateEnum.existing">
 					<template #icon>
@@ -58,8 +55,7 @@
 					</template>
 					{{ t('mail', 'Add to Contact') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'New Contact')"
 					@click="selection = ContactSelectionStateEnum.new">
 					<template #icon>
@@ -67,8 +63,7 @@
 					</template>
 					{{ t('mail', 'New Contact') }}
 				</ButtonVue>
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'Copy to clipboard')"
 					@click="onClickCopyToClipboard">
 					<template #icon>
@@ -78,8 +73,7 @@
 				</ButtonVue>
 			</div>
 			<div v-else class="contact-input-wrapper">
-				<Multiselect
-					v-if="selection === ContactSelectionStateEnum.existing"
+				<Multiselect v-if="selection === ContactSelectionStateEnum.existing"
 					id="contact-selection"
 					ref="contact-selection-label"
 					v-model="selectedContact"
@@ -97,8 +91,7 @@
 				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
 			</div>
 			<div v-if="selection !== ContactSelectionStateEnum.select">
-				<ButtonVue
-					type="tertiary-no-background"
+				<ButtonVue type="tertiary-no-background"
 					:aria-label="t('mail', 'Go back')"
 					@click="selection = ContactSelectionStateEnum.select">
 					<template #icon>
@@ -107,8 +100,7 @@
 					{{ t('mail', 'Go back') }}
 				</ButtonVue>
 
-				<ButtonVue
-					v-close-popover
+				<ButtonVue v-close-popover
 					:disabled="addButtonDisabled"
 					type="tertiary-no-background"
 					:aria-label="t('mail', 'Add')"
@@ -128,16 +120,16 @@ import { generateUrl } from '@nextcloud/router'
 
 import { NcUserBubble as UserBubble, NcPopover as Popover, NcMultiselect as Multiselect, NcButton as ButtonVue } from '@nextcloud/vue'
 
-import IconReply from 'vue-material-design-icons/Reply'
-import IconAdd from 'vue-material-design-icons/Plus'
-import IconClose from 'vue-material-design-icons/Close'
-import IconClipboard from 'vue-material-design-icons/ClipboardText'
-import IconDetails from 'vue-material-design-icons/Information'
-import IconCheck from 'vue-material-design-icons/Check'
-import IconUser from 'vue-material-design-icons/Account'
+import IconReply from 'vue-material-design-icons/Reply.vue'
+import IconAdd from 'vue-material-design-icons/Plus.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconClipboard from 'vue-material-design-icons/ClipboardText.vue'
+import IconDetails from 'vue-material-design-icons/Information.vue'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconUser from 'vue-material-design-icons/Account.vue'
 import { fetchAvatarUrlMemoized } from '../service/AvatarService.js'
 import { addToContact, findMatches, newContact, autoCompleteByName } from '../service/ContactIntegrationService.js'
-import uniqBy from 'lodash/fp/uniqBy'
+import uniqBy from 'lodash/fp/uniqBy.js'
 import debouncePromise from 'debounce-promise'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 

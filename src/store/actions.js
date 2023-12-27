@@ -22,8 +22,8 @@
  *
  */
 
-import flatMapDeep from 'lodash/fp/flatMapDeep'
-import orderBy from 'lodash/fp/orderBy'
+import flatMapDeep from 'lodash/fp/flatMapDeep.js'
+import orderBy from 'lodash/fp/orderBy.js'
 import {
 	andThen,
 	complement,
@@ -129,8 +129,8 @@ const findIndividualMailboxes = curry((getMailboxes, specialRole) =>
 		map(prop('id')),
 		map(getMailboxes),
 		flatten,
-		filter(propEq(specialRole, 'specialRole'))
-	)
+		filter(propEq(specialRole, 'specialRole')),
+	),
 )
 
 const combineEnvelopeLists = (sortOrder) => {
@@ -268,7 +268,7 @@ export default {
 					}
 					commit('saveAccountsOrder', { account, order: idx })
 					return patchAccount(account, { order: idx })
-				})
+				}),
 			)
 		})
 	},
@@ -284,8 +284,8 @@ export default {
 						dispatch('markMailboxRead', {
 							accountId: mb.accountId,
 							mailboxId: mb.databaseId,
-						})
-					)
+						}),
+					),
 				)
 			}
 
@@ -360,7 +360,7 @@ export default {
 				},
 				(decision) => {
 					resolve(decision)
-				}
+				},
 			))
 			if (!discard) {
 				commit('showMessageComposer')
@@ -377,7 +377,7 @@ export default {
 					const resp = await Axios.get(
 						generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
 							id: original.databaseId,
-						})
+						}),
 					)
 
 					resp.data = DOMPurify.sanitize(resp.data, {
@@ -457,7 +457,7 @@ export default {
 					const resp = await Axios.get(
 						generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
 							id: templateMessageId,
-						})
+						}),
 					)
 
 					resp.data = DOMPurify.sanitize(resp.data, {
@@ -559,10 +559,10 @@ export default {
 							mailboxId: mb.databaseId,
 							query,
 							addToUnifiedMailboxes: false,
-						})
+						}),
 					),
 					Promise.all.bind(Promise),
-					andThen(map(sliceToPage))
+					andThen(map(sliceToPage)),
 				)
 				const fetchUnifiedEnvelopes = pipe(
 					findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
@@ -574,9 +574,9 @@ export default {
 							commit('addEnvelopes', {
 								envelopes,
 								query,
-							})
-						)
-					)
+							}),
+						),
+					),
 				)
 
 				return fetchUnifiedEnvelopes(getters.accounts)
@@ -590,9 +590,9 @@ export default {
 							query,
 							envelopes,
 							addToUnifiedMailboxes,
-						})
-					)
-				)
+						}),
+					),
+				),
 			)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, getters.getPreference('sort-order'))
 		})
 	},
@@ -613,7 +613,7 @@ export default {
 			if (mailbox.isUnified) {
 				const getIndivisualLists = curry((query, m) => getters.getEnvelopes(m.databaseId, query))
 				const individualCursor = curry((query, m) =>
-					prop('dateInt', last(getters.getEnvelopes(m.databaseId, query)))
+					prop('dateInt', last(getters.getEnvelopes(m.databaseId, query))),
 				)
 				const cursor = individualCursor(query, mailbox)
 
@@ -628,9 +628,9 @@ export default {
 					filter(
 						where({
 							dateInt: newestFirst ? gt(cursor) : lt(cursor),
-						})
+						}),
 					),
-					slice(0, quantity)
+					slice(0, quantity),
 				)
 				// We know the next envelopes based on local data
 				// We have to fetch individual envelopes only if it ends in the known
@@ -652,7 +652,7 @@ export default {
 					pipe(
 						findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
 						tap(mbs => console.info('individual mailboxes', mbs)),
-						filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts)))
+						filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts))),
 					)(accounts)
 				const mbs = mailboxesToFetch(getters.accounts)
 
@@ -667,7 +667,7 @@ export default {
 								query,
 								quantity,
 								addToUnifiedMailboxes: false,
-							})
+							}),
 						),
 						Promise.all.bind(Promise),
 						andThen(() =>
@@ -677,8 +677,8 @@ export default {
 								quantity,
 								rec: false,
 								addToUnifiedMailboxes: true,
-							})
-						)
+							}),
+						),
 					)(mbs)
 				}
 
@@ -745,10 +745,10 @@ export default {
 											mailboxId: mailbox.databaseId,
 											query,
 											init,
-										})
-									)
-							)
-						)
+										}),
+									),
+							),
+						),
 				)
 			} else if (mailbox.isPriorityInbox && query === undefined) {
 				return Promise.all(
@@ -766,12 +766,12 @@ export default {
 													mailboxId: mailbox.databaseId,
 													query,
 													init,
-												})
-											)
-									)
-								)
+												}),
+											),
+									),
+								),
 						)
-					})
+					}),
 				)
 			}
 
@@ -872,9 +872,9 @@ export default {
 								return await dispatch('syncEnvelopes', {
 									mailboxId: mailbox.databaseId,
 								})
-							})
+							}),
 						)
-					})
+					}),
 			)
 			const newMessages = flatMapDeep(identity, results).filter((m) => m !== undefined)
 			if (newMessages.length === 0) {

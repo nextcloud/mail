@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<ckeditor
-		v-if="ready"
+	<ckeditor v-if="ready"
 		:value="value"
 		:config="config"
 		:editor="editor"
@@ -33,29 +32,29 @@
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
-import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
 import { Mention } from '@ckeditor/ckeditor5-mention'
-import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
-import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
-import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
-import FontPlugin from '@ckeditor/ckeditor5-font/src/font'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
-import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
+import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor.js'
+import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
+import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
+import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
+import FontPlugin from '@ckeditor/ckeditor5-font/src/font.js'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
+import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading.js'
+import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic.js'
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link.js'
+import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle.js'
+import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat.js'
 import SignaturePlugin from '../ckeditor/signature/SignaturePlugin.js'
-import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough'
+import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
 import QuotePlugin from '../ckeditor/quote/QuotePlugin.js'
-import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter'
-import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
-import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize'
-import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
+import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js'
+import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
+import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
+import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
-import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Components/NcRichText'
-import { emojiSearch, emojiAddRecent } from '@nextcloud/vue/dist/Functions/emoji'
+import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { emojiSearch, emojiAddRecent } from '@nextcloud/vue/dist/Functions/emoji.js'
 import { getLanguage } from '@nextcloud/l10n'
 import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
@@ -332,8 +331,6 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	color: var(--color-main-text) !important;
  }
  .link-icon{
-	width : 20px !important;
-	margin-right : 1em !important;
 	filter : var(--background-invert-if-dark);
  }
  .custom-item {

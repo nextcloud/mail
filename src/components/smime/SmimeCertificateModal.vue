@@ -41,13 +41,11 @@
 							<td>{{ certificate.info.emailAddress }}</td>
 							<td>{{ moment.unix(certificate.info.notAfter).format('LL') }}</td>
 							<td>
-								<NcButton
-									type="tertiary-no-background"
+								<NcButton type="tertiary-no-background"
 									:aria-label="t('mail', 'Delete certificate')"
 									@click="deleteCertificate(certificate.id)">
 									<template #icon>
-										<DeleteIcon
-											:title="t('mail', 'Delete certificate')"
+										<DeleteIcon :title="t('mail', 'Delete certificate')"
 											:size="20" />
 									</template>
 								</NcButton>
@@ -59,24 +57,21 @@
 					class="certificate__empty"
 					:title="t('mail', 'No certificate imported yet')" />
 				<div class="certificate-modal__list__actions">
-					<NcButton
-						type="primary"
+					<NcButton type="primary"
 						:aria-label="t('mail', 'Import certificate')"
 						@click="showImportScreen = true">
 						{{ t('mail', 'Import certificate') }}
 					</NcButton>
 				</div>
 			</div>
-			<form
-				v-else
+			<form v-else
 				class="certificate-modal__import"
 				@submit.prevent="uploadCertificate">
 				<h2>{{ t('mail', 'Import S/MIME certificate') }}</h2>
 
 				<fieldset class="certificate-modal__import__type">
 					<div>
-						<input
-							id="certificate-type-pkcs12"
+						<input id="certificate-type-pkcs12"
 							v-model="certificateType"
 							name="certificate-type"
 							type="radio"
@@ -87,8 +82,7 @@
 					</div>
 
 					<div>
-						<input
-							id="certificate-type-pem"
+						<input id="certificate-type-pem"
 							v-model="certificateType"
 							name="certificate-type"
 							type="radio"
@@ -101,8 +95,7 @@
 
 				<fieldset>
 					<label for="certificate">{{ t('mail', 'Certificate') }}</label>
-					<input
-						id="certificate"
+					<input id="certificate"
 						ref="certificate"
 						type="file"
 						required
@@ -111,8 +104,7 @@
 
 				<fieldset v-if="certificateType === TYPE_PEM">
 					<label for="private-key">{{ t('mail', 'Private key (optional)') }}</label>
-					<input
-						id="private-key"
+					<input id="private-key"
 						ref="privateKey"
 						type="file"
 						@change="privateKey = $event.target.files[0]">
@@ -130,14 +122,12 @@
 				</div>
 
 				<div class="certificate-modal__import__actions">
-					<NcButton
-						type="tertiary-no-background"
+					<NcButton type="tertiary-no-background"
 						:aria-label="t('mail', 'Back')"
 						@click="resetImportForm">
 						{{ t('mail', 'Back') }}
 					</NcButton>
-					<NcButton
-						type="primary"
+					<NcButton type="primary"
 						:aria-label="t('mail', 'Submit')"
 						native-type="submit"
 						:disabled="loading || !inputFormIsValid">
@@ -155,7 +145,7 @@ import { NcButton, NcModal, NcPasswordField, NcEmptyContent } from '@nextcloud/v
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import logger from '../../logger.js'
 import moment from '@nextcloud/moment'
-import DeleteIcon from 'vue-material-design-icons/Delete'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import { convertPkcs12ToPem, InvalidPkcs12CertificateError } from '../../util/pkcs12.js'
 
 const TYPE_PKCS12 = 'pkcs12'

@@ -100,7 +100,7 @@ export class DroppableMailbox {
 
 		try {
 			const processedEnvelopes = envelopesBeingDragged.map(async envelope => {
-				const processed = await this.processDroppedItem(parseInt(envelope.envelopeId))
+				const processed = await this.processDroppedItem(envelope)
 				return processed
 			})
 			await Promise.all(processedEnvelopes)
@@ -114,13 +114,13 @@ export class DroppableMailbox {
 		}
 	}
 
-	async processDroppedItem(envelopeId) {
-		const item = document.querySelector(`[data-envelope-id="${envelopeId}"]`)
+	async processDroppedItem(envelope) {
+		const item = document.querySelector(`[data-envelope-id="${envelope.databaseId}"]`)
 		item.setAttribute('draggable-envelope', 'pending')
 
 		try {
-			await store.dispatch('moveMessage', {
-				id: envelopeId,
+			await store.dispatch('moveThread', {
+				envelope,
 				destMailboxId: this.options.mailboxId,
 			})
 		} catch (error) {

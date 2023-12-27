@@ -26,30 +26,25 @@
 			<label for="note">Description:</label>
 			<textarea id="note" v-model="note" rows="7" />
 			<div class="all-day">
-				<input
-					id="allDay"
+				<input id="allDay"
 					v-model="isAllDay"
 					type="checkbox"
 					class="checkbox">
-				<label
-					for="allDay">
+				<label for="allDay">
 					{{ t('mail', 'All day') }}
 				</label>
 			</div>
-			<Multiselect
-				v-model="selectedCalendar"
+			<Multiselect v-model="selectedCalendar"
 				label="displayname"
 				track-by="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:allow-empty="false"
 				:options="calendars">
 				<template #option="{option}">
-					<CalendarPickerOption
-						v-bind="option" />
+					<CalendarPickerOption v-bind="option" />
 				</template>
 				<template #singleLabel="{option}">
-					<CalendarPickerOption
-						:display-icon="option.displayIcon"
+					<CalendarPickerOption :display-icon="option.displayIcon"
 						v-bind="option" />
 				</template>
 				<span slot="noOptions">{{ t('mail', 'No calendars with task list support') }}</span>

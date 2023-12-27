@@ -1,5 +1,5 @@
 <template>
-	<Content app-name="mail">
+	<NcContent app-name="mail">
 		<Navigation v-if="hasAccounts" />
 		<AppContent>
 			<div class="mail-empty-content">
@@ -21,15 +21,15 @@
 				</EmptyContent>
 			</div>
 		</AppContent>
-	</Content>
+	</NcContent>
 </template>
 
 <script>
-import { NcContent as Content, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
+import { NcContent, NcAppContent as AppContent, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import { loadState } from '@nextcloud/initial-state'
 
 import AccountForm from '../components/AccountForm.vue'
-import IconMail from 'vue-material-design-icons/Email'
+import IconMail from 'vue-material-design-icons/Email.vue'
 import Navigation from '../components/Navigation.vue'
 import logger from '../logger.js'
 
@@ -38,7 +38,7 @@ export default {
 	components: {
 		AppContent,
 		AccountForm,
-		Content,
+		NcContent,
 		EmptyContent,
 		IconMail,
 		Navigation,

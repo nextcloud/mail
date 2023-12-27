@@ -21,9 +21,9 @@
  */
 
 import { curry } from 'ramda'
-import escapeRegExp from 'lodash/fp/escapeRegExp'
-import orderBy from 'lodash/fp/orderBy'
-import uniq from 'lodash/fp/uniq'
+import escapeRegExp from 'lodash/fp/escapeRegExp.js'
+import orderBy from 'lodash/fp/orderBy.js'
+import uniq from 'lodash/fp/uniq.js'
 import Vue from 'vue'
 
 import { sortMailboxes } from '../imap/MailboxSorter.js'
@@ -140,7 +140,7 @@ export default {
 		Vue.set(
 			state,
 			'accountList',
-			sortAccounts(state.accountList.concat([account.id]).map((id) => state.accounts[id])).map((a) => a.id)
+			sortAccounts(state.accountList.concat([account.id]).map((id) => state.accounts[id])).map((a) => a.id),
 		)
 
 		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
@@ -160,7 +160,7 @@ export default {
 		Vue.set(
 			state,
 			'accountList',
-			sortAccounts(state.accountList.map((id) => state.accounts[id])).map((a) => a.id)
+			sortAccounts(state.accountList.map((id) => state.accounts[id])).map((a) => a.id),
 		)
 	},
 	toggleAccountCollapsed(state, accountId) {
@@ -284,13 +284,13 @@ export default {
 			return
 		}
 
-		const mailbox = state.mailboxes[envelopes[0].mailboxId]
 		const idToDateInt = (id) => state.envelopes[id].dateInt
 
 		const listId = normalizedEnvelopeListId(query)
 		const orderByDateInt = orderBy(idToDateInt, state.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
 
 		envelopes.forEach((envelope) => {
+			const mailbox = state.mailboxes[envelope.mailboxId]
 			const existing = mailbox.envelopeLists[listId] || []
 			normalizeTags(state, envelope)
 			Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
@@ -308,7 +308,7 @@ export default {
 					Vue.set(
 						mailbox.envelopeLists,
 						listId,
-						uniq(orderByDateInt(existing.concat([envelope.databaseId])))
+						uniq(orderByDateInt(existing.concat([envelope.databaseId]))),
 					)
 				})
 		})
@@ -392,7 +392,7 @@ export default {
 							mailbox.databaseId,
 							id,
 							listId,
-							list
+							list,
 						)
 						continue
 					}
