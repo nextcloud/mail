@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\Db;
 
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
@@ -38,6 +39,7 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class RecipientMapperTest extends TestCase {
+	use DatabaseTransaction;
 	use ImapTestAccount;
 
 	/** @var IDBConnection */
