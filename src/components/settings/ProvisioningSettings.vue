@@ -218,7 +218,7 @@
 								v-model="masterPassword"
 								:disabled="loading"
 								type="password"
-								required>
+								:required="masterPasswordEnabled">
 							<label for="mail-master-password"> {{ t('mail', 'Master password') }} </label>
 						</div>
 					</div>
@@ -437,7 +437,7 @@ export default {
 			smtpPort: this.setting.smtpPort || 587,
 			smtpUser: this.setting.smtpUser || '%USERID%domain.com',
 			smtpSslMode: this.setting.smtpSslMode || 'tls',
-			masterPasswordEnabled: this.setting.masterPasswordEnabled || '',
+			masterPasswordEnabled: this.setting.masterPasswordEnabled === true,
 			masterPassword: this.setting.masterPassword || '',
 			sieveEnabled: this.setting.sieveEnabled || '',
 			sieveHost: this.setting.sieveHost || '',
