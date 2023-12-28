@@ -66,6 +66,7 @@ use OCA\Mail\Listener\MessageKnownSinceListener;
 use OCA\Mail\Listener\MoveJunkListener;
 use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\OauthTokenRefreshListener;
+use OCA\Mail\Listener\OptionalIndicesListener;
 use OCA\Mail\Listener\OutOfOfficeListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\SpamReportListener;
@@ -87,6 +88,7 @@ use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Dashboard\IAPIWidgetV2;
+use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\IServerContainer;
 use OCP\Search\IFilteringProvider;
 use OCP\User\Events\OutOfOfficeChangedEvent;
@@ -128,6 +130,7 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(IDkimService::class, DkimService::class);
 		$context->registerServiceAlias(IDkimValidator::class, DkimValidator::class);
 
+		$context->registerEventListener(AddMissingIndicesEvent::class, OptionalIndicesListener::class);
 		$context->registerEventListener(BeforeImapClientCreated::class, OauthTokenRefreshListener::class);
 		$context->registerEventListener(BeforeMessageSentEvent::class, AntiAbuseListener::class);
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);

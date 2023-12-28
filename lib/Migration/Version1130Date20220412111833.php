@@ -168,6 +168,13 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		$messagesTable->addIndex(['mailbox_id', 'flag_important', 'flag_deleted', 'flag_seen'], 'mail_messages_id_flags');
 		$messagesTable->addIndex(['mailbox_id', 'flag_deleted', 'flag_flagged'], 'mail_messages_id_flags2');
 		$messagesTable->addIndex(['mailbox_id'], 'mail_messages_mailbox_id');
+		// mail_messages_msgid_idx was added later and may not exist until optional indices are created
+		$messagesTable->addIndex(
+			['message_id'],
+			'mail_messages_msgid_idx',
+			[],
+			['lengths' => [128]],
+		);
 
 		// Postgres doesn't allow for shortened indices, so let's skip the last index.
 		if ($this->connection->getDatabasePlatform() instanceof PostgreSQL94Platform) {
