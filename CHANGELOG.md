@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.1 – 2023-12-28
+### Fixed
+- Autoresponder time zone handline
+- Master password as required input for provisioning when feature is not enabled
+- Clean up orphaned provisioned accounts
+
 ## 3.5.0 – 2023-12-12
 ### Added
 - Emoji picker via : symbol
