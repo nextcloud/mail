@@ -2,6 +2,7 @@
 <files psalm-version="5.14.1@b9d355e0829c397b9b3b47d0c0ed042a8a70284d">
   <file src="lib/AppInfo/Application.php">
     <InvalidArgument>
+      <code>OptionalIndicesListener::class</code>
       <code>OutOfOfficeListener::class</code>
       <code>OutOfOfficeListener::class</code>
       <code>OutOfOfficeListener::class</code>
@@ -44,6 +45,17 @@
     <MissingDependency>
       <code>MailWidgetV2</code>
     </MissingDependency>
+  </file>
+  <file src="lib/Listener/OptionalIndicesListener.php">
+    <InvalidTemplateParam>
+      <code>IEventListener</code>
+    </InvalidTemplateParam>
+    <MoreSpecificImplementedParamType>
+      <code>$event</code>
+    </MoreSpecificImplementedParamType>
+    <TooManyArguments>
+      <code>addMissingIndex</code>
+    </TooManyArguments>
   </file>
   <file src="lib/Listener/OutOfOfficeListener.php">
     <InvalidTemplateParam>

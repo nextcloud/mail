@@ -48,6 +48,7 @@
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\FreePromptTaskType" />
+				<referencedClass name="OCP\DB\Events\AddMissingIndicesEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
@@ -65,6 +66,7 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
 				<referencedClass name="OC\Security\CSP\ContentSecurityPolicyNonceManager" />
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
+				<referencedClass name="OCP\DB\Events\AddMissingIndicesEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->
