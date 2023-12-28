@@ -149,8 +149,7 @@
 				</a>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="keyboard-settings"
-				:title="t('mail', 'Keyboard')"
-				@close="closeKeyboardShortcuts">
+				:title="t('mail', 'Keyboard')">
 				<dl>
 					<div>
 						<dt><kbd>C</kbd></dt>
