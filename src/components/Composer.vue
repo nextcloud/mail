@@ -11,7 +11,7 @@
 					:value="selectedAlias"
 					:options="aliases"
 					label="name"
-					track-by="selectId"
+					:get-option-key="(option)=>option.selectId"
 					:searchable="false"
 					:placeholder="t('mail', 'Select account')"
 					:clear-on-select="false"
