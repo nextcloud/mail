@@ -395,10 +395,10 @@ export default {
 		},
 	},
 	mounted() {
-		dragEventBus.$on('envelopes-dropped', this.unselectAll)
+		dragEventBus.on('envelopes-dropped', this.unselectAll)
 	},
 	beforeDestroy() {
-		dragEventBus.$off('envelopes-dropped', this.unselectAll)
+		dragEventBus.off('envelopes-dropped', this.unselectAll)
 	},
 	methods: {
 		isEnvelopeSelected(idx) {

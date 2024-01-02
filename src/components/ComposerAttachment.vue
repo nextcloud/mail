@@ -42,10 +42,6 @@ export default {
 		EmailArrowRightOutlineIcon,
 	},
 	props: {
-		bus: {
-			type: Object,
-			required: true,
-		},
 		attachment: {
 			type: Object,
 			required: true,

@@ -427,6 +427,7 @@ import IconClose from 'vue-material-design-icons/Close.vue'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
+import mitt from 'mitt'
 
 import { findRecipient } from '../service/AutocompleteService.js'
 import { detect, html, plain, toHtml, toPlain } from '../util/text.js'
@@ -603,7 +604,7 @@ export default {
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
-			bus: new Vue(),
+			bus: mitt(),
 			encrypt: false,
 			mailvelope: {
 				available: false,
@@ -920,7 +921,7 @@ export default {
 				continue
 			}
 
-			this.bus.$emit('on-add-message-as-attachment', {
+			this.bus.emit('on-add-message-as-attachment', {
 				id,
 				fileName: env.subject + '.eml',
 			})
@@ -1059,7 +1060,7 @@ export default {
 		},
 		onPicked(content) {
 			this.closePicker()
-			this.bus.$emit('append-to-body-at-cursor', content)
+			this.bus.emit('append-to-body-at-cursor', content)
 		},
 		onEditorInput(text) {
 			this.bodyVal = text
@@ -1114,15 +1115,15 @@ export default {
 			}
 		},
 		onAddLocalAttachment() {
-			this.bus.$emit('on-add-local-attachment')
+			this.bus.emit('on-add-local-attachment')
 			this.saveDraftDebounced()
 		},
 		onAddCloudAttachment() {
-			this.bus.$emit('on-add-cloud-attachment')
+			this.bus.emit('on-add-cloud-attachment')
 			this.saveDraftDebounced()
 		},
 		onAddCloudAttachmentLink() {
-			this.bus.$emit('on-add-cloud-attachment-link')
+			this.bus.emit('on-add-cloud-attachment-link')
 		},
 		onAutocomplete(term, loadingIndicator) {
 			if (term === undefined || term === '') {
