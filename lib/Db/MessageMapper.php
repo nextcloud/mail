@@ -867,9 +867,9 @@ class MessageMapper extends QBMapper {
 		$select->andWhere($qb->expr()->isNull('m2.id'));
 
 		if ($sortOrder === 'ASC') {
-			$select->orderBy('sent_at', $sortOrder);
+			$select->orderBy('m.sent_at', $sortOrder);
 		} else {
-			$select->orderBy('sent_at', 'DESC');
+			$select->orderBy('m.sent_at', 'DESC');
 		}
 
 		if ($limit !== null) {
