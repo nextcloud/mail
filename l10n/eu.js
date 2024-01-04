@@ -202,7 +202,7 @@ OC.L10N.register(
     "Read" : "Irakurri",
     "Unimportant" : "Garrantzi gabekoa",
     "Mark not spam" : "Markatu ez spam gisa",
-    "Mark as spam" : "Markatu spam bezala",
+    "Mark as spam" : "Markatu spam gisa",
     "Unselect" : "Desautatu",
     "Select" : "Hautatu",
     "Edit tags" : "Editatu etiketak",
