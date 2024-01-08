@@ -113,6 +113,8 @@ var doBind = function () {
   directive.scrollListener = throttle(doCheck.bind(directive), directive.throttleDelay);
   directive.scrollEventTarget.addEventListener('scroll', directive.scrollListener);
 
+  // TODO: refactor to use directive hooks from vue 3
+  //       https://vuejs.org/guide/reusability/custom-directives.html#directive-hooks
   this.vm.$on('hook:beforeDestroy', function () {
     directive.scrollEventTarget.removeEventListener('scroll', directive.scrollListener);
   });

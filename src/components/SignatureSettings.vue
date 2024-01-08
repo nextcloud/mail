@@ -70,7 +70,7 @@
 import logger from '../logger.js'
 import TextEditor from './TextEditor.vue'
 import { detect, toHtml } from '../util/text.js'
-import Vue from 'vue'
+import mitt from 'mitt'
 
 import { NcMultiselect as Multiselect, NcButton as ButtonVue, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
@@ -93,7 +93,7 @@ export default {
 	data() {
 		return {
 			loading: false,
-			bus: new Vue(),
+			bus: mitt(),
 			identity: null,
 			signature: '',
 			signatureAboveQuote: this.account.signatureAboveQuote,

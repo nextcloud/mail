@@ -41,7 +41,6 @@
 			<ComposerAttachment v-for="attachment in attachments"
 				ref="attachments"
 				:key="attachment.id"
-				:bus="bus"
 				:attachment="attachment"
 				:uploading="uploading"
 				@on-delete-attachment="onDelete(attachment)" />
@@ -163,10 +162,10 @@ export default {
 		},
 	},
 	created() {
-		this.bus.$on('on-add-local-attachment', this.onAddLocalAttachment)
-		this.bus.$on('on-add-cloud-attachment', this.onAddCloudAttachment)
-		this.bus.$on('on-add-cloud-attachment-link', this.onAddCloudAttachmentLink)
-		this.bus.$on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
+		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
+		this.bus.on('on-add-cloud-attachment', this.onAddCloudAttachment)
+		this.bus.on('on-add-cloud-attachment-link', this.onAddCloudAttachmentLink)
+		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.value.map(attachment => {
 			this.attachments.push({
 				id: attachment.id,
@@ -401,7 +400,7 @@ export default {
 			)
 		},
 		appendToBodyAtCursor(toAppend) {
-			this.bus.$emit('append-to-body-at-cursor', toAppend)
+			this.bus.emit('append-to-body-at-cursor', toAppend)
 		},
 		formatBytes(bytes, decimals = 2) {
 			if (bytes === 0) return '0 B'

@@ -1,3 +1,3 @@
-import Vue from 'vue'
-const dragEventBus = new Vue()
+import mitt from 'mitt'
+const dragEventBus = mitt()
 export default dragEventBus

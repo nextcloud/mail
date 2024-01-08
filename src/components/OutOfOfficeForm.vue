@@ -105,7 +105,7 @@
 					v-model="message"
 					:html="false"
 					:disabled="followingSystem"
-					:bus="{ '$on': () => { /* noop */ } }" />
+					:bus="textEditorDummyBus" />
 			</fieldset>
 		</template>
 
@@ -135,6 +135,7 @@ import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import * as OutOfOfficeService from '../service/OutOfOfficeService.js'
+import mitt from 'mitt'
 
 const OOO_DISABLED = 'disabled'
 const OOO_ENABLED = 'enabled'
@@ -174,6 +175,7 @@ export default {
 			errorMessage: '',
 			hasPersonalAbsenceSettings: nextcloudVersion >= 28 && enableSystemOutOfOffice,
 			personalAbsenceSettingsUrl: generateUrl('/settings/user/availability'),
+			textEditorDummyBus: mitt(),
 		}
 	},
 	computed: {

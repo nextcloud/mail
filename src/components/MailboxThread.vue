@@ -71,7 +71,7 @@ import { NcAppContent as AppContent, NcAppContentList as AppContentList, NcButto
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import SectionTitle from './SectionTitle.vue'
-import Vue from 'vue'
+import mitt from 'mitt'
 import addressParser from 'address-rfc2822'
 
 import infiniteScroll from '../directives/infinite-scroll.js'
@@ -122,7 +122,7 @@ export default {
 		return {
 			// eslint-disable-next-line
 			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
-			bus: new Vue(),
+			bus: mitt(),
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],
@@ -202,15 +202,15 @@ export default {
 	},
 	methods: {
 		deleteMessage(id) {
-			this.bus.$emit('delete', id)
+			this.bus.emit('delete', id)
 		},
 		onScroll(event) {
 			logger.debug('scroll', { event })
 
-			this.bus.$emit('load-more')
+			this.bus.emit('load-more')
 		},
 		onShortcut(e) {
-			this.bus.$emit('shortcut', e)
+			this.bus.emit('shortcut', e)
 		},
 		appendToSearch(str) {
 			if (this.searchQuery === undefined) {

@@ -154,10 +154,10 @@ export default {
 		},
 	},
 	created() {
-		this.bus.$on('load-more', this.onScroll)
-		this.bus.$on('delete', this.onDelete)
-		this.bus.$on('archive', this.onArchive)
-		this.bus.$on('shortcut', this.handleShortcut)
+		this.bus.on('load-more', this.onScroll)
+		this.bus.on('delete', this.onDelete)
+		this.bus.on('archive', this.onArchive)
+		this.bus.on('shortcut', this.handleShortcut)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
@@ -168,10 +168,10 @@ export default {
 			})
 	},
 	destroyed() {
-		this.bus.$off('load-more', this.onScroll)
-		this.bus.$off('delete', this.onDelete)
-		this.bus.$off('archive', this.onArchive)
-		this.bus.$off('shortcut', this.handleShortcut)
+		this.bus.off('load-more', this.onScroll)
+		this.bus.off('delete', this.onDelete)
+		this.bus.off('archive', this.onArchive)
+		this.bus.off('shortcut', this.handleShortcut)
 		this.stopInterval()
 	},
 	methods: {

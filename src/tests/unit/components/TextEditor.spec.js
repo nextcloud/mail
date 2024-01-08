@@ -20,8 +20,8 @@
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vue from 'vue'
 import Vuex from 'vuex'
+import mitt from 'mitt'
 
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import TextEditor from '../../../components/TextEditor.vue'
@@ -41,7 +41,7 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 	})
@@ -51,7 +51,7 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 
@@ -66,7 +66,7 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 
@@ -81,7 +81,7 @@ describe('TextEditor', () => {
 			localVue,
 			propsData: {
 				value: 'bonjour',
-				bus: new Vue(),
+				bus: mitt(),
 			},
 		})
 
@@ -101,7 +101,7 @@ describe('TextEditor', () => {
 				localVue,
 				propsData: {
 					value: '',
-					bus: new Vue(),
+					bus: mitt(),
 				},
 			})
 
