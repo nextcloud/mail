@@ -61,7 +61,7 @@ class AutoConfigController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @TrapError
-	 * @UserRateThrottle(limit: 5, period: 60)
+	 * @UserRateThrottle(limit=5, period=60)
 	 *
 	 * @return JsonResponse
 	 */
@@ -81,7 +81,7 @@ class AutoConfigController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @TrapError
-	 * @UserRateThrottle(limit: 5, period: 60)
+	 * @UserRateThrottle(limit=5, period=60)
 	 *
 	 * @return JsonResponse
 	 */
@@ -103,7 +103,7 @@ class AutoConfigController extends Controller {
 	 *
 	 * @NoAdminRequired
 	 * @TrapError
-	 * @UserRateThrottle(limit: 10, period: 60)
+	 * @UserRateThrottle(limit=10, period=60)
 	 *
 	 * @return JsonResponse
 	 */
