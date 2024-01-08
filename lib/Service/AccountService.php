@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -45,9 +46,9 @@ class AccountService {
 	/**
 	 * Cache accounts for multiple calls to 'findByUserId'
 	 *
-	 * @var Account[]
+	 * @var array<string, Account[]>
 	 */
-	private $accounts;
+	private array $accounts = [];
 
 	/** @var AliasesService */
 	private $aliasesService;
@@ -73,13 +74,13 @@ class AccountService {
 	 * @return Account[]
 	 */
 	public function findByUserId(string $currentUserId): array {
-		if ($this->accounts === null) {
-			return $this->accounts = array_map(static function ($a) {
+		if (!isset($this->accounts[$currentUserId])) {
+			$this->accounts[$currentUserId] = array_map(static function ($a) {
 				return new Account($a);
 			}, $this->mapper->findByUserId($currentUserId));
 		}
 
-		return $this->accounts;
+		return $this->accounts[$currentUserId];
 	}
 
 	/**
@@ -93,15 +94,15 @@ class AccountService {
 	}
 
 	/**
-	 * @param string $uid
+	 * @param string $userId
 	 * @param int $id
 	 *
 	 * @return Account
 	 * @throws ClientException
 	 */
-	public function find(string $uid, int $id): Account {
-		if ($this->accounts !== null) {
-			foreach ($this->accounts as $account) {
+	public function find(string $userId, int $id): Account {
+		if (isset($this->accounts[$userId])) {
+			foreach ($this->accounts[$userId] as $account) {
 				if ($account->getId() === $id) {
 					return $account;
 				}
@@ -110,7 +111,7 @@ class AccountService {
 		}
 
 		try {
-			return new Account($this->mapper->find($uid, $id));
+			return new Account($this->mapper->find($userId, $id));
 		} catch (DoesNotExistException $e) {
 			throw new ClientException("Account $id does not exist or you don\'t have permission to access it");
 		}
@@ -188,7 +189,7 @@ class AccountService {
 		return $this->mapper->getAllAccounts();
 	}
 
-	
+
 	/**
 	 * @param string $currentUserId
 	 * @param int $accountId
