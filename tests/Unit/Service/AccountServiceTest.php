@@ -2,6 +2,7 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -35,8 +36,8 @@ use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AccountServiceTest extends TestCase {
-	/** @var string */
-	private $user = 'herbert';
+	private string $user = 'herbert';
+	private string $user2 = 'user';
 
 	/** @var MailAccountMapper|MockObject */
 	private $mapper;
@@ -55,6 +56,9 @@ class AccountServiceTest extends TestCase {
 
 	/** @var MailAccount|MockObject */
 	private $account2;
+
+	/** @var MailAccount|MockObject */
+	private $account3;
 
 	/** @var IJobList|MockObject */
 	private $jobList;
@@ -82,24 +86,27 @@ class AccountServiceTest extends TestCase {
 
 		$this->account1 = $this->createMock(MailAccount::class);
 		$this->account2 = $this->createMock(MailAccount::class);
+		$this->account3 = $this->createMock(MailAccount::class);
 		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 	}
 
 	public function testFindByUserId() {
-		$this->mapper->expects($this->once())
+		$this->mapper->expects(self::exactly(2))
 			->method('findByUserId')
-			->with($this->user)
-			->will($this->returnValue([
-				$this->account1,
-				$this->account2,
-			]));
+			->willReturnMap([
+				[$this->user, [$this->account1, $this->account2]],
+				[$this->user2, [$this->account3]],
+			]);
 
 		$expected = [
 			new Account($this->account1),
 			new Account($this->account2),
 		];
 		$actual = $this->accountService->findByUserId($this->user);
+		$this->assertEquals($expected, $actual);
 
+		$expected = [new Account($this->account3)];
+		$actual = $this->accountService->findByUserId($this->user2);
 		$this->assertEquals($expected, $actual);
 	}
 
