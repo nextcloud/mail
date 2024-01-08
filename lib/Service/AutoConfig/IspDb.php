@@ -136,7 +136,7 @@ class IspDb {
 				],
 				[
 					$email->bare_address,
-					$email->personal,
+					$email->mailbox,
 					$email->host,
 				],
 				(string)$server->username
