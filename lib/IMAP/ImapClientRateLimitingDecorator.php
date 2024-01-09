@@ -72,7 +72,8 @@ class ImapClientRateLimitingDecorator extends Horde_Imap_Client_Socket {
 		try {
 			return parent::_login();
 		} catch (Horde_Imap_Client_Exception $e) {
-			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED) {
+			if ($e->getCode() === Horde_Imap_Client_Exception::LOGIN_AUTHENTICATIONFAILED
+				&& $e->getMessage() === 'Authentication failed.') {
 				$current = $this->cache->inc($cacheKey);
 			}
 			throw $e;
