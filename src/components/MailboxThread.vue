@@ -1,12 +1,12 @@
 <template>
 	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
-		<div slot="list"
-			:class="{ header__button: !showThread || !isMobile }">
+		<div :class="{ header__button: !showThread || !isMobile }">
 			<SearchMessages v-if="!showThread || !isMobile"
 				:mailbox="mailbox"
 				:account-id="account.accountId"
 				@search-changed="onUpdateSearchQuery" />
-			<AppContentList v-infinite-scroll="onScroll"
+			<AppContentList v-show="!showThread"
+				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
 				class="envelope-list"
 				infinite-scroll-immediate-check="false"
@@ -62,7 +62,6 @@
 			</AppContentList>
 		</div>
 		<Thread v-if="showThread" @delete="deleteMessage" />
-		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
 
@@ -309,7 +308,7 @@ export default {
 
 .app-content-list {
 	// Required for centering the loading indicator
-	display: flex;
+	display: contents;
 }
 
 .app-content-list-item:hover {

@@ -1,5 +1,6 @@
 <template>
-	<ListItem v-draggable-envelope="{
+	<ListItem v-show="!showThread"
+		v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
 			databaseId: data.databaseId,
@@ -370,6 +371,7 @@ import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import moment from '@nextcloud/moment'
 import { mapGetters } from 'vuex'
+import { priorityImportantQuery, priorityOtherQuery } from '../util/priorityInbox.js'
 
 export default {
 	name: 'Envelope',
@@ -457,6 +459,7 @@ export default {
 			showTagModal: false,
 			moreActionsOpen: false,
 			snoozeOptions: false,
+			showThread: false,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
 		}
 	},
@@ -861,13 +864,14 @@ export default {
 
 	&__subtitle {
 		display: flex;
-		gap: 4px;
+		margin-right: 30px !important;
 
 		&__subject {
 			color: var(--color-main-text);
-			line-height: 130%;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			white-space: nowrap;
+			width: 250px;
 		}
 	}
 	&__preview-text {
@@ -1024,5 +1028,26 @@ export default {
 }
 :deep(.list-item__extra) {
 	margin-top: 9px;
+}
+:deep(.line-two__subtitle) {
+	display: flex;
+	width: 450px;
+}
+:deep(.list-item-content__main) {
+	flex-direction: row;
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: flex-start
+}
+:deep(.line-one__title) {
+	flex-direction: row;
+	display: flex;
+	width: 200px;
+}
+:deep(.line-two) {
+	flex-grow: 1;
+}
+:deep(.line-one__details) {
+	float: right;
 }
 </style>
