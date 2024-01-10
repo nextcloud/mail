@@ -26,9 +26,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
+use Generator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
@@ -113,6 +115,29 @@ class MailAccountMapper extends QBMapper {
 			);
 
 		return $this->findEntity($query);
+	}
+
+	/**
+	 * Iterate over all accounts that follow system out-of-office settings
+	 *
+	 * @return Generator<MailAccount>
+	 * @throws Exception
+	 */
+	public function findAllWhereOooFollowsSystem(): Generator {
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select('*')
+			->where($qb->expr()->eq(
+				'ooo_follows_system',
+				$qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL),
+				IQueryBuilder::PARAM_BOOL))
+			->from($this->getTableName());
+
+		$result = $query->executeQuery();
+		while ($row = $result->fetch()) {
+			yield $this->mapRowToEntity($row);
+		}
+		$result->closeCursor();
 	}
 
 	/**
