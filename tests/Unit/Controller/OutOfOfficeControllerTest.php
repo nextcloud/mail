@@ -193,7 +193,7 @@ class OutOfOfficeControllerTest extends TestCase {
 				self::assertTrue($state->isEnabled());
 				self::assertEquals(new DateTimeImmutable("@$startDate"), $state->getStart());
 				self::assertEquals(new DateTimeImmutable("@$endDate"), $state->getEnd());
-				self::assertEquals('Subject', $state->getSubject());
+				self::assertEquals('Re: ${subject}', $state->getSubject());
 				self::assertEquals('Message', $state->getMessage());
 				return true;
 			}));
