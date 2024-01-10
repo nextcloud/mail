@@ -116,6 +116,7 @@ OC.L10N.register(
     "Draft: " : "임시 보관함",
     "Unfavorite" : "즐겨찾기에서 삭제",
     "Favorite" : "즐겨찾기",
+    "Unread" : "읽지 않음",
     "Read" : "읽기",
     "Mark not spam" : "스팸 해제",
     "Mark as spam" : "스팸 신고",
