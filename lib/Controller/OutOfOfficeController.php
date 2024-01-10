@@ -119,7 +119,7 @@ class OutOfOfficeController extends Controller {
 				true,
 				new DateTimeImmutable("@" . $currentOutOfOfficeData->getStartDate()),
 				new DateTimeImmutable("@" . $currentOutOfOfficeData->getEndDate()),
-				$currentOutOfOfficeData->getShortMessage(),
+				'Re: ${subject}',
 				$currentOutOfOfficeData->getMessage(),
 			);
 			$this->outOfOfficeService->update($mailAccount, $state);
