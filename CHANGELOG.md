@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.2 – 2024-01-10
+### Fixed
+- SQL error when opening mailbox
+- System auto responder applied to wrong account
+
 ## 3.5.1 – 2023-12-28
 ### Fixed
 - Autoresponder time zone handline
