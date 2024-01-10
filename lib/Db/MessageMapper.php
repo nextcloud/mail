@@ -373,24 +373,127 @@ class MessageMapper extends QBMapper {
 			'partial sync ' . $account->getId() . ':' . $account->getName()
 		);
 
+		// MailboxId is the same for all messages according to updateBulk() call
+		$mailboxId = $messages[0]->getMailboxId();
+
+		$flags = [
+			'flag_answered',
+			'flag_deleted',
+			'flag_draft',
+			'flag_flagged',
+			'flag_seen',
+			'flag_forwarded',
+			'flag_junk',
+			'flag_notjunk',
+			'flag_mdnsent',
+			'flag_important',
+		];
+
+		$updateData = [];
+		foreach ($flags as $flag) {
+			$updateData[$flag.'_true'] = [];
+			$updateData[$flag.'_false'] = [];
+		}
+
+		foreach ($messages as $message) {
+			if (empty($message->getUpdatedFields()) === false) {
+				if ($message->getFlagAnswered()) {
+					$updateData["flag_answered_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_answered_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagDeleted()) {
+					$updateData["flag_deleted_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_deleted_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagDraft()) {
+					$updateData["flag_draft_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_draft_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagFlagged()) {
+					$updateData["flag_flagged_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_flagged_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagSeen()) {
+					$updateData["flag_seen_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_seen_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagForwarded()) {
+					$updateData["flag_forwarded_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_forwarded_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagJunk()) {
+					$updateData["flag_junk_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_junk_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagNotjunk()) {
+					$updateData["flag_notjunk_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_notjunk_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagMdnsent()) {
+					$updateData["flag_mdnsent_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_mdnsent_false"][] = $message->getUid();
+				}
+
+				if ($message->getFlagImportant()) {
+					$updateData["flag_important_true"][] = $message->getUid();
+				} else {
+					$updateData["flag_important_false"][] = $message->getUid();
+				}
+			}
+		}
+
+
 		try {
-			$query = $this->db->getQueryBuilder();
-			$query->update($this->getTableName())
-				->set('flag_answered', $query->createParameter('flag_answered'))
-				->set('flag_deleted', $query->createParameter('flag_deleted'))
-				->set('flag_draft', $query->createParameter('flag_draft'))
-				->set('flag_flagged', $query->createParameter('flag_flagged'))
-				->set('flag_seen', $query->createParameter('flag_seen'))
-				->set('flag_forwarded', $query->createParameter('flag_forwarded'))
-				->set('flag_junk', $query->createParameter('flag_junk'))
-				->set('flag_notjunk', $query->createParameter('flag_notjunk'))
-				->set('flag_mdnsent', $query->createParameter('flag_mdnsent'))
-				->set('flag_important', $query->createParameter('flag_important'))
-				->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime()))
-				->where($query->expr()->andX(
-					$query->expr()->eq('uid', $query->createParameter('uid')),
-					$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
-				));
+			// UPDATE messages SET flag true/false WHERE uid in (uids) -> for each flag
+			// => total of 20 queries
+			foreach ($flags as $flag) {
+				$queryTrue = $this->db->getQueryBuilder();
+				$queryTrue->update($this->getTableName())
+					->set($flag, $queryTrue->createNamedParameter(1, IQueryBuilder::PARAM_INT))
+					->set('updated_at', $queryTrue->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
+					->where($queryTrue->expr()->andX(
+						$queryTrue->expr()->in('uid', $queryTrue->createParameter('uids')),
+						$queryTrue->expr()->eq('mailbox_id', $queryTrue->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
+						$queryTrue->expr()->eq($flag, $queryTrue->createNamedParameter(0, IQueryBuilder::PARAM_INT))
+					));
+				foreach (array_chunk($updateData[$flag.'_true'], 1000) as $chunk) {
+					$queryTrue->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+					$queryTrue->executeStatement();
+				}
+
+				$queryFalse = $this->db->getQueryBuilder();
+				$queryFalse->update($this->getTableName())
+					->set($flag, $queryFalse->createNamedParameter(0, IQueryBuilder::PARAM_INT))
+					->set('updated_at', $queryFalse->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
+					->where($queryFalse->expr()->andX(
+						$queryFalse->expr()->in('uid', $queryFalse->createParameter('uids')),
+						$queryFalse->expr()->eq('mailbox_id', $queryFalse->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
+						$queryFalse->expr()->eq($flag, $queryFalse->createNamedParameter(1, IQueryBuilder::PARAM_INT))
+					));
+				foreach (array_chunk($updateData[$flag.'_false'], 1000) as $chunk) {
+					$queryFalse->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+					$queryFalse->executeStatement();
+				}
+
+				$perf->step('Set ' . $flag . " in messages.");
+			}
 
 			// get all tags before the loop and create a mapping [message_id => [tag,...]] but only if permflags are enabled
 			$tags = [];
@@ -400,24 +503,6 @@ class MessageMapper extends QBMapper {
 			}
 
 			foreach ($messages as $message) {
-				if (empty($message->getUpdatedFields()) === false) {
-					// only run if there is anything to actually update
-					$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
-					$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
-					$query->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_deleted', $message->getFlagDeleted(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_draft', $message->getFlagDraft(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_flagged', $message->getFlagFlagged(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_seen', $message->getFlagSeen(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
-					$query->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
-					$query->executeStatement();
-					$perf->step('Updated message ' . $message->getId());
-				}
-
 				// check permflags and only go through the tagging logic if they're enabled
 				if ($permflagsEnabled) {
 					$this->updateTags($account, $message, $tags, $perf);
