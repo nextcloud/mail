@@ -65,6 +65,7 @@ OC.L10N.register(
     "Newest" : "최신순",
     "Oldest" : "과거순",
     "Looking for a way to encrypt your emails?" : "이메일을 암호화하는 방법을 찾고 계십니까?",
+    "Keyboard" : "키보드",
     "Compose new message" : "새 메시지 작성",
     "Newer message" : "새로운 메시지",
     "Older message" : "오래된 메시지",
