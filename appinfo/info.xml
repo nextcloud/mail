@@ -82,6 +82,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 		<command>OCA\Mail\Command\Thread</command>
 		<command>OCA\Mail\Command\TrainAccount</command>
 		<command>OCA\Mail\Command\UpdateAccount</command>
+		<command>OCA\Mail\Command\UpdateSystemAutoresponders</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>
