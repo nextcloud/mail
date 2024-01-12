@@ -146,7 +146,7 @@
 				</p>
 			</article>
 		</div>
-		<div v-if="isLlmConfigured"
+		<div v-if="isLlmSummaryConfigured"
 			class="app-description">
 			<h3>{{ t('mail', 'Enable thread summary') }}</h3>
 			<article>
@@ -155,6 +155,19 @@
 						type="switch"
 						@update:checked="updateEnabledThreadSummary">
 						{{ t('mail','Enable thread summaries') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
+		<div v-if="isLlmFreePromptConfigured"
+			class="app-description">
+			<h3>{{ t('mail', 'Enable smart replies') }}</h3>
+			<article>
+				<p>
+					<NcCheckboxRadioSwitch :checked.sync="enabledSmartReplies"
+						type="switch"
+						@update:checked="updateEnabledSmartReply">
+						{{ t('mail','Enable smart replies') }}
 					</NcCheckboxRadioSwitch>
 				</p>
 			</article>
@@ -274,6 +287,7 @@ import {
 	provisionAll,
 	updateAllowNewMailAccounts,
 	updateEnabledThreadSummary,
+	updateEnabledSmartReply,
 } from '../../service/SettingsService.js'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
@@ -334,7 +348,10 @@ export default {
 			},
 			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
 			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
-			isLlmConfigured: loadState('mail', 'enabled_llm_backend'),
+			enabledSmartReplies: loadState('mail', 'enabled_smart_reply', false),
+			isLlmSummaryConfigured: loadState('mail', 'enabled_llm_summary_backend'),
+			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
+
 		}
 	},
 	methods: {
@@ -390,6 +407,9 @@ export default {
 		},
 		async updateEnabledThreadSummary(checked) {
 			await updateEnabledThreadSummary(checked)
+		},
+		async updateEnabledSmartReply(checked) {
+			await updateEnabledSmartReply(checked)
 		},
 	},
 }

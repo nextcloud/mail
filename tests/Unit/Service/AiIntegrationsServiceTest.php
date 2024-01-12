@@ -27,12 +27,14 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCP\TextProcessing\FreePromptTaskType;
@@ -104,17 +106,72 @@ class AiIntegrationsServiceTest extends TestCase {
 
 	}
 
+
+	public function testSmartReplyNoBackend() {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		if($this->manager !== null) {
+			$this->container->method('get')->willReturn($this->manager);
+			$this->manager
+				->method('getAvailableTaskTypes')
+				->willReturn([]);
+			$this->expectException(ServiceException::class);
+			$this->expectExceptionMessage('No language model available for smart replies');
+			$this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+		}
+		$this->container->method('get')->willThrowException(new ServiceException());
+		$this->expectException(ServiceException::class);
+		$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
+		$this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+
+	}
+
+	public function testGeneratedMessage() {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+		$message = new Message();
+		$message->setUid(1);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$addessList = $this->createMock(AddressList::class);
+		$addessList->method('first')->willreturn('normal@email.com');
+		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
+		if($this->manager !== null) {
+			$this->container->method('get')->willReturn($this->manager);
+			$this->manager
+				->method('getAvailableTaskTypes')
+				->willReturn([FreePromptTaskType::class]);
+			$imapMessage->method('isOneClickUnsubscribe')->willReturn(true);
+			$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+			$this->assertEquals($replies, []);
+			$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+			$imapMessage->method('getUnsubscribeUrl')->willReturn('iAmAnUnsubscribeUrl');
+			$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+			$this->assertEquals($replies, []);
+			$imapMessage->method('isOneClickUnsubscribe')->willReturn(false);
+			$imapMessage->method('getUnsubscribeUrl')->willReturn(null);
+			$addessList->method('first')->willreturn('noreply@test.com');
+			$replies = $this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+			$this->assertEquals($replies, []);
+		} else {
+			$this->container->method('get')->willThrowException(new ServiceException());
+			$this->expectException(ServiceException::class);
+			$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
+			$this->aiIntegrationsService->getSmartReply($account, $mailbox, $message, '');
+		}
+	}
+
 	public function testLlmAvailable() {
 		if($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 			->method('getAvailableTaskTypes')
 			->willReturn([SummaryTaskType::class, TopicsTaskType::class, FreePromptTaskType::class]);
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable();
+			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
 			$this->assertTrue($isAvailable);
 		} else {
 			$this->container->method('get')->willThrowException(new Exception());
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable();
+			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
 			$this->assertFalse($isAvailable);
 		}
 
@@ -126,49 +183,55 @@ class AiIntegrationsServiceTest extends TestCase {
 			$this->manager
 				->method('getAvailableTaskTypes')
 				->willReturn([TopicsTaskType::class, FreePromptTaskType::class]);
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable();
+			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
 			$this->assertFalse($isAvailable);
 		} else {
 			$this->container->method('get')->willThrowException(new Exception());
-			$isAvailable = $this->aiIntegrationsService->isLlmAvailable();
+			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
 			$this->assertFalse($isAvailable);
 		}
 
 	}
 
 	public function testCached() {
+		$account = new Account(new MailAccount());
+		$mailbox = new Mailbox();
+
+		$message1 = new Message();
+		$message1->setMessageId('300');
+		$message1->setPreviewText('message1');
+		$message1->setThreadRootId('some-thread-root-id-1');
+
+		$message2 = new Message();
+		$message2->setMessageId('301');
+		$message2->setPreviewText('message2');
+		$message2->setThreadRootId('some-thread-root-id-1');
+
+		$message3 = new Message();
+		$message3->setMessageId('302');
+		$message3->setPreviewText('message3');
+		$message3->setThreadRootId('some-thread-root-id-1');
+
+		$messages = [ $message1,$message2,$message3];
 		if($this->manager !== null) {
-			$account = new Account(new MailAccount());
-			$mailbox = new Mailbox();
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')
 				->willReturn([SummaryTaskType::class]);
 
-			$message1 = new Message();
-			$message1->setMessageId('300');
-			$message1->setPreviewText('message1');
-			$message1->setThreadRootId('some-thread-root-id-1');
-
-			$message2 = new Message();
-			$message2->setMessageId('301');
-			$message2->setPreviewText('message2');
-			$message2->setThreadRootId('some-thread-root-id-1');
-
-			$message3 = new Message();
-			$message3->setMessageId('302');
-			$message3->setPreviewText('message3');
-			$message3->setThreadRootId('some-thread-root-id-1');
-
-			$messages = [ $message1,$message2,$message3];
 			$messageIds = [ $message1->getMessageId(),$message2->getMessageId(),$message3->getMessageId()];
-
+			$key = $this->cache->buildUrlKey($messageIds);
 			$this->cache
-				->method('getSummary')
-				->with($messageIds)
+				->method('getValue')
+				->with($key)
 				->willReturn('this is a cached summary');
 
 			$this->assertEquals('this is a cached summary', $this->aiIntegrationsService->summarizeThread($account, $mailbox, 'some-thread-root-id-1', $messages, 'admin'));
+		} else {
+			$this->container->method('get')->willThrowException(new ServiceException());
+			$this->expectException(ServiceException::class);
+			$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
+			$this->aiIntegrationsService->summarizeThread($account, $mailbox, 'some-thread-root-id-1', $messages, 'admin');
 		}
 	}
 }

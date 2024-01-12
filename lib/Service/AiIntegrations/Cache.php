@@ -45,7 +45,7 @@ class Cache {
 	 * @param array $ids
 	 * @return string
 	 */
-	private function buildUrlKey(array $ids): string {
+	public function buildUrlKey(array $ids): string {
 		return base64_encode(json_encode($ids));
 	}
 
@@ -53,10 +53,10 @@ class Cache {
 	/**
 	 * @param array $ids
 	 *
-	 * @return string|false the summary if cached, false if cached but no value or not cached
+	 * @return string|false the value if cached, false if cached but no value or not cached
 	 */
-	public function getSummary(array $ids) {
-		$cached = $this->cache->get($this->buildUrlKey($ids));
+	public function getValue(string $key) {
+		$cached = $this->cache->get($key);
 
 		if (is_null($cached) || $cached === false) {
 			return false;
@@ -66,13 +66,13 @@ class Cache {
 	}
 
 	/**
-	 * @param array $ids
-	 * @param string|null $summary
+	 * @param string $key
+	 * @param string|null $value
 	 *
 	 * @return void
 	 */
-	public function addSummary(array $ids, ?string $summary): void {
-		$this->cache->set($this->buildUrlKey($ids), $summary === null ? false : $summary, self::CACHE_TTL);
+	public function addValue(string $key, ?string $value): void {
+		$this->cache->set($key, $value === null ? false : $value, self::CACHE_TTL);
 	}
 
 

@@ -281,6 +281,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#smartReply',
+			'url' => '/api/messages/{messageId}/smartreply',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'avatars#url',
 			'url' => '/api/avatars/url/{email}',
 			'verb' => 'GET'
@@ -343,6 +348,11 @@ return [
 		[
 			'name' => 'settings#setEnabledThreadSummary',
 			'url' => '/api/settings/threadsummary',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'settings#setEnabledSmartReplies',
+			'url' => '/api/settings/smartreply',
 			'verb' => 'PUT'
 		],
 		[

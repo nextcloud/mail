@@ -85,3 +85,12 @@ export const updateEnabledThreadSummary = async (enabled) => {
 	const resp = await axios.put(url, data)
 	return resp.data
 }
+
+export const updateEnabledSmartReply = async (enabled) => {
+	const url = generateUrl('/apps/mail/api/settings/smartreply')
+	const data = {
+		enabled,
+	}
+	const resp = await axios.put(url, data)
+	return resp.data
+}

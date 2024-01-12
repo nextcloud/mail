@@ -47,6 +47,7 @@
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
 				<referencedClass name="OCP\TextProcessing\Task" />
 				<referencedClass name="OCP\TextProcessing\SummaryTaskType" />
+				<referencedClass name="OCP\TextProcessing\FreePromptTaskType" />
 				<referencedClass name="OCP\User\Events\OutOfOfficeEndedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeStartedEvent" /><!-- 28+ -->
 				<referencedClass name="OCP\User\Events\OutOfOfficeScheduledEvent" /><!-- 28+ -->

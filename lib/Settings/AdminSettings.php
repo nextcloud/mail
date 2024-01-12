@@ -36,6 +36,8 @@ use OCP\IConfig;
 use OCP\IInitialStateService;
 use OCP\LDAP\ILDAPProvider;
 use OCP\Settings\ISettings;
+use OCP\TextProcessing\FreePromptTaskType;
+use OCP\TextProcessing\SummaryTaskType;
 
 class AdminSettings implements ISettings {
 	/** @var IInitialStateService */
@@ -98,8 +100,20 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
-			'enabled_llm_backend',
-			$this->aiIntegrationsService->isLlmAvailable()
+			'enabled_smart_reply',
+			$this->config->getAppValue('mail', 'enabled_smart_reply', 'no') === 'yes'
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'enabled_llm_free_prompt_backend',
+			$this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'enabled_llm_summary_backend',
+			$this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
 		);
 
 		$this->initialStateService->provideLazyInitialState(

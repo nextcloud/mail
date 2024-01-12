@@ -385,8 +385,14 @@ export default {
 					})
 
 					data.body = html(resp.data)
+					if (reply.suggestedReply) {
+						data.body.value = `<p>${reply.suggestedReply}<\\p>` + data.body.value
+					}
 				} else {
 					data.body = plain(original.body)
+					if (reply.suggestedReply) {
+						data.body.value = `${reply.suggestedReply}\n` + data.body.value
+					}
 				}
 
 				if (reply.mode === 'reply') {
@@ -400,6 +406,7 @@ export default {
 							body: data.body,
 							originalBody: data.body,
 							replyTo: reply.data,
+							smartReply: reply.smartReply,
 						},
 					})
 					return

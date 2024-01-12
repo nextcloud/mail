@@ -48,6 +48,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\SmimeService;
@@ -139,6 +140,9 @@ class MessagesControllerTest extends TestCase {
 	private $userPreferences;
 	private SnoozeService $snoozeService;
 
+	/** @var MockObject|AiIntegrationsService */
+	private $aiIntegrationsService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -163,6 +167,7 @@ class MessagesControllerTest extends TestCase {
 		$this->dkimService = $this->createMock(IDkimService::class);
 		$this->userPreferences = $this->createMock(IUserPreferences::class);
 		$this->snoozeService = $this->createMock(SnoozeService::class);
+		$this->aiIntegrationsService = $this->createMock(AiIntegrationsService::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -194,6 +199,7 @@ class MessagesControllerTest extends TestCase {
 			$this->dkimService,
 			$this->userPreferences,
 			$this->snoozeService,
+			$this->aiIntegrationsService,
 		);
 
 		$this->account = $this->createMock(Account::class);
