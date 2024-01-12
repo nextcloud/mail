@@ -378,6 +378,7 @@ OC.L10N.register(
     "Sending …" : "Envoi en cours …",
     "Warning sending your message" : "Attention : envoi de votre message",
     "Send anyway" : "Envoyer quand même",
+    "Maximize composer" : "Maximiser la fenêtre de composition",
     "Minimize composer" : "Minimiser la fenêtre de composition",
     "Edit message" : "Modifier le message",
     "Draft" : "Brouillon",

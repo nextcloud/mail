@@ -379,6 +379,7 @@ OC.L10N.register(
     "Sending …" : "傳送中 ...",
     "Warning sending your message" : "傳送您的郵件時發生警告",
     "Send anyway" : "仍然傳送",
+    "Maximize composer" : "最大化編輯器",
     "Minimize composer" : "最小化編輯器",
     "Edit message" : "編輯訊息",
     "Draft" : "草稿",

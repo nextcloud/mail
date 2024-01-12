@@ -379,6 +379,7 @@ OC.L10N.register(
     "Sending …" : "الإرسال جارٍ ...",
     "Warning sending your message" : "تحذير إرسال رسالتك",
     "Send anyway" : "أرسِل على كُلِّ حالٍ",
+    "Maximize composer" : "استعمال الأداة \"كومبوزر\" composer في حدِّها الأقصى",
     "Minimize composer" : "تصغير الناظم composer",
     "Edit message" : "تحرير رسالة",
     "Draft" : "مسودة",

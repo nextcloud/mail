@@ -379,6 +379,7 @@ OC.L10N.register(
     "Sending …" : "Senden…",
     "Warning sending your message" : "Warnung beim Versenden Ihrer Nachricht",
     "Send anyway" : "Trotzdem senden",
+    "Maximize composer" : "Erstellungsbereich maximieren",
     "Minimize composer" : "Erstellungsbereich minimieren",
     "Edit message" : "Nachricht bearbeiten",
     "Draft" : "Entwurf",

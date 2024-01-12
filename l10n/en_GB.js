@@ -379,6 +379,7 @@ OC.L10N.register(
     "Sending …" : "Sending…",
     "Warning sending your message" : "Warning sending your message",
     "Send anyway" : "Send anyway",
+    "Maximize composer" : "Maximize composer",
     "Minimize composer" : "Minimize composer",
     "Edit message" : "Edit message",
     "Draft" : "Draft",
