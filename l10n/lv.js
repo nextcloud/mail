@@ -50,6 +50,7 @@ OC.L10N.register(
     "Add attachment from Files" : "Pievienot pielikumu no failiem",
     "Enter a date" : "Ievadiet datumu",
     "Choose a file to add as attachment" : "Izvēlēties datni ko pievienot kā pielikumu",
+    "Choose a file to share as a link" : "Izvēlieties failu, ko vēlaties koplietot kā saiti",
     "Confirm" : "Apstiprināt",
     "Favorite" : "Favorīts",
     "Read" : "Lasīt",
