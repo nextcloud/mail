@@ -25,6 +25,7 @@ OC.L10N.register(
     "Account settings" : "Paramètres de compte",
     "Signature" : "Signatura",
     "Mail server" : "Servidor email",
+    "Rename alias" : "Renomenar l’àlias",
     "Go back" : "Revenir en arrière",
     "Email address" : "Adreça mail",
     "Cancel" : "Anullar",

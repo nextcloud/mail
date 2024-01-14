@@ -535,6 +535,7 @@ OC.L10N.register(
     "Allow additional Mail accounts from User Settings" : "Zusätzliche E-Mail-Konten in den Benutzereinstellungen zulassen",
     "Enable thread summary" : "Zusammenfassung der Unterhaltung aktivieren",
     "Enable thread summaries" : "Zusammenfassungen der Unterhaltung aktivieren",
+    "Enable smart replies" : "Intelligente Antworten aktivieren",
     "Anti Spam Service" : "Anti-Spam-Dienst",
     "You can set up an anti spam service email address here." : "Hier können Sie eine E-Mail-Adresse für einen Anti-Spam-Dienst einrichten.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Jede als Spam markierte E-Mail wird an den Anti-Spam-Dienst weitergeleitet.",
