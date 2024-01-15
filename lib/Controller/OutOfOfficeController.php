@@ -36,31 +36,20 @@ use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 use OCA\Mail\Service\OutOfOfficeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
 use OCP\IUserSession;
 use OCP\User\IAvailabilityCoordinator;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 class OutOfOfficeController extends Controller {
-	private ?IAvailabilityCoordinator $availabilityCoordinator;
-
 	public function __construct(
 		IRequest $request,
-		ContainerInterface $container,
+		private ContainerInterface $container,
 		private IUserSession $userSession,
 		private AccountService $accountService,
 		private OutOfOfficeService $outOfOfficeService,
-		private ITimeFactory $timeFactory,
 	) {
 		parent::__construct(Application::APP_ID, $request);
-
-		try {
-			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
-		} catch (ContainerExceptionInterface) {
-			$this->availabilityCoordinator = null;
-		}
 	}
 
 	/**
@@ -88,7 +77,7 @@ class OutOfOfficeController extends Controller {
 	 */
 	#[TrapError]
 	public function followSystem(int $accountId) {
-		if ($this->availabilityCoordinator === null) {
+		if (!$this->container->has(IAvailabilityCoordinator::class)) {
 			return JsonResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
 		}
 
@@ -108,26 +97,7 @@ class OutOfOfficeController extends Controller {
 			$this->accountService->update($mailAccount);
 		}
 
-		$state = null;
-		$now = $this->timeFactory->getTime();
-		$currentOutOfOfficeData = $this->availabilityCoordinator->getCurrentOutOfOfficeData($user);
-		if ($currentOutOfOfficeData !== null
-		 && $currentOutOfOfficeData->getStartDate() <= $now
-		 && $currentOutOfOfficeData->getEndDate() > $now) {
-			// In the middle of a running absence => enable auto responder
-			$state = new OutOfOfficeState(
-				true,
-				new DateTimeImmutable("@" . $currentOutOfOfficeData->getStartDate()),
-				new DateTimeImmutable("@" . $currentOutOfOfficeData->getEndDate()),
-				'Re: ${subject}',
-				$currentOutOfOfficeData->getMessage(),
-			);
-			$this->outOfOfficeService->update($mailAccount, $state);
-		} else {
-			// Absence has not yet started or has already ended => disable auto responder
-			$this->outOfOfficeService->disable($mailAccount);
-		}
-
+		$state = $this->outOfOfficeService->updateFromSystem($mailAccount, $user);
 		return JsonResponse::success($state);
 	}
 

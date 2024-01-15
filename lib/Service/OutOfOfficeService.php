@@ -26,25 +26,43 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use DateTimeImmutable;
 use Horde\ManageSieve\Exception as ManageSieveException;
+use InvalidArgumentException;
 use JsonException;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
 use OCA\Mail\Exception\OutOfOfficeParserException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeParser;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeParserResult;
 use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IUser;
+use OCP\User\IAvailabilityCoordinator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class OutOfOfficeService {
+	private ?IAvailabilityCoordinator $availabilityCoordinator;
+
 	public function __construct(
 		private OutOfOfficeParser $outOfOfficeParser,
 		private SieveService $sieveService,
 		private LoggerInterface $logger,
 		private AliasesService $aliasesService,
+		private ITimeFactory $timeFactory,
+		ContainerInterface $container,
 	) {
+		// TODO: inject directly if we only support Nextcloud >= 28
+		try {
+			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
+		} catch (ContainerExceptionInterface $e) {
+			$this->availabilityCoordinator = null;
+		}
 	}
 
 	/**
@@ -82,6 +100,60 @@ class OutOfOfficeService {
 			]);
 			throw $e;
 		}
+	}
+
+	/**
+	 * Update a mail account's autoresponder from the out-of-office system setting of the corresponding user.
+	 * Note: This method throws if the given account doesn't follow system out-of-office settings.
+	 *
+	 * @param MailAccount $mailAccount The mail account to update
+	 * @param IUser $user The user the mail account belongs to
+	 *
+	 * @return OutOfOfficeState|null The new out-of-office state which has been applied
+	 * @throws ClientException
+	 * @throws CouldNotConnectException
+	 * @throws JsonException
+	 * @throws ManageSieveException
+	 * @throws OutOfOfficeParserException
+	 * @throws ServiceException
+	 * @throws InvalidArgumentException If the given mail account doesn't follow out-of-office settings
+	 */
+	public function updateFromSystem(MailAccount $mailAccount, IUser $user): ?OutOfOfficeState {
+		if ($this->availabilityCoordinator === null) {
+			throw new ServiceException('System out-of-office data is only available in Nextcloud >= 28');
+		}
+
+		if (!$mailAccount->getOutOfOfficeFollowsSystem()) {
+			throw new InvalidArgumentException('The mail account does not follow system out-of-office settings');
+		}
+
+		$userId = $user->getUID();
+		if ($mailAccount->getUserId() !== $userId) {
+			$accountId = $mailAccount->getId();
+			throw new ServiceException("Account $accountId doesn't belong to user $userId");
+		}
+
+		$state = null;
+		$now = $this->timeFactory->getTime();
+		$currentOutOfOfficeData = $this->availabilityCoordinator->getCurrentOutOfOfficeData($user);
+		if ($currentOutOfOfficeData !== null
+			&& $currentOutOfOfficeData->getStartDate() <= $now
+			&& $currentOutOfOfficeData->getEndDate() > $now) {
+			// In the middle of a running absence => enable auto responder
+			$state = new OutOfOfficeState(
+				true,
+				new DateTimeImmutable("@" . $currentOutOfOfficeData->getStartDate()),
+				new DateTimeImmutable("@" . $currentOutOfOfficeData->getEndDate()),
+				'Re: ${subject}',
+				$currentOutOfOfficeData->getMessage(),
+			);
+			$this->update($mailAccount, $state);
+		} else {
+			// Absence has not yet started or has already ended => disable auto responder
+			$this->disable($mailAccount);
+		}
+
+		return $state;
 	}
 
 	/**
