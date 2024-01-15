@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Embedded message %s" : "포함된 메시지 %s",
     "Important mail" : "중요 메일",
+    "No message found yet" : "메시지 없음",
     "Set up an account" : "계정 설정",
     "Unread mail" : "읽지 않은 메일",
     "Important" : "중요",
@@ -15,6 +16,7 @@ OC.L10N.register(
     "Drafts are saved in:" : "초안은 다음 위치에 저장:",
     "Sent messages are saved in:" : "보낸 메시지는 다음 위치에 저장:",
     "Deleted messages are moved in:" : "삭제된 메시지는 다음 위치로 이동:",
+    "Archived messages are moved in:" : "보관된 메시지가 다음으로 이동됨: ",
     "Auto" : "자동",
     "Name" : "이름",
     "Mail address" : "메일 주소",
@@ -131,6 +133,7 @@ OC.L10N.register(
     "Set reminder for tomorrow" : "알림을 내일로 설정",
     "Set reminder for this weekend" : "알림을 주말로 설정",
     "Set reminder for next week" : "알림을 다음주로 설정",
+    "Could not archive message" : "메시지를 보관할 수 없음",
     "Forward" : "전달",
     "Load more" : "더 불러오기",
     "Report this bug" : "이 오류 보고",
