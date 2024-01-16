@@ -14,7 +14,7 @@ OC.L10N.register(
     "Mail" : "Posta",
     "Mails" : "Messaggi di posta",
     "💌 A mail app for Nextcloud" : "💌 Un'applicazione di posta per Nextcloud",
-    "Your session has expired. The page will be reloaded." : "La sessione è scaduta. La pagina verrà ricaricata.",
+    "Your session has expired. The page will be reloaded." : "La sessione è scaduta. La pagina sarà ricaricata.",
     "Drafts are saved in:" : "Le bozze sono salvate in:",
     "Sent messages are saved in:" : "I messaggi inviati sono salvati in:",
     "Deleted messages are moved in:" : "I messaggi eliminati sono spostati in:",

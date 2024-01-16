@@ -535,6 +535,7 @@ OC.L10N.register(
     "Allow additional Mail accounts from User Settings" : "從使用者設定允許其他郵件帳號",
     "Enable thread summary" : "啟用討論串摘要",
     "Enable thread summaries" : "啟用討論串摘要",
+    "Enable smart replies" : "啟用智慧型回覆",
     "Anti Spam Service" : "反垃圾郵件服務",
     "You can set up an anti spam service email address here." : "您可以在此設定反垃圾郵件服務的電子郵件地址。",
     "Any email that is marked as spam will be sent to the anti spam service." : "任何被標記為垃圾郵件的電子郵件都將會被傳送至反垃圾郵件服務。",
