@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.3 – 2024-01-16
+### Fixed
+- Missing database index for mail_messages
+- Short ooo message used as auto responder subject
+- Command to repair broken autoresponders
+
 ## 3.5.2 – 2024-01-10
 ### Fixed
 - SQL error when opening mailbox
