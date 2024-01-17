@@ -28,25 +28,35 @@ namespace OCA\Mail\Listener;
 use OCP\DB\Events\AddMissingIndicesEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IConfig;
 
 /**
  * @template-implements IEventListener<Event|OptionalIndicesListener>
  */
 class OptionalIndicesListener implements IEventListener {
 
+	/** @var IConfig */
+	private $config;
+
+	public function __construct(IConfig $config) {
+		$this->config = $config;
+	}
+
 	public function handle(Event $event): void {
 		if (!($event instanceof AddMissingIndicesEvent)) {
 			return;
 		}
 
-		$event->addMissingIndex(
-			'mail_messages',
-			'mail_messages_msgid_idx',
-			['message_id'],
-			[
-				'lengths' => [128],
-			],
-		);
+		if (version_compare($this->config->getSystemValue('version', '0.0.0'), '28.0.0', '>=')) {
+			$event->addMissingIndex(
+				'mail_messages',
+				'mail_messages_msgid_idx',
+				['message_id'],
+				[
+					'lengths' => [128],
+				],
+			);
+		}
 	}
 
 }
