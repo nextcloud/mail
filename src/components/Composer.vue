@@ -245,7 +245,7 @@
 				<Actions :open.sync="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
-						<ActionButton @click="onAddLocalAttachment">
+						<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
 							<template #icon>
 								<IconUpload :size="20" />
 							</template>
@@ -253,7 +253,7 @@
 								t('mail', 'Upload attachment')
 							}}
 						</ActionButton>
-						<ActionButton @click="onAddCloudAttachment">
+						<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
 							<template #icon>
 								<IconFolder :size="20" />
 							</template>
@@ -261,7 +261,7 @@
 								t('mail', 'Add attachment from Files')
 							}}
 						</ActionButton>
-						<ActionButton :disabled="encrypt" @click="onAddCloudAttachmentLink">
+						<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
 							<template #icon>
 								<IconPublic :size="20" />
 							</template>
