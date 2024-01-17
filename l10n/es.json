@@ -533,6 +533,7 @@
     "Allow additional Mail accounts from User Settings" : "Permitir cuentas de correo adicionales desde las configuraciones de usuario",
     "Enable thread summary" : "Habilitar resumen de hilo",
     "Enable thread summaries" : "Habilitar resúmenes de hilos",
+    "Enable smart replies" : "Habilitar respuestas inteligentes",
     "Anti Spam Service" : "Servicio Anti Spam",
     "You can set up an anti spam service email address here." : "Puedes configurar la dirección de correo de un servicio anti spam aquí.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Cualquier correo que sea marcado como spam será enviado al servicio anti spam.",

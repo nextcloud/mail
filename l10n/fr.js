@@ -604,7 +604,7 @@ OC.L10N.register(
     "With the settings above, the app will create account settings in the following way:" : "Avec les paramètres ci-dessus, l'application créera les paramètres de compte de la manière suivante:",
     "S/MIME certificates" : "Certificats S/MIME",
     "Certificate name" : "Nom du certificat",
-    "E-mail address" : "Adresse e-mail",
+    "E-mail address" : "Adresse électronique",
     "Valid until" : "Valide jusqu'à",
     "Delete certificate" : "Supprimer le certificat",
     "No certificate imported yet" : "Pas encore de certificat importé",
