@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.4 – 2024-01-17
+### Fixed
+- Optional index length issues on Nextcloud 27
+
 ## 3.5.3 – 2024-01-16
 ### Fixed
 - Missing database index for mail_messages
