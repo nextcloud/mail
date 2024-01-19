@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Service;
 
-use ChristophWurst\KItinerary\Itinerary;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
+use Nextcloud\KItinerary\Itinerary;
 use OC\Memcache\ArrayCache;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;

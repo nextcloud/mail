@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\KItinerary;
 
-use ChristophWurst\KItinerary\Bin\BinaryAdapter;
-use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
-use ChristophWurst\KItinerary\Sys\SysAdapter;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Nextcloud\KItinerary\Bin\BinaryAdapter;
+use Nextcloud\KItinerary\Flatpak\FlatpakAdapter;
+use Nextcloud\KItinerary\Sys\SysAdapter;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
