@@ -576,7 +576,7 @@ OC.L10N.register(
     "Microsoft integration unlinked" : "Intégration Microsoft désactivée",
     "Could not unlink Microsoft integration" : "Impossible de désactiver l'intégration Microsoft",
     "Domain Match: {provisioningDomain}" : "Correspondance de domaine : {provisioningDomain}",
-    "Email: {email}" : "E-mail : {email}",
+    "Email: {email}" : "Adresse électronique : {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP : {user} sur {host}:{port} ({ssl} encryption)",
     "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP : {user} sur {host}:{port} ({ssl} encryption)",
     "Sieve: {user} on {host}:{port} ({ssl} encryption)" : "Sieve : {user} sur {host}:{port} ({ssl} encryption)",
