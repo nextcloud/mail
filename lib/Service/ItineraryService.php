@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use ChristophWurst\KItinerary\Itinerary;
+use Nextcloud\KItinerary\Itinerary;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\IMAPClientFactory;
