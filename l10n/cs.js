@@ -533,6 +533,7 @@ OC.L10N.register(
     "Allow additional Mail accounts from User Settings" : "Umožnit v nastaveních pro uživatele zadávat ještě další e-mailové účty",
     "Enable thread summary" : "Zapnout vytváření souhrnu vlákna",
     "Enable thread summaries" : "Zapnout vytváření souhrnů vláken",
+    "Enable smart replies" : "Zapnout inteligentní (smart) odpovědi",
     "Anti Spam Service" : "Služba ochrany před nevyžádanou poštou",
     "You can set up an anti spam service email address here." : "Adresu e-mailu služby proti spam zprávám je možné nastavit zde.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Jakýkoli e-mail, označený jako spam bude odeslán na službu proti nevyžádaným zprávám.",
