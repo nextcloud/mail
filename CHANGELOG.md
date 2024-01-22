@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.5 – 2024-01-22
+### Fixed
+- Open actions menu after clicking outside of it
+- Alias selection
+
 ## 3.5.4 – 2024-01-17
 ### Fixed
 - Optional index length issues on Nextcloud 27
