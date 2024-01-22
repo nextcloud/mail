@@ -206,6 +206,21 @@ class MailAccountMapper extends QBMapper {
 		return $this->findEntities($query);
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getTotal(): int {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->select($qb->func()->count())
+			->from($this->getTableName());
+		$result = $qb->executeQuery();
+
+		$count = (int)$result->fetchColumn();
+		$result->closeCursor();
+		return $count;
+	}
+
 	public function getAllUserIdsWithAccounts(): array {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb
