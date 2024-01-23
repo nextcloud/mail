@@ -277,4 +277,57 @@ class QuotaJobTest extends TestCase {
 			$this->createMock(JobList::class),
 		);
 	}
+
+	public function testQuotaZero(): void {
+		$oldQuota = 0;
+		$newQuota = 0;
+		$quotaDTO = new Quota(0, 0);
+		$mailAccount = $this->createMock(MailAccount::class);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getId' => 123,
+			'getUserId' => 'user123',
+			'getMailAccount' => $mailAccount,
+		]);
+		$user = $this->createConfiguredMock(IUser::class, [
+			'isEnabled' => true,
+		]);
+
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('findById')
+			->with(123)
+			->willReturn($account);
+		$this->serviceMock->getParameter('userManager')
+			->expects(self::once())
+			->method('get')
+			->with('user123')
+			->willReturn($user);
+		$this->serviceMock->getParameter('logger')
+			->expects(self::never())
+			->method('debug');
+		$this->serviceMock->getParameter('mailManager')
+			->expects(self::once())
+			->method('getQuota')
+			->willReturn($quotaDTO);
+		$account->expects(self::once())
+			->method('calculateAndSetQuotaPercentage')
+			->with($quotaDTO);
+		$account->expects(self::exactly(2))
+			->method('getMailAccount')
+			->willReturn($mailAccount);
+		$account->expects(self::once())
+			->method('getQuotaPercentage')
+			->willReturn($newQuota);
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('update')
+			->with($mailAccount);
+
+		$this->job->setArgument([
+			'accountId' => 123,
+		]);
+		$this->job->start(
+			$this->createMock(JobList::class),
+		);
+	}
 }
