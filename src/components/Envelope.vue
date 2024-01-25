@@ -12,7 +12,7 @@
 		:to="link"
 		:exact="true"
 		:data-envelope-id="data.databaseId"
-		:title="addresses"
+		:name="addresses"
 		:details="formatted()"
 		@click="onClick"
 		@click.ctrl.prevent="toggleSelected"
@@ -47,7 +47,7 @@
 				</p>
 			</div>
 		</template>
-		<template #subtitle>
+		<template #subname>
 			<div class="envelope__subtitle">
 				<Reply v-if="data.flags.answered"
 					class="seen-icon-style"
@@ -864,14 +864,12 @@ export default {
 		gap: 4px;
 
 		&__subject {
-			color: var(--color-main-text);
 			line-height: 130%;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 	}
 	&__preview-text {
-		color: var(--color-text-maxcontrast);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -918,9 +916,7 @@ export default {
 .list-item-style:not(.seen) {
 	font-weight: bold;
 }
-.list-item-style.selected {
-	background-color: var(--color-background-dark);
-}
+
 .list-item-style {
 	.draft {
 		line-height: 130%;

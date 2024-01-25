@@ -1,25 +1,23 @@
 <template>
 	<NcContent app-name="mail">
 		<Navigation v-if="hasAccounts" />
-		<AppContent>
-			<div class="mail-empty-content">
-				<EmptyContent v-if="allowNewMailAccounts" :title="t('mail', 'Connect your mail account')">
-					<template #icon>
-						<IconMail :size="65" />
-					</template>
-					<template #action>
-						<AccountForm :display-name="displayName"
-							:email="email"
-							:error.sync="error"
-							@account-created="onAccountCreated" />
-					</template>
-				</EmptyContent>
-				<EmptyContent v-else :title="t('mail', 'To add a mail account, please contact your administrator.')">
-					<template #icon>
-						<IconMail :size="65" />
-					</template>
-				</EmptyContent>
-			</div>
+		<AppContent class="container">
+			<EmptyContent v-if="allowNewMailAccounts" :name="t('mail', 'Connect your mail account')">
+				<template #icon>
+					<IconMail :size="65" />
+				</template>
+				<template #action>
+					<AccountForm :display-name="displayName"
+						:email="email"
+						:error.sync="error"
+						@account-created="onAccountCreated" />
+				</template>
+			</EmptyContent>
+			<EmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
+				<template #icon>
+					<IconMail :size="65" />
+				</template>
+			</EmptyContent>
 		</AppContent>
 	</NcContent>
 </template>
@@ -68,7 +66,8 @@ export default {
 </script>
 
 <style>
-.mail-empty-content {
-	margin: 0 auto;
+.container{
+ display: flex;
+ justify-content: center;
 }
 </style>

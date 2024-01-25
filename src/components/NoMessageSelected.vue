@@ -20,8 +20,8 @@
   -->
 
 <template>
-	<AppContentDetails>
-		<NcEmptyContent :title="welcomeMessage">
+	<AppContentDetails class="app-content">
+		<NcEmptyContent :name="welcomeMessage" class="app-content__empty">
 			<template #icon>
 				<IconMail :size="65" />
 			</template>
@@ -58,5 +58,13 @@ export default {
 .header {
 	display: grid !important;
 	justify-content: center !important;
+}
+.app-content {
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	&__empty {
+		flex-grow: unset;
+	}
 }
 </style>

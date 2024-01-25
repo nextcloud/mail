@@ -42,7 +42,7 @@
 			</DashboardWidgetItem>
 		</template>
 		<template #empty-content>
-			<EmptyContent id="mail--empty-content" :title="t('mail', 'No message found yet')">
+			<EmptyContent id="mail--empty-content" :name="t('mail', 'No message found yet')">
 				<template #icon>
 					<IconCheck :size="65" />
 				</template>
@@ -156,6 +156,8 @@ export default {
 #mail--empty-content {
 	text-align: center;
 	margin-top: 5vh;
+	height: 100%;
+	display: flex;
 }
 .no-account {
 	margin-top: 5vh;

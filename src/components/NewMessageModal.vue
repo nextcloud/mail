@@ -1,12 +1,12 @@
 <template>
 	<Modal v-if="showMessageComposer"
 		:size="largerModal ? 'large' : 'normal'"
-		:title="modalTitle"
+		:name="modalTitle"
 		:additional-trap-elements="toolbarElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
 		<EmptyContent v-if="error"
-			:title="t('mail', 'Error sending your message')"
-			class="centered-content"
+			:name="t('mail', 'Error sending your message')"
+			class="empty-content"
 			role="alert">
 			<p>{{ error }}</p>
 			<template #action>
@@ -27,8 +27,8 @@
 			:hint="t('mail', 'Sending …')"
 			role="alert" />
 		<EmptyContent v-else-if="warning"
-			:title="t('mail', 'Warning sending your message')"
-			class="centered-content"
+			:name="t('mail', 'Warning sending your message')"
+			class="empty-content"
 			role="alert">
 			<template #description>
 				{{ warning }}
@@ -562,5 +562,9 @@ export default {
 	top: 4px;
 	right: 33px;
 
+}
+.empty-content{
+	height: 100%;
+	display: flex;
 }
 </style>

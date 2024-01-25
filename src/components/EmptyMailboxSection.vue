@@ -1,5 +1,5 @@
 <template>
-	<NcEmptyContent :title="t('mail', 'No messages')">
+	<NcEmptyContent class="empty-content" :title="t('mail', 'No messages')">
 		<template #icon>
 			<IconMail :size="65" />
 		</template>
@@ -17,3 +17,9 @@ export default {
 	},
 }
 </script>
+<style lang="scss" scoped>
+.empty-content {
+	height: 100%;
+	display: flex;
+}
+</style>

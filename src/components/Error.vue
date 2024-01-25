@@ -21,7 +21,7 @@
   -->
 
 <template>
-	<NcEmptyContent :title="error"
+	<NcEmptyContent :name="error"
 		:description="message"
 		class="mail-error"
 		:class="{ 'mail-error--auto-margin': autoMargin }">
@@ -78,6 +78,8 @@ export default {
 
 <style lang="scss" scoped>
 .mail-error {
+	height: 100%;
+	display: flex;
 	&--auto-margin {
 		margin: auto 0;
 	}

@@ -25,7 +25,7 @@
 			</NcActionButton>
 		</NcActions>
 		<NcModal v-if="moreSearchActions"
-			:title="t('mail', 'Search parameters')"
+			:name="t('mail', 'Search parameters')"
 			class="search-modal"
 			@close="closeSearchModal">
 			<h2 class="modal-title">
@@ -62,13 +62,13 @@
 					</label>
 					<div class="modal-inner--container range">
 						<div class="modal-inner-inline">
-							<NcDatetimePicker v-model="startDate"
+							<NcDateTimePicker v-model="startDate"
 								type="date"
 								:placeholder="t('mail', 'Pick a start date')"
 								confirm />
 						</div>
 						<div class="modal-inner-inline">
-							<NcDatetimePicker v-model="endDate"
+							<NcDateTimePicker v-model="endDate"
 								type="date"
 								:disabled="startDate === null"
 								:placeholder="t('mail', 'Pick an end date')"
@@ -81,21 +81,22 @@
 						{{ t("mail", "From") }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect id="fromId"
-							v-model="searchInFrom"
+						<NcSelect id="fromId"
+							class="modal-inner--container__select"
 							label="label"
 							track-by="email"
 							:options="autocompleteRecipients"
 							:value="searchInFrom"
 							:placeholder="t('mail', 'Select senders')"
+							:aria-label-combobox="t('mail', 'Select senders')"
 							:multiple="true"
 							:taggable="true"
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
 							:max="1"
-							@tag="addTag($event,'from')"
-							@search-change="searchRecipients($event)" />
+							@option:created="addTag($event,'from')"
+							@search="searchRecipients($event)" />
 					</div>
 				</div>
 
@@ -104,21 +105,22 @@
 						{{ t('mail', 'To') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect id="toId"
-							v-model="searchInTo"
+						<NcSelect id="toId"
+							class="modal-inner--container__select"
 							label="label"
 							track-by="email"
 							:options="autocompleteRecipients"
 							:value="searchInTo"
 							:placeholder="t('mail', 'Select recipients')"
+							:aria-label-combobox="t('mail', 'Select recipients')"
 							:multiple="true"
 							:taggable="true"
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
 							:max="1"
-							@tag="addTag($event,'to')"
-							@search-change="searchRecipients($event)" />
+							@option:created="addTag($event,'to')"
+							@search="searchRecipients($event)" />
 					</div>
 				</div>
 
@@ -127,21 +129,22 @@
 						{{ t('mail', 'Cc') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect id="ccId"
-							v-model="searchInCc"
+						<NcSelect id="ccId"
+							class="modal-inner--container__select"
 							label="label"
 							track-by="email"
 							:options="autocompleteRecipients"
 							:value="searchInCc"
 							:placeholder="t('mail', 'Select CC recipients')"
+							:aria-label-combobox="t('mail', 'Select CC recipients')"
 							:multiple="true"
 							:taggable="true"
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
 							:max="1"
-							@tag="addTag($event,'cc')"
-							@search-change="searchRecipients($event)" />
+							@option:created="addTag($event,'cc')"
+							@search="searchRecipients($event)" />
 					</div>
 				</div>
 
@@ -150,21 +153,22 @@
 						{{ t('mail', 'Bcc') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect id="bccId"
-							v-model="searchInBcc"
+						<NcSelect id="bccId"
+							class="modal-inner--container__select"
 							label="label"
 							track-by="email"
 							:options="autocompleteRecipients"
-							:value="searchInCc"
+							:value="searchInBcc"
 							:placeholder="t('mail', 'Select BCC recipients')"
+							:aria-label-combobox="t('mail', 'Select BCC recipients')"
 							:multiple="true"
 							:taggable="true"
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
 							:max="1"
-							@tag="addTag($event,'bcc')"
-							@search-change="searchRecipients($event)" />
+							@option:created="addTag($event,'bcc')"
+							@search="searchRecipients($event)" />
 					</div>
 				</div>
 
@@ -173,19 +177,20 @@
 						{{ t('mail', 'Tags') }}
 					</label>
 					<div class="modal-inner--container">
-						<NcMultiselect v-if="tags.length > 0"
+						<NcSelect v-if="tags.length > 0"
 							id="tagsId"
 							v-model="selectedTags"
-							class="multiselect-search-tags"
+							class="multiselect-search-tags "
 							:options="tags"
 							label="displayName"
 							:value="selectedTags"
 							:placeholder="t('mail', 'Select tags')"
+							:aria-label-combobox="t('mail', 'Select tags')"
 							track-by="displayName"
 							:multiple="true"
 							:auto-limit="false"
 							:close-on-select="false">
-							<template #tag="{ option }">
+							<template #selected-option="option">
 								<div class="tag-group__search">
 									<div class="tag-group__bg"
 										:style="
@@ -199,10 +204,10 @@
 									</div>
 								</div>
 							</template>
-							<template #option="{ option }">
+							<template #option="option">
 								{{ option.displayName }}
 							</template>
-						</NcMultiselect>
+						</NcSelect>
 					</div>
 				</div>
 
@@ -273,8 +278,8 @@
 import moment from '@nextcloud/moment'
 
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
-import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -295,8 +300,8 @@ export default {
 	name: 'SearchMessages',
 	components: {
 		NcModal,
-		NcMultiselect,
-		NcDatetimePicker,
+		NcSelect,
+		NcDateTimePicker,
 		NcActions,
 		NcActionButton,
 		NcButton,
@@ -620,7 +625,7 @@ export default {
 	.modal-inner--container {
 		width: calc(100% - 120px);
 
-		.multiselect {
+		.select {
 			width: 100%;
 		}
 	}

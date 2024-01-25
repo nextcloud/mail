@@ -54,10 +54,10 @@ import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Components/NcRichText.js'
-import { emojiSearch, emojiAddRecent } from '@nextcloud/vue/dist/Functions/emoji.js'
 import { getLanguage } from '@nextcloud/l10n'
 import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
+import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
 
 export default {
 	name: 'TextEditor',

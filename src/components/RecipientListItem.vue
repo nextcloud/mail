@@ -1,7 +1,7 @@
 <template>
 	<div class="multiselect__tag multiselect__tag--recipient" :title="option.email">
 		<ListItemIcon :no-margin="true"
-			:title="option.label"
+			:name="option.label"
 			:url="option.photo"
 			:avatar-size="24" />
 		<Close class="delete-recipient"
@@ -38,15 +38,19 @@ export default {
 	.multiselect__tags
 	.multiselect__tags-wrap
 	.multiselect__tag--recipient {
-	padding: 0;
+	padding: 0 ;
 	border-radius: 25px;
 	border-color: transparent;
 	background-color: var(--color-background-dark);
 	height: 24px;
+	width: 100%;
 
 	& > span.option {
 		margin-left: 0
 	}
+}
+.vs__selected{
+	padding: 0 !important;
 }
 .multiselect__tag--recipient .action-item--single {
 	width: auto;
@@ -75,6 +79,9 @@ export default {
 	}
 }
 :deep(.option) {
-	margin-left: 10px;
+	margin: 7px;
+}
+.close-icon {
+	margin-right: 3px;
 }
 </style>
