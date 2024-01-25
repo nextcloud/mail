@@ -52,6 +52,7 @@ describe('Envelope', () => {
 			getAccount: () => (id) => ({}),
 			getEnvelopeTags: () => (id) => ([]),
 			getMailbox: () => (id) => ({}),
+			getPreference: () => (key, defaultValue) => defaultValue,
 		}
 		store = new Vuex.Store({
 			actions,

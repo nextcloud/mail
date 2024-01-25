@@ -4,6 +4,32 @@
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:open.sync="showSettings">
+			<NcAppSettingsSection id="mail-list-view" :name="t('mail', 'Layout')">
+				<NcCheckboxRadioSwitch value="no-split"
+					:button-variant="true"
+					name="mail-layout"
+					type="radio"
+					:checked="layoutMode"
+					button-variant-grouped="vertical"
+					@update:checked="setLayout">
+					<template #icon>
+						<CompactMode :size="20" />
+					</template>
+					{{ t('mail', 'List') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch value="vertical-split"
+					:button-variant="true"
+					name="mail-layout"
+					type="radio"
+					:checked="layoutMode"
+					button-variant-grouped="vertical"
+					@update:checked="setLayout">
+					<template #icon>
+						<VerticalSplit :size="20" />
+					</template>
+					{{ t('mail', 'Vertical split') }}
+				</NcCheckboxRadioSwitch>
+			</NcAppSettingsSection>
 			<NcAppSettingsSection id="account-settings" :name="t('mail', 'Account creation')">
 				<NcButton v-if="allowNewMailAccounts"
 					type="primary"
@@ -120,22 +146,22 @@
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="sorting-settings" :name="t('mail', 'Sorting')">
 				<div class="sorting">
-					<CheckboxRadioSwitch class="sorting__switch"
+					<NcCheckboxRadioSwitch class="sorting__switch"
 						:checked="sortOrder"
 						value="newest"
 						name="order_radio"
 						type="radio"
 						@update:checked="onSortByDate">
 						{{ t('mail', 'Newest') }}
-					</CheckboxRadioSwitch>
-					<CheckboxRadioSwitch class="sorting__switch"
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch class="sorting__switch"
 						:checked="sortOrder"
 						value="oldest"
 						name="order_radio"
 						type="radio"
 						@update:checked="onSortByDate">
 						{{ t('mail', 'Oldest') }}
-					</CheckboxRadioSwitch>
+					</NcCheckboxRadioSwitch>
 				</div>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="mailvelope-settings" :name="t('mail', 'Mailvelope')">
@@ -202,12 +228,14 @@
 <script>
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
+import CompactMode from 'vue-material-design-icons/ReorderHorizontal.vue'
 
-import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch as CheckboxRadioSwitch } from '@nextcloud/vue'
+import { NcAppSettingsSection, NcAppSettingsDialog, NcButton, NcLoadingIcon as IconLoading, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 
 import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
+import VerticalSplit from 'vue-material-design-icons/FormatColumns.vue'
 import Logger from '../logger.js'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import TrustedSenders from './TrustedSenders.vue'
@@ -222,9 +250,11 @@ export default {
 		IconLoading,
 		IconLock,
 		SmimeCertificateModal,
-		CheckboxRadioSwitch,
+		NcCheckboxRadioSwitch,
 		NcAppSettingsDialog,
 		NcAppSettingsSection,
+		CompactMode,
+		VerticalSplit,
 	},
 	props: {
 		open: {
@@ -270,6 +300,9 @@ export default {
 		allowNewMailAccounts() {
 			return this.$store.getters.getPreference('allow-new-accounts', true)
 		},
+		layoutMode() {
+			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
+		},
 	},
 	watch: {
 		showSettings(value) {
@@ -287,6 +320,16 @@ export default {
 		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
 	},
 	methods: {
+		async setLayout(value) {
+			try {
+				await this.$store.dispatch('savePreference', {
+					key: 'layout-mode',
+					value,
+				})
+			} catch (error) {
+				Logger.error('could not save preferences', { error })
+			}
+		},
 		async onOpen() {
 			this.showSettings = true
 		},
@@ -464,5 +507,8 @@ p.app-settings {
 	margin-top: -12px;
 	margin-bottom: 6px;
 	color: var(--color-text-maxcontrast);
+}
+.app-settings-section {
+	list-style: none;
 }
 </style>

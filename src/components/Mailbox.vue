@@ -2,6 +2,7 @@
   - @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author Richard Steinmetz <richard@steinmetz.cloud>
   -
   - @license AGPL-3.0-or-later
   -
@@ -111,7 +112,7 @@ export default {
 			error: false,
 			refreshing: false,
 			loadingMore: false,
-			loadingEnvelopes: true,
+			loadingEnvelopes: false,
 			loadingCacheInitialization: false,
 			loadMailboxInterval: undefined,
 			expanded: false,
@@ -161,11 +162,14 @@ export default {
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
-		this.loadEnvelopes()
-			.then(() => {
-				logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
-				this.sync(false)
-			})
+		if (this.$store.getters.hasFetchedInitialEnvelopes) {
+			return
+		}
+
+		await this.loadEnvelopes()
+		logger.debug(`syncing mailbox ${this.mailbox.databaseId} (${this.searchQuery}) after mount`)
+		await this.sync(false)
+		this.$store.commit('setHasFetchedInitialEnvelopes', true)
 	},
 	destroyed() {
 		this.bus.off('load-more', this.onScroll)

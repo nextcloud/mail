@@ -155,4 +155,6 @@ export const getters = {
 	getInbox: (state, getters) => (accountId) => {
 		return getters.findMailboxBySpecialRole(accountId, 'inbox')
 	},
+	isOneLineLayout: (state) => state.list,
+	hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
 }

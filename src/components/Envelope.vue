@@ -14,6 +14,7 @@
 		:data-envelope-id="data.databaseId"
 		:name="addresses"
 		:details="formatted()"
+		:one-line="oneLineLayout"
 		@click="onClick"
 		@click.ctrl.prevent="toggleSelected"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
@@ -22,16 +23,19 @@
 				fill-color="#f9cf3d"
 				:size="18"
 				class="app-content-list-item-star favorite-icon-style"
+				:class="{ 'one-line': oneLineLayout, 'favorite-icon-style': !oneLineLayout }"
 				:data-starred="data.flags.flagged ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleFlagged() : false" />
 			<div v-if="isImportant"
 				class="app-content-list-item-star svg icon-important"
+				:class="{ 'important-one-line': oneLineLayout, 'icon-important': !oneLineLayout }"
 				:data-starred="isImportant ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleImportant() : false"
 				v-html="importantSvg" />
 			<JunkIcon v-if="data.flags.$junk"
 				:size="18"
 				class="app-content-list-item-star junk-icon-style"
+				:class="{ 'one-line': oneLineLayout, 'junk-icon-style': !oneLineLayout }"
 				:data-starred="data.flags.$junk ? 'true' : 'false'"
 				@click.prevent="hasWriteAcl ? onToggleJunk() : false" />
 			<div class="app-content-list-item-icon">
@@ -48,23 +52,26 @@
 			</div>
 		</template>
 		<template #subname>
-			<div class="envelope__subtitle">
-				<Reply v-if="data.flags.answered"
-					class="seen-icon-style"
-					:size="18" />
-				<IconAttachment v-if="data.flags.hasAttachments === true"
-					class="attachment-icon-style"
-					:size="18" />
-				<span v-else-if="draft" class="draft">
-					<em>{{ t('mail', 'Draft: ') }}</em>
-				</span>
-				<span class="envelope__subtitle__subject">
-					{{ subjectForSubtitle }}
-				</span>
-			</div>
-			<div v-if="data.encrypted || data.previewText"
-				class="envelope__preview-text">
-				{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
+			<div class="line-two"
+				:class="{ 'one-line': oneLineLayout }">
+				<div class="envelope__subtitle">
+					<Reply v-if="data.flags.answered"
+						class="seen-icon-style"
+						:size="18" />
+					<IconAttachment v-if="data.flags.hasAttachments === true"
+						class="attachment-icon-style"
+						:size="18" />
+					<span v-else-if="draft" class="draft">
+						<em>{{ t('mail', 'Draft: ') }}</em>
+					</span>
+					<span class="envelope__subtitle__subject">
+						{{ subjectForSubtitle }}
+					</span>
+				</div>
+				<div v-if="data.encrypted || data.previewText"
+					class="envelope__preview-text">
+					{{ isEncrypted ? t('mail', 'Encrypted message') : data.previewText.trim() }}
+				</div>
 			</div>
 		</template>
 		<template #indicator>
@@ -126,7 +133,7 @@
 						messageLongDate
 					}}
 				</ActionText>
-				<ActionSeparator />
+				<NcActionSeparator />
 				<ActionButton v-if="hasWriteAcl"
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
@@ -320,7 +327,8 @@ import {
 	NcListItem as ListItem,
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
-	NcActionSeparator as ActionSeparator,
+	NcActionSeparator,
+	NcActionInput,
 	NcActionText as ActionText,
 } from '@nextcloud/vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
@@ -364,8 +372,6 @@ import { generateUrl } from '@nextcloud/router'
 import { isPgpText } from '../crypto/pgp.js'
 import { mailboxHasRights } from '../util/acl.js'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
-import NcActionSeparator from '@nextcloud/vue/dist/Components/NcActionSeparator.js'
-import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import moment from '@nextcloud/moment'
@@ -403,7 +409,6 @@ export default {
 		IconBullet,
 		Reply,
 		ActionLink,
-		ActionSeparator,
 		ActionText,
 		DownloadIcon,
 		ClockOutlineIcon,
@@ -466,6 +471,9 @@ export default {
 		]),
 		messageLongDate() {
 			return messageDateTime(new Date(this.data.dateInt))
+		},
+		oneLineLayout() {
+			return this.$store.getters.getPreference('layout-mode', 'vertical-split') === 'no-split'
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -844,7 +852,6 @@ export default {
 	},
 }
 </script>
-
 <style lang="scss" scoped>
 .mail-message-account-color {
 	position: absolute;
@@ -860,20 +867,24 @@ export default {
 	}
 
 	&__subtitle {
-		display: flex;
-		gap: 4px;
-
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		&__subject {
 			line-height: 130%;
-			overflow: hidden;
-			text-overflow: ellipsis;
+			&::after {
+				content: '\00B7';
+				margin: 12px;
+			}
 		}
 	}
 	&__preview-text {
+		color: var(--color-text-maxcontrast);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		font-weight: initial;
+		flex: 1 1;
 	}
 }
 
@@ -902,6 +913,9 @@ export default {
 	opacity: 0.5;
 	}
 	}
+}
+.important-one-line.app-content-list-item-star:deep() {
+	top: 6px !important;
 }
 
 .app-content-list-item-select-checkbox {
@@ -974,7 +988,7 @@ export default {
 	border: 1px solid transparent;
 	border-radius: var(--border-radius-pill);
 	position: relative;
-	margin: 0 1px;
+	margin: 9px 1px 0;
 	overflow: hidden;
 	left: 4px;
 }
@@ -986,7 +1000,7 @@ export default {
 }
 .icon-important.app-content-list-item-star:deep() {
 	position: absolute;
-	top: 14px;
+	top: 12px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {
@@ -1008,9 +1022,11 @@ export default {
 }
 .seen-icon-style {
 	opacity: .6;
+	display: inline;
 }
 .attachment-icon-style {
 	opacity: .6;
+	display: inline;
 }
 :deep(.list-item__anchor) {
 	margin-top: 6px;
@@ -1019,9 +1035,21 @@ export default {
 :deep(.list-item) {
 	flex-wrap: wrap;
 }
-:deep(.list-item__extra) {
-	margin-top: 9px;
+:deep(.line-two__subtitle) {
+	display: flex;
 	flex-basis: 100%;
 	padding-left: 40px;
+	width: 450px;
+}
+:deep(.line-one__title) {
+	flex-direction: row;
+	display: flex;
+	width: 200px;
+}
+.line-two.one-line {
+	display: flex;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 </style>

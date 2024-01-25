@@ -506,4 +506,10 @@ export default {
 	addSmimeCertificate(state, { certificate }) {
 		state.smimeCertificates = [...state.smimeCertificates, certificate]
 	},
+	setOneLineLayout(state, { list }) {
+		Vue.set(state, 'list', list)
+	},
+	setHasFetchedInitialEnvelopes(state, hasFetchedInitialEnvelopes) {
+		state.hasFetchedInitialEnvelopes = hasFetchedInitialEnvelopes
+	},
 }

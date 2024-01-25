@@ -320,6 +320,7 @@ export default {
 			showMoveModal: false,
 			showTagModal: false,
 			lastToggledIndex: undefined,
+			defaultView: false,
 		}
 	},
 	computed: {

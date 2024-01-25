@@ -1499,4 +1499,13 @@ export default {
 			},
 		})
 	},
+	async setLayout({ commit }, { list }) {
+		try {
+			commit('setOneLineLayout', {
+				list,
+			})
+		} catch (error) {
+			logger.error('Could not set layouts', { error })
+		}
+	},
 }
