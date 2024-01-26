@@ -125,7 +125,6 @@ OC.L10N.register(
     "Toggle recipients list mode" : "Превключете в режима на списък с получатели",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
-    "No contacts found." : "Няма намерени контакти.",
     "Subject" : "Тема",
     "Subject …" : "Тема...",
     "This message came from a noreply address so your reply will probably not be read." : "Това съобщение дойде от адрес с настройка без отговор, така че отговорът ви вероятно няма да бъде прочетен.",

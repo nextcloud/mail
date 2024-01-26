@@ -86,7 +86,6 @@ OC.L10N.register(
     "Contact or email address …" : "Kontakt eller e-postadress …",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
-    "No contacts found." : "Inga kontakter hittades.",
     "Subject" : "Ämne",
     "Subject …" : "Ämne …",
     "This message came from a noreply address so your reply will probably not be read." : "Det här meddelandet kom från en noreply adress så ditt svar kommer förmodligen inte att läsas.",

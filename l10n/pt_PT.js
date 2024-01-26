@@ -68,7 +68,6 @@ OC.L10N.register(
     "Contact or email address …" : "Contacto ou endereço de email",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
-    "No contacts found." : "Não foram encontrados contactos",
     "Subject" : "Assunto",
     "Subject …" : "Assunto...",
     "Write message …" : "Nova mensagem...",

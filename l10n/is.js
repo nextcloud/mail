@@ -70,7 +70,6 @@ OC.L10N.register(
     "Contact or email address …" : "Tengiliður eða tölvupóstfang …",
     "Cc" : "Afrit (Cc)",
     "Bcc" : "Falið afrit (Bcc)",
-    "No contacts found." : "Engir tengiliðir fundust.",
     "Subject" : "Viðfangsefni",
     "Subject …" : "Viðfangsefni …",
     "This message came from a noreply address so your reply will probably not be read." : "Skilaboðin komu frá ekki-svara netfangi (noreply) þannig að svarið þitt verður líklega ekki lesið.",

@@ -60,7 +60,6 @@ OC.L10N.register(
     "Select account" : "Elekti konton",
     "To" : "Al",
     "Contact or email address …" : "Kontakto aŭ retpoŝtadreso …",
-    "No contacts found." : "Neniuj kontaktoj trovitaj.",
     "Subject" : "Temo",
     "Subject …" : "Temo …",
     "This message came from a noreply address so your reply will probably not be read." : "Ĉi tiu mesaĝo venis al neresponda-adreso, do via respondo probable ne legus.",

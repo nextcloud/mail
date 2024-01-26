@@ -89,7 +89,6 @@ OC.L10N.register(
     "Contact or email address …" : "Contact of e-mailadres ...",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
-    "No contacts found." : "Geen contacten gevonden.",
     "Subject" : "Onderwerp",
     "Subject …" : "Onderwerp ...",
     "This message came from a noreply address so your reply will probably not be read." : "Dit bericht kwam van een noreply-adres. Je antwoord zal dus niet worden gelezen.",

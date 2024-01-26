@@ -89,7 +89,6 @@ OC.L10N.register(
     "Contact or email address …" : "連絡先もしくはメールアドレス…",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
-    "No contacts found." : "連絡先が見つかりません。",
     "Subject" : "件名",
     "Subject …" : "件名...",
     "This message came from a noreply address so your reply will probably not be read." : "このメッセージは送信専用アドレスから送信されたため、返信しても確認されない恐れがあります。",

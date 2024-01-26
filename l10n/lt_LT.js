@@ -99,7 +99,6 @@ OC.L10N.register(
     "Contact or email address …" : "Adresatas ar el. pašto adresas…",
     "Cc" : "Cc",
     "Bcc" : "Bcc",
-    "No contacts found." : "Adresatų nerasta.",
     "Subject" : "Tema",
     "Subject …" : "Tema…",
     "This message came from a noreply address so your reply will probably not be read." : "Šis laiškas atėjo iš adreso, kuris nėra skirtas atsakyti, taigi jūsų atsakymas, tikriausiai, nebus perskaitytas.",
