@@ -20,9 +20,11 @@
 						<!-- Indicator to show that there are more participants than displayed -->
 						<Popover v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
-							<span slot="trigger" class="avatar-more">
-								{{ moreParticipantsString }}
-							</span>
+							<template #trigger>
+								<span class="avatar-more">
+									{{ moreParticipantsString }}
+								</span>
+							</template>
 							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
 								:key="participant.email"
 								:email="participant.email"

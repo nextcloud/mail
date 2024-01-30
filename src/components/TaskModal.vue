@@ -34,6 +34,7 @@
 					{{ t('mail', 'All day') }}
 				</label>
 			</div>
+			<!-- FIXME: is broken due to upstream select component serializing options to JSON -->
 			<NcSelect v-model="selectedCalendar"
 				label="displayname"
 				input-id="url"
@@ -50,7 +51,9 @@
 						:displayname="getCalendarById(id).displayname"
 						:display-icon="getCalendarById(id).displayIcon" />
 				</template>
-				<span slot="noOptions">{{ t('mail', 'No calendars with task list support') }}</span>
+				<template #no-options>
+					<span>{{ t('mail', 'No calendars with task list support') }}</span>
+				</template>
 			</NcSelect>
 			<br>
 			<button class="primary" :disabled="disabled" @click="onSave">

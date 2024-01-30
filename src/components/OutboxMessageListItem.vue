@@ -32,7 +32,7 @@
 		<template #subtitle>
 			{{ subjectForSubtitle }}
 		</template>
-		<template slot="actions">
+		<template #actions>
 			<ActionButton :close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
