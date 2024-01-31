@@ -405,6 +405,7 @@ OC.L10N.register(
     "With the settings above, the app will create account settings in the following way:" : "Med innstillingene ovenfor vil appen opprette konto innstillinger på følgende måte:",
     "E-mail address" : "E-postadresse",
     "Valid until" : "Gyldig til",
+    "Delete certificate" : "Slett sertifikat",
     "Certificate" : "Sertifikat",
     "Submit" : "Send inn",
     "Account connected" : "Konto er koblet",
