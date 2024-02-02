@@ -279,3 +279,15 @@ export async function sendMdn(id, data) {
 		throw convertAxiosError(e)
 	}
 }
+
+export async function sendRecipe(json) {
+	const url = generateUrl('/apps/cookbook/api/v1/recipes')
+
+	try {
+		const result = await axios.post(url, json)
+
+		return result.status >= 200 && result.status < 300
+	} catch (e) {
+		return false
+	}
+}

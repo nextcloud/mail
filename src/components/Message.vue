@@ -36,6 +36,9 @@
 		<div v-if="itineraries.length > 0" class="message-itinerary">
 			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
+		<div v-if="Object.entries(schema).length > 0" class="message-schema">
+			<Schema :json="schema"/>
+		</div>
 		<div v-if="message.scheduling.length > 0" class="message-imip">
 			<Imip v-for="scheduling in message.scheduling"
 				:key="scheduling.id"
@@ -84,6 +87,7 @@ import { NcButton } from '@nextcloud/vue'
 import { html, plain } from '../util/text.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
 import Itinerary from './Itinerary.vue'
+import Schema from './Schema'
 import MessageAttachments from './MessageAttachments.vue'
 import MessageEncryptedBody from './MessageEncryptedBody.vue'
 import MessageHTMLBody from './MessageHTMLBody.vue'
@@ -96,6 +100,7 @@ export default {
 	name: 'Message',
 	components: {
 		Itinerary,
+		Schema,
 		MessageAttachments,
 		MessageEncryptedBody,
 		MessageHTMLBody,
@@ -139,6 +144,9 @@ export default {
 		},
 		itineraries() {
 			return this.message.itineraries ?? []
+		},
+		schema() {
+			return this.message.schema ?? {}
 		},
 	},
 	methods: {

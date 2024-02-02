@@ -80,6 +80,7 @@ import {
 	unSnoozeMessage,
 	updateEnvelopeTag,
 	deleteTag,
+	sendRecipe,
 } from '../service/MessageService.js'
 import { moveDraft, updateDraft } from '../service/DraftService.js'
 import * as AliasService from '../service/AliasService.js'
@@ -1497,6 +1498,17 @@ export default {
 			data: {
 				snoozeMailboxId,
 			},
+		})
+	},
+	async sendRecipeToCookbook({ commit }, { recipe }) {
+		return handleHttpAuthErrors(commit, async () => {
+			try {
+				const result = await sendRecipe(recipe)
+				
+				return result
+			} catch (e) {
+				throw e
+			}
 		})
 	},
 }

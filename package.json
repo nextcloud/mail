@@ -61,6 +61,7 @@
     "ical.js": "^1.5.0",
     "iframe-resizer": "^4.3.9",
     "js-base64": "^3.7.5",
+    "jsonld2html": "^1.0.0",
     "jstz": "^2.1.1",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
