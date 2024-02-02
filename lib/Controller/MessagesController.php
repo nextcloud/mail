@@ -51,6 +51,7 @@ use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
+use OCA\Mail\Service\SchemaService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
@@ -77,6 +78,7 @@ class MessagesController extends Controller {
 	private IMailManager $mailManager;
 	private IMailSearch $mailSearch;
 	private ItineraryService $itineraryService;
+	private SchemaService $schemaService;
 	private ?string $currentUserId;
 	private LoggerInterface $logger;
 	private ?Folder $userFolder;
@@ -99,6 +101,7 @@ class MessagesController extends Controller {
 		IMailManager $mailManager,
 		IMailSearch $mailSearch,
 		ItineraryService $itineraryService,
+		SchemaService $schemaService,
 		?string $UserId,
 		$userFolder,
 		LoggerInterface $logger,
@@ -119,6 +122,7 @@ class MessagesController extends Controller {
 		$this->mailManager = $mailManager;
 		$this->mailSearch = $mailSearch;
 		$this->itineraryService = $itineraryService;
+		$this->schemaService = $schemaService;
 		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
@@ -242,6 +246,20 @@ class MessagesController extends Controller {
 		if ($itineraries) {
 			$json['itineraries'] = $itineraries;
 		}
+
+		/*
+		 * TODO:
+		 * 
+		 * Here, the plan is to add and read config options to be able to determine
+		 * whether the user wants to use the extraction/rendering of KItinerary or 
+		 * the html2jsonld library for extraction and subsequently jsonld2html for
+		 * rendering schema markup in the mail message.
+		 */
+		$schema = $this->schemaService->extract($account, $mailbox, $message->getUid());
+		if ($schema) {
+			$json["schema"] = $schema;
+		}
+
 		$json['attachments'] = array_map(function ($a) use ($id) {
 			return $this->enrichDownloadUrl(
 				$id,
