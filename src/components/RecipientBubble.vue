@@ -83,6 +83,7 @@
 					track-by="label"
 					:multiple="false"
 					:placeholder="t('name', 'Contact name …')"
+					:aria-label-combobox="t('mail', 'Contact name')"
 					:clear-search-on-select="false"
 					:show-no-options="false"
 					:preserve-search="true"

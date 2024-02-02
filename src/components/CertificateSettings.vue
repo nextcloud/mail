@@ -33,6 +33,7 @@
 		<NcSelect v-if="alias !== null"
 			v-model="savedCertificate"
 			:options="smimeCertOptions"
+			:aria-label-combobox="t('mail', 'Select certificates')"
 			:searchable="false"
 			label="label"
 			track-by="id"

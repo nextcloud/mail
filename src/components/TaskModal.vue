@@ -38,6 +38,7 @@
 				label="displayname"
 				track-by="url"
 				:placeholder="t('mail', 'Select calendar')"
+				:aria-label-combobox="t('mail', 'Select calendar')"
 				:allow-empty="false"
 				:options="calendars">
 				<template #option="option">
