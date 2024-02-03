@@ -121,6 +121,7 @@ OC.L10N.register(
     "From" : "От",
     "Select account" : "Избери профил",
     "To" : "До",
+    "Select recipient" : "Избор на получател",
     "Contact or email address …" : "Контакт или имейл адрес...",
     "Toggle recipients list mode" : "Превключете в режима на списък с получатели",
     "Cc" : "Cc",

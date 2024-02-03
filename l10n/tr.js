@@ -415,6 +415,7 @@ OC.L10N.register(
     "New Contact" : "Yeni kişi",
     "Copy to clipboard" : "Panoya kopyala",
     "Contact name …" : "Kişi adı …",
+    "Contact name" : "İlgili adı",
     "Add" : "Ekle",
     "Copied email address to clipboard" : "E-posta adresi panoya kopyalandı",
     "Could not copy email address to clipboard" : "E-posta adresi panoya kopyalanamadı",

@@ -286,6 +286,7 @@ OC.L10N.register(
     "New Contact" : "Ny kontakt",
     "Copy to clipboard" : "Kopiert til utklippstavlen",
     "Contact name …" : "Kontakt navn ...",
+    "Contact name" : "Kontakt navn",
     "Add" : "Legg til",
     "Close" : "Lukk",
     "Body" : "Kropp",

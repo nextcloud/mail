@@ -331,6 +331,7 @@ OC.L10N.register(
     "New Contact" : "Uusi yhteystieto",
     "Copy to clipboard" : "Kopioi leikepöydälle",
     "Contact name …" : "Yhteystiedon nimi…",
+    "Contact name" : "Yhteystiedon nimi",
     "Add" : "Lisää",
     "Copied email address to clipboard" : "Sähköpostiosoite kopioitu leikepöydälle",
     "Could not copy email address to clipboard" : "Sähköpostiosoitetta ei voitu kopioida leikepöydälle",

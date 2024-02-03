@@ -391,6 +391,7 @@ OC.L10N.register(
     "New Contact" : "Új névjegy",
     "Copy to clipboard" : "Másolás a vágólapra",
     "Contact name …" : "Névjegyhez tartozó név…",
+    "Contact name" : "Névjegyhez tartozó név",
     "Add" : "Hozzáadás",
     "Copied email address to clipboard" : "Az e-mail a vágólapra másolva",
     "Could not copy email address to clipboard" : "Nem sikerült az e-mail-cím vágólapra másolása",

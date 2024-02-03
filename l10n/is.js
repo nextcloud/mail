@@ -167,6 +167,7 @@ OC.L10N.register(
     "First day" : "Fyrsta dag",
     "Message" : "Skilaboð",
     "Copy to clipboard" : "Afrita á klippispjald",
+    "Contact name" : "Nafn tengiliðar",
     "Add" : "Bæta við",
     "Close" : "Loka",
     "Body" : "Meginmál",

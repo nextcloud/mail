@@ -245,6 +245,7 @@ OC.L10N.register(
     "New Contact" : "Nieuwe contactpersoon",
     "Copy to clipboard" : "Kopiëren naar het klembord",
     "Contact name …" : "Naam contactpersoon ...",
+    "Contact name" : "Contactnaam",
     "Add" : "Toevoegen",
     "Close" : "Sluit",
     "Body" : "Body",

@@ -379,6 +379,7 @@ OC.L10N.register(
     "New Contact" : "New Contact",
     "Copy to clipboard" : "کپی کردن به حافظه موقت",
     "Contact name …" : "Contact name …",
+    "Contact name" : "نام مخاطب",
     "Add" : "افزودن",
     "Copied email address to clipboard" : "Copied email address to clipboard",
     "Could not copy email address to clipboard" : "Could not copy email address to clipboard",

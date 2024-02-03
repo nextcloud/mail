@@ -336,6 +336,7 @@ OC.L10N.register(
     "New Contact" : "Nowy kontakt",
     "Copy to clipboard" : "Kopiuj do schowka",
     "Contact name …" : "Nazwa kontaktu…",
+    "Contact name" : "Nazwa kontaktu",
     "Add" : "Dodaj",
     "Copied email address to clipboard" : "Skopiowano adres e-mail do schowka",
     "Could not copy email address to clipboard" : "Nie można skopiować adresu e-mail do schowka",

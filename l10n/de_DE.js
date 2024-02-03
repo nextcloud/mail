@@ -415,6 +415,7 @@ OC.L10N.register(
     "New Contact" : "Neuer Kontakt",
     "Copy to clipboard" : "In die Zwischenablage kopieren",
     "Contact name …" : "Kontakt-Name …",
+    "Contact name" : "Kontaktname",
     "Add" : "Hinzufügen",
     "Copied email address to clipboard" : "E-Mail-Adresse in die Zwischenablage kopiert",
     "Could not copy email address to clipboard" : "E-Mail-Adresse konnte nicht in die Zwischenablage kopiert werden",

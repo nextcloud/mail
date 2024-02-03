@@ -415,6 +415,7 @@ OC.L10N.register(
     "New Contact" : "Нови контакт",
     "Copy to clipboard" : "Копирај у оставу",
     "Contact name …" : "Име контакта ...",
+    "Contact name" : "Име контакта",
     "Add" : "Додај",
     "Copied email address to clipboard" : "И-мејл адреса је копирана у клипборд",
     "Could not copy email address to clipboard" : "И-мејл адреса не може да се копира у клипборд",

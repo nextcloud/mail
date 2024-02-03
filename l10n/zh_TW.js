@@ -415,6 +415,7 @@ OC.L10N.register(
     "New Contact" : "新聯絡人",
     "Copy to clipboard" : "複製到剪貼簿",
     "Contact name …" : "聯絡人名稱……",
+    "Contact name" : "聯絡人名字",
     "Add" : "新增",
     "Copied email address to clipboard" : "將電子郵件地址複製到剪貼簿",
     "Could not copy email address to clipboard" : "無法複製電子郵件地址到剪貼簿",

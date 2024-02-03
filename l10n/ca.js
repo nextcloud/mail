@@ -414,6 +414,7 @@ OC.L10N.register(
     "New Contact" : "Crea un contacte",
     "Copy to clipboard" : "Copia-ho al porta-papers",
     "Contact name …" : "Nom de contacte …",
+    "Contact name" : "Nom del contacte",
     "Add" : "Afegeix",
     "Copied email address to clipboard" : "S'ha copiat l'adreça de correu electrònic al porta-retalls",
     "Could not copy email address to clipboard" : "No s'ha pogut copiar l'adreça de correu electrònic al porta-retalls",
