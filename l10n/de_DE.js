@@ -138,6 +138,7 @@ OC.L10N.register(
     "Automatically classify importance of new email" : "Automatische Einordnung der Wichtigkeit einer neuen E-Mail",
     "Could not update preference" : "Voreinstellung konnte nicht aktualisieren werden",
     "Select an alias" : "Alias wählen",
+    "Select certificates" : "Zertifikate auswählen",
     "Update Certificate" : "Zertifikat aktualisieren",
     "No certificate" : "Kein Zertifikat",
     "Certificate updated" : "Zertifikat aktualisiert",

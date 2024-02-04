@@ -350,6 +350,7 @@ OC.L10N.register(
     "New Contact" : "Нов контакт",
     "Copy to clipboard" : "Копиране в клипборда",
     "Contact name …" : "Име за контакт …",
+    "Contact name" : "Име за контакт",
     "Add" : "Добавяне",
     "Copied email address to clipboard" : "Копиран е имейл адрес в клипборда",
     "Could not copy email address to clipboard" : "Неуспешно копиране на имейл адреса в клипборда",

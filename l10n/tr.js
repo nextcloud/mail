@@ -138,6 +138,7 @@ OC.L10N.register(
     "Automatically classify importance of new email" : "Yeni e-postaların önem düzeyi otomatik olarak belirlensin",
     "Could not update preference" : "Ayar güncellenemedi",
     "Select an alias" : "Bir kısaltma seçin",
+    "Select certificates" : "Sertifikaları seçin",
     "Update Certificate" : "Sertifikayı güncelle",
     "No certificate" : "Herhangi bir sertifika yok",
     "Certificate updated" : "Sertifika güncellendi",
