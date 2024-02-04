@@ -218,6 +218,10 @@ class Account implements JsonSerializable {
 	 * @return void
 	 */
 	public function calculateAndSetQuotaPercentage(Quota $quota): void {
+		if ($quota->getLimit() === 0) {
+			$this->account->setQuotaPercentage(0);
+			return;
+		}
 		$percentage = (int)round($quota->getUsage() / $quota->getLimit() * 100);
 		$this->account->setQuotaPercentage($percentage);
 	}
