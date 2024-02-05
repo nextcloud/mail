@@ -167,7 +167,9 @@ class Version1130Date20220412111833 extends SimpleMigrationStep {
 		// Add named indices
 		$messagesTable->addIndex(['mailbox_id', 'flag_important', 'flag_deleted', 'flag_seen'], 'mail_messages_id_flags');
 		$messagesTable->addIndex(['mailbox_id', 'flag_deleted', 'flag_flagged'], 'mail_messages_id_flags2');
-		$messagesTable->addIndex(['mailbox_id'], 'mail_messages_mailbox_id');
+		// Dropped in Version3600Date20240205180726 because mail_messages_mailbox_id is redundant with mail_messages_mb_id_uid
+		// $messagesTable->addIndex(['mailbox_id'], 'mail_messages_mailbox_id');
+
 		// mail_messages_msgid_idx was added later and may not exist until optional indices are created
 		$messagesTable->addIndex(
 			['message_id'],

@@ -52,7 +52,8 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 				'default' => false
 			]);
 			$tagsTable->setPrimaryKey(['id']);
-			$tagsTable->addIndex(['user_id'], 'mail_msg_tags_usr_id_index');
+			// Dropped in Version3600Date20240205180726 because mail_msg_tags_usr_id_index is redundant with mail_msg_tags_usr_lbl_idx
+			// $tagsTable->addIndex(['user_id'], 'mail_msg_tags_usr_id_index');
 			$tagsTable->addUniqueIndex(
 				[
 					'user_id',
