@@ -138,6 +138,7 @@ OC.L10N.register(
     "Automatically classify importance of new email" : "自動分類新電子郵件的重要性",
     "Could not update preference" : "無法更新偏好設定",
     "Select an alias" : "選取別名",
+    "Select certificates" : "選取憑證",
     "Update Certificate" : "更新憑證",
     "No certificate" : "無憑證",
     "Certificate updated" : "憑證已更新",

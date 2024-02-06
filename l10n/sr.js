@@ -138,6 +138,7 @@ OC.L10N.register(
     "Automatically classify importance of new email" : "Аутоматски класификуј важност новог и-мејла",
     "Could not update preference" : "Подешавање не може да се ажурира",
     "Select an alias" : "Изаберите алијас",
+    "Select certificates" : "Изаберите сертификате",
     "Update Certificate" : "Ажурирај сертификат",
     "No certificate" : "Нема сертификата",
     "Certificate updated" : "Сертификат је ажуриран",
