@@ -252,10 +252,10 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function findFlagsByIds(Horde_Imap_Client_Base $client,
-								   string $mailbox,
-								   $ids,
-								   string $userId,
-								   bool $loadBody = false): array {
+		string $mailbox,
+		array|Horde_Imap_Client_Ids $ids,
+		string $userId,
+		bool $loadBody = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$query->flags();
@@ -279,7 +279,7 @@ class MessageMapper {
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
 		string $mailbox,
-		$ids,
+		array|Horde_Imap_Client_Ids $ids,
 		string $userId,
 		bool $loadBody = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
@@ -312,7 +312,12 @@ class MessageMapper {
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
 	 */
-	private function findByQuery(array|Horde_Imap_Client_Ids $ids, Horde_Imap_Client_Fetch_Query $query, string $mailbox, Horde_Imap_Client_Base $client, bool $loadBody, string $userId): array {
+	private function findByQuery(array|Horde_Imap_Client_Ids $ids,
+		Horde_Imap_Client_Fetch_Query $query,
+		string $mailbox,
+		Horde_Imap_Client_Base $client,
+		bool $loadBody,
+		string $userId): array {
 		if (is_array($ids)) {
 			// Chunk to prevent overly long IMAP commands
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
