@@ -103,12 +103,12 @@ class AutoConfigController extends Controller {
 	 * @param int $port
 	 *
 	 * @NoAdminRequired
-	 * @UserRateThrottle(limit=10, period=60)
+	 * @UserRateThrottle(limit=30, period=60)
 	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
-	#[UserRateLimit(limit: 10, period: 60)]
+	#[UserRateLimit(limit: 30, period: 60)]
 	public function testConnectivity(string $host, int $port): JsonResponse {
 		if (!in_array($port, [143, 993, 465, 587])) {
 			return JsonResponse::fail('Port not allowed');
