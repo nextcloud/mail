@@ -953,9 +953,6 @@ export default {
 		margin-bottom: -14px;
 	}
 }
-:deep(.list-item__extra) {
-	margin-left: 41px !important;
-}
 .tag-group__label {
 	margin: 0 7px;
 	z-index: 2;
@@ -1015,8 +1012,9 @@ export default {
 .attachment-icon-style {
 	opacity: .6;
 }
-:deep(.list-item-content__wrapper) {
+:deep(.list-item__anchor) {
 	margin-top: 6px;
+	margin-bottom: 6px;
 }
 :deep(.list-item__extra) {
 	margin-top: 9px;
