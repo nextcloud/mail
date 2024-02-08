@@ -1217,16 +1217,10 @@ export default {
 			this.onNewAddr(addr, this.selectBcc)
 		},
 		onNewAddr(addr, list) {
-			if (list.some((recipient) => recipient.email === addr)) {
+			if (list.some((recipient) => recipient.email === addr.email)) {
 				return
 			}
-			let res = addr
-			if (!this.allRecipients.some((recipient) => recipient.email === addr)) {
-				res = {
-					...addr,
-					email: addr.label,
-				}
-			}
+			let res = { ...addr }
 			this.newRecipients.push(res)
 			list.push(res)
 			this.saveDraftDebounced()
