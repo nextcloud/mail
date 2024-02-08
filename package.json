@@ -126,6 +126,7 @@
     "jest-serializer-vue": "^3.1.0",
     "jest-transform-stub": "^2.0.0",
     "jest-watch-typeahead": "^2.2.2",
+    "mini-css-extract-plugin": "^2.8.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "postcss": "^8.4.31",
     "postcss-loader": "^4.3.0",

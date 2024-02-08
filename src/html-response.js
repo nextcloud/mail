@@ -21,7 +21,7 @@
  */
 
 // injected styles
-import '../css/html-response.css'
+import './css/html-response.css'
 
 // iframe-resizer client script
 import 'iframe-resizer/js/iframeResizer.contentWindow.js'

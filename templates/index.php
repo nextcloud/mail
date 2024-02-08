@@ -24,6 +24,7 @@
  *
  */
 script('mail', 'mail');
+style('mail', 'mail');
 ?>
 
 <input type="hidden" id="attachment-size-limit" value="<?php p($_['attachment-size-limit']); ?>">

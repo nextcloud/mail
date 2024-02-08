@@ -1,9 +1,30 @@
 const path = require('path')
+const fs = require('fs/promises')
+const { existsSync } = require('fs')
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
 const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 const { ProvidePlugin } = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+const CleanCssPlugin = {
+	apply(compiler) {
+		compiler.hooks.emit.tapAsync('CleanCss', async (compilation, callback) => {
+			const directory = path.join(__dirname, 'css')
+			if (!existsSync(directory)) {
+				callback()
+				return
+			}
+
+			for (const file of await fs.readdir(directory)) {
+				await fs.unlink(path.join(directory, file))
+			}
+
+			callback()
+		})
+	},
+}
 
 function getPostCssConfig(ckEditorOpts) {
 	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
@@ -13,6 +34,10 @@ function getPostCssConfig(ckEditorOpts) {
 };
 
 const plugins = [
+	new MiniCssExtractPlugin({
+		filename: '../css/[name].css',
+		chunkFilename: '../css/mail.[name].[contenthash].css',
+	}),
 	// CKEditor needs its own plugin to be built using webpack.
 	new CKEditorWebpackPlugin({
 		// See https://ckeditor.com/docs/ckeditor5/latest/features/ui-language.html
@@ -25,6 +50,7 @@ const plugins = [
 		// Thanks to https://stackoverflow.com/a/65018686/14239942
 		process: 'process/browser.js',
 	}),
+	CleanCssPlugin,
 ]
 
 module.exports = {
@@ -45,11 +71,11 @@ module.exports = {
 		rules: [
 			{
 				test: /\.css$/,
-				use: ['style-loader', 'css-loader'],
+				use: [MiniCssExtractPlugin.loader, 'css-loader'],
 			},
 			{
 				test: /\.scss$/,
-				use: ['style-loader', 'css-loader', 'sass-loader'],
+				use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
 			},
 			{
 				test: /\.vue$/,

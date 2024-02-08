@@ -24,6 +24,7 @@ declare(strict_types=1);
  */
 
 script(\OCA\Mail\AppInfo\Application::APP_ID, 'oauthpopup');
+style('mail', 'oauthpopup');
 
 ?>
 

@@ -22,6 +22,7 @@
  */
 
 script(\OCA\Mail\AppInfo\Application::APP_ID, 'settings');
+style('mail', 'settings');
 
 ?>
 <div id="mail-admin-settings">
