@@ -6,7 +6,7 @@
 			:account="activeAccount"
 			:mailbox="activeMailbox" />
 
-		<template v-if="hasComposerSession">
+		<template v-if="hasComposerSession && accounts !== null">
 			<ComposerSessionIndicator @close="onCloseMessageModal" />
 			<NewMessageModal ref="newMessageModal" :accounts="accounts" />
 		</template>
