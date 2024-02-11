@@ -229,7 +229,7 @@ export default {
 			// TODO bug: cancel axios on close or delete attachment
 			const promises = map((file) => {
 				const controller = new AbortController()
-				this.attachments.push({
+				const attachment = {
 					fileName: file.name,
 					fileType: file.type,
 					imageBlobURL: this.generatePreview(file),
@@ -241,7 +241,8 @@ export default {
 					error: false,
 					hasPreview: false,
 					controller,
-				})
+				}
+				this.attachments.push(attachment)
 
 				Vue.set(this.uploads, file.name, {
 					total: file.size,
@@ -260,6 +261,8 @@ export default {
 						})
 						.then(({ file, id }) => {
 							logger.info('local attachment uploaded', { file, id })
+
+							attachment.id = id
 
 							this.emitNewAttachments([{
 								fileName: file.name,
@@ -372,9 +375,11 @@ export default {
 			))
 		},
 		onDelete(attachment) {
-			if (!attachment.finished) {
+			// If the attachment is still uploading, abort the upload
+			if (!attachment.finished && attachment.controller) {
 				attachment.controller.abort()
 			}
+
 			const val = {
 				fileName: attachment.fileName,
 				displayName: attachment.displayName,
@@ -382,22 +387,30 @@ export default {
 				size: attachment.total,
 				type: attachment.type,
 			}
-			const _att = this.attachments.filter((a) => {
-				return a !== attachment
-			})
-			this.attachments = _att
+
+			this.attachments = this.attachments.filter(a => a !== attachment)
 
 			this.$emit(
 				'input',
-				this.value.filter((a) => {
+				this.value.filter(a => {
 					if (val.type === 'cloud') {
 						return a.fileName !== val.fileName
 					} else {
 						return a.id !== val.id
 					}
-
 				}),
 			)
+
+			const updatedUploads = Object.keys(this.uploads)
+				.filter(fileName => fileName !== attachment.fileName)
+				.reduce((acc, fileName) => {
+					acc[fileName] = this.uploads[fileName]
+					return acc
+				}, {})
+
+			this.uploads = updatedUploads
+
+			this.$emit('on-delete-attachment', attachment)
 		},
 		appendToBodyAtCursor(toAppend) {
 			this.bus.emit('append-to-body-at-cursor', toAppend)
