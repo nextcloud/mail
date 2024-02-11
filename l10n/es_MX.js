@@ -94,6 +94,7 @@ OC.L10N.register(
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
     "Tag already exists" : "La etiqueta ya existe",
+    "Not found" : "No encontrado",
     "Remove" : "Eliminar",
     "Reset" : "Reiniciar",
     "Client ID" : "ID del cliente",
