@@ -1220,7 +1220,7 @@ export default {
 			if (list.some((recipient) => recipient.email === addr.email)) {
 				return
 			}
-			let res = { ...addr }
+			const res = { ...addr }
 			this.newRecipients.push(res)
 			list.push(res)
 			this.saveDraftDebounced()
