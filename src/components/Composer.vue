@@ -39,7 +39,6 @@
 					:value="selectTo"
 					:options="selectableRecipients.filter(reciptient=>!selectTo.some(to=>to.email===reciptient.email))"
 					:taggable="true"
-					label="label"
 					:aria-label-combobox="t('mail', 'Select recipient')"
 					:filter-by="(option, label, search)=>filterOption(option, label, search,'to')"
 					:multiple="true"
@@ -49,6 +48,7 @@
 					:reducible="true"
 					:clearable="true"
 					:no-wrap="false"
+					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
 					@search="onAutocomplete($event, 'to')">
@@ -95,7 +95,6 @@
 					:no-wrap="false"
 					:filter-by="(option, label, search)=>filterOption(option, label, search,'cc')"
 					:taggable="true"
-					label="label"
 					:close-on-select="true"
 
 					:multiple="true"
@@ -105,6 +104,7 @@
 					:loading="loadingIndicatorCc"
 					:reducible="true"
 					:clearable="true"
+					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewCcAddr"
 					@search="onAutocomplete($event, 'cc')">
@@ -145,7 +145,6 @@
 					:filter-by="(option, label, search)=>filterOption(option, label, search,'bcc')"
 					:options="selectableRecipients.filter(reciptient=>!selectBcc.some(bcc=>bcc.email===reciptient.email))"
 					:taggable="true"
-					label="label"
 					:close-on-select="true"
 
 					:multiple="true"
@@ -155,6 +154,7 @@
 					:reset-on-options-change="true"
 					:loading="loadingIndicatorBcc"
 					:clearable="true"
+					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewBccAddr"
 					@search="onAutocomplete($event, 'bcc')">
@@ -1207,22 +1207,22 @@ export default {
 			this.mailvelope.keyRing = await mailvelope.getKeyring()
 			await this.checkRecipientsKeys()
 		},
-		onNewToAddr(addr) {
-			this.onNewAddr(addr, this.selectTo)
+		onNewToAddr(option) {
+			this.onNewAddr(option, this.selectTo)
 		},
-		onNewCcAddr(addr) {
-			this.onNewAddr(addr, this.selectCc)
+		onNewCcAddr(option) {
+			this.onNewAddr(option, this.selectCc)
 		},
-		onNewBccAddr(addr) {
-			this.onNewAddr(addr, this.selectBcc)
+		onNewBccAddr(option) {
+			this.onNewAddr(option, this.selectBcc)
 		},
-		onNewAddr(addr, list) {
-			if (list.some((recipient) => recipient.email === addr.email)) {
+		onNewAddr(option, list) {
+			if (list.some((recipient) => recipient.email === option.email)) {
 				return
 			}
-			const res = { ...addr }
-			this.newRecipients.push(res)
-			list.push(res)
+			const recipient = { ...option }
+			this.newRecipients.push(recipient)
+			list.push(recipient)
 			this.saveDraftDebounced()
 		},
 		async onSend(_, force = false) {
@@ -1359,6 +1359,16 @@ export default {
 				return undefined
 			}
 			return this.$store.getters.getSmimeCertificate(certificateId)
+		},
+
+		/**
+		 * Create a new option for the to, cc and bcc selects.
+		 *
+		 * @param {string} value The string (email) typed by the user
+		 * @return {{email: string, label: string}} The new option
+		 */
+		createRecipientOption(value) {
+			return { email: value, label: value }
 		},
 	},
 }
