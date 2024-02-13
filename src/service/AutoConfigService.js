@@ -22,8 +22,8 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export async function queryIspdb(email) {
-	return (await axios.get(generateUrl('/apps/mail/api/autoconfig/ispdb/{email}', { email }))).data.data
+export async function queryIspdb(host, email) {
+	return (await axios.get(generateUrl('/apps/mail/api/autoconfig/ispdb/{host}/{email}', { host, email }))).data.data
 }
 
 export async function queryMx(email) {
