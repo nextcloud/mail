@@ -45,12 +45,11 @@ class MxRecord {
 		$mxRecords = array_filter($mxRecords, static function ($record) {
 			return !empty($record);
 		});
-		$this->logger->debug("found " . count($mxRecords) . " MX records for host <$host>");
+		$this->logger->debug("found " . count($sortedRecords) . " MX records for host <$host>");
 		if (empty(($mxRecords))) {
 			return [];
 		}
 
-		// TODO: sort by weight
 		return $this->sanitizedRecords($mxRecords);
 	}
 
