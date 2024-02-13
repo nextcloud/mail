@@ -57,13 +57,6 @@
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
 		<div v-if="smartReplies.length>0" class="reply-buttons">
-			<NcButton type="primary"
-				@click="onReply">
-				<template #icon>
-					<ReplyIcon />
-				</template>
-				Reply
-			</NcButton>
 			<NcButton v-for="(reply,index) in smartReplies"
 				:key="index"
 				type="secondary"
@@ -72,6 +65,13 @@
 					<ReplyIcon />
 				</template>
 				{{ reply }}
+			</NcButton>
+			<NcButton type="primary"
+				@click="onReply">
+				<template #icon>
+					<ReplyIcon />
+				</template>
+				{{t('mail','Reply')}}
 			</NcButton>
 		</div>
 	</div>
