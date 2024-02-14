@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.6 – 2024-02-14
+### Fixed
+- Rate limiting of denied IMAP authentication
+- Quota division by zero
+- Setup autoconfig rate limit too low
+- Setup autoconfig with Gmail and custom domain
+- Sorting MX records by priority in autoconfig
+
 ## 3.5.5 – 2024-01-22
 ### Fixed
 - Open actions menu after clicking outside of it
