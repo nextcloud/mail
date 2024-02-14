@@ -470,7 +470,7 @@ export default {
 		},
 		async detectConfig() {
 			this.loadingMessage = t('mail', 'Looking up configuration')
-			const config = await queryIspdb(this.emailAddress)
+			const config = await queryIspdb(this.emailAddress.split('@').pop(), this.emailAddress)
 			logger.debug('fetched auto config', { config })
 			// Apply settings to manual mode before submitting so the user
 			// can make modifications if the config fails
@@ -478,10 +478,26 @@ export default {
 				logger.debug('ISP DB config applied')
 				return true
 			} else {
-				this.loadingMessage = t('mail', 'Checking mail host connectivity')
 				const mxHosts = await queryMx(this.emailAddress)
 				logger.debug('MX hosts fetched', { mxHosts })
-				const imapAndSmtpHosts = mxHosts.flatMap(host => {
+
+				if (mxHosts.length) {
+					// Try the TLD of the MX
+					// FIXME: breaks with eTLDs like .co.uk
+					const tldMx = mxHosts[0].split('.').splice(-2).join('.').toLowerCase()
+					const mxConfig = await queryIspdb(
+						tldMx,
+						this.emailAddress,
+					)
+					logger.debug('fetched MX auto config', { mxConfig })
+					if (mxConfig && this.applyAutoConfig(mxConfig)) {
+						return true
+					}
+				}
+
+				// Test the highest priority MX for open IMAP/SMTP ports
+				this.loadingMessage = t('mail', 'Checking mail host connectivity')
+				const imapAndSmtpHosts = mxHosts.slice(0, 1).flatMap(host => {
 					return [993, 143, 465, 587].map(port => ({
 						host,
 						port,

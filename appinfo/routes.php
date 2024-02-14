@@ -112,7 +112,7 @@ return [
 		],
 		[
 			'name' => 'autoConfig#queryIspdb',
-			'url' => '/api/autoconfig/ispdb/{email}',
+			'url' => '/api/autoconfig/ispdb/{host}/{email}',
 			'verb' => 'GET',
 		],
 		[
