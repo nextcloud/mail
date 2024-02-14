@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\AutoConfig;
 
 use Psr\Log\LoggerInterface;
+use function array_combine;
+use function asort;
 
 class MxRecord {
 	/** @var LoggerInterface */
@@ -38,10 +40,15 @@ class MxRecord {
 	 * @return string[]
 	 */
 	public function query(string $host) {
-		if (getmxrr($host, $mxRecords, $mxWeight) === false) {
+		if (getmxrr($host, $mxRecords, $mxWeights) === false) {
 			$this->logger->debug("no MX records for host <$host> found");
 			return [];
 		}
+
+		// Sort MX records by weight
+		$sortedRecords = array_combine($mxRecords, $mxWeights);
+		asort($sortedRecords, SORT_NUMERIC);
+
 		$mxRecords = array_filter($mxRecords, static function ($record) {
 			return !empty($record);
 		});
