@@ -67,13 +67,13 @@ class AutoConfigController extends Controller {
 	 */
 	#[TrapError]
 	#[UserRateLimit(limit: 5, period: 60)]
-	public function queryIspdb(string $email): JsonResponse {
+	public function queryIspdb(string $host, string $email): JsonResponse {
 		$rfc822Address = new Horde_Mail_Rfc822_Address($email);
-		if (!$rfc822Address->valid || !$this->hostValidator->isValid($rfc822Address->host)) {
+		if (!$rfc822Address->valid || !$this->hostValidator->isValid($host)) {
 			return JsonResponse::fail('Invalid email address', Http::STATUS_UNPROCESSABLE_ENTITY)
 				->cacheFor(60 * 60, false, true);
 		}
-		$config = $this->ispDb->query($rfc822Address->host, $rfc822Address);
+		$config = $this->ispDb->query($host, $rfc822Address);
 		return JsonResponse::success($config)->cacheFor(5 * 60, false, true);
 	}
 
