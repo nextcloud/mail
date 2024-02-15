@@ -2,17 +2,17 @@
 	<NcContent app-name="mail">
 		<Navigation v-if="hasAccounts" />
 		<AppContent class="container">
-			<EmptyContent v-if="allowNewMailAccounts" :name="t('mail', 'Connect your mail account')">
-				<template #icon>
-					<IconMail :size="65" />
-				</template>
-				<template #action>
-					<AccountForm :display-name="displayName"
-						:email="email"
-						:error.sync="error"
-						@account-created="onAccountCreated" />
-				</template>
-			</EmptyContent>
+			<div v-if="allowNewMailAccounts">
+				<EmptyContent :name="t('mail', 'Connect your mail account')">
+					<template #icon>
+						<IconMail :size="65" />
+					</template>
+				</EmptyContent>
+				<AccountForm :display-name="displayName"
+					:email="email"
+					:error.sync="error"
+					@account-created="onAccountCreated" />
+			</div>
 			<EmptyContent v-else :name="t('mail', 'To add a mail account, please contact your administrator.')">
 				<template #icon>
 					<IconMail :size="65" />
