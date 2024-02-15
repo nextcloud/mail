@@ -33,6 +33,7 @@
 				</label>
 			</div>
 			<NcSelect v-model="selectedCalendar"
+				class="modal-content__calendar-picker"
 				label="displayname"
 				:aria-label-combobox="t('mail', 'Select calendar')"
 				:options="calendars">
@@ -44,6 +45,11 @@
 						v-bind="option" />
 				</template>
 			</NcSelect>
+			<label for="description">{{ t('mail', 'Description') }}</label>
+			<textarea id="description"
+				v-model="description"
+				class="modal-content__description-input"
+				rows="7" />
 			<br>
 			<button class="primary" @click="onSave">
 				{{ t('mail', 'Create') }}
@@ -91,6 +97,7 @@ export default {
 			endTimezoneId: defaultTimezoneId,
 			saving: false,
 			selectedCalendar: undefined,
+			description: this.envelope.previewText,
 		}
 	},
 	computed: {
@@ -127,6 +134,7 @@ export default {
 					startDate: this.startDate,
 					startTimezone: this.startTimezoneId,
 					endTimezone: this.endTimezoneId,
+					description: this.description,
 				})
 
 				const timezoneManager = getTimezoneManager()
@@ -148,6 +156,9 @@ export default {
 				const calendar = createEvent(startDateTime, endDateTime)
 				const event = calendar.getFirstComponent('VEVENT')
 				event.addProperty(new TextProperty('SUMMARY', this.eventTitle))
+				if (this.description) {
+					event.addProperty(new TextProperty('DESCRIPTION', this.description))
+				}
 				for (const vObject of calendar.getVObjectIterator()) {
 					vObject.undirtify()
 				}
@@ -182,6 +193,14 @@ export default {
 }
 .modal-content {
 	padding: 30px 30px 20px !important;
+
+	&__calendar-picker {
+		display: block;
+	}
+	&__description-input {
+		width: 100%;
+		resize: vertical;
+	}
 }
 input {
 	width: 100%;
