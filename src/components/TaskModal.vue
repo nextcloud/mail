@@ -36,17 +36,19 @@
 			</div>
 			<NcSelect v-model="selectedCalendar"
 				label="displayname"
-				track-by="url"
+				input-id="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:aria-label-combobox="t('mail', 'Select calendar')"
 				:allow-empty="false"
 				:options="calendars">
-				<template #option="option">
-					<CalendarPickerOption v-bind="option" />
+				<template #option="{ id }">
+					<CalendarPickerOption :color="getCalendarById(id).color"
+						:displayname="getCalendarById(id).displayname" />
 				</template>
-				<template #singleLabel="option">
-					<CalendarPickerOption :display-icon="option.displayIcon"
-						v-bind="option" />
+				<template #selected-option="{ id }">
+					<CalendarPickerOption :color="getCalendarById(id).color"
+						:displayname="getCalendarById(id).displayname"
+						:display-icon="getCalendarById(id).displayIcon" />
 				</template>
 				<span slot="noOptions">{{ t('mail', 'No calendars with task list support') }}</span>
 			</NcSelect>
@@ -115,7 +117,7 @@ export default {
 			return this.$store.getters.getAllTags
 		},
 		calendars() {
-			return this.$store.getters.getTaskCalendarsForCurrentUser
+			return this.$store.getters.getTaskCalendarsForCurrentUser.map(calendar => ({ id: calendar.id, color: calendar.color, displayname: calendar.displayname }))
 		},
 	},
 	created() {
@@ -130,6 +132,13 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * @param {string} id The calendar id
+		 * @return {object|undefined} The calendar object (if it exists)
+		 */
+		getCalendarById(id) {
+			return this.calendars.find((cal) => cal.id === id)
+		},
 
 		onClose() {
 			this.$emit('close')
