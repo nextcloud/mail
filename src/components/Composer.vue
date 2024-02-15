@@ -1217,13 +1217,25 @@ export default {
 			this.onNewAddr(option, this.selectBcc)
 		},
 		onNewAddr(option, list) {
-			if (list.some((recipient) => recipient.email === option.email)) {
-				return
-			}
-			const recipient = { ...option }
-			this.newRecipients.push(recipient)
-			list.push(recipient)
-			this.saveDraftDebounced()
+			//@todo condition if it is not a contact
+
+			const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+			const delimiterRegex = /;|,/
+
+			const addresses = option.email.trim().split(delimiterRegex).filter(email => emailRegex.test(email))
+
+			addresses.forEach(email => {
+				if (list.some((recipient) => recipient.email === email)) {
+					return
+				}
+
+				const t = {label: email, email: email}
+
+				const recipient = { ...t }
+				this.newRecipients.push(recipient)
+				list.push(recipient)
+				this.saveDraftDebounced()
+			});
 		},
 		async onSend(_, force = false) {
 			if (this.encrypt) {
