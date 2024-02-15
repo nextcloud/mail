@@ -16,14 +16,6 @@ export default {
 	justify-content: space-between;
 }
 
-.list-item-content__actions--primary .action--primary:first-child {
-	padding-left: 5px;
-}
-
-.list-item-content__actions--primary .action--primary:last-child {
-	padding-right: 5px;
-}
-
 .list-item-content__actions--primary .action--primary .action-button {
 	align-items: center;
 	flex-direction: column;
