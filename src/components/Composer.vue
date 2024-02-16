@@ -1217,21 +1217,16 @@ export default {
 			this.onNewAddr(option, this.selectBcc)
 		},
 		onNewAddr(option, list) {
-			//@todo condition if it is not a contact
-
-			const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 			const delimiterRegex = /;|,/
 
-			const addresses = option.email.trim().split(delimiterRegex).filter(email => emailRegex.test(email))
+			const addresses = option.email.trim().split(delimiterRegex)
 
 			addresses.forEach(email => {
 				if (list.some((recipient) => recipient.email === email)) {
 					return
 				}
 
-				const t = {label: email, email: email}
-
-				const recipient = { ...t }
+				const recipient = { ...{label: email, email: email} }
 				this.newRecipients.push(recipient)
 				list.push(recipient)
 				this.saveDraftDebounced()
