@@ -23,7 +23,7 @@
 					:show-timezone-select="true"
 					:timezone-id="endTimezoneId" />
 			</div>
-			<label for="note">Description:</label>
+			<label for="note">{{ t('mail', 'Description') }}</label>
 			<textarea id="note" v-model="note" rows="7" />
 			<div class="all-day">
 				<input id="allDay"
