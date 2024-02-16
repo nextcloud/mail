@@ -68,8 +68,10 @@ export default {
 }
 .wrapper {
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
 	flex-direction: column;
 	flex: 1 auto;
+	align-items: center;
+	height: 100vh;
 }
 </style>
