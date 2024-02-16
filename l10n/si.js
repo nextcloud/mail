@@ -20,6 +20,7 @@ OC.L10N.register(
     "Read" : "කියවීම",
     "Select" : "තෝරන්න",
     "Back" : "ආපසු",
+    "Description" : "විස්තරය",
     "Create" : "සාදන්න",
     "Comment" : "අදහස",
     "Accept" : "පිළිගන්න",

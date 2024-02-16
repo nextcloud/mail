@@ -218,6 +218,7 @@ OC.L10N.register(
     "Report this bug" : "Pošlji poročilo o hrošču",
     "All day" : "Ves dan",
     "Select calendar" : "Izbor koledarja",
+    "Description" : "Opis",
     "Create" : "Ustvari",
     "Event created" : "Dogodek je ustvarjen",
     "Could not create event" : "Ni mogoče ustvariti dogodka",

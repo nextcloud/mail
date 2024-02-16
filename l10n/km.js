@@ -16,6 +16,7 @@ OC.L10N.register(
     "Send" : "ផ្ញើ",
     "Select" : "Select",
     "Back" : "ត្រឡប់ក្រោយ",
+    "Description" : "ការ​អធិប្បាយ",
     "Create" : "បង្កើត",
     "Comment" : "មតិ",
     "Choose" : "ជ្រើស",

@@ -172,6 +172,7 @@ OC.L10N.register(
     "_Delete {number} thread_::_Delete {number} threads_" : ["Διαγραφή {number} νημάτος","Διαγραφή {number} νημάτων"],
     "Report this bug" : "Αναφέρετε αυτό το σφάλμα",
     "All day" : "Ολοήμερο",
+    "Description" : "Περιγραφή",
     "Create" : "Δημιουργία",
     "Event created" : "Το συμβάν δημιουργήθηκε",
     "Could not create event" : "Αδυναμία δημιουργίας συμβάντος",

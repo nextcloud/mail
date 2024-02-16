@@ -61,6 +61,7 @@ OC.L10N.register(
     "Create event" : "Izveidot notikumu",
     "Forward" : "Turpināt",
     "All day" : "Visas dienas",
+    "Description" : "Apraksts",
     "Create" : "Izveidot",
     "Comment" : "Komentārs",
     "Accept" : "Pieņemt",

@@ -198,6 +198,7 @@
     "_Delete {number} thread_::_Delete {number} threads_" : ["Vymazať {number} vlákno","Vymazať {number} vlákien","Vymazať {number} vlákien","Vymazať {number} vlákien"],
     "Report this bug" : "Nahlásiť túto chybu",
     "All day" : "Celý deň",
+    "Description" : "Popis",
     "Create" : "Vytvoriť",
     "Event created" : "Udalosť bola vytvorená",
     "Could not create event" : "Udalosť sa nepodarilo vytvoriť",

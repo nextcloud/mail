@@ -249,6 +249,7 @@ OC.L10N.register(
     "Report this bug" : "Eman errore honen berri",
     "All day" : "Egun osoa",
     "Select calendar" : "Hautatu egutegia",
+    "Description" : "Deskripzioa",
     "Create" : "Sortu",
     "Event created" : "Sortu da gertaera",
     "Could not create event" : "Ezin izan da gertaera sortu",

@@ -117,9 +117,10 @@
     "Could not delete message" : "לא ניתן למחוק הודעה",
     "Forward" : "העברה",
     "Load more" : "לטעון עוד",
-    "_Mark {number} unread_::_Mark {number} unread_" : ["סימון {number} שלא נקראה","סימון {number} שלא נקראו","סימון {number} שלא נקראו","סימון {number} שלא נקראו"],
+    "_Mark {number} unread_::_Mark {number} unread_" : ["סימון {number} שלא נקראה","סימון {number} שלא נקראו","סימון {number} שלא נקראו"],
     "Report this bug" : "דיווח על התקלה הזו",
     "All day" : "כל היום",
+    "Description" : "תיאור",
     "Create" : "יצירה",
     "Could not create event" : "לא ניתן ליצור אירוע",
     "Comment" : "הערה",
@@ -167,7 +168,7 @@
     "The mailbox and all messages in it will be deleted." : "תיבת הדוא״ל על כל ההודעות שבה תימחק.",
     "Delete mailbox {name}" : "מחיקת תיבת הדוא״ל {name}",
     "An error occurred, unable to rename the mailbox." : "אירעה שגיאה, לא ניתן לשנות את שם תיבת הדוא״ל.",
-    "_{total} message_::_{total} messages_" : ["הודעה אחת","{total} הודעות","{total} הודעות","{total} הודעות"],
+    "_{total} message_::_{total} messages_" : ["הודעה אחת","{total} הודעות","{total} הודעות"],
     "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["אחת לא נקראה מתוך {total}","{unread} לא נקראו מתוך {total}","{unread} לא נקראו מתוך {total}","{unread} לא נקראו מתוך {total}"],
     "New message" : "הודעה חדשה",
     "Error sending your message" : "שליחת ההודעה שלך נכשלה",
@@ -250,7 +251,7 @@
     "Trash" : "פח אשפה",
     "Error while sharing file" : "שגיאה בשיתוף הקובץ",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["הודעה חדשה \nמאת {from}","2 הודעות חדשות \nמאת {from}","%n הודעות חדשות \nמאת {from}","%n הודעות חדשות \nמאת {from}"],
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["הודעה חדשה \nמאת {from}","2 הודעות חדשות \nמאת {from}","%n הודעות חדשות \nמאת {from}"],
     "Nextcloud Mail" : "דוא״ל Nextcloud",
     "Attachments were not copied. Please add them manually." : "הקבצים המצורפים לא הועתקו. נא להוסיף אותם ידנית.",
     "Message sent" : "הודעה נשלחה",
@@ -265,5 +266,5 @@
     "Redirect" : "הפנייה",
     "The link leads to %s" : "הקישור מוביל אל %s",
     "Continue to %s" : "ממשיך אל %s"
-},"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;"
+},"pluralForm" :"nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;"
 }

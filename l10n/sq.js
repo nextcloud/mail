@@ -54,6 +54,7 @@ OC.L10N.register(
     "Back" : "Prapa",
     "Forward" : "Përpara",
     "All day" : "Gjithë ditën",
+    "Description" : "Përshkrim",
     "Create" : "Krijo",
     "Comment" : "Koment",
     "Accept" : "Prano",

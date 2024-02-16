@@ -40,6 +40,7 @@ OC.L10N.register(
     "Create event" : "Buat acara",
     "Forward" : "Teruskan",
     "All day" : "Sepanjang hari",
+    "Description" : "Deskrisi",
     "Create" : "Buat",
     "Comment" : "Komentar",
     "Accept" : "Terima",

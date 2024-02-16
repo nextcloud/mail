@@ -223,6 +223,7 @@ OC.L10N.register(
     "Report this bug" : "报告此问题",
     "All day" : "全天",
     "Select calendar" : "选择日历",
+    "Description" : "描述",
     "Create" : "创建",
     "Event created" : "已创建事件",
     "Could not create event" : "无法创建事件",

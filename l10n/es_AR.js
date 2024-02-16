@@ -51,6 +51,7 @@ OC.L10N.register(
     "Back" : "Atrás",
     "Forward" : "Reenviar",
     "All day" : "Todo el día",
+    "Description" : "Descripción",
     "Create" : "Crear",
     "Comment" : "Comentario",
     "Accept" : "Aceptar",

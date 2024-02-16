@@ -206,6 +206,7 @@ OC.L10N.register(
     "Report this bug" : "Ilmoita viasta",
     "All day" : "Koko päivä",
     "Select calendar" : "Valitse kalenteri",
+    "Description" : "Kuvaus",
     "Create" : "Luo",
     "Event created" : "Tapahtuma luotu",
     "Could not create event" : "Tapahtumaa ei voitu luoda",

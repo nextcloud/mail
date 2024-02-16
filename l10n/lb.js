@@ -21,6 +21,7 @@ OC.L10N.register(
     "Select" : "Select",
     "Edit tags" : "Tags editéieren",
     "Back" : "Zeréck",
+    "Description" : "Beschreiwung",
     "Create" : "Erstellen",
     "Comment" : "Kommentar",
     "Choose" : "Auswielen",

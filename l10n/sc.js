@@ -140,6 +140,7 @@ OC.L10N.register(
     "_Delete {number} thread_::_Delete {number} threads_" : ["Cantzella {number} dibatas","Cantzella {number} dibatas"],
     "Report this bug" : "Signala cust'errore",
     "All day" : "Totu sa die",
+    "Description" : "Descritzione",
     "Create" : "Crea",
     "Could not create event" : "No at fatu a creare s'eventu",
     "Comment" : "Cummentu",

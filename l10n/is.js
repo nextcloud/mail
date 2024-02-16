@@ -111,6 +111,7 @@ OC.L10N.register(
     "Load more" : "Hlaða inn meira",
     "Report this bug" : "Tilkynna þessa villu",
     "All day" : "Heilsdagsviðburður",
+    "Description" : "Lýsing",
     "Create" : "Búa til",
     "Could not create event" : "Tókst ekki að útbúa atburð",
     "Comment" : "Athugasemd",

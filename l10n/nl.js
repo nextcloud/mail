@@ -149,6 +149,7 @@ OC.L10N.register(
     "_Delete {number} thread_::_Delete {number} threads_" : ["Verwijderen {number} draadje","Verwijderen {number} draadjes"],
     "Report this bug" : "Meld deze fout",
     "All day" : "Alle dagen",
+    "Description" : "Omschrijving",
     "Create" : "Aanmaken",
     "Event created" : "Afspraak aangemaakt",
     "Could not create event" : "Kon afspraak niet creëren",

@@ -235,6 +235,7 @@ OC.L10N.register(
     "Report this bug" : "گزارش این اشکال",
     "All day" : "تمام روز",
     "Select calendar" : "Select calendar",
+    "Description" : "شرح",
     "Create" : "ساخت",
     "Event created" : "Event created",
     "Could not create event" : "رویداد ایجاد نشد",

@@ -255,6 +255,7 @@ OC.L10N.register(
     "Report this bug" : "Повідомити про помилку",
     "All day" : "Весь день",
     "Select calendar" : "Виберіть календар",
+    "Description" : "Опис",
     "Create" : "Створити",
     "Event created" : "Подію створено",
     "Could not create event" : "Неможливо створити подію",

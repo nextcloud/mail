@@ -229,6 +229,7 @@ OC.L10N.register(
     "Report this bug" : "Отправить отчёт об этой ошибке",
     "All day" : "Весь день",
     "Select calendar" : "Выбрать календарь",
+    "Description" : "Описание",
     "Create" : "Создать",
     "Event created" : "Событие создано",
     "Could not create event" : "Не удалось создать событие",

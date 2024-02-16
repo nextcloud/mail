@@ -139,6 +139,7 @@ OC.L10N.register(
     "_Mark {number} as not spam_::_Mark {number} as not spam_" : ["{number}件をスパムでないとマーク"],
     "Report this bug" : "不具合を報告",
     "All day" : "終日",
+    "Description" : "説明",
     "Create" : "作成",
     "Event created" : "イベントを作成しました",
     "Could not create event" : "イベントを作成できませんでした。",

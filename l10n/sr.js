@@ -261,6 +261,7 @@ OC.L10N.register(
     "Report this bug" : "Пријави ову грешку",
     "All day" : "Цео дан",
     "Select calendar" : "Изаберите календар",
+    "Description" : "Опис",
     "Create" : "Направи",
     "Event created" : "Креиран је догађај",
     "Could not create event" : "Не могу да креирам догађај",

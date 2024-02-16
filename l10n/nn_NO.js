@@ -19,6 +19,7 @@ OC.L10N.register(
     "Favorite" : "Favoritt",
     "Select" : "Vel",
     "Back" : "Tilbake",
+    "Description" : "Skildring",
     "Create" : "Lag",
     "Comment" : "Kommentér",
     "Choose" : "Vel",

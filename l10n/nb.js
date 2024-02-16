@@ -261,6 +261,7 @@ OC.L10N.register(
     "Report this bug" : "Rapporter denne feilen",
     "All day" : "Hele dagen",
     "Select calendar" : "Velg kalender",
+    "Description" : "Beskrivelse",
     "Create" : "Opprett",
     "Event created" : "Hendelse opprettet",
     "Could not create event" : "Kunne ikke opprette hendelsen",

@@ -114,6 +114,7 @@
     "_Forward {number} as attachment_::_Forward {number} as attachment_" : ["Chuyển tiếp {number} dưới dạng tệp đính kèm"],
     "Report this bug" : "Báo cáo lỗi này",
     "All day" : "Cả ngày",
+    "Description" : "Mô tả",
     "Create" : "‎Tạo‎",
     "Could not create event" : "Không thể tạo sự kiện",
     "Comment" : "Bình luận",

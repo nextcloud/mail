@@ -56,6 +56,7 @@ OC.L10N.register(
     "Back" : "უკან",
     "Forward" : "წინ",
     "All day" : "მთელი დღე",
+    "Description" : "აღწერილობა",
     "Create" : "შექმნა",
     "Comment" : "კომენტარი",
     "Accept" : "მიღება",

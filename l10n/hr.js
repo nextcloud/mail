@@ -142,6 +142,7 @@ OC.L10N.register(
     "_Delete {number} thread_::_Delete {number} threads_" : ["Izbriši {number} dretvu","Izbriši {number} dretve","Izbriši {number} dretvi"],
     "Report this bug" : "Prijavi ovu pogrešku",
     "All day" : "Cijeli dan",
+    "Description" : "Opis",
     "Create" : "Stvori",
     "Event created" : "Događaj je stvoren",
     "Could not create event" : "Nije moguće stvoriti događaj",

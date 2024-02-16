@@ -34,6 +34,7 @@ OC.L10N.register(
     "Edit tags" : "แก้ไขแท็ก",
     "Back" : "ย้อนกลับ",
     "Forward" : "ส่งต่อ",
+    "Description" : "คำอธิบาย",
     "Create" : "สร้าง",
     "Comment" : "ความคิดเห็น",
     "Accept" : "ยอมรับ",

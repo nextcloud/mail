@@ -228,6 +228,7 @@ OC.L10N.register(
     "Report this bug" : "Raportați acest incident",
     "All day" : "Toată ziua",
     "Select calendar" : "Selectează calendarul",
+    "Description" : "Descriere",
     "Create" : "Crează",
     "Event created" : "Evenimentul a fost  creat",
     "Could not create event" : "Evenimentul nu a putut fi creat",

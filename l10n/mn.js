@@ -36,6 +36,7 @@ OC.L10N.register(
     "Select" : "Сонгох",
     "Back" : "буцах",
     "Forward" : "дамжих",
+    "Description" : "Тодорхойлолт",
     "Create" : "Үүсгэх",
     "Comment" : "undefined",
     "Accept" : "Хүлээн зөвшөөрөх",

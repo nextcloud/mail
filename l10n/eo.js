@@ -86,6 +86,7 @@ OC.L10N.register(
     "Forward" : "Antaŭen",
     "Report this bug" : "Raporti tiun problemon",
     "All day" : "Tuttage",
+    "Description" : "Priskribo",
     "Create" : "Krei",
     "Could not create event" : "Ne eblis krei okazaĵon",
     "Comment" : "Komento",

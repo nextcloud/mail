@@ -218,6 +218,7 @@ OC.L10N.register(
     "Report this bug" : "Informar de este error",
     "All day" : "Todo el día",
     "Select calendar" : "Seleccionar calendario",
+    "Description" : "Descripción",
     "Create" : "Crear",
     "Event created" : "Evento creado",
     "Could not create event" : "No se pudo crear el evento",

@@ -240,6 +240,7 @@ OC.L10N.register(
     "Report this bug" : "A hiba bejelentése",
     "All day" : "Egész nap",
     "Select calendar" : "Válasszon naptárat",
+    "Description" : "Leírás",
     "Create" : "Létrehozás",
     "Event created" : "Esemény létrehozása",
     "Could not create event" : "Nem sikerült létrehozni az eseményt",

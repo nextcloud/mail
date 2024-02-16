@@ -199,6 +199,7 @@ OC.L10N.register(
     "_Delete {number} thread_::_Delete {number} threads_" : ["Slet {number} tråd","Slet {number} tråde"],
     "Report this bug" : "Rapporter denne fejl",
     "All day" : "Hele dagen",
+    "Description" : "Beskrivelse",
     "Create" : "Opret",
     "Event created" : "Begivenhed oprettet",
     "Could not create event" : "Begivenheden kunne ikke oprettes",

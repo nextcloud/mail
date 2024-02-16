@@ -249,6 +249,7 @@ OC.L10N.register(
     "Report this bug" : "Diesen Bug melden",
     "All day" : "Ganztägig",
     "Select calendar" : "Kalender auswählen",
+    "Description" : "Beschreibung",
     "Create" : "Erstellen",
     "Event created" : "Termin wurde erstellt",
     "Could not create event" : "Termin konnte nicht erstellt werden",

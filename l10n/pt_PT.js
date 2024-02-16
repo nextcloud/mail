@@ -98,6 +98,7 @@ OC.L10N.register(
     "Forward" : "Encaminhar",
     "Load more" : "Carregar mais",
     "All day" : "Todo o dia",
+    "Description" : "Descrição",
     "Create" : "Criar",
     "Could not create event" : "Não foi possível criar o evento",
     "Comment" : "Comentário",

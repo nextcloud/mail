@@ -20,6 +20,7 @@ OC.L10N.register(
     "Select" : "Obeleži",
     "Back" : "Nazad",
     "Forward" : "Prosledi",
+    "Description" : "Opis",
     "Create" : "Napravi",
     "Comment" : "Komentar",
     "Choose" : "Odaberi",

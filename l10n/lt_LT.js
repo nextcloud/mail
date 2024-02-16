@@ -164,6 +164,7 @@ OC.L10N.register(
     "_Mark {number} read_::_Mark {number} read_" : ["Žymėti {number} kaip skaitytą","Žymėti {number} kaip skaitytus","Žymėti {number} kaip skaitytus","Žymėti {number} kaip skaitytą"],
     "Report this bug" : "Pranešti apie šią klaidą",
     "All day" : "Visą dieną",
+    "Description" : "Aprašas",
     "Create" : "Sukurti",
     "Event created" : "Įvykis sukurtas",
     "Could not create event" : "Nepavyko sukurti įvykio",

@@ -49,6 +49,7 @@ OC.L10N.register(
     "Create event" : "Lisa sündmus",
     "Forward" : "Edasi",
     "All day" : "Kogu päev",
+    "Description" : "Kirjeldus",
     "Create" : "Loo",
     "Comment" : "Kommentaar",
     "Accept" : "Nõustu",

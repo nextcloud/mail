@@ -254,6 +254,7 @@ OC.L10N.register(
     "Report this bug" : "이 오류 보고",
     "All day" : "하루 종일",
     "Select calendar" : "달력 선택",
+    "Description" : "설명",
     "Create" : "생성",
     "Event created" : "일정 생성됨",
     "Could not create event" : "일정을 생성할 수 없음",

@@ -261,6 +261,7 @@ OC.L10N.register(
     "Report this bug" : "Bu hatayı bildirin",
     "All day" : "Tüm gün",
     "Select calendar" : "Takvim seçin",
+    "Description" : "Açıklama",
     "Create" : "Ekle",
     "Event created" : "Etkinlik eklendi",
     "Could not create event" : "Etkinlik oluşturulamadı",

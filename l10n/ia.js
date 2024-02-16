@@ -26,6 +26,7 @@ OC.L10N.register(
     "Favorite" : "Favorite",
     "Select" : "Selectionar",
     "Back" : "Retro",
+    "Description" : "Description",
     "Create" : "Crear",
     "Comment" : "Commentario",
     "Accept" : "Acceptar",
