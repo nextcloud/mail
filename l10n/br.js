@@ -28,6 +28,7 @@ OC.L10N.register(
     "Select" : "Dibab",
     "Back" : "Distro",
     "Forward" : "War-raok",
+    "Description" : "Deskrivadur",
     "Create" : "Krouiñ",
     "Comment" : "Displegadenn",
     "Accept" : "Asantiñ",

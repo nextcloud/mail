@@ -74,6 +74,7 @@ OC.L10N.register(
     "No subject" : "Geen onderwerp",
     "Forward" : "Stuur aan",
     "All day" : "Heeldag",
+    "Description" : "Beskrywing",
     "Create" : "Skep",
     "Comment" : "Kommentaar",
     "Accept" : "Aanvaar",

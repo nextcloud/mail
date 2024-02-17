@@ -22,6 +22,7 @@ OC.L10N.register(
     "Select" : "সিলেক্ট",
     "Edit tags" : "ট্যাগ সম্পাদনা",
     "Back" : "পেছনে যাও",
+    "Description" : "বিবরণ",
     "Create" : "তৈরী কর",
     "Comment" : "মন্তব্য",
     "Choose" : "বেছে নিন",

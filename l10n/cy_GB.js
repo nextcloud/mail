@@ -58,6 +58,7 @@ OC.L10N.register(
     "Create event" : "Creu digwyddiad",
     "Report this bug" : "Cofnodi'r gwall",
     "All day" : "Drwy'r dydd",
+    "Description" : "Disgrifiad",
     "Create" : "Creu",
     "Comment" : "Sylw",
     "Accept" : "Derbyn",

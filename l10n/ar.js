@@ -261,6 +261,7 @@ OC.L10N.register(
     "Report this bug" : "الإبلاغ عن هذا الخلل",
     "All day" : "طِوَال اليوم",
     "Select calendar" : "إختر التقويم",
+    "Description" : "الوصف",
     "Create" : "إنشاء",
     "Event created" : "تمّ إنشاء الحدث",
     "Could not create event" : "تعذّر إنشاء الحدث",

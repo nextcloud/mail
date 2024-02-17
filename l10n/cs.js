@@ -259,6 +259,7 @@ OC.L10N.register(
     "Report this bug" : "Nahlásit tuto chybu",
     "All day" : "Celý den",
     "Select calendar" : "Vybrat kalendář",
+    "Description" : "Popis",
     "Create" : "Vytvořit",
     "Event created" : "Událost vytvořena",
     "Could not create event" : "Událost se nedaří vytvořit",

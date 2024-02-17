@@ -28,6 +28,7 @@ OC.L10N.register(
     "Read" : "Oxu",
     "Select" : "Select",
     "Back" : "Geri",
+    "Description" : "Açıqlanma",
     "Create" : "Yarat",
     "Comment" : "Komentariya",
     "Accept" : "Qəbul et",

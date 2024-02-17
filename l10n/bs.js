@@ -17,6 +17,7 @@ OC.L10N.register(
     "Favorite" : "Favorit",
     "Select" : "Select",
     "Edit tags" : "Izmjeni oznake",
+    "Description" : "Opis",
     "Create" : "Ustvari",
     "Comment" : "Komentar",
     "Accept" : "Prihvati",
