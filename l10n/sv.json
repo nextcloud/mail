@@ -311,6 +311,7 @@
     "With the settings above, the app will create account settings in the following way:" : "Med inställningarna ovan skapar appen kontoinställningar på följande sätt:",
     "E-mail address" : "E-postadress",
     "Valid until" : "Giltigt till",
+    "Delete certificate" : "Ta bort certifikat",
     "Certificate" : "Certifikat",
     "Submit" : "Skicka",
     "Account connected" : "Konto anslutet",
