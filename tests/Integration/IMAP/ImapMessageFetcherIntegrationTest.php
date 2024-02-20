@@ -41,6 +41,8 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 
+	private const LOREM = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.';
+
 	private MailAccount $account;
 	private ImapMessageFetcherFactory $fetcherFactory;
 	private SmimeCertificateMapper $certificateMapper;
@@ -58,22 +60,17 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->certificateManager = Server::get(ICertificateManager::class);
 
 		$this->certificateManager->addCertificate(
-			file_get_contents(__DIR__ . '/../../data/smime-certs/domain.tld.ca.crt'),
-			'domain.tld.ca.crt'
-		);
-		$this->certificateManager->addCertificate(
 			file_get_contents(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt'),
 			'imap.localhost.ca.crt'
 		);
 
 		$this->importCertificate('user@imap.localhost');
-		$this->importCertificate('user@domain.tld');
+		$this->importCertificate('debug@imap.localhost');
 	}
 
 	protected function tearDown(): void {
 		parent::tearDown();
 
-		$this->certificateManager->removeCertificate('domain.tld.ca.crt');
 		$this->certificateManager->removeCertificate('imap.localhost.ca.crt');
 		$this->clearCertificates();
 	}
@@ -117,12 +114,11 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("Just some encrypted test images.\n\n", $message->getPlainBody());
-		$this->assertCount(3, $message->attachments);
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertCount(1, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
-		// TODO: https://github.com/nextcloud/mail/issues/9286
-		// $this->assertTrue($message->isSignatureValid());
+		$this->assertTrue($message->isSignatureValid());
 	}
 
 	public function testFetchMessageWithEncryptedUnverifiedMessage(): void {
@@ -142,8 +138,8 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("Just some encrypted test images.\n\n", $message->getPlainBody());
-		$this->assertCount(3, $message->attachments);
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
+		$this->assertCount(1, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertFalse($message->isSignatureValid());
@@ -163,7 +159,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("hoi\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
@@ -183,11 +179,10 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("This is a signed message.\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
-		// TODO: https://github.com/nextcloud/mail/issues/9286
-		// $this->assertTrue($message->isSignatureValid());
+		$this->assertTrue($message->isSignatureValid());
 	}
 
 	public function testFetchMessageWithOpaqueSignedMessage(): void {
@@ -204,7 +199,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 
 		$message = $fetcher->fetchMessage();
 
-		$this->assertEquals("hoi\n\n", $message->getPlainBody());
+		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
 		$this->assertTrue($message->isSignatureValid());
