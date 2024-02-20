@@ -209,7 +209,7 @@ class SmimeServiceTest extends TestCase {
 		$message->expects(self::once())
 			->method('getEnvelope')
 			->willReturn($envelope);
-		$certificate = $this->getTestCertificate('user@domain.tld');
+		$certificate = $this->getTestCertificate('user@imap.localhost');
 		$this->certificateMapper->expects(self::once())
 			->method('findAllByEmailAddress')
 			->with('user', 'user@imap.localhost')
@@ -227,7 +227,7 @@ class SmimeServiceTest extends TestCase {
 			});
 		$this->certificateManager->expects(self::exactly(2))
 			->method('getAbsoluteBundlePath')
-			->willReturn(__DIR__ . '/../../data/smime-certs/domain.tld.ca.crt');
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
 
 		$this->assertEquals(
 			$decryptedBody,
@@ -308,7 +308,7 @@ class SmimeServiceTest extends TestCase {
 			);
 		$this->certificateManager->expects(self::once())
 			->method('getAbsoluteBundlePath')
-			->willReturn(__DIR__ . '/../../data/smime-certs/domain.tld.ca.crt');
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
 
 		$this->assertEquals(
 			$verifiedContent,
@@ -397,15 +397,15 @@ class SmimeServiceTest extends TestCase {
 				new SmimeCertificateInfo(
 					'user',
 					'user@imap.localhost',
-					1706263943,
+					4862017735,
 				),
 			],
 			[
 				$this->getTestCertificate('cn-only@imap.localhost'),
 				new SmimeCertificateInfo(
+					'cn-only',
 					'cn-only@imap.localhost',
-					'cn-only@imap.localhost',
-					1711452343,
+					4862017727,
 				),
 			],
 		];
