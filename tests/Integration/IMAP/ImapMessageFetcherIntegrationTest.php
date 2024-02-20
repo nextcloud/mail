@@ -118,8 +118,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertCount(1, $message->attachments);
 		$this->assertTrue($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
-		// TODO: https://github.com/nextcloud/mail/issues/9286
-		// $this->assertTrue($message->isSignatureValid());
+		$this->assertTrue($message->isSignatureValid());
 	}
 
 	public function testFetchMessageWithEncryptedUnverifiedMessage(): void {
@@ -183,8 +182,7 @@ class ImapMessageFetcherIntegrationTest extends TestCase {
 		$this->assertEquals(self::LOREM . "\n\n", $message->getPlainBody());
 		$this->assertFalse($message->isEncrypted());
 		$this->assertTrue($message->isSigned());
-		// TODO: https://github.com/nextcloud/mail/issues/9286
-		// $this->assertTrue($message->isSignatureValid());
+		$this->assertTrue($message->isSignatureValid());
 	}
 
 	public function testFetchMessageWithOpaqueSignedMessage(): void {
