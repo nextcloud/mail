@@ -22,22 +22,18 @@
 
 <template>
 	<div>
-		<NcSelect :options="aliases"
+		<NcSelect v-model="alias"
+			:options="aliases"
 			:searchable="false"
-			:value="alias"
 			:placeholder="t('mail', 'Select an alias')"
 			:aria-label-combobox="t('mail','Select an alias')"
 			label="name"
-			track-by="id"
-			@select="handleAlias" />
+			@input="savedCertificate = null" />
 		<NcSelect v-if="alias !== null"
 			v-model="savedCertificate"
 			:options="smimeCertOptions"
 			:aria-label-combobox="t('mail', 'Select certificates')"
-			:searchable="false"
-			label="label"
-			track-by="id"
-			@select="selectCertificate" />
+			:searchable="false" />
 		<ButtonVue type="primary"
 			:disabled="certificate === null"
 			:aria-label="t('mail', 'Update Certificate')"
@@ -133,13 +129,6 @@ export default {
 	},
 
 	methods: {
-		selectCertificate(certificate) {
-			this.certificate = certificate
-		},
-		handleAlias(alias) {
-			this.alias = alias
-			this.savedCertificate = null
-		},
 		async updateSmimeCertificate() {
 			if (this.alias.isAccountCertificate) {
 				await this.$store.dispatch('updateAccountSmimeCertificate', {
