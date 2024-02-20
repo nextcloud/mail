@@ -32,15 +32,21 @@ use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\MailboxStats;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class FolderMapperTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 
+	/** @var LoggerInterface|MockObject */
+	private $logger;
+
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->mapper = new FolderMapper();
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->mapper = new FolderMapper($this->logger);
 	}
 
 	public function testGetFoldersEmtpyAccount(): void {
@@ -230,6 +236,31 @@ class FolderMapperTest extends TestCase {
 		self::assertArrayHasKey('INBOX', $stats);
 		$expected = new MailboxStats(123, 2);
 		self::assertEquals($expected, $stats['INBOX']);
+	}
+
+	public function testGetFoldersStatusAsObjectNullStats(): void {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('status')
+			->with(['INBOX'])
+			->willReturn([
+				'INBOX' => [
+					'messages' => null,
+					'unseen' => 2,
+				],
+				'Company' => [
+					'messages' => 123,
+					'unseen' => 2,
+				],
+			]);
+		
+		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
+
+		self::assertArrayNotHasKey('INBOX', $stats);
+		self::assertArrayHasKey('Company', $stats);
+		$expected = new MailboxStats(123, 2);
+		self::assertEquals($expected, $stats['Company']);
+
 	}
 
 	public function testDetectSpecialUseFromAttributes() {

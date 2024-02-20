@@ -29,12 +29,20 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
+use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
 use function in_array;
 use function reset;
 
 class FolderMapper {
+
+	/** @var LoggerInterface */
+	private $logger;
+
+	public function __construct(LoggerInterface $logger) {
+		$this->logger = $logger;
+	}
 	/**
 	 * This is a temporary workaround for when the sieve folder is a subfolder of
 	 * INBOX. Once "#386 Subfolders and Dovecot" has been resolved, we can go back
@@ -142,10 +150,17 @@ class FolderMapper {
 
 		$statuses = [];
 		foreach ($multiStatus as $mailbox => $status) {
-			$statuses[$mailbox] = new MailboxStats(
-				$status['messages'],
-				$status['unseen'],
-			);
+			try {
+				if (!isset($status['messages'], $status['unseen'])) {
+					throw new ServiceException('Could not fetch stats of mailbox: '.$mailbox);
+				}
+				$statuses[$mailbox] = new MailboxStats(
+					$status['messages'],
+					$status['unseen'],
+				);
+			} catch (ServiceException $e) {
+				$this->logger->warning($e->getMessage());
+			}
 		}
 		return $statuses;
 	}

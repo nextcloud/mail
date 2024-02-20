@@ -26,15 +26,21 @@ use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\Tests\Integration\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class FolderMapperIntegrationTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 
+	/** @var LoggerInterface|MockObject */
+	private $logger;
+
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->mapper = new FolderMapper();
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->mapper = new FolderMapper($this->logger);
 	}
 
 	/**
