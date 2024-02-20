@@ -30,6 +30,7 @@ use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\Classifier;
 use OCA\Mail\Db\ClassifierMapper;
+use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -75,13 +76,17 @@ class PersistenceService {
 	/** @var LoggerInterface */
 	private $logger;
 
+	/** @var MailAccountMapper */
+	private $accountMapper;
+
 	public function __construct(ClassifierMapper $mapper,
 		IAppData $appData,
 		ITempManager $tempManager,
 		ITimeFactory $timeFactory,
 		IAppManager $appManager,
 		ICacheFactory $cacheFactory,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		MailAccountMapper $accountMapper) {
 		$this->mapper = $mapper;
 		$this->appData = $appData;
 		$this->tempManager = $tempManager;
@@ -89,6 +94,7 @@ class PersistenceService {
 		$this->appManager = $appManager;
 		$this->cacheFactory = $cacheFactory;
 		$this->logger = $logger;
+		$this->accountMapper = $accountMapper;
 	}
 
 	/**
@@ -211,9 +217,9 @@ class PersistenceService {
 	}
 
 	public function cleanUp(): void {
-		$threshold = $this->timeFactory->getTime() - 2 * 30 * 24 * 60 * 60;
-
-		$classifiers = $this->mapper->findHistoric($threshold, 100);
+		$threshold = $this->timeFactory->getTime() - 30 * 24 * 60 * 60;
+		$totalAccounts = $this->accountMapper->getTotal();
+		$classifiers = $this->mapper->findHistoric($threshold, $totalAccounts * 10);
 		foreach ($classifiers as $classifier) {
 			try {
 				$this->deleteModel($classifier->getId());
