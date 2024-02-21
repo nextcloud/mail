@@ -1216,12 +1216,63 @@ export default {
 		onNewBccAddr(option) {
 			this.onNewAddr(option, this.selectBcc)
 		},
+		findAddress(string) {
+      		const regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g;
+      		const matches = string.match(regex);
+
+			return matches ? matches.map(match => {
+				const label = string.replace(regex, '');
+				const addess = match;
+				
+				return match;
+			}) : false;
+    	},
+    	parseEmails(addrString) {
+			let start = 0;
+			let end = 0;
+			let inEmail = false;
+			let parsedEmails = []
+
+			for (let i = 0; i < addrString.length; i++) {
+				const char = addrString[i];
+
+				if (char === '@' || inEmail) {
+					inEmail = true
+
+					if (char === ';' || char === ',' || char === ' ') {
+
+						let string = addrString.substring(start, i)
+						let valid = this.findAddress(string)
+
+						// parsedEmails.push({'address': string, 'valid': valid});
+						parsedEmails.push(valid);
+						inEmail = false
+						start = i;
+					}	
+				}
+      		}
+
+			if (inEmail) {
+				end = addrString.length;
+
+				let string = addrString.substring(start+1, end)
+				let valid = this.findAddress(string)
+
+				// parsedEmails.push({'address': string, 'valid': valid});
+				parsedEmails.push(valid);
+			}
+
+	  		return parsedEmails
+    	},
 		onNewAddr(option, list) {
 			const delimiterRegex = /;|,/
 
-			const addresses = option.email.trim().split(delimiterRegex)
+			const testParseEmails = this.parseEmails(option.email)
+			console.log(testParseEmails)
 
-			addresses.forEach(email => {
+			// const addresses = option.email.trim().split(delimiterRegex)
+
+			testParseEmails.forEach(email => {
 				if (list.some((recipient) => recipient.email === email)) {
 					return
 				}
