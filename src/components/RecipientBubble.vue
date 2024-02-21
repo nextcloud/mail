@@ -20,99 +20,101 @@
   -->
 
 <template>
-	<Popover ref="popover" trigger="click" class="contact-popover">
-		<UserBubble slot="trigger"
-			:display-name="label"
-			:avatar-image="avatarUrlAbsolute"
-			@click="onClickOpenContactDialog" />
-		<div class="contact-wrapper">
-			<p class="contact-popover__email">
-				{{ email }}
-			</p>
-			<ButtonVue v-if="contactsWithEmail && contactsWithEmail.length > 0"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Contacts with this address')"
-				class="contact-existing">
-				<template #icon>
-					<IconDetails :size="20" />
-				</template>
-				{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
-			</ButtonVue>
-			<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
-				<ButtonVue :aria-label="t('mail', 'Reply')"
+	<Popover popup-role="dialog" class="contact-popover">
+		<template #trigger="{ attrs }">
+			<UserBubble v-bind="attrs"
+				:display-name="label"
+				:avatar-image="avatarUrlAbsolute"
+				@click="onClickOpenContactDialog" />
+		</template>
+		<template>
+			<div class="contact-wrapper">
+				<p class="contact-popover__email">
+					{{ email }}
+				</p>
+				<ButtonVue v-if="contactsWithEmail && contactsWithEmail.length > 0"
 					type="tertiary-no-background"
-					@click="onClickReply">
+					:aria-label="t('mail', 'Contacts with this address')"
+					class="contact-existing">
 					<template #icon>
-						<IconReply :size="20" />
+						<IconDetails :size="20" />
 					</template>
-					{{ t('mail', 'Reply') }}
+					{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
 				</ButtonVue>
-				<ButtonVue type="tertiary-no-background"
-					:aria-label="t('mail', 'Add to Contact')"
-					@click="selection = ContactSelectionStateEnum.existing">
-					<template #icon>
-						<IconUser :size="20" />
-					</template>
-					{{ t('mail', 'Add to Contact') }}
-				</ButtonVue>
-				<ButtonVue type="tertiary-no-background"
-					:aria-label="t('mail', 'New Contact')"
-					@click="selection = ContactSelectionStateEnum.new">
-					<template #icon>
-						<IconAdd :size="20" />
-					</template>
-					{{ t('mail', 'New Contact') }}
-				</ButtonVue>
-				<ButtonVue type="tertiary-no-background"
-					:aria-label="t('mail', 'Copy to clipboard')"
-					@click="onClickCopyToClipboard">
-					<template #icon>
-						<IconClipboard :size="20" />
-					</template>
-					{{ t('mail', 'Copy to clipboard') }}
-				</ButtonVue>
-			</div>
-			<div v-else class="contact-input-wrapper">
-				<NcSelect v-if="selection === ContactSelectionStateEnum.existing"
-					id="contact-selection"
-					ref="contact-selection-label"
-					v-model="selectedContact"
-					:options="selectableContacts"
-					:taggable="true"
-					label="label"
-					track-by="label"
-					:multiple="false"
-					:placeholder="t('name', 'Contact name …')"
-					:aria-label-combobox="t('mail', 'Contact name')"
-					:clear-search-on-select="false"
-					:show-no-options="false"
-					:preserve-search="true"
-					@search="onAutocomplete" />
+				<div v-if="selection === ContactSelectionStateEnum.select" class="contact-menu">
+					<ButtonVue :aria-label="t('mail', 'Reply')"
+						type="tertiary-no-background"
+						@click="onClickReply">
+						<template #icon>
+							<IconReply :size="20" />
+						</template>
+						{{ t('mail', 'Reply') }}
+					</ButtonVue>
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'Add to Contact')"
+						@click="selection = ContactSelectionStateEnum.existing">
+						<template #icon>
+							<IconUser :size="20" />
+						</template>
+						{{ t('mail', 'Add to Contact') }}
+					</ButtonVue>
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'New Contact')"
+						@click="selection = ContactSelectionStateEnum.new">
+						<template #icon>
+							<IconAdd :size="20" />
+						</template>
+						{{ t('mail', 'New Contact') }}
+					</ButtonVue>
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'Copy to clipboard')"
+						@click="onClickCopyToClipboard">
+						<template #icon>
+							<IconClipboard :size="20" />
+						</template>
+						{{ t('mail', 'Copy to clipboard') }}
+					</ButtonVue>
+				</div>
+				<div v-else class="contact-input-wrapper">
+					<NcSelect v-if="selection === ContactSelectionStateEnum.existing"
+						id="contact-selection"
+						ref="contact-selection-label"
+						v-model="selectedContact"
+						:options="selectableContacts"
+						:taggable="true"
+						track-by="label"
+						:multiple="false"
+						:placeholder="t('name', 'Contact name …')"
+						:clear-search-on-select="true"
+						:show-no-options="false"
+						:append-to-body="false"
+						@search="onAutocomplete" />
 
-				<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
-			</div>
-			<div v-if="selection !== ContactSelectionStateEnum.select">
-				<ButtonVue type="tertiary-no-background"
-					:aria-label="t('mail', 'Go back')"
-					@click="selection = ContactSelectionStateEnum.select">
-					<template #icon>
-						<IconClose :size="20" />
-					</template>
-					{{ t('mail', 'Go back') }}
-				</ButtonVue>
+					<input v-else-if="selection === ContactSelectionStateEnum.new" v-model="newContactName">
+				</div>
+				<div v-if="selection !== ContactSelectionStateEnum.select">
+					<ButtonVue type="tertiary-no-background"
+						:aria-label="t('mail', 'Go back')"
+						@click="selection = ContactSelectionStateEnum.select">
+						<template #icon>
+							<IconClose :size="20" />
+						</template>
+						{{ t('mail', 'Go back') }}
+					</ButtonVue>
 
-				<ButtonVue v-close-popover
-					:disabled="addButtonDisabled"
-					type="tertiary-no-background"
-					:aria-label="t('mail', 'Add')"
-					@click="onClickAddToContact">
-					<template #icon>
-						<IconCheck :size="20" />
-					</template>
-					{{ t('mail', 'Add') }}
-				</ButtonVue>
+					<ButtonVue v-close-popover
+						:disabled="addButtonDisabled"
+						type="tertiary-no-background"
+						:aria-label="t('mail', 'Add')"
+						@click="onClickAddToContact">
+						<template #icon>
+							<IconCheck :size="20" />
+						</template>
+						{{ t('mail', 'Add') }}
+					</ButtonVue>
+				</div>
 			</div>
-		</div>
+		</template>
 	</Popover>
 </template>
 
@@ -169,7 +171,7 @@ export default {
 			loadingContacts: false,
 			contactsWithEmail: [],
 			autoCompleteContacts: [],
-			selectedContact: '',
+			selectedContact: null,
 			newContactName: '',
 			ContactSelectionStateEnum,
 			selection: ContactSelectionStateEnum.select,
@@ -308,5 +310,9 @@ export default {
 }
 :deep(.button-vue__text) {
 	font-weight: normal !important;
+}
+:deep(.vs__dropdown-menu) {
+	// Make the dropdown scrollable
+	max-height: 100px;
 }
 </style>
