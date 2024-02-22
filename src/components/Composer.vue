@@ -1216,72 +1216,76 @@ export default {
 		onNewBccAddr(option) {
 			this.onNewAddr(option, this.selectBcc)
 		},
-		findAddress(string) {
-      		const regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g;
-      		const matches = string.match(regex);
+		getLabelAndAddress(string) {
+			const regex = /(<)?(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])(>?|,?|;?|>?,?|>;?)/g
+			const match = string.match(regex)
 
-			return matches ? matches.map(match => {
-				const label = string.replace(regex, '');
-				const addess = match;
-				
-				return match;
-			}) : false;
-    	},
-    	parseEmails(addrString) {
-			let start = 0;
-			let end = 0;
-			let inEmail = false;
-			let parsedEmails = []
+			if (!match) return false
 
-			for (let i = 0; i < addrString.length; i++) {
-				const char = addrString[i];
+			const email = match[0].replace(/<|>|\n/g, '').trim()
+			const label = string.split(match[0])[0].trim() || email
+
+			return { label, email }
+		},
+		parseEmailList(string) {
+			let start = 0
+			let inEmail = false
+			let list = []
+
+			for (let i = 0; i < string.length; i++) {
+				const char = string[i]
 
 				if (char === '@' || inEmail) {
 					inEmail = true
 
 					if (char === ';' || char === ',' || char === ' ') {
+						let stringAddress = string.substring(start, i).trim()
+						let labelAndAddress = this.getLabelAndAddress(stringAddress)
 
-						let string = addrString.substring(start, i)
-						let valid = this.findAddress(string)
+						if(labelAndAddress) {
+							list.push(labelAndAddress)
+						}
 
-						// parsedEmails.push({'address': string, 'valid': valid});
-						parsedEmails.push(valid);
 						inEmail = false
-						start = i;
+						start = i + 1
 					}	
 				}
-      		}
-
-			if (inEmail) {
-				end = addrString.length;
-
-				let string = addrString.substring(start+1, end)
-				let valid = this.findAddress(string)
-
-				// parsedEmails.push({'address': string, 'valid': valid});
-				parsedEmails.push(valid);
 			}
 
-	  		return parsedEmails
-    	},
+			if (inEmail) {
+				let stringAddress = string.substring(start).trim()
+				let labelAndAddress = this.getLabelAndAddress(stringAddress)
+
+				if(labelAndAddress) {
+					list.push(labelAndAddress)
+				}
+			}
+
+			return list
+		},
 		onNewAddr(option, list) {
-			const delimiterRegex = /;|,/
-
-			const testParseEmails = this.parseEmails(option.email)
-			console.log(testParseEmails)
-
-			// const addresses = option.email.trim().split(delimiterRegex)
-
-			testParseEmails.forEach(email => {
-				if (list.some((recipient) => recipient.email === email)) {
+			if(option.id) {
+				if (list.some((recipient) => recipient.email === option.email)) {
 					return
 				}
-
-				const recipient = { ...{label: email, email: email} }
+				const recipient = { ...option }
 				this.newRecipients.push(recipient)
 				list.push(recipient)
 				this.saveDraftDebounced()
-			});
+			} else{
+				const emailList = this.parseEmailList(option.email)
+
+				emailList.forEach(email => {
+					if (list.some((recipient) => recipient.email === email.email)) {
+						return
+					}
+
+					const recipient = { ...email }
+					this.newRecipients.push(recipient)
+					list.push(recipient)
+					this.saveDraftDebounced()
+				});
+			}
 		},
 		async onSend(_, force = false) {
 			if (this.encrypt) {
