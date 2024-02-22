@@ -22,6 +22,10 @@
 
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import JestFetchMock from 'jest-fetch-mock'
+
+// Required for @nextcloud/files
+JestFetchMock.enableMocks()
 
 global.OC = {
 	getLocale: () => 'en',
