@@ -349,7 +349,6 @@ OC.L10N.register(
     "New Contact" : "Nov stik",
     "Copy to clipboard" : "Kopiraj v odložišče",
     "Contact name …" : "Ime stika …",
-    "Contact name" : "Ime stika",
     "Add" : "Dodaj",
     "Copied email address to clipboard" : "Elektronski naslov je kopiran v odložišče",
     "Could not copy email address to clipboard" : "Elektronskega naslova ni mogoče kopirati v odložišče",

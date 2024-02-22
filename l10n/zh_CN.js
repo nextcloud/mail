@@ -366,7 +366,6 @@ OC.L10N.register(
     "New Contact" : "新联系人",
     "Copy to clipboard" : "复制到剪贴板",
     "Contact name …" : "联系人姓名 ...",
-    "Contact name" : "联系人名字",
     "Add" : "新增",
     "Copied email address to clipboard" : "已复制电子邮件地址到剪贴板",
     "Could not copy email address to clipboard" : "无法复制电子邮件地址到剪贴板",

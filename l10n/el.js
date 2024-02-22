@@ -285,7 +285,6 @@ OC.L10N.register(
     "New Contact" : "Νέα επαφή",
     "Copy to clipboard" : "Αντιγραφή στο πρόχειρο",
     "Contact name …" : "Όνομα επαφής ...",
-    "Contact name" : "Όνομα επαφής",
     "Add" : "Προσθήκη",
     "Close" : "Κλείσιμο",
     "Body" : "Σώμα",

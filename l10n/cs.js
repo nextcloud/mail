@@ -414,7 +414,6 @@ OC.L10N.register(
     "New Contact" : "Nový kontakt",
     "Copy to clipboard" : "Zkopírovat do schránky",
     "Contact name …" : "Jméno kontaktu…",
-    "Contact name" : "Název kontaktu",
     "Add" : "Přidat",
     "Copied email address to clipboard" : "E-mailová adresa zkopírována do schránky",
     "Could not copy email address to clipboard" : "E-mailovou adresu se nepodařilo zkopírovat do schránky",

@@ -407,7 +407,6 @@ OC.L10N.register(
     "New Contact" : "Новий контакт",
     "Copy to clipboard" : "Копіювати до буферу обміну ",
     "Contact name …" : "Ім'я контакту ...",
-    "Contact name" : "Ім'я контакту",
     "Add" : "Додати",
     "Copied email address to clipboard" : "Адресу електронної пошти скопійовано до буферу обміну",
     "Could not copy email address to clipboard" : "Не вдалося скопіювати адресу електронної пошти до буфера обміну",

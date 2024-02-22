@@ -312,7 +312,6 @@ OC.L10N.register(
     "New Contact" : "Нов контакт",
     "Copy to clipboard" : "Копирај во клипборд",
     "Contact name …" : "Име на контакт ...",
-    "Contact name" : "Име на контакт",
     "Add" : "Додади",
     "Search in mailbox" : "Барај во сандачето",
     "Close" : "Затвори",

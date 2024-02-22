@@ -232,7 +232,6 @@ OC.L10N.register(
     "New Contact" : "Cuntatu nou",
     "Copy to clipboard" : "Còpia in is punta de billete",
     "Contact name …" : "Nùmene de su cuntatu ...",
-    "Contact name" : "Nùmene de su cuntatu",
     "Add" : "Agiunghe",
     "Close" : "Serra",
     "Body" : "Corpus",

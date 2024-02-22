@@ -415,7 +415,6 @@ OC.L10N.register(
     "New Contact" : "Novo Contato",
     "Copy to clipboard" : "Copiar para área de transferência",
     "Contact name …" : "Nome de contato ...",
-    "Contact name" : "Nome do contato",
     "Add" : "Adicionar",
     "Copied email address to clipboard" : "Endereço de e-mail copiado para a área de transferência",
     "Could not copy email address to clipboard" : "Não foi possível opiar o endereço de e-mail para a área de transferência",

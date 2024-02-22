@@ -345,7 +345,6 @@ OC.L10N.register(
     "New Contact" : "Nuovo contatto",
     "Copy to clipboard" : "Copia negli appunti",
     "Contact name …" : "Nome contatto …",
-    "Contact name" : "Nome contatto",
     "Add" : "Aggiungi",
     "Copied email address to clipboard" : "Indirizzo email copiato negli appunti",
     "Could not copy email address to clipboard" : "Impossibile copiare l'indirizzo email negli appunti",

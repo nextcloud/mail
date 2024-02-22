@@ -404,7 +404,6 @@ OC.L10N.register(
     "New Contact" : "Novo contacto",
     "Copy to clipboard" : "Copiar no portapapeis.",
     "Contact name …" : "Nome do contacto…",
-    "Contact name" : "Nome do contacto",
     "Add" : "Engadir",
     "Copied email address to clipboard" : "Copiouse o enderezo de correo no portapapeis",
     "Could not copy email address to clipboard" : "Non foi posíbel copiar o enderezo de correo no portapapeis",

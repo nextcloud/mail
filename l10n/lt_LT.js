@@ -261,7 +261,6 @@ OC.L10N.register(
     "New Contact" : "Naujas adresatas",
     "Copy to clipboard" : "Kopijuoti į iškarpinę",
     "Contact name …" : "Adresato vardas…",
-    "Contact name" : "Adresato vardas",
     "Add" : "Pridėti",
     "Search in mailbox" : "Ieškoti pašto dėžutėje",
     "Close" : "Užverti",

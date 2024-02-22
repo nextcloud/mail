@@ -335,7 +335,6 @@ OC.L10N.register(
     "New Contact" : "Nový kontakt",
     "Copy to clipboard" : "Skopírovať do schránky",
     "Contact name …" : "Názov kontaktu ...",
-    "Contact name" : "Meno kontaktu",
     "Add" : "Pridať",
     "Search in mailbox" : "Vyhľadať v schránke",
     "Close" : "Zatvoriť",

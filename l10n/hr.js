@@ -235,7 +235,6 @@ OC.L10N.register(
     "New Contact" : "Novi kontakt",
     "Copy to clipboard" : "Kopiraj u međuspremnik",
     "Contact name …" : "Naziv kontakta…",
-    "Contact name" : "Naziv kontakta",
     "Add" : "Dodaj",
     "Close" : "Zatvori",
     "Body" : "Tijelo",

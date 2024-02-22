@@ -404,7 +404,6 @@ OC.L10N.register(
     "New Contact" : "Kontaktu berria",
     "Copy to clipboard" : "Kopiatu arbelera",
     "Contact name …" : "Kontaktu izena ...",
-    "Contact name" : "Kontaktuaren izena",
     "Add" : "Gehitu",
     "Copied email address to clipboard" : "e-posta helbidea arbelera kopiatu da",
     "Could not copy email address to clipboard" : "Ezin izan da e-posta helbidea arbelera kopiatu",

@@ -180,7 +180,6 @@ OC.L10N.register(
     "Message" : "הודעה",
     "Oh Snap!" : "שוד ושבר!",
     "Copy to clipboard" : "העתקה ללוח הגזירים",
-    "Contact name" : "שם איש הקשר",
     "Add" : "הוספה",
     "Close" : "סגירה",
     "Body" : "גוף",

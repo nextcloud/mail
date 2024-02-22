@@ -245,7 +245,6 @@ OC.L10N.register(
     "New Contact" : "Ny kontakt",
     "Copy to clipboard" : "Kopiera till urklipp",
     "Contact name …" : "Kontaktnamn …",
-    "Contact name" : "Kontaktens namn",
     "Add" : "Lägg till",
     "Search in mailbox" : "Sök i brevlådan",
     "Close" : "Stäng",

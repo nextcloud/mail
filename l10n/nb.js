@@ -417,7 +417,6 @@ OC.L10N.register(
     "New Contact" : "Ny kontakt",
     "Copy to clipboard" : "Kopiert til utklippstavlen",
     "Contact name …" : "Kontakt navn ...",
-    "Contact name" : "Kontakt navn",
     "Add" : "Legg til",
     "Copied email address to clipboard" : "Kopierte e-postadressen til utklippstavlen",
     "Could not copy email address to clipboard" : "Kunne ikke kopiere e-postadressen til utklippstavlen",

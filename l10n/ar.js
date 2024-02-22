@@ -417,7 +417,6 @@ OC.L10N.register(
     "New Contact" : "جهة اتصال جديدة",
     "Copy to clipboard" : "نسخ الرابط إلى الحافظة",
     "Contact name …" : "اسم جهة الاتصال ...",
-    "Contact name" : "اسم جهة الاتصال",
     "Add" : "إضافة",
     "Copied email address to clipboard" : "تمّ نسخ عنوان البريد الالكتروني إلى الحافظة",
     "Could not copy email address to clipboard" : "تعذّر نسخ عنوان البريد الالكتروني إلى الحافظة",

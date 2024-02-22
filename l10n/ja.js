@@ -225,7 +225,6 @@ OC.L10N.register(
     "New Contact" : "新しい連絡先",
     "Copy to clipboard" : "クリップボードにコピー",
     "Contact name …" : "連絡先の名前…",
-    "Contact name" : "連絡先の名前",
     "Add" : "追加",
     "Close" : "閉じる",
     "Body" : "本文",
