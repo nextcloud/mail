@@ -3,7 +3,7 @@ const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
 const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
-const { ProvidePlugin } = require('webpack')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 function getPostCssConfig(ckEditorOpts) {
 	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
@@ -19,11 +19,12 @@ const plugins = [
 		language: 'en',
 	}),
 	new VueLoaderPlugin(),
-	new ProvidePlugin({
-		// Make a global `process` variable that points to the `process` package,
-		// because the `util` package expects there to be a global variable named `process`.
-		// Thanks to https://stackoverflow.com/a/65018686/14239942
-		process: 'process/browser.js',
+
+	// Make sure we auto-inject node polyfills on demand
+	// https://webpack.js.org/blog/2020-10-10-webpack-5-release/#automatic-nodejs-polyfills-removed
+	new NodePolyfillPlugin({
+		// Console is available in the web-browser
+		excludeAliases: ['console'],
 	}),
 ]
 
@@ -107,10 +108,5 @@ module.exports = {
 	resolve: {
 		extensions: ['*', '.js', '.vue', '.json'],
 		symlinks: false,
-		fallback: {
-			buffer: require.resolve('buffer/'),
-			stream: require.resolve('stream-browserify'),
-			util: require.resolve('util/'),
-		},
 	},
 }
