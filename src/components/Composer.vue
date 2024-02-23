@@ -1238,11 +1238,11 @@ export default {
 				if (char === '@' || inEmail) {
 					inEmail = true
 
-					if (char === ';' || char === ',' || char === ' ') {
+					if ([';', ',', ' '].includes(char)) {
 						let stringAddress = string.substring(start, i).trim()
 						let labelAndAddress = this.getLabelAndAddress(stringAddress)
 
-						if(labelAndAddress) {
+						if (labelAndAddress) {
 							list.push(labelAndAddress)
 						}
 
@@ -1256,35 +1256,30 @@ export default {
 				let stringAddress = string.substring(start).trim()
 				let labelAndAddress = this.getLabelAndAddress(stringAddress)
 
-				if(labelAndAddress) {
+				if (labelAndAddress) {
 					list.push(labelAndAddress)
 				}
 			}
 
 			return list
 		},
+		pushNewAddr(option, list){
+			if (list.some((recipient) => recipient.email === option.email)) {
+				return
+			}
+
+			const recipient = { ...option }
+			this.newRecipients.push(recipient)
+			list.push(recipient)
+			this.saveDraftDebounced()
+		},
 		onNewAddr(option, list) {
-			if(option.id) {
-				if (list.some((recipient) => recipient.email === option.email)) {
-					return
-				}
-				const recipient = { ...option }
-				this.newRecipients.push(recipient)
-				list.push(recipient)
-				this.saveDraftDebounced()
-			} else{
+			if (option.id) {
+				this.pushNewAddr(option, list)
+			} else {
 				const emailList = this.parseEmailList(option.email)
 
-				emailList.forEach(email => {
-					if (list.some((recipient) => recipient.email === email.email)) {
-						return
-					}
-
-					const recipient = { ...email }
-					this.newRecipients.push(recipient)
-					list.push(recipient)
-					this.saveDraftDebounced()
-				});
+				emailList.forEach(email => this.pushNewAddr(email, list));
 			}
 		},
 		async onSend(_, force = false) {
