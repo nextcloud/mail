@@ -21,8 +21,9 @@
   -->
 
 <template>
-	<div>
+	<div class="certificate-settings">
 		<NcSelect v-model="alias"
+			class="certificate-settings__alias"
 			:options="aliases"
 			:searchable="false"
 			:placeholder="t('mail', 'Select an alias')"
@@ -31,20 +32,26 @@
 			@input="savedCertificate = null" />
 		<NcSelect v-if="alias !== null"
 			v-model="savedCertificate"
+			class="certificate-settings__certificate"
 			:options="smimeCertOptions"
 			:aria-label-combobox="t('mail', 'Select certificates')"
 			:searchable="false" />
-		<ButtonVue type="primary"
+		<NcButton type="primary"
+			class="certificate-settings__submit"
 			:disabled="certificate === null"
 			:aria-label="t('mail', 'Update Certificate')"
 			@click="updateSmimeCertificate">
 			{{ t('mail', 'Update Certificate') }}
-		</ButtonVue>
+		</NcButton>
+		<NcNoteCard v-if="alias && !savedCertificate.isChainVerified"
+			type="warning">
+			<p>{{ t('mail', 'The selected certificate is not trusted by the server. Recipients might not be able to verify your signature.') }}</p>
+		</NcNoteCard>
 	</div>
 </template>
 
 <script>
-import { NcSelect, NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcSelect, NcButton, NcNoteCard } from '@nextcloud/vue'
 import { compareSmimeCertificates } from '../util/smime.js'
 import { mapGetters } from 'vuex'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -55,7 +62,8 @@ export default {
 	name: 'CertificateSettings',
 	components: {
 		NcSelect,
-		ButtonVue,
+		NcButton,
+		NcNoteCard,
 	},
 	props: {
 		account: {
@@ -79,7 +87,7 @@ export default {
 					return this.certificate
 				}
 				const saved = this.smimeCertOptions.find(certificate => this.alias.smimeCertificateId === certificate.id)
-				return saved || { label: t('mail', 'No certificate') }
+				return saved || this.noCertificateOption
 			},
 			set(newVal) {
 				this.certificate = newVal
@@ -116,15 +124,26 @@ export default {
 					return cert.hasKey
 						&& cert.emailAddress === this.alias.alias
 						&& cert.info.notAfter >= now
-						&& cert.purposes.sign
-						&& cert.purposes.encrypt
+						&& cert.info.purposes.sign
+						&& cert.info.purposes.encrypt
 						// TODO: select a separate certificate for encryption?!
 				})
 				.map(this.mapCertificateToOption)
 				.sort(compareSmimeCertificates)
-			certs.push({ label: t('mail', 'No certificate') })
+			certs.push(this.noCertificateOption)
 
 			return certs
+		},
+		/**
+		 * The select option for no certificate
+		 *
+		 * @return {{label: string, isChainVerified: bool}}
+		 */
+		noCertificateOption() {
+			return {
+				label: this.t('mail', 'No certificate'),
+				isChainVerified: true,
+			}
 		},
 	},
 
@@ -169,19 +188,29 @@ export default {
 				commonName: cert.info.commonName ?? cert.info.emailAddress,
 				expiryDate: moment.unix(cert.info.notAfter).format('LL'),
 			})
-			return { ...cert, label }
+			return {
+				...cert,
+				label,
+				isChainVerified: cert.info.isChainVerified,
+			}
 		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
-.multiselect--single {
-  width: 100%;
-  margin-bottom: 4px;
-}
+.certificate-settings {
+	&__alias,
+	&__certificate {
+		width: 100%;
+	}
 
-.button-vue {
-	margin-top: 4px !important;
+	&__alias + &__certificate {
+		margin-top: 5px
+	}
+
+	&__submit {
+		margin-top: 1rem;
+	}
 }
 </style>

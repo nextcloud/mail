@@ -37,6 +37,7 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Db\SmimeCertificateMapper;
 use OCA\Mail\Model\SmimeCertificateInfo;
+use OCA\Mail\Model\SmimeCertificatePurposes;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\ICertificateManager;
@@ -398,6 +399,8 @@ class SmimeServiceTest extends TestCase {
 					'user',
 					'user@imap.localhost',
 					4862017735,
+					new SmimeCertificatePurposes(true, true),
+					true,
 				),
 			],
 			[
@@ -406,6 +409,18 @@ class SmimeServiceTest extends TestCase {
 					'cn-only',
 					'cn-only@imap.localhost',
 					4862017727,
+					new SmimeCertificatePurposes(true, true),
+					true,
+				),
+			],
+			[
+				$this->getTestCertificate('user@domain.tld'),
+				new SmimeCertificateInfo(
+					'user',
+					'user@domain.tld',
+					4862017705,
+					new SmimeCertificatePurposes(true, true),
+					false,
 				),
 			],
 		];
@@ -416,6 +431,10 @@ class SmimeServiceTest extends TestCase {
 	 */
 	public function testParseCertificate(SmimeCertificate $certificate,
 		SmimeCertificateInfo $expected): void {
+		$this->certificateManager->expects(self::once())
+			->method('getAbsoluteBundlePath')
+			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
+
 		$this->assertEquals(
 			$expected,
 			$this->smimeService->parseCertificate($certificate->getCertificate()),
