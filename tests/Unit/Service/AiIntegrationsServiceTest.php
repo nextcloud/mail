@@ -37,6 +37,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
+use OCP\AppFramework\QueryException;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
@@ -45,6 +46,7 @@ use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\UnknownTypeException;
 use Psr\Container\ContainerInterface;
+use function interface_exists;
 
 class AiIntegrationsServiceTest extends TestCase {
 
@@ -234,4 +236,139 @@ class AiIntegrationsServiceTest extends TestCase {
 			$this->aiIntegrationsService->summarizeThread($account, $mailbox, 'some-thread-root-id-1', $messages, 'admin');
 		}
 	}
+
+	public function testGenerateEventDataLlmUnavailable(): void {
+		if (!interface_exists(IManager::class)) {
+			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
+		}
+
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$message1 = new Message();
+		$message2 = new Message();
+		$this->container->expects(self::once())
+			->method('get')
+			->willThrowException($this->createMock(QueryException::class));
+
+		$result = $this->aiIntegrationsService->generateEventData(
+			$account,
+			$mailbox,
+			'thread1',
+			[$message1, $message2],
+			'user123',
+		);
+
+		self::assertNull($result);
+	}
+
+	public function testGenerateEventDataFreePromptUnavailable(): void {
+		if (!interface_exists(IManager::class)) {
+			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
+		}
+
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$message1 = new Message();
+		$message2 = new Message();
+		$manager = $this->createMock(IManager::class);
+		$this->container->expects(self::once())
+			->method('get')
+			->willReturn($manager);
+		$manager->expects(self::once())
+			->method('getAvailableTaskTypes')
+			->willReturn([]);
+
+		$result = $this->aiIntegrationsService->generateEventData(
+			$account,
+			$mailbox,
+			'thread1',
+			[$message1, $message2],
+			'user123',
+		);
+
+		self::assertNull($result);
+	}
+
+	public function testGenerateEventDataInvalidJson(): void {
+		if (!interface_exists(IManager::class)) {
+			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
+		}
+
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$message1 = new Message();
+		$message1->setUid(1);
+		$message2 = new Message();
+		$message2->setUid(2);
+		$manager = $this->createMock(IManager::class);
+		$this->container->expects(self::once())
+			->method('get')
+			->willReturn($manager);
+		$manager->expects(self::once())
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$this->mailManager->expects(self::exactly(2))
+			->method('getImapMessage')
+			->willReturn($imapMessage);
+		$imapMessage->expects(self::exactly(2))
+			->method('getPlainBody')
+			->willReturn('plain');
+		$manager->expects(self::once())
+			->method('runTask')
+			->willReturn('Jason');
+
+		$result = $this->aiIntegrationsService->generateEventData(
+			$account,
+			$mailbox,
+			'thread1',
+			[$message1, $message2],
+			'user123',
+		);
+
+		self::assertNull($result);
+	}
+
+	public function testGenerateEventData(): void {
+		if (!interface_exists(IManager::class)) {
+			$this->markTestSkipped('Text processing APIs require Nextcloud 27+');
+		}
+
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$message1 = new Message();
+		$message1->setUid(1);
+		$message2 = new Message();
+		$message2->setUid(2);
+		$manager = $this->createMock(IManager::class);
+		$this->container->expects(self::once())
+			->method('get')
+			->willReturn($manager);
+		$manager->expects(self::once())
+			->method('getAvailableTaskTypes')
+			->willReturn([FreePromptTaskType::class]);
+		$imapMessage = $this->createMock(IMAPMessage::class);
+		$this->mailManager->expects(self::exactly(2))
+			->method('getImapMessage')
+			->willReturn($imapMessage);
+		$imapMessage->expects(self::exactly(2))
+			->method('getPlainBody')
+			->willReturn('plain');
+		$manager->expects(self::once())
+			->method('runTask')
+			->willReturn('{"title":"Meeting", "agenda":"* Q&A"}');
+
+		$result = $this->aiIntegrationsService->generateEventData(
+			$account,
+			$mailbox,
+			'thread1',
+			[$message1, $message2],
+			'user123',
+		);
+
+		self::assertNotNull($result);
+		self::assertSame('Meeting', $result->getSummary());
+		self::assertSame('* Q&A', $result->getDescription());
+	}
+
 }

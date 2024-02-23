@@ -23,19 +23,25 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AiIntegrations;
 
+use JsonException;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
 use OCP\TextProcessing\Task;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use function array_map;
+use function implode;
+use function in_array;
+use function json_decode;
 
 class AiIntegrationsService {
 
@@ -51,6 +57,12 @@ class AiIntegrationsService {
 	/** @var IMailManager  */
 	private IMailManager $mailManager;
 
+	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
+I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.
+
+The email contents are:
+
+PROMPT;
 
 	public function __construct(ContainerInterface $container, Cache $cache, IMAPClientFactory $clientFactory, IMailManager $mailManager) {
 		$this->container = $container;
@@ -107,6 +119,50 @@ class AiIntegrationsService {
 			return $summary;
 		} else {
 			throw new ServiceException('No language model available for summary');
+		}
+	}
+
+	/**
+	 * @param Message[] $messages
+	 */
+	public function generateEventData(Account $account, Mailbox $mailbox, string $threadId, array $messages, string $currentUserId): ?EventData {
+		try {
+			/** @var IManager $manager */
+			$manager = $this->container->get(IManager::class);
+		} catch (ContainerExceptionInterface $e) {
+			return null;
+		}
+		if (!in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+			return null;
+		}
+		$client = $this->clientFactory->getClient($account);
+		try {
+			$messageBodies = array_map(function ($message) use ($client, $account, $mailbox) {
+				$imapMessage = $this->mailManager->getImapMessage(
+					$client,
+					$account,
+					$mailbox,
+					$message->getUid(), true
+				);
+				return $imapMessage->getPlainBody();
+			}, $messages);
+		} finally {
+			$client->logout();
+		}
+
+		$task = new Task(
+			FreePromptTaskType::class,
+			self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies),
+			"mail",
+			$currentUserId,
+			"event_data_$threadId",
+		);
+		$result = $manager->runTask($task);
+		try {
+			$decoded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+			return new EventData($decoded['title'], $decoded['agenda']);
+		} catch (JsonException $e) {
+			return null;
 		}
 	}
 

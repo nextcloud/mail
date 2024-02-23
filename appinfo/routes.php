@@ -411,6 +411,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'thread#generateEventData',
+			'url' => '/api/thread/{id}/eventdata',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'outbox#send',
 			'url' => '/api/outbox/{id}',
 			'verb' => 'POST'

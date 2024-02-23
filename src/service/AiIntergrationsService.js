@@ -15,6 +15,20 @@ export const summarizeThread = async (threadId) => {
 		throw convertAxiosError(e)
 	}
 }
+
+export const generateEventData = async (threadId) => {
+	const url = generateUrl('/apps/mail/api/thread/{threadId}/eventdata', {
+		threadId,
+	})
+
+	try {
+		const resp = await axios.get(url)
+		return resp.data.data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
+
 export const smartReply = async (messageId) => {
 	const url = generateUrl('/apps/mail/api/messages/{messageId}/smartreply', {
 		messageId,
