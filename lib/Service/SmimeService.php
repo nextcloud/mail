@@ -172,24 +172,23 @@ class SmimeService {
 			throw new SmimeCertificateParserException('Certificate does not contain an email address');
 		}
 
+		$purposes = new SmimeCertificatePurposes(false, false);
+		foreach ($certificateData['purposes'] as $purpose) {
+			[$state, $_, $name] = $purpose;
+			if ($name === 'smimesign') {
+				$purposes->setSign((bool)$state);
+			} elseif ($name === 'smimeencrypt') {
+				$purposes->setEncrypt((bool)$state);
+			}
+		}
+
+		$caBundle = [$this->certificateManager->getAbsoluteBundlePath()];
 		return new SmimeCertificateInfo(
 			$certificateData['subject']['CN'] ?? null,
 			$certificateData['subject']['emailAddress'] ?? $certificateData['subject']['CN'],
 			$certificateData['validTo_time_t'],
-		);
-	}
-
-	/**
-	 * Get S/MIME related certificate purposes of the given certificate.
-	 *
-	 * @param string $certificate X509 certificate encoded as PEM
-	 * @return SmimeCertificatePurposes
-	 */
-	public function getCertificatePurposes(string $certificate): SmimeCertificatePurposes {
-		$caBundle = [$this->certificateManager->getAbsoluteBundlePath()];
-		return new SmimeCertificatePurposes(
-			openssl_x509_checkpurpose($certificate, X509_PURPOSE_SMIME_SIGN, $caBundle),
-			openssl_x509_checkpurpose($certificate, X509_PURPOSE_SMIME_ENCRYPT, $caBundle),
+			$purposes,
+			openssl_x509_checkpurpose($certificate, X509_PURPOSE_ANY, $caBundle) === true,
 		);
 	}
 
@@ -216,7 +215,6 @@ class SmimeService {
 		return new EnrichedSmimeCertificate(
 			$certificate,
 			$this->parseCertificate($decryptedCertificate),
-			$this->getCertificatePurposes($decryptedCertificate),
 		);
 	}
 

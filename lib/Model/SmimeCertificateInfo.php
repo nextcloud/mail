@@ -32,13 +32,19 @@ class SmimeCertificateInfo implements JsonSerializable {
 	private ?string $commonName;
 	private ?string $emailAddress;
 	private int $notAfter;
+	private SmimeCertificatePurposes $purposes;
+	private bool $isChainVerified;
 
 	public function __construct(?string $commonName,
 		?string $emailAddress,
-		int $notAfter) {
+		int $notAfter,
+		SmimeCertificatePurposes $purposes,
+		bool $isChainVerified) {
 		$this->commonName = $commonName;
 		$this->emailAddress = $emailAddress;
 		$this->notAfter = $notAfter;
+		$this->purposes = $purposes;
+		$this->isChainVerified = $isChainVerified;
 	}
 
 	/**
@@ -83,12 +89,30 @@ class SmimeCertificateInfo implements JsonSerializable {
 		$this->notAfter = $notAfter;
 	}
 
+	public function getPurposes(): SmimeCertificatePurposes {
+		return $this->purposes;
+	}
+
+	public function setPurposes(SmimeCertificatePurposes $purposes): void {
+		$this->purposes = $purposes;
+	}
+
+	public function isChainVerified(): bool {
+		return $this->isChainVerified;
+	}
+
+	public function setIsChainVerified(bool $isChainVerified): void {
+		$this->isChainVerified = $isChainVerified;
+	}
+
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return [
 			'commonName' => $this->commonName,
 			'emailAddress' => $this->emailAddress,
 			'notAfter' => $this->notAfter,
+			'purposes' => $this->purposes->jsonSerialize(),
+			'isChainVerified' => $this->isChainVerified,
 		];
 	}
 }

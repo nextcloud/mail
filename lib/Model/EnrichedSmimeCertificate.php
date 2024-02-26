@@ -32,19 +32,14 @@ use ReturnTypeWillChange;
 class EnrichedSmimeCertificate implements JsonSerializable {
 	private SmimeCertificate $certificate;
 	private SmimeCertificateInfo $info;
-	private SmimeCertificatePurposes $purposes;
 
 	/**
 	 * @param SmimeCertificate $certificate
 	 * @param SmimeCertificateInfo $info
-	 * @param SmimeCertificatePurposes $purposes
 	 */
-	public function __construct(SmimeCertificate         $certificate,
-		SmimeCertificateInfo     $info,
-		SmimeCertificatePurposes $purposes) {
+	public function __construct(SmimeCertificate $certificate, SmimeCertificateInfo $info) {
 		$this->certificate = $certificate;
 		$this->info = $info;
-		$this->purposes = $purposes;
 	}
 
 	/**
@@ -75,25 +70,10 @@ class EnrichedSmimeCertificate implements JsonSerializable {
 		$this->info = $info;
 	}
 
-	/**
-	 * @return SmimeCertificatePurposes
-	 */
-	public function getPurposes(): SmimeCertificatePurposes {
-		return $this->purposes;
-	}
-
-	/**
-	 * @param SmimeCertificatePurposes $purposes
-	 */
-	public function setPurposes(SmimeCertificatePurposes $purposes): void {
-		$this->purposes = $purposes;
-	}
-
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		$json = $this->certificate->jsonSerialize();
 		$json['info'] = $this->info->jsonSerialize();
-		$json['purposes'] = $this->purposes->jsonSerialize();
 		return $json;
 	}
 }
