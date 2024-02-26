@@ -54,6 +54,7 @@ use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ClientException;
@@ -130,7 +131,9 @@ class MailTransmission implements IMailTransmission {
 		PerformanceLogger $performanceLogger,
 		AliasesService $aliasesService,
 		GroupsIntegration $groupsIntegration,
-		SmimeService $smimeService) {
+		SmimeService $smimeService,
+		private TransmissionService $transmissionService
+	) {
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
 		$this->mailManager = $mailManager;
@@ -156,9 +159,16 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		if ($repliedToMessageId !== null) {
-			$message = $this->buildReplyMessage($account, $messageData, $repliedToMessageId);
+			// Reply
+			$message = $account->newMessage();
+			$message->setSubject($messageData->getSubject());
+			$message->setTo($messageData->getTo());
+			$message->setInReplyTo($repliedToMessageId);
 		} else {
-			$message = $this->buildNewMessage($account, $messageData);
+			// New message
+			$message = $account->newMessage();
+			$message->setTo($messageData->getTo());
+			$message->setSubject($messageData->getSubject());
 		}
 
 		$account->setAlias($alias);
@@ -170,7 +180,7 @@ class MailTransmission implements IMailTransmission {
 		$message->setCC($messageData->getCc());
 		$message->setBcc($messageData->getBcc());
 		$message->setContent($messageData->getBody());
-		$this->handleAttachments($account, $messageData, $message); // only ever going to be local attachments
+		$this->handleAttachments($account, $messageData, $message);
 
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
@@ -263,7 +273,7 @@ class MailTransmission implements IMailTransmission {
 		$mail->setBasePart($mimePart);
 
 		$this->eventDispatcher->dispatchTyped(
-			new BeforeMessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
+			new BeforeMessageSentEvent($account, $repliedToMessageId, $draft, $message, $mail)
 		);
 
 		// Send the message
@@ -278,90 +288,137 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$this->eventDispatcher->dispatchTyped(
-			new MessageSentEvent($account, $messageData, $repliedToMessageId, $draft, $message, $mail)
+			new MessageSentEvent($account, $repliedToMessageId, $draft, $message, $mail)
 		);
 	}
 
-	public function sendLocalMessage(Account $account, LocalMessage $message): void {
-		$to = new AddressList(
-			array_map(
-				static function ($recipient) {
-					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				},
-				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_TO;
-				}))
-			)
-		);
-		$cc = new AddressList(
-			array_map(
-				static function ($recipient) {
-					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				},
-				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_CC;
-				}))
-			)
-		);
-		$bcc = new AddressList(
-			array_map(
-				static function ($recipient) {
-					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				},
-				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_BCC;
-				}))
-			)
-		);
-		$attachments = array_map(static function (LocalAttachment $attachment) {
-			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
-			return [
-				'type' => 'local',
-				'id' => $attachment->getId(),
-			];
-		}, $message->getAttachments());
-		$messageData = new NewMessageData(
-			$account,
-			$to,
-			$cc,
-			$bcc,
-			$message->getSubject(),
-			$message->getBody(),
-			$attachments,
-			$message->isHtml(),
-			false,
-			$message->getSmimeCertificateId(),
-			$message->getSmimeSign() ?? false,
-			$message->getSmimeEncrypt() ?? false,
-		);
+	public function sendLocalMessage(Account $account, LocalMessage $localMessage): void {
+		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
+		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
+		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
+		$attachments = $this->transmissionService->getAttachments($localMessage);
 
-		if ($message->getAliasId() !== null) {
-			$alias = $this->aliasesService->find($message->getAliasId(), $account->getUserId());
+		if ($account->getMailAccount()->getSentMailboxId() === null) {
+			$localMessage->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
+			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($localMessage));
+			throw new SentMailboxNotSetException();
 		}
 
+		$message = $account->newMessage();
+		$message->setSubject($localMessage->getSubject());
+		$message->setTo($to);
+
+		$alias = null;
+		if ($localMessage->getAliasId() !== null) {
+			$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getUserId());
+		}
+
+		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
+		$from = new AddressList([
+			Address::fromRaw($account->getName(), $fromEmail),
+		]);
+		$message->setFrom($from);
+		$message->setCC($cc);
+		$message->setBcc($bcc);
+
+		$message->setContent($localMessage->getBody());
+
+		foreach ($attachments as $attachment) {
+			$this->transmissionService->handleAttachment($account, $attachment, $message);
+		}
+
+		$repliedToMessageId = $localMessage->getInReplyToMessageId();
+		if ($repliedToMessageId !== null) {
+			$message->setInReplyTo($repliedToMessageId);
+		}
+
+		$transport = $this->smtpClientFactory->create($account);
+		// build mime body
+		$headers = [
+			'From' => $message->getFrom()->first()->toHorde(),
+			'To' => $message->getTo()->toHorde(),
+			'Cc' => $message->getCC()->toHorde(),
+			'Bcc' => $message->getBCC()->toHorde(),
+			'Subject' => $message->getSubject(),
+		];
+
+		if (($inReplyTo = $message->getInReplyTo()) !== null) {
+			$headers['References'] = $inReplyTo;
+			$headers['In-Reply-To'] = $inReplyTo;
+		}
+
+		if ($localMessage->isMdnRequested()) {
+			$headers[Horde_Mime_Mdn::MDN_HEADER] = $message->getFrom()->first()->toHorde();
+		}
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+
+		$mimeMessage = new MimeMessage(
+			new DataUriParser()
+		);
+		$mimePart = $mimeMessage->build(
+			$localMessage->isHtml(),
+			$message->getContent(),
+			$message->getAttachments()
+		);
+
+		// TODO: add smimeEncrypt check if implemented
 		try {
-			$this->sendMessage($messageData, $message->getInReplyToMessageId(), $alias ?? null);
-		} catch (SentMailboxNotSetException $e) {
-			throw new ClientException('Could not send message: ' . $e->getMessage(), $e->getCode(), $e);
+			$mimePart = $this->transmissionService->getSignMimePart($localMessage, $account, $mimePart);
+			$mimePart = $this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $mimePart);
+		} catch (ServiceException $e) {
+			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($localMessage));
+			throw $e;
 		}
+
+		$mail->setBasePart($mimePart);
+
+		$this->eventDispatcher->dispatchTyped(
+			new BeforeMessageSentEvent($account, $repliedToMessageId, $message, $mail, $localMessage)
+		);
+
+		// Send the message
+		try {
+			// We need to store the message somewhere in case we fail
+			$mail->send($transport, false, false);
+		} catch (Horde_Mime_Exception $e) {
+			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SEND_FAIL);
+			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($localMessage));
+			throw new ServiceException(
+				'Could not send message: ' . $e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		}
+
+		$this->eventDispatcher->dispatchTyped(
+			new MessageSentEvent($account, $repliedToMessageId, $message, $mail, $localMessage)
+		);
 	}
 
 	public function saveLocalDraft(Account $account, LocalMessage $message): void {
-		$messageData = $this->getNewMessageData($message, $account);
+		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
+		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
+		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
+		$attachments = $this->transmissionService->getAttachments($message);
 
 		$perfLogger = $this->performanceLogger->start('save local draft');
 
-		$account = $messageData->getAccount();
 		$imapMessage = $account->newMessage();
-		$imapMessage->setTo($messageData->getTo());
-		$imapMessage->setSubject($messageData->getSubject());
+		$imapMessage->setTo($to);
+		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
 			Address::fromRaw($account->getName(), $account->getEMailAddress()),
 		]);
 		$imapMessage->setFrom($from);
-		$imapMessage->setCC($messageData->getCc());
-		$imapMessage->setBcc($messageData->getBcc());
-		$imapMessage->setContent($messageData->getBody());
+		$imapMessage->setCC($cc);
+		$imapMessage->setBcc($bcc);
+		$imapMessage->setContent($message->getBody());
+
+		foreach ($attachments as $attachment) {
+			$this->transmissionService->handleAttachment($account, $attachment, $imapMessage);
+		}
 
 		// build mime body
 		$headers = [
@@ -410,7 +467,7 @@ class MailTransmission implements IMailTransmission {
 			$client->logout();
 		}
 
-		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, $messageData, null));
+		$this->eventDispatcher->dispatchTyped(new DraftSavedEvent($account, null));
 		$perfLogger->step('emit post local draft save event');
 
 		$perfLogger->end();
@@ -502,80 +559,6 @@ class MailTransmission implements IMailTransmission {
 		return [$account, $draftsMailbox, $newUid];
 	}
 
-	private function buildReplyMessage(Account $account,
-		NewMessageData $messageData,
-		string $repliedToMessageId): IMessage {
-		// Reply
-		$message = $account->newMessage();
-		$message->setSubject($messageData->getSubject());
-		$message->setTo($messageData->getTo());
-		$message->setInReplyTo($repliedToMessageId);
-
-		return $message;
-	}
-
-	private function buildNewMessage(Account $account, NewMessageData $messageData): IMessage {
-		// New message
-		$message = $account->newMessage();
-		$message->setTo($messageData->getTo());
-		$message->setSubject($messageData->getSubject());
-
-		return $message;
-	}
-
-	/**
-	 * @param Account $account
-	 * @param NewMessageData $messageData
-	 * @param IMessage $message
-	 *
-	 * @return void
-	 */
-	private function handleAttachments(Account $account, NewMessageData $messageData, IMessage $message): void {
-		foreach ($messageData->getAttachments() as $attachment) {
-			if (isset($attachment['type']) && $attachment['type'] === 'local') {
-				// Adds an uploaded attachment
-				$this->handleLocalAttachment($account, $attachment, $message);
-			} elseif (isset($attachment['type']) && $attachment['type'] === 'message') {
-				// Adds another message as attachment
-				$this->handleForwardedMessageAttachment($account, $attachment, $message);
-			} elseif (isset($attachment['type']) && $attachment['type'] === 'message/rfc822') {
-				// Adds another message as attachment with mime type 'message/rfc822
-				$this->handleEmbeddedMessageAttachments($account, $attachment, $message);
-			} elseif (isset($attachment['type']) && $attachment['type'] === 'message-attachment') {
-				// Adds an attachment from another email (use case is, eg., a mail forward)
-				$this->handleForwardedAttachment($account, $attachment, $message);
-			} else {
-				// Adds an attachment from Files
-				$this->handleCloudAttachment($attachment, $message);
-			}
-		}
-	}
-
-	/**
-	 * @param Account $account
-	 * @param array $attachment
-	 * @param IMessage $message
-	 *
-	 * @return int|null
-	 */
-	private function handleLocalAttachment(Account $account, array $attachment, IMessage $message) {
-		if (!isset($attachment['id'])) {
-			$this->logger->warning('ignoring local attachment because its id is unknown');
-			return null;
-		}
-
-		$id = (int)$attachment['id'];
-
-		try {
-			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), $id);
-			$message->addLocalAttachment($localAttachment, $file);
-		} catch (AttachmentNotFoundException $ex) {
-			$this->logger->warning('ignoring local attachment because it does not exist');
-			// TODO: rethrow?
-			return null;
-		}
-	}
-
 	/**
 	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
 	 *
@@ -583,13 +566,11 @@ class MailTransmission implements IMailTransmission {
 	 * @param mixed[] $attachment
 	 * @param IMessage $message
 	 */
-	private function handleForwardedMessageAttachment(Account $account, array $attachment, IMessage $message): void {
+	private function handleForwardedMessageAttachment(Account $account, array $attachment, IMessage $message, \Horde_Imap_Client_Socket $client): void {
 		// Gets original of other message
 		$userId = $account->getMailAccount()->getUserId();
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
-
-		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$fullText = $this->messageMapper->getFullText(
 				$client,
@@ -605,96 +586,6 @@ class MailTransmission implements IMailTransmission {
 			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
 			$fullText
 		);
-	}
-
-	/**
-	 * Adds an email as attachment
-	 *
-	 * @param Account $account
-	 * @param mixed[] $attachment
-	 * @param IMessage $message
-	 */
-	private function handleEmbeddedMessageAttachments(Account $account, array $attachment, IMessage $message): void {
-		// Gets original of other message
-		$userId = $account->getMailAccount()->getUserId();
-		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
-		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
-
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$fullText = $this->messageMapper->getFullText(
-				$client,
-				$mailbox->getName(),
-				$attachmentMessage->getUid(),
-				$userId
-			);
-		} finally {
-			$client->logout();
-		}
-
-		$message->addEmbeddedMessageAttachment(
-			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
-			$fullText
-		);
-	}
-
-
-	/**
-	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
-	 *
-	 * @param Account $account
-	 * @param mixed[] $attachment
-	 * @param IMessage $message
-	 */
-	private function handleForwardedAttachment(Account $account, array $attachment, IMessage $message): void {
-		// Gets attachment from other message
-		$userId = $account->getMailAccount()->getUserId();
-		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['messageId']);
-		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
-		$client = $this->imapClientFactory->getClient($account);
-		try {
-			$attachments = $this->messageMapper->getRawAttachments(
-				$client,
-				$mailbox->getName(),
-				$attachmentMessage->getUid(),
-				$userId,
-				[
-					$attachment['id']
-				]
-			);
-		} finally {
-			$client->logout();
-		}
-
-		// Attaches attachment to new message
-		$message->addRawAttachment($attachment['fileName'], $attachments[0]);
-	}
-
-	/**
-	 * @param array $attachment
-	 * @param IMessage $message
-	 *
-	 * @return File|null
-	 */
-	private function handleCloudAttachment(array $attachment, IMessage $message) {
-		if (!isset($attachment['fileName'])) {
-			$this->logger->warning('ignoring cloud attachment because its fileName is unknown');
-			return null;
-		}
-
-		$fileName = $attachment['fileName'];
-		if (!$this->userFolder->nodeExists($fileName)) {
-			$this->logger->warning('ignoring cloud attachment because the node does not exist');
-			return null;
-		}
-
-		$file = $this->userFolder->get($fileName);
-		if (!$file instanceof File) {
-			$this->logger->warning('ignoring cloud attachment because the node is not a file');
-			return null;
-		}
-
-		$message->addAttachmentFromFiles($file);
 	}
 
 	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
@@ -767,49 +658,15 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	/**
-	 * @param LocalMessage $message
 	 * @param Account $account
+	 * @param AddressList $to
+	 * @param AddressList $cc
+	 * @param AddressList $bcc
+	 * @param LocalMessage $message
+	 * @param array $attachments
 	 * @return NewMessageData
 	 */
-	private function getNewMessageData(LocalMessage $message, Account $account): NewMessageData {
-		$to = new AddressList(
-			array_map(
-				static function ($recipient) {
-					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				},
-				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_TO;
-				}))
-			)
-		);
-
-		$cc = new AddressList(
-			array_map(
-				static function ($recipient) {
-					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				},
-				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_CC;
-				}))
-			)
-		);
-		$bcc = new AddressList(
-			array_map(
-				static function ($recipient) {
-					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
-				},
-				$this->groupsIntegration->expand(array_filter($message->getRecipients(), static function (Recipient $recipient) {
-					return $recipient->getType() === Recipient::TYPE_BCC;
-				}))
-			)
-		);
-		$attachments = array_map(function (LocalAttachment $attachment) {
-			// Convert to the untyped nested array used in \OCA\Mail\Controller\AccountsController::send
-			return [
-				'type' => 'local',
-				'id' => $attachment->getId(),
-			];
-		}, $message->getAttachments());
+	private function buildMessageData(Account $account, AddressList $to, AddressList $cc, AddressList $bcc, LocalMessage $message, array $attachments): NewMessageData {
 		return new NewMessageData(
 			$account,
 			$to,
@@ -818,7 +675,13 @@ class MailTransmission implements IMailTransmission {
 			$message->getSubject(),
 			$message->getBody(),
 			$attachments,
-			$message->isHtml()
+			$message->isHtml(),
+			false,
+			$message->getSmimeCertificateId(),
+			$message->getSmimeSign() ?? false,
+			$message->getSmimeEncrypt() ?? false,
 		);
 	}
+
+
 }

@@ -27,11 +27,15 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
 
 class AntiSpamService {
@@ -49,7 +53,8 @@ class AntiSpamService {
 
 	public function __construct(IConfig $config,
 		MessageMapper $messageMapper,
-		IMailTransmission $transmission) {
+		IMailTransmission $transmission,
+		private OutboxService $service) {
 		$this->config = $config;
 		$this->messageMapper = $messageMapper;
 		$this->transmission = $transmission;

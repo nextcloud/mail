@@ -26,8 +26,12 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
+use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Model\NewMessageData;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\IMemcache;
@@ -51,15 +55,16 @@ class AntiAbuseService {
 	public function __construct(IConfig $config,
 		ICacheFactory $cacheFactory,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		private IEventDispatcher $eventDispatcher) {
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->timeFactory = $timeFactory;
 		$this->logger = $logger;
 	}
 
-	public function onBeforeMessageSent(IUser $user,
-		NewMessageData $messageData): void {
+	public function onBeforeMessageSent(IUser $user, LocalMessage $localMessage): void {
+
 		$abuseDetection = $this->config->getAppValue(
 			Application::APP_ID,
 			'abuse_detection',
@@ -70,12 +75,11 @@ class AntiAbuseService {
 			return;
 		}
 
-		$this->checkNumberOfRecipients($user, $messageData);
-		$this->checkRateLimits($user, $messageData);
+		$this->checkNumberOfRecipients($user, $localMessage);
+		$this->checkRateLimits($user, $localMessage);
 	}
 
-	private function checkNumberOfRecipients(IUser $user,
-		NewMessageData $messageData): void {
+	private function checkNumberOfRecipients(IUser $user, LocalMessage $message): void {
 		$numberOfRecipientsThreshold = (int)$this->config->getAppValue(
 			Application::APP_ID,
 			'abuse_number_of_recipients_per_message_threshold',
@@ -85,11 +89,11 @@ class AntiAbuseService {
 			return;
 		}
 
-		$actualNumberOfRecipients = count($messageData->getTo())
-			+ count($messageData->getCc())
-			+ count($messageData->getBcc());
+		$actualNumberOfRecipients = count($message->getRecipients());
 
 		if ($actualNumberOfRecipients >= $numberOfRecipientsThreshold) {
+			$message->setStatus(LocalMessage::STATUS_TOO_MANY_RECIPIENTS);
+			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($message));
 			$this->logger->alert('User {user} sends to a suspicious number of recipients. {expected} are allowed. {actual} are used', [
 				'user' => $user->getUID(),
 				'expected' => $numberOfRecipientsThreshold,
@@ -98,8 +102,7 @@ class AntiAbuseService {
 		}
 	}
 
-	private function checkRateLimits(IUser $user,
-		NewMessageData $messageData): void {
+	private function checkRateLimits(IUser $user, LocalMessage $message): void {
 		if (!$this->cacheFactory->isAvailable()) {
 			// No cache, no rate limits
 			return;
@@ -110,16 +113,22 @@ class AntiAbuseService {
 			return;
 		}
 
-		$this->checkRateLimitsForPeriod($user, $messageData, $cache, '15m', 15 * 60);
-		$this->checkRateLimitsForPeriod($user, $messageData, $cache, '1h', 60 * 60);
-		$this->checkRateLimitsForPeriod($user, $messageData, $cache, '1d', 24 * 60 * 60);
+		$ratelimited = (
+			$this->checkRateLimitsForPeriod($user, $cache, '15m', 15 * 60, $message) ||
+			$this->checkRateLimitsForPeriod($user, $cache, '1h', 60 * 60, $message) ||
+			$this->checkRateLimitsForPeriod($user, $cache, '1d', 24 * 60 * 60, $message)
+		);
+		if($ratelimited) {
+			$message->setStatus(LocalMessage::STATUS_RATELIMIT);
+			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($message));
+		}
 	}
 
 	private function checkRateLimitsForPeriod(IUser $user,
-		NewMessageData $messageData,
 		IMemcache $cache,
 		string $id,
-		int $period): void {
+		int $period,
+		LocalMessage $message): bool {
 		$maxNumberOfMessages = (int)$this->config->getAppValue(
 			Application::APP_ID,
 			'abuse_number_of_messages_per_' . $id,
@@ -127,7 +136,7 @@ class AntiAbuseService {
 		);
 		if ($maxNumberOfMessages === 0) {
 			// No limit set
-			return;
+			return false;
 		}
 
 		$now = $this->timeFactory->getTime();
@@ -136,7 +145,7 @@ class AntiAbuseService {
 		$periodStart = ((int)($now / $period)) * $period;
 		$cacheKey = implode('_', ['counter', $id, $periodStart]);
 		$cache->add($cacheKey, 0);
-		$counter = $cache->inc($cacheKey, count($messageData->getTo()) + count($messageData->getCc()) + count($messageData->getBcc()));
+		$counter = $cache->inc($cacheKey, count($message->getRecipients()));
 
 		if ($counter >= $maxNumberOfMessages) {
 			$this->logger->alert('User {user} sends a supcious number of messages within {period}. {expected} are allowed. {actual} have been sent', [
@@ -145,6 +154,8 @@ class AntiAbuseService {
 				'expected' => $maxNumberOfMessages,
 				'actual' => $counter,
 			]);
+			return true;
 		}
+		return false;
 	}
 }

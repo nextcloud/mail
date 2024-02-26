@@ -60,11 +60,29 @@ use function array_filter;
  * @method setSmimeCertificateId(?int $smimeCertificateId)
  * @method bool|null getSmimeEncrypt()
  * @method setSmimeEncrypt (bool $smimeEncryt)
+ * @method int getStatus();
+ * @method setStatus(int $status);
+ * @method bool isMdnRequested()
+ * @method setMdnRequested(bool $mdnRequested)
+ * @method string|null getRaw()
+ * @method setRaw(string|null $raw)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
 	public const TYPE_DRAFT = 1;
 
+	public const STATUS_UNPROCESSED = 0;
+	public const STATUS_NO_SENT_MAILBOX = 1;
+	public const STATUS_SMIME_SIGN_NO_CERT_ID = 2;
+	public const STATUS_SMIME_SIGN_CERT = 3;
+	public const STATUS_SMIME_SIGN_FAIL = 4;
+	public const STATUS_SMIME_ENCRYPT_NO_CERT_ID = 5;
+	public const STATUS_SMIME_ENCRYPT_CERT = 6;
+	public const STATUS_SMIME_ENCRYT_FAIL = 7;
+	public const STATUS_TOO_MANY_RECIPIENTS = 8;
+	public const STATUS_RATELIMIT = 9;
+	public const STATUS_IMAP_SEND_FAIL = 10;
+	public const STATUS_IMAP_SENT_MAILBOX_FAIL = 11;
 	/**
 	 * @var int
 	 * @psalm-var self::TYPE_*
@@ -116,6 +134,18 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool|null */
 	protected $smimeEncrypt;
 
+	/**
+	 * @var int
+	 * @psalm-var self::STATUS_*
+	 */
+	protected $status;
+
+	/** @var bool */
+	protected $mdnRequested;
+
+	/** @var string|null */
+	protected $raw;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -127,6 +157,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeSign', 'boolean');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
+		$this->addType('status', 'integer');
+		$this->addType('mdnRequested', 'boolean');
 	}
 
 	#[ReturnTypeWillChange]
@@ -168,6 +200,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
 			'smimeSign' => $this->getSmimeSign() === true,
 			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
+			'status' => $this->getStatus(),
+			'mdnRequested' => $this->getMdnRequested() === true,
+			'raw' => $this->getRaw(),
 		];
 	}
 

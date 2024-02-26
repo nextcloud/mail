@@ -69,7 +69,7 @@ class AntiAbuseListener implements IEventListener {
 
 		$this->service->onBeforeMessageSent(
 			$user,
-			$event->getNewMessageData(),
+			$event->getLocalMessage(),
 		);
 	}
 }

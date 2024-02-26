@@ -27,6 +27,7 @@ namespace OCA\Mail\Events;
 
 use Horde_Mime_Mail;
 use OCA\Mail\Account;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
@@ -38,9 +39,6 @@ use OCP\EventDispatcher\Event;
 class BeforeMessageSentEvent extends Event {
 	/** @var Account */
 	private $account;
-
-	/** @var NewMessageData */
-	private $newMessageData;
 
 	/** @var Message|null */
 	private $draft;
@@ -55,16 +53,13 @@ class BeforeMessageSentEvent extends Event {
 	private $repliedToMessageId;
 
 	public function __construct(Account $account,
-		NewMessageData $newMessageData,
 		?string $repliedToMessageId,
-		?Message $draft,
 		IMessage $message,
-		Horde_Mime_Mail $mail) {
+		Horde_Mime_Mail $mail,
+		private LocalMessage $localMessage) {
 		parent::__construct();
 		$this->account = $account;
-		$this->newMessageData = $newMessageData;
 		$this->repliedToMessageId = $repliedToMessageId;
-		$this->draft = $draft;
 		$this->message = $message;
 		$this->mail = $mail;
 	}
@@ -73,16 +68,8 @@ class BeforeMessageSentEvent extends Event {
 		return $this->account;
 	}
 
-	public function getNewMessageData(): NewMessageData {
-		return $this->newMessageData;
-	}
-
 	public function getRepliedToMessageId(): ?string {
 		return $this->repliedToMessageId;
-	}
-
-	public function getDraft(): ?Message {
-		return $this->draft;
 	}
 
 	public function getMessage(): IMessage {
@@ -91,5 +78,13 @@ class BeforeMessageSentEvent extends Event {
 
 	public function getMail(): Horde_Mime_Mail {
 		return $this->mail;
+	}
+
+	public function getLocalMessage(): LocalMessage {
+		return $this->localMessage;
+	}
+
+	public function setLocalMessage(LocalMessage $localMessage): void {
+		$this->localMessage = $localMessage;
 	}
 }
