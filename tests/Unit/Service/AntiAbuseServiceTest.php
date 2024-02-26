@@ -27,10 +27,8 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Account;
-use OCA\Mail\Address;
-use OCA\Mail\AddressList;
-use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Service\AntiAbuseService;
 use OCP\IMemcache;
 use OCP\IUser;
@@ -54,15 +52,7 @@ class AntiAbuseServiceTest extends TestCase {
 	public function testThresholdDisabled(): void {
 		$user = $this->createMock(IUser::class);
 		$user->method('getUID')->willReturn('user123');
-		$account = $this->createMock(Account::class);
-		$messageData = new NewMessageData(
-			$account,
-			new AddressList([]),
-			new AddressList([]),
-			new AddressList([]),
-			'subject',
-			'henlo',
-		);
+		$messageData = new LocalMessage();
 		$this->serviceMock->getParameter('config')
 			->expects(self::once())
 			->method('getAppValue')
@@ -84,30 +74,16 @@ class AntiAbuseServiceTest extends TestCase {
 	public function testThresholdReached(): void {
 		$user = $this->createMock(IUser::class);
 		$user->method('getUID')->willReturn('user123');
-		$account = $this->createMock(Account::class);
-		$messageData = new NewMessageData(
-			$account,
-			new AddressList(array_map(static function (int $i) {
-				return Address::fromRaw(
-					"user$i@domain.tld",
-					"user$i@domain.tld",
-				);
-			}, range(1, 50))),
-			new AddressList(array_map(static function (int $i) {
-				return Address::fromRaw(
-					"user$i@domain.tld",
-					"user$i@domain.tld",
-				);
-			}, range(51, 60))),
-			new AddressList(array_map(static function (int $i) {
-				return Address::fromRaw(
-					"user$i@domain.tld",
-					"user$i@domain.tld",
-				);
-			}, range(51, 70))),
-			'subject',
-			'henlo',
-		);
+		$messageData = new LocalMessage();
+		$recipients = array_map(static function (int $i) {
+			return Recipient::fromParams([
+				'label' => 'rec ' . $i,
+				'email' => $i . '@domain.tld',
+				'type' => Recipient::TYPE_TO,
+			]);
+		}, range(0, 70));
+		$messageData->setRecipients($recipients);
+
 		$this->serviceMock->getParameter('config')
 			->method('getAppValue')
 			->withConsecutive(
@@ -123,7 +99,7 @@ class AntiAbuseServiceTest extends TestCase {
 			->with(self::anything(), [
 				'user' => 'user123',
 				'expected' => 50,
-				'actual' => 80,
+				'actual' => 71,
 			]);
 
 		$this->service->onBeforeMessageSent(
@@ -135,20 +111,14 @@ class AntiAbuseServiceTest extends TestCase {
 	public function test15mThreshold(): void {
 		$user = $this->createMock(IUser::class);
 		$user->method('getUID')->willReturn('user123');
-		$account = $this->createMock(Account::class);
-		$messageData = new NewMessageData(
-			$account,
-			new AddressList([
-				Address::fromRaw(
-					"user@domain.tld",
-					"user@domain.tld",
-				)
-			]),
-			new AddressList([]),
-			new AddressList([]),
-			'subject',
-			'henlo',
-		);
+		$messageData = new LocalMessage();
+		$recipients = Recipient::fromParams([
+			'label' => 'rec 1',
+			'email' => 'u1@domain.tld',
+			'type' => Recipient::TYPE_TO,
+		]);
+		$messageData->setRecipients([$recipients]);
+
 		$this->serviceMock->getParameter('config')
 			->method('getAppValue')
 			->withConsecutive(
