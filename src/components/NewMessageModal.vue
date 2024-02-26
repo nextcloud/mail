@@ -396,7 +396,9 @@ export default {
 
 				if (!data.sendAt || data.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 					// Awaiting here would keep the modal open for a long time and thus block the user
-					this.$store.dispatch('outbox/sendMessageWithUndo', { id: dataForServer.id })
+					this.$store.dispatch('outbox/sendMessageWithUndo', { id: dataForServer.id }).catch((error) => {
+						logger.debug('Could not send message', { error })
+					})
 				}
 				if (dataForServer.id) {
 					// Remove old draft envelope

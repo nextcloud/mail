@@ -144,6 +144,10 @@ class OutboxControllerTest extends TestCase {
 		$message = new LocalMessage();
 		$message->setId(1);
 		$message->setAccountId(1);
+		$newMessage = new LocalMessage();
+		$newMessage->setId(1);
+		$newMessage->setAccountId(1);
+		$newMessage->setStatus(LocalMessage::STATUS_PROCESSED);
 		$account = new Account(new MailAccount());
 
 		$this->service->expects(self::once())
@@ -156,7 +160,8 @@ class OutboxControllerTest extends TestCase {
 			->willReturn($account);
 		$this->service->expects(self::once())
 			->method('sendMessage')
-			->with($message, $account);
+			->with($message, $account)
+			->willReturn($newMessage);
 
 		$expected = JsonResponse::success('Message sent', Http::STATUS_ACCEPTED);
 		$actual = $this->controller->send($message->getId());
