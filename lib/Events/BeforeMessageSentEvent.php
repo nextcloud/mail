@@ -30,7 +30,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Model\IMessage;
-use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
 /**

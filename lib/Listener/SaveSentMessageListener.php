@@ -30,7 +30,6 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -91,18 +90,16 @@ class SaveSentMessageListener implements IEventListener {
 
 		$client = $this->imapClientFactory->getClient($event->getAccount());
 		try {
-//			$this->messageMapper->save(
-//				$client,
-//				$sentMailbox,
-//				$event->getMail()
-//			);
+			$this->messageMapper->save(
+				$client,
+				$sentMailbox,
+				$event->getMail()
+			);
 			throw new Horde_Imap_Client_Exception();
 		} catch (Horde_Imap_Client_Exception $e) {
-			$mail = $event->getMail();
-			$raw = $mail->getRaw(false);
 			$localMessage = $event->getLocalMessage();
 			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
-			$localMessage->setRaw($raw);
+			$localMessage->setRaw($event->getMail());
 			$this->localMessageMapper->update($localMessage);
 			// also cache the object somewhere so we can retrieve the actual Horde_Mime_Mail ?
 			// Then raw would be a backup in case the cache expires

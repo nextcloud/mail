@@ -27,15 +27,11 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
-use OCA\Mail\Db\LocalAttachment;
-use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
 
 class AntiSpamService {

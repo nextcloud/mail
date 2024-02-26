@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright 2024 Anna Larch <anna.larch@gmx.net>
@@ -21,7 +22,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
-use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
 use OCP\EventDispatcher\Event;

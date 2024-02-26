@@ -28,8 +28,6 @@ namespace OCA\Mail\Service;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
-use OCA\Mail\Exception\ManyRecipientsException;
-use OCA\Mail\Model\NewMessageData;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
@@ -64,7 +62,6 @@ class AntiAbuseService {
 	}
 
 	public function onBeforeMessageSent(IUser $user, LocalMessage $localMessage): void {
-
 		$abuseDetection = $this->config->getAppValue(
 			Application::APP_ID,
 			'abuse_detection',

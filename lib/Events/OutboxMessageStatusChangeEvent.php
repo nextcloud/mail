@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright 2024 Anna Larch <anna.larch@gmx.net>

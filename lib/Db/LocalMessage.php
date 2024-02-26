@@ -62,7 +62,7 @@ use function array_filter;
  * @method setSmimeEncrypt (bool $smimeEncryt)
  * @method int getStatus();
  * @method setStatus(int $status);
- * @method bool isMdnRequested()
+ * @method bool getMdnRequested()
  * @method setMdnRequested(bool $mdnRequested)
  * @method string|null getRaw()
  * @method setRaw(string|null $raw)

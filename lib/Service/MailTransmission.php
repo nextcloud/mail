@@ -45,7 +45,6 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Alias;
-use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -56,7 +55,6 @@ use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
 use OCA\Mail\Events\SaveDraftEvent;
-use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
@@ -71,11 +69,8 @@ use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Files\File;
 use OCP\Files\Folder;
 use Psr\Log\LoggerInterface;
-use function array_filter;
-use function array_map;
 
 class MailTransmission implements IMailTransmission {
 	private SmimeService $smimeService;
@@ -347,7 +342,7 @@ class MailTransmission implements IMailTransmission {
 			$headers['In-Reply-To'] = $inReplyTo;
 		}
 
-		if ($localMessage->isMdnRequested()) {
+		if ($localMessage->getMdnRequested()) {
 			$headers[Horde_Mime_Mdn::MDN_HEADER] = $message->getFrom()->first()->toHorde();
 		}
 
@@ -380,7 +375,6 @@ class MailTransmission implements IMailTransmission {
 
 		// Send the message
 		try {
-			// We need to store the message somewhere in case we fail
 			$mail->send($transport, false, false);
 		} catch (Horde_Mime_Exception $e) {
 			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SEND_FAIL);
@@ -393,7 +387,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$this->eventDispatcher->dispatchTyped(
-			new MessageSentEvent($account, $repliedToMessageId, $message, $mail, $localMessage)
+			new MessageSentEvent($account, $repliedToMessageId, $message, $mail->getRaw(false), $localMessage)
 		);
 	}
 
@@ -455,7 +449,7 @@ class MailTransmission implements IMailTransmission {
 			$this->messageMapper->save(
 				$client,
 				$draftsMailbox,
-				$mail,
+				$mail->getRaw(false),
 				[Horde_Imap_Client::FLAG_DRAFT]
 			);
 			$perfLogger->step('save local draft message on IMAP');
@@ -537,7 +531,7 @@ class MailTransmission implements IMailTransmission {
 			$newUid = $this->messageMapper->save(
 				$client,
 				$draftsMailbox,
-				$mail,
+				$mail->getRaw(false),
 				[Horde_Imap_Client::FLAG_DRAFT]
 			);
 			$perfLogger->step('save message on IMAP');
@@ -551,7 +545,7 @@ class MailTransmission implements IMailTransmission {
 
 		$this->eventDispatcher->dispatch(
 			DraftSavedEvent::class,
-			new DraftSavedEvent($account, $message, $previousDraft)
+			new DraftSavedEvent($account, $message)
 		);
 		$perfLogger->step('emit post event');
 

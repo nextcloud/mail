@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use Horde_Mime_Mail;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Message;
@@ -52,13 +51,13 @@ class MessageSentEvent extends Event {
 	/** @var IMessage */
 	private $message;
 
-	/** @var Horde_Mime_Mail */
+	/** @var string */
 	private $mail;
 
 	public function __construct(Account $account,
 		?string $repliedToMessageId,
 		IMessage $message,
-		Horde_Mime_Mail $mail,
+		string $mail,
 		private LocalMessage $localMessage) {
 		parent::__construct();
 		$this->account = $account;
@@ -79,7 +78,7 @@ class MessageSentEvent extends Event {
 		return $this->message;
 	}
 
-	public function getMail(): Horde_Mime_Mail {
+	public function getMail(): string {
 		return $this->mail;
 	}
 

@@ -58,8 +58,8 @@ class TransmissionService {
 					return Address::fromRaw($recipient->getLabel() ?? $recipient->getEmail(), $recipient->getEmail());
 				},
 				$this->groupsIntegration->expand(
-						array_filter($message->getRecipients(), static function (Recipient $recipient) use ($type) {
-							return $recipient->getType() === $type;
+					array_filter($message->getRecipients(), static function (Recipient $recipient) use ($type) {
+						return $recipient->getType() === $type;
 					})
 				)
 			)

@@ -32,7 +32,6 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
-use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
@@ -268,8 +267,6 @@ class OutboxService {
 				}
 				if($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
 					// here should be the code for saving to sent again
-					// We need a copy of the actually sent message
-					// We should get a UID back
 					continue;
 				}
 				$this->sendMessage(
