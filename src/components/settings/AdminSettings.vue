@@ -148,26 +148,16 @@
 		</div>
 		<div v-if="isLlmSummaryConfigured"
 			class="app-description">
-			<h3>{{ t('mail', 'Enable thread summary') }}</h3>
+			<h3>{{ t('mail', 'Enable text processing through LLMs') }}</h3>
 			<article>
 				<p>
-					<NcCheckboxRadioSwitch :checked.sync="enabledThreadSummary"
-						type="switch"
-						@update:checked="updateEnabledThreadSummary">
-						{{ t('mail','Enable thread summaries') }}
-					</NcCheckboxRadioSwitch>
+					{{ t('mail', 'The Mail app can process user data with the help of the configured large language model and provide assistance features like thread summaries, smart replies and event agendas.') }}
 				</p>
-			</article>
-		</div>
-		<div v-if="isLlmFreePromptConfigured"
-			class="app-description">
-			<h3>{{ t('mail', 'Enable smart replies') }}</h3>
-			<article>
 				<p>
-					<NcCheckboxRadioSwitch :checked.sync="enabledSmartReplies"
+					<NcCheckboxRadioSwitch :checked.sync="isLlmEnabled"
 						type="switch"
-						@update:checked="updateEnabledSmartReply">
-						{{ t('mail','Enable smart replies') }}
+						@update:checked="updateLlmEnabled">
+						{{ t('mail', 'Enable LLM processing') }}
 					</NcCheckboxRadioSwitch>
 				</p>
 			</article>
@@ -286,7 +276,7 @@ import {
 	updateProvisioningSettings,
 	provisionAll,
 	updateAllowNewMailAccounts,
-	updateEnabledThreadSummary,
+	updateLlmEnabled,
 	updateEnabledSmartReply,
 } from '../../service/SettingsService.js'
 
@@ -347,9 +337,8 @@ export default {
 				loading: false,
 			},
 			allowNewMailAccounts: loadState('mail', 'allow_new_mail_accounts', true),
-			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
-			enabledSmartReplies: loadState('mail', 'enabled_smart_reply', false),
 			isLlmSummaryConfigured: loadState('mail', 'enabled_llm_summary_backend'),
+			isLlmEnabled: loadState('mail', 'llm_processing', true),
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
 
 		}
@@ -405,8 +394,8 @@ export default {
 		async updateAllowNewMailAccounts(checked) {
 			await updateAllowNewMailAccounts(checked)
 		},
-		async updateEnabledThreadSummary(checked) {
-			await updateEnabledThreadSummary(checked)
+		async updateLlmEnabled(checked) {
+			await updateLlmEnabled(checked)
 		},
 		async updateEnabledSmartReply(checked) {
 			await updateEnabledSmartReply(checked)

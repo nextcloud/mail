@@ -386,7 +386,7 @@ export default {
 			showTaskModal: false,
 			showTagModal: false,
 			rawMessage: '', // Will hold the raw source of the message when requested
-			enabledSmartReply: loadState('mail', 'enabled_smart_reply', false),
+			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
 		}
 	},
 	computed: {

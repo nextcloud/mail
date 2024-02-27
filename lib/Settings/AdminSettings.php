@@ -94,14 +94,8 @@ class AdminSettings implements ISettings {
 
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
-			'enabled_thread_summary',
-			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes'
-		);
-
-		$this->initialStateService->provideInitialState(
-			Application::APP_ID,
-			'enabled_smart_reply',
-			$this->config->getAppValue('mail', 'enabled_smart_reply', 'no') === 'yes'
+			'llm_processing',
+			$this->config->getAppValue('mail', 'llm_processing', 'no') === 'yes'
 		);
 
 		$this->initialStateService->provideInitialState(

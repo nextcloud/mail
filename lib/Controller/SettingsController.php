@@ -125,12 +125,9 @@ class SettingsController extends Controller {
 		$this->config->setAppValue('mail', 'allow_new_mail_accounts', $allowed ? 'yes' : 'no');
 	}
 
-	public function setEnabledThreadSummary(bool $enabled) {
-		$this->config->setAppValue('mail', 'enabled_thread_summary', $enabled ? 'yes' : 'no');
-	}
-
-	public function setEnabledSmartReplies(bool $enabled) {
-		$this->config->setAppValue('mail', 'enabled_smart_reply', $enabled ? 'yes' : 'no');
+	public function setEnabledLlmProcessing(bool $enabled): JSONResponse {
+		$this->config->setAppValue('mail', 'llm_processing', $enabled ? 'yes' : 'no');
+		return new JSONResponse([]);
 	}
 
 }
