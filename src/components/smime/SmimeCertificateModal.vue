@@ -37,9 +37,15 @@
 					</thead>
 					<tbody>
 						<tr v-for="certificate in certificates" :key="certificate.id">
-							<td>{{ certificate.info.commonName }}</td>
-							<td>{{ certificate.info.emailAddress }}</td>
-							<td>{{ moment.unix(certificate.info.notAfter).format('LL') }}</td>
+							<td :title="certificate.info.commonName">
+								{{ certificate.info.commonName }}
+							</td>
+							<td :title="certificate.info.emailAddress">
+								{{ certificate.info.emailAddress }}
+							</td>
+							<td :title="moment.unix(certificate.info.notAfter).format('LL')">
+								{{ moment.unix(certificate.info.notAfter).format('LL') }}
+							</td>
 							<td>
 								<NcButton type="tertiary-no-background"
 									:aria-label="t('mail', 'Delete certificate')"
@@ -258,6 +264,7 @@ export default {
 
 	&__list {
 		table {
+			table-layout: fixed;
 			width: 100%;
 
 			th {
@@ -266,6 +273,24 @@ export default {
 
 			th, td {
 				padding: 2.5px;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				flex: 5 1 0px;
+			}
+
+			th:last-child, td:last-child {
+				flex: 1 1 0px;
+			}
+
+			span {
+				text-overflow: ellipsis;
+			}
+
+			tr {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
 			}
 
 			// Disable default hover style
