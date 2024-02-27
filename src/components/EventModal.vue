@@ -3,7 +3,7 @@
 		<div class="modal-content">
 			<h2>{{ t('mail', 'Create event') }}</h2>
 			<div class="eventTitle">
-				<input v-model="eventTitle" type="text">
+				<input v-model="eventTitle" :disabled="generatingData" type="text">
 			</div>
 			<div class="dateTimePicker">
 				<DatetimePicker v-model="startDate"
@@ -48,6 +48,7 @@
 			<label for="description">{{ t('mail', 'Description') }}</label>
 			<textarea id="description"
 				v-model="description"
+				:disabled="generatingData"
 				class="modal-content__description-input"
 				rows="7" />
 			<br>
@@ -67,6 +68,8 @@ import { getUserCalendars, importCalendarEvent } from '../service/DAVService.js'
 import logger from '../logger.js'
 import CalendarPickerOption from './CalendarPickerOption.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { loadState } from '@nextcloud/initial-state'
+import { generateEventData } from '../service/AiIntergrationsService.js'
 
 export default {
 	name: 'EventModal',
@@ -98,6 +101,8 @@ export default {
 			saving: false,
 			selectedCalendar: undefined,
 			description: this.envelope.previewText,
+			generatingData: false,
+			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
 		}
 	},
 	computed: {
@@ -108,10 +113,12 @@ export default {
 			return this.isAllDay ? 'date' : 'datetime'
 		},
 	},
-	created() {
+	async created() {
 		logger.debug('creating event from envelope', {
 			envelope: this.envelope,
 		})
+
+		await this.generateEventData()
 	},
 	async mounted() {
 		this.calendars = (await getUserCalendars()).filter(c => c.writable)
@@ -121,6 +128,20 @@ export default {
 		}
 	},
 	methods: {
+		async generateEventData() {
+			if (!this.enabledThreadSummary) {
+				return
+			}
+			try {
+				this.generatingData = true
+
+				const { summary, description } = await generateEventData(this.envelope.databaseId)
+				this.eventTitle = summary
+				this.description = description
+			} finally {
+				this.generatingData = false
+			}
+		},
 		onClose() {
 			this.$emit('close')
 		},

@@ -183,6 +183,29 @@ class ThreadController extends Controller {
 		return new JSONResponse(['data' => $summary]);
 	}
 
+	public function generateEventData(int $id): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+		if (empty($message->getThreadRootId())) {
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+		}
+		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
+		$data = $this->aiIntergrationsService->generateEventData(
+			$account,
+			$mailbox,
+			$message->getThreadRootId(),
+			$thread,
+			$this->currentUserId,
+		);
+
+		return new JSONResponse(['data' => $data]);
+	}
+
 	/**
 	 * @NoAdminRequired
 	 *

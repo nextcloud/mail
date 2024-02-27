@@ -65,4 +65,11 @@
       <code>$event</code>
     </MoreSpecificImplementedParamType>
   </file>
+  <file src="lib/Service/AiIntegrations/AiIntegrationsService.php">
+    <UndefinedDocblockClass>
+      <code>$manager</code>
+      <code>$manager</code>
+      <code>$manager</code>
+    </UndefinedDocblockClass>
+  </file>
 </files>
