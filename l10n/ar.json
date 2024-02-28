@@ -138,6 +138,7 @@
     "Select an alias" : "إختَر اسماً مُستعاراً alias",
     "Select certificates" : "إختّر شهادات المصادقة",
     "Update Certificate" : "تحديث الشهادة",
+    "The selected certificate is not trusted by the server. Recipients might not be able to verify your signature." : "الشهادة المحددة غير موثوق بها من قِبَل الخادوم. قد لا يتمكن المستلمون من التحقُّق من توقيعك.",
     "No certificate" : "لا شهادة",
     "Certificate updated" : "تمّ تحديث الشهادة",
     "Could not update certificate" : "تعذّر تحديث الشهادة",

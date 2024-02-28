@@ -140,6 +140,7 @@ OC.L10N.register(
     "Select an alias" : "Velg et alias",
     "Select certificates" : "Velg sertifikater",
     "Update Certificate" : "Oppdater sertifikat",
+    "The selected certificate is not trusted by the server. Recipients might not be able to verify your signature." : "Det valgte sertifikatet er ikke klarert av serveren. Mottakerne kan kanskje ikke bekrefte signaturen din.",
     "No certificate" : "Ingen sertifikat",
     "Certificate updated" : "Sertifikat oppdatert",
     "Could not update certificate" : "Kunne ikke oppdatere sertifikatet",

@@ -138,6 +138,7 @@
     "Select an alias" : "選取別名",
     "Select certificates" : "選取憑證",
     "Update Certificate" : "更新憑證",
+    "The selected certificate is not trusted by the server. Recipients might not be able to verify your signature." : "伺服器不信任所選的憑證。收件人可能無法驗證您的簽名。",
     "No certificate" : "無憑證",
     "Certificate updated" : "憑證已更新",
     "Could not update certificate" : "無法更新憑證",

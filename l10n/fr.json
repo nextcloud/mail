@@ -137,6 +137,7 @@
     "Select an alias" : "Sélectionner un alias",
     "Select certificates" : "Sélectionner les certificats",
     "Update Certificate" : "Mettre à jour le certificat",
+    "The selected certificate is not trusted by the server. Recipients might not be able to verify your signature." : "Le certificat sélectionné n'est pas reconnu par le serveur. Les destinataires peuvent ne être capables de vérifier votre signature.",
     "No certificate" : "Aucun certificat",
     "Certificate updated" : "Certificat mis à jour",
     "Could not update certificate" : "Impossible de mettre à jour le certificat",

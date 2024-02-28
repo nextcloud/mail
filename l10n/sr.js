@@ -140,6 +140,7 @@ OC.L10N.register(
     "Select an alias" : "Изаберите алијас",
     "Select certificates" : "Изаберите сертификате",
     "Update Certificate" : "Ажурирај сертификат",
+    "The selected certificate is not trusted by the server. Recipients might not be able to verify your signature." : "Сервер не верује изабраном сертификату. Примаоци можда неће моћи да потврде ваш потпис.",
     "No certificate" : "Нема сертификата",
     "Certificate updated" : "Сертификат је ажуриран",
     "Could not update certificate" : "Није могао да се ажурира сертификат",

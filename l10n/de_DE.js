@@ -140,6 +140,7 @@ OC.L10N.register(
     "Select an alias" : "Alias wählen",
     "Select certificates" : "Zertifikate auswählen",
     "Update Certificate" : "Zertifikat aktualisieren",
+    "The selected certificate is not trusted by the server. Recipients might not be able to verify your signature." : "Dem ausgewählten Zertifikat wird vom Server nicht vertraut. Empfänger können Ihre Signatur möglicherweise nicht überprüfen.",
     "No certificate" : "Kein Zertifikat",
     "Certificate updated" : "Zertifikat aktualisiert",
     "Could not update certificate" : "Zertifikat konnte nicht aktualisiert werden",
