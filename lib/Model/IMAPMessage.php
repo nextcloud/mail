@@ -310,6 +310,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'messageId' => $this->getMessageId(),
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),
+			'replyTo' => $this->getReplyTo()->jsonSerialize(),
 			'cc' => $this->getCC()->jsonSerialize(),
 			'bcc' => $this->getBCC()->jsonSerialize(),
 			'subject' => $this->getSubject(),
@@ -426,17 +427,22 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		throw new Exception('not implemented');
 	}
 
+	/**
+	 * @return AddressList
+	 */
 	public function getReplyTo(): AddressList {
 		return $this->replyTo;
 	}
 
 	/**
-	 * @param string $id
+	 * @param AddressList $replyTo
+	 *
+	 * @throws Exception
 	 *
 	 * @return void
 	 */
-	public function setReplyTo(string $id) {
-		throw new Exception('not implemented');
+	public function setReplyTo(AddressList $replyTo) {
+		throw new Exception('IMAP message is immutable');
 	}
 
 	public function isEncrypted(): bool {

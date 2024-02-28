@@ -147,6 +147,7 @@ class IMAPMessageTest extends TestCase {
 			'to' => [ [ 'label' => 'to@mail.com', 'email' => 'to@mail.com' ] ],
 			'cc' => [ [ 'label' => 'cc@mail.com', 'email' => 'cc@mail.com' ] ],
 			'bcc' => [ [ 'label' => 'bcc@mail.com', 'email' => 'bcc@mail.com' ] ],
+			'replyTo' => [ [ 'label' => 'reply-to@mail.com', 'email' => 'reply-to@mail.com' ] ],
 			'subject' => 'subject',
 			'dateInt' => 1451606400,
 			'flags' => [

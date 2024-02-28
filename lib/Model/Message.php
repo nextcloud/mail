@@ -43,6 +43,9 @@ class Message implements IMessage {
 	private $to;
 
 	/** @var AddressList */
+	private $replyTo;
+
+	/** @var AddressList */
 	private $cc;
 
 	/** @var AddressList */
@@ -63,6 +66,7 @@ class Message implements IMessage {
 	public function __construct() {
 		$this->from = new AddressList();
 		$this->to = new AddressList();
+		$this->replyTo = new AddressList();
 		$this->cc = new AddressList();
 		$this->bcc = new AddressList();
 	}
@@ -124,6 +128,22 @@ class Message implements IMessage {
 	 */
 	public function setTo(AddressList $to) {
 		$this->to = $to;
+	}
+
+	/**
+	 * @return AddressList
+	 */
+	public function getReplyTo(): AddressList {
+		return $this->replyTo;
+	}
+
+	/**
+	 * @param AddressList $replyTo
+	 *
+	 * @return void
+	 */
+	public function setReplyTo(AddressList $replyTo) {
+		$this->replyTo = $replyTo;
 	}
 
 	/**

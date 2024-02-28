@@ -73,10 +73,14 @@ const RecipientType = Object.seal({
 	Cc: 2,
 })
 
-export const buildRecipients = (envelope, ownAddress) => {
+export const buildRecipients = (envelope, ownAddress, replyTo) => {
 	let recipientType = RecipientType.None
 	const isOwnAddress = (a) => a.email === ownAddress.email
 	const isNotOwnAddress = negate(isOwnAddress)
+
+	// The Reply-To header has higher precedence than the From header.
+	// This re-uses Horde's handling of the reply_to field directly.
+	const from = replyTo !== undefined ? replyTo : envelope.from
 
 	// Locate why we received this envelope
 	// Can be in 'to', 'cc' or unknown
@@ -97,20 +101,20 @@ export const buildRecipients = (envelope, ownAddress) => {
 	if (recipientType === RecipientType.To) {
 		// Send to everyone except yourself, plus the original sender if not ourself
 		to = envelope.to.filter(isNotOwnAddress)
-		to = to.concat(envelope.from.filter(isNotOwnAddress))
+		to = to.concat(from.filter(isNotOwnAddress))
 
 		// CC remains the same
 		cc = envelope.cc
 	} else if (recipientType === RecipientType.Cc) {
 		// Send to the same people, plus the sender if not ourself
-		to = envelope.to.concat(envelope.from.filter(isNotOwnAddress))
+		to = envelope.to.concat(from.filter(isNotOwnAddress))
 
 		// All CC values are being kept except the replying address
 		cc = envelope.cc.filter(isNotOwnAddress)
 	} else {
 		// Send to the same recipient and the sender (if not ourself) -> answer all
 		to = envelope.to
-		to = to.concat(envelope.from.filter(isNotOwnAddress))
+		to = to.concat(from.filter(isNotOwnAddress))
 
 		// Keep CC values
 		cc = envelope.cc
@@ -118,7 +122,7 @@ export const buildRecipients = (envelope, ownAddress) => {
 
 	// edge case: pure self-sent email
 	if (to.length === 0) {
-		to = envelope.from
+		to = from
 	}
 
 	return {
