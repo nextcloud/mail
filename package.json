@@ -127,7 +127,7 @@
     "node-polyfill-webpack-plugin": "^2.0.1",
     "postcss": "^8.4.35",
     "postcss-loader": "^4.3.0",
-    "sass": "^1.69.5",
+    "sass": "^1.71.1",
     "sass-loader": "^13.3.2",
     "style-loader": "^3.3.4",
     "svg-inline-loader": "^0.8.2",
