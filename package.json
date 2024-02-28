@@ -82,7 +82,6 @@
     "vue-router": "^3.6.5",
     "vue-scroll": "^2.1.13",
     "vue-shortkey": "^3.1.7",
-    "vue-slide-up-down": "^2.0.1",
     "vue-tabs-component": "^1.5.0",
     "vuex": "^3.6.2",
     "vuex-router-sync": "^5.0.0",
