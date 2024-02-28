@@ -152,6 +152,10 @@ class OutboxService {
 			$this->mapper->update($message);
 			throw $e;
 		}
+		if($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
+			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
+			$this->mapper->deleteWithRecipients($message);
+		}
 	}
 
 	/**
