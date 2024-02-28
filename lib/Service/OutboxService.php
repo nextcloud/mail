@@ -145,7 +145,6 @@ class OutboxService {
 			// We can get rid of this after implementing the frontend changes that allow
 			// displaying the new failure codes
 			$message->setFailed(true);
-			$message->setStatus(LocalMessage::STATUS_IMAP_SEND_FAIL);
 			$this->mapper->update($message);
 			throw $e;
 		}
