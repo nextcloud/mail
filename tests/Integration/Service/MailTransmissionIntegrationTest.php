@@ -279,7 +279,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$localMessage->setRecipients([$to]);
 		$localMessage->setAttachments([]);
 
-		$this->transmission->sendLocalMessage($this->account, $localMessage);
+		$this->transmission->sendMessage($this->account, $localMessage);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');

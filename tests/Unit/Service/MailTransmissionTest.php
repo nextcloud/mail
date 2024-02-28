@@ -467,7 +467,7 @@ class MailTransmissionTest extends TestCase {
 		$replyMessage = new DbMessage();
 		$replyMessage->setMessageId('abc');
 
-		$this->transmission->sendLocalMessage(new Account($mailAccount), $message);
+		$this->transmission->sendMessage(new Account($mailAccount), $message);
 	}
 
 	public function testConvertInlineImageToAttachment() {
@@ -600,6 +600,6 @@ class MailTransmissionTest extends TestCase {
 		$replyMessage->setMessageId('abc');
 
 		$this->expectException(ClientException::class);
-		$this->transmission->sendLocalMessage(new Account($mailAccount), $message);
+		$this->transmission->sendMessage(new Account($mailAccount), $message);
 	}
 }

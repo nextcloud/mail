@@ -27,9 +27,6 @@ namespace OCA\Mail\Events;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
-use OCA\Mail\Db\Message;
-use OCA\Mail\Model\IMessage;
-use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
 /**
@@ -39,43 +36,19 @@ class MessageSentEvent extends Event {
 	/** @var Account */
 	private $account;
 
-	/** @var NewMessageData */
-	private $newMessageData;
-
-	/** @var null|string */
-	private $repliedToMessageId;
-
-	/** @var Message|null */
-	private $draft;
-
-	/** @var IMessage */
-	private $message;
-
 	/** @var string */
 	private $mail;
 
 	public function __construct(Account $account,
-		?string $repliedToMessageId,
-		IMessage $message,
 		string $mail,
 		private LocalMessage $localMessage) {
 		parent::__construct();
 		$this->account = $account;
-		$this->repliedToMessageId = $repliedToMessageId;
-		$this->message = $message;
 		$this->mail = $mail;
 	}
 
 	public function getAccount(): Account {
 		return $this->account;
-	}
-
-	public function getRepliedToMessageId(): ?string {
-		return $this->repliedToMessageId;
-	}
-
-	public function getMessage(): IMessage {
-		return $this->message;
 	}
 
 	public function getMail(): string {
@@ -84,9 +57,5 @@ class MessageSentEvent extends Event {
 
 	public function getLocalMessage(): LocalMessage {
 		return $this->localMessage;
-	}
-
-	public function setLocalMessage(LocalMessage $localMessage): void {
-		$this->localMessage = $localMessage;
 	}
 }

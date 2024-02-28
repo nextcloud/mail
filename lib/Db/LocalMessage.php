@@ -71,7 +71,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
 	public const TYPE_DRAFT = 1;
 
-	public const STATUS_UNPROCESSED = 0;
+	public const STATUS_RAW = 0;
 	public const STATUS_NO_SENT_MAILBOX = 1;
 	public const STATUS_SMIME_SIGN_NO_CERT_ID = 2;
 	public const STATUS_SMIME_SIGN_CERT = 3;
@@ -83,6 +83,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 	public const STATUS_RATELIMIT = 9;
 	public const STATUS_IMAP_SEND_FAIL = 10;
 	public const STATUS_IMAP_SENT_MAILBOX_FAIL = 11;
+	public const STATUS_PROCESSED = 12;
 	/**
 	 * @var int
 	 * @psalm-var self::TYPE_*

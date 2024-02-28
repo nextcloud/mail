@@ -69,11 +69,11 @@ class FlagRepliedMessageListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if (!($event instanceof MessageSentEvent) || $event->getRepliedToMessageId() === null) {
+		if (!($event instanceof MessageSentEvent) || $event->getLocalMessage()->getInReplyToMessageId() === null) {
 			return;
 		}
 
-		$messages = $this->dbMessageMapper->findByMessageId($event->getAccount(), $event->getRepliedToMessageId());
+		$messages = $this->dbMessageMapper->findByMessageId($event->getAccount(), $event->getLocalMessage()->getInReplyToMessageId());
 		if ($messages === []) {
 			return;
 		}

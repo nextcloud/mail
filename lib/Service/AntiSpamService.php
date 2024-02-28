@@ -25,35 +25,35 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use Horde_Imap_Client_Exception;
+use Horde_Mime_Exception;
+use Horde_Mime_Mail;
 use OCA\Mail\Account;
-use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Address;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\Exception\SentMailboxNotSetException;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
+use OCA\Mail\Service\DataUri\DataUriParser;
+use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\IConfig;
+use Psr\Log\LoggerInterface;
 
 class AntiSpamService {
 	private const NAME = 'antispam_reporting';
 	private const MESSAGE_TYPE = 'message/rfc822';
 
-	/** @var IConfig */
-	private $config;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var IMailTransmission */
-	private $transmission;
-
-	public function __construct(IConfig $config,
-		MessageMapper $messageMapper,
-		IMailTransmission $transmission,
-		private OutboxService $service) {
-		$this->config = $config;
-		$this->messageMapper = $messageMapper;
-		$this->transmission = $transmission;
+	public function __construct(private IConfig $config,
+		private MessageMapper $dbMessageMapper,
+		private MailManager $mailManager,
+		private IMAPClientFactory $imapClientFactory,
+		private SmtpClientFactory $smtpClientFactory,
+		private ImapMessageMapper $messageMapper,
+		private LoggerInterface $logger,
+	) {
 	}
 
 	public function getSpamEmail(): string {
@@ -100,25 +100,124 @@ class AntiSpamService {
 		$subject = ($flag === '$junk') ? $this->getSpamSubject() : $this->getHamSubject();
 
 		// Message to attach not found
-		$messageId = $this->messageMapper->getIdForUid($mailbox, $uid);
+		$messageId = $this->dbMessageMapper->getIdForUid($mailbox, $uid);
 		if ($messageId === null) {
 			throw new ServiceException('Could not find reported message');
 		}
 
-		$messageData = NewMessageData::fromRequest(
-			$account,
-			$reportEmail,
-			null,
-			null,
-			$subject,
-			$subject, // add any message body - not all IMAP servers accept empty emails
-			[['id' => $messageId, 'type' => self::MESSAGE_TYPE]]
+		$attachment = ['id' => $messageId, 'type' => self::MESSAGE_TYPE];
+
+		if ($account->getMailAccount()->getSentMailboxId() === null) {
+			throw new ServiceException('Could not find sent mailbox');
+		}
+
+		$message = $account->newMessage();
+		$from = new AddressList([
+			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+		]);
+		$to = new AddressList([
+			Address::fromRaw($reportEmail, $reportEmail),
+		]);
+		$message->setTo($to);
+		$message->setSubject($subject);
+		$message->setFrom($from);
+		$message->setContent($subject);
+
+		// Gets original of other message
+		$userId = $account->getMailAccount()->getUserId();
+		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
+		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
+
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$fullText = $this->messageMapper->getFullText(
+				$client,
+				$mailbox->getName(),
+				$attachmentMessage->getUid(),
+				$userId
+			);
+		} catch (ServiceException $e) {
+			throw  new ServiceException($e);
+		} finally {
+			$client->logout();
+		}
+
+		$message->addEmbeddedMessageAttachment(
+			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
+			$fullText
 		);
 
+		$transport = $this->smtpClientFactory->create($account);
+		// build mime body
+		$headers = [
+			'From' => $message->getFrom()->first()->toHorde(),
+			'To' => $message->getTo()->toHorde(),
+			'Cc' => $message->getCC()->toHorde(),
+			'Bcc' => $message->getBCC()->toHorde(),
+			'Subject' => $message->getSubject(),
+		];
+
+		if (($inReplyTo = $message->getInReplyTo()) !== null) {
+			$headers['References'] = $inReplyTo;
+			$headers['In-Reply-To'] = $inReplyTo;
+		}
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+
+		$mimeMessage = new MimeMessage(
+			new DataUriParser()
+		);
+		$mimePart = $mimeMessage->build(
+			true,
+			$message->getContent(),
+			$message->getAttachments()
+		);
+
+		$mail->setBasePart($mimePart);
+
+		// Send the message
 		try {
-			$this->transmission->sendMessage($messageData);
-		} catch (SentMailboxNotSetException | ServiceException $e) {
-			throw new ServiceException('Could not send report email from anti spam email service', 0, $e);
+			$mail->send($transport, false, false);
+		} catch (Horde_Mime_Exception $e) {
+			throw new ServiceException(
+				'Could not send message: ' . $e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		}
+
+		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+		if ($sentMailboxId === null) {
+			$this->logger->warning("No sent mailbox exists, can't save sent message");
+			return;
+		}
+
+		// Save the message in the sent mailbox
+		try {
+			$sentMailbox = $this->mailManager->getMailbox(
+				$account->getUserId(),
+				$sentMailboxId
+			);
+		} catch (ClientException $e) {
+			$this->logger->error('Sent mailbox could not be found', [
+				'exception' => $e,
+			]);
+			return;
+		}
+
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$this->messageMapper->save(
+				$client,
+				$sentMailbox,
+				$mail->getRaw()
+			);
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->error('Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #' . $messageId);
+		} finally {
+			$client->logout();
 		}
 	}
+
 }

@@ -70,10 +70,8 @@ class InteractionListener implements IEventListener {
 			$this->logger->debug('no user object found');
 			return;
 		}
-		$recipients = $event->getMessage()->getTo()
-			->merge($event->getMessage()->getCC())
-			->merge($event->getMessage()->getBCC());
-		foreach ($recipients->iterate() as $recipient) {
+		$message = $event->getLocalMessage();
+		foreach ($message->getRecipients() as $recipient) {
 			$interactionEvent = new ContactInteractedWithEvent($user);
 			$email = $recipient->getEmail();
 			if ($email === null) {

@@ -79,9 +79,6 @@ class InteractionListenerTest extends TestCase {
 		]);
 		$event = $this->createMock(MessageSentEvent::class);
 		$message = $this->createMock(IMessage::class);
-		$event
-			->method('getMessage')
-			->willReturn($message);
 		$message
 			->method('getTo')
 			->willReturn($to);

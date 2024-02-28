@@ -44,7 +44,6 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
-use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -58,11 +57,8 @@ use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Exception\SmimeEncryptException;
-use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -144,150 +140,14 @@ class MailTransmission implements IMailTransmission {
 		$this->smimeService = $smimeService;
 	}
 
-	public function sendMessage(NewMessageData $messageData,
-		?string $repliedToMessageId = null,
-		?Alias $alias = null,
-		?Message $draft = null): void {
-		$account = $messageData->getAccount();
-		if ($account->getMailAccount()->getSentMailboxId() === null) {
-			throw new SentMailboxNotSetException();
-		}
-
-		if ($repliedToMessageId !== null) {
-			// Reply
-			$message = $account->newMessage();
-			$message->setSubject($messageData->getSubject());
-			$message->setTo($messageData->getTo());
-			$message->setInReplyTo($repliedToMessageId);
-		} else {
-			// New message
-			$message = $account->newMessage();
-			$message->setTo($messageData->getTo());
-			$message->setSubject($messageData->getSubject());
-		}
-
-		$account->setAlias($alias);
-		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
-		$from = new AddressList([
-			Address::fromRaw($account->getName(), $fromEmail),
-		]);
-		$message->setFrom($from);
-		$message->setCC($messageData->getCc());
-		$message->setBcc($messageData->getBcc());
-		$message->setContent($messageData->getBody());
-		$this->handleAttachments($account, $messageData, $message);
-
-		$transport = $this->smtpClientFactory->create($account);
-		// build mime body
-		$headers = [
-			'From' => $message->getFrom()->first()->toHorde(),
-			'To' => $message->getTo()->toHorde(),
-			'Cc' => $message->getCC()->toHorde(),
-			'Bcc' => $message->getBCC()->toHorde(),
-			'Subject' => $message->getSubject(),
-		];
-
-		if (($inReplyTo = $message->getInReplyTo()) !== null) {
-			$headers['References'] = $inReplyTo;
-			$headers['In-Reply-To'] = $inReplyTo;
-		}
-
-		if ($messageData->isMdnRequested()) {
-			$headers[Horde_Mime_Mdn::MDN_HEADER] = $message->getFrom()->first()->toHorde();
-		}
-
-		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
-
-		$mimeMessage = new MimeMessage(
-			new DataUriParser()
-		);
-		$mimePart = $mimeMessage->build(
-			$messageData->isHtml(),
-			$message->getContent(),
-			$message->getAttachments()
-		);
-
-		// TODO: add smimeEncrypt check if implemented
-		if ($messageData->getSmimeSign()) {
-			if ($messageData->getSmimeCertificateId() === null) {
-				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
-			}
-
-			try {
-				$certificate = $this->smimeService->findCertificate(
-					$messageData->getSmimeCertificateId(),
-					$account->getUserId(),
-				);
-				$mimePart = $this->smimeService->signMimePart($mimePart, $certificate);
-			} catch (DoesNotExistException $e) {
-				throw new ServiceException(
-					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			} catch (SmimeSignException | ServiceException $e) {
-				throw new ServiceException(
-					'Could not send message: Failed to sign MIME part: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			}
-		}
-
-		if ($messageData->getSmimeEncrypt()) {
-			if ($messageData->getSmimeCertificateId() === null) {
-				throw new ServiceException('Could not send message: Requested S/MIME signature without certificate id');
-			}
-
-			try {
-				$addressList = $messageData->getTo()
-					->merge($messageData->getCc())
-					->merge($messageData->getBcc());
-				$certificates = $this->smimeService->findCertificatesByAddressList($addressList, $account->getUserId());
-
-				$senderCertificate = $this->smimeService->findCertificate($messageData->getSmimeCertificateId(), $account->getUserId());
-				$certificates[] = $senderCertificate;
-
-				$mimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);
-			} catch (DoesNotExistException $e) {
-				throw new ServiceException(
-					'Could not send message: Certificate does not exist: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			} catch (SmimeEncryptException | ServiceException $e) {
-				throw new ServiceException(
-					'Could not send message: Failed to encrypt MIME part: ' . $e->getMessage(),
-					$e->getCode(),
-					$e,
-				);
-			}
-		}
-
-		$mail->setBasePart($mimePart);
-
+	public function copySentMessage(Account $account, LocalMessage $localMessage): void {
 		$this->eventDispatcher->dispatchTyped(
-			new BeforeMessageSentEvent($account, $repliedToMessageId, $draft, $message, $mail)
-		);
-
-		// Send the message
-		try {
-			$mail->send($transport, false, false);
-		} catch (Horde_Mime_Exception $e) {
-			throw new ServiceException(
-				'Could not send message: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
-		}
-
-		$this->eventDispatcher->dispatchTyped(
-			new MessageSentEvent($account, $repliedToMessageId, $draft, $message, $mail)
+			new MessageSentEvent($account, $localMessage->getRaw(), $localMessage)
 		);
 	}
 
-	public function sendLocalMessage(Account $account, LocalMessage $localMessage): void {
+
+	public function sendMessage(Account $account, LocalMessage $localMessage): void {
 		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
@@ -387,7 +247,7 @@ class MailTransmission implements IMailTransmission {
 		}
 
 		$this->eventDispatcher->dispatchTyped(
-			new MessageSentEvent($account, $repliedToMessageId, $message, $mail->getRaw(false), $localMessage)
+			new MessageSentEvent($account, $mail->getRaw(false), $localMessage)
 		);
 	}
 
@@ -553,35 +413,6 @@ class MailTransmission implements IMailTransmission {
 		return [$account, $draftsMailbox, $newUid];
 	}
 
-	/**
-	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
-	 *
-	 * @param Account $account
-	 * @param mixed[] $attachment
-	 * @param IMessage $message
-	 */
-	private function handleForwardedMessageAttachment(Account $account, array $attachment, IMessage $message, \Horde_Imap_Client_Socket $client): void {
-		// Gets original of other message
-		$userId = $account->getMailAccount()->getUserId();
-		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
-		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
-		try {
-			$fullText = $this->messageMapper->getFullText(
-				$client,
-				$mailbox->getName(),
-				$attachmentMessage->getUid(),
-				$userId
-			);
-		} finally {
-			$client->logout();
-		}
-
-		$message->addRawAttachment(
-			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
-			$fullText
-		);
-	}
-
 	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->flags();
@@ -650,32 +481,5 @@ class MailTransmission implements IMailTransmission {
 			throw new ServiceException('Unable to send mdn for message "' . $message->getId() . '" caused by: ' . $e->getMessage(), 0, $e);
 		}
 	}
-
-	/**
-	 * @param Account $account
-	 * @param AddressList $to
-	 * @param AddressList $cc
-	 * @param AddressList $bcc
-	 * @param LocalMessage $message
-	 * @param array $attachments
-	 * @return NewMessageData
-	 */
-	private function buildMessageData(Account $account, AddressList $to, AddressList $cc, AddressList $bcc, LocalMessage $message, array $attachments): NewMessageData {
-		return new NewMessageData(
-			$account,
-			$to,
-			$cc,
-			$bcc,
-			$message->getSubject(),
-			$message->getBody(),
-			$attachments,
-			$message->isHtml(),
-			false,
-			$message->getSmimeCertificateId(),
-			$message->getSmimeSign() ?? false,
-			$message->getSmimeEncrypt() ?? false,
-		);
-	}
-
 
 }
