@@ -51,12 +51,6 @@ class Version3600Date20240220134813 extends SimpleMigrationStep {
 				'default' => 0,
 			]);
 		}
-		if (!$localMessagesTable->hasColumn('mdn_requested')) {
-			$localMessagesTable->addColumn('mdn_requested', Types::BOOLEAN, [
-				'notnull' => false,
-				'default' => 0,
-			]);
-		}
 		if (!$localMessagesTable->hasColumn('raw')) {
 			$localMessagesTable->addColumn('raw', Types::TEXT, [
 				'notnull' => false,

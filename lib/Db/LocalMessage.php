@@ -62,8 +62,6 @@ use function array_filter;
  * @method setSmimeEncrypt (bool $smimeEncryt)
  * @method int getStatus();
  * @method setStatus(int $status);
- * @method bool getMdnRequested()
- * @method setMdnRequested(bool $mdnRequested)
  * @method string|null getRaw()
  * @method setRaw(string|null $raw)
  */
@@ -141,9 +139,6 @@ class LocalMessage extends Entity implements JsonSerializable {
 	 */
 	protected $status;
 
-	/** @var bool */
-	protected $mdnRequested;
-
 	/** @var string|null */
 	protected $raw;
 
@@ -159,7 +154,6 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
 		$this->addType('status', 'integer');
-		$this->addType('mdnRequested', 'boolean');
 	}
 
 	#[ReturnTypeWillChange]
@@ -202,7 +196,6 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'smimeSign' => $this->getSmimeSign() === true,
 			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
 			'status' => $this->getStatus(),
-			'mdnRequested' => $this->getMdnRequested() === true,
 			'raw' => $this->getRaw(),
 		];
 	}

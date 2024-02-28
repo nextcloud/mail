@@ -25,6 +25,6 @@ namespace OCA\Mail\Exception;
 
 class ManyRecipientsException extends ClientException {
 	public function __construct() {
-		parent::__construct("Many recipients in TO and/or CC and/or BCC");
+		parent::__construct("Many recipients in TO and/or CC");
 	}
 }
