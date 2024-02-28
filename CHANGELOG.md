@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.7 – 2024-02-28
+### Fixed
+- ISPDB configuration using the local part of email addresses
+- Error while opening mailto links
+- Classifier clean-up
+- Missing localization for the tasks modal
+
 ## 3.5.6 – 2024-02-14
 ### Fixed
 - Rate limiting of denied IMAP authentication
