@@ -51,7 +51,7 @@
     "@nextcloud/vue-dashboard": "^2.0.1",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^5.0.8",
-    "address-rfc2822": "^2.1.0",
+    "address-rfc2822": "^2.2.0",
     "color-convert": "^2.0.1",
     "core-js": "^3.34.0",
     "debounce-promise": "^3.1.2",
