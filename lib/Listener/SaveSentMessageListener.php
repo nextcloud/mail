@@ -89,20 +89,19 @@ class SaveSentMessageListener implements IEventListener {
 		}
 
 		$client = $this->imapClientFactory->getClient($event->getAccount());
+		$localMessage = $event->getLocalMessage();
 		try {
 			$this->messageMapper->save(
 				$client,
 				$sentMailbox,
 				$event->getMail()
 			);
-			throw new Horde_Imap_Client_Exception();
+			$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
+			$this->localMessageMapper->update($localMessage);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$localMessage = $event->getLocalMessage();
 			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 			$localMessage->setRaw($event->getMail());
 			$this->localMessageMapper->update($localMessage);
-			// also cache the object somewhere so we can retrieve the actual Horde_Mime_Mail ?
-			// Then raw would be a backup in case the cache expires
 			throw new ServiceException('Could not save sent message on IMAP', 0, $e);
 		} finally {
 			$client->logout();
