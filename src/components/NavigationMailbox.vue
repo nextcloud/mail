@@ -64,7 +64,7 @@
 			</div>
 		</template>
 		<!-- actions -->
-		<template slot="actions">
+		<template #actions>
 			<ActionText v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 				:name="mailbox.name">
 				<template #icon>
@@ -168,13 +168,15 @@
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>
 		</template>
-		<CounterBubble v-if="showUnreadCounter && subCounter" slot="counter">
-			{{ mailbox.unread }}&nbsp;({{ subCounter }})
-		</CounterBubble>
-		<CounterBubble v-else-if="showUnreadCounter" slot="counter">
-			{{ mailbox.unread }}
-		</CounterBubble>
-		<template slot="extra">
+		<template #counter>
+			<CounterBubble v-if="showUnreadCounter && subCounter">
+				{{ mailbox.unread }}&nbsp;({{ subCounter }})
+			</CounterBubble>
+			<CounterBubble v-else-if="showUnreadCounter">
+				{{ mailbox.unread }}
+			</CounterBubble>
+		</template>
+		<template #extra>
 			<MoveMailboxModal v-if="showMoveModal"
 				:account="account"
 				:mailbox="mailbox"

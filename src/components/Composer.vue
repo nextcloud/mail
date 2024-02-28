@@ -19,11 +19,11 @@
 					:selectable="(option)=> {
 						return option.selectable}"
 					@option:selected="onAliasChange">
-					<template slot="option" slot-scope="option">
+					<template #option="option">
 						{{ formatAliases(option) }}
 					</template>
 
-					<template slot="selected-option" slot-scope="option">
+					<template #selected-option="option">
 						{{ formatAliases(option) }}
 					</template>
 				</NcSelect>

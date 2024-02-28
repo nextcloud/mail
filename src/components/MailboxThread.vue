@@ -1,66 +1,68 @@
 <template>
 	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
-		<div slot="list"
-			:class="{ header__button: !showThread || !isMobile }">
-			<SearchMessages v-if="!showThread || !isMobile"
-				:mailbox="mailbox"
-				:account-id="account.accountId"
-				@search-changed="onUpdateSearchQuery" />
-			<AppContentList v-infinite-scroll="onScroll"
-				v-shortkey.once="shortkeys"
-				class="envelope-list"
-				infinite-scroll-immediate-check="false"
-				:show-details="showThread"
-				:infinite-scroll-disabled="false"
-				:infinite-scroll-distance="10"
-				role="heading"
-				:aria-level="2"
-				@shortkey.native="onShortcut">
-				<Mailbox v-if="!mailbox.isPriorityInbox"
-					:account="account"
+		<template #list>
+			<div :class="{ header__button: !showThread || !isMobile }">
+				<SearchMessages v-if="!showThread || !isMobile"
 					:mailbox="mailbox"
-					:search-query="query"
-					:bus="bus"
-					:open-first="mailbox.specialRole !== 'drafts'" />
-				<template v-else>
-					<div v-show="hasImportantEnvelopes" class="app-content-list-item">
-						<SectionTitle class="important" :name="t('mail', 'Important')" />
-						<Popover trigger="hover focus">
-							<ButtonVue slot="trigger"
-								type="tertiary-no-background"
-								:aria-label="t('mail', 'Important info')"
-								class="button">
-								<template #icon>
-									<IconInfo :size="20" />
+					:account-id="account.accountId"
+					@search-changed="onUpdateSearchQuery" />
+				<AppContentList v-infinite-scroll="onScroll"
+					v-shortkey.once="shortkeys"
+					class="envelope-list"
+					infinite-scroll-immediate-check="false"
+					:show-details="showThread"
+					:infinite-scroll-disabled="false"
+					:infinite-scroll-distance="10"
+					role="heading"
+					:aria-level="2"
+					@shortkey.native="onShortcut">
+					<Mailbox v-if="!mailbox.isPriorityInbox"
+						:account="account"
+						:mailbox="mailbox"
+						:search-query="query"
+						:bus="bus"
+						:open-first="mailbox.specialRole !== 'drafts'" />
+					<template v-else>
+						<div v-show="hasImportantEnvelopes" class="app-content-list-item">
+							<SectionTitle class="important" :name="t('mail', 'Important')" />
+							<Popover trigger="hover focus">
+								<template #trigger>
+									<ButtonVue type="tertiary-no-background"
+										:aria-label="t('mail', 'Important info')"
+										class="button">
+										<template #icon>
+											<IconInfo :size="20" />
+										</template>
+									</ButtonVue>
 								</template>
-							</ButtonVue>
-							<p class="important-info">
-								{{ importantInfo }}
-							</p>
-						</Popover>
-					</div>
-					<Mailbox v-show="hasImportantEnvelopes"
-						class="nameimportant"
-						:account="unifiedAccount"
-						:mailbox="unifiedInbox"
-						:search-query="appendToSearch(priorityImportantQuery)"
-						:paginate="'manual'"
-						:is-priority-inbox="true"
-						:initial-page-size="importantMessagesInitialPageSize"
-						:collapsible="true"
-						:bus="bus" />
-					<SectionTitle v-show="hasImportantEnvelopes"
-						class="app-content-list-item other"
-						:name="t('mail', 'Other')" />
-					<Mailbox class="nameother"
-						:account="unifiedAccount"
-						:mailbox="unifiedInbox"
-						:search-query="appendToSearch(priorityOtherQuery)"
-						:is-priority-inbox="true"
-						:bus="bus" />
-				</template>
-			</AppContentList>
-		</div>
+								<p class="important-info">
+									{{ importantInfo }}
+								</p>
+							</Popover>
+						</div>
+						<Mailbox v-show="hasImportantEnvelopes"
+							class="nameimportant"
+							:account="unifiedAccount"
+							:mailbox="unifiedInbox"
+							:search-query="appendToSearch(priorityImportantQuery)"
+							:paginate="'manual'"
+							:is-priority-inbox="true"
+							:initial-page-size="importantMessagesInitialPageSize"
+							:collapsible="true"
+							:bus="bus" />
+						<SectionTitle v-show="hasImportantEnvelopes"
+							class="app-content-list-item other"
+							:name="t('mail', 'Other')" />
+						<Mailbox class="nameother"
+							:account="unifiedAccount"
+							:mailbox="unifiedInbox"
+							:search-query="appendToSearch(priorityOtherQuery)"
+							:is-priority-inbox="true"
+							:bus="bus" />
+					</template>
+				</AppContentList>
+			</div>
+		</template>
 		<Thread v-if="showThread" @delete="deleteMessage" />
 		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
