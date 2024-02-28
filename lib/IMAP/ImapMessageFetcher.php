@@ -39,6 +39,7 @@ use Horde_Mime_Headers;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 use OCA\Mail\Service\SmimeService;
@@ -79,7 +80,8 @@ class ImapMessageFetcher {
 		Horde_Imap_Client_Base $client,
 		string $userId,
 		Html $htmlService,
-		SmimeService $smimeService) {
+		SmimeService $smimeService,
+		private Converter $converter) {
 		$this->uid = $uid;
 		$this->mailbox = $mailbox;
 		$this->client = $client;
@@ -434,6 +436,7 @@ class ImapMessageFetcher {
 	 * @throws DoesNotExistException
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws ServiceException
 	 */
 	private function loadBodyData(Horde_Mime_Part $p, string $partNo, bool $isFetched): string {
 		if (!$isFetched) {
@@ -461,22 +464,10 @@ class ImapMessageFetcher {
 			}
 
 			$data = $fetch->getBodyPart($partNo);
-
 			$p->setContents($data);
 		}
 
-		$data = $p->getContents();
-		if ($data === null) {
-			return '';
-		}
-
-		// Only convert encoding if it is explicitly specified in the header because text/calendar
-		// data is utf-8 by default.
-		$charset = $p->getContentTypeParameter('charset');
-		if ($charset !== null && strtoupper($charset) !== 'UTF-8') {
-			$data = mb_convert_encoding($data, 'UTF-8', $charset);
-		}
-		return (string)$data;
+		return $this->converter->convert($p);
 	}
 
 	private function hasAttachments(Horde_Mime_Part $part): bool {
