@@ -151,9 +151,9 @@ class MessagesController extends Controller {
 	 */
 	#[TrapError]
 	public function index(int $mailboxId,
-		int $cursor = null,
-		string $filter = null,
-		int $limit = null): JSONResponse {
+		?int $cursor = null,
+		?string $filter = null,
+		?int $limit = null): JSONResponse {
 		try {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());

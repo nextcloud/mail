@@ -30,7 +30,7 @@ use Throwable;
 class ClassifierTrainingException extends ServiceException {
 	public function __construct($message = "Classifier training failed",
 		$code = 0,
-		Throwable $previous = null) {
+		?Throwable $previous = null) {
 		parent::__construct($message, $code, $previous);
 	}
 }

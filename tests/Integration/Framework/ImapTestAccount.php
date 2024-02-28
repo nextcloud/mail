@@ -42,7 +42,7 @@ trait ImapTestAccount {
 	 *
 	 * @return MailAccount
 	 */
-	public function createTestAccount(string $userId = null) {
+	public function createTestAccount(?string $userId = null) {
 		/* @var $accountService AccountService */
 		$accountService = Server::get(AccountService::class);
 

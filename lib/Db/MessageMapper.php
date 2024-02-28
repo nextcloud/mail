@@ -789,7 +789,7 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return int[]
 	 */
-	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, array $uids = null): array {
+	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit, ?array $uids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		if ($this->needDistinct($query)) {
@@ -979,7 +979,7 @@ class MessageMapper extends QBMapper {
 		return $result;
 	}
 
-	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, array $uids = null): array {
+	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, ?array $uids = null): array {
 		$qb = $this->db->getQueryBuilder();
 		$qbMailboxes = $this->db->getQueryBuilder();
 

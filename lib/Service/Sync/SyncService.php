@@ -111,11 +111,11 @@ class SyncService {
 	public function syncMailbox(Account $account,
 		Mailbox $mailbox,
 		int $criteria,
-		array $knownIds = null,
+		?array $knownIds = null,
 		?int $lastMessageTimestamp,
 		bool $partialOnly,
 		string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST,
-		string $filter = null): Response {
+		?string $filter = null): Response {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}

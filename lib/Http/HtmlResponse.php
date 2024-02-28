@@ -52,8 +52,8 @@ class HtmlResponse extends Response {
 	 */
 	private function __construct(string $content,
 		bool $plain = false,
-		string $nonce = null,
-		string $scriptUrl = null) {
+		?string $nonce = null,
+		?string $scriptUrl = null) {
 		parent::__construct();
 		$this->content = $content;
 		$this->plain = $plain;

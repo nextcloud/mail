@@ -175,7 +175,7 @@ class AccountService {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function updateSignature(int $id, string $uid, string $signature = null): void {
+	public function updateSignature(int $id, string $uid, ?string $signature = null): void {
 		$account = $this->find($uid, $id);
 		$mailAccount = $account->getMailAccount();
 		$mailAccount->setSignature($signature);

@@ -148,8 +148,8 @@ class MailTransmission implements IMailTransmission {
 
 	public function sendMessage(NewMessageData $messageData,
 		?string $repliedToMessageId = null,
-		Alias $alias = null,
-		Message $draft = null): void {
+		?Alias $alias = null,
+		?Message $draft = null): void {
 		$account = $messageData->getAccount();
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			throw new SentMailboxNotSetException();
@@ -425,7 +425,7 @@ class MailTransmission implements IMailTransmission {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function saveDraft(NewMessageData $message, Message $previousDraft = null): array {
+	public function saveDraft(NewMessageData $message, ?Message $previousDraft = null): array {
 		$perfLogger = $this->performanceLogger->start('save draft');
 		$this->eventDispatcher->dispatch(
 			SaveDraftEvent::class,

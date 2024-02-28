@@ -942,7 +942,7 @@ class MessageMapper {
 					$structure->setContents($htmlBody);
 					$htmlBody = $structure->getContents();
 				}
-				$html = new Html2Text($htmlBody, array('do_links' => 'none','alt_image' => 'hide'));
+				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
 				return new MessageStructureData(
 					$hasAttachments,
 					trim($html->getText()),

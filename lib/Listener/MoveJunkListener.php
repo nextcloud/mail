@@ -83,7 +83,7 @@ class MoveJunkListener implements IEventListener {
 					'account_id' => $account->getId(),
 				]);
 			}
-		} elseif (!$event->isSet() && 'INBOX' !== $mailbox->getName()) {
+		} elseif (!$event->isSet() && $mailbox->getName() !== 'INBOX') {
 			try {
 				$this->mailManager->moveMessage(
 					$account,

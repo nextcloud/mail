@@ -127,7 +127,7 @@ class AliasesController extends Controller {
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]
-	public function updateSignature(int $id, string $signature = null): JSONResponse {
+	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		return new JSONResponse($this->aliasService->updateSignature($this->currentUserId, $id, $signature));
 	}
 }

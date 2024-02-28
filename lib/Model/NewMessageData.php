@@ -118,9 +118,9 @@ class NewMessageData {
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account,
-		string $to = null,
-		string $cc = null,
-		string $bcc = null,
+		?string $to = null,
+		?string $cc = null,
+		?string $bcc = null,
 		string $subject,
 		string $body,
 		array $attachments = [],
