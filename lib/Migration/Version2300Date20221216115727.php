@@ -67,7 +67,8 @@ class Version2300Date20221216115727 extends SimpleMigrationStep {
 			]);
 			$table->setPrimaryKey(['id'], 'mail_smime_certs_id_idx');
 			$table->addIndex(['user_id'], 'mail_smime_certs_uid_idx');
-			$table->addIndex(['id', 'user_id'], 'mail_smime_certs_id_uid_idx');
+			// Dropped in Version3600Date20240205180726
+			// $table->addIndex(['id', 'user_id'], 'mail_smime_certs_id_uid_idx');
 		}
 
 		return $schema;

@@ -57,6 +57,64 @@ class OptionalIndicesListener implements IEventListener {
 				],
 			);
 		}
+
+		$event->addMissingIndex(
+			'mail_messages',
+			'mail_messages_strucanalyz_idx',
+			['structure_analyzed']
+		);
+
+		$event->addMissingIndex(
+			'mail_classifiers',
+			'mail_class_creat_idx',
+			['created_at']
+		);
+
+		$event->addMissingIndex(
+			'mail_accounts',
+			'mail_acc_prov_idx',
+			['provisioning_id']
+		);
+
+		$event->addMissingIndex(
+			'mail_aliases',
+			'mail_alias_accid_idx',
+			['account_id']
+		);
+
+		if (method_exists($event, 'replaceIndex')) {
+			$event->replaceIndex(
+				'mail_messages',
+				['mail_messages_mb_id_uid'],
+				'mail_messages_mb_id_uid_uidx',
+				['mailbox_id', 'uid'],
+				true
+			);
+
+			$event->replaceIndex(
+				'mail_smime_certificates',
+				['mail_smime_certs_uid_idx'],
+				'mail_smime_certs_uid_email_idx',
+				['user_id', 'email_address'],
+				false
+			);
+
+			$event->replaceIndex(
+				'mail_trusted_senders',
+				['mail_trusted_senders_type'],
+				'mail_trusted_senders_idx',
+				['user_id', 'email', 'type'],
+				false
+			);
+
+			$event->replaceIndex(
+				'mail_coll_addresses',
+				['mail_coll_addr_userid_index', 'mail_coll_addr_email_index'],
+				'mail_coll_idx',
+				['user_id', 'email', 'display_name'],
+				false
+			);
+		}
 	}
 
 }
