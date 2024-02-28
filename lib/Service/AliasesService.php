@@ -132,7 +132,7 @@ class AliasesService {
 	 *
 	 * @throws DoesNotExistException
 	 */
-	public function updateSignature(string $userId, int $aliasId, string $signature = null): Alias {
+	public function updateSignature(string $userId, int $aliasId, ?string $signature = null): Alias {
 		$entity = $this->find($aliasId, $userId);
 		$entity->setSignature($signature);
 		return $this->aliasMapper->update($entity);

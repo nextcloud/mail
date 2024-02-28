@@ -47,7 +47,7 @@ class Avatar implements JsonSerializable {
 	 * @param string|null $mime
 	 * @param bool $isExternal
 	 */
-	public function __construct(string $url, string $mime = null, bool $isExternal = true) {
+	public function __construct(string $url, ?string $mime = null, bool $isExternal = true) {
 		$this->url = $url;
 		$this->mime = $mime;
 		$this->isExternal = $isExternal;

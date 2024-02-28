@@ -155,16 +155,16 @@ class AccountsController extends Controller {
 	public function update(int $id,
 		string $accountName,
 		string $emailAddress,
-		string $imapHost = null,
-		int $imapPort = null,
-		string $imapSslMode = null,
-		string $imapUser = null,
-		string $imapPassword = null,
-		string $smtpHost = null,
-		int $smtpPort = null,
-		string $smtpSslMode = null,
-		string $smtpUser = null,
-		string $smtpPassword = null,
+		?string $imapHost = null,
+		?int $imapPort = null,
+		?string $imapSslMode = null,
+		?string $imapUser = null,
+		?string $imapPassword = null,
+		?string $smtpHost = null,
+		?int $smtpPort = null,
+		?string $smtpSslMode = null,
+		?string $smtpUser = null,
+		?string $smtpPassword = null,
 		string $authMethod = 'password'): JSONResponse {
 		try {
 			// Make sure the account actually exists
@@ -235,18 +235,18 @@ class AccountsController extends Controller {
 	 */
 	#[TrapError]
 	public function patchAccount(int $id,
-		string $editorMode = null,
-		int $order = null,
-		bool $showSubscribedOnly = null,
-		int $draftsMailboxId = null,
-		int $sentMailboxId = null,
-		int $trashMailboxId = null,
-		int $archiveMailboxId = null,
-		int $snoozeMailboxId = null,
-		bool $signatureAboveQuote = null,
-		int $trashRetentionDays = null,
-		int $junkMailboxId = null,
-		bool $searchBody = null): JSONResponse {
+		?string $editorMode = null,
+		?int $order = null,
+		?bool $showSubscribedOnly = null,
+		?int $draftsMailboxId = null,
+		?int $sentMailboxId = null,
+		?int $trashMailboxId = null,
+		?int $archiveMailboxId = null,
+		?int $snoozeMailboxId = null,
+		?bool $signatureAboveQuote = null,
+		?int $trashRetentionDays = null,
+		?int $junkMailboxId = null,
+		?bool $searchBody = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -311,7 +311,7 @@ class AccountsController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
-	public function updateSignature(int $id, string $signature = null): JSONResponse {
+	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$this->accountService->updateSignature($id, $this->currentUserId, $signature);
 		return new JSONResponse();
 	}
@@ -353,15 +353,15 @@ class AccountsController extends Controller {
 	#[TrapError]
 	public function create(string $accountName,
 		string $emailAddress,
-		string $imapHost = null,
-		int $imapPort = null,
-		string $imapSslMode = null,
-		string $imapUser = null,
+		?string $imapHost = null,
+		?int $imapPort = null,
+		?string $imapSslMode = null,
+		?string $imapUser = null,
 		?string $imapPassword = null,
-		string $smtpHost = null,
-		int $smtpPort = null,
-		string $smtpSslMode = null,
-		string $smtpUser = null,
+		?string $smtpHost = null,
+		?int $smtpPort = null,
+		?string $smtpSslMode = null,
+		?string $smtpUser = null,
 		?string $smtpPassword = null,
 		string $authMethod = 'password'): JSONResponse {
 		if ($this->config->getAppValue(Application::APP_ID, 'allow_new_mail_accounts', 'yes') === 'no') {
@@ -435,7 +435,7 @@ class AccountsController extends Controller {
 		string $cc,
 		string $bcc,
 		bool $isHtml = true,
-		int $draftId = null): JSONResponse {
+		?int $draftId = null): JSONResponse {
 		if ($draftId === null) {
 			$this->logger->info("Saving a new draft in account <$id>");
 		} else {

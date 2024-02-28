@@ -210,7 +210,7 @@ class ImapToDbSynchronizer {
 		Mailbox $mailbox,
 		LoggerInterface $logger,
 		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-		array $knownUids = null,
+		?array $knownUids = null,
 		bool $force = false,
 		bool $batchSync = false): bool {
 		$rebuildThreads = true;
@@ -384,7 +384,7 @@ class ImapToDbSynchronizer {
 		Mailbox $mailbox,
 		LoggerInterface $logger,
 		int $criteria,
-		array $knownUids = null): bool {
+		?array $knownUids = null): bool {
 		$newOrVanished = false;
 		$perf = $this->performanceLogger->startWithLogger(
 			'partial sync ' . $account->getId() . ':' . $mailbox->getName(),

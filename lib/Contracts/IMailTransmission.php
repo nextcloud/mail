@@ -46,9 +46,9 @@ interface IMailTransmission {
 	 * @throws ServiceException
 	 */
 	public function sendMessage(NewMessageData $messageData,
-		string $repliedToMessageId = null,
-		Alias $alias = null,
-		Message $draft = null): void;
+		?string $repliedToMessageId = null,
+		?Alias $alias = null,
+		?Message $draft = null): void;
 
 	/**
 	 * @param Account $account
@@ -79,7 +79,7 @@ interface IMailTransmission {
 	 * @throws ClientException if no drafts mailbox is configured
 	 * @throws ServiceException
 	 */
-	public function saveDraft(NewMessageData $message, Message $previousDraft = null): array;
+	public function saveDraft(NewMessageData $message, ?Message $previousDraft = null): array;
 
 	/**
 	 * Send a mdn message

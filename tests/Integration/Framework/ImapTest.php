@@ -94,7 +94,7 @@ trait ImapTest {
 	/**
 	 * @return array<string>
 	 */
-	public function getMailboxes(Horde_Imap_Client_Socket $client = null) {
+	public function getMailboxes(?Horde_Imap_Client_Socket $client = null) {
 		if ($client === null) {
 			$client = $this->getTestClient();
 		}
@@ -135,7 +135,7 @@ trait ImapTest {
 	 *
 	 * @return int id of the new message
 	 */
-	public function saveMessage(string $mailbox, SimpleMessage $message, MailAccount $account = null) {
+	public function saveMessage(string $mailbox, SimpleMessage $message, ?MailAccount $account = null) {
 		$headers = [
 			'From' => new Horde_Mail_Rfc822_Address($message->getFrom()),
 			'To' => new Horde_Mail_Rfc822_Address($message->getTo()),
@@ -198,7 +198,7 @@ trait ImapTest {
 		}
 	}
 
-	public function flagMessage($mailbox, $id, MailAccount $account = null) {
+	public function flagMessage($mailbox, $id, ?MailAccount $account = null) {
 		$client = $this->getClient($account);
 		try {
 			$client->store($mailbox, [
@@ -212,7 +212,7 @@ trait ImapTest {
 		}
 	}
 
-	public function deleteMessage($mailbox, $id, MailAccount $account = null) {
+	public function deleteMessage($mailbox, $id, ?MailAccount $account = null) {
 		$client = $this->getClient($account);
 		$ids = new Horde_Imap_Client_Ids([$id]);
 		try {

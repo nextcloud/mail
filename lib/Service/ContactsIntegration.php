@@ -212,7 +212,7 @@ class ContactsIntegration {
 	/**
 	 * Adds a new contact with the specified email to an addressbook
 	 */
-	public function newContact(string $name, string $mailAddr, string $type = 'HOME', string $addressbook = null): ?array {
+	public function newContact(string $name, string $mailAddr, string $type = 'HOME', ?string $addressbook = null): ?array {
 		if (!$this->contactsManager->isEnabled()) {
 			return null;
 		}

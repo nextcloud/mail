@@ -116,7 +116,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 				$val['slicemap'] = true;
 
 				foreach (array_keys(array_flip($val['add'])) as $uid) {
-					if ($s['c']++ > $this->_params['slicesize']) {
+					if ($this->_params['slicesize'] < $s['c']++) {
 						$s['c'] = 0;
 						$val['slice'][] = ++$s['i'];
 						$this->_loadSlice($mbox, $s['i']);
