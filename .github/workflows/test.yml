@@ -49,7 +49,7 @@ jobs:
       env:
         XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+      uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
       if: ${{ always() && matrix.php-versions == '8.0' }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -188,7 +188,7 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+            uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
