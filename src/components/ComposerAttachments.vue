@@ -51,6 +51,17 @@
 			multiple
 			style="display: none;"
 			@change="onLocalAttachmentSelected">
+		<FilePicker v-if="isAttachementPickerOpen"
+			:title="t('mail','Choose a file to add as attachment')"
+			:buttons="attachementPickerButtons"
+			:filter-fn="filterAttachements"
+			@close="()=>isAttachementPickerOpen = false" />
+		<FilePicker v-if="isLinkPickerOpen"
+			:title="t('mail','Choose a file to share as a link')"
+			:multiselect="false"
+			:buttons="linkPickerButtons"
+			:filter-fn="filterAttachements"
+			@close="()=>isLinkPickerOpen = false" />
 	</div>
 </template>
 
@@ -60,7 +71,8 @@ import trimStart from 'lodash/fp/trimCharsStart.js'
 import { getRequestToken } from '@nextcloud/auth'
 import { formatFileSize } from '@nextcloud/files'
 import prop from 'lodash/fp/prop.js'
-import { getFilePickerBuilder, showWarning } from '@nextcloud/dialogs'
+import { showWarning } from '@nextcloud/dialogs'
+import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import sumBy from 'lodash/fp/sumBy.js'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
@@ -87,6 +99,7 @@ const mimes = [
 export default {
 	name: 'ComposerAttachments',
 	components: {
+		FilePicker,
 		ComposerAttachment,
 		ChevronDown,
 		ChevronUp,
@@ -113,6 +126,23 @@ export default {
 			attachments: [],
 			isToggle: false,
 			hasNextLine: false,
+			isAttachementPickerOpen: false,
+			isLinkPickerOpen: false,
+			attachementPickerButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.onAddCloudAttachment,
+					type: 'primary',
+				},
+			],
+			linkPickerButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.onAddCloudAttachmentLink,
+					type: 'primary',
+				},
+			],
+
 		}
 	},
 	computed: {
@@ -163,8 +193,8 @@ export default {
 	},
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
-		this.bus.on('on-add-cloud-attachment', this.onAddCloudAttachment)
-		this.bus.on('on-add-cloud-attachment-link', this.onAddCloudAttachmentLink)
+		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
+		this.bus.on('on-add-cloud-attachment-link', this.OpenctLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.value.map(attachment => {
 			this.attachments.push({
@@ -180,6 +210,17 @@ export default {
 		})
 	},
 	methods: {
+		filterAttachements(node) {
+			const downloadShareAttribute = JSON.parse(node.attributes['share-attributes']).find((shareAttribute) => shareAttribute.key === 'download')
+			const downloadPermissions = downloadShareAttribute !== undefined ? downloadShareAttribute.enabled : true
+			return (node.permissions & OC.PERMISSION_READ) && downloadPermissions
+		},
+		openAttachementPicker() {
+			this.isAttachementPickerOpen = true
+		},
+		OpenctLinkPicker() {
+			this.isLinkPickerOpen = true
+		},
 		onAddLocalAttachment() {
 			this.$refs.localAttachments.click()
 		},
@@ -285,11 +326,10 @@ export default {
 
 			return done
 		},
-		async onAddCloudAttachment() {
-			const picker = getFilePickerBuilder(t('mail', 'Choose a file to add as attachment')).setMultiSelect(true).build()
-
+		async onAddCloudAttachment(nodes) {
 			try {
-				const paths = await picker.pick(t('mail', 'Choose a file to add as attachment'))
+				const paths = nodes.map(node => node.path)
+				this.cloudAttachement = false
 				// maybe fiiled front with placeholder loader...?
 				const filesFromCloud = await Promise.all(paths.map(getFileData))
 
@@ -332,12 +372,10 @@ export default {
 				logger.error('could not choose a file as attachment', { error })
 			}
 		},
-		async onAddCloudAttachmentLink() {
-			const picker = getFilePickerBuilder(t('mail', 'Choose a file to share as a link')).build()
-
+		async onAddCloudAttachmentLink(nodes) {
 			try {
-				const path = await picker.pick(t('mail', 'Choose a file to share as a link'))
-				const url = await shareFile(path, getRequestToken())
+				this.cloudAttachementLink = false
+				const url = await shareFile(nodes[0].path, getRequestToken())
 
 				this.appendToBodyAtCursor(`<a href="${url}">${url}</a>`)
 			} catch (error) {
