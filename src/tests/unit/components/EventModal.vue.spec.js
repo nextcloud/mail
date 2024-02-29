@@ -42,7 +42,7 @@ describe('EventModal', () => {
 			},
 		})
 
-		expect(view.vm.enabledThreadSummary).toBe(false)
+		expect(view.vm.llmProcessingEnabled).toBe(false)
 		expect(view.vm.eventTitle).toBe('Sub?')
 		expect(view.vm.description).toBe('prev')
 	})

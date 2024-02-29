@@ -93,7 +93,7 @@ export default {
 			expandedThreads: [],
 			participantsToDisplay: 999,
 			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
-			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
+			enabledThreadSummary: loadState('mail', 'llm_summaries_available', false),
 			summaryText: '',
 			summaryError: false,
 		}

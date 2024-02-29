@@ -277,13 +277,13 @@ class PageController extends Controller {
 		);
 
 		$this->initialStateService->provideInitialState(
-			'enabled_thread_summary',
-			$this->config->getAppValue('mail', 'enabled_thread_summary', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+			'llm_summaries_available',
+			$this->config->getAppValue('mail', 'llm_processing', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
 		);
 
 		$this->initialStateService->provideInitialState(
-			'enabled_smart_reply',
-			$this->config->getAppValue('mail', 'enabled_smart_reply', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			'llm_freeprompt_available',
+			$this->config->getAppValue('mail', 'llm_processing', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
 		);
 
 		$this->initialStateService->provideInitialState(

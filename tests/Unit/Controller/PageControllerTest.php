@@ -260,8 +260,8 @@ class PageControllerTest extends TestCase {
 				['mail', 'microsoft_oauth_tenant_id' ],
 				['core', 'backgroundjobs_mode', 'ajax' ],
 				['mail', 'allow_new_mail_accounts', 'yes'],
-				['mail', 'enabled_thread_summary', 'no'],
-				['mail', 'enabled_smart_reply', 'no'],
+				['mail', 'llm_processing', 'no'],
+				['mail', 'llm_processing', 'no'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
 				$this->returnValue(''),
@@ -309,8 +309,8 @@ class PageControllerTest extends TestCase {
 				['disable-scheduled-send', false],
 				['disable-snooze', false],
 				['allow-new-accounts', true],
-				['enabled_thread_summary', false],
-				['enabled_smart_reply', false],
+				['llm_summaries_available', false],
+				['llm_freeprompt_available', false],
 				['smime-certificates', []],
 			);
 

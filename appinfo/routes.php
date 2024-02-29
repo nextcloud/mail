@@ -346,13 +346,8 @@ return [
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'settings#setEnabledThreadSummary',
-			'url' => '/api/settings/threadsummary',
-			'verb' => 'PUT'
-		],
-		[
-			'name' => 'settings#setEnabledSmartReplies',
-			'url' => '/api/settings/smartreply',
+			'name' => 'settings#setEnabledLlmProcessing',
+			'url' => '/api/settings/llm',
 			'verb' => 'PUT'
 		],
 		[

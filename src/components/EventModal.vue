@@ -102,7 +102,7 @@ export default {
 			selectedCalendar: undefined,
 			description: this.envelope.previewText,
 			generatingData: false,
-			enabledThreadSummary: loadState('mail', 'enabled_thread_summary', false),
+			llmProcessingEnabled: loadState('mail', 'llm_summaries_available', false),
 		}
 	},
 	computed: {
@@ -129,7 +129,7 @@ export default {
 	},
 	methods: {
 		async generateEventData() {
-			if (!this.enabledThreadSummary) {
+			if (!this.llmProcessingEnabled) {
 				return
 			}
 			try {
