@@ -174,7 +174,7 @@ class LocalMessageMapperTest extends TestCase {
 		$this->assertCount(1, $row->getRecipients());
 	}
 
-	public function testUpdateWithRecipient(): void {
+	public function testUpdateWithRecipients(): void {
 		$results = $this->mapper->getAllForUser($this->account->getUserId());
 		$this->assertEmpty($results[0]->getRecipients());
 		// cleanup

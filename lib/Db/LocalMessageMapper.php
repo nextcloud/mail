@@ -256,14 +256,14 @@ class LocalMessageMapper extends QBMapper {
 			$message = $this->update($message);
 
 			$this->recipientMapper->updateRecipients($message->getId(), $message->getRecipients(), $to, $cc, $bcc);
+			$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
+			$message->setRecipients($recipients);
 			$this->db->commit();
+			return $message;
 		} catch (Throwable $e) {
 			$this->db->rollBack();
 			throw $e;
 		}
-		$recipients = $this->recipientMapper->findByLocalMessageId($message->getId());
-		$message->setRecipients($recipients);
-		return $message;
 	}
 
 	public function deleteWithRecipients(LocalMessage $message): void {
