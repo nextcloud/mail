@@ -125,18 +125,18 @@ class CollectedAddressMapperTest extends TestCase {
 		}
 	}
 
-	public function existsData() {
+	public function insertIfNewData(): array {
 		return [
-			['user1@example.com', true],
-			['user3@example.com', false],
+			['user1@example.com', false],
+			['user3@example.com', true],
 		];
 	}
 
 	/**
-	 * @dataProvider existsData
+	 * @dataProvider insertIfNewData
 	 */
-	public function testExists($email, $expected) {
-		$actual = $this->mapper->exists($this->userId, $email);
+	public function testExists($email, $expected): void {
+		$actual = $this->mapper->insertIfNew($this->userId, $email, null);
 
 		$this->assertSame($expected, $actual);
 	}
