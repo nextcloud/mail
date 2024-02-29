@@ -1016,7 +1016,12 @@ export default {
 	margin-top: 6px;
 	margin-bottom: 6px;
 }
+:deep(.list-item) {
+	flex-wrap: wrap;
+}
 :deep(.list-item__extra) {
 	margin-top: 9px;
+	flex-basis: 100%;
+	padding-left: 40px;
 }
 </style>
