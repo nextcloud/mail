@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "No message found yet" : "Entá nun s'atopó nengún mensaxe",
+    "Personal" : "Personal",
     "Mail" : "Corréu electrónicu",
     "Name" : "Nome",
     "Password" : "Contraseña",
