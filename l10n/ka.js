@@ -532,8 +532,6 @@ OC.L10N.register(
     "Provision all accounts" : "Provision all accounts",
     "Allow additional mail accounts" : "Allow additional mail accounts",
     "Allow additional Mail accounts from User Settings" : "Allow additional Mail accounts from User Settings",
-    "Enable thread summary" : "Enable thread summary",
-    "Enable thread summaries" : "Enable thread summaries",
     "Anti Spam Service" : "Anti Spam Service",
     "You can set up an anti spam service email address here." : "You can set up an anti spam service email address here.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Any email that is marked as spam will be sent to the anti spam service.",

@@ -469,8 +469,6 @@ OC.L10N.register(
     "Add new config" : "Adaugă o nouă configurație",
     "Allow additional mail accounts" : "Permite conturi de mail suplimentare",
     "Allow additional Mail accounts from User Settings" : "Permite conturi de mail suplimentare în setările utilizator",
-    "Enable thread summary" : "Activați rezumatul conversației",
-    "Enable thread summaries" : "Activează rezumatul conversației",
     "Anti Spam Service" : "Serviciul anti-spam",
     "Successfully updated config for \"{domain}\"" : "S-a actualizat configurația pentru \"{domain}\"",
     "Error saving config" : "Eroare la salvarea configurației",

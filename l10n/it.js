@@ -436,8 +436,6 @@ OC.L10N.register(
     "Provisioning Configurations" : "Configurazione di approvvigionamento",
     "Add new config" : "Aggiungi nuova configurazione",
     "Provision all accounts" : "Predisponi tutti gli account",
-    "Enable thread summaries" : "Abilita riepiloghi delle discussioni",
-    "Enable smart replies" : "Abilita risposte intelligenti",
     "Anti Spam Service" : "Servizio anti-spam",
     "You can set up an anti spam service email address here." : "È possibile impostare un indirizzo e-mail del servizio Anti-Spam qui.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Qualsiasi email contrassegnata come posta indesiderata verrà inviata al servizio anti-spam.",

@@ -522,8 +522,6 @@ OC.L10N.register(
     "Provision all accounts" : "Hornitu kontu guztiak",
     "Allow additional mail accounts" : "Onartu e-mail kontu gehigarriak",
     "Allow additional Mail accounts from User Settings" : "Onartu posta kontu gehigarriak erabiltzaile ezarpenetatik",
-    "Enable thread summary" : "Gaitu harien laburbiltzea",
-    "Enable thread summaries" : "Gaitu harien laburbiltzea",
     "Anti Spam Service" : "Anti spam zerbitzua",
     "You can set up an anti spam service email address here." : "Hemen spamaren aurkako zerbitzuaren helbide elektronikoa konfigura dezakezu.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Spam gisa markatutako edozein mezu elektroniko spamaren aurkako zerbitzura bidaliko da.",

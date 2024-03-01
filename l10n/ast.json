@@ -31,12 +31,16 @@
     "Add" : "Amestar",
     "Close" : "Zarrar",
     "Tags" : "Etiquetes",
+    "Clear" : "Borrar",
     "Date" : "Data",
     "Custom" : "Personalizar",
+    "Not found" : "Nun s'atopó",
     "Reset" : "Reafitar",
+    "User" : "Usuariu",
     "Port" : "Puertu",
     "Certificate" : "Certificáu",
     "Submit" : "Unviar",
+    "All" : "Too",
     "Favorites" : "Favoritos",
     "{from}\n{subject}" : "{from}\n{subject}"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

@@ -531,8 +531,6 @@
     "Provision all accounts" : "Provisionar todas as contas",
     "Allow additional mail accounts" : "Permitir contas de e-mail adicionais",
     "Allow additional Mail accounts from User Settings" : "Permitir contas de e-mail adicionais nas Configurações do Usuário",
-    "Enable thread summary" : "Ativar resumo do tópico",
-    "Enable thread summaries" : "Ativar resumos de tópicos",
     "Anti Spam Service" : "Serviço Anti-Spam ",
     "You can set up an anti spam service email address here." : "Você pode configurar um endereço de e-mail do serviço anti-spam aqui.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Qualquer e-mail marcado como spam será enviado para o serviço anti-spam. ",

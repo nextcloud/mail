@@ -522,8 +522,6 @@ OC.L10N.register(
     "Provision all accounts" : "Aprovisionar todas as contas",
     "Allow additional mail accounts" : "Permitir contas de correo adicionais",
     "Allow additional Mail accounts from User Settings" : "Permitir contas de correo adicionais dende os axustes do usuario",
-    "Enable thread summary" : "Activa o resumo do fío",
-    "Enable thread summaries" : "Activar os resumos dos fíos",
     "Anti Spam Service" : "Servizo «antispam»",
     "You can set up an anti spam service email address here." : "Pode configurar un enderezo de correo do servizo «antispam» aquí.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Calquera correo que estea marcado como lixo enviarase ao servizo «antispam».",

@@ -533,8 +533,6 @@ OC.L10N.register(
     "Provision all accounts" : "Aprovisiona tots els comptes",
     "Allow additional mail accounts" : "Permet comptes de correu addicionals",
     "Allow additional Mail accounts from User Settings" : "Permet comptes de correu addicionals des de la configuració d'usuari",
-    "Enable thread summary" : "Habilita el resum del fil",
-    "Enable thread summaries" : "Habilita els resums de fils",
     "Anti Spam Service" : "Servei contra correu brossa",
     "You can set up an anti spam service email address here." : "Podeu configurar una adreça de correu electrònic del servei contra correu brossa aquí.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Qualsevol correu electrònic que estigui marcat com a correu brossa s'enviarà al servei contra correu brossa.",

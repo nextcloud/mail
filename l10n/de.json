@@ -520,8 +520,6 @@
     "Provision all accounts" : "Alle Konten bereitstellen",
     "Allow additional mail accounts" : "Zusätzliche E-Mail-Konten zulassen",
     "Allow additional Mail accounts from User Settings" : "Zusätzliche E-Mail-Konten in den Benutzereinstellungen zulassen",
-    "Enable thread summary" : "Zusammenfassung der Unterhaltung aktivieren",
-    "Enable thread summaries" : "Zusammenfassungen der Unterhaltungen aktivieren",
     "Anti Spam Service" : "Anti-Spam-Dienst",
     "You can set up an anti spam service email address here." : "Hier kannst du eine E-Mail-Adresse für einen Anti-Spam-Dienst einrichten.",
     "Any email that is marked as spam will be sent to the anti spam service." : "Jede als Spam markierte E-Mail wird an den Anti-Spam-Dienst weitergeleitet.",
