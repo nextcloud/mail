@@ -19,6 +19,7 @@ OC.L10N.register(
     "Search" : "Buscar",
     "Confirm" : "Confirmar",
     "Favorite" : "Meter en Favoritos",
+    "Select" : "Seleicionar",
     "Back" : "Atrás",
     "Load more" : "Cargar más",
     "Description" : "Descripción",
