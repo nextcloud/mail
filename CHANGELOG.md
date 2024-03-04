@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.6.0 – unreleased
+### Added
+* Selection of untrusted S/MIME certificates
+* Suggested replies
+* LLM suggested event titles and agendas
+* Maximize composer modal
+* Descriptions for events created from threads
+### Changed
+* Move threads with drag and drop
+* One feature setting for all LLM features
+* Faster background sync
+### Fixed
+* Database index usages
+* Division by zero
+* Autoconfig via MX DNS records
+
 ## 3.5.0 – unreleased
 ### Added
 - Emoji picker via : symbol
