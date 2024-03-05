@@ -60,11 +60,7 @@ class CollectedAddressMapper extends QBMapper {
 		return $this->findEntities($dbQuery);
 	}
 
-	/**
-	 * @param null|string $email
-	 * @return bool
-	 */
-	public function exists(string $userId, ?string $email) {
+	public function insertIfNew(string $userId, string $email, ?string $label): bool {
 		$qb = $this->db->getQueryBuilder();
 		$dbQuery = $qb
 			->select('*')
@@ -72,7 +68,18 @@ class CollectedAddressMapper extends QBMapper {
 			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
 			->andWhere($qb->expr()->iLike('email', $qb->createNamedParameter($email)));
 
-		return count($this->findEntities($dbQuery)) > 0;
+		if (!empty($this->findEntities($dbQuery))) {
+			return false;
+		}
+
+		$entity = new CollectedAddress();
+		$entity->setUserId($userId);
+		if ($label !== $email) {
+			$entity->setDisplayName($label);
+		}
+		$entity->setEmail($email);
+		$this->insert($entity);
+		return true;
 	}
 
 	public function getTotal(): int {

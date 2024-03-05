@@ -28,9 +28,12 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
+use OCP\AppFramework\Db\TTransactional;
 use Psr\Log\LoggerInterface;
 
 class AddressCollector {
+	use TTransactional;
+
 	/** @var CollectedAddressMapper */
 	private $mapper;
 
@@ -78,16 +81,8 @@ class AddressCollector {
 			$this->logger->debug("<" . $address->getEmail() . "> is not a valid RFC822 mail address");
 			return;
 		}
-		if ($address->getEmail() !== null && !$this->mapper->exists($userId, $address->getEmail())) {
-			$this->logger->debug("saving new address <{$address->getEmail()}>");
-
-			$entity = new CollectedAddress();
-			$entity->setUserId($userId);
-			if ($address->getLabel() !== $address->getEmail()) {
-				$entity->setDisplayName($address->getLabel());
-			}
-			$entity->setEmail($address->getEmail());
-			$this->mapper->insert($entity);
+		if ($address->getEmail() !== null && $this->mapper->insertIfNew($userId, $address->getEmail(), $address->getLabel())) {
+			$this->logger->debug("saved new address <{$address->getEmail()}>");
 		}
 	}
 
