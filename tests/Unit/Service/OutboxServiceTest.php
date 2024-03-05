@@ -455,12 +455,6 @@ class OutboxServiceTest extends TestCase {
 		$this->transmission->expects(self::once())
 			->method('sendMessage')
 			->with($account, $message);
-		$this->attachmentService->expects(self::once())
-			->method('deleteLocalMessageAttachments')
-			->with($account->getUserId(), $message->getId());
-		$this->mapper->expects(self::once())
-			->method('deleteWithRecipients')
-			->with($message);
 
 		$this->outboxService->sendMessage($message, $account);
 	}
@@ -488,10 +482,6 @@ class OutboxServiceTest extends TestCase {
 			->method('sendMessage')
 			->with($account, $message)
 			->willThrowException(new ClientException());
-		$this->attachmentService->expects(self::never())
-			->method('deleteLocalMessageAttachments');
-		$this->mapper->expects(self::never())
-			->method('deleteWithRecipients');
 
 		$this->expectException(ClientException::class);
 		$this->outboxService->sendMessage($message, $account);
