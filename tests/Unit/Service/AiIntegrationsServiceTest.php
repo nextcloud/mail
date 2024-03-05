@@ -99,12 +99,12 @@ class AiIntegrationsServiceTest extends TestCase {
 				->willReturn([]);
 			$this->expectException(ServiceException::class);
 			$this->expectExceptionMessage('No language model available for summary');
-			$this->aiIntegrationsService->summarizeThread($account, $mailbox, '', [], '');
+			$this->aiIntegrationsService->summarizeThread($account, '', [], '');
 		}
 		$this->container->method('get')->willThrowException(new ServiceException());
 		$this->expectException(ServiceException::class);
 		$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
-		$this->aiIntegrationsService->summarizeThread($account, $mailbox, '', [], '');
+		$this->aiIntegrationsService->summarizeThread($account, '', [], '');
 
 	}
 
@@ -228,12 +228,12 @@ class AiIntegrationsServiceTest extends TestCase {
 				->with($key)
 				->willReturn('this is a cached summary');
 
-			$this->assertEquals('this is a cached summary', $this->aiIntegrationsService->summarizeThread($account, $mailbox, 'some-thread-root-id-1', $messages, 'admin'));
+			$this->assertEquals('this is a cached summary', $this->aiIntegrationsService->summarizeThread($account, 'some-thread-root-id-1', $messages, 'admin'));
 		} else {
 			$this->container->method('get')->willThrowException(new ServiceException());
 			$this->expectException(ServiceException::class);
 			$this->expectExceptionMessage('Text processing is not available in your current Nextcloud version');
-			$this->aiIntegrationsService->summarizeThread($account, $mailbox, 'some-thread-root-id-1', $messages, 'admin');
+			$this->aiIntegrationsService->summarizeThread($account, 'some-thread-root-id-1', $messages, 'admin');
 		}
 	}
 
