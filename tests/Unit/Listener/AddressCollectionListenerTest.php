@@ -26,19 +26,15 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Mime_Mail;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
-use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Model\IMessage;
-use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\TransmissionService;
 use OCP\EventDispatcher\Event;
@@ -112,17 +108,20 @@ class AddressCollectionListenerTest extends TestCase {
 		]);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(LocalMessage::class);
-		;
-		$message->setRecipients([Recipient::fromParams([
-			'email' => 'to@email',
-			'type' => Recipient::TYPE_TO,
-		]), Recipient::fromParams([
-			'email' => 'cc@email',
-			'type' => Recipient::TYPE_CC,
-		]), Recipient::fromParams([
-			'email' => 'bcc@email',
-			'type' => Recipient::TYPE_BCC,
-		])]);
+		$message->setRecipients([
+			Recipient::fromParams([
+				'email' => 'to@email',
+				'type' => Recipient::TYPE_TO,
+			]),
+			Recipient::fromParams([
+				'email' => 'cc@email',
+				'type' => Recipient::TYPE_CC,
+			]),
+			Recipient::fromParams([
+				'email' => 'bcc@email',
+				'type' => Recipient::TYPE_BCC,
+			])
+		]);
 		$event = new MessageSentEvent(
 			$account,
 			'abc123',

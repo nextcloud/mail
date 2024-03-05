@@ -27,6 +27,7 @@ namespace OCA\Mail\Test\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -93,18 +94,15 @@ class FlagRepliedMessageListenerTest extends TestCase {
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
 		/** @var IMessage|MockObject $message */
-		$message = $this->createMock(IMessage::class);
+		$message = $this->createMock(LocalMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(\Horde_Mime_Mail::class);
 		$draft = new Message();
 		$draft->setUid(123);
 		$event = new MessageSentEvent(
 			$account,
-			$newMessageData,
-			null,
-			$draft,
+			'Test',
 			$message,
-			$mail
 		);
 		$this->dbMessageMapper->expects($this->never())
 			->method('findByMessageId');
@@ -119,23 +117,17 @@ class FlagRepliedMessageListenerTest extends TestCase {
 	public function testHandleMessageSentEvent(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		/** @var NewMessageData|MockObject $newMessageData */
-		$newMessageData = $this->createMock(NewMessageData::class);
 		/** @var RepliedMessageData|MockObject $repliedMessageData */
 		$repliedMessageData = $this->createMock(RepliedMessageData::class);
-		/** @var IMessage|MockObject $message */
-		$message = $this->createMock(IMessage::class);
-		/** @var \Horde_Mime_Mail|MockObject $mail */
-		$mail = $this->createMock(\Horde_Mime_Mail::class);
+		/** @var LocalMessage|MockObject $message */
+		$message = new LocalMessage();
+		$message->setInReplyToMessageId('<abc123@123.com>');
 		$draft = new Message();
 		$draft->setUid(123);
 		$event = new MessageSentEvent(
 			$account,
-			$newMessageData,
-			'<abc123@123.com>',
-			$draft,
+			'Test',
 			$message,
-			$mail
 		);
 		$messageInReply = new Message();
 		$messageInReply->setUid(321);

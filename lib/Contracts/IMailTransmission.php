@@ -37,11 +37,11 @@ interface IMailTransmission {
 	 * Send a new message or reply to an existing one
 	 *
 	 * @param Account $account
-	 * @param LocalMessage $message
+	 * @param LocalMessage $localMessage
 	 * @throws SentMailboxNotSetException
 	 * @throws ServiceException
 	 */
-	public function sendMessage(Account $account, LocalMessage $message): void;
+	public function sendMessage(Account $account, LocalMessage $localMessage): void;
 
 	/**
 	 * @param Account $account

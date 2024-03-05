@@ -42,7 +42,7 @@ class DraftSavedEvent extends Event {
 
 	public function __construct(Account $account,
 		NewMessageData $newMessageData,
-		?Message $draft) {
+		?Message $draft = null) {
 		parent::__construct();
 		$this->account = $account;
 		$this->newMessageData = $newMessageData;

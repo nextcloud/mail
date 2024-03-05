@@ -39,6 +39,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
@@ -105,8 +106,6 @@ class AntiSpamService {
 			throw new ServiceException('Could not find reported message');
 		}
 
-		$attachment = ['id' => $messageId, 'type' => self::MESSAGE_TYPE];
-
 		if ($account->getMailAccount()->getSentMailboxId() === null) {
 			throw new ServiceException('Could not find sent mailbox');
 		}
@@ -125,7 +124,13 @@ class AntiSpamService {
 
 		// Gets original of other message
 		$userId = $account->getMailAccount()->getUserId();
-		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
+		try {
+			$attachmentMessage = $this->mailManager->getMessage($userId, $messageId);
+		} catch (DoesNotExistException $e) {
+			$this->logger->error('Could not find reported email with message ID #' . $messageId);
+			return;
+		}
+
 		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
 		$client = $this->imapClientFactory->getClient($account);
@@ -137,13 +142,13 @@ class AntiSpamService {
 				$userId
 			);
 		} catch (ServiceException $e) {
-			throw  new ServiceException($e);
+			throw new ServiceException($e);
 		} finally {
 			$client->logout();
 		}
 
 		$message->addEmbeddedMessageAttachment(
-			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
+			$attachmentMessage->getSubject() . '.eml',
 			$fullText
 		);
 
@@ -211,7 +216,7 @@ class AntiSpamService {
 			$this->messageMapper->save(
 				$client,
 				$sentMailbox,
-				$mail->getRaw()
+				$mail->getRaw(false)
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
 			$this->logger->error('Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #' . $messageId);

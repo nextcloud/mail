@@ -73,7 +73,7 @@ class AddressCollectionListener implements IEventListener {
 			$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
 			$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
 
-			$addresses = $to->merge($bcc)->merge($cc);
+			$addresses = $to->merge($cc)->merge($bcc);
 
 			$this->collector->addAddresses($event->getAccount()->getUserId(), $addresses);
 		} catch (Throwable $e) {

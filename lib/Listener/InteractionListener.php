@@ -71,13 +71,18 @@ class InteractionListener implements IEventListener {
 			return;
 		}
 		$message = $event->getLocalMessage();
+		$emails = [];
 		foreach ($message->getRecipients() as $recipient) {
+			if(in_array($recipient->getEmail(), $emails)) {
+				continue;
+			}
 			$interactionEvent = new ContactInteractedWithEvent($user);
 			$email = $recipient->getEmail();
 			if ($email === null) {
 				// Weird, bot ok
 				continue;
 			}
+			$emails[] = $email;
 			$interactionEvent->setEmail($email);
 			$this->dispatcher->dispatch(ContactInteractedWithEvent::class, $interactionEvent);
 		}

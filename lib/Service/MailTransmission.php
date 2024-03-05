@@ -41,8 +41,6 @@ use Horde_Mime_Mdn;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
-use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
@@ -65,79 +63,20 @@ use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Files\Folder;
 use Psr\Log\LoggerInterface;
 
 class MailTransmission implements IMailTransmission {
-	private SmimeService $smimeService;
-
-	/** @var Folder */
-	private $userFolder;
-
-	/** @var IAttachmentService */
-	private $attachmentService;
-
-	/** @var IMailManager */
-	private $mailManager;
-
-	/** @var IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var SmtpClientFactory */
-	private $smtpClientFactory;
-
-	/** @var IEventDispatcher */
-	private $eventDispatcher;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
-
-	/** @var MessageMapper */
-	private $messageMapper;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var PerformanceLogger */
-	private $performanceLogger;
-
-	/** @var AliasesService */
-	private $aliasesService;
-
-	/** @var GroupsIntegration */
-	private $groupsIntegration;
-
-	/**
-	 * @param Folder $userFolder
-	 */
-	public function __construct($userFolder,
-		IAttachmentService $attachmentService,
-		IMailManager $mailManager,
-		IMAPClientFactory $imapClientFactory,
-		SmtpClientFactory $smtpClientFactory,
-		IEventDispatcher $eventDispatcher,
-		MailboxMapper $mailboxMapper,
-		MessageMapper $messageMapper,
-		LoggerInterface $logger,
-		PerformanceLogger $performanceLogger,
-		AliasesService $aliasesService,
-		GroupsIntegration $groupsIntegration,
-		SmimeService $smimeService,
+	public function __construct(
+		private IMAPClientFactory $imapClientFactory,
+		private SmtpClientFactory $smtpClientFactory,
+		private IEventDispatcher $eventDispatcher,
+		private MailboxMapper $mailboxMapper,
+		private MessageMapper $messageMapper,
+		private LoggerInterface $logger,
+		private PerformanceLogger $performanceLogger,
+		private AliasesService $aliasesService,
 		private TransmissionService $transmissionService
 	) {
-		$this->userFolder = $userFolder;
-		$this->attachmentService = $attachmentService;
-		$this->mailManager = $mailManager;
-		$this->imapClientFactory = $imapClientFactory;
-		$this->smtpClientFactory = $smtpClientFactory;
-		$this->eventDispatcher = $eventDispatcher;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
-		$this->logger = $logger;
-		$this->performanceLogger = $performanceLogger;
-		$this->aliasesService = $aliasesService;
-		$this->groupsIntegration = $groupsIntegration;
-		$this->smimeService = $smimeService;
 	}
 
 	public function copySentMessage(Account $account, LocalMessage $localMessage): void {
