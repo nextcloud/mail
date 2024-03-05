@@ -705,39 +705,32 @@ class MessageMapper extends QBMapper {
 	}
 
 	public function deleteByUid(Mailbox $mailbox, int ...$uids): void {
-		$messageIdQuery = $this->db->getQueryBuilder();
+		$messageIdSubQuery = $this->db->getQueryBuilder();
 		$deleteRecipientsQuery = $this->db->getQueryBuilder();
 		$deleteMessagesQuery = $this->db->getQueryBuilder();
 
-		// Get all message ids query
-		$messageIdQuery->select('id')
+		$messageIdSubQuery->select('id')
 			->from($this->getTableName())
 			->where(
-				$messageIdQuery->expr()->eq('mailbox_id', $messageIdQuery->createNamedParameter($mailbox->getId())),
-				$messageIdQuery->expr()->in('uid', $messageIdQuery->createParameter('uids'))
+				$messageIdSubQuery->expr()->eq('mailbox_id', $deleteRecipientsQuery->createNamedParameter($mailbox->getId())),
+				$messageIdSubQuery->expr()->in('uid', $deleteRecipientsQuery->createParameter('uids'))
 			);
-
 		$deleteRecipientsQuery->delete('mail_recipients')
-			->where($deleteRecipientsQuery->expr()->in('message_id', $deleteRecipientsQuery->createParameter('messageIds')));
+			->where($deleteRecipientsQuery->expr()->in('message_id', $deleteMessagesQuery->createFunction($messageIdSubQuery->getSQL())));
 
 		$deleteMessagesQuery->delete($this->getTableName())
-			->where($deleteMessagesQuery->expr()->in('id', $deleteMessagesQuery->createParameter('messageIds')));
+			->where(
+				$deleteMessagesQuery->expr()->eq('mailbox_id', $deleteMessagesQuery->createNamedParameter($mailbox->getId())),
+				$deleteMessagesQuery->expr()->in('uid', $deleteMessagesQuery->createParameter('uids')),
+			);
 
 		foreach (array_chunk($uids, 1000) as $chunk) {
-			$messageIdQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$cursor = $messageIdQuery->executeQuery();
-
-			$messageIds = array_map(static function (array $message) {
-				return $message['id'];
-			}, $cursor->fetchAll());
-			$cursor->closeCursor();
-
 			// delete all related recipient entries
-			$deleteRecipientsQuery->setParameter('messageIds', $messageIds, IQueryBuilder::PARAM_INT_ARRAY);
+			$deleteRecipientsQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$deleteRecipientsQuery->executeStatement();
 
 			// delete all messages
-			$deleteMessagesQuery->setParameter('messageIds', $messageIds, IQueryBuilder::PARAM_INT_ARRAY);
+			$deleteMessagesQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 			$deleteMessagesQuery->executeStatement();
 		}
 	}

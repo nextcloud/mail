@@ -36,6 +36,8 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use function array_map;
+use function range;
 use function time;
 
 class MessageMapperTest extends TestCase {
@@ -185,5 +187,28 @@ class MessageMapperTest extends TestCase {
 		$result = $this->mapper->findIdsByQuery($mailbox, $searchQuery, $sortOrder, 3, null);
 
 		self::assertEquals([3,2,1], $result);
+	}
+
+	public function testDeleteByUid(): void {
+		$mailbox = new Mailbox();
+		$mailbox->setId(1);
+		array_map(function ($i) {
+			$qb = $this->db->getQueryBuilder();
+			$insert = $qb->insert($this->mapper->getTableName())
+				->values([
+					'uid' => $qb->createNamedParameter($i, IQueryBuilder::PARAM_INT),
+					'message_id' => $qb->createNamedParameter('<abc' . $i . '@123.com>'),
+					'mailbox_id' => $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT),
+					'subject' => $qb->createNamedParameter('TEST'),
+					'sent_at' => $qb->createNamedParameter(time(), IQueryBuilder::PARAM_INT),
+					'in_reply_to' => $qb->createNamedParameter('<>')
+				]);
+			$insert->executeStatement();
+		}, range(1, 10));
+
+		$this->mapper->deleteByUid($mailbox, 1, 5);
+
+		$messages = $this->mapper->findByUids($mailbox, range(1, 10));
+		self::assertCount(8, $messages);
 	}
 }
