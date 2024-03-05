@@ -295,12 +295,16 @@ class MailboxSync {
 		}, $syncStatus));
 		foreach ($syncStatus as $mailbox) {
 			$status = $statuses[$mailbox->getName()];
-			$mailbox->setMessages($status->getTotal());
-			$mailbox->setUnseen($status->getUnread());
+			if(isset($status)) {
+				$mailbox->setMessages($status->getTotal());
+				$mailbox->setUnseen($status->getUnread());
+			}
 		}
 		$this->atomic(function () use ($syncStatus) {
 			foreach ($syncStatus as $mailbox) {
-				$this->mailboxMapper->update($mailbox);
+				if(isset($statuses[$mailbox->getName()])) {
+					$this->mailboxMapper->update($mailbox);
+				}
 			}
 		}, $this->dbConnection);
 	}
