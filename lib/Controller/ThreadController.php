@@ -183,6 +183,9 @@ class ThreadController extends Controller {
 		return new JSONResponse(['data' => $summary]);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 */
 	public function generateEventData(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
