@@ -1112,7 +1112,7 @@ export default {
 			this.bodyVal = editor.getData()
 			this.insertSignature()
 			if (this.smartReply) {
-				this.bus.$emit('append-to-body-at-cursor', this.smartReply)
+				this.bus.emit('append-to-body-at-cursor', this.smartReply)
 			}
 		},
 		onChangeSendLater(value) {
