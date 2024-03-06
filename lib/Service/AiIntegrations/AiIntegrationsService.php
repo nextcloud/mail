@@ -71,6 +71,7 @@ PROMPT;
 		$this->mailManager = $mailManager;
 	}
 	/**
+	 * @param Account $account
 	 * @param string $threadId
 	 * @param array $messages
 	 * @param string $currentUserId
@@ -79,7 +80,7 @@ PROMPT;
 	 *
 	 * @throws ServiceException
 	 */
-	public function summarizeThread(Account $account, Mailbox $mailbox, string $threadId, array $messages, string $currentUserId): null|string {
+	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): null|string {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
@@ -95,7 +96,8 @@ PROMPT;
 			}
 			$client = $this->clientFactory->getClient($account);
 			try {
-				$messagesBodies = array_map(function ($message) use ($client, $account, $mailbox) {
+				$messagesBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
+					$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
 					$imapMessage = $this->mailManager->getImapMessage(
 						$client,
 						$account,
