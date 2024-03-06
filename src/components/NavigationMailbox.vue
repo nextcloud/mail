@@ -28,7 +28,7 @@
 			accountId: mailbox.accountId,
 			isValidDropTarget,
 		}"
-		:allow-collapse="true"
+		:allow-collapse="hasSubMailboxes"
 		:menu-open.sync="menuOpen"
 		:force-menu="true"
 		:name="title"
