@@ -266,6 +266,23 @@
 				</ButtonVue>
 			</div>
 			<div class="composer-actions--secondary-actions">
+				<ButtonVue v-if="!encrypt && editorPlainText"
+					type="tertiary"
+					:aria-label="t('mail', 'Enable formatting')"
+					@click="setEditorModeHtml()">
+					<template #icon>
+						<IconFormat :size="20" :title="t('mail', 'Enable formatting')" />
+					</template>
+				</ButtonVue>
+				<ButtonVue v-if="!encrypt && !editorPlainText"
+					type="tertiary"
+					:pressed="true"
+					:aria-label="t('mail', 'Disable formatting')"
+					@click="setEditorModeText()">
+					<template #icon>
+						<IconFormat :size="20" :title="t('mail', 'Disable formatting')" />
+					</template>
+				</ButtonVue>
 				<Actions :open.sync="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
@@ -310,20 +327,6 @@
 							{{
 								t('mail', 'Send later')
 							}}
-						</ActionButton>
-						<ActionButton v-if="!encrypt && editorPlainText"
-							@click="setEditorModeHtml()">
-							<template #icon>
-								<IconHtml :size="20" />
-							</template>
-							{{ t('mail', 'Enable formatting') }}
-						</ActionButton>
-						<ActionButton v-if="!encrypt && !editorPlainText"
-							@click="setEditorModeText()">
-							<template #icon>
-								<IconClose :size="20" />
-							</template>
-							{{ t('mail', 'Disable formatting') }}
 						</ActionButton>
 						<ActionCheckbox :checked="requestMdnVal"
 							@check="requestMdnVal = true"
@@ -447,8 +450,7 @@ import IconLinkPicker from 'vue-material-design-icons/Shape.vue'
 import RecipientListItem from './RecipientListItem.vue'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
-import IconHtml from 'vue-material-design-icons/ImageSizeSelectActual.vue'
-import IconClose from 'vue-material-design-icons/Close.vue'
+import IconFormat from 'vue-material-design-icons/FormatUnderline.vue'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
@@ -504,8 +506,7 @@ export default {
 		SendClock,
 		UnfoldMoreHorizontal,
 		UnfoldLessHorizontal,
-		IconHtml,
-		IconClose,
+		IconFormat,
 		NcReferencePickerModal,
 	},
 	props: {

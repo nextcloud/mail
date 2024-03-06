@@ -21,20 +21,24 @@
   -->
 
 <template>
-	<ckeditor v-if="ready"
-		:value="value"
-		:config="config"
-		:editor="editor"
-		:disabled="disabled"
-		@input="onEditorInput"
-		@ready="onEditorReady" />
+	<div>
+		<ckeditor v-if="ready"
+			:value="value"
+			:config="config"
+			:editor="editor"
+			:disabled="disabled"
+			class="editor"
+			@input="onEditorInput"
+			@ready="onEditorReady" />
+		<div ref="container" class="toolbar" />
+	</div>
 </template>
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment.js'
 import { Mention } from '@ckeditor/ckeditor5-mention'
-import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor.js'
+import Editor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor.js'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials.js'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
@@ -52,6 +56,7 @@ import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64u
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image.js'
 import ImageResizePlugin from '@ckeditor/ckeditor5-image/src/imageresize.js'
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload.js'
+import { DropdownView } from '@ckeditor/ckeditor5-ui'
 import MailPlugin from '../ckeditor/mail/MailPlugin.js'
 import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Components/NcRichText.js'
 import { getLanguage } from '@nextcloud/l10n'
@@ -219,6 +224,54 @@ export default {
 
 			return itemElement
 		},
+		overrideDropdownPositionsToNorth(editor, toolbarView) {
+			const {
+				south, north, southEast, southWest, northEast, northWest,
+				southMiddleEast, southMiddleWest, northMiddleEast, northMiddleWest,
+			} = DropdownView.defaultPanelPositions
+
+			let panelPositions
+
+			if (editor.locale.uiLanguageDirection !== 'rtl') {
+				panelPositions = [
+					northEast, northWest, northMiddleEast, northMiddleWest, north,
+					southEast, southWest, southMiddleEast, southMiddleWest, south,
+				]
+			} else {
+				panelPositions = [
+					northWest, northEast, northMiddleWest, northMiddleEast, north,
+					southWest, southEast, southMiddleWest, southMiddleEast, south,
+				]
+			}
+
+			for (const item of toolbarView.items) {
+				if (!(item instanceof DropdownView)) {
+					continue
+				}
+
+				item.on('change:isOpen', () => {
+					if (!item.isOpen) {
+						return
+					}
+
+					item.panelView.position = DropdownView._getOptimalPosition({
+						element: item.panelView.element,
+						target: item.buttonView.element,
+						fitInViewport: true,
+						positions: panelPositions,
+					}).name
+				})
+			}
+		},
+		overrideTooltipPositions(toolbarView) {
+			for (const item of toolbarView.items) {
+				if (item.buttonView) {
+					item.buttonView.tooltipPosition = 'n'
+				} else if (item.tooltipPosition) {
+					item.tooltipPosition = 'n'
+				}
+			}
+		},
 		async loadEditorTranslations(language) {
 			if (language === 'en') {
 				// The default, nothing to fetch
@@ -250,6 +303,13 @@ export default {
 		 */
 		onEditorReady(editor) {
 			logger.debug('TextEditor is ready', { editor })
+
+			// https://ckeditor.com/docs/ckeditor5/latest/examples/builds-custom/bottom-toolbar-editor.html
+			if (editor.ui) {
+				this.$refs.container.appendChild(editor.ui.view.toolbar.element)
+				this.overrideDropdownPositionsToNorth(editor, editor.ui.view.toolbar)
+				this.overrideTooltipPositions(editor.ui.view.toolbar)
+			}
 
 			editor.commands.get('mention')?.on('execute', (event, data) => {
 				event.stop()
@@ -307,6 +367,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.editor {
+	width: 100%;
+	height: calc(100% - 75px);
+	overflow: scroll;
+	margin-bottom: 10px;
+
+	&.ck {
+		border: none !important;
+		box-shadow: none !important;
+		padding: 0;
+	}
+}
+
 :deep(a) {
 	color: #07d;
 }
