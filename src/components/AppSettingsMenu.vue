@@ -417,11 +417,11 @@ p.app-settings {
 .app-settings-link {
 	text-decoration: underline;
 }
-::v-deep .button-vue__text {
+:deep(.button-vue__text) {
 	text-overflow: clip;
 	white-space: normal;
 }
-::v-deep .button-vue__wrapper {
+:deep(.button-vue__wrapper) {
 	justify-content: flex-start;
 }
 .mailvelope-section {
