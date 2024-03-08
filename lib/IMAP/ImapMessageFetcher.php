@@ -446,7 +446,6 @@ class ImapMessageFetcher {
 			$fetch_query->bodyPart($partNo, [
 				'peek' => true
 			]);
-			$fetch_query->bodyPartSize($partNo);
 			$fetch_query->mimeHeader($partNo, [
 				'peek' => true
 			]);
