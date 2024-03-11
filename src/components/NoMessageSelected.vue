@@ -52,6 +52,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+:deep(.refresh__button) {
+	display: none !important;
+}
 .header {
 	display: grid !important;
 	justify-content: center !important;
