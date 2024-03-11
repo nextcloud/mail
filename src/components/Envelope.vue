@@ -855,6 +855,7 @@ export default {
 }
 
 .envelope {
+	margin-left: -3px;
 	.app-content-list-item-icon {
 		height: 40px; // To prevent some unexpected spacing below the avatar
 	}
@@ -974,9 +975,10 @@ export default {
 	border: 1px solid transparent;
 	border-radius: var(--border-radius-pill);
 	position: relative;
-	margin: 0 1px;
+	margin: 0 1px -5px 1px;
 	overflow: hidden;
-	left: 4px;
+	left: 43px;
+	bottom: -4px;
 }
 .list-item__wrapper:deep() {
 	list-style: none;
