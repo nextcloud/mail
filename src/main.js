@@ -109,6 +109,10 @@ store.commit('savePreference', {
 	key: 'password-is-unavailable',
 	value: loadState('mail', 'password-is-unavailable', false),
 })
+store.commit('savePreference', {
+	key: 'layout-mode',
+	value: getPreferenceFromPage('layout-mode'),
+})
 
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])

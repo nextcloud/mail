@@ -1,7 +1,10 @@
 <template>
-	<AppContent pane-config-key="mail" :show-details="isThreadShown" @update:showDetails="hideMessage">
+	<AppContent pane-config-key="mail"
+		:layout="layoutMode"
+		:show-details="isThreadShown"
+		@update:showDetails="hideMessage">
 		<template #list>
-			<div :class="{ header__button: !showThread || !isMobile }">
+			<div :class="{ list__wrapper: !showThread || !isMobile }">
 				<SearchMessages v-if="!showThread || !isMobile"
 					:mailbox="mailbox"
 					:account-id="account.accountId"
@@ -63,8 +66,9 @@
 				</AppContentList>
 			</div>
 		</template>
+
 		<Thread v-if="showThread" @delete="deleteMessage" />
-		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
+		<NoMessageSelected v-else-if="hasEnvelopes" />
 	</AppContent>
 </template>
 
@@ -138,9 +142,13 @@ export default {
 			priorityImportantQuery,
 			priorityOtherQuery,
 			startMailboxTimer: undefined,
+			hasContent: false,
 		}
 	},
 	computed: {
+		layoutMode() {
+			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
+		},
 		unifiedAccount() {
 			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
 		},
@@ -331,11 +339,6 @@ export default {
 		background-color: var(--color-background-dark);
 	}
 }
-:deep(.button-vue--vue-secondary) {
-	position: sticky;
-	top:40px;
-	left: 10px;
-}
 :deep(.app-content-wrapper) {
 	overflow: auto;
 }
@@ -351,10 +354,17 @@ export default {
 		margin-bottom: 20px;
 	}
 }
-.header__button {
+.list__wrapper {
 	display: flex;
 	flex: 1 0 0;
 	flex-direction: column;
-	height: calc(100vh - var(--header-height));
+	height: 100%;
+}
+:deep(.app-details-toggle) {
+	opacity: 1;
+}
+ // temporary fix
+:deep(.app-content-list) {
+	min-height: 0;
 }
 </style>

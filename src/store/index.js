@@ -107,6 +107,7 @@ export default new Store({
 				sieveScript: {},
 				calendars: [],
 				smimeCertificates: [],
+				hasFetchedInitialEnvelopes: false,
 			},
 			getters,
 			mutations,
