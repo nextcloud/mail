@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 * LLM suggested event titles and agendas
 * Maximize composer modal
 * Descriptions for events created from threads
+* Full list layout option
+* Editor toolbar
 ### Changed
 * Move threads with drag and drop
 * One feature setting for all LLM features
