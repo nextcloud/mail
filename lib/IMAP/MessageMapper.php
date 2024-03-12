@@ -351,7 +351,7 @@ class MessageMapper {
 		string $mailbox): void {
 		$client->store($mailbox, [
 			'add' => [
-				Horde_Imap_Client::FLAG_SEEN,
+				[Horde_Imap_Client::FLAG_SEEN],
 			],
 		]);
 	}
