@@ -79,7 +79,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 	public const STATUS_SMIME_ENCRYT_FAIL = 7;
 	public const STATUS_TOO_MANY_RECIPIENTS = 8;
 	public const STATUS_RATELIMIT = 9;
-	public const STATUS_IMAP_SEND_FAIL = 10;
+	public const STATUS_SMPT_SEND_FAIL = 10;
 	public const STATUS_IMAP_SENT_MAILBOX_FAIL = 11;
 	public const STATUS_PROCESSED = 12;
 	/**

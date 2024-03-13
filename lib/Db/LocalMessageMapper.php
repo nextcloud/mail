@@ -134,10 +134,6 @@ class LocalMessageMapper extends QBMapper {
 				$qb->expr()->isNotNull('send_at'),
 				$qb->expr()->eq('type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
-				$qb->expr()->orX(
-					$qb->expr()->isNull('failed'),
-					$qb->expr()->eq('failed', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
-				)
 			)
 			->orderBy('send_at', 'asc');
 		$messages = $this->findEntities($select);

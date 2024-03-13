@@ -172,7 +172,7 @@ class MailTransmission implements IMailTransmission {
 		try {
 			$mail->send($transport, false, false);
 		} catch (Horde_Mime_Exception $e) {
-			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SEND_FAIL);
+			$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 			$localMessage->setFailed(true);
 			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($localMessage));
 			throw new ServiceException(
