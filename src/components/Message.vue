@@ -56,22 +56,22 @@
 			:message="message" />
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
-		<div v-if="smartReplies.length>0" class="reply-buttons">
-			<NcButton v-for="(reply,index) in smartReplies"
-				:key="index"
-				type="secondary"
-				@click="onReply(reply)">
-				<template #icon>
-					<ReplyIcon />
-				</template>
-				{{ reply }}
-			</NcButton>
+		<div class="reply-buttons">
+			<div v-if="smartReplies.length>0" class="reply-buttons__suggested">
+				<NcButton v-for="(reply,index) in smartReplies"
+					:key="index"
+					class="reply-buttons__suggested__button"
+					type="secondary"
+					@click="onReply(reply)">
+					{{ reply }}
+				</NcButton>
+			</div>
 			<NcButton type="primary"
 				@click="onReply">
 				<template #icon>
 					<ReplyIcon />
 				</template>
-				{{t('mail','Reply')}}
+				{{ multipleRecipients ? t('mail','Reply all') :t('mail','Reply') }}
 			</NcButton>
 		</div>
 	</div>
@@ -123,6 +123,10 @@ export default {
 			required: false,
 			type: Array,
 			default: () => [],
+		},
+		multipleRecipients: {
+			required: true,
+			type: Boolean,
 		},
 	},
 	computed: {
@@ -177,14 +181,19 @@ export default {
 	}
 }
 .reply-buttons{
+	margin: 0 10px 0 50px;
 	display: flex;
-	justify-content: end;
-
-	& > * {
-		margin: 5px;
-		top: 0 !important;
-		left: 0 !important;
-
+	justify-content: space-between;
+	&__suggested {
+		display: flex;
+		justify-content: space-between;
+		&__button {
+			margin-right:5px;
+			border-radius: 12px;
+			:deep(.button-vue__text){
+				font-weight: normal;
+			}
+		}
 	}
 
 }

@@ -109,19 +109,6 @@
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
 					<NcActions :inline="inlineMenuSize">
-						<NcActionButton v-if="inlineMenuSize >= 1 || !moreActionsOpen"
-							:class="{ primary: expanded}"
-							:aria-label="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
-							:name="hasMultipleRecipients ? t('mail', 'Reply all') : t('mail', 'Reply')"
-							type="tertiary-no-background"
-							@click="onReply">
-							<template #icon>
-								<ReplyAllIcon v-if="hasMultipleRecipients"
-									:size="20" />
-								<ReplyIcon v-else
-									:size="20" />
-							</template>
-						</NcActionButton>
 						<NcActionButton v-if="hasWriteAcl && (inlineMenuSize >= 2 || !moreActionsOpen)"
 							type="tertiary-no-background"
 							class="action--primary"
@@ -176,10 +163,11 @@
 						<MenuEnvelope class="app-content-list-item-menu"
 							:envelope="envelope"
 							:mailbox="mailbox"
-							:with-reply="false"
+							:with-reply="true"
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
+							@reply="onReply"
 							@delete="$emit('delete',envelope.databaseId)"
 							@show-source-modal="onShowSourceModal"
 							@open-tag-modal="onOpenTagModal"
@@ -220,6 +208,7 @@
 			:message="message"
 			:full-height="fullHeight"
 			:smart-replies="smartReplies"
+			:multiple-recipients="hasMultipleRecipients"
 			@load="loading = LOADING_DONE"
 			@reply="onReply" />
 		<Error v-else-if="error"
@@ -268,8 +257,6 @@ import MenuEnvelope from './MenuEnvelope.vue'
 import Moment from './Moment.vue'
 import { smartReply } from '../service/AiIntergrationsService.js'
 import { mailboxHasRights } from '../util/acl.js'
-import ReplyIcon from 'vue-material-design-icons/Reply.vue'
-import ReplyAllIcon from 'vue-material-design-icons/ReplyAll.vue'
 import StarOutline from 'vue-material-design-icons/StarOutline.vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import ArchiveIcon from 'vue-material-design-icons/PackageDown.vue'
@@ -319,8 +306,6 @@ export default {
 		MenuEnvelope,
 		Moment,
 		Message,
-		ReplyIcon,
-		ReplyAllIcon,
 		StarOutline,
 		EmailRead,
 		EmailUnread,
