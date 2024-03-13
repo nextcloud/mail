@@ -35,7 +35,6 @@ use OCA\Mail\Exception\SmimeSignException;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 
 class TransmissionService {
@@ -44,7 +43,6 @@ class TransmissionService {
 		private AttachmentService $attachmentService,
 		private LoggerInterface $logger,
 		private SmimeService $smimeService,
-		private IEventDispatcher $eventDispatcher,
 	) {
 	}
 
@@ -90,6 +88,7 @@ class TransmissionService {
 	public function handleAttachment(Account $account, array $attachment, IMessage $message): void {
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
+			return;
 		}
 
 		$id = (int)$attachment['id'];
