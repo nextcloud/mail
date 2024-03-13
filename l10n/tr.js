@@ -100,6 +100,8 @@ OC.L10N.register(
     "Create alias" : "Takma ad ekle",
     "Cancel" : "İptal",
     "Mail settings" : "E-posta ayarları",
+    "Layout" : "Görünüm",
+    "List" : "Liste",
     "Account creation" : "Hesap açılışı",
     "Add mail account" : "E-posta hesabı ekle",
     "Activate body search" : "Metinler aransın",

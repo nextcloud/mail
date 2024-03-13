@@ -99,6 +99,7 @@ OC.L10N.register(
     "Create alias" : "Álnév létrehozása",
     "Cancel" : "Mégse",
     "Mail settings" : "Levelezési beállítások",
+    "List" : "Lista",
     "Add mail account" : "E-mail-fiók hozzáadása",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Engedélyezés az alkalmazásnak, hogy az adatokat gyűjtsön az interakcióiról. Az adatok alapján az alkalmazás alkalmazkodni fog a használati szokásaihoz. Az adatok helyben lesznek tárolva.",
     "Trusted senders" : "Megbízható küldők",

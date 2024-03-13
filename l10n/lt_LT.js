@@ -71,6 +71,8 @@ OC.L10N.register(
     "Add alias" : "Pridėti alternatyvų vardą",
     "Cancel" : "Atsisakyti",
     "Mail settings" : "Pašto nustatymai",
+    "Layout" : "Išdėstymas",
+    "List" : "Sąrašas",
     "Add mail account" : "Pridėti pašto paskyrą",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Leisti programėlei rinkti duomenis apie jūsų sąveikas. Remiantis šiais duomenimis, programėlė prisitaikys prie jūsų nuostatų. Duomenys bus laikomi tik vietoje.",
     "Trusted senders" : "Patikimi siuntėjai",

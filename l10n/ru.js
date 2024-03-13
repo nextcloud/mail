@@ -97,6 +97,7 @@ OC.L10N.register(
     "Create alias" : "Создать псевдоним",
     "Cancel" : "Отмена",
     "Mail settings" : "Параметры эл. почты",
+    "List" : "Список",
     "Add mail account" : "Добавить учётную запись",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Разрешить приложению собирать данные о взаимодействии.  Основываясь на этих данных, приложение адаптируется к вашим предпочтениям. Данные будут храниться только локально.",
     "Trusted senders" : "Доверенные отправители",

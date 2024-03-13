@@ -99,6 +99,8 @@ OC.L10N.register(
     "Create alias" : "Vytvořit alternativní název",
     "Cancel" : "Storno",
     "Mail settings" : "Nastavení pro E-mail",
+    "Layout" : "Rozvržení",
+    "List" : "Seznam",
     "Account creation" : "Vytváření účtů",
     "Add mail account" : "Přidat e-mailový účet",
     "Activate body search" : "Zapnout hledání v těle",

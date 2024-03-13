@@ -159,6 +159,7 @@ OC.L10N.register(
     "_Delete {number} thread_::_Delete {number} threads_" : ["Ta bort {number} tråd","Ta bort {number} trådar"],
     "Report this bug" : "Rapportera detta fel",
     "All day" : "Hela dagen",
+    "Description" : "Beskrivning",
     "Create" : "Skapa",
     "Event created" : "Evenemang skapat",
     "Could not create event" : "Kunde inte skapa händelse",

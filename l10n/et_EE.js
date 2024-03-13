@@ -28,6 +28,7 @@ OC.L10N.register(
     "Go back" : "Mine tagasi",
     "Email address" : "E-posti aadress",
     "Cancel" : "Loobu",
+    "List" : "Nimekiri",
     "Register" : "Registreeru",
     "Archive" : "Arhiiv",
     "Delete" : "Kustuta",

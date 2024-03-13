@@ -31,6 +31,7 @@ OC.L10N.register(
     "Go back" : "Nôl",
     "Email address" : "Cyfeiriad e-bost",
     "Cancel" : "Diddymu",
+    "List" : "Rhestr",
     "Add mail account" : "Ychwanegu cyfrif post",
     "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
     "Register" : "Cofrestru",

@@ -17,6 +17,7 @@ OC.L10N.register(
     "Password required" : "Ger-tremen ret",
     "Change name" : "Cheñch env",
     "Cancel" : "Arrest",
+    "List" : "Roll",
     "Delete" : "Dilemel",
     "Search" : "Klask",
     "Send" : "Kas",

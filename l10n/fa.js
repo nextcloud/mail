@@ -97,6 +97,7 @@ OC.L10N.register(
     "Create alias" : "Create alias",
     "Cancel" : "لغو",
     "Mail settings" : "Mail settings",
+    "List" : "فهرست",
     "Add mail account" : "حساب کاربری پست الکترونیکی اضافه کنید",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.",
     "Trusted senders" : "Trusted senders",

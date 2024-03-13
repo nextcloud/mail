@@ -100,6 +100,7 @@ OC.L10N.register(
     "Create alias" : "Crear alias",
     "Cancel" : "Cancelar",
     "Mail settings" : "Axustes de Correo",
+    "Layout" : "Deseño",
     "Add mail account" : "Engadir unha conta de correo",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permitirlle á aplicación recoller datos sobre as súas interaccións. A partir destes datos, a aplicación adaptarase ás súas preferencias. Os datos só se almacenarán localmente.",
     "Trusted senders" : "Remitentes de confianza",

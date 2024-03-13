@@ -100,6 +100,8 @@ OC.L10N.register(
     "Create alias" : "Créer un alias",
     "Cancel" : "Annuler",
     "Mail settings" : "Paramètres de Mail",
+    "Layout" : "Affichage",
+    "List" : "Liste",
     "Account creation" : "Création de compte",
     "Add mail account" : "Ajouter un compte mail",
     "Activate body search" : "Activer la recherche dans le corps des mail",

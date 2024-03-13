@@ -87,6 +87,7 @@ OC.L10N.register(
     "Create alias" : "Ustvari vzdevek",
     "Cancel" : "Prekliči",
     "Mail settings" : "Nastavitve pošte",
+    "List" : "Seznam",
     "Account creation" : "Ustvarjanje računa",
     "Add mail account" : "Dodaj račun elektronske pošte",
     "Data collection consent" : "Strinjanje z zbiranjem podatkov",

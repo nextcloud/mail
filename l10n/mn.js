@@ -22,6 +22,7 @@ OC.L10N.register(
     "Signature" : "Гарын үсэг",
     "Go back" : "Буцах",
     "Cancel" : "болиулах",
+    "List" : "Жагсаалт",
     "Add mail account" : "шуудангийн хаяг нэмэх",
     "Archive" : "архив",
     "Delete" : "Устгах",

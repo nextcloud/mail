@@ -91,6 +91,7 @@ OC.L10N.register(
     "Create alias" : "Creează alias",
     "Cancel" : "Anulează",
     "Mail settings" : "Setări Mail",
+    "List" : "Listă",
     "Add mail account" : "Adaugă un cont de mail",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permiteți aplicației să colecteze date despre interacțiunile dumneavoastră. Aplicația se va adapta preferințelor dumneavoastră în funcție de aceste date. Datele sunt stocate doar local.",
     "Trusted senders" : "Expeditori de încredere",

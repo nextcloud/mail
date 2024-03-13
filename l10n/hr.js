@@ -60,6 +60,7 @@ OC.L10N.register(
     "Add alias" : "Dodaj pseudonim",
     "Create alias" : "Stvori pseudonim",
     "Cancel" : "Odustani",
+    "List" : "Popis",
     "Add mail account" : "Dodaj račun e-pošte",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Dopustite aplikaciji da prikuplja podatke o vašim interakcijama. Aplikacija će se prilagoditi vašim željama na temelju tih podataka. Podaci će biti pohranjeni samo lokalno.",
     "Trusted senders" : "Pouzdani pošiljatelji",

@@ -100,6 +100,7 @@ OC.L10N.register(
     "Create alias" : "Crea un àlies",
     "Cancel" : "Cancel·la",
     "Mail settings" : "Paràmetres de Correu",
+    "List" : "Llista",
     "Account creation" : "Creació de comptes",
     "Add mail account" : "Afegeix compte de correu",
     "Activate body search" : "Activa la cerca corporal",

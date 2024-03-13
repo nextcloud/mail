@@ -65,6 +65,7 @@ OC.L10N.register(
     "Add alias" : "別名を追加",
     "Create alias" : "別名をつける",
     "Cancel" : "キャンセル",
+    "List" : "リスト",
     "Add mail account" : "メールアカウントを追加",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "操作手順についてのデータ収集をアプリに許可します。このデータに基づき、アプリがあなた好みに適応します。データはローカルにしか保存されません。",
     "Use Gravatar and favicon avatars" : "Gravatarとfaviconのアバターを使用する",

@@ -20,6 +20,7 @@ OC.L10N.register(
     "Go back" : "Kembali",
     "Email address" : "Alamat surel",
     "Cancel" : "Membatalkan",
+    "List" : "Daftar",
     "Add mail account" : "Tambahkan akun surel",
     "Register" : "Daftar",
     "Archive" : "Arsip",

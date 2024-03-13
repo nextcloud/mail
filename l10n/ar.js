@@ -100,6 +100,7 @@ OC.L10N.register(
     "Create alias" : "إنشاء اسم مُستعار alias",
     "Cancel" : "إلغاء",
     "Mail settings" : "إعدادات البريد الالكتروني",
+    "List" : "قائمة",
     "Account creation" : "إنشاء حساب",
     "Add mail account" : "أضِف حساب بريد الكتروني",
     "Activate body search" : "تفعيل البحث في المتن",

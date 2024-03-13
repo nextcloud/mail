@@ -29,6 +29,7 @@ OC.L10N.register(
     "Go back" : "Revenir en arrière",
     "Email address" : "Adreça mail",
     "Cancel" : "Anullar",
+    "List" : "Tièra",
     "Register" : "S'inscriure",
     "Keyboard" : "Clavièr",
     "Archive" : "Archius",
