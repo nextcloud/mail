@@ -405,13 +405,14 @@ https://github.com/ckeditor/ckeditor5/issues/1142
  }
  .link-icon{
 	filter : var(--background-invert-if-dark);
+	width: 16px !important;
+	margin-right: 5px !important;
  }
  .custom-item {
 	width : 100% !important;
 	border-radius : 8px !important;
 	padding : 4px 8px !important;
 	display :block;
-	background:var(--color-main-background)!important;
  }
  .custom-item:hover {
 	background:var(--color-primary-element-light)!important;
@@ -421,7 +422,12 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 	padding :4px 8px !important;
 	display : block;
 	width : 100% !important;
+ }
+ .ck-off{
 	background:var(--color-main-background)!important;
+ }
+ .ck-on{
+	background:var(--color-primary-element-light)!important;
  }
  .link-container:hover {
 	background:var(--color-primary-element-light)!important;
