@@ -154,10 +154,6 @@ class OutboxService {
 		try {
 			$this->transmission->sendMessage($account, $message);
 		} catch (ServiceException|SentMailboxNotSetException $e) {
-			// Mark as failed so the message is not sent repeatedly in background
-			// We can get rid of this after implementing the frontend changes that allow
-			// displaying the new failure codes
-			$message->setFailed(true);
 			$this->mapper->update($message);
 			throw $e;
 		}
@@ -270,29 +266,30 @@ class OutboxService {
 				// Ignore message of non-existent account
 				continue;
 			}
-			if($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
-				try {
-					$this->sendMessage(
-						$message,
-						$account,
-					);
-
-					$this->logger->debug('Outbox message {id} sent', [
-						'id' => $message->getId(),
-					]);
-				} catch (Throwable $e) {
-					// Failure of one message should not stop sending other messages
-					// Log and continue
-					$this->logger->warning('Could not send outbox message {id}: ' . $e->getMessage(), [
-						'id' => $message->getId(),
-						'exception' => $e,
-					]);
-				}
-			}
 
 			if($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
+				// Delete messages that have been processed
 				$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
 				$this->mapper->deleteWithRecipients($message);
+				continue;
+			}
+
+			try {
+				$this->sendMessage(
+					$message,
+					$account,
+				);
+
+				$this->logger->debug('Outbox message {id} sent', [
+					'id' => $message->getId(),
+				]);
+			} catch (Throwable $e) {
+				// Failure of one message should not stop sending other messages
+				// Log and continue
+				$this->logger->warning('Could not send outbox message {id}: ' . $e->getMessage(), [
+					'id' => $message->getId(),
+					'exception' => $e,
+				]);
 			}
 		}
 	}

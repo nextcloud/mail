@@ -217,11 +217,16 @@ class OutboxController extends Controller {
 		$message->setBody($body);
 		$message->setEditorBody($editorBody);
 		$message->setHtml($isHtml);
-		$message->setFailed($failed);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		// Explicitly overwrite the status, so we can try sending again
+		// in case the user has updated the failing component
+		// Only allow this if the message hasn't been sent yet
+		if($message->getStatus() !== LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
+			$message->setStatus(LocalMessage::STATUS_RAW);
+		}
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
