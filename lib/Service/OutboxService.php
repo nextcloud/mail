@@ -145,19 +145,21 @@ class OutboxService {
 		}
 
 		// Make sure we don't send processed messages again
-		if($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
+		if($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
+			try {
+				$this->transmission->sendMessage($account, $message);
+			} catch (ServiceException|SentMailboxNotSetException $e) {
+				$this->mapper->update($message);
+				throw $e;
+			}
+		}
+
+		// Yes, the if is weird. But it also means we can handle processing and removing a message in one go
+		// if the conditions are right.
+		if($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
 			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
 			$this->mapper->deleteWithRecipients($message);
-			return;
 		}
-
-		try {
-			$this->transmission->sendMessage($account, $message);
-		} catch (ServiceException|SentMailboxNotSetException $e) {
-			$this->mapper->update($message);
-			throw $e;
-		}
-
 	}
 
 	/**
@@ -266,14 +268,6 @@ class OutboxService {
 				// Ignore message of non-existent account
 				continue;
 			}
-
-			if($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
-				// Delete messages that have been processed
-				$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
-				$this->mapper->deleteWithRecipients($message);
-				continue;
-			}
-
 			try {
 				$this->sendMessage(
 					$message,
