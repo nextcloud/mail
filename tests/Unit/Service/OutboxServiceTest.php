@@ -35,6 +35,7 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -121,8 +122,9 @@ class OutboxServiceTest extends TestCase {
 					'body' => 'Test',
 					'html' => false,
 					'reply_to_id' => null,
-					'draft_id' => 99
-
+					'draft_id' => 99,
+					'status' => 0,
+					'raw' => 'Test',
 				],
 				[
 					'id' => 2,
@@ -134,7 +136,9 @@ class OutboxServiceTest extends TestCase {
 					'body' => 'Second Test',
 					'html' => true,
 					'reply_to_id' => null,
-					'draft_id' => null
+					'draft_id' => null,
+					'status' => 0,
+					'raw' => 'Second Test',
 				]
 			]);
 
@@ -385,6 +389,7 @@ class OutboxServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
+
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
@@ -396,6 +401,7 @@ class OutboxServiceTest extends TestCase {
 			->method('getClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
+
 		$result = $this->outboxService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 		$this->assertEmpty($result->getAttachments());
 	}
@@ -436,6 +442,7 @@ class OutboxServiceTest extends TestCase {
 	public function testSendMessage(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_RAW);
 		$recipient = new Recipient();
 		$recipient->setEmail('museum@startdewvalley.com');
 		$recipient->setLabel('Gunther');
@@ -459,9 +466,40 @@ class OutboxServiceTest extends TestCase {
 		$this->outboxService->sendMessage($message, $account);
 	}
 
+	public function testSendMessageAlreadyProcessed(): void {
+		$message = new LocalMessage();
+		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_PROCESSED);
+		$recipient = new Recipient();
+		$recipient->setEmail('museum@startdewvalley.com');
+		$recipient->setLabel('Gunther');
+		$recipient->setType(Recipient::TYPE_TO);
+		$recipients = [$recipient];
+		$attachment = new LocalAttachment();
+		$attachment->setMimeType('image/png');
+		$attachment->setFileName('SlimesInTheMines.png');
+		$attachment->setCreatedAt($this->time->getTime());
+		$attachments = [$attachment];
+		$message->setRecipients($recipients);
+		$message->setAttachments($attachments);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $this->userId
+		]);
+
+		$this->transmission->expects(self::never())
+			->method('sendMessage');
+		$this->attachmentService->expects(self::once())
+			->method('deleteLocalMessageAttachments');
+		$this->mapper->expects(self::once())
+			->method('deleteWithRecipients');
+
+		$this->outboxService->sendMessage($message, $account);
+	}
+
 	public function testSendMessageTransmissionError(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
+		$message->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
 		$recipient = new Recipient();
 		$recipient->setEmail('museum@startdewvalley.com');
 		$recipient->setLabel('Gunther');
@@ -481,10 +519,15 @@ class OutboxServiceTest extends TestCase {
 		$this->transmission->expects(self::once())
 			->method('sendMessage')
 			->with($account, $message)
-			->willThrowException(new ClientException());
+			->willThrowException(new SentMailboxNotSetException());
+		$this->attachmentService->expects(self::never())
+			->method('deleteLocalMessageAttachments');
+		$this->mapper->expects(self::never())
+			->method('deleteWithRecipients');
 
-		$this->expectException(ClientException::class);
+		$this->expectException(SentMailboxNotSetException::class);
 		$this->outboxService->sendMessage($message, $account);
+		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $message->getStatus());
 	}
 
 	public function testConvertToOutboxMessageNoRecipients(): void {

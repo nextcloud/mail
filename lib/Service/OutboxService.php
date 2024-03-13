@@ -34,6 +34,7 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -134,7 +135,7 @@ class OutboxService {
 	 * @param LocalMessage $message
 	 * @param Account $account
 	 * @return void
-	 * @throws ClientException
+	 * @throws SentMailboxNotSetException
 	 * @throws ServiceException
 	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
@@ -142,9 +143,17 @@ class OutboxService {
 			$this->transmission->copySentMessage($account, $message);
 			return;
 		}
+
+		// Make sure we don't send processed messages again
+		if($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
+			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
+			$this->mapper->deleteWithRecipients($message);
+			return;
+		}
+
 		try {
 			$this->transmission->sendMessage($account, $message);
-		} catch (ClientException|ServiceException $e) {
+		} catch (ServiceException|SentMailboxNotSetException $e) {
 			// Mark as failed so the message is not sent repeatedly in background
 			// We can get rid of this after implementing the frontend changes that allow
 			// displaying the new failure codes
@@ -152,10 +161,7 @@ class OutboxService {
 			$this->mapper->update($message);
 			throw $e;
 		}
-		if($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
-			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
-			$this->mapper->deleteWithRecipients($message);
-		}
+
 	}
 
 	/**
