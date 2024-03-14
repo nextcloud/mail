@@ -134,16 +134,27 @@ class MessageMapper {
 		);
 		$perf->step('mailbox meta search');
 		$min = (int) $metaResults['min'];
-		$max = (int) $metaResults['max'];
 		$total = (int) $metaResults['count'];
 
 		if ($total === 0) {
+			$perf->step('No data in mailbox');
 			// Nothing to fetch for this mailbox
 			return [
 				'messages' => [],
 				'all' => true,
 				'total' => $total,
 			];
+		}
+
+		// This can happen for iCloud
+		if ($metaResults['max'] === null) {
+			$uidnext = $client->status(
+				$mailbox
+			);
+			$perf->step('mailbox meta search for UIDNEXT');
+			$max = (int) $uidnext['uidnext'] - 1; // We need to subtract one for the last used UID
+		} else {
+			$max = ((int) $metaResults['max']);
 		}
 
 		// The inclusive range of UIDs
