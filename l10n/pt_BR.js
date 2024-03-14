@@ -102,6 +102,7 @@ OC.L10N.register(
     "Mail settings" : "Configurações de e-mail",
     "Layout" : "Layout",
     "List" : "Lista",
+    "Vertical split" : "Divisão vertical",
     "Account creation" : "Criação de conta",
     "Add mail account" : "Adicionar conta de e-mail",
     "Activate body search" : "Ativar pesquisa corporal",
