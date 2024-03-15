@@ -60,8 +60,8 @@ use function array_filter;
  * @method setSmimeCertificateId(?int $smimeCertificateId)
  * @method bool|null getSmimeEncrypt()
  * @method setSmimeEncrypt (bool $smimeEncryt)
- * @method int getStatus();
- * @method setStatus(int $status);
+ * @method int|null getStatus();
+ * @method setStatus(?int $status);
  * @method string|null getRaw()
  * @method setRaw(string|null $raw)
  */
@@ -134,8 +134,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 	protected $smimeEncrypt;
 
 	/**
-	 * @var int
-	 * @psalm-var self::STATUS_*
+	 * @var int|null
+	 * @psalm-var int-mask-of<self::STATUS_*>
 	 */
 	protected $status;
 
