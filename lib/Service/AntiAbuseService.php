@@ -27,9 +27,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\LocalMessage;
-use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\IMemcache;
@@ -53,8 +51,7 @@ class AntiAbuseService {
 	public function __construct(IConfig $config,
 		ICacheFactory $cacheFactory,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger,
-		private IEventDispatcher $eventDispatcher) {
+		LoggerInterface $logger) {
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->timeFactory = $timeFactory;
@@ -90,7 +87,6 @@ class AntiAbuseService {
 
 		if ($actualNumberOfRecipients >= $numberOfRecipientsThreshold) {
 			$message->setStatus(LocalMessage::STATUS_TOO_MANY_RECIPIENTS);
-			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($message));
 			$this->logger->alert('User {user} sends to a suspicious number of recipients. {expected} are allowed. {actual} are used', [
 				'user' => $user->getUID(),
 				'expected' => $numberOfRecipientsThreshold,
@@ -117,7 +113,6 @@ class AntiAbuseService {
 		);
 		if($ratelimited) {
 			$message->setStatus(LocalMessage::STATUS_RATELIMIT);
-			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($message));
 		}
 	}
 

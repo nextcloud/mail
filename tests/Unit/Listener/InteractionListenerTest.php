@@ -96,7 +96,6 @@ class InteractionListenerTest extends TestCase {
 		]);
 		$event = new MessageSentEvent(
 			$this->createMock(Account::class),
-			'test',
 			$message,
 		);
 		$user = $this->createMock(IUser::class);

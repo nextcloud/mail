@@ -47,13 +47,10 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Recipient;
-use OCA\Mail\Events\BeforeMessageSentEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Events\OutboxMessageStatusChangeEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -79,64 +76,40 @@ class MailTransmission implements IMailTransmission {
 	) {
 	}
 
-	public function copySentMessage(Account $account, LocalMessage $localMessage): void {
-		$this->eventDispatcher->dispatchTyped(
-			new MessageSentEvent($account, $localMessage->getRaw(), $localMessage)
-		);
-	}
-
-
 	public function sendMessage(Account $account, LocalMessage $localMessage): void {
 		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
 		$attachments = $this->transmissionService->getAttachments($localMessage);
 
-		if ($account->getMailAccount()->getSentMailboxId() === null) {
-			$localMessage->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
-			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($localMessage));
-			throw new SentMailboxNotSetException();
-		}
-
-		$message = $account->newMessage();
-		$message->setSubject($localMessage->getSubject());
-		$message->setTo($to);
-
 		$alias = null;
 		if ($localMessage->getAliasId() !== null) {
 			$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getUserId());
 		}
-
 		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
 		$from = new AddressList([
 			Address::fromRaw($account->getName(), $fromEmail),
 		]);
-		$message->setFrom($from);
-		$message->setCC($cc);
-		$message->setBcc($bcc);
 
-		$message->setContent($localMessage->getBody());
-
+		$attachmentParts = [];
 		foreach ($attachments as $attachment) {
-			$this->transmissionService->handleAttachment($account, $attachment, $message);
-		}
-
-		$repliedToMessageId = $localMessage->getInReplyToMessageId();
-		if ($repliedToMessageId !== null) {
-			$message->setInReplyTo($repliedToMessageId);
+			$part = $this->transmissionService->handleAttachment($account, $attachment);
+			if($part !== null) {
+				$attachmentParts[] = $part;
+			}
 		}
 
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
 		$headers = [
-			'From' => $message->getFrom()->first()->toHorde(),
-			'To' => $message->getTo()->toHorde(),
-			'Cc' => $message->getCC()->toHorde(),
-			'Bcc' => $message->getBCC()->toHorde(),
-			'Subject' => $message->getSubject(),
+			'From' => $from->first()->toHorde(),
+			'To' => $to->toHorde(),
+			'Cc' => $cc->toHorde(),
+			'Bcc' => $bcc->toHorde(),
+			'Subject' => $localMessage->getSubject(),
 		];
 
-		if (($inReplyTo = $message->getInReplyTo()) !== null) {
+		if (($inReplyTo = $localMessage->getInReplyToMessageId()) !== null) {
 			$headers['References'] = $inReplyTo;
 			$headers['In-Reply-To'] = $inReplyTo;
 		}
@@ -149,8 +122,8 @@ class MailTransmission implements IMailTransmission {
 		);
 		$mimePart = $mimeMessage->build(
 			$localMessage->isHtml(),
-			$message->getContent(),
-			$message->getAttachments()
+			$localMessage->getBody(),
+			$attachmentParts
 		);
 
 		// TODO: add smimeEncrypt check if implemented
@@ -158,31 +131,24 @@ class MailTransmission implements IMailTransmission {
 			$mimePart = $this->transmissionService->getSignMimePart($localMessage, $account, $mimePart);
 			$mimePart = $this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $mimePart);
 		} catch (ServiceException $e) {
-			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($localMessage));
-			throw $e;
+			$this->logger->error($e);
+			return;
 		}
 
 		$mail->setBasePart($mimePart);
 
-		$this->eventDispatcher->dispatchTyped(
-			new BeforeMessageSentEvent($account, $repliedToMessageId, $message, $mail, $localMessage)
-		);
-
 		// Send the message
 		try {
 			$mail->send($transport, false, false);
+			$localMessage->setRaw($mail->getRaw(false));
 		} catch (Horde_Mime_Exception $e) {
 			$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
-			$this->eventDispatcher->dispatchTyped(new OutboxMessageStatusChangeEvent($localMessage));
-			throw new ServiceException(
-				'Could not send message: ' . $e->getMessage(),
-				$e->getCode(),
-				$e
-			);
+			$this->logger->error($e);
+			return;
 		}
 
 		$this->eventDispatcher->dispatchTyped(
-			new MessageSentEvent($account, $mail->getRaw(false), $localMessage)
+			new MessageSentEvent($account, $localMessage)
 		);
 	}
 

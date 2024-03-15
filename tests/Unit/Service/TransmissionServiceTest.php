@@ -116,13 +116,10 @@ class TransmissionServiceTest extends TestCase {
 		$this->attachmentService->expects(self::once())
 			->method('getAttachment')
 			->willReturn([$localAttachment, $file]);
-		$message->expects(self::once())
-			->method('addLocalAttachment')
-			->with($localAttachment, $file);
 		$this->logger->expects(self::never())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, $expected, $message);
+		$this->transmissionService->handleAttachment($account, $expected);
 	}
 
 	public function testHandleAttachmentNoId() {
@@ -135,7 +132,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, $attachment, $message);
+		$this->transmissionService->handleAttachment($account, $attachment);
 	}
 
 	public function testHandleAttachmentNotFound() {
@@ -155,7 +152,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, $attachment, $message);
+		$this->transmissionService->handleAttachment($account, $attachment);
 	}
 
 	public function testGetSignMimePart() {

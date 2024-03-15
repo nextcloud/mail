@@ -124,8 +124,7 @@ class AddressCollectionListenerTest extends TestCase {
 		]);
 		$event = new MessageSentEvent(
 			$account,
-			'abc123',
-			$message,
+			new LocalMessage(),
 		);
 		$to = new AddressList([Address::fromRaw('to', 'to@email')]);
 		$cc = new AddressList([Address::fromRaw('cc', 'cc@email')]);

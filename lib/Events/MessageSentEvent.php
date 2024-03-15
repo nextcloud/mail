@@ -36,23 +36,14 @@ class MessageSentEvent extends Event {
 	/** @var Account */
 	private $account;
 
-	/** @var string */
-	private $mail;
-
 	public function __construct(Account $account,
-		string $mail,
 		private LocalMessage $localMessage) {
 		parent::__construct();
 		$this->account = $account;
-		$this->mail = $mail;
 	}
 
 	public function getAccount(): Account {
 		return $this->account;
-	}
-
-	public function getMail(): string {
-		return $this->mail;
 	}
 
 	public function getLocalMessage(): LocalMessage {

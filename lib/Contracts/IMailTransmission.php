@@ -45,13 +45,6 @@ interface IMailTransmission {
 
 	/**
 	 * @param Account $account
-	 * @param LocalMessage $localMessage
-	 * @return void
-	 */
-	public function copySentMessage(Account $account, LocalMessage $localMessage): void;
-
-	/**
-	 * @param Account $account
 	 * @param LocalMessage $message
 	 * @throws ClientException
 	 * @throws ServiceException

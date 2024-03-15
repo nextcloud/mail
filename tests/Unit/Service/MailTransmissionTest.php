@@ -37,7 +37,6 @@ use OCA\Mail\Db\Mailbox as DbMailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message as DbMessage;
 use OCA\Mail\Db\Recipient;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -104,19 +103,12 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBody('Test');
 		$localMessage->setHtml(false);
-
-		$message = new Message();
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 
-		$account->expects($this->once())
-			->method('newMessage')
-			->willReturn($message);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->with($account)
 			->willReturn($transport);
-		$this->eventDispatcher->expects(self::exactly(2))
-			->method('dispatchTyped');
 
 		$this->transmission->sendMessage($account, $localMessage);
 	}
@@ -134,26 +126,19 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setSubject('Test');
 		$localMessage->setBody('Test');
 		$localMessage->setHtml(false);
-
-		$message = new Message();
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 
-		$account->expects($this->once())
-			->method('newMessage')
-			->willReturn($message);
-		$this->smtpClientFactory->expects($this->once())
-			->method('create')
-			->with($account)
-			->willReturn($transport);
 		$this->transmissionService->expects(self::once())
 			->method('getSignMimePart')
 			->willThrowException(new ServiceException());
-		$this->eventDispatcher->expects(self::once())
+		$this->smtpClientFactory->expects(self::once())
+			->method('create')
+			->with($account)
+			->willReturn($transport);
+		$this->eventDispatcher->expects(self::never())
 			->method('dispatchTyped');
 
-		$this->expectException(ServiceException::class);
 		$this->transmission->sendMessage($account, $localMessage);
-		$this->assertEquals(LocalMessage::STATUS_SMIME_SIGN_NO_CERT_ID, $message->getStatus());
 	}
 
 	public function testSendMessageFromAlias() {
@@ -174,12 +159,8 @@ class MailTransmissionTest extends TestCase {
 		$localMessage->setBody('Test');
 		$localMessage->setHtml(false);
 		$localMessage->setAliasId(1);
-
-		$message = new Message();
-		$account->expects($this->once())
-			->method('newMessage')
-			->willReturn($message);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
+
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->with($account)
@@ -222,9 +203,6 @@ class MailTransmissionTest extends TestCase {
 		$mailbox->setAccountId(22);
 		$mailbox->setName('mock');
 
-		$account->expects($this->once())
-			->method('newMessage')
-			->willReturn($message);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->with($account)
@@ -265,9 +243,6 @@ class MailTransmissionTest extends TestCase {
 		$message = new Message();
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 
-		$account->expects($this->once())
-			->method('newMessage')
-			->willReturn($message);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')
 			->with($account)
@@ -342,40 +317,5 @@ class MailTransmissionTest extends TestCase {
 			->method('save');
 
 		$this->transmission->saveLocalDraft(new Account($mailAccount), $localMessage);
-	}
-
-	public function testSendLocalDraftNoDraftsMailbox(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setId(10);
-		$mailAccount->setUserId('gunther');
-		$mailAccount->setName('Gunther');
-		$mailAccount->setEmail('gunther@stardewvalley-museum.com');
-		$localMessage = new LocalMessage();
-		$localMessage->setType(LocalMessage::TYPE_DRAFT);
-		$localMessage->setAccountId($mailAccount->getId());
-		$localMessage->setAliasId(2);
-		$localMessage->setSendAt(123);
-		$localMessage->setSubject('subject');
-		$localMessage->setBody('message');
-		$localMessage->setHtml(true);
-		$localMessage->setInReplyToMessageId('abc');
-		$localMessage->setAttachments([]);
-		$to = Recipient::fromParams([
-			'email' => 'emily@stardewvalleypub.com',
-			'label' => 'Emily',
-			'type' => Recipient::TYPE_TO
-		]);
-		$localMessage->setRecipients([$to]);
-
-		$this->transmissionService->expects(self::exactly(3))
-			->method('getAddressList');
-		$this->transmissionService->expects(self::once())
-			->method('getAttachments');
-		$this->aliasService->expects(self::never())
-			->method('find');
-
-		$this->expectException(ClientException::class);
-		$this->transmission->sendMessage(new Account($mailAccount), $localMessage);
-		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $localMessage->getStatus());
 	}
 }

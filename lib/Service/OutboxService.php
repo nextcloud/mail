@@ -37,6 +37,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -80,7 +81,9 @@ class OutboxService {
 		IMailManager $mailManager,
 		AccountService $accountService,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		private Chain $sendChain,
+	) {
 		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
@@ -139,27 +142,7 @@ class OutboxService {
 	 * @throws ServiceException
 	 */
 	public function sendMessage(LocalMessage $message, Account $account): void {
-		if($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
-			$this->transmission->copySentMessage($account, $message);
-			return;
-		}
-
-		// Make sure we don't send processed messages again
-		if($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
-			try {
-				$this->transmission->sendMessage($account, $message);
-			} catch (ServiceException|SentMailboxNotSetException $e) {
-				$this->mapper->update($message);
-				throw $e;
-			}
-		}
-
-		// Yes, the if is weird. But it also means we can handle processing and removing a message in one go
-		// if the conditions are right.
-		if($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
-			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
-			$this->mapper->deleteWithRecipients($message);
-		}
+		$this->sendChain->process($account, $message);
 	}
 
 	/**
@@ -269,11 +252,7 @@ class OutboxService {
 				continue;
 			}
 			try {
-				$this->sendMessage(
-					$message,
-					$account,
-				);
-
+				$this->sendChain->process($account, $message);
 				$this->logger->debug('Outbox message {id} sent', [
 					'id' => $message->getId(),
 				]);

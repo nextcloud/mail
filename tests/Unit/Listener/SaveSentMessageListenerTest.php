@@ -26,22 +26,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Exception;
-use OCA\Mail\Account;
-use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
-use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\Db\Message;
-use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\Listener\SaveSentMessageListener;
-use OCA\Mail\Model\IMessage;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -71,133 +59,5 @@ class SaveSentMessageListenerTest extends TestCase {
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->mapper = $this->createMock(LocalMessageMapper::class);
-
-		$this->listener = new SaveSentMessageListener(
-			$this->mailboxMapper,
-			$this->imapClientFactory,
-			$this->messageMapper,
-			$this->logger,
-			$this->mapper,
-		);
-	}
-
-	public function testHandleUnrelated(): void {
-		$event = new Event();
-
-		$this->listener->handle($event);
-
-		$this->addToAssertionCount(1);
-	}
-
-	public function testHandleMessageSentMailboxNotSet(): void {
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
-		$mailAccount = new MailAccount();
-		$account->method('getMailAccount')->willReturn($mailAccount);
-		/** @var IMessage|MockObject $message */
-		$message = $this->createMock(LocalMessage::class);
-		$draft = new Message();
-		$draft->setUid(123);
-		$event = new MessageSentEvent(
-			$account,
-			'test',
-			$message,
-		);
-		$this->mailboxMapper->expects($this->never())
-			->method('findById');
-		$this->logger->expects($this->once())
-			->method('warning');
-
-		$this->listener->handle($event);
-	}
-
-	public function testHandleMessageSentMailboxDoesNotExist(): void {
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
-		$mailAccount = new MailAccount();
-		$mailAccount->setSentMailboxId(123);
-		$account->method('getMailAccount')->willReturn($mailAccount);
-		$message = $this->createMock(LocalMessage::class);
-		$draft = new Message();
-		$draft->setUid(123);
-		$event = new MessageSentEvent(
-			$account,
-			'abc123',
-			$message,
-		);
-		$this->mailboxMapper->expects($this->once())
-			->method('findById')
-			->with(123)
-			->willThrowException(new DoesNotExistException(''));
-		$this->messageMapper->expects($this->never())
-			->method('save');
-		$this->logger->expects($this->once())
-		->method('error');
-
-		$this->listener->handle($event);
-	}
-
-	public function testHandleMessageSentSavingError(): void {
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
-		$mailAccount = new MailAccount();
-		$mailAccount->setSentMailboxId(123);
-		$account->method('getMailAccount')->willReturn($mailAccount);
-		$message = $this->createMock(LocalMessage::class);
-		$draft = new Message();
-		$draft->setUid(123);
-		$event = new MessageSentEvent(
-			$account,
-			'test',
-			$message,
-		);
-		$mailbox = new Mailbox();
-		$this->mailboxMapper->expects($this->once())
-			->method('findById')
-			->with(123)
-			->willReturn($mailbox);
-		$this->messageMapper->expects($this->once())
-			->method('save')
-			->with(
-				$this->anything(),
-				$mailbox,
-				'test'
-			)
-			->willThrowException(new Horde_Imap_Client_Exception('', 0));
-		$this->expectException(ServiceException::class);
-
-		$this->listener->handle($event);
-	}
-
-	public function testHandleMessageSent(): void {
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
-		$mailAccount = new MailAccount();
-		$mailAccount->setSentMailboxId(123);
-		$account->method('getMailAccount')->willReturn($mailAccount);
-		$message = $this->createMock(LocalMessage::class);
-		$draft = new Message();
-		$draft->setUid(123);
-		$event = new MessageSentEvent(
-			$account,
-			'abc123',
-			$message,
-		);
-		$mailbox = new Mailbox();
-		$this->mailboxMapper->expects($this->once())
-			->method('findById')
-			->with(123)
-			->willReturn($mailbox);
-		$this->messageMapper->expects($this->once())
-			->method('save')
-			->with(
-				$this->anything(),
-				$mailbox,
-				'abc123'
-			);
-		$this->logger->expects($this->never())->method('warning');
-		$this->logger->expects($this->never())->method('error');
-
-		$this->listener->handle($event);
 	}
 }

@@ -209,6 +209,9 @@ class OutboxController extends Controller {
 		?int $sendAt = null
 	): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
+		if ($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL || $message->getStatus() === LocalMessage::STATUS_PROCESSED) {
+			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
+		}
 		$account = $this->accountService->find($this->userId, $accountId);
 
 		$message->setAccountId($accountId);
@@ -223,10 +226,7 @@ class OutboxController extends Controller {
 		$message->setSmimeEncrypt($smimeEncrypt);
 		// Explicitly overwrite the status, so we can try sending again
 		// in case the user has updated the failing component
-		// Only allow this if the message hasn't been sent yet
-		if($message->getStatus() !== LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL) {
-			$message->setStatus(LocalMessage::STATUS_RAW);
-		}
+		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);

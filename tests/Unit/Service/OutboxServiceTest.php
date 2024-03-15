@@ -35,8 +35,8 @@ use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\MailTransmission;
@@ -92,6 +92,7 @@ class OutboxServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->chain = $this->createMock(Chain::class);
 		$this->outboxService = new OutboxService(
 			$this->transmission,
 			$this->mapper,
@@ -102,6 +103,7 @@ class OutboxServiceTest extends TestCase {
 			$this->accountService,
 			$this->timeFactory,
 			$this->logger,
+			$this->chain,
 		);
 		$this->userId = 'linus';
 		$this->time = $this->createMock(ITimeFactory::class);
@@ -459,8 +461,8 @@ class OutboxServiceTest extends TestCase {
 			'getUserId' => $this->userId
 		]);
 
-		$this->transmission->expects(self::once())
-			->method('sendMessage')
+		$this->chain->expects(self::once())
+			->method('process')
 			->with($account, $message);
 
 		$this->outboxService->sendMessage($message, $account);
@@ -486,12 +488,9 @@ class OutboxServiceTest extends TestCase {
 			'getUserId' => $this->userId
 		]);
 
-		$this->transmission->expects(self::never())
-			->method('sendMessage');
-		$this->attachmentService->expects(self::once())
-			->method('deleteLocalMessageAttachments');
-		$this->mapper->expects(self::once())
-			->method('deleteWithRecipients');
+		$this->chain->expects(self::once())
+			->method('process')
+			->with($account, $message);
 
 		$this->outboxService->sendMessage($message, $account);
 	}
@@ -516,16 +515,10 @@ class OutboxServiceTest extends TestCase {
 			'getUserId' => $this->userId
 		]);
 
-		$this->transmission->expects(self::once())
-			->method('sendMessage')
-			->with($account, $message)
-			->willThrowException(new SentMailboxNotSetException());
-		$this->attachmentService->expects(self::never())
-			->method('deleteLocalMessageAttachments');
-		$this->mapper->expects(self::never())
-			->method('deleteWithRecipients');
+		$this->chain->expects(self::once())
+			->method('process')
+			->with($account, $message);
 
-		$this->expectException(SentMailboxNotSetException::class);
 		$this->outboxService->sendMessage($message, $account);
 		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $message->getStatus());
 	}

@@ -83,7 +83,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 	public const STATUS_IMAP_SENT_MAILBOX_FAIL = 11;
 	public const STATUS_PROCESSED = 12;
 	/**
-	 * @var int
+	 * @var int<1,12>
 	 * @psalm-var self::TYPE_*
 	 */
 	protected $type;

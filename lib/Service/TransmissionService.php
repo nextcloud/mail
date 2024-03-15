@@ -32,7 +32,6 @@ use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeEncryptException;
 use OCA\Mail\Exception\SmimeSignException;
-use OCA\Mail\Model\IMessage;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
@@ -83,21 +82,26 @@ class TransmissionService {
 	/**
 	 * @param Account $account
 	 * @param array $attachment
-	 * @param IMessage $message
+	 * @return \Horde_Mime_Part|null
 	 */
-	public function handleAttachment(Account $account, array $attachment, IMessage $message): void {
+	public function handleAttachment(Account $account, array $attachment): ?\Horde_Mime_Part {
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
-			return;
+			return null;
 		}
 
-		$id = (int)$attachment['id'];
-
 		try {
-			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), $id);
-			$message->addLocalAttachment($localAttachment, $file);
-		} catch (AttachmentNotFoundException $ex) {
-			$this->logger->warning('ignoring local attachment because it does not exist');
+			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachment['id']);
+			$part = new \Horde_Mime_Part();
+			$part->setCharset('us-ascii');
+			$part->setDisposition('attachment');
+			$part->setName($localAttachment->getFileName());
+			$part->setContents($file->getContent());
+			$part->setType($localAttachment->getMimeType());
+			return $part;
+		} catch (AttachmentNotFoundException $e) {
+			$this->logger->warning('ignoring local attachment because it does not exist', ['exception' => $e]);
+			return null;
 		}
 	}
 
@@ -185,4 +189,5 @@ class TransmissionService {
 		}
 		return $mimePart;
 	}
+
 }
