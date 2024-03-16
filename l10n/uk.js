@@ -224,7 +224,7 @@ OC.L10N.register(
     "Edit as new message" : "Редагувати як нове повідомлення",
     "Create event" : "Додати подію",
     "Create task" : "Створити завдання",
-    "Download message" : "Завантажити повідомлення",
+    "Download message" : "Звантажити повідомлення",
     "Blind copy recipients only" : "Лише отримувачі у прихованій копії",
     "No subject" : "Без теми",
     "Set reminder for later today" : "Встановити нагадування на сьогодні пізніше",
