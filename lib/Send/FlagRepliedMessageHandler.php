@@ -44,7 +44,11 @@ class FlagRepliedMessageHandler extends AHandler {
 	}
 
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
-		if($localMessage->getStatus() === LocalMessage::STATUS_PROCESSED || $localMessage->getInReplyToMessageId() === null) {
+		if ($localMessage->getStatus() !== LocalMessage::STATUS_PROCESSED) {
+			return $localMessage;
+		}
+
+		if ($localMessage->getInReplyToMessageId() === null) {
 			return $this->processNext($account, $localMessage);
 		}
 
@@ -57,7 +61,7 @@ class FlagRepliedMessageHandler extends AHandler {
 			$client = $this->imapClientFactory->getClient($account);
 			foreach ($messages as $message) {
 				try {
-					$mailbox = $this->mailboxMapper->findById($localMessage->getMailboxId());
+					$mailbox = $this->mailboxMapper->findById($message->getMailboxId());
 					//ignore read-only mailboxes
 					if ($mailbox->getMyAcls() !== null && !strpos($mailbox->getMyAcls(), 'w')) {
 						continue;
@@ -73,14 +77,14 @@ class FlagRepliedMessageHandler extends AHandler {
 						[$message->getUid()],
 						Horde_Imap_Client::FLAG_ANSWERED
 					);
+					$message->setFlagAnswered(true);
+					$this->dbMessageMapper->update($message);
 				} catch (DoesNotExistException|Horde_Imap_Client_Exception $e) {
 					$this->logger->warning('Could not flag replied message: ' . $e, [
 						'exception' => $e,
 					]);
 				}
 
-				$message->setFlagAnswered(true);
-				$this->dbMessageMapper->update($message);
 			}
 		} finally {
 			$client->logout();

@@ -26,7 +26,7 @@ use OCA\Mail\Db\LocalMessage;
 
 abstract class AHandler {
 
-	protected AHandler|null $next;
+	protected AHandler|null $next = null;
 
 	public function __construct() {
 	}
