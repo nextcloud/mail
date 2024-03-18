@@ -24,7 +24,9 @@ namespace OCA\Mail\Send;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Service\Attachment\AttachmentService;
 
 class Chain {
 	public function __construct(private SentMailboxHandler $sentMailboxHandler,
@@ -32,22 +34,25 @@ class Chain {
 		private SendHandler $sendHandler,
 		private CopySentMessageHandler $copySentMessageHandler,
 		private FlagRepliedMessageHandler $flagRepliedMessageHandler,
-		private RemoveMessageHandler $removeMessageHandler,
 		private MessageMapper $messageMapper,
+		private AttachmentService $attachmentService,
+		private LocalMessageMapper $localMessageMapper,
 	) {
 	}
 
 	public function process(Account $account, LocalMessage $localMessage): void {
-		$chain = $this->sentMailboxHandler;
-		$chain->setNext($this->antiAbuseHandler)
+		$handlers = $this->sentMailboxHandler;
+		$handlers->setNext($this->antiAbuseHandler)
 			->setNext($this->sendHandler)
 			->setNext($this->copySentMessageHandler)
-			->setNext($this->flagRepliedMessageHandler)
-			->setNext($this->removeMessageHandler);
+			->setNext($this->flagRepliedMessageHandler);
 
-		$result = $chain->process($account, $localMessage);
-		if($result->getStatus() !== LocalMessage::STATUS_PROCESSED) {
-			$this->messageMapper->update($result);
+		$result = $handlers->process($account, $localMessage);
+		if ($result->getStatus() === LocalMessage::STATUS_PROCESSED) {
+			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $result->getId());
+			$this->localMessageMapper->deleteWithRecipients($result);
+			return;
 		}
+		$this->messageMapper->update($result);
 	}
 }

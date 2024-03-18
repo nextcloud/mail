@@ -40,7 +40,9 @@ class FlagRepliedMessageHandler extends AHandler {
 		private MessageMapper $messageMapper,
 		private DbMessageMapper $dbMessageMapper,
 	) {
+		parent::__construct();
 	}
+
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
 		if($localMessage->getStatus() === LocalMessage::STATUS_PROCESSED || $localMessage->getInReplyToMessageId() === null) {
 			return $this->processNext($account, $localMessage);

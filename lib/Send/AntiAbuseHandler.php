@@ -33,8 +33,8 @@ class AntiAbuseHandler extends AHandler {
 	public function __construct(private IUserManager $userManager,
 		private AntiAbuseService $service,
 		private LoggerInterface $logger) {
+		parent::__construct();
 	}
-
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
 		if($localMessage->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL
 			|| $localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
@@ -48,6 +48,7 @@ class AntiAbuseHandler extends AHandler {
 				'id' => $account->getId(),
 			]);
 			// What to do here?
+			return $localMessage;
 		}
 
 		$this->service->onBeforeMessageSent(

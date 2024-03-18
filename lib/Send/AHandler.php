@@ -29,7 +29,6 @@ abstract class AHandler {
 	protected AHandler|null $next;
 
 	public function __construct() {
-
 	}
 
 	public function setNext(AHandler $next): AHandler {

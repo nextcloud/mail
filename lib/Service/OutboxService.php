@@ -189,6 +189,9 @@ class OutboxService {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
+		// Explicitly reset the status, so we can try sending from scratch again
+		// in case the user has updated a failing component
+		$message->setStatus(LocalMessage::STATUS_RAW);
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {

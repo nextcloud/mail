@@ -163,7 +163,7 @@ class OutboxController extends Controller {
 
 		$outboxMessage = $this->service->convertDraft($draftMessage, $sendAt);
 
-		return  JsonResponse::success(
+		return JsonResponse::success(
 			$outboxMessage,
 			Http::STATUS_CREATED,
 		);
@@ -224,9 +224,6 @@ class OutboxController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
-		// Explicitly overwrite the status, so we can try sending again
-		// in case the user has updated the failing component
-		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);

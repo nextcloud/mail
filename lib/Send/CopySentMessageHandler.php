@@ -39,6 +39,7 @@ class CopySentMessageHandler extends AHandler {
 		private LoggerInterface $logger,
 		private MessageMapper $messageMapper
 	) {
+		parent::__construct();
 	}
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
 		if($localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
@@ -47,6 +48,9 @@ class CopySentMessageHandler extends AHandler {
 
 		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		if ($sentMailboxId === null) {
+			// We can't write the "sent mailbox" status here bc that would trigger an additional send.
+			// Thus, we leave the "imap copy to sent mailbox" status.
+			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 			$this->logger->warning("No sent mailbox exists, can't save sent message");
 			return $localMessage;
 		}
@@ -80,6 +84,7 @@ class CopySentMessageHandler extends AHandler {
 			$this->logger->error('Could not copy message to sent mailbox', [
 				'exception' => $e,
 			]);
+			return $localMessage;
 		} finally {
 			$client->logout();
 		}
