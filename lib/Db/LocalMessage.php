@@ -64,6 +64,8 @@ use function array_filter;
  * @method setStatus(?int $status);
  * @method string|null getRaw()
  * @method setRaw(string|null $raw)
+ * @method bool getForce()
+ * @method setForce(bool $force)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -142,6 +144,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var string|null */
 	protected $raw;
 
+	/** @var bool */
+	protected $force;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -154,6 +159,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
 		$this->addType('status', 'integer');
+		$this->addType('force', 'boolean');
+
 	}
 
 	#[ReturnTypeWillChange]
@@ -197,6 +204,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
 			'status' => $this->getStatus(),
 			'raw' => $this->getRaw(),
+			'force' => $this->getForce(),
 		];
 	}
 

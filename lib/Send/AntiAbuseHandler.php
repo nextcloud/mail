@@ -25,13 +25,15 @@ namespace OCA\Mail\Send;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Service\AntiAbuseService;
+use OCA\Mail\Service\RecipientsService;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class AntiAbuseHandler extends AHandler {
 
 	public function __construct(private IUserManager $userManager,
-		private AntiAbuseService $service,
+		private AntiAbuseService $antiAbuseService,
+		private RecipientsService $recipientsService,
 		private LoggerInterface $logger) {
 		parent::__construct();
 	}
@@ -51,14 +53,16 @@ class AntiAbuseHandler extends AHandler {
 			return $localMessage;
 		}
 
-		$this->service->onBeforeMessageSent(
+		$this->recipientsService->checkNumberOfRecipients($account, $localMessage);
+		if($localMessage->getStatus() === LocalMessage::STATUS_TOO_MANY_RECIPIENTS && $localMessage->getForce() === false) {
+			return $localMessage;
+		}
+
+		// We don't react to the ratelimit at the moment.
+		$this->antiAbuseService->onBeforeMessageSent(
 			$user,
 			$localMessage,
 		);
-		// We don't react to a ratelimited message / a message that has too many recipients
-		// at this point.
-		// Any future improvement from https://github.com/nextcloud/mail/issues/6461
-		// should refactor the chain to stop at this point unless the force send option is true
 		return $this->processNext($account, $localMessage);
 	}
 }

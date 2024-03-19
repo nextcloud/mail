@@ -47,6 +47,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Send\AntiAbuseHandler;
 use OCA\Mail\Send\SendHandler;
 use OCA\Mail\Service\AntiAbuseService;
+use OCA\Mail\Service\RecipientsService;
 use OCP\IUser;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -64,9 +65,11 @@ class AntiAbuseHandlerTest extends TestCase {
 		$this->antiAbuseService = $this->createMock(AntiAbuseService::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->sendHandler = $this->createMock(SendHandler::class);
+		$this->recipientsService = $this->createMock(RecipientsService::class);
 		$this->handler = new AntiAbuseHandler(
 			$this->userManager,
 			$this->antiAbuseService,
+			$this->recipientsService,
 			$this->logger,
 		);
 		$this->handler->setNext($this->sendHandler);

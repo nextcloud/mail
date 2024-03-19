@@ -69,30 +69,7 @@ class AntiAbuseService {
 			return;
 		}
 
-		$this->checkNumberOfRecipients($user, $localMessage);
 		$this->checkRateLimits($user, $localMessage);
-	}
-
-	private function checkNumberOfRecipients(IUser $user, LocalMessage $message): void {
-		$numberOfRecipientsThreshold = (int)$this->config->getAppValue(
-			Application::APP_ID,
-			'abuse_number_of_recipients_per_message_threshold',
-			'0',
-		);
-		if ($numberOfRecipientsThreshold <= 1) {
-			return;
-		}
-
-		$actualNumberOfRecipients = count($message->getRecipients());
-
-		if ($actualNumberOfRecipients >= $numberOfRecipientsThreshold) {
-			$message->setStatus(LocalMessage::STATUS_TOO_MANY_RECIPIENTS);
-			$this->logger->alert('User {user} sends to a suspicious number of recipients. {expected} are allowed. {actual} are used', [
-				'user' => $user->getUID(),
-				'expected' => $numberOfRecipientsThreshold,
-				'actual' => $actualNumberOfRecipients,
-			]);
-		}
 	}
 
 	private function checkRateLimits(IUser $user, LocalMessage $message): void {

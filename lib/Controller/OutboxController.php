@@ -115,6 +115,7 @@ class OutboxController extends Controller {
 		array $cc = [],
 		array $bcc = [],
 		array $attachments = [],
+		bool $force,
 		?int $draftId = null,
 		?int $aliasId = null,
 		?string $inReplyToMessageId = null,
@@ -139,6 +140,7 @@ class OutboxController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setForce($force);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
@@ -198,11 +200,11 @@ class OutboxController extends Controller {
 		bool $isHtml,
 		bool $smimeSign,
 		bool $smimeEncrypt,
-		bool $failed = false,
 		array $to = [],
 		array $cc = [],
 		array $bcc = [],
 		array $attachments = [],
+		bool $force,
 		?int $aliasId = null,
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
@@ -224,6 +226,7 @@ class OutboxController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setForce($force);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
