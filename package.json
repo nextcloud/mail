@@ -22,7 +22,7 @@
     "@ckeditor/ckeditor5-dev-utils": "37.0.1",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "~31.1.13",
     "@ckeditor/ckeditor5-editor-balloon": "37.1.0",
-    "@ckeditor/ckeditor5-editor-decoupled": "37.0.1",
+    "@ckeditor/ckeditor5-editor-decoupled": "37.1.0",
     "@ckeditor/ckeditor5-essentials": "37.1.0",
     "@ckeditor/ckeditor5-font": "37.1.0",
     "@ckeditor/ckeditor5-heading": "37.1.0",
