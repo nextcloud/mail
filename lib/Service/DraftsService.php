@@ -111,11 +111,6 @@ class DraftsService {
 	 * @return LocalMessage
 	 */
 	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
-		$this->recipientsService->checkNumberOfRecipients($account, $message);
-		if($message->getStatus() === LocalMessage::STATUS_TOO_MANY_RECIPIENTS && $message->getForce() === false) {
-			throw new ManyRecipientsException();
-		}
-
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
@@ -127,6 +122,11 @@ class DraftsService {
 		}
 
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
+
+		$this->recipientsService->checkNumberOfRecipients($account, $message);
+		if($message->getStatus() === LocalMessage::STATUS_TOO_MANY_RECIPIENTS && $message->getForce() === false) {
+			throw new ManyRecipientsException();
+		}
 
 		if ($attachments === []) {
 			$message->setAttachments($attachments);
@@ -154,16 +154,16 @@ class DraftsService {
 	 * @return LocalMessage
 	 */
 	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
-		$this->recipientsService->checkNumberOfRecipients($account, $message);
-		if($message->getStatus() === LocalMessage::STATUS_TOO_MANY_RECIPIENTS && $message->getForce() === false) {
-			throw new ManyRecipientsException();
-		}
-
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
+
+		$this->recipientsService->checkNumberOfRecipients($account, $message);
+		if($message->getStatus() === LocalMessage::STATUS_TOO_MANY_RECIPIENTS && $message->getForce() === false) {
+			throw new ManyRecipientsException();
+		}
 
 		if ($attachments === []) {
 			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));

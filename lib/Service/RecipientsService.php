@@ -26,6 +26,7 @@ use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Recipient;
+use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
@@ -59,7 +60,11 @@ class RecipientsService {
 			return;
 		}
 
-		$recipients = $this->groupsIntegration->expand($message->getRecipients());
+		try {
+			$recipients = $this->groupsIntegration->expand($message->getRecipients());
+		} catch (ServiceException $e) {
+			$recipients = $message->getRecipients();
+		}
 		$to = count(array_filter($recipients, function ($recipient) {
 			return $recipient->getType() === Recipient::TYPE_TO;
 		}));
