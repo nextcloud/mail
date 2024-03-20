@@ -124,9 +124,6 @@ class DraftsService {
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		$this->recipientsService->checkNumberOfRecipients($account, $message);
-		if($message->getStatus() === LocalMessage::STATUS_TOO_MANY_RECIPIENTS && $message->getForce() === false) {
-			throw new ManyRecipientsException();
-		}
 
 		if ($attachments === []) {
 			$message->setAttachments($attachments);
@@ -161,9 +158,6 @@ class DraftsService {
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		$this->recipientsService->checkNumberOfRecipients($account, $message);
-		if($message->getStatus() === LocalMessage::STATUS_TOO_MANY_RECIPIENTS && $message->getForce() === false) {
-			throw new ManyRecipientsException();
-		}
 
 		if ($attachments === []) {
 			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));

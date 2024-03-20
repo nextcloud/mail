@@ -614,6 +614,10 @@ export default {
 			type: Array,
 			required: true,
 		},
+		status: {
+			type: Number,
+			required: false,
+		}
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -1065,6 +1069,7 @@ export default {
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
+				status: this.status,
 			}
 		},
 		saveDraft() {

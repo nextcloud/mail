@@ -89,6 +89,8 @@
 				:is-first-open="modalFirstOpen"
 				:request-mdn="composerData.requestMdn"
 				:accounts="accounts"
+				:tooManyRecipients="tooManyRecipients"
+				:force="force"
 				@update:from-account="patchComposerData({ accountId: $event })"
 				@update:from-alias="patchComposerData({ aliasId: $event })"
 				@update:to="patchComposerData({ to: $event })"
@@ -160,6 +162,8 @@ export default {
 			canSaveDraft: true,
 			savingDraft: false,
 			draftSaved: false,
+			tooManyRecipients: false,
+			force: false,
 			uploadingAttachments: false,
 			sending: false,
 			error: undefined,
@@ -257,18 +261,24 @@ export default {
 					let idToReturn
 					const dataForServer = this.getDataForServer(data, true)
 					if (!id) {
-						const { id } = await saveDraft(dataForServer)
-						dataForServer.id = id
-						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId })
+						const message = await saveDraft(dataForServer)
+						debugger;
+						dataForServer.id = message.id
+						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId, status: message.status })
 						this.canSaveDraft = true
 						this.draftSaved = true
+						this.tooManyRecipients = message.status === 8
 
 						idToReturn = id
 					} else {
 						dataForServer.id = id
-						await updateDraft(dataForServer)
+						const message = await updateDraft(dataForServer)
+						debugger;
+						await this.$store.dispatch('patchComposerData', { id, status: message.status })
+
 						this.canSaveDraft = true
 						this.draftSaved = true
+						this.tooManyRecipients = message.status === 8
 						idToReturn = id
 					}
 
@@ -319,6 +329,7 @@ export default {
 				inReplyToMessageId: data.inReplyToMessageId,
 				sendAt: data.sendAt,
 				draftId: this.composerData?.draftId,
+				status: this.composerData?.status,
 			}
 		},
 		onAttachmentUploading(done, data) {
@@ -365,6 +376,11 @@ export default {
 					}
 				}
 
+				debugger;
+				if(!force && dataForServer.status === 8) {
+					throw new ManyRecipientsError()
+				}
+
 				if (!this.composerData.id) {
 					// This is a new message
 					const { id } = await saveDraft(dataForServer)
@@ -407,7 +423,7 @@ export default {
 						return t('mail', 'No sent mailbox configured. Please pick one in the account settings.')
 					},
 					[ManyRecipientsError.getName()]() {
-						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
+						return t('mail', 'Too many recipients. Send anyway?')
 					},
 					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
@@ -417,6 +433,9 @@ export default {
 				this.warning = await matchError(error, {
 					[AttachmentMissingError.getName()]() {
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
+					},
+					[ManyRecipientsError.getName()]() {
+						return t('mail', 'Too many recipients. Send anyway?')
 					},
 					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
