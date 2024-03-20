@@ -97,8 +97,8 @@ class Manager {
 
 	public function getConfigs(): array {
 		$cache = null;
-		if ($this->cacheFactory->isAvailable()) {
-			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+		if ($this->cacheFactory->isLocalCacheAvailable()) {
+			$cache = $this->cacheFactory->createLocal(self::MAIL_PROVISIONINGS);
 			$cached = $cache->get('provisionings_all');
 			if ($cached !== null) {
 				return unserialize($cached, ['allowed_classes' => [Provisioning::class]]);
@@ -256,8 +256,8 @@ class Manager {
 	public function newProvisioning(array $data): Provisioning {
 		$provisioning = $this->provisioningMapper->validate($data);
 		$provisioning = $this->provisioningMapper->insert($provisioning);
-		if ($this->cacheFactory->isAvailable()) {
-			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+		if ($this->cacheFactory->isLocalCacheAvailable()) {
+			$cache = $this->cacheFactory->createLocal(self::MAIL_PROVISIONINGS);
 			$cache->clear();
 		}
 		return $provisioning;
@@ -270,8 +270,8 @@ class Manager {
 	public function updateProvisioning(array $data): void {
 		$provisioning = $this->provisioningMapper->validate($data);
 		$this->provisioningMapper->update($provisioning);
-		if ($this->cacheFactory->isAvailable()) {
-			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+		if ($this->cacheFactory->isLocalCacheAvailable()) {
+			$cache = $this->cacheFactory->createLocal(self::MAIL_PROVISIONINGS);
 			$cache->clear();
 		}
 	}
@@ -310,8 +310,8 @@ class Manager {
 	public function deprovision(Provisioning $provisioning): void {
 		$this->mailAccountMapper->deleteProvisionedAccounts($provisioning->getId());
 		$this->provisioningMapper->delete($provisioning);
-		if ($this->cacheFactory->isAvailable()) {
-			$cache = $this->cacheFactory->createDistributed(self::MAIL_PROVISIONINGS);
+		if ($this->cacheFactory->isLocalCacheAvailable()) {
+			$cache = $this->cacheFactory->createLocal(self::MAIL_PROVISIONINGS);
 			$cache->clear();
 		}
 	}
