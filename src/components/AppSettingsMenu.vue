@@ -4,14 +4,14 @@
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:open.sync="showSettings">
-			<NcAppSettingsSection id="mail-list-view" :name="t('mail', 'Layout')">
+			<NcAppSettingsSection v-if="!isMobile" id="mail-list-view" :name="t('mail', 'Layout')">
 				<NcCheckboxRadioSwitch value="no-split"
 					:button-variant="true"
 					name="mail-layout"
 					type="radio"
 					:checked="layoutMode"
 					button-variant-grouped="vertical"
-					@update:checked="setLayout">
+					@update:checked="setLayout('no-split')">
 					<template #icon>
 						<CompactMode :size="20" />
 					</template>
@@ -23,11 +23,23 @@
 					type="radio"
 					:checked="layoutMode"
 					button-variant-grouped="vertical"
-					@update:checked="setLayout">
+					@update:checked="setLayout('vertical-split')">
 					<template #icon>
 						<VerticalSplit :size="20" />
 					</template>
 					{{ t('mail', 'Vertical split') }}
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch value="horizontal-split"
+					:button-variant="true"
+					name="mail-layout"
+					type="radio"
+					:checked="layoutMode"
+					button-variant-grouped="vertical"
+					@update:checked="setLayout('horizontal-split')">
+					<template #icon>
+						<HorizontalSplit :size="20" />
+					</template>
+					{{ t('mail', 'Horizontal split') }}
 				</NcCheckboxRadioSwitch>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="account-settings" :name="t('mail', 'Account creation')">
@@ -236,9 +248,11 @@ import IconAdd from 'vue-material-design-icons/Plus.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
 import VerticalSplit from 'vue-material-design-icons/FormatColumns.vue'
+import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
 import Logger from '../logger.js'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import TrustedSenders from './TrustedSenders.vue'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -255,7 +269,9 @@ export default {
 		NcAppSettingsSection,
 		CompactMode,
 		VerticalSplit,
+		HorizontalSplit,
 	},
+	mixins: [isMobile],
 	props: {
 		open: {
 			required: true,
@@ -320,14 +336,14 @@ export default {
 		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
 	},
 	methods: {
-		async setLayout(value) {
+		async setLayout(layoutMode) {
 			try {
 				await this.$store.dispatch('savePreference', {
 					key: 'layout-mode',
-					value,
+					value: layoutMode,
 				})
 			} catch (error) {
-				Logger.error('could not save preferences', { error })
+				Logger.error('Could not save preferences', { error })
 			}
 		},
 		async onOpen() {
