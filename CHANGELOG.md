@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 * LLM suggested event titles and agendas
 * Maximize composer modal
 * Descriptions for events created from threads
-* Full list layout option
+* Full list and horizontal split layout options
 * Editor toolbar
 ### Changed
 * Move threads with drag and drop
@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 * Database index usages
 * Division by zero
 * Autoconfig via MX DNS records
+* iCloud IMAP compatibility
 
 ## 3.5.0 – unreleased
 ### Added
