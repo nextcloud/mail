@@ -125,7 +125,7 @@
     "jest-transform-stub": "^2.0.0",
     "jest-watch-typeahead": "^2.2.2",
     "node-polyfill-webpack-plugin": "^3.0.0",
-    "postcss": "^8.4.35",
+    "postcss": "^8.4.37",
     "postcss-loader": "^4.3.0",
     "sass": "^1.72.0",
     "sass-loader": "^14.1.1",
