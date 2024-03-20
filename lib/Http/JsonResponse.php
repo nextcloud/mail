@@ -93,9 +93,16 @@ class JsonResponse extends Base {
 		);
 	}
 
+	/**
+	 * @param string $message
+	 * @param int $status
+	 * @param array|JsonSerializable|bool|string $data
+	 *
+	 * @return static
+	 */
 	public static function error(string $message,
 		int $status = Http::STATUS_INTERNAL_SERVER_ERROR,
-		array $data = [],
+		$data = [],
 		int $code = 0): self {
 		return new self(
 			[
@@ -109,11 +116,18 @@ class JsonResponse extends Base {
 	}
 
 	/**
-	 * @param mixed[] $data
+	 * @param Throwable $error
+	 * @param int $status
+	 * @param array|JsonSerializable|bool|string $data
+	 *
+	 * @return static
 	 */
 	public static function errorFromThrowable(Throwable $error,
 		int $status = Http::STATUS_INTERNAL_SERVER_ERROR,
-		array $data = []): self {
+		$data = []): self {
+		if (!is_array($data)) {
+			$data = [$data];
+		}
 		return self::error(
 			$error->getMessage(),
 			$status,
