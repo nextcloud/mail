@@ -64,7 +64,8 @@
 					<span v-else-if="draft" class="draft">
 						<em>{{ t('mail', 'Draft: ') }}</em>
 					</span>
-					<span class="envelope__subtitle__subject">
+					<span class="envelope__subtitle__subject"
+						:class="{'one-line': oneLineLayout }">
 						{{ subjectForSubtitle }}
 					</span>
 				</div>
@@ -872,10 +873,6 @@ export default {
 		white-space: nowrap;
 		&__subject {
 			line-height: 130%;
-			&::after {
-				content: '\00B7';
-				margin: 12px;
-			}
 		}
 	}
 	&__preview-text {
@@ -1051,5 +1048,11 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+.envelope__subtitle__subject.one-line {
+	&::after {
+		content: '\00B7';
+		margin: 12px;
+	}
 }
 </style>
