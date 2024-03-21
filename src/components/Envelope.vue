@@ -885,6 +885,12 @@ export default {
 	}
 }
 
+.list-item__wrapper--active {
+	.envelope__preview-text {
+		color: var(--color-primary-element-text);
+	}
+}
+
 .icon-important {
 	:deep(path) {
 	fill: #ffcc00;
