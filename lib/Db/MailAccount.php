@@ -290,6 +290,10 @@ class MailAccount extends Entity {
 		$this->setOooFollowsSystem($outOfOfficeFollowsSystem);
 	}
 
+	public function canAuthenticateImap(): bool {
+		return isset($this->inboundPassword) || isset($this->oauthAccessToken);
+	}
+
 	/**
 	 * @return array
 	 */

@@ -74,11 +74,11 @@ class TrainImportanceClassifierJob extends TimedJob {
 			return;
 		}
 
-		$dbAccount = $account->getMailAccount();
-		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
-			$this->logger->info("Ignoring cron training for provisioned account that has no password set yet");
+		if(!$account->getMailAccount()->canAuthenticateImap()) {
+			$this->logger->debug('Cron importance classifier training not possible: no authentication on IMAP possible');
 			return;
 		}
+
 		if ($this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
 			$this->logger->debug("classification is turned off for account $accountId");
 			return;

@@ -95,18 +95,18 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testNoUser(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId(1);
-		$account = new Account($mailAccount);
+		$mailAccount = $this->createMock(MailAccount::class);
+		$mailAccount->method('canAuthenticateImap')->willReturn(true);
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->accountService->expects(self::once())
 			->method('findById')
 			->with(self::$argument['accountId'])
 			->willReturn($account);
 		$this->manager->expects(self::once())
-			->method('get')
-			->with($account->getUserId())
-			->willReturn(null);
+			->method('get');
 		$this->logger->expects(self::once())
 			->method('debug');
 
@@ -114,25 +114,16 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testProvisionedNoPassword(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId(1);
-		$mailAccount->setProvisioningId(1);
-		$mailAccount->setInboundPassword(null);
+		$mailAccount = $this->createMock(MailAccount::class);
+		$mailAccount->method('canAuthenticateImap')->willReturn(false);
 		$account = new Account($mailAccount);
-		$user = $this->createMock(IUser::class);
-		$user->setEnabled();
 
 		$this->accountService->expects(self::once())
 			->method('findById')
 			->with(self::$argument['accountId'])
 			->willReturn($account);
-		$this->manager->expects(self::once())
-			->method('get')
-			->with($account->getUserId())
-			->willReturn($user);
-		$user->expects(self::once())
-			->method('isEnabled')
-			->willReturn(true);
+		$this->manager->expects(self::never())
+			->method('get');
 		$this->logger->expects(self::once())
 			->method('info');
 
@@ -140,9 +131,11 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testProcessing(): void {
-		$mailAccount = new MailAccount();
-		$mailAccount->setUserId(1);
-		$account = new Account($mailAccount);
+		$mailAccount = $this->createMock(MailAccount::class);
+		$mailAccount->method('canAuthenticateImap')->willReturn(true);
+		$account = $this->createMock(Account::class);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$time = time();
 		$user = $this->createMock(IUser::class);
 		$user->setEnabled();
