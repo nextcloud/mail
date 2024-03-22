@@ -27,8 +27,8 @@
  * @return {string} URI without a mailto prefix
  */
 export function removeMailtoPrefix(uri) {
-	if (uri.startsWith('mailto:')) {
-		return uri.substr(7)
+	if (uri.startsWith('mailto:') || uri.startsWith('MAILTO:')) {
+		return uri.substring(7)
 	}
 
 	return uri
