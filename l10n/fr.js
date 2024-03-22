@@ -650,7 +650,7 @@ OC.L10N.register(
     "There is already a message in progress. All unsaved changes will be lost if you continue!" : "Il y a déjà un message en cours. Tout changement non sauvegardé sera perdu si vous continuez !",
     "Discard changes" : "Abandonner les modifications",
     "Discard unsaved changes" : "Abandonner les modifications non sauvegardées",
-    "Keep editing message" : "Continuer l'édition du message",
+    "Keep editing message" : "Continuer la modification du message",
     "Attachments were not copied. Please add them manually." : "Les pièces jointes n'ont pas été copiées. Veuillez les ajouter manuellement.",
     "Could not create snooze mailbox" : "Impossible de créer un dossier de mise en attente des messages",
     "Message sent" : "Message envoyé",

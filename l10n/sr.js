@@ -103,6 +103,7 @@ OC.L10N.register(
     "Layout" : "Распоред",
     "List" : "Листа",
     "Vertical split" : "Вертикална подела",
+    "Horizontal split" : "Хоризонтална подела",
     "Account creation" : "Креирање налога",
     "Add mail account" : "Додај налог е-поште",
     "Activate body search" : "Активирај претрагу по телу",

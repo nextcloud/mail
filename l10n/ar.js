@@ -103,6 +103,7 @@ OC.L10N.register(
     "Layout" : "تنسيق",
     "List" : "قائمة",
     "Vertical split" : "تقسيم عمودي",
+    "Horizontal split" : "تقسيم أفقي",
     "Account creation" : "إنشاء حساب",
     "Add mail account" : "أضِف حساب بريد الكتروني",
     "Activate body search" : "تفعيل البحث في المتن",

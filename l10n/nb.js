@@ -103,6 +103,7 @@ OC.L10N.register(
     "Layout" : "Utforming",
     "List" : "Liste",
     "Vertical split" : "Loddrett deling",
+    "Horizontal split" : "Horisontal deling",
     "Account creation" : "Opprettelse av konto",
     "Add mail account" : "Legg til e-postkonto",
     "Activate body search" : "Aktiver søk etter meldingsinnhold",

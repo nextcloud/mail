@@ -103,6 +103,7 @@ OC.L10N.register(
     "Layout" : "佈局",
     "List" : "清單",
     "Vertical split" : "垂直分割",
+    "Horizontal split" : "水平分割",
     "Account creation" : "帳號建立",
     "Add mail account" : "新增郵件帳號",
     "Activate body search" : "啟用正文搜尋",

@@ -103,6 +103,7 @@ OC.L10N.register(
     "Layout" : "Layout",
     "List" : "Liste",
     "Vertical split" : "Vertikale Aufteilung",
+    "Horizontal split" : "Horizontale Aufteilung",
     "Account creation" : "Kontoerstellung",
     "Add mail account" : "E-Mail-Konto hinzufügen",
     "Activate body search" : "Suche im Nachrichteninhalt aktivieren",
