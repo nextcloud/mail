@@ -39,8 +39,8 @@ const transformMailboxName = (account, mailbox) => {
 		/**
 		 * Sub-mailbox, e.g. 'Archive.2020' or 'INBOX.Archive.2020'
 		 */
-		mailbox.displayName = mailbox.name.substr(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
-		mailbox.path = mailbox.name.substr(0, mailbox.name.lastIndexOf(mailbox.delimiter))
+		mailbox.displayName = mailbox.name.substring(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
+		mailbox.path = mailbox.name.substring(0, mailbox.name.lastIndexOf(mailbox.delimiter))
 	} else if (account.personalNamespace && mailbox.name.startsWith(account.personalNamespace)) {
 		/**
 		 * Top-level mailbox, but with a personal namespace, e.g. 'INBOX.Sent'
