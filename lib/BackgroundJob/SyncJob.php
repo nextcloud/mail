@@ -90,6 +90,11 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
+		if(!$account->getMailAccount()->canAuthenticateImap()) {
+			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
+			return;
+		}
+
 		$user = $this->userManager->get($account->getUserId());
 		if ($user === null || !$user->isEnabled()) {
 			$this->logger->debug(sprintf(
@@ -97,12 +102,6 @@ class SyncJob extends TimedJob {
 				$account->getId(),
 				$account->getUserId()
 			));
-			return;
-		}
-
-		$dbAccount = $account->getMailAccount();
-		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
-			$this->logger->info("Ignoring cron sync for provisioned account that has no password set yet");
 			return;
 		}
 
