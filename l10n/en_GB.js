@@ -103,6 +103,7 @@ OC.L10N.register(
     "Layout" : "Layout",
     "List" : "List",
     "Vertical split" : "Vertical split",
+    "Horizontal split" : "Horizontal split",
     "Account creation" : "Account creation",
     "Add mail account" : "Add mail account",
     "Activate body search" : "Activate body search",
