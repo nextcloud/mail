@@ -30,6 +30,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\BackgroundJob\JobList;
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
 use OCP\IUser;
@@ -90,10 +91,51 @@ class SyncJobTest extends TestCase {
 		);
 	}
 
-	public function testUserDoesntExist(): void {
+	public function testNoAuthentication(): void {
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => false,
+		]);
 		$account = $this->createMock(Account::class);
 		$account->method('getId')->willReturn(123);
 		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
+
+		$this->serviceMock->getParameter('accountService')
+			->expects(self::once())
+			->method('findById')
+			->with(123)
+			->willReturn($account);
+		$this->serviceMock->getParameter('logger')
+			->expects(self::once())
+			->method('debug')
+			->with('No authentication on IMAP possible, skipping background sync job');
+		$this->serviceMock->getParameter('userManager')
+			->expects(self::never())
+			->method('get');
+		$this->serviceMock->getParameter('mailboxSync')
+			->expects(self::never())
+			->method('sync');
+		$this->serviceMock->getParameter('syncService')
+			->expects(self::never())
+			->method('syncAccount');
+
+		$this->job->setArgument([
+			'accountId' => 123,
+		]);
+		$this->job->execute(
+			$this->createMock(JobList::class),
+			$this->createMock(ILogger::class)
+		);
+	}
+
+	public function testUserDoesntExist(): void {
+		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
+			'canAuthenticateImap' => true,
+		]);
+		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(123);
+		$account->method('getUserId')->willReturn('user123');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::once())
 			->method('findById')
