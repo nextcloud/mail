@@ -74,6 +74,11 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 			return;
 		}
 
+		if (!$account->getMailAccount()->canAuthenticateImap()) {
+			$this->logger->info('Ignoring preprocessing job for provisioned account as athentication on IMAP not possible');
+			return;
+		}
+
 		$user = $this->userManager->get($account->getUserId());
 		if ($user === null || !$user->isEnabled()) {
 			$this->logger->debug(sprintf(
@@ -81,12 +86,6 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 				$account->getId(),
 				$account->getUserId()
 			));
-			return;
-		}
-
-		$dbAccount = $account->getMailAccount();
-		if (!is_null($dbAccount->getProvisioningId()) && $dbAccount->getInboundPassword() === null) {
-			$this->logger->info("Ignoring preprocessing job for provisioned account that has no password set yet");
 			return;
 		}
 
