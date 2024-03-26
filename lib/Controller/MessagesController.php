@@ -908,7 +908,7 @@ class MessagesController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		try {
-			$replies = $this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId);
+			$replies = array_values($this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId));
 		} catch (ServiceException $e) {
 			$this->logger->error('Smart reply failed: ' . $e->getMessage(), [
 				'exception' => $e,
