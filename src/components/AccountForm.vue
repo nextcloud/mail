@@ -694,7 +694,15 @@ h4 {
 .flex-row {
 	display: flex;
 }
-
+@-moz-document url-prefix() {
+	.flex-row {
+		height: 44px;
+	}
+	label.button {
+		white-space: nowrap;
+		padding: 6px 17px 17px 17px;
+	}
+}
 label.button {
 	display: inline-block;
 	text-align: center;
