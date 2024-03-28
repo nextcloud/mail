@@ -34,6 +34,7 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ManyRecipientsException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -62,7 +63,8 @@ class DraftsService {
 		IMailManager $mailManager,
 		LoggerInterface $logger,
 		AccountService $accountService,
-		ITimeFactory $time) {
+		ITimeFactory $time,
+		private RecipientsService $recipientsService) {
 		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
@@ -121,6 +123,8 @@ class DraftsService {
 
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
+		$this->recipientsService->checkNumberOfRecipients($account, $message);
+
 		if ($attachments === []) {
 			$message->setAttachments($attachments);
 			return $message;
@@ -151,8 +155,9 @@ class DraftsService {
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
 
-
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
+
+		$this->recipientsService->checkNumberOfRecipients($account, $message);
 
 		if ($attachments === []) {
 			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));

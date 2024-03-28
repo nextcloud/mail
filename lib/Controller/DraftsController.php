@@ -99,6 +99,7 @@ class DraftsController extends Controller {
 		array   $cc = [],
 		array   $bcc = [],
 		array   $attachments = [],
+		bool $force = false,
 		?int    $aliasId = null,
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
@@ -121,6 +122,7 @@ class DraftsController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setForce($force);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
@@ -165,13 +167,13 @@ class DraftsController extends Controller {
 		array   $cc = [],
 		array   $bcc = [],
 		array   $attachments = [],
+		bool $force = false,
 		?int    $aliasId = null,
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
 		?int $sendAt = null): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $accountId);
-
 
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($accountId);
@@ -186,6 +188,7 @@ class DraftsController extends Controller {
 		$message->setUpdatedAt($this->timeFactory->getTime());
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setForce($force);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);

@@ -27,11 +27,11 @@ namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Address;
-use OCA\Mail\AddressList;
+use OCA\Mail\Account;
+use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Listener\InteractionListener;
-use OCA\Mail\Model\IMessage;
 use OCP\Contacts\Events\ContactInteractedWithEvent;
 use OCP\EventDispatcher\Event;
 use OCP\IUser;
@@ -66,31 +66,38 @@ class InteractionListenerTest extends TestCase {
 			return;
 		}
 
-		$to = new AddressList([
-			Address::fromRaw('rec 1', 'u1@domain.tld'),
-			Address::fromRaw('rec 1', 'u2@domain.tld'),
+		$message = new LocalMessage();
+		$message->setRecipients([
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u1@domain.tld',
+				'type' => Recipient::TYPE_TO,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u2@domain.tld',
+				'type' => Recipient::TYPE_TO,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u3@domain.tld',
+				'type' => Recipient::TYPE_CC,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u4@domain.tld',
+				'type' => Recipient::TYPE_BCC,
+			]),
+			Recipient::fromParams([
+				'label' => 'rec 1',
+				'email' => 'u2@domain.tld',
+				'type' => Recipient::TYPE_CC,
+			]),
 		]);
-		$cc = new AddressList([
-			Address::fromRaw('rec 1', 'u3@domain.tld'),
-		]);
-		$bcc = new AddressList([
-			Address::fromRaw('rec 1', 'u4@domain.tld'),
-			Address::fromRaw('rec 1', 'u2@domain.tld'), // intentional duplicate
-		]);
-		$event = $this->createMock(MessageSentEvent::class);
-		$message = $this->createMock(IMessage::class);
-		$event
-			->method('getMessage')
-			->willReturn($message);
-		$message
-			->method('getTo')
-			->willReturn($to);
-		$message
-			->method('getCC')
-			->willReturn($cc);
-		$message
-			->method('getBCC')
-			->willReturn($bcc);
+		$event = new MessageSentEvent(
+			$this->createMock(Account::class),
+			$message,
+		);
 		$user = $this->createMock(IUser::class);
 		$this->serviceMock->getParameter('userSession')
 			->method('getUser')

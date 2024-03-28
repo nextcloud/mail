@@ -115,6 +115,7 @@ class OutboxController extends Controller {
 		array $cc = [],
 		array $bcc = [],
 		array $attachments = [],
+		bool $force,
 		?int $draftId = null,
 		?int $aliasId = null,
 		?string $inReplyToMessageId = null,
@@ -139,6 +140,7 @@ class OutboxController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setForce($force);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
@@ -163,7 +165,7 @@ class OutboxController extends Controller {
 
 		$outboxMessage = $this->service->convertDraft($draftMessage, $sendAt);
 
-		return  JsonResponse::success(
+		return JsonResponse::success(
 			$outboxMessage,
 			Http::STATUS_CREATED,
 		);
@@ -198,17 +200,20 @@ class OutboxController extends Controller {
 		bool $isHtml,
 		bool $smimeSign,
 		bool $smimeEncrypt,
-		bool $failed = false,
 		array $to = [],
 		array $cc = [],
 		array $bcc = [],
 		array $attachments = [],
+		bool $force,
 		?int $aliasId = null,
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
 		?int $sendAt = null
 	): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
+		if ($message->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL || $message->getStatus() === LocalMessage::STATUS_PROCESSED) {
+			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
+		}
 		$account = $this->accountService->find($this->userId, $accountId);
 
 		$message->setAccountId($accountId);
@@ -217,11 +222,11 @@ class OutboxController extends Controller {
 		$message->setBody($body);
 		$message->setEditorBody($editorBody);
 		$message->setHtml($isHtml);
-		$message->setFailed($failed);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setForce($force);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
