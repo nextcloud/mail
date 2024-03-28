@@ -89,7 +89,6 @@
 				:is-first-open="modalFirstOpen"
 				:request-mdn="composerData.requestMdn"
 				:accounts="accounts"
-				:tooManyRecipients="tooManyRecipients"
 				:force="force"
 				@update:from-account="patchComposerData({ accountId: $event })"
 				@update:from-alias="patchComposerData({ aliasId: $event })"
