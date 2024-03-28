@@ -15,6 +15,7 @@ OC.L10N.register(
     "Go back" : "Dir p'atrás",
     "Email address" : "Direición de corréu electrónicu",
     "Cancel" : "Encaboxar",
+    "Register" : "Rexistrase",
     "Delete" : "Desaniciar",
     "Search" : "Buscar",
     "Smart picker" : "Selector intelixente",
