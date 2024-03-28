@@ -426,7 +426,7 @@
 					</template>
 					{{ submitButtonTitle }}
 				</ButtonVue>
-				<NcDialog :open.sync="tooManyRecipients"
+				<NcDialog :open.sync="tooManyRecipientsDialog"
 					:name="t('mail', 'Too many recipients')"
 					:message="t('mail', 'The amount of recipients sent is larger than the maximum amount of recipients suggested.')"
 					:buttons="tooManyRecipientsButtons" />
@@ -471,8 +471,6 @@ import { isPgpgMessage } from '../crypto/pgp.js'
 
 import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichText.js'
 import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
-import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
-import IconCheck from '@mdi/svg/svg/check.svg?raw'
 
 import Send from 'vue-material-design-icons/Send.vue'
 import SendClock from 'vue-material-design-icons/SendClock.vue'
@@ -626,6 +624,10 @@ export default {
 			type: Number,
 			required: false,
 		},
+		tooManyRecipients: {
+			type: Boolean,
+			required: false,
+		},
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -677,17 +679,15 @@ export default {
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
-			tooManyRecipients: false,
+			tooManyRecipientsDialog: false,
 			tooManyRecipientsButtons: [
 				{
 					label: t('mail', 'Cancel'),
-					icon: IconCancel,
-					callback: () => { this.tooManyRecipients = false },
+					callback: () => { this.tooManyRecipientsDialog = false },
 				},
 				{
 					label: t('mail', 'Ok'),
 					type: 'primary',
-					icon: IconCheck,
 					callback: () => { this.onSend(null, true) },
 				},
 			],
@@ -941,6 +941,9 @@ export default {
 		},
 		requestMdnVal(val) {
 			this.$emit('update:request-mdn', val)
+		},
+		tooManyRecipients(val) {
+			this.tooManyRecipientsDialog = val
 		},
 	},
 	async beforeMount() {
@@ -1259,15 +1262,19 @@ export default {
 				await this.$refs.mailvelopeEditor.pull()
 			}
 
+			this.$emit('on-draft')
+
 			if (!force) {
 
 				// backend check happens here
-				this.tooManyRecipients = true
 
 				if (this.tooManyRecipients) {
+					this.tooManyRecipientsDialog = true
 					return
 				}
 
+			} else {
+				this.tooManyRecipientsDialog = false
 			}
 
 			this.$emit('send', {
