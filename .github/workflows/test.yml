@@ -18,6 +18,8 @@ jobs:
             nextcloud-versions: 'stable27'
           - php-versions: '8.2'
             nextcloud-versions: 'stable28'
+          - php-versions: '8.3'
+            nextcloud-versions: 'stable29'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
