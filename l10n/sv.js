@@ -237,6 +237,7 @@ OC.L10N.register(
     "Send anyway" : "Skicka ändå",
     "Edit message" : "Redigera meddelande",
     "Draft" : "Utkast",
+    "Welcome to {cloudName} Mail" : "Välkommen till {cloudName} Mail",
     "First day" : "Första dagen",
     "Message" : "Meddelande",
     "Oh Snap!" : "Hoppsan!",

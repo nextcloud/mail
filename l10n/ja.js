@@ -71,6 +71,7 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Gravatarとfaviconのアバターを使用する",
     "Register" : "登録",
     "Sorting" : "並べ替え",
+    "Newest" : "最新",
     "Compose new message" : "新しいメッセージを作成する",
     "Newer message" : "新しいメッセージ",
     "Older message" : "古いメッセージ",

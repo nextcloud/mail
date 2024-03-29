@@ -33,6 +33,7 @@ OC.L10N.register(
     "Add mail account" : "Agregar cuenta de correo",
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",
     "Register" : "Registrar",
+    "Sorting" : "Ordenando",
     "Compose new message" : "Escribir mensaje nuevo",
     "Newer message" : "Mensaje más nuevo",
     "Older message" : "Mensaje más antiguo",
