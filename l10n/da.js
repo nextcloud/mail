@@ -282,6 +282,7 @@ OC.L10N.register(
     "Send anyway" : "Send alligevel",
     "No sent mailbox configured. Please pick one in the account settings." : "Ingen sendt postkasse konfigureret. Vælg en i kontoindstillingerne.",
     "You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses." : "Du prøver at sende til mange modtagere i Til og/eller Cc. Overvej at bruge Bcc til at skjule modtageradresser.",
+    "First day" : "Første dag",
     "Message" : "Besked",
     "Could not open outbox" : "Kunne ikke åbne udbakken",
     "Copy to clipboard" : "Kopier til udklipsholder",

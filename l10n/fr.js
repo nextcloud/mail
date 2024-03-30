@@ -102,6 +102,8 @@ OC.L10N.register(
     "Mail settings" : "Paramètres de Mail",
     "Layout" : "Affichage",
     "List" : "Liste",
+    "Vertical split" : "Séparation verticale",
+    "Horizontal split" : "Séparation horizontale",
     "Account creation" : "Création de compte",
     "Add mail account" : "Ajouter un compte mail",
     "Activate body search" : "Activer la recherche dans le corps des mail",
