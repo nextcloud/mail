@@ -48,6 +48,7 @@ OC.L10N.register(
     "Subject" : "Asunto",
     "Upload attachment" : "Cargar adjunto",
     "Add attachment from Files" : "Agregar adjunto desd Archivos",
+    "Enter a date" : "Ingrese una fecha",
     "Choose a file to add as attachment" : "Selecciona el archivo a agregar como adjunto",
     "Choose" : "Seleccionar",
     "Confirm" : "Confirmar",

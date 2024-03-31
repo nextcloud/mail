@@ -293,7 +293,7 @@ OC.L10N.register(
     "Body" : "Krop",
     "Pick a start date" : "Vælg en startdato",
     "Pick an end date" : "Vælg en slutdato",
-    "Tags" : "Mærker",
+    "Tags" : "Tags",
     "Select tags" : "Vælg tags",
     "Marked as" : "Markeret som",
     "Has attachments" : "Har vedhæftede filer",
