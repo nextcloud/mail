@@ -24,9 +24,7 @@
 <template>
 	<DashboardWidget :items="importantMessages"
 		:show-more-url="''"
-		:loading="loading"
-		@hide="() => {}"
-		@markDone="() => {}">
+		:loading="loading">
 		<template #default="{ item }">
 			<DashboardWidgetItem :class="{unread: itemUnread(item)}"
 				:target-url="itemTargetUrl(item)"
@@ -59,7 +57,8 @@
 <script>
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl, imagePath } from '@nextcloud/router'
-import { DashboardWidget, DashboardWidgetItem } from '@nextcloud/vue-dashboard'
+import DashboardWidget from '@nextcloud/vue/dist/Components/NcDashboardWidget.js'
+import DashboardWidgetItem from '@nextcloud/vue/dist/Components/NcDashboardWidgetItem.js'
 import orderBy from 'lodash/fp/orderBy.js'
 import prop from 'lodash/fp/prop.js'
 import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
