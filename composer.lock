@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "866b545a6b2773b427e66e06e7a0cdf2",
+    "content-hash": "923e333ef6d33cad25bba56778236890",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1963,16 +1963,16 @@
         },
         {
             "name": "nextcloud/kitinerary-bin",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-bin.git",
-                "reference": "1139208d21f2363f3a9a88feba562e3f79255883"
+                "reference": "781d1242c343478674e4058bdcb9a87e64b1bd76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/1139208d21f2363f3a9a88feba562e3f79255883",
-                "reference": "1139208d21f2363f3a9a88feba562e3f79255883",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-bin/zipball/781d1242c343478674e4058bdcb9a87e64b1bd76",
+                "reference": "781d1242c343478674e4058bdcb9a87e64b1bd76",
                 "shasum": ""
             },
             "require": {
@@ -1998,9 +1998,9 @@
             ],
             "description": "KItinerary binary executable",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.2"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-bin/tree/v1.0.3"
             },
-            "time": "2024-01-29T19:57:31+00:00"
+            "time": "2024-03-25T09:26:53+00:00"
         },
         {
             "name": "nextcloud/kitinerary-flatpak",

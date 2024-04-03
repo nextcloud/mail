@@ -32,7 +32,7 @@
 		"nextcloud/horde-managesieve": "^1.0",
 		"nextcloud/horde-smtp": "^1.0.2",
 		"nextcloud/kitinerary": "^1.0",
-		"nextcloud/kitinerary-bin": "^1.0.2",
+		"nextcloud/kitinerary-bin": "^1.0.3",
 		"nextcloud/kitinerary-flatpak": "^1.0",
 		"nextcloud/kitinerary-sys": "^1.0",
 		"phpmailer/dkimvalidator": "^0.3.0",
