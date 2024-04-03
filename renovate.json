@@ -70,6 +70,12 @@
 			"allowedVersions": "<4.1.0"
 		},
 		{
+			"description": "Ignore Vue 3 packages",
+			"matchManagers": ["npm"],
+			"matchPackageNames": ["vue-loader"],
+			"allowedVersions": "<16.0.0"
+		},
+		{
 			"description": "Request PHP reviews",
 			"matchManagers": ["composer"],
 			"reviewers": [
