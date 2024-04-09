@@ -98,10 +98,10 @@ class SyncService {
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param int $criteria
-	 * @param int[] $knownIds
 	 * @param bool $partialOnly
-	 *
 	 * @param string|null $filter
+	 *
+	 * @param int[] $knownIds
 	 *
 	 * @return Response
 	 * @throws ClientException
@@ -111,9 +111,9 @@ class SyncService {
 	public function syncMailbox(Account $account,
 		Mailbox $mailbox,
 		int $criteria,
-		?array $knownIds = null,
-		?int $lastMessageTimestamp,
 		bool $partialOnly,
+		?int $lastMessageTimestamp,
+		?array $knownIds = null,
 		string $sortOrder = IMailSearch::ORDER_NEWEST_FIRST,
 		?string $filter = null): Response {
 		if ($partialOnly && !$mailbox->isCached()) {

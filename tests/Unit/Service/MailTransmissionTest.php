@@ -261,7 +261,7 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account->method('getName')->willReturn('Test User');
 		$account->method('getEMailAddress')->willReturn('test@user');
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
+		$messageData = NewMessageData::fromRequest($account, 'sub', 'bod', 'to@d.com', '', '');
 		$message = new Message();
 
 		$account->expects($this->once())

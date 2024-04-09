@@ -226,9 +226,9 @@ class OutboxServiceIntegrationTest extends TestCase {
 			new Account($this->account),
 			$dbInbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-			[],
+			false,
 			null,
-			false
+			[]
 		);
 		/** @var MessageMapper $messageMapper */
 		$messageMapper = Server::get(MessageMapper::class);

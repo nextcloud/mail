@@ -35,7 +35,7 @@ class NewMessageDataTest extends TestCase {
 		$subject = 'Hello';
 		$body = 'Hi!';
 		$attachments = [];
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments, false, true);
+		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, $attachments, false, true);
 
 		$this->assertEquals($account, $messageData->getAccount());
 		$this->assertInstanceOf(AddressList::class, $messageData->getTo());
@@ -56,7 +56,7 @@ class NewMessageDataTest extends TestCase {
 		$subject = 'Hello';
 		$body = 'Hi!';
 		$attachments = [];
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments);
+		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, $attachments);
 
 		$this->assertEquals($account, $messageData->getAccount());
 		$this->assertInstanceOf(AddressList::class, $messageData->getTo());

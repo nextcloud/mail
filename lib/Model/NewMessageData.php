@@ -105,11 +105,11 @@ class NewMessageData {
 
 	/**
 	 * @param Account $account
+	 * @param string $subject
+	 * @param string $body
 	 * @param string|null $to
 	 * @param string|null $cc
 	 * @param string|null $bcc
-	 * @param string $subject
-	 * @param string $body
 	 * @param array $attachments
 	 * @param bool $isHtml
 	 * @param bool $requestMdn
@@ -118,11 +118,11 @@ class NewMessageData {
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account,
+		string $subject,
+		string $body,
 		?string $to = null,
 		?string $cc = null,
 		?string $bcc = null,
-		string $subject,
-		string $body,
 		array $attachments = [],
 		bool $isHtml = true,
 		bool $requestMdn = false,
