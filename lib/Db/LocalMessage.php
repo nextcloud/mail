@@ -60,13 +60,30 @@ use function array_filter;
  * @method setSmimeCertificateId(?int $smimeCertificateId)
  * @method bool|null getSmimeEncrypt()
  * @method setSmimeEncrypt (bool $smimeEncryt)
+ * @method int|null getStatus();
+ * @method setStatus(?int $status);
+ * @method string|null getRaw()
+ * @method setRaw(string|null $raw)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
 	public const TYPE_DRAFT = 1;
 
+	public const STATUS_RAW = 0;
+	public const STATUS_NO_SENT_MAILBOX = 1;
+	public const STATUS_SMIME_SIGN_NO_CERT_ID = 2;
+	public const STATUS_SMIME_SIGN_CERT = 3;
+	public const STATUS_SMIME_SIGN_FAIL = 4;
+	public const STATUS_SMIME_ENCRYPT_NO_CERT_ID = 5;
+	public const STATUS_SMIME_ENCRYPT_CERT = 6;
+	public const STATUS_SMIME_ENCRYT_FAIL = 7;
+	public const STATUS_TOO_MANY_RECIPIENTS = 8;
+	public const STATUS_RATELIMIT = 9;
+	public const STATUS_SMPT_SEND_FAIL = 10;
+	public const STATUS_IMAP_SENT_MAILBOX_FAIL = 11;
+	public const STATUS_PROCESSED = 12;
 	/**
-	 * @var int
+	 * @var int<1,12>
 	 * @psalm-var self::TYPE_*
 	 */
 	protected $type;
@@ -116,6 +133,15 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var bool|null */
 	protected $smimeEncrypt;
 
+	/**
+	 * @var int|null
+	 * @psalm-var int-mask-of<self::STATUS_*>
+	 */
+	protected $status;
+
+	/** @var string|null */
+	protected $raw;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -127,6 +153,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeSign', 'boolean');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
+		$this->addType('status', 'integer');
 	}
 
 	#[ReturnTypeWillChange]
@@ -168,6 +195,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'smimeCertificateId' => $this->getSmimeCertificateId(),
 			'smimeSign' => $this->getSmimeSign() === true,
 			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
+			'status' => $this->getStatus(),
+			'raw' => $this->getRaw(),
 		];
 	}
 

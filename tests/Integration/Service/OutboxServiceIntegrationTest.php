@@ -37,6 +37,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
@@ -93,6 +94,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 
 	/** @var ITimeFactory */
 	private $timeFactory;
+	private \PHPUnit\Framework\MockObject\MockObject|Chain $chain;
+	private \OCP\IDBConnection $db;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -121,14 +124,14 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->clientFactory = Server::get(IMAPClientFactory::class);
 		$this->accountService = Server::get(AccountService::class);
 		$this->timeFactory = Server::get(ITimeFactory::class);
+		$this->chain = Server::get(Chain::class);
 
 		$this->db = OC::$server->getDatabaseConnection();
 		$qb = $this->db->getQueryBuilder();
 		$delete = $qb->delete($this->mapper->getTableName());
 		$delete->execute();
 
-		$this->outbox = new OutboxService(
-			$this->transmission,
+		$this->outbox = new OutboxService($this->transmission,
 			$this->mapper,
 			$this->attachmentService,
 			$this->eventDispatcher,
@@ -136,7 +139,8 @@ class OutboxServiceIntegrationTest extends TestCase {
 			$mailManager,
 			$this->accountService,
 			$this->timeFactory,
-			$this->createMock(LoggerInterface::class)
+			$this->createMock(LoggerInterface::class),
+			$this->chain
 		);
 	}
 
@@ -357,7 +361,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$this->assertCount(1, $saved->getRecipients());
 		$this->assertEmpty($message->getAttachments());
 
-		$this->outbox->sendMessage($saved, new Account($this->account));
+		$actual = $this->outbox->sendMessage($saved, new Account($this->account));
 
 		$this->expectException(DoesNotExistException::class);
 		$this->outbox->getMessage($message->getId(), $this->user->getUID());

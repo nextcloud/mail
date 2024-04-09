@@ -119,6 +119,10 @@ class DraftsService {
 			throw new ClientException('Cannot convert message to outbox message without at least one recipient');
 		}
 
+		// Explicitly reset the status, so we can try sending from scratch again
+		// in case the user has updated a failing component
+		$message->setStatus(LocalMessage::STATUS_RAW);
+
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
