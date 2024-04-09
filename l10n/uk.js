@@ -19,7 +19,7 @@ OC.L10N.register(
     "Your session has expired. The page will be reloaded." : "Ваш сеанс закінчився. Сторінка буде перезавантажена.",
     "Drafts are saved in:" : "Чернетки зберігаються в:",
     "Sent messages are saved in:" : "Надіслані повідомлення зберігаються в:",
-    "Deleted messages are moved in:" : "Видалені повідомлення переміщуються в:",
+    "Deleted messages are moved in:" : "Вилучені листи буде переміщено до:",
     "Archived messages are moved in:" : "Архівні повідомлення перенесено:",
     "Snoozed messages are moved in:" : "Відкладені повідомлення буде переміщено до:",
     "Junk messages are saved in:" : "Спам зберігатиметься у:",
