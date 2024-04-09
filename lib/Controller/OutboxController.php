@@ -163,7 +163,7 @@ class OutboxController extends Controller {
 
 		$outboxMessage = $this->service->convertDraft($draftMessage, $sendAt);
 
-		return  JsonResponse::success(
+		return JsonResponse::success(
 			$outboxMessage,
 			Http::STATUS_CREATED,
 		);
@@ -209,6 +209,9 @@ class OutboxController extends Controller {
 		?int $sendAt = null
 	): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
+		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
+			return JsonResponse::error('Cannot modify already sent message', Http::STATUS_FORBIDDEN, [$message]);
+		}
 		$account = $this->accountService->find($this->userId, $accountId);
 
 		$message->setAccountId($accountId);
@@ -217,7 +220,6 @@ class OutboxController extends Controller {
 		$message->setBody($body);
 		$message->setEditorBody($editorBody);
 		$message->setHtml($isHtml);
-		$message->setFailed($failed);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
@@ -244,8 +246,12 @@ class OutboxController extends Controller {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $message->getAccountId());
 
-		$this->service->sendMessage($message, $account);
-		return  JsonResponse::success(
+		$message = $this->service->sendMessage($message, $account);
+
+		if($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
+			return JsonResponse::error('Could not send message', Http::STATUS_INTERNAL_SERVER_ERROR, [$message]);
+		}
+		return JsonResponse::success(
 			'Message sent', Http::STATUS_ACCEPTED
 		);
 	}
