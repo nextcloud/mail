@@ -426,6 +426,10 @@
 					</template>
 					{{ submitButtonTitle }}
 				</ButtonVue>
+				<NcDialog :open.sync="tooManyRecipientsDialog"
+					:name="t('mail', 'Too many recipients')"
+					:message="t('mail', 'The amount of recipients sent is larger than the maximum amount of recipients suggested.')"
+					:buttons="tooManyRecipientsButtons" />
 			</div>
 		</div>
 	</div>
@@ -466,6 +470,7 @@ import { getMailvelope } from '../crypto/mailvelope.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
 
 import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
 
 import Send from 'vue-material-design-icons/Send.vue'
 import SendClock from 'vue-material-design-icons/SendClock.vue'
@@ -508,6 +513,7 @@ export default {
 		UnfoldLessHorizontal,
 		IconFormat,
 		NcReferencePickerModal,
+		NcDialog,
 	},
 	props: {
 		fromAccount: {
@@ -614,6 +620,14 @@ export default {
 			type: Array,
 			required: true,
 		},
+		status: {
+			type: Number,
+			required: false,
+		},
+		tooManyRecipients: {
+			type: Boolean,
+			required: false,
+		},
 	},
 	data() {
 		// Set default custom date time picker value to now + 1 hour
@@ -665,6 +679,18 @@ export default {
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
+			tooManyRecipientsDialog: false,
+			tooManyRecipientsButtons: [
+				{
+					label: t('mail', 'Cancel'),
+					callback: () => { this.tooManyRecipientsDialog = false },
+				},
+				{
+					label: t('mail', 'Ok'),
+					type: 'primary',
+					callback: () => { this.onSend(null, true) },
+				},
+			],
 		}
 	},
 	computed: {
@@ -916,6 +942,9 @@ export default {
 		requestMdnVal(val) {
 			this.$emit('update:request-mdn', val)
 		},
+		tooManyRecipients(val) {
+			this.tooManyRecipientsDialog = val
+		},
 	},
 	async beforeMount() {
 		this.setAlias()
@@ -1065,6 +1094,7 @@ export default {
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
+				status: this.status,
 			}
 		},
 		saveDraft() {
@@ -1230,6 +1260,21 @@ export default {
 			if (this.encrypt) {
 				logger.debug('get encrypted message from mailvelope')
 				await this.$refs.mailvelopeEditor.pull()
+			}
+
+			this.$emit('on-draft')
+
+			if (!force) {
+
+				// backend check happens here
+
+				if (this.tooManyRecipients) {
+					this.tooManyRecipientsDialog = true
+					return
+				}
+
+			} else {
+				this.tooManyRecipientsDialog = false
 			}
 
 			this.$emit('send', {

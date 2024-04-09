@@ -70,3 +70,15 @@ export async function moveDraft(id) {
 		throw convertAxiosError(e)
 	}
 }
+
+export async function checkRecipients(id) {
+	const url = generateUrl('/apps/mail/api/drafts/check-recipients/{id}', {
+		id,
+	})
+
+	try {
+		return (await axios.post(url)).data.data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}

@@ -89,6 +89,7 @@
 				:is-first-open="modalFirstOpen"
 				:request-mdn="composerData.requestMdn"
 				:accounts="accounts"
+				:too-many-recipients="tooManyRecipients"
 				@update:from-account="patchComposerData({ accountId: $event })"
 				@update:from-alias="patchComposerData({ aliasId: $event })"
 				@update:to="patchComposerData({ to: $event })"
@@ -131,7 +132,7 @@ import { mapGetters } from 'vuex'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
-import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
+import { deleteDraft, saveDraft, updateDraft, checkRecipients } from '../service/DraftService.js'
 
 export default {
 	name: 'NewMessageModal',
@@ -160,6 +161,8 @@ export default {
 			canSaveDraft: true,
 			savingDraft: false,
 			draftSaved: false,
+			tooManyRecipients: false,
+			force: false,
 			uploadingAttachments: false,
 			sending: false,
 			error: undefined,
@@ -237,7 +240,7 @@ export default {
 		toHtml,
 		plain,
 		/**
-		 * @param data Message data
+		 * @param {{}} data Message data
 		 * @param {object=} opts Options
 		 * @param {boolean=} opts.showToast Show a toast after saving
 		 * @return {Promise<number>} Draft id promise
@@ -257,16 +260,18 @@ export default {
 					let idToReturn
 					const dataForServer = this.getDataForServer(data, true)
 					if (!id) {
-						const { id } = await saveDraft(dataForServer)
-						dataForServer.id = id
-						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId })
+						const message = await saveDraft(dataForServer)
+						dataForServer.id = message.id
+						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId, status: message.status })
 						this.canSaveDraft = true
 						this.draftSaved = true
 
 						idToReturn = id
 					} else {
 						dataForServer.id = id
-						await updateDraft(dataForServer)
+						const message = await updateDraft(dataForServer)
+						await this.$store.dispatch('patchComposerData', { id, status: message.status })
+
 						this.canSaveDraft = true
 						this.draftSaved = true
 						idToReturn = id
@@ -319,6 +324,7 @@ export default {
 				inReplyToMessageId: data.inReplyToMessageId,
 				sendAt: data.sendAt,
 				draftId: this.composerData?.draftId,
+				status: this.composerData?.status,
 			}
 		},
 		onAttachmentUploading(done, data) {
@@ -328,8 +334,18 @@ export default {
 				.then(() => logger.debug('attachments uploaded'))
 				.catch((error) => logger.error('could not upload attachments', { error }))
 		},
-		async onSend(data, force = false) {
+		async onSend(data) {
+
 			logger.debug('sending message', { data })
+
+			await this.onDraft(data)
+
+			const dataForServer = this.getDataForServer(data, true)
+			this.tooManyRecipients = await checkRecipients(dataForServer)
+
+			if (this.tooManyRecipients && !data.force) {
+				return undefined
+			}
 
 			await this.attachmentsPromise
 			this.uploadingAttachments = false
@@ -351,7 +367,7 @@ export default {
 					dataForServer.sendAt = Math.floor((now + UNDO_DELAY) / 1000)
 				}
 
-				if (!force && data.attachments.length === 0) {
+				if (!data.force && data.attachments.length === 0) {
 					const lines = toPlain(data.body).value.toLowerCase().split('\n')
 					const wordAttachment = t('mail', 'attachment').toLowerCase()
 					const wordAttached = t('mail', 'attached').toLowerCase()
@@ -363,6 +379,10 @@ export default {
 							throw new AttachmentMissingError()
 						}
 					}
+				}
+
+				if (!data.force && dataForServer.status === 8) {
+					throw new ManyRecipientsError()
 				}
 
 				if (!this.composerData.id) {
@@ -407,7 +427,7 @@ export default {
 						return t('mail', 'No sent mailbox configured. Please pick one in the account settings.')
 					},
 					[ManyRecipientsError.getName()]() {
-						return t('mail', 'You are trying to send to many recipients in To and/or Cc. Consider using Bcc to hide recipient addresses.')
+						return t('mail', 'Too many recipients. Send anyway?')
 					},
 					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
@@ -417,6 +437,9 @@ export default {
 				this.warning = await matchError(error, {
 					[AttachmentMissingError.getName()]() {
 						return t('mail', 'You mentioned an attachment. Did you forget to add it?')
+					},
+					[ManyRecipientsError.getName()]() {
+						return t('mail', 'Too many recipients. Send anyway?')
 					},
 					// eslint-disable-next-line n/handle-callback-err
 					default(error) {
