@@ -195,10 +195,14 @@ export default {
 		if (id) {
 			this.draftsPromise = Promise.resolve(id)
 		}
+		window.addEventListener('beforeunload', this.onBeforeUnload)
 	},
 	async mounted() {
 		await this.$nextTick()
 		this.updateCookedComposerData()
+	},
+	beforeDestroy() {
+		window.removeEventListener('beforeunload', this.onBeforeUnload)
 	},
 	methods: {
 		handleShow(element) {
@@ -473,6 +477,15 @@ export default {
 			this.changed = true
 			this.updateCookedComposerData()
 			await this.$store.dispatch('patchComposerData', data)
+		},
+		onBeforeUnload(e) {
+			if (this.canSaveDraft && this.changed) {
+				e.preventDefault()
+				e.returnValue = true
+				this.$store.dispatch('showMessageComposer')
+			} else {
+				console.info('No unsaved changes. See you!')
+			}
 		},
 		async onMinimize() {
 			this.modalFirstOpen = false
