@@ -124,11 +124,11 @@ class AntiSpamServiceTest extends TestCase {
 			->willReturn('test@test.com');
 		$messageData = NewMessageData::fromRequest(
 			$event->getAccount(),
+			'Learn as Junk',
+			'Learn as Junk',
 			'test@test.com',
 			null,
 			null,
-			'Learn as Junk',
-			'Learn as Junk',
 			[['id' => 123, 'type' => 'message/rfc822']]
 		);
 
@@ -165,6 +165,16 @@ class AntiSpamServiceTest extends TestCase {
 			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
+		$messageData = NewMessageData::fromRequest(
+			$event->getAccount(),
+			'Learn as Junk',
+			'Learn as Junk',
+			'test@test.com',
+			null,
+			null,
+			[['id' => 123, 'type' => 'message/rfc822']]
+		);
+
 		$this->dbMessageMapper->expects(self::once())
 			->method('getIdForUid')
 			->with($event->getMailbox(), 123)
@@ -221,6 +231,16 @@ class AntiSpamServiceTest extends TestCase {
 			->method('getAppValue')
 			->with('mail', 'antispam_reporting_spam')
 			->willReturn('test@test.com');
+		$messageData = NewMessageData::fromRequest(
+			$event->getAccount(),
+			'Learn as Not Junk',
+			'Learn as Not Junk',
+			'test@test.com',
+			null,
+			null,
+			[['id' => 123, 'type' => 'message/rfc822']]
+		);
+
 		$this->dbMessageMapper->expects(self::once())
 			->method('getIdForUid')
 			->with($event->getMailbox(), 123)

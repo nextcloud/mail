@@ -35,23 +35,16 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Migration\MigrateImportantFromImapAndDb;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class MigrateImportantFromImapAndDbTest extends TestCase {
-	/** @var MockObject */
-	private $client;
-
-	/** @var MockObject */
-	private $messageMapper;
-
-	/** @var MockObject */
-	private $mailboxMapper;
-
-	/** @var MockObject */
-	private $logger;
-
-	/** @var MigrateImportantFromImapAndDb */
-	private $migration;
+	private Horde_Imap_Client_Socket|MockObject $client;
+	private MockObject|MessageMapper $messageMapper;
+	private MailboxMapper|MockObject $mailboxMapper;
+	private MockObject|LoggerInterface $logger;
+	private MigrateImportantFromImapAndDb $migration;
+	private IMAPClientFactory|MockObject $clientFactory;
 
 	protected function setUp(): void {
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);

@@ -91,9 +91,9 @@ class AntiSpamServiceIntegrationTest extends TestCase {
 			new Account($account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			false,
 			null,
-			null,
-			false
+			null
 		);
 
 		// now we flag this message as junk

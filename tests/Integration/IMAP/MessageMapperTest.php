@@ -91,9 +91,9 @@ class MessageMapperTest extends TestCase {
 			new Account($account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			false,
 			null,
-			null,
-			false
+			null
 		);
 
 		// Let's retrieve the DB to see if we have this tag!
@@ -121,9 +121,9 @@ class MessageMapperTest extends TestCase {
 			new Account($account),
 			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			true,
 			null,
-			null,
-			true
+			null
 		);
 
 		$messages = $messageMapper->findByUids($inbox, [$newUid]);

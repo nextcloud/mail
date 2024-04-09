@@ -99,9 +99,9 @@ class SyncServiceTest extends TestCase {
 			$account,
 			$mailbox,
 			42,
-			[],
-			null,
 			true,
+			null,
+			[],
 			'DESC'
 		);
 	}
@@ -141,9 +141,9 @@ class SyncServiceTest extends TestCase {
 			$account,
 			$mailbox,
 			0,
-			[],
+			false,
 			null,
-			false
+			[]
 		);
 
 		$this->assertEquals($expectedResponse, $response);

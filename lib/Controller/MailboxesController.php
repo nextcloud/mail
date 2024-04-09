@@ -156,11 +156,11 @@ class MailboxesController extends Controller {
 				$account,
 				$mailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+				!$init,
+				$lastMessageTimestamp,
 				array_map(static function ($id) {
 					return (int)$id;
 				}, $ids),
-				$lastMessageTimestamp,
-				!$init,
 				$order,
 				$query
 			);

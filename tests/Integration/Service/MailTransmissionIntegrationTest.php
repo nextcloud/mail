@@ -255,7 +255,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 	}
 
 	public function testSaveNewDraft() {
-		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [], false);
+		$message = NewMessageData::fromRequest($this->account, 'greetings', 'hello there', 'recipient@domain.com', null, null, [], false);
 		[,,$uid] = $this->transmission->saveDraft($message);
 		// There should be a new mailbox …
 		$this->assertMailboxExists('Drafts');
@@ -266,9 +266,9 @@ class MailTransmissionIntegrationTest extends TestCase {
 	}
 
 	public function testReplaceDraft() {
-		$message1 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello t', []);
+		$message1 = NewMessageData::fromRequest($this->account, 'greetings', 'hello t', 'recipient@domain.com', null, null, []);
 		[,,$uid] = $this->transmission->saveDraft($message1);
-		$message2 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$message2 = NewMessageData::fromRequest($this->account, 'greetings', 'hello there', 'recipient@domain.com', null, null, []);
 		$previous = new Message();
 		$previous->setUid($uid);
 		$this->transmission->saveDraft($message2, $previous);

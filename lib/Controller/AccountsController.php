@@ -451,7 +451,7 @@ class AccountsController extends Controller {
 				$this->logger->info("Draft " . $draftId . " could not be loaded: " . $e->getMessage());
 			}
 		}
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, [], $isHtml);
+		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);
 
 		try {
 			/** @var Mailbox $draftsMailbox */
@@ -460,9 +460,9 @@ class AccountsController extends Controller {
 				$account,
 				$draftsMailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS,
-				[],
+				false,
 				null,
-				false
+				[]
 			);
 			return new JSONResponse([
 				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
