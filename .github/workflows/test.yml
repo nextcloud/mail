@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0', '8.1', '8.2', '8.3']
+        php-versions: ['8.1', '8.2', '8.3']
         nextcloud-versions: ['master']
         include:
-          - php-versions: '8.1'
+          - php-versions: '8.0'
             nextcloud-versions: 'stable27'
-          - php-versions: '8.2'
+          - php-versions: '8.1'
             nextcloud-versions: 'stable28'
-          - php-versions: '8.3'
+          - php-versions: '8.2'
             nextcloud-versions: 'stable29'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
@@ -39,18 +39,18 @@ jobs:
     - name: Run tests
       working-directory: nextcloud/apps/mail
       run: composer run test:unit
-      if: ${{ matrix.php-versions == '8.0' }}
+      if: ${{ matrix.php-versions == '8.3' }}
       env:
         XDEBUG_MODE: coverage
     - name: Run tests
       working-directory: nextcloud/apps/mail
       run: composer run test:unit
-      if: ${{ matrix.php-versions != '8.0' }}
+      if: ${{ matrix.php-versions != '8.3' }}
       env:
         XDEBUG_MODE: off
     - name: Report coverage
       uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
-      if: ${{ always() && matrix.php-versions == '8.0' }}
+      if: ${{ always() && matrix.php-versions == '8.3' }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
@@ -61,20 +61,20 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              php-versions: ['8.0']
+              php-versions: ['8.3']
               nextcloud-versions: ['master']
               db: ['sqlite', 'mysql', 'pgsql']
               cache: ['nocache']
               include:
-                - php-versions: 8.2
+                - php-versions: 8.0
                   nextcloud-versions: stable27
                   db: 'sqlite'
                   cache: 'redis'
-                - php-versions: 8.3
+                - php-versions: 8.1
                   nextcloud-versions: stable28
                   db: 'mysql'
                   cache: 'redis'
-                - php-versions: 8.3
+                - php-versions: 8.2
                   nextcloud-versions: stable29
                   db: 'mysql'
                   cache: 'nocache'
