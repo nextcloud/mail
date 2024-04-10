@@ -741,7 +741,7 @@ input[type='radio'][disabled] + label {
 }
 #account-form {
 	z-index: 1001;
-	width: 250px;
+	width: 300px;
 	top: 15%;
 	padding-bottom: 50px;
 	margin: 0 auto;
