@@ -12,7 +12,7 @@
 				<Close :size="24" />
 			</template>
 		</NcButton>
-
+//Fixing some bugs
 		<span v-if="filterChanged"
 			class="filter-changed" />
 
