@@ -199,7 +199,6 @@ class ThreadController extends Controller {
 		$thread = $this->mailManager->getThread($account, $message->getThreadRootId());
 		$data = $this->aiIntergrationsService->generateEventData(
 			$account,
-			$mailbox,
 			$message->getThreadRootId(),
 			$thread,
 			$this->currentUserId,
