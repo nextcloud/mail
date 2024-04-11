@@ -102,6 +102,7 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Not found" : "No encontrado",
     "Remove" : "Eliminar",
+    "Untitled event" : "Evento sin título",
     "Reset" : "Reiniciar",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",

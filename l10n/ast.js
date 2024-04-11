@@ -62,6 +62,7 @@ OC.L10N.register(
     "Edit message" : "Editar el mensaxe",
     "Failed to save message" : "Nun se pue guardar el mensaxe",
     "Failed to save draft" : "Nun se pue guardar el borrador",
+    "First day" : "El primer día",
     "Message" : "Mensaxe",
     "Copy to clipboard" : "Copiar nel cartafueyu",
     "Add" : "Amestar",
@@ -100,6 +101,7 @@ OC.L10N.register(
     "Favorites" : "Favoritos",
     "Error while sharing file" : "Hebo un error mentanto se compartía'l ficheru",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "Message sent" : "Unvióse'l mensaxe"
+    "Message sent" : "Unvióse'l mensaxe",
+    "Redirect" : "Redirixir"
 },
 "nplurals=2; plural=(n != 1);");
