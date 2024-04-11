@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.5.8 – 2024-04-11
+### Fixed
+- Accidentally left tab and lost draft
+- Password error in quota background job
+
 ## 3.5.7 – 2024-02-28
 ### Fixed
 - ISPDB configuration using the local part of email addresses
