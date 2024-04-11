@@ -161,7 +161,7 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 					$this->urlGenerator->linkToRoute('core.GuestAvatar.getAvatar', [
 						'guestName' => $firstFrom
 							? ($firstFrom->getLabel()
-								? $firstFrom->getLabel()
+								? str_replace('/', '-', $firstFrom->getLabel())
 								: $firstFrom->getEmail())
 							: '',
 						'size' => 44,
