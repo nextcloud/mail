@@ -280,9 +280,6 @@ class MailboxSync {
 					$doNotSync,
 				];
 			}
-			elseif ($mailbox->getSelectable() === false) {
-				return [$sync, $doNotSync];
-			}
 			return [
 				$sync,
 				array_merge($doNotSync, [$mailbox]),
