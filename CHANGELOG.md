@@ -19,6 +19,9 @@ All notable changes to this project will be documented in this file.
 * Division by zero
 * Autoconfig via MX DNS records
 * iCloud IMAP compatibility
+* IMAP/SMTP security buttons on the setup page
+* Message suck in outbox when storing on IMAP fails (temporarily)
+* Accidentaly leaving the tab while a draft has not been saved
 
 ## 3.5.0 – unreleased
 ### Added
