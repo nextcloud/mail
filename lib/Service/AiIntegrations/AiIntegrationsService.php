@@ -127,7 +127,7 @@ PROMPT;
 	/**
 	 * @param Message[] $messages
 	 */
-	public function generateEventData(Account $account, string $threadId, array $messages, string $currentUserId): ?EventData {
+	public function generateEventData(Account $account, Mailbox $mailbox, string $threadId, array $messages, string $currentUserId): ?EventData {
 		try {
 			/** @var IManager $manager */
 			$manager = $this->container->get(IManager::class);
@@ -139,8 +139,7 @@ PROMPT;
 		}
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$messageBodies = array_map(function ($message) use ($client, $account, $currentUserId) {
-				$mailbox = $this->mailManager->getMailbox($currentUserId, $message->getMailboxId());
+			$messageBodies = array_map(function ($message) use ($client, $account, $mailbox) {
 				$imapMessage = $this->mailManager->getImapMessage(
 					$client,
 					$account,
