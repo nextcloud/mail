@@ -243,7 +243,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 
 		$account = $this->createMock(Account::class);
-		$mailbox = new Mailbox();
 		$message1 = new Message();
 		$message2 = new Message();
 		$this->container->expects(self::once())
@@ -252,7 +251,6 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$result = $this->aiIntegrationsService->generateEventData(
 			$account,
-			$mailbox,
 			'thread1',
 			[$message1, $message2],
 			'user123',
@@ -267,7 +265,6 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 
 		$account = $this->createMock(Account::class);
-		$mailbox = new Mailbox();
 		$message1 = new Message();
 		$message2 = new Message();
 		$manager = $this->createMock(IManager::class);
@@ -280,7 +277,6 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$result = $this->aiIntegrationsService->generateEventData(
 			$account,
-			$mailbox,
 			'thread1',
 			[$message1, $message2],
 			'user123',
@@ -295,11 +291,12 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 
 		$account = $this->createMock(Account::class);
-		$mailbox = new Mailbox();
 		$message1 = new Message();
 		$message1->setUid(1);
+		$message1->setMailboxId(123);
 		$message2 = new Message();
 		$message2->setUid(2);
+		$message2->setMailboxId(456);
 		$manager = $this->createMock(IManager::class);
 		$this->container->expects(self::once())
 			->method('get')
@@ -320,7 +317,6 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$result = $this->aiIntegrationsService->generateEventData(
 			$account,
-			$mailbox,
 			'thread1',
 			[$message1, $message2],
 			'user123',
@@ -335,11 +331,12 @@ class AiIntegrationsServiceTest extends TestCase {
 		}
 
 		$account = $this->createMock(Account::class);
-		$mailbox = new Mailbox();
 		$message1 = new Message();
 		$message1->setUid(1);
+		$message1->setMailboxId(123);
 		$message2 = new Message();
 		$message2->setUid(2);
+		$message2->setMailboxId(456);
 		$manager = $this->createMock(IManager::class);
 		$this->container->expects(self::once())
 			->method('get')
@@ -360,7 +357,6 @@ class AiIntegrationsServiceTest extends TestCase {
 
 		$result = $this->aiIntegrationsService->generateEventData(
 			$account,
-			$mailbox,
 			'thread1',
 			[$message1, $message2],
 			'user123',
