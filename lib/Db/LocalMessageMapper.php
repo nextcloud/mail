@@ -135,6 +135,9 @@ class LocalMessageMapper extends QBMapper {
 				$qb->expr()->isNotNull('send_at'),
 				$qb->expr()->eq('type', $qb->createNamedParameter($type, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->lte('send_at', $qb->createNamedParameter($time, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				// Skip all failed mails for now
+				// FIXME: investigate why emails are sent over and over again and actually fix it
+				$qb->expr()->eq('status', $qb->createNamedParameter(LocalMessage::STATUS_RAW, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			)
 			->orderBy('send_at', 'asc');
 		$messages = $this->findEntities($select);

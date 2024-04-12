@@ -39,6 +39,12 @@ class Chain {
 	}
 
 	public function process(Account $account, LocalMessage $localMessage): void {
+		// Skip all failed mails for now
+		// FIXME: investigate why emails are sent over and over again and actually fix it
+		if ($localMessage->getStatus() !== LocalMessage::STATUS_RAW) {
+			return;
+		}
+
 		$handlers = $this->sentMailboxHandler;
 		$handlers->setNext($this->antiAbuseHandler)
 			->setNext($this->sendHandler)
