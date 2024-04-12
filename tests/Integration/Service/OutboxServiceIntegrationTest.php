@@ -350,6 +350,7 @@ class OutboxServiceIntegrationTest extends TestCase {
 		$message->setSubject('subject');
 		$message->setBody('message');
 		$message->setHtml(true);
+		$message->setStatus(LocalMessage::STATUS_RAW);
 
 		$to = [[
 			'label' => 'Penny',
