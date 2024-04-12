@@ -30,6 +30,7 @@ use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Mail_Transport_Null;
+use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Headers_Addresses;
@@ -145,6 +146,14 @@ class MailTransmission implements IMailTransmission {
 			$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			return;
+		} finally {
+			if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
+				try {
+					$transport->getSMTPObject()->logout();
+				} catch (\Throwable $e) {
+					// Handle silently as this is a resource usage optimization
+				}
+			}
 		}
 
 		$this->eventDispatcher->dispatchTyped(
