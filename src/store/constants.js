@@ -28,5 +28,3 @@ export const PAGE_SIZE = 20
 export const UNDO_DELAY = TOAST_UNDO_TIMEOUT
 export const EDITOR_MODE_HTML = 'richtext'
 export const EDITOR_MODE_TEXT = 'plaintext'
-
-export const STATUS_IMAP_SENT_MAILBOX_FAIL = 11

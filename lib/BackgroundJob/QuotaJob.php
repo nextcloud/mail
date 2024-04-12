@@ -95,7 +95,7 @@ class QuotaJob extends TimedJob {
 		}
 
 		$quota = $this->mailManager->getQuota($account);
-		if ($quota === null) {
+		if($quota === null) {
 			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
 			return;
 		}

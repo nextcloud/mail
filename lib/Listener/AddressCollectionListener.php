@@ -26,10 +26,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Listener;
 
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
-use OCA\Mail\Service\TransmissionService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
@@ -50,8 +48,7 @@ class AddressCollectionListener implements IEventListener {
 
 	public function __construct(IUserPreferences $preferences,
 		AddressCollector $collector,
-		LoggerInterface $logger,
-		private TransmissionService $transmissionService) {
+		LoggerInterface $logger) {
 		$this->collector = $collector;
 		$this->logger = $logger;
 		$this->preferences = $preferences;
@@ -68,12 +65,10 @@ class AddressCollectionListener implements IEventListener {
 
 		// Non-essential feature, hence we catch all possible errors
 		try {
-			$message = $event->getLocalMessage();
-			$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
-			$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
-			$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
-
-			$addresses = $to->merge($cc)->merge($bcc);
+			$message = $event->getMessage();
+			$addresses = $message->getTo()
+				->merge($message->getCC())
+				->merge($message->getBCC());
 
 			$this->collector->addAddresses($event->getAccount()->getUserId(), $addresses);
 		} catch (Throwable $e) {
