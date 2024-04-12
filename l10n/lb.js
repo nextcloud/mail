@@ -18,6 +18,7 @@ OC.L10N.register(
     "Refresh" : "Opfrëschen",
     "Select account" : "Account auswielen",
     "Choose" : "Auswielen",
+    "Confirm" : "Konfirméieren",
     "Favorite" : "Favorit",
     "Select" : "Select",
     "Edit tags" : "Tags editéieren",
