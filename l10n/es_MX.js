@@ -87,6 +87,7 @@ OC.L10N.register(
     "New message" : "Mensaje nuevo",
     "Retry" : "Reintentar",
     "Sending …" : "Enviando ...",
+    "First day" : "Primer día",
     "Message" : "Mensaje",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Add" : "Agregar",
