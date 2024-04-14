@@ -4,6 +4,7 @@ const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const { VueLoaderPlugin } = require('vue-loader')
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const { IgnorePlugin } = require('webpack')
 
 function getPostCssConfig(ckEditorOpts) {
 	// CKEditor is not compatbile with postcss@8 and postcss-loader@4 despite stating so.
@@ -25,6 +26,12 @@ const plugins = [
 	new NodePolyfillPlugin({
 		// Console is available in the web-browser
 		excludeAliases: ['console'],
+	}),
+
+	// Fix warning when bundling moment locales
+	new IgnorePlugin({
+		resourceRegExp: /^\.\/locale$/,
+		contextRegExp: /moment\/min$/,
 	}),
 ]
 
