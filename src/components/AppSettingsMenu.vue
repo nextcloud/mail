@@ -88,10 +88,9 @@
 					<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
 				</p>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Auto tagging text')">
+			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
 				<p v-if="toggleAutoTagging" class="app-settings">
 					<IconLoading :size="20" />
-					{{ autoTaggingText }}
 				</p>
 				<p v-else class="app-settings">
 					<input id="auto-tagging-toggle"
@@ -100,6 +99,14 @@
 						:checked="useAutoTagging"
 						@change="onToggleAutoTagging">
 					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
+				</p>
+				<p v-if="isFollowUpFeatureAvailable" class="app-settings">
+					<input id="follow-up-reminder-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="useFollowUpReminders"
+						@change="onToggleFollowUpReminders">
+					<label for="follow-up-reminder-toggle">{{ followUpReminderText }}</label>
 				</p>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="trusted-sender" :name="t('mail', 'Trusted senders')">
@@ -273,6 +280,7 @@ import Logger from '../logger.js'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import TrustedSenders from './TrustedSenders.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -311,6 +319,8 @@ export default {
 			loadingReplySettings: false,
 			// eslint-disable-next-line
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
+			// eslint-disable-next-line
+			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			toggleAutoTagging: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
@@ -319,6 +329,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters([
+			'isFollowUpFeatureAvailable',
+		]),
 		searchPriorityBody() {
 			return this.$store.getters.getPreference('search-priority-body', 'false') === 'true'
 		},
@@ -333,6 +346,9 @@ export default {
 		},
 		useAutoTagging() {
 			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
+		},
+		useFollowUpReminders() {
+			return this.$store.getters.getPreference('follow-up-reminders', 'true') === 'true'
 		},
 		allowNewMailAccounts() {
 			return this.$store.getters.getPreference('allow-new-accounts', true)
@@ -462,6 +478,17 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			} finally {
 				this.toggleAutoTagging = false
+			}
+		},
+		async onToggleFollowUpReminders(e) {
+			try {
+				await this.$store.dispatch('savePreference', {
+					key: 'follow-up-reminders',
+					value: e.target.checked ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
 			}
 		},
 		registerProtocolHandler() {

@@ -30,6 +30,34 @@
 						:bus="bus"
 						:open-first="mailbox.specialRole !== 'drafts'" />
 					<template v-else>
+						<div v-show="hasFollowUpEnvelopes"
+							class="app-content-list-item">
+							<SectionTitle class="section-title"
+								:name="t('mail', 'Follow up')" />
+							<Popover trigger="hover focus">
+								<template #trigger>
+									<ButtonVue type="tertiary-no-background"
+										:aria-label="t('mail', 'Follow up info')"
+										class="button">
+										<template #icon>
+											<IconInfo :size="20" />
+										</template>
+									</ButtonVue>
+								</template>
+								<p class="section-header-info">
+									{{ followupInfo }}
+								</p>
+							</Popover>
+						</div>
+						<Mailbox v-show="hasFollowUpEnvelopes"
+							:account="unifiedAccount"
+							:mailbox="followUpMailbox"
+							:search-query="appendToSearch(followUpQuery)"
+							:paginate="'manual'"
+							:is-priority-inbox="true"
+							:initial-page-size="followUpMessagesInitialPageSize"
+							:collapsible="true"
+							:bus="bus" />
 						<div v-show="hasImportantEnvelopes" class="app-content-list-item">
 							<SectionTitle class="section-title important"
 								:name="t('mail', 'Important')" />
@@ -43,7 +71,7 @@
 										</template>
 									</ButtonVue>
 								</template>
-								<p class="important-info">
+								<p class="section-header-info">
 									{{ importantInfo }}
 								</p>
 							</Popover>
@@ -92,7 +120,12 @@ import Mailbox from './Mailbox.vue'
 import SearchMessages from './SearchMessages.vue'
 import NoMessageSelected from './NoMessageSelected.vue'
 import Thread from './Thread.vue'
-import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
+import {
+	FOLLOW_UP_MAILBOX_ID,
+	PRIORITY_INBOX_ID,
+	UNIFIED_ACCOUNT_ID,
+	UNIFIED_INBOX_ID,
+} from '../store/constants.js'
 import {
 	priorityImportantQuery,
 	priorityOtherQuery,
@@ -133,6 +166,7 @@ export default {
 		return {
 			// eslint-disable-next-line
 			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
+			followupInfo: t('mail', 'Messages sent by you that require a reply but did not receive one after a couple of days will be shown here.'),
 			bus: mitt(),
 			searchQuery: undefined,
 			shortkeys: {
@@ -160,6 +194,24 @@ export default {
 		unifiedInbox() {
 			return this.$store.getters.getMailbox(UNIFIED_INBOX_ID)
 		},
+		followUpMailbox() {
+			return this.$store.getters.getMailbox(FOLLOW_UP_MAILBOX_ID)
+		},
+		/**
+		 * @return {string|undefined}
+		 */
+		followUpQuery() {
+			const tag = this.$store.getters.getFollowUpTag
+			if (!tag) {
+				logger.warn('No follow-up tag available')
+				return undefined
+			}
+
+			const notAfter = new Date()
+			notAfter.setDate(notAfter.getDate() - 4)
+			const dateToTimestamp = (date) => Math.round(date.getTime() / 1000)
+			return `tags:${tag.id} end:${dateToTimestamp(notAfter)}`
+		},
 		hasEnvelopes() {
 			if (this.mailbox.isPriorityInbox) {
 				return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
@@ -170,6 +222,24 @@ export default {
 		hasImportantEnvelopes() {
 			return this.$store.getters.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
 		},
+		/**
+		 * @return {boolean}
+		 */
+		hasFollowUpEnvelopes() {
+			// TODO: remove this version check once we only support >= 27.1
+			const [major, minor] = OC.config.version.split('.').map(parseInt)
+			if (major < 27 || (major === 27 && minor < 1)) {
+				return false
+			}
+
+			if (!this.followUpQuery) {
+				return false
+			}
+
+			return this.$store.getters
+				.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
+				.length > 0
+		},
 		importantMessagesInitialPageSize() {
 			if (window.innerHeight > 900) {
 				return 7
@@ -178,6 +248,12 @@ export default {
 				return 5
 			}
 			return 3
+		},
+		/**
+		 * @return {number}
+		 */
+		followUpMessagesInitialPageSize() {
+			return 5
 		},
 		showThread() {
 			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes)
@@ -198,8 +274,18 @@ export default {
 		},
 	},
 	watch: {
-		$route() {
+		async $route(to) {
 			this.handleMailto()
+			if (to.name === 'mailbox' && to.params.mailboxId === PRIORITY_INBOX_ID) {
+				await this.onPriorityMailboxOpened()
+			}
+		},
+		async hasFollowUpEnvelopes(value) {
+			if (!value) {
+				return
+			}
+
+			await this.onPriorityMailboxOpened()
 		},
 		mailbox() {
 			clearTimeout(this.startMailboxTimer)
@@ -209,13 +295,18 @@ export default {
 	created() {
 		this.handleMailto()
 	},
-	mounted() {
+	async mounted() {
 		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
 	},
 	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
+		async onPriorityMailboxOpened() {
+			logger.debug('Priority inbox was opened')
+
+			await this.$store.dispatch('checkFollowUpReminders', { query: this.followUpQuery })
+		},
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
 		},
@@ -323,7 +414,7 @@ export default {
 	z-index: 1;
 }
 
-.important-info {
+.section-header-info {
 	max-width: 230px;
 	padding: 16px;
 }

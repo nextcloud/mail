@@ -11,7 +11,7 @@ import Vue from 'vue'
 
 import { sortMailboxes } from '../imap/MailboxSorter.js'
 import { normalizedEnvelopeListId } from './normalization.js'
-import { UNIFIED_ACCOUNT_ID } from './constants.js'
+import { FOLLOW_UP_MAILBOX_ID, UNIFIED_ACCOUNT_ID } from './constants.js'
 
 const transformMailboxName = (account, mailbox) => {
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
@@ -406,6 +406,15 @@ export default {
 			Vue.set(state.mailboxes[id], 'envelopeLists', [])
 		  })
 	},
+	removeEnvelopeFromFollowUpMailbox(state, { id }) {
+		const filteredLists = {}
+		const mailbox = state.mailboxes[FOLLOW_UP_MAILBOX_ID]
+		for (const listId of Object.keys(mailbox.envelopeLists)) {
+			filteredLists[listId] = mailbox.envelopeLists[listId]
+				.filter((idInList) => id !== idInList)
+		}
+		Vue.set(state.mailboxes[FOLLOW_UP_MAILBOX_ID], 'envelopeLists', filteredLists)
+	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
 	},
@@ -494,5 +503,8 @@ export default {
 	},
 	setHasFetchedInitialEnvelopes(state, hasFetchedInitialEnvelopes) {
 		state.hasFetchedInitialEnvelopes = hasFetchedInitialEnvelopes
+	},
+	setFollowUpFeatureAvailable(state, followUpFeatureAvailable) {
+		state.followUpFeatureAvailable = followUpFeatureAvailable
 	},
 }

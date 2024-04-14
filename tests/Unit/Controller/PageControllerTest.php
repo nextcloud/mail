@@ -160,7 +160,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(8))
+		$this->preferences->expects($this->exactly(9))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -171,6 +171,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'search-priority-body', 'false', 'false'],
 				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'layout-mode', 'vertical-split', 'vertical-split'],
+				[$this->userId, 'follow-up-reminders', 'true', 'true'],
 			]);
 		$this->classificationSettingsService->expects(self::once())
 			->method('isClassificationEnabled')
@@ -247,7 +248,7 @@ class PageControllerTest extends TestCase {
 				['version', '0.0.0', '26.0.0'],
 				['app.mail.attachment-size-limit', 0, 123],
 			]);
-		$this->config->expects($this->exactly(8))
+		$this->config->expects($this->exactly(6))
 			->method('getAppValue')
 			->withConsecutive(
 				[ 'mail', 'installed_version' ],
@@ -256,8 +257,6 @@ class PageControllerTest extends TestCase {
 				['mail', 'microsoft_oauth_tenant_id' ],
 				['core', 'backgroundjobs_mode', 'ajax' ],
 				['mail', 'allow_new_mail_accounts', 'yes'],
-				['mail', 'llm_processing', 'no'],
-				['mail', 'llm_processing', 'no'],
 			)->willReturnOnConsecutiveCalls(
 				$this->returnValue('1.2.3'),
 				$this->returnValue(''),
@@ -267,7 +266,9 @@ class PageControllerTest extends TestCase {
 				$this->returnValue('yes'),
 				$this->returnValue('no')
 			);
-
+		$this->aiIntegrationsService->expects(self::exactly(3))
+			->method('isLlmProcessingEnabled')
+			->willReturn(false);
 
 		$user->method('getUID')
 			->will($this->returnValue('jane'));
@@ -289,7 +290,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(16))
+		$this->initialState->expects($this->exactly(17))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -307,6 +308,7 @@ class PageControllerTest extends TestCase {
 				['allow-new-accounts', true],
 				['llm_summaries_available', false],
 				['llm_freeprompt_available', false],
+				['llm_followup_available', false],
 				['smime-certificates', []],
 			);
 
@@ -320,6 +322,7 @@ class PageControllerTest extends TestCase {
 			'tag-classified-messages' => 'false',
 			'search-priority-body' => 'false',
 			'layout-mode' => 'vertical-split',
+			'follow-up-reminders' => 'true',
 		]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');

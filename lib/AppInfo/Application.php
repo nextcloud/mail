@@ -40,6 +40,7 @@ use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AccountSynchronizedThreadUpdaterListener;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Listener\DeleteDraftListener;
+use OCA\Mail\Listener\FollowUpClassifierListener;
 use OCA\Mail\Listener\HamReportListener;
 use OCA\Mail\Listener\InteractionListener;
 use OCA\Mail\Listener\MailboxesSynchronizedSpecialMailboxesUpdater;
@@ -128,6 +129,7 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(NewMessagesSynchronized::class, MessageKnownSinceListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+		$context->registerEventListener(NewMessagesSynchronized::class, FollowUpClassifierListener::class);
 
 		// TODO: drop condition if nextcloud < 28 is not supported anymore
 		if (class_exists(OutOfOfficeStartedEvent::class)

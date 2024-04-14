@@ -5,7 +5,7 @@
 
 import { defaultTo, head, prop, sortBy } from 'ramda'
 
-import { UNIFIED_ACCOUNT_ID } from './constants.js'
+import { FOLLOW_UP_TAG_LABEL, UNIFIED_ACCOUNT_ID } from './constants.js'
 import { normalizedEnvelopeListId } from './normalization.js'
 import { getCalendarHome } from '../service/caldavService.js'
 import toCalendar from './calendar.js'
@@ -97,6 +97,16 @@ export const getters = {
 	getTags: (state) => {
 		return state.tagList.map(tagId => state.tags[tagId])
 	},
+	getFollowUpTag: (state) => {
+		return Object.values(state.tags).find((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
+	},
+	getFollowUpReminderEnvelopes: (state) => {
+		return Object.values(state.envelopes)
+			.filter((envelope) => envelope.tags
+				?.map((tagId) => state.tags[tagId])
+				.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL),
+			)
+	},
 	isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
 	isSnoozeDisabled: (state) => state.isSnoozeDisabled,
 	googleOauthUrl: (state) => state.googleOauthUrl,
@@ -140,4 +150,5 @@ export const getters = {
 	},
 	isOneLineLayout: (state) => state.list,
 	hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
+	isFollowUpFeatureAvailable: (state) => state.followUpFeatureAvailable,
 }

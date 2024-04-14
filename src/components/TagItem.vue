@@ -9,7 +9,7 @@
 				color: convertHex(tag.color, 1),
 				'background-color': convertHex(tag.color, 0.15)
 			}">
-			{{ tag.displayName }}
+			{{ translateTagDisplayName(tag) }}
 		</button>
 		<Actions :force-menu="true">
 			<NcActionButton v-if="renameTagLabel"
@@ -60,6 +60,7 @@ import { NcColorPicker, NcActions as Actions, NcActionButton, NcActionText as Ac
 import { showInfo } from '@nextcloud/dialogs'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import IconEdit from 'vue-material-design-icons/Pencil.vue'
+import { translateTagDisplayName } from '../util/tag.js'
 
 export default {
 	name: 'TagItem',
@@ -96,6 +97,7 @@ export default {
 		}
 	},
 	methods: {
+		translateTagDisplayName,
 		deleteTag() {
 			this.$emit('delete-tag', this.tag)
 		},

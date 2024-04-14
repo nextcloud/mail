@@ -465,6 +465,11 @@ return [
 			'url' => '/api/out-of-office/{accountId}/follow-system',
 			'verb' => 'POST',
 		],
+		[
+			'name' => 'followUp#checkMessageIds',
+			'url' => '/api/follow-up/check-message-ids',
+			'verb' => 'POST',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

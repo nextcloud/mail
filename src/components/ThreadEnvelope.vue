@@ -7,6 +7,18 @@
 	<div ref="envelope"
 		class="envelope"
 		:class="{'envelope--expanded' : expanded }">
+		<div v-if="showFollowUpHeader"
+			class="envelope__follow-up-header">
+			<span class="envelope__follow-up-header__date">
+				{{ t('mail', "You've sent this message on {date}", { date: formattedSentAt }) }}
+			</span>
+			<div class="envelope__follow-up-header__actions">
+				<NcButton @click="onDisableFollowUpReminder">
+					{{ t('mail', 'Disable reminder') }}
+				</NcButton>
+			</div>
+		</div>
+
 		<div class="envelope__header">
 			<div class="envelope__header__avatar">
 				<Avatar v-if="envelope.from && envelope.from[0]"
@@ -58,7 +70,9 @@
 						<div class="tag-group__bg"
 							:style="{'background-color': tag.color}" />
 						<span class="tag-group__label"
-							:style="{color: tag.color}">{{ tag.displayName }} </span>
+							:style="{color: tag.color}">
+							{{ translateTagDisplayName(tag) }}
+						</span>
 					</div>
 				</div>
 				<div class="envelope__header__left__unsubscribe">
@@ -189,10 +203,10 @@
 			:envelope="envelope"
 			:message="message"
 			:full-height="fullHeight"
-			:smart-replies="smartReplies"
-			:multiple-recipients="hasMultipleRecipients"
+			:smart-replies="showFollowUpHeader ? [] : smartReplies"
+			:reply-button-label="replyButtonLabel"
 			@load="loading = LOADING_DONE"
-			@reply="onReply" />
+			@reply="(body) => onReply(body, showFollowUpHeader)" />
 		<Error v-else-if="error"
 			:error="error.message || t('mail', 'Not found')"
 			message=""
@@ -265,6 +279,9 @@ import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import useOutboxStore from '../store/outboxStore.js'
 import { mapStores } from 'pinia'
+import moment from '@nextcloud/moment'
+import { translateTagDisplayName } from '../util/tag.js'
+import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -496,6 +513,43 @@ export default {
 
 			return t('mail', 'This message contains an unverified digital S/MIME signature. The message might have been changed since it was sent or the certificate of the signer is untrusted.')
 		},
+		/**
+		 * A human readable representation of envelope's sent date (without the time).
+		 *
+		 * @return {string}
+		 */
+		formattedSentAt() {
+			return moment(this.envelope.dateInt * 1000).format('LL')
+		},
+		/**
+		 * @return {boolean}
+		 */
+		showFollowUpHeader() {
+			// TODO: remove this version check once we only support >= 27.1
+			const [major, minor] = OC.config.version.split('.').map(parseInt)
+			if (major < 27 || (major === 27 && minor < 1)) {
+				return false
+			}
+
+			const tags = this.$store.getters.getEnvelopeTags(this.envelope.databaseId)
+			return tags.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
+		},
+		/**
+		 * Translated label for the reply button.
+		 *
+		 * @return {string}
+		 */
+		replyButtonLabel() {
+			if (this.showFollowUpHeader) {
+				return t('mail', 'Follow up')
+			}
+
+			if (this.hasMultipleRecipients) {
+				return t('mail', 'Reply all')
+			}
+
+			return t('mail', 'Reply')
+		},
 	},
 	watch: {
 		expanded(expanded) {
@@ -533,6 +587,7 @@ export default {
 		window.removeEventListener('resize', this.redrawMenuBar)
 	},
 	methods: {
+		translateTagDisplayName,
 		redrawMenuBar() {
 			this.$nextTick(() => {
 				this.recomputeMenuSize++
@@ -580,7 +635,7 @@ export default {
 			}
 
 			// Fetch smart replies
-			if (this.enabledSmartReply && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole)) {
+			if (this.enabledSmartReply && this.message && !['trash', 'junk'].includes(this.mailbox.specialRole) && !this.showFollowUpHeader) {
 				this.smartReplies = await smartReply(this.envelope.databaseId)
 			}
 		},
@@ -620,12 +675,13 @@ export default {
 			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
 			window.scrollTo({ top })
 		},
-		onReply(body = '') {
+		onReply(body = '', followUp = false) {
 			this.$store.dispatch('startComposerSession', {
 				reply: {
 					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
 					data: this.envelope,
 					smartReply: body,
+					followUp,
 				},
 			})
 		},
@@ -688,6 +744,11 @@ export default {
 				logger.error('could not archive message', error)
 				return t('mail', 'Could not archive message')
 			}
+		},
+		async onDisableFollowUpReminder() {
+			await this.$store.dispatch('clearFollowUpReminder', {
+				envelope: this.envelope,
+			})
 		},
 		async unsubscribeViaOneClick() {
 			try {
@@ -863,6 +924,24 @@ export default {
 		&:last-of-type {
 			margin-bottom: 10px;
 			padding-bottom: 0;
+		}
+
+		&__follow-up-header {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 15px;
+			padding: 10px;
+
+			&__date {
+				flex-shrink: 1;
+			}
+
+			&__actions {
+				flex-shrink: 0;
+				display: flex;
+				gap: 5px;
+			}
 		}
 
 		&__header {

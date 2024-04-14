@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\AiIntegrations;
 
 use JsonException;
 use OCA\Mail\Account;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
@@ -18,6 +19,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\EventData;
 use OCA\Mail\Model\IMAPMessage;
+use OCP\IConfig;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
@@ -43,6 +45,8 @@ class AiIntegrationsService {
 	/** @var IMailManager  */
 	private IMailManager $mailManager;
 
+	private IConfig $config;
+
 	private const EVENT_DATA_PROMPT_PREAMBLE = <<<PROMPT
 I am scheduling an event based on an email thread and need an event title and agenda. Provide the result as JSON with keys for "title" and "agenda". For example ```{ "title": "Project kick-off meeting", "agenda": "* Introduction\\n* Project goals\\n* Next steps" }```.
 
@@ -50,11 +54,12 @@ The email contents are:
 
 PROMPT;
 
-	public function __construct(ContainerInterface $container, Cache $cache, IMAPClientFactory $clientFactory, IMailManager $mailManager) {
+	public function __construct(ContainerInterface $container, Cache $cache, IMAPClientFactory $clientFactory, IMailManager $mailManager, IConfig $config) {
 		$this->container = $container;
 		$this->cache = $cache;
 		$this->clientFactory = $clientFactory;
 		$this->mailManager = $mailManager;
+		$this->config = $config;
 	}
 	/**
 	 * @param Account $account
@@ -213,7 +218,74 @@ PROMPT;
 		} else {
 			throw new ServiceException('No language model available for smart replies');
 		}
+	}
 
+	/**
+	 * Analyze whether a sender of an email expects a reply based on the email's body.
+	 *
+	 * @throws ServiceException
+	 */
+	public function requiresFollowUp(
+		Account $account,
+		Mailbox $mailbox,
+		Message $message,
+		string $currentUserId,
+	): bool {
+		try {
+			$manager = $this->container->get(IManager::class);
+		} catch (ContainerExceptionInterface $e) {
+			throw new ServiceException(
+				'Text processing is not available in your current Nextcloud version',
+				0,
+				$e,
+			);
+		}
+
+		if (!in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+			throw new ServiceException('No language model available for smart replies');
+		}
+
+		$client = $this->clientFactory->getClient($account);
+		try {
+			$imapMessage = $this->mailManager->getImapMessage(
+				$client,
+				$account,
+				$mailbox,
+				$message->getUid(),
+				true,
+			);
+		} finally {
+			$client->logout();
+		}
+
+		if (!$this->isPersonalEmail($imapMessage)) {
+			return false;
+		}
+
+		$messageBody = $imapMessage->getPlainBody();
+		$messageBody = str_replace('"', '\"', $messageBody);
+
+		$prompt = "Consider the following TypeScript function prototype:
+---
+/**
+ * This function takes in an email text and returns a boolean indicating whether the email author expects a response.
+ *
+ * @param emailText - string with the email text
+ * @returns boolean true if the email expects a reply, false if not
+ */
+declare function doesEmailExpectReply(emailText: string): Promise<boolean>;
+---
+Tell me what the function outputs for the following parameters.
+
+emailText: \"$messageBody\"
+The JSON output should be in the form: {\"expectsReply\": true}
+Never return null or undefined.";
+		$task = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $currentUserId);
+
+		$manager->runTask($task);
+
+		// Can't use json_decode() here because the output contains additional garbage
+		return preg_match('/{\s*"expectsReply"\s*:\s*true\s*}/i', $task->getOutput()) === 1;
 	}
 
 	public function isLlmAvailable(string $taskType): bool {
@@ -223,6 +295,13 @@ PROMPT;
 			return false;
 		}
 		return in_array($taskType, $manager->getAvailableTaskTypes(), true);
+	}
+
+	/**
+	 * Whether the llm_processing admin setting is enabled globally on this instance.
+	 */
+	public function isLlmProcessingEnabled(): bool {
+		return $this->config->getAppValue(Application::APP_ID, 'llm_processing', 'no') === 'yes';
 	}
 
 	private function isPersonalEmail(IMAPMessage $imapMessage): bool {

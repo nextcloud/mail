@@ -199,6 +199,7 @@ class PageController extends Controller {
 				'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
 				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 				'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
+				'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
@@ -266,12 +267,18 @@ class PageController extends Controller {
 
 		$this->initialStateService->provideInitialState(
 			'llm_summaries_available',
-			$this->config->getAppValue('mail', 'llm_processing', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class)
 		);
 
 		$this->initialStateService->provideInitialState(
 			'llm_freeprompt_available',
-			$this->config->getAppValue('mail', 'llm_processing', 'no') === 'yes' && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+			$this->aiIntegrationsService->isLlmProcessingEnabled() && $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'llm_followup_available',
+			$this->aiIntegrationsService->isLlmProcessingEnabled()
+			&& $this->aiIntegrationsService->isLlmAvailable(FreePromptTaskType::class)
 		);
 
 		$this->initialStateService->provideInitialState(

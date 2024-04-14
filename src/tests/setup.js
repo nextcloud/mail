@@ -22,6 +22,9 @@ global.OC = {
 		},
 	},
 	isUserAdmin: () => false,
+	config: {
+		version: '9999.0.0',
+	},
 }
 
 /**
