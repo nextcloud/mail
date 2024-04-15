@@ -34,8 +34,8 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -79,9 +79,7 @@ class OutboxService {
 		IMailManager $mailManager,
 		AccountService $accountService,
 		ITimeFactory $timeFactory,
-		LoggerInterface $logger,
-		private Chain $sendChain,
-	) {
+		LoggerInterface $logger) {
 		$this->transmission = $transmission;
 		$this->mapper = $mapper;
 		$this->attachmentService = $attachmentService;
@@ -132,9 +130,24 @@ class OutboxService {
 		$this->mapper->deleteWithRecipients($message);
 	}
 
-	public function sendMessage(LocalMessage $message, Account $account): LocalMessage {
-		$this->sendChain->process($account, $message);
-		return $message;
+	/**
+	 * @param LocalMessage $message
+	 * @param Account $account
+	 * @return void
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function sendMessage(LocalMessage $message, Account $account): void {
+		try {
+			$this->transmission->sendLocalMessage($account, $message);
+		} catch (ClientException|ServiceException $e) {
+			// Mark as failed so the message is not sent repeatedly in background
+			$message->setFailed(true);
+			$this->mapper->update($message);
+			throw $e;
+		}
+		$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
+		$this->mapper->deleteWithRecipients($message);
 	}
 
 	/**
@@ -181,7 +194,6 @@ class OutboxService {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
-
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
@@ -239,13 +251,16 @@ class OutboxService {
 		}, $accountIds));
 
 		foreach ($messages as $message) {
-			$account = $accounts[$message->getAccountId()];
-			if ($account === null) {
-				// Ignore message of non-existent account
-				continue;
-			}
 			try {
-				$this->sendChain->process($account, $message);
+				$account = $accounts[$message->getAccountId()];
+				if ($account === null) {
+					// Ignore message of non-existent account
+					continue;
+				}
+				$this->sendMessage(
+					$message,
+					$account,
+				);
 				$this->logger->debug('Outbox message {id} sent', [
 					'id' => $message->getId(),
 				]);

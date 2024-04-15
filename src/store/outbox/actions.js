@@ -22,7 +22,7 @@
 
 import * as OutboxService from '../../service/OutboxService.js'
 import logger from '../../logger.js'
-import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
+import { showError, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { html, plain } from '../../util/text.js'
 import { UNDO_DELAY } from '../constants.js'
@@ -131,8 +131,6 @@ export default {
 			await OutboxService.sendMessage(id)
 			logger.debug(`Outbox message ${id} sent`)
 		} catch (error) {
-			const m = error.response.data.data[0]
-			commit('updateMessage', { message: m })
 			logger.error(`Failed to send message ${id} from outbox`, { error })
 			throw error
 		}
@@ -186,28 +184,5 @@ export default {
 				}
 			}, UNDO_DELAY)
 		})
-	},
-
-	/**
-	 * "Send" a message
-	 * The backend chain will handle the actual copying
-	 * We need different toast texts and can do this without UNDO.
-	 *
-	 * @param {object} store Vuex destructuring object
-	 * @param {Function} store.dispatch Vuex dispatch object
-	 * @param {object} store.getters Vuex getters object
-	 * @param {object} data Action data
-	 * @param {number} data.id Id of outbox message to send
-	 */
-	async copyMessageToSentMailbox({ getters, dispatch }, { id }) {
-		const message = getters.getMessage(id)
-
-		try {
-			await dispatch('sendMessage', { id: message.id })
-			showSuccess(t('mail', 'Message copied to "Sent" mailbox'))
-		} catch (error) {
-			showError(t('mail', 'Could not copy message to "Sent" mailbox'))
-			logger.error('Could not copy message to "Sent" mailbox ' + message.id, { message })
-		}
 	},
 }

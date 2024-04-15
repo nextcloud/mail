@@ -172,6 +172,7 @@ class DraftsController extends Controller {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $accountId);
 
+
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setAccountId($accountId);
 		$message->setAliasId($aliasId);

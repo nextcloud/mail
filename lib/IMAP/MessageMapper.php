@@ -35,6 +35,7 @@ use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
+use Horde_Mime_Mail;
 use Horde_Mime_Part;
 use Html2Text\Html2Text;
 use OCA\Mail\Attachment;
@@ -397,7 +398,7 @@ class MessageMapper {
 	 */
 	public function save(Horde_Imap_Client_Socket $client,
 		Mailbox $mailbox,
-		string $mail,
+		Horde_Mime_Mail $mail,
 		array $flags = []): int {
 		$flags = array_merge([
 			Horde_Imap_Client::FLAG_SEEN,
@@ -407,7 +408,7 @@ class MessageMapper {
 			$mailbox->getName(),
 			[
 				[
-					'data' => $mail,
+					'data' => $mail->getRaw(),
 					'flags' => $flags,
 				]
 			]

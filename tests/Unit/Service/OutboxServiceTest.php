@@ -36,7 +36,6 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\MailTransmission;
@@ -92,7 +91,6 @@ class OutboxServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->chain = $this->createMock(Chain::class);
 		$this->outboxService = new OutboxService(
 			$this->transmission,
 			$this->mapper,
@@ -103,7 +101,6 @@ class OutboxServiceTest extends TestCase {
 			$this->accountService,
 			$this->timeFactory,
 			$this->logger,
-			$this->chain,
 		);
 		$this->userId = 'linus';
 		$this->time = $this->createMock(ITimeFactory::class);
@@ -124,9 +121,8 @@ class OutboxServiceTest extends TestCase {
 					'body' => 'Test',
 					'html' => false,
 					'reply_to_id' => null,
-					'draft_id' => 99,
-					'status' => 0,
-					'raw' => 'Test',
+					'draft_id' => 99
+
 				],
 				[
 					'id' => 2,
@@ -138,9 +134,7 @@ class OutboxServiceTest extends TestCase {
 					'body' => 'Second Test',
 					'html' => true,
 					'reply_to_id' => null,
-					'draft_id' => null,
-					'status' => 0,
-					'raw' => 'Second Test',
+					'draft_id' => null
 				]
 			]);
 
@@ -391,7 +385,6 @@ class OutboxServiceTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $this->userId
 		]);
-
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
 			->with($message, [$rTo], $cc, $bcc)
@@ -403,7 +396,6 @@ class OutboxServiceTest extends TestCase {
 			->method('getClient');
 		$this->attachmentService->expects(self::never())
 			->method('handleAttachments');
-
 		$result = $this->outboxService->updateMessage($account, $message, $to, $cc, $bcc, $attachments);
 		$this->assertEmpty($result->getAttachments());
 	}
@@ -444,7 +436,6 @@ class OutboxServiceTest extends TestCase {
 	public function testSendMessage(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
-		$message->setStatus(LocalMessage::STATUS_RAW);
 		$recipient = new Recipient();
 		$recipient->setEmail('museum@startdewvalley.com');
 		$recipient->setLabel('Gunther');
@@ -461,36 +452,15 @@ class OutboxServiceTest extends TestCase {
 			'getUserId' => $this->userId
 		]);
 
-		$this->chain->expects(self::once())
-			->method('process')
+		$this->transmission->expects(self::once())
+			->method('sendLocalMessage')
 			->with($account, $message);
-
-		$this->outboxService->sendMessage($message, $account);
-	}
-
-	public function testSendMessageAlreadyProcessed(): void {
-		$message = new LocalMessage();
-		$message->setId(1);
-		$message->setStatus(LocalMessage::STATUS_PROCESSED);
-		$recipient = new Recipient();
-		$recipient->setEmail('museum@startdewvalley.com');
-		$recipient->setLabel('Gunther');
-		$recipient->setType(Recipient::TYPE_TO);
-		$recipients = [$recipient];
-		$attachment = new LocalAttachment();
-		$attachment->setMimeType('image/png');
-		$attachment->setFileName('SlimesInTheMines.png');
-		$attachment->setCreatedAt($this->time->getTime());
-		$attachments = [$attachment];
-		$message->setRecipients($recipients);
-		$message->setAttachments($attachments);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
-
-		$this->chain->expects(self::once())
-			->method('process')
-			->with($account, $message);
+		$this->attachmentService->expects(self::once())
+			->method('deleteLocalMessageAttachments')
+			->with($account->getUserId(), $message->getId());
+		$this->mapper->expects(self::once())
+			->method('deleteWithRecipients')
+			->with($message);
 
 		$this->outboxService->sendMessage($message, $account);
 	}
@@ -498,7 +468,6 @@ class OutboxServiceTest extends TestCase {
 	public function testSendMessageTransmissionError(): void {
 		$message = new LocalMessage();
 		$message->setId(1);
-		$message->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
 		$recipient = new Recipient();
 		$recipient->setEmail('museum@startdewvalley.com');
 		$recipient->setLabel('Gunther');
@@ -515,12 +484,17 @@ class OutboxServiceTest extends TestCase {
 			'getUserId' => $this->userId
 		]);
 
-		$this->chain->expects(self::once())
-			->method('process')
-			->with($account, $message);
+		$this->transmission->expects(self::once())
+			->method('sendLocalMessage')
+			->with($account, $message)
+			->willThrowException(new ClientException());
+		$this->attachmentService->expects(self::never())
+			->method('deleteLocalMessageAttachments');
+		$this->mapper->expects(self::never())
+			->method('deleteWithRecipients');
 
+		$this->expectException(ClientException::class);
 		$this->outboxService->sendMessage($message, $account);
-		$this->assertEquals(LocalMessage::STATUS_NO_SENT_MAILBOX, $message->getStatus());
 	}
 
 	public function testConvertToOutboxMessageNoRecipients(): void {

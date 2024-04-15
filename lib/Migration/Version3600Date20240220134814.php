@@ -28,11 +28,10 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
-use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version3600Date20240220134813 extends SimpleMigrationStep {
+class Version3600Date20240220134814 extends SimpleMigrationStep {
 
 	/**
 	 * @param IOutput $output
@@ -44,21 +43,13 @@ class Version3600Date20240220134813 extends SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		/* REVERTED in Version3600Date20240220134814
 		$localMessagesTable = $schema->getTable('mail_local_messages');
-		if (!$localMessagesTable->hasColumn('status')) {
-			$localMessagesTable->addColumn('status', Types::INTEGER, [
-				'notnull' => false,
-				'default' => 0,
-			]);
+		if ($localMessagesTable->hasColumn('status')) {
+			$localMessagesTable->dropColumn('status');
 		}
-		if (!$localMessagesTable->hasColumn('raw')) {
-			$localMessagesTable->addColumn('raw', Types::TEXT, [
-				'notnull' => false,
-				'default' => null,
-			]);
+		if ($localMessagesTable->hasColumn('raw')) {
+			$localMessagesTable->dropColumn('raw');
 		}
-		*/
 
 		return $schema;
 	}

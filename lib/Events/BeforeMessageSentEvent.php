@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-/**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+/*
+ * @copyright 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -35,15 +35,12 @@ use OCP\EventDispatcher\Event;
 /**
  * @psalm-immutable
  */
-class MessageSentEvent extends Event {
+class BeforeMessageSentEvent extends Event {
 	/** @var Account */
 	private $account;
 
 	/** @var NewMessageData */
 	private $newMessageData;
-
-	/** @var null|string */
-	private $repliedToMessageId;
 
 	/** @var Message|null */
 	private $draft;
@@ -53,6 +50,9 @@ class MessageSentEvent extends Event {
 
 	/** @var Horde_Mime_Mail */
 	private $mail;
+
+	/** @var string|null */
+	private $repliedToMessageId;
 
 	public function __construct(Account $account,
 		NewMessageData $newMessageData,

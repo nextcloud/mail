@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
@@ -36,12 +37,27 @@ interface IMailTransmission {
 	/**
 	 * Send a new message or reply to an existing one
 	 *
-	 * @param Account $account
-	 * @param LocalMessage $localMessage
+	 * @param NewMessageData $messageData
+	 * @param string|null $repliedToMessageId
+	 * @param Alias|null $alias
+	 * @param Message|null $draft
+	 *
 	 * @throws SentMailboxNotSetException
 	 * @throws ServiceException
 	 */
-	public function sendMessage(Account $account, LocalMessage $localMessage): void;
+	public function sendMessage(NewMessageData $messageData,
+		?string $repliedToMessageId = null,
+		?Alias $alias = null,
+		?Message $draft = null): void;
+
+	/**
+	 * @param Account $account
+	 * @param LocalMessage $message
+	 * @throws ClientException
+	 * @throws ServiceException
+	 * @return void
+	 */
+	public function sendLocalMessage(Account $account, LocalMessage $message): void;
 
 	/**
 	 * @param Account $account

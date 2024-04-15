@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<ListItem v-if="message.status !== statusImapSentMailboxFail()"
-		class="outbox-message"
+	<ListItem class="outbox-message"
 		:class="{ selected }"
 		:name="title"
 		:details="details"
@@ -51,35 +50,6 @@
 			</ActionButton>
 		</template>
 	</ListItem>
-	<ListItem v-else
-		class="outbox-message"
-		:name="title"
-		:class="{ selected }"
-		:details="details">
-		<template #icon>
-			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
-		</template>
-		<template #subtitle>
-			{{ subjectForSubtitle }}
-		</template>
-		<template slot="actions">
-			<ActionButton :close-after-click="true"
-				@click="sendMessageNow">
-				{{ t('mail', 'Copy to "Sent" Mailbox') }}
-				<template #icon>
-					<Send :title="t('mail', 'Copy to Sent Mailbox')"
-						:size="20" />
-				</template>
-			</ActionButton>
-			<ActionButton :close-after-click="true"
-				@click="deleteMessage">
-				<template #icon>
-					<IconDelete :size="20" />
-				</template>
-				{{ t('mail', 'Delete') }}
-			</ActionButton>
-		</template>
-	</ListItem>
 </template>
 
 <script>
@@ -94,10 +64,7 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match.js'
 import { html, plain } from '../util/text.js'
 import Send from 'vue-material-design-icons/Send.vue'
-import {
-	STATUS_IMAP_SENT_MAILBOX_FAIL,
-	UNDO_DELAY,
-} from '../store/constants.js'
+import { UNDO_DELAY } from '../store/constants.js'
 
 export default {
 	name: 'OutboxMessageListItem',
@@ -130,9 +97,7 @@ export default {
 			return formatter.format(recipients)
 		},
 		details() {
-			if (this.message.status === 11) {
-				return this.t('mail', 'Could not copy to "Sent" mailbox')
-			} else if (this.message.status !== 0) {
+			if (this.message.failed) {
 				return this.t('mail', 'Message could not be sent')
 			}
 			if (!this.message.sendAt) {
@@ -152,9 +117,6 @@ export default {
 		},
 	},
 	methods: {
-		statusImapSentMailboxFail() {
-			return STATUS_IMAP_SENT_MAILBOX_FAIL
-		},
 		async deleteMessage() {
 			try {
 				await this.$store.dispatch('outbox/deleteMessage', {
@@ -177,23 +139,9 @@ export default {
 				sendAt: (new Date().getTime() + UNDO_DELAY) / 1000,
 			}
 			await this.$store.dispatch('outbox/updateMessage', { message, id: message.id })
-			try {
-				if (this.message.status !== STATUS_IMAP_SENT_MAILBOX_FAIL) {
-					await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id })
-				} else {
-					await this.$store.dispatch('outbox/copyMessageToSentMailbox', { id: message.id })
-				}
-			} catch (error) {
-				logger.error('Could not send or copy message', { error })
-				if (error.data !== undefined) {
-					await this.$store.dispatch('outbox/updateMessage', { message: error.data[0], id: message.id })
-				}
-			}
+			await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id })
 		},
 		async openModal() {
-			if (this.message.status === 11) {
-				return
-			}
 			await this.$store.dispatch('startComposerSession', {
 				type: 'outbox',
 				data: {

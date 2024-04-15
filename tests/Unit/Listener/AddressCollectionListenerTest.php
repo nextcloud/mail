@@ -26,17 +26,17 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Mime_Mail;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Db\LocalMessage;
-use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Model\IMessage;
+use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
-use OCA\Mail\Service\TransmissionService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -55,21 +55,17 @@ class AddressCollectionListenerTest extends TestCase {
 	/** @var IEventListener */
 	private $listener;
 
-	private MockObject|TransmissionService $transmission;
-
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->addressCollector = $this->createMock(AddressCollector::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
-		$this->transmission = $this->createMock(TransmissionService::class);
 
 		$this->listener = new AddressCollectionListener(
 			$this->preferences,
 			$this->addressCollector,
-			$this->logger,
-			$this->transmission,
+			$this->logger
 		);
 	}
 
@@ -106,47 +102,44 @@ class AddressCollectionListenerTest extends TestCase {
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => 'test'
 		]);
+		/** @var NewMessageData|MockObject $newMessageData */
+		$newMessageData = $this->createMock(NewMessageData::class);
+		/** @var RepliedMessageData|MockObject $repliedMessageData */
+		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
-		$message = $this->createMock(LocalMessage::class);
-		$message->setRecipients([
-			Recipient::fromParams([
-				'email' => 'to@email',
-				'type' => Recipient::TYPE_TO,
-			]),
-			Recipient::fromParams([
-				'email' => 'cc@email',
-				'type' => Recipient::TYPE_CC,
-			]),
-			Recipient::fromParams([
-				'email' => 'bcc@email',
-				'type' => Recipient::TYPE_BCC,
-			])
-		]);
-		$event = new MessageSentEvent(
-			$account,
-			new LocalMessage(),
-		);
-		$to = new AddressList([Address::fromRaw('to', 'to@email')]);
-		$cc = new AddressList([Address::fromRaw('cc', 'cc@email')]);
-		$bcc = new AddressList([Address::fromRaw('bcc', 'bcc@email')]);
-		$addresses = $to->merge($cc)->merge($bcc);
-
+		$message = $this->createMock(IMessage::class);
 		$this->preferences->expects($this->once())
 			->method('getPreference')
 			->with('test', 'collect-data', 'true')
 			->willReturn('true');
-		$this->transmission->expects($this->exactly(3))
-			->method('getAddressList')
-			->willReturnOnConsecutiveCalls(
-				$to,
-				$cc,
-				$bcc,
-			);
+		/** @var Horde_Mime_Mail|MockObject $mail */
+		$mail = $this->createMock(Horde_Mime_Mail::class);
+		$event = new MessageSentEvent(
+			$account,
+			$newMessageData,
+			'abc123',
+			null,
+			$message,
+			$mail
+		);
+		$message->expects($this->once())
+			->method('getTo')
+			->willReturn(new AddressList([Address::fromRaw('to', 'to@email')]));
+		$message->expects($this->once())
+			->method('getCC')
+			->willReturn(new AddressList([Address::fromRaw('cc', 'cc@email')]));
+		$message->expects($this->once())
+			->method('getBCC')
+			->willReturn(new AddressList([Address::fromRaw('bcc', 'bcc@email')]));
 		$this->addressCollector->expects($this->once())
 			->method('addAddresses')
 			->with(
-				$account->getUserId(),
-				$this->equalTo($addresses)
+				'test',
+				$this->equalTo(new AddressList([
+					Address::fromRaw('to', 'to@email'),
+					Address::fromRaw('cc', 'cc@email'),
+					Address::fromRaw('bcc', 'bcc@email'),
+				]))
 			);
 		$this->logger->expects($this->never())->method($this->anything());
 
