@@ -430,7 +430,8 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
 			->willReturn($client);
-		$mb = $this->createMock(Mailbox::class);
+		$mb = new Mailbox();
+		$mb->setName('INBOX');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -458,7 +459,8 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
 			->willReturn($client);
-		$mb = $this->createMock(Mailbox::class);
+		$mb = new Mailbox();
+		$mb->setName('INBOX');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -489,7 +491,8 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->any())
 			->method('getClient')
 			->willReturn($client);
-		$mb = $this->createMock(Mailbox::class);
+		$mb = new Mailbox();
+		$mb->setName('INBOX');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')

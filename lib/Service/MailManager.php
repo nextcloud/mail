@@ -499,8 +499,16 @@ class MailManager implements IMailManager {
 			)
 		);
 	}
-	public function tagMessageWithClient(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox, array $messages, Tag $tag, bool $value):void {
 
+	/**
+	 * Tag (flag) multiple messages on IMAP using a given client instance
+	 *
+	 * @param Message[] $messages
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function tagMessagesWithClient(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox, array $messages, Tag $tag, bool $value):void {
 		if ($this->isPermflagsEnabled($client, $account, $mailbox->getName()) === true) {
 			$messageIds = array_map(static function (Message $message) {
 				return $message->getUid();
@@ -519,17 +527,19 @@ class MailManager implements IMailManager {
 					$e
 				);
 			}
-			if ($value) {
-				foreach ($messages as $message) {
-					$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
-				}
-			} else {
-				foreach ($messages as $message) {
-					$this->tagMapper->untagMessage($tag, $message->getMessageId());
-				}
+		}
+
+		if ($value) {
+			foreach ($messages as $message) {
+				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+			}
+		} else {
+			foreach ($messages as $message) {
+				$this->tagMapper->untagMessage($tag, $message->getMessageId());
 			}
 		}
 	}
+
 	/**
 	 * Tag (flag) a message on IMAP
 	 *
@@ -553,31 +563,10 @@ class MailManager implements IMailManager {
 			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
 		}
 		$client = $this->imapClientFactory->getClient($account);
-		if ($this->isPermflagsEnabled($client, $account, $mailbox) === true) {
-			try {
-				if ($value) {
-					// imap keywords and flags work the same way
-					$this->imapMessageMapper->addFlag($client, $mb, [$message->getUid()], $tag->getImapLabel());
-				} else {
-					$this->imapMessageMapper->removeFlag($client, $mb, [$message->getUid()], $tag->getImapLabel());
-				}
-			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException(
-					"Could not set message keyword on IMAP: " . $e->getMessage(),
-					$e->getCode(),
-					$e
-				);
-			} finally {
-				$client->logout();
-			}
-		} else {
+		try {
+			$this->tagMessagesWithClient($client, $account, $mb, [$message], $tag, $value);
+		} finally {
 			$client->logout();
-		}
-
-		if ($value) {
-			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
-		} else {
-			$this->tagMapper->untagMessage($tag, $message->getMessageId());
 		}
 	}
 
@@ -895,13 +884,13 @@ class MailManager implements IMailManager {
 		try {
 			foreach ($groupedMessages as $mailboxId => $messages) {
 				$mailbox = $this->getMailbox($userId, $mailboxId);
-				$this->tagMessageWithClient($client, $account, $mailbox, $messages, $tag, false);
+				$this->tagMessagesWithClient($client, $account, $mailbox, $messages, $tag, false);
 			}
 		} finally {
 			$client->logout();
 		}
-		
 	}
+
 	public function moveThread(Account $srcAccount, Mailbox $srcMailbox, Account $dstAccount, Mailbox $dstMailbox, string $threadRootId): array {
 		$mailAccount = $srcAccount->getMailAccount();
 		$messageInTrash = $srcMailbox->getId() === $mailAccount->getTrashMailboxId();
