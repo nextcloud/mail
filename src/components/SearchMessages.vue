@@ -85,7 +85,7 @@
 				</div>
 				<div class="modal-inner--field">
 					<label class="modal-inner--label" for="fromId">
-						{{ t("mail", "From") }}
+						{{ t('mail', 'From') }}
 					</label>
 					<div class="modal-inner--container">
 						<NcMultiselect
@@ -473,22 +473,18 @@ export default {
 			}
 		},
 		addTag(tag, type) {
-			const _tag = [{
-				label: tag,
-				email: tag,
-			}]
 			switch (type) {
 			case 'to':
-				this.searchInTo = _tag
+				this.searchInTo = tag
 				break
 			case 'from':
-				this.searchInFrom = _tag
+				this.searchInFrom = tag
 				break
 			case 'cc':
-				this.searchInCc = _tag
+				this.searchInCc = tag
 				break
 			case 'bcc':
-				this.searchInBcc = _tag
+				this.searchInBcc = tag
 				break
 			}
 		},
