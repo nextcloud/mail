@@ -218,7 +218,7 @@ export default {
 			}
 		},
 		async loadMore() {
-			if (!this.expanded) {
+			if (!this.expanded && this.envelopesToShow.length < this.envelopes.length) {
 				logger.debug('expanding envelope list')
 				this.expanded = true
 				return
