@@ -42,6 +42,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
+use OCA\Mail\Service\PhishingDetectionService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use function str_starts_with;
@@ -53,6 +54,7 @@ class ImapMessageFetcher {
 
 	private Html $htmlService;
 	private SmimeService $smimeService;
+	private PhishingDetectionService $phishingDetectionService;
 	private string $userId;
 
 	// Conditional fetching/parsing
@@ -71,6 +73,7 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
+	private array $phishingDetails = [];
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
 	private ?string $unsubscribeMailto = null;
@@ -81,13 +84,16 @@ class ImapMessageFetcher {
 		string $userId,
 		Html $htmlService,
 		SmimeService $smimeService,
-		private Converter $converter) {
+		private Converter $converter,
+		PhishingDetectionService $phishingDetectionService,
+	) {
 		$this->uid = $uid;
 		$this->mailbox = $mailbox;
 		$this->client = $client;
 		$this->userId = $userId;
 		$this->htmlService = $htmlService;
 		$this->smimeService = $smimeService;
+		$this->phishingDetectionService = $phishingDetectionService;
 	}
 
 
@@ -115,7 +121,7 @@ class ImapMessageFetcher {
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
 	 */
-	public function fetchMessage(?Horde_Imap_Client_Data_Fetch $fetch = null): IMAPMessage {
+	public function fetchMessage(?Horde_Imap_Client_Data_Fetch $fetch = null, bool $runPhishingCheck = false): IMAPMessage {
 		$ids = new Horde_Imap_Client_Ids($this->uid);
 
 		$isSigned = false;
@@ -231,7 +237,7 @@ class ImapMessageFetcher {
 			}
 		}
 
-		$this->parseHeaders($fetch);
+		$this->parseHeaders($fetch, $runPhishingCheck);
 
 		$envelope = $fetch->getEnvelope();
 		return new IMAPMessage(
@@ -255,6 +261,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->hasDkimSignature,
+			$this->phishingDetails,
 			$this->unsubscribeUrl,
 			$this->isOneClickUnsubscribe,
 			$this->unsubscribeMailto,
@@ -493,7 +500,7 @@ class ImapMessageFetcher {
 		return iconv("UTF-8", "UTF-8//IGNORE", $subject);
 	}
 
-	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
+	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch, bool $runPhishingCheck = false): void {
 		/** @var resource $headersStream */
 		$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
@@ -511,6 +518,10 @@ class ImapMessageFetcher {
 
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
+
+		if($runPhishingCheck) {
+			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders);
+		}
 
 		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
 		if ($listUnsubscribeHeader !== null) {

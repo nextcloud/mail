@@ -29,19 +29,23 @@ namespace OCA\Mail\IMAP;
 use Horde_Imap_Client_Base;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Service\Html;
+use OCA\Mail\Service\PhishingDetectionService;
 use OCA\Mail\Service\SmimeService;
 
 class ImapMessageFetcherFactory {
 	private Html $htmlService;
 	private SmimeService $smimeService;
 	private Converter $charsetConverter;
+	private PhishingDetectionService $phishingDetectionService;
 
 	public function __construct(Html         $htmlService,
 		SmimeService $smimeService,
-		Converter $charsetConverter) {
+		Converter $charsetConverter,
+		PhishingDetectionService $phishingDetectionService) {
 		$this->htmlService = $htmlService;
 		$this->smimeService = $smimeService;
 		$this->charsetConverter = $charsetConverter;
+		$this->phishingDetectionService = $phishingDetectionService;
 	}
 
 	public function build(int $uid,
@@ -56,6 +60,7 @@ class ImapMessageFetcherFactory {
 			$this->htmlService,
 			$this->smimeService,
 			$this->charsetConverter,
+			$this->phishingDetectionService,
 		);
 	}
 }

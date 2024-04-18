@@ -237,7 +237,7 @@ class ContactsIntegration {
 	/**
 	 * @param string[] $fields
 	 */
-	private function doSearch(string $term, array $fields, bool $strictSearch): array {
+	private function doSearch(string $term, array $fields, bool $strictSearch, bool $forceSAB = false) : array {
 		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
 
 		$result = $this->contactsManager->search($term, $fields, [
@@ -245,18 +245,21 @@ class ContactsIntegration {
 		]);
 		$matches = [];
 		foreach ($result as $r) {
-			if (!$allowSystemUsers && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
+			if ((!$allowSystemUsers && !$forceSAB) && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
 				continue;
 			}
 			$id = $r['UID'];
 			$fn = $r['FN'];
+			$email = $r['EMAIL'];
 			$matches[] = [
 				'id' => $id,
 				'label' => $fn,
+				'email' => $email,
 			];
 		}
 		return $matches;
 	}
+
 
 	/**
 	 * Extracts all Contacts with the specified mail address
@@ -271,7 +274,7 @@ class ContactsIntegration {
 	/**
 	 * Extracts all Contacts with the specified name
 	 */
-	public function getContactsWithName(string $name): array {
-		return $this->doSearch($name, ['FN'], false);
+	public function getContactsWithName(string $name, bool $forceSAB = false): array {
+		return $this->doSearch($name, ['FN'], false, $forceSAB);
 	}
 }
