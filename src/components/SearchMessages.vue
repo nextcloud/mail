@@ -78,7 +78,7 @@
 				</div>
 				<div class="modal-inner--field">
 					<label class="modal-inner--label" for="fromId">
-						{{ t("mail", "From") }}
+						{{ t('mail', 'From') }}
 					</label>
 					<div class="modal-inner--container">
 						<NcSelect id="fromId"
@@ -95,7 +95,7 @@
 							:show-no-options="false"
 							:preserve-search="true"
 							:max="1"
-							@option:created="addTag($event,'from')"
+							@option:selecting="addTag($event,'from')"
 							@search="searchRecipients($event)" />
 					</div>
 				</div>
@@ -119,7 +119,7 @@
 							:show-no-options="false"
 							:preserve-search="true"
 							:max="1"
-							@option:created="addTag($event,'to')"
+							@option:selecting="addTag($event,'to')"
 							@search="searchRecipients($event)" />
 					</div>
 				</div>
@@ -458,22 +458,18 @@ export default {
 			}
 		},
 		addTag(tag, type) {
-			const _tag = [{
-				label: tag,
-				email: tag,
-			}]
 			switch (type) {
 			case 'to':
-				this.searchInTo = _tag
+				this.searchInTo = tag
 				break
 			case 'from':
-				this.searchInFrom = _tag
+				this.searchInFrom = tag
 				break
 			case 'cc':
-				this.searchInCc = _tag
+				this.searchInCc = tag
 				break
 			case 'bcc':
-				this.searchInBcc = _tag
+				this.searchInBcc = tag
 				break
 			}
 		},
