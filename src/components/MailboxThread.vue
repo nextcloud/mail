@@ -27,7 +27,8 @@
 						:open-first="mailbox.specialRole !== 'drafts'" />
 					<template v-else>
 						<div v-show="hasImportantEnvelopes" class="app-content-list-item">
-							<SectionTitle class="important" :name="t('mail', 'Important')" />
+							<SectionTitle class="section-title important"
+								:name="t('mail', 'Important')" />
 							<Popover trigger="hover focus">
 								<template #trigger>
 									<ButtonVue type="tertiary-no-background"
@@ -54,7 +55,7 @@
 							:collapsible="true"
 							:bus="bus" />
 						<SectionTitle v-show="hasImportantEnvelopes"
-							class="app-content-list-item other"
+							class="app-content-list-item section-title other"
 							:name="t('mail', 'Other')" />
 						<Mailbox class="nameother"
 							:account="unifiedAccount"
@@ -308,6 +309,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.section-title {
+	:deep(h2) {
+		margin: 0 !important;
+	}
+}
+
 .v-popover > .trigger > * {
 	z-index: 1;
 }
