@@ -7,6 +7,7 @@
 	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail','Message body')">
+		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
 		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
 			<LockOffIcon :size="20"
@@ -68,6 +69,7 @@ import { html, plain } from '../util/text.js'
 import { isPgpgMessage } from '../crypto/pgp.js'
 import Itinerary from './Itinerary.vue'
 import MessageAttachments from './MessageAttachments.vue'
+import PhishingWarning from './PhishingWarning.vue'
 import MessageEncryptedBody from './MessageEncryptedBody.vue'
 import MessageHTMLBody from './MessageHTMLBody.vue'
 import MessagePlainTextBody from './MessagePlainTextBody.vue'
@@ -83,6 +85,7 @@ export default {
 		MessageEncryptedBody,
 		MessageHTMLBody,
 		MessagePlainTextBody,
+		PhishingWarning,
 		Imip,
 		LockOffIcon,
 		ReplyIcon,

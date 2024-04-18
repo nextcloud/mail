@@ -68,7 +68,7 @@ class MessageMapper {
 		int $id,
 		string $userId,
 		bool $loadBody = false): IMAPMessage {
-		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody);
+		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody, true);
 
 		if (count($result) === 0) {
 			throw new DoesNotExistException("Message does not exist");
@@ -249,7 +249,8 @@ class MessageMapper {
 		string $mailbox,
 		$ids,
 		string $userId,
-		bool $loadBody = false): array {
+		bool $loadBody = false,
+		bool $runPhishingCheck = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
 		$query->flags();
@@ -294,7 +295,7 @@ class MessageMapper {
 			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody, $userId) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody, $userId, $runPhishingCheck) {
 			return $this->imapMessageFactory
 				->build(
 					$fetchResult->getUid(),
@@ -303,6 +304,7 @@ class MessageMapper {
 					$userId,
 				)
 				->withBody($loadBody)
+				->withPhishingCheck($runPhishingCheck)
 				->fetchMessage($fetchResult);
 		}, $fetchResults);
 	}

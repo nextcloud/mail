@@ -61,6 +61,7 @@ class MessageMapperTest extends TestCase {
 		$ids = [1, 3];
 		$userId = 'user';
 		$loadBody = false;
+		$runPhishingCheck = false;
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
 		$imapMessageFetcher2 = $this->createMock(ImapMessageFetcher::class);
@@ -99,6 +100,10 @@ class MessageMapperTest extends TestCase {
 			->with($loadBody)
 			->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
+		->method('withPhishingCheck')
+		->with($runPhishingCheck)
+		->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
 			->method('fetchMessage')
 			->with($fetchResult1)
 			->willReturn($message1);
@@ -106,6 +111,10 @@ class MessageMapperTest extends TestCase {
 			->method('withBody')
 			->with($loadBody)
 			->willReturnSelf();
+		$imapMessageFetcher2->expects(self::once())
+		->method('withPhishingCheck')
+		->with($runPhishingCheck)
+		->willReturnSelf();
 		$imapMessageFetcher2->expects(self::once())
 			->method('fetchMessage')
 			->with($fetchResult2)
@@ -167,6 +176,7 @@ class MessageMapperTest extends TestCase {
 		$ids = [1, 3];
 		$userId = 'user';
 		$loadBody = false;
+		$runPhishingCheck = false;
 
 		$imapMessageFetcher1 = $this->createMock(ImapMessageFetcher::class);
 		$message1 = $this->createMock(IMAPMessage::class);
@@ -201,6 +211,10 @@ class MessageMapperTest extends TestCase {
 			->method('withBody')
 			->with($loadBody)
 			->willReturnSelf();
+		$imapMessageFetcher1->expects(self::once())
+		->method('withPhishingCheck')
+		->with($runPhishingCheck)
+		->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
 			->method('fetchMessage')
 			->with($fetchResult1)

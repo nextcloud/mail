@@ -72,6 +72,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			false,
+			[],
 			null,
 			false,
 			'',
@@ -113,6 +114,7 @@ class IMAPMessageTest extends TestCase {
 			'',
 			'disposition',
 			false,
+			[],
 			null,
 			false,
 			null,
@@ -152,6 +154,7 @@ class IMAPMessageTest extends TestCase {
 			'hasHtmlBody' => true,
 			'dispositionNotificationTo' => 'disposition',
 			'hasDkimSignature' => false,
+			'phishingDetails' => [],
 			'scheduling' => [],
 		], $json);
 		$this->assertEquals(1234, $json['uid']);
