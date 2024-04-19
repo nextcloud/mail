@@ -29,7 +29,7 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>3.7.0-alpha.1</version>
+	<version>3.7.0-alpha.2</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author homepage="https://github.com/nextcloud/groupware">Nextcloud Groupware Team</author>

@@ -25,7 +25,9 @@ namespace OCA\Mail\Send;
 use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Attachment\AttachmentService;
+use OCP\DB\Exception;
 
 class Chain {
 	public function __construct(private SentMailboxHandler $sentMailboxHandler,
@@ -38,12 +40,26 @@ class Chain {
 	) {
 	}
 
+	/**
+	 * @throws \Throwable
+	 * @throws Exception
+	 * @throws ServiceException
+	 */
 	public function process(Account $account, LocalMessage $localMessage): void {
 		$handlers = $this->sentMailboxHandler;
 		$handlers->setNext($this->antiAbuseHandler)
 			->setNext($this->sendHandler)
 			->setNext($this->copySentMessageHandler)
 			->setNext($this->flagRepliedMessageHandler);
+
+		/**
+		 * Skip all messages that errored out indeterminedly in the SMTP send.
+		 * @see \Horde_Smtp_Exception  for the error codes that are inderminate
+		 * They might or might not have been sent already.
+		 */
+		if ($localMessage->getStatus() === LocalMessage::STATUS_ERROR) {
+			throw new ServiceException('Could not send message because a previous send operation produced an unclear sent state.');
+		}
 
 		$result = $handlers->process($account, $localMessage);
 		if ($result->getStatus() === LocalMessage::STATUS_PROCESSED) {

@@ -38,6 +38,7 @@ use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
+use Horde_Smtp_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -63,6 +64,12 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 
 class MailTransmission implements IMailTransmission {
+	private const RETRIABLE_CODES = [
+		Horde_Smtp_Exception::INSUFFICIENT_STORAGE,
+		Horde_Smtp_Exception::OVERQUOTA,
+		Horde_Smtp_Exception::LOGIN_REQUIREAUTHENTICATION,
+	];
+
 	public function __construct(
 		private IMAPClientFactory $imapClientFactory,
 		private SmtpClientFactory $smtpClientFactory,
@@ -142,8 +149,12 @@ class MailTransmission implements IMailTransmission {
 			$mail->send($transport, false, false);
 			$localMessage->setRaw($mail->getRaw(false));
 		} catch (Horde_Mime_Exception $e) {
-			$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
 			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			if (in_array($e->getCode(), self::RETRIABLE_CODES, true)) {
+				$localMessage->setStatus(LocalMessage::STATUS_SMPT_SEND_FAIL);
+				return;
+			}
+			$localMessage->setStatus(LocalMessage::STATUS_ERROR);
 			return;
 		}
 

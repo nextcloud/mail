@@ -35,7 +35,7 @@ class CopySentMessageHandler extends AHandler {
 	public function __construct(private IMAPClientFactory $imapClientFactory,
 		private MailboxMapper $mailboxMapper,
 		private LoggerInterface $logger,
-		private MessageMapper $messageMapper
+		private MessageMapper $messageMapper,
 	) {
 	}
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
