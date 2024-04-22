@@ -194,7 +194,7 @@ export default {
 	created() {
 		this.bus.on('on-add-local-attachment', this.onAddLocalAttachment)
 		this.bus.on('on-add-cloud-attachment', this.openAttachementPicker)
-		this.bus.on('on-add-cloud-attachment-link', this.OpenctLinkPicker)
+		this.bus.on('on-add-cloud-attachment-link', this.OpenLinkPicker)
 		this.bus.on('on-add-message-as-attachment', this.onAddMessageAsAttachment)
 		this.value.map(attachment => {
 			this.attachments.push({
@@ -218,7 +218,7 @@ export default {
 		openAttachementPicker() {
 			this.isAttachementPickerOpen = true
 		},
-		OpenctLinkPicker() {
+		OpenLinkPicker() {
 			this.isLinkPickerOpen = true
 		},
 		onAddLocalAttachment() {
