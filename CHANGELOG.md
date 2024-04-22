@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.6.0 – unreleased
+## 3.6.0 – 2024-04-22
 ### Added
 * Selection of untrusted S/MIME certificates
 * Suggested replies
@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 * IMAP/SMTP security buttons on the setup page
 * Message suck in outbox when storing on IMAP fails (temporarily)
 * Accidentaly leaving the tab while a draft has not been saved
+* Display from, to, cc, bcc correctly on advance search
 
 ## 3.5.0 – unreleased
 ### Added
