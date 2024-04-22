@@ -25,6 +25,7 @@ namespace OCA\Mail\Tests\Unit\Service\Attachment;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OC\Files\Node\File;
+use OCA\Files_Sharing\SharedStorage;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
@@ -40,6 +41,8 @@ use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\Folder;
 use OCP\Files\NotPermittedException;
+use OCP\Share\IAttributes;
+use OCP\Share\IShare;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -389,12 +392,63 @@ class AttachmentServiceTest extends TestCase {
 		$this->service->handleAttachments($account, [$attachments], $client);
 	}
 
+	public function testHandleAttachmentsCloudAttachmentNoDownloadPermission(): void {
+		$userId = 'linus';
+		$storage = $this->createMock(SharedStorage::class);
+		$storage->expects(self::once())
+			->method('instanceOfStorage')
+			->with(SharedStorage::class)
+			->willReturn(true);
+		$share = $this->createMock(IShare::class);
+		$attributes = $this->createMock(IAttributes::class);
+		$attributes->expects(self::once())
+			->method('getAttribute')
+			->with('permissions', 'download')
+			->willReturn(false);
+		$share->expects(self::once())
+			->method('getAttributes')
+			->willReturn($attributes);
+		$storage->expects(self::once())
+			->method('getShare')
+			->willReturn($share);
+		
+		$file = $this->createConfiguredMock(File::class, [
+			'getName' => 'cat.jpg',
+			'getMimeType' => 'text/plain',
+			'getContent' => 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds',
+			'getStorage' => $storage
+		]);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getUserId' => $userId
+		]);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$attachments = [
+			'type' => 'cloud',
+			'messageId' => 999,
+			'fileName' => 'cat.jpg',
+			'mimeType' => 'text/plain',
+		];
+		$this->userFolder->expects(self::once())
+			->method('nodeExists')
+			->with('cat.jpg')
+			->willReturn(true);
+		$this->userFolder->expects(self::once())
+			->method('get')
+			->with('cat.jpg')
+			->willReturn($file);
+
+		$result = $this->service->handleAttachments($account, [$attachments], $client);
+		$this->assertEquals([], $result);
+
+	}
+
 	public function testHandleAttachmentsCloudAttachment(): void {
 		$userId = 'linus';
 		$file = $this->createConfiguredMock(File::class, [
 			'getName' => 'cat.jpg',
 			'getMimeType' => 'text/plain',
-			'getContent' => 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds'
+			'getContent' => 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds',
+			'getStorage' => $this->createMock(SharedStorage::class)
 		]);
 		$account = $this->createConfiguredMock(Account::class, [
 			'getUserId' => $userId
