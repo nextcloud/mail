@@ -69,6 +69,7 @@
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
 								:subtitle="option.email"
+								:icon-class="!option.id ? 'icon-user' : null"
 								:url="option.photo"
 								:avatar-size="24" />
 						</div>
@@ -126,6 +127,7 @@
 								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
+								:icon-class="!option.id ? 'icon-user' : null"
 								:avatar-size="24" />
 						</div>
 					</template>
@@ -176,6 +178,7 @@
 								:name="option.label"
 								:subtitle="option.email"
 								:url="option.photo"
+								:icon-class="!option.id ? 'icon-user' : null"
 								:avatar-size="24" />
 						</div>
 					</template>
