@@ -68,6 +68,8 @@ class SearchQuery {
 	/** @var bool */
 	private $hasAttachments = false;
 
+	private string $match = 'allof';
+
 	/**
 	 * @return int|null
 	 * @psalm-mutation-free
@@ -81,6 +83,14 @@ class SearchQuery {
 	 */
 	public function setCursor(int $cursor): void {
 		$this->cursor = $cursor;
+	}
+
+	public function getMatch(): string {
+		return $this->match;
+	}
+
+	public function setMatch(string $match): void {
+		$this->match = $match;
 	}
 
 	/**
