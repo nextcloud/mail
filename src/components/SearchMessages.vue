@@ -1,276 +1,306 @@
 <template>
-	<div class="search-messages">
-		<input v-model="query"
-			type="text"
-			class="search-messages--input"
-			:placeholder="t('mail', 'Search in mailbox')">
-		<NcButton v-if="filterChanged"
-			:aria-label="t('mail', 'Close')"
-			class="search-messages--close"
-			@click="resetFilter()">
-			<template #icon>
-				<Close :size="24" />
-			</template>
-		</NcButton>
-
-		<span v-if="filterChanged"
-			class="filter-changed" />
-
-		<NcActions>
-			<NcActionButton @click="moreSearchActions = true">
+	<div>
+		<div class="search-messages">
+			<input v-model="query"
+				type="text"
+				class="search-messages--input"
+				:placeholder="t('mail', 'Search in mailbox')"
+				@click="toggleButtons">
+			<NcButton v-if="filterChanged"
+				:aria-label="t('mail', 'Close')"
+				class="search-messages--close"
+				@click="resetFilter()">
 				<template #icon>
-					<Tune :size="20" />
+					<Close :size="24" />
 				</template>
-				{{ t("mail", "Search parameters") }}
-			</NcActionButton>
-		</NcActions>
-		<NcModal v-if="moreSearchActions"
-			:name="t('mail', 'Search parameters')"
-			class="search-modal"
-			@close="closeSearchModal">
-			<h2 class="modal-title">
-				{{ t('mail', 'Search in mailbox') }}
-			</h2>
-			<div class="modal-inner--content">
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="subjectId">
-						{{ t('mail','Subject') }}
-					</label>
-					<div class="modal-inner--container">
-						<input id="subjectId"
-							v-model="searchInSubject"
-							type="text"
-							class="search-input"
-							:placeholder="t('mail', 'Search subject')">
-					</div>
-				</div>
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="bodyId">
-						{{ t('mail','Body') }}
-					</label>
-					<div class="modal-inner--container">
-						<input id="bodyId"
-							v-model="searchInMessageBody"
-							type="text"
-							class="search-input"
-							:placeholder="t('mail', 'Search body')">
-					</div>
-				</div>
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t("mail", "Date") }}
-					</label>
-					<div class="modal-inner--container range">
-						<div class="modal-inner-inline">
-							<NcDateTimePicker v-model="startDate"
-								type="date"
-								:placeholder="t('mail', 'Pick a start date')"
-								confirm />
-						</div>
-						<div class="modal-inner-inline">
-							<NcDateTimePicker v-model="endDate"
-								type="date"
-								:disabled="startDate === null"
-								:placeholder="t('mail', 'Pick an end date')"
-								confirm />
+			</NcButton>
+
+			<span v-if="filterChanged"
+				class="filter-changed" />
+
+			<NcActions>
+				<NcActionButton @click="moreSearchActions = true">
+					<template #icon>
+						<Tune :size="20" />
+					</template>
+					{{ t("mail", "Search parameters") }}
+				</NcActionButton>
+			</NcActions>
+			<NcModal v-if="moreSearchActions"
+				:name="t('mail', 'Search parameters')"
+				class="search-modal"
+				@close="closeSearchModal">
+				<h2 class="modal-title">
+					{{ t('mail', 'Search in mailbox') }}
+				</h2>
+				<div class="modal-inner--content">
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="subjectId">
+							{{ t('mail','Subject') }}
+						</label>
+						<div class="modal-inner--container">
+							<input id="subjectId"
+								v-model="searchInSubject"
+								type="text"
+								class="search-input"
+								:placeholder="t('mail', 'Search subject')">
 						</div>
 					</div>
-				</div>
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t('mail', 'From') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcSelect id="fromId"
-							class="modal-inner--container__select"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInFrom"
-							:placeholder="t('mail', 'Select senders')"
-							:aria-label-combobox="t('mail', 'Select senders')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@option:selecting="addTag($event,'from')"
-							@search="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="bodyId">
+							{{ t('mail','Body') }}
+						</label>
+						<div class="modal-inner--container">
+							<input id="bodyId"
+								v-model="searchInMessageBody"
+								type="text"
+								class="search-input"
+								:placeholder="t('mail', 'Search body')">
+						</div>
 					</div>
-				</div>
-
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="toId">
-						{{ t('mail', 'To') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcSelect id="toId"
-							class="modal-inner--container__select"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInTo"
-							:placeholder="t('mail', 'Select recipients')"
-							:aria-label-combobox="t('mail', 'Select recipients')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@option:selecting="addTag($event,'to')"
-							@search="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="fromId">
+							{{ t('mail', 'Date') }}
+						</label>
+						<div class="modal-inner--container range">
+							<div class="modal-inner-inline">
+								<NcDateTimePicker v-model="startDate"
+									type="date"
+									:placeholder="t('mail', 'Pick a start date')"
+									confirm />
+							</div>
+							<div class="modal-inner-inline">
+								<NcDateTimePicker v-model="endDate"
+									type="date"
+									:disabled="startDate === null"
+									:placeholder="t('mail', 'Pick an end date')"
+									confirm />
+							</div>
+						</div>
 					</div>
-				</div>
-
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="ccId">
-						{{ t('mail', 'Cc') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcSelect id="ccId"
-							class="modal-inner--container__select"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInCc"
-							:placeholder="t('mail', 'Select CC recipients')"
-							:aria-label-combobox="t('mail', 'Select CC recipients')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@option:created="addTag($event,'cc')"
-							@search="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="fromId">
+							{{ t('mail', 'From') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="fromId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInFrom"
+								:placeholder="t('mail', 'Select senders')"
+								:aria-label-combobox="t('mail', 'Select senders')"
+								:multiple="true"
+								:taggable="true"
+								:close-on-select="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								:max="1"
+								@option:selecting="addTag($event,'from')"
+								@search="searchRecipients($event)" />
+						</div>
 					</div>
-				</div>
 
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="bccId">
-						{{ t('mail', 'Bcc') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcSelect id="bccId"
-							class="modal-inner--container__select"
-							label="label"
-							track-by="email"
-							:options="autocompleteRecipients"
-							:value="searchInBcc"
-							:placeholder="t('mail', 'Select BCC recipients')"
-							:aria-label-combobox="t('mail', 'Select BCC recipients')"
-							:multiple="true"
-							:taggable="true"
-							:close-on-select="true"
-							:show-no-options="false"
-							:preserve-search="true"
-							:max="1"
-							@option:created="addTag($event,'bcc')"
-							@search="searchRecipients($event)" />
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="toId">
+							{{ t('mail', 'To') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="toId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInTo"
+								:placeholder="t('mail', 'Select recipients')"
+								:aria-label-combobox="t('mail', 'Select recipients')"
+								:multiple="true"
+								:taggable="true"
+								:close-on-select="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								:max="1"
+								@option:selecting="addTag($event,'to')"
+								@search="searchRecipients($event)" />
+						</div>
 					</div>
-				</div>
 
-				<div v-if="tags.length > 0" class="modal-inner--field">
-					<label for="tagsId">
-						{{ t('mail', 'Tags') }}
-					</label>
-					<div class="modal-inner--container">
-						<NcSelect v-if="tags.length > 0"
-							id="tagsId"
-							v-model="selectedTags"
-							class="multiselect-search-tags "
-							:options="tags"
-							label="displayName"
-							:value="selectedTags"
-							:placeholder="t('mail', 'Select tags')"
-							:aria-label-combobox="t('mail', 'Select tags')"
-							track-by="displayName"
-							:multiple="true"
-							:auto-limit="false"
-							:close-on-select="false">
-							<template #selected-option="option">
-								<div class="tag-group__search">
-									<div class="tag-group__bg"
-										:style="
-											'background-color:' +
-												(option.color !== '#fff'
-													? option.color
-													: '#333')" />
-									<div class="tag-group__label"
-										:style="'color:' + option.color">
-										{{ option.displayName }}
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="ccId">
+							{{ t('mail', 'Cc') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="ccId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInCc"
+								:placeholder="t('mail', 'Select CC recipients')"
+								:aria-label-combobox="t('mail', 'Select CC recipients')"
+								:multiple="true"
+								:taggable="true"
+								:close-on-select="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								:max="1"
+								@option:created="addTag($event,'cc')"
+								@search="searchRecipients($event)" />
+						</div>
+					</div>
+
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="bccId">
+							{{ t('mail', 'Bcc') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect id="bccId"
+								class="modal-inner--container__select"
+								label="label"
+								track-by="email"
+								:options="autocompleteRecipients"
+								:value="searchInBcc"
+								:placeholder="t('mail', 'Select BCC recipients')"
+								:aria-label-combobox="t('mail', 'Select BCC recipients')"
+								:multiple="true"
+								:taggable="true"
+								:close-on-select="true"
+								:show-no-options="false"
+								:preserve-search="true"
+								:max="1"
+								@option:created="addTag($event,'bcc')"
+								@search="searchRecipients($event)" />
+						</div>
+					</div>
+
+					<div v-if="tags.length > 0" class="modal-inner--field">
+						<label for="tagsId">
+							{{ t('mail', 'Tags') }}
+						</label>
+						<div class="modal-inner--container">
+							<NcSelect v-if="tags.length > 0"
+								id="tagsId"
+								v-model="selectedTags"
+								class="multiselect-search-tags "
+								:options="tags"
+								label="displayName"
+								:value="selectedTags"
+								:placeholder="t('mail', 'Select tags')"
+								:aria-label-combobox="t('mail', 'Select tags')"
+								track-by="displayName"
+								:multiple="true"
+								:auto-limit="false"
+								:close-on-select="false">
+								<template #selected-option="option">
+									<div class="tag-group__search">
+										<div class="tag-group__bg"
+											:style="
+												'background-color:' +
+													(option.color !== '#fff'
+														? option.color
+														: '#333')" />
+										<div class="tag-group__label"
+											:style="'color:' + option.color">
+											{{ option.displayName }}
+										</div>
 									</div>
-								</div>
-							</template>
-							<template #option="option">
-								{{ option.displayName }}
-							</template>
-						</NcSelect>
-					</div>
-				</div>
-
-				<div class="modal-inner--field">
-					<label class="modal-inner--label" for="fromId">
-						{{ t('mail', 'Marked as') }}
-					</label>
-					<div class="modal-inner--container marked-as">
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
-								value="is_important"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Important') }}
-							</NcCheckboxRadioSwitch>
-						</div>
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
-								value="starred"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Favorite') }}
-							</NcCheckboxRadioSwitch>
-						</div>
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
-								value="unread"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Unread') }}
-							</NcCheckboxRadioSwitch>
-						</div>
-						<div class="modal-inner-inline">
-							<NcCheckboxRadioSwitch :checked.sync="searchFlags"
-								value="attachments"
-								name="flags[]"
-								type="checkbox">
-								{{ t('mail', 'Has attachments') }}
-							</NcCheckboxRadioSwitch>
+								</template>
+								<template #option="option">
+									{{ option.displayName }}
+								</template>
+							</NcSelect>
 						</div>
 					</div>
-				</div>
 
-				<div class="modal-inner-field--right">
-					<NcButton class="button-reset-filter"
-						:aria-label="t('mail', 'Clear')"
-						@click="resetFilter()">
-						<template #icon>
-							<Close :size="24" />
-						</template>
-						{{ t('mail', 'Clear') }}
-					</NcButton>
-					<NcButton type="primary"
-						:aria-label="t('mail', 'Search')"
-						@click="closeSearchModal()">
-						<template #icon>
-							<Magnify :size="24" />
-						</template>
-						{{ t('mail', 'Search') }}
-					</NcButton>
+					<div class="modal-inner--field">
+						<label class="modal-inner--label" for="fromId">
+							{{ t('mail', 'Marked as') }}
+						</label>
+						<div class="modal-inner--container marked-as">
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="is_important"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Important') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="starred"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Favorite') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="unread"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Unread') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="attachments"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Has attachments') }}
+								</NcCheckboxRadioSwitch>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-inner-field--right">
+						<NcButton class="button-reset-filter"
+							:aria-label="t('mail', 'Clear')"
+							@click="resetFilter()">
+							<template #icon>
+								<Close :size="24" />
+							</template>
+							{{ t('mail', 'Clear') }}
+						</NcButton>
+						<NcButton type="primary"
+							:aria-label="t('mail', 'Search')"
+							@click="closeSearchModal()">
+							<template #icon>
+								<Magnify :size="24" />
+							</template>
+							{{ t('mail', 'Search') }}
+						</NcButton>
+					</div>
 				</div>
-			</div>
-		</NcModal>
+			</NcModal>
+		</div>
+		<!-- Filter buttons -->
+		<div v-if="showButtons" class="filter-buttons">
+			<NcButton type="secondary"
+				class="shortcut"
+				:aria-label="t('mail', 'Has attachment')"
+				:pressed="hasAttachmentActive"
+				@update:pressed="hasAttachmentActive = !hasAttachmentActive"
+				@click="toggleGetAttachments">
+				{{ t('mail', 'Has attachment') }}
+			</NcButton>
+			<NcButton type="secondary"
+				class="shortcut"
+				:pressed="hasLast7daysActive"
+				:aria-label="t('mail', 'Last 7 days')"
+				@update:pressed="hasLast7daysActive = !hasLast7daysActive"
+				@click="toggleLastWeekFilter">
+				{{ t('mail', 'Last 7 days') }}
+			</NcButton>
+			<NcButton type="secondary"
+				class="shortcut"
+				:pressed="hasFromMeActive"
+				:aria-label="t('mail', 'From me')"
+				@update:pressed="hasFromMeActive = !hasFromMeActive"
+				@click="toggleCurrentUser">
+				{{ t('mail', 'From me') }}
+			</NcButton>
+		</div>
 	</div>
 </template>
 
@@ -322,6 +352,7 @@ export default {
 	},
 	data() {
 		return {
+			showButtons: false,
 			query: '',
 			debouncedSearchQuery: debouncePromise(this.sendQueryEvent, 700),
 			autocompleteRecipients: [],
@@ -334,7 +365,9 @@ export default {
 			searchInSubject: null,
 			searchInMessageBody: null,
 			searchFlags: [],
-			hasAttachments: false,
+			hasAttachmentActive: false,
+			hasLast7daysActive: false,
+			hasFromMeActive: false,
 			startDate: null,
 			endDate: null,
 		}
@@ -365,6 +398,9 @@ export default {
 		searchBody() {
 			return this.$store.getters.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.$store.getters.getPreference('search-priority-body', 'false') === 'true')
 		},
+		account() {
+			return this.$store.getters.getAccount(this.accountId)
+		},
 		filterData() {
 			return {
 				to: this.searchInTo !== null && this.searchInTo.length > 0 ? this.searchInTo[0].email : '',
@@ -377,7 +413,6 @@ export default {
 				flags: this.searchFlags.length > 0 ? this.searchFlags.map(item => item) : '',
 				start: this.prepareStart(),
 				end: this.prepareEnd(),
-				attachments: this.hasAttachments ? this.hasAttachments.toString() : '',
 			}
 		},
 		searchQuery() {
@@ -406,6 +441,48 @@ export default {
 		},
 	},
 	methods: {
+		toggleButtons() {
+			this.showButtons = !this.showButtons
+		},
+		toggleGetAttachments() {
+			if (this.hasAttachmentActive) {
+				this.searchFlags.push('attachments')
+			} else {
+				this.searchFlags = this.searchFlags.filter((flag) => flag !== 'attachments')
+			}
+			this.$nextTick(() => {
+				this.sendQueryEvent()
+			})
+		},
+		toggleCurrentUser() {
+			if (this.hasFromMeActive) {
+				this.searchInFrom = [{
+					email: this.account.emailAddress,
+					label: this.account.emailAddress,
+				}]
+			} else {
+				this.searchInFrom = null
+			}
+			this.$nextTick(() => {
+				this.sendQueryEvent()
+			})
+		},
+		toggleLastWeekFilter() {
+			if (this.hasLast7daysActive) {
+				const endDate = new Date()
+				const startDate = new Date()
+				startDate.setDate(startDate.getDate() - 7)
+
+				this.startDate = startDate
+				this.endDate = endDate
+			} else {
+				this.startDate = null
+				this.endDate = null
+			}
+			this.$nextTick(() => {
+				this.sendQueryEvent()
+			})
+		},
 		prepareStart() {
 			if (this.startDate !== null) {
 				if (this.endDate !== null && this.startDate > this.endDate) {
@@ -642,7 +719,7 @@ export default {
 	background: transparent !important;
 	border: none !important;
 	padding: 0 !important;
-	top: 5px
+	top: 6px;
 }
 
 .button-reset-filter {
@@ -661,5 +738,12 @@ export default {
 }
 .mx-datepicker {
 	width:100%;
+}
+.filter-buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px;
 }
 </style>
