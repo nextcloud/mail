@@ -38,7 +38,7 @@ class ImportantMailWidget extends MailWidget {
 	 * @inheritDoc
 	 */
 	public function getTitle(): string {
-		return $this->l10n->t('Important mail');
+		return $this->l10n->t('Important mails');
 	}
 
 	/**
