@@ -204,7 +204,7 @@ OC.L10N.register(
     "Encrypted message" : "Лист із шифруванням",
     "This message is unread" : "Це повідомлення не прочитано",
     "Unfavorite" : "Прибрати зірочку",
-    "Favorite" : "До улюблених",
+    "Favorite" : "Із зірочкою",
     "Unread" : "Непрочитане",
     "Read" : "Читати",
     "Unimportant" : "Неважливе",
