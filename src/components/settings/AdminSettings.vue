@@ -163,6 +163,21 @@
 			</article>
 		</div>
 		<div class="app-description">
+			<h3>{{ t('mail', 'Enable classification by importance by default') }}</h3>
+			<article>
+				<p>
+					{{ t('mail', 'The Mail app can classify incoming emails by importance using machine learning. This feature is enabled by default but can be disabled by default here. Individual users will still be able to toggle the feature for their accounts.') }}
+				</p>
+				<p>
+					<NcCheckboxRadioSwitch type="switch"
+						:checked="isImportanceClassificationEnabledByDefault"
+						@update:checked="setImportanceClassificationEnabledByDefault">
+						{{ t('mail', 'Enable classification of important mails by default') }}
+					</NcCheckboxRadioSwitch>
+				</p>
+			</article>
+		</div>
+		<div class="app-description">
 			<h3>
 				{{
 					t(
@@ -278,6 +293,7 @@ import {
 	updateAllowNewMailAccounts,
 	updateLlmEnabled,
 	updateEnabledSmartReply,
+	setImportanceClassificationEnabledByDefault,
 } from '../../service/SettingsService.js'
 
 const googleOauthClientId = loadState('mail', 'google_oauth_client_id', null) ?? undefined
@@ -340,7 +356,8 @@ export default {
 			isLlmSummaryConfigured: loadState('mail', 'enabled_llm_summary_backend'),
 			isLlmEnabled: loadState('mail', 'llm_processing', true),
 			isLlmFreePromptConfigured: loadState('mail', 'enabled_llm_free_prompt_backend'),
-
+			isClassificationEnabledByDefault: loadState('mail', 'llm_processing', true),
+			isImportanceClassificationEnabledByDefault: loadState('mail', 'importance_classification_default', true),
 		}
 	},
 	methods: {
@@ -399,6 +416,15 @@ export default {
 		},
 		async updateEnabledSmartReply(checked) {
 			await updateEnabledSmartReply(checked)
+		},
+		async setImportanceClassificationEnabledByDefault(enabledByDefault) {
+			try {
+				await setImportanceClassificationEnabledByDefault(enabledByDefault)
+				this.isImportanceClassificationEnabledByDefault = !this.isImportanceClassificationEnabledByDefault
+			} catch (error) {
+				showError(t('mail', 'Could not save default classification setting'))
+				logger.error('Could not save default classification setting', { error })
+			}
 		},
 	},
 }

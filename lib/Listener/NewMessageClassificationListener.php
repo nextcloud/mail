@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2024 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -27,11 +28,11 @@ namespace OCA\Mail\Listener;
 
 use Horde_Imap_Client;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
@@ -62,19 +63,18 @@ class NewMessageClassificationListener implements IEventListener {
 	/** @var IMailManager */
 	private $mailManager;
 
-	/** @var IUserPreferences */
-	private $preferences;
+	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(ImportanceClassifier $classifier,
 		TagMapper $tagMapper,
 		LoggerInterface $logger,
 		IMailManager $mailManager,
-		IUserPreferences $preferences) {
+		ClassificationSettingsService $classificationSettingsService) {
 		$this->classifier = $classifier;
 		$this->logger = $logger;
 		$this->tagMapper = $tagMapper;
 		$this->mailManager = $mailManager;
-		$this->preferences = $preferences;
+		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	public function handle(Event $event): void {
@@ -82,8 +82,7 @@ class NewMessageClassificationListener implements IEventListener {
 			return;
 		}
 
-		$allowTagging = $this->preferences->getPreference($event->getAccount()->getUserId(), 'tag-classified-messages');
-		if ($allowTagging === 'false') {
+		if (!$this->classificationSettingsService->isClassificationEnabled($event->getAccount()->getUserId())) {
 			return;
 		}
 

@@ -33,6 +33,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
@@ -116,6 +117,9 @@ class PageControllerTest extends TestCase {
 	/** @var ContainerInterface|MockObject */
 	private $container;
 
+	/** @var ClassificationSettingsService|MockObject */
+	private $classificationSettingsService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -139,6 +143,7 @@ class PageControllerTest extends TestCase {
 		$this->smimeService = $this->createMock(SmimeService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->container = $this->createMock(ContainerInterface::class);
+		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -161,6 +166,7 @@ class PageControllerTest extends TestCase {
 			$this->aiIntegrationsService,
 			$this->userManager,
 			$this->container,
+			$this->classificationSettingsService,
 		);
 	}
 
@@ -168,7 +174,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(9))
+		$this->preferences->expects($this->exactly(8))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -178,9 +184,12 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'collect-data', 'true', 'true'],
 				[$this->userId, 'search-priority-body', 'false', 'false'],
 				[$this->userId, 'start-mailbox-id', null, '123'],
-				[$this->userId, 'tag-classified-messages', 'true', 'true'],
 				[$this->userId, 'layout-mode', 'vertical-split', 'vertical-split'],
 			]);
+		$this->classificationSettingsService->expects(self::once())
+			->method('isClassificationEnabled')
+			->with($this->userId)
+			->willReturn(false);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
@@ -322,7 +331,7 @@ class PageControllerTest extends TestCase {
 			'app-version' => '1.2.3',
 			'collect-data' => 'true',
 			'start-mailbox-id' => '123',
-			'tag-classified-messages' => 'true',
+			'tag-classified-messages' => 'false',
 			'search-priority-body' => 'false',
 			'layout-mode' => 'vertical-split',
 		]);

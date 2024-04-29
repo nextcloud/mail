@@ -351,6 +351,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'settings#setImportanceClassificationEnabledByDefault',
+			'url' => '/api/settings/importance-classification-default',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'trusted_senders#setTrusted',
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'PUT'

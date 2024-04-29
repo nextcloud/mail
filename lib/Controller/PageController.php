@@ -35,6 +35,7 @@ use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
@@ -83,6 +84,7 @@ class PageController extends Controller {
 	private AiIntegrationsService $aiIntegrationsService;
 	private IUserManager $userManager;
 	private ?IAvailabilityCoordinator $availabilityCoordinator;
+	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -103,7 +105,8 @@ class PageController extends Controller {
 		SmimeService     $smimeService,
 		AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
-		ContainerInterface $container) {
+		ContainerInterface $container,
+		ClassificationSettingsService $classificationSettingsService) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -123,6 +126,7 @@ class PageController extends Controller {
 		$this->smimeService = $smimeService;
 		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
+		$this->classificationSettingsService = $classificationSettingsService;
 
 		// TODO: inject directly if support for nextcloud < 28 is dropped
 		try {
@@ -211,7 +215,7 @@ class PageController extends Controller {
 				'collect-data' => $this->preferences->getPreference($this->currentUserId, 'collect-data', 'true'),
 				'search-priority-body' => $this->preferences->getPreference($this->currentUserId, 'search-priority-body', 'false'),
 				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
-				'tag-classified-messages' => $this->preferences->getPreference($this->currentUserId, 'tag-classified-messages', 'true'),
+				'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',
