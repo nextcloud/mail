@@ -79,15 +79,8 @@ class ChainTest extends TestCase {
 		$expected->setStatus(LocalMessage::STATUS_PROCESSED);
 		$expected->setId(100);
 
-
-		$this->sentMailboxHandler->expects(self::any())
-			->method('setNext')
-			->withConsecutive(
-				[$this->antiAbuseHandler],
-				[$this->sentMailboxHandler],
-				[$this->copySentMessageHandler],
-				[$this->flagRepliedMessageHandler],
-			);
+		$this->sentMailboxHandler->expects(self::once())
+			->method('setNext');
 		$this->sentMailboxHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)
@@ -116,15 +109,8 @@ class ChainTest extends TestCase {
 		$expected->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 		$expected->setId(100);
 
-
-		$this->sentMailboxHandler->expects(self::any())
-			->method('setNext')
-			->withConsecutive(
-				[$this->antiAbuseHandler],
-				[$this->sentMailboxHandler],
-				[$this->copySentMessageHandler],
-				[$this->flagRepliedMessageHandler],
-			);
+		$this->sentMailboxHandler->expects(self::once())
+			->method('setNext');
 		$this->sentMailboxHandler->expects(self::once())
 			->method('process')
 			->with($account, $localMessage)

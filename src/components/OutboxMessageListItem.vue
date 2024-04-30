@@ -21,8 +21,7 @@
   -->
 
 <template>
-	<ListItem v-if="message.status !== statusImapSentMailboxFail()"
-		class="outbox-message"
+	<ListItem class="outbox-message"
 		:class="{ selected }"
 		:name="title"
 		:details="details"
@@ -34,7 +33,17 @@
 			{{ subjectForSubtitle }}
 		</template>
 		<template #actions>
-			<ActionButton :close-after-click="true"
+			<ActionButton v-if="message.status === statusImapSentMailboxFail()"
+				:close-after-click="true"
+				@click="sendMessageNow">
+				{{ t('mail', 'Copy to "Sent" Mailbox') }}
+				<template #icon>
+					<Copy :title="t('mail', 'Copy to Sent Mailbox')"
+						:size="20" />
+				</template>
+			</ActionButton>
+			<ActionButton v-if="message.status !== statusImapSentMailboxFail() && message.status !== statusSmtpError()"
+				:close-after-click="true"
 				@click="sendMessageNow">
 				{{ t('mail', 'Send now') }}
 				<template #icon>
@@ -45,36 +54,7 @@
 			<ActionButton :close-after-click="true"
 				@click="deleteMessage">
 				<template #icon>
-					<IconDelete :size="20" />
-				</template>
-				{{ t('mail', 'Delete') }}
-			</ActionButton>
-		</template>
-	</ListItem>
-	<ListItem v-else
-		class="outbox-message"
-		:name="title"
-		:class="{ selected }"
-		:details="details">
-		<template #icon>
-			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
-		</template>
-		<template #subtitle>
-			{{ subjectForSubtitle }}
-		</template>
-		<template slot="actions">
-			<ActionButton :close-after-click="true"
-				@click="sendMessageNow">
-				{{ t('mail', 'Copy to "Sent" Mailbox') }}
-				<template #icon>
-					<Send :title="t('mail', 'Copy to Sent Mailbox')"
-						:size="20" />
-				</template>
-			</ActionButton>
-			<ActionButton :close-after-click="true"
-				@click="deleteMessage">
-				<template #icon>
-					<IconDelete :size="20" />
+					<IconDelete :size="24" />
 				</template>
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
@@ -94,8 +74,11 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { matchError } from '../errors/match.js'
 import { html, plain } from '../util/text.js'
 import Send from 'vue-material-design-icons/Send.vue'
+import Copy from 'vue-material-design-icons/ContentCopy.vue'
 import {
+	STATUS_RAW,
 	STATUS_IMAP_SENT_MAILBOX_FAIL,
+	STATUS_SMTP_ERROR,
 	UNDO_DELAY,
 } from '../store/constants.js'
 
@@ -107,6 +90,7 @@ export default {
 		ActionButton,
 		IconDelete,
 		Send,
+		Copy,
 	},
 	mixins: [
 		OutboxAvatarMixin,
@@ -130,9 +114,11 @@ export default {
 			return formatter.format(recipients)
 		},
 		details() {
-			if (this.message.status === 11) {
+			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
 				return this.t('mail', 'Could not copy to "Sent" mailbox')
-			} else if (this.message.status !== 0) {
+			} else if (this.message.status === STATUS_SMTP_ERROR) {
+				return this.t('mail', 'Mail server error')
+			} else if (this.message.status !== STATUS_RAW) {
 				return this.t('mail', 'Message could not be sent')
 			}
 			if (!this.message.sendAt) {
@@ -154,6 +140,9 @@ export default {
 	methods: {
 		statusImapSentMailboxFail() {
 			return STATUS_IMAP_SENT_MAILBOX_FAIL
+		},
+		statusSmtpError() {
+			return STATUS_SMTP_ERROR
 		},
 		async deleteMessage() {
 			try {
@@ -191,7 +180,7 @@ export default {
 			}
 		},
 		async openModal() {
-			if (this.message.status === 11) {
+			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
 				return
 			}
 			await this.$store.dispatch('startComposerSession', {
