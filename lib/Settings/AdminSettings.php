@@ -30,6 +30,7 @@ use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AntiSpamService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
@@ -53,6 +54,7 @@ class AdminSettings implements ISettings {
 	private MicrosoftIntegration $microsoftIntegration;
 	private IConfig $config;
 	private AiIntegrationsService $aiIntegrationsService;
+	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(IInitialStateService $initialStateService,
 		ProvisioningManager $provisioningManager,
@@ -60,7 +62,8 @@ class AdminSettings implements ISettings {
 		GoogleIntegration $googleIntegration,
 		MicrosoftIntegration $microsoftIntegration,
 		IConfig $config,
-		AiIntegrationsService $aiIntegrationsService) {
+		AiIntegrationsService $aiIntegrationsService,
+		ClassificationSettingsService $classificationSettingsService) {
 		$this->initialStateService = $initialStateService;
 		$this->provisioningManager = $provisioningManager;
 		$this->antiSpamService = $antiSpamService;
@@ -68,6 +71,7 @@ class AdminSettings implements ISettings {
 		$this->microsoftIntegration = $microsoftIntegration;
 		$this->config = $config;
 		$this->aiIntegrationsService = $aiIntegrationsService;
+		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	public function getForm() {
@@ -142,6 +146,12 @@ class AdminSettings implements ISettings {
 			Application::APP_ID,
 			'microsoft_oauth_redirect_url',
 			$this->microsoftIntegration->getRedirectUrl(),
+		);
+
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'importance_classification_default',
+			$this->classificationSettingsService->isClassificationEnabledByDefault(),
 		);
 
 		return new TemplateResponse(Application::APP_ID, 'settings-admin');

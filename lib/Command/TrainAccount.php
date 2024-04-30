@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2024 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -25,8 +26,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -42,19 +43,19 @@ class TrainAccount extends Command {
 
 	private AccountService $accountService;
 	private ImportanceClassifier $classifier;
-	private IUserPreferences $preferences;
 	private LoggerInterface $logger;
+	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(AccountService $service,
 		ImportanceClassifier $classifier,
-		IUserPreferences $preferences,
+		ClassificationSettingsService $classificationSettingsService,
 		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
 		$this->classifier = $classifier;
 		$this->logger = $logger;
-		$this->preferences = $preferences;
+		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
 	/**
@@ -78,7 +79,7 @@ class TrainAccount extends Command {
 			$output->writeln("<error>account $accountId does not exist</error>");
 			return 1;
 		}
-		if ($this->preferences->getPreference($account->getUserId(), 'tag-classified-messages') === 'false') {
+		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
 			$output->writeln("<info>classification is turned off for account $accountId</info>");
 			return 2;
 		}

@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2024 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license AGPL-3.0-or-later
  *
@@ -93,4 +94,15 @@ export const updateEnabledSmartReply = async (enabled) => {
 	}
 	const resp = await axios.put(url, data)
 	return resp.data
+}
+
+/**
+ * @param {boolean} enabledByDefault
+ * @return {Promise<void>}
+ */
+export const setImportanceClassificationEnabledByDefault = async (enabledByDefault) => {
+	const url = generateUrl('/apps/mail/api/settings/importance-classification-default')
+	await axios.put(url, {
+		enabledByDefault,
+	})
 }
