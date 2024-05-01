@@ -202,6 +202,7 @@ OC.L10N.register(
     "Tags" : "Etiquetes",
     "Select tags" : "Seleicionar etiquetes",
     "Clear" : "Borrar",
+    "Last 7 days" : "Los últimos 7 díes",
     "Disabled" : "Desactivóse",
     "Enabled" : "Activóse",
     "Sieve Host" : "Agospiador de sieve",
