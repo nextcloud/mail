@@ -448,7 +448,7 @@ OC.L10N.register(
     "Place signature above quoted text" : "Coloque a sinatura enriba do texto citado",
     "Edit name or color" : "Edita o nome ou a cor",
     "Saving new tag name …" : "Gardando o nome da nova etiqueta…",
-    "Delete tag" : "Eliminar etiqueta",
+    "Delete tag" : "Eliminar a etiqueta",
     "Set tag" : "Poñer etiquetas",
     "Unset tag" : "Desactivar a etiqueta",
     "An error occurred, unable to rename the tag." : "Produciuse un erro, non é posíbel cambiar o nome da etiqueta.",
