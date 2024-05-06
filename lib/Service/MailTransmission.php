@@ -122,6 +122,10 @@ class MailTransmission implements IMailTransmission {
 			$headers['In-Reply-To'] = $inReplyTo;
 		}
 
+		if ($localMessage->getRequestMdn()) {
+			$headers[Horde_Mime_Mdn::MDN_HEADER] = $from->first()->toHorde();
+		}
+
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 

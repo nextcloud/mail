@@ -217,6 +217,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
+		$message->setRequestMdn(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -264,6 +265,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
+		$message->setRequestMdn(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
@@ -298,7 +300,8 @@ class DraftsControllerTest extends TestCase {
 			$message->getInReplyToMessageId(),
 			null,
 			null,
-			1
+			1,
+			false
 		);
 
 		$this->assertEquals($expected, $actual);
@@ -316,6 +319,7 @@ class DraftsControllerTest extends TestCase {
 		$message->setType(LocalMessage::TYPE_DRAFT);
 		$message->setSendAt(null);
 		$message->setUpdatedAt(123456);
+		$message->setRequestMdn(false);
 
 		$account = new Account(new MailAccount());
 		$this->accountService->expects(self::once())
