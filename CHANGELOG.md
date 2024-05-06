@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.7.0 - unreleased
+
+### Added
+* Global setting to turn off email classification for the priority inbox
+* Quick filters
+* Nextcloud 30 support
+### Changed
+* Updated dependencies
+### Removed
+* Nextcloud 26 support (EOL)
+### Fixed
+* Indeterminate SMTP errors
+* File picker
+* Avatar flickering in composer
+* Background job memory usage
+* File picker accessibility
+* Setup view styling
+
 ## 3.6.0 – unreleased
 ### Added
 * Selection of untrusted S/MIME certificates
