@@ -322,6 +322,8 @@
     "Unnamed" : "Unbenannt",
     "Embedded message" : "Eingebettete Nachricht",
     "Next week – {timeLocale}" : "Nächste Woche – {timeLocale}",
+    "Attachment saved to Files" : "Anhang wurde in Dateien gespeichert",
+    "Attachment could not be saved" : "Anhang konnte nicht gespeichert werden",
     "calendar imported" : "Kalender importiert",
     "View fewer attachments" : "Weniger Anhänge anzeigen",
     "Save all to Files" : "Alles unter Dateien sichern",

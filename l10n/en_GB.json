@@ -322,6 +322,8 @@
     "Unnamed" : "Unnamed",
     "Embedded message" : "Embedded message",
     "Next week – {timeLocale}" : "Next week – {timeLocale}",
+    "Attachment saved to Files" : "Attachment saved to Files",
+    "Attachment could not be saved" : "Attachment could not be saved",
     "calendar imported" : "calendar imported",
     "View fewer attachments" : "View fewer attachments",
     "Save all to Files" : "Save all to Files",

@@ -322,6 +322,8 @@
     "Unnamed" : "بدون اسم",
     "Embedded message" : "رسالة مُضمّنة",
     "Next week – {timeLocale}" : "الأسبوع القادم – {timeLocale}",
+    "Attachment saved to Files" : "تمّ حفظ المُرفَق في \"الملفات\" FILES",
+    "Attachment could not be saved" : "تعذّر حِفظ المُرفَق ",
     "calendar imported" : "تمّ استيراد التقويم",
     "View fewer attachments" : "أرنِي مُرفَقَاتٍ أقل",
     "Save all to Files" : "حفظ الجميع في الملفات Files",

@@ -324,6 +324,8 @@ OC.L10N.register(
     "Unnamed" : "未命名",
     "Embedded message" : "內嵌郵件",
     "Next week – {timeLocale}" : "下星期 – {timeLocale}",
+    "Attachment saved to Files" : "附件已儲存至檔案",
+    "Attachment could not be saved" : "無法儲存附件",
     "calendar imported" : "已導入日曆",
     "View fewer attachments" : "檢視較少附件",
     "Save all to Files" : "全部儲存至檔案",

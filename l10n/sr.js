@@ -324,6 +324,8 @@ OC.L10N.register(
     "Unnamed" : "Неименовано",
     "Embedded message" : "Уграђена порука",
     "Next week – {timeLocale}" : "Наредне недеље – {timeLocale}",
+    "Attachment saved to Files" : "Прилог је сачуван у апликацији Фајлови",
+    "Attachment could not be saved" : "Прилог не може да се сачува",
     "calendar imported" : "календар је увезен",
     "View fewer attachments" : "Прикажи мање прилога",
     "Save all to Files" : "Сачувај све у фајлове",
