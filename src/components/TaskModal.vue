@@ -35,13 +35,13 @@
 				</label>
 			</div>
 			<!-- FIXME: is broken due to upstream select component serializing options to JSON -->
-			<NcSelect v-model="selectedCalendar"
+			<NcSelect v-model="selectedCalendarChoice"
 				label="displayname"
 				input-id="url"
 				:placeholder="t('mail', 'Select calendar')"
 				:aria-label-combobox="t('mail', 'Select calendar')"
 				:allow-empty="false"
-				:options="calendars">
+				:options="calendarChoices">
 				<template #option="{ id }">
 					<CalendarPickerOption :color="getCalendarById(id).color"
 						:displayname="getCalendarById(id).displayname" />
@@ -102,7 +102,7 @@ export default {
 			startTimezoneId: defaultTimezoneId,
 			endTimezoneId: defaultTimezoneId,
 			saving: false,
-			selectedCalendar: undefined,
+			selectedCalendarChoice: undefined,
 			note: this.envelope.previewText,
 		}
 	},
@@ -120,7 +120,21 @@ export default {
 			return this.$store.getters.getAllTags
 		},
 		calendars() {
-			return this.$store.getters.getTaskCalendarsForCurrentUser.map(calendar => ({ id: calendar.id, color: calendar.color, displayname: calendar.displayname }))
+			return this.$store.getters.getTaskCalendarsForCurrentUser
+		},
+		calendarChoices() {
+			return this.calendars.map(calendar => ({
+				id: calendar.id,
+				color: calendar.color,
+				displayname: calendar.displayname,
+			}))
+		},
+		selectedCalendar() {
+			if (!this.selectedCalendarChoice) {
+				return undefined
+			}
+
+			return this.calendars.find((cal) => cal.id === this.selectedCalendarChoice.id)
 		},
 	},
 	created() {
@@ -129,9 +143,8 @@ export default {
 		})
 	},
 	async mounted() {
-
 		if (this.calendars.length) {
-			this.selectedCalendar = this.calendars[0]
+			this.selectedCalendarChoice = this.calendarChoices[0]
 		}
 	},
 	methods: {
