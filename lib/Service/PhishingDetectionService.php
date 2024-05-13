@@ -42,16 +42,6 @@ class PhishingDetectionService {
 		$this->contactIntegration = $contactIntegration;
 	}
 
-
-
-	private function checkSpf(ReceivedList $list, string $from): array {
-		$result = [];
-		foreach($list->iterate() as $received) {
-			$result[] = $received->jsonSpfCheck($from);
-		}
-		return $result;
-	}
-
 	private function checkDatePass(string $date): bool {
 		$now = new DateTime();
 		$dt = new DateTime($date);
@@ -61,6 +51,19 @@ class PhishingDetectionService {
 		return $dt < $now;
 	}
 
+	private function replyToCheckPass(string $fromEmail, string $replyToEmail): bool {
+		if($replyToEmail !== $fromEmail){
+			$this->warn = true;
+		}
+		return $replyToEmail === $fromEmail;
+	}
+
+	private function customEmailCheck(string $fromEmail, string $customEmail): bool {
+		if($customEmail !== $fromEmail){
+			$this->warn = true;
+		}
+		return $customEmail === $fromEmail;
+	}
 
 
 	private function contactsCheckPass(string $fn, string $email):bool {
@@ -86,17 +89,13 @@ class PhishingDetectionService {
 		$result = [];
 		$fromFN = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getLabel();
 		$fromEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getEmail();
-		$customEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getCustomEmail();
-		$contactCheck = $this->contactsCheckPass($fromFN, $fromEmail);
-		$result['contactCheck'] = $contactCheck;
-		$receivedList = ReceivedList::fromHorde($headers->getHeader('Received'));
-		$result['spfCheck'] = $this->checkSpf($receivedList, $fromEmail);
+		$replyToEmail = AddressList::fromHorde($headers->getHeader('Reply-To')->getAddressList(true))->first()->getEmail();
 		$date = $headers->getHeader('Date')->__get('value');
+		$customEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getCustomEmail();
+		$result['replyTo'] =$this->replyToCheckPass($fromEmail, $replyToEmail);
+		$result['contactCheck'] = $this->contactsCheckPass($fromFN, $fromEmail);
 		$result['dateCheck'] = $this->checkDatePass($date);
-		if($customEmail !== $fromEmail) {
-			$this->warn = true;
-		}
-		$result['customEmailCheck'] = $customEmail === $fromEmail;
+		$result['customEmailCheck'] = $this->customEmailCheck($fromEmail, $customEmail);
 		$result['warn'] = $this->warn;
 		return $result;
 	}
