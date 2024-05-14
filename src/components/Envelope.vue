@@ -686,7 +686,7 @@ export default {
 			this.$emit('update:selected', !this.selected)
 		},
 		async onClick(event) {
-			if (this.draft && event.defaultPrevented) {
+			if (!event.ctrlKey && this.draft && !event.defaultPrevented) {
 				await this.$store.dispatch('startComposerSession', {
 					data: {
 						...this.data,
