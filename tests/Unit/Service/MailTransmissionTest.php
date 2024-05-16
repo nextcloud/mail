@@ -264,9 +264,6 @@ class MailTransmissionTest extends TestCase {
 		$messageData = NewMessageData::fromRequest($account, 'sub', 'bod', 'to@d.com', '', '');
 		$message = new Message();
 
-		$account->expects($this->once())
-			->method('newMessage')
-			->willReturn($message);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')

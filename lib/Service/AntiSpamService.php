@@ -37,6 +37,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
+use OCA\Mail\Model\Message;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -110,7 +111,7 @@ class AntiSpamService {
 			throw new ServiceException('Could not find sent mailbox');
 		}
 
-		$message = $account->newMessage();
+		$message = new Message();
 		$from = new AddressList([
 			Address::fromRaw($account->getName(), $account->getEMailAddress()),
 		]);

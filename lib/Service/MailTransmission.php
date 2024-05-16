@@ -55,6 +55,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\Model\Message as ModelMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Service\DataUri\DataUriParser;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -171,7 +172,7 @@ class MailTransmission implements IMailTransmission {
 
 		$perfLogger = $this->performanceLogger->start('save local draft');
 
-		$imapMessage = $account->newMessage();
+		$imapMessage = new ModelMessage();
 		$imapMessage->setTo($to);
 		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
@@ -257,7 +258,7 @@ class MailTransmission implements IMailTransmission {
 		$perfLogger->step('emit pre event');
 
 		$account = $message->getAccount();
-		$imapMessage = $account->newMessage();
+		$imapMessage = new ModelMessage();
 		$imapMessage->setTo($message->getTo());
 		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([

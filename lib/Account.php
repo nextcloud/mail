@@ -42,8 +42,6 @@ use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Model\IMessage;
-use OCA\Mail\Model\Message;
 use OCA\Mail\Service\Quota;
 use OCP\ICacheFactory;
 use OCP\IConfig;
@@ -201,15 +199,6 @@ class Account implements JsonSerializable {
 	 */
 	public function getUserId() {
 		return $this->account->getUserId();
-	}
-
-	/**
-	 * Factory method for creating new messages
-	 *
-	 * @return IMessage
-	 */
-	public function newMessage() {
-		return new Message();
 	}
 
 	/**
