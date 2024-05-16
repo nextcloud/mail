@@ -94,8 +94,8 @@
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
-							:max="1"
 							@option:selecting="addTag($event,'from')"
+							@option:deselecting="removeTag($event,'from')"
 							@search="searchRecipients($event)" />
 					</div>
 				</div>
@@ -118,8 +118,8 @@
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
-							:max="1"
 							@option:selecting="addTag($event,'to')"
+							@option:deselecting="removeTag($event,'to')"
 							@search="searchRecipients($event)" />
 					</div>
 				</div>
@@ -142,8 +142,8 @@
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
-							:max="1"
-							@option:created="addTag($event,'cc')"
+							@option:selecting="addTag($event,'cc')"
+							@option:deselecting="removeTag($event,'cc')"
 							@search="searchRecipients($event)" />
 					</div>
 				</div>
@@ -166,8 +166,8 @@
 							:close-on-select="true"
 							:show-no-options="false"
 							:preserve-search="true"
-							:max="1"
-							@option:created="addTag($event,'bcc')"
+							@option:selecting="addTag($event,'bcc')"
+							@option:deselecting="removeTag($event,'bcc')"
 							@search="searchRecipients($event)" />
 					</div>
 				</div>
@@ -327,10 +327,10 @@ export default {
 			autocompleteRecipients: [],
 			selectedTags: [],
 			moreSearchActions: false,
-			searchInFrom: null,
-			searchInTo: null,
-			searchInCc: null,
-			searchInBcc: null,
+			searchInFrom: [],
+			searchInTo: [],
+			searchInCc: [],
+			searchInBcc: [],
 			searchInSubject: null,
 			searchInMessageBody: null,
 			searchFlags: [],
@@ -367,10 +367,10 @@ export default {
 		},
 		filterData() {
 			return {
-				to: this.searchInTo !== null && this.searchInTo.length > 0 ? this.searchInTo[0].email : '',
-				from: this.searchInFrom !== null && this.searchInFrom.length > 0 ? this.searchInFrom[0].email : '',
-				cc: this.searchInCc !== null && this.searchInCc.length > 0 ? this.searchInCc[0].email : '',
-				bcc: this.searchInBcc !== null && this.searchInBcc.length > 0 ? this.searchInBcc[0].email : '',
+				to: this.searchInTo.length > 0 ? this.searchInTo.map(address => address.email) : null,
+				from: this.searchInFrom.length > 0 ? this.searchInFrom.map(address => address.email) : null,
+				cc: this.searchInCc.length > 0 ? this.searchInCc.map(address => address.email) : null,
+				bcc: this.searchInBcc.length > 0 ? this.searchInBcc.map(address => address.email) : null,
 				subject: this.searchInSubject !== null && this.searchInSubject.length > 1 ? this.searchInSubject : '',
 				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
 				tags: this.selectedTags.length > 0 ? this.selectedTags.map(item => item.id) : '',
@@ -383,7 +383,11 @@ export default {
 		searchQuery() {
 			let _search = ''
 			Object.entries(this.filterData).filter(([key, val]) => {
-				if (key === 'body') {
+				if (['to', 'from', 'cc', 'bcc'].includes(key)) {
+					val?.forEach((address) => {
+						_search += `${key}:${encodeURI(address)} `
+					})
+				} else if (key === 'body') {
 					val.split(' ').forEach((word) => {
 						if (word !== '' && val !== null) {
 							_search += `${key}:${encodeURI(word)} `
@@ -443,10 +447,10 @@ export default {
 			this.query = ''
 			this.selectedTags = []
 			this.moreSearchActions = false
-			this.searchInFrom = null
-			this.searchInTo = null
-			this.searchInCc = null
-			this.searchInBcc = null
+			this.searchInFrom = []
+			this.searchInTo = []
+			this.searchInCc = []
+			this.searchInBcc = []
 			this.searchInSubject = null
 			this.searchInMessageBody = null
 			this.searchFlags = []
@@ -458,20 +462,42 @@ export default {
 			}
 		},
 		addTag(tag, type) {
+			if (typeof tag === 'string') {
+				tag = { email: tag, label: tag }
+			}
 			switch (type) {
 			case 'to':
-				this.searchInTo = tag
+				this.searchInTo.push(tag)
 				break
 			case 'from':
-				this.searchInFrom = tag
+				this.searchInFrom.push(tag)
 				break
 			case 'cc':
-				this.searchInCc = tag
+				this.searchInCc.push(tag)
 				break
 			case 'bcc':
-				this.searchInBcc = tag
+				this.searchInBcc.push(tag)
 				break
 			}
+		},
+		removeTag(tag, type) {
+			switch (type) {
+			case 'to':
+				this.searchInTo = this.removeAddress(tag, this.searchInTo)
+				break
+			case 'from':
+				this.searchInFrom = this.removeAddress(tag, this.searchInFrom)
+				break
+			case 'cc':
+				this.searchInCc = this.removeAddress(tag, this.searchInCc)
+				break
+			case 'bcc':
+				this.searchInBcc = this.removeAddress(tag, this.searchInBcc)
+				break
+			}
+		},
+		removeAddress(tag, addresses) {
+			return addresses.filter((address) => address.email !== tag.email)
 		},
 	},
 }
