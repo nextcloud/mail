@@ -65,6 +65,7 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\TrustedSenderService;
 use OCA\Mail\Service\UserPreferenceService;
+use OCA\Mail\Provider\MailProvider;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -161,6 +162,9 @@ class Application extends App implements IBootstrap {
 		} else {
 			$context->registerSearchProvider(Provider::class);
 		}
+
+		// register mail provider
+		$context->registerMailProvider(MailProvider::class);
 
 		$context->registerNotifierService(Notifier::class);
 
