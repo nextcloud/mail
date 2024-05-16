@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.6.1 – 2024-05-16
+### Fixed
+- Searching mailbox by address
+- Creating tasks from emails
+- Url generation
+- Saving attachments to files
+- Threading garbage collection
+
 ## 3.6.0 – 2024-04-22
 ### Added
 * Selection of untrusted S/MIME certificates
