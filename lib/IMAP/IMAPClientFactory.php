@@ -28,6 +28,7 @@ use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Cache\Cache;
+use OCA\Mail\Cache\NewCache;
 use OCA\Mail\Events\BeforeImapClientCreated;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -35,6 +36,8 @@ use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\IMemcache;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
+
 use function hash;
 use function implode;
 use function json_encode;
@@ -127,7 +130,8 @@ class IMAPClientFactory {
 		);
 		if ($useCache && $this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
-				'backend' => new Cache([
+				'backend' => new NewCache([
+					'logger' => \OC::$server->get(LoggerInterface::class),
 					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
 				])];
 		} else {
