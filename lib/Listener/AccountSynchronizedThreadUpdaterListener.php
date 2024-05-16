@@ -34,6 +34,7 @@ use OCA\Mail\IMAP\Threading\ThreadBuilder;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use function array_chunk;
+use function gc_collect_cycles;
 use function iterator_to_array;
 
 /**
@@ -79,6 +80,10 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 
 			$logger->debug("Chunk of " . self::WRITE_IDS_CHUNK_SIZE . " messages updated");
 		}
+
+		// Free memory
+		unset($flattened, $threads, $messages);
+		gc_collect_cycles();
 	}
 
 	/**
