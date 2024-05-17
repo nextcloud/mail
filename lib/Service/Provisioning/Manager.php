@@ -319,7 +319,7 @@ class Manager {
 	/**
 	 * @param Provisioning[] $provisionings
 	 */
-	public function updatePassword(IUser $user, string $password, array $provisionings): void {
+	public function updatePassword(IUser $user, ?string $password, array $provisionings): void {
 		try {
 			$account = $this->mailAccountMapper->findProvisionedAccount($user);
 
@@ -327,11 +327,18 @@ class Manager {
 			if ($provisioning === null) {
 				return;
 			}
-			$masterPassword = $provisioning->getMasterPassword();
-			$masterPasswordEnabled = $provisioning->getMasterPasswordEnabled();
-			if ($masterPasswordEnabled && $masterPassword !== null) {
-				$password = $masterPassword;
+
+			// FIXME: Need to check for an empty string here too?
+			// The password is empty (and not null) when using WebAuthn passwordless login.
+			// Maybe research other providers as well.
+			// Ref \OCA\Mail\Controller\PageController::index()
+			//     -> inital state for password-is-unavailable
+			if ($provisioning->getMasterPasswordEnabled() === true && $provisioning->getMasterPassword() !== null) {
+				$password = $provisioning->getMasterPassword();
 				$this->logger->debug('Password set to master password for ' . $user->getUID());
+			} else if ($password === null) {
+				$this->logger->debug('No password set for ' . $user->getUID());
+				return;
 			}
 
 			if (!empty($account->getInboundPassword())

@@ -235,7 +235,7 @@ class ManagerTest extends TestCase {
 		$this->manager->updatePassword($user, '123456', [$config]);
 	}
 
-	public function testUpdateMasterPassword(): void {
+	public function testUpdateMasterPasswordWithExistingLoginPassword(): void {
 		/** @var IUser|MockObject $user */
 		$user = $this->createMock(IUser::class);
 		$account = $this->createMock(MailAccount::class);
@@ -258,6 +258,31 @@ class ManagerTest extends TestCase {
 			->with($account);
 
 		$this->manager->updatePassword($user, '123456', [$config]);
+	}
+
+	public function testUpdateMasterPasswordWithoutLoginPassword(): void {
+		/** @var IUser|MockObject $user */
+		$user = $this->createMock(IUser::class);
+		$account = $this->createMock(MailAccount::class);
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('findProvisionedAccount')
+			->willReturn($account);
+		$config = new Provisioning();
+		$config->setProvisioningDomain(Provisioning::WILDCARD);
+		$config->setMasterPasswordEnabled(true);
+		$config->setMasterPassword('topsecret');
+		$this->mock->getParameter('crypto')
+			->expects(self::atLeast(1))
+			->method('encrypt')
+			->with('topsecret')
+			->willReturn('tercespot');
+		$this->mock->getParameter('mailAccountMapper')
+			->expects($this->once())
+			->method('update')
+			->with($account);
+
+		$this->manager->updatePassword($user, null, [$config]);
 	}
 
 	public function testNewProvisioning(): void {
