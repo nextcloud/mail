@@ -324,6 +324,8 @@ OC.L10N.register(
     "Unnamed" : "Adsız",
     "Embedded message" : "Gömülü ileti",
     "Next week – {timeLocale}" : "Gelecek hafta – {timeLocale}",
+    "Attachment saved to Files" : "Ek dosya Dosyalar uygulamasına kaydedildi.",
+    "Attachment could not be saved" : "Ek dosya kaydedilemedi",
     "calendar imported" : "takvim içe aktarıldı",
     "View fewer attachments" : "Daha az ek dosya görüntüle",
     "Save all to Files" : "Tümünü dosyalara kaydet",
