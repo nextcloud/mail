@@ -28,74 +28,162 @@ namespace OCA\Mail\Service;
 use DateTime;
 use Horde_Mime_Headers;
 use OCA\Mail\AddressList;
-use OCA\Mail\ReceivedList;
+use OCA\Mail\Contracts\ITrustedSenderService;
 
 class PhishingDetectionService {
 
 
 	private ContactsIntegration $contactIntegration;
 
+	private ITrustedSenderService $trustedSenderService;
+
+
 	private bool $warn = false;
 
 
-	public function __construct(ContactsIntegration $contactIntegration) {
+	public function __construct(ContactsIntegration $contactIntegration, ITrustedSenderService $trustedSenderService) {
 		$this->contactIntegration = $contactIntegration;
+		$this->trustedSenderService = $trustedSenderService;
 	}
 
-	private function checkDatePass(string $date): bool {
+	private function checkDatePass(string $date): array {
 		$now = new DateTime();
 		$dt = new DateTime($date);
 		if($dt > $now) {
 			$this->warn = true;
+			return ["check" => false , "message" => "Sent date is in the future"];
 		}
-		return $dt < $now;
+		return ["check" => $dt < $now ];
 	}
 
-	private function replyToCheckPass(string $fromEmail, string $replyToEmail): bool {
-		if($replyToEmail !== $fromEmail){
+	private function replyToCheckPass(string $fromEmail, ?string $replyToEmail): array {
+		if(!(isset($replyToEmail))) {
+			return ["check" => true];
+		}
+		if($replyToEmail !== $fromEmail) {
 			$this->warn = true;
 		}
-		return $replyToEmail === $fromEmail;
+		return ["check" => false , "message" => "Reply-To email: ${$replyToEmail} is different from the sender email: ${$fromEmail}"];
 	}
 
-	private function customEmailCheck(string $fromEmail, string $customEmail): bool {
-		if($customEmail !== $fromEmail){
+	private function customEmailCheck(string $fromEmail, ?string $customEmail): array {
+		if(!(isset($customEmail))) {
+			return ["check" => true];
+		}
+		if($customEmail !== $fromEmail) {
 			$this->warn = true;
 		}
-		return $customEmail === $fromEmail;
+		return ["check" => false , "message" => "Sender is using a custom email: ${$customEmail} instead of the sender email: ${$fromEmail}"] ;
 	}
 
 
-	private function contactsCheckPass(string $fn, string $email):bool {
+	private function contactsCheckPass(string $fn, string $email):array {
 		$emailInContacts = false;
+		$emails = "";
 		$contacts = $this->contactIntegration->getContactsWithName($fn, true);
 		foreach ($contacts as $contact) {
 			foreach ($contact['email'] as $contactEmail) {
 				$emailInContacts = true;
+				$emails .= $contactEmail.",";
 				if ($contactEmail === $email) {
-					return true;
+					return ["check" => true];
 				}
 			}
 		}
 		if ($emailInContacts) {
 			$this->warn = true;
-			return false;
+			return ["check" => false, "message" => "Sender email: ${$email} is not in the contacts list, but the sender name: ${$fn} is in the contacts list with the following emails: ${$emails}"];
 		}
-		return true;
+		return ["check" => true];
+	}
+
+	private function checkTrusted(string $uid, string $email): array {
+		$domain = explode('@', $email)[1];
+		$trusted = $this->trustedSenderService->isTrusted($uid, $email) || $this->trustedSenderService->isTrusted($uid, $domain);
+
+		if(!$trusted) {
+			$this->warn = true;
+			return ["check" => false, "message" => "Sender email: ${$email} is not trusted"];
+		}
+		return ["check" => true];
+	}
+
+	private function isLink(string $text): bool {
+		$pattern = '/^(https?:\/\/|www\.|[a-zA-Z0-9-]+\.[a-zA-Z]{2,})/i';
+
+		return preg_match($pattern, $text) === 1;
+	}
+
+	private function getInnerText(\DOMElement $node) : string {
+		$innerText = '';
+		foreach ($node->childNodes as $child) {
+			if ($child->nodeType === XML_TEXT_NODE) {
+				$innerText .= $child->nodeValue;
+			} elseif ($child->nodeType === XML_ELEMENT_NODE) {
+				$innerText .= $this->getInnerText($child);
+			}
+		}
+		return $innerText;
+	}
+
+	private function parseAnchorTags(string $htmlMessage): array {
+
+		$results = [];
+		$zippedArray = [];
+
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors(true);
+		$dom->loadHTML($htmlMessage);
+		libxml_use_internal_errors();
+		$anchors = $dom->getElementsByTagName('a');
+		foreach ($anchors as $anchor) {
+			$href = $anchor->getAttribute('href');
+			$linkText = $this->getInnerText($anchor);
+			$zippedArray[] = [
+				'href' => $href,
+				'linkText' => $linkText
+			];
+		}
+		foreach ($zippedArray as $zipped) {
+			if($this->isLink($zipped['linkText'])) {
+				if (str_contains($zipped['linkText'], $zipped['href']) === false) {
+					$results[] = [
+						'href' => $zipped['href'],
+						'linkText' => $zipped['linkText'],
+					];
+				}
+			}
+		}
+		if(count($results) > 0) {
+			$this->warn = true;
+			return [
+				'check' => false,
+				'message' => 'Some addresses in this message are not matching the link text',
+				'links' => $results
+			];
+		}
+		return [
+			'check' => true];
+
 	}
 
 
-	public function checkHeadersForPhishing(Horde_Mime_Headers $headers): array {
+	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, string $uid, bool $hasHtmlMessage, string $htmlMessage): array {
 		$result = [];
 		$fromFN = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getLabel();
 		$fromEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getEmail();
-		$replyToEmail = AddressList::fromHorde($headers->getHeader('Reply-To')->getAddressList(true))->first()->getEmail();
+		$replyToEmailHeader = $headers->getHeader('Reply-To')?->getAddressList(true);
+		$replyToEmail = isset($replyToEmailHeader)? AddressList::fromHorde($replyToEmailHeader)->first()->getEmail() : null ;
 		$date = $headers->getHeader('Date')->__get('value');
 		$customEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getCustomEmail();
-		$result['replyTo'] =$this->replyToCheckPass($fromEmail, $replyToEmail);
+		$result['replyTo'] = $this->replyToCheckPass($fromEmail, $replyToEmail);
 		$result['contactCheck'] = $this->contactsCheckPass($fromFN, $fromEmail);
 		$result['dateCheck'] = $this->checkDatePass($date);
 		$result['customEmailCheck'] = $this->customEmailCheck($fromEmail, $customEmail);
+		$result['trustedCheck'] = $this->checkTrusted($uid, $fromEmail);
+		if($hasHtmlMessage) {
+			$result['links'] = $this->parseAnchorTags($htmlMessage);
+		}
 		$result['warn'] = $this->warn;
 		return $result;
 	}

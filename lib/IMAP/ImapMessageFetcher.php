@@ -520,7 +520,7 @@ class ImapMessageFetcher {
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
 
 		if($runPhishingCheck) {
-			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders);
+			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders, $this->userId, $this->hasHtmlMessage, $this->htmlMessage);
 		}
 
 		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
