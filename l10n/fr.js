@@ -324,6 +324,7 @@ OC.L10N.register(
     "Unnamed" : "Sans nom",
     "Embedded message" : "Message intégré",
     "Next week – {timeLocale}" : "Semaine prochaine – {timeLocale}",
+    "Attachment saved to Files" : "Pièce jointe enregistrée dans Fichiers",
     "calendar imported" : "calendrier importé",
     "View fewer attachments" : "Voir moins de pièces jointes",
     "Save all to Files" : "Enregistrer tout dans les Fichiers",
