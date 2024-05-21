@@ -38,4 +38,5 @@ codecov.yml
 /vendor/bin
 /vendor-bin
 /vendor/cerdic/css-tidy/css_optimiser.php
+/vendor/wamania/php-stemmer/test
 /webpack.*
