@@ -416,6 +416,7 @@
     "Copy to \"Sent\" Mailbox" : "Skopírovať do schránky „Odoslané“",
     "Copy to Sent Mailbox" : "Skopírovať do schránky Odoslané",
     "Could not copy to \"Sent\" mailbox" : "Nepodarilo sa skopírovať do schránky \"Odoslané\"",
+    "Mail server error" : "Chyba mail servera",
     "Message could not be sent" : "Správu sa nepodarilo odoslať",
     "Message deleted" : "Správa bola zmazaná",
     "Contacts with this address" : "Kontakty s touto adresou",
