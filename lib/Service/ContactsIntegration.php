@@ -260,7 +260,6 @@ class ContactsIntegration {
 		return $matches;
 	}
 
-
 	/**
 	 * Extracts all Contacts with the specified mail address
 	 *

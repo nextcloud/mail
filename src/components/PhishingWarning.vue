@@ -20,30 +20,35 @@
   -->
 <template>
 	<div class="warning">
-		<h4>Warning: This email might be a phishing attempt. Please be cautious.</h4>
-		<ul v-for="(warning, key) in warnings" :key="key">
+		<div class="warning__title">
+			<IconAlertOutline :size="20" :title="t('mail', 'Phishing email')" />
+			This email might be a phishing attempt
+		</div>
+		<ul v-for="(warning, key) in warnings" :key="key" class="warning__list">
 			<li>{{ warning.message }}</li>
 		</ul>
 		<div v-if="hasLinkWarnings" class="warning__links">
-			<NcButton type="Tertiary" @click="showMore = !showMore">
+			<NcButton class="warning__links__button" type="Tertiary" @click="showMore = !showMore">
 				{{ showMore? t('mail','hide suspicious links') :t('mail','Show suspicious links') }}
 			</NcButton>
 			<div v-if="showMore">
-				<div v-for="(link,index) in warnings.links.links" :key="index">
-					<p><b>href: </b>{{ link.href }} : <b>{{ t('mail','link text') }}</b> {{ link.linkText }} </p>
-				</div>
+				<ul v-for="(link,index) in warnings.links.links" :key="index" class="warning__list">
+					<li><b>href: </b>{{ link.href }} : <b>{{ t('mail','link text') }}</b> {{ link.linkText }} </li>
+				</ul>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
 import { NcButton } from '@nextcloud/vue'
+import IconAlertOutline from 'vue-material-design-icons/AlertOutline.vue'
 
 export default {
 
 	name: 'PhishingWarning',
 	components: {
 		NcButton,
+		IconAlertOutline,
 	},
 	props: {
 		phishingData: {
@@ -76,14 +81,24 @@ export default {
 </script>
 <style lang="scss" scoped>
 .warning {
-    background-color:var(--ck-color-base-error);
+	background-color:var(--ck-color-base-error);
     border-radius: var(--border-radius-rounded);
-    width: 90%;
+    width: 100%;
     text-align: left;
-    padding: 10px;
+    padding: 15px;
     margin-bottom: 10px;
+	&__title {
+		display: flex;
+	}
+	&__list {
+		list-style-position: inside;
+		list-style-type: disc;
+	}
     &__links {
       margin-top: 10px;
+		&__button{
+			margin-bottom: 10px;
+		}
     }
 }
 </style>
