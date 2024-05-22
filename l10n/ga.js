@@ -33,6 +33,7 @@ OC.L10N.register(
     "Body" : "Corp",
     "Date" : "Dáta",
     "Last 7 days" : "7 lá seo caite",
+    "Disabled" : "Faoi mhíchumas",
     "Not found" : "Ní bhfuarthas",
     "Mark as unread" : "Marcáil mar neamhléite",
     "Mark as read" : "Marcáil mar léite",
