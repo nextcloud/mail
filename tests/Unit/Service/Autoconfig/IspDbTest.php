@@ -11,13 +11,18 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Exception;
 use Horde_Mail_Rfc822_Address;
+use InvalidArgumentException;
+use OCA\Mail\Dns\Resolver;
 use OCA\Mail\Service\AutoConfig\IspDb;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use function file_get_contents;
+use function str_starts_with;
 
 class IspDbTest extends TestCase {
 	/** @var IClientService|MockObject */
@@ -26,18 +31,30 @@ class IspDbTest extends TestCase {
 	/** @var IClient|MockObject */
 	private $client;
 
+	/** @var MockObject|Resolver */
+	private MockObject|Resolver $dnsResolver;
+
 	/** @var LoggerInterface|MockObject */
 	private $logger;
+
+	private IspDb $ispDb;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->client = $this->createMock(IClient::class);
+		$this->dnsResolver = $this->createMock(Resolver::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->clientService->method('newClient')
 			->willReturn($this->client);
+
+		$this->ispDb = new IspDb(
+			$this->clientService,
+			$this->dnsResolver,
+			$this->logger,
+		);
 	}
 
 	public function fakeAutoconfigData() {
@@ -61,13 +78,13 @@ class IspDbTest extends TestCase {
 						$response = $this->createMock(IResponse::class);
 						$response->method('getBody')->willReturn(file_get_contents(__DIR__ . '/../../../resources/autoconfig-gmx.xml'));
 						return $response;
+					default:
+						throw new InvalidArgumentException();
 				}
 			});
 
-		$ispDb = new IspDb($this->clientService, $this->logger);
-
 		$email = new Horde_Mail_Rfc822_Address('test@gmx.com');
-		$configuration = $ispDb->query('gmx.com', $email);
+		$configuration = $this->ispDb->query('gmx.com', $email);
 
 		self::assertNotNull($configuration);
 		self::assertNotNull($configuration->getImapConfig());
@@ -91,10 +108,8 @@ class IspDbTest extends TestCase {
 				}
 			});
 
-		$ispDb = new IspDb($this->clientService, $this->logger);
-
 		$email = new Horde_Mail_Rfc822_Address('test@outlook.com');
-		$configuration = $ispDb->query('outlook.com', $email);
+		$configuration = $this->ispDb->query('outlook.com', $email);
 
 		self::assertNotNull($configuration);
 		self::assertNotNull($configuration->getImapConfig());
@@ -109,13 +124,69 @@ class IspDbTest extends TestCase {
 				return $response;
 			});
 
-		$ispDb = new IspDb($this->clientService, $this->logger);
-
 		$email = new Horde_Mail_Rfc822_Address('test@postdeo.org');
-		$configuration = $ispDb->query('posteo.org', $email);
+		$configuration = $this->ispDb->query('posteo.org', $email);
 
 		self::assertNotNull($configuration);
 		self::assertNotNull($configuration->getImapConfig());
 		self::assertNotNull($configuration->getSmtpConfig());
+	}
+
+	public function testQueryByMx(): void {
+		$this->dnsResolver->expects(self::once())
+			->method('resolve')
+			->with('company.org', DNS_MX)
+			->willReturn([
+				[
+					'target' => 'mx.company.org',
+				]
+			]);
+		$this->dnsResolver->expects(self::once())
+			->method('isSuffix')
+			->with('company.org')
+			->willReturn(false);
+		$contactedServer = false;
+		$this->client->method('get')
+			->willReturnCallback(function ($url) use (&$contactedServer) {
+				if (str_starts_with($url, 'https://autoconfig.company.org')) {
+					$contactedServer = true;
+				}
+				throw new Exception('Random error');
+			});
+
+		$email = new Horde_Mail_Rfc822_Address('test@company.org');
+		$configuration = $this->ispDb->query('company.org', $email);
+
+		self::assertTrue($contactedServer, 'Should have contacted the server');
+		self::assertNull($configuration);
+	}
+
+	public function testQueryByMxSameDomain(): void {
+		$this->dnsResolver->expects(self::once())
+			->method('resolve')
+			->with('company.org', DNS_MX)
+			->willReturn([
+				[
+					'target' => 'company.org',
+				]
+			]);
+		$this->dnsResolver->expects(self::once())
+			->method('isSuffix')
+			->with('org')
+			->willReturn(true);
+		$contactedServer = false;
+		$this->client->method('get')
+			->willReturnCallback(function ($url) use (&$contactedServer) {
+				if (str_starts_with($url, 'https://autoconfig.org')) {
+					$contactedServer = true;
+				}
+				throw new Exception('Random error');
+			});
+
+		$email = new Horde_Mail_Rfc822_Address('test@company.org');
+		$configuration = $this->ispDb->query('company.org', $email);
+
+		self::assertFalse($contactedServer, 'Should not have contacted the server');
+		self::assertNull($configuration);
 	}
 }
