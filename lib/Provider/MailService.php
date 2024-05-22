@@ -28,33 +28,36 @@ use OCP\Mail\Provider\IService;
 use OCP\Mail\Provider\IMessageSend;
 use OCP\Mail\Provider\IServiceIdentity;
 use OCP\Mail\Provider\IServiceLocation;
-use OCP\Mail\IMessage;
+use OCP\Mail\Provider\IMessage;
 
 use OCA\Mail\AppInfo\Application;
 
 class MailService implements IService, IMessageSend {
 
-	private string $_id;
-	private string $_label;
-	private string $primaryAddress;
-	private array $secondaryAddress;
-	private MailServiceIdentity $_identity;
-	private MailServiceLocation $_location;
+	private string $userId;
+	private string $serviceId;
+	private string $serviceLabel;
+	private string $servicePrimaryAddress;
+	private array $serviceSecondaryAddress;
+	private MailServiceIdentity $serviceIdentity;
+	private MailServiceLocation $serviceLocation;
 	private $accountService;
 
 	public function __construct(
-		string $id,
+		string $uid,
+		string $sid,
 		string $label,
 		string $primaryAddress,
 		MailServiceIdentity $identity,
 		MailServiceLocation $location
 	) {
 
-		$this->_id = $id;
-		$this->_label = $label;
-		$this->primaryAddress = $primaryAddress;
-		$this->_identity = $identity;
-		$this->_location = $location;
+		$this->userId = $uid;
+		$this->serviceId = $sid;
+		$this->serviceLabel = $label;
+		$this->servicePrimaryAddress = $primaryAddress;
+		$this->serviceIdentity = $identity;
+		$this->serviceLocation = $location;
 
 	}
 
@@ -64,7 +67,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function id(): string {
 
-		return $this->_id;
+		return $this->userId;
 
 	}
 
@@ -74,7 +77,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function getLabel(): string {
 
-		return $this->_label;
+		return $this->serviceLabel;
 
 	}
 
@@ -84,7 +87,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function setLabel(string $value) {
 
-		$this->_label = $value;
+		$this->serviceLabel = $value;
 
 	}
 
@@ -94,7 +97,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function getIdentity(): IServiceIdentity {
 
-		return $this->_identity;
+		return $this->serviceIdentity;
 
 	}
 
@@ -104,7 +107,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function setIdentity(IServiceIdentity $value) {
 
-		$this->_identity = $value;
+		$this->serviceIdentity = $value;
 
 	}
 
@@ -114,7 +117,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function getLocation(): IServiceLocation {
 
-		return $this->_location;
+		return $this->serviceLocation;
 
 	}
 
@@ -124,7 +127,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function setLocation(IServiceLocation $value) {
 
-		$this->_location = $value;
+		$this->serviceLocation = $value;
 
 	}
 
@@ -134,7 +137,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function setPrimaryAddress(string $value) {
 
-		$this->primaryAddress = $value;
+		$this->servicePrimaryAddress = $value;
 
 	}
 
@@ -144,7 +147,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function getPrimaryAddress(): string {
 
-		return $this->primaryAddress;
+		return $this->servicePrimaryAddress;
 
 	}
 
@@ -154,7 +157,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function setSecondaryAddress(string $array) {
 
-		$this->secondaryAddress = $value;
+		$this->serviceSecondaryAddress = $value;
 
 	}
 
@@ -164,7 +167,7 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function getSecondaryAddress(): array | null {
 
-		return $this->secondaryAddress;
+		return $this->serviceSecondaryAddress;
 
 	}
 
@@ -175,13 +178,13 @@ class MailService implements IService, IMessageSend {
 			$this->accountService = \OC::$server->get(\OCA\Mail\Service\AccountService::class);
 		}
 
-		$account = $this->accountService->findById((int) $this->_id);
+		$account = $this->accountService->findById((int) $this->serviceId);
 
 		$lm = new \OCA\Mail\Db\LocalMessage();
 		$lm->setType($lm::TYPE_OUTGOING);
 		$lm->setAccountId($account->getId());
 		$lm->setSubject($message->getSubject());
-		$lm->setBody($message->getPlainBody());
+		$lm->setBody($message->getBody());
 		//$lm->setEditorBody($editorBody);
 		$lm->setHtml(true);
 		//$lm->setInReplyToMessageId($inReplyToMessageId);
@@ -195,30 +198,45 @@ class MailService implements IService, IMessageSend {
 			$lm->setSmimeCertificateId($smimeCertificate->getId());
 		}
 		*/
+		$attachments = [];
+		if (count($message->getAttachments()) > 0) {
+			// load attachment service
+			$AttachmentService = \OC::$server->get(\OCA\Mail\Service\Attachment\AttachmentService::class);
+			// iterate attachments and save them
+			foreach ($message->getAttachments() as $entry) {
+				$attachments[] = $AttachmentService->addFileFromString(
+					$this->userId,
+					$entry->getName(),
+					$entry->getType(),
+					$entry->getContents()
+				);
+			}
+		}
 
-		$service = \OC::$server->get(\OCA\Mail\Service\OutboxService::class);
+		// load outbound mail service
+		$OutboxService = \OC::$server->get(\OCA\Mail\Service\OutboxService::class);
 
 		$to = $this->convertAddressArray($message->getTo());
 		$cc = $this->convertAddressArray($message->getCc());
 		$bcc = $this->convertAddressArray($message->getBcc());
 
-		$service->saveMessage(
+		$OutboxService->saveMessage(
 			$account,
 			$lm,
 			$to,
 			$cc,
 			$bcc,
-			[]
+			$attachments
 		);
 
 	}
 
-	protected function convertAddressArray(array $in) {
+	protected function convertAddressArray(array|null $in) {
 		// construct place holder
 		$out = [];
 		// convert format
-		foreach ($in as $key => $value) {
-			$out[] = ($value) ? ['email' => $key, 'label' => $value] : ['email' => $key];
+		foreach ($in as $entry) {
+			$out[] = (!empty($entry->getName())) ? ['email' => $entry->getAddress(), 'label' => $entry->getName()] : ['email' => $entry->getAddress()];
 		}
 		// return converted addressess
 		return $out;

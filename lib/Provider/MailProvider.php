@@ -32,12 +32,12 @@ use OCA\Mail\AppInfo\Application;
 
 class MailProvider implements IProvider {
 
-	private $_ServicesService;
-	private ?array $_ServiceCollection = null;
+	private $AccountService;
+	private ?array $ServiceCollection = null;
 
 	public function __construct(AccountService $AccountService) {
 		
-		$this->_ServicesService = $AccountService;
+		$this->AccountService = $AccountService;
 
 	}
 
@@ -78,11 +78,11 @@ class MailProvider implements IProvider {
 	public function listServices(string $uid): array {
 
 		// evaluate if collection of services is null
-		if (!is_array($this->_ServiceCollection)) {
+		if (!is_array($this->ServiceCollection)) {
 			// define services collection
-			$this->_ServiceCollection = [];
+			$this->ServiceCollection = [];
 			// retrieve list of services from data store
-			$services = $this->_ServicesService->findByUserId($uid);
+			$services = $this->AccountService->findByUserId($uid);
 			// add services to collection
 			foreach ($services as $entry) {
 				// extract values
@@ -92,11 +92,11 @@ class MailProvider implements IProvider {
 				$identity = new MailServiceIdentity();
 				$location = new MailServiceLocation();
 				// add service to collection
-				$this->_ServiceCollection[] = new MailService($id, $label, $address, $identity, $location);
+				$this->ServiceCollection[] = new MailService($uid, $id, $label, $address, $identity, $location);
 			}
 		}
 		// return list of services for user
-		return $this->_ServiceCollection;
+		return $this->ServiceCollection;
 
 	}
 
