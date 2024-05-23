@@ -182,13 +182,16 @@ class SmimeService {
 			}
 		}
 
+		$decryptedCertificateFile = $this->tempManager->getTemporaryFile();
+		file_put_contents($decryptedCertificateFile, $certificate);
+
 		$caBundle = [$this->certificateManager->getAbsoluteBundlePath()];
 		return new SmimeCertificateInfo(
 			$certificateData['subject']['CN'] ?? null,
 			$certificateData['subject']['emailAddress'] ?? $certificateData['subject']['CN'],
 			$certificateData['validTo_time_t'],
 			$purposes,
-			openssl_x509_checkpurpose($certificate, X509_PURPOSE_ANY, $caBundle) === true,
+			openssl_x509_checkpurpose($certificate, X509_PURPOSE_ANY, $caBundle, $decryptedCertificateFile) === true,
 		);
 	}
 
@@ -376,13 +379,16 @@ class SmimeService {
 			);
 		}
 
+		$decryptedCertificateFile = $this->tempManager->getTemporaryFile();
+		file_put_contents($decryptedCertificateFile, $decryptedCertificate);
+
 		$inPath = $this->tempManager->getTemporaryFile();
 		$outPath = $this->tempManager->getTemporaryFile();
 		file_put_contents($inPath, $part->toString([
 			'canonical' => true,
 			'headers' => true,
 		]));
-		if (!openssl_pkcs7_sign($inPath, $outPath, $decryptedCertificate, $decryptedKey, null)) {
+		if (!openssl_pkcs7_sign($inPath, $outPath, $decryptedCertificate, $decryptedKey, null, PKCS7_DETACHED, $decryptedCertificateFile)) {
 			throw new SmimeSignException('Failed to sign MIME part');
 		}
 

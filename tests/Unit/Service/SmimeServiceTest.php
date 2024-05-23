@@ -423,6 +423,36 @@ class SmimeServiceTest extends TestCase {
 					false,
 				),
 			],
+			[ // Full chain: Leaf -> Intermediate CA -> CA
+				$this->getTestCertificate('chain@imap.localhost'),
+				new SmimeCertificateInfo(
+					'chain',
+					'chain@imap.localhost',
+					4870519697,
+					new SmimeCertificatePurposes(true, true),
+					true,
+				),
+			],
+			[ // Partial chain: Leaf -> Intermediate CA
+				$this->getTestCertificate('chain-partial@imap.localhost'),
+				new SmimeCertificateInfo(
+					'chain',
+					'chain@imap.localhost',
+					4870519697,
+					new SmimeCertificatePurposes(true, true),
+					true,
+				),
+			],
+			[ // Leaf only
+				$this->getTestCertificate('chain-leaf-only@imap.localhost'),
+				new SmimeCertificateInfo(
+					'chain',
+					'chain@imap.localhost',
+					4870519697,
+					new SmimeCertificatePurposes(true, true),
+					false,
+				),
+			],
 		];
 	}
 
@@ -434,6 +464,10 @@ class SmimeServiceTest extends TestCase {
 		$this->certificateManager->expects(self::once())
 			->method('getAbsoluteBundlePath')
 			->willReturn(__DIR__ . '/../../data/smime-certs/imap.localhost.ca.crt');
+
+		$this->tempManager->expects(self::once())
+			->method('getTemporaryFile')
+			->willReturnCallback(fn () => $this->createTempFile());
 
 		$this->assertEquals(
 			$expected,
