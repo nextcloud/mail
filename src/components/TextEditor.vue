@@ -284,7 +284,7 @@ export default {
 					/* webpackMode: "lazy-once" */
 					/* webpackPrefetch: true */
 					/* webpackPreload: true */
-					`@ckeditor/ckeditor5-build-balloon/build/translations/${language}`
+					`@ckeditor/ckeditor5-build-decoupled-document/build/translations/${language}`
 				)
 				this.showEditor(language)
 			} catch (error) {
