@@ -26,15 +26,13 @@ namespace OCA\Mail\Provider;
 
 use OCP\Mail\Provider\IServiceIdentity;
 
-use OCA\JMAPC\AppInfo\Application;
-
 class MailServiceIdentity implements IServiceIdentity {
 
 	/**
 	 * 
 	 * @since 1.0.0
 	 */
-	public function id(): string {
+	public function type(): string {
 		
 		return 'Internal';
 

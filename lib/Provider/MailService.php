@@ -24,11 +24,14 @@ declare(strict_types=1);
 */
 namespace OCA\Mail\Provider;
 
+use Psr\Container\ContainerInterface;
+
 use OCP\Mail\Provider\IService;
 use OCP\Mail\Provider\IMessageSend;
 use OCP\Mail\Provider\IServiceIdentity;
 use OCP\Mail\Provider\IServiceLocation;
 use OCP\Mail\Provider\IMessage;
+use OCP\Mail\Provider\IAddress;
 
 use OCA\Mail\AppInfo\Application;
 
@@ -37,21 +40,22 @@ class MailService implements IService, IMessageSend {
 	private string $userId;
 	private string $serviceId;
 	private string $serviceLabel;
-	private string $servicePrimaryAddress;
-	private array $serviceSecondaryAddress;
-	private MailServiceIdentity $serviceIdentity;
-	private MailServiceLocation $serviceLocation;
-	private $accountService;
+	private IAddress $servicePrimaryAddress;
+	private ?array $serviceSecondaryAddress;
+	private ?MailServiceIdentity $serviceIdentity;
+	private ?MailServiceLocation $serviceLocation;
 
 	public function __construct(
+		ContainerInterface $container,
 		string $uid,
 		string $sid,
 		string $label,
-		string $primaryAddress,
-		MailServiceIdentity $identity,
-		MailServiceLocation $location
+		IAddress $primaryAddress,
+		?MailServiceIdentity $identity = null,
+		?MailServiceLocation $location = null
 	) {
 
+		$this->container = $container;
 		$this->userId = $uid;
 		$this->serviceId = $sid;
 		$this->serviceLabel = $label;
@@ -63,17 +67,21 @@ class MailService implements IService, IMessageSend {
 
 	/**
 	 * An arbitrary unique text string identifying this service
+	 * 
 	 * @since 1.0.0
+	 * @return string
 	 */
 	public function id(): string {
 
-		return $this->userId;
+		return $this->serviceId;
 
 	}
 
 	/**
 	 * The localized human frendly name of this provider
+	 * 
 	 * @since 1.0.0
+	 * @return string
 	 */
 	public function getLabel(): string {
 
@@ -83,11 +91,13 @@ class MailService implements IService, IMessageSend {
 
 	/**
 	 * The localized human frendly name of this provider
+	 * 
 	 * @since 1.0.0
 	 */
-	public function setLabel(string $value) {
+	public function setLabel(string $value): self {
 
 		$this->serviceLabel = $value;
+		return $this;
 
 	}
 
@@ -95,7 +105,7 @@ class MailService implements IService, IMessageSend {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function getIdentity(): IServiceIdentity {
+	public function getIdentity(): IServiceIdentity | null {
 
 		return $this->serviceIdentity;
 
@@ -105,17 +115,17 @@ class MailService implements IService, IMessageSend {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function setIdentity(IServiceIdentity $value) {
+	public function setIdentity(IServiceIdentity $value): self {
 
 		$this->serviceIdentity = $value;
-
+		return $this;
 	}
 
 	/**
 	 * 
 	 * @since 1.0.0
 	 */
-	public function getLocation(): IServiceLocation {
+	public function getLocation(): IServiceLocation | null {
 
 		return $this->serviceLocation;
 
@@ -125,9 +135,10 @@ class MailService implements IService, IMessageSend {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function setLocation(IServiceLocation $value) {
+	public function setLocation(IServiceLocation $value): self {
 
 		$this->serviceLocation = $value;
+		return $this;
 
 	}
 
@@ -135,18 +146,9 @@ class MailService implements IService, IMessageSend {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function setPrimaryAddress(string $value) {
+	public function getPrimaryAddress(): IAddress {
 
-		$this->servicePrimaryAddress = $value;
-
-	}
-
-	/**
-	 * 
-	 * @since 1.0.0
-	 */
-	public function getPrimaryAddress(): string {
-
+		// retrieve and return primary service address
 		return $this->servicePrimaryAddress;
 
 	}
@@ -155,9 +157,10 @@ class MailService implements IService, IMessageSend {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function setSecondaryAddress(string $array) {
+	public function setPrimaryAddress(IAddress $value): self {
 
-		$this->serviceSecondaryAddress = $value;
+		$this->servicePrimaryAddress = $value;
+		return $this;
 
 	}
 
@@ -167,79 +170,29 @@ class MailService implements IService, IMessageSend {
 	 */
 	public function getSecondaryAddress(): array | null {
 
+		// retrieve and return secondary service addressess (aliases) collection
 		return $this->serviceSecondaryAddress;
+
+	}
+
+	/**
+	 * 
+	 * @since 1.0.0
+	 */
+	public function setSecondaryAddress(IAddress ...$value): self {
+
+		$this->serviceSecondaryAddress = $value;
+		return $this;
 
 	}
 
 	public function messageSend(IMessage $message, array $option = []): void {
 
-		// evaluate if account service is loaded
-		if ($this->accountService === null) {
-			$this->accountService = \OC::$server->get(\OCA\Mail\Service\AccountService::class);
-		}
+		// load action
+		$cmd = $this->container->get(\OCA\Mail\Provider\Command\MessageSend::class);
+		// perform action
+		$cmd->perform($this->userId, $this->serviceId, $message, $option);
 
-		$account = $this->accountService->findById((int) $this->serviceId);
-
-		$lm = new \OCA\Mail\Db\LocalMessage();
-		$lm->setType($lm::TYPE_OUTGOING);
-		$lm->setAccountId($account->getId());
-		$lm->setSubject($message->getSubject());
-		$lm->setBody($message->getBody());
-		//$lm->setEditorBody($editorBody);
-		$lm->setHtml(true);
-		//$lm->setInReplyToMessageId($inReplyToMessageId);
-		$lm->setSendAt(time());
-		//$lm->setSmimeSign($smimeSign);
-		//$lm->setSmimeEncrypt($smimeEncrypt);
-
-		/*
-		if (!empty($smimeCertificateId)) {
-			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
-			$lm->setSmimeCertificateId($smimeCertificate->getId());
-		}
-		*/
-		$attachments = [];
-		if (count($message->getAttachments()) > 0) {
-			// load attachment service
-			$AttachmentService = \OC::$server->get(\OCA\Mail\Service\Attachment\AttachmentService::class);
-			// iterate attachments and save them
-			foreach ($message->getAttachments() as $entry) {
-				$attachments[] = $AttachmentService->addFileFromString(
-					$this->userId,
-					$entry->getName(),
-					$entry->getType(),
-					$entry->getContents()
-				);
-			}
-		}
-
-		// load outbound mail service
-		$OutboxService = \OC::$server->get(\OCA\Mail\Service\OutboxService::class);
-
-		$to = $this->convertAddressArray($message->getTo());
-		$cc = $this->convertAddressArray($message->getCc());
-		$bcc = $this->convertAddressArray($message->getBcc());
-
-		$OutboxService->saveMessage(
-			$account,
-			$lm,
-			$to,
-			$cc,
-			$bcc,
-			$attachments
-		);
-
-	}
-
-	protected function convertAddressArray(array|null $in) {
-		// construct place holder
-		$out = [];
-		// convert format
-		foreach ($in as $entry) {
-			$out[] = (!empty($entry->getName())) ? ['email' => $entry->getAddress(), 'label' => $entry->getName()] : ['email' => $entry->getAddress()];
-		}
-		// return converted addressess
-		return $out;
 	}
 
 }

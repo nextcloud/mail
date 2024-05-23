@@ -24,19 +24,27 @@ declare(strict_types=1);
 */
 namespace OCA\Mail\Provider;
 
+use Psr\Container\ContainerInterface;
+
 use OCP\Mail\Provider\IProvider;
 use OCP\Mail\Provider\IService;
-use OCA\Mail\Service\AccountService;
+use OCP\Mail\Provider\Address as MailAddress;
 
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Service\AccountService;
 
 class MailProvider implements IProvider {
 
-	private $AccountService;
+	private ContainerInterface $container;
+	private AccountService $AccountService;
 	private ?array $ServiceCollection = null;
 
-	public function __construct(AccountService $AccountService) {
+	public function __construct(
+		ContainerInterface $container,
+		AccountService $AccountService
+	) {
 		
+		$this->container = $container;
 		$this->AccountService = $AccountService;
 
 	}
@@ -88,11 +96,11 @@ class MailProvider implements IProvider {
 				// extract values
 				$id = (string) $entry->getId();
 				$label = $entry->getName();
-				$address = $entry->getEmail();
+				$address = new MailAddress($entry->getEmail(), $entry->getName());
 				$identity = new MailServiceIdentity();
 				$location = new MailServiceLocation();
 				// add service to collection
-				$this->ServiceCollection[] = new MailService($uid, $id, $label, $address, $identity, $location);
+				$this->ServiceCollection[] = new MailService($this->container, $uid, $id, $label, $address, $identity, $location);
 			}
 		}
 		// return list of services for user

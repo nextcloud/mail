@@ -26,8 +26,6 @@ namespace OCA\Mail\Provider;
 
 use OCP\Mail\Provider\IServiceLocation;
 
-use OCA\JMAPC\AppInfo\Application;
-
 class MailServiceLocation implements IServiceLocation {
 
 	/**
