@@ -51,7 +51,7 @@ export function convertPkcs12ToPem(pkcs12Der, password) {
 	}
 
 	return {
-		certificate: forge.pki.certificateToPem(certBags[0].cert),
+		certificate: certBags.map((certBag) => forge.pki.certificateToPem(certBag.cert)).join('\r\n'),
 		privateKey: forge.pki.privateKeyToPem(keyBags[0].key),
 	}
 }
