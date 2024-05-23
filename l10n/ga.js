@@ -5,6 +5,7 @@ OC.L10N.register(
     "Mail" : "Post",
     "Name" : "Ainm",
     "Password" : "Pasfhocal",
+    "None" : "aon cheann",
     "Save" : "Sábháil",
     "Signature" : "Sínithe",
     "Email address" : "Seoladh ríomhphoist",
@@ -18,6 +19,7 @@ OC.L10N.register(
     "Read" : "Léigh",
     "Back" : "Ar ais",
     "Forward" : "Ar aghaidh",
+    "Description" : "Cur síos",
     "Create" : "Cruthaigh",
     "Comment" : "Trácht",
     "Move" : "Bog",
@@ -40,6 +42,7 @@ OC.L10N.register(
     "Remove" : "Bain",
     "General" : "Ginearálta",
     "Submit" : "Cuir isteach",
-    "Account connected" : "Cuntas ceangailte"
+    "Account connected" : "Cuntas ceangailte",
+    "All" : "Gach"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");
