@@ -49,7 +49,7 @@ class MessageSend {
 	public function perform(string $userId, string $serviceId, IMessage $message, array $option = []): void {
 		// find user mail account details
 		$account = $this->accountService->find($userId, (int) $serviceId);
-		// construct 
+		// convert mail provider message to local message 
 		$lm = new LocalMessage();
 		$lm->setType($lm::TYPE_OUTGOING);
 		$lm->setAccountId($account->getId());
@@ -68,33 +68,34 @@ class MessageSend {
 			$lm->setSmimeCertificateId($smimeCertificate->getId());
 		}
 		*/
+
+		// convert all mail provider attachments to local attachments
 		$attachments = [];
 		if (count($message->getAttachments()) > 0) {
 			// iterate attachments and save them
 			foreach ($message->getAttachments() as $entry) {
-				$attachment = $this->attachmentService->addFileFromString(
+				$attachments[] = $this->attachmentService->addFileFromString(
 					$userId,
 					$entry->getName(),
 					$entry->getType(),
 					$entry->getContents()
-				);
-
-				$attachments[] = ['type' => 'local', 'id' => $attachment];
+				)->jsonSerialize();
 			}
 		}
-
+		// convert recipiant addresses
 		$to = $this->convertAddressArray($message->getTo());
 		$cc = $this->convertAddressArray($message->getCc());
 		$bcc = $this->convertAddressArray($message->getBcc());
-
-		$this->outboxService->saveMessage(
+		// save/send message
+		$lm = $this->outboxService->saveMessage(
 			$account,
 			$lm,
 			$to,
 			$cc,
 			$bcc,
-			$attachments
+			$attachments	
 		);
+
 	}
 
 	protected function convertAddressArray(array|null $in) {
