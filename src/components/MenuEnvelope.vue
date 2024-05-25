@@ -160,6 +160,13 @@
 				</template>
 				{{ t('mail', 'View source') }}
 			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click="onPrint">
+				<template #icon>
+					<PrinterIcon :size="20" />
+				</template>
+				{{ t('mail', 'Print message') }}
+			</ActionButton>
 			<ActionLink :close-after-click="true"
 				:href="exportMessageLink">
 				<template #icon>
@@ -238,6 +245,7 @@ import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import { mailboxHasRights } from '../util/acl.js'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information.vue'
+import PrinterIcon from 'vue-material-design-icons/Printer.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
@@ -281,6 +289,7 @@ export default {
 		ImportantIcon,
 		TaskIcon,
 		AlarmIcon,
+		PrinterIcon,
 	},
 	props: {
 		envelope: {
@@ -557,6 +566,9 @@ export default {
 		},
 		setCustomSnooze() {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
+		},
+		onPrint() {
+			window.print()
 		},
 	},
 }
