@@ -68,8 +68,8 @@ class MailService implements IService, IMessageSend {
 	/**
 	 * An arbitrary unique text string identifying this service
 	 * 
-	 * @since 1.0.0
-	 * @return string
+	 * @since 30.0.0
+	 * @return string			id of this service (e.g. 1 or service1 or anything else)
 	 */
 	public function id(): string {
 
@@ -78,10 +78,10 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
-	 * The localized human frendly name of this provider
+	 * gets the localized human frendly name of this service
 	 * 
-	 * @since 1.0.0
-	 * @return string
+	 * @since 30.0.0
+	 * @return string						label/name of service (e.g. ACME Company Mail Service)
 	 */
 	public function getLabel(): string {
 
@@ -90,9 +90,11 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
-	 * The localized human frendly name of this provider
+	 * sets the localized human frendly name of this service
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @param string $value					label/name of service (e.g. ACME Company Mail Service)
+	 * @return self                         return this object for command chaining
 	 */
 	public function setLabel(string $value): self {
 
@@ -102,8 +104,10 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * gets service itentity
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @return IServiceIdentity				service identity object
 	 */
 	public function getIdentity(): IServiceIdentity | null {
 
@@ -112,8 +116,11 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * sets service identity
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @param IServiceIdentity $identity	service identity object
+	 * @return self                         return this object for command chaining
 	 */
 	public function setIdentity(IServiceIdentity $value): self {
 
@@ -122,8 +129,10 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * gets service location
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @return IServiceLocation				service location object
 	 */
 	public function getLocation(): IServiceLocation | null {
 
@@ -132,8 +141,11 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * sets service location
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @param IServiceLocation $location	service location object
+	 * @return self                         return this object for command chaining
 	 */
 	public function setLocation(IServiceLocation $value): self {
 
@@ -143,8 +155,10 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * gets the primary mailing address for this service
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @return IAddress						mail address object
 	 */
 	public function getPrimaryAddress(): IAddress {
 
@@ -154,8 +168,11 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * sets the primary mailing address for this service
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @param IAddress $value				mail address object
+	 * @return self                         return this object for command chaining
 	 */
 	public function setPrimaryAddress(IAddress $value): self {
 
@@ -165,8 +182,10 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * gets the secondary mailing addresses (aliases) collection for this service
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @return array<int, IAddress>			collection of mail address objects
 	 */
 	public function getSecondaryAddress(): array | null {
 
@@ -176,8 +195,11 @@ class MailService implements IService, IMessageSend {
 	}
 
 	/**
+	 * sets the secondary mailing addresses (aliases) for this service
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @param IAddress ...$value				collection of or one or more mail address objects
+	 * @return self                         	return this object for command chaining
 	 */
 	public function setSecondaryAddress(IAddress ...$value): self {
 
@@ -186,6 +208,13 @@ class MailService implements IService, IMessageSend {
 
 	}
 
+	/**
+	 * Sends an outbound message 
+	 * 
+	 * @since 30.0.0
+	 * @param IMessage $message			mail message object with all required parameters to send a message
+	 * @param array $options			array of options reserved for future use
+	 */
 	public function messageSend(IMessage $message, array $option = []): void {
 
 		// load action

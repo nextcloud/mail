@@ -29,8 +29,10 @@ use OCP\Mail\Provider\IServiceIdentity;
 class MailServiceIdentity implements IServiceIdentity {
 
 	/**
+	 * An arbitrary unique text string identifying this credential type
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @return string
 	 */
 	public function type(): string {
 		

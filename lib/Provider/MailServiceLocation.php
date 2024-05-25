@@ -29,8 +29,10 @@ use OCP\Mail\Provider\IServiceLocation;
 class MailServiceLocation implements IServiceLocation {
 
 	/**
+	 * A string identifiing this location type
 	 * 
-	 * @since 1.0.0
+	 * @since 30.0.0
+	 * @return string
 	 */
 	public function type(): string {
 
