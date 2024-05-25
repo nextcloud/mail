@@ -80,14 +80,14 @@ class AccountService {
 
 	/**
 	 * Finds a mail account by user id and mail address
-	 * 
+	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @param string $userId			system user id
 	 * @param string $address			mail address (e.g. test@example.com)
 	 *
 	 * @return Account[]
-	 * 
+	 *
 	 * @throws ClientException
 	 */
 	public function findByUserIdAndAddress(string $userId, string $address): array {

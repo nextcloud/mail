@@ -1,36 +1,36 @@
 <?php
+
 declare(strict_types=1);
 
 /**
-* @copyright Copyright (c) 2023 Sebastian Krupinski <krupinski01@gmail.com>
-*
-* @author Sebastian Krupinski <krupinski01@gmail.com>
-*
-* @license AGPL-3.0-or-later
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License as
-* published by the Free Software Foundation, either version 3 of the
-* License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * @copyright Copyright (c) 2023 Sebastian Krupinski <krupinski01@gmail.com>
+ *
+ * @author Sebastian Krupinski <krupinski01@gmail.com>
+ *
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 namespace OCA\Mail\Provider\Command;
-
-use OCP\Mail\Provider\IMessage;
 
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
-use OCA\Mail\Service\Attachment\AttachmentService;
+use OCP\Mail\Provider\IMessage;
 
 class MessageSend {
 
@@ -49,7 +49,7 @@ class MessageSend {
 	public function perform(string $userId, string $serviceId, IMessage $message, array $option = []): void {
 		// find user mail account details
 		$account = $this->accountService->find($userId, (int) $serviceId);
-		// convert mail provider message to local message 
+		// convert mail provider message to local message
 		$lm = new LocalMessage();
 		$lm->setType($lm::TYPE_OUTGOING);
 		$lm->setAccountId($account->getId());
@@ -93,7 +93,7 @@ class MessageSend {
 			$to,
 			$cc,
 			$bcc,
-			$attachments	
+			$attachments
 		);
 
 	}

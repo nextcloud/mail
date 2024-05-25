@@ -85,7 +85,7 @@ class MailAccountMapper extends QBMapper {
 
 	/**
 	 * Finds a mail account(s) by user id and mail address
-	 * 
+	 *
 	 * @since 2024.05.25
 	 *
 	 * @param string $userId			system user id
