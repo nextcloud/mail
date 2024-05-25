@@ -53,7 +53,7 @@ class MailProvider implements IProvider {
 	 * An arbitrary unique text string identifying this provider
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @return string				id of this provider (e.g. UUID or 'IMAP/SMTP' or anything else)
 	 */
 	public function id(): string {
@@ -66,7 +66,7 @@ class MailProvider implements IProvider {
 	 * The localized human frendly name of this provider
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @return string				label/name of this provider (e.g. Plain Old IMAP/SMTP)
 	 */
 	public function label(): string {
@@ -79,7 +79,7 @@ class MailProvider implements IProvider {
 	 * Determain if any services are configured for a specific user
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @return bool 				true if any services are configure for the user
 	 */
 	public function hasServices(string $uid): bool {
@@ -92,7 +92,7 @@ class MailProvider implements IProvider {
 	 * retrieve collection of services for a specific user
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @return array<string,IService>		collection of service objects
 	 */
 	public function listServices(string $uid): array {
@@ -124,10 +124,10 @@ class MailProvider implements IProvider {
 	 * Retrieve a service with a specific id
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @param string $uid				user id
 	 * @param string $id				service id
-	 * 
+	 *
 	 * @return IService|null			returns service object or null if non found
 	 */
 	public function findServiceById(string $uid, string $id): IService | null {
@@ -160,7 +160,7 @@ class MailProvider implements IProvider {
 	 *
 	 * @param string $uid				user id
 	 * @param string $address			mail address (e.g. test@example.com)
-	 * 
+	 *
 	 * @return IService					returns service object or null if non found
 	 */
 	public function findServiceByAddress(string $uid, string $address): IService | null {
@@ -187,10 +187,10 @@ class MailProvider implements IProvider {
 	 * create a service configuration for a specific user
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @param string $uid			user id of user to configure service for
 	 * @param IService $service 	service configuration object
-	 * 
+	 *
 	 * @return string				id of created service
 	 */
 	public function createService(string $uid, IService $service): string {
@@ -203,10 +203,10 @@ class MailProvider implements IProvider {
 	 * modify a service configuration for a specific user
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @param string $uid			user id of user to configure service for
 	 * @param IService $service 	service configuration object
-	 * 
+	 *
 	 * @return string				id of modifided service
 	 */
 	public function modifyService(string $uid, IService $service): string {
@@ -219,10 +219,10 @@ class MailProvider implements IProvider {
 	 * delete a service configuration for a specific user
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @param string $uid			user id of user to delete service for
 	 * @param IService $service 	service configuration object
-	 * 
+	 *
 	 * @return bool					status of delete action
 	 */
 	public function deleteService(string $uid, IService $service): bool {

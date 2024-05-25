@@ -33,7 +33,7 @@ class MailServiceLocation implements IServiceLocation {
 	 * A string identifiing this location type
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @return string
 	 */
 	public function type(): string {

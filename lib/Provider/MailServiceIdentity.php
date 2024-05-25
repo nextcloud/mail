@@ -33,7 +33,7 @@ class MailServiceIdentity implements IServiceIdentity {
 	 * An arbitrary unique text string identifying this credential type
 	 *
 	 * @since 2024.05.25
-	 * 
+	 *
 	 * @return string
 	 */
 	public function type(): string {
