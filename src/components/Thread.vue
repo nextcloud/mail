@@ -446,14 +446,38 @@ export default {
 	.app-content-list,
 	.message-composer,
 	.splitpanes__pane-list,
+	.splitpanes__splitter,
 	.mail-message-attachments {
 		display: none !important;
 	}
 	.app-content {
 		margin-left: 0 !important;
+		overflow: visible;
+		position: fixed;
 	}
-	.mail-message-body {
-		margin-bottom: 0 !important;
+	#content-vue {
+		margin: 0;
+		width: auto;
+		height: auto !important;
+		overflow-y: visible;
+		border-radius: 0;
+		position: fixed;
+	}
+	#mail-thread-header {
+		position: relative;
+		background: none;
+	}
+	* {
+		overflow: visible !important;
+	}
+	.envelope__header .right div {
+		display: none;
+	}
+	.avatar-header {
+		display: none;
+	}
+	html, #body-user {
+		height: auto !important;
 	}
 }
 
