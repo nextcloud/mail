@@ -80,8 +80,10 @@ class MailService implements IService, IMessageSend {
 	/**
 	 * checks or retrieves what capabilites the service has
 	 *
-	 * @since 30.0.0
+	 * @since 2024.05.25
+	 *
 	 * @param string $ability				required ability e.g. 'MessageSend'
+	 *
 	 * @return bool|array					true/false if ability is supplied, collection of abilities otherwise
 	 */
 	public function capable(?string $ability = null): bool | array {
