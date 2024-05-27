@@ -48,6 +48,7 @@
 					:reducible="true"
 					:clearable="true"
 					:no-wrap="false"
+					:append-to-body="false"
 					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
@@ -97,7 +98,7 @@
 					:filter-by="(option, label, search)=>filterOption(option, label, search,'cc')"
 					:taggable="true"
 					:close-on-select="true"
-
+					:append-to-body="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:aria-label-combobox="t('mail', 'Contact or email address …')"
@@ -148,7 +149,7 @@
 					:options="selectableRecipients.filter(reciptient=>!selectBcc.some(bcc=>bcc.email===reciptient.email))"
 					:taggable="true"
 					:close-on-select="true"
-
+					:append-to-body="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
 					:aria-label-combobox="t('mail', 'Contact or email address …')"
@@ -1559,7 +1560,7 @@ export default {
 	min-height: 100px;
 }
 
-:deep(.multiselect .multiselect__tags),:deep( .vs__dropdown-toggle),:deep(.vs__dropdown-menu),  .subject {
+.subject {
 	border: none !important;
 }
 :deep([data-select="create"] .avatardiv--unknown) {
@@ -1578,9 +1579,7 @@ export default {
 }
 
 :deep(.vs__dropdown-menu){
-	border: 1px solid var(--color-border) !important;
 	padding: 0 !important;
-	border-radius: 0  !important;
 }
 
 :deep(.vs__dropdown-option){
