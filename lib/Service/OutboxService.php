@@ -17,11 +17,13 @@ use OCA\Mail\Db\LocalMessageMapper;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Send\Chain;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -115,9 +117,13 @@ class OutboxService {
 		$this->mapper->deleteWithRecipients($message);
 	}
 
+	/**
+	 * @throws Throwable
+	 * @throws Exception
+	 * @throws ServiceException
+	 */
 	public function sendMessage(LocalMessage $message, Account $account): LocalMessage {
-		$this->sendChain->process($account, $message);
-		return $message;
+		return $this->sendChain->process($account, $message);
 	}
 
 	/**
@@ -136,7 +142,7 @@ class OutboxService {
 		$message = $this->mapper->saveWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
-			$message->setAttachments($attachments);
+			$message->setAttachments([]);
 			return $message;
 		}
 

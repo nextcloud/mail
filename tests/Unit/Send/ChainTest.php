@@ -106,7 +106,8 @@ class ChainTest extends TestCase {
 			->method('deleteWithRecipients');
 		$this->localMessageMapper->expects(self::once())
 			->method('update')
-			->with($expected);
+			->with($expected)
+			->willReturn($expected);
 
 		$this->chain->process($account, $localMessage);
 	}

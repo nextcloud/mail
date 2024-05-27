@@ -30,7 +30,7 @@ class Chain {
 	 * @throws Exception
 	 * @throws ServiceException
 	 */
-	public function process(Account $account, LocalMessage $localMessage): void {
+	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
 		$handlers = $this->sentMailboxHandler;
 		$handlers->setNext($this->antiAbuseHandler)
 			->setNext($this->sendHandler)
@@ -50,8 +50,8 @@ class Chain {
 		if ($result->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $result->getId());
 			$this->localMessageMapper->deleteWithRecipients($result);
-			return;
+			return $localMessage;
 		}
-		$this->localMessageMapper->update($result);
+		return $this->localMessageMapper->update($result);
 	}
 }
