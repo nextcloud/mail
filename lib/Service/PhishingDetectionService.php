@@ -27,6 +27,7 @@ namespace OCA\Mail\Service;
 
 use DateTime;
 use Horde_Mime_Headers;
+use URL\Normalizer;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCP\IL10N;
@@ -106,7 +107,7 @@ class PhishingDetectionService {
 		$trusted = $this->trustedSenderService->isTrusted($uid, $email) || $this->trustedSenderService->isTrusted($uid, $domain);
 
 		//returns a "trusted" key instead of "check" because we don't want it to be part of the frontend warning messages
-
+		
 		if(!$trusted) {
 			return ["trusted" => false, "message" => $this->l10n->t('Sender email: %1$s is not trusted', [$email])];
 		}
@@ -151,10 +152,12 @@ class PhishingDetectionService {
 			];
 		}
 		foreach ($zippedArray as $zipped) {
+			$un = new Normalizer($zipped['href']);
+			$url=  $un->normalize();
 			if($this->textLooksLikeALink($zipped['linkText'])) {
-				if (str_contains($zipped['linkText'], $zipped['href']) || str_contains($zipped['href'], $zipped['linkText']) === false) {
+				if (str_contains($zipped['linkText'], $url) || str_contains($url, $zipped['linkText']) === false) {
 					$results[] = [
-						'href' => $zipped['href'],
+						'href' => $url,
 						'linkText' => $zipped['linkText'],
 					];
 				}
