@@ -1,5 +1,6 @@
 { "translations": {
     "Personal" : "Pearsanta",
+    "Later" : "Níos déanaí",
     "Mail" : "Post",
     "Name" : "Ainm",
     "Password" : "Pasfhocal",
@@ -9,7 +10,9 @@
     "Signature" : "Sínithe",
     "Email address" : "Seoladh ríomhphoist",
     "Cancel" : "Cealaigh",
+    "List" : "Liosta",
     "Sorting" : "Sórtáil",
+    "Archive" : "Cartlann",
     "Delete" : "Scrios",
     "Search" : "Cuardach",
     "Refresh" : "Athnuaigh",
@@ -18,11 +21,13 @@
     "Choose" : "Roghnaigh",
     "Confirm" : "Deimhnigh",
     "Read" : "Léigh",
+    "Select" : "Roghnaigh",
     "Back" : "Ar ais",
     "Forward" : "Ar aghaidh",
     "Description" : "Cur síos",
     "Create" : "Cruthaigh",
     "Comment" : "Trácht",
+    "Reply" : "Freagra",
     "Quoted text" : "Téacs luaite",
     "Move" : "Bog",
     "Quota" : "Cuóta",
@@ -40,6 +45,8 @@
     "Tags" : "Clibeanna",
     "Last 7 days" : "7 lá seo caite",
     "Disabled" : "Faoi mhíchumas",
+    "Custom" : "Saincheaptha",
+    "Add tag" : "Cuir clib leis",
     "Not found" : "Ní bhfuarthas",
     "Mark as unread" : "Marcáil mar neamhléite",
     "Mark as read" : "Marcáil mar léite",
@@ -50,6 +57,7 @@
     "Port" : "Port",
     "Submit" : "Cuir isteach",
     "Account connected" : "Cuntas ceangailte",
-    "All" : "Gach"
+    "All" : "Gach",
+    "Favorites" : "Ceanáin"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }
