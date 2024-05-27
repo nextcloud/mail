@@ -69,11 +69,33 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @since 2024.05.25
 	 *
-	 * @return string			id of this service (e.g. 1 or service1 or anything else)
+	 * @return string						id of this service (e.g. 1 or service1 or anything else)
 	 */
 	public function id(): string {
 
 		return $this->serviceId;
+
+	}
+
+	/**
+	 * checks or retrieves what capabilites the service has
+	 *
+	 * @since 30.0.0
+	 * @param string $ability				required ability e.g. 'MessageSend'
+	 * @return bool|array					true/false if ability is supplied, collection of abilities otherwise
+	 */
+	public function capable(?string $ability = null): bool | array {
+
+		// define all abilities
+		$abilities = [
+			'MessageSend' => true,
+		];
+		// evaluate if required ability was specified
+		if (isset($ability)) {
+			return (isset($abilities[$ability]) ? (bool) $abilities[$ability] : false);
+		} else {
+			return $abilities;
+		}
 
 	}
 
