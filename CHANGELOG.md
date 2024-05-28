@@ -2,7 +2,6 @@
 All notable changes to this project will be documented in this file.
 
 ## 3.7.0 - unreleased
-
 ### Added
 * Global setting to turn off email classification for the priority inbox
 * Quick filters
@@ -18,6 +17,7 @@ All notable changes to this project will be documented in this file.
 * Background job memory usage
 * File picker accessibility
 * Setup view styling
+* Text editor translations
 
 ## 3.6.0 – unreleased
 ### Added
