@@ -30,11 +30,12 @@ use OCA\Mail\AddressList;
 use OCA\Mail\PhishingDetectionList;
 
 class PhishingDetectionService {
-	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck) {
+	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck , private TrustedCheck $trustedCheck) {
 		$this->contactCheck = $contactCheck;
 		$this->customEmailCheck = $customEmailCheck;
 		$this->dateCheck = $dateCheck;
 		$this->replyToCheck = $replyToCheck;
+		$this->trustedCheck = $trustedCheck;
 	}
 
 
