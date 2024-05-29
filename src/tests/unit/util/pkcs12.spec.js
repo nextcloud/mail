@@ -36,7 +36,7 @@ describe('pkcs12', () => {
 		})
 
 		it('correctly handles PKCS#12 files with multiple cert bags', () => {
-			const certPem = readTestData('user@imap.localhost.crt').replaceAll('\n', '\r\n')
+			const certPem = readTestData('user@imap.localhost.chain.crt').replaceAll('\n', '\r\n')
 			const keyPem = readTestData('user@imap.localhost.key').replaceAll('\n', '\r\n')
 			const pkcs12Der = toArrayBuffer(readTestDataRaw('user@imap.localhost.chain.p12'))
 
