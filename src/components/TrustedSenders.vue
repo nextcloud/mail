@@ -40,7 +40,6 @@
 
 import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
 import { NcButton as ButtonVue } from '@nextcloud/vue'
-import { NcButton as ButtonVue } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import logger from '../logger.js'
