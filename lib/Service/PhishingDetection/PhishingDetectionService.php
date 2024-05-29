@@ -35,11 +35,12 @@ class PhishingDetectionService {
 	/** @var PhishingDetectionList */
 	private $list ;
 
-	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck) {
+	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private LinkCheck $linkCheck, private ReplyToCheck $replyToCheck) {
 		$this->contactCheck = $contactCheck;
 		$this->customEmailCheck = $customEmailCheck;
 		$this->dateCheck = $dateCheck;
 		$this->replyToCheck = $replyToCheck;
+		$this->linkCheck = $linkCheck;
 		$this->list = new PhishingDetectionList();
 	}
 
@@ -56,6 +57,9 @@ class PhishingDetectionService {
 		$this->list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
 		$this->list->addCheck($this->dateCheck->run($date));
 		$this->list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));
+		if($hasHtmlMessage) {
+			$this->list->addCheck($this->linkCheck->run($htmlMessage));
+		}
 		return $this->list->jsonSerialize();
 	}
 }

@@ -19,7 +19,7 @@
   - along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
+  <template>
 	<div>
 		<div v-for="sender in sortedSenders"
 			:key="sender.email">
@@ -39,6 +39,7 @@
 <script>
 
 import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 import { NcButton as ButtonVue } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
