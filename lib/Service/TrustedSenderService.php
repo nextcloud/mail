@@ -36,31 +36,15 @@ class TrustedSenderService implements ITrustedSenderService {
 		$this->mapper = $mapper;
 	}
 
-	/**
-	 * @param string $uid User ID
-	 * @param string $sender Email address or domain
-	 *
-	 * @return bool
-	 */
-
-	public function isTrusted(string $uid, string $sender): bool {
+	public function isTrusted(string $uid, string $email): bool {
 		return $this->mapper->exists(
 			$uid,
-			$sender
+			$email
 		);
 	}
 
-	/**
-	 * @param string $uid User ID
-	 * @param string $sender Email address or domain
-	 * @param string $type individual|domain
-	 * @param bool|null $trust
-	 *
-	 * @return void
-	 */
-
-	public function trust(string $uid, string $sender, string $type, ?bool $trust = true): void {
-		if ($trust && $this->isTrusted($uid, $sender)) {
+	public function trust(string $uid, string $email, string $type, ?bool $trust = true): void {
+		if ($trust && $this->isTrusted($uid, $email)) {
 			// Nothing to do
 			return;
 		}
@@ -68,22 +52,18 @@ class TrustedSenderService implements ITrustedSenderService {
 		if ($trust) {
 			$this->mapper->create(
 				$uid,
-				$sender,
+				$email,
 				$type
 			);
 		} else {
 			$this->mapper->remove(
 				$uid,
-				$sender,
+				$email,
 				$type
 			);
 		}
 	}
-	/**
-	 * @param string $uid User ID
-	 *
-	 * @return array Trusted senders
-	 */
+
 	public function getTrusted(string $uid): array {
 		return $this->mapper->findAll($uid);
 	}

@@ -24,30 +24,18 @@
 			<IconAlertOutline :size="20" :title="t('mail', 'Phishing email')" />
 			This email might be a phishing attempt
 		</div>
-		<ul v-for="warning in warnings" :key="key" class="warning__list">
+		<ul v-for="(warning,index) in warnings" :key="index" class="warning__list">
 			<li>{{ warning.message }}</li>
 		</ul>
-		<div v-if="linkWarning !== undefined" class="warning__links">
-			<NcButton class="warning__links__button" type="Tertiary" @click="showMore = !showMore">
-				{{ showMore? t('mail','hide suspicious links') :t('mail','Show suspicious links') }}
-			</NcButton>
-			<div v-if="showMore">
-				<ul v-for="(link,index) in linkWarning.additionalData" :key="index" class="warning__list">
-					<li><b>href: </b>{{ link.href }} : <b>{{ t('mail','link text') }}</b> {{ link.linkText }} </li>
-				</ul>
-			</div>
-		</div>
 	</div>
 </template>
 <script>
-import { NcButton } from '@nextcloud/vue'
 import IconAlertOutline from 'vue-material-design-icons/AlertOutline.vue'
 
 export default {
 
 	name: 'PhishingWarning',
 	components: {
-		NcButton,
 		IconAlertOutline,
 	},
 	props: {
@@ -63,10 +51,7 @@ export default {
 	},
 	computed: {
 		warnings() {
-			return this.phishingData.filter(check=> check.isPhishing)
-		},
-		linkWarning() {
-			return this.warnings.find(check=> check.type === "Link")
+			return this.phishingData.filter(check => check.isPhishing)
 		},
 	},
 

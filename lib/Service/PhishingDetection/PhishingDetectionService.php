@@ -35,20 +35,17 @@ class PhishingDetectionService {
 	/** @var PhishingDetectionList */
 	private $list ;
 
-	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private LinkCheck $linkCheck, private ReplyToCheck $replyToCheck, private TrustedCheck $trustedCheck) {
+	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck) {
 		$this->contactCheck = $contactCheck;
 		$this->customEmailCheck = $customEmailCheck;
 		$this->dateCheck = $dateCheck;
 		$this->replyToCheck = $replyToCheck;
-		$this->trustedCheck = $trustedCheck;
-		$this->linkCheck = $linkCheck;
 		$this->list = new PhishingDetectionList();
 	}
 
 
 
 	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, string $uid, bool $hasHtmlMessage, string $htmlMessage): array {
-		$result = [];
 		$fromFN = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getLabel();
 		$fromEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getEmail();
 		$replyToEmailHeader = $headers->getHeader('Reply-To')?->getAddressList(true);
@@ -59,10 +56,6 @@ class PhishingDetectionService {
 		$this->list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
 		$this->list->addCheck($this->dateCheck->run($date));
 		$this->list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));
-		// $this->trustedCheck->run($uid, $fromEmail);
-		if($hasHtmlMessage) {
-			$this->list->addCheck($this->linkCheck->run($htmlMessage));
-		}
 		return $this->list->jsonSerialize();
 	}
 }

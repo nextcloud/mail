@@ -33,39 +33,17 @@
 			</ButtonVue>
 		</div>
 		<span v-if="!sortedSenders.length"> {{ t('mail', 'No senders are trusted at the moment.') }}</span>
-		<ButtonVue type="primary"
-			@click="openModal = true">
-			<template #icon>
-				<IconAdd :size="20" />
-			</template>
-			{{ t('mail', 'Add trusted sender') }}
-		</ButtonVue>
-		<NcModal v-if="openModal"
-			:container="null"
-			:name="t('mail', 'Add trusted sender')"
-			@close="openModal = false">
-			<div class="content">
-				<h2>{{ t('mail', 'Add trusted sender') }}</h2>
-				<NcTextField class="input" :label="t('mail', 'Sender')" :value.sync="sender" />
-				<ButtonVue type="primary"
-					:disabled="sender.length === 0"
-					@click="trustSender">
-					{{ t('mail', 'Add') }}
-				</ButtonVue>
-			</div>
-		</NcModal>
 	</div>
 </template>
 
 <script>
 
 import { fetchTrustedSenders, trustSender } from '../service/TrustedSenderService.js'
-import { NcButton as ButtonVue, NcModal, NcTextField } from '@nextcloud/vue'
+import { NcButton as ButtonVue } from '@nextcloud/vue'
 import prop from 'lodash/fp/prop.js'
 import sortBy from 'lodash/fp/sortBy.js'
 import logger from '../logger.js'
 import { showError } from '@nextcloud/dialogs'
-import IconAdd from 'vue-material-design-icons/Plus.vue'
 
 const sortByEmail = sortBy(prop('email'))
 
@@ -73,16 +51,11 @@ export default {
 	name: 'TrustedSenders',
 	components: {
 		ButtonVue,
-		IconAdd,
-		NcModal,
-		NcTextField,
 	},
 
 	data() {
 		return {
 			list: [],
-			openModal: false,
-			sender: '',
 		}
 	},
 	computed: {
@@ -114,40 +87,6 @@ export default {
 				this.list.push(sender)
 			}
 		},
-		async trustSender() {
-			const type = this.checkType()
-			try {
-				await trustSender(
-					this.sender,
-					type,
-					true,
-				).then(async () => {
-					this.list = await fetchTrustedSenders()
-					this.sender = ''
-					this.openModal = false
-
-				})
-			} catch (error) {
-				logger.error(`Could not trust sender ${this.sender}`, {
-					error,
-				})
-				showError(t('mail', 'Could not trust sender {sender}', {
-					sende: this.sender,
-				}))
-			}
-		},
-		checkType() {
-			const parts = this.sender.split('@')
-			if (parts.length !== 2) {
-				return 'domain'
-			}
-			// remove '@'' from domain if added by mistake
-			if (parts[0].length === 0) {
-				this.sender = parts[1]
-				return 'domain'
-			}
-			return 'individual'
-		},
 		senderType(type) {
 			switch (type) {
 			case 'individual':
@@ -164,11 +103,5 @@ export default {
 <style lang="scss" scoped>
 .button-vue:deep() {
 	display: inline-block !important;
-}
-.content{
-	margin: 50px;
-}
-.input{
-	margin-bottom: 10px;
 }
 </style>
