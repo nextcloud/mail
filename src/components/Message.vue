@@ -24,7 +24,7 @@
 	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
 		role="region"
 		:aria-label="t('mail','Message body')">
-		<PhishingWarning v-if="message.phishingDetails.warn" :phishing-data="message.phishingDetails" />
+		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
 		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
 			<LockOffIcon :size="20"

@@ -24,15 +24,15 @@
 			<IconAlertOutline :size="20" :title="t('mail', 'Phishing email')" />
 			This email might be a phishing attempt
 		</div>
-		<ul v-for="(warning, key) in warnings" :key="key" class="warning__list">
+		<ul v-for="warning in warnings" :key="key" class="warning__list">
 			<li>{{ warning.message }}</li>
 		</ul>
-		<div v-if="hasLinkWarnings" class="warning__links">
+		<div v-if="linkWarning !== undefined" class="warning__links">
 			<NcButton class="warning__links__button" type="Tertiary" @click="showMore = !showMore">
 				{{ showMore? t('mail','hide suspicious links') :t('mail','Show suspicious links') }}
 			</NcButton>
 			<div v-if="showMore">
-				<ul v-for="(link,index) in warnings.links.links" :key="index" class="warning__list">
+				<ul v-for="(link,index) in linkWarning.additionalData" :key="index" class="warning__list">
 					<li><b>href: </b>{{ link.href }} : <b>{{ t('mail','link text') }}</b> {{ link.linkText }} </li>
 				</ul>
 			</div>
@@ -63,16 +63,10 @@ export default {
 	},
 	computed: {
 		warnings() {
-			const result = {}
-			for (const key in this.phishingData) {
-				if (this.phishingData[key].check === false) {
-					result[key] = this.phishingData[key]
-				}
-			}
-			return result
+			return this.phishingData.filter(check=> check.isPhishing)
 		},
-		hasLinkWarnings() {
-			return Object.keys(this.warnings).includes('links')
+		linkWarning() {
+			return this.warnings.find(check=> check.type === "Link")
 		},
 	},
 

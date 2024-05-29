@@ -30,59 +30,67 @@ use Horde_Mime_Headers;
 use URL\Normalizer;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\PhishingDetectionList;
+use OCA\Mail\PhishingDetectionResult;
 use OCP\IL10N;
 
 class PhishingDetectionService {
-
 
 	private ContactsIntegration $contactIntegration;
 	private ITrustedSenderService $trustedSenderService;
 	protected IL10N $l10n;
 
-
-	private bool $warn = false;
-
+	/** @var PhishingDetectionList */
+	private $list ;
 
 	public function __construct(ContactsIntegration $contactIntegration, ITrustedSenderService $trustedSenderService, IL10N $l10n) {
 		$this->contactIntegration = $contactIntegration;
 		$this->trustedSenderService = $trustedSenderService;
 		$this->l10n = $l10n;
+		$this->list = new PhishingDetectionList();
 	}
 
-	private function checkDate(string $date): array {
+	private function checkDate(string $date) {
 		$now = new DateTime();
 		$dt = new DateTime($date);
 		if($dt > $now) {
-			$this->warn = true;
-			return ["check" => false , "message" => $this->l10n->t("Sent date is in the future")];
+			$result = new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, true, $this->l10n->t("Sent date is in the future"));
 		}
-		return ["check" => $dt < $now ];
+		$result = new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, false);
+		$this->list->addCheck($result);
 	}
 	// %1$s is the from email and %2$s is the reply to email
 
-	private function checkReplyTo(string $fromEmail, ?string $replyToEmail): array {
+	private function checkReplyTo(string $fromEmail, ?string $replyToEmail) {
 		if(!(isset($replyToEmail))) {
-			return ["check" => true];
+			$result = new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, false);
 		}
-		if($replyToEmail !== $fromEmail) {
-			$this->warn = true;
+		elseif($fromEmail === $replyToEmail) {
+			$result = new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, false);
 		}
-		return ["check" => false , "message" => $this->l10n->t('Reply-To email: %1$s  is different from the sender email: %2$s', [$replyToEmail, $fromEmail])];
+		else {
+			$result = new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, true, $this->l10n->t('Reply-To email: %1$s  is different from the sender email: %2$s', [$replyToEmail, $fromEmail]));
+		}
+		$this->list->addCheck($result);
 	}
 
-	private function checkCustomEmail(string $fromEmail, ?string $customEmail): array {
+	private function checkCustomEmail(string $fromEmail, ?string $customEmail) {
 		if(!(isset($customEmail))) {
-			return ["check" => true];
+			$result = new PhishingDetectionResult(PhishingDetectionResult::CUSTOM_EMAIL_CHECK, false);
 		}
-		if($customEmail !== $fromEmail) {
-			$this->warn = true;
+		elseif($fromEmail === $customEmail) {
+			$result = new PhishingDetectionResult(PhishingDetectionResult::CUSTOM_EMAIL_CHECK, false);
 		}
-		return ["check" => false , "message" => $this->l10n->t('Sender is using a custom email: %1$s instead of the sender email: %2$s', [$customEmail, $fromEmail])] ;
+		else {
+			$result = new PhishingDetectionResult(PhishingDetectionResult::CUSTOM_EMAIL_CHECK, true, $this->l10n->t('Sender is using a custom email: %1$s instead of the sender email: %2$s', [$customEmail, $fromEmail]));
+		}
+		$this->list->addCheck($result);
 	}
 
 
-	private function checkContacts(string $fn, string $email):array {
+	private function checkContacts(string $fn, string $email) {
 		$emailInContacts = false;
+		$check = false;
 		$emails = "";
 		$contacts = $this->contactIntegration->getContactsWithName($fn, true);
 		foreach ($contacts as $contact) {
@@ -90,28 +98,34 @@ class PhishingDetectionService {
 				$emailInContacts = true;
 				$emails .= $contactEmail.",";
 				if ($contactEmail === $email) {
-					return ["check" => true];
+					$check = true;
 				}
 			}
 		}
-		if ($emailInContacts) {
-			$this->warn = true;
-			return ["check" => false, "message" => $this->l10n->t('Sender email: %1$s is not in the contacts list, but the sender name: %2$s is in the contacts list with the following emails: %3$s', [$email, $fn, $emails])];
+		if ($emailInContacts && !$check) {
+			$result = new PhishingDetectionResult(PhishingDetectionResult::CONTACTS_CHECK, true, $this->l10n->t('Sender email: %1$s is not in the contacts list, but the sender name: %2$s is in the contacts list with the following emails: %3$s', [$email, $fn, $emails]));
 		}
-		return ["check" => true];
+		else {
+			$result = new PhishingDetectionResult(PhishingDetectionResult::CONTACTS_CHECK, false);
+		}
+		$this->list->addCheck($result);
 	}
 
 
-	private function checkTrusted(string $uid, string $email): array {
+	private function checkTrusted(string $uid, string $email) {
 		$domain = explode('@', $email)[1];
 		$trusted = $this->trustedSenderService->isTrusted($uid, $email) || $this->trustedSenderService->isTrusted($uid, $domain);
 
 		//returns a "trusted" key instead of "check" because we don't want it to be part of the frontend warning messages
 		
 		if(!$trusted) {
-			return ["trusted" => false, "message" => $this->l10n->t('Sender email: %1$s is not trusted', [$email])];
+			$result = new PhishingDetectionResult(PhishingDetectionResult::TRUSTED_CHECK, true, $this->l10n->t('Sender email: %1$s is not trusted', [$email]));
 		}
-		return ["trusted" => true];
+		else {
+			$result = new PhishingDetectionResult(PhishingDetectionResult::TRUSTED_CHECK, false);
+		}
+		// Will be fixed in a followup 
+		// $this->list->addCheck($result);
 	}
 
 	// checks if link text is meant to look like a link
@@ -133,7 +147,7 @@ class PhishingDetectionService {
 		return $innerText;
 	}
 
-	private function checkAnchorTags(string $htmlMessage): array {
+	private function checkAnchorTags(string $htmlMessage) {
 
 		$results = [];
 		$zippedArray = [];
@@ -164,15 +178,12 @@ class PhishingDetectionService {
 			}
 		}
 		if(count($results) > 0) {
-			$this->warn = true;
-			return [
-				'check' => false,
-				'message' => $this->l10n->t('Some addresses in this message are not matching the link text'),
-				'links' => $results
-			];
+			$results = new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, true, $this->l10n->t('Some addresses in this message are not matching the link text'), $results);
 		}
-		return [
-			'check' => true];
+		else {
+			$results = new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false);
+		}
+		$this->list->addCheck($results);
 
 	}
 
@@ -185,15 +196,14 @@ class PhishingDetectionService {
 		$replyToEmail = isset($replyToEmailHeader)? AddressList::fromHorde($replyToEmailHeader)->first()->getEmail() : null ;
 		$date = $headers->getHeader('Date')->__get('value');
 		$customEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getCustomEmail();
-		$result['replyTo'] = $this->checkReplyTo($fromEmail, $replyToEmail);
-		$result['contactCheck'] = $this->checkContacts($fromFN, $fromEmail);
-		$result['dateCheck'] = $this->checkDate($date);
-		$result['checkCustomEmail'] = $this->checkCustomEmail($fromEmail, $customEmail);
-		$result['trustedCheck'] = $this->checkTrusted($uid, $fromEmail);
+		$this->checkReplyTo($fromEmail, $replyToEmail);
+		$this->checkContacts($fromFN, $fromEmail);
+		$this->checkDate($date);
+		$this->checkCustomEmail($fromEmail, $customEmail);
+		$this->checkTrusted($uid, $fromEmail);
 		if($hasHtmlMessage) {
-			$result['links'] = $this->checkAnchorTags($htmlMessage);
+			$this->checkAnchorTags($htmlMessage);
 		}
-		$result['warn'] = $this->warn;
-		return $result;
+		return $this->list->jsonSerialize();
 	}
 }
