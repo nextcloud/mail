@@ -23,12 +23,13 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Service;
+namespace OCA\Mail\Service\PhishingDetection;
 
 use DateTime;
 use Horde_Mime_Headers;
 use URL\Normalizer;
 use OCA\Mail\AddressList;
+use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\PhishingDetectionList;
 use OCA\Mail\PhishingDetectionResult;

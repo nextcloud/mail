@@ -29,8 +29,8 @@ namespace OCA\Mail\IMAP;
 use Horde_Imap_Client_Base;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Service\Html;
-use OCA\Mail\Service\PhishingDetectionService;
 use OCA\Mail\Service\SmimeService;
+use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 
 class ImapMessageFetcherFactory {
 	private Html $htmlService;
