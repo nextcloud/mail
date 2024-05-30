@@ -1,6 +1,7 @@
 OC.L10N.register(
     "mail",
     {
+    "Work" : "Obair",
     "Personal" : "Pearsanta",
     "Later" : "Níos déanaí",
     "Mail" : "Post",
@@ -13,6 +14,7 @@ OC.L10N.register(
     "Email address" : "Seoladh ríomhphoist",
     "Cancel" : "Cealaigh",
     "List" : "Liosta",
+    "Register" : "Clár",
     "Sorting" : "Sórtáil",
     "Archive" : "Cartlann",
     "Delete" : "Scrios",
@@ -31,6 +33,8 @@ OC.L10N.register(
     "Description" : "Cur síos",
     "Create" : "Cruthaigh",
     "Comment" : "Trácht",
+    "Accept" : "Glac",
+    "Other" : "Eile",
     "Reply" : "Freagra",
     "Quoted text" : "Téacs luaite",
     "Move" : "Bog",
@@ -61,6 +65,7 @@ OC.L10N.register(
     "User" : "Úsáideoir",
     "Host" : "Óstach",
     "Port" : "Port",
+    "Certificate" : "Teastas",
     "Submit" : "Cuir isteach",
     "Account connected" : "Cuntas ceangailte",
     "All" : "Gach",
