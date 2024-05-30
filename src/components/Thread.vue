@@ -457,7 +457,7 @@ export default {
 	}
 	#content-vue {
 		margin: 0;
-		width: auto;
+		width: 100%;
 		height: auto !important;
 		overflow-y: visible;
 		border-radius: 0;
@@ -465,10 +465,6 @@ export default {
 	}
 	#mail-thread-header {
 		position: relative;
-		background: none;
-	}
-	* {
-		overflow: visible !important;
 	}
 	.envelope__header .right div {
 		display: none;
