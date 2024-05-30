@@ -149,6 +149,12 @@ class MailTransmissionTest extends TestCase {
 			->method('create')
 			->with($account)
 			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
 		$this->transmission->sendMessage($messageData, null);
 	}
@@ -392,6 +398,12 @@ class MailTransmissionTest extends TestCase {
 			->method('create')
 			->with($account)
 			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
 		$this->transmission->sendMessage($messageData, $messageInReply->getMessageId());
 	}
