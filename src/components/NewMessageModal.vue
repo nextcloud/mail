@@ -132,6 +132,8 @@ import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
+import useOutboxStore from '../store/outboxStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'NewMessageModal',
@@ -171,6 +173,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useOutboxStore),
 		...mapGetters(['showMessageComposer', 'getPreference']),
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
@@ -373,14 +376,14 @@ export default {
 					// This is a new message
 					const { id } = await saveDraft(dataForServer)
 					dataForServer.id = id
-					await this.$store.dispatch('outbox/enqueueFromDraft', {
+					await this.outboxStore.enqueueFromDraft({
 						draftMessage: dataForServer,
 						id,
 					})
 				} else if (this.composerData.type === 0) {
 					// This is an outbox message
 					dataForServer.id = this.composerData.id
-					await this.$store.dispatch('outbox/updateMessage', {
+					await this.outboxStore.updateMessage({
 						message: dataForServer,
 						id: this.composerData.id,
 					})
@@ -388,7 +391,7 @@ export default {
 					// This is a draft
 					await updateDraft(dataForServer)
 					dataForServer.id = this.composerData.id
-					await this.$store.dispatch('outbox/enqueueFromDraft', {
+					await this.outboxStore.enqueueFromDraft({
 						draftMessage: dataForServer,
 						id: this.composerData.id,
 					})
@@ -396,7 +399,7 @@ export default {
 
 				if (!data.sendAt || data.sendAt < Math.floor((now + UNDO_DELAY) / 1000)) {
 					// Awaiting here would keep the modal open for a long time and thus block the user
-					this.$store.dispatch('outbox/sendMessageWithUndo', { id: dataForServer.id }).catch((error) => {
+					this.outboxStore.sendMessageWithUndo({ id: dataForServer.id }).catch((error) => {
 						logger.debug('Could not send message', { error })
 					})
 				}
@@ -476,7 +479,7 @@ export default {
 
 			try {
 				if (isOutbox) {
-					await this.$store.dispatch('outbox/deleteMessage', { id })
+					await this.outboxStore.deleteMessage({ id })
 				} else {
 					deleteDraft(id)
 				}

@@ -42,6 +42,9 @@
 import { NcAppNavigationItem as AppNavigationItem, NcCounterBubble as CounterBubble } from '@nextcloud/vue'
 import IconOutbox from 'vue-material-design-icons/InboxArrowUp.vue'
 
+import useOutboxStore from '../store/outboxStore.js'
+import { mapStores } from 'pinia'
+
 export default {
 	name: 'NavigationOutbox',
 	components: {
@@ -50,8 +53,9 @@ export default {
 		IconOutbox,
 	},
 	computed: {
+		...mapStores(useOutboxStore),
 		count() {
-			return this.$store.getters['outbox/getAllMessages'].length
+			return this.outboxStore.getAllMessages.length
 		},
 		to() {
 			return {

@@ -38,11 +38,16 @@ import router from './router.js'
 import store from './store/index.js'
 import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+import useOutboxStore from './store/outboxStore.js'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
 // eslint-disable-next-line camelcase
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
+
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
 
 sync(store, router)
 
@@ -143,8 +148,6 @@ accounts.map(fixAccountId).forEach((account) => {
 
 tags.forEach(tag => store.commit('addTag', { tag }))
 
-outboxMessages.forEach(message => store.commit('outbox/addMessage', { message }))
-
 store.commit('setScheduledSendingDisabled', disableScheduledSend)
 store.commit('setSnoozeDisabled', disableSnooze)
 store.commit('setGoogleOauthUrl', googleOauthUrl)
@@ -159,5 +162,9 @@ export default new Vue({
 	name: 'Mail',
 	router,
 	store,
+	pinia,
 	render: (h) => h(App),
 })
+
+const outboxStore = useOutboxStore()
+outboxMessages.forEach(message => outboxStore.addMessageMutation({ message }))

@@ -51,6 +51,8 @@ import EmptyMailbox from './EmptyMailbox.vue'
 import OutboxMessageContent from './OutboxMessageContent.vue'
 import OutboxMessageListItem from './OutboxMessageListItem.vue'
 import logger from '../logger.js'
+import useOutboxStore from '../store/outboxStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'Outbox',
@@ -71,6 +73,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useOutboxStore),
 		isMessageShown() {
 			return !!this.$route.params.messageId
 		},
@@ -79,10 +82,10 @@ export default {
 				return null
 			}
 
-			return this.$store.getters['outbox/getMessage'](this.$route.params.messageId)
+			return this.outboxStore.getMessage(this.$route.params.messageId)
 		},
 		messages() {
-			return this.$store.getters['outbox/getAllMessages']
+			return this.outboxStore.getAllMessages
 		},
 	},
 	created() {
@@ -108,7 +111,7 @@ export default {
 			this.error = false
 
 			try {
-				await this.$store.dispatch('outbox/fetchMessages')
+				await this.outboxStore.fetchMessages()
 			} catch (error) {
 				this.error = true
 				logger.error('Failed to fetch outbox messages', { error })

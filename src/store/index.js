@@ -31,7 +31,6 @@ import {
 import actions from './actions.js'
 import { getters } from './getters.js'
 import mutations from './mutations.js'
-import outbox from './outbox/index.js'
 
 Vue.use(Vuex)
 
@@ -113,6 +112,5 @@ export default new Store({
 			mutations,
 			actions,
 		},
-		outbox,
 	},
 })

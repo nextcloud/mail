@@ -93,6 +93,8 @@ import NavigationOutbox from './NavigationOutbox.vue'
 import IconSetting from 'vue-material-design-icons/Cog.vue'
 import AppSettingsMenu from '../components/AppSettingsMenu.vue'
 import { UNIFIED_ACCOUNT_ID } from '../store/constants.js'
+import useOutboxStore from '../store/outboxStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'Navigation',
@@ -115,6 +117,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useOutboxStore),
 		menu() {
 			return this.$store.getters.accounts
 				.filter(account => account.id !== UNIFIED_ACCOUNT_ID)
@@ -148,7 +151,7 @@ export default {
 			return this.$store.getters.getPreference('password-is-unavailable', false)
 		},
 		outboxMessages() {
-			return this.$store.getters['outbox/getAllMessages']
+			return this.outboxStore.getAllMessages
 		},
 	},
 	methods: {
