@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
+/**
+ * @copyright Copyright (c) 2024 Sebastian Krupinski <krupinski01@gmail.com>
  *
- * @author 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Sebastian Krupinski <krupinski01@gmail.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,16 +21,16 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OCA\Mail\Tests\Unit\Provider;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCP\Mail\Provider\Address;
-use OCP\Mail\Provider\Message;
 use OCA\Mail\Provider\MailService;
 use OCA\Mail\Provider\MailServiceIdentity;
 use OCA\Mail\Provider\MailServiceLocation;
+use OCP\Mail\Provider\Address;
 use Psr\Container\ContainerInterface;
 
 class MailServiceTest extends TestCase {
@@ -65,18 +65,18 @@ class MailServiceTest extends TestCase {
 
 	public function testId(): void {
 		
-        $this->assertEquals('service1', $this->mailService->id());
+		$this->assertEquals('service1', $this->mailService->id());
 
 	}
 
 	public function testCapable(): void {
 		
 		// test matched result
-        $this->assertEquals(true, $this->mailService->capable('MessageSend'));
+		$this->assertEquals(true, $this->mailService->capable('MessageSend'));
 		// test not matched result
-        $this->assertEquals(false, $this->mailService->capable('NoMatch'));
+		$this->assertEquals(false, $this->mailService->capable('NoMatch'));
 		// test collection result
-        $this->assertEquals([
+		$this->assertEquals([
 			'MessageSend' => true,
 		], $this->mailService->capable());
 
@@ -85,35 +85,35 @@ class MailServiceTest extends TestCase {
 	public function testLabel(): void {
 		
 		// test set by constructor
-        $this->assertEquals('Mail Service', $this->mailService->getLabel());
+		$this->assertEquals('Mail Service', $this->mailService->getLabel());
 		// test set by setter
 		$this->mailService->setLabel('Mail Service 2');
-        $this->assertEquals('Mail Service 2', $this->mailService->getLabel());
+		$this->assertEquals('Mail Service 2', $this->mailService->getLabel());
 
 	}
 
 	public function testIdentity(): void {
 		
 		// test set by constructor
-        $this->assertEquals($this->mailServiceIdentity, $this->mailService->getIdentity());
+		$this->assertEquals($this->mailServiceIdentity, $this->mailService->getIdentity());
 
 	}
 
 	public function testLocation(): void {
 		
 		// test set by constructor
-        $this->assertEquals($this->mailServiceLocation, $this->mailService->getLocation());
+		$this->assertEquals($this->mailServiceLocation, $this->mailService->getLocation());
 
 	}
 
 	public function testPrimaryAddress(): void {
 		
 		// test set by constructor
-        $this->assertEquals($this->primaryAddress, $this->mailService->getPrimaryAddress());
+		$this->assertEquals($this->primaryAddress, $this->mailService->getPrimaryAddress());
 		// test set by setter
 		$address = new Address('tester@testing.com');
 		$this->mailService->setPrimaryAddress($address);
-        $this->assertEquals($address, $this->mailService->getPrimaryAddress());
+		$this->assertEquals($address, $this->mailService->getPrimaryAddress());
 
 	}
 
@@ -123,8 +123,8 @@ class MailServiceTest extends TestCase {
 		$address1 = new Address('test1@testing.com');
 		$address2 = new Address('test2@testing.com');
 		$this->mailService->setSecondaryAddress($address1, $address2);
-        $this->assertEquals([$address1, $address2], $this->mailService->getSecondaryAddress());
+		$this->assertEquals([$address1, $address2], $this->mailService->getSecondaryAddress());
 
 	}
-	
+
 }

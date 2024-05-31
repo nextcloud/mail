@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2023 Sebastian Krupinski <krupinski01@gmail.com>
+ * @copyright Copyright (c) 2024 Sebastian Krupinski <krupinski01@gmail.com>
  *
  * @author Sebastian Krupinski <krupinski01@gmail.com>
  *

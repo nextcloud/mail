@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-/*
- * @copyright 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
+/**
+ * @copyright Copyright (c) 2024 Sebastian Krupinski <krupinski01@gmail.com>
  *
- * @author 2021 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Sebastian Krupinski <krupinski01@gmail.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,20 +21,21 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OCA\Mail\Tests\Unit\Provider;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCP\Mail\Provider\Address as MailAddress;
 use OCA\Mail\Account;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\AccountService;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Provider\MailProvider;
 use OCA\Mail\Provider\MailService;
 use OCA\Mail\Provider\MailServiceIdentity;
 use OCA\Mail\Provider\MailServiceLocation;
+use OCA\Mail\Service\AccountService;
+use OCP\Mail\Provider\Address as MailAddress;
 use Psr\Container\ContainerInterface;
 
 class MailProviderTest extends TestCase {
@@ -56,7 +57,7 @@ class MailProviderTest extends TestCase {
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService);
 		// test set by constructor
-        $this->assertEquals('mail-application', $mailProvider->id());
+		$this->assertEquals('mail-application', $mailProvider->id());
 
 	}
 
@@ -65,7 +66,7 @@ class MailProviderTest extends TestCase {
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService);
 		// test set by constructor
-        $this->assertEquals('Mail Application', $mailProvider->label());
+		$this->assertEquals('Mail Application', $mailProvider->label());
 
 	}
 
@@ -100,9 +101,9 @@ class MailProviderTest extends TestCase {
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService);
 		// test result with no services found
-        $this->assertFalse($mailProvider->hasServices('user0'));
+		$this->assertFalse($mailProvider->hasServices('user0'));
 		// test result with services found
-        $this->assertTrue($mailProvider->hasServices('user1'));
+		$this->assertTrue($mailProvider->hasServices('user1'));
 
 	}
 
@@ -147,9 +148,9 @@ class MailProviderTest extends TestCase {
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService);
 		// test result with no services found
-        $this->assertEquals([], $mailProvider->listServices('user0'));
+		$this->assertEquals([], $mailProvider->listServices('user0'));
 		// test result with services found
-        $this->assertEquals([$mailService], $mailProvider->listServices('user1'));
+		$this->assertEquals([$mailService], $mailProvider->listServices('user1'));
 
 	}
 
@@ -194,9 +195,9 @@ class MailProviderTest extends TestCase {
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService);
 		// test result with no services found
-        $this->assertEquals(null, $mailProvider->findServiceById('user0', '100'));
+		$this->assertEquals(null, $mailProvider->findServiceById('user0', '100'));
 		// test result with services found
-        $this->assertEquals($mailService, $mailProvider->findServiceById('user1', '100'));
+		$this->assertEquals($mailService, $mailProvider->findServiceById('user1', '100'));
 
 	}
 
@@ -241,9 +242,9 @@ class MailProviderTest extends TestCase {
 		// construct mail provider
 		$mailProvider = new MailProvider($this->containerInterface, $this->accountService);
 		// test result with no services found
-        $this->assertEquals(null, $mailProvider->findServiceByAddress('user0', 'user0@testing.com'));
+		$this->assertEquals(null, $mailProvider->findServiceByAddress('user0', 'user0@testing.com'));
 		// test result with services found
-        $this->assertEquals($mailService, $mailProvider->findServiceByAddress('user1', 'user1@testing.com'));
+		$this->assertEquals($mailService, $mailProvider->findServiceByAddress('user1', 'user1@testing.com'));
 
 	}
 
