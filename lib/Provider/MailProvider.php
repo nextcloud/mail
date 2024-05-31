@@ -25,6 +25,7 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Provider;
 
+use OCA\Mail\Account;
 use OCA\Mail\Service\AccountService;
 
 use OCP\Mail\Provider\Address as MailAddress;
@@ -37,7 +38,7 @@ class MailProvider implements IProvider {
 
 	private ContainerInterface $container;
 	private AccountService $AccountService;
-	private ?array $ServiceCollection = null;
+	private ?array $ServiceCollection = [];
 
 	public function __construct(
 		ContainerInterface $container,
@@ -97,26 +98,27 @@ class MailProvider implements IProvider {
 	 */
 	public function listServices(string $uid): array {
 
-		// evaluate if collection of services is null
-		if (!is_array($this->ServiceCollection)) {
-			// define services collection
-			$this->ServiceCollection = [];
+		try {
 			// retrieve service(s) details from data store
-			$services = $this->AccountService->findByUserId($uid);
-			// add services to collection
-			foreach ($services as $entry) {
-				// extract values
-				$id = (string) $entry->getId();
-				$label = $entry->getName();
-				$address = new MailAddress($entry->getEmail(), $entry->getName());
-				$identity = new MailServiceIdentity();
-				$location = new MailServiceLocation();
-				// add service to collection
-				$this->ServiceCollection[$id] = new MailService($this->container, $uid, $id, $label, $address, $identity, $location);
-			}
+			$accounts = $this->AccountService->findByUserId($uid);
+		} catch (\Throwable $th) {
+			return [];
+		}
+		// construct temporary collection
+		$services = [];
+		// add services to collection
+		foreach ($accounts as $entry) {
+			// extract values
+			$id = (string) $entry->getId();
+			$label = $entry->getName();
+			$address = new MailAddress($entry->getEmail(), $entry->getName());
+			$identity = new MailServiceIdentity();
+			$location = new MailServiceLocation();
+			// add service to collection
+			$services[] = new MailService($this->container, $uid, $id, $label, $address, $identity, $location);
 		}
 		// return list of services for user
-		return $this->ServiceCollection;
+		return $services;
 
 	}
 
@@ -134,15 +136,19 @@ class MailProvider implements IProvider {
 
 		// evaluate if id is a number
 		if (is_numeric($id)) {
-			// retrieve service details from data store
-			$service = $this->AccountService->find($uid, (int) $id);
+			try {
+				// retrieve service details from data store
+				$account = $this->AccountService->find($uid, (int) $id);
+			} catch(\Throwable $th) {
+				return null;
+			}
 		}
 		// evaliate if service details where found
-		if ($service !== null) {
+		if ($account instanceof Account) {
 			// extract values
-			$id = (string) $service->getId();
-			$label = $service->getName();
-			$address = new MailAddress($service->getEmail(), $service->getName());
+			$id = (string) $account->getId();
+			$label = $account->getName();
+			$address = new MailAddress($account->getEmail(), $account->getName());
 			$identity = new MailServiceIdentity();
 			$location = new MailServiceLocation();
 			// return mail service instance
@@ -165,14 +171,18 @@ class MailProvider implements IProvider {
 	 */
 	public function findServiceByAddress(string $uid, string $address): IService | null {
 
-		// retrieve service details from data store
-		$services = $this->AccountService->findByUserIdAndAddress($uid, $address);
+		try {
+			// retrieve service details from data store
+			$accounts = $this->AccountService->findByUserIdAndAddress($uid, $address);
+		} catch(\Throwable $th) {
+			return null;
+		}
 		// evaliate if service details where found
-		if (is_array($services) && count($services) > 0) {
+		if (is_array($accounts) && count($accounts) > 0 && $accounts[0] instanceof Account) {
 			// extract values
-			$id = (string) $services[0]->getId();
-			$label = $services[0]->getName();
-			$address = new MailAddress($services[0]->getEmail(), $services[0]->getName());
+			$id = (string) $accounts[0]->getId();
+			$label = $accounts[0]->getName();
+			$address = new MailAddress($accounts[0]->getEmail(), $accounts[0]->getName());
 			$identity = new MailServiceIdentity();
 			$location = new MailServiceLocation();
 			// return mail service instance
