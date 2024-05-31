@@ -109,6 +109,12 @@ class MailTransmissionTest extends TestCase {
 			->method('create')
 			->with($account)
 			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
 		$this->transmission->sendMessage($account, $localMessage);
 	}
@@ -171,6 +177,12 @@ class MailTransmissionTest extends TestCase {
 		$this->aliasService->expects(self::once())
 			->method('find')
 			->willReturn($alias);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
 		$this->transmission->sendMessage($account, $localMessage);
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
@@ -217,6 +229,12 @@ class MailTransmissionTest extends TestCase {
 			);
 		$this->transmissionService->expects(self::once())
 			->method('handleAttachment');
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
 		$this->transmission->sendMessage($account, $localMessage);
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
@@ -247,6 +265,12 @@ class MailTransmissionTest extends TestCase {
 			->method('create')
 			->with($account)
 			->willReturn($transport);
+		$this->transmissionService->expects(self::once())
+			->method('getSignMimePart')
+			->willReturnCallback(static fn ($localMessage, $account, $mimePart) => $mimePart);
+		$this->transmissionService->expects(self::once())
+			->method('getEncryptMimePart')
+			->willReturnCallback(static fn ($localMessage, $to, $cc, $bcc, $account, $mimePart) => $mimePart);
 
 		$this->transmission->sendMessage($account, $localMessage);
 		$this->assertEquals(LocalMessage::STATUS_RAW, $localMessage->getStatus());
