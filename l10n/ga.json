@@ -9,6 +9,7 @@
     "SMTP Password" : "Pasfhocal SMTP",
     "Save" : "Sábháil",
     "Signature" : "Sínithe",
+    "Go back" : "Dul ar ais",
     "Email address" : "Seoladh ríomhphoist",
     "Cancel" : "Cealaigh",
     "List" : "Liosta",
@@ -32,6 +33,7 @@
     "Create" : "Cruthaigh",
     "Comment" : "Trácht",
     "Accept" : "Glac",
+    "Decline" : "Meath",
     "Other" : "Eile",
     "Reply" : "Freagra",
     "Quoted text" : "Téacs luaite",
@@ -45,6 +47,9 @@
     "Mark all as read" : "Marcáil go léir mar a léitear",
     "Clear cache" : "Glan taisce",
     "Retry" : "Bain triail eile as",
+    "First day" : "Céad lá",
+    "Message" : "Teachtaireacht",
+    "Copy to clipboard" : "Cóipeáil chuig an ngearrthaisce",
     "Add" : "Cuir",
     "Close" : "Dún",
     "Body" : "Corp",
@@ -58,7 +63,10 @@
     "Mark as unread" : "Marcáil mar neamhléite",
     "Mark as read" : "Marcáil mar léite",
     "Remove" : "Bain",
+    "Untitled event" : "Imeacht gan teideal",
     "Reset" : "Athshocraigh",
+    "Client ID" : "Aitheantas Cliant",
+    "Client secret" : "Rún an chliaint",
     "General" : "Ginearálta",
     "User" : "Úsáideoir",
     "Host" : "Óstach",
@@ -67,6 +75,7 @@
     "Submit" : "Cuir isteach",
     "Account connected" : "Cuntas ceangailte",
     "All" : "Gach",
-    "Favorites" : "Ceanáin"
+    "Favorites" : "Ceanáin",
+    "Redirect" : "Atreorú"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }
