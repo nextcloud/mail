@@ -24,6 +24,7 @@ OC.L10N.register(
     "Refresh" : "Athnuaigh",
     "Select account" : "Roghnaigh cuntas",
     "Smart picker" : "Roghnóir cliste",
+    "Enter a date" : "Cuir isteach dáta",
     "Choose" : "Roghnaigh",
     "Confirm" : "Deimhnigh",
     "Favorite" : "is fearr leat",
