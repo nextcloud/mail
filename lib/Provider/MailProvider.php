@@ -115,7 +115,7 @@ class MailProvider implements IProvider {
 			$identity = new MailServiceIdentity();
 			$location = new MailServiceLocation();
 			// add service to collection
-			$services[] = new MailService($this->container, $uid, $id, $label, $address, $identity, $location);
+			$services[$id] = new MailService($this->container, $uid, $id, $label, $address, $identity, $location);
 		}
 		// return list of services for user
 		return $services;
