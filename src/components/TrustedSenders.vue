@@ -19,7 +19,7 @@
   - along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
+  <template>
 	<div>
 		<div v-for="sender in sortedSenders"
 			:key="sender.email">
