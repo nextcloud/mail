@@ -51,9 +51,16 @@
 			</span>
 		</div>
 		<p v-if="moreThanOne" class="attachments-button-wrapper">
+			<FilePicker v-if="isFilePickerOpen"
+				:title="t('mail', 'Choose a folder to store the attachments in')"
+				:buttons="saveAttachementButtons"
+				:allow-pick-directory="true"
+				:multiselect="false"
+				:mimetype-filter="['httpd/unix-directory']"
+				@close="()=>isFilePickerOpen = false" />
 			<span class="attachment-link"
 				:disabled="savingToCloud"
-				@click="saveAll">
+				@click="() => isFilePickerOpen = true">
 				<CloudDownload v-if="!savingToCloud" :size="18" />
 				<IconLoading v-else class="spin" :size="18" />
 				{{ t('mail', 'Save all to Files') }}
@@ -70,8 +77,9 @@
 <script>
 import { basename } from '@nextcloud/paths'
 import { NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { FilePickerVue as FilePicker } from '@nextcloud/dialogs/filepicker.js'
 import { generateUrl } from '@nextcloud/router'
-import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { saveAttachmentsToFiles } from '../service/AttachmentService.js'
 
 import MessageAttachment from './MessageAttachment.vue'
@@ -91,6 +99,7 @@ export default {
 		CloudDownload,
 		ChevronDown,
 		ChevronUp,
+		FilePicker,
 	},
 	props: {
 		envelope: {
@@ -110,6 +119,14 @@ export default {
 			attachmentImageURL: '',
 			hasNextLine: false,
 			isToggled: false,
+			saveAttachementButtons: [
+				{
+					label: t('mail', 'Choose'),
+					callback: this.saveAll,
+					type: 'primary',
+				},
+			],
+			isFilePickerOpen: false,
 		}
 	},
 	computed: {
@@ -165,30 +182,20 @@ export default {
 		canPreview(fileInfo) {
 			return this.previewableFileInfos.includes(fileInfo)
 		},
-		saveAll() {
-			const picker = getFilePickerBuilder(t('mail', 'Choose a folder to store the attachments in'))
-				.setMultiSelect(false)
-				.addMimeTypeFilter('httpd/unix-directory')
-				.setModal(true)
-				.setType(1)
-				.allowDirectories(true)
-				.build()
-
-			const saveAttachments = (id) => (directory) => {
-				return saveAttachmentsToFiles(id, directory)
-			}
+		saveAll(dest) {
+			const path = dest[0].path
+			this.savingToCloud = true
 			const id = this.$route.params.threadId
 
-			return picker
-				.pick()
-				.then((dest) => {
-					this.savingToCloud = true
-					return dest
-				})
-				.then(saveAttachments(id))
-				.then(() => Logger.info('saved'))
-				.catch((error) => Logger.error('not saved', { error }))
-				.then(() => (this.savingToCloud = false))
+			saveAttachmentsToFiles(id, path).then(() => {
+				Logger.info('saved')
+				showSuccess(t('mail', 'Attachments saved to Files'))
+			}).catch((error) => {
+				Logger.error('not saved', error)
+				showError(t('mail', 'Error while saving attachments'))
+			}).finally(() => {
+				this.savingToCloud = false
+			})
 		},
 		downloadZip() {
 			window.location = this.zipUrl
