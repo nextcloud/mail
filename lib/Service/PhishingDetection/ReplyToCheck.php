@@ -36,10 +36,10 @@ class ReplyToCheck {
 	}
 
 	public function run(string $fromEmail, ?string $replyToEmail) :PhishingDetectionResult {
-		if(!(isset($replyToEmail))) {
+		if ($replyToEmail === null) {
 			return  new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, false);
 		}
-		if($fromEmail === $replyToEmail) {
+		if ($fromEmail === $replyToEmail) {
 			return new PhishingDetectionResult(PhishingDetectionResult::REPLYTO_CHECK, false);
 		}
 

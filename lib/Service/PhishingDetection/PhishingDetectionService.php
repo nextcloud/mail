@@ -31,9 +31,7 @@ use OCA\Mail\PhishingDetectionList;
 
 class PhishingDetectionService {
 
-
-	/** @var PhishingDetectionList */
-	private $list ;
+	private PhishingDetectionList $list ;
 
 	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck) {
 		$this->contactCheck = $contactCheck;
@@ -42,7 +40,6 @@ class PhishingDetectionService {
 		$this->replyToCheck = $replyToCheck;
 		$this->list = new PhishingDetectionList();
 	}
-
 
 
 	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, string $uid, bool $hasHtmlMessage, string $htmlMessage): array {

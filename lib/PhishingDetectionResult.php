@@ -44,7 +44,7 @@ class PhishingDetectionResult implements JsonSerializable {
 	private string $message = "";
 	private bool $isPhishing;
 	private array $additionalData = [];
-	private $type;
+	private string $type;
 
 	public function __construct(string $type, bool $isPhishing, string $message = "", array $additionalData = []) {
 		$this->type = $type;
@@ -57,6 +57,7 @@ class PhishingDetectionResult implements JsonSerializable {
 	public function getType(): string {
 		return $this->type;
 	}
+
 	public function isPhishing(): bool {
 		return $this->isPhishing;
 	}

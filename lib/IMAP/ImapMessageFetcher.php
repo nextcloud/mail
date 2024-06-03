@@ -57,6 +57,7 @@ class ImapMessageFetcher {
 	private PhishingDetectionService $phishingDetectionService;
 	private string $userId;
 
+	private bool $runPhishingCheck = false;
 	// Conditional fetching/parsing
 	private bool $loadBody = false;
 
@@ -109,6 +110,17 @@ class ImapMessageFetcher {
 	}
 
 	/**
+	 * Configure the fetcher to check for phishing.
+	 *
+	 * @param bool $value
+	 * @return $this
+	 */
+	public function withPhishingCheck(bool $value): ImapMessageFetcher {
+		$this->runPhishingCheck = $value;
+		return $this;
+	}
+
+	/**
 	 * @param Horde_Imap_Client_Data_Fetch|null $fetch
 	 * Will be reused if no body is requested.
 	 * It should at least contain envelope, flags, imapDate and headerText.
@@ -121,7 +133,7 @@ class ImapMessageFetcher {
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
 	 */
-	public function fetchMessage(?Horde_Imap_Client_Data_Fetch $fetch = null, bool $runPhishingCheck = false): IMAPMessage {
+	public function fetchMessage(?Horde_Imap_Client_Data_Fetch $fetch = null): IMAPMessage {
 		$ids = new Horde_Imap_Client_Ids($this->uid);
 
 		$isSigned = false;
@@ -237,7 +249,7 @@ class ImapMessageFetcher {
 			}
 		}
 
-		$this->parseHeaders($fetch, $runPhishingCheck);
+		$this->parseHeaders($fetch);
 
 		$envelope = $fetch->getEnvelope();
 		return new IMAPMessage(
@@ -500,7 +512,7 @@ class ImapMessageFetcher {
 		return iconv("UTF-8", "UTF-8//IGNORE", $subject);
 	}
 
-	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch, bool $runPhishingCheck = false): void {
+	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
 		/** @var resource $headersStream */
 		$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
@@ -519,7 +531,7 @@ class ImapMessageFetcher {
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
 
-		if($runPhishingCheck) {
+		if ($this->runPhishingCheck) {
 			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders, $this->userId, $this->hasHtmlMessage, $this->htmlMessage);
 		}
 

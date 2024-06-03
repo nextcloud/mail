@@ -319,7 +319,8 @@ class MessageMapper {
 					$userId,
 				)
 				->withBody($loadBody)
-				->fetchMessage($fetchResult, $runPhishingCheck);
+				->withPhishingCheck($runPhishingCheck)
+				->fetchMessage($fetchResult);
 		}, $fetchResults);
 	}
 

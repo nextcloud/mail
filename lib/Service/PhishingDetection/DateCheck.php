@@ -36,10 +36,10 @@ class DateCheck {
 		$this->l10n = $l10n;
 	}
 
-	public function run(string $date):PhishingDetectionResult {
+	public function run(string $date): PhishingDetectionResult {
 		$now = new DateTime();
 		$dt = new DateTime($date);
-		if($dt > $now) {
+		if ($dt > $now) {
 			$result = new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, true, $this->l10n->t("Sent date is in the future"));
 		}
 		$result = new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, false);
