@@ -24,14 +24,13 @@ namespace OCA\Mail\Tests\Unit\Service\Phishing;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\ContactsIntegration;
+
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
-use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
-
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
-
 use OCP\IL10N;
+
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PhishingDetectionServiceTest extends TestCase {
@@ -42,8 +41,6 @@ class PhishingDetectionServiceTest extends TestCase {
 	private CustomEmailCheck $customEmailCheck;
 	private DateCheck $dateCheck;
 	private ReplyToCheck $replyToCheck;
-	private PhishingDetectionService $phishingDetectionService;
-
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -53,7 +50,6 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->customEmailCheck = new CustomEmailCheck($this->l10n);
 		$this->dateCheck = new DateCheck($this->l10n);
 		$this->replyToCheck = new ReplyToCheck($this->l10n);
-		$this->phishingDetectionService = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck);
 	}
 
 	public function testContactCheck() {
@@ -64,6 +60,19 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->assertTrue($result->isPhishing());
 	}
 
+	public function testCustomEmailCheck() {
+		$result = $this->customEmailCheck->run("jhon@example.org", "jhon.doe@example.org");
+		$this->assertTrue($result->isPhishing());
+	}
 
+	public function testDateCheck() {
+		$result = $this->dateCheck->run("2024-12-12 12:12:12");
+		$this->assertTrue($result->isPhishing());
+	}
+
+	public function testReplyToCheck() {
+		$result = $this->replyToCheck->run("jhon@example.org", "jhon.doe@example.org");
+		$this->assertTrue($result->isPhishing());
+	}
 
 }

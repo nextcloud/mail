@@ -30,29 +30,26 @@ use OCA\Mail\AddressList;
 use OCA\Mail\PhishingDetectionList;
 
 class PhishingDetectionService {
-
-	private PhishingDetectionList $list ;
-
 	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck) {
 		$this->contactCheck = $contactCheck;
 		$this->customEmailCheck = $customEmailCheck;
 		$this->dateCheck = $dateCheck;
 		$this->replyToCheck = $replyToCheck;
-		$this->list = new PhishingDetectionList();
 	}
 
 
 	public function checkHeadersForPhishing(Horde_Mime_Headers $headers, string $uid, bool $hasHtmlMessage, string $htmlMessage): array {
+		$list = new PhishingDetectionList();
 		$fromFN = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getLabel();
 		$fromEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getEmail();
 		$replyToEmailHeader = $headers->getHeader('Reply-To')?->getAddressList(true);
 		$replyToEmail = isset($replyToEmailHeader)? AddressList::fromHorde($replyToEmailHeader)->first()->getEmail() : null ;
 		$date = $headers->getHeader('Date')->__get('value');
 		$customEmail = AddressList::fromHorde($headers->getHeader('From')->getAddressList(true))->first()->getCustomEmail();
-		$this->list->addCheck($this->replyToCheck->run($fromEmail, $replyToEmail));
-		$this->list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
-		$this->list->addCheck($this->dateCheck->run($date));
-		$this->list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));
-		return $this->list->jsonSerialize();
+		$list->addCheck($this->replyToCheck->run($fromEmail, $replyToEmail));
+		$list->addCheck($this->contactCheck->run($fromFN, $fromEmail));
+		$list->addCheck($this->dateCheck->run($date));
+		$list->addCheck($this->customEmailCheck->run($fromEmail, $customEmail));
+		return $list->jsonSerialize();
 	}
 }
