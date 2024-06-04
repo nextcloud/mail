@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 3.7.0 - unreleased
+## 3.7.0 - 2024-06-04
 ### Added
 * Global setting to turn off email classification for the priority inbox
 * Quick filters
@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file.
 * File picker accessibility
 * Setup view styling
 * Text editor translations
+* Encoding of sent messages
+* Processing of full S/MIME certificate chain
 
 ## 3.6.0 – unreleased
 ### Added
