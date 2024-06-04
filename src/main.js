@@ -24,6 +24,7 @@
 
 import Vue from 'vue'
 import { getRequestToken } from '@nextcloud/auth'
+import { registerDavProperty } from '@nextcloud/files'
 import { sync } from 'vuex-router-sync'
 import { generateFilePath } from '@nextcloud/router'
 import '@nextcloud/dialogs/style.css'
@@ -57,6 +58,8 @@ const getPreferenceFromPage = (key) => {
 	}
 	return elem.value
 }
+
+registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 
 store.commit('savePreference', {
 	key: 'debug',
