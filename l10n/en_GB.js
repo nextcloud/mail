@@ -331,6 +331,8 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Choose a folder to store the attachments in",
     "Save all to Files" : "Save all to Files",
     "Download Zip" : "Download Zip",
+    "Attachments saved to Files" : "Attachments saved to Files",
+    "Error while saving attachments" : "Error while saving attachments",
     "_View {count} more attachment_::_View {count} more attachments_" : ["View {count} more attachment","View {count} more attachments"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "This message is encrypted with PGP. Install Mailvelope to decrypt it.",
     "The images have been blocked to protect your privacy." : "The images have been blocked to protect your privacy.",

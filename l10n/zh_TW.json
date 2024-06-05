@@ -329,6 +329,8 @@
     "Choose a folder to store the attachments in" : "選擇一個資料夾來存放附件",
     "Save all to Files" : "全部儲存至檔案",
     "Download Zip" : "下載 Zip 壓縮檔",
+    "Attachments saved to Files" : "附件已儲存至「檔案」",
+    "Error while saving attachments" : "儲存附件時發生錯誤",
     "_View {count} more attachment_::_View {count} more attachments_" : ["檢視另外 {count} 個附件"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "此郵件使用 PGP 加密。安裝 Mailvelope 來解密。",
     "The images have been blocked to protect your privacy." : "為維護您的隱私，圖片將不會被載入。",

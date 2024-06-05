@@ -329,6 +329,8 @@
     "Choose a folder to store the attachments in" : "Escolha uma pasta para armazenar os anexos",
     "Save all to Files" : "Salvar tudo para Arquivos",
     "Download Zip" : "Baixar arquivo Zip",
+    "Attachments saved to Files" : "Anexos salvos em Arquivos",
+    "Error while saving attachments" : "Erro ao salvar anexos",
     "_View {count} more attachment_::_View {count} more attachments_" : ["Ver {count} mais anexos","Ver {count} mais anexos","Ver {count} mais anexos"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Esta mensagem é criptografada com PGP. Instale o Mailvelope para descriptografá-la.",
     "The images have been blocked to protect your privacy." : "As imagens foram bloqueadas para proteger sua privacidade",

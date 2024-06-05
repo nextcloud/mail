@@ -329,6 +329,8 @@
     "Choose a folder to store the attachments in" : "إختَر مُجلّدًا لتخزين المُرفَقَات فيه",
     "Save all to Files" : "حفظ الجميع في الملفات Files",
     "Download Zip" : "تنزيل مضغوط zip",
+    "Attachments saved to Files" : "مرفقات تمّ حفظها في ملفات",
+    "Error while saving attachments" : "حدث خطأ أثناء حفظ المرفقات",
     "_View {count} more attachment_::_View {count} more attachments_" : ["عرض {count} مرفقات أكثر","عرض {count} مرفق ","عرض {count} مرفقات أكثر","عرض {count} مرفقات أكثر","عرض {count} مرفقات أكثر","عرض {count} مرفقات أكثر"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "هذه الرسالة مُشفّرة باستخدام PGP. قم بتثبيت Mailvelope لفك تشفيرها.",
     "The images have been blocked to protect your privacy." : "تم حجب هذه الصور لحماية خصوصيتك",
