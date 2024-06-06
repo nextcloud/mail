@@ -331,6 +331,8 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Ek dosyalarının kaydedileceği bir klasör seçin",
     "Save all to Files" : "Tümünü dosyalara kaydet",
     "Download Zip" : "Zip indir",
+    "Attachments saved to Files" : "Ek dosyalar Dosyalar uygulamasına kaydedildi.",
+    "Error while saving attachments" : "Ek dosyalar kaydedilirken sorun çıktı",
     "_View {count} more attachment_::_View {count} more attachments_" : ["{count} ek dosyayı daha görüntüle","{count} ek dosyayı daha görüntüle"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Bu ileti PGP ile şifrelenmiş. Şifreyi çözmek için Mailvelope uygulamasını kurun.",
     "The images have been blocked to protect your privacy." : "Gizliliğinizi korumak için görsellerin görüntülenmesi engellendi.",

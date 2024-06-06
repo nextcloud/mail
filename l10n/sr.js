@@ -331,6 +331,8 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Одаберите фасциклу за смештање прилога",
     "Save all to Files" : "Сачувај све у фајлове",
     "Download Zip" : "Преузми Zip",
+    "Attachments saved to Files" : "Прилози cу сачувани у апликацији Фајлови",
+    "Error while saving attachments" : "Грешка приликом чувања прилога",
     "_View {count} more attachment_::_View {count} more attachments_" : ["Прикажи још {count} прилог","Прикажи још {count} прилога","Прикажи још {count} прилога"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Ова порука је шифрована PGP-ом. Инсталирајте Mailvelope да је дешифрујете.",
     "The images have been blocked to protect your privacy." : "Слике су блокиране да заштите Вашу приватност.",
