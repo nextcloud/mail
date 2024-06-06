@@ -30,20 +30,18 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
+use OCP\IConfig;
 use OCP\Mail\Provider\IMessage;
 
 class MessageSend {
 
 	public function __construct(
-		AccountService $accountService,
-		OutboxService $outboxService,
-		AttachmentService $attachmentService,
-		SmimeService $smimeService
+		protected IConfig $config,
+		protected AccountService $accountService,
+		protected OutboxService $outboxService,
+		protected AttachmentService $attachmentService,
+		protected SmimeService $smimeService
 	) {
-		$this->accountService = $accountService;
-		$this->outboxService = $outboxService;
-		$this->attachmentService = $attachmentService;
-		$this->smimeService = $smimeService;
 	}
 
 	public function perform(string $userId, string $serviceId, IMessage $message, array $option = []): void {
@@ -55,20 +53,9 @@ class MessageSend {
 		$lm->setAccountId($account->getId());
 		$lm->setSubject($message->getSubject());
 		$lm->setBody($message->getBody());
-		//$lm->setEditorBody($editorBody);
 		$lm->setHtml(true);
-		//$lm->setInReplyToMessageId($inReplyToMessageId);
 		$lm->setSendAt(time());
-		//$lm->setSmimeSign($smimeSign);
-		//$lm->setSmimeEncrypt($smimeEncrypt);
-
-		/*
-		if (!empty($smimeCertificateId)) {
-			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
-			$lm->setSmimeCertificateId($smimeCertificate->getId());
-		}
-		*/
-
+		
 		// convert all mail provider attachments to local attachments
 		$attachments = [];
 		if (count($message->getAttachments()) > 0) {
@@ -86,7 +73,7 @@ class MessageSend {
 		$to = $this->convertAddressArray($message->getTo());
 		$cc = $this->convertAddressArray($message->getCc());
 		$bcc = $this->convertAddressArray($message->getBcc());
-		// save/send message
+		// save message for sending
 		$lm = $this->outboxService->saveMessage(
 			$account,
 			$lm,
@@ -95,6 +82,11 @@ class MessageSend {
 			$bcc,
 			$attachments
 		);
+
+		// evaluate if job scheduler is NOT cron, send message right away otherwise let cron job handle it
+		if ($this->config->getAppValue('core', 'backgroundjobs_mode', 'ajax') !== 'cron') {
+			$lm = $this->outboxService->sendMessage($lm, $account);
+		}
 
 	}
 

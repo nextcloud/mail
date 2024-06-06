@@ -164,7 +164,10 @@ class Application extends App implements IBootstrap {
 		}
 
 		// register mail provider
-		$context->registerMailProvider(MailProvider::class);
+		// TODO: drop condition if nextcloud < 30 is not supported anymore
+		if (interface_exists(MailProvider::class)) {
+			$context->registerMailProvider(MailProvider::class);
+		}
 
 		$context->registerNotifierService(Notifier::class);
 
