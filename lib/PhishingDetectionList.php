@@ -29,9 +29,6 @@ namespace OCA\Mail;
 use JsonSerializable;
 use ReturnTypeWillChange;
 
-/**
- * @psalm-immutable
- */
 class PhishingDetectionList implements JsonSerializable {
 
 	/** @var PhishingDetectionResult[] */
