@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.7.1 – 2024-06-06
+
+
 ## 3.7.0 - 2024-06-04
 ### Added
 * Global setting to turn off email classification for the priority inbox
