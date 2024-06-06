@@ -40,10 +40,9 @@ class DateCheck {
 		$now = new DateTime();
 		$dt = new DateTime($date);
 		if ($dt > $now) {
-			$result = new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, true, $this->l10n->t("Sent date is in the future"));
+			return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, true, $this->l10n->t("Sent date is in the future"));
 		}
-		$result = new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, false);
-		return $result;
+		return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, false);
 	}
 
 }

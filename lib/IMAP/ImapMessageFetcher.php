@@ -514,7 +514,7 @@ class ImapMessageFetcher {
 
 	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {
 		/** @var resource $headersStream */
-		$headersStream = $fetch->getHeaderText('0', Horde_Imap_Client_Data_Fetch::HEADER_STREAM);
+		$headersStream = $fetch->getHeaderText('0', 10);
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headersStream);
 		fclose($headersStream);
 
@@ -532,7 +532,7 @@ class ImapMessageFetcher {
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
 
 		if ($this->runPhishingCheck) {
-			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders, $this->userId, $this->hasHtmlMessage, $this->htmlMessage);
+			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders, $this->hasHtmlMessage, $this->htmlMessage);
 		}
 
 		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
