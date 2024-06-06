@@ -41,6 +41,14 @@
       <code>IAPIWidgetV2</code>
     </UndefinedClass>
   </file>
+  <file src="lib/Service/Attachment/AttachmentService.php">
+    <UndefinedDocblockClass occurrences="2">
+      <code>OCA\Files_Sharing\SharedStorage</code>
+    </UndefinedDocblockClass>
+    <UndefinedClass occurrences="1">
+      <code>SharedStorage</code>
+    </UndefinedClass>
+  </file>
   <file src="lib/Dashboard/UnreadMailWidgetV2.php">
     <MissingDependency>
       <code>MailWidgetV2</code>
