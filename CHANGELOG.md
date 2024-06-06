@@ -2,7 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## 3.7.1 – 2024-06-06
-
+### Fixed
+* Save attachments to Files
 
 ## 3.7.0 - 2024-06-04
 ### Added
