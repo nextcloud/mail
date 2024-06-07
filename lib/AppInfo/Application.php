@@ -163,9 +163,11 @@ class Application extends App implements IBootstrap {
 			$context->registerSearchProvider(Provider::class);
 		}
 
-		// register mail provider
+		
 		// TODO: drop condition if nextcloud < 30 is not supported anymore
-		if (interface_exists(MailProvider::class)) {
+		// evaluate, if mail provider registration is possible
+		if (method_exists($context, 'registerMailProvider')) {
+			// register mail provider
 			$context->registerMailProvider(MailProvider::class);
 		}
 
