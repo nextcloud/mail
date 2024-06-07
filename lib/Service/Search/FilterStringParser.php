@@ -119,6 +119,9 @@ class FilterStringParser {
 					$query->setEnd($param);
 				}
 				return true;
+			case 'match':
+				$query->setMatch($param);
+				return true;
 			case 'flags':
 				$flagArray = explode(',', $param);
 				foreach ($flagArray as $flagItem) {

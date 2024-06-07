@@ -354,6 +354,7 @@ export default {
 	data() {
 		return {
 			showButtons: false,
+			match: 'allof',
 			query: '',
 			debouncedSearchQuery: debouncePromise(this.sendQueryEvent, 700),
 			autocompleteRecipients: [],
@@ -434,14 +435,22 @@ export default {
 				}
 				return val
 			})
+			_search += `match:${encodeURI(this.match)} `
 
 			return _search.trim()
 		},
 	},
 	watch: {
 		query() {
+			if (this.query.length === 0) {
+				return
+			}
+
+			this.match = 'anyof'
 			this.searchInMessageBody = this.searchBody ? this.query : null
 			this.searchInSubject = this.query
+			this.searchInFrom = [{ email: this.query, label: this.query }]
+			this.searchInTo = [{ email: this.query, label: this.query }]
 			this.debouncedSearchQuery()
 		},
 	},
@@ -502,10 +511,10 @@ export default {
 		},
 		closeSearchModal() {
 			this.moreSearchActions = false
+			this.match = 'allof'
 			this.$nextTick(() => {
 				this.sendQueryEvent()
 			})
-
 		},
 		sendQueryEvent() {
 			this.$emit('search-changed', this.searchQuery)
@@ -522,6 +531,7 @@ export default {
 		},
 		resetFilter() {
 			const prevQuery = this.query
+			this.match = 'allof'
 			this.query = ''
 			this.selectedTags = []
 			this.moreSearchActions = false
