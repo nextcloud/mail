@@ -21,103 +21,93 @@
   -->
 
 <template>
-	<AppNavigationItem v-if="visible"
-		:id="id"
-		:key="id"
-		:menu-open.sync="menuOpen"
-		:name="account.emailAddress"
-		:to="firstMailboxRoute"
-		:exact="true"
-		@update:menuOpen="onMenuToggle">
-		<template #icon>
-			<IconError v-if="account.error || isDisabled" :size="20" />
-			<IconBullet v-else-if="bulletColor" :size="16" :fill-color="bulletColor" />
-		</template>
-		<!-- Actions -->
-		<template #actions>
-			<template v-if="isDisabled">
-				<ActionText :name="t('mail', 'Provisioned account is disabled')">
-					<template #icon>
-						<IconInfo :size="20" />
-					</template>
-					{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
-				</ActionText>
+	<Fragment>
+		<NcAppNavigationCaption v-if="visible"
+			:id="id"
+			:key="id"
+			:name="account.emailAddress"
+			@update:menuOpen="onMenuToggle">
+			<!-- Actions -->
+			<template #actions>
+				<template v-if="isDisabled">
+					<ActionText :name="t('mail', 'Provisioned account is disabled')">
+						<template #icon>
+							<IconInfo :size="20" />
+						</template>
+						{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
+					</ActionText>
+				</template>
+				<template v-else>
+					<ActionText v-if="!account.isUnified" :name="t('mail', 'Quota')">
+						<template #icon>
+							<IconInfo :size="20" />
+						</template>
+						{{ quotaText }}
+					</ActionText>
+					<ActionButton :close-after-click="true"
+						@click="showAccountSettings"
+						@shortkey="toggleAccountSettings">
+						<template #icon>
+							<IconSettings :size="20" />
+						</template>
+						{{ t('mail', 'Account settings') }}
+					</ActionButton>
+					<ActionCheckbox :checked="account.showSubscribedOnly"
+						:disabled="savingShowOnlySubscribed"
+						@update:checked="changeShowSubscribedOnly">
+						{{ t('mail', 'Show only subscribed mailboxes') }}
+					</ActionCheckbox>
+					<ActionButton v-if="!editing" @click="openCreateMailbox">
+						<template #icon>
+							<IconFolderAdd :size="20" />
+						</template>
+						{{ t('mail', 'Add mailbox') }}
+					</ActionButton>
+					<ActionInput v-if="editing"
+						:value.sync="createMailboxName"
+						@submit.prevent.stop="createMailbox">
+						<template #icon>
+							<IconFolderAdd :size="20" />
+						</template>
+						{{ t('mail', 'Mailbox name') }}
+					</ActionInput>
+					<ActionText v-if="showSaving">
+						<template #icon>
+							<IconLoading :size="20" />
+						</template>
+						{{ t('mail', 'Saving') }}
+					</ActionText>
+					<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
+						<template #icon>
+							<MenuUp :size="20" />
+						</template>
+						{{ t('mail', 'Move up') }}
+					</ActionButton>
+					<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
+						<template #icon>
+							<MenuDown :size="20" />
+						</template>
+						{{ t('mail', 'Move down') }}
+					</ActionButton>
+					<ActionButton v-if="!account.provisioningId" @click="removeAccount">
+						<template #icon>
+							<IconDelete :size="20" />
+						</template>
+						{{ t('mail', 'Remove account') }}
+					</ActionButton>
+				</template>
 			</template>
-			<template v-else>
-				<ActionText v-if="!account.isUnified" :name="t('mail', 'Quota')">
-					<template #icon>
-						<IconInfo :size="20" />
-					</template>
-					{{ quotaText }}
-				</ActionText>
-				<ActionButton :close-after-click="true"
-					@click="showAccountSettings"
-					@shortkey="toggleAccountSettings">
-					<template #icon>
-						<IconSettings :size="20" />
-					</template>
-					{{ t('mail', 'Account settings') }}
-				</ActionButton>
-				<ActionCheckbox :checked="account.showSubscribedOnly"
-					:disabled="savingShowOnlySubscribed"
-					@update:checked="changeShowSubscribedOnly">
-					{{ t('mail', 'Show only subscribed mailboxes') }}
-				</ActionCheckbox>
-				<ActionButton v-if="!editing" @click="openCreateMailbox">
-					<template #icon>
-						<IconFolderAdd :size="20" />
-					</template>
-					{{ t('mail', 'Add mailbox') }}
-				</ActionButton>
-				<ActionInput v-if="editing"
-					:value.sync="createMailboxName"
-					@submit.prevent.stop="createMailbox">
-					<template #icon>
-						<IconFolderAdd :size="20" />
-					</template>
-					{{ t('mail', 'Mailbox name') }}
-				</ActionInput>
-				<ActionText v-if="showSaving">
-					<template #icon>
-						<IconLoading :size="20" />
-					</template>
-					{{ t('mail', 'Saving') }}
-				</ActionText>
-				<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
-					<template #icon>
-						<MenuUp :size="20" />
-					</template>
-					{{ t('mail', 'Move up') }}
-				</ActionButton>
-				<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
-					<template #icon>
-						<MenuDown :size="20" />
-					</template>
-					{{ t('mail', 'Move down') }}
-				</ActionButton>
-				<ActionButton v-if="!account.provisioningId"
-					:disabled="loading.delete"
-					@click="removeAccount">
-					<template #icon>
-						<IconLoading v-if="loading.delete" :size="20" />
-						<IconDelete v-else :size="20" />
-					</template>
-					{{ t('mail', 'Remove account') }}
-				</ActionButton>
-			</template>
-		</template>
-		<template #extra>
-			<AccountSettings :open="showSettings" :account="account" @update:open="toggleAccountSettings" />
-		</template>
-	</AppNavigationItem>
+		</NcAppNavigationCaption>
+		<AccountSettings :open="showSettings" :account="account" @update:open="toggleAccountSettings" />
+	</Fragment>
 </template>
 
 <script>
-
-import { NcAppNavigationItem as AppNavigationItem, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
+import { NcAppNavigationCaption, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-import { calculateAccountColor } from '../util/AccountColor.js'
+import { Fragment } from 'vue-frag'
+
 import logger from '../logger.js'
 import { fetchQuota } from '../service/AccountService.js'
 import IconInfo from 'vue-material-design-icons/Information.vue'
@@ -126,14 +116,12 @@ import IconFolderAdd from 'vue-material-design-icons/Folder.vue'
 import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
-import IconError from 'vue-material-design-icons/AlertCircle.vue'
-import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle.vue'
 import { DialogBuilder } from '@nextcloud/dialogs'
-
 export default {
 	name: 'NavigationAccount',
 	components: {
-		AppNavigationItem,
+		NcAppNavigationCaption,
+		Fragment,
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
@@ -145,8 +133,6 @@ export default {
 		MenuDown,
 		MenuUp,
 		IconDelete,
-		IconError,
-		IconBullet,
 		IconLoading,
 	},
 	props: {
@@ -189,23 +175,8 @@ export default {
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
-		firstMailboxRoute() {
-			if (this.firstMailbox && !this.isDisabled) {
-				return {
-					name: 'mailbox',
-					params: {
-						mailboxId: this.firstMailbox.databaseId,
-					},
-				}
-			} else {
-				return ''
-			}
-		},
 		id() {
 			return 'account-' + this.account.id
-		},
-		bulletColor() {
-			return this.account.error ? undefined : calculateAccountColor(this.account.emailAddress)
 		},
 		quotaText() {
 			if (this.quota === undefined) {
@@ -259,6 +230,7 @@ export default {
 							try {
 								await this.$store.dispatch('deleteAccount', this.account)
 								logger.info(`account ${id} deleted, redirecting …`)
+
 								// TODO: update store and handle this more efficiently
 								location.href = generateUrl('/apps/mail')
 							} catch (error) {
