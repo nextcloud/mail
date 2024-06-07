@@ -331,6 +331,8 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Ordner zum Speichern des Anhangs auswählen",
     "Save all to Files" : "Alles unter Dateien sichern",
     "Download Zip" : "ZIP herunterladen",
+    "Attachments saved to Files" : "Anhänge wurden in Dateien gespeichert.",
+    "Error while saving attachments" : "Fehler beim Speichern der Anhänge",
     "_View {count} more attachment_::_View {count} more attachments_" : ["{count} weiteren Anhange anzeigen","{count} weitere Anhänge anzeigen"],
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Diese Nachricht wurde mit PGP verschlüsselt. Installiere Mailvelope um sie zu entschlüsseln.",
     "The images have been blocked to protect your privacy." : "Die Bilder wurden blockiert, um deine Privatsphäre zu schützen.",
