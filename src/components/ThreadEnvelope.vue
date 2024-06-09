@@ -281,6 +281,8 @@ import EventModal from './EventModal.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
+import useOutboxStore from '../store/outboxStore.js'
+import { mapStores } from 'pinia'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -375,6 +377,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useOutboxStore),
 		inlineMenuSize() {
 			// eslint-disable-next-line no-unused-expressions
 			const { envelope } = this.$refs
@@ -731,7 +734,7 @@ export default {
 			}
 			try {
 				this.unsubscribing = true
-				const message = await this.$store.dispatch('outbox/enqueueMessage', {
+				const message = await this.outboxStore.enqueueMessage({
 					message: {
 						accountId: this.message.accountId,
 						subject: params.subject || 'Unsubscribe',
@@ -754,7 +757,7 @@ export default {
 					},
 				})
 				logger.debug('Unsubscribe email to ' + email + ' enqueued')
-				await this.$store.dispatch('outbox/sendMessage', { id: message.id })
+				await this.outboxStore.sendMessage({ id: message.id })
 				logger.debug('Unsubscribe email sent to ' + email)
 				showSuccess(t('mail', 'Unsubscribe request sent'))
 			} catch (error) {

@@ -120,6 +120,7 @@ import {
 	findAll,
 } from '../service/caldavService.js'
 import * as SmimeCertificateService from '../service/SmimeCertificateService.js'
+import useOutboxStore from './outboxStore.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -490,7 +491,8 @@ export default {
 					...data,
 					body: data.isHtml ? data.body.value : toPlain(data.body).value,
 				}
-				await dispatch('outbox/stopMessage', { message })
+				const outboxStore = useOutboxStore()
+				await outboxStore.stopMessage({ message })
 			}
 
 			commit('startComposerSession', {

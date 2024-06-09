@@ -81,6 +81,8 @@ import {
 	STATUS_SMTP_ERROR,
 	UNDO_DELAY,
 } from '../store/constants.js'
+import useOutboxStore from '../store/outboxStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'OutboxMessageListItem',
@@ -102,6 +104,7 @@ export default {
 		},
 	},
 	computed: {
+		...mapStores(useOutboxStore),
 		selected() {
 			return this.$route.params.messageId === this.message.id
 		},
@@ -146,7 +149,7 @@ export default {
 		},
 		async deleteMessage() {
 			try {
-				await this.$store.dispatch('outbox/deleteMessage', {
+				await this.outboxStore.deleteMessage({
 					id: this.message.id,
 				})
 				showSuccess(t('mail', 'Message deleted'))
@@ -165,17 +168,17 @@ export default {
 				failed: false,
 				sendAt: (new Date().getTime() + UNDO_DELAY) / 1000,
 			}
-			await this.$store.dispatch('outbox/updateMessage', { message, id: message.id })
+			await this.outboxStore.updateMessage({ message, id: message.id })
 			try {
 				if (this.message.status !== STATUS_IMAP_SENT_MAILBOX_FAIL) {
-					await this.$store.dispatch('outbox/sendMessageWithUndo', { id: message.id })
+					await this.outboxStore.sendMessageWithUndo({ id: message.id })
 				} else {
-					await this.$store.dispatch('outbox/copyMessageToSentMailbox', { id: message.id })
+					await this.outboxStore.copyMessageToSentMailbox({ id: message.id })
 				}
 			} catch (error) {
 				logger.error('Could not send or copy message', { error })
 				if (error.data !== undefined) {
-					await this.$store.dispatch('outbox/updateMessage', { message: error.data[0], id: message.id })
+					await this.outboxStore.updateMessage({ message: error.data[0], id: message.id })
 				}
 			}
 		},
