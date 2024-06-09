@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2024 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * Mail
  *
@@ -143,10 +144,14 @@ class IMAPClientFactory {
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
 		}
+
+		$client = new HordeImapClient($params);
+
 		$rateLimitingCache = $this->cacheFactory->createDistributed('mail_imap_ratelimit');
 		if ($rateLimitingCache instanceof IMemcache) {
-			return new ImapClientRateLimitingDecorator($params, $paramHash, $rateLimitingCache, $this->timeFactory);
+			$client->enableRateLimiter($rateLimitingCache, $paramHash, $this->timeFactory);
 		}
-		return new Horde_Imap_Client_Socket($params);
+
+		return $client;
 	}
 }
