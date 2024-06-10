@@ -59,11 +59,13 @@ use function array_filter;
  * @method int|null getSmimeCertificateId()
  * @method setSmimeCertificateId(?int $smimeCertificateId)
  * @method bool|null getSmimeEncrypt()
- * @method setSmimeEncrypt (bool $smimeEncryt)
+ * @method setSmimeEncrypt(bool $smimeEncryt)
  * @method int|null getStatus();
  * @method setStatus(?int $status);
  * @method string|null getRaw()
  * @method setRaw(string|null $raw)
+ * @method bool getRequestMdn()
+ * @method setRequestMdn(bool $mdn)
  */
 class LocalMessage extends Entity implements JsonSerializable {
 	public const TYPE_OUTGOING = 0;
@@ -143,6 +145,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	/** @var string|null */
 	protected $raw;
 
+	/** @var bool */
+	protected $requestMdn;
+
 	public function __construct() {
 		$this->addType('type', 'integer');
 		$this->addType('accountId', 'integer');
@@ -155,6 +160,8 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
 		$this->addType('status', 'integer');
+		$this->addType('requestMdn', 'boolean');
+
 	}
 
 	#[ReturnTypeWillChange]
@@ -198,6 +205,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'smimeEncrypt' => $this->getSmimeEncrypt() === true,
 			'status' => $this->getStatus(),
 			'raw' => $this->getRaw(),
+			'requestMdn' => $this->getRequestMdn(),
 		];
 	}
 

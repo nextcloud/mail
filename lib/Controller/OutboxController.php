@@ -119,7 +119,8 @@ class OutboxController extends Controller {
 		?int $aliasId = null,
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
-		?int $sendAt = null
+		?int $sendAt = null,
+		bool $requestMdn = false,
 	): JsonResponse {
 		$account = $this->accountService->find($this->userId, $accountId);
 
@@ -139,6 +140,7 @@ class OutboxController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setRequestMdn($requestMdn);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
@@ -206,7 +208,8 @@ class OutboxController extends Controller {
 		?int $aliasId = null,
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
-		?int $sendAt = null
+		?int $sendAt = null,
+		bool $requestMdn = false,
 	): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
@@ -224,6 +227,7 @@ class OutboxController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setRequestMdn($requestMdn);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);

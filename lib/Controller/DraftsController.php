@@ -103,7 +103,8 @@ class DraftsController extends Controller {
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
 		?int $sendAt = null,
-		?int $draftId = null) : JsonResponse {
+		?int $draftId = null,
+		bool $requestMdn = false) : JsonResponse {
 		$account = $this->accountService->find($this->userId, $accountId);
 		if ($draftId !== null) {
 			$this->service->handleDraft($account, $draftId);
@@ -121,6 +122,7 @@ class DraftsController extends Controller {
 		$message->setSendAt($sendAt);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setRequestMdn($requestMdn);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
@@ -168,7 +170,8 @@ class DraftsController extends Controller {
 		?int    $aliasId = null,
 		?string $inReplyToMessageId = null,
 		?int $smimeCertificateId = null,
-		?int $sendAt = null): JsonResponse {
+		?int $sendAt = null,
+		bool $requestMdn = false): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $accountId);
 
@@ -185,6 +188,7 @@ class DraftsController extends Controller {
 		$message->setUpdatedAt($this->timeFactory->getTime());
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
+		$message->setRequestMdn($requestMdn);
 
 		if (!empty($smimeCertificateId)) {
 			$smimeCertificate = $this->smimeService->findCertificate($smimeCertificateId, $this->userId);
