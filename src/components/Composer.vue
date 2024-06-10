@@ -1221,14 +1221,71 @@ export default {
 		onNewBccAddr(option) {
 			this.onNewAddr(option, this.selectBcc)
 		},
-		onNewAddr(option, list) {
+		getLabelAndAddress(string) {
+			const regex = /(<)?(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])(>?|,?|;?|>?,?|>;?)/g
+			const match = string.match(regex)
+
+			if (!match) return false
+
+			const email = match[0].replace(/<|>|\n/g, '').trim()
+			const label = string.split(match[0])[0].trim() || email
+
+			return { label, email }
+		},
+		parseEmailList(string) {
+			let start = 0
+			let inEmail = false
+			let list = []
+
+			for (let i = 0; i < string.length; i++) {
+				const char = string[i]
+
+				if (char === '@' || inEmail) {
+					inEmail = true
+
+					if ([';', ',', ' '].includes(char)) {
+						let stringAddress = string.substring(start, i).trim()
+						let labelAndAddress = this.getLabelAndAddress(stringAddress)
+
+						if (labelAndAddress) {
+							list.push(labelAndAddress)
+						}
+
+						inEmail = false
+						start = i + 1
+					}	
+				}
+			}
+
+			if (inEmail) {
+				let stringAddress = string.substring(start).trim()
+				let labelAndAddress = this.getLabelAndAddress(stringAddress)
+
+				if (labelAndAddress) {
+					list.push(labelAndAddress)
+				}
+			}
+
+			return list
+		},
+		pushNewAddr(option, list){
 			if (list.some((recipient) => recipient.email === option.email)) {
 				return
 			}
+
 			const recipient = { ...option }
 			this.newRecipients.push(recipient)
 			list.push(recipient)
 			this.saveDraftDebounced()
+		},
+		onNewAddr(option, list) {
+			if (option.id) {
+				this.pushNewAddr(option, list)
+			} else {
+				const emailList = this.parseEmailList(option.email)
+
+				emailList.forEach(email => this.pushNewAddr(email, list));
+			}
 		},
 		async onSend(_, force = false) {
 			if (this.encrypt) {
