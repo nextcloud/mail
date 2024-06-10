@@ -283,6 +283,7 @@ class OutboxControllerTest extends TestCase {
 		$message->setSmimeEncrypt(false);
 		$message->setInReplyToMessageId('abc');
 		$message->setType(LocalMessage::TYPE_OUTGOING);
+		$message->setRequestMdn(false);
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
