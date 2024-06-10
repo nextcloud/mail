@@ -35,7 +35,7 @@ body:
   attributes:
       label: Mail app version
       description: |
-          See apps admin page, e.g. 0.5.3
+          See apps admin page, e.g. 3.7.1
 - type: input
   id: mail-server-service
   attributes:
@@ -60,6 +60,7 @@ body:
           - "PHP 8.0"
           - "PHP 8.1"
           - "PHP 8.2"
+          - "PHP 8.3"
           - "Other"
 - type: dropdown
   id: webserver
