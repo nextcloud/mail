@@ -34,14 +34,11 @@
 
 namespace OCA\Mail;
 
-use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use JsonSerializable;
 use OC;
-use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Quota;
 use OCP\ICacheFactory;
 use OCP\IConfig;
@@ -114,61 +111,6 @@ class Account implements JsonSerializable {
 	 */
 	public function getEMailAddress() {
 		return $this->account->getEmail();
-	}
-
-	/**
-	 * @deprecated use \OCA\Mail\IMAP\IMAPClientFactory instead
-	 * @return Horde_Imap_Client_Socket
-	 *
-	 * @throws ServiceException
-	 */
-	public function getImapConnection() {
-		if ($this->client === null) {
-			$host = $this->account->getInboundHost();
-			$user = $this->account->getInboundUser();
-			$password = $this->account->getInboundPassword();
-			$password = $this->crypto->decrypt($password);
-			$port = $this->account->getInboundPort();
-			$ssl_mode = $this->convertSslMode($this->account->getInboundSslMode());
-
-			$params = [
-				'username' => $user,
-				'password' => $password,
-				'hostspec' => $host,
-				'port' => $port,
-				'secure' => $ssl_mode,
-				'timeout' => (int) $this->config->getSystemValue('app.mail.imap.timeout', 20),
-				'context' => [
-					'ssl' => [
-						'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-						'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
-					],
-				],
-			];
-			if ($this->config->getSystemValue('debug', false)) {
-				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
-			}
-			if ($this->config->getSystemValue('app.mail.server-side-cache.enabled', true)) {
-				if ($this->memcacheFactory->isAvailable()) {
-					$params['cache'] = [
-						'backend' => new Cache([
-							'cacheob' => $this->memcacheFactory
-								->createDistributed(md5($this->getId() . $this->getEMailAddress()))
-						])];
-				}
-			}
-			$this->client = new \Horde_Imap_Client_Socket($params);
-			try {
-				$this->client->login();
-			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException(
-					"Could not connect to IMAP host $host:$port: " . $e->getMessage(),
-					$e->getCode(),
-					$e
-				);
-			}
-		}
-		return $this->client;
 	}
 
 	#[ReturnTypeWillChange]
