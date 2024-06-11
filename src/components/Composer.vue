@@ -37,7 +37,7 @@
 				<NcSelect id="to"
 					ref="toLabel"
 					:value="selectTo"
-					:options="selectableRecipients.filter(reciptient=>!selectTo.some(to=>to.email===reciptient.email))"
+					:options="selectableRecipients.filter(recipient=>!selectTo.some(to=>to.email===recipient.email))"
 					:taggable="true"
 					:aria-label-combobox="t('mail', 'Select recipient')"
 					:filter-by="(option, label, search)=>filterOption(option, label, search,'to')"
@@ -50,8 +50,10 @@
 					:no-wrap="false"
 					:append-to-body="false"
 					:create-option="createRecipientOption"
+					:clear-search-on-blur="() => clearOnBlur('to')"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewToAddr"
+					@search:blur="onNewToAddr"
 					@search="onAutocomplete($event, 'to')">
 					<template #search="{ events, attributes }">
 						<input :placeholder="t('mail', 'Contact or email address …')"
@@ -93,11 +95,12 @@
 					ref="toLabel"
 					:value="selectCc"
 					:class="{'opened': !autoLimit,'select':true}"
-					:options="selectableRecipients.filter(reciptient=>!selectCc.some(cc=>cc.email===reciptient.email))"
+					:options="selectableRecipients.filter(recipient=>!selectCc.some(cc=>cc.email===recipient.email))"
 					:no-wrap="false"
 					:filter-by="(option, label, search)=>filterOption(option, label, search,'cc')"
 					:taggable="true"
 					:close-on-select="true"
+					:clear-search-on-blur="() => clearOnBlur('cc')"
 					:append-to-body="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
@@ -109,6 +112,7 @@
 					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewCcAddr"
+					@search:blur="onNewCcAddr"
 					@search="onAutocomplete($event, 'cc')">
 					<template #search="{ events, attributes }">
 						<input :placeholder="t('mail', 'Contact or email address …')"
@@ -146,9 +150,10 @@
 					:class="{'opened': !autoLimit,'select':true}"
 					:no-wrap="false"
 					:filter-by="(option, label, search)=>filterOption(option, label, search,'bcc')"
-					:options="selectableRecipients.filter(reciptient=>!selectBcc.some(bcc=>bcc.email===reciptient.email))"
+					:options="selectableRecipients.filter(recipient=>!selectBcc.some(bcc=>bcc.email===recipient.email))"
 					:taggable="true"
 					:close-on-select="true"
+					:clear-search-on-blur="() => clearOnBlur('bcc')"
 					:append-to-body="false"
 					:multiple="true"
 					:placeholder="t('mail', 'Contact or email address …')"
@@ -160,6 +165,7 @@
 					:create-option="createRecipientOption"
 					@input="saveDraftDebounced"
 					@option:selecting="onNewBccAddr"
+					@search:blur="onNewBccAddr"
 					@search="onAutocomplete($event, 'bcc')">
 					<template #search="{ events, attributes }">
 						<input :placeholder="t('mail', 'Contact or email address …')"
@@ -669,6 +675,7 @@ export default {
 			wantsSmimeSign: this.smimeSign,
 			wantsSmimeEncrypt: this.smimeEncrypt,
 			isPickerOpen: false,
+			recipientSearchTerms: {},
 		}
 	},
 	computed: {
@@ -970,6 +977,9 @@ export default {
 		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
+		clearOnBlur(event) {
+			return this.recipientSearchTerms[event].includes('@')
+		},
 		handleShow(event) {
 			this.$emit('show-toolbar', event)
 		},
@@ -1175,19 +1185,20 @@ export default {
 		onAddCloudAttachmentLink() {
 			this.bus.emit('on-add-cloud-attachment-link')
 		},
-		onAutocomplete(term, loadingIndicator) {
+		onAutocomplete(term, addressType) {
 			if (term === undefined || term === '') {
 				return
 			}
-			this.loadingIndicatorTo = loadingIndicator === 'to'
-			this.loadingIndicatorCc = loadingIndicator === 'cc'
-			this.loadingIndicatorBcc = loadingIndicator === 'bcc'
+			this.loadingIndicatorTo = addressType === 'to'
+			this.loadingIndicatorCc = addressType === 'cc'
+			this.loadingIndicatorBcc = addressType === 'bcc'
+			this.recipientSearchTerms[addressType] = term
 			debouncedSearch(term).then((results) => {
-				if (loadingIndicator === 'to') {
+				if (addressType === 'to') {
 					this.loadingIndicatorTo = false
-				} else if (loadingIndicator === 'cc') {
+				} else if (addressType === 'cc') {
 					this.loadingIndicatorCc = false
-				} else if (loadingIndicator === 'bcc') {
+				} else if (addressType === 'bcc') {
 					this.loadingIndicatorBcc = false
 				}
 
@@ -1213,16 +1224,30 @@ export default {
 			await this.checkRecipientsKeys()
 		},
 		onNewToAddr(option) {
-			this.onNewAddr(option, this.selectTo)
+			this.onNewAddr(option, this.selectTo, 'to')
 		},
 		onNewCcAddr(option) {
-			this.onNewAddr(option, this.selectCc)
+			this.onNewAddr(option, this.selectCc, 'cc')
 		},
 		onNewBccAddr(option) {
-			this.onNewAddr(option, this.selectBcc)
+			this.onNewAddr(option, this.selectBcc, 'bcc')
 		},
-		onNewAddr(option, list) {
-			if (list.some((recipient) => recipient.email === option.email)) {
+		onNewAddr(option, list, type) {
+			if (
+				(option === null || option === undefined)
+				&& this.recipientSearchTerms[type] !== undefined
+				&& this.recipientSearchTerms[type] !== ''
+			) {
+				if (!this.recipientSearchTerms[type].includes('@')) {
+					return
+				}
+				option = {}
+				option.email = this.recipientSearchTerms[type]
+				option.label = this.recipientSearchTerms[type]
+				this.recipientSearchTerms[type] = ''
+			}
+
+			if (list.some((recipient) => recipient.email === option?.email) || !option) {
 				return
 			}
 			const recipient = { ...option }
