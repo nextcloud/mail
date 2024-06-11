@@ -29,8 +29,8 @@ use Horde_Imap_Client_Socket;
 use OC\Memcache\Redis;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\ImapClientRateLimitingDecorator;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
@@ -127,7 +127,7 @@ class IMAPClientFactoryTest extends TestCase {
 			->willReturn('notmypassword');
 
 		$client = $this->factory->getClient($account);
-		self::assertInstanceOf(ImapClientRateLimitingDecorator::class, $client);
+		self::assertInstanceOf(HordeImapClient::class, $client);
 		foreach ([1, 2, 3] as $attempts) {
 			try {
 				$client->login();
