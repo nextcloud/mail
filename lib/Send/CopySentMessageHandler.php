@@ -5,6 +5,7 @@ declare(strict_types=1);
  * @copyright 2024 Anna Larch <anna.larch@gmx.net>
  *
  * @author Anna Larch <anna.larch@gmx.net>
+ * @author 2024 Richard Steinmetz <richard@steinmetz.cloud>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -43,6 +44,12 @@ class CopySentMessageHandler extends AHandler {
 			return $this->processNext($account, $localMessage);
 		}
 
+		$rawMesage = $localMessage->getRaw();
+		if ($rawMesage === null) {
+			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+			return $localMessage;
+		}
+
 		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		if ($sentMailboxId === null) {
 			// We can't write the "sent mailbox" status here bc that would trigger an additional send.
@@ -73,7 +80,7 @@ class CopySentMessageHandler extends AHandler {
 			$this->messageMapper->save(
 				$client,
 				$sentMailbox,
-				$localMessage->getRaw()
+				$rawMesage,
 			);
 			$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
 		} catch (Horde_Imap_Client_Exception $e) {

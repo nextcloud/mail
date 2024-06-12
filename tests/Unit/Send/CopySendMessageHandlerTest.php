@@ -107,7 +107,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
-		$localMessage->addMethods(['getStatus','setStatus']);
+		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
 
 		$this->loggerInterface->expects(self::once())
@@ -115,6 +115,9 @@ class CopySendMessageHandlerTest extends TestCase {
 		$mock->expects(self::once())
 			->method('getStatus')
 			->willReturn(LocalMessage::STATUS_RAW);
+		$mock->expects(self::once())
+			->method('getRaw')
+			->willReturn('Test');
 		$mock->expects(self::once())
 			->method('setStatus')
 			->with(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
@@ -138,7 +141,7 @@ class CopySendMessageHandlerTest extends TestCase {
 		$mailAccount->setSentMailboxId(1);
 		$account = new Account($mailAccount);
 		$localMessage = $this->getMockBuilder(LocalMessage::class);
-		$localMessage->addMethods(['getStatus','setStatus']);
+		$localMessage->addMethods(['getStatus', 'setStatus', 'getRaw']);
 		$mock = $localMessage->getMock();
 
 		$this->loggerInterface->expects(self::never())
@@ -146,6 +149,9 @@ class CopySendMessageHandlerTest extends TestCase {
 		$mock->expects(self::once())
 			->method('getStatus')
 			->willReturn(LocalMessage::STATUS_RAW);
+		$mock->expects(self::once())
+			->method('getRaw')
+			->willReturn('Test');
 		$mock->expects(self::once())
 			->method('setStatus')
 			->with(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
@@ -228,5 +234,36 @@ class CopySendMessageHandlerTest extends TestCase {
 			->method('process');
 
 		$this->handler->process($account, $mock);
+	}
+
+	public function testProcessNoRawMessage(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(1);
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+		$localMessage = $this->getMockBuilder(LocalMessage::class);
+		$localMessage->addMethods(['getStatus','setStatus', 'getRaw']);
+		$mock = $localMessage->getMock();
+
+		$mock->expects(self::once())
+			->method('getStatus')
+			->willReturn(LocalMessage::STATUS_RAW);
+		$mock->expects(self::once())
+			->method('getRaw')
+			->willReturn(null);
+		$mock->expects(self::once())
+			->method('setStatus')
+			->willReturn(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
+		$this->mailboxMapper->expects(self::never())
+			->method('findById');
+		$this->imapClientFactory->expects(self::never())
+			->method('getClient');
+		$this->messageMapper->expects(self::never())
+			->method('save');
+		$this->flagRepliedMessageHandler->expects(self::never())
+			->method('process');
+
+		$result = $this->handler->process($account, $mock);
+		$this->assertEquals($mock, $result);
 	}
 }
