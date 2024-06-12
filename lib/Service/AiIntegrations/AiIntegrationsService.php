@@ -170,9 +170,10 @@ PROMPT;
 	}
 
 	/**
-	 * @return string[]
+	 * @return ?string[]
+	 * @throws ServiceException
 	 */
-	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): array {
+	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
@@ -181,7 +182,7 @@ PROMPT;
 		if (in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
 			$cachedReplies = $this->cache->getValue('smartReplies_'.$message->getId());
 			if ($cachedReplies) {
-				return explode("|", $cachedReplies);
+				return json_decode($cachedReplies, true, 512);
 			}
 			$client = $this->clientFactory->getClient($account);
 			try {
@@ -199,13 +200,30 @@ PROMPT;
 			} finally {
 				$client->logout();
 			}
-			$prompt = "Suggest 2 replies to the following email. Each reply should be 25 characters max. Separate the replies with  \"| \", like for example  \"Yes! | No, I'm not available \". Do not print anything else. The email contents are : ".$messageBody."";
+			$prompt = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
+
+			Formulate two extremely succinct reply suggestions to the provided ***E-MAIL***. Please, do not invent any context for the replies but, rather, leave blanks for me to fill in with relevant information where necessary. Provide the output formatted as valid JSON with the keys 'reply1' and 'reply2' for the reply suggestions.
+
+			Each suggestion must be of 25 characters or less.
+
+			Here is the ***E-MAIL*** for which you must suggest the replies to:
+
+			***START_OF_E-MAIL***".$messageBody."
+
+			***END_OF_E-MAIL***
+
+			Please, output *ONLY* a valid JSON string with the keys 'reply1' and 'reply2' for the reply suggestions. Leave out any other text besides the JSON! Be extremely succinct and write the replies from my point of view.
+			 ";
 			$task = new Task(FreePromptTaskType::class, $prompt, 'mail,', $currentUserId);
 			$manager->runTask($task);
-			$replies = array_slice(explode("|", $task->getOutput()), 0, 2);
-			$this->cache->addValue('smartReplies_'.$message->getUid(), implode("|", $replies));
-			return $replies;
-			
+			$replies = $task->getOutput();
+			try {
+				$decoded = json_decode($replies, true, 512, JSON_THROW_ON_ERROR);
+				$this->cache->addValue('smartReplies_'.$message->getId(), $replies);
+				return $decoded;
+			} catch (JsonException $e) {
+				throw new ServiceException('Failed to decode smart replies JSON output', $e);
+			}
 		} else {
 			throw new ServiceException('No language model available for smart replies');
 		}
@@ -234,7 +252,7 @@ PROMPT;
 		];
 
 		$senderAddress = $imapMessage->getFrom()->first()?->getEmail();
-		
+
 		if($senderAddress !== null) {
 			foreach ($commonPatterns as $pattern) {
 				if (stripos($senderAddress, $pattern) !== false) {
