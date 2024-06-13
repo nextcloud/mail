@@ -59,7 +59,7 @@ class PhishingDetectionServiceTest extends TestCase {
 
 	
 
-	public function testCheckHeadersForPhishing() {
+	public function testCheckHeadersForPhishing(): void {
 		$headerStream = fopen(__DIR__ . '/../../data/phishing-mail-headers.txt', 'r');
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headerStream);
 		fclose($headerStream);
