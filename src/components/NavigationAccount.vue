@@ -95,9 +95,12 @@
 					</template>
 					{{ t('mail', 'Move down') }}
 				</ActionButton>
-				<ActionButton v-if="!account.provisioningId" @click="removeAccount">
+				<ActionButton v-if="!account.provisioningId"
+					:disabled="loading.delete"
+					@click="removeAccount">
 					<template #icon>
-						<IconDelete :size="20" />
+						<IconLoading v-if="loading.delete" :size="20" />
+						<IconDelete v-else :size="20" />
 					</template>
 					{{ t('mail', 'Remove account') }}
 				</ActionButton>
@@ -114,7 +117,6 @@
 import { NcAppNavigationItem as AppNavigationItem, NcActionButton as ActionButton, NcActionCheckbox as ActionCheckbox, NcActionInput as ActionInput, NcActionText as ActionText, NcLoadingIcon as IconLoading } from '@nextcloud/vue'
 import { formatFileSize } from '@nextcloud/files'
 import { generateUrl } from '@nextcloud/router'
-
 import { calculateAccountColor } from '../util/AccountColor.js'
 import logger from '../logger.js'
 import { fetchQuota } from '../service/AccountService.js'
@@ -126,6 +128,7 @@ import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
 import IconError from 'vue-material-design-icons/AlertCircle.vue'
 import IconBullet from 'vue-material-design-icons/CheckboxBlankCircle.vue'
+import { DialogBuilder } from '@nextcloud/dialogs'
 
 export default {
 	name: 'NavigationAccount',
@@ -238,38 +241,36 @@ export default {
 			this.editing = true
 			this.showSaving = false
 		},
-		removeAccount() {
+		async removeAccount() {
 			const id = this.account.id
 			logger.info('delete account', { account: this.account })
-			// eslint-disable-next-line
-			const dialogueText = t('mail', 'The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider.', { email: this.account.emailAddress });
-			OC.dialogs.confirmDestructive(
-				dialogueText,
-				t('mail', 'Remove account {email}', { email: this.account.emailAddress }),
-				{
-					type: OC.dialogs.YES_NO_BUTTONS,
-					confirm: t('mail', 'Remove {email}', { email: this.account.emailAddress }),
-					confirmClasses: 'error',
-					cancel: t('mail', 'Cancel'),
-				},
-				(result) => {
-					if (result) {
-						return this.$store
-							.dispatch('deleteAccount', this.account)
-							.then(() => {
-								this.loading.delete = true
-							})
-							.then(() => {
+			const dialog = new DialogBuilder()
+				.setName(t('mail', 'Remove account'))
+				.setText(t('mail', 'The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider.', { email: this.account.emailAddress }))
+				.setButtons([
+					{
+						label: t('mail', 'Cancel'),
+					},
+					{
+						label: t('mail', 'Remove {email}', { email: this.account.emailAddress }),
+						type: 'error',
+						callback: async () => {
+							this.loading.delete = true
+							try {
+								await this.$store.dispatch('deleteAccount', this.account)
 								logger.info(`account ${id} deleted, redirecting …`)
-
 								// TODO: update store and handle this more efficiently
 								location.href = generateUrl('/apps/mail')
-							})
-							.catch((error) => logger.error('could not delete account', { error }))
-					}
-					this.loading.delete = false
-				},
-			)
+							} catch (error) {
+								logger.error('could not delete account', { error })
+							} finally {
+								this.loading.delete = false
+							}
+						},
+					},
+				])
+				.build()
+			await dialog.show()
 		},
 		changeAccountOrderUp() {
 			this.$store
@@ -334,3 +335,16 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss">
+// Fix very long button labels overflowing the modal
+.dialog {
+	&__actions {
+		flex-wrap: wrap;
+
+		> button {
+			flex: 1 auto;
+		}
+	}
+}
+</style>
