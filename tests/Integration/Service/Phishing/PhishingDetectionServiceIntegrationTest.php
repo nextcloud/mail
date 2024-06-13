@@ -31,6 +31,7 @@ use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
 use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -39,6 +40,7 @@ class PhishingDetectionServiceTest extends TestCase {
 
 	private ContactsIntegration|MockObject $contactsIntegration;
 	private IL10N|MockObject $l10n;
+	private ITimeFactory $timeFactory;
 	private ContactCheck $contactCheck;
 	private CustomEmailCheck $customEmailCheck;
 	private DateCheck $dateCheck;
@@ -51,14 +53,14 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->contactCheck = new ContactCheck($this->contactsIntegration, $this->l10n);
 		$this->customEmailCheck = new CustomEmailCheck($this->l10n);
-		$this->dateCheck = new DateCheck($this->l10n);
+		$this->dateCheck = new DateCheck($this->l10n, $this->timeFactory);
 		$this->replyToCheck = new ReplyToCheck($this->l10n);
 		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck);
 	}
 
 	
 
-	public function testContactCheck() {
+	public function testContactCheck(): void {
 		$this->contactsIntegration->expects($this->once())
 		->method('getContactsWithName')
 		->willReturn([["id" => 1, "fn" => "John Doe", "email" => ["jhon@example.org","Doe@example.org"]]]);
@@ -66,21 +68,21 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->assertTrue($result->isPhishing());
 	}
 
-	public function testCustomEmailCheck() {
+	public function testCustomEmailCheck(): void {
 		$result = $this->customEmailCheck->run("jhon@example.org", "jhon.doe@example.org");
 		$this->assertTrue($result->isPhishing());
 	}
 
-	public function testDateCheck() {
+	public function testDateCheck(): void {
 		$result = $this->dateCheck->run("3024-12-12 12:12:12");
 		$this->assertTrue($result->isPhishing());
 	}
 
-	public function testReplyToCheck() {
+	public function testReplyToCheck(): void {
 		$result = $this->replyToCheck->run("jhon@example.org", "jhon.doe@example.org");
 		$this->assertTrue($result->isPhishing());
 	}
-	public function testCheckHeadersForPhishing() {
+	public function testCheckHeadersForPhishing(): void {
 		$headerStream = fopen(__DIR__ . '/../../../data/phishing-mail-headers.txt', 'r');
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headerStream);
 		fclose($headerStream);

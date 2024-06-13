@@ -25,20 +25,22 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\PhishingDetection;
 
-use DateTime;
 use OCA\Mail\PhishingDetectionResult;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 
 class DateCheck {
 	protected IL10N $l10n;
+	protected ITimeFactory $timeFactory;
 
-	public function __construct(IL10N $l10n) {
+	public function __construct(IL10N $l10n, ITimeFactory $timeFactory) {
 		$this->l10n = $l10n;
+		$this->timeFactory = $timeFactory;
 	}
 
 	public function run(string $date): PhishingDetectionResult {
-		$now = new DateTime();
-		$dt = new DateTime($date);
+		$now = $this->timeFactory->getDateTime();
+		$dt = $this->timeFactory->getDateTime($date);
 		if ($dt > $now) {
 			return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, true, $this->l10n->t("Sent date is in the future"));
 		}

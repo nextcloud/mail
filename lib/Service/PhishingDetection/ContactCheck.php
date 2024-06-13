@@ -53,7 +53,7 @@ class ContactCheck {
 			}
 		}
 		if ($emailInContacts) {
-			return new PhishingDetectionResult(PhishingDetectionResult::CONTACTS_CHECK, true, $this->l10n->t('Sender email: %1$s is not in the contacts list, but the sender name: %2$s is in the contacts list with the following emails: %3$s', [$email, $fn, $emails]));
+			return new PhishingDetectionResult(PhishingDetectionResult::CONTACTS_CHECK, true, $this->l10n->t('Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s', [$email, $fn, $emails]));
 		}
 
 		return new PhishingDetectionResult(PhishingDetectionResult::CONTACTS_CHECK, false);
