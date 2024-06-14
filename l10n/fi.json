@@ -277,7 +277,6 @@
     "Not supported by the server" : "Ei tuettu palvelimen toimesta",
     "{usage} of {limit} used" : "{usage}/{limit} käytetty",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Tili {email} ja tallennetut viesti poistetaan Nextcloudista, muttei sähköpostintarjoajaltasi.",
-    "Remove account {email}" : "Poista tili {email}",
     "Remove {email}" : "Poista {email}",
     "Show all subscribed mailboxes" : "Näytä kaikki tilatut postilaatikot",
     "Show all mailboxes" : "Näytä kaikki postilaatikot",

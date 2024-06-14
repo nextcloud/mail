@@ -261,7 +261,6 @@ OC.L10N.register(
     "Not supported by the server" : "Не е поддржано од серверот",
     "{usage} of {limit} used" : "Искористено {usage} од {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Сметката за {email} и зачуваните податоци ќе бидат избришани, но нема да бидат избришани од провајдерот на електронската пошта.",
-    "Remove account {email}" : "Отстрани сметка {email}",
     "Remove {email}" : "Одстрани {email}",
     "Show all subscribed mailboxes" : "Прикажи ги сите сандачиња со претплата",
     "Show all mailboxes" : "Прикажи ги сите сандачиња",

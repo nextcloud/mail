@@ -201,7 +201,6 @@ OC.L10N.register(
     "Not supported by the server" : "Ne podržava poslužitelj",
     "{usage} of {limit} used" : "{usage} od {limit} iskorišteno",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Račun za {email} i podaci e-pošte spremljeni u predmemoriji uklonit će se iz Nextclouda, ali ne iz vašeg davatelja usluga e-pošte.",
-    "Remove account {email}" : "Ukloni račun {email}",
     "Remove {email}" : "Ukloni {email}",
     "Show all subscribed mailboxes" : "Prikaži sve pretplaćene sandučiće",
     "Show all mailboxes" : "Prikaži sve sandučiće",

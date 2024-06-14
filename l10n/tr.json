@@ -358,7 +358,6 @@
     "Not supported by the server" : "Sunucu tarafından desteklenmiyor",
     "{usage} of {limit} used" : "{usage} / {limit} kullanılmış",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} hesabı ve ön belleğe alınmış verileri Nextcloud üzerinden silinecek ancak e-posta hizmeti sağlayıcınız üzerinden silinmeyecek.",
-    "Remove account {email}" : "{email} hesabını kaldır",
     "Remove {email}" : "{email} sil",
     "Show all subscribed mailboxes" : "Tüm abone olunmuş kutular görüntülensin",
     "Show all mailboxes" : "Tüm e-posta kutularını görüntüle",

@@ -358,7 +358,6 @@ OC.L10N.register(
     "Not supported by the server" : "Zerbitzariak ez du onartzen",
     "{usage} of {limit} used" : "{usage} / {limit} erabilita",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} kontua eta cachean gordetako posta datuak Nextcloudetik ezabatu egingo dira, baina ez zure posta hornitzailetik.",
-    "Remove account {email}" : "Kendu {email} kontua ",
     "Remove {email}" : "Kendu {email}",
     "Show all subscribed mailboxes" : "Erakutsi harpidetutako postontzi guztiak",
     "Show all mailboxes" : "Erakutsi postontzi guztiak",

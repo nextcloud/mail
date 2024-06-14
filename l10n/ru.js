@@ -308,7 +308,6 @@ OC.L10N.register(
     "Not supported by the server" : "Функция не поддерживается сервером",
     "{usage} of {limit} used" : "Используется {usage} из {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Учётная запись {email} и сохранённые данные будут удалены из Nextcloud, но сохранятся на исходном почтовом сервере.",
-    "Remove account {email}" : "Удалить учётную запись {email}",
     "Remove {email}" : "Удалить {email}",
     "Show all subscribed mailboxes" : "Показать все папки из подписки",
     "Show all mailboxes" : "Показать все папки",

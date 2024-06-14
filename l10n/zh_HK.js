@@ -360,7 +360,6 @@ OC.L10N.register(
     "Not supported by the server" : "不被伺服器支援",
     "{usage} of {limit} used" : "已使用 {limit} 中的 {usage}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} 賬號與已快取的電子郵件將會從 Nextcloud 移除，但不會從您的電子郵件提供商移除。",
-    "Remove account {email}" : "移除賬號 {email}",
     "Remove {email}" : "移除 {email}",
     "Show all subscribed mailboxes" : "顯示所有已訂閱的信箱",
     "Show all mailboxes" : "顯示所有信箱",

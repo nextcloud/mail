@@ -358,7 +358,6 @@
     "Not supported by the server" : "Сервер не подржава ово",
     "{usage} of {limit} used" : "{usage} од {limit} искоришћено",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} налог и кеширани подаци е-поште ће бити уклоњени из Некстклауда, али не и са Вашег е-мејл провајдера.",
-    "Remove account {email}" : "Уклони налог {email}",
     "Remove {email}" : "Уклони {email}",
     "Show all subscribed mailboxes" : "Прикажи све претплаћене сандучиће",
     "Show all mailboxes" : "Прикажи све сандучиће",

@@ -354,7 +354,6 @@
     "Not supported by the server" : "Støttes ikke av serveren",
     "{usage} of {limit} used" : "{usage} av {limit} brukt",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Kontoen for {email} og bufrede e-postdata vil bli fjernet fra Nextcloud, men ikke fra e-postleverandøren din.",
-    "Remove account {email}" : "Fjern kontoen {email}",
     "Remove {email}" : "Fjern {email}",
     "Show all subscribed mailboxes" : "Vis alle postbokser du abonnerer på",
     "Show all mailboxes" : "Vis alle postbokser",

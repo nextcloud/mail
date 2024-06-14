@@ -168,7 +168,6 @@
     "Not supported by the server" : "Không được máy chủ hỗ trợ",
     "{usage} of {limit} used" : "Đã sử dụng {use} trong tổng số {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Tài khoản cho {email} và dữ liệu email đã lưu trong bộ nhớ cache sẽ bị xóa khỏi vWorkspace, nhưng không bị xóa khỏi nhà cung cấp dịch vụ email của bạn.",
-    "Remove account {email}" : "Xóa tài khoản {email}",
     "Remove {email}" : "Xóa {email}",
     "Show all subscribed mailboxes" : "Hiển thị tất cả các hộp thư đã đăng ký",
     "Show all mailboxes" : "Hiển thị tất cả các hộp thư",

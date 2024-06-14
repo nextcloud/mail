@@ -348,7 +348,6 @@ OC.L10N.register(
     "Loading …" : "読み込み中...",
     "Not supported by the server" : "サーバーに対応していません",
     "{usage} of {limit} used" : "{usage} / {limit} 使われています",
-    "Remove account {email}" : "アカウント {email} の削除",
     "Remove {email}" : "{email} を削除",
     "Show all subscribed mailboxes" : "購読したメールボックスを全て表示",
     "Show all mailboxes" : "全てのメールボックスを表示",

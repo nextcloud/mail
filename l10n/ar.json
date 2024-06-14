@@ -358,7 +358,6 @@
     "Not supported by the server" : "غير مدعوم من قبل الخادوم",
     "{usage} of {limit} used" : "تمّ استخدام {Usage} من {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "ستتم إزالة حساب {email} وبيانات البريد الإلكتروني المخزنة مؤقتًا من نكست كلاود، ولكن ليس من مُزوِّد بريدك الإلكتروني.",
-    "Remove account {email}" : "إزالة الحساب {email}",
     "Remove {email}" : "إزالة {email}",
     "Show all subscribed mailboxes" : "عرض كافة صناديق البريد المُشترِكة",
     "Show all mailboxes" : "عرض كافة صناديق البريد",

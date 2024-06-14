@@ -297,7 +297,6 @@ OC.L10N.register(
     "Not supported by the server" : "Не се поддържа от сървъра",
     "{usage} of {limit} used" : "{usage} от {limit}  използвани",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Профилът за {email} и кешираните имейл данни ще бъдат премахнати от Nextcloud, но не и от вашия доставчик на електронна поща.",
-    "Remove account {email}" : "Премахване на профил {email}",
     "Remove {email}" : "Премахване {email}",
     "Show all subscribed mailboxes" : "Показване на всички абонирани пощенски кутии",
     "Show all mailboxes" : "Показване на всички пощенски кутии",

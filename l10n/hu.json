@@ -329,7 +329,6 @@
     "Not supported by the server" : "A kiszolgáló nem támogatja",
     "{usage} of {limit} used" : "{usage} / {limit} felhasználva",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Az {email} fiók és a gyorsítótárazott e-mail-adatok el lesznek távolítva a Nextcloudból, az e-mail-szolgáltatójától azonban nem.",
-    "Remove account {email}" : "{email} fiók eltávolítása",
     "Remove {email}" : "{email} eltávolítása",
     "Show all subscribed mailboxes" : "Összes feliratkozott postafiók megjelenítése",
     "Show all mailboxes" : "Összes postafiók megjelenítése",

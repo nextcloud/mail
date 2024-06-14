@@ -348,7 +348,6 @@
     "Not supported by the server" : "Not supported by the server",
     "{usage} of {limit} used" : "{usage} of {limit} used",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider.",
-    "Remove account {email}" : "Remove account {email}",
     "Remove {email}" : "Remove {email}",
     "Show all subscribed mailboxes" : "Show all subscribed mailboxes",
     "Show all mailboxes" : "Show all mailboxes",

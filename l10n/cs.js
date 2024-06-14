@@ -351,7 +351,6 @@ OC.L10N.register(
     "Not supported by the server" : "Nepodporováno serverem",
     "{usage} of {limit} used" : "využito {usage} z {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Účet pro {email} a data e-mailů, uložených v mezipaměti, budou odebrána z Nextcloud, ale ne z poskytovatele e-mailů.",
-    "Remove account {email}" : "Odebrat účet {email}",
     "Remove {email}" : "Odebrat {email}",
     "Show all subscribed mailboxes" : "Zobrazit všechny přihlášené poštovní schránky",
     "Show all mailboxes" : "Zobrazit všechny schránky",

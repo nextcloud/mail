@@ -257,7 +257,6 @@ OC.L10N.register(
     "Move down" : "Flyt ned",
     "Remove account" : "Fjern konto",
     "Loading …" : "Indlæser…",
-    "Remove account {email}" : "Fjern konto {email}",
     "Remove {email}" : "Fjern {email}",
     "Show all subscribed mailboxes" : "Vis alle postkasser der abonneres på",
     "Show all mailboxes" : "Vis alle postkasser",

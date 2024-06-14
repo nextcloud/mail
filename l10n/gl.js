@@ -340,7 +340,6 @@ OC.L10N.register(
     "Not supported by the server" : "Non é compatíbel co servidor",
     "{usage} of {limit} used" : "Usado {usage} de {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "A conta de {email} e os datos de correo na caché retiraranse de Nextcloud, mais non do seu provedor de correo.",
-    "Remove account {email}" : "Retirar a conta {email}",
     "Remove {email}" : "Retirar {email}",
     "Show all subscribed mailboxes" : "Amosar todas as caixas de correo subscritas",
     "Show all mailboxes" : "Amosar todas as caixas de correo",

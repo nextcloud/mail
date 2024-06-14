@@ -347,7 +347,6 @@ OC.L10N.register(
     "Loading …" : "Завантаження...",
     "Not supported by the server" : "Не підтримується сервером",
     "{usage} of {limit} used" : "Використано {usage} із {limit}",
-    "Remove account {email}" : "Вилучити обліковий запис {email}",
     "Remove {email}" : "Вилучити {email}",
     "Show all subscribed mailboxes" : "Показати всі поштові скриньки, на які підписано",
     "Show all mailboxes" : "Показати всі поштові скриньки",

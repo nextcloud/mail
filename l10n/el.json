@@ -243,7 +243,6 @@
     "Not supported by the server" : "Δεν υποστηρίζεται από τον διακομιστή",
     "{usage} of {limit} used" : "Σε χρήση {usage} από {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Ο λογαριασμός για {email} και προσωρινά αποθηκευμένα δεδομένα email θα καταργηθεί από το Nextcloud, αλλά όχι από τον πάροχο email σας.",
-    "Remove account {email}" : "Αφαίρεση λογαριασμού {email}",
     "Remove {email}" : "Αφαίρεση {email}",
     "Show all subscribed mailboxes" : "Εμφάνιση όλων των εγγεγραμμένων γραμματοκιβωτίων",
     "Show all mailboxes" : "Εμφάνιση όλων των γραμματοκιβωτίων",

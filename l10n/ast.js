@@ -154,7 +154,6 @@ OC.L10N.register(
     "Loading …" : "Cargando…",
     "Not supported by the server" : "Nun ye compatible col sirvidor",
     "{usage} of {limit} used" : "{usage} de {limit} n'usu",
-    "Remove account {email}" : "Quitar la cuenta {email}",
     "Remove {email}" : "Quitar {email}",
     "Show all mailboxes" : "Amosar toles bandexes",
     "Collapse mailboxes" : "Contrayer toles bandexes",

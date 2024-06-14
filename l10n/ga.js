@@ -360,7 +360,6 @@ OC.L10N.register(
     "Not supported by the server" : "Ní thacaíonn an freastalaí leis",
     "{usage} of {limit} used" : "{usage} de {limit} úsáidte",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Bainfear an cuntas le haghaidh {email} agus na sonraí ríomhphoist i dtaisce de Nextcloud, ach ní bhainfear iad de do sholáthraí ríomhphoist.",
-    "Remove account {email}" : "Bain cuntas {email}",
     "Remove {email}" : "Bain {email}",
     "Show all subscribed mailboxes" : "Taispeáin gach bosca poist suibscríofa",
     "Show all mailboxes" : "Taispeáin gach bosca poist",

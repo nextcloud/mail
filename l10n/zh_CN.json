@@ -348,7 +348,6 @@
     "Not supported by the server" : "服务器不支持",
     "{usage} of {limit} used" : "已使用 {usage} / {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email}的账户和缓存的电子邮件数据将从Nextcloud中删除，但不会从您的电子邮件提供商那里删除。",
-    "Remove account {email}" : "移除账户{email}",
     "Remove {email}" : "移除 {email}",
     "Show all subscribed mailboxes" : "显示所有订阅的邮箱",
     "Show all mailboxes" : "显示所有邮箱",

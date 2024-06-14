@@ -155,7 +155,6 @@ OC.L10N.register(
     "Remove account" : "הסרת חשבון",
     "Loading …" : "בטעינה",
     "Not supported by the server" : "לא נתמך על ידי השרת",
-    "Remove account {email}" : "להסיר את החשבון {email}",
     "Remove {email}" : "להסיר את {email}",
     "Show all mailboxes" : "הצגת כל תיבות הדוא״ל",
     "Collapse mailboxes" : "צמצום תיבות דוא״ל",

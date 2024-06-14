@@ -317,7 +317,6 @@ OC.L10N.register(
     "Not supported by the server" : "Incompatibil cu serverul",
     "{usage} of {limit} used" : "{usage} din {limit} utilizat",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Contul pentru {email} și datele din cache vor fi eliminate din Nextcloud, dar nu și de la providerul de mail.",
-    "Remove account {email}" : "Șterge contul {email}",
     "Remove {email}" : "Șterge {email}",
     "Show all subscribed mailboxes" : "Afișează toate căsuțele abonate",
     "Show all mailboxes" : "Afișează toate folderele",

@@ -342,7 +342,6 @@ OC.L10N.register(
     "Not supported by the server" : "서버에서 지원하지 않음",
     "{usage} of {limit} used" : "{limit} 중 {usage} 사용중",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "{email} 계정 및 캐시된 이메일 데이터가 Nextcloud에서 삭제되지만, 이메일 서비스 제공자에서 삭제되지는 않습니다.",
-    "Remove account {email}" : "{email} 계정 제거",
     "Remove {email}" : "{email} 제거",
     "Show all subscribed mailboxes" : "구독 중인 모든 편지함 표시",
     "Show all mailboxes" : "모든 편지함 표시",

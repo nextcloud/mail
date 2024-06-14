@@ -214,7 +214,6 @@ OC.L10N.register(
     "Loading …" : "Läser in ...",
     "Not supported by the server" : "Stöds ej av  servern",
     "{usage} of {limit} used" : "{usage} av {limit} använt",
-    "Remove account {email}" : "Ta bort kontot {email}",
     "Remove {email}" : "Ta bort {email}",
     "Show all mailboxes" : "Visa alla brevlådor",
     "Mark all as read" : "Markera alla som lästa",

@@ -220,7 +220,6 @@
     "Not supported by the server" : "Serveris nepalaiko",
     "{usage} of {limit} used" : "Panaudota {usage} iš {limit}",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Paskyra {email} ir podėlyje esantys el. pašto duomenys bus pašalinti iš Nextcloud, tačiau nebus pašalinti iš jūsų el. pašto teikėjo puslapio.",
-    "Remove account {email}" : "Šalinti paskyrą {email}",
     "Remove {email}" : "Šalinti {email}",
     "Show all subscribed mailboxes" : "Rodyti visas prenumeruotas pašto dėžutes",
     "Show all mailboxes" : "Rodyti visas pašto dėžutes",

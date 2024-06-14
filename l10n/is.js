@@ -149,7 +149,6 @@ OC.L10N.register(
     "Loading …" : "Hleð inn …",
     "Not supported by the server" : "Ekki stutt af þjóninum",
     "{usage} of {limit} used" : "{usage} af {limit} notað",
-    "Remove account {email}" : "Fjarlægja aðganginn {email}",
     "Remove {email}" : "Fjarlægja {email}",
     "Mark all as read" : "Merkja allt sem lesið",
     "Mark all messages of this mailbox as read" : "Merkja öll skilaboð í þessu pósthólfi sem lesin",

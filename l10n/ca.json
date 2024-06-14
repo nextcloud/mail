@@ -349,7 +349,6 @@
     "Not supported by the server" : "El servidor no ho implementa",
     "{usage} of {limit} used" : "{usage} de {limit} utilitzat",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "El compte de {email} i les dades de correu electrònic emmagatzemades a la memòria cau s'eliminaran de Nextcloud, però no del vostre proveïdor de correu electrònic.",
-    "Remove account {email}" : "Suprimeix el compte {email}",
     "Remove {email}" : "Suprimeix {email}",
     "Show all subscribed mailboxes" : "Mostra totes les bústies subscrites",
     "Show all mailboxes" : "Mostra totes les bústies",

@@ -138,7 +138,6 @@ OC.L10N.register(
     "Loading …" : "A carregar...",
     "Not supported by the server" : "Não é suportado pelo servidor",
     "{usage} of {limit} used" : "Usado {usage}  {limit}",
-    "Remove account {email}" : "Remover conta {email}",
     "Remove {email}" : "Remover {email}",
     "Show all mailboxes" : "Mostrar todas as caixas de entrada",
     "Mark all as read" : "Marcar todas como lidas",

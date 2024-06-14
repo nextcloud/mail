@@ -195,7 +195,6 @@
     "Not supported by the server" : "No suportadu dae su serbidore",
     "{usage} of {limit} used" : "{usage} de {limit} impreadu",
     "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "Su contu pro {email} e is datos de posta eletrònica allogados in sa memòria temporànea s'ant a bogare dae Nextcloud, ma no dae su frunidore de posta eletrònica tuo.",
-    "Remove account {email}" : "Boga·nche contu {email}",
     "Remove {email}" : "Boga•nche {email}",
     "Show all subscribed mailboxes" : "Mustra totu is casellas de posta sutascritas",
     "Show all mailboxes" : "Mustra totu is casellas de posta",
