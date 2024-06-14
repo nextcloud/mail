@@ -33,12 +33,15 @@ class CompositeAvatarSource {
 	/** @var IAvatarSource[] */
 	private $sources;
 
-	public function __construct(AddressbookSource $addressbookSource,
+	public function __construct(
+		AddressbookSource $addressbookSource,
+		BimiSource $bimiSource,
 		FaviconSource $faviconSource,
 		GravatarSource $gravatarSource) {
 		// This determines the priority of known sources
 		$this->sources = [
 			$addressbookSource,
+			$bimiSource,
 			$gravatarSource,
 			$faviconSource,
 		];

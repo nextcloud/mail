@@ -31,6 +31,7 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Service\Avatar\GravatarSource;
+use OCA\Mail\Service\Avatar\BimiSource;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class CompositeAvatarSourceTest extends TestCase {
@@ -50,10 +51,16 @@ class CompositeAvatarSourceTest extends TestCase {
 		parent::setUp();
 
 		$this->addressbookSource = $this->createMock(AddressbookSource::class);
-		$this->gravatarSource = $this->createMock(GravatarSource::class);
+		$this->bimiSource = $this->createMock(BimiSource::class);
 		$this->faviconSource = $this->createMock(FaviconSource::class);
+		$this->gravatarSource = $this->createMock(GravatarSource::class);
 
-		$this->source = new CompositeAvatarSource($this->addressbookSource, $this->faviconSource, $this->gravatarSource);
+		$this->source = new CompositeAvatarSource(
+			$this->addressbookSource,
+			$this->bimiSource,
+			$this->faviconSource,
+			$this->gravatarSource
+		);
 	}
 
 	public function testFetchNoneFound() {
