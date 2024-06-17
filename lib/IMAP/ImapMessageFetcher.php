@@ -22,6 +22,7 @@ use Horde_Mime_Headers;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
@@ -115,6 +116,7 @@ class ImapMessageFetcher {
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function fetchMessage(?Horde_Imap_Client_Data_Fetch $fetch = null): IMAPMessage {
 		$ids = new Horde_Imap_Client_Ids($this->uid);

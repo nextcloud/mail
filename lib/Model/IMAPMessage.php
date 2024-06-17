@@ -268,21 +268,27 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return array
 	 */
-	public function getFullMessage(int $id): array {
+	public function getFullMessage(int $id, bool $loadBody = true): array {
 		$mailBody = $this->plainMessage;
 		$data = $this->jsonSerialize();
-		if ($this->hasHtmlMessage) {
-			$data['hasHtmlBody'] = true;
+
+		if($this->hasHtmlMessage && $loadBody) {
 			$data['body'] = $this->getHtmlBody($id);
-			$data['attachments'] = $this->attachments;
-		} else {
-			$mailBody = $this->htmlService->convertLinks($mailBody);
-			[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
-			$data['body'] = $mailBody;
-			$data['signature'] = $signature;
-			$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
 		}
 
+		if ($this->hasHtmlMessage) {
+			$data['hasHtmlBody'] = true;
+			$data['attachments'] = $this->attachments;
+			return $data;
+		}
+
+		$mailBody = $this->htmlService->convertLinks($mailBody);
+		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
+		$data['signature'] = $signature;
+		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
+		if($loadBody) {
+			$data['body'] = $mailBody;
+		}
 		return $data;
 	}
 

@@ -30,6 +30,7 @@ use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -173,6 +174,7 @@ class MailManager implements IMailManager {
 	 * @return IMAPMessage
 	 *
 	 * @throws ServiceException
+	 * @throws SmimeDecryptException
 	 */
 	public function getImapMessage(Horde_Imap_Client_Socket $client,
 		Account $account,
