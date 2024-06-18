@@ -492,5 +492,12 @@ return [
 		'outbox' => ['url' => '/api/outbox'],
 		'preferences' => ['url' => '/api/preferences'],
 		'smimeCertificates' => ['url' => '/api/smime/certificates'],
-	]
+	],
+	'ocs' => [
+		[
+			'name' => 'messageApi#get',
+			'url' => '/message/{$id}',
+			'verb' => 'GET',
+		],
+	],
 ];

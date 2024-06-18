@@ -18,7 +18,6 @@ use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
@@ -52,13 +51,13 @@ class MessageApiController extends OCSController {
 	}
 
 	/**
+	 * @param int $id
 	 * @return JSONResponse
 	 */
-	#[ApiRoute(verb: 'GET', url: '/message/{id}')]
 	#[BruteForceProtection('mailGetMessage')]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function get(int $id) {
+	public function get(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
