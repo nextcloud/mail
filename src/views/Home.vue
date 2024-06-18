@@ -21,8 +21,8 @@
 import { NcContent } from '@nextcloud/vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 
-import '../../css/mail.scss'
-import '../../css/mobile.scss'
+import '../css/mail.scss'
+import '../css/mobile.scss'
 
 import { testAccountConnection } from '../service/AccountService.js'
 import logger from '../logger.js'

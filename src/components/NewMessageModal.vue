@@ -575,14 +575,14 @@ export default {
 
 .minimize-button {
 	float: right;
-	position: absolute;
+	position: absolute !important;
 	top: 4px;
 	right: 63px;
 }
 
 .maximize-button {
 	float: right;
-	position: absolute;
+	position: absolute !important;
 	top: 4px;
 	right: 33px;
 
