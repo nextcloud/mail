@@ -496,7 +496,7 @@ return [
 	'ocs' => [
 		[
 			'name' => 'messageApi#get',
-			'url' => '/message/{$id}',
+			'url' => '/message/{id}',
 			'verb' => 'GET',
 		],
 	],
