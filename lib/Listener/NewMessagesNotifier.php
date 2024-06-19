@@ -15,7 +15,9 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IURLGenerator;
-
+/**
+ * @template-implements IEventListener<Event|NewMessagesSynchronized>
+ */
 class NewMessagesNotifier implements IEventListener {
 
 	public function __construct(private IEventDispatcher $eventDispatcher,
