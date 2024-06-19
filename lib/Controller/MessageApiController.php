@@ -21,7 +21,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
-use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
@@ -52,19 +52,19 @@ class MessageApiController extends OCSController {
 
 	/**
 	 * @param int $id
-	 * @return JSONResponse
+	 * @return DataResponse
 	 */
 	#[BruteForceProtection('mailGetMessage')]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function get(int $id): JSONResponse {
+	public function get(int $id): DataResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
 		} catch (ClientException | DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new DataResponse(null, Http::STATUS_FORBIDDEN);
 		}
 
 		$client = $this->clientFactory->getClient($account);
@@ -77,7 +77,7 @@ class MessageApiController extends OCSController {
 			);
 		} catch (ServiceException $e) {
 			$this->logger->error('Message not found on IMAP or mail server went away', ['exception' => $e->getMessage()]);
-			return new JSONResponse(null, Http::STATUS_NOT_FOUND);
+			return new DataResponse(null, Http::STATUS_NOT_FOUND);
 		} finally {
 			$client->logout();
 		}
@@ -88,6 +88,6 @@ class MessageApiController extends OCSController {
 			'message/rfc822',
 		);
 
-		return new JSONResponse($messageContent->render(), Http::STATUS_OK);
+		return new DataResponse($messageContent->render(), Http::STATUS_OK);
 	}
 }
