@@ -15,6 +15,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IURLGenerator;
+
 /**
  * @template-implements IEventListener<Event|NewMessagesSynchronized>
  */
