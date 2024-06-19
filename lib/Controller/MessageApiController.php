@@ -64,7 +64,7 @@ class MessageApiController extends OCSController {
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
 		} catch (ClientException | DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
-			return new DataResponse(null, Http::STATUS_FORBIDDEN);
+			return new DataResponse('Forbidden', Http::STATUS_FORBIDDEN);
 		}
 
 		$client = $this->clientFactory->getClient($account);
@@ -77,7 +77,7 @@ class MessageApiController extends OCSController {
 			);
 		} catch (ServiceException $e) {
 			$this->logger->error('Message not found on IMAP or mail server went away', ['exception' => $e->getMessage()]);
-			return new DataResponse(null, Http::STATUS_NOT_FOUND);
+			return new DataResponse('Not found', Http::STATUS_NOT_FOUND);
 		} finally {
 			$client->logout();
 		}
