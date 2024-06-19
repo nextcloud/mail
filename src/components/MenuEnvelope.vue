@@ -264,6 +264,7 @@ import logger from '../logger.js'
 import moment from '@nextcloud/moment'
 import { shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
 import { mapGetters } from 'vuex'
+import { translate as t } from '@nextcloud/l10n'
 
 export default {
 	name: 'MenuEnvelope',
@@ -596,8 +597,33 @@ export default {
 			frameDoc.document.write(printStyles)
 			frameDoc.document.write('</style></head><body>')
 			frameDoc.document.write(document.querySelector('#mail-thread-header h2').outerHTML)
-			frameDoc.document.write(`<h4>${this.envelope.from[0].label}, ${this.envelope.from[0].email}</h4>`)
-			frameDoc.document.write(`<h4>${shortRelativeDatetime(new Date(this.envelope.dateInt * 1000))}</h4>`)
+
+			if (this.envelope.from.length) {
+				let fromString = '<strong>' + t('mail', 'From') + ':</strong> '
+				this.envelope.from.forEach((contact) => {
+					fromString += ` ${contact.label} <em>${contact.email}</em>`
+				})
+				frameDoc.document.write(fromString + '<br>')
+			}
+
+			if (this.envelope.to.length) {
+				let toString = '<strong>' + t('mail', 'Cc') + ':</strong> '
+				this.envelope.to.forEach((contact) => {
+					toString += ` ${contact.label} <em>${contact.email}</em>`
+				})
+				frameDoc.document.write(toString + '<br>')
+			}
+
+			if (this.envelope.bcc.length) {
+				let bccString = '<strong>' + t('mail', 'Bcc') + ':</strong> '
+				this.envelope.bcc.forEach((contact) => {
+					bccString += ` ${contact.label} <em>${contact.email}</em>`
+				})
+				frameDoc.document.write(bccString + '<br>')
+			}
+			const momentDate = moment(this.envelope.dateInt * 1000)
+
+			frameDoc.document.write(`<h4>${momentDate.format('H:mm MMM D, YYYY')}</h4>`)
 			frameDoc.document.write(combinedContent)
 			frameDoc.document.write('</body></html>')
 			frameDoc.document.close()
