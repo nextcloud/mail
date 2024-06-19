@@ -48,6 +48,7 @@
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
 				@delete="$emit('delete', env.databaseId)"
+				@print="printSetup"
 				@move="onMove(env.databaseId)"
 				@toggle-expand="toggleExpand(env.databaseId)" />
 		</template>
@@ -309,6 +310,9 @@ export default {
 				}
 			}
 		},
+		printSetup(databaseId) {
+			this.expandedThreads = [databaseId]
+		},
 	},
 }
 </script>
@@ -426,54 +430,6 @@ export default {
 	.icon-reply-white,
 	.icon-reply-all-white {
 		background-position: 12px center;
-	}
-}
-
-@media print {
-	#mail-thread-header-fields {
-		position: relative;
-	}
-	.app-content-details,
-	.splitpanes__pane-details {
-		max-width: unset !important;
-		width: 100% !important;
-	}
-	#header,
-	.app-navigation,
-	#reply-composer,
-	#forward-button,
-	#mail-message-has-blocked-content,
-	.app-content-list,
-	.message-composer,
-	.splitpanes__pane-list,
-	.splitpanes__splitter,
-	.mail-message-attachments {
-		display: none !important;
-	}
-	.app-content {
-		margin-left: 0 !important;
-		overflow: visible;
-		position: fixed;
-	}
-	#content-vue {
-		margin: 0;
-		width: 100%;
-		height: auto !important;
-		overflow-y: visible;
-		border-radius: 0;
-		position: fixed;
-	}
-	#mail-thread-header {
-		position: relative;
-	}
-	.envelope__header .right div {
-		display: none;
-	}
-	.avatar-header {
-		display: none;
-	}
-	html, #body-user {
-		height: auto !important;
 	}
 }
 

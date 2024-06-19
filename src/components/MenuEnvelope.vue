@@ -262,6 +262,7 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import logger from '../logger.js'
 import moment from '@nextcloud/moment'
+import { shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -567,8 +568,45 @@ export default {
 		setCustomSnooze() {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
 		},
-		onPrint() {
-			window.print()
+		async onPrint() {
+			await this.$emit('print')
+
+			const printStyles = `
+				* {
+					font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', Arial, 'Noto Color Emoji', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+				};
+			`
+
+			let combinedContent = ''
+			const messageFrames = document.querySelectorAll('iframe.message-frame')
+
+			messageFrames.forEach(frame => {
+				const doc = frame.contentDocument || frame.contentWindow.document
+				combinedContent += doc.body.innerHTML
+			})
+
+			const frame = document.createElement('iframe')
+			frame.name = 'printFrame'
+			frame.style.position = 'absolute'
+			frame.style.top = '-1000000px'
+			document.body.appendChild(frame)
+			const frameDoc = frame.contentWindow ? frame.contentWindow : frame.contentDocument.document ? frame.contentDocument.document : frame.contentDocument
+			frameDoc.document.open()
+			frameDoc.document.write('<html><head><style>')
+			frameDoc.document.write(printStyles)
+			frameDoc.document.write('</style></head><body>')
+			frameDoc.document.write(document.querySelector('#mail-thread-header h2').outerHTML)
+			frameDoc.document.write(`<h4>${this.envelope.from[0].label}, ${this.envelope.from[0].email}</h4>`)
+			frameDoc.document.write(`<h4>${shortRelativeDatetime(new Date(this.envelope.dateInt * 1000))}</h4>`)
+			frameDoc.document.write(combinedContent)
+			frameDoc.document.write('</body></html>')
+			frameDoc.document.close()
+
+			setTimeout(function() {
+				window.frames.printFrame.focus()
+				window.frames.printFrame.print()
+				document.body.removeChild(frame)
+			}, 500)
 		},
 	},
 }
