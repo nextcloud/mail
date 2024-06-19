@@ -177,14 +177,30 @@
 				</div>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="mailvelope-settings" :name="t('mail', 'Mailvelope')">
-				<p class="mailvelope-section">
-					{{ t('mail', 'Looking for a way to encrypt your emails?') }}
-				</p>
-				<a href="https://www.mailvelope.com/"
-					target="_blank"
-					rel="noopener noreferrer">
-					{{ t('mail', 'Install Mailvelope browser extension by clicking here') }}
-				</a>
+				<div class="mailvelope-section">
+					<div v-if="mailvelopeIsAvailable">
+						{{ t('mail', 'Mailvelope is enabled for the current domain!') }}
+					</div>
+					<div v-else>
+						<p>
+							{{ t('mail', 'Looking for a way to encrypt your emails?') }}
+						</p>
+						<p>
+							<a href="https://www.mailvelope.com/"
+								target="_blank"
+								class="button"
+								rel="noopener noreferrer">
+								{{ t('mail', 'Install Mailvelope browser extension by clicking here') }}
+							</a>
+						</p>
+						<p>
+							<a class="button"
+								@click="mailvelopeAuthorizeDomain">
+								{{ t('mail', 'Enable Mailvelope for the current domain') }}
+							</a>
+						</p>
+					</div>
+				</div>
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="keyboard-settings"
 				:name="t('mail', 'Keyboard')">
@@ -295,6 +311,7 @@ export default {
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
 			showSettings: false,
+			mailvelopeIsAvailable: false,
 		}
 	},
 	computed: {
@@ -334,8 +351,15 @@ export default {
 	},
 	mounted() {
 		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
+		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
+	},
+	updated() {
+		this.checkMailvelope()
 	},
 	methods: {
+		checkMailvelope() {
+			this.mailvelopeIsAvailable = !!window.mailvelope
+		},
 		async setLayout(layoutMode) {
 			try {
 				await this.$store.dispatch('savePreference', {
@@ -446,6 +470,12 @@ export default {
 					Logger.error('could not register protocol handler', { err })
 				}
 			}
+		},
+		mailvelopeAuthorizeDomain() {
+			const iframe = document.createElement('iframe')
+			iframe.style = 'display: none'
+			iframe.src = 'https://api.mailvelope.com/authorize-domain/?api=true'
+			document.body.append(iframe)
 		},
 	},
 }
