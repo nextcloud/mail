@@ -601,7 +601,7 @@ export default {
 			if (this.envelope.from.length) {
 				let fromString = '<strong>' + t('mail', 'From') + ':</strong> '
 				this.envelope.from.forEach((contact) => {
-					fromString += ` ${contact.label} <em>${contact.email}</em>`
+					fromString += ` ${this.sanitize(contact.label)} <em>${this.sanitize(contact.email)}</em>`
 				})
 				frameDoc.document.write(fromString + '<br>')
 			}
@@ -609,7 +609,7 @@ export default {
 			if (this.envelope.to.length) {
 				let toString = '<strong>' + t('mail', 'Cc') + ':</strong> '
 				this.envelope.to.forEach((contact) => {
-					toString += ` ${contact.label} <em>${contact.email}</em>`
+					toString += ` ${this.sanitize(contact.label)} <em>${this.sanitize(contact.email)}</em>`
 				})
 				frameDoc.document.write(toString + '<br>')
 			}
@@ -617,7 +617,7 @@ export default {
 			if (this.envelope.bcc.length) {
 				let bccString = '<strong>' + t('mail', 'Bcc') + ':</strong> '
 				this.envelope.bcc.forEach((contact) => {
-					bccString += ` ${contact.label} <em>${contact.email}</em>`
+					bccString += ` ${this.sanitize(contact.label)} <em>${this.sanitize(contact.email)}</em>`
 				})
 				frameDoc.document.write(bccString + '<br>')
 			}
@@ -633,6 +633,19 @@ export default {
 				window.frames.printFrame.print()
 				document.body.removeChild(frame)
 			}, 500)
+		},
+
+		sanitize(string) {
+			const map = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#x27;',
+				"/": '&#x2F;',
+			};
+			const reg = /[&<>"'/]/ig;
+			return string.replace(reg, (match)=>(map[match]));
 		},
 	},
 }
