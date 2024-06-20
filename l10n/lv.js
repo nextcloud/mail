@@ -85,6 +85,7 @@ OC.L10N.register(
     "Quota" : "Kvota",
     "Saving" : "Saglabā",
     "Remove account" : "Noņemt kontu",
+    "Loading …" : "Ielādē…",
     "Subscribed" : "Abonēts",
     "New message" : "Jauna ziņa",
     "Retry" : "Mēģināt vēlreiz",
