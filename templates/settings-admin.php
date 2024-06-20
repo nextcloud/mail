@@ -21,7 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-script(\OCA\Mail\AppInfo\Application::APP_ID, 'settings');
+script(\OCA\Mail\AppInfo\Application::APP_ID, 'nextcloud-mail-settings');
+style(\OCA\Mail\AppInfo\Application::APP_ID, 'nextcloud-mail-style');
 
 ?>
 <div id="mail-admin-settings">

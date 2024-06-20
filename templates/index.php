@@ -23,7 +23,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-script('mail', 'mail');
+script('mail', 'nextcloud-mail-main');
+style('mail', 'nextcloud-mail-style');
 ?>
 
 <input type="hidden" id="attachment-size-limit" value="<?php p($_['attachment-size-limit']); ?>">

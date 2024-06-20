@@ -20,7 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-style('mail', 'redirect');
+script('mail', 'nextcloud-mail-redirect');
+style('mail', 'nextcloud-mail-style');
 ?>
 <?php /** @var array $_ */ ?>
 <?php if (isset($_['authorizedRedirect']) && ($_['authorizedRedirect'])): ?>

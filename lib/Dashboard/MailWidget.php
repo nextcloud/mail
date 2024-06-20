@@ -103,7 +103,8 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	 * @inheritDoc
 	 */
 	public function load(): void {
-		Util::addScript(Application::APP_ID, 'dashboard');
+		Util::addScript(Application::APP_ID, 'nextcloud-mail-dashboard');
+		Util::addStyle(Application::APP_ID, 'nextcloud-mail-style');
 
 		$this->initialState->provideInitialState(
 			'mail-accounts',
