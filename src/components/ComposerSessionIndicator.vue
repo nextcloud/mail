@@ -119,10 +119,7 @@ export default {
 	padding: 0 8px;
 
 	// Retain border radius from outer body container for visual consistency
-	height: calc(var(--body-container-radius) * 2);
 	border-radius: var(--body-container-radius);
-	//height: 44px;
-	//border-radius: var(--border-radius-pill);
 
 	// Mobile
 	@media (max-width: 1024px) {
