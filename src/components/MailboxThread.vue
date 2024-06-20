@@ -153,16 +153,10 @@ export default {
 			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
 		},
 		horizontalListMinWidth() {
-			return this.layoutMode === 'horizontal-split' ? 60 : this.defaultListMinWidth
+			return this.layoutMode === 'horizontal-split' ? 40 : 30
 		},
 		horizontalListMaxWidth() {
-			return this.layoutMode === 'horizontal-split' ? 70 : this.defaultListMaxWidth
-		},
-		defaultListMinWidth() {
-			return 30
-		},
-		defaultListMaxWidth() {
-			return 40
+			return this.layoutMode === 'horizontal-split' ? 60 : 50
 		},
 		unifiedAccount() {
 			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
