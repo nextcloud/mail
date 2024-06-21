@@ -96,7 +96,6 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 */
 	protected function _initOb() {
 		$this->_cache = $this->_params['cacheob'];
-		register_shutdown_function([$this, 'save']);
 	}
 
 	/**
