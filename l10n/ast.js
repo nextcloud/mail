@@ -1,6 +1,7 @@
 OC.L10N.register(
     "mail",
     {
+    "Important mail" : "Mensaxes importantes",
     "No message found yet" : "Entá nun s'atopó nengún mensaxe",
     "Important" : "Importante",
     "Work" : "Trabayu",
