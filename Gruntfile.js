@@ -1,14 +1,8 @@
-/* global module */
-
 /**
- * Mail
- *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
- *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2017
+ * SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+/* global module */
 module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({

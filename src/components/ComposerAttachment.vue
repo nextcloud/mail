@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<li class="composer-attachment" :class="{'composer-attachment--with-error' : attachment.error }">
 		<div class="attachment-preview">

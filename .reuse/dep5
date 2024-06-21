@@ -1,0 +1,28 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: mail
+Upstream-Contact: Nextcloud <info@nextcloud.com>
+Source: https://github.com/nextcloud/mail
+
+Files: l10n/*.js l10n/*.json js/*.js.map js/*.js
+Copyright: 2016 Nextcloud GmbH and Nextcloud contributors
+License: AGPL-3.0-or-later
+
+Files: .tx/config package-lock.json package.json
+Copyright: 2018 Nextcloud GmbH and Nextcloud contributors
+License: AGPL-3.0-or-later
+
+Files: composer.json composer.lock
+Copyright: 2014-2016 ownCloud, Inc., 2016-2024 Nextcloud GmbH and Nextcloud contributors
+License: AGPL-3.0-or-later
+
+Files: renovate.json
+Copyright: 2024 Nextcloud GmbH and Nextcloud contributors
+License: AGPL-3.0-or-later
+
+Files: img/calendar-dark.svg img/calendar.png img/calendar.svg img/favicon-mask.svg img/favicon-touch.png img/favicon-touch.svg img/favicon.ico img/favicon.png img/favicon.svg
+Copyright: 2018-2024 Google LLC, 2016-2024 Nextcloud GmbH and Nextcloud contributors
+License: Apache-2.0
+
+Files: composer/autoload.php
+Copyright: Nils Adermann, Jordi Boggiano
+License: MIT
