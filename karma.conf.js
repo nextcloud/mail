@@ -1,3 +1,8 @@
+/**
+ * SPDX-FileCopyrightText: 2016-2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2015-2016 owncloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
 // Karma configuration
 // Generated on Tue Sep 01 2015 13:54:51 GMT+0200 (CEST)
 

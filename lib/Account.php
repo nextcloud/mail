@@ -1,37 +1,10 @@
 <?php
 
 /**
- * @author Alexander Weidinger <alexwegoo@gmail.com>
- * @author Christian Nöding <christian@noeding-online.de>
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Christoph Wurst <ChristophWurst@users.noreply.github.com>
- * @author Christoph Wurst <wurst.christoph@gmail.com>
- * @author Clement Wong <mail@clement.hk>
- * @author gouglhupf <dr.gouglhupf@gmail.com>
- * @author Lukas Reschke <lukas@owncloud.com>
- * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
- * @author Thomas Imbreckx <zinks@iozero.be>
- * @author Thomas I <thomas@oatr.be>
- * @author Thomas Mueller <thomas.mueller@tmit.eu>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Richard Steinmetz <richard@steinmetz.cloud>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2015-2016 owncloud, Inc.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
-
 namespace OCA\Mail;
 
 use Horde_Imap_Client_Socket;

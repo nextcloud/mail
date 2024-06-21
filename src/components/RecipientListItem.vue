@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<div class="multiselect__tag multiselect__tag--recipient" :title="option.email">
 		<ListItemIcon :no-margin="true"
