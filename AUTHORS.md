@@ -10,19 +10,25 @@
 - Christian Nöding <christian@noeding-online.de>
 - Christoph Wurst <christoph@winzerhof-wurst.at>
 - Clement Wong <mail@clement.hk>
+- colm <mail@colm.be>
 - Daniel Kesselberg <mail@danielkesselberg.de>
+- Damien <dcosset@hotmail.fr>
 - gouglhupf <dr.gouglhupf@gmail.com>
 - Hamza Mahjoubi <hamzamahjoubi22@proton.me>
 - Jakob Sack <mail@jakobsack.de>
 - Jan-Christoph Borchardt <hey@jancborchardt.net>
 - Johannes Merkel <mail@johannesgge.de>
+- John Molakvoæ <skjnldsv@protonmail.com>
 - Kristian Lebold <kristian@lebold.info>
 - Luc Calaresu <dev@calaresu.com>
 - Lukas Reschke <lukas@statuscode.ch>
 - Matthias Rella <mrella@pisys.eu>
+- Maximilian Martin <maximilian_martin@gmx.de>
+- Raimund Schlüßler <raimund.schluessler@mailbox.org>
 - Richard Steinmetz <richard@steinmetz.cloud>
 - Robin McCorkell <rmccorkell@karoshi.org.uk>
 - Silvio Zimmer <silvio.zimmer@die-kinderwelt.com>
+- Steffen Lindner <mail@steffen-lindner.de>
 - Tahaa Karim <tahaalibra@gmail.com>
 - Thomas Imbreckx <zinks@iozero.be>
 - Thomas I <thomas@oatr.be>

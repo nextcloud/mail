@@ -1,9 +1,11 @@
-/* eslint-disable */
-
 /**
+ * SPDX-FileCopyrightText: 2021-2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2015-2017 vue-infinite-scroll authors
+ * SPDX-License-Identifier: MIT
+ *
  * Vendored and fixed version of the abandoned https://github.com/ElemeFE/vue-infinite-scroll lib
  */
-
+/* eslint-disable */
 const ctx = '@@InfiniteScroll';
 
 var throttle = function (fn, delay) {

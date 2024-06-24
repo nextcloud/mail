@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <template>
 	<NcContent app-name="mail">
 		<Navigation v-if="hasAccounts" />
