@@ -1,6 +1,12 @@
+<!--
+  - SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2013-2016 ownCloud, Inc.
+  - SPDX-License-Identifier: AGPL-3.0-only
+-->
 # Nextcloud Mail
 
 ![Downloads](https://img.shields.io/github/downloads/nextcloud/mail/total.svg)
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/mail)](https://api.reuse.software/info/github.com/nextcloud/mail)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/nextcloud/mail/Test)
 [![Codecov](https://img.shields.io/codecov/c/github/nextcloud/mail)](https://codecov.io/gh/nextcloud/mail)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nextcloud/mail)](https://dependabot.com)
