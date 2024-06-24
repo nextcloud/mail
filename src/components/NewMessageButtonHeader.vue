@@ -5,8 +5,7 @@
 <template>
 	<div class="header">
 		<ButtonVue :aria-label="t('mail', 'New message')"
-			type="primary"
-			class="new-message-button"
+			type="secondary"
 			button-id="mail_new_message"
 			role="complementary"
 			:wide="true"
@@ -96,8 +95,5 @@ export default {
 }
 .refresh__button {
 	background-color: transparent;
-}
-.new-message-button {
-	background-image: var(--gradient-primary-background);
 }
 </style>
