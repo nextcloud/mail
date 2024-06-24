@@ -1,4 +1,9 @@
 /**
+ * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+/**
  * Maps a dav collection to our calendar object model
  *
  * @param {object} calendar The calendar object from the cdav library
