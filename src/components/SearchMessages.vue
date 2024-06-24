@@ -8,8 +8,13 @@
 			<input v-model="query"
 				type="text"
 				class="search-messages--input"
-				:placeholder="t('mail', 'Search in mailbox')"
+				:aria-label="t('mail', 'Search in mailbox')"
 				@click="toggleButtons">
+			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
+				<template #icon>
+					<Tune :size="20" />
+				</template>
+			</NcButton>
 			<NcButton v-if="filterChanged"
 				:aria-label="t('mail', 'Close')"
 				class="search-messages--close"
@@ -31,6 +36,7 @@
 				</NcActionButton>
 			</NcActions>
 			<NcDialog v-if="moreSearchActions"
+			<NcModal v-if="moreSearchActions"
 				:name="t('mail', 'Search parameters')"
 				size="normal"
 				class="search-modal"
@@ -724,18 +730,33 @@ export default {
 	}
 }
 
-.button-vue.search-messages--close.button-vue--icon-only {
+.modal-wrapper--normal .modal-container {
+	position: relative
+}
+
+.button-vue.search-messages--filter.button-vue--icon-only {
 	position: absolute;
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 45px;
+	right: 5px;
 	left: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
 	padding: 0 !important;
-	top: 6px;
+}
+.button-vue.search-messages--close.button-vue--icon-only {
+	position: absolute;
+	width: auto;
+	height: auto;
+	z-index: 5;
+	right: 35px;
+	left: auto;
+	box-shadow: none !important;
+	background: transparent !important;
+	border: none !important;
+	padding: 0 !important;
 }
 
 .button-reset-filter {
