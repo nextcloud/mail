@@ -54,7 +54,7 @@
 				<template #icon>
 					<ReplyIcon />
 				</template>
-				{{ multipleRecipients ? t('mail','Reply all') :t('mail','Reply') }}
+				{{ replyButtonLabel }}
 			</NcButton>
 		</div>
 	</div>
@@ -107,10 +107,10 @@ export default {
 			type: Array,
 			default: () => [],
 		},
-		multipleRecipients: {
+		replyButtonLabel: {
 			required: true,
-			type: Boolean,
-		},
+			type: String,
+		}
 	},
 	computed: {
 		from() {

@@ -21,6 +21,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AiIntegrations\Cache;
 use OCP\AppFramework\QueryException;
+use OCP\IConfig;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\SummaryTaskType;
@@ -51,6 +52,8 @@ class AiIntegrationsServiceTest extends TestCase {
 	/** @var IMailManager|MockObject */
 	private $mailManager;
 
+	/** @var IConfig|MockObject */
+	private $config;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -64,11 +67,13 @@ class AiIntegrationsServiceTest extends TestCase {
 		$this->cache = $this->createMock(Cache::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->config = $this->createMock(IConfig::class);
 		$this->aiIntegrationsService = new AiIntegrationsService(
 			$this->container,
 			$this->cache,
 			$this->clientFactory,
-			$this->mailManager
+			$this->mailManager,
+			$this->config,
 		);
 	}
 
@@ -176,6 +181,25 @@ class AiIntegrationsServiceTest extends TestCase {
 			$this->assertFalse($isAvailable);
 		}
 
+	}
+
+	public function isLlmProcessingEnabledDataProvider(): array {
+		return [
+			['no', false],
+			['yes', true],
+		];
+	}
+
+	/**
+	 * @dataProvider isLlmProcessingEnabledDataProvider
+	 */
+	public function testIsLlmProcessingEnabled(string $appConfigValue, bool $expected) {
+		$this->config->expects(self::once())
+			->method('getAppValue')
+			->with('mail', 'llm_processing', 'no')
+			->willReturn($appConfigValue);
+
+		$this->assertEquals($expected, $this->aiIntegrationsService->isLlmProcessingEnabled());
 	}
 
 	public function testCached() {

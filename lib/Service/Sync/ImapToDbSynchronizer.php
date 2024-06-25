@@ -107,12 +107,14 @@ class ImapToDbSynchronizer {
 		$rebuildThreads = false;
 		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
 		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
+		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		$trashRetentionDays = $account->getMailAccount()->getTrashRetentionDays();
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$syncTrash = $trashMailboxId === $mailbox->getId() && $trashRetentionDays !== null;
 			$syncSnooze = $snoozeMailboxId === $mailbox->getId();
+			$syncSent = $sentMailboxId === $mailbox->getId() || $mailbox->isSpecialUse('sent');
 
-			if (!$syncTrash && !$mailbox->isInbox() && !$syncSnooze && !$mailbox->getSyncInBackground()) {
+			if (!$syncTrash && !$mailbox->isInbox() && !$syncSnooze && !$mailbox->getSyncInBackground() && !$syncSent) {
 				$logger->debug("Skipping mailbox sync for " . $mailbox->getId());
 				continue;
 			}

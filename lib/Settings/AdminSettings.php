@@ -83,7 +83,7 @@ class AdminSettings implements ISettings {
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
 			'llm_processing',
-			$this->config->getAppValue('mail', 'llm_processing', 'no') === 'yes'
+			$this->aiIntegrationsService->isLlmProcessingEnabled(),
 		);
 
 		$this->initialStateService->provideInitialState(

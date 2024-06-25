@@ -76,7 +76,7 @@ import {
 	updateAccount as updateSieveAccount,
 	updateActiveScript,
 } from '../service/SieveService.js'
-import { PAGE_SIZE, UNIFIED_INBOX_ID } from './constants.js'
+import { FOLLOW_UP_TAG_LABEL, PAGE_SIZE, UNIFIED_INBOX_ID } from './constants.js'
 import * as ThreadService from '../service/ThreadService.js'
 import {
 	getPrioritySearchQueries,
@@ -102,6 +102,7 @@ import {
 } from '../service/caldavService.js'
 import * as SmimeCertificateService from '../service/SmimeCertificateService.js'
 import useOutboxStore from './outboxStore.js'
+import * as FollowUpService from '../service/FollowUpService.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -379,10 +380,14 @@ export default {
 
 				if (reply.mode === 'reply') {
 					logger.debug('Show simple reply composer', { reply })
+					let to = original.replyTo !== undefined ? original.replyTo : reply.data.from
+					if (reply.followUp) {
+						to = reply.data.to
+					}
 					commit('startComposerSession', {
 						data: {
 							accountId: reply.data.accountId,
-							to: original.replyTo !== undefined ? original.replyTo : reply.data.from,
+							to,
 							cc: [],
 							subject: buildReplySubject(reply.data.subject),
 							body: data.body,
@@ -1489,6 +1494,32 @@ export default {
 			})
 		} catch (error) {
 			logger.error('Could not set layouts', { error })
+		}
+	},
+	async clearFollowUpReminder({ commit, dispatch }, { envelope }) {
+		await dispatch('removeEnvelopeTag', {
+			envelope,
+			imapLabel: FOLLOW_UP_TAG_LABEL,
+		})
+		commit('removeEnvelopeFromFollowUpMailbox', {
+			id: envelope.databaseId,
+		})
+	},
+	async checkFollowUpReminders({ dispatch, getters }) {
+		const envelopes = getters.getFollowUpReminderEnvelopes
+		const messageIds = envelopes.map((envelope) => envelope.databaseId)
+		if (messageIds.length === 0) {
+			return
+		}
+
+		const data = await FollowUpService.checkMessageIds(messageIds)
+		for (const messageId of data.wasFollowedUp) {
+			const envelope = getters.getEnvelope(messageId)
+			if (!envelope) {
+				continue
+			}
+
+			await dispatch('clearFollowUpReminder', { envelope })
 		}
 	},
 }

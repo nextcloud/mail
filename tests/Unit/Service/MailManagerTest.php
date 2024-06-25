@@ -579,6 +579,28 @@ class MailManagerTest extends TestCase {
 		self::assertEquals('#0082c9', $tag->getColor());
 	}
 
+	public function testCreateTagForFollowUp(): void {
+		$this->tagMapper->expects(self::once())
+			->method('getTagByImapLabel')
+			->willThrowException(new DoesNotExistException('Computer says no'));
+		$this->tagMapper->expects(self::once())
+			->method('insert')
+			->willReturnCallback(static function (Tag $tag) {
+				self::assertEquals('admin', $tag->getUserId());
+				self::assertEquals('Follow up', $tag->getDisplayName());
+				self::assertEquals('$follow_up', $tag->getImapLabel());
+				self::assertEquals('#d77000', $tag->getColor());
+				return $tag;
+			});
+
+		$tag = $this->manager->createTag('Follow up', '#d77000', 'admin');
+
+		self::assertEquals('admin', $tag->getUserId());
+		self::assertEquals('Follow up', $tag->getDisplayName());
+		self::assertEquals('$follow_up', $tag->getImapLabel());
+		self::assertEquals('#d77000', $tag->getColor());
+	}
+
 	public function testUpdateTag(): void {
 		$existingTag = new Tag();
 		$existingTag->setId(100);

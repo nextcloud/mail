@@ -306,7 +306,9 @@
 				<div class="tag-group__bg"
 					:style="{'background-color': tag.color}" />
 				<span class="tag-group__label"
-					:style="{color: tag.color}">{{ tag.displayName }} </span>
+					:style="{color: tag.color}">
+					{{ translateTagDisplayName(tag) }}
+				</span>
 			</div>
 			<MoveModal v-if="showMoveModal"
 				:account="account"
@@ -381,6 +383,8 @@ import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import moment from '@nextcloud/moment'
 import { mapGetters } from 'vuex'
+import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
+import { translateTagDisplayName } from '../util/tag.js'
 
 export default {
 	name: 'Envelope',
@@ -563,9 +567,16 @@ export default {
 				.some((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.data.databaseId).filter(
+			let tags = this.$store.getters.getEnvelopeTags(this.data.databaseId).filter(
 				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
+
+			// Don't show follow-up tag in unified mailbox as it has its own section at the top
+			if (this.mailbox.isUnified) {
+				tags = tags.filter((tag) => tag.imapLabel !== FOLLOW_UP_TAG_LABEL)
+			}
+
+			return tags
 		},
 		draggableLabel() {
 			let label = this.data.subject
@@ -673,6 +684,7 @@ export default {
 		},
 	},
 	methods: {
+		translateTagDisplayName,
 		setSelected(value) {
 			if (this.selected !== value) {
 				this.$emit('update:selected', value)

@@ -102,6 +102,10 @@ store.commit('savePreference', {
 	key: 'layout-mode',
 	value: getPreferenceFromPage('layout-mode'),
 })
+store.commit('savePreference', {
+	key: 'follow-up-reminders',
+	value: getPreferenceFromPage('follow-up-reminders'),
+})
 
 const accountSettings = loadState('mail', 'account-settings')
 const accounts = loadState('mail', 'accounts', [])
@@ -111,6 +115,7 @@ const disableScheduledSend = loadState('mail', 'disable-scheduled-send')
 const disableSnooze = loadState('mail', 'disable-snooze')
 const googleOauthUrl = loadState('mail', 'google-oauth-url', null)
 const microsoftOauthUrl = loadState('mail', 'microsoft-oauth-url', null)
+const followUpFeatureAvailable = loadState('mail', 'llm_followup_available', false)
 
 accounts.map(fixAccountId).forEach((account) => {
 	const settings = accountSettings.find(settings => settings.accountId === account.id)
@@ -133,6 +138,7 @@ store.commit('setScheduledSendingDisabled', disableScheduledSend)
 store.commit('setSnoozeDisabled', disableSnooze)
 store.commit('setGoogleOauthUrl', googleOauthUrl)
 store.commit('setMicrosoftOauthUrl', microsoftOauthUrl)
+store.commit('setFollowUpFeatureAvailable', followUpFeatureAvailable)
 
 const smimeCertificates = loadState('mail', 'smime-certificates', [])
 store.commit('setSmimeCertificates', smimeCertificates)
