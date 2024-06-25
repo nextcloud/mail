@@ -868,11 +868,19 @@ export default {
 	}
 
 	&__subtitle {
+		display: flex;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		align-items: center;
 		&__subject {
+			flex: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 			line-height: 130%;
+			display: flex;
+			align-items: center;
 		}
 	}
 	&__preview-text {
@@ -1023,13 +1031,12 @@ export default {
 	height: 16px;
 	width: 16px;
 }
-.seen-icon-style {
+.seen-icon-style,
+.attachment-icon-style  {
 	opacity: .6;
-	display: inline;
-}
-.attachment-icon-style {
-	opacity: .6;
-	display: inline;
+	display: inline-flex;
+	align-items: center;
+	margin-right: 5px;
 }
 :deep(.list-item__anchor) {
 	margin-top: 6px;
@@ -1052,6 +1059,7 @@ export default {
 .line-two.one-line {
 	display: flex;
 	overflow: hidden;
+	align-items: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
