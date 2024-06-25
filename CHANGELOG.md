@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.7.2
+### Fixed
+* Handling of missing raw message
+* Horde cache inconsistencies in background jobs
+* Handling of MDN requests
+* Missing backend check for download permissions for cloud attachments
+* Shipping of PHP test files
+* Vulnerable frontend packages
+
 ## 3.7.1 – 2024-06-06
 ### Fixed
 * Save attachments to Files
