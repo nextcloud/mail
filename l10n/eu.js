@@ -109,7 +109,6 @@ OC.L10N.register(
     "Activate body search" : "Gaitu gorputz bilaketa",
     "Data collection consent" : "Datuak biltzeko baimena",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Baimena eman aplikazioari zure interakzioei buruzko datuak biltzeko. Datu horietan oinarrituta, aplikazioa zure hobespenetara egokituko da. Datuak lokalki bakarrik gordeko dira.",
-    "Auto tagging text" : "Testua automatikoki etiketatzea",
     "Trusted senders" : "Bidaltzaile fidagarriak",
     "Gravatar settings" : "Gravatar ezarpenak",
     "Use Gravatar and favicon avatars" : "Erabili Gravatar eta favicon avatarrak",

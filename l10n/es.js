@@ -109,7 +109,6 @@ OC.L10N.register(
     "Activate body search" : "Activar búsqueda de cuerpo del mensaje",
     "Data collection consent" : "Consentimiento para recolección de datos",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permitir a la app recolectar datos sobre sus interacciones. Basándose en estos datos, la app se adaptará mejor a sus preferencias. Estos datos sólo se almacenan localmente.",
-    "Auto tagging text" : "Auto-etiquetado de texto",
     "Trusted senders" : "Remitentes de confianza",
     "Gravatar settings" : "Ajustes de Gravatar",
     "Use Gravatar and favicon avatars" : "Usar avatares de Gravatar y favicon",

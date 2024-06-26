@@ -109,7 +109,6 @@ OC.L10N.register(
     "Activate body search" : "Aktivovať prehľadávanie tela správy",
     "Data collection consent" : "Súhlas so zberom údajov",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Povoľte aplikácii zhromažďovať údaje o vašich interakciách. Na základe týchto údajov sa aplikácia prispôsobí vašim preferenciám. Dáta sa budú ukladať iba lokálne.",
-    "Auto tagging text" : "Automatický štítok textu",
     "Trusted senders" : "Dôveryhodní odosielatelia",
     "Gravatar settings" : "Nastavenia Gravatar",
     "Use Gravatar and favicon avatars" : "Použiť Gravatar a favicon avatary",

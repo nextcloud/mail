@@ -106,7 +106,6 @@ OC.L10N.register(
     "Activate body search" : "Zapnout hledání v těle",
     "Data collection consent" : "Souhlas se shromažďováním dat",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Povolit aplikaci shromažďovat data o vaší interakci s ní. Na základě těchto dat se aplikace přizpůsobí vašim preferencím. Data budou ukládána pouze lokálně.",
-    "Auto tagging text" : "Text automatického opatřování štítkem",
     "Trusted senders" : "Důvěryhodní odesílatelé",
     "Gravatar settings" : "Nastavení pro gravatar",
     "Use Gravatar and favicon avatars" : "Použít Gravatar a favicon avatary",

@@ -109,7 +109,6 @@ OC.L10N.register(
     "Activate body search" : "啟動正文搜尋",
     "Data collection consent" : "數據收藏品同意",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "允許應用程式蒐集關於您互動的資料。以此資料為基礎，應用程式將會適應您的偏好設定。資料將只會儲存在本機。",
-    "Auto tagging text" : "自動標籤文字",
     "Trusted senders" : "受信任的寄件人",
     "Gravatar settings" : "Gravatar 設定",
     "Use Gravatar and favicon avatars" : "使用 Gravatar 和 favicon 虛擬化身圖示",

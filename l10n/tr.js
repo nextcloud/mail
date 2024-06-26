@@ -109,7 +109,6 @@ OC.L10N.register(
     "Activate body search" : "Metinler aransın",
     "Data collection consent" : "Kişisel verileri toplama rızası",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Uygulamanın etkileşimleriniz ile ilgili veri toplamasına izin verin. Uygulama bu verilere göre ayarlarınızı değiştirir. Veriler yalnızca yerel olarak saklanır ve başka bir yere aktarılmaz.",
-    "Auto tagging text" : "Otomatik metin imleme",
     "Trusted senders" : "Güvenilen göndericiler",
     "Gravatar settings" : "Gravatar ayarları",
     "Use Gravatar and favicon avatars" : "Gravatar ve favicon avatarları kullanılsın",

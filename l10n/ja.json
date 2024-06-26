@@ -102,7 +102,6 @@
     "Activate body search" : "本文の検索を有効化する",
     "Data collection consent" : "データ収集の同意",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "操作手順についてのデータ収集をアプリに許可します。このデータに基づき、アプリがあなた好みに適応します。データはローカルにしか保存されません。",
-    "Auto tagging text" : "テキストの自動タグ付け",
     "Trusted senders" : "信頼できる送信先",
     "Gravatar settings" : "グラバター設定",
     "Use Gravatar and favicon avatars" : "Gravatarとfaviconのアバターを使用する",

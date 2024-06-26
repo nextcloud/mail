@@ -106,7 +106,6 @@ OC.L10N.register(
     "Activate body search" : "Activa la cerca corporal",
     "Data collection consent" : "Consentiment de recollida de dades",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permet que l'aplicació recopili dades quant a les vostres interaccions. A partir d'aquesta dada, l'aplicació s'adaptarà a les teves preferències. Les dades només s'emmagatzemaran localment.",
-    "Auto tagging text" : "Etiquetatge automàtic de text",
     "Trusted senders" : "Remitents de confiança",
     "Gravatar settings" : "Paràmetres de Gravatar",
     "Use Gravatar and favicon avatars" : "Fes servir avatars de Gravatar i icona de web",

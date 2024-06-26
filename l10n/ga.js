@@ -109,7 +109,6 @@ OC.L10N.register(
     "Activate body search" : "Gníomhachtaigh cuardach coirp",
     "Data collection consent" : "Toiliú le bailiú sonraí",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Lig don aip sonraí a bhailiú faoi d'idirghníomhaíochtaí. Bunaithe ar na sonraí seo, déanfaidh an aip oiriúnú do do shainroghanna. Ní stórálfar na sonraí ach go háitiúil.",
-    "Auto tagging text" : "Uathchlibeáil téacs",
     "Trusted senders" : "Seoltóirí iontaofa",
     "Gravatar settings" : "Socruithe Gravatar",
     "Use Gravatar and favicon avatars" : "Bain úsáid as Gravatar agus avatars favicon",
