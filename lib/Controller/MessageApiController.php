@@ -16,6 +16,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
+use OCA\Mail\Service\Search\MailSearch;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;
@@ -41,6 +42,7 @@ class MessageApiController extends OCSController {
 		private AliasesService $aliasesService,
 		private AttachmentService $attachmentService,
 		private OutboxService $outboxService,
+		private MailSearch $mailSearch,
 		private MailManager $mailManager,
 		private IMAPClientFactory $clientFactory,
 		private LoggerInterface $logger,
@@ -67,6 +69,7 @@ class MessageApiController extends OCSController {
 			return new DataResponse('Forbidden', Http::STATUS_FORBIDDEN);
 		}
 
+		$message = $this->mailSearch->findMessage($account, $mailbox, $message);
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$source = $this->mailManager->getSource(
@@ -82,12 +85,6 @@ class MessageApiController extends OCSController {
 			$client->logout();
 		}
 
-		$messageContent = new AttachmentDownloadResponse(
-			$source,
-			$message->getSubject() . '.eml',
-			'message/rfc822',
-		);
-
-		return new DataResponse($messageContent->render(), Http::STATUS_OK);
+		return new DataResponse(['message' => $message, 'source' => $source], Http::STATUS_OK);
 	}
 }
