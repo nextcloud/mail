@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.6.2 – 2024-05-24
+### Fixed
+- CKEditor translations
+- Misplaced NcSelect border
+- Selecting draft opening the composer
+- Using shortcut to select draft shouldnt open the composer
+- S/MIME: Use whole certificate chain
+- Replace deprecated filepicker
+- Query share attribute for filepicker
+- Backend check for download permission for cloud attachments
+- Vulnerable js dependencies
+
 ## 3.6.1 – 2024-05-16
 ### Fixed
 - Searching mailbox by address
