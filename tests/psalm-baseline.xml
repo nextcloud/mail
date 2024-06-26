@@ -33,6 +33,7 @@
       <code>Command</code>
     </UndefinedClass>
   </file>
+  
   <file src="lib/Command/CleanUp.php">
     <UndefinedClass occurrences="1">
       <code>Command</code>
@@ -376,5 +377,13 @@
 	  <code>OutboxMessageCreatedEvent</code>
 	  <code>OutboxMessageCreatedEvent</code>
 	</MissingDependency>
+  </file>
+  <file src="lib/Service/Attachment/AttachmentService.php">
+    <UndefinedDocblockClass occurrences="2">
+      <code>OCA\Files_Sharing\SharedStorage</code>
+    </UndefinedDocblockClass>
+    <UndefinedClass occurrences="1">
+      <code>SharedStorage</code>
+    </UndefinedClass>
   </file>
 </files>
