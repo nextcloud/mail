@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.10 - 2024-06-26
+### Fixed
+* Rate limit
+* Backend check for download permissions for cloud attachments
+
 ## 2.2.9 - 2023-10-19
 ### Fixed
 - Update vulnerable dependencies
