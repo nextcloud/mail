@@ -63,6 +63,7 @@ class OutboxServiceTest extends TestCase {
 
 	/** @var MockObject|LoggerInterface */
 	private $logger;
+	private MockObject|Chain $chain;
 
 	protected function setUp(): void {
 		parent::setUp();

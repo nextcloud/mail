@@ -34,6 +34,8 @@ class AntiSpamServiceTest extends TestCase {
 	private SmtpClientFactory|MockObject $smtpClientFactory;
 	private MockObject|ImapMessageMapper $imapMessageMapper;
 	private LoggerInterface|MockObject $logger;
+	private MockObject|IMailTransmission $transmission;
+	private MailManager|MockObject $mailManager;
 
 	protected function setUp(): void {
 		parent::setUp();
