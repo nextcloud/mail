@@ -25,6 +25,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\Charset\Converter;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
+use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use function str_starts_with;
@@ -36,8 +37,10 @@ class ImapMessageFetcher {
 
 	private Html $htmlService;
 	private SmimeService $smimeService;
+	private PhishingDetectionService $phishingDetectionService;
 	private string $userId;
 
+	private bool $runPhishingCheck = false;
 	// Conditional fetching/parsing
 	private bool $loadBody = false;
 
@@ -54,6 +57,7 @@ class ImapMessageFetcher {
 	private string $rawReferences = '';
 	private string $dispositionNotificationTo = '';
 	private bool $hasDkimSignature = false;
+	private array $phishingDetails = [];
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
 	private ?string $unsubscribeMailto = null;
@@ -64,13 +68,16 @@ class ImapMessageFetcher {
 		string $userId,
 		Html $htmlService,
 		SmimeService $smimeService,
-		private Converter $converter) {
+		private Converter $converter,
+		PhishingDetectionService $phishingDetectionService,
+	) {
 		$this->uid = $uid;
 		$this->mailbox = $mailbox;
 		$this->client = $client;
 		$this->userId = $userId;
 		$this->htmlService = $htmlService;
 		$this->smimeService = $smimeService;
+		$this->phishingDetectionService = $phishingDetectionService;
 	}
 
 
@@ -82,6 +89,17 @@ class ImapMessageFetcher {
 	 */
 	public function withBody(bool $value): ImapMessageFetcher {
 		$this->loadBody = $value;
+		return $this;
+	}
+
+	/**
+	 * Configure the fetcher to check for phishing.
+	 *
+	 * @param bool $value
+	 * @return $this
+	 */
+	public function withPhishingCheck(bool $value): ImapMessageFetcher {
+		$this->runPhishingCheck = $value;
 		return $this;
 	}
 
@@ -238,6 +256,7 @@ class ImapMessageFetcher {
 			$this->rawReferences,
 			$this->dispositionNotificationTo,
 			$this->hasDkimSignature,
+			$this->phishingDetails,
 			$this->unsubscribeUrl,
 			$this->isOneClickUnsubscribe,
 			$this->unsubscribeMailto,
@@ -494,6 +513,10 @@ class ImapMessageFetcher {
 
 		$dkimSignatureHeader = $parsedHeaders->getHeader('dkim-signature');
 		$this->hasDkimSignature = $dkimSignatureHeader !== null;
+
+		if ($this->runPhishingCheck) {
+			$this->phishingDetails = $this->phishingDetectionService->checkHeadersForPhishing($parsedHeaders, $this->hasHtmlMessage, $this->htmlMessage);
+		}
 
 		$listUnsubscribeHeader = $parsedHeaders->getHeader('list-unsubscribe');
 		if ($listUnsubscribeHeader !== null) {

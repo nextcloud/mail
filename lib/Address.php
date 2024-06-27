@@ -51,7 +51,25 @@ class Address implements JsonSerializable {
 			// Fallback
 			return $this->getEmail();
 		}
+		$personal = trim(explode('<', $personal)[0]); // Remove the email part if present
 		return $personal;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getCustomEmail(): ?string {
+		$personal = $this->wrapped->personal;
+		if ($personal === null) {
+			// Fallback
+			return null;
+		}
+		$parts = explode('<', $personal);
+		if (count($parts) === 1) {
+			return null;
+		}
+		$customEmail = trim($parts[1], '>');
+		return $customEmail;
 	}
 
 	/**
