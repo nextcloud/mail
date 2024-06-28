@@ -239,7 +239,7 @@ class MailService implements IService, IMessageSend {
 	 *
 	 * @param array $options			array of options reserved for future use
 	 */
-	public function messageSend(IMessage $message, array $option = []): void {
+	public function sendMessage(IMessage $message, array $option = []): void {
 
 		// load action
 		$cmd = $this->container->get(\OCA\Mail\Provider\Command\MessageSend::class);
