@@ -301,7 +301,7 @@ OC.L10N.register(
     "Choose target mailbox" : "Zielpostfach auswählen",
     "No more submailboxes in here" : "Keine Unter-Postfächer vorhanden",
     "Follow up" : "Nachverfolgen",
-    "Follow up info" : "Weitere Informationen",
+    "Follow up info" : "Nachverfolgungsinformationen",
     "Important info" : "Wichtige Information",
     "Other" : "Andere",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Nachrichten werden automatisch als wichtig markiert, je nachdem, mit welchen Nachrichten Sie interagieren, oder als wichtig markiert haben. Am Anfang müssen Sie möglicherweise die Wichtigkeit manuell ändern, um das System anzulernen, aber es wird sich mit der Zeit verbessern.",
