@@ -336,7 +336,7 @@ class Manager {
 			if ($provisioning->getMasterPasswordEnabled() === true && $provisioning->getMasterPassword() !== null) {
 				$password = $provisioning->getMasterPassword();
 				$this->logger->debug('Password set to master password for ' . $user->getUID());
-			} else if ($password === null) {
+			} elseif ($password === null) {
 				$this->logger->debug('No password set for ' . $user->getUID());
 				return;
 			}
