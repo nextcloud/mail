@@ -66,6 +66,7 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 			<step>OCA\Mail\Migration\MakeItineraryExtractorExecutable</step>
 			<step>OCA\Mail\Migration\ProvisionAccounts</step>
 			<step>OCA\Mail\Migration\RepairMailTheads</step>
+			<step>OCA\Mail\Migration\DeleteDuplicateUids</step>
 		</post-migration>
 	</repair-steps>
 	<commands>
