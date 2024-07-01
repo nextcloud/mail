@@ -500,8 +500,13 @@ return [
 			'verb' => 'GET',
 		],
 		[
-			'name' => 'messageApi#raw',
+			'name' => 'messageApi#getRaw',
 			'url' => '/message/{id}/raw',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'messageApi#getAttachment',
+			'url' => '/message/{id}/attachment/{attachmentId}',
 			'verb' => 'GET',
 		],
 	],

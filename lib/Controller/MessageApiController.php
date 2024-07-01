@@ -10,7 +10,6 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
@@ -28,8 +27,6 @@ use OCP\AppFramework\Http\Attribute\BruteForceProtection;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\OCSController;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\IMimeTypeDetector;
@@ -129,7 +126,7 @@ class MessageApiController extends OCSController {
 	#[BruteForceProtection('mailGetRawMessage')]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function raw(int $id): DataResponse {
+	public function getRaw(int $id): DataResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
@@ -164,12 +161,11 @@ class MessageApiController extends OCSController {
 	 * @return array
 	 */
 	private function enrichDownloadUrl(int $id, array $attachment) {
-		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messageApi.downloadAttachment',
+		$downloadUrl = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.downloadAttachment',
 			[
 				'id' => $id,
 				'attachmentId' => $attachment['id'],
 			]);
-		$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
 		return $attachment;
 	}
@@ -177,37 +173,46 @@ class MessageApiController extends OCSController {
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[TrapError]
-	public function downloadAttachment(int $id,
-		string $attachmentId): Response {
+	public function getAttachment(int $id,
+		string $attachmentId): DataResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
-		} catch (DoesNotExistException $e) {
-			return new JSONResponse($e, Http::STATUS_FORBIDDEN);
+		} catch (DoesNotExistException | ClientException $e) {
+			return new DataResponse($e, Http::STATUS_FORBIDDEN);
 		}
 
-		$attachment = $this->mailManager->getMailAttachment(
-			$account,
-			$mailbox,
-			$message,
-			$attachmentId,
-		);
+		try {
+			$attachment = $this->mailManager->getMailAttachment(
+				$account,
+				$mailbox,
+				$message,
+				$attachmentId,
+			);
+		} catch (\Horde_Imap_Client_Exception_NoSupportExtension | \Horde_Imap_Client_Exception | \Horde_Mime_Exception $e) {
+			$this->logger->error('Error when trying to process the attachment', ['exception' => $e]);
+			return new DataResponse($e, Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (ServiceException | DoesNotExistException $e) {
+			$this->logger->error('Could not find attachment', ['exception' => $e]);
+			return new DataResponse($e, Http::STATUS_NOT_FOUND);
+		}
 
 		// Body party and embedded messages do not have a name
 		if ($attachment->getName() === null) {
-			return new AttachmentDownloadResponse(
-				$attachment->getContent(),
-				$this->l10n->t('Embedded message %s', [
-					$attachmentId,
-				]) . '.eml',
-				$attachment->getType()
-			);
+			return new DataResponse([
+				'name' => $attachmentId . '.eml',
+				'mime' => $attachment->getType(),
+				'size' => $attachment->getSize(),
+				'content' => $attachment->getContent()
+			]);
 		}
-		return new AttachmentDownloadResponse(
-			$attachment->getContent(),
-			$attachment->getName(),
-			$attachment->getType()
-		);
+
+		return new DataResponse([
+			'name' => $attachment->getName(),
+			'mime' => $attachment->getType(),
+			'size' => $attachment->getSize(),
+			'content' => $attachment->getContent()
+		]);
 	}
 }
