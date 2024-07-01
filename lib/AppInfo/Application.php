@@ -54,6 +54,7 @@ use OCA\Mail\Listener\OutOfOfficeListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Notification\Notifier;
+use OCA\Mail\Provider\MailProvider;
 use OCA\Mail\Search\FilteringProvider;
 use OCA\Mail\Search\Provider;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -160,6 +161,14 @@ class Application extends App implements IBootstrap {
 			$context->registerSearchProvider(FilteringProvider::class);
 		} else {
 			$context->registerSearchProvider(Provider::class);
+		}
+
+		
+		// TODO: drop condition if nextcloud < 30 is not supported anymore
+		// evaluate, if mail provider registration is possible
+		if (method_exists($context, 'registerMailProvider')) {
+			// register mail provider
+			$context->registerMailProvider(MailProvider::class);
 		}
 
 		$context->registerNotifierService(Notifier::class);
