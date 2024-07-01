@@ -499,5 +499,10 @@ return [
 			'url' => '/message/{id}',
 			'verb' => 'GET',
 		],
+		[
+			'name' => 'messageApi#raw',
+			'url' => '/message/{id}/raw',
+			'verb' => 'GET',
+		],
 	],
 ];
