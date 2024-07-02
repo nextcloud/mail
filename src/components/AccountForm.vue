@@ -78,9 +78,11 @@
 						:disabled="loading"
 						value="none"
 						@change="onImapSslModeChange">
-					<label class="button"
+					<ButtonVue class="button"
 						for="man-imap-sec-none"
-						:class="{primary: manualConfig.imapSslMode === 'none'}">{{ t('mail', 'None') }}</label>
+						:class="{primary: manualConfig.imapSslMode === 'none'}">
+						{{ t('mail', 'None') }}
+					</ButtonVue>
 					<input id="man-imap-sec-ssl"
 						v-model="manualConfig.imapSslMode"
 						type="radio"
@@ -88,9 +90,11 @@
 						:disabled="loading"
 						value="ssl"
 						@change="onImapSslModeChange">
-					<label class="button"
+					<ButtonVue class="button"
 						for="man-imap-sec-ssl"
-						:class="{primary: manualConfig.imapSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
+						:class="{primary: manualConfig.imapSslMode === 'ssl'}">
+						{{ t('mail', 'SSL/TLS') }}
+					</ButtonVue>
 					<input id="man-imap-sec-tls"
 						v-model="manualConfig.imapSslMode"
 						type="radio"
@@ -98,9 +102,11 @@
 						:disabled="loading"
 						value="tls"
 						@change="onImapSslModeChange">
-					<label class="button"
+					<ButtonVue class="button"
 						for="man-imap-sec-tls"
-						:class="{primary: manualConfig.imapSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
+						:class="{primary: manualConfig.imapSslMode === 'tls'}">
+						{{ t('mail', 'STARTTLS') }}
+					</ButtonVue>
 				</div>
 				<label for="man-imap-port" class="account-form__label--required">{{ t('mail', 'IMAP Port') }}</label>
 				<input id="man-imap-port"
@@ -150,9 +156,11 @@
 						:disabled="loading"
 						value="none"
 						@change="onSmtpSslModeChange">
-					<label class="button"
+					<ButtonVue class="button"
 						for="man-smtp-sec-none"
-						:class="{primary: manualConfig.smtpSslMode === 'none'}">{{ t('mail', 'None') }}</label>
+						:class="{primary: manualConfig.smtpSslMode === 'none'}">
+						{{ t('mail', 'None') }}
+					</ButtonVue>
 					<input id="man-smtp-sec-ssl"
 						v-model="manualConfig.smtpSslMode"
 						type="radio"
@@ -160,9 +168,11 @@
 						:disabled="loading"
 						value="ssl"
 						@change="onSmtpSslModeChange">
-					<label class="button"
+					<ButtonVue class="button"
 						for="man-smtp-sec-ssl"
-						:class="{primary: manualConfig.smtpSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
+						:class="{primary: manualConfig.smtpSslMode === 'ssl'}">
+						{{ t('mail', 'SSL/TLS') }}
+					</ButtonVue>
 					<input id="man-smtp-sec-tls"
 						v-model="manualConfig.smtpSslMode"
 						type="radio"
@@ -170,9 +180,11 @@
 						:disabled="loading"
 						value="tls"
 						@change="onSmtpSslModeChange">
-					<label class="button"
+					<ButtonVue class="button"
 						for="man-smtp-sec-tls"
-						:class="{primary: manualConfig.smtpSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
+						:class="{primary: manualConfig.smtpSslMode === 'tls'}">
+						{{ t('mail', 'STARTTLS') }}
+					</ButtonVue>
 				</div>
 				<label for="man-smtp-port" class="account-form__label--required">{{ t('mail', 'SMTP Port') }}</label>
 				<input id="man-smtp-port"
