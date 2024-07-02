@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\TrustedSenderMapper;
 
 class TrustedSenderService implements ITrustedSenderService {
@@ -21,6 +22,23 @@ class TrustedSenderService implements ITrustedSenderService {
 	}
 
 	public function isTrusted(string $uid, string $email): bool {
+		return $this->mapper->exists(
+			$uid,
+			$email
+		);
+	}
+
+	public function isSenderTrusted(string $uid, Message $message): bool {
+		$from = $message->getFrom();
+		$first = $from->first();
+		if ($first === null) {
+			return false;
+		}
+		$email = $first->getEmail();
+		if ($email === null) {
+			return false;
+		}
+
 		return $this->mapper->exists(
 			$uid,
 			$email
