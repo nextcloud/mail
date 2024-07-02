@@ -164,6 +164,13 @@
 				</template>
 				{{ t('mail', 'View source') }}
 			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click="onPrint">
+				<template #icon>
+					<PrinterIcon :size="20" />
+				</template>
+				{{ t('mail', 'Print message') }}
+			</ActionButton>
 			<ActionLink :close-after-click="true"
 				:href="exportMessageLink">
 				<template #icon>
@@ -242,6 +249,7 @@ import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import { mailboxHasRights } from '../util/acl.js'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information.vue'
+import PrinterIcon from 'vue-material-design-icons/Printer.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
@@ -258,7 +266,9 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import logger from '../logger.js'
 import moment from '@nextcloud/moment'
+import { shortRelativeDatetime } from '../util/shortRelativeDatetime.js'
 import { mapGetters } from 'vuex'
+import { translate as t } from '@nextcloud/l10n'
 
 export default {
 	name: 'MenuEnvelope',
@@ -285,6 +295,7 @@ export default {
 		ImportantIcon,
 		TaskIcon,
 		AlarmIcon,
+		PrinterIcon,
 	},
 	props: {
 		envelope: {
@@ -561,6 +572,84 @@ export default {
 		},
 		setCustomSnooze() {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
+		},
+		async onPrint() {
+			await this.$emit('print')
+
+			const printStyles = `
+				* {
+					font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', Arial, 'Noto Color Emoji', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+				};
+			`
+
+			let combinedContent = ''
+			const messageFrames = document.querySelectorAll('iframe.message-frame')
+
+			messageFrames.forEach(frame => {
+				const doc = frame.contentDocument || frame.contentWindow.document
+				combinedContent += doc.body.innerHTML
+			})
+
+			const frame = document.createElement('iframe')
+			frame.name = 'printFrame'
+			frame.style.position = 'absolute'
+			frame.style.top = '-1000000px'
+			document.body.appendChild(frame)
+			const frameDoc = frame.contentWindow ? frame.contentWindow : frame.contentDocument.document ? frame.contentDocument.document : frame.contentDocument
+			frameDoc.document.open()
+			frameDoc.document.write('<html><head><style>')
+			frameDoc.document.write(printStyles)
+			frameDoc.document.write('</style></head><body>')
+			frameDoc.document.write(document.querySelector('#mail-thread-header h2').outerHTML)
+
+			if (this.envelope.from.length) {
+				let fromString = '<strong>' + t('mail', 'From') + ':</strong> '
+				this.envelope.from.forEach((contact) => {
+					fromString += ` ${this.sanitize(contact.label)} <em>${this.sanitize(contact.email)}</em>`
+				})
+				frameDoc.document.write(fromString + '<br>')
+			}
+
+			if (this.envelope.to.length) {
+				let toString = '<strong>' + t('mail', 'Cc') + ':</strong> '
+				this.envelope.to.forEach((contact) => {
+					toString += ` ${this.sanitize(contact.label)} <em>${this.sanitize(contact.email)}</em>`
+				})
+				frameDoc.document.write(toString + '<br>')
+			}
+
+			if (this.envelope.bcc.length) {
+				let bccString = '<strong>' + t('mail', 'Bcc') + ':</strong> '
+				this.envelope.bcc.forEach((contact) => {
+					bccString += ` ${this.sanitize(contact.label)} <em>${this.sanitize(contact.email)}</em>`
+				})
+				frameDoc.document.write(bccString + '<br>')
+			}
+			const momentDate = moment(this.envelope.dateInt * 1000)
+
+			frameDoc.document.write(`<h4>${momentDate.format('H:mm MMM D, YYYY')}</h4>`)
+			frameDoc.document.write(combinedContent)
+			frameDoc.document.write('</body></html>')
+			frameDoc.document.close()
+
+			setTimeout(function() {
+				window.frames.printFrame.focus()
+				window.frames.printFrame.print()
+				document.body.removeChild(frame)
+			}, 500)
+		},
+
+		sanitize(string) {
+			const map = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#x27;',
+				"/": '&#x2F;',
+			};
+			const reg = /[&<>"'/]/ig;
+			return string.replace(reg, (match)=>(map[match]));
 		},
 	},
 }
