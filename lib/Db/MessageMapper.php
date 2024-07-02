@@ -1672,7 +1672,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('t1.uid', 't2.uid', IQueryBuilder::PARAM_INT),
 				$qb->expr()->neq('t1.id', 't2.id', IQueryBuilder::PARAM_INT),
 			))
-			->groupBy('mailbox_id', 'uid')
+			->groupBy('t1.mailbox_id', 't1.uid', 't1.id')
 			->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
