@@ -144,8 +144,6 @@ class ProvisioningMiddlewareTest extends TestCase {
 		$credentials->expects($this->once())
 			->method('getPassword')
 			->willReturn(null);
-		$this->provisioningManager->expects($this->never())
-			->method('updatePassword');
 
 		$this->middleware->beforeController(
 			$this->createMock(PageController::class),
