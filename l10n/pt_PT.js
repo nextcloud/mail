@@ -141,7 +141,7 @@ OC.L10N.register(
     "Remove {email}" : "Remover {email}",
     "Show all mailboxes" : "Mostrar todas as caixas de entrada",
     "Mark all as read" : "Marcar todas como lidas",
-    "Edit name" : "Editar nome",
+    "Rename" : "Renomear",
     "Clear cache" : "Limpar cache",
     "Clear locally cached data, in case there are issues with synchronization." : "Limpe a cache de dados local no caso de ter problemas com a sincronização.",
     "Subscribed" : "Subscrito",

@@ -356,7 +356,7 @@ OC.L10N.register(
     "Mark all as read" : "标记所有为已读",
     "Mark all messages of this mailbox as read" : "将此邮箱中的所有消息都标记为已读",
     "Add submailbox" : "添加子邮箱",
-    "Edit name" : "编辑名称",
+    "Rename" : "重命名",
     "Move mailbox" : "移动邮箱",
     "Clear cache" : "清空缓存",
     "Clear locally cached data, in case there are issues with synchronization." : "万一同步出现问题，请清除本地缓存的数据。",

@@ -264,7 +264,6 @@ OC.L10N.register(
     "Mark all as read" : "Markér alle som læst",
     "Mark all messages of this mailbox as read" : "Markér alle beskeder i denne postkasse som læst",
     "Add submailbox" : "Tilføj underpostkasse",
-    "Edit name" : "Rediger navn",
     "Clear cache" : "Ryd cache",
     "Subscribed" : "Abonneret",
     "Sync in background" : "Synkroniser i baggrunden",

@@ -377,7 +377,7 @@ OC.L10N.register(
     "Mark all as read" : "全部標記為已讀",
     "Mark all messages of this mailbox as read" : "將此信箱所有的郵件標記為已讀",
     "Add submailbox" : "新增子信箱",
-    "Edit name" : "編輯名稱",
+    "Rename" : "重新命名",
     "Move mailbox" : "移動信箱",
     "Clear cache" : "清除快取",
     "Clear locally cached data, in case there are issues with synchronization." : "如果遇到同步問題，請清除本機快取資料。",

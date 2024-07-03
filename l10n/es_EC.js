@@ -309,7 +309,7 @@ OC.L10N.register(
     "Mark all as read" : "Marcar todos como leídos",
     "Mark all messages of this mailbox as read" : "Marcar todos los mensajes de este buzón como leídos",
     "Add submailbox" : "Agregar sub-buzón",
-    "Edit name" : "Editar nombre",
+    "Rename" : "Renombrar",
     "Move mailbox" : "Mover buzón",
     "Clear cache" : "Borrar el caché",
     "Clear locally cached data, in case there are issues with synchronization." : "Borrar datos en caché local, en caso de problemas con la sincronización.",

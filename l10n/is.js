@@ -152,7 +152,7 @@ OC.L10N.register(
     "Remove {email}" : "Fjarlægja {email}",
     "Mark all as read" : "Merkja allt sem lesið",
     "Mark all messages of this mailbox as read" : "Merkja öll skilaboð í þessu pósthólfi sem lesin",
-    "Edit name" : "Breyta heiti",
+    "Rename" : "Endurnefna",
     "Clear cache" : "Hreinsa skyndiminni",
     "Subscribed" : "Í áskrift",
     "Sync in background" : "Samstilling í bakgrunni",

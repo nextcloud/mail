@@ -39,6 +39,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Saving" : "Salveguardante",
     "Remove account" : "Remover conto",
+    "Rename" : "Renominar",
     "Sending …" : "Inviante ...",
     "Add" : "Adder",
     "Close" : "Clauder",

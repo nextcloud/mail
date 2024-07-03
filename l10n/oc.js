@@ -62,7 +62,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Loading …" : "Cargament…",
     "Mark all as read" : "Marcar totes coma legits",
-    "Edit name" : "Modificar lo nom",
+    "Rename" : "Tornar nommar",
     "Clear cache" : "Voidar l'escondedor",
     "_{total} message_::_{total} messages_" : ["{total} messatge","{total} messatges"],
     "Retry" : "Tornar ensajar",

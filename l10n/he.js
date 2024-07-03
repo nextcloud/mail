@@ -161,7 +161,7 @@ OC.L10N.register(
     "Mark all as read" : "סימון הכול כנקרא",
     "Mark all messages of this mailbox as read" : "סימון כל ההודעות בתיבת הדוא״ל הזו כנקראו",
     "Add submailbox" : "הוספת תת־תיבת דוא״ל",
-    "Edit name" : "ערוך שם",
+    "Rename" : "שינוי שם",
     "Clear cache" : "פינוי מטמון",
     "Clear locally cached data, in case there are issues with synchronization." : "פינוי הנתונים שמאוחסנים מקומית במטמון, במקרה שיש תקלות בסנכרון.",
     "Sync in background" : "סנכרון ברקע",

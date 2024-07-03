@@ -26,6 +26,7 @@ OC.L10N.register(
     "Move" : "Senkez",
     "Remove account" : "Kkes amiḍan",
     "Loading …" : "Asali ...",
+    "Rename" : "Beddel isem",
     "Retry" : "Ɛreḍ tikkelt-nniḍen",
     "Message" : "Izen",
     "Copy to clipboard" : "Copier dans le presse-papiers",

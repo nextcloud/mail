@@ -348,7 +348,7 @@ OC.L10N.register(
     "Mark all as read" : "모두 읽은 것으로 표시",
     "Mark all messages of this mailbox as read" : "편지함에 있는 모든 메시지를 읽음 처리하기",
     "Add submailbox" : "하위 편지함 추가",
-    "Edit name" : "이름 편집",
+    "Rename" : "이름 바꾸기",
     "Move mailbox" : "편지함 이동",
     "Clear cache" : "Clear cache",
     "Clear locally cached data, in case there are issues with synchronization." : "동기화 관련 문제가 발생했을 경우 로컬에서 캐시된 데이터를 비우십시오.",

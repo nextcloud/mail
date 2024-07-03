@@ -268,7 +268,7 @@ OC.L10N.register(
     "Mark all as read" : "Означи ги сите како прочитани",
     "Mark all messages of this mailbox as read" : "Означи ги како прочитани сите пораки од ова сандаче ",
     "Add submailbox" : "Додади подсандаче",
-    "Edit name" : "Уреди име",
+    "Rename" : "Преименувај",
     "Move mailbox" : "Премести сандаче",
     "Clear cache" : "Избриши го кешот",
     "Clear locally cached data, in case there are issues with synchronization." : "Исчистете ги локално зачуваните податоци, во случај да има проблеми со синхронизацијата.",

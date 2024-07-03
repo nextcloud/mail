@@ -364,7 +364,7 @@ OC.L10N.register(
     "Mark all as read" : "Marquer tout comme lu",
     "Mark all messages of this mailbox as read" : "Marquer tous les messages de ce dossier comme lus",
     "Add submailbox" : "Créer un sous-dossier",
-    "Edit name" : "Modifier le nom",
+    "Rename" : "Renommer",
     "Move mailbox" : "Déplacer le dossier",
     "Clear cache" : "Vider le cache",
     "Clear locally cached data, in case there are issues with synchronization." : "Supprimer les données locales en cache pour régler les problèmes de synchronisation.",

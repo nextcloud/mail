@@ -114,6 +114,7 @@ OC.L10N.register(
     "Remove account" : "Forigi konton",
     "Loading …" : "Ŝargas …",
     "Mark all as read" : "Marki ĉion kiel legita",
+    "Rename" : "Alinomi",
     "Clear cache" : "Forviŝi la kaŝmemoron",
     "_{total} message_::_{total} messages_" : ["{total} mesaĝo","{total} mesaĝoj"],
     "New message" : "Nova mesaĝo",

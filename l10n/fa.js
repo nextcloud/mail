@@ -330,7 +330,7 @@ OC.L10N.register(
     "Mark all as read" : "علامت همه به عنوان خوانده‌شده",
     "Mark all messages of this mailbox as read" : "Mark all messages of this mailbox as read",
     "Add submailbox" : "Add submailbox",
-    "Edit name" : "ویرایش نام",
+    "Rename" : "تغییرنام",
     "Move mailbox" : "Move mailbox",
     "Clear cache" : "پاک‌سازی انباره",
     "Clear locally cached data, in case there are issues with synchronization." : "Clear locally cached data, in case there are issues with synchronization.",

@@ -228,7 +228,7 @@ OC.L10N.register(
     "Collapse mailboxes" : "Suskleisti pašto dėžutes",
     "Mark all as read" : "Žymėti visus kaip skaitytus",
     "Mark all messages of this mailbox as read" : "Žymėti visus laiškus šioje pašto dėžutėje kaip skaitytus",
-    "Edit name" : "Taisyti pavadinimą",
+    "Rename" : "Pervadinti",
     "Clear cache" : "Išvalyti podėlį",
     "Subscribed" : "Prenumeruotas",
     "Sync in background" : "Sinchronizuoti fone",

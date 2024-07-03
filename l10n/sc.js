@@ -204,7 +204,6 @@ OC.L10N.register(
     "Mark all as read" : "Marca totu comente lèghidu",
     "Mark all messages of this mailbox as read" : "Marca totu is messàgios de custa casella de posta comente lèghidos",
     "Add submailbox" : "Agiunghe una sutacasella de posta",
-    "Edit name" : "Modìfica nùmene",
     "Clear cache" : "Lìmpia memòria temporànea",
     "Clear locally cached data, in case there are issues with synchronization." : "Lìmpia is datos locales allogados in sa memòria temporànea, s'in casu mai b'apant problemas cun sa sincronizatzione.",
     "Subscribed" : "Sutaiscritu",

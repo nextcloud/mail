@@ -315,7 +315,7 @@ OC.L10N.register(
     "Mark all as read" : "Пометить всё как прочитанное",
     "Mark all messages of this mailbox as read" : "Пометить все сообщения в папке как прочитанные",
     "Add submailbox" : "Добавить вложенную папку",
-    "Edit name" : "Изменить название",
+    "Rename" : "Переименовать",
     "Move mailbox" : "Переместить почтовый ящик",
     "Clear cache" : "Очистить кеш",
     "Clear locally cached data, in case there are issues with synchronization." : "Очистить локальный кеш данных в случае проблем с синхронизацией.",

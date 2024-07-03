@@ -177,7 +177,7 @@ OC.L10N.register(
     "Mark all as read" : "Đánh dấu tất cả như đã ",
     "Mark all messages of this mailbox as read" : "Đánh dấu tất cả các thư của hộp thư này là đã đọc",
     "Add submailbox" : "Thêm hộp thư con",
-    "Edit name" : "Sửa đổi tên",
+    "Rename" : "Đổi tên",
     "Clear cache" : "Xóa bộ nhớ ",
     "Clear locally cached data, in case there are issues with synchronization." : "Xóa dữ liệu được lưu trong bộ nhớ cache cục bộ, trong trường hợp có sự cố với đồng bộ hóa.",
     "Subscribed" : "Đã đăng ký",

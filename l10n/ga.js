@@ -377,7 +377,7 @@ OC.L10N.register(
     "Mark all as read" : "Marcáil go léir mar a léitear",
     "Mark all messages of this mailbox as read" : "Marcáil gach teachtaireacht sa bhosca ríomhphoist seo mar léite",
     "Add submailbox" : "Cuir bosca fo-phoist leis",
-    "Edit name" : "Cuir ainm in eagar",
+    "Rename" : "Athainmnigh",
     "Move mailbox" : "Bog an bosca poist",
     "Clear cache" : "Glan taisce",
     "Clear locally cached data, in case there are issues with synchronization." : "Glan sonraí i dtaisce go háitiúil, ar eagla go mbeidh fadhbanna ann le sioncrónú.",

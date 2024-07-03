@@ -305,7 +305,7 @@ OC.L10N.register(
     "Mark all as read" : "Označi vse kot prebrano",
     "Mark all messages of this mailbox as read" : "Označi vsa sporočila v tej mapi kot prebrana",
     "Add submailbox" : "Dodaj podrejeni poštni predal",
-    "Edit name" : "Uredi ime",
+    "Rename" : "Preimenuj",
     "Move mailbox" : "Premakni poštni predal",
     "Clear cache" : "Počisti predpomnilnik",
     "Clear locally cached data, in case there are issues with synchronization." : "Počisti krajevno predpomnjena sporočila, v primeru morebitnih težav z usklajevanjem.",

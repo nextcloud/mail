@@ -50,6 +50,7 @@ OC.L10N.register(
     "Saving" : "กำลังบันทึก",
     "Remove account" : "ลบบัญชี",
     "Mark all as read" : "เปลี่ยนทั้งหมดเป็นอ่านแล้ว",
+    "Rename" : "เปลี่ยนชื่อ",
     "Clear cache" : "ล้างแคช",
     "Sending …" : "กำลังส่ง ...",
     "Copy to clipboard" : "คัดลอกไปยังคลิปบอร์ด",

@@ -362,7 +362,7 @@
     "Mark all as read" : "Marcar como leído",
     "Mark all messages of this mailbox as read" : "Marcar todos los mensajes de este buzón como leídos",
     "Add submailbox" : "Añadir sub-buzón",
-    "Edit name" : "Editar el nombre",
+    "Rename" : "Renombrar",
     "Move mailbox" : "Mover buzón",
     "Clear cache" : "Vaciar caché",
     "Clear locally cached data, in case there are issues with synchronization." : "Limpiar datos en caché local, por si hay problemas con la sincronización.",

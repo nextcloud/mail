@@ -31,6 +31,7 @@ OC.L10N.register(
     "Remove account" : "Ukloni nalog",
     "Loading …" : "Učitavanje...",
     "Mark all as read" : "Označi sve kao pročitano",
+    "Rename" : "Preimenuj",
     "Clear cache" : "Očisti keš",
     "Add" : "Dodaj",
     "Close" : "Zatvori",

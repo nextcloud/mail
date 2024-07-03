@@ -23,6 +23,7 @@ OC.L10N.register(
     "Other" : "ផ្សេងៗ",
     "Reply" : "ឆ្លើយតប",
     "Move" : "Move",
+    "Rename" : "ប្ដូរ​ឈ្មោះ",
     "Sending …" : "កំពុង​ផ្ញើរ...",
     "Add" : "បញ្ចូល",
     "Close" : "បិទ",

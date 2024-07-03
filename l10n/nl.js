@@ -217,7 +217,7 @@ OC.L10N.register(
     "Mark all as read" : "Alles als gelezen markeren",
     "Mark all messages of this mailbox as read" : "Markeer alle berichten in deze berichtenbox als gelezen",
     "Add submailbox" : "Toevoegen subpostbus",
-    "Edit name" : "Bewerken naam",
+    "Rename" : "Hernoemen",
     "Clear cache" : "Cache leegmaken",
     "Clear locally cached data, in case there are issues with synchronization." : "Maak de lokale gegevenscache schoon, als er problemen zijn bij synchronisatie.",
     "Subscribed" : "Geabonneerd",

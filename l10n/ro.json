@@ -322,7 +322,7 @@
     "Mark all as read" : "Marcaţi tot ca fiind citit",
     "Mark all messages of this mailbox as read" : "Marchează toate mesajele din acest folder ca citite",
     "Add submailbox" : "Adaugă subfolder",
-    "Edit name" : "Modifică numele",
+    "Rename" : "Redenumire",
     "Move mailbox" : "Mută cutia poștală",
     "Clear cache" : "Șterge cache",
     "Clear locally cached data, in case there are issues with synchronization." : "Ștergeți datele din cache local în cazul problemelor de sincronizare.",

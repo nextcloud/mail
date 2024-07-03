@@ -43,7 +43,6 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Remove account" : "Lemel ar c'hont",
     "Loading …" : "O Kargañ ...",
-    "Edit name" : "Ebmann anv",
     "Clear cache" : "Gwalc'hiñ ar c'hache",
     "Retry" : "Klaskit en dro",
     "Add" : "Ouzhpennañ",

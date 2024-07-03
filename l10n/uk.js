@@ -353,7 +353,7 @@ OC.L10N.register(
     "Mark all as read" : "Всі прочитані",
     "Mark all messages of this mailbox as read" : "Позначити всі повідомлення з цієї поштової скриньки як прочитані",
     "Add submailbox" : "Додати вкладену поштову скриньку",
-    "Edit name" : "Редагувати назву",
+    "Rename" : "Перейменувати",
     "Move mailbox" : "Перемістити поштову скриньку",
     "Clear cache" : "Очистити кеш",
     "Clear locally cached data, in case there are issues with synchronization." : "Очистити локально кешовані дані у разі проблем з синхронізацією.",

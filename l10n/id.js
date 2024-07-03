@@ -57,7 +57,7 @@ OC.L10N.register(
     "Saving" : "Menyimpan",
     "Remove account" : "Hapus akun",
     "Mark all as read" : "Tandai semua telah dibaca",
-    "Edit name" : "Edit nama",
+    "Rename" : "Ubah nama",
     "Clear cache" : "Bersihkan cache",
     "New message" : "Pesan baru",
     "Retry" : "Ulangi",

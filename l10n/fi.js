@@ -286,7 +286,7 @@ OC.L10N.register(
     "Mark all as read" : "Merkitse kaikki luetuiksi",
     "Mark all messages of this mailbox as read" : "Merkitse kaikki tämän postilaatikon viestit luetuiksi",
     "Add submailbox" : "Lisää alipostilaatikko",
-    "Edit name" : "Muokkaa nimeä",
+    "Rename" : "Nimeä uudelleen",
     "Clear cache" : "Tyhjennä välimuisti",
     "Clear locally cached data, in case there are issues with synchronization." : "Poista paikallisesti tallennetut tiedot, jos synkronoinnissa on ongelmia.",
     "Subscribed" : "Tilattu",

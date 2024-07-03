@@ -377,7 +377,7 @@ OC.L10N.register(
     "Mark all as read" : "Marker alle som lest",
     "Mark all messages of this mailbox as read" : "Merk alle meldinger i denne postkassen som lest",
     "Add submailbox" : "Legg til underpostboks",
-    "Edit name" : "Rediger navn",
+    "Rename" : "Endre navn",
     "Move mailbox" : "Flytt postboks",
     "Clear cache" : "Tøm hurtiglager",
     "Clear locally cached data, in case there are issues with synchronization." : "Slett lokalt bufrede data, i tilfelle det er problemer med synkronisering.",

@@ -31,7 +31,6 @@ OC.L10N.register(
     "Remove account" : "ගිණුම ඉවත් කරන්න",
     "Loading …" : "පූරණය වෙමින් …",
     "Mark all as read" : "සියල්ල කියවූ ලෙස සලකුණු කරන්න",
-    "Edit name" : "නම සංස්කරණය",
     "Retry" : "නැවත උත්සාහ කරන්න",
     "Message" : "පණිවිඩය",
     "Add" : "එකතු කරන්න",

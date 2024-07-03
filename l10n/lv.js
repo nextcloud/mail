@@ -87,6 +87,7 @@ OC.L10N.register(
     "Saving" : "Saglabā",
     "Remove account" : "Noņemt kontu",
     "Loading …" : "Ielādē…",
+    "Rename" : "Pārsaukt",
     "Subscribed" : "Abonēts",
     "New message" : "Jauna ziņa",
     "Retry" : "Mēģināt vēlreiz",

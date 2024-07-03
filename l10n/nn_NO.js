@@ -28,6 +28,7 @@ OC.L10N.register(
     "Move" : "Move",
     "Quota" : "Kvote",
     "Saving" : "Lagrar",
+    "Rename" : "Endra namn",
     "Retry" : "Forsøk att",
     "Add" : "Legg til",
     "Close" : "Lat att",

@@ -362,7 +362,7 @@ OC.L10N.register(
     "Mark all as read" : "Označ všetko ako prečítané",
     "Mark all messages of this mailbox as read" : "Označiť všetky správy v tejto schránke ako prečítané",
     "Add submailbox" : "Pridať podschránku",
-    "Edit name" : "Upraviť názov",
+    "Rename" : "Premenovať",
     "Move mailbox" : "Presunúť schránku",
     "Clear cache" : "Vymazať vyrovnávaciu pamäť",
     "Clear locally cached data, in case there are issues with synchronization." : "V prípade problémov so synchronizáciou, vyčistite údaje vo vyrovnávacej pamäti.",

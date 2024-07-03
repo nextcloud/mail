@@ -33,6 +33,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Saving" : "Speicheren...",
     "Remove account" : "De Kont läschen",
+    "Rename" : "Ëmbenennen",
     "Add" : "Derbäimaachen",
     "Close" : "Zoumaachen",
     "Date" : "Date",

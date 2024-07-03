@@ -74,6 +74,7 @@ OC.L10N.register(
     "Saving" : "Duke u ruajtur!",
     "Remove account" : "Fshij llogarinë",
     "Mark all as read" : "Shënoji krejt si të lexuar",
+    "Rename" : "Riemërtoje",
     "Clear cache" : "Pastroje fshehtinën",
     "New message" : "Mesazh i ri",
     "Retry" : "Riprovoni",

@@ -218,7 +218,7 @@ OC.L10N.register(
     "Show all mailboxes" : "Visa alla brevlådor",
     "Mark all as read" : "Markera alla som lästa",
     "Mark all messages of this mailbox as read" : "Markera alla meddelanden i den här brevlådan som lästa",
-    "Edit name" : "Ändra namn",
+    "Rename" : "Byt namn",
     "Clear cache" : "Rensa cachen",
     "Clear locally cached data, in case there are issues with synchronization." : "Rensa lokalt cachad data, ifall det finns problem med synkronisering.",
     "Subscribed" : "Prenumeration aktiverad",

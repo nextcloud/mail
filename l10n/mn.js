@@ -55,6 +55,7 @@ OC.L10N.register(
     "Saving" : "хадгаламж",
     "Remove account" : "Аккаунт устгах",
     "Loading …" : "Уншиж байна...",
+    "Rename" : "Нэрлэнэ үү",
     "New message" : "шинэ зурвас",
     "Retry" : "Дахин оролдох",
     "Sending …" : "илгээмж",

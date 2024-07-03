@@ -338,7 +338,7 @@ OC.L10N.register(
     "Mark all as read" : "Összes megjelölése olvasottként",
     "Mark all messages of this mailbox as read" : "Postafiók összes üzenetének megjelölése olvasottként",
     "Add submailbox" : "Alpostaláda hozzáadása",
-    "Edit name" : "Név szerkesztése",
+    "Rename" : "Átnevezés",
     "Move mailbox" : "Postaláda áthelyezése",
     "Clear cache" : "Gyorsítótár ürítése",
     "Clear locally cached data, in case there are issues with synchronization." : "Törölje a helyileg gyorsítótárazott adatokat, ha a szinkronizálással kapcsolatban problémák merülnének fel.",

@@ -252,7 +252,6 @@ OC.L10N.register(
     "Mark all as read" : "Σημείωση όλων ως αναγνωσμένων",
     "Mark all messages of this mailbox as read" : "Επισήμανση όλων ως αναγνωσμένων",
     "Add submailbox" : "Προσθήκη υπο-γραμματοκιβωτίου",
-    "Edit name" : "Επεξεργασία ονόματος",
     "Clear cache" : "Εκκαθάριση προσωρινής μνήμης",
     "Clear locally cached data, in case there are issues with synchronization." : "Εκκαθαρίστε τα δεδομένα κρυφής μνήμης, σε περίπτωση που υπάρχουν προβλήματα με το συγχρονισμό.",
     "Subscribed" : "Εγγεγραμμένα",

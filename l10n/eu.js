@@ -364,7 +364,7 @@ OC.L10N.register(
     "Mark all as read" : "Markatu dena irakurrita bezala",
     "Mark all messages of this mailbox as read" : "Markatu postontzi honetako mezu guztiak irakurrita bezala",
     "Add submailbox" : "Gehitu azpipostontzia",
-    "Edit name" : "Editatu izena",
+    "Rename" : "Berrizendatu",
     "Move mailbox" : "Mugitu postontzia",
     "Clear cache" : "Garbitu cachea",
     "Clear locally cached data, in case there are issues with synchronization." : "Ezabatu lokalean katxeatutako datuak, sinkronizaziorik arazorik badagoen.",
