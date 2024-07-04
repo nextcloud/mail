@@ -36,19 +36,7 @@ jobs:
         with:
           path: ${{ env.APP_NAME }}
 
-      - name: Conventional Changelog Action
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
-        working-directory: ${{ env.APP_NAME }}
-        with:
-          github-token: ${{ secrets.RELEASE_PAT }}
-          skip-git-pull: "true"
-          pre-commit: build/pre-commit.js
-          release-count: 0
-          version-file: "package.json, package-lock.json"
-
       - name: Get appinfo data
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         id: appinfo
         uses: skjnldsv/xpath-action@7e6a7c379d0e9abc8acaef43df403ab4fc4f770c # master
         with:
@@ -56,7 +44,6 @@ jobs:
           expression: "//info//dependencies//nextcloud/@min-version"
 
       - name: Read package.json node and npm engines version
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
         id: versions
         # Continue if no package.json
@@ -67,38 +54,72 @@ jobs:
           fallbackNpm: '^9'
 
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        # Skip if no package.json
+        if: ${{ steps.versions.outputs.nodeVersion }}
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
 
       - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        # Skip if no package.json
+        if: ${{ steps.versions.outputs.npmVersion }}
         run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
       - name: Set up php ${{ env.PHP_VERSION }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
+        uses: shivammathur/setup-php@a4e22b60bbb9c1021113f2860347b0759f66fe5d # v2
         with:
           php-version: ${{ env.PHP_VERSION }}
           coverage: none
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check composer.json
+        id: check_composer
+        uses: andstor/file-existence-action@076e0072799f4942c8bc574a82233e1e4d13e9d6 # v3
+        with:
+          files: "${{ env.APP_NAME }}/composer.json"
+
+      - name: Install composer dependencies
+        if: steps.check_composer.outputs.files_exists == 'true'
+        run: |
+          cd ${{ env.APP_NAME }}
+          composer install --no-dev
+
+      - name: Build ${{ env.APP_NAME }}
+        # Skip if no package.json
+        if: ${{ steps.versions.outputs.nodeVersion }}
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+        run: |
+          cd ${{ env.APP_NAME }}
+          npm ci
+          npm run build
+
+      - name: Check Krankerl config
+        id: krankerl
+        uses: andstor/file-existence-action@076e0072799f4942c8bc574a82233e1e4d13e9d6 # v3
+        with:
+          files: ${{ env.APP_NAME }}/krankerl.toml
+
       - name: Install Krankerl
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: steps.krankerl.outputs.files_exists == 'true'
         run: |
           wget https://github.com/ChristophWurst/krankerl/releases/download/v0.14.0/krankerl_0.14.0_amd64.deb
           sudo dpkg -i krankerl_0.14.0_amd64.deb
 
       - name: Package ${{ env.APP_NAME }} ${{ env.APP_VERSION }} with krankerl
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: steps.krankerl.outputs.files_exists == 'true'
         run: |
           cd ${{ env.APP_NAME }}
           krankerl package
 
+      - name: Package ${{ env.APP_NAME }} ${{ env.APP_VERSION }} with makefile
+        if: steps.krankerl.outputs.files_exists != 'true'
+        run: |
+          cd ${{ env.APP_NAME }}
+          make appstore
+
       - name: Checkout server ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         continue-on-error: true
         id: server-checkout
         run: |
@@ -108,14 +129,13 @@ jobs:
 
       - name: Checkout server master fallback
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
-        if: ${{ steps.changelog.outputs.skipped == 'false' && steps.server-checkout.outcome != 'success' }}
+        if: ${{ steps.server-checkout.outcome != 'success' }}
         with:
           submodules: true
           repository: nextcloud/server
           path: nextcloud
 
       - name: Sign app
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           # Extracting release
           cd ${{ env.APP_NAME }}/build/artifacts
@@ -130,26 +150,17 @@ jobs:
           cd ${{ env.APP_NAME }}/build/artifacts
           tar -zcvf ${{ env.APP_NAME }}.tar.gz ${{ env.APP_NAME }}
 
-      - name: Push tag to releases organization
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        run: |
-          git remote add release https://github.com/nextcloud-releases/twofactor_admin.git
-          git push release ${{ steps.changelog.outputs.tag }}
-
       - name: Attach tarball to github release
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: svenstaro/upload-release-action@04733e069f2d7f7f0b4aebc4fbdbce8613b03ccd # v2
         id: attach_to_release
         with:
-          repo_token: ${{ secrets.RELEASE_PAT }}
-          repo_name: nextcloud-releases/${{ env.APP_NAME }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.APP_NAME }}/build/artifacts/${{ env.APP_NAME }}.tar.gz
           asset_name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}.tar.gz
-          tag: ${{ steps.changelog.outputs.tag }}
+          tag: ${{ github.ref }}
           overwrite: true
 
       - name: Upload app to Nextcloud appstore
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: nextcloud-releases/nextcloud-appstore-push-action@a011fe619bcf6e77ddebc96f9908e1af4071b9c1 # v1
         with:
           app_name: ${{ env.APP_NAME }}
