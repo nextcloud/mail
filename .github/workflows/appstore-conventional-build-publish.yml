@@ -40,7 +40,7 @@ jobs:
       - name: Conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
-        working-directory: ${{ env.APP_NAME }}
+        working-directory: ./${{ env.APP_NAME }}
         with:
           github-token: ${{ secrets.RELEASE_PAT }}
           skip-git-pull: "true"
