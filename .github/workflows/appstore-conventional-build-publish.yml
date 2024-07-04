@@ -18,6 +18,7 @@ env:
 jobs:
   build_and_publish:
     runs-on: ubuntu-latest
+    environment: release
 
     steps:
       - name: Check actor permission
@@ -33,6 +34,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          token: ${{ secrets.RELEASE_PAT }}
+          fetch-depth: 0
 
       - name: Conventional Changelog Action
         id: changelog
