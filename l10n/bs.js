@@ -26,6 +26,7 @@ OC.L10N.register(
     "Other" : "Ostali",
     "Move" : "Move",
     "Quota" : "Kvota",
+    "Rename" : "Preimenuj",
     "Add" : "Dodaj",
     "Close" : "Zatvori",
     "Date" : "Date",

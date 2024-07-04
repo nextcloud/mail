@@ -158,6 +158,7 @@ OC.L10N.register(
     "Remove {email}" : "Quitar {email}",
     "Show all mailboxes" : "Amosar toles bandexes",
     "Collapse mailboxes" : "Contrayer toles bandexes",
+    "Rename" : "Renomar",
     "Move mailbox" : "Mover la bandexa",
     "Delete mailbox" : "Desaniciar la bandexa",
     "All messages in mailbox will be deleted." : "Van desaniciase tolos mensaxes d'esta bandexa.",

@@ -41,6 +41,7 @@ OC.L10N.register(
     "Quota" : "Norma",
     "Saving" : "Saxlanılır",
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",
+    "Rename" : "Adı dəyiş",
     "Clear cache" : "Keşi təmizlə",
     "Sending …" : "Göndərilir...",
     "Add" : "Əlavə etmək",

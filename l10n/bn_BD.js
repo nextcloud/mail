@@ -32,6 +32,7 @@ OC.L10N.register(
     "Move" : "Move",
     "Quota" : "কোটা",
     "Mark all as read" : "সব পঠিত হিসেবে চিহ্নিত কর",
+    "Rename" : "পূনঃনামকরণ",
     "Clear cache" : "ক্যাশে পরিষ্কার কর",
     "Sending …" : "পাঠানো হচ্ছে......",
     "Add" : "যোগ করুন",

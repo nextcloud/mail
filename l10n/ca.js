@@ -357,6 +357,7 @@ OC.L10N.register(
     "Mark all as read" : "Marca-ho tot com a llegit",
     "Mark all messages of this mailbox as read" : "Marca tots els missatges d'aquesta bústia de correu com a llegits",
     "Add submailbox" : "Afegeix una subbústia",
+    "Rename" : "Anomena",
     "Move mailbox" : "Mou la bústia",
     "Clear cache" : "Neteja la memòria cau",
     "Clear locally cached data, in case there are issues with synchronization." : "Esborra les dades locals de la memòria cau, en cas que hi hagi problemes amb la sincronització.",
