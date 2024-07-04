@@ -52,7 +52,7 @@ jobs:
         id: appinfo
         uses: skjnldsv/xpath-action@7e6a7c379d0e9abc8acaef43df403ab4fc4f770c # master
         with:
-          filename: ${{ env.APP_NAME }}/appinfo/info.xml
+          filename: appinfo/info.xml
           expression: "//info//dependencies//nextcloud/@min-version"
 
       - name: Read package.json node and npm engines version
