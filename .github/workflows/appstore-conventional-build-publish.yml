@@ -8,7 +8,9 @@
 
 name: Build and publish app release conventionally
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    branches: stable*
 
 env:
   PHP_VERSION: 8.2
@@ -16,9 +18,6 @@ env:
 jobs:
   build_and_publish:
     runs-on: ubuntu-latest
-
-    # Only allowed to be run on nextcloud-releases repositories
-    if: ${{ github.repository_owner == 'nextcloud-releases' }}
 
     steps:
       - name: Check actor permission
@@ -34,19 +33,20 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-        with:
-          path: ${{ env.APP_NAME }}
 
       - name: Conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
-        working-directory: ./${{ env.APP_NAME }}
         with:
           github-token: ${{ secrets.RELEASE_PAT }}
           skip-git-pull: "true"
           pre-commit: build/pre-commit.js
           release-count: 0
           version-file: "package.json, package-lock.json"
+
+      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: pwd && exit 1
 
       - name: Get appinfo data
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
