@@ -659,7 +659,7 @@ export default {
 				keysMissing: [],
 			},
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
-			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
+			addShareLink: t('mail', 'Add share link from Files'),
 			requestMdnVal: this.requestMdn,
 			changeSignature: false,
 			loadingIndicatorTo: false,
