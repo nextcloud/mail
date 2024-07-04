@@ -48,12 +48,7 @@ jobs:
           release-count: 0
           version-file: "package.json, package-lock.json"
 
-      - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        run: pwd && exit 1
-
       - name: Get appinfo data
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         id: appinfo
         uses: skjnldsv/xpath-action@7e6a7c379d0e9abc8acaef43df403ab4fc4f770c # master
         with:
@@ -61,7 +56,6 @@ jobs:
           expression: "//info//dependencies//nextcloud/@min-version"
 
       - name: Read package.json node and npm engines version
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
         id: versions
         # Continue if no package.json
@@ -72,17 +66,14 @@ jobs:
           fallbackNpm: '^9'
 
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
 
       - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
       - name: Set up php ${{ env.PHP_VERSION }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: shivammathur/setup-php@a4e22b60bbb9c1021113f2860347b0759f66fe5d # v2
         with:
           php-version: ${{ env.PHP_VERSION }}
@@ -91,25 +82,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Krankerl
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           wget https://github.com/ChristophWurst/krankerl/releases/download/v0.14.0/krankerl_0.14.0_amd64.deb
           sudo dpkg -i krankerl_0.14.0_amd64.deb
 
       - name: Package ${{ env.APP_NAME }} ${{ env.APP_VERSION }} with krankerl
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        run: |
-          cd ${{ env.APP_NAME }}
-          krankerl package
+        run: krankerl package
 
       - name: Checkout server ${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        working-directory: ''
         continue-on-error: true
         id: server-checkout
         run: |
           NCVERSION=${{ fromJSON(steps.appinfo.outputs.result).nextcloud.min-version }}
-          wget --quiet https://download.nextcloud.com/server/releases/latest-$NCVERSION.zip
-          unzip latest-$NCVERSION.zip
+          wget --quiet https://download.nextcloud.com/server/releases/latest-$NCVERSION.zip -o ../nextcloud.zip
+          unzip ../nextcloud.zip ../nextcloud
 
       - name: Checkout server master fallback
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -120,10 +107,9 @@ jobs:
           path: nextcloud
 
       - name: Sign app
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           # Extracting release
-          cd ${{ env.APP_NAME }}/build/artifacts
+          cd build/artifacts
           tar -xvf ${{ env.APP_NAME }}.tar.gz
           cd ../../../
           # Setting up keys
@@ -148,7 +134,7 @@ jobs:
         with:
           repo_token: ${{ secrets.RELEASE_PAT }}
           repo_name: nextcloud-releases/${{ env.APP_NAME }}
-          file: ${{ env.APP_NAME }}/build/artifacts/${{ env.APP_NAME }}.tar.gz
+          file: build/artifacts/${{ env.APP_NAME }}.tar.gz
           asset_name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}.tar.gz
           tag: ${{ steps.changelog.outputs.tag }}
           overwrite: true
