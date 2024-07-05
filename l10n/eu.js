@@ -183,7 +183,6 @@ OC.L10N.register(
     "Monday morning" : "Astelehen goizean",
     "Custom date and time" : "Data eta ordu pertsonalizatuak",
     "Enter a date" : "Sartu data bat",
-    "Add share link from {productName} Files" : "Gehitu partekatze esteka {productName} Fitxategiak-etik",
     "Encrypt with S/MIME and send later" : "Enkriptatu S/MIME-rekin eta bidali geroago",
     "Encrypt with S/MIME and send" : "Enkriptatu S/MIME-rekin eta bidali",
     "Encrypt with Mailvelope and send later" : "Enkriptatu Mailvelope-rekin eta bidali geroago",

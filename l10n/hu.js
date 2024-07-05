@@ -166,7 +166,6 @@ OC.L10N.register(
     "Monday morning" : "Hétfő reggel",
     "Custom date and time" : "Egyéni dátum és idő",
     "Enter a date" : "Adjon meg egy dátumot",
-    "Add share link from {productName} Files" : "Megosztási hivatkozás hozzáadása a(z) {productName} fájlokból",
     "Encrypt with S/MIME and send later" : "Titkosítás S/MIME-mal és elküldés később",
     "Encrypt with S/MIME and send" : "Titkosítás S/MIME-mal és elküldés",
     "Encrypt with Mailvelope and send later" : "Titkosítás Mailvelope-pal és elküldés később",

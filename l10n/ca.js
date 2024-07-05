@@ -178,7 +178,6 @@ OC.L10N.register(
     "Monday morning" : "Dilluns al matí",
     "Custom date and time" : "Data i hora personalitzades",
     "Enter a date" : "Introduïu una data",
-    "Add share link from {productName} Files" : "Afegeix un enllaç per compartició des de {productName} Fitxers",
     "Encrypt with S/MIME and send later" : "Xifra amb S/MIME i envia'l més tard",
     "Encrypt with S/MIME and send" : "Xifra amb S/MIME i envia",
     "Encrypt with Mailvelope and send later" : "Xifra amb Mailvelope i envia'l més tard",

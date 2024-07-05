@@ -95,7 +95,6 @@ OC.L10N.register(
     "Request a read receipt" : "Pedi una cunfirma de letura",
     "Encrypt message with Mailvelope" : "Tzifra messàgiu cun Mailvelope",
     "Enter a date" : "Inserta una data",
-    "Add share link from {productName} Files" : "Agiunghe unu ligòngiu de cumpartzidura dae {productName} Archìvios",
     "Message {id} could not be found" : "Su messàgiu {id} no s'est pòdidu agatare",
     "Choose a file to add as attachment" : "Sèbera un'archìviu de agiùnghere comente alligongiadu",
     "Choose a file to share as a link" : "Sèbera un'archìviu de cumpartzire comente ligòngiu",

@@ -100,7 +100,6 @@ OC.L10N.register(
     "Request a read receipt" : "Zatražite potvrdu o čitanju",
     "Encrypt message with Mailvelope" : "Šifriraj poruku s Mailvelope",
     "Enter a date" : "Unesi datum",
-    "Add share link from {productName} Files" : "Dodaj poveznicu za dijeljenje iz datoteka {productName}",
     "Message {id} could not be found" : "Poruka {id} nije pronađena",
     "Choose a file to add as attachment" : "Izaberi datoteku kao privitak",
     "Choose a file to share as a link" : "Izaberi datoteku za dijeljenje putem poveznice",

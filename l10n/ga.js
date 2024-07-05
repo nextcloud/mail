@@ -195,7 +195,6 @@ OC.L10N.register(
     "Monday morning" : "maidin dé Luain",
     "Custom date and time" : "Dáta agus am saincheaptha",
     "Enter a date" : "Cuir isteach dáta",
-    "Add share link from {productName} Files" : "Cuir nasc comhroinnte leis ó Chomhaid {productName}",
     "Encrypt with S/MIME and send later" : "Criptigh le S/MIME agus seol níos déanaí",
     "Encrypt with S/MIME and send" : "Criptigh le S / MIME agus seol",
     "Encrypt with Mailvelope and send later" : "Criptigh le Mailvelope agus seol níos déanaí",

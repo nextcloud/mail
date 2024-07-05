@@ -195,7 +195,6 @@ OC.L10N.register(
     "Monday morning" : "Понедељак ујутру",
     "Custom date and time" : "Жељени датум и време",
     "Enter a date" : "Унеси датум",
-    "Add share link from {productName} Files" : "Додај линк за дељење из {productName} Фајлови",
     "Encrypt with S/MIME and send later" : "Шифруј са S/MIME пошаљи касније",
     "Encrypt with S/MIME and send" : "Шифруј са S/MIME пошаљи",
     "Encrypt with Mailvelope and send later" : "Шифруј са Mailvelope пошаљи касније",

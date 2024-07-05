@@ -174,7 +174,6 @@ OC.L10N.register(
     "Monday morning" : "월요일 아침",
     "Custom date and time" : "사용자 지정 날짜 및 시간",
     "Enter a date" : "날짜 입력",
-    "Add share link from {productName} Files" : "{productName} 파일 앱에서 공유 링크 추가",
     "Encrypt with S/MIME and send later" : "S/MIME로 암호화하고 나중에 보내기",
     "Encrypt with S/MIME and send" : "S/MIME로 암호화하고 보내기",
     "Encrypt with Mailvelope and send later" : "Mailvelope로 암호화하고 나중에 보내기",

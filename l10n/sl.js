@@ -156,7 +156,6 @@ OC.L10N.register(
     "Monday morning" : "Ponedeljek zjutraj",
     "Custom date and time" : "Datum in čas po meri",
     "Enter a date" : "Vpis datuma ...",
-    "Add share link from {productName} Files" : "Dodaj mapo do mesta souporabe datotek {productName}",
     "Encrypt with S/MIME and send later" : "Šifriraj z S/MIME in pošlji kasneje",
     "Encrypt with S/MIME and send" : "Šifriraj z S/MIME in pošlji",
     "Encrypt with Mailvelope and send later" : "Šifriraj z Mailvelope in pošlji kasneje",

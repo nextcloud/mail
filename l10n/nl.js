@@ -104,7 +104,6 @@ OC.L10N.register(
     "Request a read receipt" : "Vraag een leesbevestiging",
     "Encrypt message with Mailvelope" : "Versleutel bericht met Mailvelope",
     "Enter a date" : "Voeg een datum toe",
-    "Add share link from {productName} Files" : "Toevoegen deellink van {productName} Bestanden",
     "Message {id} could not be found" : "Bericht {id} kon niet worden gevonden",
     "Choose a file to add as attachment" : "Kies een bestand om als bijlage toe te voegen",
     "Choose a file to share as a link" : "Kies een bestand om als link te delen",

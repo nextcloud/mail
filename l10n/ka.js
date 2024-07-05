@@ -177,7 +177,6 @@ OC.L10N.register(
     "Monday morning" : "Monday morning",
     "Custom date and time" : "Custom date and time",
     "Enter a date" : "Enter a date",
-    "Add share link from {productName} Files" : "Add share link from {productName} Files",
     "Encrypt with S/MIME and send later" : "Encrypt with S/MIME and send later",
     "Encrypt with S/MIME and send" : "Encrypt with S/MIME and send",
     "Encrypt with Mailvelope and send later" : "Encrypt with Mailvelope and send later",

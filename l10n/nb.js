@@ -191,7 +191,6 @@ OC.L10N.register(
     "Monday morning" : "Mandag morgen",
     "Custom date and time" : "Egendefinert dato og klokkeslett",
     "Enter a date" : "Skriv inn dato",
-    "Add share link from {productName} Files" : "Legg til delingslink fra {productName}-filer",
     "Encrypt with S/MIME and send later" : "Krypter med S/MIME og send senere",
     "Encrypt with S/MIME and send" : "Krypter med S/MIME og send",
     "Encrypt with Mailvelope and send later" : "Krypter med Mailvelope og send senere",

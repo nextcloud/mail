@@ -77,6 +77,7 @@ OC.L10N.register(
     "Remove account" : "Dileu cyfrif",
     "Loading …" : "Yn llwytho …",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",
+    "Rename" : "Ailenwi",
     "New message" : "Neges newydd",
     "Error sending your message" : "Gwall wrth anfon eich neges",
     "Retry" : "Ceisio eto",

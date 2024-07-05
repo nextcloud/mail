@@ -183,7 +183,6 @@ OC.L10N.register(
     "Monday morning" : "Pazartesi sabah",
     "Custom date and time" : "Özel tarih ve saat",
     "Enter a date" : "Bir tarih yazın",
-    "Add share link from {productName} Files" : "{productName} dosyalarından paylaşım bağlantısı ekle",
     "Encrypt with S/MIME and send later" : "İleti S/MIME ile şifrelensin ve daha sonra gönderilsin",
     "Encrypt with S/MIME and send" : "İleti S/MIME ile şifrelensin ve gönderilsin",
     "Encrypt with Mailvelope and send later" : "Mailvelope ile şifrelensin ve daha sonra gönderilsin",

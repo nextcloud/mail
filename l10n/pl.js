@@ -160,7 +160,6 @@ OC.L10N.register(
     "Monday morning" : "W poniedziałek rano",
     "Custom date and time" : "Własna data i godzina",
     "Enter a date" : "Wpisz datę",
-    "Add share link from {productName} Files" : "Dodaj link do udostępnienia z Plików {productName}",
     "Message {id} could not be found" : "Nie można znaleźć wiadomości {id}",
     "Any existing formatting (for example bold, italic, underline or inline images) will be removed." : "Wszelkie istniejące formatowanie (na przykład pogrubienie, kursywa, podkreślenie lub obrazy w tekście) zostaną usunięte.",
     "Turn off formatting" : "Wyłącz formatowanie",

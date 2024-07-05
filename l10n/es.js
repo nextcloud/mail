@@ -183,7 +183,6 @@ OC.L10N.register(
     "Monday morning" : "El lunes por la mañana",
     "Custom date and time" : "Hora y fecha personalizadas",
     "Enter a date" : "Introduzca una fecha",
-    "Add share link from {productName} Files" : "Añade un enlace para compartir desde Archivos de {productName}",
     "Encrypt with S/MIME and send later" : "Cifrar el mensaje con S/MIME y enviar después",
     "Encrypt with S/MIME and send" : "Cifrar el mensaje con S/MIME y enviar",
     "Encrypt with Mailvelope and send later" : "Cifrar el mensaje con Mailvelope y enviar después",
