@@ -221,15 +221,10 @@ to {
 	z-index: 1;
 }
 .outbox {
-	margin-left: 6px;
+	margin: 6px 6px 0 6px;
 	width: auto;
 	&__border {
 		border-top: 1px solid var(--color-background-darker);
-	}
-	:deep(.app-navigation-entry) {
-		&.active {
-			background-color: transparent !important;
-		}
 	}
 }
 .mail-settings {
