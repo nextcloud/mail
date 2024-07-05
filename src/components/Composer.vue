@@ -300,33 +300,40 @@
 						<IconFormat :size="20" :title="t('mail', 'Disable formatting')" />
 					</template>
 				</ButtonVue>
+
+				<Actions :open.sync="isAddAttachmentsOpen">
+					<template #icon>
+						<Paperclip :size="20" />
+					</template>
+					<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
+						<template #icon>
+							<IconUpload :size="20" />
+						</template>
+						{{
+							t('mail', 'Upload attachment')
+						}}
+					</ActionButton>
+					<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
+						<template #icon>
+							<IconFolder :size="20" />
+						</template>
+						{{
+							t('mail', 'Add attachment from Files')
+						}}
+					</ActionButton>
+					<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
+						<template #icon>
+							<IconPublic :size="20" />
+						</template>
+						{{
+							t('mail', 'Add share link from Files')
+						}}
+					</ActionButton>
+				</Actions>
+
 				<Actions :open.sync="isActionsOpen"
 					@close="isMoreActionsOpen = false">
 					<template v-if="!isMoreActionsOpen">
-						<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
-							<template #icon>
-								<IconUpload :size="20" />
-							</template>
-							{{
-								t('mail', 'Upload attachment')
-							}}
-						</ActionButton>
-						<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
-							<template #icon>
-								<IconFolder :size="20" />
-							</template>
-							{{
-								t('mail', 'Add attachment from Files')
-							}}
-						</ActionButton>
-						<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
-							<template #icon>
-								<IconPublic :size="20" />
-							</template>
-							{{
-								addShareLink
-							}}
-						</ActionButton>
 						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
 							<template #icon>
 								<IconLinkPicker :size="20" />
@@ -467,6 +474,7 @@ import IconLinkPicker from 'vue-material-design-icons/Shape.vue'
 import RecipientListItem from './RecipientListItem.vue'
 import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
+import Paperclip from 'vue-material-design-icons/Paperclip.vue'
 import IconFormat from 'vue-material-design-icons/FormatUnderline.vue'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
@@ -516,6 +524,7 @@ export default {
 		IconPublic,
 		IconLinkPicker,
 		NcSelect,
+		Paperclip,
 		TextEditor,
 		ListItemIcon,
 		RecipientListItem,
@@ -659,7 +668,6 @@ export default {
 				keysMissing: [],
 			},
 			editorMode: (this.body?.format !== 'html') ? EDITOR_MODE_TEXT : EDITOR_MODE_HTML,
-			addShareLink: t('mail', 'Add share link from Files'),
 			requestMdnVal: this.requestMdn,
 			changeSignature: false,
 			loadingIndicatorTo: false,
