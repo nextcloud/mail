@@ -195,6 +195,7 @@ OC.L10N.register(
     "Monday morning" : "Luns pola mañá",
     "Custom date and time" : "Data e hora personalizadas",
     "Enter a date" : "Introduza unha data",
+    "Add share link from Files" : "Engadir ligazón para compartir dende Ficheiros",
     "Encrypt with S/MIME and send later" : "Cifrar con S/MIME e enviar máis tarde",
     "Encrypt with S/MIME and send" : "Cifrar con S/MIME e enviar",
     "Encrypt with Mailvelope and send later" : "Cifrar con Mailvelope e enviar máis tarde",

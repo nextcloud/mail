@@ -195,6 +195,7 @@ OC.L10N.register(
     "Monday morning" : "أول صباح عمل في الأسبوع",
     "Custom date and time" : "وقت و تاريخ مُخصّص",
     "Enter a date" : "أدخِل تاريخاً",
+    "Add share link from Files" : "إضافة رابط المشاركة من الملفات",
     "Encrypt with S/MIME and send later" : "شفّر مع S/MIME و أرسِل لاحقاً",
     "Encrypt with S/MIME and send" : "شفّر مع S/MIME و أرسِل ",
     "Encrypt with Mailvelope and send later" : "شفّر مع Mailvelope و أرسل لاحقاً",
