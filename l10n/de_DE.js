@@ -195,7 +195,7 @@ OC.L10N.register(
     "Monday morning" : "Montag Vormittag",
     "Custom date and time" : "Benutzerspezifisches Datum und Zeit",
     "Enter a date" : "Datum eingeben",
-    "Add share link from Files" : "Link zum Teilen aus „Dateien“ hinzufügen",
+    "Add share link from Files" : "Link zum Teilen aus Dateien hinzufügen",
     "Encrypt with S/MIME and send later" : "Mit S/MIME verschlüsseln und später versenden",
     "Encrypt with S/MIME and send" : "Mit S/MIME verschlüsseln und versenden",
     "Encrypt with Mailvelope and send later" : "Mit Mailvelope verschlüsseln und später versenden",
