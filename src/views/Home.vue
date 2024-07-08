@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcContent app-name="mail">
+	<NcContent app-name="mail" class="mail-content">
 		<Navigation />
 		<Outbox v-if="$route.name === 'outbox'" />
 		<MailboxThread v-else-if="activeAccount"
@@ -170,7 +170,28 @@ export default {
 
 </script>
 
+<style lang="scss">
+@media print {
+	body {
+		/*
+		 * Nextcloud uses an inner scrolling but we need the
+		 * full page to scroll for print
+		 */
+		position: relative;
+		height: initial;
+	}
+}
+</style>
+
 <style lang="scss" scoped>
+@media print {
+	.mail-content {
+		height: initial;
+		/* needs important because of a more specific selector */
+		position: relative !important;
+	}
+}
+
 :deep(.app-content-details) {
 	margin: 0 auto;
 	max-width: 900px;
