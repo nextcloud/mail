@@ -394,11 +394,6 @@ https://github.com/ckeditor/ckeditor5/issues/1142
  .link-title{
 	color: var(--color-main-text) !important;
  }
- .link-icon{
-	filter : var(--background-invert-if-dark);
-	width: 16px !important;
-	margin-right: 5px !important;
- }
  .custom-item {
 	width : 100% !important;
 	border-radius : 8px !important;
