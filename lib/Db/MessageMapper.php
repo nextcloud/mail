@@ -1641,4 +1641,60 @@ class MessageMapper extends QBMapper {
 
 		return $this->findEntities($select);
 	}
+
+	/**
+	 * Delete all duplicated cached messages.
+	 * Some messages (with the same mailbox_id and uid) where inserted twice and this method cleans
+	 * up the duplicated rows.
+	 *
+	 * @throws \OCP\DB\Exception
+	 */
+	public function deleteDuplicateUids(): void {
+		$qb = $this->db->getQueryBuilder();
+		$result = $qb->select('t1.id', 't1.mailbox_id', 't1.uid')
+			->from($this->getTableName(), 't1')
+			->innerJoin('t1', $this->getTableName(), 't2', $qb->expr()->andX(
+				$qb->expr()->eq('t1.mailbox_id', 't2.mailbox_id', IQueryBuilder::PARAM_INT),
+				$qb->expr()->eq('t1.uid', 't2.uid', IQueryBuilder::PARAM_INT),
+				$qb->expr()->neq('t1.id', 't2.id', IQueryBuilder::PARAM_INT),
+			))
+			->executeQuery();
+
+		$deleteQb = $this->db->getQueryBuilder();
+		$deleteQb->delete($this->getTableName())
+			->where(
+				$deleteQb->expr()->neq(
+					'id',
+					$deleteQb->createParameter('id'),
+					IQueryBuilder::PARAM_INT,
+				),
+				$deleteQb->expr()->eq(
+					'mailbox_id',
+					$deleteQb->createParameter('mailbox_id'),
+					IQueryBuilder::PARAM_INT,
+				),
+				$deleteQb->expr()->eq(
+					'uid',
+					$deleteQb->createParameter('uid'),
+					IQueryBuilder::PARAM_INT,
+				),
+			);
+
+		$handledMailboxIdUidPairs = [];
+		while ($row = $result->fetch()) {
+			$pair = $row['mailbox_id'] . ':' . $row['uid'];
+			if (isset($handledMailboxIdUidPairs[$pair])) {
+				continue;
+			}
+
+			$deleteQb->setParameter('id', $row['id'], IQueryBuilder::PARAM_INT);
+			$deleteQb->setParameter('mailbox_id', $row['mailbox_id'], IQueryBuilder::PARAM_INT);
+			$deleteQb->setParameter('uid', $row['uid'], IQueryBuilder::PARAM_INT);
+			$deleteQb->executeStatement();
+
+			$handledMailboxIdUidPairs[$pair] = true;
+		}
+
+		$result->closeCursor();
+	}
 }
