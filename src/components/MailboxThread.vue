@@ -6,6 +6,8 @@
 	<AppContent pane-config-key="mail"
 		:layout="layoutMode"
 		:show-details="isThreadShown"
+		:list-min-width="horizontalListMinWidth"
+		:list-max-width="horizontalListMaxWidth"
 		@update:showDetails="hideMessage">
 		<template #list>
 			<div :class="{ list__wrapper: !showThread || !isMobile }">
@@ -187,6 +189,12 @@ export default {
 	computed: {
 		layoutMode() {
 			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
+		},
+		horizontalListMinWidth() {
+			return this.layoutMode === 'horizontal-split' ? 40 : 30
+		},
+		horizontalListMaxWidth() {
+			return this.layoutMode === 'horizontal-split' ? 60 : 50
 		},
 		unifiedAccount() {
 			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
