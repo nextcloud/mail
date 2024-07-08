@@ -38,6 +38,7 @@ use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
@@ -60,6 +61,9 @@ use function OCA\Mail\array_flat_map;
  * @template-extends QBMapper<Message>
  */
 class MessageMapper extends QBMapper {
+
+	use TTransactional;
+
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -705,33 +709,44 @@ class MessageMapper extends QBMapper {
 	}
 
 	public function deleteByUid(Mailbox $mailbox, int ...$uids): void {
-		$messageIdSubQuery = $this->db->getQueryBuilder();
+		$selectMessageIdsQuery = $this->db->getQueryBuilder();
 		$deleteRecipientsQuery = $this->db->getQueryBuilder();
 		$deleteMessagesQuery = $this->db->getQueryBuilder();
 
-		$messageIdSubQuery->select('id')
+		$selectMessageIdsQuery->select('id')
 			->from($this->getTableName())
 			->where(
-				$messageIdSubQuery->expr()->eq('mailbox_id', $deleteRecipientsQuery->createNamedParameter($mailbox->getId())),
-				$messageIdSubQuery->expr()->in('uid', $deleteRecipientsQuery->createParameter('uids'))
+				$selectMessageIdsQuery->expr()->eq('mailbox_id', $selectMessageIdsQuery->createNamedParameter($mailbox->getId())),
+				$selectMessageIdsQuery->expr()->in('uid', $deleteMessagesQuery->createParameter('uids')),
 			);
 		$deleteRecipientsQuery->delete('mail_recipients')
-			->where($deleteRecipientsQuery->expr()->in('message_id', $deleteMessagesQuery->createFunction($messageIdSubQuery->getSQL())));
-
-		$deleteMessagesQuery->delete($this->getTableName())
 			->where(
-				$deleteMessagesQuery->expr()->eq('mailbox_id', $deleteMessagesQuery->createNamedParameter($mailbox->getId())),
-				$deleteMessagesQuery->expr()->in('uid', $deleteMessagesQuery->createParameter('uids')),
+				$deleteRecipientsQuery->expr()->in('message_id', $deleteRecipientsQuery->createParameter('ids')),
+			);
+		$deleteMessagesQuery->delete('mail_messages')
+			->where(
+				$deleteMessagesQuery->expr()->in('id', $deleteMessagesQuery->createParameter('ids')),
 			);
 
 		foreach (array_chunk($uids, 1000) as $chunk) {
-			// delete all related recipient entries
-			$deleteRecipientsQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteRecipientsQuery->executeStatement();
+			$this->atomic(function () use ($selectMessageIdsQuery, $deleteRecipientsQuery, $deleteMessagesQuery, $chunk) {
+				$selectMessageIdsQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+				$selectResult = $selectMessageIdsQuery->executeQuery();
+				$ids = array_map('intval', $selectResult->fetchAll(\PDO::FETCH_COLUMN));
+				$selectResult->closeCursor();
+				if (empty($ids)) {
+					// Avoid useless queries
+					return;
+				}
 
-			// delete all messages
-			$deleteMessagesQuery->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
-			$deleteMessagesQuery->executeStatement();
+				// delete all related recipient entries
+				$deleteRecipientsQuery->setParameter('ids', $ids, IQueryBuilder::PARAM_INT_ARRAY);
+				$deleteRecipientsQuery->executeStatement();
+
+				// delete all messages
+				$deleteMessagesQuery->setParameter('ids', $ids, IQueryBuilder::PARAM_INT_ARRAY);
+				$deleteMessagesQuery->executeStatement();
+			}, $this->db);
 		}
 	}
 
