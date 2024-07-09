@@ -183,6 +183,7 @@ OC.L10N.register(
     "Disable formatting" : "Искључи форматирање",
     "Upload attachment" : "Закачи прилог",
     "Add attachment from Files" : "Додај прилог из фајлова",
+    "Add share link from Files" : "Додај везу дељења из Фајлова",
     "Smart picker" : "Паметни бирач",
     "Send later" : "Пошаљи касније",
     "Request a read receipt" : "Захтевај потврду о читању",
