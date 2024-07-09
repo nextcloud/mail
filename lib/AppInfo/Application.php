@@ -55,6 +55,7 @@ use OCA\Mail\Listener\OutOfOfficeListener;
 use OCA\Mail\Listener\SpamReportListener;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Notification\Notifier;
+use OCA\Mail\Provider\MailProvider;
 use OCA\Mail\Search\FilteringProvider;
 use OCA\Mail\Search\Provider;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -163,6 +164,10 @@ class Application extends App implements IBootstrap {
 		} else {
 			$context->registerSearchProvider(Provider::class);
 		}
+
+		// Added in version 4.0.0
+		// register mail provider
+		$context->registerMailProvider(MailProvider::class);
 
 		$context->registerNotifierService(Notifier::class);
 
