@@ -727,6 +727,14 @@ export default {
 		async onToggleJunk() {
 			const removeEnvelope = await this.$store.dispatch('moveEnvelopeToJunk', this.data)
 
+			if (this.isImportant) {
+				await this.$store.dispatch('toggleEnvelopeImportant', this.data)
+			}
+
+			if (!this.data.flags.seen) {
+				await this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.data })
+			}
+
 			/**
 			 * moveEnvelopeToJunk returns true if the envelope should be moved to a different mailbox.
 			 *
