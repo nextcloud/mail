@@ -43,8 +43,8 @@ use function array_map;
 use function array_merge;
 
 /**
- * @psalm-import-type MessageApiResponse from ResponseDefinitions
- * @psalm-import-type MessageApiAttachment from ResponseDefinitions
+ * @psalm-import-type MailMessageApiResponse from ResponseDefinitions
+ * @psalm-import-type MailMessageApiAttachment from ResponseDefinitions
  */
 class MessageApiController extends OCSController {
 
@@ -72,15 +72,17 @@ class MessageApiController extends OCSController {
 	}
 
 	/**
+	 * Send an email though a mail account that has been configured with Nextcloud Mail
+	 *
 	 * @param int $accountId  The mail account to use for SMTP
 	 * @param string $fromEmail  The "From" email address or alias email address
 	 * @param string $subject  The subject
 	 * @param string $body  The message body
 	 * @param bool $isHtml  If the message body contains HTML
-	 * @param array $to  An array of "To" recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array $cc  An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array $bcc  An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param ?string $references  An optional string of an RFC2392 <message-id> to set the "Reply-To" and "References" header on sending
+	 * @param list<array{ label?: string, email: string}> $to  An array of "To" recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param array<empty>|list<array{ label?: string, email: string}> $cc  An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param array<empty>|list<array{ label?: string, email: string}> $bcc  An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param ?string $references  An optional string of an RFC2392 "message-id" to set the "Reply-To" and "References" header on sending
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_ACCEPTED|Http::STATUS_BAD_REQUEST|Http::STATUS_FORBIDDEN|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
 	 * 200: The email was sent
@@ -207,8 +209,10 @@ class MessageApiController extends OCSController {
 	}
 
 	/**
-	 * @param int $id
-	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_PARTIAL_CONTENT, MessageApiResponse, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
+	 * Get a mail message with its metadata
+	 *
+	 * @param int $id  the message id
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_PARTIAL_CONTENT, MailMessageApiResponse, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
 	 * 200: Message found
 	 * 206: Message could not be decrypted, no "body" data returned
@@ -296,8 +300,10 @@ class MessageApiController extends OCSController {
 	}
 
 	/**
+	 * Get the raw rfc2822 email
+	 *
 	 * @param int $id the id of the message
-	 * @return DataResponse<Http::STATUS_OK|?string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, string, array{}>
+	 * @return DataResponse<Http::STATUS_OK, ?string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, string, array{}>
 	 *
 	 * 200: Message found
 	 * 404: User was not logged in
@@ -356,9 +362,11 @@ class MessageApiController extends OCSController {
 	}
 
 	/**
-	 * @param int $id
-	 * @param string $attachmentId
-	 * @return DataResponse<Http::STATUS_OK, MessageApiAttachment, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
+	 * Get a mail message's attachments
+	 *
+	 * @param int $id  the mail id
+	 * @param string $attachmentId  the attachment id
+	 * @return DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
 	 * 200: Message found
 	 * 404: User was not logged in

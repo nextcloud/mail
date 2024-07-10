@@ -15,9 +15,9 @@ namespace OCA\Mail;
  *     messageId: string,
  *     from: list<array{label: string, email: string}>,
  *     to: list<array{label: string, email: string}>,
- *     replyTo: array<empty>|list<array{label: string, email: string}>,
- *     cc: array<empty>|list<array{label: string, email: string}>,
- *     bcc: array<empty>|list<array{label: string, email: string}>,
+ *     replyTo: list<array{label: string, email: string}>,
+ *     cc: list<array{label: string, email: string}>,
+ *     bcc: list<array{label: string, email: string}>,
  *     subject: string,
  *     dateInt: int<0, max>,
  *     flags: array{seen: bool, flagged: bool, answered: bool, deleted: bool, draft: bool, forwarded: bool, hasAttachments: bool, mdnsent: bool, important: bool},
@@ -25,17 +25,17 @@ namespace OCA\Mail;
  *     body?: string,
  *     dispositionNotificationTo: string,
  *     hasDkimSignature: bool,
- *     phishingDetails: array{checks: list<array{type: string, isPhishing: bool, message: string, additionalData: array}>, warning: bool},
+ *     phishingDetails: array{checks: list<array{type: string, isPhishing: bool, message: string, additionalData: array<string, mixed>}>, warning: bool},
  *     unsubscribeUrl: ?string,
  *     isOneClickUnsubscribe: bool,
  *     unsubscribeMailTo: ?string,
- *     scheduling: array<empty>|list<array{id: ?string, messageId: string, method: string, contents: string}>,
- *     attachments: array<empty>|list<array{id: int<1, max>, messageId: int<1, max>, filename: string, mime: string, size: int<0, max>, cid: ?string, disposition: string, downloadUrl?: string}>
+ *     scheduling: list<array{id: ?string, messageId: string, method: string, contents: string}>,
+ *     attachments: list<array{id: int<1, max>, messageId: int<1, max>, filename: string, mime: string, size: int<0, max>, cid: ?string, disposition: string, downloadUrl?: string}>
  * }
  *
- * @psalm-type MessageApiResponse = MailIMAPFullMessage&array{
+ * @psalm-type MailMessageApiResponse = MailIMAPFullMessage&array{
  *     signature: ?string,
- *     itineraries?: array{},
+ *     itineraries?: array<string, mixed>,
  *     id: int<1, max>,
  *     isSenderTrusted: bool,
  *     smime: array{ isSigned: bool, signatureIsValid: ?bool, isEncrypted: bool},
@@ -43,7 +43,7 @@ namespace OCA\Mail;
  *     rawUrl: string
  * }
  *
- * @psalm-type MessageApiAttachment = array{ name: string, mime: string, size: int<0, max>, content: string}
+ * @psalm-type MailMessageApiAttachment = array{ name: string, mime: string, size: int<0, max>, content: string}
  */
 class ResponseDefinitions {
 }
