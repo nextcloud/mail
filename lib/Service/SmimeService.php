@@ -522,7 +522,7 @@ class SmimeService {
 		}
 
 		if ($decryptionResult === null) {
-			throw new ServiceException('Failed to find a suitable S/MIME certificate for decryption');
+			throw new SmimeDecryptException('Failed to find a suitable S/MIME certificate for decryption');
 		}
 
 		return $decryptionResult;
