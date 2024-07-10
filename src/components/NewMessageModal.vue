@@ -26,10 +26,10 @@
 				</NcButton>
 			</template>
 		</EmptyContent>
-		<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-		<Loading v-else-if="sending"
-			:hint="t('mail', 'Sending …')"
+		<Loading v-else-if="uploadingAttachments"
+			:hint="t('mail', 'Uploading attachments …')"
 			role="alert" />
+		<Loading v-else-if="sending" :hint="t('mail', 'Sending …')" role="alert" />
 		<EmptyContent v-else-if="warning"
 			:name="t('mail', 'Warning sending your message')"
 			class="empty-content"
@@ -51,65 +51,72 @@
 			</template>
 		</EmptyContent>
 		<template v-else>
-			<NcButton class="maximize-button"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Maximize composer')"
-				@click="onMaximize">
-				<template #icon>
-					<MaximizeIcon v-if="!largerModal" :size="16" />
-					<DefaultComposerIcon v-else :size="16" />
-				</template>
-			</NcButton>
-			<NcButton class="minimize-button"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Minimize composer')"
-				@click="onMinimize">
-				<template #icon>
-					<MinimizeIcon :size="16" />
-				</template>
-			</NcButton>
+			<div class="modal-content">
+				<div class="left-pane">
+					<NcButton class="maximize-button"
+						type="tertiary-no-background"
+						:aria-label="t('mail', 'Maximize composer')"
+						@click="onMaximize">
+						<template #icon>
+							<MaximizeIcon v-if="!largerModal" :size="20" />
+							<DefaultComposerIcon v-else :size="20" />
+						</template>
+					</NcButton>
+					<NcButton class="minimize-button"
+						type="tertiary-no-background"
+						:aria-label="t('mail', 'Minimize composer')"
+						@click="onMinimize">
+						<template #icon>
+							<MinimizeIcon :size="20" />
+						</template>
+					</NcButton>
 
-			<Composer ref="composer"
-				:from-account="composerData.accountId"
-				:from-alias="composerData.aliasId"
-				:to="composerData.to"
-				:cc="composerData.cc"
-				:bcc="composerData.bcc"
-				:subject="composerData.subject"
-				:attachments-data="composerData.attachments"
-				:body="composerData.body"
-				:editor-body="convertEditorBody(composerData)"
-				:in-reply-to-message-id="composerData.inReplyToMessageId"
-				:reply-to="composerData.replyTo"
-				:forward-from="composerData.forwardFrom"
-				:send-at="composerData.sendAt * 1000"
-				:forwarded-messages="forwardedMessages"
-				:smart-reply="smartReply"
-				:can-save-draft="canSaveDraft"
-				:saving-draft="savingDraft"
-				:draft-saved="draftSaved"
-				:smime-sign="composerData.smimeSign"
-				:smime-encrypt="composerData.smimeEncrypt"
-				:is-first-open="modalFirstOpen"
-				:request-mdn="composerData.requestMdn"
-				:accounts="accounts"
-				@update:from-account="patchComposerData({ accountId: $event })"
-				@update:from-alias="patchComposerData({ aliasId: $event })"
-				@update:to="patchComposerData({ to: $event })"
-				@update:cc="patchComposerData({ cc: $event })"
-				@update:bcc="patchComposerData({ bcc: $event })"
-				@update:subject="patchComposerData({ subject: $event })"
-				@update:attachments-data="patchComposerData({ attachments: $event })"
-				@update:editor-body="patchComposerData({ editorBody: $event })"
-				@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
-				@update:smime-sign="patchComposerData({ smimeSign: $event })"
-				@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
-				@update:request-mdn="patchComposerData({ requestMdn: $event })"
-				@draft="onDraft"
-				@discard-draft="discardDraft"
-				@upload-attachment="onAttachmentUploading"
-				@send="onSend"
-				@show-toolbar="handleShow" />
+					<Composer ref="composer"
+						:from-account="composerData.accountId"
+						:from-alias="composerData.aliasId"
+						:to="composerData.to"
+						:cc="composerData.cc"
+						:bcc="composerData.bcc"
+						:subject="composerData.subject"
+						:attachments-data="composerData.attachments"
+						:body="composerData.body"
+						:editor-body="convertEditorBody(composerData)"
+						:in-reply-to-message-id="composerData.inReplyToMessageId"
+						:reply-to="composerData.replyTo"
+						:forward-from="composerData.forwardFrom"
+						:send-at="composerData.sendAt * 1000"
+						:forwarded-messages="forwardedMessages"
+						:smart-reply="smartReply"
+						:can-save-draft="canSaveDraft"
+						:saving-draft="savingDraft"
+						:draft-saved="draftSaved"
+						:smime-sign="composerData.smimeSign"
+						:smime-encrypt="composerData.smimeEncrypt"
+						:is-first-open="modalFirstOpen"
+						:request-mdn="composerData.requestMdn"
+						:accounts="accounts"
+						@update:from-account="patchComposerData({ accountId: $event })"
+						@update:from-alias="patchComposerData({ aliasId: $event })"
+						@update:to="patchComposerData({ to: $event })"
+						@update:cc="patchComposerData({ cc: $event })"
+						@update:bcc="patchComposerData({ bcc: $event })"
+						@update:subject="patchComposerData({ subject: $event })"
+						@update:attachments-data="patchComposerData({ attachments: $event })"
+						@update:editor-body="patchComposerData({ editorBody: $event })"
+						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
+						@update:smime-sign="patchComposerData({ smimeSign: $event })"
+						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
+						@update:request-mdn="patchComposerData({ requestMdn: $event })"
+						@draft="onDraft"
+						@discard-draft="discardDraft"
+						@upload-attachment="onAttachmentUploading"
+						@send="onSend"
+						@show-toolbar="handleShow" />
+				</div>
+				<div class="right-pane">
+					<RecipientInfo :recipient="recipient" />
+				</div>
+			</div>
 		</template>
 	</Modal>
 </template>
@@ -138,6 +145,7 @@ import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import useOutboxStore from '../store/outboxStore.js'
 import { mapStores } from 'pinia'
+import RecipientInfo from './RecipientInfo.vue'
 
 export default {
 	name: 'NewMessageModal',
@@ -150,6 +158,7 @@ export default {
 		MinimizeIcon,
 		MaximizeIcon,
 		DefaultComposerIcon,
+		RecipientInfo,
 	},
 	props: {
 		accounts: {
@@ -174,6 +183,10 @@ export default {
 			cookedComposerData: undefined,
 			changed: false,
 			largerModal: false,
+			recipient: {
+				name: '',
+				email: '',
+			},
 		}
 	},
 	computed: {
@@ -590,5 +603,20 @@ export default {
 .empty-content{
 	height: 100%;
 	display: flex;
+}
+.modal-content {
+	display: flex;
+	height: 100%
+}
+
+.left-pane {
+	flex: 2;
+	padding: 10px;
+}
+
+.right-pane {
+	flex: 1;
+	padding: 10px;
+	border-left: 1px solid #ddd;
 }
 </style>
