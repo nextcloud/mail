@@ -16,7 +16,7 @@
 					@click="onScroll">
 					{{ t('mail', 'Go to newest message') }}
 					<template #icon>
-						<ArrowDownIcon :size="20" />
+						<ArrowDownIcon :size="16" />
 					</template>
 				</NcButton>
 			</div>

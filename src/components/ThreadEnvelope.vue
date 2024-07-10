@@ -90,13 +90,13 @@
 					<NcActions v-if="smimeData.isSigned || smimeData.isEncrypted">
 						<template #icon>
 							<LockPlusIcon v-if="smimeData.isEncrypted"
-								:size="20"
+								:size="16"
 								fill-color="#008000" />
 							<LockIcon v-else-if="smimeData.signatureIsValid"
-								:size="20"
+								:size="16"
 								fill-color="#008000" />
 							<LockOffIcon v-else
-								:size="20"
+								:size="16"
 								fill-color="red" />
 						</template>
 						<NcActionText class="smime-text" :name="smimeHeading">
@@ -114,9 +114,9 @@
 							@click.prevent="onToggleFlagged">
 							<template #icon>
 								<StarOutline v-if="showFavoriteIconVariant"
-									:size="20" />
+									:size="16" />
 								<IconFavorite v-else
-									:size="20" />
+									:size="16" />
 							</template>
 						</NcActionButton>
 						<NcActionButton v-if="hasSeenAcl && (inlineMenuSize >= 3 || !moreActionsOpen)"
@@ -128,9 +128,9 @@
 							@click.prevent="onToggleSeen">
 							<template #icon>
 								<EmailRead v-if="showImportantIconVariant"
-									:size="20" />
+									:size="16" />
 								<EmailUnread v-else
-									:size="20" />
+									:size="16" />
 							</template>
 						</NcActionButton>
 						<NcActionButton v-if="showArchiveButton && hasArchiveAcl && (inlineMenuSize >= 4 || !moreActionsOpen)"
@@ -142,7 +142,7 @@
 							@click.prevent="onArchive">
 							<template #icon>
 								<ArchiveIcon :title="t('mail', 'Archive message')"
-									:size="20" />
+									:size="16" />
 							</template>
 						</NcActionButton>
 						<NcActionButton v-if="hasDeleteAcl && (inlineMenuSize >= 5 || !moreActionsOpen)"
@@ -153,7 +153,7 @@
 							@click.prevent="onDelete">
 							<template #icon>
 								<DeleteIcon :title="t('mail', 'Delete message')"
-									:size="20" />
+									:size="16" />
 							</template>
 						</NcActionButton>
 						<MenuEnvelope class="app-content-list-item-menu"

@@ -21,7 +21,7 @@
 					:aria-label="t('mail', 'Contacts with this address')"
 					class="contact-existing">
 					<template #icon>
-						<IconDetails :size="20" />
+						<IconDetails :size="16" />
 					</template>
 					{{ t('mail', 'Contacts with this address') }}: {{ contactsWithEmailComputed }}
 				</ButtonVue>
@@ -30,7 +30,7 @@
 						type="tertiary-no-background"
 						@click="onClickReply">
 						<template #icon>
-							<IconReply :size="20" />
+							<IconReply :size="16" />
 						</template>
 						{{ t('mail', 'Reply') }}
 					</ButtonVue>
@@ -38,7 +38,7 @@
 						:aria-label="t('mail', 'Add to Contact')"
 						@click="selection = ContactSelectionStateEnum.existing">
 						<template #icon>
-							<IconUser :size="20" />
+							<IconUser :size="16" />
 						</template>
 						{{ t('mail', 'Add to Contact') }}
 					</ButtonVue>
@@ -46,7 +46,7 @@
 						:aria-label="t('mail', 'New Contact')"
 						@click="selection = ContactSelectionStateEnum.new">
 						<template #icon>
-							<IconAdd :size="20" />
+							<IconAdd :size="16" />
 						</template>
 						{{ t('mail', 'New Contact') }}
 					</ButtonVue>
@@ -54,7 +54,7 @@
 						:aria-label="t('mail', 'Copy to clipboard')"
 						@click="onClickCopyToClipboard">
 						<template #icon>
-							<IconClipboard :size="20" />
+							<IconClipboard :size="16" />
 						</template>
 						{{ t('mail', 'Copy to clipboard') }}
 					</ButtonVue>
@@ -81,7 +81,7 @@
 						:aria-label="t('mail', 'Go back')"
 						@click="selection = ContactSelectionStateEnum.select">
 						<template #icon>
-							<IconClose :size="20" />
+							<IconClose :size="16" />
 						</template>
 						{{ t('mail', 'Go back') }}
 					</ButtonVue>
@@ -92,7 +92,7 @@
 						:aria-label="t('mail', 'Add')"
 						@click="onClickAddToContact">
 						<template #icon>
-							<IconCheck :size="20" />
+							<IconCheck :size="16" />
 						</template>
 						{{ t('mail', 'Add') }}
 					</ButtonVue>

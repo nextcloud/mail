@@ -10,21 +10,21 @@
 			<Actions type="tertiary" :menu-name="t('mail', 'Show images')">
 				<ActionButton @click="displayIframe">
 					<template #icon>
-						<IconImage :size="20" />
+						<IconImage :size="16" />
 					</template>
 					{{ t('mail', 'Show images temporarily') }}
 				</ActionButton>
 				<ActionButton v-if="sender"
 					@click="onShowBlockedContent">
 					<template #icon>
-						<IconMail :size="20" />
+						<IconMail :size="16" />
 					</template>
 					{{ t('mail', 'Always show images from {sender}', { sender }) }}
 				</ActionButton>
 				<ActionButton v-if="domain"
 					@click="onShowBlockedContentForDomain">
 					<template #icon>
-						<IconDomain :size="20" />
+						<IconDomain :size="16" />
 					</template>
 					{{ t('mail', 'Always show images from {domain}', { domain }) }}
 				</ActionButton>

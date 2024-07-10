@@ -297,7 +297,7 @@
 							native-type="submit"
 							:disabled="loading">
 							<template #icon>
-								<IconUpload :size="20" />
+								<IconUpload :size="16" />
 							</template>
 							{{ t('mail', 'Save Config') }}
 						</ButtonVue>
@@ -308,7 +308,7 @@
 							:disabled="loading"
 							@click="disableConfig()">
 							<template #icon>
-								<IconDelete :size="20" />
+								<IconDelete :size="16" />
 							</template>
 							{{ t('mail', 'Unprovision & Delete Config') }}
 						</ButtonVue>

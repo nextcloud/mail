@@ -269,7 +269,7 @@
 					:aria-label="t('mail', 'Save draft')"
 					@click="saveDraft">
 					<template #icon>
-						<Download :size="20" :title="t('mail', 'Save draft')" />
+						<Download :size="16" :title="t('mail', 'Save draft')" />
 					</template>
 				</ButtonVue>
 				<ButtonVue v-if="!savingDraft && draftSaved"
@@ -278,7 +278,7 @@
 					:aria-label="t('mail', 'Discard & close draft')"
 					@click="$emit('discard-draft')">
 					<template #icon>
-						<Delete :size="20" :title="t('mail', 'Discard & close draft')" />
+						<Delete :size="16" :title="t('mail', 'Discard & close draft')" />
 					</template>
 				</ButtonVue>
 			</div>
@@ -288,7 +288,7 @@
 					:aria-label="t('mail', 'Enable formatting')"
 					@click="setEditorModeHtml()">
 					<template #icon>
-						<IconFormat :size="20" :title="t('mail', 'Enable formatting')" />
+						<IconFormat :size="16" :title="t('mail', 'Enable formatting')" />
 					</template>
 				</ButtonVue>
 				<ButtonVue v-if="!encrypt && !editorPlainText"
@@ -297,17 +297,17 @@
 					:aria-label="t('mail', 'Disable formatting')"
 					@click="setEditorModeText()">
 					<template #icon>
-						<IconFormat :size="20" :title="t('mail', 'Disable formatting')" />
+						<IconFormat :size="16" :title="t('mail', 'Disable formatting')" />
 					</template>
 				</ButtonVue>
 
 				<Actions :open.sync="isAddAttachmentsOpen">
 					<template #icon>
-						<Paperclip :size="20" />
+						<Paperclip :size="16" />
 					</template>
 					<ActionButton :close-after-click="true" @click="onAddLocalAttachment">
 						<template #icon>
-							<IconUpload :size="20" />
+							<IconUpload :size="16" />
 						</template>
 						{{
 							t('mail', 'Upload attachment')
@@ -315,7 +315,7 @@
 					</ActionButton>
 					<ActionButton :close-after-click="true" @click="onAddCloudAttachment">
 						<template #icon>
-							<IconFolder :size="20" />
+							<IconFolder :size="16" />
 						</template>
 						{{
 							t('mail', 'Add attachment from Files')
@@ -323,7 +323,7 @@
 					</ActionButton>
 					<ActionButton :close-after-click="true" :disabled="encrypt" @click="onAddCloudAttachmentLink">
 						<template #icon>
-							<IconPublic :size="20" />
+							<IconPublic :size="16" />
 						</template>
 						{{
 							t('mail', 'Add share link from Files')
@@ -336,7 +336,7 @@
 					<template v-if="!isMoreActionsOpen">
 						<ActionButton v-if="isPickerAvailable" :close-after-click="true" @click="openPicker">
 							<template #icon>
-								<IconLinkPicker :size="20" />
+								<IconLinkPicker :size="16" />
 							</template>
 							{{
 								t('mail', 'Smart picker')
@@ -346,7 +346,7 @@
 							:close-after-click="false"
 							@click="isMoreActionsOpen=true">
 							<template #icon>
-								<SendClock :size="20" :title="t('mail', 'Send later')" />
+								<SendClock :size="16" :title="t('mail', 'Send later')" />
 							</template>
 							{{
 								t('mail', 'Send later')
@@ -384,7 +384,7 @@
 							@click="isMoreActionsOpen=false">
 							<template #icon>
 								<ChevronLeft :title="t('mail', 'Send later')"
-									:size="20" />
+									:size="16" />
 								{{ t('mail', 'Send later') }}
 							</template>
 						</ActionButton>
@@ -446,7 +446,7 @@
 					@click="onSend">
 					<template #icon>
 						<Send :title="submitButtonTitle"
-							:size="20" />
+							:size="16" />
 					</template>
 					{{ submitButtonTitle }}
 				</ButtonVue>

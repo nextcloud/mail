@@ -5,7 +5,7 @@
 <template>
 	<div class="warning">
 		<div class="warning__title">
-			<IconAlertOutline :size="20" :title="t('mail', 'Phishing email')" />
+			<IconAlertOutline :size="16" :title="t('mail', 'Phishing email')" />
 			This email might be a phishing attempt
 		</div>
 		<ul v-for="(warning,index) in warnings" :key="index" class="warning__list">

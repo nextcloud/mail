@@ -15,7 +15,7 @@
 				<template v-if="isDisabled">
 					<ActionText :name="t('mail', 'Provisioned account is disabled')">
 						<template #icon>
-							<IconInfo :size="20" />
+							<IconInfo :size="16" />
 						</template>
 						{{ t('mail', 'Please login using a password to enable this account. The current session is using passwordless authentication, e.g. SSO or WebAuthn.') }}
 					</ActionText>
@@ -23,7 +23,7 @@
 				<template v-else>
 					<ActionText v-if="!account.isUnified" :name="t('mail', 'Quota')">
 						<template #icon>
-							<IconInfo :size="20" />
+							<IconInfo :size="16" />
 						</template>
 						{{ quotaText }}
 					</ActionText>
@@ -31,7 +31,7 @@
 						@click="showAccountSettings"
 						@shortkey="toggleAccountSettings">
 						<template #icon>
-							<IconSettings :size="20" />
+							<IconSettings :size="16" />
 						</template>
 						{{ t('mail', 'Account settings') }}
 					</ActionButton>
@@ -42,7 +42,7 @@
 					</ActionCheckbox>
 					<ActionButton v-if="!editing" @click="openCreateMailbox">
 						<template #icon>
-							<IconFolderAdd :size="20" />
+							<IconFolderAdd :size="16" />
 						</template>
 						{{ t('mail', 'Add mailbox') }}
 					</ActionButton>
@@ -50,31 +50,31 @@
 						:value.sync="createMailboxName"
 						@submit.prevent.stop="createMailbox">
 						<template #icon>
-							<IconFolderAdd :size="20" />
+							<IconFolderAdd :size="16" />
 						</template>
 						{{ t('mail', 'Mailbox name') }}
 					</ActionInput>
 					<ActionText v-if="showSaving">
 						<template #icon>
-							<IconLoading :size="20" />
+							<IconLoading :size="16" />
 						</template>
 						{{ t('mail', 'Saving') }}
 					</ActionText>
 					<ActionButton v-if="!isFirst" @click="changeAccountOrderUp">
 						<template #icon>
-							<MenuUp :size="20" />
+							<MenuUp :size="16" />
 						</template>
 						{{ t('mail', 'Move up') }}
 					</ActionButton>
 					<ActionButton v-if="!isLast" @click="changeAccountOrderDown">
 						<template #icon>
-							<MenuDown :size="20" />
+							<MenuDown :size="16" />
 						</template>
 						{{ t('mail', 'Move down') }}
 					</ActionButton>
 					<ActionButton v-if="!account.provisioningId" @click="removeAccount">
 						<template #icon>
-							<IconDelete :size="20" />
+							<IconDelete :size="16" />
 						</template>
 						{{ t('mail', 'Remove account') }}
 					</ActionButton>

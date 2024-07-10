@@ -8,7 +8,7 @@
 			class="empty-content"
 			:name="hint">
 			<template #icon>
-				<IconLoading :size="20" />
+				<IconLoading :size="16" />
 			</template>
 			<transition name="fade">
 				<em v-if="slowHint && slow">{{ slowHint }}</em>

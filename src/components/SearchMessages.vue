@@ -25,7 +25,7 @@
 			<NcActions>
 				<NcActionButton @click="moreSearchActions = true">
 					<template #icon>
-						<Tune :size="20" />
+						<Tune :size="16" />
 					</template>
 					{{ t("mail", "Search parameters") }}
 				</NcActionButton>

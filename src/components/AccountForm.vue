@@ -225,8 +225,8 @@
 				:disabled="isDisabledAuto || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
-					<IconCheck v-else :size="20" />
+					<IconLoading v-if="loading" :size="16" />
+					<IconCheck v-else :size="16" />
 				</template>
 				{{ submitButtonText }}
 			</ButtonVue>
@@ -238,8 +238,8 @@
 				:disabled="isDisabledManual || loading"
 				@click.prevent="onSubmit">
 				<template #icon>
-					<IconLoading v-if="loading" :size="20" />
-					<IconCheck v-else :size="20" />
+					<IconLoading v-if="loading" :size="16" />
+					<IconCheck v-else :size="16" />
 				</template>
 				{{ submitButtonText }}
 			</ButtonVue>
