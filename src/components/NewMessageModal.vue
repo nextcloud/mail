@@ -4,7 +4,7 @@
 -->
 <template>
 	<Modal v-if="showMessageComposer"
-		:size="largerModal ? 'large' : 'normal'"
+		:size="modalSize"
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
@@ -26,10 +26,10 @@
 				</NcButton>
 			</template>
 		</EmptyContent>
-		<Loading v-else-if="uploadingAttachments" :hint="t('mail', 'Uploading attachments …')" role="alert" />
-		<Loading v-else-if="sending"
-			:hint="t('mail', 'Sending …')"
+		<Loading v-else-if="uploadingAttachments"
+			:hint="t('mail', 'Uploading attachments …')"
 			role="alert" />
+		<Loading v-else-if="sending" :hint="t('mail', 'Sending …')" role="alert" />
 		<EmptyContent v-else-if="warning"
 			:name="t('mail', 'Warning sending your message')"
 			class="empty-content"
@@ -51,65 +51,73 @@
 			</template>
 		</EmptyContent>
 		<template v-else>
-			<NcButton class="maximize-button"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Maximize composer')"
-				@click="onMaximize">
-				<template #icon>
-					<MaximizeIcon v-if="!largerModal" :size="16" />
-					<DefaultComposerIcon v-else :size="16" />
-				</template>
-			</NcButton>
-			<NcButton class="minimize-button"
-				type="tertiary-no-background"
-				:aria-label="t('mail', 'Minimize composer')"
-				@click="onMinimize">
-				<template #icon>
-					<MinimizeIcon :size="16" />
-				</template>
-			</NcButton>
+			<div :class="['modal-content', { 'with-recipient': composerData.to && composerData.to.length > 0 }]">
+				<div class="left-pane">
+					<NcButton class="maximize-button"
+						type="tertiary-no-background"
+						:aria-label="t('mail', 'Maximize composer')"
+						@click="onMaximize">
+						<template #icon>
+							<MaximizeIcon v-if="!largerModal" :size="20" />
+							<DefaultComposerIcon v-else :size="20" />
+						</template>
+					</NcButton>
+					<NcButton class="minimize-button"
+						type="tertiary-no-background"
+						:aria-label="t('mail', 'Minimize composer')"
+						@click="onMinimize">
+						<template #icon>
+							<MinimizeIcon :size="20" />
+						</template>
+					</NcButton>
 
-			<Composer ref="composer"
-				:from-account="composerData.accountId"
-				:from-alias="composerData.aliasId"
-				:to="composerData.to"
-				:cc="composerData.cc"
-				:bcc="composerData.bcc"
-				:subject="composerData.subject"
-				:attachments-data="composerData.attachments"
-				:body="composerData.body"
-				:editor-body="convertEditorBody(composerData)"
-				:in-reply-to-message-id="composerData.inReplyToMessageId"
-				:reply-to="composerData.replyTo"
-				:forward-from="composerData.forwardFrom"
-				:send-at="composerData.sendAt * 1000"
-				:forwarded-messages="forwardedMessages"
-				:smart-reply="smartReply"
-				:can-save-draft="canSaveDraft"
-				:saving-draft="savingDraft"
-				:draft-saved="draftSaved"
-				:smime-sign="composerData.smimeSign"
-				:smime-encrypt="composerData.smimeEncrypt"
-				:is-first-open="modalFirstOpen"
-				:request-mdn="composerData.requestMdn"
-				:accounts="accounts"
-				@update:from-account="patchComposerData({ accountId: $event })"
-				@update:from-alias="patchComposerData({ aliasId: $event })"
-				@update:to="patchComposerData({ to: $event })"
-				@update:cc="patchComposerData({ cc: $event })"
-				@update:bcc="patchComposerData({ bcc: $event })"
-				@update:subject="patchComposerData({ subject: $event })"
-				@update:attachments-data="patchComposerData({ attachments: $event })"
-				@update:editor-body="patchComposerData({ editorBody: $event })"
-				@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
-				@update:smime-sign="patchComposerData({ smimeSign: $event })"
-				@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
-				@update:request-mdn="patchComposerData({ requestMdn: $event })"
-				@draft="onDraft"
-				@discard-draft="discardDraft"
-				@upload-attachment="onAttachmentUploading"
-				@send="onSend"
-				@show-toolbar="handleShow" />
+					<Composer ref="composer"
+						:from-account="composerData.accountId"
+						:from-alias="composerData.aliasId"
+						:to="composerData.to"
+						:cc="composerData.cc"
+						:bcc="composerData.bcc"
+						:subject="composerData.subject"
+						:attachments-data="composerData.attachments"
+						:body="composerData.body"
+						:editor-body="convertEditorBody(composerData)"
+						:in-reply-to-message-id="composerData.inReplyToMessageId"
+						:reply-to="composerData.replyTo"
+						:forward-from="composerData.forwardFrom"
+						:send-at="composerData.sendAt * 1000"
+						:forwarded-messages="forwardedMessages"
+						:smart-reply="smartReply"
+						:can-save-draft="canSaveDraft"
+						:saving-draft="savingDraft"
+						:draft-saved="draftSaved"
+						:smime-sign="composerData.smimeSign"
+						:smime-encrypt="composerData.smimeEncrypt"
+						:is-first-open="modalFirstOpen"
+						:request-mdn="composerData.requestMdn"
+						:accounts="accounts"
+						@update:from-account="patchComposerData({ accountId: $event })"
+						@update:from-alias="patchComposerData({ aliasId: $event })"
+						@update:to="patchComposerData({ to: $event })"
+						@update:cc="patchComposerData({ cc: $event })"
+						@update:bcc="patchComposerData({ bcc: $event })"
+						@update:subject="patchComposerData({ subject: $event })"
+						@update:attachments-data="patchComposerData({ attachments: $event })"
+						@update:editor-body="patchComposerData({ editorBody: $event })"
+						@update:send-at="patchComposerData({ sendAt: $event / 1000 })"
+						@update:smime-sign="patchComposerData({ smimeSign: $event })"
+						@update:smime-encrypt="patchComposerData({ smimeSign: $event })"
+						@update:request-mdn="patchComposerData({ requestMdn: $event })"
+						@draft="onDraft"
+						@discard-draft="discardDraft"
+						@upload-attachment="onAttachmentUploading"
+						@send="onSend"
+						@show-toolbar="handleShow" />
+				</div>
+
+				<div v-if="showRecipientPane" class="right-pane">
+					<RecipientInfo />
+				</div>
+			</div>
 		</template>
 	</Modal>
 </template>
@@ -138,6 +146,7 @@ import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import useOutboxStore from '../store/outboxStore.js'
 import { mapStores } from 'pinia'
+import RecipientInfo from './RecipientInfo.vue'
 
 export default {
 	name: 'NewMessageModal',
@@ -150,6 +159,7 @@ export default {
 		MinimizeIcon,
 		MaximizeIcon,
 		DefaultComposerIcon,
+		RecipientInfo,
 	},
 	props: {
 		accounts: {
@@ -174,6 +184,12 @@ export default {
 			cookedComposerData: undefined,
 			changed: false,
 			largerModal: false,
+			isLargeScreen: window.innerWidth >= 1024,
+			isMaximized: false,
+			recipient: {
+				name: '',
+				email: '',
+			},
 		}
 	},
 	computed: {
@@ -194,6 +210,15 @@ export default {
 			}
 			return t('mail', 'New message')
 		},
+		hasContactDetailsApi() {
+			return !!window.OCA?.Contacts?.mountContactDetails
+		},
+		showRecipientPane() {
+			return this.hasContactDetailsApi
+				&& this.composerData.to
+				&& this.composerData.to.length > 0
+				&& !this.isMaximized
+		},
 		composerMessage() {
 			return this.$store.getters.composerMessage
 		},
@@ -205,6 +230,11 @@ export default {
 		},
 		smartReply() {
 			return this.composerData?.smartReply ?? null
+		},
+		modalSize() {
+			return this.isLargeScreen && this.hasContactDetailsApi && this.composerData.to && this.composerData.to.length > 0
+				? 'large'
+				: (this.largerModal ? 'large' : 'normal')
 		},
 	},
 	created() {
@@ -218,11 +248,16 @@ export default {
 		await this.$nextTick()
 		this.updateCookedComposerData()
 		await this.openModalSize()
+		window.addEventListener('resize', this.checkScreenSize)
 	},
 	beforeDestroy() {
 		window.removeEventListener('beforeunload', this.onBeforeUnload)
+		window.removeEventListener('resize', this.checkScreenSize)
 	},
 	methods: {
+		checkScreenSize() {
+			this.isLargeScreen = window.innerWidth >= 1024
+		},
 		async openModalSize() {
 			try {
 				const sizePreference = this.$store.getters.getPreference('modalSize')
@@ -232,6 +267,7 @@ export default {
 			}
 		},
 		async onMaximize() {
+			this.isMaximized = !this.isMaximized
 			this.largerModal = !this.largerModal
 			try {
 				await this.$store.dispatch('savePreference', {
@@ -241,6 +277,16 @@ export default {
 			} catch (error) {
 				console.error('Failed to save preference', error)
 			}
+		},
+		async onMinimize() {
+			this.isMaximized = false
+			this.modalFirstOpen = false
+
+			await this.$store.dispatch('closeMessageComposer')
+			if (!this.$store.getters.composerMessageIsSaved && this.changed) {
+				await this.onDraft(this.cookedComposerData, { showToast: true })
+			}
+
 		},
 		handleShow(element) {
 			this.additionalTrapElements.push(element)
@@ -528,15 +574,6 @@ export default {
 				console.info('No unsaved changes. See you!')
 			}
 		},
-		async onMinimize() {
-			this.modalFirstOpen = false
-
-			await this.$store.dispatch('closeMessageComposer')
-			if (!this.$store.getters.composerMessageIsSaved && this.changed) {
-				await this.onDraft(this.cookedComposerData, { showToast: true })
-			}
-
-		},
 		async onClose() {
 			this.$store.commit('setComposerIndicatorDisabled', true)
 			await this.onMinimize()
@@ -590,5 +627,33 @@ export default {
 .empty-content{
 	height: 100%;
 	display: flex;
+}
+.modal-content {
+	display: flex;
+	height: 100%;
+	flex-direction: row;
+	width: 100%;
+}
+
+.left-pane {
+	flex: 1;
+	overflow-y: auto;
+}
+
+.right-pane {
+	flex: 0 0 400px;
+	overflow-y: auto;
+	padding-left: 5px;
+	border-left: 1px solid #ccc;
+	@media (max-width: 1024px) {
+		display: none;
+	}
+}
+
+.modal-content.with-recipient .left-pane {
+	flex: 1;
+}
+.modal-content .left-pane {
+	width: 100%;
 }
 </style>
