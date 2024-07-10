@@ -12,7 +12,6 @@
 				:key="'mailbox-' + mailbox.databaseId"
 				:account="unifiedAccount"
 				:mailbox="mailbox" />
-			<AppNavigationSpacer />
 
 			<!-- All other mailboxes grouped by their account -->
 			<template v-for="group in menu">
@@ -212,9 +211,6 @@ from {
 to {
 		transform: rotate(-360deg);
 	}
-}
-.app-navigation-spacer {
-	order: 0 !important;
 }
 :deep(.settings-button) {
 	font-weight: bold !important;
