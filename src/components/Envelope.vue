@@ -1087,10 +1087,14 @@ export default {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+:deep(.list-item-content__name) {
+	align-self: center;
+}
 .envelope__subtitle__subject.one-line {
 	&::after {
 		content: '\00B7';
 		margin: 12px;
 	}
 }
+
 </style>
