@@ -31,8 +31,8 @@
 					:form="formId"
 					:name="t('mail', 'Update alias')">
 					<template #icon>
-						<IconLoading v-if="loading" :size="20" />
-						<IconCheck v-else :size="20" />
+						<IconLoading v-if="loading" :size="16" />
+						<IconCheck v-else :size="16" />
 					</template>
 				</NcButton>
 			</template>
@@ -46,7 +46,7 @@
 					:name="t('mail', 'Show update alias form')"
 					@click.prevent="showForm = true">
 					<template #icon>
-						<IconRename :size="20" />
+						<IconRename :size="16" />
 					</template>
 				</NcButton>
 				<NcButton v-if="enableDelete && !alias.provisioned"
@@ -55,8 +55,8 @@
 					:name="t('mail', 'Delete alias')"
 					@click.prevent="deleteAlias">
 					<template #icon>
-						<IconLoading v-if="loading" :size="20" />
-						<IconDelete v-else :size="20" />
+						<IconLoading v-if="loading" :size="16" />
+						<IconDelete v-else :size="16" />
 					</template>
 				</NcButton>
 			</template>

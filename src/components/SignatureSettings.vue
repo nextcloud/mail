@@ -36,8 +36,8 @@
 			:aria-label="t('mail', 'Save signature')"
 			@click="saveSignature">
 			<template #icon>
-				<IconLoading v-if="loading" :size="20" fill-color="white" />
-				<IconCheck v-else :size="20" />
+				<IconLoading v-if="loading" :size="16" fill-color="white" />
+				<IconCheck v-else :size="16" />
 			</template>
 			{{ t('mail', 'Save signature') }}
 		</ButtonVue>

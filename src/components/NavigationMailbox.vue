@@ -22,29 +22,29 @@
 		<template #icon>
 			<div>
 				<ImportantIcon v-if="mailbox.isPriorityInbox"
-					:size="20" />
+					:size="16" />
 				<IconAllInboxes v-else-if="mailbox.id === UNIFIED_INBOX_ID"
-					:size="20" />
+					:size="16" />
 				<IconInbox v-else-if="mailbox.specialRole === 'inbox' && !mailbox.isPriorityInbox && filter !=='starred'"
-					:size="20" />
+					:size="16" />
 				<IconFavorite v-else-if="filter === 'starred'"
-					:size="20" />
+					:size="16" />
 				<IconDraft v-else-if="mailbox.databaseId === account.draftsMailboxId"
-					:size="20" />
+					:size="16" />
 				<IconSend v-else-if="mailbox.databaseId === account.sentMailboxId"
-					:size="20" />
+					:size="16" />
 				<IconArchive v-else-if="mailbox.databaseId === account.archiveMailboxId"
-					:size="20" />
+					:size="16" />
 				<IconDelete v-else-if="mailbox.databaseId === account.trashMailboxId"
-					:size="20" />
+					:size="16" />
 				<IconJunk v-else-if="mailbox.databaseId === account.junkMailboxId"
-					:size="20" />
+					:size="16" />
 				<AlarmIcon v-else-if="mailbox.databaseId === account.snoozeMailboxId"
-					:size="20" />
+					:size="16" />
 				<IconFolderShared v-else-if="mailbox.shared"
-					:size="20" />
+					:size="16" />
 				<IconFolder v-else
-					:size="20" />
+					:size="16" />
 			</div>
 		</template>
 		<!-- actions -->
@@ -53,7 +53,7 @@
 				:name="mailbox.name">
 				<template #icon>
 					<IconInfo :title="statsText"
-						:size="20" />
+						:size="16" />
 				</template>
 				{{ statsText }}
 			</ActionText>
@@ -63,14 +63,14 @@
 				:disabled="loadingMarkAsRead"
 				@click="markAsRead">
 				<template #icon>
-					<IconEmailCheck :size="20" />
+					<IconEmailCheck :size="16" />
 				</template>
 				{{ t('mail', 'Mark all messages of this mailbox as read') }}
 			</ActionButton>
 			<ActionButton v-if="!editing && !account.isUnified && hasDelimiter && mailbox.specialRole !== 'flagged' && hasSubmailboxActionAcl"
 				@click="openCreateMailbox">
 				<template #icon>
-					<IconFolderAdd :size="20" />
+					<IconFolderAdd :size="16" />
 				</template>
 				{{ t('mail', 'Add submailbox') }}
 			</ActionButton>
@@ -78,13 +78,13 @@
 				:value.sync="createMailboxName"
 				@submit.prevent.stop="createMailbox">
 				<template #icon>
-					<IconFolderAdd :size="20" />
+					<IconFolderAdd :size="16" />
 				</template>
 			</ActionInput>
 			<ActionButton v-if="renameLabel && !hasSubMailboxes && !account.isUnified && hasRenameAcl"
 				@click.prevent.stop="openRenameInput">
 				<template #icon>
-					<IconFolderRename :size="20" />
+					<IconFolderRename :size="16" />
 				</template>
 				{{ t('mail', 'Rename') }}
 			</ActionButton>
@@ -93,12 +93,12 @@
 				@submit.prevent.stop="renameMailbox">
 				<template #icon>
 					<IconFolderRename :title="t('mail', 'Rename')"
-						:size="20" />
+						:size="16" />
 				</template>
 			</ActionInput>
 			<ActionText v-if="showSaving">
 				<template #icon>
-					<IconLoading :size="20" />
+					<IconLoading :size="16" />
 				</template>
 				{{ t('mail', 'Saving') }}
 			</ActionText>
@@ -107,7 +107,7 @@
 				:close-after-click="true"
 				@click.prevent="onOpenMoveModal">
 				<template #icon>
-					<IconExternal :size="20" />
+					<IconExternal :size="16" />
 				</template>
 				{{ t('mail', 'Move mailbox') }}
 			</ActionButton>
@@ -116,7 +116,7 @@
 				:disabled="clearingCache"
 				@click="clearCache">
 				<template #icon>
-					<IconFolderSync :size="20" />
+					<IconFolderSync :size="16" />
 				</template>
 				{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
 			</ActionButton>
@@ -139,7 +139,7 @@
 				:close-after-click="true"
 				@click="clearMailbox">
 				<template #icon>
-					<EraserVariant :size="20" />
+					<EraserVariant :size="16" />
 				</template>
 				{{ t('mail', 'Clear mailbox') }}
 			</ActionButton>
@@ -147,7 +147,7 @@
 			<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes && hasDeleteAcl"
 				@click="deleteMailbox">
 				<template #icon>
-					<IconDelete :size="20" />
+					<IconDelete :size="16" />
 				</template>
 				{{ t('mail', 'Delete mailbox') }}
 			</ActionButton>

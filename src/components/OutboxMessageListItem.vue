@@ -22,7 +22,7 @@
 				{{ t('mail', 'Copy to "Sent" Mailbox') }}
 				<template #icon>
 					<Copy :title="t('mail', 'Copy to Sent Mailbox')"
-						:size="20" />
+						:size="16" />
 				</template>
 			</ActionButton>
 			<ActionButton v-if="message.status !== statusImapSentMailboxFail() && message.status !== statusSmtpError()"
@@ -31,7 +31,7 @@
 				{{ t('mail', 'Send now') }}
 				<template #icon>
 					<Send :title="t('mail', 'Send now')"
-						:size="20" />
+						:size="16" />
 				</template>
 			</ActionButton>
 			<ActionButton :close-after-click="true"

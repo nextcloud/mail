@@ -17,7 +17,7 @@
 					button-variant-grouped="vertical"
 					@update:checked="setLayout('no-split')">
 					<template #icon>
-						<CompactMode :size="20" />
+						<CompactMode :size="16" />
 					</template>
 					{{ t('mail', 'List') }}
 				</NcCheckboxRadioSwitch>
@@ -29,7 +29,7 @@
 					button-variant-grouped="vertical"
 					@update:checked="setLayout('vertical-split')">
 					<template #icon>
-						<VerticalSplit :size="20" />
+						<VerticalSplit :size="16" />
 					</template>
 					{{ t('mail', 'Vertical split') }}
 				</NcCheckboxRadioSwitch>
@@ -41,7 +41,7 @@
 					button-variant-grouped="vertical"
 					@update:checked="setLayout('horizontal-split')">
 					<template #icon>
-						<HorizontalSplit :size="20" />
+						<HorizontalSplit :size="16" />
 					</template>
 					{{ t('mail', 'Horizontal split') }}
 				</NcCheckboxRadioSwitch>
@@ -53,7 +53,7 @@
 					:aria-label="t('mail', 'Add mail account')"
 					class="app-settings-button">
 					<template #icon>
-						<IconAdd :size="20" />
+						<IconAdd :size="16" />
 					</template>
 					{{ t('mail', 'Add mail account') }}
 				</NcButton>
@@ -76,7 +76,7 @@
 					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
 				</p>
 				<p v-if="loadingOptOutSettings" class="app-settings">
-					<IconLoading :size="20" />
+					<IconLoading :size="16" />
 					{{ optOutSettingsText }}
 				</p>
 				<p v-else class="app-settings">
@@ -90,7 +90,7 @@
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
 				<p v-if="toggleAutoTagging" class="app-settings">
-					<IconLoading :size="20" />
+					<IconLoading :size="16" />
 				</p>
 				<p v-else class="app-settings">
 					<input id="auto-tagging-toggle"
@@ -114,7 +114,7 @@
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="gravatar-settings" :name="t('mail', 'Gravatar settings')">
 				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
-					<IconLoading :size="20" />
+					<IconLoading :size="16" />
 					{{ t('mail', 'Use Gravatar and favicon avatars') }}
 				</p>
 				<p v-else class="app-settings">
@@ -128,7 +128,7 @@
 			</NcAppSettingsSection>
 			<NcAppSettingsSection id="reply-settings" :name="t('mail', 'Reply text position')">
 				<p v-if="loadingReplySettings" class="app-settings reply-settings">
-					<IconLoading :size="20" />
+					<IconLoading :size="16" />
 					{{ replySettingsText }}
 				</p>
 				<p v-else class="app-settings">
@@ -149,7 +149,7 @@
 					:aria-label="t('mail', 'Register as application for mail links')"
 					@click="registerProtocolHandler">
 					<template #icon>
-						<IconEmail :size="20" />
+						<IconEmail :size="16" />
 					</template>
 					{{ t('mail', 'Register') }}
 				</NcButton>
@@ -160,7 +160,7 @@
 					:aria-label="t('mail', 'Manage S/MIME certificates')"
 					@click.prevent.stop="displaySmimeCertificateModal = true">
 					<template #icon>
-						<IconLock :size="20" />
+						<IconLock :size="16" />
 					</template>
 					{{ t('mail', 'Manage S/MIME certificates') }}
 				</NcButton>

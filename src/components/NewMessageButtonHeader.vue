@@ -11,7 +11,7 @@
 			:wide="true"
 			@click="onNewMessage">
 			<template #icon>
-				<IconAdd :size="20" />
+				<IconAdd :size="16" />
 			</template>
 			{{ t('mail', 'New message') }}
 		</ButtonVue>
@@ -23,9 +23,9 @@
 			@click="refreshMailbox">
 			<template #icon>
 				<IconRefresh v-if="!refreshing"
-					:size="20" />
+					:size="16" />
 				<IconLoading v-if="refreshing"
-					:size="20" />
+					:size="16" />
 			</template>
 		</ButtonVue>
 	</div>

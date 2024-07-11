@@ -7,7 +7,7 @@
 		:class="{'composer-session--disabled': disabled}"
 		@click="onShowComposer">
 		<div class="composer-session__icon">
-			<PencilIcon :size="20" />
+			<PencilIcon :size="16" />
 		</div>
 
 		<div class="composer-session__text">
@@ -20,7 +20,7 @@
 					:disabled="disabled"
 					@click.stop="onShowComposer">
 					<template #icon>
-						<ArrowExpandIcon :size="20" />
+						<ArrowExpandIcon :size="16" />
 					</template>
 				</NcActionButton>
 			</NcActions>
@@ -29,7 +29,7 @@
 					:disabled="disabled"
 					@click.stop="onClose">
 					<template #icon>
-						<CloseIcon :size="20" />
+						<CloseIcon :size="16" />
 					</template>
 				</NcActionButton>
 			</NcActions>

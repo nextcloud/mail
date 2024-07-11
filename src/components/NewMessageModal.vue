@@ -56,8 +56,8 @@
 				:aria-label="t('mail', 'Maximize composer')"
 				@click="onMaximize">
 				<template #icon>
-					<MaximizeIcon v-if="!largerModal" :size="20" />
-					<DefaultComposerIcon v-else :size="20" />
+					<MaximizeIcon v-if="!largerModal" :size="16" />
+					<DefaultComposerIcon v-else :size="16" />
 				</template>
 			</NcButton>
 			<NcButton class="minimize-button"
@@ -65,7 +65,7 @@
 				:aria-label="t('mail', 'Minimize composer')"
 				@click="onMinimize">
 				<template #icon>
-					<MinimizeIcon :size="20" />
+					<MinimizeIcon :size="16" />
 				</template>
 			</NcButton>
 

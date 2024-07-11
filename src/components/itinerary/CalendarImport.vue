@@ -6,14 +6,14 @@
 <template>
 	<Actions v-if="calendars.length">
 		<template #icon>
-			<IconAdd :size="20" />
+			<IconAdd :size="16" />
 		</template>
 		<ActionButton v-for="(calendar, idx) in cals"
 			:key="idx"
 			@click="onImport(calendar)">
 			<template #icon>
-				<IconLoading v-if="calendar.loading" :size="20" />
-				<IconAdd v-else :size="20" />
+				<IconLoading v-if="calendar.loading" :size="16" />
+				<IconAdd v-else :size="16" />
 			</template>
 			{{ t('mail', 'Import into {calendar}', {calendar: calendar.displayname}) }}
 		</ActionButton>

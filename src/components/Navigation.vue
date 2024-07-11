@@ -54,7 +54,7 @@
 					:close-after-click="true"
 					@click="showMailSettings">
 					<template #icon>
-						<IconSetting :size="20" />
+						<IconSetting :size="16" />
 					</template>
 					{{ t('mail', 'Mail settings') }}
 				</NcButton>

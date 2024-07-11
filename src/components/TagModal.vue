@@ -28,18 +28,18 @@
 					class="tagButton"
 					@click="addTagInput">
 					<template #icon>
-						<IconAdd :size="20" />
+						<IconAdd :size="16" />
 					</template>
 					{{ t('mail', 'Add tag') }}
 				</NcButton>
 				<ActionInput v-if="editing" :disabled="showSaving" @submit="createTag">
 					<template #icon>
-						<IconTag :size="20" />
+						<IconTag :size="16" />
 					</template>
 				</ActionInput>
 				<ActionText v-if="showSaving">
 					<template #icon>
-						<IconLoading :size="20" />
+						<IconLoading :size="16" />
 					</template>
 					{{ t('mail', 'Saving tag …') }}
 				</ActionText>

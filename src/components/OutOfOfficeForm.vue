@@ -41,7 +41,7 @@
 			<p>{{ t('mail', 'The autoresponder follows your personal absence period settings.') }}</p>
 			<ButtonVue :href="personalAbsenceSettingsUrl" target="_blank" rel="noopener noreferrer">
 				<template #icon>
-					<OpenInNewIcon :size="20" />
+					<OpenInNewIcon :size="16" />
 				</template>
 				{{ t('mail', 'Edit absence settings') }}
 			</ButtonVue>
@@ -102,7 +102,7 @@
 			:aria-label="t('mail', 'Save autoresponder')"
 			:disabled="loading || !valid">
 			<template #icon>
-				<CheckIcon :size="20" />
+				<CheckIcon :size="16" />
 			</template>
 			{{ t('mail', 'Save autoresponder') }}
 		</ButtonVue>

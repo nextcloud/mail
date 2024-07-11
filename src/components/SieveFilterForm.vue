@@ -18,8 +18,8 @@
 			:aria-label="t('mail', 'Save sieve script')"
 			@click="saveActiveScript">
 			<template #icon>
-				<IconLoading v-if="loading" :size="20" />
-				<IconCheck v-else :size="20" />
+				<IconLoading v-if="loading" :size="16" />
+				<IconCheck v-else :size="16" />
 			</template>
 			{{ t('mail', 'Save sieve script') }}
 		</ButtonVue>

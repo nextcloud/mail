@@ -35,7 +35,7 @@
 									@click="deleteCertificate(certificate.id)">
 									<template #icon>
 										<DeleteIcon :title="t('mail', 'Delete certificate')"
-											:size="20" />
+											:size="16" />
 									</template>
 								</NcButton>
 							</td>

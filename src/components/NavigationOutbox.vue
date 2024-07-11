@@ -10,7 +10,7 @@
 		:to="to">
 		<template #icon>
 			<IconOutbox class="outbox-opacity-icon"
-				:size="20" />
+				:size="16" />
 		</template>
 		<template #counter>
 			<CounterBubble v-if="count"

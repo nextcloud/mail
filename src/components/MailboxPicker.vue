@@ -10,12 +10,12 @@
 			</h2>
 			<span class="crumbs">
 				<div @click.prevent="onClickHome">
-					<IconInbox :size="20" />
+					<IconInbox :size="16" />
 				</div>
 				<div v-for="(box, index) in mailboxCrumbs"
 					:key="box.databaseId"
 					class="level">
-					<IconBreadcrumb :size="20" />
+					<IconBreadcrumb :size="16" />
 					<a @click.prevent="onClickCrumb(index)">
 						{{ getMailboxTitle(box) }}
 					</a>
@@ -26,17 +26,17 @@
 					<li v-for="box in filteredMailboxes "
 						:key="box.databaseId"
 						@click.prevent="onClickMailbox(box)">
-						<IconInbox v-if="box.specialRole === 'inbox'" :size="20" />
+						<IconInbox v-if="box.specialRole === 'inbox'" :size="16" />
 						<IconDraft v-else-if="box.specialRole === 'drafts'"
-							:size="20" />
+							:size="16" />
 						<IconSent v-else-if="box.specialRole === 'sent'"
-							:size="20" />
+							:size="16" />
 						<IconArchive v-else-if="box.specialRole === 'archive'"
-							:size="20" />
+							:size="16" />
 						<IconTrash v-else-if="box.specialRole === 'trash'"
-							:size="20" />
+							:size="16" />
 						<IconFolder v-else
-							:size="20" />
+							:size="16" />
 						<div class="mailbox-title">
 							{{ getMailboxTitle(box) }}
 						</div>
@@ -52,7 +52,7 @@
 					:aria-label="loading ? labelSelectLoading : labelSelect"
 					@click="onSelect">
 					<template #icon>
-						<IconLoading v-if="loading" :size="20" />
+						<IconLoading v-if="loading" :size="16" />
 					</template>
 					{{ loading ? labelSelectLoading : labelSelect }}
 				</ButtonVue>

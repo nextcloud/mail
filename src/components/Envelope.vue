@@ -132,7 +132,7 @@
 			<template v-if="!moreActionsOpen && !snoozeOptions">
 				<ActionText>
 					<template #icon>
-						<ClockOutlineIcon :size="20" />
+						<ClockOutlineIcon :size="16" />
 					</template>
 					{{
 						messageLongDate
@@ -143,7 +143,7 @@
 					:close-after-click="true"
 					@click.prevent="onToggleJunk">
 					<template #icon>
-						<AlertOctagonIcon :size="20" />
+						<AlertOctagonIcon :size="16" />
 					</template>
 					{{
 						data.flags.$junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
@@ -152,7 +152,7 @@
 				<ActionButton :close-after-click="true"
 					@click.prevent="toggleSelected">
 					<template #icon>
-						<CheckIcon :size="20" />
+						<CheckIcon :size="16" />
 					</template>
 					{{
 						selected ? t('mail', 'Unselect') : t('mail', 'Select')
@@ -162,7 +162,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenTagModal">
 					<template #icon>
-						<TagIcon :size="20" />
+						<TagIcon :size="16" />
 					</template>
 					{{ t('mail', 'Edit tags') }}
 				</ActionButton>
@@ -171,7 +171,7 @@
 					@click="showSnoozeOptions">
 					<template #icon>
 						<AlarmIcon :title="t('mail', 'Snooze')"
-							:size="20" />
+							:size="16" />
 					</template>
 					{{
 						t('mail', 'Snooze')
@@ -182,7 +182,7 @@
 					@click="onUnSnooze">
 					<template #icon>
 						<AlarmIcon :title="t('mail', 'Unsnooze')"
-							:size="20" />
+							:size="16" />
 					</template>
 					{{ t('mail', 'Unsnooze') }}
 				</ActionButton>
@@ -190,7 +190,7 @@
 					:close-after-click="true"
 					@click.prevent="onOpenMoveModal">
 					<template #icon>
-						<OpenInNewIcon :size="20" />
+						<OpenInNewIcon :size="16" />
 					</template>
 					{{ t('mail', 'Move thread') }}
 				</ActionButton>
@@ -199,7 +199,7 @@
 					:disabled="disableArchiveButton"
 					@click.prevent="onArchive">
 					<template #icon>
-						<ArchiveIcon :size="20" />
+						<ArchiveIcon :size="16" />
 					</template>
 					{{ t('mail', 'Archive thread') }}
 				</ActionButton>
@@ -207,14 +207,14 @@
 					:close-after-click="true"
 					@click.prevent="onDelete">
 					<template #icon>
-						<DeleteIcon :size="20" />
+						<DeleteIcon :size="16" />
 					</template>
 					{{ t('mail', 'Delete thread') }}
 				</ActionButton>
 				<ActionButton :close-after-click="false"
 					@click="showMoreActionOptions">
 					<template #icon>
-						<DotsHorizontalIcon :size="20" />
+						<DotsHorizontalIcon :size="16" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
@@ -223,7 +223,7 @@
 				<ActionButton :close-after-click="false"
 					@click="snoozeOptions = false">
 					<template #icon>
-						<ChevronLeft :size="20" />
+						<ChevronLeft :size="16" />
 					</template>
 					{{
 						t('mail', 'Back')
@@ -248,7 +248,7 @@
 					:min="new Date()"
 					@change="setCustomSnoozeDateTime">
 					<template #icon>
-						<CalendarClock :size="20" />
+						<CalendarClock :size="16" />
 					</template>
 				</NcActionInput>
 
@@ -256,7 +256,7 @@
 					close-after-click
 					@click.stop="setCustomSnooze(customSnoozeDateTime)">
 					<template #icon>
-						<CheckIcon :size="20" />
+						<CheckIcon :size="16" />
 					</template>
 					{{ t('spreed', 'Set custom snooze') }}
 				</ActionButton>
@@ -265,35 +265,35 @@
 				<ActionButton :close-after-click="false"
 					@click="moreActionsOpen=false">
 					<template #icon>
-						<ChevronLeft :size="20" />
+						<ChevronLeft :size="16" />
 					</template>
 					{{ t('mail', 'More actions') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="onOpenEditAsNew">
 					<template #icon>
-						<PlusIcon :size="20" />
+						<PlusIcon :size="16" />
 					</template>
 					{{ t('mail', 'Edit as new message') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showEventModal = true">
 					<template #icon>
-						<IconCreateEvent :size="20" />
+						<IconCreateEvent :size="16" />
 					</template>
 					{{ t('mail', 'Create event') }}
 				</ActionButton>
 				<ActionButton :close-after-click="true"
 					@click.prevent="showTaskModal = true">
 					<template #icon>
-						<TaskIcon :size="20" />
+						<TaskIcon :size="16" />
 					</template>
 					{{ t('mail', 'Create task') }}
 				</ActionButton>
 				<ActionLink :close-after-click="true"
 					:href="exportMessageLink">
 					<template #icon>
-						<DownloadIcon :size="20" />
+						<DownloadIcon :size="16" />
 					</template>
 					{{ t('mail', 'Download message') }}
 				</ActionLink>

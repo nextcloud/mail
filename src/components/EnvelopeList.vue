@@ -34,7 +34,7 @@
 						:close-after-click="true"
 						@click.prevent="markSelectionImportant">
 						<template #icon>
-							<ImportantIcon :size="20" />
+							<ImportantIcon :size="16" />
 						</template>
 						{{
 							n(
@@ -52,7 +52,7 @@
 						:close-after-click="true"
 						@click.prevent="markSelectionUnimportant">
 						<template #icon>
-							<ImportantIcon :size="20" />
+							<ImportantIcon :size="16" />
 						</template>
 						{{
 							n(
@@ -69,7 +69,7 @@
 					<ActionButton :close-after-click="true"
 						@click.prevent="favoriteOrUnfavoriteAll">
 						<template #icon>
-							<IconFavorite :size="20" />
+							<IconFavorite :size="16" />
 						</template>
 						{{
 							areAllSelectedFavorite
@@ -97,7 +97,7 @@
 						:close-after-click="true"
 						@click.prevent="markSelectionJunk">
 						<template #icon>
-							<AlertOctagonIcon :size="20" />
+							<AlertOctagonIcon :size="16" />
 						</template>
 						{{
 							n(
@@ -115,7 +115,7 @@
 						:close-after-click="true"
 						@click.prevent="markSelectionNotJunk">
 						<template #icon>
-							<AlertOctagonIcon :size="20" />
+							<AlertOctagonIcon :size="16" />
 						</template>
 						{{
 							n(
@@ -132,7 +132,7 @@
 					<ActionButton :close-after-click="true"
 						@click.prevent="unselectAll">
 						<template #icon>
-							<IconSelect :size="20" />
+							<IconSelect :size="16" />
 						</template>
 						{{ n(
 							'mail',
@@ -147,7 +147,7 @@
 					<ActionButton :close-after-click="true"
 						@click.prevent="onOpenTagModal">
 						<template #icon>
-							<TagIcon :size="20" />
+							<TagIcon :size="16" />
 						</template>
 						{{ n(
 							'mail',
@@ -163,7 +163,7 @@
 						:close-after-click="true"
 						@click.prevent="onOpenMoveModal">
 						<template #icon>
-							<OpenInNewIcon :size="20" />
+							<OpenInNewIcon :size="16" />
 						</template>
 						{{ n(
 							'mail',
@@ -179,7 +179,7 @@
 						@click.prevent="forwardSelectedAsAttachment">
 						<template #icon>
 							<ShareIcon :title="t('mail', 'Forward')"
-								:size="20" />
+								:size="16" />
 						</template>
 						{{ n(
 							'mail',
@@ -194,7 +194,7 @@
 					<ActionButton :close-after-click="true"
 						@click.prevent="deleteAllSelected">
 						<template #icon>
-							<IconDelete :size="20" />
+							<IconDelete :size="16" />
 						</template>
 						{{
 							n(
@@ -233,7 +233,7 @@
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
 				@click="$emit('load-more')">
-				<AddIcon :size="20" />
+				<AddIcon :size="16" />
 				{{ t('mail', 'Load more') }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />

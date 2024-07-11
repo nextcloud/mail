@@ -10,7 +10,7 @@
 		<PhishingWarning v-if="message.phishingDetails.warning" :phishing-data="message.phishingDetails.checks" />
 		<div v-if="message.smime.isSigned && !message.smime.signatureIsValid"
 			class="invalid-signature-warning">
-			<LockOffIcon :size="20"
+			<LockOffIcon :size="16"
 				fill-color="red"
 				class="invalid-signature-warning__icon" />
 			<p>
@@ -113,7 +113,7 @@ export default {
 		replyButtonLabel: {
 			required: true,
 			type: String,
-		}
+		},
 	},
 	computed: {
 		from() {

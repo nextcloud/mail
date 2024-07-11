@@ -27,12 +27,12 @@
 		</div>
 		<div v-else-if="isReply"
 			class="imip__type">
-			<CalendarIcon :size="20" />
+			<CalendarIcon :size="16" />
 			<span>{{ replyStatusMessage }}</span>
 		</div>
 		<div v-else-if="isCancel"
 			class="imip__type">
-			<CloseIcon :size="20" fill-color="red" />
+			<CloseIcon :size="16" fill-color="red" />
 			<span>{{ t('mail', 'This event was cancelled') }}</span>
 		</div>
 
