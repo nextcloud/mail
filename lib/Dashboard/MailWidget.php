@@ -70,7 +70,7 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	 */
 	public function getIconUrl(): string {
 		return $this->urlGenerator->getAbsoluteURL(
-			$this->urlGenerator->imagePath(Application::APP_ID, 'mail.svg')
+			$this->urlGenerator->imagePath(Application::APP_ID, 'mail-dark.svg')
 		);
 	}
 
