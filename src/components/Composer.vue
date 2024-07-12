@@ -673,6 +673,7 @@ export default {
 			loadingIndicatorTo: false,
 			loadingIndicatorCc: false,
 			loadingIndicatorBcc: false,
+			isAddAttachmentsOpen: false,
 			isActionsOpen: false,
 			isMoreActionsOpen: false,
 			selectedDate,
