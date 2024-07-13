@@ -161,7 +161,7 @@ OC.L10N.register(
     "This message came from a noreply address so your reply will probably not be read." : "Táto správa prišla z adresy \"noreply\", vašu odpoveď si pravdepodobne nikto neprečíta.",
     "The following recipients do not have a S/MIME certificate: {recipients}." : "Nasledujúci príjemcovia nemajú S/MIME certifikát: {recipients}.",
     "The following recipients do not have a PGP key: {recipients}." : "Nasledujúci príjemcovia nemajú kľúč PGP: {recipients}.",
-    "Write message …" : "Napísať správu…",
+    "Write message …" : "Píšte správu…",
     "Saving draft …" : "Koncept sa ukladá…",
     "Error saving draft" : "Chyba pri ukladaní konceptu",
     "Draft saved" : "Koncept bol uložený",
