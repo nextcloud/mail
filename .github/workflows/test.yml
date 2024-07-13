@@ -50,7 +50,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
         flags: unittests
-        fail_ci_if_error: true
+        fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
 
   integration-tests:
       runs-on: ubuntu-latest
@@ -181,7 +181,7 @@ jobs:
               token: ${{ secrets.CODECOV_TOKEN }}
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
               flags: integrationtests
-              fail_ci_if_error: true
+              fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
   frontend-unit-test:
       runs-on: ubuntu-latest
       name: Front-end unit tests
