@@ -4,7 +4,7 @@ OC.L10N.register(
     "Embedded message %s" : "Mensaxe incrustada %s",
     "Important mail" : "Correo importante",
     "No message found yet" : "Aínda non se atopou ningunha mensaxe",
-    "Set up an account" : "Estabelecer unha conta",
+    "Set up an account" : "Definir unha conta",
     "Unread mail" : "Correo sen ler",
     "Important" : "Importante",
     "Work" : "Traballo",
