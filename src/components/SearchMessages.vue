@@ -612,7 +612,6 @@ export default {
 	}
 
 	.action-item--single {
-		border-radius: var(--border-radius-pill);
 		border: none;
 		background: none;
 		transition: 0.4s;
