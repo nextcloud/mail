@@ -1,3 +1,16 @@
+## [3.7.4](https://github.com/nextcloud/mail/compare/v3.7.3...v3.7.4) (2024-07-15)
+
+
+### Bug Fixes
+
+* add repair job to deleted duplicated cached messages ([7075e64](https://github.com/nextcloud/mail/commit/7075e640b4651a3b1a736103359ed80a4f4bfbb7))
+* **db:** Delete recipients without sub query ([50328e1](https://github.com/nextcloud/mail/commit/50328e1876ec81c69a4692e4bf7e8a1d485240b3))
+* **deps:** Apply npm audit fix ([64fba8c](https://github.com/nextcloud/mail/commit/64fba8cfb8dbe9f684f901757e0f49f8a1998f5e))
+* duplicate uid repair job failing on postgres ([48f1b33](https://github.com/nextcloud/mail/commit/48f1b33620f5d7c42d3cba8033d8947dcf4b7f9c))
+* **printing:** Fix long emails getting cut for print ([e73f285](https://github.com/nextcloud/mail/commit/e73f28595049d0eb660828579ea128ec546116ae))
+
+
+
 ## [3.7.3](https://github.com/nextcloud/mail/compare/v3.7.2...v3.7.3) (2024-07-04)
 
 
