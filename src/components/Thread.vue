@@ -459,6 +459,15 @@ export default {
 	.mail-message-body {
 		margin-bottom: 0 !important;
 	}
+	.app-content-details {
+		min-width: 100% !important;
+	}
+	.action-items, .reply-buttons, .envelope__header__left__unsubscribe {
+		display: none !important;
+	}
+	.envelope {
+		border: none !important;
+	}
 }
 
 .message-source {

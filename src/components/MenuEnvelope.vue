@@ -164,6 +164,13 @@
 				</template>
 				{{ t('mail', 'View source') }}
 			</ActionButton>
+			<ActionButton :close-after-click="true"
+				@click="onPrint">
+				<template #icon>
+					<PrinterIcon :size="20" />
+				</template>
+				{{ t('mail', 'Print message') }}
+			</ActionButton>
 			<ActionLink :close-after-click="true"
 				:href="exportMessageLink">
 				<template #icon>
@@ -239,6 +246,7 @@ import CheckIcon from 'vue-material-design-icons/Check.vue'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
+import PrinterIcon from 'vue-material-design-icons/Printer.vue'
 import { mailboxHasRights } from '../util/acl.js'
 import { generateUrl } from '@nextcloud/router'
 import InformationIcon from 'vue-material-design-icons/Information.vue'
@@ -285,6 +293,7 @@ export default {
 		ImportantIcon,
 		TaskIcon,
 		AlarmIcon,
+		PrinterIcon,
 	},
 	props: {
 		envelope: {
@@ -561,6 +570,12 @@ export default {
 		},
 		setCustomSnooze() {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
+		},
+		onPrint() {
+			// needed for the actions menu to actually close and not be shown in the print preview
+			setTimeout(() => {
+				window.print()
+			}, 10)
 		},
 	},
 }
