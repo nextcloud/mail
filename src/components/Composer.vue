@@ -994,7 +994,10 @@ export default {
 	},
 	methods: {
 		clearOnBlur(event) {
-			return this.recipientSearchTerms[event].includes('@')
+			if (this.recipientSearchTerms[event]) {
+				return this.recipientSearchTerms[event].includes('@')
+			}
+			return false
 		},
 		handleShow(event) {
 			this.$emit('show-toolbar', event)
