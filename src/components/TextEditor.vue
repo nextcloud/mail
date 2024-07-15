@@ -380,6 +380,10 @@ https://github.com/ckeditor/ckeditor5/issues/1142
  .ck .ck-reset {
 	background: var(--color-main-background) !important;
  }
+/* Default ckeditor value of padding-inline-start, to overwrite the global styling from server */
+.ck-content ul, .ck-content ol {
+	padding-inline-start: 40px;
+}
 .ck-list__item {
 	.ck-off {
 		background:var(--color-main-background) !important;
