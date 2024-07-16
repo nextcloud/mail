@@ -37,6 +37,7 @@
     "@ckeditor/ckeditor5-ui": "37.1.0",
     "@ckeditor/ckeditor5-upload": "37.1.0",
     "@ckeditor/ckeditor5-vue2": "^3.0.1",
+    "@mdi/svg": "^7.4.47",
     "@nextcloud/auth": "^2.3.0",
     "@nextcloud/axios": "^2.5.0",
     "@nextcloud/calendar-js": "^6.1.0",
