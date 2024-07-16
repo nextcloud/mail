@@ -9,21 +9,22 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
-use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\BackgroundJob\DeleteDuplicatedUidsJob;
+use OCP\BackgroundJob\IJobList;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class DeleteDuplicateUids implements IRepairStep {
 	public function __construct(
-		private MessageMapper $messageMapper,
+		private IJobList $jobList,
 	) {
 	}
 
 	public function getName(): string {
-		return 'Delete duplicated cached messages';
+		return 'Queue a job to delete duplicated cached messages';
 	}
 
 	public function run(IOutput $output): void {
-		$this->messageMapper->deleteDuplicateUids();
+		$this->jobList->add(DeleteDuplicatedUidsJob::class);
 	}
 }
