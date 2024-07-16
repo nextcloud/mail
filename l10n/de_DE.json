@@ -13,7 +13,7 @@
     "You are reaching your mailbox quota limit for {account_email}" : "Sie erreichen die Grenze Ihres Postfach-Kontingents für {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Sie nutzen derzeit {percentage} Ihres Postfachspeichers. Bitte schaffen Sie etwas Platz, indem Sie nicht benötigte E-Mails löschen.",
     "Mails" : "E-Mails",
-    "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "E-Mail-Adresse des Absenders: %1$s ist nicht im Adressbuch, aber der Name des Absenders: %2$s ist mit den folgenden E-Mail-Adressen im Adressbuch: %3$s",
+    "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "E-Mail-Adresse des Absenders %1$s ist nicht im Adressbuch, aber der Name des Absenders %2$s ist mit den folgenden E-Mail-Adressen im Adressbuch %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "Der Absender verwendet eine benutzerdefinierte E-Mail-Adresse: %1$s anstatt der E-Mail-Adresse: %2$s",
     "Sent date is in the future" : "Sendedatum ist in der Zukunft",
     "Reply-To email: %1$s  is different from the sender email: %2$s" : "Antwort-E-Mail-Adresse: %1$s unterscheidet sich von der Absender-E-Mail-Adresse: %2$s",
