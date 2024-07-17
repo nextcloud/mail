@@ -324,6 +324,7 @@ OC.L10N.register(
     "Move message" : "Bog teachtaireacht",
     "Forward message as attachment" : "Cuir teachtaireacht ar aghaidh mar cheangaltán",
     "View source" : "Féach ar an bhfoinse",
+    "Print message" : "Priontáil teachtaireacht",
     "Download thread data for debugging" : "Íosluchtaigh sonraí le haghaidh dífhabhtaithe",
     "Message was snoozed" : "Cuireadh an teachtaireacht ar suan",
     "Could not snooze message" : "Níorbh fhéidir an teachtaireacht a chur ar suan",

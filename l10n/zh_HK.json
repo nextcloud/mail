@@ -322,6 +322,7 @@
     "Move message" : "移動訊息",
     "Forward message as attachment" : "將訊息作為附件轉發",
     "View source" : "檢視原始碼",
+    "Print message" : "打印訊息",
     "Download thread data for debugging" : "下載郵件串的資料以供除錯",
     "Message was snoozed" : "訊息已延後",
     "Could not snooze message" : "無法延後訊息",

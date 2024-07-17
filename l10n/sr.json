@@ -322,6 +322,7 @@
     "Move message" : "Премести поруку",
     "Forward message as attachment" : "Проследи поруку као прилог",
     "View source" : "Погледај изворни код",
+    "Print message" : "Штампај поруку",
     "Download thread data for debugging" : "Преузми податке нити за потребе отклањања грешака",
     "Message was snoozed" : "Порука је одложена",
     "Could not snooze message" : "Порука није могла да се одложи",

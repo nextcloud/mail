@@ -324,6 +324,7 @@ OC.L10N.register(
     "Move message" : "Move message",
     "Forward message as attachment" : "Forward message as attachment",
     "View source" : "View source",
+    "Print message" : "Print message",
     "Download thread data for debugging" : "Download thread data for debugging",
     "Message was snoozed" : "Message was snoozed",
     "Could not snooze message" : "Could not snooze message",

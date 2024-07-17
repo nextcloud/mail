@@ -324,6 +324,7 @@ OC.L10N.register(
     "Move message" : "Nachricht verschieben",
     "Forward message as attachment" : "Nachricht als Anhang weiterleiten",
     "View source" : "Quelle ansehen",
+    "Print message" : "Nachricht drucken",
     "Download thread data for debugging" : "Daten der Unterhaltung zum Debuggen herunterladen",
     "Message was snoozed" : "Nachricht wurde zurückgestellt",
     "Could not snooze message" : "Nachricht konnte nicht zurückgestellt werden",
