@@ -1,0 +1,152 @@
+<!--
+  - SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<template>
+	<NcModal size="large"
+		:close-on-click-outside="false"
+		name="Name inside modal"
+		@close="closeModal">
+		<div class="modal__content">
+			<div class="filter-name">
+				<NcTextField :value.sync="localFilter.name"
+					:label="t('mail', 'Filter name')"
+					:required="true" />
+			</div>
+
+			<div class="filter-operator">
+				<MailFilterOperator :operator="localFilter.operator"
+					@change-operator="changeOperator" />
+			</div>
+
+			<div class="filter-tests">
+				<p>{{ t('mail', 'Tests') }}</p>
+				<MailFilterTest v-for="test in localFilter.tests"
+					:key="test.id"
+					:test="test"
+					@delete-test="deleteTest(test.id)" />
+				<NcButton class="app-settings-button"
+					type="secondary"
+					:aria-label="t('mail', 'New test')"
+					@click="createTest">
+					{{ t('mail', 'New test') }}
+				</NcButton>
+			</div>
+
+			<div class="filter-actions">
+				<p>{{ t('mail', 'Actions') }}</p>
+				<MailFilterAction v-for="action in localFilter.actions"
+					:key="action.id"
+					:action="action"
+					:account="account"
+					@change-action="changeAction"
+					@delete-action="deleteAction" />
+				<NcButton class="app-settings-button"
+					type="secondary"
+					:aria-label="t('mail', 'New action')"
+					@click="createAction">
+					{{ t('mail', 'New action') }}
+				</NcButton>
+			</div>
+
+			<NcButton type="primary"
+				@click="storeFilter">
+				Submit
+			</NcButton>
+		</div>
+	</NcModal>
+</template>
+<script>
+import { NcButton, NcModal, NcSelect, NcTextField } from '@nextcloud/vue'
+import MailFilterTest from './MailFilterTest.vue'
+import MailFilterOperator from './MailFilterOperator.vue'
+import IconLock from 'vue-material-design-icons/Lock.vue'
+import { Test } from '../sieve/Test'
+import { randomId } from '../util/randomId'
+import MailFilterAction from './MailFilterAction.vue'
+import logger from '../logger'
+
+export default {
+	name: 'MailFilterModal',
+	components: {
+		IconLock,
+		MailFilterAction,
+		MailFilterTest,
+		MailFilterOperator,
+		NcModal,
+		NcButton,
+		NcTextField,
+		NcSelect,
+	},
+	props: {
+		filter: {
+			type: Object,
+			required: true,
+		},
+		account: {
+			type: Object,
+			required: true,
+		},
+	},
+	data() {
+		return {
+			localFilter: this.filter.copy(),
+		}
+	},
+	methods: {
+		createTest() {
+			this.localFilter.createTest(randomId())
+		},
+		deleteTest(testId) {
+			this.localFilter.deleteTest(testId)
+		},
+		storeFilter() {
+			this.$emit('store-filter')
+		},
+		changeOperator(operator) {
+			this.localFilter.operator = operator
+		},
+		closeModal() {
+			this.$emit('close')
+		},
+		createAction() {
+			this.localFilter.createAction(randomId())
+		},
+		deleteAction(actionId) {
+			this.localFilter.deleteAction(actionId)
+		},
+	},
+}
+</script>
+<style lang="scss" scoped>
+.modal__content {
+	margin: 50px;
+}
+
+.modal__content h2 {
+	text-align: center;
+}
+
+.filter-name, .filter-operator, .filter-tests, .filter-actions {
+	margin-bottom: 8px;
+}
+
+.form-group {
+	margin: calc(var(--default-grid-baseline) * 4) 0;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.external-label {
+	display: flex;
+	width: 100%;
+	margin-top: 1rem;
+}
+
+.external-label label {
+	padding-top: 7px;
+	padding-right: 14px;
+	white-space: nowrap;
+}
+</style>
