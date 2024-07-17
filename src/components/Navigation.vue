@@ -41,7 +41,6 @@
 					<NavigationAccountExpandCollapse v-if="!group.account.isUnified && group.isCollapsible"
 						:key="'collapse-' + group.account.id"
 						:account="group.account" />
-					<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 				</template>
 			</template>
 		</template>
@@ -65,7 +64,7 @@
 </template>
 
 <script>
-import { NcButton, NcAppNavigation as AppNavigation, NcAppNavigationSpacer as AppNavigationSpacer } from '@nextcloud/vue'
+import { NcButton, NcAppNavigation as AppNavigation } from '@nextcloud/vue'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 import NavigationAccount from './NavigationAccount.vue'
@@ -83,7 +82,6 @@ export default {
 	components: {
 		NcButton,
 		AppNavigation,
-		AppNavigationSpacer,
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,

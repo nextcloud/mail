@@ -91,7 +91,6 @@ export default {
 	justify-content: space-between;
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
 	gap: 4px;
-	height: 61px;
 }
 .refresh__button {
 	background-color: transparent;
