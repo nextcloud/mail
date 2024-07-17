@@ -1,3 +1,14 @@
+## [3.7.5](https://github.com/nextcloud/mail/compare/v3.7.4...v3.7.5) (2024-07-17)
+
+
+### Bug Fixes
+
+* **deps:** Apply npm audit fix ([3ffe2d3](https://github.com/nextcloud/mail/commit/3ffe2d3f94d820b65b0919f35198d3c2a8784712))
+* move delete duplicate uids repair step to a job ([04d131a](https://github.com/nextcloud/mail/commit/04d131a77b9c4422f312f17d7fb21a8c36dff779))
+* remove the global styling from the composer list ([b0d9a55](https://github.com/nextcloud/mail/commit/b0d9a5589f2c7db3f11c93986c8abb726e2b81fb))
+
+
+
 ## [3.7.4](https://github.com/nextcloud/mail/compare/v3.7.3...v3.7.4) (2024-07-15)
 
 
