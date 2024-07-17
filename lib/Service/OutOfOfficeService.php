@@ -13,7 +13,6 @@ use DateTimeImmutable;
 use Horde\ManageSieve\Exception as ManageSieveException;
 use InvalidArgumentException;
 use JsonException;
-use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\CouldNotConnectException;
@@ -36,8 +35,8 @@ class OutOfOfficeService {
 		private OutOfOfficeParser $outOfOfficeParser,
 		private SieveService $sieveService,
 		private LoggerInterface $logger,
-		private AliasesService $aliasesService,
 		private ITimeFactory $timeFactory,
+		private AllowedRecipientsService $allowedRecipientsService,
 		ContainerInterface $container,
 	) {
 		// TODO: inject directly if we only support Nextcloud >= 28
@@ -72,7 +71,7 @@ class OutOfOfficeService {
 		$newScript = $this->outOfOfficeParser->buildSieveScript(
 			$state,
 			$oldState->getUntouchedSieveScript(),
-			$this->buildAllowedRecipients($account),
+			$this->allowedRecipientsService->get($account),
 		);
 		try {
 			$this->sieveService->updateActiveScript($account->getUserId(), $account->getId(), $newScript);
@@ -154,16 +153,5 @@ class OutOfOfficeService {
 
 		$state->setEnabled(false);
 		$this->update($account, $state);
-	}
-
-	/**
-	 * @return string[]
-	 */
-	private function buildAllowedRecipients(MailAccount $mailAccount): array {
-		$aliases = $this->aliasesService->findAll($mailAccount->getId(), $mailAccount->getUserId());
-		$formattedAliases = array_map(static function (Alias $alias) {
-			return $alias->getAlias();
-		}, $aliases);
-		return array_merge([$mailAccount->getEmail()], $formattedAliases);
 	}
 }
