@@ -86,8 +86,8 @@
 				<button :title="t('mail','Toggle recipients list mode')"
 					:class="{'active':!autoLimit}"
 					@click.prevent="toggleViewMode">
-					<UnfoldMoreHorizontal v-if="autoLimit" :size="24" />
-					<UnfoldLessHorizontal v-else :size="24" />
+					<UnfoldMoreHorizontal v-if="autoLimit" :size="16" />
+					<UnfoldLessHorizontal v-else :size="16" />
 				</button>
 			</div>
 		</div>
