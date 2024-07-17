@@ -1440,7 +1440,6 @@ export default {
 .composer-fields {
 	flex-wrap: nowrap;
 	display: flex;
-	border-top: 1px solid var(--color-border);
 	align-items: flex-start;
 
 	label {
@@ -1558,6 +1557,7 @@ export default {
 .message-editor {
 	flex: 1 1 100%;
 	min-height: 0;
+	border-top: 1px solid var(--color-border);
 }
 
 .draft-status {
