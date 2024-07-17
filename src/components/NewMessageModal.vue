@@ -4,7 +4,7 @@
 -->
 <template>
 	<Modal v-if="showMessageComposer"
-		:size="largerModal ? 'large' : 'normal'"
+		:size="modalSize"
 		:name="modalTitle"
 		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
@@ -51,7 +51,7 @@
 			</template>
 		</EmptyContent>
 		<template v-else>
-			<div class="modal-content">
+			<div :class="['modal-content', { 'with-recipient': composerData.to && composerData.to.length > 0 }]">
 				<div class="left-pane">
 					<NcButton class="maximize-button"
 						type="tertiary-no-background"
@@ -113,8 +113,9 @@
 						@send="onSend"
 						@show-toolbar="handleShow" />
 				</div>
-				<div class="right-pane">
-					<RecipientInfo :recipient="recipient" />
+
+				<div v-if="composerData.to && composerData.to.length > 0" class="right-pane">
+					<RecipientInfo :recipient-info="composerData.to" />
 				</div>
 			</div>
 		</template>
@@ -218,6 +219,9 @@ export default {
 		},
 		smartReply() {
 			return this.composerData?.smartReply ?? null
+		},
+		modalSize() {
+			return this.composerData.to && this.composerData.to.length > 0 ? 'full' : (this.largerModal ? 'large' : 'normal')
 		},
 	},
 	created() {
@@ -606,17 +610,28 @@ export default {
 }
 .modal-content {
 	display: flex;
-	height: 100%
+	height: 100%;
+	flex-direction: row;
+	width: 100%;
 }
 
 .left-pane {
-	flex: 2;
-	padding: 10px;
+	flex: 1;
+	overflow-y: auto;
 }
 
 .right-pane {
+	flex: 0 0 400px;
+	overflow-y: auto;
+	padding-left: 5px;
+	border-left: 1px solid #ccc;
+}
+
+.modal-content.with-recipient .left-pane {
 	flex: 1;
-	padding: 10px;
-	border-left: 1px solid #ddd;
+	width: calc(100% - 400px);
+}
+.modal-content .left-pane {
+	width: 100%;
 }
 </style>
