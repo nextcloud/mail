@@ -103,6 +103,9 @@ class MailTransmission implements IMailTransmission {
 			'Subject' => $localMessage->getSubject(),
 		];
 
+		// The table (oc_local_messages) currently only allows for a single reply to message id
+		// but we already set the 'references' header for an email so we could support multiple references
+		// Get the previous message and then concatenate all its "References" message ids with this one
 		if (($inReplyTo = $localMessage->getInReplyToMessageId()) !== null) {
 			$headers['References'] = $inReplyTo;
 			$headers['In-Reply-To'] = $inReplyTo;

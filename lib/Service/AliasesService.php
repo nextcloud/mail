@@ -48,6 +48,16 @@ class AliasesService {
 	}
 
 	/**
+	 * @param string $aliasEmail
+	 * @param string $userId
+	 * @return Alias
+	 * @throws DoesNotExistException
+	 */
+	public function findByAliasAndUserId(string $aliasEmail, string $userId): Alias {
+		return $this->aliasMapper->findByAlias($aliasEmail, $userId);
+	}
+
+	/**
 	 * @param string $userId
 	 * @param int $accountId
 	 * @param string $alias
