@@ -358,10 +358,10 @@ export default {
 			autocompleteRecipients: [],
 			selectedTags: [],
 			moreSearchActions: false,
-			searchInFrom: null,
-			searchInTo: null,
-			searchInCc: null,
-			searchInBcc: null,
+			searchInFrom: [],
+			searchInTo: [],
+			searchInCc: [],
+			searchInBcc: [],
 			searchInSubject: null,
 			searchInMessageBody: null,
 			searchFlags: [],
@@ -392,8 +392,7 @@ export default {
 		},
 		filterChanged() {
 			return Object.entries(this.filterData).filter(([key, val]) => {
-				return val !== ''
-			}).length > 0
+				return val !== '' && val !== null && val.length > 0			}).length > 0
 		},
 		searchBody() {
 			return this.$store.getters.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.$store.getters.getPreference('search-priority-body', 'false') === 'true')
@@ -403,10 +402,10 @@ export default {
 		},
 		filterData() {
 			return {
-				to: this.searchInTo !== null && this.searchInTo.length > 0 ? this.searchInTo[0].email : '',
-				from: this.searchInFrom !== null && this.searchInFrom.length > 0 ? this.searchInFrom[0].email : '',
-				cc: this.searchInCc !== null && this.searchInCc.length > 0 ? this.searchInCc[0].email : '',
-				bcc: this.searchInBcc !== null && this.searchInBcc.length > 0 ? this.searchInBcc[0].email : '',
+				to: this.searchInTo.length > 0 ? this.searchInTo.map(address => address.email) : null,
+				from: this.searchInFrom.length > 0 ? this.searchInFrom.map(address => address.email) : null,
+				cc: this.searchInCc.length > 0 ? this.searchInCc.map(address => address.email) : null,
+				bcc: this.searchInBcc.length > 0 ? this.searchInBcc.map(address => address.email) : null,
 				subject: this.searchInSubject !== null && this.searchInSubject.length > 1 ? this.searchInSubject : '',
 				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
 				tags: this.selectedTags.length > 0 ? this.selectedTags.map(item => item.id) : '',
@@ -520,10 +519,10 @@ export default {
 			this.query = ''
 			this.selectedTags = []
 			this.moreSearchActions = false
-			this.searchInFrom = null
-			this.searchInTo = null
-			this.searchInCc = null
-			this.searchInBcc = null
+			this.searchInFrom = []
+			this.searchInTo = []
+			this.searchInCc = []
+			this.searchInBcc = []
 			this.searchInSubject = null
 			this.searchInMessageBody = null
 			this.searchFlags = []
@@ -535,18 +534,21 @@ export default {
 			}
 		},
 		addTag(tag, type) {
+			if (typeof tag === 'string') {
+				tag = { email: tag, label: tag }
+			}
 			switch (type) {
 			case 'to':
-				this.searchInTo = tag
+				this.searchInTo.push(tag)
 				break
 			case 'from':
-				this.searchInFrom = tag
+				this.searchInFrom.push(tag)
 				break
 			case 'cc':
-				this.searchInCc = tag
+				this.searchInCc.push(tag)
 				break
 			case 'bcc':
-				this.searchInBcc = tag
+				this.searchInBcc.push(tag)
 				break
 			}
 		},
