@@ -598,7 +598,7 @@ export default {
 <style lang="scss">
 .search-messages {
 	min-height: 52px;
-	margin: 3px 0 0 52px;
+	margin: -1px 0 0 52px;
 	padding-right: 4px; /* matches .app-content-list */
 	border-right: 1px solid var(--color-border);
 	position: relative;
