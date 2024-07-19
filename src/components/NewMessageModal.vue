@@ -6,7 +6,7 @@
 	<Modal v-if="showMessageComposer"
 		:size="largerModal ? 'large' : 'normal'"
 		:name="modalTitle"
-		:additional-trap-elements="toolbarElements"
+		:additional-trap-elements="additionalTrapElements"
 		@close="$event.type === 'click' ? onClose() : onMinimize()">
 		<EmptyContent v-if="error"
 			:name="t('mail', 'Error sending your message')"
@@ -159,7 +159,7 @@ export default {
 	},
 	data() {
 		return {
-			toolbarElements: undefined,
+			additionalTrapElements: ['#reference-picker'],
 			original: undefined,
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
@@ -243,7 +243,7 @@ export default {
 			}
 		},
 		handleShow(element) {
-			this.toolbarElements = [element]
+			this.additionalTrapElements.push(element)
 		},
 		toHtml,
 		plain,
