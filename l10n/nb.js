@@ -324,6 +324,7 @@ OC.L10N.register(
     "Move message" : "Flytt melding",
     "Forward message as attachment" : "Videresend melding som et vedlegg",
     "View source" : "Vis kilde",
+    "Print message" : "Skriv ut melding",
     "Download thread data for debugging" : "Last ned tråddata for feilsøking",
     "Message was snoozed" : "Meldingen ble slumret",
     "Could not snooze message" : "Kunne ikke slumre melding",
