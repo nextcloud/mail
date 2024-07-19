@@ -323,6 +323,12 @@ export default {
 		Vue.set(state.tags, tag.id, tag)
 		state.tagList.push(tag.id)
 	},
+	addInternalAddress(state, address) {
+		Vue.set(state.internalAddress, address.id, address)
+	},
+	removeInternalAddress(state, { addressId }) {
+		state.internalAddress = state.internalAddress.filter((address) => address.id !== addressId)
+	},
 	deleteTag(state, { tagId }) {
 		state.tagList = state.tagList.filter((id) => id !== tagId)
 		Vue.delete(state.tags, tagId)

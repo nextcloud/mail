@@ -103,6 +103,7 @@ import {
 import * as SmimeCertificateService from '../service/SmimeCertificateService.js'
 import useOutboxStore from './outboxStore.js'
 import * as FollowUpService from '../service/FollowUpService.js'
+import { addInternalAddress, removeInternalAddress } from '../service/InternalAddressService.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -1110,6 +1111,25 @@ export default {
 				result,
 			})
 			return result
+		})
+	},
+	async addInternalAddress({ commit }, { address, type }) {
+		return handleHttpAuthErrors(commit, async () => {
+			const internalAddress = await addInternalAddress(address, type)
+			commit('addInternalAddress', internalAddress)
+			console.debug('internal address added')
+		})
+	},
+	async removeInternalAddress({ commit }, { id, address, type }) {
+		return handleHttpAuthErrors(commit, async () => {
+			try {
+				await removeInternalAddress(address, type)
+				commit('removeInternalAddress', { addressId: id })
+				console.debug('internal address removed')
+			} catch (error) {
+				console.error('could not delete internal address', error)
+				throw error
+			}
 		})
 	},
 	async deleteMessage({ getters, commit }, { id }) {

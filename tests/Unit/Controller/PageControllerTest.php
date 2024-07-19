@@ -20,6 +20,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
@@ -106,6 +107,9 @@ class PageControllerTest extends TestCase {
 	/** @var ClassificationSettingsService|MockObject */
 	private $classificationSettingsService;
 
+	/** @var InternalAddressService|MockObject */
+	private $internalAddressService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -130,6 +134,7 @@ class PageControllerTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->container = $this->createMock(ContainerInterface::class);
 		$this->classificationSettingsService = $this->createMock(ClassificationSettingsService::class);
+		$this->internalAddressService = $this->createMock(InternalAddressService::class);
 
 		$this->controller = new PageController(
 			$this->appName,
@@ -153,6 +158,8 @@ class PageControllerTest extends TestCase {
 			$this->userManager,
 			$this->container,
 			$this->classificationSettingsService,
+			$this->internalAddressService,
+
 		);
 	}
 
@@ -160,7 +167,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(9))
+		$this->preferences->expects($this->exactly(10))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -172,6 +179,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'layout-mode', 'vertical-split', 'vertical-split'],
 				[$this->userId, 'follow-up-reminders', 'true', 'true'],
+				[$this->userId, 'internal-addresses', 'false', 'false'],
 			]);
 		$this->classificationSettingsService->expects(self::once())
 			->method('isClassificationEnabled')
@@ -290,7 +298,7 @@ class PageControllerTest extends TestCase {
 			->method('getLoginCredentials')
 			->willReturn($loginCredentials);
 
-		$this->initialState->expects($this->exactly(17))
+		$this->initialState->expects($this->exactly(19))
 			->method('provideInitialState')
 			->withConsecutive(
 				['debug', true],
@@ -298,6 +306,8 @@ class PageControllerTest extends TestCase {
 				['accounts', $accountsJson],
 				['account-settings', []],
 				['tags', []],
+				['internal-addresses-list', []],
+				['internal-addresses', false],
 				['sort-order', 'newest'],
 				['password-is-unavailable', true],
 				['prefill_displayName', 'Jane Doe'],
