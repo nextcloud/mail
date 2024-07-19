@@ -476,11 +476,12 @@ import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal
 import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
 import Paperclip from 'vue-material-design-icons/Paperclip.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
+import {namespaces as NS} from '@nextcloud/cdav-library'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import { getCanonicalLocale, getFirstDay, getLocale, translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
-import mitt from 'mitt'
 
+import mitt from 'mitt'
 import { findRecipient } from '../service/AutocompleteService.js'
 import { detect, html, plain, toHtml, toPlain } from '../util/text.js'
 import logger from '../logger.js'
@@ -1244,6 +1245,21 @@ export default {
 		},
 		onNewToAddr(option) {
 			this.onNewAddr(option, this.selectTo, 'to')
+			this.$store.getters.getAddressBooks.forEach(addressBook => {
+				console.info(addressBook)
+				addressBook.addressbookQuery([{
+					name: [NS.IETF_CARDDAV, 'comp-filter'],
+					attributes: [['name', 'VCARD']],
+					children: [{
+						name: [NS.IETF_CARDDAV, 'prop-filter'],
+						attributes: [['name', 'EMAIL']],
+						children: [{
+							name: [NS.IETF_CALDAV, 'text-match'],
+							value: option.email,
+						}],
+					}],
+				}])
+			})
 		},
 		onNewCcAddr(option) {
 			this.onNewAddr(option, this.selectCc, 'cc')
