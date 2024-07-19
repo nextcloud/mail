@@ -4,7 +4,10 @@
 -->
 <template>
 	<div class="message-composer">
-		<NcReferencePickerModal v-if="isPickerAvailable && isPickerOpen" @submit="onPicked" @cancel="closePicker" />
+		<NcReferencePickerModal v-if="isPickerAvailable && isPickerOpen"
+			id="reference-picker"
+			@submit="onPicked"
+			@cancel="closePicker" />
 		<div class="composer-fields composer-fields__from mail-account">
 			<label class="from-label" for="from">
 				{{ t('mail', 'From') }}
