@@ -439,7 +439,7 @@
     "Go to latest message" : "Перейти к последнему сообщению",
     "Go to newest message" : "Перейти к последнему сообщению",
     "Thread Summary" : "Краткое описание темы",
-    "{name} Assistant" : "{name} Ассистент",
+    "{name} Assistant" : "{name} Помощник",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Отключите сохранение корзины, оставив поле пустым или установив для него значение 0. Будут обрабатываться только письма, удаленные после включения сохранения корзины.",
     "Remove" : "Удалить",
     "No senders are trusted at the moment." : "Отсутствуют доверенные отправители.",

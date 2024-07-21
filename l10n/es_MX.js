@@ -60,6 +60,7 @@ OC.L10N.register(
     "Edit tags" : "Editar etiquetas",
     "More actions" : "Más acciones",
     "Back" : "Atrás",
+    "Create event" : "Crear evento",
     "Forward" : "Adelante",
     "All day" : "Todo el día",
     "Description" : "Descripción",
