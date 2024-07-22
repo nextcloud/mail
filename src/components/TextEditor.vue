@@ -414,6 +414,10 @@ https://github.com/ckeditor/ckeditor5/issues/1142
  }
  .link-title{
 	color: var(--color-main-text) !important;
+	margin-left: var(--default-grid-baseline) !important;
+ }
+ .link-icon {
+	width: 16px !important;
  }
  .link-icon{
 	filter : var(--background-invert-if-dark);
