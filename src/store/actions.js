@@ -1378,9 +1378,12 @@ export default {
 	 */
 	async loadCollections({ commit }) {
 		await handleHttpAuthErrors(commit, async () => {
-			const { calendars } = await findAll()
+			const { calendarGroups: { calendars }, addressBooks } = await findAll()
 			for (const calendar of calendars) {
 				commit('addCalendar', { calendar })
+			}
+			for (const addressBook of addressBooks) {
+				commit('addAddressBook', { addressBook })
 			}
 		})
 	},
