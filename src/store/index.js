@@ -103,6 +103,7 @@ export default new Store({
 				masterPasswordEnabled: false,
 				sieveScript: {},
 				calendars: [],
+				addressBooks: [],
 				smimeCertificates: [],
 				hasFetchedInitialEnvelopes: false,
 				followUpFeatureAvailable: false,
