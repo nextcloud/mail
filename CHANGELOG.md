@@ -6,6 +6,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 4.0.0 - unreleased
+
 ## 3.6.0 – unreleased
 ### Added
 * Selection of untrusted S/MIME certificates
