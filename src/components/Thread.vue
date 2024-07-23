@@ -339,7 +339,7 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding: 30px 0;
+	padding: 0 0 10px 0;
 	// somehow ios doesn't care about this !important rule
 	// so we have to manually set left/right padding to chidren
 	// for 100% to be used
@@ -360,13 +360,16 @@ export default {
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 70px;
+	// while scrolling, the back button overlaps with subject on small screen
+	padding-left: 86px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
 	p {
 		padding-bottom: 7px;
 		margin-bottom: 0;
+		// some h2 styling coming from server add some space on top
+		margin-top: 5px;
 	}
 
 	p {
