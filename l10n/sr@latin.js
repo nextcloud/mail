@@ -38,6 +38,7 @@ OC.L10N.register(
     "Body" : "Telo",
     "Date" : "Date",
     "Tags" : "Oznake",
+    "Not found" : "Nije nađeno",
     "Remove" : "Ukloni",
     "General" : "Opšte",
     "User" : "User",
