@@ -8,8 +8,13 @@
 			<input v-model="query"
 				type="text"
 				class="search-messages--input"
-				:placeholder="t('mail', 'Search in mailbox')"
+				:aria-label="t('mail', 'Search in mailbox')"
 				@click="toggleButtons">
+			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
+				<template #icon>
+					<Tune :size="20" />
+				</template>
+			</NcButton>
 			<NcButton v-if="filterChanged"
 				:aria-label="t('mail', 'Close')"
 				class="search-messages--close"
@@ -22,14 +27,6 @@
 			<span v-if="filterChanged"
 				class="filter-changed" />
 
-			<NcActions>
-				<NcActionButton @click="moreSearchActions = true">
-					<template #icon>
-						<Tune :size="16" />
-					</template>
-					{{ t("mail", "Search parameters") }}
-				</NcActionButton>
-			</NcActions>
 			<NcDialog v-if="moreSearchActions"
 				:name="t('mail', 'Search parameters')"
 				size="normal"
@@ -295,12 +292,11 @@ import moment from '@nextcloud/moment'
 import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import Tune from 'vue-material-design-icons/Tune.vue'
+import Close from 'vue-material-design-icons/Close.vue'
 import IconClose from '@mdi/svg/svg/close.svg'
 import IconMagnify from '@mdi/svg/svg/magnify.svg'
 import { translate as t } from '@nextcloud/l10n'
@@ -318,11 +314,10 @@ export default {
 		NcDialog,
 		NcSelect,
 		NcDateTimePicker,
-		NcActions,
-		NcActionButton,
 		NcButton,
 		NcCheckboxRadioSwitch,
 		Tune,
+		Close,
 	},
 	props: {
 		mailbox: {
@@ -723,19 +718,32 @@ export default {
 		}
 	}
 }
-
-.button-vue.search-messages--close.button-vue--icon-only {
+.modal-wrapper--normal .modal-container {
+	position: relative
+}
+.button-vue.search-messages--filter.button-vue--icon-only {
 	position: absolute;
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 45px;
+	right: 5px;
 	left: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
 	padding: 0 !important;
-	top: 6px;
+}
+.button-vue.search-messages--close.button-vue--icon-only {
+	position: absolute;
+	width: auto;
+	height: auto;
+	z-index: 5;
+	right: 35px;
+	left: auto;
+	box-shadow: none !important;
+	background: transparent !important;
+	border: none !important;
+	padding: 0 !important;
 }
 
 .button-reset-filter {
