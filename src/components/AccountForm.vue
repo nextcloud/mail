@@ -9,21 +9,22 @@
 			@changed="onModeChanged">
 			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
 				<label for="auto-name">{{ t('mail', 'Name') }}</label>
-				<input id="auto-name"
-					v-model="accountName"
+				<NcInputField id="auto-name"
+					:value.sync="accountName"
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading"
-					autofocus>
+					:label-outside="true"
+					autofocus />
 				<label for="auto-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
-				<input id="auto-address"
-					v-model.lazy="emailAddress"
+				<NcInputField id="auto-address"
+					:value.sync="emailAddress"
 					:disabled="loading"
 					:placeholder="t('mail', 'name@example.org')"
 					required
 					type="email"
-					@blur="isValidEmail(emailAddress)"
-					@change="clearFeedback">
+					:label-outside="true"
+					@change="clearFeedback" />
 				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
@@ -40,63 +41,91 @@
 			</Tab>
 			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
 				<label for="man-name">{{ t('mail', 'Name') }}</label>
-				<input id="man-name"
-					v-model="accountName"
+				<NcInputField id="man-name"
+					:value.sync="accountName"
 					type="text"
+					:label-outside="true"
 					:placeholder="t('mail', 'Name')"
-					:disabled="loading">
+					:disabled="loading" />
 				<label for="man-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
-				<input id="man-address"
-					v-model.lazy="emailAddress"
+				<NcInputField id="man-address"
+					:value.sync="emailAddress"
 					type="email"
 					:placeholder="t('mail', 'name@example.org')"
 					:disabled="loading"
+					:label-outside="true"
 					required
-					@blur="isValidEmail(emailAddress)"
-					@change="clearFeedback">
+					@change="clearFeedback" />
 				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
 
 				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
 				<label for="man-imap-host" class="account-form__label--required">{{ t('mail', 'IMAP Host') }}</label>
-				<input id="man-imap-host"
-					v-model="manualConfig.imapHost"
+				<NcInputField id="man-imap-host"
+					:value.sync="manualConfig.imapHost"
 					type="text"
 					:placeholder="t('mail', 'IMAP Host')"
 					:disabled="loading"
+					:label-outside="true"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'IMAP Security') }}
 				</h4>
 				<div class="flex-row">
-					<ButtonVue :pressed="manualConfig.imapSslMode === 'none'" :disabled="loading" @click="updateImapSslMode('none')">
+					<NcCheckboxRadioSwitch id="man-imap-sec-none"
+						:button-variant="true"
+						:checked="manualConfig.imapSslMode"
+						type="radio"
+						name="man-imap-sec"
+						:disabled="loading"
+						value="none"
+						button-variant-grouped="horizontal"
+						@update:checked="onImapSslModeChange">
 						{{ t('mail', 'None') }}
-					</ButtonVue>
-					<ButtonVue :pressed="manualConfig.imapSslMode === 'ssl'" :disabled="loading" @click="updateImapSslMode('ssl')">
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch id="man-imap-sec-ssl"
+						:button-variant="true"
+						:checked="manualConfig.imapSslMode"
+						type="radio"
+						name="man-imap-sec"
+						:disabled="loading"
+						value="ssl"
+						button-variant-grouped="horizontal"
+						@update:checked="onImapSslModeChange">
 						{{ t('mail', 'SSL/TLS') }}
-					</ButtonVue>
-					<ButtonVue :pressed="manualConfig.imapSslMode === 'tls'" :disabled="loading" @click="updateImapSslMode('tls')">
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch id="man-imap-sec-tls"
+						:button-variant="true"
+						:checked="manualConfig.imapSslMode"
+						type="radio"
+						name="man-imap-sec"
+						:disabled="loading"
+						value="tls"
+						button-variant-grouped="horizontal"
+						@update:checked="onImapSslModeChange">
 						{{ t('mail', 'STARTTLS') }}
-					</ButtonVue>
+					</NcCheckboxRadioSwitch>
 				</div>
 				<label for="man-imap-port" class="account-form__label--required">{{ t('mail', 'IMAP Port') }}</label>
-				<input id="man-imap-port"
-					v-model="manualConfig.imapPort"
+				<NcInputField id="man-imap-port"
+					:value.sync="manualConfig.imapPort"
+					:label-outside="true"
 					type="number"
 					:placeholder="t('mail', 'IMAP Port')"
 					:disabled="loading"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 				<label for="man-imap-user" class="account-form__label--required">{{ t('mail', 'IMAP User') }}</label>
-				<input id="man-imap-user"
-					v-model="manualConfig.imapUser"
+				<NcInputField id="man-imap-user"
+					:value.sync="manualConfig.imapUser"
+					:label-outside="true"
 					type="text"
 					:placeholder="t('mail', 'IMAP User')"
 					:disabled="loading"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 				<label v-if="!useOauth" for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
 				<NcPasswordField v-if="!useOauth"
 					id="man-imap-password"
@@ -109,45 +138,72 @@
 
 				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
 				<label for="man-smtp-host" class="account-form__label--required">{{ t('mail', 'SMTP Host') }}</label>
-				<input id="man-smtp-host"
+				<NcInputField id="man-smtp-host"
 					ref="smtpHost"
-					v-model="manualConfig.smtpHost"
+					:value.sync="manualConfig.smtpHost"
+					:label-outside="true"
 					type="text"
 					name="smtp-host"
 					:placeholder="t('mail', 'SMTP Host')"
 					:disabled="loading"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 				<h4 class="account-form__heading--required">
 					{{ t('mail', 'SMTP Security') }}
 				</h4>
 				<div class="flex-row">
-					<ButtonVue :pressed="manualConfig.smtpSslMode === 'none'" :disabled="loading" @click="updateSmtpSslMode('none')">
+					<NcCheckboxRadioSwitch id="man-imap-sec-none"
+						:button-variant="true"
+						:checked="manualConfig.smtpSslMode"
+						type="radio"
+						name="man-smtp-sec"
+						:disabled="loading"
+						value="none"
+						button-variant-grouped="horizontal"
+						@update:checked="onSmtpSslModeChange">
 						{{ t('mail', 'None') }}
-					</ButtonVue>
-					<ButtonVue :pressed="manualConfig.smtpSslMode === 'ssl'" :disabled="loading" @click="updateSmtpSslMode('ssl')">
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch id="man-imap-sec-ssl"
+						:button-variant="true"
+						:checked="manualConfig.smtpSslMode"
+						type="radio"
+						name="man-smtp-sec"
+						:disabled="loading"
+						value="ssl"
+						button-variant-grouped="horizontal"
+						@update:checked="onSmtpSslModeChange">
 						{{ t('mail', 'SSL/TLS') }}
-					</ButtonVue>
-					<ButtonVue :pressed="manualConfig.smtpSslMode === 'tls'" :disabled="loading" @click="updateSmtpSslMode('tls')">
-						{{ t('mail', 'SSL/TLS') }}
-					</ButtonVue>
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch id="man-imap-sec-tls"
+						:button-variant="true"
+						:checked="manualConfig.smtpSslMode"
+						type="radio"
+						name="man-smtp-sec"
+						:disabled="loading"
+						value="tls"
+						button-variant-grouped="horizontal"
+						@update:checked="onSmtpSslModeChange">
+						{{ t('mail', 'STARTTLS') }}
+					</NcCheckboxRadioSwitch>
 				</div>
 				<label for="man-smtp-port" class="account-form__label--required">{{ t('mail', 'SMTP Port') }}</label>
-				<input id="man-smtp-port"
-					v-model="manualConfig.smtpPort"
+				<NcInputField id="man-smtp-port"
+					:value.sync="manualConfig.smtpPort"
+					:label-outside="true"
 					type="number"
 					:placeholder="t('mail', 'SMTP Port')"
 					:disabled="loading"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 				<label for="man-smtp-user" class="account-form__label--required">{{ t('mail', 'SMTP User') }}</label>
-				<input id="man-smtp-user"
-					v-model="manualConfig.smtpUser"
+				<NcInputField id="man-smtp-user"
+					:value.sync="manualConfig.smtpUser"
+					:label-outside="true"
 					type="text"
 					:placeholder="t('mail', 'SMTP User')"
 					:disabled="loading"
 					required
-					@change="clearFeedback">
+					@change="clearFeedback" />
 				<label v-if="!useOauth" for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
 				<NcPasswordField v-if="!useOauth"
 					id="man-smtp-password"
@@ -199,7 +255,7 @@
 <script>
 import { Tab, Tabs } from 'vue-tabs-component'
 import { mapGetters } from 'vuex'
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcPasswordField } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcPasswordField, NcInputField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import { translate as t } from '@nextcloud/l10n'
 
@@ -215,6 +271,8 @@ export default {
 	name: 'AccountForm',
 	components: {
 		NcPasswordField,
+		NcInputField,
+		NcCheckboxRadioSwitch,
 		Tab,
 		Tabs,
 		ButtonVue,
@@ -365,13 +423,9 @@ export default {
 				}
 			}
 		},
-		updateImapSslMode(value) {
-			this.manualConfig.imapSslMode = value
-			this.onImapSslModeChange()
-		},
-		onImapSslModeChange() {
+		onImapSslModeChange(value) {
 			this.clearFeedback()
-
+			this.manualConfig.imapSslMode = value
 			switch (this.manualConfig.imapSslMode) {
 			case 'none':
 			case 'tls':
@@ -382,13 +436,9 @@ export default {
 				break
 			}
 		},
-		updateSmtpSslMode(value) {
-			this.manualConfig.smtpSslMode = value
-			this.onSmtpSslModeChange()
-		},
-		onSmtpSslModeChange() {
+		onSmtpSslModeChange(value) {
 			this.clearFeedback()
-
+			this.manualConfig.smtpSslMode = value
 			switch (this.manualConfig.smtpSslMode) {
 			case 'none':
 			case 'tls':
