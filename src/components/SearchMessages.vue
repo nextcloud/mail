@@ -30,13 +30,12 @@
 					{{ t("mail", "Search parameters") }}
 				</NcActionButton>
 			</NcActions>
-			<NcModal v-if="moreSearchActions"
+			<NcDialog v-if="moreSearchActions"
 				:name="t('mail', 'Search parameters')"
+				size="normal"
 				class="search-modal"
-				@close="closeSearchModal">
-				<h2 class="modal-title">
-					{{ t('mail', 'Search in mailbox') }}
-				</h2>
+				:buttons="dialogButtons"
+				@closing="closeSearchModal">
 				<div class="modal-inner--content">
 					<div class="modal-inner--field">
 						<label class="modal-inner--label" for="subjectId">
@@ -257,27 +256,8 @@
 							</div>
 						</div>
 					</div>
-
-					<div class="modal-inner-field--right">
-						<NcButton class="button-reset-filter"
-							:aria-label="t('mail', 'Clear')"
-							@click="resetFilter()">
-							<template #icon>
-								<Close :size="24" />
-							</template>
-							{{ t('mail', 'Clear') }}
-						</NcButton>
-						<NcButton type="primary"
-							:aria-label="t('mail', 'Search')"
-							@click="closeSearchModal()">
-							<template #icon>
-								<Magnify :size="24" />
-							</template>
-							{{ t('mail', 'Search') }}
-						</NcButton>
-					</div>
 				</div>
-			</NcModal>
+			</NcDialog>
 		</div>
 		<!-- Filter buttons -->
 		<div v-if="showButtons" class="filter-buttons">
@@ -312,7 +292,7 @@
 <script>
 import moment from '@nextcloud/moment'
 
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
@@ -321,8 +301,9 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import Tune from 'vue-material-design-icons/Tune.vue'
-import Close from 'vue-material-design-icons/Close.vue'
-import Magnify from 'vue-material-design-icons/Magnify.vue'
+import IconClose from '@mdi/svg/svg/close.svg'
+import IconMagnify from '@mdi/svg/svg/magnify.svg'
+import { translate as t } from '@nextcloud/l10n'
 
 import debouncePromise from 'debounce-promise'
 import { findRecipient } from '../service/AutocompleteService.js'
@@ -334,7 +315,7 @@ const debouncedSearch = debouncePromise(findRecipient, 500)
 export default {
 	name: 'SearchMessages',
 	components: {
-		NcModal,
+		NcDialog,
 		NcSelect,
 		NcDateTimePicker,
 		NcActions,
@@ -342,8 +323,6 @@ export default {
 		NcButton,
 		NcCheckboxRadioSwitch,
 		Tune,
-		Close,
-		Magnify,
 	},
 	props: {
 		mailbox: {
@@ -376,6 +355,20 @@ export default {
 			hasFromMeActive: false,
 			startDate: null,
 			endDate: null,
+			dialogButtons: [
+				{
+					label: t('mail', 'Clear'),
+					callback: () => this.resetFilter(),
+					type: 'secondary',
+					icon: IconClose,
+				},
+				{
+					label: t('mail', 'Search'),
+					callback: () => this.closeSearchModal(),
+					type: 'primary',
+					icon: IconMagnify,
+				},
+			],
 		}
 	},
 	computed: {
@@ -658,20 +651,7 @@ export default {
 	z-index: 2;
 }
 
-.search-modal .modal-container {
-	min-height: auto;
-	overflow: visible !important;
-	position: relative;
-	display: flex !important;
-	flex-direction: column;
-
-	.modal-title {
-		padding: 16px 30px 0 30px;
-		position: relative;
-		/* needs while modal-container__close not set */
-		display: inline-block;
-	}
-
+.search-modal {
 	.modal-inner--content {
 		padding: 16px 0 36px 0;
 		overflow-y: scroll;
@@ -742,10 +722,6 @@ export default {
 			width: 100%;
 		}
 	}
-}
-
-.modal-wrapper--normal .modal-container {
-	position: relative
 }
 
 .button-vue.search-messages--close.button-vue--icon-only {
