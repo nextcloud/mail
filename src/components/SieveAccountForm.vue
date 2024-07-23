@@ -5,110 +5,47 @@
 <template>
 	<form id="sieve-form">
 		<p>
-			<input id="sieve-disabled"
-				v-model="sieveConfig.sieveEnabled"
-				type="radio"
-				class="radio"
-				name="sieve-active"
-				:value="false">
-			<label :class="{primary: !sieveConfig.sieveEnabled}"
-				for="sieve-disabled">
-				{{ t('mail', 'Disabled') }}
-			</label>
-			<input id="sieve-enabled"
-				v-model="sieveConfig.sieveEnabled"
-				type="radio"
-				class="radio"
-				name="sieve-active"
-				:value="true">
-			<label :class="{primary: sieveConfig.sieveEnabled}"
-				for="sieve-enabled">
-				{{ t('mail', 'Enabled') }}
-			</label>
+			<NcCheckboxRadioSwitch :checked.sync="sieveConfig.sieveEnabled">
+				{{ ('mail', 'Enable sieve security') }}
+			</NcCheckboxRadioSwitch>
 		</p>
-		<template v-if="sieveConfig.sieveEnabled">
-			<label for="sieve-host">{{ t('mail', 'Sieve Host') }}</label>
-			<input id="sieve-host"
-				v-model="sieveConfig.sieveHost"
-				type="text"
-				required>
-			<h4>{{ t('mail', 'Sieve Security') }}</h4>
+		<div v-if="sieveConfig.sieveEnabled">
+			<NcTextField :label="t('mail', 'Sieve host')" :value.sync="sieveConfig.sieveHost" />
+			<h4>{{ t('mail', 'Sieve security') }}</h4>
 			<div class="flex-row">
-				<input id="sieve-sec-none"
-					v-model="sieveConfig.sieveSslMode"
-					type="radio"
-					name="sieve-sec"
-					value="none">
-				<label class="button"
-					for="sieve-sec-none"
-					:class="{primary: sieveConfig.sieveSslMode === 'none'}">{{
-						t('mail', 'None')
-					}}</label>
-				<input id="sieve-sec-ssl"
-					v-model="sieveConfig.sieveSslMode"
-					type="radio"
-					name="sieve-sec"
-					value="ssl">
-				<label class="button"
-					for="sieve-sec-ssl"
-					:class="{primary: sieveConfig.sieveSslMode === 'ssl'}">
+				<ButtonVue :pressed="sieveConfig.sieveSslMode === 'none'"
+					@click="updateSslMode('none')">
+					{{ t('mail', 'None') }}
+				</ButtonVue>
+				<ButtonVue :pressed="sieveConfig.sieveSslMode === 'ssl'"
+					@click="updateSslMode('ssl')">
 					{{ t('mail', 'SSL/TLS') }}
-				</label>
-				<input id="sieve-sec-tls"
-					v-model="sieveConfig.sieveSslMode"
-					type="radio"
-					name="sieve-sec"
-					value="tls">
-				<label class="button"
-					for="sieve-sec-tls"
-					:class="{primary: sieveConfig.sieveSslMode === 'tls'}">
+				</ButtonVue>
+				<ButtonVue :pressed="sieveConfig.sieveSslMode === 'tls'"
+					@click="updateSslMode('tls')">
 					{{ t('mail', 'STARTTLS') }}
-				</label>
+				</ButtonVue>
 			</div>
-			<label for="sieve-port">{{ t('mail', 'Sieve Port') }}</label>
-			<input id="sieve-port"
-				v-model="sieveConfig.sievePort"
-				type="text"
-				required>
-			<h4>{{ t('mail', 'Sieve Credentials') }}</h4>
-			<p>
-				<input id="sieve-credentials-imap"
-					v-model="useImapCredentials"
-					type="radio"
-					class="radio"
-					:value="true">
-				<label :class="{primary: useImapCredentials}"
-					for="sieve-credentials-imap">
-					{{ t('mail', 'IMAP Credentials') }}
-				</label>
-				<input id="sieve-credentials-custom"
-					v-model="useImapCredentials"
-					type="radio"
-					class="radio"
-					:value="false">
-				<label :class="{primary: !useImapCredentials}"
-					for="sieve-credentials-custom">
+			<NcTextField :label="t('mail', 'Sieve Port')" :value.sync="sieveConfig.sievePort" />
+			<h4>{{ t('mail', 'Sieve credentials') }}</h4>
+			<div class="flex-row">
+				<ButtonVue :pressed="useImapCredentials"
+					@click="updateCredentials(true)">
+					{{ t('mail', 'IMAP credentials') }}
+				</ButtonVue>
+				<ButtonVue :pressed="!useImapCredentials"
+					@click="updateCredentials(false)">
 					{{ t('mail', 'Custom') }}
-				</label>
+				</ButtonVue>
+			</div>
+			<p v-if="!useImapCredentials" class="custom">
+				<NcTextField :label="t('mail', 'Sieve User')" :value.sync="sieveConfig.sieveUser" />
+				<NcPasswordField :label="t('mail', 'Sieve Password')" :value.sync="sieveConfig.sievePassword" />
 			</p>
-			<template v-if="!useImapCredentials">
-				<label for="sieve-user">{{ t('mail', 'Sieve User') }}</label>
-				<input id="sieve-user"
-					v-model="sieveConfig.sieveUser"
-					type="text"
-					required>
-				<label for="sieve-password">{{
-					t('mail', 'Sieve Password')
-				}}</label>
-				<input id="sieve-password"
-					v-model="sieveConfig.sievePassword"
-					type="password"
-					required>
-			</template>
-		</template>
+		</div>
 		<slot name="feedback" />
 		<p v-if="errorMessage">
-			{{ t('mail', 'Oh Snap!') }}
+			{{ t('mail', 'Oh snap!') }}
 			{{ errorMessage }}
 		</p>
 		<ButtonVue type="primary"
@@ -121,11 +58,14 @@
 </template>
 
 <script>
-import { NcButton as ButtonVue } from '@nextcloud/vue'
+import { NcButton as ButtonVue, NcTextField, NcPasswordField, NcCheckboxRadioSwitch } from '@nextcloud/vue'
 export default {
 	name: 'SieveAccountForm',
 	components: {
 		ButtonVue,
+		NcTextField,
+		NcPasswordField,
+		NcCheckboxRadioSwitch,
 	},
 	props: {
 		account: {
@@ -149,6 +89,12 @@ export default {
 		}
 	},
 	methods: {
+		updateSslMode(value) {
+			this.sieveConfig.sieveSslMode = value
+		},
+		updateCredentials(value) {
+			this.useImapCredentials = value
+		},
 		async onSubmit() {
 			this.loading = true
 			this.errorMessage = ''
@@ -186,7 +132,7 @@ export default {
 
 <style scoped>
 form {
-	width: 250px
+	width: 300px
 }
 
 label {
@@ -199,15 +145,12 @@ input {
 
 .flex-row {
 	display: flex;
+	gap: var(--default-grid-baseline);
+	margin-bottom: calc(var(--default-grid-baseline) * 4);
 }
 
-label.button {
-	text-align: center;
-	flex-grow: 1;
-}
-
-label.error {
-	color: red;
+.custom {
+	margin-bottom: calc(var(--default-grid-baseline) * 4);
 }
 
 input[type='radio'] {
