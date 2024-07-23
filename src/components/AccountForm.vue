@@ -71,40 +71,13 @@
 					{{ t('mail', 'IMAP Security') }}
 				</h4>
 				<div class="flex-row">
-					<input id="man-imap-sec-none"
-						v-model="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="none"
-						@change="onImapSslModeChange">
-					<ButtonVue class="button"
-						for="man-imap-sec-none"
-						:class="{primary: manualConfig.imapSslMode === 'none'}">
+					<ButtonVue :pressed="manualConfig.imapSslMode === 'none'" :disabled="loading" @click="updateImapSslMode('none')">
 						{{ t('mail', 'None') }}
 					</ButtonVue>
-					<input id="man-imap-sec-ssl"
-						v-model="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="ssl"
-						@change="onImapSslModeChange">
-					<ButtonVue class="button"
-						for="man-imap-sec-ssl"
-						:class="{primary: manualConfig.imapSslMode === 'ssl'}">
+					<ButtonVue :pressed="manualConfig.imapSslMode === 'ssl'" :disabled="loading" @click="updateImapSslMode('ssl')">
 						{{ t('mail', 'SSL/TLS') }}
 					</ButtonVue>
-					<input id="man-imap-sec-tls"
-						v-model="manualConfig.imapSslMode"
-						type="radio"
-						name="man-imap-sec"
-						:disabled="loading"
-						value="tls"
-						@change="onImapSslModeChange">
-					<ButtonVue class="button"
-						for="man-imap-sec-tls"
-						:class="{primary: manualConfig.imapSslMode === 'tls'}">
+					<ButtonVue :pressed="manualConfig.imapSslMode === 'tls'" :disabled="loading" @click="updateImapSslMode('tls')">
 						{{ t('mail', 'STARTTLS') }}
 					</ButtonVue>
 				</div>
@@ -149,41 +122,14 @@
 					{{ t('mail', 'SMTP Security') }}
 				</h4>
 				<div class="flex-row">
-					<input id="man-smtp-sec-none"
-						v-model="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="none"
-						@change="onSmtpSslModeChange">
-					<ButtonVue class="button"
-						for="man-smtp-sec-none"
-						:class="{primary: manualConfig.smtpSslMode === 'none'}">
+					<ButtonVue :pressed="manualConfig.smtpSslMode === 'none'" :disabled="loading" @click="updateSmtpSslMode('none')">
 						{{ t('mail', 'None') }}
 					</ButtonVue>
-					<input id="man-smtp-sec-ssl"
-						v-model="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="ssl"
-						@change="onSmtpSslModeChange">
-					<ButtonVue class="button"
-						for="man-smtp-sec-ssl"
-						:class="{primary: manualConfig.smtpSslMode === 'ssl'}">
+					<ButtonVue :pressed="manualConfig.smtpSslMode === 'ssl'" :disabled="loading" @click="updateSmtpSslMode('ssl')">
 						{{ t('mail', 'SSL/TLS') }}
 					</ButtonVue>
-					<input id="man-smtp-sec-tls"
-						v-model="manualConfig.smtpSslMode"
-						type="radio"
-						name="man-smtp-sec"
-						:disabled="loading"
-						value="tls"
-						@change="onSmtpSslModeChange">
-					<ButtonVue class="button"
-						for="man-smtp-sec-tls"
-						:class="{primary: manualConfig.smtpSslMode === 'tls'}">
-						{{ t('mail', 'STARTTLS') }}
+					<ButtonVue :pressed="manualConfig.smtpSslMode === 'tls'" :disabled="loading" @click="updateSmtpSslMode('tls')">
+						{{ t('mail', 'SSL/TLS') }}
 					</ButtonVue>
 				</div>
 				<label for="man-smtp-port" class="account-form__label--required">{{ t('mail', 'SMTP Port') }}</label>
@@ -419,6 +365,10 @@ export default {
 				}
 			}
 		},
+		updateImapSslMode(value) {
+			this.manualConfig.imapSslMode = value
+			this.onImapSslModeChange()
+		},
 		onImapSslModeChange() {
 			this.clearFeedback()
 
@@ -431,6 +381,10 @@ export default {
 				this.manualConfig.imapPort = 993
 				break
 			}
+		},
+		updateSmtpSslMode(value) {
+			this.manualConfig.smtpSslMode = value
+			this.onSmtpSslModeChange()
 		},
 		onSmtpSslModeChange() {
 			this.clearFeedback()
@@ -722,16 +676,9 @@ h4 {
 
 .flex-row {
 	display: flex;
+	gap: var(--default-grid-baseline);
 }
 
-label.button {
-	display: inline-block;
-	text-align: center;
-	flex-grow: 1;
-}
-label.primary {
-	color: var(--color-main-background);
-}
 input.primary {
 	color: var(--color-main-background);
 }
