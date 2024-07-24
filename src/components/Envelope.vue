@@ -903,8 +903,6 @@ export default {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			line-height: 130%;
-			display: flex;
-			align-items: center;
 		}
 	}
 	&__preview-text {
@@ -939,7 +937,7 @@ export default {
 	// In message list, but not the one in the action menu
 	&.app-content-list-item-star {
 	background-image: none;
-	left: 7px;
+	left: 15px;
 	top: 13px;
 	opacity: 1;
 
@@ -951,6 +949,7 @@ export default {
 }
 .important-one-line.app-content-list-item-star:deep() {
 	top: 6px !important;
+	left: 7px;
 }
 
 .app-content-list-item-select-checkbox {
@@ -1035,7 +1034,7 @@ export default {
 }
 .icon-important.app-content-list-item-star:deep() {
 	position: absolute;
-	top: 12px;
+	top: 14px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {
