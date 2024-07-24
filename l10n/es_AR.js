@@ -84,8 +84,6 @@ OC.L10N.register(
     "Date" : "Fecha",
     "Tags" : "Etiquetas",
     "Clear" : "Borrar",
-    "Disabled" : "Deshabilitado",
-    "Enabled" : "Habilitado",
     "Custom" : "Personalizado",
     "Add tag" : "Añadir etiqueta",
     "Tag already exists" : "La etiqueta ya existe",

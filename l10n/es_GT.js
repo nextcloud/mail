@@ -157,8 +157,6 @@ OC.L10N.register(
     "Tags" : "Etiquetas",
     "Select tags" : "Selecciona las etiquetas",
     "Clear" : "Limpiar",
-    "Disabled" : "Deshabilitado",
-    "Enabled" : "Habilitado",
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
     "Remove" : "Eliminar",

@@ -269,8 +269,6 @@ OC.L10N.register(
     "Tags" : "Žymės",
     "Select tags" : "Pasirinkti žymes",
     "Clear" : "Išvalyti",
-    "Disabled" : "Išjungta",
-    "Enabled" : "Įjungta",
     "Custom" : "Tinkinti",
     "This weekend – {timeLocale}" : "Šį savaitgalį – {timeLocale}",
     "Signature …" : "Parašas…",

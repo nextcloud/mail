@@ -38,8 +38,6 @@ OC.L10N.register(
     "Close" : "Zoumaachen",
     "Date" : "Date",
     "Tags" : "Tags",
-    "Disabled" : "Deaktivéiert",
-    "Enabled" : "Aktivéiert",
     "Custom" : "Individualiséier",
     "Remove" : "Läschen",
     "Reset" : "Zeréck setzen",

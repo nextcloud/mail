@@ -87,8 +87,6 @@ OC.L10N.register(
     "Close" : "Cau",
     "Date" : "Date",
     "Tags" : "Tagiau",
-    "Disabled" : "Analluogwyd",
-    "Enabled" : "Galluogwyd",
     "Custom" : "Cyfaddas",
     "Not found" : "Heb ei ganfod",
     "Remove" : "Gwaredu",

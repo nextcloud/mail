@@ -29,8 +29,6 @@ OC.L10N.register(
     "Close" : "បិទ",
     "Date" : "កាលបរិច្ឆេទ",
     "Tags" : "ស្លាក",
-    "Disabled" : "បាន​បិទ",
-    "Enabled" : "បាន​បើក",
     "Remove" : "ដកចេញ",
     "General" : "ទូទៅ",
     "User" : "User",

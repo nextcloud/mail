@@ -62,8 +62,6 @@ OC.L10N.register(
     "Add" : "нэмэх",
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
-    "Disabled" : "идэвхигүй",
-    "Enabled" : "Идэвхижүүлэх",
     "Custom" : "Дурын",
     "Remove" : "Устгах",
     "Reset" : "тохируулах",

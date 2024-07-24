@@ -34,7 +34,6 @@ OC.L10N.register(
     "Close" : "Lat att",
     "Date" : "Dato",
     "Tags" : "Emneord",
-    "Disabled" : "Deaktivert",
     "Remove" : "Fjern",
     "Client ID" : "Klient-ID",
     "General" : "Generelt",

@@ -51,8 +51,6 @@ OC.L10N.register(
     "Date" : "Deiz",
     "Tags" : "Klavioù",
     "Clear" : "Netaat",
-    "Disabled" : "Disaotreañ",
-    "Enabled" : "Aotreet",
     "Remove" : "Lemel",
     "Client ID" : "ID kliant",
     "General" : "Hollek",

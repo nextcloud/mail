@@ -87,8 +87,6 @@ OC.L10N.register(
     "Tags" : "Etiketat",
     "Select tags" : "Përzgjidh etiketat",
     "Clear" : "Pastro",
-    "Disabled" : "I çaktivizuar",
-    "Enabled" : "I aktivizuar",
     "Custom" : "E përshtatur",
     "Delete tag" : "Fshi etiketën",
     "Add tag" : "Shto etiketim",

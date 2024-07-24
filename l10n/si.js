@@ -37,8 +37,6 @@ OC.L10N.register(
     "Close" : "වසන්න",
     "Body" : "අන්තර්ගතය",
     "Date" : "දිනය",
-    "Disabled" : "අබල කර ඇත",
-    "Enabled" : "සබල කර ඇත",
     "Remove" : "ඉවත් කරන්න",
     "General" : "සමාන්‍යය",
     "User" : "පරිශීලක",

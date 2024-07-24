@@ -59,8 +59,6 @@ OC.L10N.register(
     "Date" : "วันที่",
     "Tags" : "แท็ก",
     "Clear" : "ล้าง",
-    "Disabled" : "ปิดใช้งาน",
-    "Enabled" : "เปิดใช้งาน",
     "Custom" : "กำหนดเอง",
     "Tag already exists" : "มีแท็กอยู่แล้ว",
     "Remove" : "ลบออก",

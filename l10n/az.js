@@ -48,8 +48,6 @@ OC.L10N.register(
     "Close" : "Bağla",
     "Date" : "Date",
     "Tags" : "Işarələr",
-    "Disabled" : "Dayandırılıb",
-    "Enabled" : "İşə salınıb",
     "Not found" : "Tapılmadı",
     "Remove" : "Sil",
     "Reset" : "Sıfırla",

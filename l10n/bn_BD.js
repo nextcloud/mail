@@ -39,8 +39,6 @@ OC.L10N.register(
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
-    "Disabled" : "অকার্যকর",
-    "Enabled" : "কার্যকর",
     "Remove" : "অপসারণ",
     "Reset" : "পূণঃনির্ধানণ",
     "Client ID" : "ক্লায়েন্ট পরিচিতি",

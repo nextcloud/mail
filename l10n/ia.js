@@ -45,7 +45,6 @@ OC.L10N.register(
     "Close" : "Clauder",
     "Date" : "Date",
     "Tags" : "Etiquettas",
-    "Enabled" : "Activate",
     "Custom" : "Personalisate",
     "Reset" : "Re-fixar",
     "General" : "General",

@@ -70,8 +70,6 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Tag",
     "Clear" : "Bersihkan",
-    "Disabled" : "Dinonaktifkan",
-    "Enabled" : "Diaktifkan",
     "Add tag" : "Tambahkan tag",
     "Tag already exists" : "Tag sudah ada",
     "Unsubscribe" : "Berhenti berlangganan",

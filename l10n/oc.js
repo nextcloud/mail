@@ -74,8 +74,6 @@ OC.L10N.register(
     "Date" : "Data",
     "Tags" : "Etiquetas",
     "Clear" : "Escafar",
-    "Disabled" : "Desactivat",
-    "Enabled" : "Activada",
     "Custom" : "Personalizats",
     "Mark as unread" : "Marcar coma pas legit",
     "Mark as read" : "Marcar coma legit",

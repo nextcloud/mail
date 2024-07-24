@@ -33,8 +33,6 @@ OC.L10N.register(
     "Add" : "Rnu",
     "Close" : "Mdel",
     "Tags" : "Tibzimin",
-    "Disabled" : "Ittwarermed",
-    "Enabled" : "Yermed",
     "Mark as unread" : "Creḍ ur yettwaɣra ara",
     "Mark as read" : "Creḍ yettwaɣra",
     "Remove" : "Kkes",
