@@ -112,6 +112,18 @@
 			<NcAppSettingsSection id="trusted-sender" :name="t('mail', 'Trusted senders')">
 				<TrustedSenders />
 			</NcAppSettingsSection>
+			<NcAppSettingsSection id="internal-address" :name="t('mail', 'Internal addresses')">
+				<p class="app-settings">
+					<input id="internal-address-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="useInternalAddresses"
+						@change="onToggleInternalAddress">
+					<label for="internal-address-toggle">{{ internalAddressText }}</label>
+				</p>
+				<InternalAddress v-if="useInternalAddresses" class="internal_address" />
+			</NcAppSettingsSection>
+
 			<NcAppSettingsSection id="gravatar-settings" :name="t('mail', 'Gravatar settings')">
 				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 					<IconLoading :size="16" />
@@ -279,6 +291,7 @@ import HorizontalSplit from 'vue-material-design-icons/ViewSplitHorizontal.vue'
 import Logger from '../logger.js'
 import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import TrustedSenders from './TrustedSenders.vue'
+import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import { mapGetters } from 'vuex'
 
@@ -286,6 +299,7 @@ export default {
 	name: 'AppSettingsMenu',
 	components: {
 		TrustedSenders,
+		InternalAddress,
 		NcButton,
 		IconEmail,
 		IconAdd,
@@ -321,6 +335,7 @@ export default {
 			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
 			// eslint-disable-next-line
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
+			internalAddressText: t('mail', 'Use internal addresses'),
 			toggleAutoTagging: false,
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
@@ -346,6 +361,9 @@ export default {
 		},
 		useAutoTagging() {
 			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
+		},
+		useInternalAddresses() {
+			return this.$store.getters.getPreference('internal-addresses', 'false') === 'true'
 		},
 		useFollowUpReminders() {
 			return this.$store.getters.getPreference('follow-up-reminders', 'true') === 'true'
@@ -491,6 +509,17 @@ export default {
 				showError(t('mail', 'Could not update preference'))
 			}
 		},
+		async onToggleInternalAddress(e) {
+			try {
+				await this.$store.dispatch('savePreference', {
+					key: 'internal-addresses',
+					value: e.target.checked ? 'true' : 'false',
+				})
+			} catch (error) {
+				Logger.error('Could not save preferences', { error })
+				showError(t('mail', 'Could not update preference'))
+			}
+		},
 		registerProtocolHandler() {
 			if (window.navigator.registerProtocolHandler) {
 				const url
@@ -587,5 +616,9 @@ p.app-settings {
 }
 .app-settings-section {
 	list-style: none;
+}
+// align it with the checkbox
+.internal_address{
+	margin-left: 3px;
 }
 </style>

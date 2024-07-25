@@ -106,6 +106,7 @@ export default new Store({
 				smimeCertificates: [],
 				hasFetchedInitialEnvelopes: false,
 				followUpFeatureAvailable: false,
+				internalAddress: [],
 			},
 			getters,
 			mutations,

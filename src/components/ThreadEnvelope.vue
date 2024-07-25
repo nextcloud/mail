@@ -52,7 +52,7 @@
 				<div class="envelope__header__left__sender-subject-tags">
 					<div class="sender">
 						{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}
-						<p class="sender__email">
+						<p :class="isInternal?'sender__email':'sender__email external'">
 							{{ envelope.from && envelope.from[0] ? envelope.from[0].email : '' }}
 						</p>
 					</div>
@@ -372,6 +372,7 @@ export default {
 			showTaskModal: false,
 			showTagModal: false,
 			rawMessage: '', // Will hold the raw source of the message when requested
+			isInternal: true,
 			enabledSmartReply: loadState('mail', 'llm_freeprompt_available', false),
 		}
 	},
@@ -569,6 +570,9 @@ export default {
 			// Only one envelope is expanded at the time of mounting so we can
 			// assume that this is the relevant envelope to be scrolled to.
 			this.$nextTick(() => this.scrollToCurrentEnvelope())
+		}
+		if (this.$store.getters.getPreference('internal-addresses', 'false') === 'true') {
+			this.isInternal = this.$store.getters.isInternalAddress(this.envelope.from[0].email)
 		}
 		this.$checkInterval = setInterval(() => {
 			const { envelope } = this.$refs
@@ -896,6 +900,10 @@ export default {
 
 			}
 		}
+	}
+
+	.external {
+		color: var(--color-error);
 	}
 
 	.envelope {

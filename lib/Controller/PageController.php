@@ -19,6 +19,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
@@ -89,7 +90,8 @@ class PageController extends Controller {
 		AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
 		ContainerInterface $container,
-		ClassificationSettingsService $classificationSettingsService) {
+		ClassificationSettingsService $classificationSettingsService,
+		InternalAddressService $internalAddressService, ) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -110,6 +112,7 @@ class PageController extends Controller {
 		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
 		$this->classificationSettingsService = $classificationSettingsService;
+		$this->internalAddressService = $internalAddressService;
 
 		// TODO: inject directly if support for nextcloud < 28 is dropped
 		try {
@@ -172,6 +175,11 @@ class PageController extends Controller {
 		);
 
 		$this->initialStateService->provideInitialState(
+			'internal-addresses-list',
+			$this->internalAddressService->getInternalAddresses($this->currentUserId)
+		);
+
+		$this->initialStateService->provideInitialState(
 			'sort-order',
 			$this->preferences->getPreference($this->currentUserId, 'sort-order', 'newest')
 		);
@@ -200,6 +208,7 @@ class PageController extends Controller {
 				'start-mailbox-id' => $this->preferences->getPreference($this->currentUserId, 'start-mailbox-id'),
 				'tag-classified-messages' => $this->classificationSettingsService->isClassificationEnabled($this->currentUserId) ? 'true' : 'false',
 				'follow-up-reminders' => $this->preferences->getPreference($this->currentUserId, 'follow-up-reminders', 'true'),
+				'internal-addresses' => $this->preferences->getPreference($this->currentUserId, 'internal-addresses', 'false'),
 			]);
 		$this->initialStateService->provideInitialState(
 			'prefill_displayName',

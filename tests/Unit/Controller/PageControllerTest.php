@@ -160,7 +160,7 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(9))
+		$this->preferences->expects($this->exactly(10))
 			->method('getPreference')
 			->willReturnMap([
 				[$this->userId, 'account-settings', '[]', json_encode([])],
@@ -172,6 +172,7 @@ class PageControllerTest extends TestCase {
 				[$this->userId, 'start-mailbox-id', null, '123'],
 				[$this->userId, 'layout-mode', 'vertical-split', 'vertical-split'],
 				[$this->userId, 'follow-up-reminders', 'true', 'true'],
+				[$this->userId, 'internal-addresses', 'false', 'false'],
 			]);
 		$this->classificationSettingsService->expects(self::once())
 			->method('isClassificationEnabled')
