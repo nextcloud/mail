@@ -32,6 +32,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
+use function array_values;
 use function count;
 use function fclose;
 use function in_array;
@@ -245,9 +246,35 @@ class MessageMapper {
 	 * @throws Horde_Mime_Exception
 	 * @throws ServiceException
 	 */
+	public function findFlagsByIds(Horde_Imap_Client_Base $client,
+		string $mailbox,
+		array|Horde_Imap_Client_Ids $ids,
+		string $userId,
+		bool $loadBody = false): array {
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
+		$query->flags();
+
+		return $this->findByQuery($ids, $query, $mailbox, $client, $loadBody, $userId);
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Base $client
+	 * @param string $mailbox
+	 * @param int[]|Horde_Imap_Client_Ids $ids
+	 * @param string $userId
+	 * @param bool $loadBody
+	 * @return IMAPMessage[]
+	 *
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
+	 */
 	public function findByIds(Horde_Imap_Client_Base $client,
 		string $mailbox,
-		$ids,
+		array|Horde_Imap_Client_Ids $ids,
 		string $userId,
 		bool $loadBody = false,
 		bool $runPhishingCheck = false): array {
@@ -263,6 +290,30 @@ class MessageMapper {
 			]
 		);
 
+		return $this->findByQuery($ids, $query, $mailbox, $client, $loadBody, $userId);
+	}
+
+	/**
+	 * @param array|Horde_Imap_Client_Ids $ids
+	 * @param Horde_Imap_Client_Fetch_Query $query
+	 * @param string $mailbox
+	 * @param Horde_Imap_Client_Base $client
+	 * @param bool $loadBody
+	 * @param string $userId
+	 *
+	 * @return array|IMAPMessage[]
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 * @throws Horde_Mime_Exception
+	 * @throws ServiceException
+	 */
+	private function findByQuery(array|Horde_Imap_Client_Ids $ids,
+		Horde_Imap_Client_Fetch_Query $query,
+		string $mailbox,
+		Horde_Imap_Client_Base $client,
+		bool $loadBody,
+		string $userId): array {
 		if (is_array($ids)) {
 			// Chunk to prevent overly long IMAP commands
 			/** @var Horde_Imap_Client_Data_Fetch[] $fetchResults */
@@ -279,11 +330,11 @@ class MessageMapper {
 		}
 
 		$fetchResults = array_values(array_filter($fetchResults, static function (Horde_Imap_Client_Data_Fetch $fetchResult) {
-			return $fetchResult->exists(Horde_Imap_Client::FETCH_ENVELOPE);
+			return $fetchResult->exists(Horde_Imap_Client::FETCH_UID);
 		}));
 
 		if ($fetchResults === []) {
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
+			$this->logger->debug("findByQuery in $mailbox got " . count($ids) . " UIDs but found none");
 		} else {
 			$minFetched = $fetchResults[0]->getUid();
 			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
@@ -292,7 +343,7 @@ class MessageMapper {
 			} else {
 				$range = 'literals';
 			}
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
+			$this->logger->debug("findByQuery in $mailbox got " . count($ids) . " UIDs ($range) and found " . count($fetchResults) . ". minFetched=$minFetched maxFetched=$maxFetched");
 		}
 
 		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody, $userId, $runPhishingCheck) {

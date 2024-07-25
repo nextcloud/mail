@@ -83,7 +83,7 @@ class Synchronizer {
 		}
 
 		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $newUids, $userId);
-		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $changedUids, $userId);
+		$changedMessages = $this->messageMapper->findFlagsByIds($imapClient, $request->getMailbox(), $changedUids, $userId);
 		$vanishedMessageUids = $vanishedUids;
 
 		return new Response($newMessages, $changedMessages, $vanishedMessageUids, null);
