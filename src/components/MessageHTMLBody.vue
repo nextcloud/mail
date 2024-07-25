@@ -192,4 +192,7 @@ export default {
 :deep(.button-vue__icon) {
 	display: none !important;
 }
+:deep(.button-vue--vue-tertiary) {
+	color: var(--color-text-maxcontrast);
+}
 </style>
