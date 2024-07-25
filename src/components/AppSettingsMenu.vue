@@ -8,7 +8,21 @@
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:open.sync="showSettings">
-			<NcAppSettingsSection v-if="!isMobile" id="mail-list-view" :name="t('mail', 'Layout')">
+			<NcAppSettingsSection id="account-settings" :name="t('mail', 'Account creation')">
+				<NcButton v-if="allowNewMailAccounts"
+					type="primary"
+					to="/setup"
+					:aria-label="t('mail', 'Add mail account')"
+					class="app-settings-button">
+					<template #icon>
+						<IconAdd :size="16" />
+					</template>
+					{{ t('mail', 'Add mail account') }}
+				</NcButton>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'General')">
+				<h6>{{ t('mail', 'Layout') }}</h6>
 				<NcCheckboxRadioSwitch value="no-split"
 					:button-variant="true"
 					name="mail-layout"
@@ -45,129 +59,8 @@
 					</template>
 					{{ t('mail', 'Horizontal split') }}
 				</NcCheckboxRadioSwitch>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="account-settings" :name="t('mail', 'Account creation')">
-				<NcButton v-if="allowNewMailAccounts"
-					type="primary"
-					to="/setup"
-					:aria-label="t('mail', 'Add mail account')"
-					class="app-settings-button">
-					<template #icon>
-						<IconAdd :size="16" />
-					</template>
-					{{ t('mail', 'Add mail account') }}
-				</NcButton>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="body-settings" :name="t('mail', 'Activate body search')">
-				<p v-if="loadingPrioritySettings" class="app-settings">
-					{{ prioritySettingsText }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="priority-inbox-toggle"
-						class="checkbox"
-						type="checkbox"
-						:checked="searchPriorityBody"
-						@change="onToggleSearchPriorityBody">
-					<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
-				</p>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="data-settings" :name="t('mail', 'Data collection consent')">
-				<p class="settings-hint">
-					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
-				</p>
-				<p v-if="loadingOptOutSettings" class="app-settings">
-					<IconLoading :size="16" />
-					{{ optOutSettingsText }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="data-collection-toggle"
-						class="checkbox"
-						type="checkbox"
-						:checked="useDataCollection"
-						@change="onToggleCollectData">
-					<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
-				</p>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
-				<p v-if="toggleAutoTagging" class="app-settings">
-					<IconLoading :size="16" />
-				</p>
-				<p v-else class="app-settings">
-					<input id="auto-tagging-toggle"
-						class="checkbox"
-						type="checkbox"
-						:checked="useAutoTagging"
-						@change="onToggleAutoTagging">
-					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
-				</p>
-				<p v-if="isFollowUpFeatureAvailable" class="app-settings">
-					<input id="follow-up-reminder-toggle"
-						class="checkbox"
-						type="checkbox"
-						:checked="useFollowUpReminders"
-						@change="onToggleFollowUpReminders">
-					<label for="follow-up-reminder-toggle">{{ followUpReminderText }}</label>
-				</p>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="trusted-sender" :name="t('mail', 'Trusted senders')">
-				<TrustedSenders />
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="gravatar-settings" :name="t('mail', 'Gravatar settings')">
-				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
-					<IconLoading :size="16" />
-					{{ t('mail', 'Use Gravatar and favicon avatars') }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="gravatar-enabled"
-						class="checkbox"
-						type="checkbox"
-						:checked="useExternalAvatars"
-						@change="onToggleExternalAvatars">
-					<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
-				</p>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="reply-settings" :name="t('mail', 'Reply text position')">
-				<p v-if="loadingReplySettings" class="app-settings reply-settings">
-					<IconLoading :size="16" />
-					{{ replySettingsText }}
-				</p>
-				<p v-else class="app-settings">
-					<input id="bottom-reply-enabled"
-						class="checkbox"
-						type="checkbox"
-						:checked="useBottomReplies"
-						@change="onToggleButtonReplies">
-					<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
-				</p>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="mailto-settings" :name="t('mail', 'Mailto')">
-				<p class="settings-hint">
-					{{ t('mail', 'Register as application for mail links') }}
-				</p>
-				<NcButton type="secondary"
-					class="app-settings-button"
-					:aria-label="t('mail', 'Register as application for mail links')"
-					@click="registerProtocolHandler">
-					<template #icon>
-						<IconEmail :size="16" />
-					</template>
-					{{ t('mail', 'Register') }}
-				</NcButton>
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="smime-settings" :name="t('mail', 'S/MIME')">
-				<NcButton class="app-settings-button"
-					type="secondary"
-					:aria-label="t('mail', 'Manage S/MIME certificates')"
-					@click.prevent.stop="displaySmimeCertificateModal = true">
-					<template #icon>
-						<IconLock :size="16" />
-					</template>
-					{{ t('mail', 'Manage S/MIME certificates') }}
-				</NcButton>
-				<SmimeCertificateModal v-if="displaySmimeCertificateModal"
-					@close="displaySmimeCertificateModal = false" />
-			</NcAppSettingsSection>
-			<NcAppSettingsSection id="sorting-settings" :name="t('mail', 'Sorting')">
+
+				<h6>{{ t('mail', 'Sorting') }}</h6>
 				<div class="sorting">
 					<NcCheckboxRadioSwitch class="sorting__switch"
 						:checked="sortOrder"
@@ -186,8 +79,98 @@
 						{{ t('mail', 'Oldest') }}
 					</NcCheckboxRadioSwitch>
 				</div>
+
+				<h6>{{ t('mail', 'Search in body') }}</h6>
+				<p v-if="loadingPrioritySettings" class="app-settings">
+					{{ prioritySettingsText }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="priority-inbox-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="searchPriorityBody"
+						@change="onToggleSearchPriorityBody">
+					<label for="priority-inbox-toggle">{{ prioritySettingsText }}</label>
+				</p>
+
+				<h6>{{ t('mail', 'Reply text position') }}</h6>
+				<p v-if="loadingReplySettings" class="app-settings reply-settings">
+					<IconLoading :size="16" />
+					{{ replySettingsText }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="bottom-reply-enabled"
+						class="checkbox"
+						type="checkbox"
+						:checked="useBottomReplies"
+						@change="onToggleButtonReplies">
+					<label for="bottom-reply-enabled">{{ replySettingsText }}</label>
+				</p>
+
+				<h6>{{ t('mail', 'Gravatar settings') }}</h6>
+				<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
+					<IconLoading :size="16" />
+					{{ t('mail', 'Use Gravatar and favicon avatars') }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="gravatar-enabled"
+						class="checkbox"
+						type="checkbox"
+						:checked="useExternalAvatars"
+						@change="onToggleExternalAvatars">
+					<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
+				</p>
+
+				<h6>{{ t('mail', 'Mailto') }}</h6>
+				<p class="settings-hint">
+					{{ t('mail', 'Register as application for mail links') }}
+				</p>
+				<NcButton type="secondary"
+					class="app-settings-button"
+					:aria-label="t('mail', 'Register as application for mail links')"
+					@click="registerProtocolHandler">
+					<template #icon>
+						<IconEmail :size="16" />
+					</template>
+					{{ t('mail', 'Register') }}
+				</NcButton>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="mailvelope-settings" :name="t('mail', 'Mailvelope')">
+
+			<NcAppSettingsSection id="privacy-and-security" :name="t('mail', 'Privacy and security')">
+				<h6>{{ t('mail', 'Data collection consent') }}</h6>
+				<p class="settings-hint">
+					{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
+				</p>
+				<p v-if="loadingOptOutSettings" class="app-settings">
+					<IconLoading :size="16" />
+					{{ optOutSettingsText }}
+				</p>
+				<p v-else class="app-settings">
+					<input id="data-collection-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="useDataCollection"
+						@change="onToggleCollectData">
+					<label for="data-collection-toggle">{{ optOutSettingsText }}</label>
+				</p>
+
+				<h6>{{ t('mail', 'Trusted senders') }}</h6>
+				<TrustedSenders />
+
+				<h6>{{ t('mail', 'S/MIME') }}</h6>
+				<NcButton class="app-settings-button"
+					type="secondary"
+					:aria-label="t('mail', 'Manage S/MIME certificates')"
+					@click.prevent.stop="displaySmimeCertificateModal = true">
+					<template #icon>
+						<IconLock :size="16" />
+					</template>
+					{{ t('mail', 'Manage S/MIME certificates') }}
+				</NcButton>
+				<SmimeCertificateModal v-if="displaySmimeCertificateModal"
+					@close="displaySmimeCertificateModal = false" />
+
+				<h6>{{ t('mail', 'Mailvelope') }}</h6>
 				<div class="mailvelope-section">
 					<div v-if="mailvelopeIsAvailable">
 						{{ t('mail', 'Mailvelope is enabled for the current domain!') }}
@@ -213,8 +196,30 @@
 					</div>
 				</div>
 			</NcAppSettingsSection>
-			<NcAppSettingsSection id="keyboard-settings"
-				:name="t('mail', 'Keyboard')">
+
+			<NcAppSettingsSection id="autotagging-settings" :name="t('mail', 'Assistance features')">
+				<p v-if="toggleAutoTagging" class="app-settings">
+					<IconLoading :size="16" />
+				</p>
+				<p v-else class="app-settings">
+					<input id="auto-tagging-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="useAutoTagging"
+						@change="onToggleAutoTagging">
+					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
+				</p>
+				<p v-if="isFollowUpFeatureAvailable" class="app-settings">
+					<input id="follow-up-reminder-toggle"
+						class="checkbox"
+						type="checkbox"
+						:checked="useFollowUpReminders"
+						@change="onToggleFollowUpReminders">
+					<label for="follow-up-reminder-toggle">{{ followUpReminderText }}</label>
+				</p>
+			</NcAppSettingsSection>
+
+			<NcAppSettingsSection id="keyboard-shortcut-settings" :name="t('mail', 'Keyboard shortcuts')">
 				<dl>
 					<div>
 						<dt><kbd>C</kbd></dt>
@@ -318,7 +323,7 @@ export default {
 			replySettingsText: t('mail', 'Put my text to the bottom of a reply instead of on top of it.'),
 			loadingReplySettings: false,
 			// eslint-disable-next-line
-			autoTaggingText: t('mail', 'Automatically classify importance of new email'),
+			autoTaggingText: t('mail', 'Mark as important'),
 			// eslint-disable-next-line
 			followUpReminderText: t('mail', 'Remind about messages that require a reply but received none'),
 			toggleAutoTagging: false,
