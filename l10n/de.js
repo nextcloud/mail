@@ -467,6 +467,7 @@ OC.L10N.register(
     "Custom" : "Benutzerdefiniert",
     "Sieve User" : "Sieve-Benutzer",
     "Sieve Password" : "Sieve-Passwort",
+    "Oh snap!" : "Hoppla!",
     "Save sieve settings" : "Sieve-Einstellungen speichern",
     "Save sieve script" : "Sieve-Skript speichern",
     "The syntax seems to be incorrect:" : "Die Syntax scheint falsch zu sein:",
