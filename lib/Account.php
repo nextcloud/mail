@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2015-2016 owncloud, Inc.
@@ -7,50 +9,13 @@
  */
 namespace OCA\Mail;
 
-use Horde_Imap_Client_Socket;
 use JsonSerializable;
-use OC;
-use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Quota;
-use OCP\ICacheFactory;
-use OCP\IConfig;
-use OCP\Security\ICrypto;
 use ReturnTypeWillChange;
 
 class Account implements JsonSerializable {
-	/** @var MailAccount */
-	private $account;
-
-	/** @var Horde_Imap_Client_Socket */
-	private $client;
-
-	/** @var ICrypto */
-	private $crypto;
-
-	/** @var IConfig */
-	private $config;
-
-	/** @var ICacheFactory */
-	private $memcacheFactory;
-
-	/** @var Alias */
-	private $alias;
-
-	/**
-	 * @param MailAccount $account
-	 */
-	public function __construct(MailAccount $account) {
-		$this->account = $account;
-		$this->crypto = OC::$server->getCrypto();
-		$this->config = OC::$server->getConfig();
-		$this->memcacheFactory = OC::$server->getMemcacheFactory();
-	}
-
-	public function __destruct() {
-		if ($this->client !== null) {
-			$this->client->logout();
-		}
+	public function __construct(private MailAccount $account) {
 	}
 
 	public function getMailAccount(): MailAccount {
@@ -65,18 +30,10 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * @param Alias|null $alias
-	 * @return void
-	 */
-	public function setAlias($alias) {
-		$this->alias = $alias;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getName() {
-		return $this->alias ? $this->alias->getName() : $this->account->getName();
+		return $this->account->getName();
 	}
 
 	/**
@@ -89,20 +46,6 @@ class Account implements JsonSerializable {
 	#[ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return $this->account->toJson();
-	}
-
-	/**
-	 * Convert special security mode values into Horde parameters
-	 *
-	 * @param string $sslMode
-	 * @return false|string
-	 */
-	protected function convertSslMode($sslMode) {
-		switch ($sslMode) {
-			case 'none':
-				return false;
-		}
-		return $sslMode;
 	}
 
 	public function getEmail(): string {
