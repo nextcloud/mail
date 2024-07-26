@@ -27,11 +27,11 @@
 						return option.selectable}"
 					@option:selected="onAliasChange">
 					<template #option="option">
-						{{ formatAliases(option) }}
+						<span :title="formatAliases(option)">{{ formatAliases(option) }}</span>
 					</template>
 
 					<template #selected-option="option">
-						{{ formatAliases(option) }}
+						<span :title="formatAliases(option)">{{ formatAliases(option) }}</span>
 					</template>
 				</NcSelect>
 			</div>
@@ -1615,9 +1615,6 @@ export default {
 :deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
-	flex-wrap: wrap;
-}
 
 #from{
 	width: 100%;
@@ -1682,13 +1679,23 @@ export default {
 .composer-actions-draft-status {
 	padding-left: 10px;
 }
+
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
-	width: 100%;
+	max-height: var(--default-clickable-area);
 }
 
-:deep(.v-select.select .vs__selected) {
-	height: unset;
-	min-height: calc(var(--default-clickable-area) - var(--default-grid-baseline));
+:deep(.v-select.select .vs__selected), :deep(.vs__dropdown-option) {
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height: calc(var(--default-clickable-area) - var(--default-grid-baseline));
+
+	span {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 }
 
 @media only screen and (max-width: 580px) {
