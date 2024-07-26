@@ -1499,10 +1499,11 @@ export default {
 
 	.composer-fields--custom {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: space-between;
 		padding-top: 2px;
 		width: calc(100% - 120px);
+		margin-bottom: var(--default-grid-baseline);
 
 		button {
 			margin-top: 0;
@@ -1526,6 +1527,7 @@ export default {
 		}
 		.v-select{
 			flex-grow: 0.95;
+			margin-bottom: 0;
 		}
 	}
 
@@ -1682,6 +1684,11 @@ export default {
 }
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
 	width: 100%;
+}
+
+:deep(.v-select.select .vs__selected) {
+	height: unset;
+	min-height: calc(var(--default-clickable-area) - var(--default-grid-baseline));
 }
 
 @media only screen and (max-width: 580px) {
