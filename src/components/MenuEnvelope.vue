@@ -17,28 +17,6 @@
 					isImportant ? t('mail', 'Unimportant') : t('mail', 'Important')
 				}}
 			</ActionButton>
-			<ActionButton v-if="withReply"
-				:close-after-click="true"
-				@click="onReply">
-				<template #icon>
-					<ReplyAllIcon v-if="hasMultipleRecipients"
-						:title="t('mail', 'Reply all')"
-						:size="16" />
-					<ReplyIcon v-else
-						:title="t('mail', 'Reply')"
-						:size="16" />
-				</template>
-				{{ t('mail', 'Reply') }}
-			</ActionButton>
-			<ActionButton v-if="hasMultipleRecipients"
-				:close-after-click="true"
-				@click="onReply(true)">
-				<template #icon>
-					<ReplyIcon :title="t('mail', 'Reply to sender only')"
-						:size="16" />
-				</template>
-				{{ t('mail', 'Reply to sender only') }}
-			</ActionButton>
 			<ActionButton :close-after-click="true"
 				@click="onForward">
 				<template #icon>
@@ -253,8 +231,6 @@ import InformationIcon from 'vue-material-design-icons/Information.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
-import ReplyIcon from 'vue-material-design-icons/Reply.vue'
-import ReplyAllIcon from 'vue-material-design-icons/ReplyAll.vue'
 import TaskIcon from 'vue-material-design-icons/CheckboxMarkedCirclePlusOutline.vue'
 import ShareIcon from 'vue-material-design-icons/Share.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -286,8 +262,6 @@ export default {
 		InformationIcon,
 		OpenInNewIcon,
 		PlusIcon,
-		ReplyIcon,
-		ReplyAllIcon,
 		ShareIcon,
 		TagIcon,
 		ImportantIcon,
@@ -314,12 +288,6 @@ export default {
 			// Indicates if the envelope is currently selected
 			type: Boolean,
 			default: false,
-		},
-		withReply: {
-			// "Reply" action should only appear in envelopes from the envelope list
-			// (Because in thread envelopes, this action is already set as primary button of this menu)
-			type: Boolean,
-			default: true,
 		},
 		withSelect: {
 			// "Select" action should only appear in envelopes from the envelope list
