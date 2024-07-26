@@ -8,29 +8,24 @@
 			cache-lifetime="0"
 			@changed="onModeChanged">
 			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
-				<label for="auto-name">{{ t('mail', 'Name') }}</label>
 				<NcInputField id="auto-name"
 					:value.sync="accountName"
+					:label="t('mail', 'Name')"
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading"
-					:label-outside="true"
 					autofocus />
-				<label for="auto-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
 				<NcInputField id="auto-address"
 					:value.sync="emailAddress"
+					:label="t('mail', 'Mail address')"
 					:disabled="loading"
 					:placeholder="t('mail', 'name@example.org')"
 					required
 					type="email"
-					:label-outside="true"
 					@change="clearFeedback" />
 				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
 					{{ t('mail', 'Please enter an email of the format name@example.com') }}
 				</p>
-				<label for="auto-password"
-					:class="{ 'account-form__label': hasPasswordAlternatives, 'account-form__label--required': !hasPasswordAlternatives }">{{ t('mail', 'Password') }}</label>
-
 				<NcPasswordField id="auto-password"
 					:value.sync="autoConfig.password"
 					:disabled="loading"
@@ -40,20 +35,18 @@
 					@change="clearFeedback" />
 			</Tab>
 			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
-				<label for="man-name">{{ t('mail', 'Name') }}</label>
 				<NcInputField id="man-name"
 					:value.sync="accountName"
+					:label="t('mail', 'Name')"
 					type="text"
-					:label-outside="true"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading" />
-				<label for="man-address" class="account-form__label--required">{{ t('mail', 'Mail address') }}</label>
 				<NcInputField id="man-address"
 					:value.sync="emailAddress"
+					:label="t('mail', 'Mail address')"
 					type="email"
 					:placeholder="t('mail', 'name@example.org')"
 					:disabled="loading"
-					:label-outside="true"
 					required
 					@change="clearFeedback" />
 				<p v-if="!isValidEmail(emailAddress)" class="account-form--error">
@@ -61,13 +54,12 @@
 				</p>
 
 				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
-				<label for="man-imap-host" class="account-form__label--required">{{ t('mail', 'IMAP Host') }}</label>
 				<NcInputField id="man-imap-host"
 					:value.sync="manualConfig.imapHost"
+					:label="t('mail', 'IMAP Host')"
 					type="text"
 					:placeholder="t('mail', 'IMAP Host')"
 					:disabled="loading"
-					:label-outside="true"
 					required
 					@change="clearFeedback" />
 				<h4 class="account-form__heading--required">
@@ -108,25 +100,22 @@
 						{{ t('mail', 'STARTTLS') }}
 					</NcCheckboxRadioSwitch>
 				</div>
-				<label for="man-imap-port" class="account-form__label--required">{{ t('mail', 'IMAP Port') }}</label>
 				<NcInputField id="man-imap-port"
 					:value.sync="manualConfig.imapPort"
-					:label-outside="true"
+					:label="t('mail', 'IMAP Port')"
 					type="number"
 					:placeholder="t('mail', 'IMAP Port')"
 					:disabled="loading"
 					required
 					@change="clearFeedback" />
-				<label for="man-imap-user" class="account-form__label--required">{{ t('mail', 'IMAP User') }}</label>
 				<NcInputField id="man-imap-user"
 					:value.sync="manualConfig.imapUser"
-					:label-outside="true"
+					:label="t('mail', 'IMAP User')"
 					type="text"
 					:placeholder="t('mail', 'IMAP User')"
 					:disabled="loading"
 					required
 					@change="clearFeedback" />
-				<label v-if="!useOauth" for="man-imap-password" class="account-form__label--required">{{ t('mail', 'IMAP Password') }}</label>
 				<NcPasswordField v-if="!useOauth"
 					id="man-imap-password"
 					type="password"
@@ -137,11 +126,10 @@
 					@change="clearFeedback" />
 
 				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
-				<label for="man-smtp-host" class="account-form__label--required">{{ t('mail', 'SMTP Host') }}</label>
 				<NcInputField id="man-smtp-host"
 					ref="smtpHost"
 					:value.sync="manualConfig.smtpHost"
-					:label-outside="true"
+					:label="t('mail', 'SMTP Host')"
 					type="text"
 					name="smtp-host"
 					:placeholder="t('mail', 'SMTP Host')"
@@ -186,30 +174,27 @@
 						{{ t('mail', 'STARTTLS') }}
 					</NcCheckboxRadioSwitch>
 				</div>
-				<label for="man-smtp-port" class="account-form__label--required">{{ t('mail', 'SMTP Port') }}</label>
 				<NcInputField id="man-smtp-port"
+					:label="t('mail', 'SMTP Port')"
 					:value.sync="manualConfig.smtpPort"
-					:label-outside="true"
 					type="number"
 					:placeholder="t('mail', 'SMTP Port')"
 					:disabled="loading"
 					required
 					@change="clearFeedback" />
-				<label for="man-smtp-user" class="account-form__label--required">{{ t('mail', 'SMTP User') }}</label>
 				<NcInputField id="man-smtp-user"
 					:value.sync="manualConfig.smtpUser"
-					:label-outside="true"
+					:label="t('mail', 'SMTP User')"
 					type="text"
 					:placeholder="t('mail', 'SMTP User')"
 					:disabled="loading"
 					required
 					@change="clearFeedback" />
-				<label v-if="!useOauth" for="man-smtp-password" class="account-form__label--required">{{ t('mail', 'SMTP Password') }}</label>
 				<NcPasswordField v-if="!useOauth"
 					id="man-smtp-password"
+					:label="t('mail', 'SMTP Password')"
 					type="password"
 					:value.sync="manualConfig.smtpPassword"
-					:lable="t('mail', 'SMTP Password')"
 					:disabled="loading"
 					required
 					@change="clearFeedback" />
@@ -703,6 +688,10 @@ export default {
 	font-weight: bold;
 }
 
+:deep(.input-field) {
+	margin: calc(var(--default-grid-baseline) * 3) 0;
+}
+
 .tabs-component-panels {
 	padding-top: 20px;
 }
@@ -726,7 +715,6 @@ h4 {
 
 .flex-row {
 	display: flex;
-	gap: var(--default-grid-baseline);
 }
 
 input.primary {
