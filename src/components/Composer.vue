@@ -1684,8 +1684,12 @@ export default {
 	max-height: var(--default-clickable-area);
 }
 
+:deep(.vs__selected-options) {
+	overflow-y: hidden;
+}
+
 :deep(.v-select.select .vs__selected), :deep(.vs__dropdown-option) {
-	max-width: 100%;
+	max-width: calc(100% - 14px); //-14px because the input to the left has horizontal paddings of 7px
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -1696,6 +1700,10 @@ export default {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
+}
+
+:deep(.vs--open .vs__selected) {
+	max-width: calc(100% - 24px) !important;
 }
 
 @media only screen and (max-width: 580px) {
