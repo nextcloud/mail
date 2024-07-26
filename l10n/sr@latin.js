@@ -11,6 +11,7 @@ OC.L10N.register(
     "Password required" : "Potrebna je lozinka",
     "Signature" : "Potpis",
     "Cancel" : "Otkaži",
+    "General" : "Opšte",
     "Delete" : "Delete",
     "Search" : "Search",
     "Send" : "Pošalji",
@@ -40,7 +41,6 @@ OC.L10N.register(
     "Tags" : "Oznake",
     "Not found" : "Nije nađeno",
     "Remove" : "Ukloni",
-    "General" : "Opšte",
     "User" : "User",
     "Favorites" : "Omiljene"
 },
