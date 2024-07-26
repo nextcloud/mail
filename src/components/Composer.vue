@@ -1689,7 +1689,7 @@ export default {
 }
 
 :deep(.v-select.select .vs__selected), :deep(.vs__dropdown-option) {
-	max-width: calc(100% - 14px); //-14px because the input to the left has horizontal paddings of 7px
+	max-width: 100%;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -1702,7 +1702,7 @@ export default {
 	}
 }
 
-:deep(.vs--open .vs__selected) {
+.mail-account :deep(.vs--open .vs__selected) {
 	max-width: calc(100% - 24px) !important;
 }
 
