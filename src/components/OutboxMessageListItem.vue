@@ -12,7 +12,7 @@
 		<template #icon>
 			<Avatar :display-name="avatarDisplayName" :email="avatarEmail" />
 		</template>
-		<template #subtitle>
+		<template #subname>
 			{{ subjectForSubtitle }}
 		</template>
 		<template #actions>
