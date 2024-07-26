@@ -5,7 +5,9 @@
 
 <template>
 	<AppNavigation>
-		<NewMessageButtonHeader />
+		<template #search>
+			<NewMessageButtonHeader />
+		</template>
 		<template #list>
 			<!-- Special mailboxes first -->
 			<NavigationMailbox v-for="mailbox in unifiedMailboxes"
