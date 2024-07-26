@@ -590,7 +590,7 @@ export default {
 
 	&__input {
 		min-height: 52px;
-		margin: -1px 0 0 52px;
+		margin: -1px 0 0 calc(var(--app-navigation-padding)*2 + var(--default-clickable-area));
 		padding-right: 3px; /* matches .app-content-list */
 		border-right: 1px solid var(--color-border);
 		position: relative;
@@ -731,7 +731,7 @@ export default {
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 4px;
+	right: 7px; /* same spacing to the input border as top/bottom */
 	left: auto;
 	box-shadow: none !important;
 	background: transparent !important;
