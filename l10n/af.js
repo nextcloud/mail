@@ -44,6 +44,7 @@ OC.L10N.register(
     "Add mail account" : "Voeg posrekening toe",
     "General" : "Algemeen",
     "Register" : "Registreer",
+    "Keyboard shortcuts" : "Sneltoetse",
     "Archive" : "Argief",
     "Delete" : "Skrap",
     "Search" : "Soek",

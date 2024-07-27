@@ -46,6 +46,7 @@ OC.L10N.register(
     "Gravatar settings" : "Configuración de Gravatar",
     "Register" : "Rexistrase",
     "S/MIME" : "S/MIME",
+    "Keyboard shortcuts" : "Atayos del tecláu",
     "Archive" : "Archivar",
     "Delete" : "Desaniciar",
     "Search" : "Buscar",

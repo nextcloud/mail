@@ -100,6 +100,7 @@ OC.L10N.register(
     "Trusted senders" : "Доверени податели",
     "Manage S/MIME certificates" : "Управление на S/MIME сертификати",
     "Looking for a way to encrypt your emails?" : "Търсите ли начин да шифровате имейлите си?",
+    "Keyboard shortcuts" : "Бързи клавиши",
     "Compose new message" : "Създай ново съобщение",
     "Newer message" : "Следващо съобщение",
     "Older message" : "Предишно съобщение",
