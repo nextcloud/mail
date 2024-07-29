@@ -3,8 +3,8 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div>
-		<div class="search-messages">
+	<div class="search-messages">
+		<div class="search-messages__input">
 			<input v-model="query"
 				type="text"
 				class="search-messages--input"
@@ -585,29 +585,33 @@ export default {
 
 <style lang="scss">
 .search-messages {
-	min-height: 52px;
-	margin: -1px 0 0 52px;
-	padding-right: 4px; /* matches .app-content-list */
-	border-right: 1px solid var(--color-border);
-	position: relative;
-	display: flex;
-	align-items: center;
-	//important info icon overlaps it while scrolling
-	z-index: 1;
+	border-bottom: 1px solid var(--color-border);
 
-	input {
-		flex-grow: 1;
-	}
+	&__input {
+		min-height: 52px;
+		margin: -1px 0 0 52px;
+		padding-right: 3px; /* matches .app-content-list */
+		border-right: 1px solid var(--color-border);
+		position: relative;
+		display: flex;
+		align-items: center;
+		//important info icon overlaps it while scrolling
+		z-index: 1;
 
-	.action-item--single {
-		border: none;
-		background: none;
-		transition: 0.4s;
-	}
+		input {
+			flex-grow: 1;
+		}
 
-	.action-item--single:hover {
-		transition: 0.4s;
-		background: var(--color-primary-element);
+		.action-item--single {
+			border: none;
+			background: none;
+			transition: 0.4s;
+		}
+
+		.action-item--single:hover {
+			transition: 0.4s;
+			background: var(--color-primary-element);
+		}
 	}
 }
 
@@ -726,7 +730,7 @@ export default {
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 5px;
+	right: 4px;
 	left: auto;
 	box-shadow: none !important;
 	background: transparent !important;
