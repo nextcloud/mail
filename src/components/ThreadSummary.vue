@@ -6,11 +6,9 @@
 	<div class="summary">
 		<div class="summary__header">
 			<div class="summary__header__actions">
-				<span class="summary__header__actions__brand">
-					<CreationIcon class="summary__header__actions__brand__icon" />
-					<p>{{ brand }}</p>
-				</span>
-				<NcActions />
+				<NcChip :icon-svg="creation" no-close>
+					{{ brand }}
+				</NcChip>
 				<NcButton :aria-label=" t('mail', 'Go to latest message')"
 					type="secondary"
 					@click="onScroll">
@@ -21,7 +19,7 @@
 				</NcButton>
 			</div>
 			<div class="summary__header__title">
-				<h2>{{ t('mail', 'Thread Summary') }}</h2>
+				<h2>{{ t('mail', 'Thread summary') }}</h2>
 			</div>
 		</div>
 		<div class="summary__body">
@@ -33,10 +31,10 @@
 	</div>
 </template>
 <script>
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import CreationIcon from 'vue-material-design-icons/Creation.vue'
 import ArrowDownIcon from 'vue-material-design-icons/ArrowDown.vue'
+import creation from '@mdi/svg/svg/creation.svg'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcChip from '@nextcloud/vue/dist/Components/NcChip.js'
 import LoadingSkeleton from './LoadingSkeleton.vue'
 
 export default {
@@ -44,8 +42,7 @@ export default {
 	components: {
 		LoadingSkeleton,
 		NcButton,
-		NcActions,
-		CreationIcon,
+		NcChip,
 		ArrowDownIcon,
 	},
 	props: {
@@ -57,6 +54,11 @@ export default {
 			type: Boolean,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			creation,
+		}
 	},
 	computed: {
 		brand() {
@@ -83,7 +85,7 @@ export default {
     border: 2px solid var(--color-primary-element);
     border-radius:var( --border-radius-large) ;
     margin: 0 10px 20px 10px;
-    padding: 24px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
 
@@ -93,7 +95,6 @@ export default {
         &__actions{
 			display: flex;
 			justify-content: space-between;
-			margin-bottom: 10px;
             &__brand{
                 display: flex;
                 align-items: center;
@@ -119,10 +120,6 @@ export default {
 				flex-direction: column;
 				&__actions{
 					flex-direction: column;
-					&__brand{
-						flex-wrap: nowrap;
-						margin-bottom: 10px;
-					}
 				}
 			}
 		}
