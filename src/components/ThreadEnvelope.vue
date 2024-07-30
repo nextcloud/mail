@@ -105,6 +105,27 @@
 						<!-- TODO: display information about signer and/or CA certificate -->
 					</NcActions>
 					<NcActions :inline="inlineMenuSize">
+						<NcActionButton :close-after-click="true"
+							@click="onReply('', false)">
+							<template #icon>
+								<ReplyAllIcon v-if="hasMultipleRecipients"
+									:title="t('mail', 'Reply all')"
+									:size="16" />
+								<ReplyIcon v-else
+									:title="t('mail', 'Reply')"
+									:size="16" />
+							</template>
+							{{ t('mail', 'Reply') }}
+						</NcActionButton>
+						<NcActionButton v-if="hasMultipleRecipients"
+							:close-after-click="true"
+							@click="onReply('', true)">
+							<template #icon>
+								<ReplyIcon :title="t('mail', 'Reply to sender only')"
+									:size="16" />
+							</template>
+							{{ t('mail', 'Reply to sender only') }}
+						</NcActionButton>
 						<NcActionButton v-if="hasWriteAcl && (inlineMenuSize >= 2 || !moreActionsOpen)"
 							type="tertiary-no-background"
 							class="action--primary"
@@ -159,7 +180,6 @@
 						<MenuEnvelope class="app-content-list-item-menu"
 							:envelope="envelope"
 							:mailbox="mailbox"
-							:with-reply="true"
 							:with-select="false"
 							:with-show-source="true"
 							:more-actions-open.sync="moreActionsOpen"
@@ -269,6 +289,8 @@ import NoTrashMailboxConfiguredError from '../errors/NoTrashMailboxConfiguredErr
 import { isPgpText } from '../crypto/pgp.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionText from '@nextcloud/vue/dist/Components/NcActionText.js'
+import ReplyIcon from 'vue-material-design-icons/Reply.vue'
+import ReplyAllIcon from 'vue-material-design-icons/ReplyAll.vue'
 import { unsubscribe } from '../service/ListService.js'
 import TagModal from './TagModal.vue'
 import MoveModal from './MoveModal.vue'
@@ -317,6 +339,8 @@ export default {
 		LockPlusIcon,
 		NcActions,
 		NcActionText,
+		ReplyIcon,
+		ReplyAllIcon,
 	},
 	props: {
 		envelope: {
