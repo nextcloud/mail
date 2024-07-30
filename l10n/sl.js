@@ -145,6 +145,7 @@ OC.L10N.register(
     "Disable formatting" : "Onemogoči oblikovanje",
     "Upload attachment" : "Pošlji prilogo",
     "Add attachment from Files" : "Dodaj prilogo iz Datotek",
+    "Smart picker" : "Pametni izbirnik",
     "Send later" : "Pošlji kasneje",
     "Request a read receipt" : "Zahtevaj povratnico",
     "Sign message with S/MIME" : "Podpiši sporočila z S/MIME",
