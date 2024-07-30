@@ -902,7 +902,7 @@ export default {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
-			line-height: 130%;
+			height: var(--default-line-height);
 		}
 	}
 	&__preview-text {
