@@ -8,6 +8,7 @@
 			<input v-model="query"
 				type="text"
 				class="search-messages--input"
+				:placeholder="t('mail', 'Search in mailbox')"
 				:aria-label="t('mail', 'Search in mailbox')"
 				@click="toggleButtons">
 			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
