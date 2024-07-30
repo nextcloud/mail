@@ -18,11 +18,13 @@ use OCA\Mail\Service\AutoConfig\IspDb;
 use OCA\Mail\Service\AutoConfig\MxRecord;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\IRequest;
 use OCP\Security\IRemoteHostValidator;
 use function in_array;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AutoConfigController extends Controller {
 	private IspDb $ispDb;
 	private MxRecord $mxRecord;

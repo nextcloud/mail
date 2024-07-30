@@ -16,6 +16,7 @@ use OCA\Mail\Exception\UploadException;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Model\SmimeData;
+use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -41,6 +42,10 @@ use Throwable;
 use function array_map;
 use function array_merge;
 
+/**
+ * @psalm-import-type MessageApiResponse from ResponseDefinitions
+ * @psalm-import-type MessageApiAttachment from ResponseDefinitions
+ */
 class MessageApiController extends OCSController {
 
 	private ?string $userId;
@@ -203,7 +208,13 @@ class MessageApiController extends OCSController {
 
 	/**
 	 * @param int $id
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_PARTIAL_CONTENT, MessageApiResponse, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
+	 *
+	 * 200: Message found
+	 * 206: Message could not be decrypted, no "body" data returned
+	 * 404: User was not logged in
+	 * 404: Message, Account or Mailbox not found
+	 * 500: Could not connect to IMAP server
 	 */
 	#[BruteForceProtection('mailGetMessage')]
 	#[NoAdminRequired]
@@ -251,7 +262,7 @@ class MessageApiController extends OCSController {
 		$json = $imapMessage->getFullMessage($id, $loadBody);
 		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getUid());
 		if ($itineraries) {
-			$json['itineraries'] = $itineraries;
+			$json['itineraries'] = $itineraries->jsonSerialize();
 		}
 		$json['attachments'] = array_map(function ($a) use ($id) {
 			return $this->enrichDownloadUrl(
@@ -268,7 +279,7 @@ class MessageApiController extends OCSController {
 			$smimeData->setIsSigned(true);
 			$smimeData->setSignatureIsValid($imapMessage->isSignatureValid());
 		}
-		$json['smime'] = $smimeData;
+		$json['smime'] = $smimeData->jsonSerialize();
 
 		$dkimResult = $this->dkimService->getCached($account, $mailbox, $message->getUid());
 		if (is_bool($dkimResult)) {
@@ -284,17 +295,30 @@ class MessageApiController extends OCSController {
 		return new DataResponse($json, Http::STATUS_OK);
 	}
 
+	/**
+	 * @param int $id the id of the message
+	 * @return DataResponse<Http::STATUS_OK|?string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, string, array{}>
+	 *
+	 * 200: Message found
+	 * 404: User was not logged in
+	 * 404: Message, Account or Mailbox not found
+	 * 404: Could not find message on IMAP
+	 */
 	#[BruteForceProtection('mailGetRawMessage')]
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getRaw(int $id): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
+		}
+
 		try {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
 		} catch (ClientException | DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
-			return new DataResponse($e, Http::STATUS_FORBIDDEN);
+			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
 
 		$client = $this->clientFactory->getClient($account);
@@ -306,8 +330,8 @@ class MessageApiController extends OCSController {
 				$message->getUid()
 			);
 		} catch (ServiceException $e) {
-			$this->logger->error('Message not found on IMAP or mail server went away', ['exception' => $e->getMessage()]);
-			return new DataResponse($e, Http::STATUS_NOT_FOUND);
+			$this->logger->error('Message not found on IMAP, or mail server went away', ['exception' => $e->getMessage()]);
+			return new DataResponse('Message not found', Http::STATUS_NOT_FOUND);
 		} finally {
 			$client->logout();
 		}
@@ -316,12 +340,12 @@ class MessageApiController extends OCSController {
 	}
 
 	/**
-	 * @param int $id
+	 * @param int $id the id of the message
 	 * @param array $attachment
 	 *
 	 * @return array
 	 */
-	private function enrichDownloadUrl(int $id, array $attachment) {
+	private function enrichDownloadUrl(int $id, array $attachment): array {
 		$downloadUrl = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.getAttachment',
 			[
 				'id' => $id,
@@ -331,17 +355,28 @@ class MessageApiController extends OCSController {
 		return $attachment;
 	}
 
+	/**
+	 * @param int $id
+	 * @param string $attachmentId
+	 * @return DataResponse<Http::STATUS_OK, MessageApiAttachment, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
+	 *
+	 * 200: Message found
+	 * 404: User was not logged in
+	 * 404: Message, Account or Mailbox not found
+	 * 404: Could not find attachment
+	 * 500: Could not process attachment
+	 *
+	 */
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[TrapError]
-	public function getAttachment(int $id,
-		string $attachmentId): DataResponse {
+	public function getAttachment(int $id, string $attachmentId): DataResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
 		} catch (DoesNotExistException | ClientException $e) {
-			return new DataResponse($e, Http::STATUS_FORBIDDEN);
+			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
 
 		try {
@@ -353,10 +388,10 @@ class MessageApiController extends OCSController {
 			);
 		} catch (\Horde_Imap_Client_Exception_NoSupportExtension | \Horde_Imap_Client_Exception | \Horde_Mime_Exception $e) {
 			$this->logger->error('Error when trying to process the attachment', ['exception' => $e]);
-			return new DataResponse($e, Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new DataResponse('Error when trying to process the attachment', Http::STATUS_INTERNAL_SERVER_ERROR);
 		} catch (ServiceException | DoesNotExistException $e) {
 			$this->logger->error('Could not find attachment', ['exception' => $e]);
-			return new DataResponse($e, Http::STATUS_NOT_FOUND);
+			return new DataResponse('Could not find attachment', Http::STATUS_NOT_FOUND);
 		}
 
 		// Body party and embedded messages do not have a name

@@ -201,7 +201,7 @@ class MessageApiControllerTest extends TestCase {
 					'attachments' => [],
 					'id' => $this->messageId,
 					'isSenderTrusted' => false,
-					'smime' => new SmimeData(),
+					'smime' => (new SmimeData())->jsonSerialize(),
 					'rawUrl' => 'http://rawUrl',
 				]
 			],
@@ -212,7 +212,7 @@ class MessageApiControllerTest extends TestCase {
 					'attachments' => [],
 					'id' => $this->messageId,
 					'isSenderTrusted' => false,
-					'smime' => $smime1,
+					'smime' => $smime1->jsonSerialize(),
 					'rawUrl' => 'http://rawUrl',
 				]
 			],
@@ -223,7 +223,7 @@ class MessageApiControllerTest extends TestCase {
 					'attachments' => [],
 					'id' => $this->messageId,
 					'isSenderTrusted' => false,
-					'smime' => $smime2,
+					'smime' => $smime2->jsonSerialize(),
 					'rawUrl' => 'http://rawUrl',
 				]
 			]
@@ -246,7 +246,7 @@ class MessageApiControllerTest extends TestCase {
 			'attachments' => [],
 			'id' => $this->messageId,
 			'isSenderTrusted' => false,
-			'smime' => $smime,
+			'smime' => $smime->jsonSerialize(),
 			'rawUrl' => 'http://rawUrl',
 		];
 

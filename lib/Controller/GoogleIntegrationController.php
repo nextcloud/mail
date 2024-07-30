@@ -18,6 +18,7 @@ use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\IRequest;
@@ -27,6 +28,7 @@ use Psr\Log\LoggerInterface;
 
 use function filter_var;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class GoogleIntegrationController extends Controller {
 	private ?string $userId;
 	private GoogleIntegration $googleIntegration;

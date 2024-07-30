@@ -21,6 +21,7 @@ use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\Tag;
+use OCA\Mail\ResponseDefinitions;
 use OCA\Mail\Service\Html;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
@@ -30,6 +31,9 @@ use function mb_convert_encoding;
 use function mb_strcut;
 use function trim;
 
+/**
+ * @psalm-import-type MailIMAPFullMessage from ResponseDefinitions
+ */
 class IMAPMessage implements IMessage, JsonSerializable {
 	use ConvertAddresses;
 
@@ -266,7 +270,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @param int $id
 	 *
-	 * @return array
+	 * @return MailIMAPFullMessage
 	 */
 	public function getFullMessage(int $id, bool $loadBody = true): array {
 		$mailBody = $this->plainMessage;

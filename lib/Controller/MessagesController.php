@@ -35,6 +35,7 @@ use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
@@ -51,6 +52,7 @@ use OCP\Lock\LockedException;
 use Psr\Log\LoggerInterface;
 use function array_map;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MessagesController extends Controller {
 	private AccountService $accountService;
 	private IMailManager $mailManager;

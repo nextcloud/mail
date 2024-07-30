@@ -13,9 +13,11 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class PreferencesController extends Controller {
 	private IUserPreferences $userPreference;
 	private string $userId;

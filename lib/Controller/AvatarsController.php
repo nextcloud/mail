@@ -14,10 +14,12 @@ use OCA\Mail\Http\AvatarDownloadResponse;
 use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AvatarsController extends Controller {
 	private IAvatarService $avatarService;
 	private string $uid;

@@ -16,6 +16,7 @@ use OCA\Mail\Service\AntiSpamService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
 use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\IRequest;
@@ -23,6 +24,7 @@ use Psr\Container\ContainerInterface;
 
 use function array_merge;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SettingsController extends Controller {
 	private ProvisioningManager $provisioningManager;
 	private AntiSpamService $antiSpamService;
