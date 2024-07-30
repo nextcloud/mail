@@ -1,3 +1,14 @@
+## [3.7.6](https://github.com/nextcloud/mail/compare/v3.7.5...v3.7.6) (2024-07-30)
+
+
+### Bug Fixes
+
+* **deps:** Apply npm audit fix ([e891f64](https://github.com/nextcloud/mail/commit/e891f64ba33880bc172cc71e34c1fc6a9262dd7e))
+* lost focus in reference picker ([09c4110](https://github.com/nextcloud/mail/commit/09c4110d5578236e912b0f703c884b5ebf783c10))
+* set link icon size explicitly ([8ded095](https://github.com/nextcloud/mail/commit/8ded0954cd4dae7c41af0fb7d8a636305b299035))
+
+
+
 ## [3.7.5](https://github.com/nextcloud/mail/compare/v3.7.4...v3.7.5) (2024-07-17)
 
 
