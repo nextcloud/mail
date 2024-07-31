@@ -425,5 +425,16 @@ https://github.com/ckeditor/ckeditor5/issues/1142
 :root {
 	--ck-z-default: 10000;
 	--ck-balloon-border-width:  0;
-	}
+}
+.ck.ck-toolbar.ck-rounded-corners {
+	border-radius: var(--border-radius-large) !important;
+}
+.ck-rounded-corners .ck.ck-dropdown__panel, .ck.ck-dropdown__panel.ck-rounded-corners {
+	border-radius: var(--border-radius-large) !important;
+	overflow: hidden;
+}
+
+.ck.ck-button {
+	border-radius: var(--border-radius-element) !important;
+}
 </style>
