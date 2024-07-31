@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcEmptyContent class="empty-content" :title="t('mail', 'No messages')">
+	<NcEmptyContent class="empty-content" :name="t('mail', 'No messages')">
 		<template #icon>
 			<IconMail :size="65" />
 		</template>
