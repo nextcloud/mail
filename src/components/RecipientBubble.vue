@@ -8,6 +8,7 @@
 		<template #trigger="{ attrs }">
 			<UserBubble v-bind="attrs"
 				:display-name="label"
+				:size="26"
 				:avatar-image="avatarUrlAbsolute"
 				@click="onClickOpenContactDialog" />
 		</template>
