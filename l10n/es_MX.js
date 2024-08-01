@@ -92,6 +92,7 @@ OC.L10N.register(
     "Rename" : "Renombrar",
     "Clear cache" : "Borrar el caché",
     "Subscribed" : "Suscrito",
+    "Clear mailbox" : "Vaciar buzón",
     "New message" : "Mensaje nuevo",
     "Retry" : "Reintentar",
     "Sending …" : "Enviando ...",

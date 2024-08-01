@@ -533,6 +533,7 @@ OC.L10N.register(
     "Could not unsubscribe from mailing list" : "Non foi posíbel cancelar a subscrición da lista de correo",
     "Go to latest message" : "Ir á última mensaxe",
     "Go to newest message" : "Ir á mensaxe máis recente",
+    "Thread summary" : "Resumo do fío",
     "{name} Assistant" : "Asistente de {name}",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Desactive a retención do lixo deixando o campo baleiro ou axustándoo a 0. Só se procesarán os correos eliminados após activar a retención do lixo.",
     "Remove" : "Retirar",
