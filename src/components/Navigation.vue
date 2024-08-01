@@ -51,14 +51,14 @@
 				<NavigationOutbox class="outbox" />
 			</div>
 			<div class="mail-settings">
-				<NcButton class="mail-settings__button"
+				<AppNavigationItem class="mail-settings__button"
 					:close-after-click="true"
+					:name="t('mail', 'Mail settings')"
 					@click="showMailSettings">
 					<template #icon>
 						<IconSetting :size="16" />
 					</template>
-					{{ t('mail', 'Mail settings') }}
-				</NcButton>
+				</AppNavigationItem>
 			</div>
 		</template>
 		<AppSettingsMenu :open.sync="showSettings" />
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { NcButton, NcAppNavigation as AppNavigation } from '@nextcloud/vue'
+import { NcAppNavigation as AppNavigation, NcAppNavigationItem as AppNavigationItem } from '@nextcloud/vue'
 import NewMessageButtonHeader from './NewMessageButtonHeader.vue'
 
 import NavigationAccount from './NavigationAccount.vue'
@@ -82,7 +82,6 @@ import { mapStores } from 'pinia'
 export default {
 	name: 'Navigation',
 	components: {
-		NcButton,
 		AppNavigation,
 		AppSettingsMenu,
 		NavigationAccount,
@@ -91,6 +90,7 @@ export default {
 		NavigationOutbox,
 		NewMessageButtonHeader,
 		IconSetting,
+		AppNavigationItem,
 	},
 	data() {
 		return {
@@ -179,31 +179,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.button {
-	width: 44px;
-	height: 44px;
-	background-color: var(--color-main-background);
-	border: none;
-	display: inline-block;
-	position: absolute;
-	margin-left: 254px;
-	margin-top: 13px;
-	opacity: .7;
-	&:hover,
-	&:focus {
-		opacity: 1;
-		background-color:var(--color-background-hover);
-	}
-	&:disabled {
-		cursor: not-allowed;
-		opacity: .5;
-		animation: rotation 2s linear;
-	}
-}
-:deep(.app-navigation-new button) {
-	width: 240px !important;
-	height: 44px;
-}
 @keyframes rotation {
 from {
 	transform: rotate(-0deg);
@@ -212,12 +187,10 @@ to {
 		transform: rotate(-360deg);
 	}
 }
-:deep(.settings-button) {
-	font-weight: bold !important;
-	z-index: 1;
-}
 .outbox {
-	margin: 6px 6px 0 6px;
+	padding: calc(var(--default-grid-baseline, 4px) * 2);
+	padding-bottom: 0;
+
 	width: auto;
 	&__border {
 		border-top: 1px solid var(--color-background-darker);
@@ -225,11 +198,12 @@ to {
 }
 .mail-settings {
 	padding: calc(var(--default-grid-baseline, 4px) * 2);
+	padding-top: 0;
 
 	&__button {
+		display: flex;
 		width: 100% !important;
 		justify-content: start !important;
-
 	}
 }
 
