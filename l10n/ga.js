@@ -533,6 +533,7 @@ OC.L10N.register(
     "Could not unsubscribe from mailing list" : "Níorbh fhéidir díliostáil ón liosta postála",
     "Go to latest message" : "Téigh go dtí an teachtaireacht is déanaí",
     "Go to newest message" : "Téigh go dtí an teachtaireacht is déanaí",
+    "Thread summary" : "Achoimre snáithe",
     "{name} Assistant" : "{name} Cúntóir",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Díchumasaigh coinneáil bruscair tríd an réimse a fhágáil folamh nó é a shocrú go 0. Ní dhéanfar próiseáil ar bith ach ríomhphoist a scriostar tar éis coinneáil bruscair a chumasú.",
     "Remove" : "Bain",

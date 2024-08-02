@@ -531,6 +531,7 @@
     "Could not unsubscribe from mailing list" : "無法從郵寄名單取消訂閱",
     "Go to latest message" : "到最新的訊息",
     "Go to newest message" : "到最新的訊息",
+    "Thread summary" : "討論串摘要",
     "{name} Assistant" : "{name} 小幫手",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "將該欄位留空或設定其為 0 來停用垃圾保留。僅處理啟用垃圾保留後的郵件。",
     "Remove" : "移除",
