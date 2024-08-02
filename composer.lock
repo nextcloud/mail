@@ -2039,16 +2039,16 @@
         },
         {
             "name": "nextcloud/kitinerary-sys",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-libraries/kitinerary-sys.git",
-                "reference": "b9b39ac4123a6dd6bfbc9fa821324e5cc2a6a804"
+                "reference": "10755e6cc417bf8b60a21c6e2d9be146e9051b22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/b9b39ac4123a6dd6bfbc9fa821324e5cc2a6a804",
-                "reference": "b9b39ac4123a6dd6bfbc9fa821324e5cc2a6a804",
+                "url": "https://api.github.com/repos/nextcloud-libraries/kitinerary-sys/zipball/10755e6cc417bf8b60a21c6e2d9be146e9051b22",
+                "reference": "10755e6cc417bf8b60a21c6e2d9be146e9051b22",
                 "shasum": ""
             },
             "require": {
@@ -2077,9 +2077,9 @@
             ],
             "description": "KItinerary binding for the system package",
             "support": {
-                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v1.0.0"
+                "source": "https://github.com/nextcloud-libraries/kitinerary-sys/tree/v1.0.1"
             },
-            "time": "2024-01-19T10:37:59+00:00"
+            "time": "2024-08-02T13:48:52+00:00"
         },
         {
             "name": "phpmailer/dkimvalidator",
