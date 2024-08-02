@@ -146,8 +146,8 @@ class MailProvider implements IProvider {
 		} catch(\Throwable $th) {
 			return null;
 		}
-		// evaliate if service details where found
-		if (is_array($accounts) && count($accounts) > 0 && !empty($accounts[0]->getId())) {
+		// evaluate if service details where found
+		if (count($accounts) > 0 && $accounts[0] instanceof Account) {
 			// extract values
 			$serviceId = (string) $accounts[0]->getId();
 			$label = $accounts[0]->getName();
