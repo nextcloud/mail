@@ -533,6 +533,7 @@ OC.L10N.register(
     "Could not unsubscribe from mailing list" : "Could not unsubscribe from mailing list",
     "Go to latest message" : "Go to latest message",
     "Go to newest message" : "Go to newest message",
+    "Thread summary" : "Thread summary",
     "{name} Assistant" : "{name} Assistant",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed.",
     "Remove" : "Remove",
