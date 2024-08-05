@@ -12,17 +12,20 @@ DELETE FROM oc_appconfig WHERE appid = 'mail';
 DELETE FROM oc_migrations WHERE app = 'mail';
 DROP TABLE oc_mail_accounts;
 DROP TABLE oc_mail_aliases;
-DROP TABLE oc_mail_coll_addresses;
 DROP TABLE oc_mail_attachments;
-DROP TABLE oc_mail_mailboxes;
-DROP TABLE oc_mail_messages;
-DROP TABLE oc_mail_recipients;
 DROP TABLE oc_mail_classifiers;
-DROP TABLE oc_mail_trusted_senders;
-DROP TABLE oc_mail_tags;
-DROP TABLE oc_mail_message_tags;
-DROP TABLE oc_mail_provisionings;
+DROP TABLE oc_mail_coll_addresses;
 DROP TABLE oc_mail_local_messages;
+DROP TABLE oc_mail_mailboxes;
+DROP TABLE oc_mail_message_tags;
+DROP TABLE oc_mail_messages;
+DROP TABLE oc_mail_messages_retention;
+DROP TABLE oc_mail_messages_snoozed;
+DROP TABLE oc_mail_provisionings;
+DROP TABLE oc_mail_recipients;
+DROP TABLE oc_mail_smime_certificates;
+DROP TABLE oc_mail_tags;
+DROP TABLE oc_mail_trusted_senders;
 ```
 
 ## Enable CKEditor Inspector
