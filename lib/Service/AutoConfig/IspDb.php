@@ -40,6 +40,7 @@ class IspDb {
 
 	/** @var LoggerInterface */
 	private $logger;
+	private Resolver $dnsResolver;
 
 	/** @returns string[] */
 	public function getUrls(): array {
@@ -50,8 +51,11 @@ class IspDb {
 		];
 	}
 
-	public function __construct(IClientService $clientService, LoggerInterface $logger) {
+	public function __construct(IClientService $clientService,
+		Resolver $dnsResolver,
+		LoggerInterface $logger) {
 		$this->client = $clientService->newClient();
+		$this->dnsResolver = $dnsResolver;
 		$this->logger = $logger;
 	}
 
@@ -144,7 +148,7 @@ class IspDb {
 			}
 		}
 
-		if ($tryMx && ($dns = dns_get_record($domain, DNS_MX))) {
+		if ($tryMx && ($dns = $this->dnsResolver->resolve($domain, DNS_MX))) {
 			$domain = $dns[0]['target'];
 			if (!($provider = $this->query($domain, $email, false))) {
 				[, $domain] = explode('.', $domain, 2);

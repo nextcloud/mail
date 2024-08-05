@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+name: Update public suffix list
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "5 2 * * *"
+
+jobs:
+  update-public-suffix-list:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        branches: ['main', 'stable3.7']
+
+    name: update-public-suffix-list-${{ matrix.branches }}
+
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        with:
+          ref: ${{ matrix.branches }}
+          submodules: true
+
+      - name: Download public suffix list
+        run: curl --output resources/resources/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
+        with:
+          token: ${{ secrets.COMMAND_BOT_PAT }}
+          commit-message: 'fix(dns): Update public suffix list'
+          committer: GitHub <noreply@github.com>
+          author: nextcloud-command <nextcloud-command@users.noreply.github.com>
+          signoff: true
+          branch: 'fix/dns/update-public-suffix-list-${{ matrix.branches }}'
+          title: '[${{ matrix.branches }}] fix(dns): Update public suffix list'
+          body: |
+            Auto-generated update of https://publicsuffix.org/
+          labels: |
+            dependencies
+            3. to review
+          reviewers: ChristophWurst
