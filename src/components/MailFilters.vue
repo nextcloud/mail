@@ -93,23 +93,31 @@ export default {
 	},
 	methods: {
 		createFilter() {
-			this.currentFilter = { id: randomId(), name: t('mail', 'New filter') }
+			this.currentFilter = {
+				id: randomId(),
+				name: t('mail', 'New filter'),
+				enable: false,
+				operator: 'allof',
+				tests: [],
+				actions: []
+			}
 			this.showModal = true
 		},
 		updateFilter(filter) {
-			this.currentFilter = structuredClone(filter)
+			this.currentFilter = filter
 			this.showModal = true
 		},
-		storeFilter() {
-			// const filter = this.currentFilter.copy()
-			// const index = this.filters.findIndex((item) => item.id === filter.id)
-			// logger.debug('store filter', { filter, index })
-			//
-			// if (index === -1) {
-			// 	this.filters.push(filter)
-			// } else {
-			// 	this.filters[index] = filter
-			// }
+		async storeFilter(filter) {
+			await this.mailFilterStore.$patch((state) => {
+				const index = state.filters.findIndex((item) => item.id === filter.id)
+				logger.debug('store filter', { filter, index })
+
+				if (index === -1) {
+					state.filters.push(filter)
+				} else {
+					state.filters[index] = filter
+				}
+			})
 		},
 		closeModal() {
 			this.showModal = false

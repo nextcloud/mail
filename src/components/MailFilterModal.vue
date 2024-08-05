@@ -48,8 +48,8 @@
 			</div>
 
 			<div>
-				<NcCheckboxRadioSwitch :checked.sync="clone.enabled" type="switch">
-					{{ t('mail', 'Enable mail filter') }}
+				<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
+					{{ t('mail', 'Enable filter') }}
 				</NcCheckboxRadioSwitch>
 			</div>
 
@@ -124,7 +124,7 @@ export default {
 			this.loading = true
 
 			try {
-				await this.$emit('store-filter')
+				await this.$emit('store-filter', structuredClone(this.clone))
 			} finally {
 				this.loading = false
 			}
