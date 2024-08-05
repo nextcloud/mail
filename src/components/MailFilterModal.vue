@@ -9,19 +9,18 @@
 		@close="closeModal">
 		<div class="modal__content">
 			<div class="filter-name">
-				<NcTextField :value.sync="localFilter.name"
+				<NcTextField :value.sync="clone.name"
 					:label="t('mail', 'Filter name')"
 					:required="true" />
 			</div>
 
 			<div class="filter-operator">
-				<MailFilterOperator :operator="localFilter.operator"
-					@change-operator="changeOperator" />
+				<MailFilterOperator :filter="clone" />
 			</div>
 
 			<div class="filter-tests">
 				<p>{{ t('mail', 'Tests') }}</p>
-				<MailFilterTest v-for="test in localFilter.tests"
+				<MailFilterTest v-for="test in clone.tests"
 					:key="test.id"
 					:test="test"
 					@delete-test="deleteTest(test.id)" />
@@ -35,11 +34,10 @@
 
 			<div class="filter-actions">
 				<p>{{ t('mail', 'Actions') }}</p>
-				<MailFilterAction v-for="action in localFilter.actions"
+				<MailFilterAction v-for="action in clone.actions"
 					:key="action.id"
 					:action="action"
 					:account="account"
-					@change-action="changeAction"
 					@delete-action="deleteAction" />
 				<NcButton class="app-settings-button"
 					type="secondary"
@@ -49,15 +47,25 @@
 				</NcButton>
 			</div>
 
+			<div>
+				<NcCheckboxRadioSwitch :checked.sync="clone.enabled" type="switch">
+					{{ t('mail', 'Enable mail filter') }}
+				</NcCheckboxRadioSwitch>
+			</div>
+
 			<NcButton type="primary"
 				@click="storeFilter">
-				Submit
+				<template #icon>
+					<IconLoading v-if="loading" :size="16" />
+					<IconCheck v-else :size="16" />
+				</template>
+				{{ t('mail', 'Save filter') }}
 			</NcButton>
 		</div>
 	</NcModal>
 </template>
 <script>
-import { NcButton, NcModal, NcSelect, NcTextField } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcModal, NcSelect, NcTextField } from '@nextcloud/vue'
 import MailFilterTest from './MailFilterTest.vue'
 import MailFilterOperator from './MailFilterOperator.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
@@ -65,18 +73,23 @@ import { Test } from '../sieve/Test'
 import { randomId } from '../util/randomId'
 import MailFilterAction from './MailFilterAction.vue'
 import logger from '../logger'
+import IconCheck from 'vue-material-design-icons/Check.vue'
+import IconLoading from 'vue-material-design-icons/Loading.vue'
 
 export default {
 	name: 'MailFilterModal',
 	components: {
+		IconCheck,
+		IconLoading,
 		IconLock,
 		MailFilterAction,
-		MailFilterTest,
 		MailFilterOperator,
-		NcModal,
+		MailFilterTest,
 		NcButton,
-		NcTextField,
+		NcCheckboxRadioSwitch,
+		NcModal,
 		NcSelect,
+		NcTextField,
 	},
 	props: {
 		filter: {
@@ -90,31 +103,37 @@ export default {
 	},
 	data() {
 		return {
-			localFilter: this.filter.copy(),
+			clone: structuredClone(this.filter),
+			loading: false,
 		}
 	},
 	methods: {
 		createTest() {
-			this.localFilter.createTest(randomId())
+			this.clone.tests.push({ id: randomId(), operator: '', value: '' })
 		},
 		deleteTest(testId) {
-			this.localFilter.deleteTest(testId)
+			this.clone.tests = this.clone.tests.filter((test) => test.id !== testId)
 		},
-		storeFilter() {
-			this.$emit('store-filter')
+		createAction() {
+			this.clone.actions.push({ id: randomId(), type: '' })
 		},
-		changeOperator(operator) {
-			this.localFilter.operator = operator
+		deleteAction(actionId) {
+			this.clone.actions = this.clone.actions.filter((action) => action.id !== actionId)
 		},
+		async storeFilter() {
+			this.loading = true
+
+			try {
+				await this.$emit('store-filter')
+			} finally {
+				this.loading = false
+			}
+		},
+
 		closeModal() {
 			this.$emit('close')
 		},
-		createAction() {
-			this.localFilter.createAction(randomId())
-		},
-		deleteAction(actionId) {
-			this.localFilter.deleteAction(actionId)
-		},
+
 	},
 }
 </script>

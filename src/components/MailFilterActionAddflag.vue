@@ -6,7 +6,7 @@
 	<NcTextField id="mail-filter-value"
 		:required="true"
 		:label="t('mail', 'Flag')"
-		:value.sync="action.flag" />
+		:value.sync="flag" />
 </template>
 <script>
 import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
@@ -25,6 +25,11 @@ export default {
 		account: {
 			type: Object,
 			required: true,
+		},
+	},
+	computed: {
+		flag() {
+			return this.action.flag ?? ''
 		},
 	},
 }

@@ -3,11 +3,10 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxInlinePicker :account="account" :value="action.mailbox" />
+	<MailboxInlinePicker :account="account" :value="mailbox" @input="action.mailbox = $event" />
 </template>
 <script>
-import { NcActionButton, NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+
 import MailboxInlinePicker from './MailboxInlinePicker.vue'
 
 export default {
@@ -26,8 +25,13 @@ export default {
 		},
 	},
 	computed: {
-		mailboxes() {
-			return this.$store.getters.getMailboxes(this.accountId)
+		mailbox() {
+			return this.action.mailbox ?? undefined
+		},
+	},
+	method: {
+		onInput(event) {
+
 		},
 	},
 }

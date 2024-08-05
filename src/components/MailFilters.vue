@@ -39,6 +39,8 @@ import MailFilterModal from './MailFilterModal.vue'
 import { randomId } from '../util/randomId'
 import logger from '../logger'
 import { Action } from '../sieve/Action'
+import { mapStores } from 'pinia'
+import useMailFilterStore from '../store/mailFilterStore'
 
 export default {
 	name: 'MailFilters',
@@ -59,53 +61,7 @@ export default {
 		},
 	},
 	data() {
-		const test1 = new Test()
-		test1.id = randomId()
-		test1.field = 'subject'
-		test1.operator = 'contains'
-		test1.value = 'Hello Hello'
-
-		const test2 = new Test()
-		test2.id = randomId()
-		test2.field = 'to'
-		test2.operator = 'is'
-		test2.value = 'bob@acme.org'
-
-		const action1 = new Action()
-		action1.id = randomId()
-		action1.type = 'addflag'
-		action1.flag = 'Important'
-
-		const action2 = new Action()
-		action2.id = randomId()
-		action2.type = 'keep'
-
-		const filter1 = new Filter()
-		filter1.id = randomId()
-		filter1.name = 'Filter 1'
-		filter1.tests.push(test1, test2)
-		filter1.actions.push(action1, action2)
-
-		const test3 = new Test(randomId())
-		test3.field = 'subject'
-		test3.operator = 'contains'
-		test3.value = 'Hello Hello'
-
-		const test4 = new Test(randomId())
-		test4.field = 'to'
-		test4.operator = 'is'
-		test4.value = 'bob@acme.org'
-
-		const filter2 = new Filter()
-		filter2.id = randomId()
-		filter2.name = 'Filter 2'
-		filter2.tests.push(test3, test3)
-
 		return {
-			filters: [
-				filter1,
-				filter2,
-			],
 			showModal: false,
 			script: '',
 			loading: true,
@@ -114,6 +70,10 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMailFilterStore),
+		filters() {
+			return this.mailFilterStore.getFiltersByAccountId(this.account.id)
+		},
 		scriptData() {
 			return this.$store.getters.getActiveSieveScript(this.account.id)
 		},
@@ -133,23 +93,23 @@ export default {
 	},
 	methods: {
 		createFilter() {
-			this.currentFilter = new Filter()
+			this.currentFilter = { id: randomId(), name: t('mail', 'New filter') }
 			this.showModal = true
 		},
 		updateFilter(filter) {
-			this.currentFilter = filter.copy()
+			this.currentFilter = structuredClone(filter)
 			this.showModal = true
 		},
 		storeFilter() {
-			const filter = this.currentFilter.copy()
-			const index = this.filters.findIndex((item) => item.id === filter.id)
-			logger.debug('store filter', { filter, index })
-
-			if (index === -1) {
-				this.filters.push(filter)
-			} else {
-				this.filters[index] = filter
-			}
+			// const filter = this.currentFilter.copy()
+			// const index = this.filters.findIndex((item) => item.id === filter.id)
+			// logger.debug('store filter', { filter, index })
+			//
+			// if (index === -1) {
+			// 	this.filters.push(filter)
+			// } else {
+			// 	this.filters[index] = filter
+			// }
 		},
 		closeModal() {
 			this.showModal = false

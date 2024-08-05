@@ -16,26 +16,6 @@ export class Filter {
 	actions = []
 	active = true
 
-	createTest(testId) {
-		const test = new Test()
-		test.id = testId
-		this.tests.push(test)
-	}
-
-	deleteTest(testId) {
-		this.tests = this.tests.filter((test) => test.id !== testId)
-	}
-
-	createAction(actionId) {
-		const action = new Action()
-		action.id = actionId
-		this.actions.push(action)
-	}
-
-	deleteAction(actionId) {
-		this.actions = this.actions.filter((action) => action.id !== actionId)
-	}
-
 	copy() {
 		const copy = new Filter()
 		copy.id = this.id

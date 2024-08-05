@@ -8,25 +8,22 @@
 			<p>{{ t('mail', 'Operator') }}</p>
 		</div>
 		<div class="mail-filter-row">
-			<NcCheckboxRadioSwitch :checked="operator"
+			<NcCheckboxRadioSwitch :checked.sync="filter.operator"
 				value="allof"
 				name="sharing_permission_radio"
-				type="radio"
-				@update:checked="changeOperator">
+				type="radio">
 				{{ t('mail', 'allof') }}
 			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch :checked="operator"
+			<NcCheckboxRadioSwitch :checked.sync="filter.operator"
 				value="anyof"
 				name="sharing_permission_radio"
-				type="radio"
-				@update:checked="changeOperator">
+				type="radio">
 				{{ t('mail', 'anyof') }}
 			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch :checked="operator"
+			<NcCheckboxRadioSwitch :checked.sync="filter.operator"
 				value="true"
 				name="sharing_permission_radio"
-				type="radio"
-				@update:checked="changeOperator">
+				type="radio">
 				{{ t('mail', 'true') }}
 			</NcCheckboxRadioSwitch>
 		</div>
@@ -41,14 +38,9 @@ export default {
 		NcCheckboxRadioSwitch,
 	},
 	props: {
-		operator: {
-			type: String,
+		filter: {
+			type: Object,
 			required: true,
-		},
-	},
-	methods: {
-		changeOperator(operator) {
-			this.$emit('change-operator', operator)
 		},
 	},
 }
