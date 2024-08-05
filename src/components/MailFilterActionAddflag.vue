@@ -6,11 +6,11 @@
 	<NcTextField id="mail-filter-value"
 		:required="true"
 		:label="t('mail', 'Flag')"
-		:value.sync="flag" />
+		:value="flag"
+		@update:value="action.flag = $event" />
 </template>
 <script>
-import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import { NcTextField } from '@nextcloud/vue'
 
 export default {
 	name: 'MailFilterActionAddflag',

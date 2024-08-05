@@ -3,7 +3,9 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<MailboxInlinePicker :account="account" :value="mailbox" @input="action.mailbox = $event" />
+	<MailboxInlinePicker :account="account"
+		:value="mailbox"
+		@input="action.mailbox = $event" />
 </template>
 <script>
 
