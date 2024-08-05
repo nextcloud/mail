@@ -13,6 +13,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Http\Client\IClientService;
@@ -23,6 +24,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use function file_get_contents;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ProxyController extends Controller {
 	private IURLGenerator $urlGenerator;
 	private ISession $session;

@@ -19,11 +19,13 @@ use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 use OCA\Mail\Service\OutOfOfficeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 use OCP\IUserSession;
 use OCP\User\IAvailabilityCoordinator;
 use Psr\Container\ContainerInterface;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class OutOfOfficeController extends Controller {
 	public function __construct(
 		IRequest $request,

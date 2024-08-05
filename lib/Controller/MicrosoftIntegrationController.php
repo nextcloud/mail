@@ -16,12 +16,14 @@ use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 use function filter_var;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class MicrosoftIntegrationController extends Controller {
 	private ?string $userId;
 	private AccountService $accountService;

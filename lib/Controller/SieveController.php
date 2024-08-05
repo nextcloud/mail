@@ -21,12 +21,14 @@ use OCA\Mail\Sieve\SieveClientFactory;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SieveController extends Controller {
 	private MailAccountMapper $mailAccountMapper;
 	private SieveClientFactory $sieveClientFactory;
