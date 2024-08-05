@@ -480,19 +480,26 @@ export default {
 }
 
 .avatar-header {
-	max-height: 24px;
+	height: var(--default-clickable-area);
 	overflow: hidden;
+	display: flex;
+	align-items: stretch;
 }
 .avatar-more {
 	display: inline;
 	background-color: var(--color-background-dark);
-	padding: 0px 0px 1px 1px;
-	border-radius: 10px;
+	border-radius: var(--border-radius-large);
 	cursor: pointer;
 }
+
+.v-popper.avatar-more {
+	padding: 6px;
+}
+
 .avatar-hidden {
 	visibility: hidden;
 }
+
 .popover__wrapper {
 	max-width: 500px;
 }
@@ -500,9 +507,27 @@ export default {
 .app-content-list-item-star.icon-starred {
 	display: none;
 }
+
 .user-bubble__wrapper {
-	margin-right: 4px;
+	height: var(--default-clickable-area);
+	padding: var(--default-grid-baseline);
+	margin-right: var(--default-grid-baseline);
+	background-color: var(--color-background-dark);
+	border-radius: var(--border-radius-large);
 }
+
+.v-popper__popper--shown .user-bubble__wrapper {
+	margin-right: 0 !important;
+
+	.user-bubble__content {
+		padding: calc(var(--default-grid-baseline));
+	}
+
+	.user-bubble__wrapper {
+		padding: 0;
+	}
+}
+
 .user-bubble__title {
 	cursor: pointer;
 }
