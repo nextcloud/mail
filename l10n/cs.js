@@ -471,7 +471,7 @@ OC.L10N.register(
     "Tag name is a hidden system tag" : "Takto nazvaný štítek už existuje v podobě skrytého systémového štítku",
     "Tag already exists" : "Štítek už existuje",
     "Tag name cannot be empty" : "Štítek je třeba nějak nazvat",
-    "An error occurred, unable to create the tag." : "Došlo k chybě, štíte se nepodařilo vytvořit.",
+    "An error occurred, unable to create the tag." : "Došlo k chybě, štítek se nepodařilo vytvořit.",
     "No calendars with task list support" : "Nejsou zde žádné kalendáře, které by podporovaly seznam úkolů",
     "Task created" : "Úkol vytvořen",
     "Could not create task" : "Úkol se nezdařilo vytvořit",
