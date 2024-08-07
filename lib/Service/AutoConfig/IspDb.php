@@ -50,7 +50,8 @@ class IspDb {
 		];
 	}
 
-	public function __construct(IClientService $clientService, LoggerInterface $logger) {
+	public function __construct(IClientService $clientService,
+		LoggerInterface $logger) {
 		$this->client = $clientService->newClient();
 		$this->logger = $logger;
 	}
@@ -122,7 +123,7 @@ class IspDb {
 	 * @param bool $tryMx
 	 * @return array
 	 */
-	public function query(string $domain, string $email, bool $tryMx = true): array {
+	public function query(string $domain, string $email): array {
 		$this->logger->debug("IsbDb: querying <$domain>");
 		if (strpos($domain, '@') !== false) {
 			// TODO: use horde mail address parsing instead
@@ -147,14 +148,6 @@ class IspDb {
 				if (!empty($provider)) {
 					return $provider;
 				}
-			}
-		}
-
-		if ($tryMx && ($dns = dns_get_record($domain, DNS_MX))) {
-			$domain = $dns[0]['target'];
-			if (!($provider = $this->query($domain, $email, false))) {
-				[, $domain] = explode('.', $domain, 2);
-				$provider = $this->query($domain, $email, false);
 			}
 		}
 		return $provider;
