@@ -78,7 +78,7 @@ SPDX-FileCopyrightText = "2021 Nextcloud GmbH and Nextcloud contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 [[annotations]]
-path = ["vendor-bin/cs-fixer/composer.json", "vendor-bin/cs-fixer/composer.lock", "vendor-bin/mozart/composer.json", "vendor-bin/mozart/composer.lock", "vendor-bin/phpunit/composer.json", "vendor-bin/phpunit/composer.lock", "vendor-bin/rector/composer.json", "vendor-bin/rector/composer.lock"]
+path = ["vendor-bin/cs-fixer/composer.json", "vendor-bin/cs-fixer/composer.lock", "vendor-bin/mozart/composer.json", "vendor-bin/mozart/composer.lock", "vendor-bin/openapi/composer.*", "vendor-bin/phpunit/composer.json", "vendor-bin/phpunit/composer.lock", "vendor-bin/rector/composer.json", "vendor-bin/rector/composer.lock"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2021-2024 Nextcloud GmbH and Nextcloud contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
