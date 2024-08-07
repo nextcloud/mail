@@ -480,6 +480,9 @@ export default {
 	addCalendar(state, { calendar }) {
 		state.calendars = [...state.calendars, calendar]
 	},
+	addAddressBook(state, { addressBook }) {
+		state.addressBooks = [...state.addressBooks, addressBook]
+	},
 	setGoogleOauthUrl(state, url) {
 		state.googleOauthUrl = url
 	},
