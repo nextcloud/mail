@@ -21,9 +21,9 @@ jobs:
             - php-versions: 7.4
               nextcloud-versions: stable24
             - php-versions: 8.1
-              nextcloud-versions: master
+              nextcloud-versions: stable25
             - php-versions: 8.2
-              nextcloud-versions: master
+              nextcloud-versions: stable25
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
