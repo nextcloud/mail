@@ -37,6 +37,7 @@
 		"ezyang/htmlpurifier": "4.16.0",
 		"gravatarphp/gravatar": "^2.0",
 		"html2text/html2text": "^4.3",
+		"jeremykendall/php-domain-parser": "^6.0",
 		"nextcloud/horde-managesieve": "^1.0",
 		"nextcloud/horde-smtp": "^1.0",
 		"psr/log": "^1",
