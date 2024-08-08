@@ -79,6 +79,46 @@ class AccountService {
 	}
 
 	/**
+	 * Finds a mail account by user id and mail address
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $userId			system user id
+	 * @param string $address			mail address (e.g. test@example.com)
+	 *
+	 * @return Account[]
+	 *
+	 * @throws ClientException
+	 */
+	public function findByUserIdAndAddress(string $userId, string $address): array {
+		// evaluate if cached accounts collection already exists
+		if (isset($this->accounts[$userId])) {
+			// initialize tempory collection
+			$list = [];
+			// iterate through accounts and find accounts matching mail address
+			foreach ($this->accounts[$userId] as $account) {
+				if ($account->getEmail() === $address) {
+					$list[] = $account;
+				}
+			}
+			// evaluate if any accounts where found and return them
+			if (count($list) > 0) {
+				return $list;
+			}
+			// if no accounts where found thrown an error
+			throw new ClientException("Account with address $address does not exist or you don\'t have permission to access it");
+		}
+		// if cached accounts collection did not exist retrieve account details directly from the data store
+		try {
+			return array_map(static function ($a) {
+				return new Account($a);
+			}, $this->mapper->findByUserIdAndAddress($userId, $address));
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Account with address $address does not exist or you don\'t have permission to access it");
+		}
+	}
+
+	/**
 	 * @param string $userId
 	 * @param int $id
 	 *
