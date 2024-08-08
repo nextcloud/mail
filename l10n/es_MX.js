@@ -74,6 +74,7 @@ OC.L10N.register(
     "Comment" : "Comentario",
     "Accept" : "Aceptar",
     "Decline" : "Rechazar",
+    "More options" : "Más opciones",
     "Other" : "Otro",
     "Choose a folder to store the attachment in" : "Seleccciona la carpeta en la cual almacenar el adjunto",
     "Import into calendar" : "Importar al calendario",
