@@ -7,9 +7,11 @@
 		{{
 			t('mail', 'The sender of this message has asked to be notified when you read this message.')
 		}}
-		<button :disabled="loading" @click="sendMdn">
-			{{ t('mail', 'Notify the sender') }}
-		</button>
+		<div class="notify-button">
+			<NcButton type="secondary" :disabled="loading" @click="sendMdn">
+				{{ t('mail', 'Notify the sender') }}
+			</NcButton>
+		</div>
 	</div>
 	<div v-else-if="mdnSent" class="mail-message-has-mdn-request">
 		{{
@@ -22,9 +24,13 @@
 import logger from '../logger.js'
 import { sendMdn } from '../service/MessageService.js'
 import { showError } from '@nextcloud/dialogs'
+import { NcButton } from '@nextcloud/vue'
 
 export default {
 	name: 'MdnRequest',
+	components: {
+		NcButton,
+	},
 	props: {
 		message: {
 			required: true,
@@ -64,5 +70,8 @@ export default {
 <style lang="scss" scoped>
 .mail-message-has-mdn-request {
 	white-space: normal;
+}
+.notify-button {
+	display: inline-block;
 }
 </style>
