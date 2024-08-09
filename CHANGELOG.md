@@ -1,5 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## 1.15.4 - 2024-08-09
+### Fixed
+- Button style
+- Auto config DNS query
+
 ## 1.15.3 - 2023-03-27
 ### Fixed
 - Validate favicon hosts
