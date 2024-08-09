@@ -48,9 +48,15 @@ export default {
 	background-color: var(--color-background-dark);
 	height: 24px;
 	width: 100%;
+	display: flex;
 
 	& > span.option {
-		margin-left: 0
+		margin-left: 0;
+		flex-shrink: 1;
+	}
+
+	& > .delete-recipient {
+		flex-shrink: 0;
 	}
 }
 .vs__selected{

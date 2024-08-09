@@ -27,11 +27,11 @@
 						return option.selectable}"
 					@option:selected="onAliasChange">
 					<template #option="option">
-						{{ formatAliases(option) }}
+						<span :title="formatAliases(option)">{{ formatAliases(option) }}</span>
 					</template>
 
 					<template #selected-option="option">
-						{{ formatAliases(option) }}
+						<span :title="formatAliases(option)">{{ formatAliases(option) }}</span>
 					</template>
 				</NcSelect>
 			</div>
@@ -1499,10 +1499,11 @@ export default {
 
 	.composer-fields--custom {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: space-between;
 		padding-top: 2px;
 		width: calc(100% - 120px);
+		margin-bottom: var(--default-grid-baseline);
 
 		button {
 			margin-top: 0;
@@ -1526,6 +1527,7 @@ export default {
 		}
 		.v-select{
 			flex-grow: 0.95;
+			margin-bottom: 0;
 		}
 	}
 
@@ -1613,9 +1615,6 @@ export default {
 :deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
-	flex-wrap: wrap;
-}
 
 #from{
 	width: 100%;
@@ -1680,8 +1679,31 @@ export default {
 .composer-actions-draft-status {
 	padding-left: 10px;
 }
+
 :deep(.vs__selected-options .vs__dropdown-toggle .vs--multiple ){
-	width: 100%;
+	max-height: var(--default-clickable-area);
+}
+
+:deep(.vs__selected-options) {
+	overflow-y: hidden;
+}
+
+:deep(.v-select.select .vs__selected), :deep(.vs__dropdown-option) {
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height: calc(var(--default-clickable-area) - var(--default-grid-baseline));
+
+	span {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+}
+
+.mail-account :deep(.vs--open .vs__selected) {
+	max-width: calc(100% - 24px) !important;
 }
 
 @media only screen and (max-width: 580px) {
