@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.6.3
+### Fixed
+- Auto config DNS query
+- Vulnerable js dependencies
+
 ## 3.6.2 – 2024-05-24
 ### Fixed
 - CKEditor translations
