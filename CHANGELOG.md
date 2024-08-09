@@ -1,3 +1,13 @@
+## [3.7.7](https://github.com/nextcloud/mail/compare/v3.7.6...v3.7.7) (2024-08-09)
+
+
+### Bug Fixes
+
+* **autoconfig:** Refactor DNS query for testing ([199c428](https://github.com/nextcloud/mail/commit/199c428546ecd94682513586d6f1764714fec750))
+* **deps:** Apply npm audit fix ([6d2075c](https://github.com/nextcloud/mail/commit/6d2075c78d8a88d629f5fbd6cbee2659b0a96211))
+
+
+
 ## [3.7.6](https://github.com/nextcloud/mail/compare/v3.7.5...v3.7.6) (2024-07-30)
 
 
