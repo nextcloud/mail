@@ -42,7 +42,6 @@ const plugins = [
 module.exports = {
 	entry: {
 		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
-		dashboard: path.join(__dirname, 'src/main-dashboard.js'),
 		mail: path.join(__dirname, 'src/main.js'),
 		oauthpopup: path.join(__dirname, 'src/main-oauth-popup.js'),
 		settings: path.join(__dirname, 'src/main-settings'),
