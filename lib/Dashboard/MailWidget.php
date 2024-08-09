@@ -17,16 +17,19 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Dashboard\IAPIWidget;
+use OCP\Dashboard\IAPIWidgetV2;
+use OCP\Dashboard\IButtonWidget;
 use OCP\Dashboard\IIconWidget;
 use OCP\Dashboard\IOptionWidget;
+use OCP\Dashboard\Model\WidgetButton;
 use OCP\Dashboard\Model\WidgetItem;
+use OCP\Dashboard\Model\WidgetItems;
 use OCP\Dashboard\Model\WidgetOptions;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
-use OCP\Util;
 
-abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
+abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOptionWidget, IButtonWidget {
 	protected IURLGenerator $urlGenerator;
 	protected IUserManager $userManager;
 	protected AccountService $accountService;
@@ -85,12 +88,7 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	 * @inheritDoc
 	 */
 	public function load(): void {
-		Util::addScript(Application::APP_ID, 'dashboard');
-
-		$this->initialState->provideInitialState(
-			'mail-accounts',
-			$this->accountService->findByUserId($this->userId)
-		);
+		// No assets need to be loaded anymore as the widget is rendered from the API
 	}
 
 	/**
@@ -157,7 +155,38 @@ abstract class MailWidget implements IAPIWidget, IIconWidget, IOptionWidget {
 	/**
 	 * @inheritDoc
 	 */
+	public function getItemsV2(string $userId, ?string $since = null, int $limit = 7): WidgetItems {
+		$items = $this->getItems($userId, $since, $limit);
+		return new WidgetItems(
+			$items,
+			empty($items) ? $this->l10n->t('No message found yet') : '',
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function getWidgetOptions(): WidgetOptions {
 		return new WidgetOptions(true);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getWidgetButtons(string $userId): array {
+		$buttons = [];
+
+		if ($this->userId !== null) {
+			$accounts = $this->accountService->findByUserId($this->userId);
+			if (empty($accounts)) {
+				$buttons[] = new WidgetButton(
+					WidgetButton::TYPE_SETUP,
+					$this->urlGenerator->linkToRouteAbsolute('mail.page.setup'),
+					$this->l10n->t('Set up an account'),
+				);
+			}
+		}
+
+		return $buttons;
 	}
 }
