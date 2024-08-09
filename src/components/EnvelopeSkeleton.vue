@@ -408,7 +408,7 @@ export default {
 		.list-item-content__subname,
 		.list-item-content__details,
 		.list-item-details__details {
-			color: var(--color-primary-element-text) !important;
+			color: var(--color-primary-element-text);
 		}
 	}
 	.list-item-content__name,
@@ -424,7 +424,7 @@ export default {
 
 // NcListItem
 .list-item {
-	--list-item-padding: 8px;
+	--list-item-padding: 4px;
 	// The content are two lines of text and respect the 1.5 line height
 	--list-item-border-radius: var(--border-radius-element, 32px);
 	--list-item-height: calc(4 * var(--default-line-height));
@@ -437,18 +437,15 @@ export default {
 	flex: 0 0 auto;
 	justify-content: flex-start;
 	// we need to make sure the elements are not cut off by the border
-	padding-block: var(--list-item-padding);
+	padding: var(--list-item-padding);
 	width: 100%;
 	border-radius: var(--border-radius-element, 32px);
 	cursor: pointer;
 	transition: background-color var(--animation-quick) ease-in-out;
 	list-style: none;
-
-	padding-inline: calc((calc(2 * var(--default-line-height)) - var(--list-item-border-radius)) / 2);
 	flex-wrap: nowrap !important;
 
 	&:hover,
-	&:focus-within,
 	&:has(:active),
 	&:has(:focus-visible) {
 		background-color: var(--color-background-hover);
@@ -575,7 +572,7 @@ export default {
 
 	&__anchor {
 		display: flex;
-		flex: 1 0 auto;
+		flex: 1 1 auto;
 		align-items: start;
 		height: var(--list-item-height);
 		min-width: 0;

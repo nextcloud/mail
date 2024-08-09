@@ -916,8 +916,8 @@ export default {
 }
 
 .list-item__wrapper--active {
-	.envelope__preview-text {
-		color: var(--color-primary-element-text);
+	div, :deep(.list-item-content__inner__details__details) {
+		color: var(--color-primary-element-text) !important;
 	}
 }
 
