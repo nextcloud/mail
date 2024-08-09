@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.14.6 - 2024-08-09
+### Fixed
+- XOAUTH for SMTP
+- Auto config for non-admins
+- Auto config DNS query
+
 ## 1.14.5 – 2022-12-06
 ### Fixed
 - Provisioned accounts with passwordless authentication
