@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2.2.11 - 2024-08-09
+### Fixed
+* Auto config DNS query
+
 ## 2.2.10 - 2024-06-26
 ### Fixed
 * Rate limit
