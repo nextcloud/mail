@@ -531,7 +531,7 @@
     "Could not unsubscribe from mailing list" : "Abmeldung von der Mailingliste fehlgeschlagen",
     "Go to latest message" : "Zur ältesten Nachricht springen",
     "Go to newest message" : "Zur neuesten Nachricht springen",
-    "Thread summary" : "Unterhaltungszusammenfassung",
+    "Thread summary" : "Zusammenfassung des Themas",
     "{name} Assistant" : "{name} Assistent",
     "Disable trash retention by leaving the field empty or setting it to 0. Only mails deleted after enabling trash retention will be processed." : "Deaktivieren Sie die Aufbewahrung im Papierkorb, indem Sie das Feld leer lassen oder auf 0 setzen. Es werden nur Mails verarbeitet, die nach der Aktivierung der Aufbewahrung im Papierkorb gelöscht wurden.",
     "Remove" : "Entfernen",
