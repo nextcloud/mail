@@ -43,7 +43,6 @@
 		"youthweb/urllinker": "^2.0"
 	},
 	"require-dev": {
-		"nextcloud/ocp": "dev-stable26",
 		"psalm/phar": "^5.25.0",
 		"roave/security-advisories": "dev-master"
 	},
