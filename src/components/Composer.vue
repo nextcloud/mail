@@ -37,9 +37,14 @@
 			</div>
 		</div>
 		<div class="composer-fields">
-			<label class="to-label" for="to">
-				{{ t('mail', 'To') }}
-			</label>
+			<div class="composer-fields__label">
+				<label class="to-label" for="to">
+					{{ t('mail', 'To') }}
+				</label>
+				<ButtonVue size="small" type="tertiary-no-background" @click.prevent="toggleViewMode">
+					{{ t('mail','Cc/Bcc') }}
+				</ButtonVue>
+			</div>
 			<div class="composer-fields--custom">
 				<NcSelect id="to"
 					ref="toLabel"
@@ -86,12 +91,6 @@
 						</div>
 					</template>
 				</NcSelect>
-				<button :title="t('mail','Toggle recipients list mode')"
-					:class="{'active':!autoLimit}"
-					@click.prevent="toggleViewMode">
-					<UnfoldMoreHorizontal v-if="autoLimit" :size="16" />
-					<UnfoldLessHorizontal v-else :size="16" />
-				</button>
 			</div>
 		</div>
 		<div v-if="showCC" class="composer-fields">
@@ -475,8 +474,6 @@ import IconFolder from 'vue-material-design-icons/Folder.vue'
 import IconPublic from 'vue-material-design-icons/Link.vue'
 import IconLinkPicker from 'vue-material-design-icons/Shape.vue'
 import RecipientListItem from './RecipientListItem.vue'
-import UnfoldMoreHorizontal from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
-import UnfoldLessHorizontal from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
 import Paperclip from 'vue-material-design-icons/Paperclip.vue'
 import IconFormat from 'vue-material-design-icons/FormatSize.vue'
 import { showError, showWarning } from '@nextcloud/dialogs'
@@ -533,8 +530,6 @@ export default {
 		RecipientListItem,
 		Send,
 		SendClock,
-		UnfoldMoreHorizontal,
-		UnfoldLessHorizontal,
 		IconFormat,
 		NcReferencePickerModal,
 	},
@@ -1428,7 +1423,6 @@ export default {
 
 <style lang="scss" scoped>
 .message-composer {
-	margin: 0;
 	z-index: 100;
 	display: flex;
 	flex-direction: column;
@@ -1441,12 +1435,18 @@ export default {
 	background: linear-gradient(rgba(255, 255, 255, 0), var(--color-main-background-translucent) 50%);
 }
 .composer-fields {
-	flex-wrap: nowrap;
-	display: flex;
-	align-items: flex-start;
+	padding: var(--default-grid-baseline) calc(var(--default-grid-baseline) * 2) 0 calc(var(--default-grid-baseline) * 2);
 
-	label {
-		padding: 11px 20px 11px 0;
+	&__label {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-end;
+
+		/** NcButton does not allow font weight styling */
+		:deep(.button-vue__text) {
+			font-weight: normal;
+		}
 	}
 
 	:deep(.multiselect__content-wrapper) {
@@ -1461,10 +1461,6 @@ export default {
 	:deep(.multiselect__tags) {
 		box-sizing: border-box;
 		height: auto;
-	}
-
-	&__from {
-		margin-right: 102px; /* for the modal close and minimize buttons */
 	}
 
 	.multiselect.multiselect--multiple::after {
@@ -1502,7 +1498,6 @@ export default {
 		align-items: flex-start;
 		justify-content: space-between;
 		padding-top: 2px;
-		width: calc(100% - 120px);
 
 		button {
 			margin-top: 0;
@@ -1513,13 +1508,8 @@ export default {
 			padding: 10px 16px;
 		}
 
-		button.active, button:active {
-			opacity: 1;
-		}
-
-		&.__select {
-			width: calc(100% - 150px);
-			margin-right: 12px;
+		.select {
+			width: 100%;
 		}
 		.vs__search{
 			width: 100%;
@@ -1533,7 +1523,7 @@ export default {
 		font-size: 15px;
 		font-weight: bold;
 		margin: 3px 0 !important;
-		padding: 0 12px !important;
+		padding: 0 !important;
 
 		&:focus-visible {
 			box-shadow: none !important;
@@ -1547,7 +1537,6 @@ export default {
 		border: none !important;
 		outline: none !important;
 		box-shadow: none !important;
-		padding: 12px;
 
 		// Fix contenteditable not becoming focused upon clichint within it's
 		// boundaries in safari
@@ -1575,17 +1564,10 @@ export default {
 .copy-toggle,
 .cc-label,
 .bcc-label {
-	padding-top: 12px;
-	padding-bottom: 12px;
-	padding-right: 20px;
-	cursor: text;
 	color: var(--color-text-maxcontrast);
-	width: 100px;
-	text-align: right;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-weight: bold;
 }
 
 .bcc-label {
