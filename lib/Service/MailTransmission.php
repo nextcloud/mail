@@ -141,12 +141,7 @@ class MailTransmission implements IMailTransmission {
 		// Send the message
 		try {
 			$mail->send($transport, false, false);
-			// FIXME: Fix encoding inconsistencies upstream and use stream=false instead
-			//        - stream=false defaults to 7bit quoted-printable
-			//        - stream=true defaults to 8bit
-			//        However, the headers are taken from the base part and always indicate the 8bit
-			//		  encoding.
-			$localMessage->setRaw(stream_get_contents($mail->getRaw(true)));
+			$localMessage->setRaw($mail->getRaw(false));
 		} catch (Horde_Mime_Exception $e) {
 			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			if (in_array($e->getCode(), self::RETRIABLE_CODES, true)) {
