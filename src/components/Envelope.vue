@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<ListItem v-draggable-envelope="{
+	<EnvelopeSkeleton v-draggable-envelope="{
 			accountId: data.accountId ? data.accountId : mailbox.accountId,
 			mailboxId: data.mailboxId,
 			databaseId: data.databaseId,
@@ -299,7 +299,7 @@
 				</ActionLink>
 			</template>
 		</template>
-		<template #extra>
+		<template #tags>
 			<div v-for="tag in tags"
 				:key="tag.id"
 				class="tag-group">
@@ -327,17 +327,17 @@
 				:envelopes="[data]"
 				@close="onCloseTagModal" />
 		</template>
-	</ListItem>
+	</EnvelopeSkeleton>
 </template>
 <script>
 import {
-	NcListItem as ListItem,
 	NcActionButton as ActionButton,
 	NcActionLink as ActionLink,
 	NcActionSeparator,
 	NcActionInput,
 	NcActionText as ActionText,
 } from '@nextcloud/vue'
+import EnvelopeSkeleton from './EnvelopeSkeleton.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
 import Avatar from './Avatar.vue'
 import IconCreateEvent from 'vue-material-design-icons/Calendar.vue'
@@ -401,7 +401,7 @@ export default {
 		EnvelopePrimaryActions,
 		EventModal,
 		TaskModal,
-		ListItem,
+		EnvelopeSkeleton,
 		ImportantIcon,
 		JunkIcon,
 		ActionButton,
@@ -902,7 +902,7 @@ export default {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
-			line-height: 130%;
+			line-height: var(--default-line-height);
 		}
 	}
 	&__preview-text {
@@ -916,40 +916,39 @@ export default {
 }
 
 .list-item__wrapper--active {
-	.envelope__preview-text {
-		color: var(--color-primary-element-text);
+	div, :deep(.list-item-content__inner__details__details) {
+		color: var(--color-primary-element-text) !important;
 	}
 }
 
 .icon-important {
 	:deep(path) {
-	fill: #ffcc00;
-	stroke: var(--color-main-background);
+		fill: #ffcc00;
+		stroke: var(--color-main-background);
 	}
 	.list-item:hover &,
 	.list-item:focus &,
 	.list-item.active & {
-	:deep(path) {
-	stroke: var(--color-background-dark);
-	}
+		:deep(path) {
+			stroke: var(--color-background-dark);
+		}
 	}
 
 	// In message list, but not the one in the action menu
 	&.app-content-list-item-star {
-	background-image: none;
-	left: 15px;
-	top: 13px;
-	opacity: 1;
+		background-image: none;
+		left: 4px;
+		top: 8px;
+		opacity: 1;
 
-	&:hover,
-	&:focus {
-	opacity: 0.5;
-	}
+		&:hover,
+		&:focus {
+			opacity: 0.5;
+		}
 	}
 }
 .important-one-line.app-content-list-item-star:deep() {
-	top: 6px !important;
-	left: 7px;
+	top: 3px !important;
 }
 
 .app-content-list-item-select-checkbox {
@@ -1019,12 +1018,10 @@ export default {
 }
 .tag-group {
 	display: inline-block;
-	border: 1px solid transparent;
 	border-radius: var(--border-radius-pill);
 	position: relative;
-	margin: 9px 1px 0;
+	margin-right: 1px;
 	overflow: hidden;
-	left: 4px;
 }
 .list-item__wrapper:deep() {
 	list-style: none;
@@ -1034,7 +1031,7 @@ export default {
 }
 .icon-important.app-content-list-item-star:deep() {
 	position: absolute;
-	top: 14px;
+	top: 8px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {
