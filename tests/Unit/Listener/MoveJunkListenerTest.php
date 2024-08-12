@@ -18,7 +18,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Listener\MoveJunkListener;
 use Psr\Log\LoggerInterface;
-use Psr\Log\Test\TestLogger;
+use Beste\Psr\Log\TestLogger;
 
 class MoveJunkListenerTest extends TestCase {
 	private IMailManager $mailManager;
@@ -29,7 +29,7 @@ class MoveJunkListenerTest extends TestCase {
 		parent::setUp();
 
 		$this->mailManager = $this->createMock(IMailManager::class);
-		$this->logger = new TestLogger();
+		$this->logger = TestLogger::create();
 
 		$this->listener = new MoveJunkListener(
 			$this->mailManager,

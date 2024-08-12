@@ -43,6 +43,7 @@
 		"youthweb/urllinker": "^2.0"
 	},
 	"require-dev": {
+		"beste/psr-testlogger": "^1.0",
 		"psalm/phar": "^5.25.0",
 		"roave/security-advisories": "dev-master"
 	},

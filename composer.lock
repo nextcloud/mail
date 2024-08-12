@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7dea1081222036203e146d00d5db449b",
+    "content-hash": "fc7e2523f7ea6f152586165bf9579fdb",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3507,6 +3507,69 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "beste/psr-testlogger",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beste/psr-testlogger.git",
+                "reference": "405cf168378fdb0977f34d9abc36a4a31bf29315"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beste/psr-testlogger/zipball/405cf168378fdb0977f34d9abc36a4a31bf29315",
+                "reference": "405cf168378fdb0977f34d9abc36a4a31bf29315",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^8.1",
+                "psr/log": "^2.0|^3.0"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^1.8.2",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.1.1",
+                "phpstan/phpstan-strict-rules": "^1.4",
+                "phpunit/phpunit": "^9.5.23",
+                "symfony/var-dumper": "^6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Beste\\Psr\\Log\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jérôme Gamez",
+                    "email": "jerome@gamez.name"
+                }
+            ],
+            "description": "PSR-3 compliant test logger for developers who like tests and want to check if their application logs messages as they expect.",
+            "keywords": [
+                "log",
+                "logging",
+                "psr-3",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/beste/psr-testlogger/issues",
+                "source": "https://github.com/beste/psr-testlogger/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/jeromegamez",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-09-24T15:52:38+00:00"
+        },
         {
             "name": "psalm/phar",
             "version": "5.25.0",
