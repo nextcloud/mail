@@ -14,6 +14,7 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
+use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -30,6 +31,7 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 	private CustomEmailCheck $customEmailCheck;
 	private DateCheck $dateCheck;
 	private ReplyToCheck $replyToCheck;
+	private LinkCheck $linkCheck;
 	private PhishingDetectionService $service;
 
 	protected function setUp(): void {
@@ -40,7 +42,8 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 		$this->customEmailCheck = new CustomEmailCheck($this->l10n);
 		$this->dateCheck = new DateCheck($this->l10n, \OC::$server->get(ITimeFactory::class));
 		$this->replyToCheck = new ReplyToCheck($this->l10n);
-		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck);
+		$this->linkCheck = new LinkCheck($this->l10n);
+		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck);
 	}
 
 	

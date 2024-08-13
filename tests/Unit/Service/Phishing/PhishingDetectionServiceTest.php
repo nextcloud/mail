@@ -13,6 +13,7 @@ use OCA\Mail\PhishingDetectionResult;
 use OCA\Mail\Service\PhishingDetection\ContactCheck;
 use OCA\Mail\Service\PhishingDetection\CustomEmailCheck;
 use OCA\Mail\Service\PhishingDetection\DateCheck;
+use OCA\Mail\Service\PhishingDetection\LinkCheck;
 use OCA\Mail\Service\PhishingDetection\PhishingDetectionService;
 use OCA\Mail\Service\PhishingDetection\ReplyToCheck;
 
@@ -24,6 +25,7 @@ class PhishingDetectionServiceTest extends TestCase {
 	private CustomEmailCheck|MockObject $customEmailCheck;
 	private DateCheck|MockObject $dateCheck;
 	private ReplyToCheck|MockObject $replyToCheck;
+	private LinkCheck|MockObject $linkCheck;
 	private PhishingDetectionService $service;
 
 	protected function setUp(): void {
@@ -32,7 +34,8 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->customEmailCheck = $this->createMock(customEmailCheck::class);
 		$this->dateCheck = $this->createMock(DateCheck::class);
 		$this->replyToCheck = $this->createMock(ReplyToCheck::class);
-		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck);
+		$this->linkCheck = $this->createMock(LinkCheck::class);
+		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck);
 	}
 
 	
@@ -56,7 +59,10 @@ class PhishingDetectionServiceTest extends TestCase {
 		$this->customEmailCheck->expects($this->once())
 			->method('run')
 			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::CUSTOM_EMAIL_CHECK, false));
-		$result = $this->service->checkHeadersForPhishing($parsedHeaders, false);
+		$this->linkCheck->expects($this->once())
+			->method('run')
+			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false));
+		$result = $this->service->checkHeadersForPhishing($parsedHeaders, true, '');
 		$this->assertFalse($result["warning"]);
 	}
 
