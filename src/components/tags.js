@@ -9,6 +9,7 @@ export const hiddenTags = {
 	has_cal: '',
 	'has cal': '',
 	hasnoattachment: '',
+	notjunk: '',
 	loadremoteimages: '',
 	'unsubscribe newsletter': '',
 }
