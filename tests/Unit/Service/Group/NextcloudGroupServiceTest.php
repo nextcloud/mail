@@ -83,7 +83,7 @@ class NextcloudGroupServiceTest extends TestCase {
 
 	public function dataForTestSearch(): array {
 		return [
-			['yes', [
+			['yes', 'no', [
 				[
 					'id' => 'testgroup',
 					'name' => 'first test group',
@@ -93,7 +93,9 @@ class NextcloudGroupServiceTest extends TestCase {
 					'name' => 'second test group',
 				]
 			]],
-			['no', []]
+			['no', 'yes', []],
+			['no', 'no', []],
+			['yes', 'yes', []],
 		];
 	}
 
@@ -103,22 +105,24 @@ class NextcloudGroupServiceTest extends TestCase {
 	 * @param string $allowGroupSharing
 	 * @param array $expected
 	 */
-	public function testSearch(string $allowGroupSharing, array $expected): void {
+	public function testSearch(string $allowGroupSharing, string $restrictSharingToGroups, array $expected): void {
 		$term = 'te'; // searching for: John Doe
 		$searchResult = [
 			$this->createTestGroup('testgroup', 'first test group'),
 			$this->createTestGroup('testgroup2', 'second test group'),
 		];
 
-		$this->groupsManager->expects($allowGroupSharing === 'yes' ? self::once() : self::never())
+		$this->groupsManager->expects(($allowGroupSharing === 'yes' && $restrictSharingToGroups === 'no') ? self::once() : self::never())
 			->method('search')
 			->with($term)
 			->willReturn($searchResult);
 
-		$this->config->expects(self::once())
+		$this->config->expects(self::exactly(2))
 			->method('getAppValue')
-			->with('core', 'shareapi_allow_group_sharing', 'yes')
-			->willReturn($allowGroupSharing);
+			->willReturnMap([
+				['core', 'shareapi_allow_group_sharing', 'yes', $allowGroupSharing],
+				['core', 'shareapi_only_share_with_group_members', 'no', $restrictSharingToGroups],
+			]);
 
 
 		$actual = $this->groupService->search($term);
