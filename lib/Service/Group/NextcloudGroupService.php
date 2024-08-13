@@ -43,7 +43,10 @@ class NextcloudGroupService implements IGroupService {
 	}
 
 	public function search(string $term): array {
-		if ($this->config->getAppValue('core', 'shareapi_allow_group_sharing', 'yes') !== 'yes') {
+		$c1 = $this->config->getAppValue('core', 'shareapi_allow_group_sharing', 'yes');
+		$c2 = $this->config->getAppValue('core', 'shareapi_only_share_with_group_members', 'no');
+		if ($c1 !== 'yes'
+			|| $c2 !== 'no') {
 			return [];
 		}
 		$groups = $this->groupManager->search($term);
