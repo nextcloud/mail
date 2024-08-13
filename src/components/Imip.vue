@@ -117,6 +117,7 @@
 				<Button
 					v-if="!showMoreOptions"
 					type="tertiary"
+					:disabled="loading"
 					:aria-label="t('mail', 'More options')"
 					@click="showMoreOptions = true">
 					{{ t('mail', 'More options') }}
@@ -442,44 +443,60 @@ export default {
 				return
 			}
 
-			attendee.participationStatus = status
-			if (this.comment) {
-				attendee.setParameter(new Parameter('X-RESPONSE-COMMENT', this.comment))
-				vEvent.addProperty(new Property('COMMENT', this.comment))
-			}
-			// TODO: implement an input for guests and save it to the attendee via X-NUM-GUESTS
-
 			this.loading = true
-			try {
-				if (this.isExistingEvent) {
+
+			if (!this.isExistingEvent) {
+				try {
+					await calendar.createVObject(vCalendar.toICS())
+					await this.fetchExistingEvent(vEvent.uid, true)
+				} catch (error) {
+					showError(this.t('mail', 'Failed to save your participation status'))
+					logger.error('Failed to save event to calendar', {
+						error,
+						attendee,
+						calendar,
+						vEvent,
+						vCalendar,
+						existingEvent: this.existingEvent,
+					})
+				}
+			}
+
+			if (this.isExistingEvent) {
+				attendee.participationStatus = status
+				if (this.comment) {
+					attendee.setParameter(new Parameter('X-RESPONSE-COMMENT', this.comment))
+					vEvent.addProperty(new Property('COMMENT', this.comment))
+				}
+
+				// TODO: implement an input for guests and save it to the attendee via X-NUM-GUESTS
+
+				try {
 					// TODO: don't show buttons if calendar is not writable
 					this.existingEvent.data = vCalendar.toICS()
 					await this.existingEvent.update()
-				} else {
-					await calendar.createVObject(vCalendar.toICS())
+					this.showMoreOptions = false
+				} catch (error) {
+					showError(this.t('mail', 'Failed to save your participation status'))
+					logger.error('Failed to save event to calendar', {
+						error,
+						attendee,
+						calendar,
+						vEvent,
+						vCalendar,
+						existingEvent: this.existingEvent,
+					})
 				}
-				this.showMoreOptions = false
-			} catch (error) {
-				showError(this.t('mail', 'Failed to save your participation status'))
-				logger.error('Failed to save event to calendar', {
-					error,
-					attendee,
-					calendar,
-					vEvent,
-					vCalendar,
-					existingEvent: this.existingEvent,
-				})
-			} finally {
-				this.loading = false
 			}
 
 			// Refetch the event to update the shown status message or reset the event in the case
 			// of an error.
-			this.existingEventFetched = false
-			await this.fetchExistingEvent(vEvent.uid)
+			await this.fetchExistingEvent(vEvent.uid, true)
+
+			this.loading = false
 		},
-		async fetchExistingEvent(uid) {
-			if (this.existingEventFetched) {
+		async fetchExistingEvent(uid, force = false) {
+			if (!force && this.existingEventFetched) {
 				return
 			}
 
