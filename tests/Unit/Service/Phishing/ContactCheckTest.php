@@ -28,7 +28,6 @@ class ContactCheckTest extends TestCase {
 	}
 
 	public function testContactInABCorrectEmail(): void {
-		
 		$fn = "John Doe";
 		$email = "jhon@example.com" ;
 		$contacts = [
@@ -39,12 +38,24 @@ class ContactCheckTest extends TestCase {
 		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
 		$result = $this->service->run($fn, $email);
 
+		$this->assertFalse($result->isPhishing());
+	}
+
+	public function testCaseInsensitiveEmail(): void {
+		$fn = "John Doe";
+		$email = "jhondoe@example.com" ;
+		$contacts = [
+			[
+				"email" => ["JhonDoe@example.com"]
+			]
+		];
+		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
+		$result = $this->service->run($fn, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}
 
 	public function testContactInABWrongEmail(): void {
-		
 		$fn = "John Doe";
 		$email = "jhon@example.com" ;
 		$contacts = [
@@ -54,7 +65,6 @@ class ContactCheckTest extends TestCase {
 		];
 		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
 		$result = $this->service->run($fn, $email);
-
 
 		$this->assertTrue($result->isPhishing());
 	}
