@@ -94,6 +94,10 @@ export const getters = {
 	getTag: (state) => (id) => {
 		return state.tags[id]
 	},
+	isInternalAddress: (state) => (address) => {
+		const domain = address.split('@')[1]
+		return state.internalAddress.some((internalAddress) => internalAddress.address === address || internalAddress.address === domain)
+	},
 	getTags: (state) => {
 		return state.tagList.map(tagId => state.tags[tagId])
 	},
@@ -151,4 +155,5 @@ export const getters = {
 	isOneLineLayout: (state) => state.list,
 	hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
 	isFollowUpFeatureAvailable: (state) => state.followUpFeatureAvailable,
+	getInternalAddresses: (state) => state.internalAddress?.filter(internalAddress => internalAddress !== undefined),
 }

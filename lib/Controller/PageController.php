@@ -19,6 +19,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\InternalAddressService;
 use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
@@ -70,6 +71,7 @@ class PageController extends Controller {
 	private IUserManager $userManager;
 	private ?IAvailabilityCoordinator $availabilityCoordinator;
 	private ClassificationSettingsService $classificationSettingsService;
+	private InternalAddressService $internalAddressService;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -91,7 +93,8 @@ class PageController extends Controller {
 		AiIntegrationsService $aiIntegrationsService,
 		IUserManager $userManager,
 		ContainerInterface $container,
-		ClassificationSettingsService $classificationSettingsService) {
+		ClassificationSettingsService $classificationSettingsService,
+		InternalAddressService $internalAddressService, ) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -112,6 +115,7 @@ class PageController extends Controller {
 		$this->aiIntegrationsService = $aiIntegrationsService;
 		$this->userManager = $userManager;
 		$this->classificationSettingsService = $classificationSettingsService;
+		$this->internalAddressService = $internalAddressService;
 
 		// TODO: inject directly if support for nextcloud < 28 is dropped
 		try {
@@ -171,6 +175,16 @@ class PageController extends Controller {
 		$this->initialStateService->provideInitialState(
 			'tags',
 			$this->tagMapper->getAllTagsForUser($this->currentUserId)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'internal-addresses-list',
+			$this->internalAddressService->getInternalAddresses($this->currentUserId)
+		);
+
+		$this->initialStateService->provideInitialState(
+			'internal-addresses',
+			$this->preferences->getPreference($this->currentUserId, 'internal-addresses', false)
 		);
 
 		$this->initialStateService->provideInitialState(
