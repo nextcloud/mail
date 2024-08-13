@@ -103,6 +103,7 @@ export default {
 
 textarea {
 	width: 100%;
+	resize: vertical;
 }
 
 .primary {
