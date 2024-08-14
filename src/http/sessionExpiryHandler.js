@@ -7,9 +7,7 @@ import logger from '../logger.js'
 
 export async function handleHttpAuthErrors(commit, cb) {
 	try {
-		const res = await cb()
-		logger.debug('req done')
-		return res
+		return await cb()
 	} catch (error) {
 		logger.debug('req err', { error, status: error.response?.status, message: error.response?.data?.message })
 		if (error.response?.status === 401 && error.response?.data?.message === 'Current user is not logged in') {
