@@ -26,6 +26,7 @@ OC.L10N.register(
     "Description" : "Opis",
     "Create" : "Napravi",
     "Comment" : "Komentar",
+    "Remove" : "Ukloni",
     "Other" : "Ostali",
     "Move" : "Premesti",
     "Remove account" : "Ukloni nalog",
@@ -40,7 +41,6 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Oznake",
     "Not found" : "Nije nađeno",
-    "Remove" : "Ukloni",
     "User" : "User",
     "Favorites" : "Omiljene"
 },
