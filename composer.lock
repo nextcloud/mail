@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0cc234da73403beae6482cd827b5dc06",
+    "content-hash": "fab486a104339fcd4a3f29c46d36092d",
     "packages": [
         {
             "name": "amphp/amp",
@@ -988,16 +988,16 @@
         },
         {
             "name": "bytestream/horde-mime",
-            "version": "v2.13.1",
+            "version": "v2.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Mime.git",
-                "reference": "8ae56b56dd4972f2d6eb6ec3b58ceba45aef0101"
+                "reference": "63eb21725983e437536d457135719df5a42e3cf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Mime/zipball/8ae56b56dd4972f2d6eb6ec3b58ceba45aef0101",
-                "reference": "8ae56b56dd4972f2d6eb6ec3b58ceba45aef0101",
+                "url": "https://api.github.com/repos/bytestream/Mime/zipball/63eb21725983e437536d457135719df5a42e3cf4",
+                "reference": "63eb21725983e437536d457135719df5a42e3cf4",
                 "shasum": ""
             },
             "require": {
@@ -1046,9 +1046,9 @@
             "description": "MIME library",
             "homepage": "https://www.horde.org/libraries/Horde_Mime",
             "support": {
-                "source": "https://github.com/bytestream/Mime/tree/v2.13.1"
+                "source": "https://github.com/bytestream/Mime/tree/v2.13.2"
             },
-            "time": "2024-05-30T15:16:56+00:00"
+            "time": "2024-08-12T14:10:09+00:00"
         },
         {
             "name": "bytestream/horde-secret",
