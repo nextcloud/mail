@@ -53,7 +53,9 @@ class OutOfOfficeListener implements IEventListener {
 		// check inside the sieve script acts as a redundancy.
 		$now = $this->timeFactory->getTime();
 		$enabled = $now >= $eventData->getStartDate() && $now < $eventData->getEndDate();
-		if (($event instanceof OutOfOfficeClearedEvent) || ($event instanceof OutOfOfficeEndedEvent)) {
+		if ($event instanceof OutOfOfficeStartedEvent) {
+			$enabled = true;
+		} elseif (($event instanceof OutOfOfficeClearedEvent) || ($event instanceof OutOfOfficeEndedEvent)) {
 			$enabled = false;
 		}
 
