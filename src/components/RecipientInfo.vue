@@ -17,9 +17,9 @@
 		<div class="recipient-multiple">
 			<div class="recipient-list">
 				<div v-for="(vcard, index) in recipientsVCards"
-					 :key="index"
+					:key="index"
 					class="recipient-item">
-					{{ vcard.data ? vcard.data : 'No data available' }}
+					<RecipientDetails :contacts="vcard.data" :reload-bus="reloadBus" />
 					<!--					<Avatar :user="recipient.uid"
 						:display-name="recipient.displayName"
 						:email="recipient.email"
@@ -49,17 +49,14 @@
 </template>
 
 <script>
-import Avatar from './Avatar.vue'
-import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
-import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
+import RecipientDetails from '../nextcloud-contacts/RecipientDetails.vue'
 import { mapGetters } from 'vuex'
 import { namespaces as NS } from '@nextcloud/cdav-library'
+import mitt from 'mitt'
 
 export default {
 	components: {
-		Avatar,
-		IconArrowUp,
-		IconArrowDown,
+		RecipientDetails,
 	},
 	props: {
 		recipient: {
@@ -73,6 +70,7 @@ export default {
 			photoUrl: undefined,
 			recipientsVCards: {},
 			loadingParticipants: {},
+			reloadBus: mitt(),
 		}
 	},
 	computed: {
