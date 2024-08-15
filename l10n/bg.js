@@ -238,6 +238,7 @@ OC.L10N.register(
     "Failed to save your participation status" : "Неуспешно записване на статуса ви на участие",
     "domain" : "домейн",
     "Remove" : "Премахване",
+    "email" : "имейл",
     "individual" : "Индивидуален",
     "Could not open mailbox" : "Пощенската кутия не можа да се отвори",
     "Loading messages …" : "Зареждане на съобщения ...",

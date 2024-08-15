@@ -36,6 +36,7 @@ OC.L10N.register(
     "Comment" : "Displegadenn",
     "Accept" : "Asantiñ",
     "Remove" : "Lemel",
+    "email" : "postel",
     "Important info" : "Titouroù pouezus",
     "Other" : "All",
     "Show images" : "Diskouzh ar skeudennoù",

@@ -15,9 +15,11 @@ OC.L10N.register(
     "You are reaching your mailbox quota limit for {account_email}" : "لقد قاربت على استنفاذ الحصة التخزينية لصندوق بريدك {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "أنت تستخدم الآن {percentage} مع سعة صندوق البريد. قم رجاءً بتفريغ بعض المساحة و ذلك بحذف البريد غير الضروري.",
     "Mails" : "رسائل",
+    "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "مُرسِل الإيميل: %1$s ليس في دفتر العناوين؛ لكن اسم المُرسِل: %2$s مُسجّلٌ في دفتر العناوين مع الإيميل التالي: %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "عنوان إيميل المُرسِل: %1$s ليس في دفتر العناوين؛ لكن اسم المُرسِل: %2$s موجود مرتبطاً بعناوين الإيميل التالية : %3$s",
     "Sender is using a custom email: %1$s instead of the sender email: %2$s" : "يستعمل المُرسل عنواناً مُخصّصاً للإيميل: %1$s بدلاً عن عنوان إيميل المرسل: %2$s",
     "Sent date is in the future" : "تاريخ الإرسال في المستقبل و لم يحِن بعدُ",
+    "Some addresses in this message are not matching the link text" : "بعض العناوين في هذا الإيميل لا تتطابق مع نص الرابط",
     "Reply-To email: %1$s  is different from the sender email: %2$s" : "عنوان الإيميل المردود عليه: %1$s  يختلف عن عنوان إيميل المُرسِل: %2$s",
     "💌 A mail app for Nextcloud" : "💌 تطبيق البريد الالكتروني Mail لنكست كلود",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://horde.org) libraries.\n- **📬 Want to host your own mail server?** We do not have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!\n\n## Ethical AI Rating\n\n### Priority Inbox\n\nPositive:\n* The software for training and inferencing of this model is open source.\n* The model is created and trained on-premises based on the user's own data.\n* The training data is accessible to the user, making it possible to check or correct for bias or optimise the performance and CO2 usage.\n\n### Thread Summaries (opt-in)\n\n**Rating:** 🟢/🟡/🟠/🔴\n\nThe rating depends on the installed text processing backend. See [the rating overview](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) for details.\n\nLearn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/)." : "**💌 تطبيق \"بريد نكست كلاود\" Nextcloud Mail** \n\n- **🚀 التكامل مع تطبيقات Nextcloud الأخرى!** يتكامل حتى الآن مع جهات الاتصال والتقويم والملفات؛  و المزيد في الطريق.\n- **📥 حسابات بريد متعددة!** عندك حساب شخصي و آخر للعمل؟ لا مشكلة، كلها في صندوق بريد وارد موحد و لطيف. قم بإضافة أي حساب بريد آخر IMAP. \n- **🔒 إرسال واستقبال رسائل البريد الإلكتروني المشفرة!** باستخدام ملحق المتصفح الرائع [Mailvelope] (https://mailvelope.com). \n- **🙈 نحن لا نعيد اختراع العجلة!** استنادًا إلى مكتبات [Horde] (https://horde.org). \n- **📬 هل ترغب في استضافة خادم البريد الخاص بك؟** ليس علينا إعادة تنفيذ هذا حيث يمكنك إعداد [Mail-in-a-Box] (https://mailinabox.email)! \n\n## تصنيف الذكاء الاصطناعي الأخلاقي \n\n### البريد الوارد ذو الأولوية \nالتقييم: ......\nالإيجابيّات: \n* برنامج التدريب والاستدلال على هذا النموذج مفتوح المصدر. \n* يتم إنشاء النموذج وتدريبه محليًا بناءً على بيانات المستخدم الخاصة. \n* يمكن للمستخدم الوصول إلى بيانات التدريب، مما يجعل من الممكن التحقق من التحيز أو تصحيحه أو تحسين الأداء و استهلاك ثاني أكسيد الكربون CO2. \n\n### ملخصات المواضيع (اختيارية) \n\n**التقييم:** 🟢/🟡/🟠/🔴 \nيعتمد التصنيف على الواجهة الخلفية لمعالجة النص المثبتة. راجع [نظرة عامة على التصنيف](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html) \n\nللحصول على التفاصيل. تعرف على المزيد حول تصنيف Nextcloud Ethical AI [في مدونتنا](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).",
@@ -129,6 +131,8 @@ OC.L10N.register(
     "Data collection consent" : "الموافقة على جمع البيانات",
     "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "السماح للتطبيق بجمع بيانات حول تفاعلاتك. بناءً على هذه البيانات، سيتكيف التطبيق مع تفضيلاتك. سيتم تخزين البيانات محليًا فقط.",
     "Trusted senders" : "مُرسِلُون مَوثُوقُون",
+    "Internal addresses" : "عناوين داخلية",
+    "Highlight external email addressesby enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked." : "قم بتمييز عناوين البريد الإلكتروني الخارجية من خلال تمكين هذه الميزة، وإدارة عناوينك ومجالاتك الداخلية لضمان بقاء جهات الاتصال المعروفة بدون تمييز.",
     "S/MIME" : "S/MIME",
     "Manage S/MIME certificates" : "إدارة شهادات S/MIME",
     "Mailvelope" : "Mailvelope",
@@ -153,6 +157,7 @@ OC.L10N.register(
     "Put my text to the bottom of a reply instead of on top of it." : "ضع نصي في أسفل الرد بدلاً من وضعه فوقه.",
     "Mark as important" : "ميِّز كـ\"مُهم\"",
     "Remind about messages that require a reply but received none" : "ذكِّرني بالرسائل التي تتطلب ردّاً لكن لم يتم ",
+    "Use internal addresses" : "استعمل عناوين داخلية",
     "Could not update preference" : "تعذّر تحديث التفضيلات",
     "Select an alias" : "إختَر اسماً مُستعاراً alias",
     "Select certificates" : "إختّر شهادات المصادقة",
@@ -165,6 +170,7 @@ OC.L10N.register(
     "From" : "من :",
     "Select account" : "إختَر الحساب",
     "To" : "إلى :",
+    "Cc/Bcc" : "نسخة Cc / نسخة مخفية Bcc",
     "Select recipient" : "إختَر المُستلِم",
     "Contact or email address …" : "جهة الاتصال أو عنوان البريد الإلكتروني ...",
     "Cc" : "نُسخة كَربونية Cc",
@@ -304,6 +310,11 @@ OC.L10N.register(
     "Failed to save your participation status" : "تعذّر حفظ حالة اشتراكك participation status",
     "domain" : "النطاق",
     "Remove" : "حذف",
+    "email" : "البريد الإلكتروني",
+    "Add internal address" : "إضِف عنواناً داخليّاً",
+    "Add internal email or domain" : "أضِف عنواناً داخليّاً أو نطاقاً",
+    "Could not remove internal address {sender}" : "يتعذّر حذف العنوان الداخلي {sender}",
+    "Could not add internal address {address}" : "تتعذّر إضافة العنوان الداخلي{address}",
     "individual" : "فردي",
     "Could not open mailbox" : "تعذّر فتح صندوق البريد",
     "Loading messages …" : "تحميل الرسائل ...",
@@ -442,6 +453,9 @@ OC.L10N.register(
     "Message could not be sent" : "تعذّر إرسال الرسالة",
     "Message deleted" : "تمّ حذف الرسالة",
     "Phishing email" : "إيميل تصيُّدي",
+    "hide suspicious links" : "أخفِ الروابط المشبوهة",
+    "Show suspicious links" : "أظهِر الروابط المشبوهة",
+    "link text" : "نص رابط",
     "Contacts with this address" : "جهات اتصال بهذا العنوان",
     "Add to Contact" : "أضِف إلى جهة اتصال",
     "New Contact" : "جهة اتصال جديدة",

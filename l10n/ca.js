@@ -283,6 +283,7 @@ OC.L10N.register(
     "Failed to save your participation status" : "No s'ha pogut desar el vostre estat de participació",
     "domain" : "domini",
     "Remove" : "Suprimeix",
+    "email" : "correu electrònic",
     "individual" : "individual",
     "Could not open mailbox" : "No es pot obrir la bústia de correu",
     "Loading messages …" : "S'estan carregant missatges …",

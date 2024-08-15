@@ -82,6 +82,7 @@ OC.L10N.register(
     "Comment" : "Kommentaar",
     "Accept" : "Aanvaar",
     "Remove" : "Verwyder",
+    "email" : "e-pos",
     "Other" : "Ander",
     "View source" : "Bekyk bron",
     "Message body" : "Boodskaplyfteks",
