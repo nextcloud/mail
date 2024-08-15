@@ -23,6 +23,9 @@ class ContactCheck {
 		$emails = [];
 		$contacts = $this->contactIntegration->getContactsWithName($fn, true);
 		foreach ($contacts as $contact) {
+			if(!isset($contact['email'])) {
+				continue;
+			}
 			foreach ($contact['email'] as $contactEmail) {
 				$emails[] = $contactEmail;
 				if (strcasecmp($contactEmail, $email) == 0) {

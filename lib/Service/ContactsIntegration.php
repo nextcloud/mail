@@ -236,7 +236,7 @@ class ContactsIntegration {
 			}
 			$id = $r['UID'];
 			$fn = $r['FN'];
-			$email = $r['EMAIL'];
+			$email = $r['EMAIL'] ?? null;
 			$matches[] = [
 				'id' => $id,
 				'label' => $fn,
