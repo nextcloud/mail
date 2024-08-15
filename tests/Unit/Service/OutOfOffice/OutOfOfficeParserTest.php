@@ -24,8 +24,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testParseEnabledResponder(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on.txt");
-		$cleanedScript = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on.sieve");
+		$cleanedScript = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
 
 		$actual = $this->outOfOfficeParser->parseOutOfOfficeState($script);
 		self::assertEquals($script, $actual->getSieveScript());
@@ -39,8 +39,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testParseDisabledResponder(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-off.txt");
-		$cleanedScript = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-off.sieve");
+		$cleanedScript = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
 
 		$actual = $this->outOfOfficeParser->parseOutOfOfficeState($script);
 		self::assertEquals($script, $actual->getSieveScript());
@@ -54,7 +54,7 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testParseLeaveForeignScriptUntouched(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
 
 		$actual = $this->outOfOfficeParser->parseOutOfOfficeState($script);
 		self::assertEquals($script, $actual->getSieveScript());
@@ -63,8 +63,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testParseOldEnabledResponder(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-no-tz.txt");
-		$cleanedScript = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-no-tz.sieve");
+		$cleanedScript = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
 
 		$actual = $this->outOfOfficeParser->parseOutOfOfficeState($script);
 		self::assertEquals($script, $actual->getSieveScript());
@@ -78,8 +78,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testBuildEnabledResponder(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
-		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
+		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on.sieve");
 
 		$actual = $this->outOfOfficeParser->buildSieveScript(
 			new OutOfOfficeState(
@@ -96,8 +96,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testBuildEnabledResponderWithoutEndDate(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
-		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-no-end-date.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
+		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-no-end-date.sieve");
 
 		$actual = $this->outOfOfficeParser->buildSieveScript(
 			new OutOfOfficeState(
@@ -114,8 +114,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testBuildEnabledResponderWithSpecialCharsInMessage(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
-		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-special-chars-message.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
+		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-special-chars-message.sieve");
 
 		$actual = $this->outOfOfficeParser->buildSieveScript(
 			new OutOfOfficeState(
@@ -123,7 +123,7 @@ class OutOfOfficeParserTest extends TestCase {
 				new DateTimeImmutable("2022-09-02T00:00:00+0100"),
 				null,
 				"On vacation",
-				"I'm on vacation.\n\"Hello, World!\"\n\\ escaped backslash",
+				"I'm on vacation.\r\n\"Hello, World!\"\r\n\\ escaped backslash",
 			),
 			$script,
 			["Test Test <test@test.org>", "Test Alias <alias@test.org>"],
@@ -132,8 +132,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testBuildEnabledResponderWithSpecialCharsInSubject(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
-		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-special-chars-subject.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
+		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-special-chars-subject.sieve");
 
 		$actual = $this->outOfOfficeParser->buildSieveScript(
 			new OutOfOfficeState(
@@ -150,8 +150,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testBuildEnabledResponderWithSubjectPlaceholder(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
-		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-subject-placeholder.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
+		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-on-subject-placeholder.sieve");
 
 		$actual = $this->outOfOfficeParser->buildSieveScript(
 			new OutOfOfficeState(
@@ -168,8 +168,8 @@ class OutOfOfficeParserTest extends TestCase {
 	}
 
 	public function testBuildDisabledResponder(): void {
-		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.txt");
-		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-off.txt");
+		$script = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-cleaned.sieve");
+		$expected = file_get_contents(__DIR__ . "/../../../data/sieve-vacation-off.sieve");
 
 		$actual = $this->outOfOfficeParser->buildSieveScript(
 			new OutOfOfficeState(
