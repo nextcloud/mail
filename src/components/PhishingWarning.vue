@@ -13,7 +13,7 @@
 		</ul>
 		<div v-if="linkWarning !== undefined" class="warning__links">
 			<NcButton class="warning__links__button" type="Tertiary" @click="showMore = !showMore">
-				{{ showMore? t('mail','hide suspicious links') :t('mail','Show suspicious links') }}
+				{{ showMore? t('mail','Hide suspicious links') :t('mail','Show suspicious links') }}
 			</NcButton>
 			<div v-if="showMore">
 				<ul v-for="(link,index) in linkWarning.additionalData" :key="index" class="warning__list">

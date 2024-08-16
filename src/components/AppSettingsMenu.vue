@@ -159,7 +159,7 @@
 
 				<h6>{{ t('mail', 'Internal addresses') }}</h6>
 				<p class="settings-hint">
-					{{ t('mail', 'Highlight external email addressesby enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.') }}
+					{{ t('mail', 'Highlight external email addresses by enabling this feature, manage your internal addresses and domains to ensure recognized contacts stay unmarked.') }}
 				</p>
 				<p class="app-settings">
 					<input id="internal-address-toggle"
