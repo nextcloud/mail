@@ -3,3 +3,4 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 /CHANGELOG.md merge=union
 /vendor-bin/**/composer.lock binary
+/tests/data/*.sieve text eol=crlf

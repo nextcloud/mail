@@ -73,7 +73,7 @@ class OutOfOfficeParser {
 			$state = $nextState;
 		}
 
-		return new OutOfOfficeParserResult($data, $sieveScript, implode("\n", $scriptOut));
+		return new OutOfOfficeParserResult($data, $sieveScript, implode("\r\n", $scriptOut));
 	}
 
 	/**
@@ -99,7 +99,7 @@ class OutOfOfficeParser {
 
 		if (!$state->isEnabled()) {
 			//unset($jsonData['start'], $jsonString['end']);
-			return implode("\n", [
+			return implode("\r\n", [
 				$untouchedScript,
 				self::SEPARATOR,
 				self::DATA_MARKER . $stateJsonString,
@@ -173,7 +173,7 @@ class OutOfOfficeParser {
 			self::SEPARATOR,
 		]);
 
-		return implode("\n", array_merge(
+		return implode("\r\n", array_merge(
 			$requireSection,
 			[$untouchedScript],
 			$vacationSection,
