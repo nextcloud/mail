@@ -145,7 +145,7 @@ jobs:
             if: ${{ matrix.php-versions == '8.2' }}
             run: sed -i 's/max-version="8.1"/max-version="8.2"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
-            run: php -f nextcloud/occ app:enable mail
+            run: php -f nextcloud/occ app:enable -f mail
           - name: Configure Nextcloud for testing
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
