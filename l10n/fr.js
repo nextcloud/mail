@@ -452,7 +452,6 @@ OC.L10N.register(
     "Message could not be sent" : "Le message n'a pas pu être envoyé",
     "Message deleted" : "Message supprimé",
     "Phishing email" : "Email d'hameçonnage",
-    "hide suspicious links" : "Cacher les liens suspects",
     "Show suspicious links" : "Montrer les liens suspects",
     "link text" : "Texte du lien",
     "Contacts with this address" : "Contacts ayant cette adresse",
