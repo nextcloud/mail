@@ -937,7 +937,7 @@ export default {
 	// In message list, but not the one in the action menu
 	&.app-content-list-item-star {
 		background-image: none;
-		left: 4px;
+		left: 5px;
 		top: 8px;
 		opacity: 1;
 
@@ -948,7 +948,8 @@ export default {
 	}
 }
 .important-one-line.app-content-list-item-star:deep() {
-	top: 3px !important;
+	top: 4px !important;
+	left: 2px;
 }
 
 .app-content-list-item-select-checkbox {
@@ -988,6 +989,9 @@ export default {
 	&:hover {
 		opacity: .1;
 	}
+}
+.one-line.junk-icon-style {
+	top: 36px;
 }
 
 .icon-attachment {
@@ -1037,8 +1041,8 @@ export default {
 .app-content-list-item-star.favorite-icon-style {
 	display: inline-block;
 	position: absolute;
-	margin-bottom: 21px;
-	margin-left: 28px;
+	margin-bottom: 45px;
+	margin-left: 30px;
 	cursor: pointer;
 	stroke: var(--color-main-background);
 	stroke-width: 2;
@@ -1046,6 +1050,10 @@ export default {
 	&:hover {
 		opacity: .4;
 	}
+}
+.one-line.favorite-icon-style {
+	margin-bottom: 31px;
+	margin-left: 31px;
 }
 :deep(.svg svg) {
 	height: 16px;
