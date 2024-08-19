@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div :class="isInternal?'multiselect__tag multiselect__tag--recipient' :'multiselect__tag multiselect__tag--recipient external'" :title="option.email">
+	<div :class="isInternal?'ncselect__tag--recipient' :'ncselect__tag--recipient external'" :title="option.email">
 		<ListItemIcon :no-margin="true"
 			:name="option.label"
 			:url="option.photo"
@@ -55,35 +55,20 @@ export default {
 	}
 }
 
-.multiselect
-	.multiselect__tags
-	.multiselect__tags-wrap
-	.multiselect__tag--recipient {
+.ncselect__tag--recipient {
 	padding: 0 ;
 	border-radius: 25px;
 	border-color: transparent;
 	background-color: var(--color-background-dark);
 	height: 24px;
-	width: 100%;
+	max-width: 100%;
+	display: flex;
 
 	& > span.option {
 		margin-left: 0
 	}
 }
-.vs__selected{
-	padding: 0 !important;
-}
-.multiselect__tag--recipient .action-item--single {
-	width: auto;
-	min-width: 24px;
-	height: 24px;
-	position: absolute;
-	right: -7px;
-}
-.multiselect__tag--recipient .action-item--single .material-design-icon {
-	height: 24px;
-	width: 24px;
-}
+
 .delete-recipient {
 	display: inline-flex;
 	align-items: center;
@@ -94,15 +79,16 @@ export default {
 	min-width: 24px;
 	margin-left: 6px;
 	border-radius: 50%;
+	flex-shrink: 0;
 
 	&:hover {
 		background: var(--color-background-darker);
 	}
 }
-:deep(.option) {
-	margin: 7px;
-}
-.close-icon {
-	margin-right: 3px;
+
+.option {
+	flex-shrink: 1;
+	overflow: hidden;
+	width: unset;
 }
 </style>

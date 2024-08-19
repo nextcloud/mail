@@ -1524,6 +1524,7 @@ export default {
 		font-weight: bold;
 		margin: 3px 0 !important;
 		padding: 0 !important;
+		width: 100%;
 
 		&:focus-visible {
 			box-shadow: none !important;
