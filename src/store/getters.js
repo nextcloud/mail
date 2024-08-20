@@ -157,4 +157,5 @@ export const getters = {
 	},
 	isOneLineLayout: (state) => state.list,
 	hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
+	hasCurrentUserPrincipalAndCollections: (state) => state.hasCurrentUserPrincipalAndCollections,
 }

@@ -512,4 +512,7 @@ export default {
 	setHasFetchedInitialEnvelopes(state, hasFetchedInitialEnvelopes) {
 		state.hasFetchedInitialEnvelopes = hasFetchedInitialEnvelopes
 	},
+	hasCurrentUserPrincipalAndCollections(state, hasCurrentUserPrincipalAndCollections) {
+		state.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
+	},
 }

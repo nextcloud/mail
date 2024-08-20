@@ -108,6 +108,7 @@ export default new Store({
 				calendars: [],
 				smimeCertificates: [],
 				hasFetchedInitialEnvelopes: false,
+				hasCurrentUserPrincipalAndCollections: false,
 			},
 			getters,
 			mutations,
