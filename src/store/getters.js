@@ -156,4 +156,5 @@ export const getters = {
 	hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
 	isFollowUpFeatureAvailable: (state) => state.followUpFeatureAvailable,
 	getInternalAddresses: (state) => state.internalAddress?.filter(internalAddress => internalAddress !== undefined),
+	hasCurrentUserPrincipalAndCollections: (state) => state.hasCurrentUserPrincipalAndCollections,
 }

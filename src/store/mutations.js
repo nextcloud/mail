@@ -513,4 +513,7 @@ export default {
 	setFollowUpFeatureAvailable(state, followUpFeatureAvailable) {
 		state.followUpFeatureAvailable = followUpFeatureAvailable
 	},
+	hasCurrentUserPrincipalAndCollections(state, hasCurrentUserPrincipalAndCollections) {
+		state.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
+	},
 }

@@ -48,6 +48,7 @@ export default {
 		this.sync()
 		await this.$store.dispatch('fetchCurrentUserPrincipal')
 		await this.$store.dispatch('loadCollections')
+		this.$store.commit('hasCurrentUserPrincipalAndCollections', true)
 	},
 	methods: {
 		reload() {

@@ -374,12 +374,6 @@ export default {
 				await this.fetchExistingEvent(this.attachedVEvent.uid)
 			},
 		},
-		clonedCalendars: {
-			immediate: true,
-			async handler() {
-				await this.fetchExistingEvent(this.attachedVEvent.uid)
-			},
-		},
 		calendarsForPicker: {
 			immediate: true,
 			handler(calendarsForPicker) {
