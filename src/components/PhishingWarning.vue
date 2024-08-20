@@ -12,7 +12,7 @@
 			<li>{{ warning.message }}</li>
 		</ul>
 		<div v-if="linkWarning !== undefined" class="warning__links">
-			<NcButton class="warning__links__button" type="Tertiary" @click="showMore = !showMore">
+			<NcButton class="warning__links__button" type="tertiary" @click="showMore = !showMore">
 				{{ showMore? t('mail','Hide suspicious links') :t('mail','Show suspicious links') }}
 			</NcButton>
 			<div v-if="showMore">
@@ -37,7 +37,7 @@ export default {
 	props: {
 		phishingData: {
 			required: true,
-			type: Object,
+			type: Array,
 		},
 	},
 	data() {
