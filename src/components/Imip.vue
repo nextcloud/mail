@@ -191,7 +191,7 @@ export default {
 	computed: {
 		...mapGetters({
 			currentUserPrincipalEmail: 'getCurrentUserPrincipalEmail',
-			clonedCalendars: 'getClonedCalendars',
+			clonedWriteableCalendars: 'getClonedWriteableCalendars',
 		}),
 
 		/**
@@ -362,7 +362,7 @@ export default {
 				}
 			}
 
-			return this.clonedCalendars
+			return this.clonedWriteableCalendars
 				.map(getCalendarData)
 				.filter(props => props.components.vevent && props.writable === true)
 		},
@@ -470,7 +470,7 @@ export default {
 
 			// TODO: can this query be reduced to a single request?
 			const limit = pLimit(5)
-			const promises = this.clonedCalendars.map(async (calendar) => {
+			const promises = this.clonedWriteableCalendars.map(async (calendar) => {
 				// Query adapted from https://datatracker.ietf.org/doc/html/rfc4791#section-7.8.6
 				return limit(() => calendar.calendarQuery([{
 					name: [NS.IETF_CALDAV, 'comp-filter'],
