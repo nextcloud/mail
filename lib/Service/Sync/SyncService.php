@@ -86,6 +86,16 @@ class SyncService {
 	}
 
 	/**
+	 * Run a (rather costly) sync to delete cached messages which are not present on IMAP anymore.
+	 *
+	 * @throws MailboxLockedException
+	 * @throws ServiceException
+	 */
+	public function repairSync(Account $account, Mailbox $mailbox): void {
+		$this->synchronizer->repairSync($account, $mailbox, $this->logger);
+	}
+
+	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param int $criteria
