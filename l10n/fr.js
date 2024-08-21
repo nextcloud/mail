@@ -2,7 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Embedded message %s" : "Message intégré %s",
-    "Important mail" : "E-mail important",
+    "Important mail" : "E-mails importants",
     "No message found yet" : "Aucun message pour l'instant",
     "Set up an account" : "Configurer un compte",
     "Unread mail" : "E-mails non lus",
