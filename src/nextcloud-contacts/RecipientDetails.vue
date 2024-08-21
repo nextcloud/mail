@@ -19,54 +19,17 @@
 		<template v-else>
 			<!-- contact header -->
 			<DetailsHeader>
-				<!-- avatar and upload photo -->
-				<template #avatar>
-					<ContactAvatar :contact="contact"
-						:is-read-only="isReadOnly"
-						:reload-bus="reloadBus"
-						@update-local-contact="updateLocalContact" />
-				</template>
-
 				<!-- fullname -->
 				<template #title>
-					<div v-if="isReadOnly" class="contact-title">
+					<div class="contact-title">
 						{{ contact.fullName }}
 					</div>
-					<input v-else
-						id="contact-fullname"
-						ref="fullname"
-						v-model="contact.fullName"
-						:placeholder="t('contacts', 'Name')"
-						type="text"
-						autocomplete="off"
-						autocorrect="off"
-						spellcheck="false"
-						name="fullname"
-						@click="selectInput">
 				</template>
 
 				<!-- org, title -->
 				<template #subtitle>
-					<template v-if="isReadOnly">
+					<template>
 						<span v-html="formattedSubtitle" />
-					</template>
-					<template v-else>
-						<input id="contact-title"
-							v-model="contact.title"
-							:placeholder="t('contacts', 'Title')"
-							type="text"
-							autocomplete="off"
-							autocorrect="off"
-							spellcheck="false"
-							name="title">
-						<input id="contact-org"
-							v-model="contact.org"
-							:placeholder="t('contacts', 'Company')"
-							type="text"
-							autocomplete="off"
-							autocorrect="off"
-							spellcheck="false"
-							name="org">
 					</template>
 				</template>
 
@@ -81,8 +44,7 @@
 							:contact="contact"
 							:local-contact="localContact"
 							:contacts="contacts"
-							:bus="bus"
-							:is-read-only="isReadOnly" />
+							:bus="bus" />
 					</div>
 					<!-- addressbook change select - no last property because class is not applied here,
 					empty property because this is a required prop on regular property-select. But since
@@ -95,14 +57,12 @@
 						:is-last-property="true"
 						:property="{}"
 						:hide-actions="true"
-						:is-read-only="isReadOnly"
 						class="property--addressbooks property--last" />
 
 					<!-- Groups always visible -->
 					<PropertyGroups :prop-model="groupsModel"
 						:value.sync="localContact.groups"
 						:contact="contact"
-						:is-read-only="isReadOnly"
 						class="property--groups property--last"
 						@update:value="updateGroups" />
 				</div>
@@ -181,19 +141,6 @@ export default {
 		contact() {
 			return this.$store.getters.getContact(this.contactKey)
 		},
-
-		/**
-		 * Conflict message
-		 *
-		 * @return {string|boolean}
-		 */
-		conflict() {
-			if (this.contact.conflict) {
-				return t('contacts', 'The contact you were trying to edit has changed. Please manually refresh the contact. Any further edits will be discarded.')
-			}
-			return false
-		},
-
 		/**
 		 * Contact properties copied and sorted by rfcProps.fieldOrder
 		 *

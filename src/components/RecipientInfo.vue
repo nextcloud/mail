@@ -16,10 +16,10 @@
 		</div> -->
 		<div class="recipient-multiple">
 			<div class="recipient-list">
-				<div v-for="(vcard, index) in recipientsVCards"
+				<div v-for="(vCard, index) in recipientsVCards"
 					:key="index"
 					class="recipient-item">
-					<RecipientDetails :contacts="vcard.data" :reload-bus="reloadBus" />
+					<RecipientDetails :contact-key="selectedContacts" :contacts="vCard.data" :reload-bus="reloadBus" />
 					<!--					<Avatar :user="recipient.uid"
 						:display-name="recipient.displayName"
 						:email="recipient.email"
@@ -84,6 +84,9 @@ export default {
 
 		recipientsVCardsList() {
 			return Object.values(this.recipientsVCards).filter(Boolean)
+		},
+		selectedContact() {
+			return this.$route.params.selectedContact
 		},
 	},
 	watch: {
