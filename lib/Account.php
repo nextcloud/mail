@@ -38,7 +38,7 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use JsonSerializable;
 use OC;
-use OCA\Mail\Cache\Cache;
+use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
@@ -48,6 +48,7 @@ use OCA\Mail\Service\Quota;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
+use OCP\Server;
 use ReturnTypeWillChange;
 
 class Account implements JsonSerializable {
@@ -69,6 +70,8 @@ class Account implements JsonSerializable {
 	/** @var Alias */
 	private $alias;
 
+	private HordeCacheFactory $hordeCacheFactory;
+
 	/**
 	 * @param MailAccount $account
 	 */
@@ -77,6 +80,7 @@ class Account implements JsonSerializable {
 		$this->crypto = OC::$server->getCrypto();
 		$this->config = OC::$server->getConfig();
 		$this->memcacheFactory = OC::$server->getMemcacheFactory();
+		$this->hordeCacheFactory = Server::get(HordeCacheFactory::class);
 	}
 
 	public function __destruct() {
@@ -153,10 +157,8 @@ class Account implements JsonSerializable {
 			if ($this->config->getSystemValue('app.mail.server-side-cache.enabled', true)) {
 				if ($this->memcacheFactory->isAvailable()) {
 					$params['cache'] = [
-						'backend' => new Cache([
-							'cacheob' => $this->memcacheFactory
-								->createDistributed(md5($this->getId() . $this->getEMailAddress()))
-						])];
+						'backend' => $this->hordeCacheFactory->newCache($this),
+					];
 				}
 			}
 			$this->client = new \Horde_Imap_Client_Socket($params);
