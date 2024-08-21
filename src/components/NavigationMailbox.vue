@@ -111,6 +111,14 @@
 				</template>
 				{{ t('mail', 'Move mailbox') }}
 			</ActionButton>
+			<ActionButton v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
+				:disabled="repairing"
+				@click="repair">
+				<template #icon>
+					<IconWrench :size="16" />
+				</template>
+				{{ t('mail', 'Repair mailbox') }}
+			</ActionButton>
 			<ActionButton v-if="debug && !account.isUnified && mailbox.specialRole !== 'flagged'"
 				:name="t('mail', 'Clear cache')"
 				:disabled="clearingCache"
@@ -195,15 +203,16 @@ import IconAllInboxes from 'vue-material-design-icons/InboxMultiple.vue'
 import EraserVariant from 'vue-material-design-icons/EraserVariant.vue'
 import ImportantIcon from './icons/ImportantIcon.vue'
 import IconSend from 'vue-material-design-icons/Send.vue'
+import IconWrench from 'vue-material-design-icons/Wrench.vue'
 import MoveMailboxModal from './MoveMailboxModal.vue'
 import { PRIORITY_INBOX_ID, UNIFIED_INBOX_ID } from '../store/constants.js'
 import { mailboxHasRights } from '../util/acl.js'
 import { clearCache } from '../service/MessageService.js'
-import { getMailboxStatus } from '../service/MailboxService.js'
+import { getMailboxStatus, repairMailbox } from '../service/MailboxService.js'
 import logger from '../logger.js'
 import { translatePlural as n } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator.js'
-import { showInfo } from '@nextcloud/dialogs'
+import { showInfo, showError } from '@nextcloud/dialogs'
 import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox/index.js'
 import dragEventBus from '../directives/drag-and-drop/util/dragEventBus.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
@@ -233,6 +242,7 @@ export default {
 		IconArchive,
 		IconJunk,
 		IconInbox,
+		IconWrench,
 		EraserVariant,
 		ImportantIcon,
 		IconLoading,
@@ -276,6 +286,7 @@ export default {
 			hasDelimiter: !!this.mailbox.delimiter,
 			UNIFIED_INBOX_ID,
 			createMailboxName: '',
+			repairing: false,
 		}
 	},
 	computed: {
@@ -657,6 +668,39 @@ export default {
 						filter: this.$route.params?.filter,
 					},
 				})
+			}
+		},
+		/**
+		 * Delete all vanished emails that are still cached.
+		 *
+		 * @return {Promise<void>}
+		 */
+		async repair() {
+			this.repairing = true
+
+			const mailboxId = this.mailbox.databaseId
+			try {
+				await repairMailbox(mailboxId)
+
+				// Reload the page to start with a clean mailbox state
+				await this.$router.push({
+					name: 'mailbox',
+					params: {
+						mailboxId: this.$route.params.mailboxId,
+					},
+				})
+				window.location.reload()
+			} catch (error) {
+				// Only reset state in case of an error because the page will be reloaded anyway
+				this.repairing = false
+
+				// Handle rate limit: 429 Too Many Requests
+				// Ref https://axios-http.com/docs/handling_errors
+				if (error.response?.status === 429) {
+					showError(t('mail', 'Please wait 10 minutes before repairing again'))
+				} else {
+					throw error
+				}
 			}
 		},
 	},
