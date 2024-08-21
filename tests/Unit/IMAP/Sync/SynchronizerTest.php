@@ -12,7 +12,6 @@ namespace OCA\Mail\Tests\Unit\IMAP\Sync;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
-use Horde_Imap_Client_Data_Capability;
 use Horde_Imap_Client_Data_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
@@ -47,16 +46,10 @@ class SynchronizerTest extends TestCase {
 		$request->expects($this->once())
 			->method('getToken')
 			->willReturn('123456');
+		$request->expects($this->exactly(3))
+			->method('getId')
+			->willReturn('abcdef');
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
-		$capabilities = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$imapClient->expects(self::once())
-			->method('__get')
-			->with('capability')
-			->willReturn($capabilities);
-		$capabilities->expects(self::once())
-			->method('isEnabled')
-			->with('QRESYNC')
-			->willReturn(true);
 		$imapClient->expects($this->once())
 			->method('sync')
 			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
@@ -64,20 +57,40 @@ class SynchronizerTest extends TestCase {
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessageUids = [4, 5];
-		$hordeSync->expects($this->once())
+		$hordeSync->expects($this->exactly(3))
 			->method('__get')
-			->with('vanisheduids')
-			->willReturn(new Horde_Imap_Client_Ids($vanishedMessageUids));
+			->willReturnMap([
+				['newmsgsuids', new Horde_Imap_Client_Ids($newMessages)],
+				['flagsuids', new Horde_Imap_Client_Ids($changedMessages)],
+				['vanisheduids', new Horde_Imap_Client_Ids($vanishedMessageUids)],
+			]);
 		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids);
 
-		$response = $this->synchronizer->sync(
+		$newResponse = $this->synchronizer->sync(
 			$imapClient,
 			$request,
 			'user',
+			true,
+			Horde_Imap_Client::SYNC_NEWMSGSUIDS,
+		);
+		$changedResponse = $this->synchronizer->sync(
+			$imapClient,
+			$request,
+			'user',
+			true,
+			Horde_Imap_Client::SYNC_FLAGSUIDS,
+		);
+		$vanishedResponse = $this->synchronizer->sync(
+			$imapClient,
+			$request,
+			'user',
+			true,
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 
-		$this->assertEquals($expected, $response);
+		$this->assertEquals($expected, $newResponse);
+		$this->assertEquals($expected, $changedResponse);
+		$this->assertEquals($expected, $vanishedResponse);
 	}
 
 	public function testSyncChunked(): void {
@@ -89,15 +102,6 @@ class SynchronizerTest extends TestCase {
 			->willReturn('123456');
 		$request->method('getUids')
 			->willReturn(range(1, 8000, 2)); // 19444 bytes
-		$capabilities = $this->createMock(Horde_Imap_Client_Data_Capability::class);
-		$imapClient->expects(self::once())
-			->method('__get')
-			->with('capability')
-			->willReturn($capabilities);
-		$capabilities->expects(self::once())
-			->method('isEnabled')
-			->with('QRESYNC')
-			->willReturn(false);
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
 		$imapClient->expects($this->exactly(3))
 			->method('sync')
@@ -113,6 +117,7 @@ class SynchronizerTest extends TestCase {
 			$imapClient,
 			$request,
 			'user',
+			false,
 			Horde_Imap_Client::SYNC_VANISHEDUIDS
 		);
 

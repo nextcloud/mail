@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Sync;
 
 class Request {
+	private string $id;
+
 	/** @var string */
 	private $mailbox;
 
@@ -24,10 +26,18 @@ class Request {
 	 * @param string $syncToken
 	 * @param int[] $uids
 	 */
-	public function __construct(string $mailbox, string $syncToken, array $uids) {
+	public function __construct(string $id, string $mailbox, string $syncToken, array $uids) {
+		$this->id = $id;
 		$this->mailbox = $mailbox;
 		$this->syncToken = $syncToken;
 		$this->uids = $uids;
+	}
+
+	/**
+	 * Get the id of this request which stays constant for all requests while syncing a single mailbox
+	 */
+	public function getId(): string {
+		return $this->id;
 	}
 
 	/**
