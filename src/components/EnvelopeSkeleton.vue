@@ -437,13 +437,13 @@ export default {
 	flex: 0 0 auto;
 	justify-content: flex-start;
 	// we need to make sure the elements are not cut off by the border
-	padding: var(--list-item-padding);
 	width: 100%;
 	border-radius: var(--border-radius-element, 32px);
 	cursor: pointer;
 	transition: background-color var(--animation-quick) ease-in-out;
 	list-style: none;
 	flex-wrap: nowrap !important;
+	padding: var(--default-grid-baseline);
 
 	&:hover,
 	&:has(:active),
@@ -468,7 +468,8 @@ export default {
 			min-width: 100px;
 			flex: 1 1 10%;
 			font-weight: 500;
-			max-width: 100%;
+			// we changed the time/date and actions to be alighned with the name
+			max-width: 78%;
 			line-height: var(--default-line-height);
 		}
 
@@ -509,6 +510,8 @@ export default {
 				align-items: end;
 				white-space: nowrap;
 				margin-left: calc(var(--default-grid-baseline) * 2);
+				// to align details on top instead of in the center. The right way to do it would be to change the template, but that breaks one-line layout
+				margin-top: -22px;
 
 				&__details {
 					margin: 0 9px !important;
@@ -602,16 +605,17 @@ export default {
 
 	&__actions {
 		flex: 0 0 auto;
-		align-self: center;
 		justify-content: center;
+		align-self: start;
+		margin-top: -4px;
 	}
 
 }
 
 // Force icon to be in line with the first two lines
 :deep(.app-content-list-item-icon), :deep(.avatardiv), :deep(.avatardiv__initials-wrapper) {
-	height: calc(var(--default-line-height) * var(--default-font-size) * 2) !important;
-	width: calc(var(--default-line-height) * var(--default-font-size) * 2) !important;
+	height: calc(var(--header-menu-item-height) - 4px);
+	width: calc(var(--header-menu-item-height) - 4px);
 }
 
 :deep(.avatardiv__initials){

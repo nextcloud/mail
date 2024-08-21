@@ -937,7 +937,7 @@ export default {
 	// In message list, but not the one in the action menu
 	&.app-content-list-item-star {
 		background-image: none;
-		left: 5px;
+		left: 1px;
 		top: 8px;
 		opacity: 1;
 
@@ -977,7 +977,7 @@ export default {
 .junk-icon-style {
 	opacity: .2;
 	display: flex;
-	top: 42px;
+	top: 32px;
 	left: 32px;
 	background-size: 16px;
 	height: 20px;
@@ -1011,6 +1011,7 @@ export default {
 	font-weight: bold;
 	padding-left: 2px;
 	padding-right: 2px;
+	white-space: nowrap;
 }
 .tag-group__bg {
 	position: absolute;
@@ -1026,6 +1027,7 @@ export default {
 	position: relative;
 	margin-right: 1px;
 	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .list-item__wrapper:deep() {
 	list-style: none;
@@ -1035,14 +1037,14 @@ export default {
 }
 .icon-important.app-content-list-item-star:deep() {
 	position: absolute;
-	top: 8px;
+	top: 5px;
 	z-index: 1;
 }
 .app-content-list-item-star.favorite-icon-style {
 	display: inline-block;
 	position: absolute;
-	margin-bottom: 45px;
-	margin-left: 30px;
+	top: 3px;
+	left: 30px;
 	cursor: pointer;
 	stroke: var(--color-main-background);
 	stroke-width: 2;
@@ -1070,15 +1072,13 @@ export default {
 	margin-top: 6px;
 	margin-bottom: 6px;
 }
-:deep(.list-item) {
-	flex-wrap: wrap;
-}
 :deep(.line-two__subtitle) {
 	display: flex;
 	flex-basis: 100%;
 	padding-left: 40px;
 	width: 450px;
 }
+
 :deep(.line-one__title) {
 	flex-direction: row;
 	display: flex;
