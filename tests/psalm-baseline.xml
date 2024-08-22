@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.14.1@b9d355e0829c397b9b3b47d0c0ed042a8a70284d">
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="lib/AppInfo/Application.php">
     <InvalidArgument>
-      <code>OptionalIndicesListener::class</code>
-      <code>OutOfOfficeListener::class</code>
-      <code>OutOfOfficeListener::class</code>
-      <code>OutOfOfficeListener::class</code>
-      <code>OutOfOfficeListener::class</code>
-      <code>OutOfOfficeListener::class</code>
+      <code><![CDATA[OptionalIndicesListener::class]]></code>
     </InvalidArgument>
-    <MissingDependency>
-      <code>FilteringProvider</code>
-      <code>ImportantMailWidgetV2</code>
-      <code>UnreadMailWidgetV2</code>
-    </MissingDependency>
-    <UndefinedClass>
-      <code>IAPIWidgetV2</code>
-    </UndefinedClass>
   </file>
   <file src="lib/Cache/Cache.php">
     <UnsupportedPropertyReferenceUsage>
@@ -31,53 +18,677 @@
       <code><![CDATA[$slicemap = &$this->_slicemap[$mailbox]]]></code>
     </UnsupportedPropertyReferenceUsage>
   </file>
-  <file src="lib/Dashboard/ImportantMailWidgetV2.php">
-    <MissingDependency>
-      <code>MailWidgetV2</code>
-    </MissingDependency>
+  <file src="lib/Controller/AccountsController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$imapHost]]></code>
+      <code><![CDATA[$imapHost]]></code>
+      <code><![CDATA[$imapPort]]></code>
+      <code><![CDATA[$imapPort]]></code>
+      <code><![CDATA[$imapSslMode]]></code>
+      <code><![CDATA[$imapSslMode]]></code>
+      <code><![CDATA[$imapUser]]></code>
+      <code><![CDATA[$imapUser]]></code>
+      <code><![CDATA[$smtpHost]]></code>
+      <code><![CDATA[$smtpHost]]></code>
+      <code><![CDATA[$smtpPort]]></code>
+      <code><![CDATA[$smtpPort]]></code>
+      <code><![CDATA[$smtpSslMode]]></code>
+      <code><![CDATA[$smtpSslMode]]></code>
+      <code><![CDATA[$smtpUser]]></code>
+      <code><![CDATA[$smtpUser]]></code>
+    </PossiblyNullArgument>
   </file>
-  <file src="lib/Dashboard/MailWidgetV2.php">
-    <UndefinedClass>
-      <code>IAPIWidgetV2</code>
-    </UndefinedClass>
+  <file src="lib/Controller/AvatarsController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$image]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$avatar]]></code>
+      <code><![CDATA[$image]]></code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullReference>
+      <code><![CDATA[getMime]]></code>
+      <code><![CDATA[isExternal]]></code>
+    </PossiblyNullReference>
   </file>
-  <file src="lib/Service/Attachment/AttachmentService.php">
-    <UndefinedDocblockClass occurrences="2">
-      <code>OCA\Files_Sharing\SharedStorage</code>
-    </UndefinedDocblockClass>
-    <UndefinedClass occurrences="1">
-      <code>SharedStorage</code>
-    </UndefinedClass>
+  <file src="lib/Controller/ContactIntegrationController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$contactName]]></code>
+      <code><![CDATA[$mail]]></code>
+      <code><![CDATA[$mail]]></code>
+      <code><![CDATA[$uid]]></code>
+    </PossiblyNullArgument>
   </file>
-  <file src="lib/Dashboard/UnreadMailWidgetV2.php">
-    <MissingDependency>
-      <code>MailWidgetV2</code>
-    </MissingDependency>
+  <file src="lib/Controller/DraftsController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$smimeEncrypt]]></code>
+      <code><![CDATA[$smimeEncrypt]]></code>
+      <code><![CDATA[$smimeSign]]></code>
+      <code><![CDATA[$smimeSign]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/InternalAddressController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->uid]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[jsonSerialize]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Controller/ListController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->currentUserId]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/MailboxesController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/MessageApiController.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[new DataResponse($json, Http::STATUS_OK)]]></code>
+      <code><![CDATA[new DataResponse($json, Http::STATUS_PARTIAL_CONTENT)]]></code>
+      <code><![CDATA[new DataResponse([
+				'name' => $attachmentId . '.eml',
+				'mime' => $attachment->getType(),
+				'size' => $attachment->getSize(),
+				'content' => $attachment->getContent()
+			])]]></code>
+      <code><![CDATA[new DataResponse([
+			'name' => $attachment->getName(),
+			'mime' => $attachment->getType(),
+			'size' => $attachment->getSize(),
+			'content' => $attachment->getContent()
+		])]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>]]></code>
+      <code><![CDATA[DataResponse<Http::STATUS_OK|Http::STATUS_PARTIAL_CONTENT, MailMessageApiResponse, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>]]></code>
+    </MoreSpecificReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->userId]]></code>
+      <code><![CDATA[$this->userId]]></code>
+      <code><![CDATA[$this->userId]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/MessagesController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$attachment->getName()]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$this->aiIntegrationService->getSmartReply($account, $mailbox, $message, $this->currentUserId)]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->currentUserId]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[newFile]]></code>
+      <code><![CDATA[nodeExists]]></code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$fileParts['extension']]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="lib/Controller/OutboxController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$sendAt]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/PageController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->currentUserId]]></code>
+      <code><![CDATA[$this->userManager->getDisplayName($this->currentUserId)]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[getUID]]></code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$pair[1]]]></code>
+      <code><![CDATA[$parts['path']]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="lib/Controller/ProxyController.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$content]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="lib/Controller/SieveController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$sievePassword]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/SmimeCertificatesController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$certificateFile->getTempPath()]]></code>
+      <code><![CDATA[$privateKeyFile->getTempPath()]]></code>
+      <code><![CDATA[$this->userId]]></code>
+      <code><![CDATA[$this->userId]]></code>
+      <code><![CDATA[$this->userId]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/ThreadController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+      <code><![CDATA[$message->getThreadRootId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Controller/TrustedSendersController.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->uid]]></code>
+      <code><![CDATA[$this->uid]]></code>
+      <code><![CDATA[$this->uid]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Dashboard/MailWidget.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$firstFrom ? $firstFrom->getLabel() : '']]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/CollectedAddressMapper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$label]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/LocalMessage.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->getRecipients()]]></code>
+      <code><![CDATA[$this->getRecipients()]]></code>
+      <code><![CDATA[$this->getRecipients()]]></code>
+      <code><![CDATA[$this->getRecipients()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/LocalMessageMapper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getRecipients()]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[$attachmentMap]]></code>
+      <code><![CDATA[$attachmentMap]]></code>
+      <code><![CDATA[$attachmentMap]]></code>
+      <code><![CDATA[$recipientMap]]></code>
+      <code><![CDATA[$recipientMap]]></code>
+      <code><![CDATA[$recipientMap]]></code>
+    </PossiblyNullArrayOffset>
+  </file>
+  <file src="lib/Db/Message.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->getReferences()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/MessageMapper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getPreviewText()]]></code>
+      <code><![CDATA[$recipient->getLabel()]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[$tags]]></code>
+      <code><![CDATA[$tags]]></code>
+    </PossiblyNullArrayOffset>
+  </file>
+  <file src="lib/Db/Provisioning.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->getSieveUser()]]></code>
+      <code><![CDATA[$user->getEMailAddress()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Db/ProvisioningMapper.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$data['id'] ?? null]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Folder.php">
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$delimiter]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="lib/Http/JsonResponse.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[new self(
+			[
+				'status' => 'error',
+				'message' => $message,
+				'data' => $data,
+				'code' => $code,
+			],
+			$status
+		)]]></code>
+      <code><![CDATA[new self(
+			[
+				'status' => 'fail',
+				'data' => $data,
+			],
+			$status
+		)]]></code>
+      <code><![CDATA[new self(
+			[
+				'status' => 'success',
+				'data' => $data,
+			],
+			$status
+		)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+    </MoreSpecificReturnType>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$error->getCode()]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[self::serializeException($error)]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/IMAP/FolderMapper.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$folder->getDelimiter()]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyNullArgument>
+      <code><![CDATA[$folder->getDelimiter()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/IMAP/HordeImapClient.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getTime]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/IMAP/IMAPClientFactory.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getMailAccount()->getInboundPassword()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/IMAP/MessageMapper.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$uidsToFetch]]></code>
+      <code><![CDATA[$uidsToFetch]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyNullArgument>
+      <code><![CDATA[$attachmentIds]]></code>
+      <code><![CDATA[$fullText]]></code>
+      <code><![CDATA[$htmlBodyId]]></code>
+      <code><![CDATA[$textBodyId]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[getBodyPart]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/IMAP/Sync/Response.php">
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$stats]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="lib/IMAP/Threading/DatabaseMessage.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$messageId]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/IMAP/Threading/ThreadBuilder.php">
+    <PossiblyNullReference>
+      <code><![CDATA[hasReSubject]]></code>
+      <code><![CDATA[hasReSubject]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Integration/GoogleIntegration.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$response->getBody()]]></code>
+      <code><![CDATA[$response->getBody()]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="lib/Integration/KItinerary/ItineraryExtractor.php">
+    <PossiblyFalsePropertyAssignmentValue>
+      <code><![CDATA[$this->findAvailableAdapter() ?? false]]></code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="lib/Integration/MicrosoftIntegration.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$response->getBody()]]></code>
+      <code><![CDATA[$response->getBody()]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="lib/Listener/InteractionListener.php">
+    <PossiblyNullIterator>
+      <code><![CDATA[$message->getRecipients()]]></code>
+    </PossiblyNullIterator>
+  </file>
+  <file src="lib/Listener/MailboxesSynchronizedSpecialMailboxesUpdater.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$mailAccount->getArchiveMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getDraftsMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getJunkMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getSentMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getSnoozeMailboxId()]]></code>
+      <code><![CDATA[$mailAccount->getTrashMailboxId()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="lib/Listener/OptionalIndicesListener.php">
     <InvalidTemplateParam>
-      <code>IEventListener</code>
+      <code><![CDATA[IEventListener]]></code>
     </InvalidTemplateParam>
     <MoreSpecificImplementedParamType>
-      <code>$event</code>
+      <code><![CDATA[$event]]></code>
     </MoreSpecificImplementedParamType>
-    <TooManyArguments>
-      <code>addMissingIndex</code>
-    </TooManyArguments>
   </file>
-  <file src="lib/Listener/OutOfOfficeListener.php">
-    <InvalidTemplateParam>
-      <code>IEventListener</code>
-    </InvalidTemplateParam>
-    <MoreSpecificImplementedParamType>
-      <code>$event</code>
-    </MoreSpecificImplementedParamType>
+  <file src="lib/Model/IMAPMessage.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$msg->getMessageId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Net/IpAddressClassifier.php">
+    <PossiblyInvalidCast>
+      <code><![CDATA[$parsedIp->toIPv4() ?? $parsedIp]]></code>
+    </PossiblyInvalidCast>
+  </file>
+  <file src="lib/SMTP/SmtpClientFactory.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$mailAccount->getOutboundPassword()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Send/FlagRepliedMessageHandler.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$localMessage->getInReplyToMessageId()]]></code>
+      <code><![CDATA[$mailbox->getMyAcls()]]></code>
+    </PossiblyNullArgument>
+    <PossiblyUndefinedVariable>
+      <code><![CDATA[$client]]></code>
+    </PossiblyUndefinedVariable>
   </file>
   <file src="lib/Service/AiIntegrations/AiIntegrationsService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$replies]]></code>
+      <code><![CDATA[$task->getOutput()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/AntiAbuseService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getRecipients()]]></code>
+      <code><![CDATA[$message->getRecipients()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/AntiSpamService.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$mail->getRaw(false)]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$fullText]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[toHorde]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Attachment/AttachmentService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$file->getFileName()]]></code>
+      <code><![CDATA[$fullText]]></code>
+      <code><![CDATA[$fullText]]></code>
+      <code><![CDATA[$message->getAttachments()]]></code>
+    </PossiblyNullArgument>
+    <UndefinedClass>
+      <code><![CDATA[SharedStorage]]></code>
+    </UndefinedClass>
     <UndefinedDocblockClass>
-      <code>$manager</code>
-      <code>$manager</code>
-      <code>$manager</code>
+      <code><![CDATA[$share]]></code>
+      <code><![CDATA[$storage]]></code>
     </UndefinedDocblockClass>
+  </file>
+  <file src="lib/Service/AutoConfig/IspDb.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$url]]></code>
+      <code><![CDATA[$xml]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidCast>
+      <code><![CDATA[$url]]></code>
+    </PossiblyInvalidCast>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$domain]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="lib/Service/Avatar/FaviconSource.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$body]]></code>
+      <code><![CDATA[$body]]></code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/ImportantMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/ReadMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/RepliedMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Classification/FeatureExtraction/SentMessagesExtractor.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Classification/ImportanceClassifier.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$predictedValidationLabel]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/ContactsIntegration.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[strpos($raw, 'http')]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyUndefinedVariable>
+      <code><![CDATA[$userGroups]]></code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="lib/Service/Group/NextcloudGroupService.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getUsers]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Html.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$parts]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="lib/Service/HtmlPurify/TransformStyleURLs.php">
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$value]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="lib/Service/IMipService.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[static function (Mailbox $mailbox) {
+			return $mailbox->getAccountId();
+		}]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$sender]]></code>
+      <code><![CDATA[$sender]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[getEmail]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/MailManager.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$message->getMessageId()]]></code>
+      <code><![CDATA[$message->getMessageId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/MailTransmission.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$mail->getRaw(false)]]></code>
+      <code><![CDATA[$mail->getRaw(false)]]></code>
+      <code><![CDATA[$mail->getRaw(false)]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$localMessage->getAliasId()]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[toHorde]]></code>
+      <code><![CDATA[toHorde]]></code>
+      <code><![CDATA[toHorde]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/OutOfOffice/OutOfOfficeParser.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$state->getEnd()]]></code>
+      <code><![CDATA[$state->getStart()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/PhishingDetection/LinkCheck.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$htmlMessage]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="lib/Service/PhishingDetection/PhishingDetectionService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$fromEmail]]></code>
+      <code><![CDATA[$fromFN]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[getCustomEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getLabel]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="lib/Service/Provisioning/Manager.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getInboundPassword()]]></code>
+      <code><![CDATA[$account->getOutboundPassword()]]></code>
+      <code><![CDATA[$config->getSieveEnabled()]]></code>
+      <code><![CDATA[$password]]></code>
+      <code><![CDATA[$provisioning->getLdapAliasesAttribute()]]></code>
+      <code><![CDATA[$this->userManager->getDisplayName($user->getUID())]]></code>
+      <code><![CDATA[$this->userManager->getDisplayName($user->getUID())]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/Search/Flag.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->flag]]></code>
+    </ArgumentTypeCoercion>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->flag]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Flag::*]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="lib/Service/Search/FlagExpression.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[new self("and", $operands)]]></code>
+      <code><![CDATA[new self("or", $operands)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="lib/Service/SieveService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getMailAccount()->getSieveHost()]]></code>
+      <code><![CDATA[$account->getMailAccount()->getSievePort()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/SmimeService.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$decryptedCertificates]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyNullArgument>
+      <code><![CDATA[$certificate->getPrivateKey()]]></code>
+      <code><![CDATA[$certificate->getPrivateKey()]]></code>
+      <code><![CDATA[$emailAddress]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/SnoozeService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$currentUserId]]></code>
+      <code><![CDATA[$currentUserId]]></code>
+      <code><![CDATA[$selectedMessage->getThreadRootId()]]></code>
+      <code><![CDATA[$selectedMessage->getThreadRootId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/Sync/ImapToDbSynchronizer.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$client]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyNullArgument>
+      <code><![CDATA[$mailbox->getSyncChangedToken()]]></code>
+      <code><![CDATA[$mailbox->getSyncNewToken()]]></code>
+      <code><![CDATA[$mailbox->getSyncVanishedToken()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Service/Sync/SyncService.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$sortOrder]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="lib/Service/TransmissionService.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$localMessage->getSmimeCertificateId()]]></code>
+      <code><![CDATA[$localMessage->getSmimeCertificateId()]]></code>
+      <code><![CDATA[$message->getAttachments()]]></code>
+      <code><![CDATA[$message->getRecipients()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Settings/AdminSettings.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->googleIntegration->getClientId()]]></code>
+      <code><![CDATA[$this->microsoftIntegration->getClientId()]]></code>
+      <code><![CDATA[$this->microsoftIntegration->getTenantId()]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="lib/Sieve/SieveClientFactory.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$account->getMailAccount()->getSieveHost()]]></code>
+      <code><![CDATA[$account->getMailAccount()->getSievePort()]]></code>
+      <code><![CDATA[$account->getMailAccount()->getSieveSslMode()]]></code>
+      <code><![CDATA[$password]]></code>
+    </PossiblyNullArgument>
   </file>
 </files>
