@@ -11,8 +11,8 @@ name: Npm audit fix and compile
 on:
   workflow_dispatch:
   schedule:
-    # At 2:30 on Tuesday
-    - cron: '30 2 * * 2'
+    # At 2:30 on Sundays
+    - cron: '30 2 * * 0'
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branches: ['main', 'stable3.7', 'stable3.6']
+        branches: ['main', 'master', 'stable30', 'stable29', 'stable28']
 
     name: npm-audit-fix-${{ matrix.branches }}
 
@@ -32,37 +32,44 @@ jobs:
           ref: ${{ matrix.branches }}
 
       - name: Read package.json node and npm engines version
-        uses: skjnldsv/read-package-engines-version-actions@8205673bab74a63eb9b8093402fd9e0e018663a1 # v2.2
+        uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
         id: versions
         with:
           fallbackNode: '^20'
           fallbackNpm: '^10'
 
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
 
       - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
-        run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
+        run: npm i -g 'npm@${{ steps.versions.outputs.npmVersion }}'
 
       - name: Fix npm audit
+        id: npm-audit
+        uses: nextcloud-libraries/npm-audit-action@2a60bd2e79cc77f2cc4d9a3fe40f1a69896f3a87 # v0.1.0
+
+      - name: Run npm ci and npm run build
+        if: always()
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: |
-          npm audit fix
+          npm ci
+          npm run build --if-present
 
       - name: Create Pull Request
         if: always()
-        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
         with:
           token: ${{ secrets.COMMAND_BOT_PAT }}
-          commit-message: "fix(deps): Apply npm audit fix"
+          commit-message: 'fix(deps): Fix npm audit'
           committer: GitHub <noreply@github.com>
           author: nextcloud-command <nextcloud-command@users.noreply.github.com>
           signoff: true
           branch: automated/noid/${{ matrix.branches }}-fix-npm-audit
-          title: "fix(deps): Apply npm audit fix"
-          body: |
-            Auto-generated fix of npm audit
+          title: '[${{ matrix.branches }}] Fix npm audit'
+          body: ${{ steps.npm-audit.outputs.markdown }}
           labels: |
             dependencies
             3. to review
