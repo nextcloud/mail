@@ -70,7 +70,9 @@
 					</span>
 					<span class="envelope__subtitle__subject"
 						:class="{'one-line': oneLineLayout }">
-						{{ subjectForSubtitle }}
+						<span class="envelope__subtitle__subject__text" :class="{'one-line': oneLineLayout }">
+							{{ subjectForSubtitle }}
+						</span>
 					</span>
 				</div>
 				<div v-if="data.encrypted || data.previewText"
@@ -1091,10 +1093,22 @@ export default {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+
 .envelope__subtitle__subject.one-line {
+	display: flex;
+	align-items: center;
+	height: calc(var(--default-font-size) * var(--default-line-height));
+
 	&::after {
 		content: '\00B7';
 		margin: 12px;
 	}
+}
+
+.envelope__subtitle__subject__text.one-line {
+	max-width: 300px;
+	display: inline-block;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 </style>

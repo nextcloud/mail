@@ -552,24 +552,47 @@ export default {
 		--list-item-border-radius: var(--border-radius-element, calc(var(--default-clickable-area) / 2));
 		padding-block: calc(var(--list-item-padding) * 2);
 		--list-item-padding: 2px;
+		height: unset;
 
-		.list-item-content__inner__main {
-			display: flex;
-			justify-content: start;
-			gap: 12px;
-			min-width: 0;
-		}
-		.list-item-content__inner__details {
+		.list-item-content {
 			flex-direction: row;
-			align-items: unset;
-			justify-content: end;
-		}
-		.list-item-content__name {
-			align-self: center;
+			align-content: center;
+			align-items: center;
+
+			&__name {
+				align-self: center;
+				min-width: 300px;
+				padding-right: calc(var(--default-grid-baseline) * 2);
+			}
+
+			&__inner {
+				overflow-y: hidden;
+			}
+
+			&__inner__main {
+				display: flex;
+				justify-content: start;
+				min-width: 0;
+			}
+
+			&__inner__details {
+				flex-direction: row;
+				align-items: unset;
+				justify-content: end;
+				margin-top: 0;
+				margin-left: 0;
+			}
 		}
 
 		a {
 			margin: 0;
+			align-items: center;
+			height: unset;
+		}
+
+		.list-item__actions {
+			align-self: center;
+			margin-top: 0;
 		}
 	}
 
@@ -616,10 +639,6 @@ export default {
 :deep(.app-content-list-item-icon), :deep(.avatardiv), :deep(.avatardiv__initials-wrapper) {
 	height: calc(var(--header-menu-item-height) - 4px);
 	width: calc(var(--header-menu-item-height) - 4px);
-}
-
-:deep(.avatardiv__initials){
-	line-height: 2.5;
 }
 
 </style>
