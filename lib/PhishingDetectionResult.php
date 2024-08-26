@@ -16,19 +16,19 @@ use ReturnTypeWillChange;
  */
 class PhishingDetectionResult implements JsonSerializable {
 
-	public const DATE_CHECK = "Date";
-	public const LINK_CHECK = "Link";
-	public const REPLYTO_CHECK = "Reply-To";
-	public const CUSTOM_EMAIL_CHECK = "Custom Email";
-	public const CONTACTS_CHECK = "Contacts";
-	public const TRUSTED_CHECK = "Trusted";
+	public const DATE_CHECK = 'Date';
+	public const LINK_CHECK = 'Link';
+	public const REPLYTO_CHECK = 'Reply-To';
+	public const CUSTOM_EMAIL_CHECK = 'Custom Email';
+	public const CONTACTS_CHECK = 'Contacts';
+	public const TRUSTED_CHECK = 'Trusted';
 
-	private string $message = "";
+	private string $message = '';
 	private bool $isPhishing;
 	private array $additionalData = [];
 	private string $type;
 
-	public function __construct(string $type, bool $isPhishing, string $message = "", array $additionalData = []) {
+	public function __construct(string $type, bool $isPhishing, string $message = '', array $additionalData = []) {
 		$this->type = $type;
 		$this->message = $message;
 		$this->isPhishing = $isPhishing;

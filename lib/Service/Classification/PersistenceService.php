@@ -111,7 +111,7 @@ class PersistenceService {
 			$serializedClassifier = file_get_contents($tmpPath);
 			$this->logger->debug('Serialized classifier written to tmp file (' . strlen($serializedClassifier) . 'B');
 		} catch (RuntimeException $e) {
-			throw new ServiceException("Could not serialize classifier: " . $e->getMessage(), 0, $e);
+			throw new ServiceException('Could not serialize classifier: ' . $e->getMessage(), 0, $e);
 		}
 
 		/*
@@ -125,11 +125,11 @@ class PersistenceService {
 				$folder = $this->appData->newFolder(self::ADD_DATA_FOLDER);
 				$this->logger->debug('New folder created for serialized classifiers');
 			}
-			$file = $folder->newFile((string) $classifier->getId());
+			$file = $folder->newFile((string)$classifier->getId());
 			$file->putContent($serializedClassifier);
 			$this->logger->debug('Serialized classifier written to app data');
 		} catch (NotPermittedException $e) {
-			throw new ServiceException("Could not create classifiers directory: " . $e->getMessage(), 0, $e);
+			throw new ServiceException('Could not create classifiers directory: ' . $e->getMessage(), 0, $e);
 		}
 
 		/*
@@ -166,7 +166,7 @@ class PersistenceService {
 			$this->logger->debug("Using cached serialized classifier $id");
 			$serialized = $cached;
 		} else {
-			$this->logger->debug("Loading serialized classifier from app data");
+			$this->logger->debug('Loading serialized classifier from app data');
 			try {
 				$modelsFolder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
 				$modelFile = $modelsFolder->getFile((string)$id);
@@ -177,7 +177,7 @@ class PersistenceService {
 
 			try {
 				$serialized = $modelFile->getContent();
-			} catch (NotFoundException | NotPermittedException $e) {
+			} catch (NotFoundException|NotPermittedException $e) {
 				$this->logger->debug("Could not load content for model file with classifier id $id: " . $e->getMessage());
 				throw new ServiceException("Could not load content for model file with classifier id $id: " . $e->getMessage(), 0, $e);
 			}
@@ -226,7 +226,7 @@ class PersistenceService {
 		]);
 		try {
 			$modelsFolder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
-			$modelFile = $modelsFolder->getFile((string) $id);
+			$modelFile = $modelsFolder->getFile((string)$id);
 			$modelFile->delete();
 		} catch (NotFoundException $e) {
 			$this->logger->debug("Classifier model $id does not exist", [

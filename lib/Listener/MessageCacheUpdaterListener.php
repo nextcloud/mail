@@ -38,7 +38,7 @@ class MessageCacheUpdaterListener implements IEventListener {
 			$message = reset($messages);
 
 			if ($message === false) {
-				$this->logger->warning("Flagged message is not cached");
+				$this->logger->warning('Flagged message is not cached');
 				return;
 			}
 

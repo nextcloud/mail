@@ -42,7 +42,7 @@ class AiIntegrationsService {
 	/** @var IMAPClientFactory */
 	private IMAPClientFactory $clientFactory;
 
-	/** @var IMailManager  */
+	/** @var IMailManager */
 	private IMailManager $mailManager;
 
 	private IConfig $config;
@@ -67,7 +67,7 @@ PROMPT;
 	 * @param array $messages
 	 * @param string $currentUserId
 	 *
-	 * @return  null|string
+	 * @return null|string
 	 *
 	 * @throws ServiceException
 	 */
@@ -103,7 +103,7 @@ PROMPT;
 			}
 
 			$taskPrompt = implode("\n", $messagesBodies);
-			$summaryTask = new Task(SummaryTaskType::class, $taskPrompt, "mail", $currentUserId, $threadId);
+			$summaryTask = new Task(SummaryTaskType::class, $taskPrompt, 'mail', $currentUserId, $threadId);
 			$manager->runTask($summaryTask);
 			$summary = $summaryTask->getOutput();
 
@@ -147,7 +147,7 @@ PROMPT;
 		$task = new Task(
 			FreePromptTaskType::class,
 			self::EVENT_DATA_PROMPT_PREAMBLE . implode("\n\n---\n\n", $messageBodies),
-			"mail",
+			'mail',
 			$currentUserId,
 			"event_data_$threadId",
 		);

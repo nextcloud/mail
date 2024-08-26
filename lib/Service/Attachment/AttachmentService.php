@@ -337,7 +337,7 @@ class AttachmentService implements IAttachmentService {
 			$attributes = $share->getAttributes();
 
 			if($attributes->getAttribute('permissions', 'download') === false) {
-				$this->logger->warning("Could not create attachment, no download permission for file: ".$fileName);
+				$this->logger->warning('Could not create attachment, no download permission for file: '.$fileName);
 				return false;
 
 			}

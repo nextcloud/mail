@@ -13,10 +13,10 @@ class HordeTranslationHandler implements Horde_Translation_Handler {
 	/**
 	 * Returns the translation of a message.
 	 *
-	 * @param string $message  The string to translate.
+	 * @param string $message The string to translate.
 	 *
-	 * @return string  The string translation, or the original string if no
-	 *                 translation exists.
+	 * @return string The string translation, or the original string if no
+	 *                translation exists.
 	 */
 	public function t($message) {
 		return $message;
@@ -25,12 +25,12 @@ class HordeTranslationHandler implements Horde_Translation_Handler {
 	/**
 	 * Returns the plural translation of a message.
 	 *
-	 * @param string $singular  The singular version to translate.
-	 * @param string $plural    The plural version to translate.
-	 * @param integer $number   The number that determines singular vs. plural.
+	 * @param string $singular The singular version to translate.
+	 * @param string $plural The plural version to translate.
+	 * @param integer $number The number that determines singular vs. plural.
 	 *
-	 * @return string  The string translation, or the original string if no
-	 *                 translation exists.
+	 * @return string The string translation, or the original string if no
+	 *                translation exists.
 	 */
 	public function ngettext($singular, $plural, $number) {
 		return ($number > 1 ? $plural : $singular);

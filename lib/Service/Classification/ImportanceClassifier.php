@@ -198,10 +198,10 @@ class ImportanceClassifier {
 			$perf->end();
 			return;
 		}
-		$perf->step("train and validate classifier with training and validation sets");
+		$perf->step('train and validate classifier with training and validation sets');
 
 		$estimator = $this->trainClassifier($dataSet);
-		$perf->step("train classifier with full data set");
+		$perf->step('train classifier with full data set');
 
 		$classifier->setAccountId($account->getId());
 		$classifier->setDuration($perf->end());
@@ -265,7 +265,7 @@ class ImportanceClassifier {
 		return array_map(function (Message $message) {
 			$sender = $message->getFrom()->first();
 			if ($sender === null) {
-				throw new RuntimeException("This should not happen");
+				throw new RuntimeException('This should not happen');
 			}
 
 			return [
@@ -375,7 +375,7 @@ class ImportanceClassifier {
 		 * Ref https://en.wikipedia.org/wiki/Precision_and_recall
 		 * Ref https://en.wikipedia.org/wiki/F1_score
 		 */
-		$logger->debug("classification report: " . json_encode([
+		$logger->debug('classification report: ' . json_encode([
 			'recall' => $recallImportant,
 			'precision' => $precisionImportant,
 			'f1Score' => $f1ScoreImportant,

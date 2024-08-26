@@ -58,7 +58,7 @@ class AttachmentStorage {
 	public function save(string $userId, int $attachmentId, UploadedFile $uploadedFile): void {
 		$folder = $this->getAttachmentFolder($userId);
 
-		$file = $folder->newFile((string) $attachmentId);
+		$file = $folder->newFile((string)$attachmentId);
 		$tmpPath = $uploadedFile->getTempPath();
 		if ($tmpPath === null) {
 			throw new UploadException('tmp_name of uploaded file is null');
@@ -87,7 +87,7 @@ class AttachmentStorage {
 	 */
 	public function saveContent(string $userId, int $attachmentId, string $fileContent): void {
 		$folder = $this->getAttachmentFolder($userId);
-		$file = $folder->newFile((string) $attachmentId);
+		$file = $folder->newFile((string)$attachmentId);
 		$file->putContent($fileContent);
 	}
 
@@ -104,7 +104,7 @@ class AttachmentStorage {
 		$folder = $this->getAttachmentFolder($userId);
 
 		try {
-			return $folder->getFile((string) $attachmentId);
+			return $folder->getFile((string)$attachmentId);
 		} catch (NotFoundException $ex) {
 			throw new AttachmentNotFoundException();
 		}

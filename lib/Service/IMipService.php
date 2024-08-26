@@ -63,7 +63,7 @@ class IMipService {
 		$mailboxes = array_map(function (int $mailboxId) {
 			try {
 				return $this->mailboxMapper->findById($mailboxId);
-			} catch (DoesNotExistException | ServiceException $e) {
+			} catch (DoesNotExistException|ServiceException $e) {
 				return null;
 			}
 		}, $mailboxIds);

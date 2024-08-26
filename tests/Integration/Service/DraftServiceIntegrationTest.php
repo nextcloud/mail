@@ -72,7 +72,7 @@ class DraftServiceIntegrationTest extends TestCase {
 	/** @var Folder */
 	private $userFolder;
 
-	/**  @var AccountService|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var AccountService|\PHPUnit\Framework\MockObject\MockObject */
 	private $accountService;
 
 	/** @var ITimeFactory|\PHPUnit\Framework\MockObject\MockObject */

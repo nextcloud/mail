@@ -234,10 +234,10 @@ class ThreadControllerTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(1);
 		$this->accountService
-				->expects(self::once())
-				->method('find')
-				->with('john', 1)
-				->willReturn(new Account($mailAccount));
+			->expects(self::once())
+			->method('find')
+			->with('john', 1)
+			->willReturn(new Account($mailAccount));
 		$mailbox = new Mailbox();
 		$mailbox->setId(20);
 		$mailbox->setAccountId($mailAccount->getId());
@@ -307,7 +307,7 @@ class ThreadControllerTest extends TestCase {
 		$this->aiIntergrationsService
 			->expects(self::once())
 			->method('generateEventData')
-			->willReturn(new EventData("S", "D"));
+			->willReturn(new EventData('S', 'D'));
 
 		$response = $this->controller->generateEventData(300);
 

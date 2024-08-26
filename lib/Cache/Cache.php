@@ -306,7 +306,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 * @param string $mailbox The mailbox to cache.
 	 * @param string $slice The cache slice.
 	 *
-	 * @return string  The cache ID.
+	 * @return string The cache ID.
 	 */
 	protected function _getCid($mailbox, $slice) {
 		return implode('|', [

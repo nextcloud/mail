@@ -28,11 +28,11 @@ class ContactCheckTest extends TestCase {
 	}
 
 	public function testContactInABCorrectEmail(): void {
-		$fn = "John Doe";
-		$email = "jhon@example.com" ;
+		$fn = 'John Doe';
+		$email = 'jhon@example.com' ;
 		$contacts = [
 			[
-				"email" => ["jhon@example.com"]
+				'email' => ['jhon@example.com']
 			]
 		];
 		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
@@ -42,11 +42,11 @@ class ContactCheckTest extends TestCase {
 	}
 
 	public function testCaseInsensitiveEmail(): void {
-		$fn = "John Doe";
-		$email = "jhondoe@example.com" ;
+		$fn = 'John Doe';
+		$email = 'jhondoe@example.com' ;
 		$contacts = [
 			[
-				"email" => ["JhonDoe@example.com"]
+				'email' => ['JhonDoe@example.com']
 			]
 		];
 		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
@@ -56,11 +56,11 @@ class ContactCheckTest extends TestCase {
 	}
 
 	public function testContactInABWrongEmail(): void {
-		$fn = "John Doe";
-		$email = "jhon@example.com" ;
+		$fn = 'John Doe';
+		$email = 'jhon@example.com' ;
 		$contacts = [
 			[
-				"email" => ["jhonDoe@example.com"]
+				'email' => ['jhonDoe@example.com']
 			]
 		];
 		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
@@ -71,8 +71,8 @@ class ContactCheckTest extends TestCase {
 
 	public function testContactNotInAB(): void {
 		
-		$fn = "John Doe";
-		$email = "jhon@example.com" ;
+		$fn = 'John Doe';
+		$email = 'jhon@example.com' ;
 		$contacts = [];
 		$this->contactsIntegration->method('getContactsWithName')->willReturn($contacts);
 		$result = $this->service->run($fn, $email);

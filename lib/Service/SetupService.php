@@ -111,7 +111,7 @@ class SetupService {
 		}
 
 		$this->accountService->save($newAccount);
-		$this->logger->debug("account created " . $newAccount->getId());
+		$this->logger->debug('account created ' . $newAccount->getId());
 
 		$this->tagMapper->createDefaultTags($newAccount);
 

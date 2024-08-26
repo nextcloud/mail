@@ -195,7 +195,7 @@ class PageController extends Controller {
 		try {
 			$password = $this->credentialStore->getLoginCredentials()->getPassword();
 			$passwordIsUnavailable = $password === null || $password === '';
-		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
+		} catch (CredentialsUnavailableException|PasswordUnavailableException $e) {
 			$passwordIsUnavailable = true;
 		}
 		$this->initialStateService->provideInitialState(

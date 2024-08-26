@@ -58,7 +58,7 @@ class ProvisioningMiddleware extends Middleware {
 				$password,
 				$configs
 			);
-		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
+		} catch (CredentialsUnavailableException|PasswordUnavailableException $e) {
 			// Nothing to update
 			return;
 		}

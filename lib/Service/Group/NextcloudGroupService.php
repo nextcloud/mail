@@ -31,7 +31,7 @@ class NextcloudGroupService implements IGroupService {
 	 *
 	 * @var string
 	 */
-	private $namespace = "Nextcloud";
+	private $namespace = 'Nextcloud';
 
 	public function __construct(IGroupManager $groupManager, IConfig $config) {
 		$this->groupManager = $groupManager;

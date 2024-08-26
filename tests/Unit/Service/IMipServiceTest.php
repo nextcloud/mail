@@ -38,10 +38,10 @@ class IMipServiceTest extends TestCase {
 	private $accountService;
 	private IManager $calendarManager;
 
-	/** @var MailManager|MockObject  */
+	/** @var MailManager|MockObject */
 	private $mailManager;
 
-	/** @var MockObject|LoggerInterface  */
+	/** @var MockObject|LoggerInterface */
 	private $logger;
 
 	private IMipService $service;

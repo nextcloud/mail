@@ -126,7 +126,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 	 * @inheritDoc
 	 */
 	public function getItems(string $userId, ?string $since = null, int $limit = 7): array {
-		$intSince = $since === null ? null : (int) $since;
+		$intSince = $since === null ? null : (int)$since;
 		$emails = $this->getEmails($userId, $intSince, $limit);
 
 		return array_map(function (Message $email) {
@@ -147,7 +147,7 @@ abstract class MailWidget implements IAPIWidget, IAPIWidgetV2, IIconWidget, IOpt
 						'size' => 44,
 					])
 				),
-				(string) $email->getSentAt()
+				(string)$email->getSentAt()
 			);
 		}, $emails);
 	}

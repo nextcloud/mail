@@ -74,15 +74,15 @@ class MessageApiController extends OCSController {
 	/**
 	 * Send an email though a mail account that has been configured with Nextcloud Mail
 	 *
-	 * @param int $accountId  The mail account to use for SMTP
-	 * @param string $fromEmail  The "From" email address or alias email address
-	 * @param string $subject  The subject
-	 * @param string $body  The message body
-	 * @param bool $isHtml  If the message body contains HTML
-	 * @param list<array{ label?: string, email: string}> $to  An array of "To" recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array<empty>|list<array{ label?: string, email: string}> $cc  An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param array<empty>|list<array{ label?: string, email: string}> $bcc  An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
-	 * @param ?string $references  An optional string of an RFC2392 "message-id" to set the "Reply-To" and "References" header on sending
+	 * @param int $accountId The mail account to use for SMTP
+	 * @param string $fromEmail The "From" email address or alias email address
+	 * @param string $subject The subject
+	 * @param string $body The message body
+	 * @param bool $isHtml If the message body contains HTML
+	 * @param list<array{ label?: string, email: string}> $to An array of "To" recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param array<empty>|list<array{ label?: string, email: string}> $cc An optional array of 'CC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param array<empty>|list<array{ label?: string, email: string}> $bcc An optional array of 'BCC' recipients in the format ['label' => 'Name', 'email' => 'Email Address'] or ['email' => 'Email Address']
+	 * @param ?string $references An optional string of an RFC2392 "message-id" to set the "Reply-To" and "References" header on sending
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_ACCEPTED|Http::STATUS_BAD_REQUEST|Http::STATUS_FORBIDDEN|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
 	 * 200: The email was sent
@@ -211,7 +211,7 @@ class MessageApiController extends OCSController {
 	/**
 	 * Get a mail message with its metadata
 	 *
-	 * @param int $id  the message id
+	 * @param int $id the message id
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_PARTIAL_CONTENT, MailMessageApiResponse, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
 	 * 200: Message found
@@ -232,7 +232,7 @@ class MessageApiController extends OCSController {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
-		} catch (ClientException | DoesNotExistException $e) {
+		} catch (ClientException|DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
 			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
 		}
@@ -322,7 +322,7 @@ class MessageApiController extends OCSController {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
-		} catch (ClientException | DoesNotExistException $e) {
+		} catch (ClientException|DoesNotExistException $e) {
 			$this->logger->error('Message, Account or Mailbox not found', ['exception' => $e->getMessage()]);
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
@@ -364,8 +364,8 @@ class MessageApiController extends OCSController {
 	/**
 	 * Get a mail message's attachments
 	 *
-	 * @param int $id  the mail id
-	 * @param string $attachmentId  the attachment id
+	 * @param int $id the mail id
+	 * @param string $attachmentId the attachment id
 	 * @return DataResponse<Http::STATUS_OK, MailMessageApiAttachment, array{}>|DataResponse<Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, string, array{}>
 	 *
 	 * 200: Message found
@@ -383,7 +383,7 @@ class MessageApiController extends OCSController {
 			$message = $this->mailManager->getMessage($this->userId, $id);
 			$mailbox = $this->mailManager->getMailbox($this->userId, $message->getMailboxId());
 			$account = $this->accountService->find($this->userId, $mailbox->getAccountId());
-		} catch (DoesNotExistException | ClientException $e) {
+		} catch (DoesNotExistException|ClientException $e) {
 			return new DataResponse('Message, Account or Mailbox not found', Http::STATUS_NOT_FOUND);
 		}
 
@@ -394,10 +394,10 @@ class MessageApiController extends OCSController {
 				$message,
 				$attachmentId,
 			);
-		} catch (\Horde_Imap_Client_Exception_NoSupportExtension | \Horde_Imap_Client_Exception | \Horde_Mime_Exception $e) {
+		} catch (\Horde_Imap_Client_Exception_NoSupportExtension|\Horde_Imap_Client_Exception|\Horde_Mime_Exception $e) {
 			$this->logger->error('Error when trying to process the attachment', ['exception' => $e]);
 			return new DataResponse('Error when trying to process the attachment', Http::STATUS_INTERNAL_SERVER_ERROR);
-		} catch (ServiceException | DoesNotExistException $e) {
+		} catch (ServiceException|DoesNotExistException $e) {
 			$this->logger->error('Could not find attachment', ['exception' => $e]);
 			return new DataResponse('Could not find attachment', Http::STATUS_NOT_FOUND);
 		}

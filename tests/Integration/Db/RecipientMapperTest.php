@@ -40,7 +40,7 @@ class RecipientMapperTest extends TestCase {
 	/** @var Recipient */
 	private $inboxRecipient;
 
-	/** @var LocalMessage  */
+	/** @var LocalMessage */
 	private $message;
 	/** @var MailAccount */
 	private $account;

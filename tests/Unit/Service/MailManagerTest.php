@@ -160,7 +160,7 @@ class MailManagerTest extends TestCase {
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
-			->willThrowException(new DoesNotExistException(""));
+			->willThrowException(new DoesNotExistException(''));
 		$this->expectException(ServiceException::class);
 
 		$this->manager->deleteMessage(
@@ -187,7 +187,7 @@ class MailManagerTest extends TestCase {
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
-			->willThrowException(new DoesNotExistException(""));
+			->willThrowException(new DoesNotExistException(''));
 		$this->expectException(ServiceException::class);
 
 		$this->manager->deleteMessage(
@@ -301,7 +301,7 @@ class MailManagerTest extends TestCase {
 			->willReturn($client);
 		$client->expects($this->once())
 			->method('status')
-			->willReturn([ 'permflags' => [ "11" => "\*" ] ]);
+			->willReturn([ 'permflags' => [ '11' => "\*" ] ]);
 		$this->imapMessageMapper->expects($this->once())
 			->method('addFlag');
 
@@ -317,7 +317,7 @@ class MailManagerTest extends TestCase {
 			->willReturn($client);
 		$client->expects($this->once())
 			->method('status')
-			->willReturn([ 'permflags' => [ "11" => "\*" ] ]);
+			->willReturn([ 'permflags' => [ '11' => "\*" ] ]);
 		$this->imapMessageMapper->expects($this->once())
 			->method('removeFlag');
 
@@ -357,7 +357,7 @@ class MailManagerTest extends TestCase {
 
 		$client->expects($this->once())
 			->method('status')
-			->willReturn(['permflags' => [ "11" => "\*" ]]);
+			->willReturn(['permflags' => [ '11' => "\*" ]]);
 
 		$this->assertEquals([Tag::LABEL_IMPORTANT], $this->manager->filterFlags($client, $account, Tag::LABEL_IMPORTANT, 'INBOX'));
 	}
@@ -368,7 +368,7 @@ class MailManagerTest extends TestCase {
 
 		$client->expects($this->once())
 			->method('status')
-			->willReturn(['permflags' => [ "11" => "\*"] ]);
+			->willReturn(['permflags' => [ '11' => "\*"] ]);
 
 		$this->assertTrue($this->manager->isPermflagsEnabled($client, $account, 'INBOX'));
 	}
@@ -423,7 +423,7 @@ class MailManagerTest extends TestCase {
 			->willReturn($mb);
 		$client->expects($this->once())
 			->method('status')
-			->willReturn(['permflags' => [ "11" => "\*"] ]);
+			->willReturn(['permflags' => [ '11' => "\*"] ]);
 		$this->imapMessageMapper->expects($this->once())
 			->method('addFlag')
 			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);
@@ -452,7 +452,7 @@ class MailManagerTest extends TestCase {
 			->willReturn($mb);
 		$client->expects($this->once())
 			->method('status')
-			->willReturn(['permflags' => [ "11" => "\*"] ]);
+			->willReturn(['permflags' => [ '11' => "\*"] ]);
 		$this->imapMessageMapper->expects($this->once())
 			->method('removeFlag')
 			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);

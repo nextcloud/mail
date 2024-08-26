@@ -37,7 +37,7 @@ class FlagExpression {
 	 * @return static
 	 */
 	public static function and(...$operands): self {
-		return new self("and", $operands);
+		return new self('and', $operands);
 	}
 
 	/**
@@ -46,7 +46,7 @@ class FlagExpression {
 	 * @return static
 	 */
 	public static function or(...$operands): self {
-		return new self("or", $operands);
+		return new self('or', $operands);
 	}
 
 	public function getOperator(): string {

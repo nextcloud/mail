@@ -22,7 +22,7 @@ use OCP\IUser;
 use OCP\Notification\INotification;
 
 class QuotaJobTest extends TestCase {
-	/** @var ServiceMockObject*/
+	/** @var ServiceMockObject */
 	private $serviceMock;
 
 	/** @var SyncJob */

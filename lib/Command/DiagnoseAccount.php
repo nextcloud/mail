@@ -72,7 +72,7 @@ class DiagnoseAccount extends Command {
 			$this->logger->error('Could not get account statistics: ' . $e, [
 				'exception' => $e,
 			]);
-			$output->writeln("<error>Horde error occurred: " . $e->getMessage() . ". See nextcloud.log for more details.</error>");
+			$output->writeln('<error>Horde error occurred: ' . $e->getMessage() . '. See nextcloud.log for more details.</error>');
 			return 2;
 		} finally {
 			$imapClient->logout();
@@ -89,7 +89,7 @@ class DiagnoseAccount extends Command {
 	 */
 	private function printCapabilitiesStats(OutputInterface $output,
 		Horde_Imap_Client_Socket $imapClient): void {
-		$output->writeln("IMAP capabilities:");
+		$output->writeln('IMAP capabilities:');
 		// Once logged in more capabilities are advertised
 		$imapClient->login();
 		$capabilities = array_keys(
@@ -102,7 +102,7 @@ class DiagnoseAccount extends Command {
 		foreach ($capabilities as $capability) {
 			$output->writeln("- $capability");
 		}
-		$output->writeln("");
+		$output->writeln('');
 	}
 
 	/**
@@ -120,6 +120,6 @@ class DiagnoseAccount extends Command {
 			$status = $imapClient->status($mb, Horde_Imap_Client::STATUS_MESSAGES);
 			return $c + $status['messages'];
 		}, 0);
-		$output->writeln("Account has " . $messages . " messages in " . count($mailboxes) . " mailboxes");
+		$output->writeln('Account has ' . $messages . ' messages in ' . count($mailboxes) . ' mailboxes');
 	}
 }

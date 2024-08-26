@@ -10,6 +10,7 @@ codecov.yml
 /.editorconfig
 /.eslintrc.js
 .git
+.git-blame-ignore-revs
 .gitattributes
 .github
 .gitignore

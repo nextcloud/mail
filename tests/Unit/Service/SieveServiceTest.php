@@ -105,11 +105,11 @@ class SieveServiceTest extends TestCase {
 
 	public function scriptTrimDataProvider(): array {
 		return [
-			["# foo bar", "# foo bar"],
-			["# foo bar\r\n", "# foo bar"],
-			["# foo bar\r\n\r\n", "# foo bar"],
+			['# foo bar', '# foo bar'],
+			["# foo bar\r\n", '# foo bar'],
+			["# foo bar\r\n\r\n", '# foo bar'],
 			["\r\n# foo bar", "\r\n# foo bar"],
-			["# foo bar  ", "# foo bar  "],
+			['# foo bar  ', '# foo bar  '],
 		];
 	}
 

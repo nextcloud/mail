@@ -20,7 +20,7 @@ use OCP\ILogger;
 use OCP\IUser;
 
 class SyncJobTest extends TestCase {
-	/** @var ServiceMockObject*/
+	/** @var ServiceMockObject */
 	private $serviceMock;
 
 	/** @var SyncJob */

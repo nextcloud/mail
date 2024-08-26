@@ -53,16 +53,16 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		$accountId = $event->getAccount()->getId();
 		$logger->debug("Building threads for account $accountId");
 		$messages = $this->mapper->findThreadingData($event->getAccount());
-		$logger->debug("Account $accountId has " . count($messages) . " messages with threading information");
+		$logger->debug("Account $accountId has " . count($messages) . ' messages with threading information');
 		$threads = $this->builder->build($messages, $logger);
-		$logger->debug("Account $accountId has " . count($threads) . " threads");
+		$logger->debug("Account $accountId has " . count($threads) . ' threads');
 		/** @var DatabaseMessage[] $flattened */
 		$flattened = iterator_to_array($this->flattenThreads($threads), false);
-		$logger->debug("Account $accountId has " . count($flattened) . " messages with a new thread IDs");
+		$logger->debug("Account $accountId has " . count($flattened) . ' messages with a new thread IDs');
 		foreach (array_chunk($flattened, self::WRITE_IDS_CHUNK_SIZE) as $chunk) {
 			$this->mapper->writeThreadIds($chunk);
 
-			$logger->debug("Chunk of " . self::WRITE_IDS_CHUNK_SIZE . " messages updated");
+			$logger->debug('Chunk of ' . self::WRITE_IDS_CHUNK_SIZE . ' messages updated');
 		}
 
 		// Free memory

@@ -117,7 +117,7 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|SmimeService */
 	private $smimeService;
 
-	/** @var MockObject|IMAPClientFactory  */
+	/** @var MockObject|IMAPClientFactory */
 	private $clientFactory;
 	private IDkimService $dkimService;
 
@@ -239,9 +239,9 @@ class MessagesControllerTest extends TestCase {
 		$expectedPlainResponse = HtmlResponse::plain('');
 		$expectedPlainResponse->cacheFor(3600);
 
-		$nonce = "abc123";
-		$relativeScriptUrl = "/script.js";
-		$scriptUrl = "next.cloud/script.js";
+		$nonce = 'abc123';
+		$relativeScriptUrl = '/script.js';
+		$scriptUrl = 'next.cloud/script.js';
 		$this->nonceManager->expects($this->once())
 			->method('getNonce')
 			->willReturn($nonce);
@@ -279,7 +279,7 @@ class MessagesControllerTest extends TestCase {
 		$mailboxId = 987;
 		$id = 123;
 		$uid = 321;
-		$attachmentId = "3";
+		$attachmentId = '3';
 
 		// Attachment data
 		$contents = 'abcdef';
@@ -361,14 +361,14 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue('cat.jpg'));
 		$this->userFolder->expects($this->once())
 			->method('nodeExists')
-			->with("Downloads/cat.jpg")
+			->with('Downloads/cat.jpg')
 			->will($this->returnValue(false));
 		$file = $this->getMockBuilder('\OCP\Files\File')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->userFolder->expects($this->once())
 			->method('newFile')
-			->with("Downloads/cat.jpg")
+			->with('Downloads/cat.jpg')
 			->will($this->returnValue($file));
 		$file->expects($this->once())
 			->method('putContent')
@@ -424,14 +424,14 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue('cat.jpg'));
 		$this->userFolder->expects($this->once())
 			->method('nodeExists')
-			->with("Downloads/cat.jpg")
+			->with('Downloads/cat.jpg')
 			->will($this->returnValue(false));
 		$file = $this->getMockBuilder('\OCP\Files\File')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->userFolder->expects($this->once())
 			->method('newFile')
-			->with("Downloads/cat.jpg")
+			->with('Downloads/cat.jpg')
 			->will($this->returnValue($file));
 		$file->expects($this->once())
 			->method('putContent')
@@ -499,7 +499,7 @@ class MessagesControllerTest extends TestCase {
 		$zip = new ZipResponse($this->request, 'attachments');
 		foreach ($attachments as $attachment) {
 			$fileName = $attachment->getName();
-			$fh = fopen("php://temp", 'r+');
+			$fh = fopen('php://temp', 'r+');
 			fputs($fh, $attachment->getContent());
 			$size = $attachment->getSize();
 			rewind($fh);
@@ -573,9 +573,9 @@ class MessagesControllerTest extends TestCase {
 		$mailbox->setAccountId($accountId);
 
 		$this->mailManager->expects($this->once())
-		->method('getMessage')
-		->with($this->userId, $id)
-		->willReturn($message);
+			->method('getMessage')
+			->with($this->userId, $id)
+			->willReturn($message);
 		$this->mailManager->expects($this->once())
 			->method('getMailbox')
 			->willThrowException(new ClientException());

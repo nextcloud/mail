@@ -121,7 +121,7 @@ class MicrosoftIntegrationController extends Controller {
 		try {
 			$account = $this->accountService->find(
 				$this->userId,
-				(int) $state,
+				(int)$state,
 			);
 		} catch (ClientException $e) {
 			$this->logger->warning('Attempted Microsoft authentication redirect for account: ' . $e->getMessage(), [

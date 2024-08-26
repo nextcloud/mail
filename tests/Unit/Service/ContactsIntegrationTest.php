@@ -53,7 +53,7 @@ class ContactsIntegrationTest extends TestCase {
 			->method('search');
 
 		$expected = [];
-		$actual = $this->contactsIntegration->getMatchingRecipient("", "abc");
+		$actual = $this->contactsIntegration->getMatchingRecipient('', 'abc');
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -106,7 +106,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -173,7 +173,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -213,7 +213,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -253,7 +253,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -293,7 +293,7 @@ class ContactsIntegrationTest extends TestCase {
 			],
 		];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -328,7 +328,7 @@ class ContactsIntegrationTest extends TestCase {
 
 		$expected = [];
 
-		$actual = $this->contactsIntegration->getMatchingRecipient("auser", $term);
+		$actual = $this->contactsIntegration->getMatchingRecipient('auser', $term);
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -343,11 +343,11 @@ class ContactsIntegrationTest extends TestCase {
 				['core', 'shareapi_restrict_user_enumeration_full_match_email', 'yes'],
 			)
 			->willReturnOnConsecutiveCalls(
-				$allowSystemUsers ? "yes" : " no",
-				$allowSystemUsersInGroupOnly ? "yes" : " no",
-				$shareeEnumerationFullMatch ? "yes" : " no",
-				$shareeEnumerationFullMatchUserId ? "yes" : "no",
-				$shareeEnumerationFullMatchEmail ? "yes" : " no");
+				$allowSystemUsers ? 'yes' : ' no',
+				$allowSystemUsersInGroupOnly ? 'yes' : ' no',
+				$shareeEnumerationFullMatch ? 'yes' : ' no',
+				$shareeEnumerationFullMatchUserId ? 'yes' : 'no',
+				$shareeEnumerationFullMatchEmail ? 'yes' : ' no');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
 			->will($this->returnValue(true));

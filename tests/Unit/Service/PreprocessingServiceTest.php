@@ -28,7 +28,7 @@ class PreprocessingServiceTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
-	/** @var MockObject|LoggerInterface  */
+	/** @var MockObject|LoggerInterface */
 	private $logger;
 
 	/** @var MockObject|PreviewEnhancer */

@@ -45,7 +45,7 @@ class GroupsIntegrationTest extends TestCase {
 		$searchResult1 = [
 			[
 				'id' => 'testgroup',
-				'name' => "first test group"
+				'name' => 'first test group'
 			]
 		];
 		$this->groupService1->expects($this->once())
@@ -90,8 +90,8 @@ class GroupsIntegrationTest extends TestCase {
 		$members = [
 			[
 				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
+				'name' => 'Bobby',
+				'email' => 'bob@smith.net'
 			],
 			[
 				'id' => 'mary',
@@ -125,8 +125,8 @@ class GroupsIntegrationTest extends TestCase {
 		$members = [
 			[
 				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
+				'name' => 'Bobby',
+				'email' => 'bob@smith.net'
 			],
 			[
 				'id' => 'mary',
@@ -159,8 +159,8 @@ class GroupsIntegrationTest extends TestCase {
 		$members = [
 			[
 				'id' => 'bob',
-				'name' => "Bobby",
-				'email' => "bob@smith.net"
+				'name' => 'Bobby',
+				'email' => 'bob@smith.net'
 			],
 			[
 				'id' => 'mary',

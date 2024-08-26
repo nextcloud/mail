@@ -111,7 +111,7 @@ class DeleteDraftListener implements IEventListener {
 	private function getDraftsMailbox(Account $account): Mailbox {
 		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
 		if ($draftsMailboxId === null) {
-			throw new DoesNotExistException("No drafts mailbox ID set");
+			throw new DoesNotExistException('No drafts mailbox ID set');
 		}
 		return $this->mailboxMapper->findById($draftsMailboxId);
 	}

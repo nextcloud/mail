@@ -19,8 +19,8 @@ class HtmlResponseTest extends TestCase {
 	 * @param $contentType
 	 */
 	public function testIt($content) {
-		$nonce = "abc123";
-		$scriptUrl = "next.cloud/script.js";
+		$nonce = 'abc123';
+		$scriptUrl = 'next.cloud/script.js';
 		$plainResp = HtmlResponse::plain($content);
 		$richResp = HtmlResponse::withResizer($content, $nonce, $scriptUrl);
 
