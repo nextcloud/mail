@@ -41,7 +41,7 @@
 		<MessageAttachments :attachments="message.attachments" :envelope="envelope" />
 		<div id="reply-composer" />
 		<div class="reply-buttons">
-			<div v-if="smartReplies.length>0" class="reply-buttons__suggested">
+			<div v-if="smartReplies.length > 0" class="reply-buttons__suggested">
 				<NcButton v-for="(reply,index) in smartReplies"
 					:key="index"
 					class="reply-buttons__suggested__button"
@@ -51,6 +51,7 @@
 				</NcButton>
 			</div>
 			<NcButton type="primary"
+				class="reply-buttons__notsuggested"
 				@click="onReply">
 				<template #icon>
 					<ReplyIcon />
@@ -166,21 +167,26 @@ export default {
 		margin-top: -5px;
 	}
 }
-.reply-buttons{
+.reply-buttons {
 	margin: 0 10px 0 50px;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
+
 	&__suggested {
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-start;
 		&__button {
-			margin-right:5px;
+			margin-right: 5px;
 			border-radius: 12px;
-			:deep(.button-vue__text){
+			:deep(.button-vue__text) {
 				font-weight: normal;
 			}
 		}
 	}
 
+	&__notsuggested {
+		margin-left: auto;
+	}
 }
 </style>
