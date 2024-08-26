@@ -46,7 +46,7 @@ class MigrateImportantFromImapAndDb {
 		try {
 			$uids = $this->messageMapper->getFlagged($client, $mailbox, '$important');
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException("Could not fetch UIDs of important messages: " . $e->getMessage(), 0, $e);
+			throw new ServiceException('Could not fetch UIDs of important messages: ' . $e->getMessage(), 0, $e);
 		}
 		// add $label1 for all that are tagged on IMAP
 		if ($uids !== []) {

@@ -41,7 +41,7 @@ class AccountService {
 	/** @var IJobList */
 	private $jobList;
 
-	/** @var IMAPClientFactory*/
+	/** @var IMAPClientFactory */
 	private $imapClientFactory;
 
 	public function __construct(MailAccountMapper $mapper,

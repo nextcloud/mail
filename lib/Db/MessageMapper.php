@@ -385,63 +385,63 @@ class MessageMapper extends QBMapper {
 		foreach ($messages as $message) {
 			if (empty($message->getUpdatedFields()) === false) {
 				if ($message->getFlagAnswered()) {
-					$updateData["flag_answered_true"][] = $message->getUid();
+					$updateData['flag_answered_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_answered_false"][] = $message->getUid();
+					$updateData['flag_answered_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagDeleted()) {
-					$updateData["flag_deleted_true"][] = $message->getUid();
+					$updateData['flag_deleted_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_deleted_false"][] = $message->getUid();
+					$updateData['flag_deleted_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagDraft()) {
-					$updateData["flag_draft_true"][] = $message->getUid();
+					$updateData['flag_draft_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_draft_false"][] = $message->getUid();
+					$updateData['flag_draft_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagFlagged()) {
-					$updateData["flag_flagged_true"][] = $message->getUid();
+					$updateData['flag_flagged_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_flagged_false"][] = $message->getUid();
+					$updateData['flag_flagged_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagSeen()) {
-					$updateData["flag_seen_true"][] = $message->getUid();
+					$updateData['flag_seen_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_seen_false"][] = $message->getUid();
+					$updateData['flag_seen_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagForwarded()) {
-					$updateData["flag_forwarded_true"][] = $message->getUid();
+					$updateData['flag_forwarded_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_forwarded_false"][] = $message->getUid();
+					$updateData['flag_forwarded_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagJunk()) {
-					$updateData["flag_junk_true"][] = $message->getUid();
+					$updateData['flag_junk_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_junk_false"][] = $message->getUid();
+					$updateData['flag_junk_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagNotjunk()) {
-					$updateData["flag_notjunk_true"][] = $message->getUid();
+					$updateData['flag_notjunk_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_notjunk_false"][] = $message->getUid();
+					$updateData['flag_notjunk_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagMdnsent()) {
-					$updateData["flag_mdnsent_true"][] = $message->getUid();
+					$updateData['flag_mdnsent_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_mdnsent_false"][] = $message->getUid();
+					$updateData['flag_mdnsent_false'][] = $message->getUid();
 				}
 
 				if ($message->getFlagImportant()) {
-					$updateData["flag_important_true"][] = $message->getUid();
+					$updateData['flag_important_true'][] = $message->getUid();
 				} else {
-					$updateData["flag_important_false"][] = $message->getUid();
+					$updateData['flag_important_false'][] = $message->getUid();
 				}
 			}
 		}
@@ -479,14 +479,14 @@ class MessageMapper extends QBMapper {
 					$queryFalse->executeStatement();
 				}
 
-				$perf->step('Set ' . $flag . " in messages.");
+				$perf->step('Set ' . $flag . ' in messages.');
 			}
 
 			// get all tags before the loop and create a mapping [message_id => [tag,...]] but only if permflags are enabled
 			$tags = [];
 			if ($permflagsEnabled) {
 				$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
-				$perf->step("Selected Tags for all messages");
+				$perf->step('Selected Tags for all messages');
 			}
 
 			foreach ($messages as $message) {
@@ -530,7 +530,7 @@ class MessageMapper extends QBMapper {
 		foreach ($toAdd as $tag) {
 			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
 		}
-		$perf->step("Tagged messages");
+		$perf->step('Tagged messages');
 
 		if ($dbTags === []) {
 			// we have nothing to possibly remove
@@ -543,7 +543,7 @@ class MessageMapper extends QBMapper {
 		foreach ($toRemove as $tag) {
 			$this->tagMapper->untagMessage($tag, $message->getMessageId());
 		}
-		$perf->step("Untagged messages");
+		$perf->step('Untagged messages');
 	}
 
 	/**
@@ -1179,10 +1179,10 @@ class MessageMapper extends QBMapper {
 		switch ($expr->getOperator()) {
 			case 'and':
 				/** @psalm-suppress InvalidCast */
-				return (string) $qb->expr()->andX(...$operands);
+				return (string)$qb->expr()->andX(...$operands);
 			case 'or':
 				/** @psalm-suppress InvalidCast */
-				return (string) $qb->expr()->orX(...$operands);
+				return (string)$qb->expr()->orX(...$operands);
 			default:
 				throw new RuntimeException('Unknown operator ' . $expr->getOperator());
 		}
@@ -1191,7 +1191,7 @@ class MessageMapper extends QBMapper {
 	private function flagToColumnName(Flag $flag): string {
 		// workaround for @link https://github.com/nextcloud/mail/issues/25
 		if ($flag->getFlag() === Tag::LABEL_IMPORTANT) {
-			return "flag_important";
+			return 'flag_important';
 		}
 		$key = ltrim($flag->getFlag(), '\\$');
 		return "flag_$key";
@@ -1456,7 +1456,7 @@ class MessageMapper extends QBMapper {
 		$result = $idsQuery->executeQuery();
 		$ids = [];
 		while ($row = $result->fetch()) {
-			$ids[] = (int) $row['id'];
+			$ids[] = (int)$row['id'];
 		}
 		$result->closeCursor();
 
@@ -1478,7 +1478,7 @@ class MessageMapper extends QBMapper {
 			);
 		$result = $recipientIdsQuery->executeQuery();
 		while ($row = $result->fetch()) {
-			$ids[] = (int) $row['id'];
+			$ids[] = (int)$row['id'];
 		}
 		$result->closeCursor();
 
@@ -1532,7 +1532,7 @@ class MessageMapper extends QBMapper {
 		$update = $qb->update($this->tableName)
 			->set('in_reply_to', $qb->createNamedParameter('NULL', IQueryBuilder::PARAM_NULL))
 			->where(
-				$qb->expr()->like('in_reply_to', $qb->createNamedParameter("<>", IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
+				$qb->expr()->like('in_reply_to', $qb->createNamedParameter('<>', IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			);
 		return $update->executeStatement();
 	}

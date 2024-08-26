@@ -31,17 +31,17 @@ class DateCheckTest extends TestCase {
 	public function testInThePast(): void {
 
 		$this->time->expects($this->exactly(2))
-		->method('getDateTime')
-		->withConsecutive(
-			['now'],
-			["26 June 2024 22:45:34 +0000"]
-		)
-		->willReturnOnConsecutiveCalls(
-			new DateTime('now'),
-			new DateTime('26 June 2024 22:45:34 +0000')
-		);
+			->method('getDateTime')
+			->withConsecutive(
+				['now'],
+				['26 June 2024 22:45:34 +0000']
+			)
+			->willReturnOnConsecutiveCalls(
+				new DateTime('now'),
+				new DateTime('26 June 2024 22:45:34 +0000')
+			);
 		
-		$result = $this->service->run("26 June 2024 22:45:34 +0000");
+		$result = $this->service->run('26 June 2024 22:45:34 +0000');
 
 		$this->assertFalse($result->isPhishing());
 	}
@@ -50,17 +50,17 @@ class DateCheckTest extends TestCase {
 
 
 		$this->time->expects($this->exactly(2))
-		->method('getDateTime')
-		->withConsecutive(
-			['now'],
-			["17 June 3000 22:45:34 +0000"]
-		)
-		->willReturnOnConsecutiveCalls(
-			new DateTime('now'),
-			new DateTime('17 June 3000 22:45:34 +0000')
-		);
+			->method('getDateTime')
+			->withConsecutive(
+				['now'],
+				['17 June 3000 22:45:34 +0000']
+			)
+			->willReturnOnConsecutiveCalls(
+				new DateTime('now'),
+				new DateTime('17 June 3000 22:45:34 +0000')
+			);
 
-		$result = $this->service->run("17 June 3000 22:45:34 +0000");
+		$result = $this->service->run('17 June 3000 22:45:34 +0000');
 
 		$this->assertTrue($result->isPhishing());
 	}

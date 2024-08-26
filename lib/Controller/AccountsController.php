@@ -430,7 +430,7 @@ class AccountsController extends Controller {
 			try {
 				$previousDraft = $this->mailManager->getMessage($this->currentUserId, $draftId);
 			} catch (ClientException $e) {
-				$this->logger->info("Draft " . $draftId . " could not be loaded: " . $e->getMessage());
+				$this->logger->info('Draft ' . $draftId . ' could not be loaded: ' . $e->getMessage());
 			}
 		}
 		$messageData = NewMessageData::fromRequest($account, $subject, $body, $to, $cc, $bcc, [], $isHtml);
@@ -449,7 +449,7 @@ class AccountsController extends Controller {
 			return new JSONResponse([
 				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
 			]);
-		} catch (ClientException | ServiceException $ex) {
+		} catch (ClientException|ServiceException $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
 			throw $ex;
 		}

@@ -91,7 +91,7 @@ class ErrorMiddleware extends Middleware {
 		}
 
 		return JsonResponse::error(
-			"Server error",
+			'Server error',
 			$temporary ? Http::STATUS_SERVICE_UNAVAILABLE : Http::STATUS_INTERNAL_SERVER_ERROR
 		);
 	}

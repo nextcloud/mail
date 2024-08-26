@@ -79,7 +79,7 @@ class Mailbox extends Entity implements JsonSerializable {
 
 	/**
 	 * @var int
-	 * Lock timeout for sync (5 minutes)
+	 *          Lock timeout for sync (5 minutes)
 	 */
 	public const LOCK_TIMEOUT = 300;
 
@@ -110,7 +110,7 @@ class Mailbox extends Entity implements JsonSerializable {
 				strtolower($specialUse),
 				'\\'
 			),
-			array_map("strtolower", $this->getSpecialUseParsed()),
+			array_map('strtolower', $this->getSpecialUseParsed()),
 			true
 		);
 	}

@@ -24,7 +24,7 @@ use OCP\Server;
 use function in_array;
 
 trait ImapTest {
-	/**  @var Horde_Imap_Client_Socket */
+	/** @var Horde_Imap_Client_Socket */
 	private $client;
 
 	/** @var array<string> */

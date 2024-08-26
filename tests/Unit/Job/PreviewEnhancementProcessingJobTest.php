@@ -20,26 +20,26 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class PreviewEnhancementProcessingJobTest extends TestCase {
-	/** @var ITimeFactory|ITimeFactory&MockObject|MockObject  */
+	/** @var ITimeFactory|ITimeFactory&MockObject|MockObject */
 	private $time;
 
-	/** @var IUserManager|IUserManager&MockObject|MockObject  */
+	/** @var IUserManager|IUserManager&MockObject|MockObject */
 	private $manager;
 
-	/** @var AccountService|AccountService&MockObject|MockObject  */
+	/** @var AccountService|AccountService&MockObject|MockObject */
 	private $accountService;
 
-	/** @var PreprocessingService|PreprocessingService&MockObject|MockObject  */
+	/** @var PreprocessingService|PreprocessingService&MockObject|MockObject */
 	private $preprocessingService;
 
-	/** @var MockObject|LoggerInterface|LoggerInterface&MockObject  */
+	/** @var MockObject|LoggerInterface|LoggerInterface&MockObject */
 	private $logger;
 
-	/** @var IJobList|IJobList&MockObject|MockObject  */
+	/** @var IJobList|IJobList&MockObject|MockObject */
 	private $jobList;
 	private PreviewEnhancementProcessingJob $job;
 
-	/** @var int[]  */
+	/** @var int[] */
 	private static $argument;
 
 	public function setUp(): void {

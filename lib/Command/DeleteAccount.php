@@ -51,13 +51,13 @@ class DeleteAccount extends Command {
 			$output->writeLn('<error>This account does not exist</error>');
 			return 1;
 		}
-		$output->writeLn("<info>Found account with email: " . $account->getEmail() . "</info>");
+		$output->writeLn('<info>Found account with email: ' . $account->getEmail() . '</info>');
 
 		if (!is_null($account->getMailAccount()->getProvisioningId())) {
 			$output->writeLn('<error>This is a provisioned account which can not be deleted from CLI. Use the Provisioning UI instead.</error>');
 			return 2;
 		}
-		$output->writeLn("<info>Deleting " . $account->getEmail() . "</info>");
+		$output->writeLn('<info>Deleting ' . $account->getEmail() . '</info>');
 		$this->delete($account, $output);
 
 		return 0;

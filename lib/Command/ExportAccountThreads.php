@@ -67,7 +67,7 @@ class ExportAccountThreads extends Command {
 				array_map(static function (DatabaseMessage $message) use ($salt) {
 					return $message->redact(
 						static function (string $str) use ($salt) {
-							return hash('md5', $str . $salt) . "@redacted";
+							return hash('md5', $str . $salt) . '@redacted';
 						}
 					);
 				}, $threads),

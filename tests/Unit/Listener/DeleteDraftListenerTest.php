@@ -149,7 +149,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$this->mailboxMapper->expects($this->once())
 			->method('findById')
 			->with(123)
-			->willThrowException(new DoesNotExistException(""));
+			->willThrowException(new DoesNotExistException(''));
 		$this->logger->expects($this->once())->method('warning');
 
 		$this->listener->handle($event);

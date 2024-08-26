@@ -69,7 +69,7 @@ class IspDb {
 		if ($data === false || !property_exists($data, 'emailProvider')) {
 			$errors = libxml_get_errors();
 			foreach ($errors as $error) {
-				$this->logger->debug("ISP DB returned an erroneous XML: " . $error->message);
+				$this->logger->debug('ISP DB returned an erroneous XML: ' . $error->message);
 			}
 			return null;
 		}

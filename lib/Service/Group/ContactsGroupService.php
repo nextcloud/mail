@@ -24,7 +24,7 @@ class ContactsGroupService implements IGroupService {
 	 *
 	 * @var string
 	 */
-	private $namespace = "Contacts";
+	private $namespace = 'Contacts';
 
 	public function __construct(IManager $contactsManager, IConfig $config) {
 		$this->contactsManager = $contactsManager;

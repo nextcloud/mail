@@ -117,7 +117,7 @@ class FilteringProviderTest extends TestCase {
 			->method('findMessagesGlobally')
 			->with(
 				$user,
-				"from:other@domain.tld to:other@domain.tld cc:other@domain.tld"
+				'from:other@domain.tld to:other@domain.tld cc:other@domain.tld'
 			)
 			->willReturn([
 				$message1,

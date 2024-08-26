@@ -100,9 +100,9 @@ class MessageMapperTest extends TestCase {
 			->with($loadBody)
 			->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
-		->method('withPhishingCheck')
-		->with($runPhishingCheck)
-		->willReturnSelf();
+			->method('withPhishingCheck')
+			->with($runPhishingCheck)
+			->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
 			->method('fetchMessage')
 			->with($fetchResult1)
@@ -112,9 +112,9 @@ class MessageMapperTest extends TestCase {
 			->with($loadBody)
 			->willReturnSelf();
 		$imapMessageFetcher2->expects(self::once())
-		->method('withPhishingCheck')
-		->with($runPhishingCheck)
-		->willReturnSelf();
+			->method('withPhishingCheck')
+			->with($runPhishingCheck)
+			->willReturnSelf();
 		$imapMessageFetcher2->expects(self::once())
 			->method('fetchMessage')
 			->with($fetchResult2)
@@ -212,9 +212,9 @@ class MessageMapperTest extends TestCase {
 			->with($loadBody)
 			->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
-		->method('withPhishingCheck')
-		->with($runPhishingCheck)
-		->willReturnSelf();
+			->method('withPhishingCheck')
+			->with($runPhishingCheck)
+			->willReturnSelf();
 		$imapMessageFetcher1->expects(self::once())
 			->method('fetchMessage')
 			->with($fetchResult1)

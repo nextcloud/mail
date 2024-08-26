@@ -83,7 +83,7 @@ class MailboxMapper extends QBMapper {
 			return $this->findEntity($select);
 		} catch (MultipleObjectsReturnedException $e) {
 			// Not possible due to DB constraints
-			throw new ServiceException("The impossible has happened", 42, $e);
+			throw new ServiceException('The impossible has happened', 42, $e);
 		}
 	}
 
@@ -108,7 +108,7 @@ class MailboxMapper extends QBMapper {
 			return $this->findEntity($select);
 		} catch (MultipleObjectsReturnedException $e) {
 			// Not possible due to DB constraints
-			throw new ServiceException("The impossible has happened", 42, $e);
+			throw new ServiceException('The impossible has happened', 42, $e);
 		}
 	}
 
@@ -153,7 +153,7 @@ class MailboxMapper extends QBMapper {
 			return $this->findEntity($select);
 		} catch (MultipleObjectsReturnedException $e) {
 			// Not possible due to DB constraints
-			throw new ServiceException("The impossible has happened", 42, $e);
+			throw new ServiceException('The impossible has happened', 42, $e);
 		}
 	}
 
@@ -269,11 +269,11 @@ class MailboxMapper extends QBMapper {
 	public function findFlaggedImportantUids(int $mailboxId) : array {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb->select('uid')
-				->from('mail_messages')
-				->where(
-					$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailboxId)),
-					$qb->expr()->eq('flag_important', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
-				);
+			->from('mail_messages')
+			->where(
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailboxId)),
+				$qb->expr()->eq('flag_important', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
+			);
 
 		$cursor = $query->executeQuery();
 		$uids = array_map(static function (array $row) {

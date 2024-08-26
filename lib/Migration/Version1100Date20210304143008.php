@@ -50,7 +50,7 @@ class Version1100Date20210304143008 extends SimpleMigrationStep {
 			$tagsTable->addColumn('color', Types::STRING, [
 				'notnull' => false,
 				'length' => 9,
-				'default' => "#fff"
+				'default' => '#fff'
 			]);
 			$tagsTable->addColumn('is_default_tag', Types::BOOLEAN, [
 				'notnull' => false,

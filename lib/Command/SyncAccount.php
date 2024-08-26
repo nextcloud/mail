@@ -92,7 +92,7 @@ class SyncAccount extends Command {
 			}
 
 			$mbs = (int)(memory_get_usage() / 1024 / 1024);
-			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . "MB of memory in use</info>");
+			$output->writeln("<info>Batch of new messages sync'ed. " . $mbs . 'MB of memory in use</info>');
 			$this->sync($account, $force, $output);
 		}
 	}

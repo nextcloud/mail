@@ -59,7 +59,7 @@ class AddMissingTags extends Command {
 			try {
 				$account = $this->mapper->findById($accountId);
 				$accounts = [$account];
-				$output->writeLn("<info>Found account with email: " . $account->getEmail() . "</info>");
+				$output->writeLn('<info>Found account with email: ' . $account->getEmail() . '</info>');
 			} catch (DoesNotExistException $e) {
 				$output->writeLn('<info>This account does not exist</info>');
 			}

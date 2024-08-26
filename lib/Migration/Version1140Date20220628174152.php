@@ -54,7 +54,7 @@ class Version1140Date20220628174152 extends SimpleMigrationStep {
 		 */
 
 		if ($this->connection->getDatabasePlatform() instanceof MySQLPlatform) {
-			$alterQuery = "ALTER TABLE `%s` MODIFY `%s` longtext null;";
+			$alterQuery = 'ALTER TABLE `%s` MODIFY `%s` longtext null;';
 
 			$accountsTable = $schema->getTable('mail_accounts');
 			$accountsSignatureColumn = $accountsTable->getColumn('signature');

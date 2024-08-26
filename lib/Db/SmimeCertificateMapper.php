@@ -45,7 +45,7 @@ class SmimeCertificateMapper extends QBMapper {
 			return $this->findEntity($qb);
 		} catch (MultipleObjectsReturnedException $e) {
 			// Not possible due to uniqueness of id
-			throw new ServiceException("The impossible has happened", 42, $e);
+			throw new ServiceException('The impossible has happened', 42, $e);
 		}
 	}
 

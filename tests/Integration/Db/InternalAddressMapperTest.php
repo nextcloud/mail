@@ -42,7 +42,7 @@ class InternalAddressMapperTest extends TestCase {
 	}
 
 	public function testDoesntExist(): void {
-		$exists = $this->mapper->exists($this->user->getUID(), "hamza@next.cloud");
+		$exists = $this->mapper->exists($this->user->getUID(), 'hamza@next.cloud');
 
 		$this->assertFalse($exists);
 	}
@@ -59,7 +59,7 @@ class InternalAddressMapperTest extends TestCase {
 			])
 			->executeStatement();
 
-		$exists = $this->mapper->exists($uid, "hamza@next.cloud");
+		$exists = $this->mapper->exists($uid, 'hamza@next.cloud');
 
 		$this->assertTrue($exists);
 	}
@@ -76,7 +76,7 @@ class InternalAddressMapperTest extends TestCase {
 			])
 			->executeStatement();
 
-		$exists = $this->mapper->exists($uid, "hamza@next.cloud");
+		$exists = $this->mapper->exists($uid, 'hamza@next.cloud');
 
 		$this->assertTrue($exists);
 	}
@@ -85,7 +85,7 @@ class InternalAddressMapperTest extends TestCase {
 		$uid = $this->user->getUID();
 		$this->mapper->create(
 			$uid,
-			"hamza@next.cloud",
+			'hamza@next.cloud',
 			'individual'
 		);
 
@@ -94,7 +94,7 @@ class InternalAddressMapperTest extends TestCase {
 			->from('mail_internal_address')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('address', $qb->createNamedParameter("hamza@next.cloud"))
+				$qb->expr()->eq('address', $qb->createNamedParameter('hamza@next.cloud'))
 			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
@@ -115,7 +115,7 @@ class InternalAddressMapperTest extends TestCase {
 
 		$this->mapper->remove(
 			$uid,
-			"hamza@next.cloud",
+			'hamza@next.cloud',
 			'individual'
 		);
 
@@ -124,7 +124,7 @@ class InternalAddressMapperTest extends TestCase {
 			->from('mail_internal_address')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('address', $qb->createNamedParameter("hamza@next.cloud"))
+				$qb->expr()->eq('address', $qb->createNamedParameter('hamza@next.cloud'))
 			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
@@ -136,7 +136,7 @@ class InternalAddressMapperTest extends TestCase {
 		$uid = $this->user->getUID();
 		$this->mapper->create(
 			$uid,
-			"next.cloud",
+			'next.cloud',
 			'domain'
 		);
 
@@ -145,7 +145,7 @@ class InternalAddressMapperTest extends TestCase {
 			->from('mail_internal_address')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('address', $qb->createNamedParameter("next.cloud")),
+				$qb->expr()->eq('address', $qb->createNamedParameter('next.cloud')),
 				$qb->expr()->eq('type', $qb->createNamedParameter('domain'))
 			);
 		$result = $qb->executeQuery();
@@ -167,7 +167,7 @@ class InternalAddressMapperTest extends TestCase {
 
 		$this->mapper->remove(
 			$uid,
-			"next.cloud",
+			'next.cloud',
 			'domain'
 		);
 
@@ -176,8 +176,8 @@ class InternalAddressMapperTest extends TestCase {
 			->from('mail_internal_address')
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($uid)),
-				$qb->expr()->eq('address', $qb->createNamedParameter("next.cloud")),
-				$qb->expr()->eq('type', $qb->createNamedParameter("domain"))
+				$qb->expr()->eq('address', $qb->createNamedParameter('next.cloud')),
+				$qb->expr()->eq('type', $qb->createNamedParameter('domain'))
 			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();

@@ -63,7 +63,7 @@ class PhishingDetectionServiceTest extends TestCase {
 			->method('run')
 			->willReturn(new PhishingDetectionResult(PhishingDetectionResult::LINK_CHECK, false));
 		$result = $this->service->checkHeadersForPhishing($parsedHeaders, true, '');
-		$this->assertFalse($result["warning"]);
+		$this->assertFalse($result['warning']);
 	}
 
 }

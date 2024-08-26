@@ -150,7 +150,7 @@ class MailManager implements IMailManager {
 			$this->folderMapper->fetchFolderAcls([$folder], $client);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"Could not get mailbox status: " . $e->getMessage(),
+				'Could not get mailbox status: ' . $e->getMessage(),
 				$e->getCode(),
 				$e
 			);
@@ -189,9 +189,9 @@ class MailManager implements IMailManager {
 				$account->getUserId(),
 				$loadBody
 			);
-		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
+		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
 			throw new ServiceException(
-				"Could not load message",
+				'Could not load message',
 				$e->getCode(),
 				$e
 			);
@@ -262,8 +262,8 @@ class MailManager implements IMailManager {
 				$account->getUserId(),
 				false,
 			);
-		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
-			throw new ServiceException("Could not load message", 0, $e);
+		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
+			throw new ServiceException('Could not load message', 0, $e);
 		}
 	}
 
@@ -354,7 +354,7 @@ class MailManager implements IMailManager {
 			}
 			$trashMailbox = $this->mailboxMapper->findById($trashMailboxId);
 		} catch (DoesNotExistException $e) {
-			throw new ServiceException("No trash folder", 0, $e);
+			throw new ServiceException('No trash folder', 0, $e);
 		}
 
 		if ($mailbox->getName() === $trashMailbox->getName()) {
@@ -418,7 +418,7 @@ class MailManager implements IMailManager {
 			$client->subscribeMailbox($mailbox->getName(), $subscribed);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"Could not set subscription status for mailbox " . $mailbox->getId() . " on IMAP: " . $e->getMessage(),
+				'Could not set subscription status for mailbox ' . $mailbox->getId() . ' on IMAP: ' . $e->getMessage(),
 				$e->getCode(),
 				$e
 			);
@@ -467,7 +467,7 @@ class MailManager implements IMailManager {
 			}
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"Could not set message flag on IMAP: " . $e->getMessage(),
+				'Could not set message flag on IMAP: ' . $e->getMessage(),
 				$e->getCode(),
 				$e
 			);
@@ -509,7 +509,7 @@ class MailManager implements IMailManager {
 				}
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
-					"Could not set message keyword on IMAP: " . $e->getMessage(),
+					'Could not set message keyword on IMAP: ' . $e->getMessage(),
 					$e->getCode(),
 					$e
 				);
@@ -786,7 +786,7 @@ class MailManager implements IMailManager {
 			$capabilities = $client->status($mailbox, Horde_Imap_Client::STATUS_PERMFLAGS);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"Could not get message flag options from IMAP: " . $e->getMessage(),
+				'Could not get message flag options from IMAP: ' . $e->getMessage(),
 				$e->getCode(),
 				$e
 			);

@@ -125,8 +125,8 @@ class OutOfOfficeService {
 			// In the middle of a running absence => enable auto responder
 			$state = new OutOfOfficeState(
 				true,
-				new DateTimeImmutable("@" . $currentOutOfOfficeData->getStartDate()),
-				new DateTimeImmutable("@" . $currentOutOfOfficeData->getEndDate()),
+				new DateTimeImmutable('@' . $currentOutOfOfficeData->getStartDate()),
+				new DateTimeImmutable('@' . $currentOutOfOfficeData->getEndDate()),
 				'Re: ${subject}',
 				$currentOutOfOfficeData->getMessage(),
 			);

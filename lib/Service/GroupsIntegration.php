@@ -49,7 +49,7 @@ class GroupsIntegration {
 				$gid = $this->servicePrefix($gs) . $g['id'];
 				$receivers[] = [
 					'id' => $gid,
-					'label' => $g['name'] . " (" . $gs->getNamespace() . ")",
+					'label' => $g['name'] . ' (' . $gs->getNamespace() . ')',
 					'email' => $gid,
 					'photo' => null,
 				];
@@ -69,7 +69,7 @@ class GroupsIntegration {
 		if (empty($gs->getNamespace())) {
 			throw new ServiceException('GroupService has no namespace');
 		}
-		return strtolower($gs->getNamespace()) . ":";
+		return strtolower($gs->getNamespace()) . ':';
 	}
 
 	/**

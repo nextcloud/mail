@@ -44,7 +44,7 @@ class HamReportListener implements IEventListener {
 		try {
 			$this->antiSpamService->sendReportEmail($event->getAccount(), $event->getMailbox(), $event->getUid(), $event->getFlag());
 		} catch (\Throwable $e) {
-			$this->logger->error("Could not send spam report: " . $e->getMessage(), ['exception' => $e]);
+			$this->logger->error('Could not send spam report: ' . $e->getMessage(), ['exception' => $e]);
 		}
 	}
 }

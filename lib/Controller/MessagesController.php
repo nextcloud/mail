@@ -682,7 +682,7 @@ class MessagesController extends Controller {
 
 		foreach ($attachments as $attachment) {
 			$fileName = $attachment->getName();
-			$fh = fopen("php://temp", 'r+');
+			$fh = fopen('php://temp', 'r+');
 			fputs($fh, $attachment->getContent());
 			$size = $attachment->getSize();
 			rewind($fh);

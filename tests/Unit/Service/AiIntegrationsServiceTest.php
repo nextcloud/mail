@@ -155,8 +155,8 @@ class AiIntegrationsServiceTest extends TestCase {
 		if($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
-			->method('getAvailableTaskTypes')
-			->willReturn([SummaryTaskType::class, TopicsTaskType::class, FreePromptTaskType::class]);
+				->method('getAvailableTaskTypes')
+				->willReturn([SummaryTaskType::class, TopicsTaskType::class, FreePromptTaskType::class]);
 			$isAvailable = $this->aiIntegrationsService->isLlmAvailable(SummaryTaskType::class);
 			$this->assertTrue($isAvailable);
 		} else {

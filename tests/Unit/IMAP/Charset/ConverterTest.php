@@ -45,7 +45,7 @@ class ConverterTest extends TestCase {
 		$utfMimeStreamPart = new Horde_Mime_Part();
 		$utfMimeStreamPart->setType('text/plain');
 		$utfMimeStreamPart->setCharset('UTF-8');
-		$fh = fopen("php://temp", 'r+');
+		$fh = fopen('php://temp', 'r+');
 		fwrite($fh, '💦');
 		$utfMimeStreamPart->setContents($fh, [ 'usestream' => true, ]);
 		// Hebrew

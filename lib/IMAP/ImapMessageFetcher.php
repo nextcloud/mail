@@ -106,9 +106,9 @@ class ImapMessageFetcher {
 
 	/**
 	 * @param Horde_Imap_Client_Data_Fetch|null $fetch
-	 * Will be reused if no body is requested.
-	 * It should at least contain envelope, flags, imapDate and headerText.
-	 * Otherwise, some data might not be parsed correctly.
+	 *                                                 Will be reused if no body is requested.
+	 *                                                 It should at least contain envelope, flags, imapDate and headerText.
+	 *                                                 Otherwise, some data might not be parsed correctly.
 	 * @return IMAPMessage
 	 *
 	 * @throws DoesNotExistException
@@ -428,7 +428,7 @@ class ImapMessageFetcher {
 	private function handleHtmlMessage(Horde_Mime_Part $p, string $partNo, bool $isFetched): void {
 		$this->hasHtmlMessage = true;
 		$data = $this->loadBodyData($p, $partNo, $isFetched);
-		$this->htmlMessage .= $data . "<br><br>";
+		$this->htmlMessage .= $data . '<br><br>';
 	}
 
 	/**
@@ -494,7 +494,7 @@ class ImapMessageFetcher {
 		if ($utf8 !== false) {
 			return $utf8;
 		}
-		return iconv("UTF-8", "UTF-8//IGNORE", $subject);
+		return iconv('UTF-8', 'UTF-8//IGNORE', $subject);
 	}
 
 	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {

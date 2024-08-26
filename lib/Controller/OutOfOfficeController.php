@@ -109,7 +109,7 @@ class OutOfOfficeController extends Controller {
 		}
 
 		if ($enabled && $start === null) {
-			throw new ServiceException("Missing start date");
+			throw new ServiceException('Missing start date');
 		}
 
 		$mailAccount = $account->getMailAccount();

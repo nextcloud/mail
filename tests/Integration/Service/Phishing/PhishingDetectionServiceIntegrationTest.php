@@ -50,19 +50,19 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 
 	public function testContactCheck(): void {
 		$this->contactsIntegration->expects($this->once())
-		->method('getContactsWithName')
-		->willReturn([["id" => 1, "fn" => "John Doe", "email" => ["jhon@example.org","Doe@example.org"]]]);
-		$result = $this->contactCheck->run("John Doe", "jhon.doe@example.org");
+			->method('getContactsWithName')
+			->willReturn([['id' => 1, 'fn' => 'John Doe', 'email' => ['jhon@example.org','Doe@example.org']]]);
+		$result = $this->contactCheck->run('John Doe', 'jhon.doe@example.org');
 		$this->assertTrue($result->isPhishing());
 	}
 
 	public function testCustomEmailCheck(): void {
-		$result = $this->customEmailCheck->run("jhon@example.org", "jhon.doe@example.org");
+		$result = $this->customEmailCheck->run('jhon@example.org', 'jhon.doe@example.org');
 		$this->assertTrue($result->isPhishing());
 	}
 
 	public function testReplyToCheck(): void {
-		$result = $this->replyToCheck->run("jhon@example.org", "jhon.doe@example.org");
+		$result = $this->replyToCheck->run('jhon@example.org', 'jhon.doe@example.org');
 		$this->assertTrue($result->isPhishing());
 	}
 	public function testCheckHeadersForPhishing(): void {
@@ -70,7 +70,7 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 		$parsedHeaders = Horde_Mime_Headers::parseHeaders($headerStream);
 		fclose($headerStream);
 		$result = $this->service->checkHeadersForPhishing($parsedHeaders, false);
-		$this->assertTrue($result["warning"]);
+		$this->assertTrue($result['warning']);
 	}
 
 }

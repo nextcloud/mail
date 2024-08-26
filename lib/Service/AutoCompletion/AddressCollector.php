@@ -44,7 +44,7 @@ class AddressCollector {
 	 * @return void
 	 */
 	public function addAddresses(string $userId, AddressList $addressList): void {
-		$this->logger->debug("collecting " . count($addressList) . " email addresses");
+		$this->logger->debug('collecting ' . count($addressList) . ' email addresses');
 		foreach ($addressList->iterate() as $address) {
 			/* @var $address Address */
 			$this->saveAddress($userId, $address);
@@ -65,7 +65,7 @@ class AddressCollector {
 			}
 		} catch (Horde_Mail_Exception $ex) {
 			// Ignore it
-			$this->logger->debug("<" . $address->getEmail() . "> is not a valid RFC822 mail address");
+			$this->logger->debug('<' . $address->getEmail() . '> is not a valid RFC822 mail address');
 			return;
 		}
 		if ($address->getEmail() !== null && $this->mapper->insertIfNew($userId, $address->getEmail(), $address->getLabel())) {
@@ -82,7 +82,7 @@ class AddressCollector {
 	public function searchAddress(string $userId, string $term): array {
 		$this->logger->debug("searching for collected address <$term>");
 		$result = $this->mapper->findMatching($userId, $term);
-		$this->logger->debug("found " . count($result) . " matches in collected addresses");
+		$this->logger->debug('found ' . count($result) . ' matches in collected addresses');
 		return $result;
 	}
 }

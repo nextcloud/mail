@@ -11,6 +11,6 @@ namespace OCA\Mail\Exception;
 
 class TrashMailboxNotSetException extends ClientException {
 	public function __construct() {
-		parent::__construct("No trash mailbox configured");
+		parent::__construct('No trash mailbox configured');
 	}
 }

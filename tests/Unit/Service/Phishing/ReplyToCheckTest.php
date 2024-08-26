@@ -26,22 +26,22 @@ class ReplyToCheckTest extends TestCase {
 
 	
 	public function testNoEmail(): void {
-		$email = "jhon@example.com";
+		$email = 'jhon@example.com';
 		$result = $this->service->run($email, null);
 
 		$this->assertFalse($result->isPhishing());
 	}
 
 	public function testSameEmail(): void {
-		$email = "jhon@example.com";
+		$email = 'jhon@example.com';
 		$result = $this->service->run($email, $email);
 
 		$this->assertFalse($result->isPhishing());
 	}
 
 	public function testDifferentEmail(): void {
-		$email = "jhon@example.com";
-		$customEmail = "jhondoe@example.com";
+		$email = 'jhon@example.com';
+		$customEmail = 'jhondoe@example.com';
 		$result = $this->service->run($email, $customEmail);
 
 		$this->assertTrue($result->isPhishing());

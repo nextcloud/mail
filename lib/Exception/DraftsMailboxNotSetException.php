@@ -11,6 +11,6 @@ namespace OCA\Mail\Exception;
 
 class DraftsMailboxNotSetException extends ClientException {
 	public function __construct() {
-		parent::__construct("No drafts mailbox configured");
+		parent::__construct('No drafts mailbox configured');
 	}
 }

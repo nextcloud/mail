@@ -60,7 +60,7 @@ class Thread extends Command {
 
 		$json = file_get_contents($inputFile);
 		if ($json === false) {
-			$output->writeln("<error>Could not read thread data</error>");
+			$output->writeln('<error>Could not read thread data</error>');
 			return 2;
 		}
 		$consoleLogger->debug(strlen($json) . 'B read');
@@ -77,7 +77,7 @@ class Thread extends Command {
 		}, $parsed);
 
 		$threads = $this->builder->build($threadData, $consoleLogger);
-		$output->writeln(count($threads) . " threads built from " . count($threadData) . " messages");
+		$output->writeln(count($threads) . ' threads built from ' . count($threadData) . ' messages');
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
 		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');

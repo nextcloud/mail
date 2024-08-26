@@ -107,7 +107,7 @@ class ErrorMiddlewareTest extends TestCase {
 
 	public function testSerializesRecursively() {
 		$inner = new Exception();
-		$outer = new ServiceException("Test", 0, $inner);
+		$outer = new ServiceException('Test', 0, $inner);
 		$request = $this->createMock(IRequest::class);
 		$controller = new class($request) extends Controller {
 			public function __construct(IRequest $request) {

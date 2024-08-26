@@ -26,7 +26,7 @@ class DateCheck {
 		$now = $this->timeFactory->getDateTime('now');
 		$dt = $this->timeFactory->getDateTime($date);
 		if ($dt > $now) {
-			return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, true, $this->l10n->t("Sent date is in the future"));
+			return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, true, $this->l10n->t('Sent date is in the future'));
 		}
 		return new PhishingDetectionResult(PhishingDetectionResult::DATE_CHECK, false);
 	}

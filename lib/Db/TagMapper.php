@@ -85,8 +85,8 @@ class TagMapper extends QBMapper {
 
 		$qb = $this->db->getQueryBuilder();
 		$qb->insert('mail_message_tags')
-		   ->setValue('imap_message_id', $qb->createNamedParameter($messageId))
-		   ->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
+			->setValue('imap_message_id', $qb->createNamedParameter($messageId))
+			->setValue('tag_id', $qb->createNamedParameter($tag->getId(), IQueryBuilder::PARAM_INT));
 		$qb->executeStatement();
 	}
 
@@ -239,13 +239,13 @@ class TagMapper extends QBMapper {
 	public function deleteDuplicates(): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('mt2.id')
-		->from('mail_message_tags', 'mt2')
-		->join('mt2', 'mail_message_tags', 'mt1', $qb->expr()->andX(
-			$qb->expr()->gt('mt1.id', 'mt2.id'),
-			$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
-			$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
-		)
-		);
+			->from('mail_message_tags', 'mt2')
+			->join('mt2', 'mail_message_tags', 'mt1', $qb->expr()->andX(
+				$qb->expr()->gt('mt1.id', 'mt2.id'),
+				$qb->expr()->eq('mt1.imap_message_id', 'mt2.imap_message_id'),
+				$qb->expr()->eq('mt1.tag_id', 'mt2.tag_id')
+			)
+			);
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
@@ -273,9 +273,9 @@ class TagMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('mt.id')
-		->from('mail_messages', 'm')
-		->rightJoin('m', 'mail_message_tags', 'mt', $qb->expr()->eq('m.message_id', 'mt.imap_message_id'))
-		->where($qb->expr()->isNull('m.message_id'));
+			->from('mail_messages', 'm')
+			->rightJoin('m', 'mail_message_tags', 'mt', $qb->expr()->eq('m.message_id', 'mt.imap_message_id'))
+			->where($qb->expr()->isNull('m.message_id'));
 		$result = $qb->executeQuery();
 		$rows = $result->fetchAll();
 		$result->closeCursor();

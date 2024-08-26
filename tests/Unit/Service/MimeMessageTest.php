@@ -253,12 +253,12 @@ class MimeMessageTest extends TestCase {
 		$this->assertEquals('text/html', $subParts[1]->getType());
 
 		$this->assertStringContainsString(
-			"Όλοι οι άνθρωποι γεννιούνται ελεύθεροι
+			'Όλοι οι άνθρωποι γεννιούνται ελεύθεροι
 και ίσοι στην αξιοπρέπεια και τα
 δικαιώματα. Είναι προικισμένοι με λογική
 και συνείδηση, και οφείλουν να
 συμπεριφέρονται μεταξύ τους με πνεύμα
-αδελφοσύνης.",
+αδελφοσύνης.',
 			$subParts[0]->getContents(),
 		);
 		$this->assertStringContainsString(

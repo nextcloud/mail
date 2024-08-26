@@ -98,7 +98,7 @@ class UpdateAccount extends Command {
 			return 1;
 		}
 
-		$output->writeLn("<info>Found account with email: " . $mailAccount->getEmail() . "</info>");
+		$output->writeLn('<info>Found account with email: ' . $mailAccount->getEmail() . '</info>');
 			
 		//AUTH METHOD
 		if ($input->getOption(self::ARGUMENT_AUTH_METHOD)) {
@@ -119,7 +119,7 @@ class UpdateAccount extends Command {
 		}
 
 		if ($input->getOption(self::ARGUMENT_IMAP_PORT)) {
-			$mailAccount->setInboundPort((int) $imapPort);
+			$mailAccount->setInboundPort((int)$imapPort);
 		}
 
 		if ($input->getOption(self::ARGUMENT_IMAP_SSL_MODE)) {
@@ -141,7 +141,7 @@ class UpdateAccount extends Command {
 		}
 
 		if ($input->getOption(self::ARGUMENT_SMTP_PORT)) {
-			$mailAccount->setOutboundPort((int) $smtpPort);
+			$mailAccount->setOutboundPort((int)$smtpPort);
 		}
 
 		if ($input->getOption(self::ARGUMENT_SMTP_SSL_MODE)) {
@@ -158,7 +158,7 @@ class UpdateAccount extends Command {
 
 		$this->mapper->save($mailAccount);
 
-		$output->writeln("<info>Account " . $mailAccount->getEmail() . " with ID  $accountId  succesfully updated </info>");
+		$output->writeln('<info>Account ' . $mailAccount->getEmail() . " with ID  $accountId  succesfully updated </info>");
 		return 0;
 	}
 }

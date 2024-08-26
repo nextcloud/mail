@@ -106,7 +106,7 @@ class MessageMapperTest extends TestCase {
 		$select = $qb2->select('*')
 			->from($this->mapper->getTableName())
 			->where(
-				$qb2->expr()->like('in_reply_to', $qb2->createNamedParameter("<>", IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
+				$qb2->expr()->like('in_reply_to', $qb2->createNamedParameter('<>', IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			);
 
 		$result = $select->executeQuery();

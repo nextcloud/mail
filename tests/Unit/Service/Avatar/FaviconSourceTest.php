@@ -86,7 +86,7 @@ class FaviconSourceTest extends TestCase {
 
 	public function testFetchSingleIcon(): void {
 		$email = 'hey@jancborchardt.net';
-		$iconUrl = "https://domain.tld/favicon.ic";
+		$iconUrl = 'https://domain.tld/favicon.ic';
 		$this->remoteHostValidator->expects(self::once())
 			->method('isValid')
 			->with('https://jancborchardt.net')
@@ -125,7 +125,7 @@ class FaviconSourceTest extends TestCase {
 
 	public function testFetchEmptyIcon(): void {
 		$email = 'hey@jancborchardt.net';
-		$iconUrl = "https://domain.tld/favicon.ic";
+		$iconUrl = 'https://domain.tld/favicon.ic';
 		$this->remoteHostValidator->expects(self::once())
 			->method('isValid')
 			->with('https://jancborchardt.net')

@@ -281,9 +281,9 @@ class PageControllerTest extends TestCase {
 		$user->method('getUID')
 			->will($this->returnValue('jane'));
 		$this->userManager->expects($this->once())
-		->method('getDisplayName')
-		->with($this->equalTo('jane'))
-		->will($this->returnValue('Jane Doe'));
+			->method('getDisplayName')
+			->with($this->equalTo('jane'))
+			->will($this->returnValue('Jane Doe'));
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with($this->equalTo('jane'), $this->equalTo('settings'),

@@ -190,9 +190,9 @@ class AccountServiceTest extends TestCase {
 			->method('getClient')
 			->willThrowException(new ClientException());
 		$this->mapper->expects($this->once())
-		->method('find')
-		->with($this->user, $accountId)
-		->willReturn($this->account1);
+			->method('find')
+			->with($this->user, $accountId)
+			->willReturn($this->account1);
 		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
 		$this->assertFalse($connected);
 	}
@@ -202,12 +202,12 @@ class AccountServiceTest extends TestCase {
 			->method('getClient')
 			->willReturn($this->client);
 		$this->client->expects($this->once())
-		->method('close')
-		->willReturn(null);
+			->method('close')
+			->willReturn(null);
 		$this->mapper->expects($this->once())
-		->method('find')
-		->with($this->user, $accountId)
-		->willReturn($this->account1);
+			->method('find')
+			->with($this->user, $accountId)
+			->willReturn($this->account1);
 		$connected = $this->accountService->testAccountConnection($this->user, $accountId);
 		$this->assertTrue($connected);
 	}

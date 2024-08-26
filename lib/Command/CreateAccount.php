@@ -104,20 +104,20 @@ class CreateAccount extends Command {
 		$account->setAuthMethod($authMethod);
 
 		$account->setInboundHost($imapHost);
-		$account->setInboundPort((int) $imapPort);
+		$account->setInboundPort((int)$imapPort);
 		$account->setInboundSslMode($imapSslMode);
 		$account->setInboundUser($imapUser);
 		$account->setInboundPassword($this->crypto->encrypt($imapPassword));
 
 		$account->setOutboundHost($smtpHost);
-		$account->setOutboundPort((int) $smtpPort);
+		$account->setOutboundPort((int)$smtpPort);
 		$account->setOutboundSslMode($smtpSslMode);
 		$account->setOutboundUser($smtpUser);
 		$account->setOutboundPassword($this->crypto->encrypt($smtpPassword));
 
 		$account = $this->accountService->save($account);
 
-		$output->writeln("<info>Account " . $account->getId() . " for $email created</info>");
+		$output->writeln('<info>Account ' . $account->getId() . " for $email created</info>");
 
 		return 0;
 	}

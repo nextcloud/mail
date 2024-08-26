@@ -40,7 +40,7 @@ class OutboxControllerTest extends TestCase {
 	/** @var AccountService&MockObject */
 	private $accountService;
 
-	/** @var SmimeService&MockObject  */
+	/** @var SmimeService&MockObject */
 	private $smimeService;
 
 	private OutboxController $controller;

@@ -79,7 +79,7 @@ class DatabaseMessage extends Message implements JsonSerializable {
 	public function redact(callable $hash): DatabaseMessage {
 		return new self(
 			$this->databaseId,
-			$this->hasReSubject() ? "Re: " . $hash($this->getSubject()) : $hash($this->getSubject()),
+			$this->hasReSubject() ? 'Re: ' . $hash($this->getSubject()) : $hash($this->getSubject()),
 			$hash($this->getId()),
 			array_map(static function (string $ref) use ($hash) {
 				return $hash($ref);

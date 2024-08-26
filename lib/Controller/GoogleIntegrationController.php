@@ -123,7 +123,7 @@ class GoogleIntegrationController extends Controller {
 		try {
 			$account = $this->accountService->find(
 				$this->userId,
-				(int) $state,
+				(int)$state,
 			);
 		} catch (ClientException $e) {
 			$this->logger->warning('Attempted Google authentication redirect for account: ' . $e->getMessage(), [

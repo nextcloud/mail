@@ -299,7 +299,7 @@ class MailTransmission implements IMailTransmission {
 			// save the message in the drafts folder
 			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
 			if ($draftsMailboxId === null) {
-				throw new ClientException("No drafts mailbox configured");
+				throw new ClientException('No drafts mailbox configured');
 			}
 			$draftsMailbox = $this->mailboxMapper->findById($draftsMailboxId);
 			$newUid = $this->messageMapper->save(

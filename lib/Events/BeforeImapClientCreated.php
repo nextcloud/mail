@@ -13,7 +13,7 @@ use OCA\Mail\Account;
 use OCP\EventDispatcher\Event;
 
 class BeforeImapClientCreated extends Event {
-	/** @var Account  */
+	/** @var Account */
 	private $account;
 
 	public function __construct(Account $account) {

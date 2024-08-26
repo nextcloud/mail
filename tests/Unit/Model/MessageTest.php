@@ -116,7 +116,7 @@ class MessageTest extends TestCase {
 	}
 
 	public function testContent() {
-		$content = "hello!";
+		$content = 'hello!';
 
 		$this->message->setContent($content);
 

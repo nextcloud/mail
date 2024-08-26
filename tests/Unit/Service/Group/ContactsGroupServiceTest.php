@@ -38,7 +38,7 @@ class ContactsGroupServiceTest extends TestCase {
 			->method('search');
 
 		$expected = [];
-		$actual = $this->groupService->search("abc");
+		$actual = $this->groupService->search('abc');
 
 		$this->assertEquals($expected, $actual);
 	}

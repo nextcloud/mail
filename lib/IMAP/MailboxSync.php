@@ -80,7 +80,7 @@ class MailboxSync {
 		LoggerInterface $logger,
 		bool $force = false): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
-			$logger->debug("account is up to date, skipping mailbox sync");
+			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}
 
@@ -107,7 +107,7 @@ class MailboxSync {
 				$this->folderMapper->fetchFolderAcls($folders, $client);
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
-					sprintf("IMAP error synchronizing account %d: %s", $account->getId(), $e->getMessage()),
+					sprintf('IMAP error synchronizing account %d: %s', $account->getId(), $e->getMessage()),
 					$e->getCode(),
 					$e
 				);
@@ -204,7 +204,7 @@ class MailboxSync {
 		foreach ($namespaces as $namespace) {
 			/** @var Horde_Imap_Client_Data_Namespace $namespace */
 			if ($namespace->type === Horde_Imap_Client::NS_PERSONAL) {
-				return $namespace->name !== "" ? $namespace->name : null;
+				return $namespace->name !== '' ? $namespace->name : null;
 			}
 		}
 		return null;
@@ -257,7 +257,7 @@ class MailboxSync {
 		[$sync, $doNotSync] = array_reduce($mailboxes, function (array $carry, Mailbox $mailbox) use ($personalNamespace): array {
 			/** @var array{0: Mailbox[], 1: Mailbox[]} $carry */
 			[$sync, $doNotSync] = $carry;
-			$inboxName = $personalNamespace === null ? "INBOX" : ($personalNamespace . $mailbox->getDelimiter() . "INBOX");
+			$inboxName = $personalNamespace === null ? 'INBOX' : ($personalNamespace . $mailbox->getDelimiter() . 'INBOX');
 			if ($inboxName === $mailbox->getName() || $mailbox->getSyncInBackground()) {
 				return [
 					array_merge($sync, [$mailbox]),

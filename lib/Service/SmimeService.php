@@ -502,7 +502,7 @@ class SmimeService {
 		$decryptionResult = null;
 		$envelope = $message->getEnvelope();
 		foreach ($envelope->to as $recipient) {
-			/** @var Horde_Mail_Rfc822_Address $recipient  */
+			/** @var Horde_Mail_Rfc822_Address $recipient */
 			$recipientAddress = $recipient->bare_address;
 			$certs = $this->findCertificatesByEmailAddress(
 				$recipientAddress,
@@ -512,7 +512,7 @@ class SmimeService {
 			foreach ($certs as $cert) {
 				try {
 					$decryptionResult = $this->decryptMimePartText($encryptedText, $cert);
-				} catch (ServiceException | SmimeDecryptException $e) {
+				} catch (ServiceException|SmimeDecryptException $e) {
 					// Certificate probably didn't match -> continue
 					// TODO: filter a real decryption error
 					// (is hard because openssl doesn't return a proper error code)

@@ -88,7 +88,7 @@ class FolderMapper {
 		$mb = reset($list);
 
 		if ($mb === null) {
-			throw new ServiceException("Created mailbox does not exist");
+			throw new ServiceException('Created mailbox does not exist');
 		}
 
 		return new Folder(

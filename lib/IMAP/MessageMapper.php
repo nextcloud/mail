@@ -71,7 +71,7 @@ class MessageMapper {
 		$result = $this->findByIds($client, $mailbox, new Horde_Imap_Client_Ids([$id]), $userId, $loadBody, true);
 
 		if (count($result) === 0) {
-			throw new DoesNotExistException("Message does not exist");
+			throw new DoesNotExistException('Message does not exist');
 		}
 
 		return $result[0];
@@ -117,8 +117,8 @@ class MessageMapper {
 			]
 		);
 		$perf->step('mailbox meta search');
-		$min = (int) $metaResults['min'];
-		$total = (int) $metaResults['count'];
+		$min = (int)$metaResults['min'];
+		$total = (int)$metaResults['count'];
 
 		if ($total === 0) {
 			$perf->step('No data in mailbox');
@@ -136,9 +136,9 @@ class MessageMapper {
 				$mailbox
 			);
 			$perf->step('mailbox meta search for UIDNEXT');
-			$max = (int) $uidnext['uidnext'] - 1; // We need to subtract one for the last used UID
+			$max = (int)$uidnext['uidnext'] - 1; // We need to subtract one for the last used UID
 		} else {
-			$max = ((int) $metaResults['max']);
+			$max = ((int)$metaResults['max']);
 		}
 
 		// The inclusive range of UIDs
@@ -187,7 +187,7 @@ class MessageMapper {
 			 * We take $upper as the lowest known UID as we just found out that
 			 * there is nothing to fetch in $highestKnownUid:$upper
 			 */
-			$logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
+			$logger->debug('Range for findAll did not find any messages. Trying again with a succeeding range');
 			return $this->findAll($client, $mailbox, $maxResults, $upper, $logger, $perf, $userId);
 		}
 		$uidCandidates = array_filter(
@@ -283,7 +283,7 @@ class MessageMapper {
 		}));
 
 		if ($fetchResults === []) {
-			$this->logger->debug("findByIds in $mailbox got " . count($ids) . " UIDs but found none");
+			$this->logger->debug("findByIds in $mailbox got " . count($ids) . ' UIDs but found none');
 		} else {
 			$minFetched = $fetchResults[0]->getUid();
 			$maxFetched = $fetchResults[count($fetchResults) - 1]->getUid();
@@ -481,7 +481,7 @@ class MessageMapper {
 			]);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
-				"Could not fetch message source: " . $e->getMessage(),
+				'Could not fetch message source: ' . $e->getMessage(),
 				$e->getCode(),
 				$e
 			);

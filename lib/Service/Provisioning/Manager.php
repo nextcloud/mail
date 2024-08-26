@@ -190,7 +190,7 @@ class Manager {
 			$mailAccount = $this->mailAccountMapper->update(
 				$this->updateAccount($user, $mailAccount, $provisioning)
 			);
-		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+		} catch (DoesNotExistException|MultipleObjectsReturnedException $e) {
 			if ($e instanceof MultipleObjectsReturnedException) {
 				// This is unlikely to happen but not impossible.
 				// Let's wipe any existing accounts and start fresh

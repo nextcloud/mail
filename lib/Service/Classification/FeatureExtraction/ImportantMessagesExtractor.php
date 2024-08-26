@@ -47,7 +47,7 @@ class ImportantMessagesExtractor implements IExtractor {
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {
-			throw new RuntimeException("This should not happen");
+			throw new RuntimeException('This should not happen');
 		}
 		$email = $sender->getEmail();
 
