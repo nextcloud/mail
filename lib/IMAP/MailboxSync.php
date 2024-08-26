@@ -163,7 +163,7 @@ class MailboxSync {
 	public function syncStats(Account $account, Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
-			$stats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()])[$mailbox->getName()];
+			$allStats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()]);
 		} catch (Horde_Imap_Client_Exception $e) {
 			$id = $mailbox->getId();
 			throw new ServiceException(
@@ -175,6 +175,11 @@ class MailboxSync {
 			$client->logout();
 		}
 
+		if (!isset($allStats[$mailbox->getName()])) {
+			return;
+		}
+
+		$stats = $allStats[$mailbox->getName()];
 		$mailbox->setMessages($stats->getTotal());
 		$mailbox->setUnseen($stats->getUnread());
 		$this->mailboxMapper->update($mailbox);
