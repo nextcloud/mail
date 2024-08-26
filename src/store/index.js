@@ -108,6 +108,7 @@ export default new Store({
 				followUpFeatureAvailable: false,
 				internalAddress: [],
 				hasCurrentUserPrincipalAndCollections: false,
+				showAccountSettings: null,
 			},
 			getters,
 			mutations,

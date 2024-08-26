@@ -139,9 +139,6 @@ export default {
 		}
 	},
 	computed: {
-		menu() {
-			return this.buildMenu()
-		},
 		displayName() {
 			return this.account.name
 		},

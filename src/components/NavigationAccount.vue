@@ -28,8 +28,7 @@
 						{{ quotaText }}
 					</ActionText>
 					<ActionButton :close-after-click="true"
-						@click="showAccountSettings"
-						@shortkey="toggleAccountSettings">
+						@click="showAccountSettings(true)">
 						<template #icon>
 							<IconSettings :size="16" />
 						</template>
@@ -81,7 +80,7 @@
 				</template>
 			</template>
 		</NcAppNavigationCaption>
-		<AccountSettings :open="showSettings" :account="account" @update:open="toggleAccountSettings" />
+		<AccountSettings :open="showSettings" :account="account" @update:open="showAccountSettings($event)" />
 	</Fragment>
 </template>
 
@@ -150,7 +149,6 @@ export default {
 			quota: undefined,
 			editing: false,
 			showSaving: false,
-			showSettings: false,
 			createMailboxName: '',
 			showMailboxes: false,
 			nameInput: false,
@@ -158,6 +156,9 @@ export default {
 		}
 	},
 	computed: {
+		showSettings() {
+			return this.$store.getters.showSettingsForAccount(this.account.id)
+		},
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
@@ -286,16 +287,16 @@ export default {
 			}
 		},
 		/**
-		 * Toggles the account settings overview
+		 * Show the settings for the given account
+		 *
+		 * @param {boolean} show true to show, false to hide
 		 */
-		toggleAccountSettings() {
-			this.showSettings = !this.showSettings
-		},
-		/**
-		 * Shows the account settings
-		 */
-		showAccountSettings() {
-			this.showSettings = true
+		showAccountSettings(show) {
+			if (show) {
+				this.$store.commit('showSettingsForAccount', this.account.id)
+			} else {
+				this.$store.commit('showSettingsForAccount', null)
+			}
 		},
 	},
 }

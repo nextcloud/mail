@@ -8,7 +8,7 @@
 			:name="t('mail', 'Mail settings')"
 			:show-navigation="true"
 			:open.sync="showSettings">
-			<NcAppSettingsSection id="account-settings" :name="t('mail', 'Account creation')">
+			<NcAppSettingsSection id="account-creation" :name="t('mail', 'Accounts')">
 				<NcButton v-if="allowNewMailAccounts"
 					type="primary"
 					to="/setup"
@@ -19,6 +19,18 @@
 					</template>
 					{{ t('mail', 'Add mail account') }}
 				</NcButton>
+
+				<h6>{{ t('mail', 'Account settings') }}</h6>
+				<p>{{ t('mail', 'Settings for:') }}</p>
+				<li v-for="account in accounts" :key="account.id">
+					<NcButton v-if="account && account.emailAddress"
+						class="app-settings-button"
+						type="secondary"
+						:aria-label="t('mail', 'Account settings')"
+						@click="openAccountSettings(account.id)">
+						{{ account.emailAddress }}
+					</NcButton>
+				</li>
 			</NcAppSettingsSection>
 
 			<NcAppSettingsSection id="appearance-and-accessibility" :name="t('mail', 'General')">
@@ -347,6 +359,9 @@ export default {
 			displaySmimeCertificateModal: false,
 			sortOrder: 'newest',
 			showSettings: false,
+			showAccountSettings: false,
+			showMailSettings: true,
+			selectedAccount: null,
 			mailvelopeIsAvailable: false,
 		}
 	},
@@ -354,6 +369,9 @@ export default {
 		...mapGetters([
 			'isFollowUpFeatureAvailable',
 		]),
+		...mapGetters({
+			accounts: 'accounts',
+		}),
 		searchPriorityBody() {
 			return this.$store.getters.getPreference('search-priority-body', 'false') === 'true'
 		},
@@ -402,6 +420,13 @@ export default {
 		this.checkMailvelope()
 	},
 	methods: {
+		closeAccountSettings() {
+			this.showAccountSettings = false
+		},
+		openAccountSettings(accountId) {
+			this.$store.commit('showSettingsForAccount', accountId)
+			this.showSettings = false
+		},
 		checkMailvelope() {
 			this.mailvelopeIsAvailable = !!window.mailvelope
 		},
