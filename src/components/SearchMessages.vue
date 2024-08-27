@@ -13,7 +13,7 @@
 				@click="toggleButtons">
 			<NcButton type="tertiary" class="search-messages--filter" @click="moreSearchActions = true">
 				<template #icon>
-					<Tune :size="20" />
+					<FilterVariantIcon :size="20" />
 				</template>
 			</NcButton>
 			<NcButton v-if="filterChanged"
@@ -296,7 +296,7 @@ import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import Tune from 'vue-material-design-icons/Tune.vue'
+import FilterVariantIcon from 'vue-material-design-icons/FilterVariant.vue'
 import Close from 'vue-material-design-icons/Close.vue'
 import IconClose from '@mdi/svg/svg/close.svg'
 import IconMagnify from '@mdi/svg/svg/magnify.svg'
@@ -317,7 +317,7 @@ export default {
 		NcDateTimePicker,
 		NcButton,
 		NcCheckboxRadioSwitch,
-		Tune,
+		FilterVariantIcon,
 		Close,
 	},
 	props: {
