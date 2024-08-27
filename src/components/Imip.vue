@@ -86,30 +86,32 @@
 		<template v-if="isRequest && userIsAttendee">
 			<div v-if="!wasProcessed && eventIsInFuture && existingEventFetched"
 				class="imip__actions imip__actions--buttons">
-				<ButtonVue type="secondary"
-					:loading="loading"
+				<NcButton type="secondary"
+					:disabled="loading"
 					:aria-label="t('mail', 'Accept')"
 					@click="accept">
 					{{ t('mail', 'Accept') }}
-				</ButtonVue>
-				<ButtonVue type="tertiary"
-					:loading="loading"
+				</NcButton>
+				<NcButton type="tertiary"
+					:disabled="loading"
 					:aria-label="t('mail', 'Decline')"
 					@click="decline">
 					{{ t('mail', 'Decline') }}
-				</ButtonVue>
-				<ButtonVue type="tertiary"
-					:loading="loading"
+				</NcButton>
+				<NcButton type="tertiary"
+					:disabled="loading"
 					:aria-label="t('mail', 'Tentatively accept')"
 					@click="acceptTentatively">
 					{{ t('mail', 'Tentatively accept') }}
-				</ButtonVue>
-				<ButtonVue v-if="!showMoreOptions"
+				</NcButton>
+				<NcButton v-if="!showMoreOptions"
 					type="tertiary"
+					:disabled="loading"
 					:aria-label="t('mail', 'More options')"
 					@click="showMoreOptions = true">
 					{{ t('mail', 'More options') }}
-				</ButtonVue>
+				</NcButton>
+				<NcLoadingIcon v-if="loading" />
 			</div>
 			<p v-else-if="!eventIsInFuture" class="imip__actions imip__actions--hint">
 				{{ t('mail', 'This event is in the past.') }}
@@ -120,7 +122,7 @@
 
 <script>
 import EventData from './imip/EventData.vue'
-import { NcButton as ButtonVue, NcSelect } from '@nextcloud/vue'
+import { NcButton, NcSelect, NcLoadingIcon } from '@nextcloud/vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import { getParserManager, Parameter, Property } from '@nextcloud/calendar-js'
@@ -171,11 +173,12 @@ function findAttendee(vEvent, email) {
 export default {
 	name: 'Imip',
 	components: {
-		EventData,
-		ButtonVue,
-		CloseIcon,
 		CalendarIcon,
 		CalendarPickerOption,
+		CloseIcon,
+		EventData,
+		NcButton,
+		NcLoadingIcon,
 		NcSelect,
 	},
 	props: {
@@ -431,44 +434,60 @@ export default {
 				return
 			}
 
-			attendee.participationStatus = status
-			if (this.comment) {
-				attendee.setParameter(new Parameter('X-RESPONSE-COMMENT', this.comment))
-				vEvent.addProperty(new Property('COMMENT', this.comment))
-			}
-			// TODO: implement an input for guests and save it to the attendee via X-NUM-GUESTS
-
 			this.loading = true
-			try {
-				if (this.isExistingEvent) {
+
+			if (!this.isExistingEvent) {
+				try {
+					await calendar.createVObject(vCalendar.toICS())
+					await this.fetchExistingEvent(vEvent.uid, true)
+				} catch (error) {
+					showError(this.t('mail', 'Failed to save your participation status'))
+					logger.error('Failed to save event to calendar', {
+						error,
+						attendee,
+						calendar,
+						vEvent,
+						vCalendar,
+						existingEvent: this.existingEvent,
+					})
+				}
+			}
+
+			if (this.isExistingEvent) {
+				attendee.participationStatus = status
+				if (this.comment) {
+					attendee.setParameter(new Parameter('X-RESPONSE-COMMENT', this.comment))
+					vEvent.addProperty(new Property('COMMENT', this.comment))
+				}
+
+				// TODO: implement an input for guests and save it to the attendee via X-NUM-GUESTS
+
+				try {
 					// TODO: don't show buttons if calendar is not writable
 					this.existingEvent.data = vCalendar.toICS()
 					await this.existingEvent.update()
-				} else {
-					await calendar.createVObject(vCalendar.toICS())
+					this.showMoreOptions = false
+				} catch (error) {
+					showError(this.t('mail', 'Failed to save your participation status'))
+					logger.error('Failed to save event to calendar', {
+						error,
+						attendee,
+						calendar,
+						vEvent,
+						vCalendar,
+						existingEvent: this.existingEvent,
+					})
 				}
-				this.showMoreOptions = false
-			} catch (error) {
-				showError(this.t('mail', 'Failed to save your participation status'))
-				logger.error('Failed to save event to calendar', {
-					error,
-					attendee,
-					calendar,
-					vEvent,
-					vCalendar,
-					existingEvent: this.existingEvent,
-				})
-			} finally {
-				this.loading = false
 			}
 
 			// Refetch the event to update the shown status message or reset the event in the case
 			// of an error.
-			this.existingEventFetched = false
-			await this.fetchExistingEvent(vEvent.uid)
+			await this.fetchExistingEvent(vEvent.uid, true)
+
+			this.loading = false
 		},
-		async fetchExistingEvent(uid) {
-			if (this.existingEventFetched) {
+		async fetchExistingEvent(uid, force = false) {
+			if (!force && this.existingEventFetched) {
 				return
 			}
 
