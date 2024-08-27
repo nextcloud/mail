@@ -180,7 +180,7 @@ class OutboxController extends Controller {
 		int $accountId,
 		string $subject,
 		string $body,
-		string $editorBody,
+		?string $editorBody,
 		bool $isHtml,
 		bool $smimeSign,
 		bool $smimeEncrypt,
