@@ -50,7 +50,7 @@ export default {
 			return this.phishingData.filter(check => check.isPhishing)
 		},
 		linkWarning() {
-			return this.phishingData.find(check => check.type === 'Link')
+			return this.phishingData.find(check => check.type === 'Link' && check.isPhishing)
 		},
 	},
 
