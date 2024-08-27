@@ -25,6 +25,7 @@ use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\TransmissionService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\Files\SimpleFS\InMemoryFile;
 use OCP\Files\SimpleFS\ISimpleFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -357,5 +358,29 @@ class TransmissionServiceTest extends TestCase {
 		$this->expectException(ServiceException::class);
 		$this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $send);
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYT_FAIL, $localMessage->getStatus());
+	}
+
+	public function testHandleAttachmentKeepAdditionalContentTypeParameters(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+
+		$attachment = new LocalAttachment();
+		$attachment->setFileName('event.ics');
+		$attachment->setMimeType('text/calendar; method=REQUEST');
+
+		$file = new InMemoryFile(
+			'event.ics',
+			"BEGIN:VCALENDAR\nEND:VCALENDAR"
+		);
+
+		$this->attachmentService->expects(self::once())
+			->method('getAttachment')
+			->willReturn([$attachment, $file]);
+
+		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
+
+		$this->assertEquals('event.ics', $part->getContentTypeParameter('name'));
+		$this->assertEquals('REQUEST', $part->getContentTypeParameter('method'));
 	}
 }
