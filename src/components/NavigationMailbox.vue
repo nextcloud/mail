@@ -610,23 +610,25 @@ export default {
 		},
 		async renameMailbox() {
 			this.renameInput = false
-			this.showSaving = false
+			this.showSaving = true
 
 			try {
+				let newName = this.mailboxName
+				if (this.mailbox.path) {
+					newName = this.mailbox.path + this.mailbox.delimiter + newName
+				}
 				await this.$store.dispatch('renameMailbox', {
 					account: this.account,
 					mailbox: this.mailbox,
-					newName: this.mailboxName,
+					newName,
 				})
 				this.renameLabel = true
 				this.renameInput = false
-				this.showSaving = false
 			} catch (error) {
 				showInfo(t('mail', 'An error occurred, unable to rename the mailbox.'))
 				console.error(error)
-				this.renameLabel = false
-				this.renameInput = false
-				this.showSaving = true
+			} finally {
+				this.showSaving = false
 			}
 		},
 		openRenameInput() {
