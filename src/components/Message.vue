@@ -170,12 +170,16 @@ export default {
 .reply-buttons {
 	margin: 0 10px 0 50px;
 	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
 	justify-content: space-between;
 	align-items: center;
 
 	&__suggested {
-		display: flex;
 		justify-content: flex-start;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
 		&__button {
 			margin-right: 5px;
 			border-radius: 12px;
@@ -187,6 +191,23 @@ export default {
 
 	&__notsuggested {
 		margin-left: auto;
+	}
+}
+@media screen and (max-width: 600px) {
+	.reply-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+
+		&__suggested {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 5px;
+		}
+
+		&__notsuggested {
+			margin-left: 0;
+		}
 	}
 }
 </style>

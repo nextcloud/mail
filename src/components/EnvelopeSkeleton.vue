@@ -630,7 +630,7 @@ export default {
 		flex: 0 0 auto;
 		justify-content: center;
 		align-self: start;
-		margin-top: -4px;
+		margin-top: 0;
 	}
 
 }
