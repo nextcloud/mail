@@ -1,3 +1,18 @@
+## [3.7.8](https://github.com/nextcloud/mail/compare/v3.7.7...v3.7.8) (2024-08-28)
+
+
+### Bug Fixes
+
+* **deps:** Apply npm audit fix ([f8dd52b](https://github.com/nextcloud/mail/commit/f8dd52b03e7462d77727db9f223dc90ae96fd71f))
+* **deps:** Apply npm audit fix ([1b44820](https://github.com/nextcloud/mail/commit/1b44820b523e4fb6eab564da6646046e1ee915fe))
+* **deps:** Apply npm audit fix ([1a37e7f](https://github.com/nextcloud/mail/commit/1a37e7fe69248fd648e13a503eba919a9d92f328))
+* don't fail on missing mailbox stats ([792d5c9](https://github.com/nextcloud/mail/commit/792d5c938787759063eaebf079f25fac31ca7158))
+* **integration:** Honor sharing to group members restriction ([8c60504](https://github.com/nextcloud/mail/commit/8c60504adee0445685e2c1b04137705216cf4560))
+* send imip when importing an event in mail ([f9a07a8](https://github.com/nextcloud/mail/commit/f9a07a80cabab03570431c43cc9ee667ba649fcb)), closes [/github.com/nextcloud/3rdparty/blob/ea2fabbd358c9e0f9dae43bcb242b0cf8ee0d178/sabre/vobject/lib/ITip/Broker.php#L245-L254](https://github.com//github.com/nextcloud/3rdparty/blob/ea2fabbd358c9e0f9dae43bcb242b0cf8ee0d178/sabre/vobject/lib/ITip/Broker.php/issues/L245-L254)
+* Show text in empty mailbox view ([176a9cf](https://github.com/nextcloud/mail/commit/176a9cfa4a5a09c0906e0e49a96aa4c41c0910a7))
+
+
+
 ## [3.7.7](https://github.com/nextcloud/mail/compare/v3.7.6...v3.7.7) (2024-08-09)
 
 
