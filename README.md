@@ -43,8 +43,9 @@ Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud
 
 ## Maintainers
 
-* [Christoph Wurst](https://github.com/ChristophWurst)
-* [Nextcloud Groupware team](https://github.com/nextcloud/groupware/#members)
+* [@ChristophWurst](https://github.com/ChristophWurst)
+* [@GretaD](https://github.com/GretaD)
+* [@kesselb](https://github.com/kesselb)
 
 ## Installation
 
