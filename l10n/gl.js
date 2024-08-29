@@ -412,7 +412,7 @@ OC.L10N.register(
     "Outbox" : "Caixa de saída",
     "New message" : "Nova mensaxe",
     "Error sending your message" : "Produciuse un erro ao enviar a súa mensaxe",
-    "Retry" : "Tentar de novo",
+    "Retry" : "Volver tentar",
     "Uploading attachments …" : "Enviando anexos…",
     "Sending …" : "Enviando…",
     "Warning sending your message" : "Advertencia enviando a súa mensaxe",

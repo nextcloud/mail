@@ -291,7 +291,7 @@ OC.L10N.register(
     "Could not create event" : "無法建立活動",
     "You accepted this invitation" : "您}接受了此邀请。",
     "You tentatively accepted this invitation" : "你暫時接受了此邀請",
-    "You declined this invitation" : "您婉拒了拒此邀請",
+    "You declined this invitation" : "您婉拒了此邀請",
     "You already reacted to this invitation" : "您已對此邀請作出反應",
     "You have been invited to an event" : "您已受邀參加活動",
     "This event was cancelled" : "此活動已取消",
