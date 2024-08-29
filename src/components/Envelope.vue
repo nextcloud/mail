@@ -474,7 +474,13 @@ export default {
 			moreActionsOpen: false,
 			snoozeOptions: false,
 			customSnoozeDateTime: new Date(moment().add(2, 'hours').minute(0).second(0).valueOf()),
+			overwriteOneLineMobile: false,
 		}
+	},
+	mounted() {
+		this.onWindowResize()
+
+		window.addEventListener('resize', this.onWindowResize)
 	},
 	computed: {
 		...mapGetters([
@@ -484,7 +490,7 @@ export default {
 			return messageDateTime(new Date(this.data.dateInt))
 		},
 		oneLineLayout() {
-			return this.$store.getters.getPreference('layout-mode', 'vertical-split') === 'no-split'
+			return this.overwriteOneLineMobile ? false : this.$store.getters.getPreference('layout-mode', 'vertical-split') === 'no-split'
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -876,6 +882,15 @@ export default {
 		setCustomSnooze() {
 			this.onSnooze(this.customSnoozeDateTime.valueOf())
 		},
+		onWindowResize() {
+			const widthOutput = window.innerWidth
+
+			if (widthOutput <= 700) {
+				this.overwriteOneLineMobile = true
+			} else {
+				this.overwriteOneLineMobile = false
+			}
+		},
 	},
 }
 </script>
@@ -1056,8 +1071,8 @@ export default {
 	}
 }
 .one-line.favorite-icon-style {
-	margin-bottom: 31px;
-	margin-left: 31px;
+	top: 3px;
+	left: 31px;
 }
 :deep(.svg svg) {
 	height: 16px;
