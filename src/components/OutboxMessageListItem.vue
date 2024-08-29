@@ -163,10 +163,14 @@ export default {
 				if (error.data !== undefined) {
 					await this.outboxStore.updateMessage({ message: error.data[0], id: message.id })
 				}
+
 			}
 		},
 		async openModal() {
 			if (this.message.status === STATUS_IMAP_SENT_MAILBOX_FAIL) {
+				return
+			}
+			if (this.message.editorBody === null) {
 				return
 			}
 			await this.$store.dispatch('startComposerSession', {
