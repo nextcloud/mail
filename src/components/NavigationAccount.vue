@@ -40,13 +40,13 @@
 						@update:checked="changeShowSubscribedOnly">
 						{{ t('mail', 'Show only subscribed mailboxes') }}
 					</ActionCheckbox>
-					<ActionButton v-if="!editing" @click="openCreateMailbox">
+					<ActionButton v-if="!editing && nameLabel" @click="openCreateMailbox">
 						<template #icon>
 							<IconFolderAdd :size="16" />
 						</template>
 						{{ t('mail', 'Add mailbox') }}
 					</ActionButton>
-					<ActionInput v-if="editing"
+					<ActionInput v-if="editing && nameInput"
 						:value.sync="createMailboxName"
 						@submit.prevent.stop="createMailbox">
 						<template #icon>
@@ -152,6 +152,9 @@ export default {
 			showSaving: false,
 			showSettings: false,
 			createMailboxName: '',
+			showMailboxes: false,
+			nameInput: false,
+			nameLabel: true,
 		}
 	},
 	computed: {
@@ -176,23 +179,30 @@ export default {
 		},
 	},
 	methods: {
-		createMailbox(e) {
-			this.editing = true
+		async createMailbox(e) {
+			this.nameInput = false
+			this.showSaving = true
 			const name = this.createMailboxName
 			logger.info('creating mailbox ' + name)
 			this.menuOpen = false
-			this.$store
-				.dispatch('createMailbox', { account: this.account, name })
-				.then(() => logger.info(`mailbox ${name} created`))
-				.catch((error) => {
-					logger.error('could not create mailbox', { error })
-					throw error
+			try {
+				await this.$store.dispatch('createMailbox', {
+					account: this.account, name,
 				})
-			this.editing = false
-			this.showSaving = false
+			} catch (error) {
+				logger.error('could not create mailbox', { error })
+				throw error
+			} finally {
+				this.showSaving = false
+				this.nameInput = false
+				this.editing = false
+				this.createMailboxName = ''
+			}
+			logger.info(`mailbox ${name} created`)
 		},
 		openCreateMailbox() {
 			this.editing = true
+			this.nameInput = true
 			this.showSaving = false
 		},
 		async removeAccount() {
