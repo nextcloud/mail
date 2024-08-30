@@ -40,6 +40,13 @@ class LinkCheck {
 		return $innerText;
 	}
 
+	private function parse(string $url): string {
+		if(!str_contains($url, '://')) {
+			return 'http://'.$url;
+		}
+		return $url;
+	}
+
 	public function run(string $htmlMessage) : PhishingDetectionResult {
 
 		$results = [];
@@ -62,7 +69,7 @@ class LinkCheck {
 			$un = new Normalizer($zipped['href']);
 			$url = $un->normalize();
 			if($this->textLooksLikeALink($zipped['linkText'])) {
-				if(parse_url($url, PHP_URL_HOST) !== parse_url($zipped['linkText'], PHP_URL_HOST)) {
+				if(parse_url($this->parse($url), PHP_URL_HOST) !== parse_url($this->parse($zipped['linkText']), PHP_URL_HOST)) {
 					$results[] = [
 						'href' => $url,
 						'linkText' => $zipped['linkText'],
