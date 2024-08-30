@@ -144,7 +144,7 @@ export default {
 
 			if (vcard) {
 				// Save the card
-				this.$set(this.recipientsVCards, email, new Contact(vcard.data, this.getAddressBooks[0]))
+				this.$set(this.recipientsVCards, email, new Contact(vcard.data, this.getAddressBooks))
 			}
 
 			// Loading is finished

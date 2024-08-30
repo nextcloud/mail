@@ -58,6 +58,7 @@
     "b64-to-blob": "^1.2.19",
     "color-convert": "^2.0.1",
     "core-js": "^3.37.1",
+    "debounce": "^2.1.0",
     "debounce-promise": "^3.1.2",
     "dompurify": "^3.1.6",
     "html-to-text": "^9.0.5",
