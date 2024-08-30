@@ -26,17 +26,10 @@
 					</div>
 				</template>
 
-<!--				&lt;!&ndash; org, title &ndash;&gt;
-				<template #subtitle>
-					<template>
-						<span v-html="formattedSubtitle" />
-					</template>
-				</template>-->
-
-<!--				<div v-if="!loadingData" class="contact-details-wrapper">
+				<div v-if="!loadingData" class="contact-details-wrapper">
 					<div v-for="(properties, name) in groupedProperties"
 						:key="name">
-						<ContactDetailsProperty v-for="(property, index) in properties"
+						<RecipientDetailsProperty v-for="(property, index) in properties"
 							:key="`${index}-${contact.key}-${property.name}`"
 							:is-first-property="index===0"
 							:is-last-property="index === properties.length - 1"
@@ -46,7 +39,7 @@
 							:contacts="contacts"
 							:bus="bus" />
 					</div>
-					&lt;!&ndash; addressbook change select - no last property because class is not applied here,
+				<!--		&lt;!&ndash; addressbook change select - no last property because class is not applied here,
 					empty property because this is a required prop on regular property-select. But since
 					we are hijacking this... (this is supposed to be used with a ICAL.property, but to avoid code
 					duplication, we created a fake propModel and property with our own options here) &ndash;&gt;
@@ -66,20 +59,20 @@
 						class="property&#45;&#45;groups property&#45;&#45;last"
 						@update:value="updateGroups" />
 				</div>-->
+				</div>
 			</Detailsheader>
 		</template>
 	</div>
 </template>
 
 <script>
-import {
-	NcAppContentDetails as AppContentDetails,
-	NcEmptyContent as EmptyContent,
+import { NcEmptyContent as EmptyContent,
 	isMobile,
 } from '@nextcloud/vue'
 import IconContact from 'vue-material-design-icons/AccountMultiple.vue'
 import mitt from 'mitt'
 import DetailsHeader from './DetailsHeaderRecipient.vue'
+import RecipientDetailsProperty from './RecipientDetailsProperty.vue'
 import { loadState } from '@nextcloud/initial-state'
 import Contact from './contact'
 
@@ -89,7 +82,7 @@ export default {
 	name: 'RecipientDetails',
 
 	components: {
-		AppContentDetails,
+		RecipientDetailsProperty,
 		DetailsHeader,
 		EmptyContent,
 		IconContact,
@@ -99,7 +92,7 @@ export default {
 	mixins: [isMobile],
 
 	props: {
-/* 		contactKey: {
+		/* 		contactKey: {
 			type: String,
 			default: undefined,
 		}, */
@@ -112,7 +105,7 @@ export default {
 			required: false,
 			default: '',
 		},
-/* 		addressbooks: {
+		/* 		addressbooks: {
 			type: Object,
 			required: true,
 		}, */
@@ -139,7 +132,7 @@ export default {
 	},
 
 	computed: {
-/* 		// store getter
+		/* 		// store getter
 		addressbooks() {
 			return this.$store.getters.getAddressbooks
 		},
