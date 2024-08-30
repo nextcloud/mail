@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<AppContentDetails>
+	<div>
 		<!-- nothing selected or contact not found -->
 		<EmptyContent v-if="!contact"
 			class="empty-content"
@@ -26,14 +26,14 @@
 					</div>
 				</template>
 
-				<!-- org, title -->
+<!--				&lt;!&ndash; org, title &ndash;&gt;
 				<template #subtitle>
 					<template>
 						<span v-html="formattedSubtitle" />
 					</template>
-				</template>
+				</template>-->
 
-				<div v-if="!loadingData" class="contact-details-wrapper">
+<!--				<div v-if="!loadingData" class="contact-details-wrapper">
 					<div v-for="(properties, name) in groupedProperties"
 						:key="name">
 						<ContactDetailsProperty v-for="(property, index) in properties"
@@ -46,10 +46,10 @@
 							:contacts="contacts"
 							:bus="bus" />
 					</div>
-					<!-- addressbook change select - no last property because class is not applied here,
+					&lt;!&ndash; addressbook change select - no last property because class is not applied here,
 					empty property because this is a required prop on regular property-select. But since
 					we are hijacking this... (this is supposed to be used with a ICAL.property, but to avoid code
-					duplication, we created a fake propModel and property with our own options here) -->
+					duplication, we created a fake propModel and property with our own options here) &ndash;&gt;
 					<PropertySelect :prop-model="addressbookModel"
 						:options="addressbooksOptions"
 						:value.sync="addressbook"
@@ -57,18 +57,18 @@
 						:is-last-property="true"
 						:property="{}"
 						:hide-actions="true"
-						class="property--addressbooks property--last" />
+						class="property&#45;&#45;addressbooks property&#45;&#45;last" />
 
-					<!-- Groups always visible -->
+					&lt;!&ndash; Groups always visible &ndash;&gt;
 					<PropertyGroups :prop-model="groupsModel"
 						:value.sync="localContact.groups"
 						:contact="contact"
-						class="property--groups property--last"
+						class="property&#45;&#45;groups property&#45;&#45;last"
 						@update:value="updateGroups" />
-				</div>
+				</div>-->
 			</Detailsheader>
 		</template>
-	</AppContentDetails>
+	</div>
 </template>
 
 <script>
@@ -81,6 +81,7 @@ import IconContact from 'vue-material-design-icons/AccountMultiple.vue'
 import mitt from 'mitt'
 import DetailsHeader from './DetailsHeaderRecipient.vue'
 import { loadState } from '@nextcloud/initial-state'
+import Contact from './contact'
 
 const { profileEnabled } = loadState('user_status', 'profileEnabled', false)
 
@@ -98,14 +99,10 @@ export default {
 	mixins: [isMobile],
 
 	props: {
-		contactKey: {
+/* 		contactKey: {
 			type: String,
 			default: undefined,
-		},
-		contacts: {
-			type: Array,
-			default: () => [],
-		},
+		}, */
 		reloadBus: {
 			type: Object,
 			required: true,
@@ -114,6 +111,14 @@ export default {
 			type: String,
 			required: false,
 			default: '',
+		},
+/* 		addressbooks: {
+			type: Object,
+			required: true,
+		}, */
+		contact: {
+			type: Contact,
+			required: true,
 		},
 	},
 
@@ -134,13 +139,13 @@ export default {
 	},
 
 	computed: {
-		// store getter
+/* 		// store getter
 		addressbooks() {
 			return this.$store.getters.getAddressbooks
 		},
 		contact() {
 			return this.$store.getters.getContact(this.contactKey)
-		},
+		}, */
 		/**
 		 * Contact properties copied and sorted by rfcProps.fieldOrder
 		 *

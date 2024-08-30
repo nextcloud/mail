@@ -19,7 +19,9 @@
 				<div v-for="(vCard, index) in recipientsVCards"
 					:key="index"
 					class="recipient-item">
-					<RecipientDetails :contact-key="selectedContacts" :contacts="vCard.data" :reload-bus="reloadBus" />
+					<RecipientDetails :contact="vCard" :reload-bus="reloadBus" />
+
+
 					<!--					<Avatar :user="recipient.uid"
 						:display-name="recipient.displayName"
 						:email="recipient.email"
@@ -53,6 +55,7 @@ import RecipientDetails from '../nextcloud-contacts/RecipientDetails.vue'
 import { mapGetters } from 'vuex'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import mitt from 'mitt'
+import Contact from '../nextcloud-contacts/contact'
 
 export default {
 	components: {
@@ -141,7 +144,7 @@ export default {
 
 			if (vcard) {
 				// Save the card
-				this.$set(this.recipientsVCards, email, vcard)
+				this.$set(this.recipientsVCards, email, new Contact(vcard.data, this.getAddressBooks[0]))
 			}
 
 			// Loading is finished
