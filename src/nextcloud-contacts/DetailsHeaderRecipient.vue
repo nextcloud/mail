@@ -16,39 +16,15 @@
 				<h2 class="contact-header__infos-title">
 					<slot name="title" />
 				</h2>
-				<div v-if="$slots.subtitle" class="contact-header__infos-subtitle">
-					<slot name="subtitle" />
-				</div>
-				<div class="contact-header__quick-actions">
-					<slot name="quick-actions" />
-				</div>
 			</div>
 		</div>
 
-		<!-- actions -->
-		<div class="contact-header__actions">
-			<slot name="actions" />
-
-			<!-- menu actions -->
-			<Actions ref="actions"
-					 class="header-menu"
-					 menu-align="right"
-					 v-bind="$attrs">
-				<slot name="actions-menu" />
-			</Actions>
-		</div>
 	</header>
 </template>
 
 <script>
-import { NcActions as Actions } from '@nextcloud/vue'
-
 export default {
 	name: 'DetailsHeaderRecipient',
-
-	components: {
-		Actions,
-	},
 
 	data() {
 		return {
@@ -73,9 +49,6 @@ export default {
 	display: flex;
 	align-items: center;
 	padding: 0 20px;
-	&__quick-actions{
-		padding: 5px 0;
-	}
 
 	@media (max-width: 1024px) {
 		// Top padding of 44px is already included in AppContent by default on mobile
@@ -132,17 +105,6 @@ export default {
 		&-title :deep(input) {
 			font-weight: bold;
 		}
-
-		&-subtitle:placeholder-shown {
-			max-width: 20%;
-		}
-	}
-
-	// ACTIONS
-	&__actions {
-		display: flex;
-		flex: 1 0 auto;
-		gap: 5px;
 	}
 }
 </style>
