@@ -56,9 +56,6 @@ class ImapToDbSynchronizer {
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
-	/** @var DatabaseMessageMapper */
-	private $messageMapper;
-
 	/** @var Synchronizer */
 	private $synchronizer;
 
@@ -78,7 +75,6 @@ class ImapToDbSynchronizer {
 		IMAPClientFactory $clientFactory,
 		ImapMessageMapper $imapMapper,
 		MailboxMapper $mailboxMapper,
-		DatabaseMessageMapper $messageMapper,
 		Synchronizer $synchronizer,
 		IEventDispatcher $dispatcher,
 		PerformanceLogger $performanceLogger,
@@ -88,7 +84,6 @@ class ImapToDbSynchronizer {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mailboxMapper = $mailboxMapper;
-		$this->messageMapper = $messageMapper;
 		$this->synchronizer = $synchronizer;
 		$this->dispatcher = $dispatcher;
 		$this->performanceLogger = $performanceLogger;
@@ -177,7 +172,7 @@ class ImapToDbSynchronizer {
 	 */
 	private function resetCache(Account $account, Mailbox $mailbox): void {
 		$id = $account->getId() . ':' . $mailbox->getName();
-		$this->messageMapper->deleteAll($mailbox);
+		$this->dbMapper->deleteAll($mailbox);
 		$this->logger->debug("All messages of $id cleared");
 		$mailbox->setSyncNewToken(null);
 		$mailbox->setSyncChangedToken(null);
@@ -341,7 +336,7 @@ class ImapToDbSynchronizer {
 			// We might need more attempts to fill the cache
 			$loggingMailboxId = $account->getId() . ':' . $mailbox->getName();
 			$total = $imapMessages['total'];
-			$cached = count($this->messageMapper->findAllUids($mailbox));
+			$cached = count($this->dbMapper->findAllUids($mailbox));
 			$perf->step('find number of cached UIDs');
 
 			$perf->end();
