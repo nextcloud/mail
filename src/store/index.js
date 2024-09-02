@@ -107,6 +107,7 @@ export default new Store({
 				hasFetchedInitialEnvelopes: false,
 				followUpFeatureAvailable: false,
 				internalAddress: [],
+				hasCurrentUserPrincipalAndCollections: false,
 			},
 			getters,
 			mutations,

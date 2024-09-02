@@ -20,7 +20,7 @@
 		<div v-if="itineraries.length > 0" class="message-itinerary">
 			<Itinerary :entries="itineraries" :message-id="message.messageId" />
 		</div>
-		<div v-if="message.scheduling.length > 0" class="message-imip">
+		<div v-if="hasCurrentUserPrincipalAndCollections && message.scheduling.length > 0" class="message-imip">
 			<Imip v-for="scheduling in message.scheduling"
 				:key="scheduling.id"
 				:scheduling="scheduling" />
@@ -130,6 +130,9 @@ export default {
 		},
 		itineraries() {
 			return this.message.itineraries ?? []
+		},
+		hasCurrentUserPrincipalAndCollections() {
+			return this.$store.getters.hasCurrentUserPrincipalAndCollections
 		},
 	},
 	methods: {
