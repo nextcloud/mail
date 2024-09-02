@@ -64,15 +64,17 @@
 							{{ isEncrypted ? t('mail', 'Encrypted message') : envelope.previewText }}
 						</span>
 					</div>
-					<div v-for="tag in tags"
-						:key="tag.id"
-						class="tag-group">
-						<div class="tag-group__bg"
-							:style="{'background-color': tag.color}" />
-						<span class="tag-group__label"
-							:style="{color: tag.color}">
-							{{ translateTagDisplayName(tag) }}
-						</span>
+					<div class="tagline">
+						<div v-for="tag in tags"
+							:key="tag.id"
+							class="tag-group">
+							<div class="tag-group__bg"
+								:style="{'background-color': tag.color}" />
+							<span class="tag-group__label"
+								:style="{color: tag.color}">
+								{{ translateTagDisplayName(tag) }}
+							</span>
+						</div>
 					</div>
 				</div>
 				<div class="envelope__header__left__unsubscribe">
@@ -887,9 +889,10 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		margin-left: 8px;
-
 		&__email{
 			color: var(--color-text-maxcontrast);
+			text-overflow: ellipsis;
+			overflow: hidden;
 		}
 
 		&__external{
@@ -1038,8 +1041,6 @@ export default {
 				color: var(--color-text-maxcontrast);
 			}
 			&__left__sender-subject-tags {
-				text-overflow: ellipsis;
-				overflow: hidden;
 				white-space: nowrap;
 				width: 100%;
 			}
@@ -1088,6 +1089,11 @@ export default {
 		left: 0;
 		opacity: 15%;
 	}
+	.tagline {
+		display: flex;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
 	.tag-group {
 		display: inline-block;
 		border: 1px solid transparent;
@@ -1095,6 +1101,7 @@ export default {
 		position: relative;
 		margin: 0 1px;
 		overflow: hidden;
+		text-overflow: ellipsis;
 		left: 4px;
 	}
 	.smime-text {
@@ -1105,5 +1112,12 @@ export default {
 		font-weight: normal;
 		display: inline;
 		align-items: center;
+	}
+	@media only screen and (max-width: 400px) {
+		.sender {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			width: 180px;
+		}
 	}
 </style>
