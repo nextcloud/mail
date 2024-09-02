@@ -196,10 +196,14 @@ export default {
 	watch: {
 		$route() {
 			this.handleMailto()
+			if (this.isThreadShown) {
+				this.fetchEnvelopes()
+			}
 		},
 		mailbox() {
 			clearTimeout(this.startMailboxTimer)
 			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+			this.fetchEnvelopes()
 		},
 	},
 	created() {
@@ -207,11 +211,23 @@ export default {
 	},
 	mounted() {
 		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+		if (this.isThreadShown) {
+			this.fetchEnvelopes()
+		}
 	},
 	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
+		async fetchEnvelopes() {
+			const existingEnvelopes = this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
+			if (!existingEnvelopes.length) {
+				await this.$store.dispatch('fetchEnvelopes', {
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery || '',
+				})
+			}
+		},
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
 		},
