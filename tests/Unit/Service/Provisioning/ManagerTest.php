@@ -46,14 +46,34 @@ class ManagerTest extends TestCase {
 		$this->manager = $this->mock->getService();
 	}
 
-	public function testProvision() {
+	public function testProvision(): void {
+		$config = new Provisioning();
+		$config->setId(1);
+		$config->setProvisioningDomain('batman.com');
+		$config->setEmailTemplate('%USER%@batman.com');
+
+		$this->mock->getParameter('provisioningMapper')
+			->expects($this->once())
+			->method('getAll')
+			->willReturn([$config]);
+
 		$this->mock->getParameter('userManager')
 			->expects($this->once())
 			->method('callForAllUsers');
 
-		$cnt = $this->manager->provision();
+		$count = $this->manager->provision();
 
-		$this->assertEquals(0, $cnt);
+		$this->assertEquals(0, $count);
+	}
+
+	public function testProvisionSkipWithoutConfigurations(): void {
+		$this->mock->getParameter('userManager')
+			->expects($this->never())
+			->method('callForAllUsers');
+
+		$count = $this->manager->provision();
+
+		$this->assertEquals(0, $count);
 	}
 
 	public function testUpdateProvisionSingleUser() {
