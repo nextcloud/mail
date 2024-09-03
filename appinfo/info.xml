@@ -34,7 +34,7 @@ The rating depends on the installed text processing backend. See [the rating ove
 
 Learn more about the Nextcloud Ethical AI Rating [in our blog](https://nextcloud.com/blog/nextcloud-ethical-ai-rating/).
 	]]></description>
-	<version>4.1.0-dev.0</version>
+	<version>4.1.0-alpha.0</version>
 	<licence>agpl</licence>
 	<author homepage="https://github.com/ChristophWurst">Christoph Wurst</author>
 	<author homepage="https://github.com/GretaD">GretaD</author>
