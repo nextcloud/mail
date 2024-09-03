@@ -28,7 +28,7 @@ jobs:
         run: curl --output resources/resources/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@4eb90b7bc7d471fb4fa2d53464eecc54182f3933
+        uses: peter-evans/create-pull-request@73e6230af4af8faaeddac4d3f16e25f8a2bd8e4b
         with:
           token: ${{ secrets.COMMAND_BOT_PAT }}
           commit-message: 'fix(dns): Update public suffix list'
