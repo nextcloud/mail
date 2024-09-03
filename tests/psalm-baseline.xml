@@ -160,6 +160,7 @@
   </file>
   <file src="lib/Controller/OutboxController.php">
     <PossiblyNullArgument>
+      <code><![CDATA[$editorBody]]></code>
       <code><![CDATA[$sendAt]]></code>
     </PossiblyNullArgument>
   </file>
@@ -621,8 +622,8 @@
   </file>
   <file src="lib/Service/Search/FlagExpression.php">
     <LessSpecificReturnStatement>
-      <code><![CDATA[new self("and", $operands)]]></code>
-      <code><![CDATA[new self("or", $operands)]]></code>
+      <code><![CDATA[new self('and', $operands)]]></code>
+      <code><![CDATA[new self('or', $operands)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
       <code><![CDATA[static]]></code>
