@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fab486a104339fcd4a3f29c46d36092d",
+    "content-hash": "530843b667f53cfdd10fe74ace80d574",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2318,16 +2318,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "2.5.0",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/ML.git",
-                "reference": "d43a5f2cd714277c10f74096cc5776ce4c828354"
+                "reference": "85d7d4be9f3f75ec4fea24a4213442e5c14d3853"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/ML/zipball/d43a5f2cd714277c10f74096cc5776ce4c828354",
-                "reference": "d43a5f2cd714277c10f74096cc5776ce4c828354",
+                "url": "https://api.github.com/repos/RubixML/ML/zipball/85d7d4be9f3f75ec4fea24a4213442e5c14d3853",
+                "reference": "85d7d4be9f3f75ec4fea24a4213442e5c14d3853",
                 "shasum": ""
             },
             "require": {
@@ -2475,7 +2475,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-05-23T17:44:44+00:00"
+            "time": "2024-08-31T22:53:34+00:00"
         },
         {
             "name": "rubix/tensor",
