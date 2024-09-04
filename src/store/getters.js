@@ -123,7 +123,9 @@ export const getters = {
 	getCurrentUserPrincipal: (state) => state.currentUserPrincipal,
 	getCurrentUserPrincipalEmail: (state) => state.currentUserPrincipal?.email,
 	getCalendars: (state) => state.calendars,
-	getClonedCalendars: (state) => state.calendars.map(calendar => {
+	getClonedWriteableCalendars: (state) => state.calendars.filter(calendar => {
+		return calendar.isWriteable()
+	}).map(calendar => {
 		// Hack: We need to clone all calendars because some methods (e.g. calendarQuery) are
 		// unnecessarily mutating the object and causing vue warnings (if used outside of
 		// mutations).
@@ -157,4 +159,5 @@ export const getters = {
 	},
 	isOneLineLayout: (state) => state.list,
 	hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
+	hasCurrentUserPrincipalAndCollections: (state) => state.hasCurrentUserPrincipalAndCollections,
 }
