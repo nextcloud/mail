@@ -516,4 +516,7 @@ export default {
 	hasCurrentUserPrincipalAndCollections(state, hasCurrentUserPrincipalAndCollections) {
 		state.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
 	},
+	showSettingsForAccount(state, accountId) {
+		state.showAccountSettings = accountId
+	},
 }
