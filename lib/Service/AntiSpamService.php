@@ -127,7 +127,7 @@ class AntiSpamService {
 				$userId
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		$message->addEmbeddedMessageAttachment(
@@ -204,7 +204,7 @@ class AntiSpamService {
 		} catch (Horde_Imap_Client_Exception $e) {
 			$this->logger->error('Could not move report email to sent mailbox, but the report email was sent. Reported email was id: #' . $messageId, ['exception' => $e]);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 

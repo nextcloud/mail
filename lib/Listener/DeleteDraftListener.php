@@ -76,7 +76,7 @@ class DeleteDraftListener implements IEventListener {
 			$this->logger->warning("Account has no draft mailbox set, can't delete the draft");
 			return;
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		try {

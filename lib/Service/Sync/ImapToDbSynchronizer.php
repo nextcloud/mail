@@ -277,7 +277,7 @@ class ImapToDbSynchronizer {
 				$this->mailboxMapper->unlockFromNewSync($mailbox);
 			}
 
-			$client->logout();
+			//$client->logout();
 		}
 
 		if (!$batchSync) {
@@ -308,7 +308,7 @@ class ImapToDbSynchronizer {
 		);
 
 		// Need a client without a cache
-		$client->logout();
+		//$client->logout();
 		$client = $this->clientFactory->getClient($account, false);
 
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);

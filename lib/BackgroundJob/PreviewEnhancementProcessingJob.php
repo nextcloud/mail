@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\PreprocessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -30,7 +31,8 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		AccountService $accountService,
 		PreprocessingService $preprocessingService,
 		LoggerInterface $logger,
-		IJobList $jobList) {
+		IJobList $jobList,
+		private IMAPClientFactory $imapClientFactory) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -73,6 +75,12 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 		}
 
 		$limitTimestamp = $this->time->getTime() - (60 * 60 * 24 * 14); // Two weeks into the past
+
+		// create client in memory cache
+		$this->imapClientFactory->getClient($account);
+		// process data
 		$this->preprocessingService->process($limitTimestamp, $account);
+		// destroy client in memory cache
+		$this->imapClientFactory->destroyClient($account);
 	}
 }

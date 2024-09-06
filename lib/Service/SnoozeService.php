@@ -328,7 +328,7 @@ class SnoozeService {
 				);
 			}
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 

@@ -131,7 +131,7 @@ class SetupService {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new CouldNotConnectException($e, 'IMAP', $mailAccount->getInboundHost(), $mailAccount->getInboundPort());
 		} finally {
-			$imapClient->logout();
+			$this->imapClientFactory->destroyClient($account);
 		}
 
 		$transport = $this->smtpClientFactory->create($account);

@@ -110,7 +110,7 @@ class TrashRetentionJob extends TimedJob {
 				);
 			}
 		} finally {
-			$client->logout();
+			$this->clientFactory->destroyClient($account);
 		}
 	}
 }

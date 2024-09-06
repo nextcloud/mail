@@ -117,7 +117,7 @@ class DraftsService {
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getUserId(), $message->getId(), $attachmentIds));
@@ -150,7 +150,7 @@ class DraftsService {
 		try {
 			$attachmentIds = $this->attachmentService->handleAttachments($account, $attachments, $client);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, $attachmentIds));
 		return $message;

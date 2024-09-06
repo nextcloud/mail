@@ -132,7 +132,7 @@ class MailboxSync {
 				new MailboxesSynchronizedEvent($account)
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -156,7 +156,7 @@ class MailboxSync {
 				$e
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		if (!isset($allStats[$mailbox->getName()])) {

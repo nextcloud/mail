@@ -88,7 +88,7 @@ class ListController extends Controller {
 			]);
 			return JsonResponse::error('Unknown error');
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		return JsonResponse::success();

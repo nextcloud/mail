@@ -66,7 +66,7 @@ class DkimService implements IDkimService {
 				throw new ServiceException('Could not fetch message source for uid ' . $id);
 			}
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		$result = $this->dkimValidator->validate($fullText);

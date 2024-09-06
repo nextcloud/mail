@@ -42,7 +42,7 @@ class Provider {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Could not get message IDs: ' . $e->getMessage(), 0, $e);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		return $fetchResult['match']->ids;
