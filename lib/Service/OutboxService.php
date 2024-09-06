@@ -79,7 +79,7 @@ class OutboxService {
 	}
 
 	/**
-	 * @param array $recipients
+	 * @param array<int, array{email: string, label?: string}> $recipients
 	 * @param int $type
 	 * @return Recipient[]
 	 */
@@ -129,9 +129,9 @@ class OutboxService {
 	/**
 	 * @param Account $account
 	 * @param LocalMessage $message
-	 * @param array<int, string[]> $to
-	 * @param array<int, string[]> $cc
-	 * @param array<int, string[]> $bcc
+	 * @param array<int, array{email: string, label?: string}> $to
+	 * @param array<int, array{email: string, label?: string}> $cc
+	 * @param array<int, array{email: string, label?: string}> $bcc
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
@@ -160,9 +160,9 @@ class OutboxService {
 	/**
 	 * @param Account $account
 	 * @param LocalMessage $message
-	 * @param array<int, string[]> $to
-	 * @param array<int, string[]> $cc
-	 * @param array<int, string[]> $bcc
+	 * @param array<int, array{email: string, label?: string}> $to
+	 * @param array<int, array{email: string, label?: string}> $cc
+	 * @param array<int, array{email: string, label?: string}> $bcc
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
