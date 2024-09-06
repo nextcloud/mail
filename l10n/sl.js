@@ -87,7 +87,7 @@ OC.L10N.register(
     "Create alias" : "Ustvari vzdevek",
     "Cancel" : "Prekliči",
     "Mail settings" : "Nastavitve pošte",
-    "Account creation" : "Ustvarjanje računa",
+    "Accounts" : "Računi",
     "Add mail account" : "Dodaj račun elektronske pošte",
     "General" : "Splošno",
     "List" : "Seznam",

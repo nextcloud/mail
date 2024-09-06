@@ -19,6 +19,7 @@ OC.L10N.register(
     "Change name" : "เปลี่ยนชื่อ",
     "Email address" : "ที่อยู่อีเมล",
     "Cancel" : "ยกเลิก",
+    "Accounts" : "บัญชี",
     "General" : "ทั่วไป",
     "Register" : "ลงทะเบียน",
     "Keyboard shortcuts" : "แป้นพิมพ์ลัด",

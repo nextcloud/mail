@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "創建别名",
     "Cancel" : "取消",
     "Mail settings" : "電郵設定",
-    "Account creation" : "帳戶創建",
+    "Accounts" : "帳戶",
     "Add mail account" : "添加電郵帳戶",
     "General" : "一般",
     "Layout" : "佈局",

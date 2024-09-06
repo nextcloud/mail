@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "Alias erstellen",
     "Cancel" : "Abbrechen",
     "Mail settings" : "Mail-Einstellungen",
-    "Account creation" : "Kontoerstellung",
+    "Accounts" : "Konten",
     "Add mail account" : "E-Mail-Konto hinzufügen",
     "General" : "Allgemein",
     "Layout" : "Layout",

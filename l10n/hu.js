@@ -99,6 +99,7 @@ OC.L10N.register(
     "Create alias" : "Álnév létrehozása",
     "Cancel" : "Mégse",
     "Mail settings" : "Levelezési beállítások",
+    "Accounts" : "Fiókok",
     "Add mail account" : "E-mail-fiók hozzáadása",
     "General" : "Általános",
     "List" : "Lista",

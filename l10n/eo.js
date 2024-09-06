@@ -42,6 +42,7 @@ OC.L10N.register(
     "Change name" : "Ŝanĝi nomon",
     "Email address" : "Retpoŝtadreso",
     "Cancel" : "Nuligi",
+    "Accounts" : "Kontoj",
     "Add mail account" : "Aldoni retpoŝtan konton",
     "General" : "Ĝenerala",
     "Use Gravatar and favicon avatars" : "Uzi servon „Gravatar“ kaj avatarojn en retpaĝsimbolo",

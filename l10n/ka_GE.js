@@ -28,6 +28,7 @@ OC.L10N.register(
     "Signature" : "ხელმოწერა",
     "Go back" : "უკან დაბრუნება",
     "Cancel" : "უარყოფა",
+    "Accounts" : "ანგარიში",
     "Add mail account" : "საფოსტო ანგარიშის დამატება",
     "General" : "ზოგადი",
     "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები",

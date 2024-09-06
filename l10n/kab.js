@@ -9,6 +9,7 @@ OC.L10N.register(
     "Save" : "Sekles",
     "Email address" : "Tansa imayl",
     "Cancel" : "Sefsex",
+    "Accounts" : "Imiḍanen",
     "General" : "Amatu",
     "Delete" : "Kkes",
     "Search" : "Nadi",

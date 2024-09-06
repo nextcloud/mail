@@ -69,6 +69,7 @@ OC.L10N.register(
     "Create alias" : "Δημιουργία ψευδωνύμου",
     "Cancel" : "Ακύρωση",
     "Mail settings" : "Ρυθμίσεις αλληλογραφίας",
+    "Accounts" : "Λογαριασμοί",
     "Add mail account" : "Προσθήκη λογαριασμού αλληλογραφίας",
     "General" : "Γενικά",
     "List" : "Λίστα",

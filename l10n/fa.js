@@ -97,6 +97,7 @@ OC.L10N.register(
     "Create alias" : "Create alias",
     "Cancel" : "لغو",
     "Mail settings" : "Mail settings",
+    "Accounts" : "حساب‌ها",
     "Add mail account" : "حساب کاربری پست الکترونیکی اضافه کنید",
     "General" : "عمومی",
     "List" : "فهرست",

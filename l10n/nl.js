@@ -62,6 +62,7 @@ OC.L10N.register(
     "Add alias" : "Voeg bijnaam toe",
     "Create alias" : "Aanmaken alias",
     "Cancel" : "Annuleren",
+    "Accounts" : "Accounts",
     "Add mail account" : "Voeg e-mailaccount toe",
     "General" : "Algemeen",
     "List" : "Lijst",

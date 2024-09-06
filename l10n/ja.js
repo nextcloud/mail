@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "別名をつける",
     "Cancel" : "キャンセル",
     "Mail settings" : "メール設定",
-    "Account creation" : "アカウント作成",
+    "Accounts" : "アカウント",
     "Add mail account" : "メールアカウントを追加",
     "General" : "一般",
     "Layout" : "レーアウト",

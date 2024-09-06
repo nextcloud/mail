@@ -100,7 +100,7 @@ OC.L10N.register(
     "Create alias" : "Vytvoriť alternatívny názov",
     "Cancel" : "Zrušiť",
     "Mail settings" : "Nastavenie e-mailu",
-    "Account creation" : "Vytvoriť účet",
+    "Accounts" : "Účty",
     "Add mail account" : "Pridať e-mailový účet",
     "General" : "Všeobecné",
     "Layout" : "Usporiadanie",

@@ -49,6 +49,7 @@ OC.L10N.register(
     "Email address" : "Tölvupóstfang",
     "Add alias" : "Bæta við samheiti",
     "Cancel" : "Hætta við",
+    "Accounts" : "Notandaaðgangar",
     "Add mail account" : "Bæta við notandaaðgangi",
     "General" : "Almennt",
     "Sorting" : "Röðun",

@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "Opprett alias",
     "Cancel" : "Avbryt",
     "Mail settings" : "E-post instillinger",
-    "Account creation" : "Opprettelse av konto",
+    "Accounts" : "Kontoer",
     "Add mail account" : "Legg til e-postkonto",
     "General" : "Generell",
     "Layout" : "Utforming",

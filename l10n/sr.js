@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "Креирај алијас",
     "Cancel" : "Поништи",
     "Mail settings" : "Подешавања поште",
-    "Account creation" : "Креирање налога",
+    "Accounts" : "Налози",
     "Add mail account" : "Додај налог е-поште",
     "General" : "Опште",
     "Layout" : "Распоред",

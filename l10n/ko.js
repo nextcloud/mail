@@ -98,7 +98,7 @@ OC.L10N.register(
     "Create alias" : "별칭 만들기",
     "Cancel" : "취소",
     "Mail settings" : "메일 설정",
-    "Account creation" : "계정 생성",
+    "Accounts" : "계정",
     "Add mail account" : "메일 계정 추가",
     "General" : "일반",
     "Sorting" : "정렬",

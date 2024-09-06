@@ -105,7 +105,7 @@ OC.L10N.register(
     "Create alias" : "Sortu aliasa",
     "Cancel" : "Utzi",
     "Mail settings" : "Posta ezarpenak",
-    "Account creation" : "Kontua sortzea",
+    "Accounts" : "Kontuak",
     "Add mail account" : "Gehitu posta-kontua",
     "General" : "Orokorra",
     "Layout" : "Diseinua",

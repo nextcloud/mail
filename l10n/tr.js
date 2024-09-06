@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "Takma ad ekle",
     "Cancel" : "İptal",
     "Mail settings" : "E-posta ayarları",
-    "Account creation" : "Hesap açılışı",
+    "Accounts" : "Hesaplar",
     "Add mail account" : "E-posta hesabı ekle",
     "General" : "Genel",
     "Layout" : "Yerleşim",

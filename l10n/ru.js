@@ -97,7 +97,7 @@ OC.L10N.register(
     "Create alias" : "Создать псевдоним",
     "Cancel" : "Отмена",
     "Mail settings" : "Параметры эл. почты",
-    "Account creation" : "Создание учетной записи",
+    "Accounts" : "Учётные записи",
     "Add mail account" : "Добавить учётную запись",
     "General" : "Основные",
     "List" : "Список",

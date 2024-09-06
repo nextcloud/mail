@@ -59,6 +59,7 @@ OC.L10N.register(
     "Add alias" : "Lägg till alias",
     "Create alias" : "Skapa alias",
     "Cancel" : "Avbryt",
+    "Accounts" : "Konton",
     "Add mail account" : "Lägg till e-postkonto",
     "General" : "Allmänt",
     "Sorting" : "Sortering",

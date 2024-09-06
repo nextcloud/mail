@@ -99,7 +99,7 @@ OC.L10N.register(
     "Create alias" : "Створити синонім",
     "Cancel" : "Скасувати",
     "Mail settings" : "Налаштування пошти",
-    "Account creation" : "Створення облікового запису",
+    "Accounts" : "Облікові записи",
     "Add mail account" : "Додати обліковий запис",
     "General" : "Загальна",
     "Layout" : "Подання",
