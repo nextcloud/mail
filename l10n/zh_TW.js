@@ -112,6 +112,7 @@ OC.L10N.register(
     "Mail settings" : "電子郵件設定",
     "Accounts" : "帳號",
     "Add mail account" : "新增郵件帳號",
+    "Settings for:" : "設定：",
     "General" : "一般",
     "Layout" : "佈局",
     "List" : "清單",

@@ -112,6 +112,7 @@ OC.L10N.register(
     "Mail settings" : "E-Mail-Einstellungen",
     "Accounts" : "Konten",
     "Add mail account" : "E-Mail-Konto hinzufügen",
+    "Settings for:" : "Einstellungen für:",
     "General" : "Allgemein",
     "Layout" : "Layout",
     "List" : "Liste",
