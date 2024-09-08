@@ -19,6 +19,7 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
@@ -29,6 +30,9 @@ use function array_diff;
 use function array_map;
 
 class SyncService {
+	
+	private IMAPClientFactory $clientFactory;
+
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 
@@ -50,13 +54,16 @@ class SyncService {
 	/** @var MailboxSync */
 	private $mailboxSync;
 
-	public function __construct(ImapToDbSynchronizer $synchronizer,
+	public function __construct(
+		IMAPClientFactory $clientFactory,
+		ImapToDbSynchronizer $synchronizer,
 		FilterStringParser $filterStringParser,
 		MailboxMapper $mailboxMapper,
 		MessageMapper $messageMapper,
 		PreviewEnhancer $previewEnhancer,
 		LoggerInterface $logger,
 		MailboxSync $mailboxSync) {
+		$this->clientFactory = $clientFactory;
 		$this->synchronizer = $synchronizer;
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
@@ -103,9 +110,12 @@ class SyncService {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}
-
+		
+		$client = $this->clientFactory->getClient($account);
+		
 		$this->synchronizer->sync(
 			$account,
+			$client,
 			$mailbox,
 			$this->logger,
 			$criteria,
@@ -114,6 +124,8 @@ class SyncService {
 		);
 
 		$this->mailboxSync->syncStats($account, $mailbox);
+
+		$client->logout();
 
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
 		return $this->getDatabaseSyncChanges(
