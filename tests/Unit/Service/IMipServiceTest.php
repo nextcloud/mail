@@ -285,12 +285,14 @@ class IMipServiceTest extends TestCase {
 			->willReturn('pam@stardew-bus-company.com');
 		$this->logger->expects(self::never())
 			->method('info');
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipReply');
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipCancel');
-		$this->messageMapper->expects(self::never())
-			->method('updateBulk');
+		$this->calendarManager->expects(self::once())
+			->method('handleIMipRequest')
+			->with('principals/users/vincent',
+				'pam@stardew-bus-service.com',
+				$account->getEmail(),
+				$imapMessage->scheduling[0]['contents']);
+		$this->messageMapper->expects(self::once())
+			->method('updateImipData');
 
 		$this->service->process();
 	}
@@ -349,8 +351,6 @@ class IMipServiceTest extends TestCase {
 				'pam@stardew-bus-service.com',
 				$account->getEmail(),
 				$imapMessage->scheduling[0]['contents']);
-		$this->calendarManager->expects(self::never())
-			->method('handleIMipCancel');
 		$this->messageMapper->expects(self::once())
 			->method('updateImipData');
 
