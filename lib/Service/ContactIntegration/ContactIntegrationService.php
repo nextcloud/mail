@@ -32,7 +32,7 @@ class ContactIntegrationService {
 		return $this->contactsIntegration->newContact($name, $mail);
 	}
 
-	public function autoComplete(string $term): array {
-		return $this->contactsIntegration->getContactsWithName($term);
+	public function autoComplete(string $term, bool $forceSAB = false): array {
+		return $this->contactsIntegration->getContactsWithName($term, $forceSAB);
 	}
 }

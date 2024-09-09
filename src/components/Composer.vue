@@ -245,6 +245,7 @@
 				:bus="bus"
 				@input="onEditorInput"
 				@ready="onEditorReady"
+				@mention="handleMention"
 				@show-toolbar="handleShow" />
 			<MailvelopeEditor v-else
 				ref="mailvelopeEditor"
@@ -1239,6 +1240,10 @@ export default {
 			})
 			this.mailvelope.keyRing = await mailvelope.getKeyring()
 			await this.checkRecipientsKeys()
+		},
+		handleMention(option) {
+			this.editorMode = EDITOR_MODE_HTML
+			this.onNewToAddr(option)
 		},
 		onNewToAddr(option) {
 			this.onNewAddr(option, this.selectTo, 'to')

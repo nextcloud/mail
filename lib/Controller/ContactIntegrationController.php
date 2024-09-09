@@ -15,18 +15,27 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\ICache;
+use OCP\ICacheFactory;
 use OCP\IRequest;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ContactIntegrationController extends Controller {
 	private ContactIntegrationService $service;
+	private ICache $cache;
+	private string $uid;
+
 
 	public function __construct(string $appName,
 		IRequest $request,
-		ContactIntegrationService $service) {
+		ContactIntegrationService $service,
+		ICacheFactory $cacheFactory,
+		string $UserId) {
 		parent::__construct($appName, $request);
 
 		$this->service = $service;
+		$this->cache = $cacheFactory->createLocal('mail.contacts');
+		$this->uid = $UserId;
 	}
 
 	/**
@@ -75,8 +84,16 @@ class ContactIntegrationController extends Controller {
 	 * @return JSONResponse
 	 */
 	#[TrapError]
-	public function autoComplete(string $term): JSONResponse {
-		$res = $this->service->autoComplete($term);
-		return (new JSONResponse($res))->cacheFor(60 * 60, false, true);
+	public function autoComplete(string $term, bool $forceSAB = false): JSONResponse {
+		$cached = $this->cache->get($this->uid.$term);
+		if($cached !== null) {
+			$decoded = json_decode($cached, true);
+			if($decoded !== null) {
+				return new JSONResponse($decoded);
+			}
+		}
+		$res = $this->service->autoComplete($term, $forceSAB);
+		$this->cache->set($this->uid.$term, json_encode($res), 24 * 3600);
+		return new JSONResponse($res);
 	}
 }

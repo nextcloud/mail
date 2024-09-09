@@ -45,6 +45,7 @@ import { searchProvider, getLinkWithPicker } from '@nextcloud/vue/dist/Component
 import { getLanguage } from '@nextcloud/l10n'
 import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
+import { autoCompleteByName } from '../service/ContactIntegrationService.js'
 import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
 
 export default {
@@ -86,6 +87,7 @@ export default {
 			QuotePlugin,
 			PickerPlugin,
 			Mention,
+			LinkPlugin,
 		]
 		const toolbar = ['undo', 'redo']
 
@@ -96,7 +98,6 @@ export default {
 				BoldPlugin,
 				ItalicPlugin,
 				BlockQuotePlugin,
-				LinkPlugin,
 				ListStyle,
 				FontPlugin,
 				RemoveFormat,
@@ -151,6 +152,11 @@ export default {
 							feed: this.getLink,
 							itemRenderer: this.customLinkRenderer,
 						},
+						{
+							marker: '@',
+							feed: this.getContact,
+							itemRenderer: this.customContactRenderer,
+						},
 					],
 				},
 			},
@@ -174,6 +180,14 @@ export default {
 				emojiResults.unshift(':' + text)
 			}
 			return emojiResults
+		},
+		async getContact(text) {
+			if (text.length === 0) {
+				return []
+			}
+			let contactResults = await autoCompleteByName(text, true)
+			contactResults = contactResults.filter(result => result.email.length > 0)
+			return contactResults
 		},
 		 customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
@@ -203,6 +217,20 @@ export default {
 			usernameElement.classList.add('link-title')
 			usernameElement.textContent = `${item.title} `
 			itemElement.appendChild(icon)
+			itemElement.appendChild(usernameElement)
+
+			return itemElement
+		},
+		customContactRenderer(item) {
+			const itemElement = document.createElement('span')
+
+			itemElement.classList.add('custom-item')
+			itemElement.id = `mention-list-item-id-${item.id}`
+			const usernameElement = document.createElement('p')
+
+			usernameElement.classList.add('custom-item-username')
+			usernameElement.textContent = item.label
+
 			itemElement.appendChild(usernameElement)
 
 			return itemElement
@@ -311,6 +339,10 @@ export default {
 						.catch((error) => {
 							console.debug('Smart picker promise rejected:', error)
 						})
+				}
+				if (eventData.marker === '@') {
+					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@')
+					this.$emit('mention', { email: item.email[0], label: item.label })
 				}
 			}, { priority: 'high' })
 			this.editorInstance = editor
