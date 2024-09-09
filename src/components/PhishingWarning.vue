@@ -3,20 +3,22 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="warning">
-		<div class="warning__title">
+	<div class="phishing-warning">
+		<div class="phishing-warning__title">
 			<IconAlertOutline :size="16" :title="t('mail', 'Phishing email')" />
 			This email might be a phishing attempt
 		</div>
-		<ul v-for="(warning,index) in warnings" :key="index" class="warning__list">
-			<li>{{ warning.message }}</li>
+		<ul v-for="(warning,index) in warnings" :key="index" class="phishing-warning__list">
+			<li class="phishing-warning__list__item">
+				{{ warning.message }}
+			</li>
 		</ul>
-		<div v-if="linkWarning !== undefined" class="warning__links">
+		<div v-if="linkWarning !== undefined" class="phishing-warning__links">
 			<NcButton class="warning__links__button" type="tertiary" @click="showMore = !showMore">
 				{{ showMore? t('mail','Hide suspicious links') :t('mail','Show suspicious links') }}
 			</NcButton>
 			<div v-if="showMore">
-				<ul v-for="(link,index) in linkWarning.additionalData" :key="index" class="warning__list">
+				<ul v-for="(link,index) in linkWarning.additionalData" :key="index" class="phishing-warning__list">
 					<li><b>href: </b>{{ link.href }} : <b>{{ t('mail','link text') }}</b> {{ link.linkText }} </li>
 				</ul>
 			</div>
@@ -58,19 +60,21 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-.warning {
-	background-color:var(--ck-color-base-error);
-    border-radius: var(--border-radius-rounded);
-    width: 100%;
+.phishing-warning {
+	background-color:rgba(var(--color-warning-rgb), 0.2);
+    border-radius: var(--border-radius);
     text-align: left;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 8px;
+    margin: calc(var(--default-grid-baseline) * 2);
 	&__title {
 		display: flex;
 	}
 	&__list {
 		list-style-position: inside;
 		list-style-type: disc;
+		&__item {
+			word-wrap: break-word;
+		}
 	}
     &__links {
       margin-top: 10px;
