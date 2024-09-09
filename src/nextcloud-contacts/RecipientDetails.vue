@@ -18,27 +18,27 @@
 		<!-- TODO: add empty content while this.loadingData === true -->
 		<template v-else>
 			<!-- contact header -->
-			<DetailsHeader>
+			<DetailsHeaderRecipient>
 				<!-- fullname -->
 				<template #title>
 					<div class="contact-title">
 						{{ contact.fullName }}
 					</div>
 				</template>
-
-				<div v-if="!loadingData" class="contact-details-wrapper">
-					<div v-for="(properties, name) in groupedProperties"
-						:key="name">
-						<RecipientDetailsProperty v-for="(property, index) in properties"
-							:key="`${index}-${contact.key}-${property.name}`"
-							:is-first-property="index===0"
-							:is-last-property="index === properties.length - 1"
-							:property="property"
-							:contact="contact"
-							:local-contact="localContact"
-							:contacts="contacts"
-							:bus="bus" />
-					</div>
+			</DetailsHeaderRecipient>
+			<div v-if="!loadingData" class="contact-details-wrapper">
+				<div v-for="(properties, name) in groupedProperties"
+					:key="name">
+					<RecipientDetailsProperty v-for="(property, index) in properties"
+						:key="`${index}-${contact.key}-${property.name}`"
+						:is-first-property="index===0"
+						:is-last-property="index === properties.length - 1"
+						:property="property"
+						:contact="contact"
+						:local-contact="localContact"
+						:contacts="contacts"
+						:bus="bus" />
+				</div>
 				<!-- &lt;!&ndash; addressbook change select - no last property because class is not applied here,
 					empty property because this is a required prop on regular property-select. But since
 					we are hijacking this... (this is supposed to be used with a ICAL.property, but to avoid code
@@ -59,8 +59,7 @@
 						class="property&#45;&#45;groups property&#45;&#45;last"
 						@update:value="updateGroups" />
 				</div>-->
-				</div>
-			</Detailsheader>
+			</div>
 		</template>
 	</div>
 </template>
@@ -72,10 +71,11 @@ import {
 } from '@nextcloud/vue'
 import IconContact from 'vue-material-design-icons/AccountMultiple.vue'
 import mitt from 'mitt'
-import DetailsHeader from './DetailsHeaderRecipient.vue'
+import DetailsHeaderRecipient from './DetailsHeaderRecipient.vue'
 import RecipientDetailsProperty from './RecipientDetailsProperty.vue'
 import { loadState } from '@nextcloud/initial-state'
 import Contact from './contact.js'
+import rfcProps from './rfcPropsRecipient'
 
 const { profileEnabled } = loadState('user_status', 'profileEnabled', false)
 
@@ -84,7 +84,7 @@ export default {
 
 	components: {
 		RecipientDetailsProperty,
-		DetailsHeader,
+		DetailsHeaderRecipient,
 		EmptyContent,
 		IconContact,
 
@@ -133,7 +133,6 @@ export default {
 			bus: mitt(),
 			showMenuPopover: false,
 			profileEnabled,
-			localContact: undefined,
 
 		}
 	},
@@ -151,15 +150,6 @@ export default {
 		 *
 		 * @return {Array}
 		 */
-		sortedProperties() {
-			return this.localContact.properties
-				.slice(0)
-				.sort((a, b) => {
-					const nameA = a.name.split('.').pop()
-					const nameB = b.name.split('.').pop()
-					return rfcProps.fieldOrder.indexOf(nameA) - rfcProps.fieldOrder.indexOf(nameB)
-				})
-		},
 
 		/**
 		 * Contact properties filtered and grouped by rfcProps.fieldOrder
@@ -227,10 +217,14 @@ export default {
 			}
 		},
 	},
-	methods: {
-		updateGroups(value) {
-			this.newGroupsValue = value
+	watch: {
+		contact(newContact, oldContact) {
+			if (this.contactKey && newContact !== oldContact) {
+				this.selectContact(this.contactKey)
+			}
 		},
+	},
+	methods: {
 		/**
 		 *  Update this.localContact and set this.fixed
 		 *
@@ -248,6 +242,26 @@ export default {
 			this.localContact = localContact
 			this.newGroupsValue = [...this.localContact.groups]
 		},
+		/**
+		 * Should display the property
+		 *
+		 * @param {Property} property the property to check
+		 * @return {boolean}
+		 */
+		canDisplay(property) {
+			// Make sure we have some model for the property and check for ITEM.PROP custom label format
+			const propModel = rfcProps.properties[property.name.split('.').pop()]
+
+			const propType = propModel && propModel.force
+				? propModel.force
+				: property.getDefaultType()
+
+			return propModel && propType !== 'unknown'
+		},
+		updateGroups(value) {
+			this.newGroupsValue = value
+		},
+
 	},
 }
 </script>

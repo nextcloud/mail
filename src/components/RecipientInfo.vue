@@ -55,7 +55,7 @@ import RecipientDetails from '../nextcloud-contacts/RecipientDetails.vue'
 import { mapGetters } from 'vuex'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import mitt from 'mitt'
-import Contact from '../nextcloud-contacts/contact'
+import Contact from '../nextcloud-contacts/contact.js'
 
 export default {
 	components: {
@@ -70,6 +70,7 @@ export default {
 	data() {
 		return {
 			expandedIndex: null,
+			localContact: undefined,
 			photoUrl: undefined,
 			recipientsVCards: {},
 			loadingParticipants: {},
