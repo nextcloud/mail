@@ -65,10 +65,7 @@
 </template>
 
 <script>
-import {
-	NcEmptyContent as EmptyContent,
-	isMobile,
-} from '@nextcloud/vue'
+import { isMobile, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import IconContact from 'vue-material-design-icons/AccountMultiple.vue'
 import mitt from 'mitt'
 import DetailsHeaderRecipient from './DetailsHeaderRecipient.vue'
@@ -133,6 +130,7 @@ export default {
 			bus: mitt(),
 			showMenuPopover: false,
 			profileEnabled,
+			localContact: undefined,
 
 		}
 	},
@@ -218,10 +216,8 @@ export default {
 		},
 	},
 	watch: {
-		contact(newContact, oldContact) {
-			if (this.contactKey && newContact !== oldContact) {
-				this.selectContact(this.contactKey)
-			}
+		contact() {
+			this.updateLocalContact(this.contact)
 		},
 	},
 	methods: {
@@ -232,13 +228,12 @@ export default {
 		 */
 		async updateLocalContact(contact) {
 			// create empty contact and copy inner data
+			// this.fixed = validate(localContact)
+
 			const localContact = Object.assign(
 				Object.create(Object.getPrototypeOf(contact)),
 				contact,
 			)
-
-			this.fixed = validate(localContact)
-
 			this.localContact = localContact
 			this.newGroupsValue = [...this.localContact.groups]
 		},
