@@ -50,8 +50,6 @@ class FolderMapperIntegrationTest extends TestCase {
 		$folders = $this->mapper->getFolders($account, $client);
 
 		$this->assertGreaterThan(1, count($folders));
-		foreach ($folders as $folder) {
-			$this->assertInstanceOf(Folder::class, $folder);
-		}
+		$this->assertContainsOnlyInstancesOf(Folder::class, $folders);
 	}
 }

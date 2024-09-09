@@ -16,4 +16,8 @@ return RectorConfig::configure()
 	])
 	->withSkip([
 		__DIR__ . '/lib/Vendor'
-	]);
+	])
+	->withPreparedSets(
+		phpunitCodeQuality: true,
+		phpunit: true,
+	);
