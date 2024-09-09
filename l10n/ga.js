@@ -112,6 +112,7 @@ OC.L10N.register(
     "Mail settings" : "Socruithe ríomhphoist",
     "Accounts" : "Cuntais",
     "Add mail account" : "Cuir cuntas ríomhphoist leis",
+    "Settings for:" : "Socruithe le haghaidh:",
     "General" : "Ginearálta",
     "Layout" : "Leagan Amach",
     "List" : "Liosta",

@@ -159,6 +159,7 @@ OC.L10N.register(
     "From" : "Nork",
     "Select account" : "Hautatu kontua",
     "To" : "Nori",
+    "Cc/Bcc" : "Cc/Bcc",
     "Select recipient" : "Hautatu hartzailea",
     "Contact or email address …" : "Kontaktua edo posta helbidea…",
     "Cc" : "Cc",
