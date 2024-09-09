@@ -39,7 +39,7 @@
 							:contacts="contacts"
 							:bus="bus" />
 					</div>
-				<!--		&lt;!&ndash; addressbook change select - no last property because class is not applied here,
+				<!-- &lt;!&ndash; addressbook change select - no last property because class is not applied here,
 					empty property because this is a required prop on regular property-select. But since
 					we are hijacking this... (this is supposed to be used with a ICAL.property, but to avoid code
 					duplication, we created a fake propModel and property with our own options here) &ndash;&gt;
@@ -66,7 +66,8 @@
 </template>
 
 <script>
-import { NcEmptyContent as EmptyContent,
+import {
+ NcEmptyContent as EmptyContent,
 	isMobile,
 } from '@nextcloud/vue'
 import IconContact from 'vue-material-design-icons/AccountMultiple.vue'
@@ -74,7 +75,7 @@ import mitt from 'mitt'
 import DetailsHeader from './DetailsHeaderRecipient.vue'
 import RecipientDetailsProperty from './RecipientDetailsProperty.vue'
 import { loadState } from '@nextcloud/initial-state'
-import Contact from './contact'
+import Contact from './contact.js'
 
 const { profileEnabled } = loadState('user_status', 'profileEnabled', false)
 
@@ -113,6 +114,11 @@ export default {
 			type: Contact,
 			required: true,
 		},
+		contacts: {
+			type: Array,
+			default: () => [],
+		},
+
 	},
 
 	data() {
@@ -127,6 +133,7 @@ export default {
 			bus: mitt(),
 			showMenuPopover: false,
 			profileEnabled,
+			localContact: undefined,
 
 		}
 	},

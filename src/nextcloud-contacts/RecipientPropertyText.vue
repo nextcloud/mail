@@ -61,7 +61,7 @@
 import { NcTextArea, NcTextField } from '@nextcloud/vue'
 import debounce from 'debounce'
 import RecipientPropertyTitle from './RecipientPropertyTitle.vue'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import PropertyMixingRecipient from './PropertyMixingRecipient'
 
 export default {
 	name: 'RecipientPropertyText',
@@ -70,9 +70,8 @@ export default {
 		NcTextArea,
 		NcTextField,
 		RecipientPropertyTitle,
-		OpenInNewIcon,
 	},
-
+	mixins: [PropertyMixingRecipient],
 	props: {
 		propName: {
 			type: String,
