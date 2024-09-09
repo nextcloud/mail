@@ -150,9 +150,7 @@ class ProvisioningMapperTest extends TestCase {
 
 		$this->assertIsArray($results);
 		$this->assertNotEmpty($results);
-		foreach ($results as $result) {
-			$this->assertInstanceOf(Provisioning::class, $result);
-		}
+		$this->assertContainsOnlyInstancesOf(Provisioning::class, $results);
 	}
 
 	public function testGet() {
