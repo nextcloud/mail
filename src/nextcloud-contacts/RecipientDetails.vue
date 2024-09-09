@@ -8,8 +8,8 @@
 		<!-- nothing selected or contact not found -->
 		<EmptyContent v-if="!contact"
 			class="empty-content"
-			:name="t('contacts', 'No contact selected')"
-			:description="t('contacts', 'Select a contact on the list to begin')">
+			:name="t('mail', 'No contact selected')"
+			:description="t('mail', 'Select a contact on the list to begin')">
 			<template #icon>
 				<IconContact :size="20" />
 			</template>
@@ -67,7 +67,7 @@
 
 <script>
 import {
- NcEmptyContent as EmptyContent,
+	NcEmptyContent as EmptyContent,
 	isMobile,
 } from '@nextcloud/vue'
 import IconContact from 'vue-material-design-icons/AccountMultiple.vue'
@@ -191,7 +191,7 @@ export default {
 		 */
 		addressbookModel() {
 			return {
-				readableName: t('contacts', 'Address book'),
+				readableName: t('mail', 'Address book'),
 				icon: 'icon-address-book',
 				options: this.addressbooksOptions,
 			}
@@ -222,7 +222,7 @@ export default {
 		 */
 		groupsModel() {
 			return {
-				readableName: t('contacts', 'Contact groups'),
+				readableName: t('mail', 'Contact groups'),
 				icon: 'icon-contacts-dark',
 			}
 		},

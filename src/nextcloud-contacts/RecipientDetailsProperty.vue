@@ -28,6 +28,7 @@
 <script>
 import ICAL from 'ical.js'
 import Contact from './contact.js'
+import rfcProps from './rfcPropsRecipient.js'
 
 import RecipientPropertyText from './RecipientPropertyText.vue'
 
@@ -82,10 +83,11 @@ export default {
 			return RecipientPropertyText
 		},
 
-/* 		// rfc properties list
+		// eslint-disable-next-line no-mixed-spaces-and-tabs
+ 		// rfc properties list
 		properties() {
 			return rfcProps.properties
-		}, */
+		},
 
 		/**
 		 * Return the type of the prop e.g. FN
@@ -187,23 +189,6 @@ export default {
 					return {
 						id: this.propLabel.name,
 						name: this.propLabel.getFirstValue(),
-					}
-				}
-				if (this.propModel && this.propModel.options && this.type) {
-
-					const selectedType = this.type
-						// vcard 3.0 save pref alongside TYPE
-						.filter(type => type !== 'pref')
-						// we only use uppercase strings
-						.map(str => str.toUpperCase())
-
-					const matchingType = matchTypes(
-						selectedType,
-						this.propModel.options,
-					)
-
-					if (matchingType) {
-						return matchingType.type
 					}
 				}
 				if (this.type) {
