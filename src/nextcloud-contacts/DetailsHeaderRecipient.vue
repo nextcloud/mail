@@ -18,7 +18,6 @@
 				</h2>
 			</div>
 		</div>
-
 	</header>
 </template>
 
