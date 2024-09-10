@@ -123,8 +123,6 @@ export const getters = {
 	getClonedWriteableCalendars: (state) => state.calendars.filter(calendar => {
 		return calendar.isWriteable()
 	}).map(calendar => {
-	getAddressBooks: (state) => state.addressBooks,
-	getClonedCalendars: (state) => state.calendars.map(calendar => {
 		// Hack: We need to clone all calendars because some methods (e.g. calendarQuery) are
 		// unnecessarily mutating the object and causing vue warnings (if used outside of
 		// mutations).
@@ -161,4 +159,6 @@ export const getters = {
 	isFollowUpFeatureAvailable: (state) => state.followUpFeatureAvailable,
 	getInternalAddresses: (state) => state.internalAddress?.filter(internalAddress => internalAddress !== undefined),
 	hasCurrentUserPrincipalAndCollections: (state) => state.hasCurrentUserPrincipalAndCollections,
+	showSettingsForAccount: (state) => (accountId) => state.showAccountSettings === accountId,
+	getAddressBooks: (state) => state.addressBooks,
 }

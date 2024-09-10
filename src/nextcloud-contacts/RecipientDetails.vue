@@ -120,7 +120,7 @@ export default {
 
 	data() {
 		return {
-			loadingData: true,
+			loadingData: false,
 			loadingUpdate: false,
 			// if true, the local contact have been fixed and requires a push
 			fixed: false,
@@ -132,6 +132,7 @@ export default {
 			showMenuPopover: false,
 			profileEnabled,
 			localContact: undefined,
+			addressbooks: [],
 
 		}
 	},
@@ -182,7 +183,6 @@ export default {
 				return list
 			}, {})
 		},
-
 
 		/**
 		 * Fake model to use the propertySelect component
@@ -248,6 +248,7 @@ export default {
 		contact(contact) {
 			this.updateLocalContact(contact)
 		},
+		immediate: true,
 	},
 	methods: {
 		updateGroups(value) {
@@ -281,12 +282,11 @@ export default {
 		 */
 		async updateLocalContact(contact) {
 			// create empty contact and copy inner data
+			//	this.fixed = validate(localContact)
 			const localContact = Object.assign(
 				Object.create(Object.getPrototypeOf(contact)),
 				contact,
 			)
-
-			//	this.fixed = validate(localContact)
 
 			this.localContact = localContact
 			this.newGroupsValue = [...this.localContact.groups]
