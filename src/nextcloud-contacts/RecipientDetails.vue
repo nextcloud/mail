@@ -150,6 +150,9 @@ export default {
 		 * @return {Array}
 		 */
 		sortedProperties() {
+			if (!this.localContact || !this.localContact.properties) {
+				return []
+			}
 			return this.localContact.properties
 				.slice(0)
 				.sort((a, b) => {
@@ -165,22 +168,21 @@ export default {
 		 * @return {object}
 		 */
 		groupedProperties() {
-			return this.sortedProperties
-				.reduce((list, property) => {
-					// If there is no component to display this prop, ignore it
-					if (!this.canDisplay(property)) {
-						return list
-					}
-
-					// Init if needed
-					if (!list[property.name]) {
-						list[property.name] = []
-					}
-
-					list[property.name].push(property)
+			if (!this.sortedProperties) {
+				return {}
+			}
+			return this.sortedProperties.reduce((list, property) => {
+				if (!this.canDisplay(property)) {
 					return list
-				}, {})
+				}
+				if (!list[property.name]) {
+					list[property.name] = []
+				}
+				list[property.name].push(property)
+				return list
+			}, {})
 		},
+
 
 		/**
 		 * Fake model to use the propertySelect component
