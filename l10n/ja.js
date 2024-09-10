@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "別名をつける",
     "Cancel" : "キャンセル",
     "Mail settings" : "メール設定",
-    "Account creation" : "アカウント作成",
+    "Accounts" : "アカウント",
     "Add mail account" : "メールアカウントを追加",
     "General" : "一般",
     "Layout" : "レーアウト",
@@ -715,6 +715,7 @@ OC.L10N.register(
     "Redirect" : "リダイレクト",
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
-    "Continue to %s" : "%s にリダイレクトする"
+    "Continue to %s" : "%s にリダイレクトする",
+    "Account creation" : "アカウント作成"
 },
 "nplurals=1; plural=0;");

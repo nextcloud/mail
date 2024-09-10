@@ -100,7 +100,7 @@ OC.L10N.register(
     "Create alias" : "Crea un àlies",
     "Cancel" : "Cancel·la",
     "Mail settings" : "Paràmetres de Correu",
-    "Account creation" : "Creació de comptes",
+    "Accounts" : "Comptes",
     "Add mail account" : "Afegeix compte de correu",
     "General" : "General",
     "List" : "Llista",
@@ -649,6 +649,7 @@ OC.L10N.register(
     "Redirect" : "Redirigeix",
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
-    "Continue to %s" : "Continua a %s"
+    "Continue to %s" : "Continua a %s",
+    "Account creation" : "Creació de comptes"
 },
 "nplurals=2; plural=(n != 1);");

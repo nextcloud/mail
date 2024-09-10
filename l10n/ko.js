@@ -98,7 +98,7 @@ OC.L10N.register(
     "Create alias" : "별칭 만들기",
     "Cancel" : "취소",
     "Mail settings" : "메일 설정",
-    "Account creation" : "계정 생성",
+    "Accounts" : "계정",
     "Add mail account" : "메일 계정 추가",
     "General" : "일반",
     "Sorting" : "정렬",
@@ -634,6 +634,7 @@ OC.L10N.register(
     "Redirect" : "넘겨주기",
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
-    "Continue to %s" : "%s(으)로 이동"
+    "Continue to %s" : "%s(으)로 이동",
+    "Account creation" : "계정 생성"
 },
 "nplurals=1; plural=0;");

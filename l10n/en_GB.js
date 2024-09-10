@@ -110,8 +110,9 @@ OC.L10N.register(
     "Create alias" : "Create alias",
     "Cancel" : "Cancel",
     "Mail settings" : "Mail settings",
-    "Account creation" : "Account creation",
+    "Accounts" : "Accounts",
     "Add mail account" : "Add mail account",
+    "Settings for:" : "Settings for:",
     "General" : "General",
     "Layout" : "Layout",
     "List" : "List",
@@ -486,6 +487,8 @@ OC.L10N.register(
     "From me" : "From me",
     "Clear" : "Clear",
     "Enable mail body search" : "Enable mail body search",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it.",
+    "Enable sieve filter" : "Enable sieve filter",
     "Sieve host" : "Sieve host",
     "Sieve security" : "Sieve security",
     "Sieve Port" : "Sieve Port",
@@ -715,6 +718,7 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Account creation" : "Account creation"
 },
 "nplurals=2; plural=(n != 1);");

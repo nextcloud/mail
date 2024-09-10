@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "Opprett alias",
     "Cancel" : "Avbryt",
     "Mail settings" : "E-post instillinger",
-    "Account creation" : "Opprettelse av konto",
+    "Accounts" : "Kontoer",
     "Add mail account" : "Legg til e-postkonto",
     "General" : "Generell",
     "Layout" : "Utforming",
@@ -715,6 +715,7 @@ OC.L10N.register(
     "Redirect" : "Videresend",
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
-    "Continue to %s" : "Fortsett til %s"
+    "Continue to %s" : "Fortsett til %s",
+    "Account creation" : "Opprettelse av konto"
 },
 "nplurals=2; plural=(n != 1);");

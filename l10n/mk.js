@@ -82,6 +82,7 @@ OC.L10N.register(
     "Create alias" : "Креирај алијас",
     "Cancel" : "Откажи",
     "Mail settings" : "Параметри за е-пошта",
+    "Accounts" : "Сметки",
     "Add mail account" : "Додади е-пошта сметка",
     "General" : "Општо",
     "Use Gravatar and favicon avatars" : "Користете Граватар и Фавикон аватари",

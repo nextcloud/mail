@@ -100,7 +100,7 @@ OC.L10N.register(
     "Create alias" : "Create alias",
     "Cancel" : "Cancel",
     "Mail settings" : "Mail settings",
-    "Account creation" : "Account creation",
+    "Accounts" : "Accounts",
     "Add mail account" : "Add mail account",
     "General" : "General",
     "List" : "List",
@@ -648,6 +648,7 @@ OC.L10N.register(
     "Redirect" : "Redirect",
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue to %s"
+    "Continue to %s" : "Continue to %s",
+    "Account creation" : "Account creation"
 },
 "nplurals=2; plural=(n!=1);");

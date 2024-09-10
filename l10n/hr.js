@@ -60,6 +60,7 @@ OC.L10N.register(
     "Add alias" : "Dodaj pseudonim",
     "Create alias" : "Stvori pseudonim",
     "Cancel" : "Odustani",
+    "Accounts" : "Korisnićki računi",
     "Add mail account" : "Dodaj račun e-pošte",
     "General" : "Općenito",
     "List" : "Popis",

@@ -108,7 +108,7 @@
     "Create alias" : "Criar alias",
     "Cancel" : "Cancelar",
     "Mail settings" : "Configurações de e-mail",
-    "Account creation" : "Criação de conta",
+    "Accounts" : "Contas",
     "Add mail account" : "Adicionar conta de e-mail",
     "General" : "Geral",
     "Layout" : "Layout",
@@ -713,6 +713,7 @@
     "Redirect" : "Redirecionar",
     "The link leads to %s" : "O link leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se você não quiser visitar essa página, você pode voltar para <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Continue para %s"
+    "Continue to %s" : "Continue para %s",
+    "Account creation" : "Criação de conta"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

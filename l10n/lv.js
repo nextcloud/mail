@@ -40,6 +40,7 @@ OC.L10N.register(
     "Go back" : "Atpakaļ",
     "Email address" : "E-pasta adrese",
     "Cancel" : "Atcelt",
+    "Accounts" : "Konti",
     "Add mail account" : "Pievienot e-pasta kontu",
     "General" : "Vispārīgs",
     "Keyboard shortcuts" : "Tastatūras saīsnes",

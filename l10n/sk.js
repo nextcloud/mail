@@ -100,7 +100,7 @@ OC.L10N.register(
     "Create alias" : "Vytvoriť alternatívny názov",
     "Cancel" : "Zrušiť",
     "Mail settings" : "Nastavenie e-mailu",
-    "Account creation" : "Vytvoriť účet",
+    "Accounts" : "Účty",
     "Add mail account" : "Pridať e-mailový účet",
     "General" : "Všeobecné",
     "Layout" : "Usporiadanie",
@@ -670,6 +670,7 @@ OC.L10N.register(
     "Redirect" : "Presmerovať",
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Pokračovať na %s"
+    "Continue to %s" : "Pokračovať na %s",
+    "Account creation" : "Vytvoriť účet"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

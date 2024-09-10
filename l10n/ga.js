@@ -110,8 +110,9 @@ OC.L10N.register(
     "Create alias" : "Cruthaigh ailias",
     "Cancel" : "Cealaigh",
     "Mail settings" : "Socruithe ríomhphoist",
-    "Account creation" : "Cruthú cuntais",
+    "Accounts" : "Cuntais",
     "Add mail account" : "Cuir cuntas ríomhphoist leis",
+    "Settings for:" : "Socruithe le haghaidh:",
     "General" : "Ginearálta",
     "Layout" : "Leagan Amach",
     "List" : "Liosta",
@@ -486,6 +487,8 @@ OC.L10N.register(
     "From me" : "Uaim",
     "Clear" : "Glan",
     "Enable mail body search" : "Cumasaigh cuardach coirp poist",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Is teanga chumhachtach í Sieve chun scagairí a scríobh do do bhosca poist. Is féidir leat na scripteanna criathar a bhainistiú i Mail má thacaíonn do sheirbhís ríomhphoist leis.",
+    "Enable sieve filter" : "Cumasaigh scagaire criathar",
     "Sieve host" : "Óstach criathar",
     "Sieve security" : "Slándáil criathar",
     "Sieve Port" : "Sieve Port",
@@ -715,6 +718,7 @@ OC.L10N.register(
     "Redirect" : "Atreorú",
     "The link leads to %s" : "Téann an nasc chuig %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Mura dteastaíonn uait cuairt a thabhairt ar an leathanach sin, is féidir leat filleadh ar <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "Lean ar aghaidh go %s"
+    "Continue to %s" : "Lean ar aghaidh go %s",
+    "Account creation" : "Cruthú cuntais"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

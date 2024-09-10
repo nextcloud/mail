@@ -108,8 +108,9 @@
     "Create alias" : "建立別名",
     "Cancel" : "取消",
     "Mail settings" : "電子郵件設定",
-    "Account creation" : "帳號建立",
+    "Accounts" : "帳號",
     "Add mail account" : "新增郵件帳號",
+    "Settings for:" : "設定：",
     "General" : "一般",
     "Layout" : "佈局",
     "List" : "清單",
@@ -484,6 +485,8 @@
     "From me" : "來自我",
     "Clear" : "清除",
     "Enable mail body search" : "啟用郵件正文搜尋",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve 是為電子信箱編寫篩選器的強大語言。若您的電子郵件服務支援，您可以在郵件中管理篩選命令稿。",
+    "Enable sieve filter" : "啟用 sieve 篩選器",
     "Sieve host" : "過濾主機",
     "Sieve security" : "過濾安全",
     "Sieve Port" : "過濾連接埠",
@@ -713,6 +716,7 @@
     "Redirect" : "重新導向",
     "The link leads to %s" : "該連結導向至 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "若不想造訪該頁，您可以回到<a href=\"%s\">郵件</a>。",
-    "Continue to %s" : "前往 %s"
+    "Continue to %s" : "前往 %s",
+    "Account creation" : "帳號建立"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

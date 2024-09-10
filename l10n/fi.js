@@ -81,6 +81,7 @@ OC.L10N.register(
     "Create alias" : "Luo alias",
     "Cancel" : "Peruuta",
     "Mail settings" : "Sähköpostin asetukset",
+    "Accounts" : "Tilit",
     "Add mail account" : "Lisää sähköpostitili",
     "General" : "Yleiset",
     "Sorting" : "Lajittelu",

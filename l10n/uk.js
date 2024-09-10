@@ -99,7 +99,7 @@ OC.L10N.register(
     "Create alias" : "Створити синонім",
     "Cancel" : "Скасувати",
     "Mail settings" : "Налаштування пошти",
-    "Account creation" : "Створення облікового запису",
+    "Accounts" : "Облікові записи",
     "Add mail account" : "Додати обліковий запис",
     "General" : "Загальна",
     "Layout" : "Подання",
@@ -566,6 +566,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Натисніть тут, якщо вас не буде автоматично перенаправлено протягом наступних кількох секунд.",
     "Redirect" : "Перенаправлення",
     "The link leads to %s" : "Посилання веде до %s",
-    "Continue to %s" : "Перейти до %s"
+    "Continue to %s" : "Перейти до %s",
+    "Account creation" : "Створення облікового запису"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

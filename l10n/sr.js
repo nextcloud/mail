@@ -110,7 +110,7 @@ OC.L10N.register(
     "Create alias" : "Креирај алијас",
     "Cancel" : "Поништи",
     "Mail settings" : "Подешавања поште",
-    "Account creation" : "Креирање налога",
+    "Accounts" : "Налози",
     "Add mail account" : "Додај налог е-поште",
     "General" : "Опште",
     "Layout" : "Распоред",
@@ -715,6 +715,7 @@ OC.L10N.register(
     "Redirect" : "Преусмеравање",
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
-    "Continue to %s" : "Настави на %s"
+    "Continue to %s" : "Настави на %s",
+    "Account creation" : "Креирање налога"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

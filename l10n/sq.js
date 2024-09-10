@@ -28,6 +28,7 @@ OC.L10N.register(
     "Signature" : "Nënshkrimi",
     "Go back" : "Shko prapa",
     "Cancel" : "Anullo",
+    "Accounts" : "Llogari",
     "Add mail account" : "Shto llogarinë e postës elektronike",
     "General" : "Të përgjithshme",
     "Register" : "Regjistrohu",

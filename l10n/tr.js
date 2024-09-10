@@ -110,8 +110,9 @@ OC.L10N.register(
     "Create alias" : "Takma ad ekle",
     "Cancel" : "İptal",
     "Mail settings" : "E-posta ayarları",
-    "Account creation" : "Hesap açılışı",
+    "Accounts" : "Hesaplar",
     "Add mail account" : "E-posta hesabı ekle",
+    "Settings for:" : "Şunun ayarları:",
     "General" : "Genel",
     "Layout" : "Yerleşim",
     "List" : "Liste",
@@ -486,6 +487,8 @@ OC.L10N.register(
     "From me" : "Benden",
     "Clear" : "Temizle",
     "Enable mail body search" : "E-posta içeriği aranabilsin",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve, e-posta kutunuz için süzgeçler yazmakta kullanılan güçlü bir dildir. E-posta hizmetiniz destekliyorsa, E-posta uygulamasında Sieve betiklerini yönetebilirsiniz.",
+    "Enable sieve filter" : "Sieve süzgeci kullanılsın",
     "Sieve host" : "Sieve sunucusu",
     "Sieve security" : "Sieve güvenliği",
     "Sieve Port" : "Sieve bağlantı noktası",
@@ -715,6 +718,7 @@ OC.L10N.register(
     "Redirect" : "Yönlendir",
     "The link leads to %s" : "Bağlantı %s adresine gidiyor",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">E-posta</a> uygulamasına geri dönebilirsiniz.",
-    "Continue to %s" : "%s sayfasına ilerle"
+    "Continue to %s" : "%s sayfasına ilerle",
+    "Account creation" : "Hesap açılışı"
 },
 "nplurals=2; plural=(n > 1);");
