@@ -643,6 +643,7 @@
     "Redirect" : "重定向",
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
-    "Continue to %s" : "继续 %s"
+    "Continue to %s" : "继续 %s",
+    "Account creation" : "账户创建"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

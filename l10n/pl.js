@@ -548,6 +548,7 @@ OC.L10N.register(
     "Redirect" : "Przekieruj",
     "The link leads to %s" : "Link prowadzi do %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
-    "Continue to %s" : "Kontynuuj do %s"
+    "Continue to %s" : "Kontynuuj do %s",
+    "Account creation" : "Tworzenie konta"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

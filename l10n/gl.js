@@ -718,6 +718,7 @@ OC.L10N.register(
     "Redirect" : "Redirixir",
     "The link leads to %s" : "A ligazón leva a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non quere visitar esa páxina, pode volver a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar para %s"
+    "Continue to %s" : "Continuar para %s",
+    "Account creation" : "Creación de conta"
 },
 "nplurals=2; plural=(n != 1);");

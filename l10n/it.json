@@ -548,6 +548,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Fai clic qui se non viene rediretto automaticamente entro pochi secondi.",
     "Redirect" : "Redirigi",
     "The link leads to %s" : "Il collegamento conduce a %s",
-    "Continue to %s" : "Continua su %s"
+    "Continue to %s" : "Continua su %s",
+    "Account creation" : "Creazione dell'account"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

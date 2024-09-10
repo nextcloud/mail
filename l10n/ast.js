@@ -38,6 +38,7 @@ OC.L10N.register(
     "Change name" : "Camudar el nome",
     "Email address" : "Direición de corréu electrónicu",
     "Cancel" : "Encaboxar",
+    "Accounts" : "Cuentes",
     "General" : "Xeneral",
     "List" : "Llista",
     "Vertical split" : "DIxebra verical",

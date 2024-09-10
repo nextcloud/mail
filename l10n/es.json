@@ -671,6 +671,7 @@
     "Redirect" : "Redirigir",
     "The link leads to %s" : "El enlace conduce a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quieres visitar esta página puedes volver a <a href=\"%s\">Correo</a>.",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Account creation" : "Creación de cuentas"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
