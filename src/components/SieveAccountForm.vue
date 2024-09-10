@@ -5,8 +5,11 @@
 <template>
 	<form id="sieve-form">
 		<p>
+			{{ t('mail', 'Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it.') }}
+		</p>
+		<p>
 			<NcCheckboxRadioSwitch :checked.sync="sieveConfig.sieveEnabled">
-				{{ ('mail', 'Enable sieve security') }}
+				{{ t('mail', 'Enable sieve filter') }}
 			</NcCheckboxRadioSwitch>
 		</p>
 		<div v-if="sieveConfig.sieveEnabled">
