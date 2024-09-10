@@ -132,7 +132,6 @@ export default {
 			showMenuPopover: false,
 			profileEnabled,
 			localContact: undefined,
-			addressbooks: [],
 
 		}
 	},
@@ -184,11 +183,11 @@ export default {
 			}, {})
 		},
 
-		/**
+		/* /!**
 		 * Fake model to use the propertySelect component
 		 *
 		 * @return {object}
-		 */
+		 *!/
 		addressbookModel() {
 			return {
 				readableName: t('mail', 'Address book'),
@@ -196,12 +195,12 @@ export default {
 				options: this.addressbooksOptions,
 			}
 		},
-		/**
+		/!**
 		 * Store getters filtered and mapped to usable object
 		 * This is the list of addressbooks that are available
 		 *
 		 * @return {{id: string, name: string, readOnly: boolean}[]}
-		 */
+		 *!/
 		addressbooksOptions() {
 			return this.addressbooks
 				.filter(addressbook => addressbook.enabled)
@@ -213,7 +212,7 @@ export default {
 					}
 				})
 		},
-
+ */
 		/**
 		 * Usable addressbook object linked to the local contact
 		 *
@@ -245,10 +244,12 @@ export default {
 		},
 	},
 	watch: {
-		contact(contact) {
-			this.updateLocalContact(contact)
-		},
-		immediate: true,
+    contact: {
+      handler(contact) {
+        this.updateLocalContact(contact)
+      },
+      immediate: true,
+    },
 	},
 	methods: {
 		updateGroups(value) {
