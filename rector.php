@@ -20,4 +20,10 @@ return RectorConfig::configure()
 	->withPreparedSets(
 		phpunitCodeQuality: true,
 		phpunit: true,
-	);
+	)
+	->withBootstrapFiles([
+		__DIR__ . '/../../lib/composer/autoload.php',
+	])
+	->withRules([
+		\ChristophWurst\Nextcloud\Rector\Rector\OcServerToOcpServerRector::class,
+	]);

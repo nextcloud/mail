@@ -40,7 +40,7 @@ class PhishingDetectionServiceIntegrationTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->contactCheck = new ContactCheck($this->contactsIntegration, $this->l10n);
 		$this->customEmailCheck = new CustomEmailCheck($this->l10n);
-		$this->dateCheck = new DateCheck($this->l10n, \OC::$server->get(ITimeFactory::class));
+		$this->dateCheck = new DateCheck($this->l10n, \OCP\Server::get(ITimeFactory::class));
 		$this->replyToCheck = new ReplyToCheck($this->l10n);
 		$this->linkCheck = new LinkCheck($this->l10n);
 		$this->service = new PhishingDetectionService($this->contactCheck, $this->customEmailCheck, $this->dateCheck, $this->replyToCheck, $this->linkCheck);

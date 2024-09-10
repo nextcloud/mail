@@ -1,5 +1,9 @@
 {
+	"config": {
+		"sort-packages": true
+	},
     "require-dev": {
-        "rector/rector": "^1.2.4"
-    }
+		"christophwurst/nextcloud-rector": "^0.0.4",
+		"rector/rector": "^1.2.4"
+	}
 }
