@@ -72,7 +72,7 @@ import DetailsHeaderRecipient from './DetailsHeaderRecipient.vue'
 import RecipientDetailsProperty from './RecipientDetailsProperty.vue'
 import { loadState } from '@nextcloud/initial-state'
 import Contact from './contact.js'
-import rfcProps from './rfcPropsRecipient'
+import rfcProps from './rfcPropsRecipient.js'
 
 const { profileEnabled } = loadState('user_status', 'profileEnabled', false)
 
@@ -121,6 +121,7 @@ export default {
 	data() {
 		return {
 			loadingData: true,
+			loadingUpdate: false,
 			// if true, the local contact have been fixed and requires a push
 			fixed: false,
 			contactDetailsSelector: '.contact-details',
@@ -148,6 +149,15 @@ export default {
 		 *
 		 * @return {Array}
 		 */
+		sortedProperties() {
+			return this.localContact.properties
+				.slice(0)
+				.sort((a, b) => {
+					const nameA = a.name.split('.').pop()
+					const nameB = b.name.split('.').pop()
+					return rfcProps.fieldOrder.indexOf(nameA) - rfcProps.fieldOrder.indexOf(nameB)
+				})
+		},
 
 		/**
 		 * Contact properties filtered and grouped by rfcProps.fieldOrder
@@ -184,6 +194,23 @@ export default {
 				options: this.addressbooksOptions,
 			}
 		},
+		/**
+		 * Store getters filtered and mapped to usable object
+		 * This is the list of addressbooks that are available
+		 *
+		 * @return {{id: string, name: string, readOnly: boolean}[]}
+		 */
+		addressbooksOptions() {
+			return this.addressbooks
+				.filter(addressbook => addressbook.enabled)
+				.map(addressbook => {
+					return {
+						id: addressbook.id,
+						name: addressbook.displayName,
+						readOnly: addressbook.readOnly,
+					}
+				})
+		},
 
 		/**
 		 * Usable addressbook object linked to the local contact
@@ -216,11 +243,35 @@ export default {
 		},
 	},
 	watch: {
-		contact() {
-			this.updateLocalContact(this.contact)
+		contact(contact) {
+			this.updateLocalContact(contact)
 		},
 	},
 	methods: {
+		updateGroups(value) {
+			this.newGroupsValue = value
+		},
+		/**
+		 * Send the local clone of contact to the store
+		 */
+		async updateContact() {
+			this.fixed = false
+			this.loadingUpdate = true
+			try {
+				await this.$store.dispatch('updateContact', this.localContact)
+			} finally {
+				this.loadingUpdate = false
+			}
+
+			// if we just created the contact, we need to force update the
+			// localContact to match the proper store contact
+			if (!this.localContact.dav) {
+				this.logger.debug('New contact synced!', { localContact: this.localContact })
+				// fetching newly created & storred contact
+				const contact = this.$store.getters.getContact(this.localContact.key)
+				await this.updateLocalContact(contact)
+			}
+		},
 		/**
 		 *  Update this.localContact and set this.fixed
 		 *
@@ -228,12 +279,13 @@ export default {
 		 */
 		async updateLocalContact(contact) {
 			// create empty contact and copy inner data
-			// this.fixed = validate(localContact)
-
 			const localContact = Object.assign(
 				Object.create(Object.getPrototypeOf(contact)),
 				contact,
 			)
+
+			//	this.fixed = validate(localContact)
+
 			this.localContact = localContact
 			this.newGroupsValue = [...this.localContact.groups]
 		},
@@ -252,9 +304,6 @@ export default {
 				: property.getDefaultType()
 
 			return propModel && propType !== 'unknown'
-		},
-		updateGroups(value) {
-			this.newGroupsValue = value
 		},
 
 	},
