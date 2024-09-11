@@ -29,12 +29,14 @@ use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ImapFlagEncodingException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeDecryptException;
 use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
@@ -102,7 +104,8 @@ class MailManager implements IMailManager {
 		LoggerInterface $logger,
 		TagMapper $tagMapper,
 		MessageTagsMapper $messageTagsMapper,
-		ThreadMapper $threadMapper) {
+		ThreadMapper $threadMapper,
+		private ImapFlag $imapFlag) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
@@ -795,12 +798,11 @@ class MailManager implements IMailManager {
 	}
 
 	public function createTag(string $displayName, string $color, string $userId): Tag {
-		$imapLabel = str_replace(' ', '_', $displayName);
-		$imapLabel = mb_convert_encoding($imapLabel, 'UTF7-IMAP', 'UTF-8');
-		if ($imapLabel === false) {
-			throw new ClientException('Error converting display name to UTF7-IMAP ', 0);
+		try {
+			$imapLabel = $this->imapFlag->create($displayName);
+		} catch (ImapFlagEncodingException $e) {
+			throw new ClientException('Error converting display name to UTF7-IMAP ', 0, $e);
 		}
-		$imapLabel = '$' . strtolower(mb_strcut($imapLabel, 0, 63));
 
 		try {
 			return $this->getTagByImapLabel($imapLabel, $userId);
