@@ -172,7 +172,7 @@ class RecipientMapperTest extends TestCase {
 		$penny->setEmail('penny@stardewvalleylibrary.edu');
 		$penny->setLabel('Penny');
 		$penny->setType(Recipient::TYPE_TO);
-		$this->mapper->saveRecipients($message->getId(), [$penny], Recipient::TYPE_BCC);
+		$this->mapper->saveRecipients($message->getId(), [$penny]);
 
 		$results = $this->mapper->findByLocalMessageId($message->getId());
 		$this->assertCount(1, $results);
