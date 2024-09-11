@@ -74,7 +74,7 @@ class CopySentMessageHandler extends AHandler {
 			]);
 			return $localMessage;
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		return $this->processNext($account, $localMessage);

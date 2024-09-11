@@ -11,6 +11,7 @@ namespace OCA\Mail\BackgroundJob;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
@@ -40,7 +41,8 @@ class SyncJob extends TimedJob {
 		ImapToDbSynchronizer $syncService,
 		LoggerInterface $logger,
 		IJobList $jobList,
-		IConfig $config) {
+		IConfig $config,
+		private IMAPClientFactory $imapClientFactory) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -89,8 +91,13 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
+			// create client in memory cache
+			$this->imapClientFactory->getClient($account);
+			// sync mailboxes and messages
 			$this->mailboxSync->sync($account, $this->logger, true);
 			$this->syncService->syncAccount($account, $this->logger);
+			// destroy client in memory cache
+			$this->imapClientFactory->destroyClient($account);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->warning($e->getMessage(), [
 				'exception' => $e,

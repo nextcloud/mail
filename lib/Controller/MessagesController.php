@@ -216,7 +216,7 @@ class MessagesController extends Controller {
 			);
 			$json = $imapMessage->getFullMessage($id);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		$itineraries = $this->itineraryService->getCached($account, $mailbox, $message->getUid());
@@ -485,7 +485,7 @@ class MessagesController extends Controller {
 				)
 			]);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		// Enable caching
@@ -524,7 +524,7 @@ class MessagesController extends Controller {
 				$message->getUid()
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		return new AttachmentDownloadResponse(
@@ -573,7 +573,7 @@ class MessagesController extends Controller {
 					$id
 				);
 			} finally {
-				$client->logout();
+				//$client->logout();
 			}
 
 			$htmlResponse = $plain ?

@@ -260,7 +260,7 @@ class MessageApiController extends OCSController {
 				$message->getUid()
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		$json = $imapMessage->getFullMessage($id, $loadBody);
@@ -339,7 +339,7 @@ class MessageApiController extends OCSController {
 			$this->logger->error('Message not found on IMAP, or mail server went away', ['exception' => $e->getMessage()]);
 			return new DataResponse('Message not found', Http::STATUS_NOT_FOUND);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		return new DataResponse($source, Http::STATUS_OK);

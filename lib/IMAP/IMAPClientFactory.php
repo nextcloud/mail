@@ -27,6 +27,9 @@ use function json_encode;
 use function md5;
 
 class IMAPClientFactory {
+
+	protected array $clientCache = [];
+
 	/** @var ICrypto */
 	private $crypto;
 
@@ -53,6 +56,17 @@ class IMAPClientFactory {
 		$this->timeFactory = $timeFactory;
 	}
 
+	public function __destruct() {
+		$this->clientCache;
+        array_walk($this->clientCache, function($client) {
+			try {
+				$client->logout();
+			} catch (\Throwable $e) {
+				// Ignore any errors
+			}
+		});
+    }
+
 	/**
 	 * Get the connection object for the given account
 	 *
@@ -65,6 +79,14 @@ class IMAPClientFactory {
 	 * @return Horde_Imap_Client_Socket
 	 */
 	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
+
+		// generate connection signature
+		$clientSignature = md5($account->getMailAccount()->getInboundHost() . $account->getMailAccount()->getInboundUser());
+		// determine if connection is already cached and return cached object
+		if (isset($this->clientCache[$clientSignature])) {
+			return $this->clientCache[$clientSignature];
+		}
+
 		$this->eventDispatcher->dispatchTyped(
 			new BeforeImapClientCreated($account)
 		);
@@ -136,7 +158,20 @@ class IMAPClientFactory {
 		if ($rateLimitingCache instanceof IMemcache) {
 			$client->enableRateLimiter($rateLimitingCache, $paramHash, $this->timeFactory);
 		}
+		
+		// cache client for reuse
+		$this->clientCache[$clientSignature] = $client;
 
-		return $client;
+		return $this->clientCache[$clientSignature];
+	}
+
+	public function destroyClient(Account $account) {
+		// generate connection signature
+		$clientSignature = md5($account->getMailAccount()->getInboundHost() . $account->getMailAccount()->getInboundUser());
+		// determine if connection is already cached and destroy it
+		if (isset($this->clientCache[$clientSignature])) {
+			$this->clientCache[$clientSignature]->logout();
+			unset($this->clientCache[$clientSignature]);
+		}
 	}
 }

@@ -90,7 +90,7 @@ class MigrateImportantJob extends QueuedJob {
 				$this->logger->debug('Could not flag messages from DB on IMAP for mailbox <' . $mailboxId . '>.');
 			}
 		} finally {
-			$client->logout();
+			$this->imapClientFactory->destroyClient($account);
 		}
 	}
 }

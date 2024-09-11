@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
@@ -34,7 +35,8 @@ class QuotaJob extends TimedJob {
 		IMailManager $mailManager,
 		IManager $notificationManager,
 		LoggerInterface $logger,
-		IJobList $jobList) {
+		IJobList $jobList,
+		private IMAPClientFactory $imapClientFactory) {
 		parent::__construct($time);
 
 		$this->userManager = $userManager;
@@ -77,7 +79,13 @@ class QuotaJob extends TimedJob {
 			return;
 		}
 
+		// create client in memory cache
+		$this->imapClientFactory->getClient($account);
+		// process data
 		$quota = $this->mailManager->getQuota($account);
+		// destroy client in memory cache
+		$this->imapClientFactory->destroyClient($account);
+
 		if ($quota === null) {
 			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
 			return;

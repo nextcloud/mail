@@ -75,7 +75,7 @@ class DiagnoseAccount extends Command {
 			$output->writeln('<error>Horde error occurred: ' . $e->getMessage() . '. See nextcloud.log for more details.</error>');
 			return 2;
 		} finally {
-			$imapClient->logout();
+			$this->clientFactory->destroyClient($account);
 		}
 
 		return 0;

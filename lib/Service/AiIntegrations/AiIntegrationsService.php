@@ -99,7 +99,7 @@ PROMPT;
 				}, $messages);
 
 			} finally {
-				$client->logout();
+				//$client->logout();
 			}
 
 			$taskPrompt = implode("\n", $messagesBodies);
@@ -141,7 +141,7 @@ PROMPT;
 				return $imapMessage->getPlainBody();
 			}, $messages);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		$task = new Task(
@@ -189,7 +189,7 @@ PROMPT;
 				$messageBody = $imapMessage->getPlainBody();
 
 			} finally {
-				$client->logout();
+				//$client->logout();
 			}
 			$prompt = "You are tasked with formulating helpful replies or reply templates to e-mails provided that have been sent to me. If you don't know some relevant information for answering the e-mails (like my schedule) leave blanks in the text that can later be filled by me. You must write the replies from my point of view as replies to the original sender of the provided e-mail!
 
@@ -255,7 +255,7 @@ PROMPT;
 				true,
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		if (!$this->isPersonalEmail($imapMessage)) {

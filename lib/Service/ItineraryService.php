@@ -84,7 +84,7 @@ class ItineraryService {
 			}
 			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id, $account->getUserId());
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 		$itinerary = array_reduce($attachments, function (Itinerary $combined, string $attachment) {
 			$extracted = $this->extractor->extract($attachment);

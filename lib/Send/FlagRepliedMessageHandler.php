@@ -71,7 +71,7 @@ class FlagRepliedMessageHandler extends AHandler {
 
 			}
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		return $this->processNext($account, $localMessage);

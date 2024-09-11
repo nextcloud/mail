@@ -155,7 +155,7 @@ class MailManager implements IMailManager {
 				$e
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 		$this->folderMapper->detectFolderSpecialUse([$folder]);
 
@@ -224,7 +224,7 @@ class MailManager implements IMailManager {
 				$e
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -326,7 +326,7 @@ class MailManager implements IMailManager {
 		try {
 			$this->deleteMessageWithClient($account, $sourceMailbox, $messageUid, $client);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -396,7 +396,7 @@ class MailManager implements IMailManager {
 		try {
 			return $this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -405,7 +405,7 @@ class MailManager implements IMailManager {
 		try {
 			$this->imapMessageMapper->markAllRead($client, $mailbox->getName());
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -423,7 +423,7 @@ class MailManager implements IMailManager {
 				$e
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		/**
@@ -472,7 +472,7 @@ class MailManager implements IMailManager {
 				$e
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		$this->eventDispatcher->dispatch(
@@ -553,7 +553,7 @@ class MailManager implements IMailManager {
 		try {
 			$this->tagMessagesWithClient($client, $account, $mb, [$message], $tag, $value);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -575,7 +575,7 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception_NoSupportExtension $ex) {
 			return null;
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		/**
@@ -620,7 +620,7 @@ class MailManager implements IMailManager {
 				$name
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 
 		/**
@@ -650,7 +650,7 @@ class MailManager implements IMailManager {
 		try {
 			$this->folderMapper->delete($client, $mailbox->getName());
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 		$this->mailboxMapper->delete($mailbox);
 	}
@@ -684,7 +684,7 @@ class MailManager implements IMailManager {
 			}
 			$this->dbMessageMapper->deleteAll($mailbox);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -704,7 +704,7 @@ class MailManager implements IMailManager {
 				$account->getUserId(),
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -735,7 +735,7 @@ class MailManager implements IMailManager {
 				$account->getUserId(),
 			);
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
@@ -874,7 +874,7 @@ class MailManager implements IMailManager {
 				$this->tagMessagesWithClient($client, $account, $mailbox, $messages, $tag, false);
 			}
 		} finally {
-			$client->logout();
+			//$client->logout();
 		}
 	}
 
