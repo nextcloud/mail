@@ -28,6 +28,7 @@ use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
@@ -82,11 +83,10 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function index(): JSONResponse {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 
@@ -100,7 +100,6 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -108,12 +107,12 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function show(int $id): JSONResponse {
 		return new JSONResponse($this->accountService->find($this->currentUserId, $id));
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string $accountName
@@ -134,6 +133,7 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function update(int $id,
 		string $accountName,
 		string $emailAddress,
@@ -198,7 +198,6 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string|null $editorMode
@@ -212,10 +211,10 @@ class AccountsController extends Controller {
 	 * @param bool|null $signatureAboveQuote
 	 *
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function patchAccount(int $id,
 		?string $editorMode = null,
 		?int $order = null,
@@ -282,7 +281,6 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string|null $signature
@@ -293,28 +291,27 @@ class AccountsController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		$this->accountService->updateSignature($id, $this->currentUserId, $signature);
 		return new JSONResponse();
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function destroy(int $id): JSONResponse {
 		$this->accountService->delete($this->currentUserId, $id);
 		return new JSONResponse();
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param string $accountName
 	 * @param string $emailAddress
@@ -329,10 +326,10 @@ class AccountsController extends Controller {
 	 * @param string|null $smtpUser
 	 * @param string|null $smtpPassword
 	 * @param string $authMethod
-	 *
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function create(string $accountName,
 		string $emailAddress,
 		?string $imapHost = null,
@@ -403,13 +400,12 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function draft(int $id,
 		string $subject,
 		string $body,
@@ -456,13 +452,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	public function getQuota(int $id): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
@@ -474,14 +470,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id Account id
 	 * @param ?int $smimeCertificateId
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {
 		$account = $this->accountService->find($this->currentUserId, $id)->getMailAccount();
 		$account->setSmimeCertificateId($smimeCertificateId);
@@ -490,13 +485,12 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id Account id
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
+	#[NoAdminRequired]
 	public function testAccountConnection(int $id) {
 		return new JSONResponse([
 			'data' => $this->accountService->testAccountConnection($this->currentUserId, $id),

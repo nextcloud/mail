@@ -23,6 +23,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -57,7 +58,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
 	 *
@@ -67,6 +67,7 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function index(int $accountId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
@@ -80,14 +81,13 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string $name
-	 *
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function patch(int $id,
 		?string $name = null,
 		?bool $subscribed = null,
@@ -120,7 +120,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param int[] $ids
@@ -133,6 +132,7 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function sync(int $id, array $ids = [], ?int $lastMessageTimestamp = null, bool $init = false, string $sortOrder = 'newest', ?string $query = null): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -161,7 +161,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -170,6 +169,7 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function clearCache(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -179,15 +179,14 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function markAllAsRead(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -198,7 +197,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -208,35 +206,33 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function stats(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		return new JSONResponse($mailbox->getStats());
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 *
 	 * @return never
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function show() {
 		throw new NotImplemented();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 *
 	 * @return never
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function update() {
 		throw new NotImplemented();
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 *
 	 * @return JSONResponse
@@ -244,6 +240,7 @@ class MailboxesController extends Controller {
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function create(int $accountId, string $name): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
@@ -251,7 +248,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -260,6 +256,7 @@ class MailboxesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function destroy(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
@@ -269,7 +266,6 @@ class MailboxesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -279,6 +275,7 @@ class MailboxesController extends Controller {
 	 * @throws \OCP\AppFramework\Db\DoesNotExistException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function clearMailbox(int $id): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());

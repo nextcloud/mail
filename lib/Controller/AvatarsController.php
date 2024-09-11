@@ -14,6 +14,8 @@ use OCA\Mail\Http\AvatarDownloadResponse;
 use OCA\Mail\Http\TrapError;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
@@ -35,13 +37,12 @@ class AvatarsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string $email
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function url(string $email): JSONResponse {
 		if (empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
@@ -72,13 +73,12 @@ class AvatarsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string $email
 	 * @return Response
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function image(string $email): Response {
 		if (empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);

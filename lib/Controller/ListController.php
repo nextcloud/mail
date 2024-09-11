@@ -18,6 +18,7 @@ use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\Http\Client\IClientService;
 use OCP\IRequest;
@@ -50,9 +51,9 @@ class ListController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @UserRateThrottle(limit=10, period=3600)
 	 */
+	#[NoAdminRequired]
 	public function unsubscribe(int $id): JsonResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);

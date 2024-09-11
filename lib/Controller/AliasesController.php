@@ -15,6 +15,7 @@ use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -34,32 +35,28 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
-	 *
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function index(int $accountId): JSONResponse {
 		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUserId));
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 *
 	 * @return never
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function show() {
 		throw new NotImplemented();
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function update(int    $id,
 		string $alias,
 		string $aliasName,
@@ -76,18 +73,17 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function destroy(int $id): JSONResponse {
 		return new JSONResponse($this->aliasService->delete($this->currentUserId, $id));
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
 	 * @param string $alias
@@ -97,6 +93,7 @@ class AliasesController extends Controller {
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
 		return new JSONResponse(
 			$this->aliasService->create($this->currentUserId, $accountId, $alias, $aliasName),
@@ -105,7 +102,6 @@ class AliasesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string|null $signature
@@ -114,6 +110,7 @@ class AliasesController extends Controller {
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function updateSignature(int $id, ?string $signature = null): JSONResponse {
 		return new JSONResponse($this->aliasService->updateSignature($this->currentUserId, $id, $signature));
 	}

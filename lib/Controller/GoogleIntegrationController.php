@@ -18,6 +18,8 @@ use OCA\Mail\Integration\GoogleIntegration;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
@@ -82,11 +84,11 @@ class GoogleIntegrationController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return Response
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function oauthRedirect(?string $code, ?string $state, ?string $scope, ?string $error): Response {
 		if ($this->userId === null) {
 			// TODO: redirect to main nextcloud page

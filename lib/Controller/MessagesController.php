@@ -35,6 +35,8 @@ use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
@@ -118,7 +120,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $mailboxId
 	 * @param int $cursor
@@ -131,6 +132,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function index(int $mailboxId,
 		?int $cursor = null,
 		?string $filter = null,
@@ -158,7 +160,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -166,6 +167,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function show(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -187,7 +189,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -197,6 +198,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function getBody(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -256,15 +258,14 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
 	 * @return JSONResponse
-	 *
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function getItineraries(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -280,10 +281,10 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 * @param int $id
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	public function getDkim(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -315,15 +316,14 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $id
-	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getThread(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -341,7 +341,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param int $destFolderId
@@ -352,6 +351,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function move(int $id, int $destFolderId): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -374,7 +374,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param int $unixTimestamp
@@ -385,6 +384,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -402,7 +402,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -411,6 +410,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function unSnooze(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -424,7 +424,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -434,6 +433,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function mdn(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -459,12 +459,12 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getSource(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -497,8 +497,6 @@ class MessagesController extends Controller {
 	/**
 	 * Export a whole message as an .eml file.
 	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $id
 	 * @return Response
@@ -506,6 +504,8 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function export(int $id): Response {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -535,8 +535,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $id
 	 * @param bool $plain do not inject scripts if true (default=false)
@@ -546,6 +544,8 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getHtmlBody(int $id, bool $plain = false): Response {
 		try {
 			try {
@@ -610,8 +610,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $id
 	 * @param string $attachmentId
@@ -621,6 +619,8 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function downloadAttachment(int $id,
 		string $attachmentId): Response {
 		try {
@@ -656,8 +656,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $id the message id
 	 *
@@ -668,6 +666,8 @@ class MessagesController extends Controller {
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function downloadAttachments(int $id): Response {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -692,7 +692,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string $attachmentId
@@ -706,6 +705,7 @@ class MessagesController extends Controller {
 	 * @throws LockedException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function saveAttachment(int $id,
 		string $attachmentId,
 		string $targetPath) {
@@ -755,7 +755,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param array $flags
@@ -766,6 +765,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function setFlags(int $id, array $flags): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -783,7 +783,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string $imapLabel
@@ -794,6 +793,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function setTag(int $id, string $imapLabel): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -814,7 +814,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param string $imapLabel
@@ -825,6 +824,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function removeTag(int $id, string $imapLabel): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -845,7 +845,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -853,6 +852,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function destroy(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -873,13 +873,12 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $messageId
-	 *
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function smartReply(int $messageId):JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $messageId);

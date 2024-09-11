@@ -19,6 +19,7 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
@@ -37,12 +38,12 @@ class SmimeCertificatesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @throws ServiceException
 	 * @throws SmimeCertificateParserException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function index(): JsonResponse {
 		$certificates = $this->certificateService->findAllCertificates($this->userId);
 		$certificates = array_map(function (SmimeCertificate $certificate) {
@@ -52,21 +53,19 @@ class SmimeCertificatesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JsonResponse
-	 *
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function destroy(int $id): JsonResponse {
 		$this->certificateService->deleteCertificate($id, $this->userId);
 		return JsonResponse::success();
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @return JsonResponse
 	 *
@@ -74,6 +73,7 @@ class SmimeCertificatesController extends Controller {
 	 * @throws SmimeCertificateParserException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function create(): JsonResponse {
 		// TODO: What about PKCS12 certificates?
 		// They need to be decrypted by the client because they are protected by a password.

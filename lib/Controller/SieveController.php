@@ -21,6 +21,7 @@ use OCA\Mail\Sieve\SieveClientFactory;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -56,7 +57,6 @@ class SieveController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id account id
 	 *
@@ -67,6 +67,7 @@ class SieveController extends Controller {
 	 * @throws ManagesieveException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function getActiveScript(int $id): JSONResponse {
 		$activeScript = $this->sieveService->getActiveScript($this->currentUserId, $id);
 		return new JSONResponse([
@@ -76,7 +77,6 @@ class SieveController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id account id
 	 * @param string $script
@@ -87,6 +87,7 @@ class SieveController extends Controller {
 	 * @throws CouldNotConnectException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function updateActiveScript(int $id, string $script): JSONResponse {
 		try {
 			$this->sieveService->updateActiveScript($this->currentUserId, $id, $script);
@@ -99,7 +100,6 @@ class SieveController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id account id
 	 * @param bool $sieveEnabled
@@ -115,6 +115,7 @@ class SieveController extends Controller {
 	 * @throws DoesNotExistException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function updateAccount(int $id,
 		bool $sieveEnabled,
 		string $sieveHost,

@@ -20,6 +20,7 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\IRequest;
 
@@ -44,29 +45,27 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function index(): JsonResponse {
 		return JsonResponse::success(['messages' => $this->service->getMessages($this->userId)]);
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function show(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		return JsonResponse::success($message);
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
 	 * @param string $subject
@@ -87,6 +86,7 @@ class OutboxController extends Controller {
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function create(
 		int $accountId,
 		string $subject,
@@ -137,11 +137,10 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function createFromDraft(DraftsService $draftsService, int $id, ?int $sendAt = null): JsonResponse {
 		$draftMessage = $draftsService->getMessage($id, $this->userId);
 		// Locate the account to check authorization
@@ -156,7 +155,6 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param int $accountId
@@ -175,6 +173,7 @@ class OutboxController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function update(
 		int $id,
 		int $accountId,
@@ -224,12 +223,12 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function send(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $message->getAccountId());
@@ -245,12 +244,12 @@ class OutboxController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function destroy(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$this->service->deleteMessage($this->userId, $message);

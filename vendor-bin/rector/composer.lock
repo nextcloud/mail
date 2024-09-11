@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38703a9b83f7e93c63b6f814e2d0b25b",
+    "content-hash": "fff61abda66546bf8944236a00e50516",
     "packages": [],
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud-rector",
-            "version": "v0.1.2",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud-rector.git",
-                "reference": "f98c2d8bd13654a6c27ea0d9788949e90912f800"
+                "reference": "9bd7c3d199000bf0fc9bbc2012bcbaa4d64cd974"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud-rector/zipball/f98c2d8bd13654a6c27ea0d9788949e90912f800",
-                "reference": "f98c2d8bd13654a6c27ea0d9788949e90912f800",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud-rector/zipball/9bd7c3d199000bf0fc9bbc2012bcbaa4d64cd974",
+                "reference": "9bd7c3d199000bf0fc9bbc2012bcbaa4d64cd974",
                 "shasum": ""
             },
             "require": {
@@ -65,9 +65,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ChristophWurst/nextcloud-rector/issues",
-                "source": "https://github.com/ChristophWurst/nextcloud-rector/tree/v0.1.2"
+                "source": "https://github.com/ChristophWurst/nextcloud-rector/tree/v0.2.1"
             },
-            "time": "2024-09-11T06:54:05+00:00"
+            "time": "2024-09-11T08:09:51+00:00"
         },
         {
             "name": "phpstan/phpstan",

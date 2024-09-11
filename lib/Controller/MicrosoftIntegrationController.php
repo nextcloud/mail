@@ -16,6 +16,8 @@ use OCA\Mail\Integration\MicrosoftIntegration;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
@@ -80,11 +82,11 @@ class MicrosoftIntegrationController extends Controller {
 	 * @param string|null $session_state
 	 * @param string|null $error
 	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return Response
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function oauthRedirect(?string $code, ?string $state, ?string $session_state, ?string $error): Response {
 		if ($this->userId === null) {
 			// TODO: redirect to main nextcloud page

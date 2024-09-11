@@ -24,6 +24,8 @@ use OCA\Mail\Service\OutboxService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -126,11 +128,11 @@ class PageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse renders the index page
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function index(): TemplateResponse {
 		if (class_exists(LoadViewer::class)) {
 			$this->dispatcher->dispatchTyped(new LoadViewer());
@@ -322,93 +324,93 @@ class PageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function setup(): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function mailbox(int $id): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function thread(int $mailboxId, int $id): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function filteredThread(string $filter, int $mailboxId, int $id): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function outbox(): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function outboxMessage(int $messageId): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function draft(int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function filteredDraft(string $filter, int $mailboxId, int $draftId): TemplateResponse {
 		return $this->index();
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param string $uri
 	 *
 	 * @return RedirectResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
 		$params = ['to' => $parts['path']];
@@ -429,11 +431,11 @@ class PageController extends Controller {
 		return new RedirectResponse($baseUrl . $name);
 	}
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function mailto(): TemplateResponse {
 		return $this->index();
 	}

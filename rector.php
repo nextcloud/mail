@@ -28,4 +28,6 @@ return RectorConfig::configure()
 	->withSets([
 		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_ALL,
 		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_25,
+		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_26,
+		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_27,
 	]);

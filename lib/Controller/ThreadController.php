@@ -19,6 +19,7 @@ use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -52,7 +53,6 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param int $destMailboxId
@@ -62,6 +62,7 @@ class ThreadController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function move(int $id, int $destMailboxId): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -85,7 +86,6 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param int $unixTimestamp
@@ -96,6 +96,7 @@ class ThreadController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function snooze(int $id, int $unixTimestamp, int $destMailboxId): JSONResponse {
 		try {
 			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -113,7 +114,6 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -122,6 +122,7 @@ class ThreadController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function unSnooze(int $id): JSONResponse {
 		try {
 			$selectedMessage = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -135,12 +136,11 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
-	 *
 	 * @return JSONResponse
 	 */
+	#[NoAdminRequired]
 	public function summarize(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -170,9 +170,7 @@ class ThreadController extends Controller {
 		return new JSONResponse(['data' => $summary]);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
+	#[NoAdminRequired]
 	public function generateEventData(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -196,7 +194,6 @@ class ThreadController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 *
@@ -205,6 +202,7 @@ class ThreadController extends Controller {
 	 * @throws ServiceException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function delete(int $id): JSONResponse {
 		try {
 			$message = $this->mailManager->getMessage($this->currentUserId, $id);

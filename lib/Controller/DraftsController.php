@@ -19,6 +19,7 @@ use OCA\Mail\Service\SmimeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
@@ -48,7 +49,6 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
 	 * @param string $subject
@@ -72,6 +72,7 @@ class DraftsController extends Controller {
 	 * @throws ClientException
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function create(
 		int     $accountId,
 		string  $subject,
@@ -120,7 +121,6 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @param int $accountId
@@ -139,6 +139,7 @@ class DraftsController extends Controller {
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function update(int $id,
 		int     $accountId,
 		string  $subject,
@@ -185,12 +186,12 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function destroy(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$this->accountService->find($this->userId, $message->getAccountId());
@@ -200,12 +201,12 @@ class DraftsController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function move(int $id): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		$account = $this->accountService->find($this->userId, $message->getAccountId());
