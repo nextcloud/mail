@@ -4,9 +4,71 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "715b06042960e760e5d2728bfce23b1b",
+    "content-hash": "38703a9b83f7e93c63b6f814e2d0b25b",
     "packages": [],
     "packages-dev": [
+        {
+            "name": "christophwurst/nextcloud-rector",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ChristophWurst/nextcloud-rector.git",
+                "reference": "f98c2d8bd13654a6c27ea0d9788949e90912f800"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud-rector/zipball/f98c2d8bd13654a6c27ea0d9788949e90912f800",
+                "reference": "f98c2d8bd13654a6c27ea0d9788949e90912f800",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.5",
+                "ramsey/devtools": "^2.0",
+                "rector/rector": "^1.2"
+            },
+            "type": "library",
+            "extra": {
+                "captainhook": {
+                    "force-install": true
+                },
+                "ramsey/conventional-commits": {
+                    "configFile": "conventional-commits.json"
+                },
+                "ramsey/devtools": {
+                    "command-prefix": "dev",
+                    "memory-limit": "-1"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ChristophWurst\\Nextcloud\\Rector\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Wurst",
+                    "email": "christoph@winzerhof-wurst.at",
+                    "homepage": "https://wuc.me"
+                }
+            ],
+            "description": "Rector upgrade rules for Nextcloud",
+            "keywords": [
+                "nextcloud",
+                "refactoring"
+            ],
+            "support": {
+                "issues": "https://github.com/ChristophWurst/nextcloud-rector/issues",
+                "source": "https://github.com/ChristophWurst/nextcloud-rector/tree/v0.1.2"
+            },
+            "time": "2024-09-11T06:54:05+00:00"
+        },
         {
             "name": "phpstan/phpstan",
             "version": "1.11.11",

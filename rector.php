@@ -12,6 +12,7 @@ use Rector\Config\RectorConfig;
 return RectorConfig::configure()
 	->withPaths([
 		__DIR__ . '/lib',
+		__DIR__ . '/templates',
 		__DIR__ . '/tests',
 	])
 	->withSkip([
@@ -24,6 +25,7 @@ return RectorConfig::configure()
 	->withBootstrapFiles([
 		__DIR__ . '/../../lib/composer/autoload.php',
 	])
-	->withRules([
-		\ChristophWurst\Nextcloud\Rector\Rector\OcServerToOcpServerRector::class,
+	->withSets([
+		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_ALL,
+		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_25,
 	]);
