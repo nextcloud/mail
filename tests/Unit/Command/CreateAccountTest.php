@@ -41,7 +41,7 @@ class CreateAccountTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->service = $this->getMockBuilder('\OCA\Mail\Service\AccountService')
+		$this->service = $this->getMockBuilder(\OCA\Mail\Service\AccountService::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$this->crypto = $this->getMockBuilder('\OCP\Security\ICrypto')->getMock();
