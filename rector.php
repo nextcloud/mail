@@ -22,5 +22,5 @@ return RectorConfig::configure()
 		phpunit: true,
 	)
 	->withPhpSets(
-		php71: true,
+		php73: true,
 	);

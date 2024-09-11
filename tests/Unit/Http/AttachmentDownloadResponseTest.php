@@ -14,11 +14,8 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 class AttachmentDownloadResponseTest extends TestCase {
 	/**
 	 * @dataProvider providesResponseData
-	 * @param $content
-	 * @param $filename
-	 * @param $contentType
 	 */
-	public function testIt($content, $filename, $contentType) {
+	public function testIt(string $content, string $filename, string $contentType) {
 		$resp = new AttachmentDownloadResponse($content, $filename, $contentType);
 		$headers = $resp->getHeaders();
 		$this->assertEquals($content, $resp->render());

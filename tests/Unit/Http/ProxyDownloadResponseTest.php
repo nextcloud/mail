@@ -25,7 +25,7 @@ class ProxyDownloadResponseTest extends TestCase {
 		$this->assertArrayHasKey('Content-Type', $headers);
 		$this->assertEquals($contentType, $headers['Content-Type']);
 		$this->assertArrayHasKey('Content-Disposition', $headers);
-		$pos = strpos($headers['Content-Disposition'], $filename);
+		$pos = strpos($headers['Content-Disposition'], (string)$filename);
 		$this->assertTrue($pos > 0);
 	}
 
