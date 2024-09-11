@@ -151,7 +151,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 	public function testSendMailWithLocalAttachment() {
 		$file = new UploadedFile([
 			'name' => 'text.txt',
-			'tmp_name' => dirname(__FILE__) . '/../../data/mail-message-123.txt',
+			'tmp_name' => __DIR__ . '/../../data/mail-message-123.txt',
 		]);
 
 		$localAttachment = $this->attachmentService->addFile($this->user->getUID(), $file);
