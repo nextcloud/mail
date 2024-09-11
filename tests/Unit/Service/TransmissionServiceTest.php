@@ -19,13 +19,12 @@ use OCA\Mail\Db\SmimeCertificate;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\SmimeSignException;
-use OCA\Mail\Model\Message;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\TransmissionService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\Files\SimpleFS\InMemoryFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -84,50 +83,43 @@ class TransmissionServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testHandleAttachment() {
-		$id = 1;
-		$expected = [
-			'type' => 'local',
-			'id' => $id
-		];
-		[$localAttachment, $file] = [
-			new LocalAttachment(),
-			$this->createMock(ISimpleFile::class)
-		];
-		$message = $this->createMock(Message::class);
+	public function testHandleAttachment(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
 
+		$attachment = new LocalAttachment();
+		$attachment->setFileName('test.txt');
+		$attachment->setMimeType('text/plain');
+
+		$file = new InMemoryFile(
+			'test.txt',
+			"Hello, I'm a test file."
+		);
+
 		$this->attachmentService->expects(self::once())
 			->method('getAttachment')
-			->willReturn([$localAttachment, $file]);
+			->willReturn([$attachment, $file]);
 		$this->logger->expects(self::never())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, $expected);
+		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
+
+		$this->assertEquals('test.txt', $part->getContentTypeParameter('name'));
 	}
 
-	public function testHandleAttachmentNoId() {
-		$attachment = [[
-			'type' => 'local',
-		]];
-		$message = $this->createMock(Message::class);
-		$account = new Account(new MailAccount());
+	public function testHandleAttachmentNoId(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
 
 		$this->logger->expects(self::once())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, $attachment);
+		$this->transmissionService->handleAttachment($account, ['type' => 'local']);
 	}
 
-	public function testHandleAttachmentNotFound() {
-		$attachment = [
-			'id' => 1,
-			'type' => 'local',
-		];
-
-		$message = $this->createMock(Message::class);
+	public function testHandleAttachmentNotFound(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('bob');
 		$account = new Account($mailAccount);
@@ -138,7 +130,7 @@ class TransmissionServiceTest extends TestCase {
 		$this->logger->expects(self::once())
 			->method('warning');
 
-		$this->transmissionService->handleAttachment($account, $attachment);
+		$this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
 	}
 
 	public function testGetSignMimePart() {
@@ -357,5 +349,29 @@ class TransmissionServiceTest extends TestCase {
 		$this->expectException(ServiceException::class);
 		$this->transmissionService->getEncryptMimePart($localMessage, $to, $cc, $bcc, $account, $send);
 		$this->assertEquals(LocalMessage::STATUS_SMIME_ENCRYT_FAIL, $localMessage->getStatus());
+	}
+
+	public function testHandleAttachmentKeepAdditionalContentTypeParameters(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('bob');
+		$account = new Account($mailAccount);
+
+		$attachment = new LocalAttachment();
+		$attachment->setFileName('event.ics');
+		$attachment->setMimeType('text/calendar; method=REQUEST');
+
+		$file = new InMemoryFile(
+			'event.ics',
+			"BEGIN:VCALENDAR\nEND:VCALENDAR"
+		);
+
+		$this->attachmentService->expects(self::once())
+			->method('getAttachment')
+			->willReturn([$attachment, $file]);
+
+		$part = $this->transmissionService->handleAttachment($account, ['id' => 1, 'type' => 'local']);
+
+		$this->assertEquals('event.ics', $part->getContentTypeParameter('name'));
+		$this->assertEquals('REQUEST', $part->getContentTypeParameter('method'));
 	}
 }

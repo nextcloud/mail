@@ -85,7 +85,22 @@ class TransmissionService {
 			$part->setDisposition('attachment');
 			$part->setName($localAttachment->getFileName());
 			$part->setContents($file->getContent());
-			$part->setType($localAttachment->getMimeType());
+
+			/*
+			 * Horde_Mime_Part.setType takes the mimetype (e.g. text/calendar)
+			 * and discards additional parameters (like method=REQUEST).
+			 *
+			 * $part->setType('text/calendar; method=REQUEST')
+			 * $part->getType() => text/calendar
+			 */
+			$contentTypeHeader = \Horde_Mime_Headers_ContentParam_ContentType::create();
+			$contentTypeHeader->decode($localAttachment->getMimeType());
+
+			$part->setType($contentTypeHeader->value);
+			foreach($contentTypeHeader->params as $label => $data) {
+				$part->setContentTypeParameter($label, $data);
+			}
+
 			return $part;
 		} catch (AttachmentNotFoundException $e) {
 			$this->logger->warning('Ignoring local attachment because it does not exist', ['exception' => $e]);
