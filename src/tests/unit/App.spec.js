@@ -7,30 +7,24 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import App from '../../App.vue'
 import Nextcloud from '../../mixins/Nextcloud.js'
-import Vuex from 'vuex'
+import { createPinia, setActivePinia } from 'pinia'
+import useMainStore from '../../store/mainStore.js'
 
 const localVue = createLocalVue()
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
 jest.mock('../../service/AutoConfigService.js')
 
 describe('App', () => {
 
-	let state
-	let getters
 	let store
 	let view
 
 	beforeEach(() => {
-		state = { isExpiredSession: false };
-		getters = {
-			isExpiredSession: (state) => state.isExpiredSession,
-		}
-		store = new Vuex.Store({
-			getters,
-			state,
-		})
+		setActivePinia(createPinia())
+
+		store = useMainStore()
+		store.isExpiredSession = false
 
 		view = shallowMount(App, {
 			store,
@@ -43,7 +37,7 @@ describe('App', () => {
 		view.vm.reload = jest.fn()
 
 		expect(view.vm.isExpiredSession).toBe(false)
-		state.isExpiredSession = true
+		store.isExpiredSession = true
 		expect(view.vm.isExpiredSession).toBe(true)
 	})
 

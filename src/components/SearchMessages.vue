@@ -315,6 +315,8 @@ import debouncePromise from 'debounce-promise'
 import { findRecipient } from '../service/AutocompleteService.js'
 import uniqBy from 'lodash/fp/uniqBy.js'
 import { hiddenTags } from './tags.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -378,8 +380,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		tags() {
-			return this.$store.getters.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
+			return this.mainStore.getTags.filter((tag) => !(tag.displayName.toLowerCase() in hiddenTags)).sort((a, b) => {
 				if (a.isDefaultTag && !b.isDefaultTag) {
 					return -1
 				}
@@ -401,10 +404,10 @@ export default {
 			}).length > 0
 		},
 		searchBody() {
-			return this.$store.getters.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.$store.getters.getPreference('search-priority-body', 'false') === 'true')
+			return this.mainStore.getAccount(this.accountId)?.searchBody || (this.mailbox.databaseId === 'priority' && this.mainStore.getPreference('search-priority-body', 'false') === 'true')
 		},
 		account() {
-			return this.$store.getters.getAccount(this.accountId)
+			return this.mainStore.getAccount(this.accountId)
 		},
 		filterData() {
 			return {

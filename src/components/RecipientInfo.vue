@@ -57,11 +57,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'pinia'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 import Avatar from './Avatar.vue'
 import DisplayContactDetails from './DisplayContactDetails.vue'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	components: {
@@ -76,7 +77,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['composerMessage']),
+		...mapGetters(useMainStore, ['composerMessage']),
 		recipients() {
 			return this.composerMessage.data.to
 		},

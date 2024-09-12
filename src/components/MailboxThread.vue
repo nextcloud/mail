@@ -133,6 +133,8 @@ import {
 	priorityOtherQuery,
 } from '../util/priorityInbox.js'
 import { detect, html } from '../util/text.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 const START_MAILBOX_DEBOUNCE = 5 * 1000
 
@@ -187,8 +189,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		layoutMode() {
-			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
+			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
 		horizontalListMinWidth() {
 			return this.layoutMode === 'horizontal-split' ? 40 : 30
@@ -197,19 +200,19 @@ export default {
 			return this.layoutMode === 'horizontal-split' ? 60 : 50
 		},
 		unifiedAccount() {
-			return this.$store.getters.getAccount(UNIFIED_ACCOUNT_ID)
+			return this.mainStore.getAccount(UNIFIED_ACCOUNT_ID)
 		},
 		unifiedInbox() {
-			return this.$store.getters.getMailbox(UNIFIED_INBOX_ID)
+			return this.mainStore.getMailbox(UNIFIED_INBOX_ID)
 		},
 		followUpMailbox() {
-			return this.$store.getters.getMailbox(FOLLOW_UP_MAILBOX_ID)
+			return this.mainStore.getMailbox(FOLLOW_UP_MAILBOX_ID)
 		},
 		/**
 		 * @return {string|undefined}
 		 */
 		followUpQuery() {
-			const tag = this.$store.getters.getFollowUpTag
+			const tag = this.mainStore.getFollowUpTag
 			if (!tag) {
 				logger.warn('No follow-up tag available')
 				return undefined
@@ -222,13 +225,13 @@ export default {
 		},
 		hasEnvelopes() {
 			if (this.mailbox.isPriorityInbox) {
-				return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
-					|| this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityOtherQuery)).length > 0
+				return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
+					|| this.mainStore.getEnvelopes(this.mailbox.databaseId, this.appendToSearch(priorityOtherQuery)).length > 0
 			}
-			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
 		},
 		hasImportantEnvelopes() {
-			return this.$store.getters.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
+			return this.mainStore.getEnvelopes(this.unifiedInbox.databaseId, this.appendToSearch(priorityImportantQuery)).length > 0
 		},
 		/**
 		 * @return {boolean}
@@ -238,7 +241,7 @@ export default {
 				return false
 			}
 
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopes(FOLLOW_UP_MAILBOX_ID, this.followUpQuery)
 				.length > 0
 		},
@@ -311,9 +314,9 @@ export default {
 	},
 	methods: {
 		async fetchEnvelopes() {
-			const existingEnvelopes = this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
+			const existingEnvelopes = this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
 			if (!existingEnvelopes.length) {
-				await this.$store.dispatch('fetchEnvelopes', {
+				await this.mainStore.fetchEnvelopes({
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery || '',
 				})
@@ -322,7 +325,7 @@ export default {
 		async onPriorityMailboxOpened() {
 			logger.debug('Priority inbox was opened')
 
-			await this.$store.dispatch('checkFollowUpReminders', { query: this.followUpQuery })
+			await this.mainStore.checkFollowUpReminders({ query: this.followUpQuery })
 		},
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
@@ -357,7 +360,7 @@ export default {
 				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
 					accountId = parseInt(this.$route.params.accountId, 10)
 				}
-				this.$store.dispatch('startComposerSession', {
+				this.mainStore.startComposerSession({
 					data: {
 						accountId,
 						to: this.stringToRecipients(this.$route.query.to),
@@ -370,18 +373,17 @@ export default {
 			}
 		},
 		async saveStartMailbox() {
-			const currentStartMailboxId = this.$store.getters.getPreference('start-mailbox-id')
+			const currentStartMailboxId = this.mainStore.getPreference('start-mailbox-id')
 			if (currentStartMailboxId === this.mailbox.databaseId) {
 				return
 			}
 			logger.debug(`Saving mailbox ${this.mailbox.databaseId} as start mailbox`)
 
 			try {
-				await this.$store
-					.dispatch('savePreference', {
-						key: 'start-mailbox-id',
-						value: this.mailbox.databaseId,
-					})
+				await this.mainStore.savePreference({
+					key: 'start-mailbox-id',
+					value: this.mailbox.databaseId,
+				})
 			} catch (error) {
 				// Catch and log. This is not critical.
 				logger.warn('Could not update start mailbox id', {

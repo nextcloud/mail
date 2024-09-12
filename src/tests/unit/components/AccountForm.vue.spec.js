@@ -3,35 +3,33 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { testConnectivity, queryIspdb, queryMx } from '../../../service/AutoConfigService'
-import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vuex from 'vuex'
+import { testConnectivity, queryIspdb, queryMx } from '../../../service/AutoConfigService.js'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+
+import useMainStore from '../../../store/mainStore.js'
 
 import AccountForm from '../../../components/AccountForm.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
+localVue.use(PiniaVuePlugin)
+const pinia = createPinia()
+
 
 jest.mock('../../../service/AutoConfigService.js')
 
 describe('AccountForm', () => {
 
 	let save
-	let getters
 	let store
 	let view
 
 	beforeEach(() => {
 		save = jest.fn()
-		getters = {
-			googleOauthUrl: () => () => 'https://google.oauth',
-		}
-		store = new Vuex.Store({
-			getters,
-		})
+
 		view = shallowMount(AccountForm, {
 			propsData: {
 				displayName: 'Tom Turbo',
@@ -39,8 +37,12 @@ describe('AccountForm', () => {
 				save,
 			},
 			localVue,
+			pinia,
 			store,
 		})
+
+		store = useMainStore()
+		store.googleOauthUrl = 'https://google.oauth'
 	})
 
 	it('uses name and email from nextcloud account', () => {

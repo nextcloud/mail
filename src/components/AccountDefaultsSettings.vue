@@ -41,6 +41,8 @@
 <script>
 import logger from '../logger.js'
 import MailboxInlinePicker from './MailboxInlinePicker.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountDefaultsSettings',
@@ -59,9 +61,10 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		draftsMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.draftsMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.draftsMailboxId)
 				if (!mb) {
 					return
 				}
@@ -71,7 +74,7 @@ export default {
 				logger.debug('setting drafts mailbox to ' + draftsMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							draftsMailboxId,
@@ -88,7 +91,7 @@ export default {
 		},
 		sentMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.sentMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.sentMailboxId)
 				if (!mb) {
 					return
 				}
@@ -98,7 +101,7 @@ export default {
 				logger.debug('setting sent mailbox to ' + sentMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							sentMailboxId,
@@ -115,7 +118,7 @@ export default {
 		},
 		trashMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.trashMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.trashMailboxId)
 				if (!mb) {
 					return
 				}
@@ -125,7 +128,7 @@ export default {
 				logger.debug('setting trash mailbox to ' + trashMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							trashMailboxId,
@@ -142,7 +145,7 @@ export default {
 		},
 		archiveMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.archiveMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.archiveMailboxId)
 				if (!mb) {
 					return
 				}
@@ -152,7 +155,7 @@ export default {
 				logger.debug('setting archive mailbox to ' + archiveMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							archiveMailboxId,
@@ -169,7 +172,7 @@ export default {
 		},
 		junkMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.junkMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.junkMailboxId)
 				if (!mb) {
 					return
 				}
@@ -179,7 +182,7 @@ export default {
 				logger.debug('setting junk mailbox to ' + junkMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							junkMailboxId,
@@ -196,7 +199,7 @@ export default {
 		},
 		snoozeMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.snoozeMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.snoozeMailboxId)
 				if (!mb) {
 					return
 				}
@@ -206,7 +209,7 @@ export default {
 				logger.debug('setting snooze mailbox to ' + snoozeMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							snoozeMailboxId,

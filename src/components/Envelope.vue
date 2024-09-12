@@ -380,7 +380,8 @@ import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import CalendarClock from 'vue-material-design-icons/CalendarClock.vue'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import moment from '@nextcloud/moment'
-import { mapGetters } from 'vuex'
+import { mapState, mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
 import { translateTagDisplayName } from '../util/tag.js'
 
@@ -481,14 +482,15 @@ export default {
 		window.addEventListener('resize', this.onWindowResize)
 	},
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'isSnoozeDisabled',
 		]),
 		messageLongDate() {
 			return messageDateTime(new Date(this.data.dateInt))
 		},
 		oneLineLayout() {
-			return this.overwriteOneLineMobile ? false : this.$store.getters.getPreference('layout-mode', 'vertical-split') === 'no-split'
+			return this.overwriteOneLineMobile ? false : this.mainStore.getPreference('layout-mode', 'vertical-split') === 'no-split'
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -507,7 +509,7 @@ export default {
 		},
 		account() {
 			const accountId = this.data.accountId
-			return this.$store.getters.getAccount(accountId)
+			return this.mainStore.getAccount(accountId)
 		},
 		link() {
 			if (this.draft) {
@@ -568,12 +570,12 @@ export default {
 				|| (this.data.previewText && isPgpText(this.data.previewText)) // PGP/Mailvelope
 		},
 		isImportant() {
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopeTags(this.data.databaseId)
 				.some((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			let tags = this.$store.getters.getEnvelopeTags(this.data.databaseId).filter(
+			let tags = this.mainStore.getEnvelopeTags(this.data.databaseId).filter(
 				(tag) => tag.imapLabel && tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 
@@ -635,7 +637,7 @@ export default {
 			return mailboxHasRights(this.mailbox, 'w')
 		},
 		archiveMailbox() {
-			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
+			return this.mainStore.getMailbox(this.account.archiveMailboxId)
 		},
 		isSnoozedMailbox() {
 			return this.mailbox.databaseId === this.account.snoozeMailboxId
@@ -709,7 +711,7 @@ export default {
 		},
 		async onClick(event) {
 			if (!event.ctrlKey && this.draft && !event.defaultPrevented) {
-				await this.$store.dispatch('startComposerSession', {
+				await this.mainStore.startComposerSession({
 					data: {
 						...this.data,
 						draftId: this.data.databaseId,
@@ -722,23 +724,23 @@ export default {
 			this.$emit('select-multiple')
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.data)
+			this.mainStore.toggleEnvelopeImportant(this.data)
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+			this.mainStore.toggleEnvelopeFlagged(this.data)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.data })
+			this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
 		},
 		async onToggleJunk() {
-			const removeEnvelope = await this.$store.dispatch('moveEnvelopeToJunk', this.data)
+			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.data)
 
 			if (this.isImportant) {
-				await this.$store.dispatch('toggleEnvelopeImportant', this.data)
+				await this.mainStore.toggleEnvelopeImportant(this.data)
 			}
 
 			if (!this.data.flags.seen) {
-				await this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.data })
+				await this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
 			}
 
 			/**
@@ -758,7 +760,7 @@ export default {
 				await this.$emit('delete', this.data.databaseId)
 			}
 
-			await this.$store.dispatch('toggleEnvelopeJunk', {
+			await this.mainStore.toggleEnvelopeJunk({
 				envelope: this.data,
 				removeEnvelope,
 			})
@@ -770,7 +772,7 @@ export default {
 			this.$emit('delete', this.data.databaseId)
 
 			try {
-				await this.$store.dispatch('deleteThread', {
+				await this.mainStore.deleteThread({
 					envelope: this.data,
 				})
 			} catch (error) {
@@ -804,7 +806,7 @@ export default {
 			this.$emit('archive', this.data.databaseId)
 
 			try {
-				await this.$store.dispatch('moveThread', {
+				await this.mainStore.moveThread({
 					envelope: this.data,
 					destMailboxId: this.account.archiveMailboxId,
 				})
@@ -818,11 +820,11 @@ export default {
 			this.setSelected(false)
 
 			if (!this.account.snoozeMailboxId) {
-				await this.$store.dispatch('createAndSetSnoozeMailbox', this.account)
+				await this.mainStore.createAndSetSnoozeMailbox(this.account)
 			}
 
 			try {
-				await this.$store.dispatch('snoozeThread', {
+				await this.mainStore.snoozeThread({
 					envelope: this.data,
 					unixTimestamp: timestamp / 1000,
 					destMailboxId: this.account.snoozeMailboxId,
@@ -838,7 +840,7 @@ export default {
 			this.setSelected(false)
 
 			try {
-				await this.$store.dispatch('unSnoozeThread', {
+				await this.mainStore.unSnoozeThread({
 					envelope: this.data,
 				})
 				showSuccess(t('mail', 'Thread was unsnoozed'))
@@ -848,7 +850,7 @@ export default {
 			}
 		},
 		async onOpenEditAsNew() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				templateMessageId: this.data.databaseId,
 				data: this.data,
 			})

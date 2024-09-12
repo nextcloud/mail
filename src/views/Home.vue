@@ -30,7 +30,8 @@ import MailboxThread from '../components/MailboxThread.vue'
 import Navigation from '../components/Navigation.vue'
 import Outbox from '../components/Outbox.vue'
 import ComposerSessionIndicator from '../components/ComposerSessionIndicator.vue'
-import { mapGetters } from 'vuex'
+import { mapStores, mapState } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'Home',
@@ -50,12 +51,13 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['composerSessionId']),
+		...mapStores(useMainStore),
+		...mapState(useMainStore, ['composerSessionId']),
 		activeAccount() {
-			return this.$store.getters.getAccount(this.activeMailbox?.accountId)
+			return this.mainStore.getAccount(this.activeMailbox?.accountId)
 		},
 		activeMailbox() {
-			return this.$store.getters.getMailbox(this.$route.params.mailboxId)
+			return this.mainStore.getMailbox(this.$route.params.mailboxId)
 		},
 		menu() {
 			return this.buildMenu()
@@ -81,7 +83,7 @@ export default {
 		},
 	},
 	async beforeMount() {
-		const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+		const accounts = this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		this.accounts = await Promise.all(
 			 accounts.map(async (account) => {
 				return { ...account, connectionStatus: await testAccountConnection(account.id) }
@@ -89,9 +91,9 @@ export default {
 
 	},
 	created() {
-		const accounts = this.$store.getters.accounts
-		let startMailboxId = this.$store.getters.getPreference('start-mailbox-id')
-		if (startMailboxId && !this.$store.getters.getMailbox(startMailboxId)) {
+		const accounts = this.mainStore.getAccounts
+		let startMailboxId = this.mainStore.getPreference('start-mailbox-id')
+		if (startMailboxId && !this.mainStore.getMailbox(startMailboxId)) {
 			// The start ID is set but the mailbox doesn't exist anymore
 			startMailboxId = null
 		}
@@ -108,7 +110,7 @@ export default {
 			// Show first account
 			const firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one mailbox
-			const firstMailbox = this.$store.getters.getMailboxes(firstAccount.id)[0]
+			const firstMailbox = this.mainStore.getMailboxes(firstAccount.id)[0]
 
 			console.debug('loading first mailbox of first account', firstAccount.id, firstMailbox.databaseId)
 
@@ -132,7 +134,7 @@ export default {
 			// Show first account
 			const firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one mailbox
-			const firstMailbox = this.$store.getters.getMailboxes(firstAccount.id)[0]
+			const firstMailbox = this.mainStore.getMailboxes(firstAccount.id)[0]
 
 			console.debug('loading composer with first account and mailbox', firstAccount.id, firstMailbox.id)
 

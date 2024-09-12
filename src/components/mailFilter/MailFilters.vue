@@ -53,6 +53,7 @@ import { randomId } from '../../util/randomId.js'
 import logger from '../../logger.js'
 import { mapStores } from 'pinia'
 import useMailFilterStore from '../../store/mailFilterStore.js'
+import useMainStore from '../../store/mainStore.js'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import DeleteModal from './DeleteModal.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -85,12 +86,12 @@ export default {
 		}
 	},
 	computed: {
-		...mapStores(useMailFilterStore),
+		...mapStores(useMailFilterStore, useMainStore),
 		filters() {
 			return this.mailFilterStore.filters
 		},
 		scriptData() {
-			return this.$store.getters.getActiveSieveScript(this.account.id)
+			return this.mainStore.getActiveSieveScript(this.account.id)
 		},
 	},
 	watch: {
@@ -153,7 +154,7 @@ export default {
 				await this.mailFilterStore.update(this.account.id).then(() => {
 					showSuccess(t('mail', 'Filter saved'))
 				})
-				await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
+				await this.mainStore.fetchActiveSieveScript({ accountId: this.account.id })
 			} catch (e) {
 				logger.error(e)
 				showError(t('mail', 'Could not save filter'))
@@ -184,7 +185,7 @@ export default {
 				this.loading = false
 			}
 
-			await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
+			await this.mainStore.fetchActiveSieveScript({ accountId: this.account.id })
 		},
 		closeModal() {
 			this.currentFilter = null

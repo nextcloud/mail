@@ -28,6 +28,8 @@
 
 <script>
 import Logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'EditorSettings',
@@ -42,15 +44,17 @@ export default {
 			mode: this.account.editorMode,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	watch: {
 		mode(val, oldVal) {
-			this.$store
-				.dispatch('patchAccount', {
-					account: this.account,
-					data: {
-						editorMode: val,
-					},
-				})
+			this.mainStore.patchAccount({
+				account: this.account,
+				data: {
+					editorMode: val,
+				},
+			})
 				.then(() => {
 					Logger.info('editor mode updated')
 				})

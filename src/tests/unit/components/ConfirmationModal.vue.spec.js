@@ -4,14 +4,12 @@
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vuex from 'vuex'
 
 import ConfirmationModal from '../../../components/ConfirmationModal.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
 
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
 localVue.mixin(Nextcloud)
 
 describe('ConfirmationModal', () => {

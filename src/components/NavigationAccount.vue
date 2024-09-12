@@ -99,6 +99,9 @@ import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
 import { DialogBuilder } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
+
 export default {
 	name: 'NavigationAccount',
 	components: {
@@ -156,8 +159,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		showSettings() {
-			return this.$store.getters.showSettingsForAccount(this.account.id)
+			return this.mainStore.showSettingsForAccount(this.account.id)
 		},
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
@@ -187,7 +191,7 @@ export default {
 			logger.info('creating mailbox ' + name)
 			this.menuOpen = false
 			try {
-				await this.$store.dispatch('createMailbox', {
+				await this.mainStore.createMailbox({
 					account: this.account, name,
 				})
 			} catch (error) {
@@ -222,7 +226,7 @@ export default {
 						callback: async () => {
 							this.loading.delete = true
 							try {
-								await this.$store.dispatch('deleteAccount', this.account)
+								await this.mainStore.deleteAccount(this.account)
 								logger.info(`account ${id} deleted, redirecting …`)
 
 								// TODO: update store and handle this more efficiently
@@ -239,24 +243,21 @@ export default {
 			await dialog.show()
 		},
 		changeAccountOrderUp() {
-			this.$store
-				.dispatch('moveAccount', { account: this.account, up: true })
+			this.mainStore.moveAccount({ account: this.account, up: true })
 				.catch((error) => logger.error('could not move account up', { error }))
 		},
 		changeAccountOrderDown() {
-			this.$store
-				.dispatch('moveAccount', { account: this.account })
+			this.mainStore.moveAccount({ account: this.account })
 				.catch((error) => logger.error('could not move account down', { error }))
 		},
 		changeShowSubscribedOnly(onlySubscribed) {
 			this.savingShowOnlySubscribed = true
-			this.$store
-				.dispatch('patchAccount', {
-					account: this.account,
-					data: {
-						showSubscribedOnly: onlySubscribed,
-					},
-				})
+			this.mainStore.patchAccount({
+				account: this.account,
+				data: {
+					showSubscribedOnly: onlySubscribed,
+				},
+			})
 				.then(() => {
 					this.savingShowOnlySubscribed = false
 					logger.info('show only subscribed mailboxes updated to ' + onlySubscribed)
@@ -293,9 +294,9 @@ export default {
 		 */
 		showAccountSettings(show) {
 			if (show) {
-				this.$store.commit('showSettingsForAccount', this.account.id)
+				this.mainStore.showSettingsForAccountMutation(this.account.id)
 			} else {
-				this.$store.commit('showSettingsForAccount', null)
+				this.mainStore.showSettingsForAccountMutation(null)
 			}
 		},
 	},

@@ -77,7 +77,8 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import { NcButton, NcDialog, NcLoadingIcon, NcRichText, NcSelect } from '@nextcloud/vue'
 
 import { translateText } from '../service/translationService.js'
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'TranslationModal',
@@ -116,9 +117,9 @@ export default {
 	},
 
 	computed: {
-		...mapGetters({
-			availableInputLanguages: 'getTranslationInputLanguages',
-			availableOutputLanguages: 'getTranslationOutputLanguages',
+		...mapState(useMainStore, {
+			availableInputLanguages: 'translationInputLanguages',
+			availableOutputLanguages: 'translationOutputLanguages',
 		}),
 
 		userLanguage() {
