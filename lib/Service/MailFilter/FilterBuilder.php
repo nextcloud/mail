@@ -11,6 +11,7 @@ namespace OCA\Mail\Service\MailFilter;
 
 use OCA\Mail\Exception\ImapFlagEncodingException;
 use OCA\Mail\IMAP\ImapFlag;
+use OCA\Mail\Sieve\SieveUtils;
 
 class FilterBuilder {
 	private const SEPARATOR = '### Nextcloud Mail: Filters ### DON\'T EDIT ###';
@@ -38,21 +39,21 @@ class FilterBuilder {
 					$tests[] = sprintf(
 						'header :%s "Subject" %s',
 						$test['operator'],
-						$this->stringList($test['values'])
+						SieveUtils::stringList($test['values']),
 					);
 				}
 				if ($test['field'] === 'to') {
 					$tests[] = sprintf(
 						'address :%s :all "To" %s',
 						$test['operator'],
-						$this->stringList($test['values'])
+						SieveUtils::stringList($test['values']),
 					);
 				}
 				if ($test['field'] === 'from') {
 					$tests[] = sprintf(
 						'address :%s :all "From" %s',
 						$test['operator'],
-						$this->stringList($test['values'])
+						SieveUtils::stringList($test['values']),
 					);
 				}
 			}
@@ -61,11 +62,17 @@ class FilterBuilder {
 			foreach ($filter['actions'] as $action) {
 				if ($action['type'] === 'fileinto') {
 					$extensions[] = 'fileinto';
-					$actions[] = sprintf('fileinto "%s";', $action['mailbox']);
+					$actions[] = sprintf(
+						'fileinto "%s";',
+						SieveUtils::escapeString($action['mailbox'])
+					);
 				}
 				if ($action['type'] === 'addflag') {
 					$extensions[] = 'imap4flags';
-					$actions[] = sprintf('addflag %s;', $this->stringList($this->sanitizeFlag($action['flag'])));
+					$actions[] = sprintf(
+						'addflag "%s";',
+						SieveUtils::escapeString($this->sanitizeFlag($action['flag']))
+					);
 				}
 				if ($action['type'] === 'keep') {
 					$actions[] = 'keep;';
@@ -95,7 +102,7 @@ class FilterBuilder {
 
 		if (count($extensions) > 0) {
 			$requireSection[] = self::SEPARATOR;
-			$requireSection[] = 'require ' . $this->stringList($extensions) . ';';
+			$requireSection[] = 'require ' . SieveUtils::stringList($extensions) . ';';
 			$requireSection[] = self::SEPARATOR;
 			$requireSection[] = '';
 		}
@@ -116,22 +123,6 @@ class FilterBuilder {
 			[$untouchedScript],
 			$filterSection,
 		));
-	}
-
-	private function stringList(string|array $value): string {
-		if (is_string($value)) {
-			$items = explode(',', $value);
-		} else {
-			$items = $value;
-		}
-
-		$items = array_map([$this, 'quoteString'], $items);
-
-		return '[' . implode(', ', $items) . ']';
-	}
-
-	private function quoteString(string $value): string {
-		return '"' . $value . '"';
 	}
 
 	private function sanitizeFlag(string $flag): string {
