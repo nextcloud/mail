@@ -14,7 +14,7 @@ use OCA\Mail\Db\MailAccount;
 class AllowedRecipientsService {
 
 	public function __construct(
-		private readonly AliasesService $aliasesService,
+		private AliasesService $aliasesService,
 	) {
 	}
 
