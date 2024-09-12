@@ -82,6 +82,8 @@ class FilterBuilder {
 				}
 			}
 
+			// Error: lib/Service/MailFilter/FilterBuilder.php:88:15: PossiblyUndefinedArrayOffset: Possibly undefined array key $tests[0] on list{0?: non-empty-string} (see https://psalm.dev/167)
+
 			if (count($tests) > 1) {
 				$ifTest = sprintf('%s (%s)', $filter['operator'], implode(', ', $tests));
 			} else {
