@@ -10,7 +10,7 @@ import uniq from 'lodash/fp/uniq.js'
 import Vue from 'vue'
 
 import { sortMailboxes } from '../imap/MailboxSorter.js'
-import { normalizedEnvelopeListId } from './normalization.js'
+import { normalizedEnvelopeListId } from '../util/normalization.js'
 import { FOLLOW_UP_MAILBOX_ID, UNIFIED_ACCOUNT_ID } from './constants.js'
 
 const transformMailboxName = (account, mailbox) => {
