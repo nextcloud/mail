@@ -3,9 +3,9 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal size="full"
+	<NcModal size="large"
 		:close-on-click-outside="false"
-		name="Name inside modal"
+		:name="t('mail','Update mail filter')"
 		@close="closeModal">
 		<div class="modal__content">
 			<div class="filter-name">
@@ -49,18 +49,14 @@
 				</NcButton>
 			</div>
 
-			<div class="filter-priority">
-				<NcTextField :value.sync="clone.priority"
-					type="number"
-					:label="t('mail', 'Priority')"
-					:required="true" />
-			</div>
+			<NcTextField :value.sync="clone.priority"
+				type="number"
+				:label="t('mail', 'Priority')"
+				:required="true" />
 
-			<div>
-				<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
-					{{ t('mail', 'Enable filter') }}
-				</NcCheckboxRadioSwitch>
-			</div>
+			<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
+				{{ t('mail', 'Enable filter') }}
+			</NcCheckboxRadioSwitch>
 
 			<NcButton type="primary"
 				@click="updateFilter">
@@ -79,7 +75,6 @@ import MailFilterTest from './MailFilterTest.vue'
 import MailFilterOperator from './MailFilterOperator.vue'
 import { randomId } from '../../util/randomId'
 import MailFilterAction from './MailFilterAction.vue'
-import logger from '../../logger'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {

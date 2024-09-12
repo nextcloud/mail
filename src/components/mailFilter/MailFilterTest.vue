@@ -4,8 +4,8 @@
 -->
 <template>
 	<div class="mail-filter-rows">
-		<div class="mail-filter-row">
-			<div class="mail-filter-column">
+		<div class="mail-filter-rows__row">
+			<div class="mail-filter-rows__row__column">
 				<NcSelect id="mail-filter-field"
 					:value="test.field"
 					:required="true"
@@ -13,7 +13,7 @@
 					:options="['subject', 'to', 'from']"
 					@input="updateTest({ field: $event })" />
 			</div>
-			<div class="mail-filter-column">
+			<div class="mail-filter-rows__row__column">
 				<NcSelect id="mail-filter-operator"
 					:value="test.operator"
 					:required="true"
@@ -21,7 +21,7 @@
 					:options="['is', 'contains', 'matches']"
 					@input="updateTest({ operator: $event })" />
 			</div>
-			<div class="mail-filter-column">
+			<div class="mail-filter-rows__row__column">
 				<NcButton aria-label="Delete action"
 					type="tertiary-no-background"
 					@click="deleteTest">
@@ -32,21 +32,21 @@
 				</NcButton>
 			</div>
 		</div>
-		<div class="mail-filter-row">
-			<div class="mail-filter-column values-list">
-				<div v-for="(value, index) in test.values" :key="index" class="values-list-item">
+		<div class="mail-filter-rows__row">
+			<div class="mail-filter-rows__row__column values-list">
+				<div v-for="(value, index) in test.values" :key="index" class="values-list__item">
 					<NcChip :text="value"
 						@close="deleteValue(index)" />
 					<span v-if="(index + 1) < test.values.length">{{ t('mail', 'or') }}</span>
 				</div>
 			</div>
 		</div>
-		<div class="mail-filter-row">
-			<div class="mail-filter-column">
+		<div class="mail-filter-rows__row">
+			<div class="mail-filter-rows__row__column">
 				<NcTextField :value.sync="inputValue"
 					:label="t('mail', 'Value')" />
 			</div>
-			<div class="mail-filter-column">
+			<div class="mail-filter-rows__row__column">
 				<NcButton aria-label="Add value"
 					type="tertiary-no-background"
 					@click="addValue">
@@ -118,48 +118,28 @@ export default {
 <style lang="scss" scoped>
 .mail-filter-rows {
 	margin-bottom: calc(var(--default-grid-baseline) * 4);
-}
-.mail-filter-row {
-	display: flex;
-	gap: var(--default-grid-baseline);
-	align-items: baseline;
+	&__row {
+		display: flex;
+		gap: var(--default-grid-baseline);
+		align-items: baseline;
+		&__column {
+			display: block;
+			flex-grow: 1;
+		}
+		&__column *{
+			width: 100%;
+		}
+
+	}
 }
 
 .values-list {
 	display: flex;
 	gap: var(--default-grid-baseline);
 	flex-wrap: wrap;
-}
-
-.values-list-item {
-	display: flex;
-	gap: var(--default-grid-baseline);
-}
-
-.mail-filter-column label {
-	display: block;
-}
-
-.mail-filter-values {
-	display: flex;
-}
-
-.form-group {
-	margin: calc(var(--default-grid-baseline) * 4) 0;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.external-label {
-	display: flex;
-	width: 100%;
-	margin-top: 1rem;
-}
-
-.external-label label {
-	padding-top: 7px;
-	padding-right: 14px;
-	white-space: nowrap;
+	&__item {
+		display: flex;
+		gap: var(--default-grid-baseline);
+	}
 }
 </style>

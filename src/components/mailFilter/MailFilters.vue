@@ -55,6 +55,7 @@ import { mapStores } from 'pinia'
 import useMailFilterStore from '../../store/mailFilterStore'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import MailFilterDeleteModal from './MailFilterDeleteModal.vue'
+import { showSuccess } from '@nextcloud/dialogs'
 
 export default {
 	name: 'MailFilters',
@@ -119,7 +120,7 @@ export default {
 			this.currentFilter = {
 				id: randomId(),
 				name: t('mail', 'New filter'),
-				enable: false,
+				enable: true,
 				operator: 'allof',
 				tests: [],
 				actions: [],
@@ -153,7 +154,9 @@ export default {
 			})
 
 			try {
-				await this.mailFilterStore.update(this.account.id)
+				await this.mailFilterStore.update(this.account.id).then(() => {
+					showSuccess(t('mail', 'Filter saved'))
+				})
 			} catch (e) {
 				// TODO error toast
 			} finally {

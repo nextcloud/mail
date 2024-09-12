@@ -20,12 +20,6 @@
 				type="radio">
 				{{ t('mail', 'anyof') }}
 			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch :checked.sync="filter.operator"
-				value="true"
-				name="sharing_permission_radio"
-				type="radio">
-				{{ t('mail', 'true') }}
-			</NcCheckboxRadioSwitch>
 		</div>
 	</div>
 </template>
