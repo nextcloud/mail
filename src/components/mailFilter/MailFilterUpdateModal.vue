@@ -77,9 +77,9 @@
 import { NcButton, NcCheckboxRadioSwitch, NcModal, NcSelect, NcTextField, NcLoadingIcon } from '@nextcloud/vue'
 import MailFilterTest from './MailFilterTest.vue'
 import MailFilterOperator from './MailFilterOperator.vue'
-import { randomId } from '../util/randomId'
+import { randomId } from '../../util/randomId'
 import MailFilterAction from './MailFilterAction.vue'
-import logger from '../logger'
+import logger from '../../logger'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {

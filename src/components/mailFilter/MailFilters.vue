@@ -49,10 +49,10 @@ import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcActionButton, Nc
 import IconCheck from 'vue-material-design-icons/Check.vue'
 import IconLock from 'vue-material-design-icons/Lock.vue'
 import MailFilterUpdateModal from './MailFilterUpdateModal.vue'
-import { randomId } from '../util/randomId'
-import logger from '../logger'
+import { randomId } from '../../util/randomId'
+import logger from '../../logger'
 import { mapStores } from 'pinia'
-import useMailFilterStore from '../store/mailFilterStore'
+import useMailFilterStore from '../../store/mailFilterStore'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import MailFilterDeleteModal from './MailFilterDeleteModal.vue'
 
