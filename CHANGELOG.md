@@ -6,7 +6,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 4.0.0 - unreleased
+## 4.0.0 - 2024-09-12
+### Added
+- More compact UI
+- Search subject, sender and recipient by default
+- Internal addresses
+- Follow-up reminders
+- Native editor toolbar design
+- Send and read emails via OCS API
+- Export accounts as JSON
+### Changed
+- Mark junk messages as read
+- Updated and new translations
+### Fixed
+- Vulnerable dependencies
+- IMAP cache inconsistencies
+- MDN requests
+- Create tasks from email
+- SMTP connection handling on error
+- Attachments content type parameter
+- Design issues
 
 ## 3.6.0 – unreleased
 ### Added
