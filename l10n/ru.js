@@ -115,6 +115,7 @@ OC.L10N.register(
     "Sorting" : "Сортировка",
     "Newest" : "Более новые",
     "Oldest" : "Более старые",
+    "Gravatar settings" : "Настройки Gravatar",
     "Use Gravatar and favicon avatars" : "Использовать значки Gravatar и favicon",
     "Register as application for mail links" : "Зарегистрировать в качестве приложения для обработки почтовых ссылок",
     "Register" : "Регистрация",
