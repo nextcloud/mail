@@ -14,6 +14,7 @@ OC.L10N.register(
     "Mail" : "電子郵件",
     "You are reaching your mailbox quota limit for {account_email}" : "您即將達到 {account_email} 的信箱配額限制",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "您目前使用了信箱儲存空間的 {percentage}。請刪除不必要的電子郵件以釋出空間。",
+    "Mail Application" : "郵件應用程式",
     "Mails" : "郵件",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "寄件者電子郵件：%1$s 不在通訊錄中，但寄件者名稱：%2$s 在通訊錄中，但其電子郵件為：%3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "寄件者電子郵件：%1$s 不在通訊錄中，但寄件者名稱：%2$s 在通訊錄中，但其電子郵件為：%3$s",

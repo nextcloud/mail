@@ -12,6 +12,7 @@
     "Mail" : "البريد",
     "You are reaching your mailbox quota limit for {account_email}" : "لقد قاربت على استنفاذ الحصة التخزينية لصندوق بريدك {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "أنت تستخدم الآن {percentage} مع سعة صندوق البريد. قم رجاءً بتفريغ بعض المساحة و ذلك بحذف البريد غير الضروري.",
+    "Mail Application" : "تطبيق البريد ",
     "Mails" : "رسائل",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "مُرسِل الإيميل: %1$s ليس في دفتر العناوين؛ لكن اسم المُرسِل: %2$s مُسجّلٌ في دفتر العناوين مع الإيميل التالي: %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "عنوان إيميل المُرسِل: %1$s ليس في دفتر العناوين؛ لكن اسم المُرسِل: %2$s موجود مرتبطاً بعناوين الإيميل التالية : %3$s",

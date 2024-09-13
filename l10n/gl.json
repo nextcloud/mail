@@ -12,6 +12,7 @@
     "Mail" : "Correo",
     "You are reaching your mailbox quota limit for {account_email}" : "Está a piques de acadar o límite de cota da súa caixa de correo para {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Está a usar o {percentage} do almacenamento da súa caixa de correo. Faga espazo eliminando os correos que non sexan necesarios.",
+    "Mail Application" : "Aplicación de Correo",
     "Mails" : "Correos-e",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "O correo do remitente: %1$s non está no caderno de enderezos, mais o nome do remitente: %2$s está no caderno de enderezos co seguinte correo: %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "O correo do remitente: %1$s non está no caderno de enderezos, mais o nome do remitente: %2$s está no caderno de enderezos cos seguintes correos: %3$s",
