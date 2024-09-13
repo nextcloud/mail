@@ -116,7 +116,7 @@
     "css-loader": "^6.10.0",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-import": "^2.30.0",
     "eslint-plugin-standard": "^4.1.0",
     "eslint-plugin-vue": "^9.24.0",
     "file-loader": "^6.2.0",
