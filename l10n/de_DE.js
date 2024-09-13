@@ -14,6 +14,7 @@ OC.L10N.register(
     "Mail" : "E-Mail",
     "You are reaching your mailbox quota limit for {account_email}" : "Sie erreichen die Grenze Ihres Postfach-Kontingents für {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Sie nutzen derzeit {percentage} Ihres Postfachspeichers. Bitte schaffen Sie etwas Platz, indem Sie nicht benötigte E-Mails löschen.",
+    "Mail Application" : "E-Mail Anwendung",
     "Mails" : "E-Mails",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "E-Mail-Adresse des Absenders %1$s ist nicht im Adressbuch, aber der Name des Absenders %2$s ist mit der folgender E-Mail-Adresse im Adressbuch %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "E-Mail-Adresse des Absenders %1$s ist nicht im Adressbuch, aber der Name des Absenders %2$s ist mit den folgenden E-Mail-Adressen im Adressbuch %3$s",
