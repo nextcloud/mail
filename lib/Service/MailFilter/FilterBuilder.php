@@ -95,7 +95,7 @@ class FilterBuilder {
 			}
 
 			$ifBlock = sprintf(
-				"if %s {\r\n%s\r\n}\r\n",
+				"if %s {\r\n%s\r\n}",
 				$ifTest,
 				implode(self::SIEVE_NEWLINE, $actions)
 			);

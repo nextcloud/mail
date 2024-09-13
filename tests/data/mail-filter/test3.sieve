@@ -9,10 +9,8 @@ if anyof (header :contains "Subject" ["Project-A", "Project-B"], address :is :al
 fileinto "Test Data";
 stop;
 }
-
 # Filter: Test 3.2
 if address :contains :all "To" ["@example.org"] {
 addflag "$test_a";
 }
-
 ### Nextcloud Mail: Filters ### DON'T EDIT ###

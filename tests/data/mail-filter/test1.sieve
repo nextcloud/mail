@@ -8,5 +8,4 @@ require ["imap4flags"];
 if address :is :all "From" ["alice@example.org", "bob@example.org"] {
 addflag "$alice_and_bob";
 }
-
 ### Nextcloud Mail: Filters ### DON'T EDIT ###

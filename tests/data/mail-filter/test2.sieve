@@ -8,5 +8,4 @@ require ["fileinto"];
 if anyof (header :contains "Subject" ["Project-A", "Project-B"], address :is :all "From" ["john@example.org"]) {
 fileinto "Test Data";
 }
-
 ### Nextcloud Mail: Filters ### DON'T EDIT ###
