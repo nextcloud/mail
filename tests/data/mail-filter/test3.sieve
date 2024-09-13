@@ -14,7 +14,7 @@ stop;
 
 # Filter: Test B
 if address :contains :all "To" ["@example.org"] {
-addflag ["$test_a"];
+addflag "$test_a";
 }
 
 ### Nextcloud Mail: Filters ### DON'T EDIT ###
