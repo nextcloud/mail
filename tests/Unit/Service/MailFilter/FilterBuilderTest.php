@@ -52,7 +52,7 @@ class FilterBuilderTest extends TestCase {
 	}
 
 	public function dataBuild(): array {
-		$files = glob($this->testFolder . 'test*.json');
+		$files = glob($this->testFolder . 'builder*.json');
 		$tests = [];
 
 		foreach($files as $file) {
