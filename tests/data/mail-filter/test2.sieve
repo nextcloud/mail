@@ -5,8 +5,8 @@ require ["fileinto"];
 # Hello, this is a test
 
 ### Nextcloud Mail: Filters ### DON'T EDIT ###
-# DATA: [{"name":"Test 2000","enable":true,"operator":"anyof","tests":[{"operator":"contains","values":["Project-A","Project-B"],"field":"subject"},{"operator":"is","values":["john@example.org"],"field":"from"}],"actions":[{"type":"fileinto","flag":"","mailbox":"Test Data"}],"priority":"20"}]
-# Filter: Test 2000
+# DATA: [{"name":"Test 2","enable":true,"operator":"anyof","tests":[{"operator":"contains","values":["Project-A","Project-B"],"field":"subject"},{"operator":"is","values":["john@example.org"],"field":"from"}],"actions":[{"type":"fileinto","flag":"","mailbox":"Test Data"}],"priority":"20"}]
+# Filter: Test 2
 if anyof (header :contains "Subject" ["Project-A", "Project-B"], address :is :all "From" ["john@example.org"]) {
 fileinto "Test Data";
 }

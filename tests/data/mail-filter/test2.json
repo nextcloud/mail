@@ -1,6 +1,6 @@
 [
 	{
-		"name": "Test 2000",
+		"name": "Test 2",
 		"enable": true,
 		"operator": "anyof",
 		"tests": [

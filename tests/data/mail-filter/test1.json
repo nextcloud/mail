@@ -1,6 +1,6 @@
 [
 	{
-		"name": "Test 1000",
+		"name": "Test 1",
 		"enable": true,
 		"operator": "allof",
 		"tests": [

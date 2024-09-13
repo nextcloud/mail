@@ -1,6 +1,6 @@
 [
 	{
-		"name": "Test A",
+		"name": "Test 3.1",
 		"enable": true,
 		"operator": "anyof",
 		"tests": [
@@ -33,7 +33,7 @@
 		"priority": "20"
 	},
 	{
-		"name": "Test B",
+		"name": "Test 3.2",
 		"enable": true,
 		"operator": "allof",
 		"tests": [
