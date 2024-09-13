@@ -44,7 +44,7 @@
 		"youthweb/urllinker": "^2.0"
 	},
 	"require-dev": {
-		"psalm/phar": "^5.25.0",
+		"psalm/phar": "^5.26.1",
 		"roave/security-advisories": "dev-master"
 	},
 	"autoload": {
