@@ -110,18 +110,15 @@ class FilterBuilder {
 			$requireSection[] = self::SEPARATOR;
 			$requireSection[] = 'require ' . SieveUtils::stringList($extensions) . ';';
 			$requireSection[] = self::SEPARATOR;
-			$requireSection[] = '';
 		}
 
 		$stateJsonString = json_encode($this->sanitizeDefinition($filters), JSON_THROW_ON_ERROR);
 
 		$filterSection = [
-			'',
 			self::SEPARATOR,
 			self::DATA_MARKER . $stateJsonString,
 			...$commands,
 			self::SEPARATOR,
-			'',
 		];
 
 		return implode(self::SIEVE_NEWLINE, array_merge(

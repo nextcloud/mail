@@ -42,6 +42,9 @@ class FilterBuilderTest extends TestCase {
 
 		$script = $this->builder->buildSieveScript($filters, $untouchedScript);
 
+		// the .sieve files have \r\n line endings
+		$script .= "\r\n";
+
 		$this->assertStringEqualsFile(
 			$this->testFolder . $testName . '.sieve',
 			$script
