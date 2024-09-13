@@ -147,6 +147,7 @@ class FilterBuilder {
 				unset($action['id']);
 				return $action;
 			}, $filter['actions']);
+			$filter['priority'] = (int)$filter['priority'];
 			return $filter;
 		}, $filters);
 	}
