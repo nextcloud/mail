@@ -23,7 +23,6 @@
 		"actions": [
 			{
 				"type": "fileinto",
-				"flag": "",
 				"mailbox": "Test Data"
 			}
 		],
