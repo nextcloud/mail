@@ -151,10 +151,10 @@ class OutOfOfficeServiceTest extends TestCase {
 				['email@domain.com'],
 			)
 			->willReturn('# new sieve script');
-		$aliasesService = $this->serviceMock->getParameter('aliasesService');
-		$aliasesService->expects(self::once())
-			->method('findAll')
-			->with(1, 'user')
+		$allowedRecipientsService = $this->serviceMock->getParameter('allowedRecipientsService');
+		$allowedRecipientsService->expects(self::once())
+			->method('get')
+			->with($mailAccount)
 			->willReturn([]);
 		$sieveService->expects(self::once())
 			->method('updateActiveScript')
@@ -229,10 +229,10 @@ class OutOfOfficeServiceTest extends TestCase {
 				['email@domain.com'],
 			)
 			->willReturn('# new sieve script');
-		$aliasesService = $this->serviceMock->getParameter('aliasesService');
-		$aliasesService->expects(self::once())
-			->method('findAll')
-			->with(1, 'user')
+		$allowedRecipientsService = $this->serviceMock->getParameter('allowedRecipientsService');
+		$allowedRecipientsService->expects(self::once())
+			->method('get')
+			->with($mailAccount)
 			->willReturn([]);
 		$sieveService->expects(self::once())
 			->method('updateActiveScript')
