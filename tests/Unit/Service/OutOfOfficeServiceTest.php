@@ -155,7 +155,7 @@ class OutOfOfficeServiceTest extends TestCase {
 		$allowedRecipientsService->expects(self::once())
 			->method('get')
 			->with($mailAccount)
-			->willReturn([]);
+			->willReturn(['email@domain.com']);
 		$sieveService->expects(self::once())
 			->method('updateActiveScript')
 			->with('user', 1, '# new sieve script');
@@ -233,7 +233,7 @@ class OutOfOfficeServiceTest extends TestCase {
 		$allowedRecipientsService->expects(self::once())
 			->method('get')
 			->with($mailAccount)
-			->willReturn([]);
+			->willReturn(['email@domain.com']);
 		$sieveService->expects(self::once())
 			->method('updateActiveScript')
 			->with('user', 1, '# new sieve script');
