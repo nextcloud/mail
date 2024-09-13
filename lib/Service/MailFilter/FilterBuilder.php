@@ -60,6 +60,7 @@ class FilterBuilder {
 
 			if (count($tests) === 0) {
 				// skip filter without tests
+				$commands[] = '# No valid tests found';
 				continue;
 			}
 
