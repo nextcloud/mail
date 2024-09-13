@@ -28,8 +28,8 @@ class CopySentMessageHandler extends AHandler {
 			return $this->processNext($account, $localMessage);
 		}
 
-		$rawMesage = $localMessage->getRaw();
-		if ($rawMesage === null) {
+		$rawMessage = $localMessage->getRaw();
+		if ($rawMessage === null) {
 			$localMessage->setStatus(LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL);
 			return $localMessage;
 		}
@@ -64,7 +64,7 @@ class CopySentMessageHandler extends AHandler {
 			$this->messageMapper->save(
 				$client,
 				$sentMailbox,
-				$rawMesage,
+				$rawMessage,
 			);
 			$localMessage->setStatus(LocalMessage::STATUS_PROCESSED);
 		} catch (Horde_Imap_Client_Exception $e) {
