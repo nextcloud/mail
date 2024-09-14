@@ -17,10 +17,6 @@ codecov.yml
 .hg
 /issue_template.md
 /jest.config.js
-/.jscsrc
-/.jshintignore
-/.jshintrc
-/karma.conf.js
 /krankerl.toml
 /l10n/no-php
 /.tx
@@ -30,7 +26,6 @@ codecov.yml
 /package.json
 /package-lock.json
 /phpunit*xml
-/postcss.config.js
 /psalm.xml
 /rector.php
 /renovate.json
