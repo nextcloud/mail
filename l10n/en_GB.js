@@ -14,6 +14,7 @@ OC.L10N.register(
     "Mail" : "Mail",
     "You are reaching your mailbox quota limit for {account_email}" : "You are reaching your mailbox quota limit for {account_email}",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails.",
+    "Mail Application" : "Mail Application",
     "Mails" : "Mails",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s",
