@@ -16,7 +16,6 @@ use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
 use OCP\IUser;
 
 class SyncJobTest extends TestCase {
@@ -69,10 +68,7 @@ class SyncJobTest extends TestCase {
 			'accountId' => 123,
 		]);
 		$this->job->setLastRun(0);
-		$this->job->execute(
-			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
-		);
+		$this->job->start($this->createMock(JobList::class));
 	}
 
 	public function testNoAuthentication(): void {
@@ -106,10 +102,7 @@ class SyncJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		$this->job->execute(
-			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
-		);
+		$this->job->start($this->createMock(JobList::class));
 	}
 
 	public function testUserDoesntExist(): void {
@@ -145,9 +138,6 @@ class SyncJobTest extends TestCase {
 		$this->job->setArgument([
 			'accountId' => 123,
 		]);
-		$this->job->execute(
-			$this->createMock(JobList::class),
-			$this->createMock(ILogger::class)
-		);
+		$this->job->start($this->createMock(JobList::class));
 	}
 }
