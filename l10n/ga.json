@@ -12,6 +12,7 @@
     "Mail" : "Post",
     "You are reaching your mailbox quota limit for {account_email}" : "Tá teorainn chuóta do bhosca poist le haghaidh {account_email} sroichte agat",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "Tá {percentage} de do stór bosca ríomhphoist in úsáid agat faoi láthair. Déan roinnt spáis trí ríomhphoist nach bhfuil ag teastáil a scriosadh le do thoil.",
+    "Mail Application" : "Feidhmchlár Ríomhphoist",
     "Mails" : "Ríomhphoist",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "Ríomhphost an tseoltóra: níl %1$s sa leabhar seoltaí, ach tá ainm an tseoltóra: %2$s sa leabhar seoltaí leis an ríomhphost seo a leanas: %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "Ríomhphost an tseoltóra: níl %1$s sa leabhar seoltaí, ach tá ainm an tseoltóra: %2$s sa leabhar seoltaí leis na ríomhphoist seo a leanas: %3$s",

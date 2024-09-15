@@ -12,6 +12,7 @@
     "Mail" : "E-posta",
     "You are reaching your mailbox quota limit for {account_email}" : "{account_email} e-posta kutusunun depolama alanı sınırına yaklaşıyorsunuz",
     "You are currently using {percentage} of your mailbox storage. Please make some space by deleting unneeded emails." : "E-posta kutunuzun depolama alanını {percentage} kadarını kullanıyorsunuz. Lütfen gereksiz e-postaları silerek biraz yer açın.",
+    "Mail Application" : "E-posta uygulaması",
     "Mails" : "E-postalar",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following email: %3$s" : "Gönderici e-posta adresi: %1$s adres defterinde yok. Ancak %2$s gönderici adı şu e-posta adresiyle birlikte adres defterinde var: %3$s",
     "Sender email: %1$s is not in the address book, but the sender name: %2$s is in the address book with the following emails: %3$s" : "Gönderici e-posta adresi: %1$s adres defterinde yok. Ancak %2$s gönderici adı şu e-posta adresleriyle birlikte adres defterinde var: %3$s",
