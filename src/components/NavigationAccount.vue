@@ -99,6 +99,9 @@ import MenuDown from 'vue-material-design-icons/ChevronDown.vue'
 import MenuUp from 'vue-material-design-icons/ChevronUp.vue'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
 import { DialogBuilder } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
+
 export default {
 	name: 'NavigationAccount',
 	components: {
@@ -156,8 +159,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		showSettings() {
-			return this.$store.getters.showSettingsForAccount(this.account.id)
+			return this.mainStore.showSettingsForAccount(this.account.id)
 		},
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false

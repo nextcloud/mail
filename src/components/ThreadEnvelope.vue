@@ -302,10 +302,11 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import useOutboxStore from '../store/outboxStore.js'
-import { mapStores } from 'pinia'
 import moment from '@nextcloud/moment'
 import { translateTagDisplayName } from '../util/tag.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -403,7 +404,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapStores(useOutboxStore),
+		...mapStores(useOutboxStore, useMainStore),
 		inlineMenuSize() {
 			// eslint-disable-next-line no-unused-expressions
 			const { envelope } = this.$refs
@@ -412,7 +413,7 @@ export default {
 			return Math.floor(spaceToFill / 44)
 		},
 		account() {
-			return this.$store.getters.getAccount(this.envelope.accountId)
+			return this.mainStore.getAccount(this.envelope.accountId)
 		},
 		from() {
 			if (!this.message || !this.message.from.length) {
@@ -449,12 +450,12 @@ export default {
 				&& isPgpText(this.envelope.previewText)
 		},
 		isImportant() {
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopeTags(this.envelope.databaseId)
 				.find((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter(
+			return this.mainStore.getEnvelopeTags(this.envelope.databaseId).filter(
 				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 		},
@@ -507,10 +508,10 @@ export default {
 			return mailboxHasRights(this.mailbox, 'w')
 		},
 		mailbox() {
-			return this.$store.getters.getMailbox(this.mailboxId)
+			return this.mainStore.getMailbox(this.mailboxId)
 		},
 		archiveMailbox() {
-			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
+			return this.mainStore.getMailbox(this.account.archiveMailboxId)
 		},
 		/**
 		 * @return {{isSigned: (boolean|undefined), signatureIsValid: (boolean|undefined)}}
@@ -558,7 +559,7 @@ export default {
 				return false
 			}
 
-			const tags = this.$store.getters.getEnvelopeTags(this.envelope.databaseId)
+			const tags = this.mainStore.getEnvelopeTags(this.envelope.databaseId)
 			return tags.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
 		},
 		/**
@@ -597,8 +598,8 @@ export default {
 			// assume that this is the relevant envelope to be scrolled to.
 			this.$nextTick(() => this.scrollToCurrentEnvelope())
 		}
-		if (this.$store.getters.getPreference('internal-addresses', 'false') === 'true') {
-			this.isInternal = this.$store.getters.isInternalAddress(this.envelope.from[0].email)
+		if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
+			this.isInternal = this.mainStore.isInternalAddress(this.envelope.from[0].email)
 		}
 		this.$checkInterval = setInterval(() => {
 			const { envelope } = this.$refs

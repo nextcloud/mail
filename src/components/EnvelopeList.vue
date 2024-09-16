@@ -266,6 +266,8 @@ import ShareIcon from 'vue-material-design-icons/Share.vue'
 import AlertOctagonIcon from 'vue-material-design-icons/AlertOctagon.vue'
 import TagIcon from 'vue-material-design-icons/Tag.vue'
 import TagModal from './TagModal.vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'EnvelopeList',
@@ -328,8 +330,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		sortOrder() {
-			return this.$store.getters.getPreference('sort-order', 'newest')
+			return this.mainStore.getPreference('sort-order', 'newest')
 		},
 
 		sortedEnvelops() {
@@ -351,7 +354,7 @@ export default {
 		isAtLeastOneSelectedImportant() {
 			// returns true if at least one selected message is marked as important
 			return this.selectedEnvelopes.some((env) => {
-				return this.$store.getters
+				return this.mainStore
 					.getEnvelopeTags(env.databaseId)
 					.some((tag) => tag.imapLabel === '$label1')
 			})
@@ -359,7 +362,7 @@ export default {
 		isAtLeastOneSelectedUnimportant() {
 			// returns true if at least one selected message is not marked as important
 			return this.selectedEnvelopes.some((env) => {
-				return !this.$store.getters
+				return !this.mainStore
 					.getEnvelopeTags(env.databaseId)
 					.some((tag) => tag.imapLabel === '$label1')
 			})

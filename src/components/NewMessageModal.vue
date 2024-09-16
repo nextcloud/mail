@@ -137,6 +137,7 @@ import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import useOutboxStore from '../store/outboxStore.js'
+import useMainStore from '../store/mainStore.js'
 import { mapStores } from 'pinia'
 
 export default {
@@ -177,7 +178,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapStores(useOutboxStore),
+		...mapStores(useOutboxStore, useMainStore),
 		...mapGetters(['showMessageComposer', 'getPreference']),
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
@@ -195,10 +196,10 @@ export default {
 			return t('mail', 'New message')
 		},
 		composerMessage() {
-			return this.$store.getters.composerMessage
+			return this.mainStore.composerMessage
 		},
 		composerData() {
-			return this.$store.getters.composerMessage?.data ?? {}
+			return this.mainStore.composerMessage?.data ?? {}
 		},
 		forwardedMessages() {
 			return this.composerMessage?.options?.forwardedMessages ?? []
@@ -225,7 +226,7 @@ export default {
 	methods: {
 		async openModalSize() {
 			try {
-				const sizePreference = this.$store.getters.getPreference('modalSize')
+				const sizePreference = this.mainStore.getPreference('modalSize')
 				this.largerModal = sizePreference === 'large'
 			} catch (error) {
 				console.error('Error getting modal size preference', error)
@@ -443,7 +444,7 @@ export default {
 			}
 
 			// Sync sent mailbox when it's currently open
-			const account = this.$store.getters.getAccount(data.accountId)
+			const account = this.mainStore.getAccount(data.accountId)
 			if (account && parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
 				setTimeout(() => {
 					this.$store.dispatch('syncEnvelopes', {
@@ -532,7 +533,7 @@ export default {
 			this.modalFirstOpen = false
 
 			await this.$store.dispatch('closeMessageComposer')
-			if (!this.$store.getters.composerMessageIsSaved && this.changed) {
+			if (!this.mainStore.composerMessageIsSaved && this.changed) {
 				await this.onDraft(this.cookedComposerData, { showToast: true })
 			}
 

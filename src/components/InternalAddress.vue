@@ -59,6 +59,8 @@ import IconCancel from '@mdi/svg/svg/cancel.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
 import logger from '../logger.js'
 import { showError } from '@nextcloud/dialogs'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 const sortByAddress = sortBy(prop('address'))
 
@@ -91,8 +93,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		list() {
-			return this.$store.getters.getInternalAddresses
+			return this.mainStore.getInternalAddresses
 		},
 		sortedDomains() {
 			return sortByAddress(this.list.filter(a => a.type === 'domain'))

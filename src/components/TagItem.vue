@@ -61,6 +61,8 @@ import { showInfo } from '@nextcloud/dialogs'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import IconEdit from 'vue-material-design-icons/Pencil.vue'
 import { translateTagDisplayName } from '../util/tag.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'TagItem',
@@ -95,6 +97,9 @@ export default {
 			renameTagLabel: true,
 			renameTagInput: false,
 		}
+	},
+	computed: {
+		...mapStores(useMainStore),
 	},
 	methods: {
 		translateTagDisplayName,
@@ -161,7 +166,7 @@ export default {
 		isSet(imapLabel) {
 			return this.envelopes.some(
 				(envelope) => (
-					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
+					this.mainStore.getEnvelopeTags(envelope.databaseId).some(
 						tag => tag.imapLabel === imapLabel,
 					)
 				),

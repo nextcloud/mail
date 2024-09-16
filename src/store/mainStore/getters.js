@@ -10,7 +10,7 @@ import { normalizedEnvelopeListId } from '../../util/normalization.js'
 import { getCalendarHome } from '../../service/caldavService.js'
 import toCalendar from '../../util/calendar.js'
 
-export default function mainStoreGetters() {
+export default function mainStoreGetters() {	
 	return {
 		getPreference: (state) => (key, def) => {
 			return defaultTo(def, state.preferences[key])
@@ -20,9 +20,6 @@ export default function mainStoreGetters() {
 		},
 		getAccount: (state) => (id) => {
 			return state.accounts[id]
-		},
-		getAllAccountSettings: (state) => {
-			return state.allAccountSettings
 		},
 		accounts: (state) => {
 			return state.accountList.map((id) => state.accounts[id])

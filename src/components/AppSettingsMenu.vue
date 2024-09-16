@@ -313,6 +313,8 @@ import TrustedSenders from './TrustedSenders.vue'
 import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import { mapGetters } from 'vuex'
+import useMainStore from '../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -366,38 +368,33 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
-			'isFollowUpFeatureAvailable',
-		]),
-		...mapGetters({
-			accounts: 'accounts',
-		}),
+		...mapState(useMainStore, ['accounts', 'isFollowUpFeatureAvailable']),
 		searchPriorityBody() {
-			return this.$store.getters.getPreference('search-priority-body', 'false') === 'true'
+			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
 		},
 		useBottomReplies() {
-			return this.$store.getters.getPreference('reply-mode', 'top') === 'bottom'
+			return this.mainStore.getPreference('reply-mode', 'top') === 'bottom'
 		},
 		useExternalAvatars() {
-			return this.$store.getters.getPreference('external-avatars', 'true') === 'true'
+			return this.mainStore.getPreference('external-avatars', 'true') === 'true'
 		},
 		useDataCollection() {
-			return this.$store.getters.getPreference('collect-data', 'true') === 'true'
+			return this.mainStore.getPreference('collect-data', 'true') === 'true'
 		},
 		useAutoTagging() {
-			return this.$store.getters.getPreference('tag-classified-messages', 'true') === 'true'
+			return this.mainStore.getPreference('tag-classified-messages', 'true') === 'true'
 		},
 		useInternalAddresses() {
-			return this.$store.getters.getPreference('internal-addresses', 'false') === 'true'
+			return this.mainStore.getPreference('internal-addresses', 'false') === 'true'
 		},
 		useFollowUpReminders() {
-			return this.$store.getters.getPreference('follow-up-reminders', 'true') === 'true'
+			return this.mainStore.getPreference('follow-up-reminders', 'true') === 'true'
 		},
 		allowNewMailAccounts() {
-			return this.$store.getters.getPreference('allow-new-accounts', true)
+			return this.mainStore.getPreference('allow-new-accounts', true)
 		},
 		layoutMode() {
-			return this.$store.getters.getPreference('layout-mode', 'vertical-split')
+			return this.mainStore.getPreference('layout-mode', 'vertical-split')
 		},
 	},
 	watch: {
@@ -413,7 +410,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.sortOrder = this.$store.getters.getPreference('sort-order', 'newest')
+		this.sortOrder = this.mainStore.getPreference('sort-order', 'newest')
 		document.addEventListener.call(window, 'mailvelope', () => this.checkMailvelope())
 	},
 	updated() {

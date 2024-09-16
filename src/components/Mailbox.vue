@@ -46,6 +46,8 @@ import EmptyMailboxSection from './EmptyMailboxSection.vue'
 import { showError, showWarning } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'Mailbox',
@@ -103,11 +105,12 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		sortOrder() {
-			return this.$store.getters.getPreference('sort-order', 'DESC')
+			return this.mainStore.getPreference('sort-order', 'DESC')
 		},
 		envelopes() {
-			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
+			return this.mainStore.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
@@ -145,7 +148,7 @@ export default {
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
-		if (this.$store.getters.hasFetchedInitialEnvelopes) {
+		if (this.mainStore.hasFetchedInitialEnvelopes) {
 			return
 		}
 

@@ -8,22 +8,24 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { showError } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from './logger.js'
 import { matchError } from './errors/match.js'
 import MailboxLockedError from './errors/MailboxLockedError.js'
+import { mapStores, mapState } from 'pinia'
+import useMainStore from './store/mainStore.js'
 
 export default {
 	name: 'App',
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'isExpiredSession',
 		]),
 		hasMailAccounts() {
-			return !!this.$store.getters.accounts.find((account) => !account.isUnified)
+			return !!this.mainStore.accounts.find((account) => !account.isUnified)
 		},
 	},
 	watch: {

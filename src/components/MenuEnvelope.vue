@@ -242,7 +242,8 @@ import NcActionInput from '@nextcloud/vue/dist/Components/NcActionInput.js'
 import AlarmIcon from 'vue-material-design-icons/Alarm.vue'
 import logger from '../logger.js'
 import moment from '@nextcloud/moment'
-import { mapGetters } from 'vuex'
+import { mapStores, mapState } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MenuEnvelope',
@@ -310,12 +311,13 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'isSnoozeDisabled',
 		]),
 		account() {
 			const accountId = this.envelope.accountId ?? this.mailbox.accountId
-			return this.$store.getters.getAccount(accountId)
+			return this.mainStore.getAccount(accountId)
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -348,7 +350,7 @@ export default {
 			return this.envelope.flags.seen
 		},
 		isImportant() {
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopeTags(this.envelope.databaseId)
 				.some((tag) => tag.imapLabel === '$label1')
 		},

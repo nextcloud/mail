@@ -41,6 +41,8 @@
 <script>
 import logger from '../logger.js'
 import MailboxInlinePicker from './MailboxInlinePicker.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'AccountDefaultsSettings',
@@ -59,9 +61,10 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		draftsMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.draftsMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.draftsMailboxId)
 				if (!mb) {
 					return
 				}
@@ -88,7 +91,7 @@ export default {
 		},
 		sentMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.sentMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.sentMailboxId)
 				if (!mb) {
 					return
 				}
@@ -115,7 +118,7 @@ export default {
 		},
 		trashMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.trashMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.trashMailboxId)
 				if (!mb) {
 					return
 				}
@@ -142,7 +145,7 @@ export default {
 		},
 		archiveMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.archiveMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.archiveMailboxId)
 				if (!mb) {
 					return
 				}
@@ -169,7 +172,7 @@ export default {
 		},
 		junkMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.junkMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.junkMailboxId)
 				if (!mb) {
 					return
 				}
@@ -196,7 +199,7 @@ export default {
 		},
 		snoozeMailbox: {
 			get() {
-				const mb = this.$store.getters.getMailbox(this.account.snoozeMailboxId)
+				const mb = this.mainStore.getMailbox(this.account.snoozeMailboxId)
 				if (!mb) {
 					return
 				}

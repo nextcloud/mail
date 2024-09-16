@@ -17,6 +17,8 @@
 <script>
 import logger from '../logger.js'
 import MailboxPicker from './MailboxPicker.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'MoveMailboxModal',
@@ -39,6 +41,9 @@ export default {
 			destMailboxId: undefined,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	methods: {
 		onClose() {
 			this.$emit('close')
@@ -56,7 +61,7 @@ export default {
 						})
 
 					} else {
-						const destMailbox = this.$store.getters.getMailbox(this.destMailboxId)
+						const destMailbox = this.mainStore.getMailbox(this.destMailboxId)
 						const newName = destMailbox.name + this.mailbox.delimiter + this.mailbox.name
 						await this.$store.dispatch('renameMailbox', {
 							account: this.account,
