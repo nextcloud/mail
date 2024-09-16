@@ -15,9 +15,6 @@ export default function mainStoreGetters() {
 		getPreference: (state) => (key, def) => {
 			return defaultTo(def, state.preferences[key])
 		},
-		isExpiredSession: (state) => {
-			return state.isExpiredSession
-		},
 		getAccount: (state) => (id) => {
 			return state.accounts[id]
 		},
@@ -49,20 +46,11 @@ export default function mainStoreGetters() {
 					.filter((mailbox) => mailbox.specialRole === specialRole),
 			)
 		},
-		showMessageComposer: (state) => {
-			return state.showMessageComposer
-		},
 		composerMessage: (state) => {
 			return state.newMessage
 		},
 		composerMessageOptions: (state) => {
 			return state.newMessage?.options
-		},
-		composerMessageIsSaved: (state) => {
-			return state.composerMessageIsSaved
-		},
-		composerSessionId: (state) => {
-			return state.composerSessionId
 		},
 		getEnvelope: (state) => (id) => {
 			return state.envelopes[id]
@@ -109,11 +97,6 @@ export default function mainStoreGetters() {
 					.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL),
 				)
 		},
-		isScheduledSendingDisabled: (state) => state.isScheduledSendingDisabled,
-		isSnoozeDisabled: (state) => state.isSnoozeDisabled,
-		googleOauthUrl: (state) => state.googleOauthUrl,
-		masterPasswordEnabled: (state) => state.masterPasswordEnabled,
-		microsoftOauthUrl: (state) => state.microsoftOauthUrl,
 		getActiveSieveScript: (state) => (accountId) => state.sieveScript[accountId],
 		getCurrentUserPrincipal: (state) => state.currentUserPrincipal,
 		getCurrentUserPrincipalEmail: (state) => state.currentUserPrincipal?.email,
