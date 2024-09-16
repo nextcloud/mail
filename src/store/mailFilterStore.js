@@ -4,9 +4,8 @@
  */
 
 import { defineStore } from 'pinia'
-import * as OutboxService from '../service/OutboxService'
-import * as MailFilterService from '../service/MailFilterService'
-import { randomId } from '../util/randomId'
+import * as MailFilterService from '../service/MailFilterService.js'
+import { randomId } from '../util/randomId.js'
 
 export default defineStore('mailFilter', {
 	state: () => {
@@ -18,24 +17,26 @@ export default defineStore('mailFilter', {
 		async fetch(accountId) {
 			await this.$patch(async (state) => {
 				const filters = await MailFilterService.getFilters(accountId)
-				state.filters = filters.map((filter) => {
-					filter.id = randomId()
-					filter.tests.map((test) => {
-						test.id = randomId()
-						if (!test.hasOwnProperty('values')) {
-							test.values = [test.value]
+				if (filters) {
+					state.filters = filters.map((filter) => {
+						filter.id = randomId()
+						filter.tests.map((test) => {
+							test.id = randomId()
+							if (!test.hasOwnProperty('values')) {
+								test.values = [test.value]
+							}
+							return test
+						})
+						filter.actions.map((action) => {
+							action.id = randomId()
+							return action
+						})
+						if (!filter.hasOwnProperty('priority')) {
+							filter.priority = 0
 						}
-						return test
+						return filter
 					})
-					filter.actions.map((action) => {
-						action.id = randomId()
-						return action
-					})
-					if (!filter.hasOwnProperty('priority')) {
-						filter.priority = 0
-					}
-					return filter
-				})
+				}
 			})
 		},
 		async update(accountId) {

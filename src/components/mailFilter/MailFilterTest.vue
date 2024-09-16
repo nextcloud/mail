@@ -7,6 +7,7 @@
 		<div class="mail-filter-rows__row">
 			<div class="mail-filter-rows__row__column">
 				<NcSelect id="mail-filter-field"
+					input-label="filed"
 					:value="test.field"
 					:required="true"
 					:label-outside="true"
@@ -15,6 +16,7 @@
 			</div>
 			<div class="mail-filter-rows__row__column">
 				<NcSelect id="mail-filter-operator"
+					input-label="operator"
 					:value="test.operator"
 					:required="true"
 					:label-outside="true"
@@ -35,6 +37,7 @@
 		<div class="mail-filter-rows__row">
 			<NcSelect id="mail-filter-value"
 				v-model="localValues"
+				input-label="value"
 				class="mail-filter-rows__row__select"
 				:multiple="true"
 				:wrap="true"
@@ -47,11 +50,8 @@
 	</div>
 </template>
 <script>
-import { NcActionButton, NcActions, NcButton, NcLoadingIcon, NcSelect, NcTextField, NcSelectTags } from '@nextcloud/vue'
+import { NcActionButton, NcActions, NcButton, NcLoadingIcon, NcSelect } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
-import NcChip from '@nextcloud/vue/dist/Components/NcChip.js'
-import CheckIcon from 'vue-material-design-icons/Check.vue'
-import ReceiptTextPlusIcon from 'vue-material-design-icons/ReceiptTextPlus.vue'
 
 export default {
 	name: 'MailFilterTest',
@@ -60,13 +60,8 @@ export default {
 		NcActions,
 		NcActionButton,
 		NcButton,
-		NcTextField,
 		NcSelect,
-		NcSelectTags,
 		DeleteIcon,
-		NcChip,
-		CheckIcon,
-		ReceiptTextPlusIcon,
 	},
 	props: {
 		test: {
@@ -112,6 +107,7 @@ export default {
 		}
 		&__select {
 			max-width: 100% !important;
+			width: 100%;
 		}
 
 	}

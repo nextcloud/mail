@@ -45,26 +45,21 @@
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
-import IconLock from 'vue-material-design-icons/Lock.vue'
+import { NcLoadingIcon as IconLoading, NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
 import MailFilterUpdateModal from './MailFilterUpdateModal.vue'
-import { randomId } from '../../util/randomId'
-import logger from '../../logger'
+import { randomId } from '../../util/randomId.js'
+import logger from '../../logger.js'
 import { mapStores } from 'pinia'
-import useMailFilterStore from '../../store/mailFilterStore'
+import useMailFilterStore from '../../store/mailFilterStore.js'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import MailFilterDeleteModal from './MailFilterDeleteModal.vue'
-import { showSuccess } from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 
 export default {
 	name: 'MailFilters',
 	components: {
-		IconLock,
 		NcButton,
-		ButtonVue,
 		IconLoading,
-		IconCheck,
 		NcListItem,
 		NcActionButton,
 		MailFilterUpdateModal,
@@ -157,13 +152,13 @@ export default {
 				await this.mailFilterStore.update(this.account.id).then(() => {
 					showSuccess(t('mail', 'Filter saved'))
 				})
+				await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
 			} catch (e) {
-				// TODO error toast
+				logger.error(e)
+				showError(t('mail', 'Could not save filter'))
 			} finally {
 				this.loading = false
 			}
-
-			await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
 		},
 		async deleteFilter(filter) {
 			this.loading = true
