@@ -25,7 +25,7 @@
 			</NcListItem>
 		</ul>
 		<NcButton class="app-settings-button"
-			type="secondary"
+			type="primary"
 			:aria-label="t('mail', 'New filter')"
 			@click.prevent.stop="createFilter">
 			{{ t('mail', 'New filter') }}

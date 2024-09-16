@@ -33,34 +33,21 @@
 			</div>
 		</div>
 		<div class="mail-filter-rows__row">
-			<div class="mail-filter-rows__row__column values-list">
-				<div v-for="(value, index) in test.values" :key="index" class="values-list__item">
-					<NcChip :text="value"
-						@close="deleteValue(index)" />
-					<span v-if="(index + 1) < test.values.length">{{ t('mail', 'or') }}</span>
-				</div>
-			</div>
+			<NcSelect id="mail-filter-value"
+				v-model="localValues"
+				class="mail-filter-rows__row__select"
+				:multiple="true"
+				:wrap="true"
+				:close-on-select="false"
+				:taggable="true"
+				@option:selected="updateTest({ values: localValues })"
+				@option:deselected="updateTest({ values: localValues })" />
 		</div>
-		<div class="mail-filter-rows__row">
-			<div class="mail-filter-rows__row__column">
-				<NcTextField :value.sync="inputValue"
-					:label="t('mail', 'Value')" />
-			</div>
-			<div class="mail-filter-rows__row__column">
-				<NcButton aria-label="Add value"
-					type="tertiary-no-background"
-					@click="addValue">
-					<template #icon>
-						<ReceiptTextPlusIcon :size="20" />
-					</template>
-					{{ t('mail', 'Add value') }}
-				</NcButton>
-			</div>
-		</div>
+		<hr class="solid">
 	</div>
 </template>
 <script>
-import { NcActionButton, NcActions, NcButton, NcLoadingIcon, NcSelect, NcTextField } from '@nextcloud/vue'
+import { NcActionButton, NcActions, NcButton, NcLoadingIcon, NcSelect, NcTextField, NcSelectTags } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import NcChip from '@nextcloud/vue/dist/Components/NcChip.js'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
@@ -75,6 +62,7 @@ export default {
 		NcButton,
 		NcTextField,
 		NcSelect,
+		NcSelectTags,
 		DeleteIcon,
 		NcChip,
 		CheckIcon,
@@ -89,7 +77,11 @@ export default {
 	data() {
 		return {
 			inputValue: '',
+			localValues: [],
 		}
+	},
+	mounted() {
+		this.localValues = [...this.test.values]
 	},
 	methods: {
 		updateTest(properties) {
@@ -98,24 +90,13 @@ export default {
 		deleteTest() {
 			this.$emit('delete-test', this.test)
 		},
-		addValue() {
-			if (this.inputValue.length > 0) {
-				const values = this.test.values
-				values.push(this.inputValue)
-				values.sort((a, b) => a.localeCompare(b))
-				this.updateTest({ values })
-			}
-			this.inputValue = ''
-		},
-		deleteValue(index) {
-			const values = this.test.values
-			values.splice(index, 1)
-			this.updateTest({ values })
-		},
 	},
 }
 </script>
 <style lang="scss" scoped>
+.solid {
+	margin: calc(var(--default-grid-baseline) * 4) 0 0 0;
+}
 .mail-filter-rows {
 	margin-bottom: calc(var(--default-grid-baseline) * 4);
 	&__row {
@@ -128,6 +109,9 @@ export default {
 		}
 		&__column *{
 			width: 100%;
+		}
+		&__select {
+			max-width: 100% !important;
 		}
 
 	}
