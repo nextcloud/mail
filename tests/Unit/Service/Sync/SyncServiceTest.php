@@ -9,11 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Service\Sync;
 
+use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxNotCachedException;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxStats;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\PreviewEnhancer;
@@ -21,10 +23,15 @@ use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Service\Sync\SyncService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class SyncServiceTest extends TestCase {
+
+	private IMAPClientFactory&MockObject $clientFactory;
+	private Horde_Imap_Client_Socket&MockObject $client;
+
 	/** @var ImapToDbSynchronizer */
 	private $synchronizer;
 
@@ -52,6 +59,8 @@ class SyncServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
+		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->synchronizer = $this->createMock(ImapToDbSynchronizer::class);
 		$this->filterStringParser = $this->createMock(FilterStringParser::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
@@ -61,6 +70,7 @@ class SyncServiceTest extends TestCase {
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 
 		$this->syncService = new SyncService(
+			$this->clientFactory,
 			$this->synchronizer,
 			$this->filterStringParser,
 			$this->mailboxMapper,
@@ -102,7 +112,10 @@ class SyncServiceTest extends TestCase {
 			[],
 			new MailboxStats(42, 10, null)
 		);
-
+		$this->clientFactory
+			->method('getClient')
+			->with($account)
+			->willReturn($this->client);
 		$this->messageMapper
 			->method('findUidsForIds')
 			->with($mailbox, [])
@@ -111,6 +124,7 @@ class SyncServiceTest extends TestCase {
 			->method('sync')
 			->with(
 				$account,
+				$this->client,
 				$mailbox,
 				$this->loggerInterface,
 				0,

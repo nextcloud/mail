@@ -104,6 +104,9 @@ class ImapToDbSynchronizer {
 		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
 		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		$trashRetentionDays = $account->getMailAccount()->getTrashRetentionDays();
+		
+		$client = $this->clientFactory->getClient($account);
+		
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$syncTrash = $trashMailboxId === $mailbox->getId() && $trashRetentionDays !== null;
 			$syncSnooze = $snoozeMailboxId === $mailbox->getId();
@@ -116,6 +119,7 @@ class ImapToDbSynchronizer {
 			$logger->debug('Syncing ' . $mailbox->getId());
 			if ($this->sync(
 				$account,
+				$client,
 				$mailbox,
 				$logger,
 				$criteria,
@@ -126,6 +130,9 @@ class ImapToDbSynchronizer {
 				$rebuildThreads = true;
 			}
 		}
+		
+		$client->logout();
+
 		$this->dispatcher->dispatchTyped(
 			new SynchronizationEvent(
 				$account,
@@ -187,6 +194,7 @@ class ImapToDbSynchronizer {
 	 * @return bool whether to rebuild threads or not
 	 */
 	public function sync(Account $account,
+		Horde_Imap_Client_Base $client,
 		Mailbox $mailbox,
 		LoggerInterface $logger,
 		int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
@@ -198,7 +206,6 @@ class ImapToDbSynchronizer {
 			return $rebuildThreads;
 		}
 
-		$client = $this->clientFactory->getClient($account);
 		$client->login(); // Need to login before fetching capabilities.
 
 		// There is no partial sync when using QRESYNC. As per RFC the client will always pull
@@ -271,8 +278,6 @@ class ImapToDbSynchronizer {
 				$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from new messages sync');
 				$this->mailboxMapper->unlockFromNewSync($mailbox);
 			}
-
-			$client->logout();
 		}
 
 		if (!$batchSync) {
