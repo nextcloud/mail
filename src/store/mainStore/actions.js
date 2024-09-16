@@ -128,111 +128,102 @@ const combineEnvelopeLists = (sortOrder) => {
 export default function mainStoreActions() {
 	return {
 		savePreference({
-			commit,
-			getters
-		}, {
 			key,
 			value
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const newValue = await savePreference(key, value)
-				commit('savePreference', {
+				this.savePreferenceMutation({
 					key,
 					value: newValue.value,
 				})
 			})
 		},
-		async fetchAccounts({
-			commit,
-			getters
-		}) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchAccounts() {
+			return handleHttpAuthErrors(async () => {
 				const accounts = await fetchAllAccounts()
-				accounts.forEach((account) => commit('addAccount', account))
-				return getters.accounts
+				accounts.forEach((account) => this.addAccountMutation(account))
+				return this.accounts
 			})
 		},
-		async fetchAccount({ commit }, id) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchAccount(id) {
+			return handleHttpAuthErrors(async () => {
 				const account = await fetchAccount(id)
-				commit('addAccount', account)
+				this.addAccountMutation(account)
 				return account
 			})
 		},
-		async startAccountSetup({ commit }, config) {
+		async startAccountSetup(config) {
 			const account = await createAccount(config)
 			logger.debug(`account ${account.id} created`, { account })
 			return account
 		},
-		async finishAccountSetup({ commit }, { account }) {
+		async finishAccountSetup({ account }) {
 			logger.debug(`Fetching mailboxes for account ${account.id},  …`, { account })
 			account.mailboxes = await fetchAllMailboxes(account.id)
-			commit('addAccount', account)
+			this.addAccountMutation(account)
 			logger.debug('New account mailboxes fetched', {
 				account,
 				mailboxes: account.mailboxes
 			})
 			return account
 		},
-		async updateAccount({ commit }, config) {
-			return handleHttpAuthErrors(commit, async () => {
+		async updateAccount(config) {
+			return handleHttpAuthErrors(async () => {
 				const account = await updateAccount(config)
 				logger.debug('account updated', { account })
-				commit('editAccount', account)
+				this.editAccountMutation(account)
 				return account
 			})
 		},
-		async patchAccount({ commit }, {
+		async patchAccount({
 			account,
 			data
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const patchedAccount = await patchAccount(account, data)
 				logger.debug('account patched', {
 					account: patchedAccount,
 					data
 				})
-				commit('patchAccount', {
+				this.patchAccountMutation({
 					account,
 					data
 				})
 				return account
 			})
 		},
-		async updateAccountSignature({ commit }, {
+		async updateAccountSignature({
 			account,
 			signature
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				await updateSignature(account, signature)
 				logger.debug('account signature updated', {
 					account,
 					signature
 				})
 				const updated = Object.assign({}, account, { signature })
-				commit('editAccount', updated)
+				this.editAccountMutation(updated)
 				return account
 			})
 		},
 		async setAccountSetting({
-			commit,
-			getters
-		}, {
 			accountId,
 			key,
 			value
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				commit('setAccountSetting', {
+			return handleHttpAuthErrors(async () => {
+				this.setAccountSettingMutation({
 					accountId,
 					key,
 					value
 				})
-				return await savePreference('account-settings', JSON.stringify(getters.getAllAccountSettings))
+				return await savePreference('account-settings', JSON.stringify(this.getAllAccountSettings))
 			})
 		},
-		async deleteAccount({ commit }, account) {
-			return handleHttpAuthErrors(commit, async () => {
+		async deleteAccount(account) {
+			return handleHttpAuthErrors(async () => {
 				try {
 					await deleteAccount(account.id)
 				} catch (error) {
@@ -241,35 +232,35 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async deleteMailbox({ commit }, { mailbox }) {
-			return handleHttpAuthErrors(commit, async () => {
+		async deleteMailbox({ mailbox }) {
+			return handleHttpAuthErrors(async () => {
 				await deleteMailbox(mailbox.databaseId)
-				commit('removeMailbox', { id: mailbox.databaseId })
+				this.removeMailboxMutation({ id: mailbox.databaseId })
 			})
 		},
-		async clearMailbox({ commit }, { mailbox }) {
-			return handleHttpAuthErrors(commit, async () => {
+		async clearMailbox({ mailbox }) {
+			return handleHttpAuthErrors(async () => {
 				await clearMailbox(mailbox.databaseId)
-				commit('removeEnvelopes', { id: mailbox.databaseId })
-				commit('setMailboxUnreadCount', { id: mailbox.databaseId })
+				this.removeEnvelopesMutation({ id: mailbox.databaseId })
+				this.setMailboxUnreadCountMutation({ id: mailbox.databaseId })
 			})
 		},
-		async createMailbox({ commit }, {
+		async createMailbox({
 			account,
 			name
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const prefixed = (account.personalNamespace && !name.startsWith(account.personalNamespace))
 					? account.personalNamespace + name
 					: name
 				const mailbox = await createMailbox(account.id, prefixed)
 				console.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
-				commit('addMailbox', {
+				this.addMailboxMutation({
 					account,
 					mailbox
 				})
-				commit('expandAccount', account.id)
-				commit('setAccountSetting', {
+				this.expandAccountMutation(account.id)
+				this.setAccountSettingMutation({
 					accountId: account.id,
 					key: 'collapsed',
 					value: false,
@@ -278,14 +269,11 @@ export default function mainStoreActions() {
 			})
 		},
 		async moveAccount({
-			commit,
-			getters
-		}, {
 			account,
 			up
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				const accounts = getters.accounts
+			return handleHttpAuthErrors(async () => {
+				const accounts = this.accounts
 				const index = accounts.indexOf(account)
 				if (up) {
 					const previous = accounts[index - 1]
@@ -301,7 +289,7 @@ export default function mainStoreActions() {
 						if (account.id === 0) {
 							return Promise.resolve()
 						}
-						commit('saveAccountsOrder', {
+						this.saveAccountsOrderMutation({
 							account,
 							order: idx
 						})
@@ -311,22 +299,18 @@ export default function mainStoreActions() {
 			})
 		},
 		async markMailboxRead({
-			commit,
-			getters,
-			dispatch
-		}, {
 			accountId,
 			mailboxId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				const mailbox = getters.getMailbox(mailboxId)
+			return handleHttpAuthErrors(async () => {
+				const mailbox = this.getMailbox(mailboxId)
 
 				if (mailbox.isUnified) {
-					const findIndividual = findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole)
-					const individualMailboxes = findIndividual(getters.accounts)
+					const findIndividual = findIndividualMailboxes(this.getMailboxes, mailbox.specialRole)
+					const individualMailboxes = findIndividual(this.accounts)
 					return Promise.all(
 						individualMailboxes.map((mb) =>
-							dispatch('markMailboxRead', {
+							this.markMailboxReadMutation({
 								accountId: mb.accountId,
 								mailboxId: mb.databaseId,
 							}),
@@ -338,28 +322,28 @@ export default function mainStoreActions() {
 				updated.unread = 0
 
 				await markMailboxRead(mailboxId)
-				commit('updateMailbox', {
+				this.updateMailboxMutation({
 					mailbox: updated,
 				})
 
-				dispatch('syncEnvelopes', {
+				this.syncEnvelopes({
 					accountId,
 					mailboxId,
 				})
 			})
 		},
-		async changeMailboxSubscription({ commit }, {
+		async changeMailboxSubscription({
 			mailbox,
 			subscribed
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				logger.debug(`toggle subscription for mailbox ${mailbox.databaseId}`, {
 					mailbox,
 					subscribed,
 				})
 				const updated = await patchMailbox(mailbox.databaseId, { subscribed })
 
-				commit('updateMailbox', {
+				this.updateMailboxMutation({
 					mailbox: updated,
 				})
 				logger.debug(`subscription for mailbox ${mailbox.databaseId} updated`, {
@@ -368,11 +352,11 @@ export default function mainStoreActions() {
 				})
 			})
 		},
-		async patchMailbox({ commit }, {
+		async patchMailbox({
 			mailbox,
 			attributes
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				logger.debug('patching mailbox', {
 					mailbox,
 					attributes,
@@ -380,7 +364,7 @@ export default function mainStoreActions() {
 
 				const updated = await patchMailbox(mailbox.databaseId, attributes)
 
-				commit('updateMailbox', {
+				this.updateMailboxMutation({
 					mailbox: updated,
 				})
 				logger.debug(`mailbox ${mailbox.databaseId} patched`, {
@@ -390,10 +374,6 @@ export default function mainStoreActions() {
 			})
 		},
 		async startComposerSession({
-			dispatch,
-			commit,
-			getters
-		}, {
 			type = 'imap',
 			data = {},
 			reply,
@@ -402,7 +382,7 @@ export default function mainStoreActions() {
 			isBlankMessage = false,
 		}) {
 			// Silently close old session if already saved and show a discard modal otherwise
-			if (getters.composerSessionId && !getters.composerMessageIsSaved) {
+			if (this.composerSessionId && !this.composerMessageIsSaved) {
 				// TODO: Nice to have: Add button to save current pending message
 				const discard = await new Promise((resolve) => OC.dialogs.confirmDestructive(
 					t('mail', 'There is already a message in progress. All unsaved changes will be lost if you continue!'),
@@ -418,14 +398,14 @@ export default function mainStoreActions() {
 					},
 				))
 				if (!discard) {
-					commit('showMessageComposer')
+					this.showMessageComposer()
 					return
 				}
 			}
 
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				if (reply) {
-					const original = await dispatch('fetchMessage', reply.data.databaseId)
+					const original = await this.fetchMessage(reply.data.databaseId)
 
 					// Fetch and transform the body into a rich text object
 					if (original.hasHtmlBody) {
@@ -456,7 +436,7 @@ export default function mainStoreActions() {
 						if (reply.followUp) {
 							to = reply.data.to
 						}
-						commit('startComposerSession', {
+						this.startComposerSessionMutation({
 							data: {
 								accountId: reply.data.accountId,
 								to,
@@ -471,12 +451,12 @@ export default function mainStoreActions() {
 						return
 					} else if (reply.mode === 'replyAll') {
 						logger.debug('Show reply all reply composer', { reply })
-						const account = getters.getAccount(reply.data.accountId)
+						const account = this.getAccount(reply.data.accountId)
 						const recipients = buildReplyRecipients(reply.data, {
 							email: account.emailAddress,
 							label: account.name,
 						}, original.replyTo)
-						commit('startComposerSession', {
+						this.startComposerSessionMutation({
 							data: {
 								accountId: reply.data.accountId,
 								to: recipients.to,
@@ -490,7 +470,7 @@ export default function mainStoreActions() {
 						return
 					} else if (reply.mode === 'forward') {
 						logger.debug('Show forward composer', { reply })
-						commit('startComposerSession', {
+						this.startComposerSessionMutation({
 							data: {
 								accountId: reply.data.accountId,
 								to: [],
@@ -511,7 +491,7 @@ export default function mainStoreActions() {
 						return
 					}
 				} else if (templateMessageId) {
-					const message = await dispatch('fetchMessage', templateMessageId)
+					const message = await this.fetchMessage(templateMessageId)
 					// Merge the original into any existing data
 					data = {
 						...data,
@@ -553,7 +533,7 @@ export default function mainStoreActions() {
 					await outboxStore.stopMessage({ message })
 				}
 
-				commit('startComposerSession', {
+				this.startComposerSessionMutation({
 					type,
 					data,
 					forwardedMessages,
@@ -563,23 +543,19 @@ export default function mainStoreActions() {
 
 				// Blank messages can be safely discarded (without saving a draft) until changes are made
 				if (isBlankMessage) {
-					commit('setComposerMessageSaved', true)
+					this.setComposerMessageSavedMutation(true)
 				}
 			})
 		},
 		async stopComposerSession({
-			commit,
-			dispatch,
-			getters
-		}, {
 			restoreOriginalSendAt = false,
 			moveToImap = false,
 			id
 		} = {}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 
 				// Restore original sendAt timestamp when requested
-				const message = getters.composerMessage
+				const message = this.composerMessage
 				if (restoreOriginalSendAt && message.type === 'outbox' && message.options?.originalSendAt) {
 					const body = message.data.body
 					message.body = message.data.isHtml ? body.value : toPlain(body).value
@@ -590,28 +566,26 @@ export default function mainStoreActions() {
 					await moveDraft(id)
 				}
 
-				commit('stopComposerSession')
+				this.stopComposerSession()
 			})
 		},
+		/// TODO WHY DID SOMEONE DO THISSSS, remove later
 		showMessageComposer({ commit }) {
 			commit('showMessageComposer')
 		},
 		closeMessageComposer({ commit }) {
-			commit('hideMessageComposer')
+			this.hideMessageComposerMutation()
 		},
-		patchComposerData({ commit }, data) {
-			commit('patchComposerData', data)
-			commit('setComposerMessageSaved', false)
+		patchComposerData(data) {
+			this.patchComposerDataMutation(data)
+			this.setComposerMessageSavedMutation(false)
 		},
 		async fetchEnvelope({
-			commit,
-			getters
-		}, {
 			accountId,
 			id
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				const cached = getters.getEnvelope(id)
+			return handleHttpAuthErrors(async () => {
+				const cached = this.getEnvelope(id)
 				if (cached) {
 					logger.debug(`using cached value for envelope ${id}`)
 					return cached
@@ -620,32 +594,27 @@ export default function mainStoreActions() {
 				const envelope = await fetchEnvelope(accountId, id)
 				// Only commit if not undefined (not found)
 				if (envelope) {
-					commit('addEnvelopes', {
+					this.addEnvelopesMutation({
 						envelopes: [envelope],
 					})
 				}
 
 				// Always use the object from the store
-				return getters.getEnvelope(id)
+				return this.getEnvelope(id)
 			})
 		},
 		fetchEnvelopes({
-			state,
-			commit,
-			getters,
-			dispatch
-		}, {
 			mailboxId,
 			query,
 			addToUnifiedMailboxes = true
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				const mailbox = getters.getMailbox(mailboxId)
+			return handleHttpAuthErrors(async () => {
+				const mailbox = this.getMailbox(mailboxId)
 
 				if (mailbox.isUnified) {
 					const fetchIndividualLists = pipe(
 						map((mb) =>
-							dispatch('fetchEnvelopes', {
+							this.fetchEnvelopes({
 								mailboxId: mb.databaseId,
 								query,
 								addToUnifiedMailboxes: false,
@@ -655,13 +624,13 @@ export default function mainStoreActions() {
 						andThen(map(sliceToPage)),
 					)
 					const fetchUnifiedEnvelopes = pipe(
-						findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
+						findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
 						fetchIndividualLists,
-						andThen(combineEnvelopeLists(getters.getPreference('sort-order'))),
+						andThen(combineEnvelopeLists(this.getPreference('sort-order'))),
 						andThen(sliceToPage),
 						andThen(
 							tap((envelopes) =>
-								commit('addEnvelopes', {
+								this.addEnvelopesMutation({
 									envelopes,
 									query,
 								}),
@@ -669,33 +638,29 @@ export default function mainStoreActions() {
 						),
 					)
 
-					return fetchUnifiedEnvelopes(getters.accounts)
+					return fetchUnifiedEnvelopes(this.accounts)
 				}
 
 				return pipe(
 					fetchEnvelopes,
 					andThen(
 						tap((envelopes) =>
-							commit('addEnvelopes', {
+							this.addEnvelopesMutation({
 								query,
 								envelopes,
 								addToUnifiedMailboxes,
 							}),
 						),
 					),
-				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, getters.getPreference('sort-order'))
+				)(mailbox.accountId, mailboxId, query, undefined, PAGE_SIZE, this.getPreference('sort-order'))
 			})
 		},
 		async fetchNextEnvelopePage({
-			commit,
-			getters,
-			dispatch
-		}, {
 			mailboxId,
 			query
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				const envelopes = await dispatch('fetchNextEnvelopes', {
+			return handleHttpAuthErrors(async () => {
+				const envelopes = await this.fetchNextEnvelopes({
 					mailboxId,
 					query,
 					quantity: PAGE_SIZE,
@@ -704,34 +669,30 @@ export default function mainStoreActions() {
 			})
 		},
 		async fetchNextEnvelopes({
-			commit,
-			getters,
-			dispatch
-		}, {
 			mailboxId,
 			query,
 			quantity,
 			rec = true,
 			addToUnifiedMailboxes = true
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				const mailbox = getters.getMailbox(mailboxId)
+			return handleHttpAuthErrors(async () => {
+				const mailbox = this.getMailbox(mailboxId)
 
 				if (mailbox.isUnified) {
-					const getIndivisualLists = curry((query, m) => getters.getEnvelopes(m.databaseId, query))
+					const getIndivisualLists = curry((query, m) => this.getEnvelopes(m.databaseId, query))
 					const individualCursor = curry((query, m) =>
-						prop('dateInt', last(getters.getEnvelopes(m.databaseId, query))),
+						prop('dateInt', last(this.getEnvelopes(m.databaseId, query))),
 					)
 					const cursor = individualCursor(query, mailbox)
 
 					if (cursor === undefined) {
 						throw new Error('Unified list has no tail')
 					}
-					const newestFirst = getters.getPreference('sort-order') === 'newest'
+					const newestFirst = this.getPreference('sort-order') === 'newest'
 					const nextLocalUnifiedEnvelopes = pipe(
-						findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
+						findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
 						map(getIndivisualLists(query)),
-						combineEnvelopeLists(getters.getPreference('sort-order')),
+						combineEnvelopeLists(this.getPreference('sort-order')),
 						filter(
 							where({
 								dateInt: newestFirst ? gt(cursor) : lt(cursor),
@@ -748,7 +709,7 @@ export default function mainStoreActions() {
 							return true
 						}
 
-						if (getters.getPreference('sort-order') === 'newest') {
+						if (this.getPreference('sort-order') === 'newest') {
 							return c >= last(nextEnvelopes).dateInt
 						} else {
 							return c <= last(nextEnvelopes).dateInt
@@ -757,11 +718,11 @@ export default function mainStoreActions() {
 
 					const mailboxesToFetch = (accounts) =>
 						pipe(
-							findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
+							findIndividualMailboxes(this.getMailboxes, mailbox.specialRole),
 							tap(mbs => console.info('individual mailboxes', mbs)),
 							filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts))),
 						)(accounts)
-					const mbs = mailboxesToFetch(getters.accounts)
+					const mbs = mailboxesToFetch(this.accounts)
 
 					if (rec && mbs.length) {
 						logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
@@ -769,7 +730,7 @@ export default function mainStoreActions() {
 						})
 						return pipe(
 							map((mb) =>
-								dispatch('fetchNextEnvelopes', {
+								this.fetchNextEnvelopes({
 									mailboxId: mb.databaseId,
 									query,
 									quantity,
@@ -778,7 +739,7 @@ export default function mainStoreActions() {
 							),
 							Promise.all.bind(Promise),
 							andThen(() =>
-								dispatch('fetchNextEnvelopes', {
+								this.fetchNextEnvelopes({
 									mailboxId,
 									query,
 									quantity,
@@ -789,9 +750,9 @@ export default function mainStoreActions() {
 						)(mbs)
 					}
 
-					const envelopes = nextLocalUnifiedEnvelopes(getters.accounts)
+					const envelopes = nextLocalUnifiedEnvelopes(this.accounts)
 					logger.debug('next unified page can be built locally and consists of ' + envelopes.length + ' envelopes', { addToUnifiedMailboxes })
-					commit('addEnvelopes', {
+					this.addEnvelopesMutation({
 						query,
 						envelopes,
 						addToUnifiedMailboxes,
@@ -809,17 +770,17 @@ export default function mainStoreActions() {
 					console.error('mailbox is empty', list)
 					return Promise.reject(new Error('Local mailbox has no envelopes, cannot determine cursor'))
 				}
-				const lastEnvelope = getters.getEnvelope(lastEnvelopeId)
+				const lastEnvelope = this.getEnvelope(lastEnvelopeId)
 				if (typeof lastEnvelope === 'undefined') {
 					return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 				}
 
-				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, getters.getPreference('sort-order')).then((envelopes) => {
+				return fetchEnvelopes(mailbox.accountId, mailboxId, query, lastEnvelope.dateInt, quantity, this.getPreference('sort-order')).then((envelopes) => {
 					logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 						envelopes,
 						addToUnifiedMailboxes,
 					})
-					commit('addEnvelopes', {
+					this.addEnvelopesMutation({
 						query,
 						envelopes,
 						addToUnifiedMailboxes,
@@ -829,34 +790,30 @@ export default function mainStoreActions() {
 			})
 		},
 		syncEnvelopes({
-			commit,
-			getters,
-			dispatch
-		}, {
 			mailboxId,
 			query,
 			init = false
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				logger.debug(`starting mailbox sync of ${mailboxId} (${query})`)
 
-				const mailbox = getters.getMailbox(mailboxId)
+				const mailbox = this.getMailbox(mailboxId)
 
 				// Skip superfluous requests if using passwordless authentication. They will fail anyway.
-				const passwordIsUnavailable = getters.getPreference('password-is-unavailable', false)
+				const passwordIsUnavailable = this.getPreference('password-is-unavailable', false)
 				const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
 
 				if (mailbox.isUnified) {
 					return Promise.all(
-						getters.accounts
+						this.accounts
 							.filter((account) => !account.isUnified && !isDisabled(account))
 							.map((account) =>
 								Promise.all(
-									getters
+									this
 										.getMailboxes(account.id)
 										.filter((mb) => mb.specialRole === mailbox.specialRole)
 										.map((mailbox) =>
-											dispatch('syncEnvelopes', {
+											this.syncEnvelopes({
 												mailboxId: mailbox.databaseId,
 												query,
 												init,
@@ -869,15 +826,15 @@ export default function mainStoreActions() {
 					return Promise.all(
 						getPrioritySearchQueries().map((query) => {
 							return Promise.all(
-								getters.accounts
+								this.accounts
 									.filter((account) => !account.isUnified && !isDisabled(account))
 									.map((account) =>
 										Promise.all(
-											getters
+											this
 												.getMailboxes(account.id)
 												.filter((mb) => mb.specialRole === mailbox.specialRole)
 												.map((mailbox) =>
-													dispatch('syncEnvelopes', {
+													this.syncEnvelopes({
 														mailboxId: mailbox.databaseId,
 														query,
 														init,
@@ -890,40 +847,40 @@ export default function mainStoreActions() {
 					)
 				}
 
-				const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
-				const lastTimestamp = getters.getPreference('sort-order') === 'newest' ? null : getters.getEnvelopes(mailboxId, query)[0]?.dateInt
+				const ids = this.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
+				const lastTimestamp = this.getPreference('sort-order') === 'newest' ? null : this.getEnvelopes(mailboxId, query)[0]?.dateInt
 				logger.debug(`mailbox sync of ${mailboxId} (${query}) has ${ids.length} known IDs. ${lastTimestamp} is the last known message timestamp`, { mailbox })
-				return syncEnvelopes(mailbox.accountId, mailboxId, ids, lastTimestamp, query, init, getters.getPreference('sort-order'))
+				return syncEnvelopes(mailbox.accountId, mailboxId, ids, lastTimestamp, query, init, this.getPreference('sort-order'))
 					.then((syncData) => {
 						logger.debug(`mailbox ${mailboxId} (${query}) synchronized, ${syncData.newMessages.length} new, ${syncData.changedMessages.length} changed and ${syncData.vanishedMessages.length} vanished messages`)
 
-						const unifiedMailbox = getters.getUnifiedMailbox(mailbox.specialRole)
+						const unifiedMailbox = this.getUnifiedMailbox(mailbox.specialRole)
 
-						commit('addEnvelopes', {
+						this.addEnvelopesMutation({
 							envelopes: syncData.newMessages,
 							query,
 						})
 
 						syncData.newMessages.forEach((envelope) => {
 							if (unifiedMailbox) {
-								commit('updateEnvelope', {
+								this.updateEnvelopeMutation({
 									envelope,
 								})
 							}
 						})
 						syncData.changedMessages.forEach((envelope) => {
-							commit('updateEnvelope', {
+							this.updateEnvelopeMutation({
 								envelope,
 							})
 						})
 						syncData.vanishedMessages.forEach((id) => {
-							commit('removeEnvelope', {
+							this.removeEnvelopeMutation({
 								id,
 							})
 							// Already removed from unified inbox
 						})
 
-						commit('setMailboxUnreadCount', {
+						this.setMailboxUnreadCountMutation({
 							id: mailboxId,
 							unread: syncData.stats.unread,
 						})
@@ -934,7 +891,7 @@ export default function mainStoreActions() {
 						return matchError(error, {
 							[SyncIncompleteError.getName()]() {
 								console.warn(`(initial) sync of mailbox ${mailboxId} (${query}) is incomplete, retriggering`)
-								return dispatch('syncEnvelopes', {
+								return this.syncEnvelopes({
 									mailboxId,
 									query,
 									init,
@@ -947,7 +904,7 @@ export default function mainStoreActions() {
 								}
 
 								logger.info('Sync failed because the mailbox is locked, retriggering', { error })
-								return wait(1500).then(() => dispatch('syncEnvelopes', {
+								return wait(1500).then(() => this.syncEnvelopes({
 									mailboxId,
 									query,
 									init,
@@ -961,34 +918,30 @@ export default function mainStoreActions() {
 					})
 			})
 		},
-		async syncInboxes({
-			commit,
-			getters,
-			dispatch
-		}) {
+		async syncInboxes() {
 			// Skip superfluous requests if using passwordless authentication. They will fail anyway.
-			const passwordIsUnavailable = getters.getPreference('password-is-unavailable', false)
+			const passwordIsUnavailable = this.getPreference('password-is-unavailable', false)
 			const isDisabled = (account) => passwordIsUnavailable && !!account.provisioningId
 
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const results = await Promise.all(
-					getters.accounts
+					this.accounts
 						.filter((a) => !a.isUnified && !isDisabled(a))
 						.map((account) => {
 							return Promise.all(
-								getters.getMailboxes(account.id).map(async (mailbox) => {
+								this.getMailboxes(account.id).map(async (mailbox) => {
 									if (mailbox.specialRole !== 'inbox') {
 										return
 									}
 
 									const list = mailbox.envelopeLists[normalizedEnvelopeListId(undefined)]
 									if (list === undefined) {
-										await dispatch('fetchEnvelopes', {
+										await this.fetchEnvelopes({
 											mailboxId: mailbox.databaseId,
 										})
 									}
 
-									return await dispatch('syncEnvelopes', {
+									return await this.syncEnvelopes({
 										mailboxId: mailbox.databaseId,
 									})
 								}),
@@ -1005,16 +958,16 @@ export default function mainStoreActions() {
 					logger.info('updating priority inbox')
 					for (const query of [priorityImportantQuery, priorityOtherQuery]) {
 						logger.info("sync'ing priority inbox section", { query })
-						const mailbox = getters.getMailbox(UNIFIED_INBOX_ID)
+						const mailbox = this.getMailbox(UNIFIED_INBOX_ID)
 						const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]
 						if (list === undefined) {
-							await dispatch('fetchEnvelopes', {
+							await this.fetchEnvelopes({
 								mailboxId: UNIFIED_INBOX_ID,
 								query,
 							})
 						}
 
-						await dispatch('syncEnvelopes', {
+						await this.syncEnvelopes({
 							mailboxId: UNIFIED_INBOX_ID,
 							query,
 						})
@@ -1024,14 +977,11 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		toggleEnvelopeFlagged({
-			commit,
-			getters
-		}, envelope) {
-			return handleHttpAuthErrors(commit, async () => {
+		toggleEnvelopeFlagged(envelope) {
+			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
 				const oldState = envelope.flags.flagged
-				commit('flagEnvelope', {
+				this.flagEnvelopeMutation({
 					envelope,
 					flag: 'flagged',
 					value: !oldState,
@@ -1045,7 +995,7 @@ export default function mainStoreActions() {
 					logger.error('Could not toggle message flagged state', { error })
 
 					// Revert change
-					commit('flagEnvelope', {
+					this.flagEnvelopeMutation({
 						envelope,
 						flag: 'flagged',
 						value: oldState,
@@ -1055,23 +1005,19 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async toggleEnvelopeImportant({
-			commit,
-			dispatch,
-			getters
-		}, envelope) {
-			return handleHttpAuthErrors(commit, async () => {
+		async toggleEnvelopeImportant(envelope) {
+			return handleHttpAuthErrors(async () => {
 				const importantLabel = '$label1'
-				const hasTag = getters
+				const hasTag = this
 					.getEnvelopeTags(envelope.databaseId)
 					.some((tag) => tag.imapLabel === importantLabel)
 				if (hasTag) {
-					await dispatch('removeEnvelopeTag', {
+					await this.removeEnvelopeTag({
 						envelope,
 						imapLabel: importantLabel,
 					})
 				} else {
-					await dispatch('addEnvelopeTag', {
+					await this.addEnvelopeTag({
 						envelope,
 						imapLabel: importantLabel,
 					})
@@ -1079,17 +1025,14 @@ export default function mainStoreActions() {
 			})
 		},
 		async toggleEnvelopeSeen({
-			commit,
-			getters
-		}, {
 			envelope,
 			seen
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
 				const oldState = envelope.flags.seen
 				const newState = seen === undefined ? !oldState : seen
-				commit('flagEnvelope', {
+				this.flagEnvelopeMutation({
 					envelope,
 					flag: 'seen',
 					value: newState,
@@ -1103,7 +1046,7 @@ export default function mainStoreActions() {
 					console.error('could not toggle message seen state', error)
 
 					// Revert change
-					commit('flagEnvelope', {
+					this.flagEnvelopeMutation({
 						envelope,
 						flag: 'seen',
 						value: oldState,
@@ -1114,28 +1057,25 @@ export default function mainStoreActions() {
 			})
 		},
 		async toggleEnvelopeJunk({
-			commit,
-			getters
-		}, {
 			envelope,
 			removeEnvelope
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
 				const oldState = envelope.flags.$junk
-				commit('flagEnvelope', {
+				this.flagEnvelopeMutation({
 					envelope,
 					flag: '$junk',
 					value: !oldState,
 				})
-				commit('flagEnvelope', {
+				this.flagEnvelopeMutation({
 					envelope,
 					flag: '$notjunk',
 					value: oldState,
 				})
 
 				if (removeEnvelope) {
-					commit('removeEnvelope', { id: envelope.databaseId })
+					this.removeEnvelopeMutation({ id: envelope.databaseId })
 				}
 
 				try {
@@ -1147,16 +1087,16 @@ export default function mainStoreActions() {
 					console.error('could not toggle message junk state', error)
 
 					if (removeEnvelope) {
-						commit('addEnvelopes', [envelope])
+						this.addEnvelopesMutation([envelope])
 					}
 
 					// Revert change
-					commit('flagEnvelope', {
+					this.flagEnvelopeMutation({
 						envelope,
 						flag: '$junk',
 						value: oldState,
 					})
-					commit('flagEnvelope', {
+					this.flagEnvelopeMutation({
 						envelope,
 						flag: '$notjunk',
 						value: !oldState,
@@ -1167,16 +1107,13 @@ export default function mainStoreActions() {
 			})
 		},
 		async markEnvelopeFavoriteOrUnfavorite({
-			commit,
-			getters
-		}, {
 			envelope,
 			favFlag
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
 				const oldState = envelope.flags.flagged
-				commit('flagEnvelope', {
+				this.flagEnvelopeMutation({
 					envelope,
 					flag: 'flagged',
 					value: favFlag,
@@ -1190,7 +1127,7 @@ export default function mainStoreActions() {
 					console.error('could not favorite/unfavorite message ' + envelope.uid, error)
 
 					// Revert change
-					commit('flagEnvelope', {
+					this.flagEnvelopeMutation({
 						envelope,
 						flag: 'flagged',
 						value: oldState,
@@ -1201,98 +1138,88 @@ export default function mainStoreActions() {
 			})
 		},
 		async markEnvelopeImportantOrUnimportant({
-			commit,
-			dispatch,
-			getters
-		}, {
 			envelope,
 			addTag
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const importantLabel = '$label1'
-				const hasTag = getters
+				const hasTag = this
 					.getEnvelopeTags(envelope.databaseId)
 					.some((tag) => tag.imapLabel === importantLabel)
 				if (hasTag && !addTag) {
-					await dispatch('removeEnvelopeTag', {
+					await this.removeEnvelopeTag({
 						envelope,
 						imapLabel: importantLabel,
 					})
 				} else if (!hasTag && addTag) {
-					await dispatch('addEnvelopeTag', {
+					await this.addEnvelopeTag({
 						envelope,
 						imapLabel: importantLabel,
 					})
 				}
 			})
 		},
-		async fetchThread({
-			getters,
-			commit
-		}, id) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchThread(id) {
+			return handleHttpAuthErrors(async () => {
 				const thread = await fetchThread(id)
-				commit('addEnvelopeThread', {
+				this.addEnvelopeThreadMutation({
 					id,
 					thread,
 				})
 				return thread
 			})
 		},
-		async fetchMessage({
-			getters,
-			commit
-		}, id) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchMessage(id) {
+			return handleHttpAuthErrors(async () => {
 				const message = await fetchMessage(id)
 				// Only commit if not undefined (not found)
 				if (message) {
-					commit('addMessage', {
+					this.addMessageMutation({
 						message,
 					})
 				}
 				return message
 			})
 		},
-		async fetchItineraries({ commit }, id) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchItineraries(id) {
+			return handleHttpAuthErrors(async () => {
 				const itineraries = await fetchMessageItineraries(id)
-				commit('addMessageItineraries', {
+				this.addMessageItinerariesMutation({
 					id,
 					itineraries,
 				})
 				return itineraries
 			})
 		},
-		async fetchDkim({ commit }, id) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchDkim(id) {
+			return handleHttpAuthErrors(async () => {
 				const result = await fetchMessageDkim(id)
-				commit('addMessageDkim', {
+				this.addMessageDkimMutation({
 					id,
 					result,
 				})
 				return result
 			})
 		},
-		async addInternalAddress({ commit }, {
+		async addInternalAddress({
 			address,
 			type
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const internalAddress = await addInternalAddress(address, type)
-				commit('addInternalAddress', internalAddress)
+				this.addInternalAddressMutation(internalAddress)
 				console.debug('internal address added')
 			})
 		},
-		async removeInternalAddress({ commit }, {
+		async removeInternalAddress({
 			id,
 			address,
 			type
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				try {
 					await removeInternalAddress(address, type)
-					commit('removeInternalAddress', { addressId: id })
+					this.removeInternalAddressMutation({ addressId: id })
 					console.debug('internal address removed')
 				} catch (error) {
 					console.error('could not delete internal address', error)
@@ -1300,22 +1227,19 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async deleteMessage({
-			getters,
-			commit
-		}, { id }) {
-			return handleHttpAuthErrors(commit, async () => {
-				commit('removeEnvelope', { id })
+		async deleteMessage({ id }) {
+			return handleHttpAuthErrors(async () => {
+				this.removeEnvelopeMutation({ id })
 
 				try {
 					await deleteMessage(id)
-					commit('removeMessage', { id })
+					this.removeMessageMutation({ id })
 					console.debug('message removed')
 				} catch (err) {
 					console.error('could not delete message', err)
-					const envelope = getters.getEnvelope(id)
+					const envelope = this.getEnvelope(id)
 					if (envelope) {
-						commit('addEnvelopes', { envelopes: [envelope] })
+						this.addEnvelopesMutation({ envelopes: [envelope] })
 					} else {
 						logger.error('could not find envelope', { id })
 					}
@@ -1323,39 +1247,39 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async createAlias({ commit }, {
+		async createAlias ({
 			account,
 			alias,
 			name
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.createAlias(account.id, alias, name)
-				commit('createAlias', {
+				this.createAliasMutation({
 					account,
 					alias: entity,
 				})
 			})
 		},
-		async deleteAlias({ commit }, {
+		async deleteAlias({
 			account,
 			aliasId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.deleteAlias(account.id, aliasId)
-				commit('deleteAlias', {
+				this.deleteAliasMutation({
 					account,
 					aliasId: entity.id,
 				})
 			})
 		},
-		async updateAlias({ commit }, {
+		async updateAlias({
 			account,
 			aliasId,
 			alias,
 			name,
 			smimeCertificateId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.updateAlias(
 					account.id,
 					aliasId,
@@ -1363,7 +1287,7 @@ export default function mainStoreActions() {
 					name,
 					smimeCertificateId,
 				)
-				commit('patchAlias', {
+				this.patchAliasMutation({
 					account,
 					aliasId: entity.id,
 					data: {
@@ -1372,100 +1296,100 @@ export default function mainStoreActions() {
 						smimeCertificateId: entity.smimeCertificateId,
 					},
 				})
-				commit('editAccount', account)
+				this.editAccountMutation(account)
 			})
 		},
-		async updateAliasSignature({ commit }, {
+		async updateAliasSignature({
 			account,
 			aliasId,
 			signature
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.updateSignature(account.id, aliasId, signature)
-				commit('patchAlias', {
+				this.patchAliasMutation({
 					account,
 					aliasId: entity.id,
 					data: { signature: entity.signature },
 				})
-				commit('editAccount', account)
+				this.editAccountMutation(account)
 			})
 		},
-		async renameMailbox({ commit }, {
+		async renameMailbox({
 			account,
 			mailbox,
 			newName
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const newMailbox = await patchMailbox(mailbox.databaseId, {
 					name: newName,
 				})
 
 				console.debug(`mailbox ${mailbox.databaseId} renamed to ${newName}`, { mailbox })
-				commit('removeMailbox', { id: mailbox.databaseId })
-				commit('addMailbox', {
+				this.removeMailboxMutation({ id: mailbox.databaseId })
+				this.addMailboxMutation({
 					account,
 					mailbox: newMailbox
 				})
 			})
 		},
-		async moveMessage({ commit }, {
+		async moveMessage({
 			id,
 			destMailboxId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				await moveMessage(id, destMailboxId)
-				commit('removeEnvelope', { id })
-				commit('removeMessage', { id })
+				this.removeEnvelopeMutation({ id })
+				this.removeMessageMutation({ id })
 			})
 		},
-		async snoozeMessage({ commit }, {
+		async snoozeMessage({
 			id,
 			unixTimestamp,
 			destMailboxId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				await snoozeMessage(id, unixTimestamp, destMailboxId)
-				commit('removeEnvelope', { id })
-				commit('removeMessage', { id })
+				this.removeEnvelopeMutation({ id })
+				this.removeMessageMutation({ id })
 			})
 		},
-		async unSnoozeMessage({ commit }, { id }) {
-			return handleHttpAuthErrors(commit, async () => {
+		async unSnoozeMessage({ id }) {
+			return handleHttpAuthErrors(async () => {
 				await unSnoozeMessage(id)
-				commit('removeEnvelope', { id })
-				commit('removeMessage', { id })
+				this.removeEnvelopeMutation({ id })
+				this.removeMessageMutation({ id })
 			})
 		},
-		async fetchActiveSieveScript({ commit }, { accountId }) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchActiveSieveScript({ accountId }) {
+			return handleHttpAuthErrors(async () => {
 				const scriptData = await getActiveScript(accountId)
-				commit('setActiveSieveScript', {
+				this.setActiveSieveScriptMutation({
 					accountId,
 					scriptData
 				})
 			})
 		},
-		async updateActiveSieveScript({ commit }, {
+		async updateActiveSieveScript({
 			accountId,
 			scriptData
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				await updateActiveScript(accountId, scriptData)
-				commit('setActiveSieveScript', {
+				this.setActiveSieveScriptMutation({
 					accountId,
 					scriptData
 				})
 			})
 		},
-		async updateSieveAccount({ commit }, {
+		async updateSieveAccount({
 			account,
 			data
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				logger.debug(`update sieve settings for account ${account.id}`)
 				try {
 					await updateSieveAccount(account.id, data)
-					commit('patchAccount', {
+					this.patchAccountMutation({
 						account,
 						data
 					})
@@ -1475,56 +1399,50 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async createTag({ commit }, {
+		async createTag({
 			displayName,
 			color
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				const tag = await createEnvelopeTag(displayName, color)
-				commit('addTag', { tag })
+				this.addTagMutation({ tag })
 			})
 
 		},
 		async addEnvelopeTag({
-			commit,
-			getters
-		}, {
 			envelope,
 			imapLabel
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				// TODO: fetch tags indepently of envelopes and only send tag id here
 				const tag = await setEnvelopeTag(envelope.databaseId, imapLabel)
-				if (!getters.getTag(tag.id)) {
-					commit('addTag', { tag })
+				if (!this.getTag(tag.id)) {
+					this.addTagMutation({ tag })
 				}
 
-				commit('addEnvelopeTag', {
+				this.addEnvelopeTagMutation({
 					envelope,
 					tagId: tag.id,
 				})
 			})
 		},
-		async removeEnvelopeTag({ commit }, {
-			envelope,
-			imapLabel
-		}) {
-			return handleHttpAuthErrors(commit, async () => {
+		async removeEnvelopeTag() {
+			return handleHttpAuthErrors(async () => {
 				const tag = await removeEnvelopeTag(envelope.databaseId, imapLabel)
-				commit('removeEnvelopeTag', {
+				this.removeEnvelopeTagMutation({
 					envelope,
 					tagId: tag.id,
 				})
 			})
 		},
-		async updateTag({ commit }, {
+		async updateTag({
 			tag,
 			displayName,
 			color
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				await updateEnvelopeTag(tag.id, displayName, color)
-				commit('updateTag', {
+				this.updateTagMutation({
 					tag,
 					displayName,
 					color
@@ -1536,78 +1454,66 @@ export default function mainStoreActions() {
 				})
 			})
 		},
-		async deleteTag({ commit }, {
+		async deleteTag({
 			tag,
 			accountId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				await deleteTag(tag.id, accountId)
-				commit('deleteTag', { tagId: tag.id })
+				this.deleteTagMutation({ tagId: tag.id })
 				logger.debug('tag deleted', { tag })
 			})
 		},
-		async deleteThread({
-			getters,
-			commit
-		}, { envelope }) {
-			return handleHttpAuthErrors(commit, async () => {
-				commit('removeEnvelope', { id: envelope.databaseId })
+		async deleteThread({ envelope }) {
+			return handleHttpAuthErrors(async () => {
+				this.removeEnvelopeMutation({ id: envelope.databaseId })
 
 				try {
 					await ThreadService.deleteThread(envelope.databaseId)
 					console.debug('thread removed')
 				} catch (e) {
-					commit('addEnvelopes', { envelopes: [envelope] })
+					this.addEnvelopesMutation({ envelopes: [envelope] })
 					console.error('could not delete thread', e)
 					throw e
 				}
 			})
 		},
 		async moveThread({
-			getters,
-			commit
-		}, {
 			envelope,
 			destMailboxId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
-				commit('removeEnvelope', { id: envelope.databaseId })
+			return handleHttpAuthErrors(async () => {
+				this.removeEnvelopeMutation({ id: envelope.databaseId })
 
 				try {
 					await ThreadService.moveThread(envelope.databaseId, destMailboxId)
 					console.debug('thread removed')
 				} catch (e) {
-					commit('addEnvelopes', { envelopes: [envelope] })
+					this.addEnvelopesMutation({ envelopes: [envelope] })
 					console.error('could not move thread', e)
 					throw e
 				}
 			})
 		},
 		async snoozeThread({
-			getters,
-			commit
-		}, {
 			envelope,
 			unixTimestamp,
 			destMailboxId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				try {
 					await ThreadService.snoozeThread(envelope.databaseId, unixTimestamp, destMailboxId)
 					console.debug('thread snoozed')
 				} catch (e) {
-					commit('addEnvelopes', { envelopes: [envelope] })
+					this.addEnvelopesMutation({ envelopes: [envelope] })
 					console.error('could not snooze thread', e)
 					throw e
 				}
-				commit('removeEnvelope', { id: envelope.databaseId })
+				this.removeEnvelopeMutation({ id: envelope.databaseId })
 			})
 		},
-		async unSnoozeThread({
-			getters,
-			commit
-		}, { envelope }) {
-			return handleHttpAuthErrors(commit, async () => {
+		async unSnoozeThread({ envelope }) {
+			return handleHttpAuthErrors(async () => {
 				try {
 					await ThreadService.unSnoozeThread(envelope.databaseId)
 					console.debug('thread unSnoozed')
@@ -1615,7 +1521,7 @@ export default function mainStoreActions() {
 					console.error('could not unsnooze thread', e)
 					throw e
 				}
-				commit('removeEnvelope', { id: envelope.databaseId })
+				this.removeEnvelopeMutation({ id: envelope.databaseId })
 			})
 		},
 
@@ -1625,10 +1531,10 @@ export default function mainStoreActions() {
 		 * @param {object} context Vuex store context
 		 * @param {Function} context.commit Vuex store mutations
 		 */
-		async fetchCurrentUserPrincipal({ commit }) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchCurrentUserPrincipal() {
+			return handleHttpAuthErrors(async () => {
 				await initializeClientForUserView()
-				commit('setCurrentUserPrincipal', { currentUserPrincipal: getCurrentUserPrincipal() })
+				this.setCurrentUserPrincipalMutation({ currentUserPrincipal: getCurrentUserPrincipal() })
 			})
 		},
 
@@ -1639,11 +1545,11 @@ export default function mainStoreActions() {
 		 * @param {Function} context.commit Vuex store mutations
 		 * @return {Promise<void>}
 		 */
-		async loadCollections({ commit }) {
-			await handleHttpAuthErrors(commit, async () => {
+		async loadCollections() {
+			await handleHttpAuthErrors(async () => {
 				const { calendars } = await findAll()
 				for (const calendar of calendars) {
-					commit('addCalendar', { calendar })
+					this.addCalendarMutation({ calendar })
 				}
 			})
 		},
@@ -1655,10 +1561,10 @@ export default function mainStoreActions() {
 		 * @param {Function} context.commit Vuex store mutations
 		 * @return {Promise<void>}
 		 */
-		async fetchSmimeCertificates({ commit }) {
-			return handleHttpAuthErrors(commit, async () => {
+		async fetchSmimeCertificates() {
+			return handleHttpAuthErrors(async () => {
 				const certificates = await SmimeCertificateService.fetchAll()
-				commit('setSmimeCertificates', certificates)
+				this.setSmimeCertificatesMutation(certificates)
 			})
 		},
 
@@ -1670,10 +1576,10 @@ export default function mainStoreActions() {
 		 * @param id The id of the certificate to be deleted
 		 * @return {Promise<void>}
 		 */
-		async deleteSmimeCertificate({ commit }, id) {
-			return handleHttpAuthErrors(commit, async () => {
+		async deleteSmimeCertificate(id) {
+			return handleHttpAuthErrors(async () => {
 				await SmimeCertificateService.deleteCertificate(id)
-				commit('deleteSmimeCertificate', { id })
+				this.deleteSmimeCertificateMutation({ id })
 			})
 		},
 
@@ -1687,10 +1593,10 @@ export default function mainStoreActions() {
 		 * @param {Blob=} files.privateKey
 		 * @return {Promise<object>}
 		 */
-		async createSmimeCertificate({ commit }, files) {
-			return handleHttpAuthErrors(commit, async () => {
+		async createSmimeCertificate(files) {
+			return handleHttpAuthErrors(async () => {
 				const certificate = await SmimeCertificateService.createCertificate(files)
-				commit('addSmimeCertificate', { certificate })
+				this.addSmimeCertificateMutation({ certificate })
 				return certificate
 			})
 		},
@@ -1700,7 +1606,7 @@ export default function mainStoreActions() {
 		 *
 		 * @param {object} context Vuex store context
 		 * @param {Function} context.commit Vuex store mutations
-		 * @param {Function} context.getters Vuex store getters
+		 * @param {Function} context.this Vuex store this
 		 * @param {object} data
 		 * @param {object} data.accountId
 		 * @param {number=} data.smimeCertificateId
@@ -1708,15 +1614,12 @@ export default function mainStoreActions() {
 		 * @return {Promise<void>}
 		 */
 		async updateAccountSmimeCertificate({
-			commit,
-			getters
-		}, {
 			account,
 			smimeCertificateId
 		}) {
-			return handleHttpAuthErrors(commit, async () => {
+			return handleHttpAuthErrors(async () => {
 				await updateAccountSmimeCertificate(account.id, smimeCertificateId)
-				commit('patchAccount', {
+				this.patchAccountMutation({
 					account,
 					data: { smimeCertificateId }
 				})
@@ -1727,12 +1630,12 @@ export default function mainStoreActions() {
 		 * Should the envelope moved to the junk (or back to inbox)
 		 *
 		 * @param {object} context Vuex store context
-		 * @param {object} context.getters Vuex store getters
+		 * @param {object} context.this Vuex store this
 		 * @param {object} envelope envelope object@
 		 * @return {boolean}
 		 */
-		async moveEnvelopeToJunk({ getters }, envelope) {
-			const account = getters.getAccount(envelope.accountId)
+		async moveEnvelopeToJunk(envelope) {
+			const account = this.getAccount(envelope.accountId)
 			if (account.junkMailboxId === null) {
 				return false
 			}
@@ -1742,7 +1645,7 @@ export default function mainStoreActions() {
 				return envelope.mailboxId !== account.junkMailboxId
 			}
 
-			const inbox = getters.getInbox(account.id)
+			const inbox = this.getInbox(account.id)
 			if (inbox === undefined) {
 				return false
 			}
@@ -1750,15 +1653,12 @@ export default function mainStoreActions() {
 			// move message to inbox
 			return envelope.mailboxId !== inbox.databaseId
 		},
-		async createAndSetSnoozeMailbox({
-			getters,
-			dispatch
-		}, account) {
+		async createAndSetSnoozeMailbox(account) {
 			const name = 'Snoozed'
 			let snoozeMailboxId
 
 			try {
-				const createMailboxResponse = await dispatch('createMailbox', {
+				const createMailboxResponse = await this.createMailbox({
 					account,
 					name
 				})
@@ -1769,7 +1669,7 @@ export default function mainStoreActions() {
 			}
 
 			if (snoozeMailboxId === undefined) {
-				snoozeMailboxId = getters.findMailboxByName(account.id, name).databaseId
+				snoozeMailboxId = this.findMailboxByName(account.id, name).databaseId
 			}
 
 			if (snoozeMailboxId === undefined) {
@@ -1778,39 +1678,33 @@ export default function mainStoreActions() {
 				return
 			}
 
-			await dispatch('patchAccount', {
+			await this.patchAccount({
 				account,
 				data: {
 					snoozeMailboxId,
 				},
 			})
 		},
-		async setLayout({ commit }, { list }) {
+		async setLayout({ list }) {
 			try {
-				commit('setOneLineLayout', {
+				this.setOneLineLayoutMutation({
 					list,
 				})
 			} catch (error) {
 				logger.error('Could not set layouts', { error })
 			}
 		},
-		async clearFollowUpReminder({
-			commit,
-			dispatch
-		}, { envelope }) {
-			await dispatch('removeEnvelopeTag', {
+		async clearFollowUpReminder({ envelope }) {
+			await this.removeEnvelopeTag({
 				envelope,
 				imapLabel: FOLLOW_UP_TAG_LABEL,
 			})
-			commit('removeEnvelopeFromFollowUpMailbox', {
+			this.removeEnvelopeFromFollowUpMailboxMutation({
 				id: envelope.databaseId,
 			})
 		},
-		async checkFollowUpReminders({
-			dispatch,
-			getters
-		}) {
-			const envelopes = getters.getFollowUpReminderEnvelopes
+		async checkFollowUpReminders() {
+			const envelopes = this.getFollowUpReminderEnvelopes
 			const messageIds = envelopes.map((envelope) => envelope.databaseId)
 			if (messageIds.length === 0) {
 				return
@@ -1818,12 +1712,12 @@ export default function mainStoreActions() {
 
 			const data = await FollowUpService.checkMessageIds(messageIds)
 			for (const messageId of data.wasFollowedUp) {
-				const envelope = getters.getEnvelope(messageId)
+				const envelope = this.getEnvelope(messageId)
 				if (!envelope) {
 					continue
 				}
 
-				await dispatch('clearFollowUpReminder', { envelope })
+				await this.clearFollowUpReminder({ envelope })
 			}
 		},
 	}
