@@ -5,9 +5,9 @@
 
 <template>
 	<div class="event-data">
-		<h2 class="event-data__heading">
+		<h6 class="event-data__heading">
 			{{ title }}
-		</h2>
+		</h6>
 
 		<div class="event-data__row event-data__row--date">
 			<CalendarIcon class="event-data__row__icon" :size="16" />

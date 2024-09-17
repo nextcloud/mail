@@ -213,4 +213,12 @@ export default {
 		}
 	}
 }
+@media screen and (max-width: 500px)
+:deep(.tbody) {
+       width: 70%;
+       display: flex;
+       padding-left: 0;
+       overflow: scroll;
+}
+}
 </style>
