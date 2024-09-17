@@ -681,7 +681,18 @@ export default {
 		}
 	}
 }
-
+@media (max-width: 420px) {
+	.modal-inner--container {
+		width: 100%;
+		flex-wrap: nowrap;
+		flex-direction: column;
+	}
+}
+@media (max-width: 420px) {
+	.search-modal .modal-inner--content .range {
+		flex-direction: row;
+	}
+}
 .multiselect-search-tags {
 	width: 100%;
 }
@@ -717,6 +728,8 @@ export default {
 
 	.modal-inner--container {
 		width: calc(100% - 120px);
+		display: flex;
+		flex-wrap: wrap;
 
 		.select {
 			width: 100%;
