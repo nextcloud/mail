@@ -105,6 +105,7 @@ class OutboxController extends Controller {
 		?int $smimeCertificateId = null,
 		?int $sendAt = null,
 		bool $requestMdn = false,
+		bool $isPgpMime = false,
 	): JsonResponse {
 		$account = $this->accountService->find($this->userId, $accountId);
 
@@ -122,6 +123,7 @@ class OutboxController extends Controller {
 		$message->setHtml($isHtml);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
+		$message->setPgpMime($isPgpMime);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
@@ -194,6 +196,7 @@ class OutboxController extends Controller {
 		?int $smimeCertificateId = null,
 		?int $sendAt = null,
 		bool $requestMdn = false,
+		bool $isPgpMime = false,
 	): JsonResponse {
 		$message = $this->service->getMessage($id, $this->userId);
 		if ($message->getStatus() === LocalMessage::STATUS_PROCESSED) {
@@ -209,6 +212,7 @@ class OutboxController extends Controller {
 		$message->setHtml($isHtml);
 		$message->setInReplyToMessageId($inReplyToMessageId);
 		$message->setSendAt($sendAt);
+		$message->setPgpMime($isPgpMime);
 		$message->setSmimeSign($smimeSign);
 		$message->setSmimeEncrypt($smimeEncrypt);
 		$message->setRequestMdn($requestMdn);
