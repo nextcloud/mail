@@ -60,7 +60,7 @@
 
 			<NcButton type="primary"
 				native-type="submit"
-				@click="updateFilter">
+				@click.prevent.stop="updateFilter">
 				<template #icon>
 					<NcLoadingIcon v-if="loading" :size="16" />
 					<IconCheck v-else :size="16" />

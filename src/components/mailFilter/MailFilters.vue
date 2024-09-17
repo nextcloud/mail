@@ -122,6 +122,7 @@ export default {
 				priority,
 			}
 			this.showUpdateModal = true
+			this.loading = false
 		},
 		openUpdateModal(filter) {
 			this.currentFilter = filter
@@ -134,7 +135,6 @@ export default {
 		},
 		async updateFilter(filter) {
 			this.loading = true
-
 			this.mailFilterStore.$patch((state) => {
 				const index = state.filters.findIndex((item) => item.id === filter.id)
 				logger.debug('update filter', { filter, index })
