@@ -544,12 +544,15 @@ export default {
 			this.setEnvelopeSelected(envelope, selected)
 		},
 		onEnvelopeSelectMultiple(envelope, index) {
-			if (this.lastToggledIndex === undefined) {
+			const lastToggledIndex = this.lastToggledIndex
+				?? this.findSelectionIndex(parseInt(this.$route.params.threadId))
+				?? undefined
+			if (lastToggledIndex === undefined) {
 				return
 			}
 
-			const start = Math.min(this.lastToggledIndex, index)
-			const end = Math.max(this.lastToggledIndex, index)
+			const start = Math.min(lastToggledIndex, index)
+			const end = Math.max(lastToggledIndex, index)
 			const selected = this.selection.includes(envelope.databaseId)
 			for (let i = start; i <= end; i++) {
 				this.setEnvelopeSelected(this.sortedEnvelops[i], !selected)
@@ -580,6 +583,21 @@ export default {
 		onCloseMoveModal() {
 			this.showMoveModal = false
 			this.unselectAll()
+		},
+		/**
+		 * Find the envelope list index of a given envelope's database id.
+		 *
+		 * @param {int} databaseId
+		 * @return {int|undefined} Index or undefined if not found in the envelope list
+		 */
+		findSelectionIndex(databaseId) {
+			for (const [index, envelope] of this.sortedEnvelops.entries()) {
+				if (envelope.databaseId === databaseId) {
+					return index
+				}
+			}
+
+			return undefined
 		},
 	},
 }
