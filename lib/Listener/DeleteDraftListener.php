@@ -11,7 +11,7 @@ namespace OCA\Mail\Listener;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -65,10 +65,9 @@ class DeleteDraftListener implements IEventListener {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Message $draft
 	 */
-	private function deleteDraft(Account $account, Message $draft): void {
+	private function deleteDraft(MailAccount $account, Message $draft): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$draftsMailbox = $this->getDraftsMailbox($account);
@@ -108,8 +107,8 @@ class DeleteDraftListener implements IEventListener {
 	/**
 	 * @throws DoesNotExistException
 	 */
-	private function getDraftsMailbox(Account $account): Mailbox {
-		$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+	private function getDraftsMailbox(MailAccount $account): Mailbox {
+		$draftsMailboxId = $account->getDraftsMailboxId();
 		if ($draftsMailboxId === null) {
 			throw new DoesNotExistException('No drafts mailbox ID set');
 		}

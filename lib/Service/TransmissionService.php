@@ -7,11 +7,11 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\ServiceException;
@@ -68,18 +68,17 @@ class TransmissionService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param array $attachment
 	 * @return \Horde_Mime_Part|null
 	 */
-	public function handleAttachment(Account $account, array $attachment): ?\Horde_Mime_Part {
+	public function handleAttachment(MailAccount $account, array $attachment): ?\Horde_Mime_Part {
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
 			return null;
 		}
 
 		try {
-			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), (int)$attachment['id']);
+			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getUserId(), (int)$attachment['id']);
 			$part = new \Horde_Mime_Part();
 			$part->setCharset('us-ascii');
 			$part->setDisposition('attachment');
@@ -110,12 +109,11 @@ class TransmissionService {
 
 	/**
 	 * @param LocalMessage $localMessage
-	 * @param Account $account
 	 * @param \Horde_Mime_Part $mimePart
 	 * @return \Horde_Mime_Part
 	 * @throws ServiceException
 	 */
-	public function getSignMimePart(LocalMessage $localMessage, Account $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {
+	public function getSignMimePart(LocalMessage $localMessage, MailAccount $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {
 		if ($localMessage->getSmimeSign()) {
 			if ($localMessage->getSmimeCertificateId() === null) {
 				$localMessage->setStatus(LocalMessage::STATUS_SMIME_SIGN_NO_CERT_ID);
@@ -152,12 +150,11 @@ class TransmissionService {
 	 * @param AddressList $to
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
-	 * @param Account $account
 	 * @param \Horde_Mime_Part $mimePart
 	 * @return \Horde_Mime_Part
 	 * @throws ServiceException
 	 */
-	public function getEncryptMimePart(LocalMessage $localMessage, AddressList $to, AddressList $cc, AddressList $bcc, Account $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {
+	public function getEncryptMimePart(LocalMessage $localMessage, AddressList $to, AddressList $cc, AddressList $bcc, MailAccount $account, \Horde_Mime_Part $mimePart): \Horde_Mime_Part {
 		if ($localMessage->getSmimeEncrypt()) {
 			if ($localMessage->getSmimeCertificateId() === null) {
 				$localMessage->setStatus(LocalMessage::STATUS_SMIME_ENCRYPT_NO_CERT_ID);

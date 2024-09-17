@@ -107,7 +107,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->localMessageMapper = Server::get(LocalMessageMapper::class);
 		$this->message = new LocalMessage();
-		$this->message->setAccountId($this->account->getId());
+		$account = $this->account;
+		$this->message->setAccountId($account->getId());
 		$this->message->setSubject('greetings');
 		$this->message->setBody('hello there');
 		$this->message->setType(LocalMessage::TYPE_OUTGOING);

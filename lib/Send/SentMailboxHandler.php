@@ -7,12 +7,12 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Send;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 
 class SentMailboxHandler extends AHandler {
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
-		if ($account->getMailAccount()->getSentMailboxId() === null) {
+	public function process(MailAccount $account, LocalMessage $localMessage): LocalMessage {
+		if ($account->getSentMailboxId() === null) {
 			$localMessage->setStatus(LocalMessage::STATUS_NO_SENT_MAILBOX);
 			return $localMessage;
 		}

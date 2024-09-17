@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -83,7 +82,6 @@ class IMipService {
 
 		/** @var Mailbox $mailbox */
 		foreach ($mailboxes as $mailbox) {
-			/** @var Account $account */
 			$account = $accounts[$mailbox->getAccountId()];
 			$filteredMessages = array_filter($messages, static function ($message) use ($mailbox) {
 				return $message->getMailboxId() === $mailbox->getId();
@@ -96,11 +94,11 @@ class IMipService {
 			// Check for accounts or mailboxes that no longer exist,
 			// no processing for drafts, sent items, junk or archive
 			if ($account === null
-				|| $account->getMailAccount()->getArchiveMailboxId() === $mailbox->getId()
-				|| $account->getMailAccount()->getSnoozeMailboxId() === $mailbox->getId()
-				|| $account->getMailAccount()->getTrashMailboxId() === $mailbox->getId()
-				|| $account->getMailAccount()->getSentMailboxId() === $mailbox->getId()
-				|| $account->getMailAccount()->getDraftsMailboxId() === $mailbox->getId()
+				|| $account->getArchiveMailboxId() === $mailbox->getId()
+				|| $account->getSnoozeMailboxId() === $mailbox->getId()
+				|| $account->getTrashMailboxId() === $mailbox->getId()
+				|| $account->getSentMailboxId() === $mailbox->getId()
+				|| $account->getDraftsMailboxId() === $mailbox->getId()
 				|| $mailbox->isSpecialUse(\Horde_Imap_Client::SPECIALUSE_ARCHIVE)
 			) {
 				$processedMessages = array_map(static function (Message $message) {

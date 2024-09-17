@@ -9,12 +9,9 @@ declare(strict_types=1);
  */
 namespace OCA\Mail;
 
-use JsonSerializable;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\Quota;
-use ReturnTypeWillChange;
 
-class Account implements JsonSerializable {
+class Account {
 	public function __construct(private MailAccount $account) {
 	}
 
@@ -22,58 +19,4 @@ class Account implements JsonSerializable {
 		return $this->account;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getId() {
-		return $this->account->getId();
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName() {
-		return $this->account->getName();
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getEMailAddress() {
-		return $this->account->getEmail();
-	}
-
-	#[ReturnTypeWillChange]
-	public function jsonSerialize() {
-		return $this->account->toJson();
-	}
-
-	public function getEmail(): string {
-		return $this->account->getEmail();
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getUserId() {
-		return $this->account->getUserId();
-	}
-
-	/**
-	 * Set the quota percentage
-	 * @param Quota $quota
-	 * @return void
-	 */
-	public function calculateAndSetQuotaPercentage(Quota $quota): void {
-		if ($quota->getLimit() === 0) {
-			$this->account->setQuotaPercentage(0);
-			return;
-		}
-		$percentage = (int)round($quota->getUsage() / $quota->getLimit() * 100);
-		$this->account->setQuotaPercentage($percentage);
-	}
-
-	public function getQuotaPercentage(): ?int {
-		return $this->account->getQuotaPercentage();
-	}
 }

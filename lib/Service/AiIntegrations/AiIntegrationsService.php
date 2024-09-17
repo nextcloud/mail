@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\AiIntegrations;
 
 use JsonException;
-use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ServiceException;
@@ -62,7 +62,6 @@ PROMPT;
 		$this->config = $config;
 	}
 	/**
-	 * @param Account $account
 	 * @param string $threadId
 	 * @param array $messages
 	 * @param string $currentUserId
@@ -71,7 +70,7 @@ PROMPT;
 	 *
 	 * @throws ServiceException
 	 */
-	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): null|string {
+	public function summarizeThread(MailAccount $account, string $threadId, array $messages, string $currentUserId): null|string {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
@@ -118,7 +117,7 @@ PROMPT;
 	/**
 	 * @param Message[] $messages
 	 */
-	public function generateEventData(Account $account, string $threadId, array $messages, string $currentUserId): ?EventData {
+	public function generateEventData(MailAccount $account, string $threadId, array $messages, string $currentUserId): ?EventData {
 		try {
 			/** @var IManager $manager */
 			$manager = $this->container->get(IManager::class);
@@ -164,7 +163,7 @@ PROMPT;
 	 * @return ?string[]
 	 * @throws ServiceException
 	 */
-	public function getSmartReply(Account $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
+	public function getSmartReply(MailAccount $account, Mailbox $mailbox, Message $message, string $currentUserId): ?array {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
@@ -226,7 +225,7 @@ PROMPT;
 	 * @throws ServiceException
 	 */
 	public function requiresFollowUp(
-		Account $account,
+		MailAccount $account,
 		Mailbox $mailbox,
 		Message $message,
 		string $currentUserId,

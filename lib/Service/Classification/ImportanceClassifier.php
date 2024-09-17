@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Classification;
 
 use Horde_Imap_Client;
-use OCA\Mail\Account;
 use OCA\Mail\Db\Classifier;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -135,10 +135,8 @@ class ImportanceClassifier {
 	 *
 	 * To prevent memory exhaustion, the process will only load a fixed maximum
 	 * number of messages per account.
-	 *
-	 * @param Account $account
 	 */
-	public function train(Account $account, LoggerInterface $logger): void {
+	public function train(MailAccount $account, LoggerInterface $logger): void {
 		$perf = $this->performanceLogger->start('importance classifier training');
 		$incomingMailboxes = $this->getIncomingMailboxes($account);
 		$logger->debug('found ' . count($incomingMailboxes) . ' incoming mailbox(es)');
@@ -210,11 +208,9 @@ class ImportanceClassifier {
 	}
 
 	/**
-	 * @param Account $account
-	 *
 	 * @return Mailbox[]
 	 */
-	private function getIncomingMailboxes(Account $account): array {
+	private function getIncomingMailboxes(MailAccount $account): array {
 		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
@@ -226,14 +222,12 @@ class ImportanceClassifier {
 	}
 
 	/**
-	 * @param Account $account
-	 *
 	 * @return Mailbox[]
 	 * @todo allow more than one outgoing mailbox
 	 */
-	private function getOutgoingMailboxes(Account $account): array {
+	private function getOutgoingMailboxes(MailAccount $account): array {
 		try {
-			$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+			$sentMailboxId = $account->getSentMailboxId();
 			if ($sentMailboxId === null) {
 				return [];
 			}
@@ -249,14 +243,13 @@ class ImportanceClassifier {
 	/**
 	 * Get the feature vector of every message
 	 *
-	 * @param Account $account
 	 * @param Mailbox[] $incomingMailboxes
 	 * @param Mailbox[] $outgoingMailboxes
 	 * @param Message[] $messages
 	 *
 	 * @return array
 	 */
-	private function getFeaturesAndImportance(Account $account,
+	private function getFeaturesAndImportance(MailAccount $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
 		array $messages): array {
@@ -277,13 +270,12 @@ class ImportanceClassifier {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Message[] $messages
 	 *
 	 * @return bool[]
 	 * @throws ServiceException
 	 */
-	public function classifyImportance(Account $account, array $messages): array {
+	public function classifyImportance(MailAccount $account, array $messages): array {
 		$estimator = null;
 		try {
 			$estimator = $this->persistenceService->loadLatest($account);

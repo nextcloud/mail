@@ -32,12 +32,12 @@ class MessageKnownSinceListener implements IEventListener {
 			return;
 		}
 
-		$trashRetention = $event->getAccount()->getMailAccount()->getTrashRetentionDays();
+		$trashRetention = $event->getAccount()->getTrashRetentionDays();
 		if ($trashRetention === null) {
 			return;
 		}
 
-		$trashMailboxId = $event->getAccount()->getMailAccount()->getTrashMailboxId();
+		$trashMailboxId = $event->getAccount()->getTrashMailboxId();
 		if ($trashMailboxId === null) {
 			return;
 		}

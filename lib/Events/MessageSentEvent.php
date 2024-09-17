@@ -9,24 +9,21 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCP\EventDispatcher\Event;
 
 /**
  * @psalm-immutable
  */
 class MessageSentEvent extends Event {
-	/** @var Account */
-	private $account;
-
-	public function __construct(Account $account,
+	public function __construct(private MailAccount $account,
 		private LocalMessage $localMessage) {
 		parent::__construct();
 		$this->account = $account;
 	}
 
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

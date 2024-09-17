@@ -9,22 +9,17 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCP\EventDispatcher\Event;
-
 class BeforeImapClientCreated extends Event {
-	/** @var Account */
-	private $account;
+	private MailAccount $account;
 
-	public function __construct(Account $account) {
+	public function __construct(MailAccount $account) {
 		parent::__construct();
 		$this->account = $account;
 	}
 
-	/**
-	 * @return Account
-	 */
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 }

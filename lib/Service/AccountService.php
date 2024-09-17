@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\PreviewEnhancementProcessingJob;
 use OCA\Mail\BackgroundJob\QuotaJob;
 use OCA\Mail\BackgroundJob\SyncJob;
@@ -31,7 +30,7 @@ class AccountService {
 	/**
 	 * Cache accounts for multiple calls to 'findByUserId'
 	 *
-	 * @var array<string, Account[]>
+	 * @var array<string, MailAccount[]>
 	 */
 	private array $accounts = [];
 
@@ -56,13 +55,11 @@ class AccountService {
 
 	/**
 	 * @param string $currentUserId
-	 * @return Account[]
+	 * @return MailAccount[]
 	 */
 	public function findByUserId(string $currentUserId): array {
 		if (!isset($this->accounts[$currentUserId])) {
-			$this->accounts[$currentUserId] = array_map(static function ($a) {
-				return new Account($a);
-			}, $this->mapper->findByUserId($currentUserId));
+			$this->accounts[$currentUserId] = $this->mapper->findByUserId($currentUserId);
 		}
 
 		return $this->accounts[$currentUserId];
@@ -71,11 +68,10 @@ class AccountService {
 	/**
 	 * @param int $id
 	 *
-	 * @return Account
 	 * @throws DoesNotExistException
 	 */
-	public function findById(int $id): Account {
-		return new Account($this->mapper->findById($id));
+	public function findById(int $id): MailAccount {
+		return $this->mapper->findById($id);
 	}
 
 	/**
@@ -111,10 +107,9 @@ class AccountService {
 	 * @param string $userId
 	 * @param int $id
 	 *
-	 * @return Account
 	 * @throws ClientException
 	 */
-	public function find(string $userId, int $id): Account {
+	public function find(string $userId, int $id): MailAccount {
 		if (isset($this->accounts[$userId])) {
 			foreach ($this->accounts[$userId] as $account) {
 				if ($account->getId() === $id) {
@@ -125,7 +120,7 @@ class AccountService {
 		}
 
 		try {
-			return new Account($this->mapper->find($userId, $id));
+			return $this->mapper->find($userId, $id);
 		} catch (DoesNotExistException $e) {
 			throw new ClientException("Account $id does not exist or you don\'t have permission to access it");
 		}
@@ -191,7 +186,7 @@ class AccountService {
 	 */
 	public function updateSignature(int $id, string $uid, ?string $signature = null): void {
 		$account = $this->find($uid, $id);
-		$mailAccount = $account->getMailAccount();
+		$mailAccount = $account;
 		$mailAccount->setSignature($signature);
 		$this->mapper->save($mailAccount);
 	}

@@ -9,12 +9,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCP\EventDispatcher\Event;
 
 class BeforeMessageDeletedEvent extends Event {
-	/** @var Account */
-	private $account;
+	private MailAccount $account;
 
 	/** @var string */
 	private $folderId;
@@ -22,14 +21,14 @@ class BeforeMessageDeletedEvent extends Event {
 	/** @var int */
 	private $messageId;
 
-	public function __construct(Account $account, string $mailbox, int $messageId) {
+	public function __construct(MailAccount $account, string $mailbox, int $messageId) {
 		parent::__construct();
 		$this->account = $account;
 		$this->folderId = $mailbox;
 		$this->messageId = $messageId;
 	}
 
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

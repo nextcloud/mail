@@ -53,7 +53,7 @@ class OutOfOfficeController extends Controller {
 			return JsonResponse::fail([], Http::STATUS_NOT_FOUND);
 		}
 
-		$state = $this->outOfOfficeService->parseState($account->getMailAccount());
+		$state = $this->outOfOfficeService->parseState($account);
 		return JsonResponse::success($state);
 	}
 
@@ -76,7 +76,7 @@ class OutOfOfficeController extends Controller {
 			return JsonResponse::fail([], Http::STATUS_NOT_FOUND);
 		}
 
-		$mailAccount = $account->getMailAccount();
+		$mailAccount = $account;
 		if (!$mailAccount->getOutOfOfficeFollowsSystem()) {
 			$mailAccount->setOutOfOfficeFollowsSystem(true);
 			$this->accountService->update($mailAccount);
@@ -112,7 +112,7 @@ class OutOfOfficeController extends Controller {
 			throw new ServiceException('Missing start date');
 		}
 
-		$mailAccount = $account->getMailAccount();
+		$mailAccount = $account;
 		if ($mailAccount->getOutOfOfficeFollowsSystem()) {
 			$mailAccount->setOutOfOfficeFollowsSystem(false);
 			$this->accountService->update($mailAccount);

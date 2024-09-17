@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -50,8 +50,6 @@ class SnoozeService {
 	public function wakeMessages(): void {
 		$accounts = $this->accountMapper->getAllAccounts();
 		foreach ($accounts as $account) {
-			$account = new Account($account);
-
 			try {
 				$this->wakeMessagesByAccount($account);
 			} catch (ServiceException|ClientException $e) {
@@ -59,7 +57,7 @@ class SnoozeService {
 					'exception' => $e,
 					'userId' => $account->getUserId(),
 					'accountId' => $account->getId(),
-					'snoozeMailboxId' => $account->getMailAccount()->getSnoozeMailboxId(),
+					'snoozeMailboxId' => $account->getSnoozeMailboxId(),
 				]);
 			}
 		}
@@ -68,9 +66,7 @@ class SnoozeService {
 	/**
 	 * @param Message $message
 	 * @param int $unixTimestamp
-	 * @param Account $srcAccount
 	 * @param Mailbox $srcMailbox
-	 * @param Account $dstAccount
 	 * @param Mailbox $dstMailbox
 	 *
 	 * @return void
@@ -80,9 +76,9 @@ class SnoozeService {
 	public function snoozeMessage(
 		Message $message,
 		int $unixTimestamp,
-		Account $srcAccount,
+		MailAccount $srcAccount,
 		Mailbox $srcMailbox,
-		Account $dstAccount,
+		MailAccount $dstAccount,
 		Mailbox $dstMailbox
 	): void {
 		$newUid = $this->mailManager->moveMessage(
@@ -146,9 +142,7 @@ class SnoozeService {
 	/**
 	 * @param Message $selectedMessage
 	 * @param int $unixTimestamp
-	 * @param Account $srcAccount
 	 * @param Mailbox $srcMailbox
-	 * @param Account $dstAccount
 	 * @param Mailbox $dstMailbox
 	 *
 	 * @return void
@@ -158,9 +152,9 @@ class SnoozeService {
 	public function snoozeThread(
 		Message $selectedMessage,
 		int $unixTimestamp,
-		Account $srcAccount,
+		MailAccount $srcAccount,
 		Mailbox $srcMailbox,
-		Account $dstAccount,
+		MailAccount $dstAccount,
 		Mailbox $dstMailbox
 	): void {
 		$newUids = $this->mailManager->moveThread(
@@ -271,8 +265,8 @@ class SnoozeService {
 	/**
 	 * @throws ServiceException
 	 */
-	private function wakeMessagesByAccount(Account $account): void {
-		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
+	private function wakeMessagesByAccount(MailAccount $account): void {
+		$snoozeMailboxId = $account->getSnoozeMailboxId();
 		if ($snoozeMailboxId === null) {
 			return;
 		}

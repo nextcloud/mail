@@ -33,7 +33,7 @@ class MoveJunkListener implements IEventListener {
 		}
 
 		$account = $event->getAccount();
-		$mailAccount = $account->getMailAccount();
+		$mailAccount = $account;
 
 		$junkMailboxId = $mailAccount->getJunkMailboxId();
 		if ($junkMailboxId === null) {

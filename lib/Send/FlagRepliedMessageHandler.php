@@ -9,8 +9,8 @@ namespace OCA\Mail\Send;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -27,7 +27,7 @@ class FlagRepliedMessageHandler extends AHandler {
 	) {
 	}
 
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+	public function process(MailAccount $account, LocalMessage $localMessage): LocalMessage {
 		if ($localMessage->getStatus() !== LocalMessage::STATUS_PROCESSED) {
 			return $localMessage;
 		}

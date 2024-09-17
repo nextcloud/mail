@@ -63,14 +63,14 @@ class SieveService {
 	private function getClient(string $userId, int $accountId): \Horde\ManageSieve {
 		$account = $this->accountService->find($userId, $accountId);
 
-		if (!$account->getMailAccount()->isSieveEnabled()) {
+		if (!$account->isSieveEnabled()) {
 			throw new ClientException('ManageSieve is disabled');
 		}
 
 		try {
 			$sieve = $this->sieveClientFactory->getClient($account);
 		} catch (ManagesieveException $e) {
-			throw new CouldNotConnectException($e, 'ManageSieve', $account->getMailAccount()->getSieveHost(), $account->getMailAccount()->getSievePort());
+			throw new CouldNotConnectException($e, 'ManageSieve', $account->getSieveHost(), $account->getSievePort());
 		}
 
 		return $sieve;

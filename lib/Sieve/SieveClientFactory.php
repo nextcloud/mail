@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Sieve;
 
 use Horde\ManageSieve;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
@@ -33,31 +33,30 @@ class SieveClientFactory {
 	}
 
 	/**
-	 * @param Account $account
 	 * @return ManageSieve
 	 * @throws ManageSieve\Exception
 	 */
-	public function getClient(Account $account): ManageSieve {
-		if (!isset($this->cache[$account->getId()])) {
-			$user = $account->getMailAccount()->getSieveUser();
+	public function getClient(MailAccount $account): ManageSieve {
+		if (!isset($this->cache[($account->getId())])) {
+			$user = $account->getSieveUser();
 			if (empty($user)) {
-				$user = $account->getMailAccount()->getInboundUser();
+				$user = $account->getInboundUser();
 			}
-			$password = $account->getMailAccount()->getSievePassword();
+			$password = $account->getSievePassword();
 			if (empty($password)) {
-				$password = $account->getMailAccount()->getInboundPassword();
+				$password = $account->getInboundPassword();
 			}
 
-			$this->cache[$account->getId()] = $this->createClient(
-				$account->getMailAccount()->getSieveHost(),
-				$account->getMailAccount()->getSievePort(),
+			$this->cache[($account->getId())] = $this->createClient(
+				$account->getSieveHost(),
+				$account->getSievePort(),
 				$user,
 				$password,
-				$account->getMailAccount()->getSieveSslMode()
+				$account->getSieveSslMode()
 			);
 		}
 
-		return $this->cache[$account->getId()];
+		return $this->cache[($account->getId())];
 	}
 
 	/**

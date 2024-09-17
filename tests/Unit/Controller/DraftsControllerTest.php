@@ -205,7 +205,7 @@ class DraftsControllerTest extends TestCase {
 		$to = [['label' => 'Lewis', 'email' => 'tent@stardewvalley.com']];
 		$cc = [['label' => 'Pierre', 'email' => 'generalstore@stardewvalley.com']];
 
-		$account = new Account(new MailAccount());
+		$account = new MailAccount();
 		$this->accountService->expects(self::once())
 			->method('find')
 			->with($this->userId, $message->getAccountId())

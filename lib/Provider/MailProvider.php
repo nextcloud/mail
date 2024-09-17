@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Provider;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCP\IL10N;
@@ -151,11 +151,10 @@ class MailProvider implements IProvider {
 	 * @since 4.0.0
 	 *
 	 * @param string $userId system user id
-	 * @param Account $account mail account
 	 *
 	 * @return IService service object
 	 */
-	protected function serviceFromAccount(string $userId, Account $account): IService {
+	protected function serviceFromAccount(string $userId, MailAccount $account): IService {
 		// extract values
 		$serviceId = (string)$account->getId();
 		$serviceLabel = $account->getName();

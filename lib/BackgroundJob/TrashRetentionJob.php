@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
@@ -46,9 +46,7 @@ class TrashRetentionJob extends TimedJob {
 	public function run($argument) {
 		$accounts = $this->accountMapper->getAllAccounts();
 		foreach ($accounts as $account) {
-			$account = new Account($account);
-
-			$retentionDays = $account->getMailAccount()->getTrashRetentionDays();
+			$retentionDays = $account->getTrashRetentionDays();
 			if ($retentionDays === null || $retentionDays <= 0) {
 				continue;
 			}
@@ -62,7 +60,7 @@ class TrashRetentionJob extends TimedJob {
 					'exception' => $e,
 					'userId' => $account->getUserId(),
 					'accountId' => $account->getId(),
-					'trashMailboxId' => $account->getMailAccount()->getTrashMailboxId(),
+					'trashMailboxId' => $account->getTrashMailboxId(),
 				]);
 			}
 		}
@@ -73,8 +71,8 @@ class TrashRetentionJob extends TimedJob {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	private function cleanTrash(Account $account, int $retentionSeconds): void {
-		$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+	private function cleanTrash(MailAccount $account, int $retentionSeconds): void {
+		$trashMailboxId = $account->getTrashMailboxId();
 		if ($trashMailboxId === null) {
 			return;
 		}

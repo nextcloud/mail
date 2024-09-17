@@ -9,30 +9,26 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
 class MessageDeletedEvent extends Event {
-	/** @var Account */
-	private $account;
-
 	/** @var Mailbox */
 	private $mailbox;
 
 	/** @var int */
 	private $messageId;
 
-	public function __construct(Account $account,
+	public function __construct(private MailAccount $account,
 		Mailbox $mailbox,
 		int $messageId) {
 		parent::__construct();
-		$this->account = $account;
 		$this->mailbox = $mailbox;
 		$this->messageId = $messageId;
 	}
 
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

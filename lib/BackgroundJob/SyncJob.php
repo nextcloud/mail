@@ -73,7 +73,7 @@ class SyncJob extends TimedJob {
 			return;
 		}
 
-		if(!$account->getMailAccount()->canAuthenticateImap()) {
+		if(!$account->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping background sync job');
 			return;
 		}

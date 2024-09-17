@@ -12,8 +12,8 @@ namespace OCA\Mail\IMAP;
 use Horde_Imap_Client_Cache_Backend_Null;
 use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
-use OCA\Mail\Account;
 use OCA\Mail\Cache\Cache;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Events\BeforeImapClientCreated;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -60,22 +60,22 @@ class IMAPClientFactory {
 	 * responsible to log out as soon as possible to keep the number of open
 	 * (and stale) connections at a minimum.
 	 *
-	 * @param Account $account
+	 * @param MailAccount $account
 	 * @param bool $useCache
 	 * @return Horde_Imap_Client_Socket
 	 */
-	public function getClient(Account $account, bool $useCache = true): Horde_Imap_Client_Socket {
+	public function getClient(MailAccount $account, bool $useCache = true): Horde_Imap_Client_Socket {
 		$this->eventDispatcher->dispatchTyped(
 			new BeforeImapClientCreated($account)
 		);
-		$host = $account->getMailAccount()->getInboundHost();
-		$user = $account->getMailAccount()->getInboundUser();
+		$host = $account->getInboundHost();
+		$user = $account->getInboundUser();
 		$decryptedPassword = null;
-		if ($account->getMailAccount()->getInboundPassword() !== null) {
-			$decryptedPassword = $this->crypto->decrypt($account->getMailAccount()->getInboundPassword());
+		if ($account->getInboundPassword() !== null) {
+			$decryptedPassword = $this->crypto->decrypt($account->getInboundPassword());
 		}
-		$port = $account->getMailAccount()->getInboundPort();
-		$sslMode = $account->getMailAccount()->getInboundSslMode();
+		$port = $account->getInboundPort();
+		$sslMode = $account->getInboundSslMode();
 		if ($sslMode === 'none') {
 			$sslMode = false;
 		}
@@ -94,8 +94,8 @@ class IMAPClientFactory {
 				],
 			],
 		];
-		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
-			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+		if ($account->getAuthMethod() === 'xoauth2') {
+			$decryptedAccessToken = $this->crypto->decrypt($account->getOauthAccessToken());
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Imap_Client_Password_Xoauth2(

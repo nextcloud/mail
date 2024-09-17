@@ -35,6 +35,7 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\IRemoteHostValidator;
 use Psr\Log\LoggerInterface;
+use ReturnTypeWillChange;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AccountsController extends Controller {
@@ -92,7 +93,7 @@ class AccountsController extends Controller {
 
 		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$conf = $mailAccount->jsonSerialize();
+			$conf = $mailAccount->toJson();
 			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
 			$json[] = $conf;
 		}
@@ -231,7 +232,7 @@ class AccountsController extends Controller {
 		?bool $searchBody = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
-		$dbAccount = $account->getMailAccount();
+		$dbAccount = $account;
 
 		if ($draftsMailboxId !== null) {
 			$this->mailManager->getMailbox($this->currentUserId, $draftsMailboxId);
@@ -483,7 +484,7 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 */
 	public function updateSmimeCertificate(int $id, ?int $smimeCertificateId = null) {
-		$account = $this->accountService->find($this->currentUserId, $id)->getMailAccount();
+		$account = $this->accountService->find($this->currentUserId, $id);
 		$account->setSmimeCertificateId($smimeCertificateId);
 		$this->accountService->update($account);
 		return MailJsonResponse::success();

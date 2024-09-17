@@ -13,7 +13,6 @@ use Horde_Imap_Client_Exception;
 use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use InvalidArgumentException;
-use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Exception\CouldNotConnectException;
@@ -60,8 +59,6 @@ class SetupService {
 	/**
 	 * @throws CouldNotConnectException
 	 * @throws ServiceException
-	 *
-	 * @return Account
 	 */
 	public function createNewAccount(string $accountName,
 		string $emailAddress,
@@ -77,7 +74,7 @@ class SetupService {
 		?string $smtpPassword,
 		string $uid,
 		string $authMethod,
-		?int $accountId = null): Account {
+		?int $accountId = null): MailAccount {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
@@ -104,10 +101,9 @@ class SetupService {
 		}
 		$newAccount->setAuthMethod($authMethod);
 
-		$account = new Account($newAccount);
 		if ($authMethod === 'password' && $imapPassword !== null) {
 			$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
-			$this->testConnectivity($account);
+			$this->testConnectivity($newAccount);
 		}
 
 		$this->accountService->save($newAccount);
@@ -115,15 +111,14 @@ class SetupService {
 
 		$this->tagMapper->createDefaultTags($newAccount);
 
-		return $account;
+		return $newAccount;
 	}
 
 	/**
-	 * @param Account $account
 	 * @throws CouldNotConnectException
 	 */
-	protected function testConnectivity(Account $account): void {
-		$mailAccount = $account->getMailAccount();
+	protected function testConnectivity(MailAccount $account): void {
+		$mailAccount = $account;
 
 		$imapClient = $this->imapClientFactory->getClient($account);
 		try {

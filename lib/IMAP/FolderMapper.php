@@ -12,7 +12,7 @@ namespace OCA\Mail\IMAP;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use Psr\Log\LoggerInterface;
@@ -40,14 +40,13 @@ class FolderMapper {
 	];
 
 	/**
-	 * @param Account $account
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $pattern
 	 *
 	 * @return Folder[]
 	 * @throws Horde_Imap_Client_Exception
 	 */
-	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
+	public function getFolders(MailAccount $account, Horde_Imap_Client_Socket $client,
 		string $pattern = '*'): array {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,
@@ -75,7 +74,7 @@ class FolderMapper {
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,
-		Account $account,
+		MailAccount $account,
 		string $name): Folder {
 		$client->createMailbox($name);
 

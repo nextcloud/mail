@@ -7,8 +7,8 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Send;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AntiAbuseService;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
@@ -19,7 +19,7 @@ class AntiAbuseHandler extends AHandler {
 		private AntiAbuseService $service,
 		private LoggerInterface $logger) {
 	}
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+	public function process(MailAccount $account, LocalMessage $localMessage): LocalMessage {
 		if ($localMessage->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL
 			|| $localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			return $this->processNext($account, $localMessage);

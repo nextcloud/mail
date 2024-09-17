@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use OCA\Mail\Account;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -36,11 +35,9 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
-	 *
 	 * @return Mailbox[]
 	 */
-	public function findAll(Account $account): array {
+	public function findAll(MailAccount $account): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb->select('*')
@@ -69,7 +66,7 @@ class MailboxMapper extends QBMapper {
 	 * @throws DoesNotExistException
 	 * @throws ServiceException
 	 */
-	public function find(Account $account, string $name): Mailbox {
+	public function find(MailAccount $account, string $name): Mailbox {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb->select('*')

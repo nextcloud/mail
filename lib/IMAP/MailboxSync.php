@@ -13,7 +13,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Namespace_List;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -76,10 +76,10 @@ class MailboxSync {
 	/**
 	 * @throws ServiceException
 	 */
-	public function sync(Account $account,
+	public function sync(MailAccount $account,
 		LoggerInterface $logger,
 		bool $force = false): void {
-		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
+		if (!$force && $account->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
 			$logger->debug('account is up to date, skipping mailbox sync');
 			return;
 		}
@@ -91,7 +91,7 @@ class MailboxSync {
 					'ob_return' => true,
 				]);
 				$personalNamespace = $this->getPersonalNamespace($namespaces);
-				$account->getMailAccount()->setPersonalNamespace(
+				$account->setPersonalNamespace(
 					$personalNamespace
 				);
 			} catch (Horde_Imap_Client_Exception $e) {
@@ -139,12 +139,11 @@ class MailboxSync {
 	/**
 	 * Sync unread and total message statistics.
 	 *
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function syncStats(Account $account, Mailbox $mailbox): void {
+	public function syncStats(MailAccount $account, Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {
 			$allStats = $this->folderMapper->getFoldersStatusAsObject($client, [$mailbox->getName()]);
@@ -172,7 +171,7 @@ class MailboxSync {
 	/**
 	 * @return Mailbox[]
 	 */
-	private function persist(Account $account,
+	private function persist(MailAccount $account,
 		array $folders,
 		array $existing,
 		?Horde_Imap_Client_Namespace_List $namespaces): array {
@@ -199,8 +198,8 @@ class MailboxSync {
 			$this->mailboxMapper->delete($leftover);
 		}
 
-		$account->getMailAccount()->setLastMailboxSync($this->timeFactory->getTime());
-		$this->mailAccountMapper->update($account->getMailAccount());
+		$account->setLastMailboxSync($this->timeFactory->getTime());
+		$this->mailAccountMapper->update($account);
 
 		return $mailboxes;
 	}
@@ -230,7 +229,7 @@ class MailboxSync {
 		return $this->mailboxMapper->update($mailbox);
 	}
 
-	private function createMailboxFromFolder(Account $account, Folder $folder, ?Horde_Imap_Client_Namespace_List $namespaces): Mailbox {
+	private function createMailboxFromFolder(MailAccount $account, Folder $folder, ?Horde_Imap_Client_Namespace_List $namespaces): Mailbox {
 		$mailbox = new Mailbox();
 		$mailbox->setName($folder->getMailbox());
 		$mailbox->setAccountId($account->getId());

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Message;
 use OCP\EventDispatcher\Event;
 
@@ -17,20 +17,17 @@ use OCP\EventDispatcher\Event;
  * @psalm-immutable
  */
 class DraftMessageCreatedEvent extends Event {
-	/** @var Account */
-	private $account;
 
 	/** @var Message */
 	private $draft;
 
-	public function __construct(Account $account,
+	public function __construct(private MailAccount $account,
 		Message $draft) {
 		parent::__construct();
-		$this->account = $account;
 		$this->draft = $draft;
 	}
 
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

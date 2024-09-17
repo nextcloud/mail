@@ -11,7 +11,7 @@ namespace OCA\Mail\IMAP\Search;
 
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Search_Query;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -30,7 +30,7 @@ class Provider {
 	 * @return int[]
 	 * @throws ServiceException
 	 */
-	public function findMatches(Account $account,
+	public function findMatches(MailAccount $account,
 		Mailbox $mailbox,
 		SearchQuery $searchQuery): array {
 		$client = $this->clientFactory->getClient($account);

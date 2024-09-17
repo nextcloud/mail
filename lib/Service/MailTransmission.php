@@ -25,11 +25,11 @@ use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
 use Horde_Mime_Mdn;
 use Horde_Smtp_Exception;
-use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -70,7 +70,7 @@ class MailTransmission implements IMailTransmission {
 	) {
 	}
 
-	public function sendMessage(Account $account, LocalMessage $localMessage): void {
+	public function sendMessage(MailAccount $account, LocalMessage $localMessage): void {
 		$to = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($localMessage, Recipient::TYPE_BCC);
@@ -80,7 +80,7 @@ class MailTransmission implements IMailTransmission {
 		if ($localMessage->getAliasId() !== null) {
 			$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getUserId());
 		}
-		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
+		$fromEmail = $alias ? $alias->getAlias() : $account->getEmail();
 		$from = new AddressList([
 			Address::fromRaw($account->getName(), $fromEmail),
 		]);
@@ -165,7 +165,7 @@ class MailTransmission implements IMailTransmission {
 		);
 	}
 
-	public function saveLocalDraft(Account $account, LocalMessage $message): void {
+	public function saveLocalDraft(MailAccount $account, LocalMessage $message): void {
 		$to = $this->transmissionService->getAddressList($message, Recipient::TYPE_TO);
 		$cc = $this->transmissionService->getAddressList($message, Recipient::TYPE_CC);
 		$bcc = $this->transmissionService->getAddressList($message, Recipient::TYPE_BCC);
@@ -177,7 +177,7 @@ class MailTransmission implements IMailTransmission {
 		$imapMessage->setTo($to);
 		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+			Address::fromRaw($account->getName(), $account->getEmail()),
 		]);
 		$imapMessage->setFrom($from);
 		$imapMessage->setCC($cc);
@@ -215,7 +215,7 @@ class MailTransmission implements IMailTransmission {
 			$mail->send($transport, false, false);
 			$perfLogger->step('create IMAP draft message');
 			// save the message in the drafts folder
-			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+			$draftsMailboxId = $account->getDraftsMailboxId();
 			if ($draftsMailboxId === null) {
 				throw new ClientException('No drafts mailbox configured');
 			}
@@ -263,7 +263,7 @@ class MailTransmission implements IMailTransmission {
 		$imapMessage->setTo($message->getTo());
 		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+			Address::fromRaw($account->getName(), $account->getEmail()),
 		]);
 		$imapMessage->setFrom($from);
 		$imapMessage->setCC($message->getCc());
@@ -297,7 +297,7 @@ class MailTransmission implements IMailTransmission {
 			$mail->send($transport, false, false);
 			$perfLogger->step('create IMAP message');
 			// save the message in the drafts folder
-			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+			$draftsMailboxId = $account->getDraftsMailboxId();
 			if ($draftsMailboxId === null) {
 				throw new ClientException('No drafts mailbox configured');
 			}
@@ -327,7 +327,7 @@ class MailTransmission implements IMailTransmission {
 		return [$account, $draftsMailbox, $newUid];
 	}
 
-	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
+	public function sendMdn(MailAccount $account, Mailbox $mailbox, Message $message): void {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->flags();
 		$query->uid();
@@ -384,10 +384,10 @@ class MailTransmission implements IMailTransmission {
 				true,
 				true,
 				'displayed',
-				$account->getMailAccount()->getOutboundHost(),
+				$account->getOutboundHost(),
 				$smtpClient,
 				[
-					'from_addr' => $account->getEMailAddress(),
+					'from_addr' => $account->getEmail(),
 					'charset' => 'UTF-8',
 				]
 			);

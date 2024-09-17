@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\OutboxMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
@@ -122,12 +122,11 @@ class OutboxService {
 	 * @throws Exception
 	 * @throws ServiceException
 	 */
-	public function sendMessage(LocalMessage $message, Account $account): LocalMessage {
+	public function sendMessage(LocalMessage $message, MailAccount $account): LocalMessage {
 		return $this->sendChain->process($account, $message);
 	}
 
 	/**
-	 * @param Account $account
 	 * @param LocalMessage $message
 	 * @param array<int, array{email: string, label?: string}> $to
 	 * @param array<int, array{email: string, label?: string}> $cc
@@ -135,7 +134,7 @@ class OutboxService {
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
-	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
+	public function saveMessage(MailAccount $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
@@ -158,7 +157,6 @@ class OutboxService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param LocalMessage $message
 	 * @param array<int, array{email: string, label?: string}> $to
 	 * @param array<int, array{email: string, label?: string}> $cc
@@ -166,7 +164,7 @@ class OutboxService {
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
-	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
+	public function updateMessage(MailAccount $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
@@ -189,11 +187,10 @@ class OutboxService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param int $draftId
 	 * @return void
 	 */
-	public function handleDraft(Account $account, int $draftId): void {
+	public function handleDraft(MailAccount $account, int $draftId): void {
 		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
 		$this->eventDispatcher->dispatch(
 			OutboxMessageCreatedEvent::class,
