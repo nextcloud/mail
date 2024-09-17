@@ -30,7 +30,7 @@ class MimeMessage {
 	 * @param Horde_Mime_Part[] $attachments
 	 * @return Horde_Mime_Part
 	 */
-	public function build(bool $isHtml, string $content, array $attachments): Horde_Mime_Part {
+	public function build(bool $isHtml, string $content, array $attachments, bool $isPgpMime = false): Horde_Mime_Part {
 		if ($isHtml) {
 			$imageParts = [];
 			if (empty($content)) {
@@ -115,6 +115,27 @@ class MimeMessage {
 			} else {
 				$bodyPart = $alternativePart;
 			}
+		} elseif ($isPgpMime) {
+			$contentPart = new Horde_Mime_Part();
+			$contentPart->setType('application/octet-stream');
+			$contentPart->setContentTypeParameter('name', 'encrypted.asc');
+			$contentPart->setTransferEncoding('7bit');
+			$contentPart->setDisposition('inline');
+			$contentPart->setDispositionParameter('filename', 'encrypted.asc');
+			$contentPart->setDescription('OpenPGP encrypted message');
+			$contentPart->setContents($content);
+
+			$pgpIdentPart = new Horde_Mime_Part();
+			$pgpIdentPart->setType('application/pgp-encrypted');
+			$pgpIdentPart->setTransferEncoding('7bit');
+			$pgpIdentPart->setDescription('PGP/MIME Versions Identification');
+			$pgpIdentPart->setContents('Version: 1');
+
+			$bodyPart = new Horde_Mime_Part();
+			$bodyPart->setType('multipart/encrypted');
+			$bodyPart->setContentTypeParameter('protocol', 'application/pgp-encrypted');
+			$bodyPart[] = $pgpIdentPart;
+			$bodyPart[] = $contentPart;
 		} else {
 			$bodyPart = new Horde_Mime_Part();
 			$bodyPart->setType('text/plain');

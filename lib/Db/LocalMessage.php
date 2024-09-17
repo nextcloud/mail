@@ -37,6 +37,8 @@ use function array_filter;
  * @method void setInReplyToMessageId(?string $inReplyToId)
  * @method int|null getUpdatedAt()
  * @method setUpdatedAt(?int $updatedAt)
+ * @method bool|null isPgpMime()
+ * @method setPgpMime(bool $pgpMime)
  * @method bool|null getSmimeSign()
  * @method setSmimeSign(bool $smimeSign)
  * @method int|null getSmimeCertificateId()
@@ -111,6 +113,9 @@ class LocalMessage extends Entity implements JsonSerializable {
 	protected $updatedAt;
 
 	/** @var bool|null */
+	protected $pgpMime;
+
+	/** @var bool|null */
 	protected $smimeSign;
 
 	/** @var int|null */
@@ -139,6 +144,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 		$this->addType('html', 'boolean');
 		$this->addType('failed', 'boolean');
 		$this->addType('updatedAt', 'integer');
+		$this->addType('pgpMime', 'boolean');
 		$this->addType('smimeSign', 'boolean');
 		$this->addType('smimeCertificateId', 'integer');
 		$this->addType('smimeEncrypt', 'boolean');
@@ -160,6 +166,7 @@ class LocalMessage extends Entity implements JsonSerializable {
 			'body' => $this->getBody(),
 			'editorBody' => $this->getEditorBody(),
 			'isHtml' => ($this->isHtml() === true),
+			'isPgpMime' => ($this->isPgpMime() === true),
 			'inReplyToMessageId' => $this->getInReplyToMessageId(),
 			'attachments' => $this->getAttachments(),
 			'from' => array_values(
