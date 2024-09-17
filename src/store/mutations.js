@@ -39,15 +39,15 @@ const transformMailboxName = (account, mailbox) => {
 	}
 }
 
-const addMailboxToState = curry((state, account, mailbox) => {
+const addMailboxToState = curry((account, mailbox) => {
 	mailbox.accountId = account.id
 	mailbox.mailboxes = []
 	Vue.set(mailbox, 'envelopeLists', {})
 
 	transformMailboxName(account, mailbox)
 
-	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
-	const parent = Object.values(state.mailboxes)
+	Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
+	const parent = Object.values(this.mailboxes)
 		.filter(mb => mb.accountId === account.id)
 		.find(mb => mb.name === mailbox.path)
 	if (mailbox.path === '' || !parent) {
@@ -65,10 +65,9 @@ const sortAccounts = (accounts) => {
 /**
  * Convert envelope tag objects to references and add new tags to global list.
  *
- * @param {object} state vuex state
  * @param {object} envelope envelope with tag objects
  */
-const normalizeTags = (state, envelope) => {
+const normalizeTags = (envelope) => {
 	if (Array.isArray(envelope.tags)) {
 		// Tags have been normalized already
 		return
@@ -77,11 +76,11 @@ const normalizeTags = (state, envelope) => {
 	const tags = Object
 		.entries(envelope.tags ?? {})
 		.map(([imapLabel, tag]) => {
-			if (!state.tags[tag.id]) {
-				Vue.set(state.tags, tag.id, tag)
+			if (!this.tags[tag.id]) {
+				Vue.set(this.tags, tag.id, tag)
 			}
-			if (!state.tagList.includes(tag.id)) {
-				state.tagList.push(tag.id)
+			if (!this.tagList.includes(tag.id)) {
+				this.tagList.push(tag.id)
 			}
 			return tag.id
 		})
@@ -95,13 +94,12 @@ const normalizeTags = (state, envelope) => {
  * If the given thread root id exist the message is replaced
  * otherwise appended
  *
- * @param {object} state vuex state
  * @param {Array} existing list of envelope ids for a message list
  * @param {object} envelope envelope with tag objects
  * @return {Array} list of envelope ids
  */
-const appendOrReplaceEnvelopeId = (state, existing, envelope) => {
-	const index = existing.findIndex((id) => state.envelopes[id].threadRootId === envelope.threadRootId)
+const appendOrReplaceEnvelopeId = (existing, envelope) => {
+	const index = existing.findIndex((id) => this.envelopes[id].threadRootId === envelope.threadRootId)
 	if (index === -1) {
 		existing.push(envelope.databaseId)
 	} else {
@@ -111,87 +109,84 @@ const appendOrReplaceEnvelopeId = (state, existing, envelope) => {
 }
 
 export default {
-	savePreference(state, { key, value }) {
-		Vue.set(state.preferences, key, value)
+	savePreferenceMutation({ key, value }) {
+		Vue.set(this.preferences, key, value)
 	},
-	setSessionExpired(state) {
-		Vue.set(state, 'isExpiredSession', true)
+	setSessionExpiredMutation() {
+		Vue.set(this.isExpiredSession, true)
 	},
-	addAccount(state, account) {
+	addAccountMutation(account) {
 		account.collapsed = account.collapsed ?? true
-		Vue.set(state.accounts, account.id, account)
+		Vue.set(this.accounts, account.id, account)
 		Vue.set(
-			state,
-			'accountList',
-			sortAccounts(state.accountList.concat([account.id]).map((id) => state.accounts[id])).map((a) => a.id),
+			this.accountList,
+			sortAccounts(this.accountList.concat([account.id]).map((id) => this.accounts[id])).map((a) => a.id),
 		)
 
 		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 		const mailboxes = sortMailboxes(account.mailboxes || [], account)
 		Vue.set(account, 'mailboxes', [])
 		Vue.set(account, 'aliases', account.aliases ?? [])
-		mailboxes.map(addMailboxToState(state, account))
+		mailboxes.map(addMailboxToState(account))
 	},
-	editAccount(state, account) {
-		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
+	editAccountMutation(account) {
+		Vue.set(this.accounts, account.id, Object.assign({}, this.accounts[account.id], account))
 	},
-	patchAccount(state, { account, data }) {
-		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], data))
+	patchAccountMutation({ account, data }) {
+		Vue.set(this.accounts, account.id, Object.assign({}, this.accounts[account.id], data))
 	},
-	saveAccountsOrder(state, { account, order }) {
+	saveAccountsOrderMutation({ account, order }) {
 		Vue.set(account, 'order', order)
 		Vue.set(
-			state,
-			'accountList',
-			sortAccounts(state.accountList.map((id) => state.accounts[id])).map((a) => a.id),
+			this.accountsList,
+			sortAccounts(this.accountList.map((id) => this.accounts[id])).map((a) => a.id),
 		)
 	},
-	toggleAccountCollapsed(state, accountId) {
-		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
+	toggleAccountCollapsedMutation(accountId) {
+		this.accounts[accountId].collapsed = !this.accounts[accountId].collapsed
 	},
-	expandAccount(state, accountId) {
-		state.accounts[accountId].collapsed = false
+	expandAccountMutation(accountId) {
+		this.accounts[accountId].collapsed = false
 	},
-	setAccountSetting(state, { accountId, key, value }) {
-		const accountSettings = state.allAccountSettings.find(settings => settings.accountId === accountId)
+	setAccountSettingMutation({ accountId, key, value }) {
+		const accountSettings = this.allAccountSettings.find(settings => settings.accountId === accountId)
 		if (accountSettings) {
 			accountSettings[key] = value
 		} else {
 			const newAccountSettings = { accountId }
 			newAccountSettings[key] = value
-			state.allAccountSettings.push(newAccountSettings)
+			this.allAccountSettings.push(newAccountSettings)
 		}
 	},
-	addMailbox(state, { account, mailbox }) {
-		addMailboxToState(state, account, mailbox)
+	addMailboxMutation({ account, mailbox }) {
+		addMailboxToState(account, mailbox)
 	},
-	updateMailbox(state, { mailbox }) {
-		const account = state.accounts[mailbox.accountId]
+	updateMailboxMutation({ mailbox }) {
+		const account = this.accounts[mailbox.accountId]
 		transformMailboxName(account, mailbox)
-		Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
+		Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
 	},
-	removeMailbox(state, { id }) {
-		const mailbox = state.mailboxes[id]
+	removeMailboxMutation({ id }) {
+		const mailbox = this.mailboxes[id]
 		if (mailbox === undefined) {
 			throw new Error(`Mailbox ${id} does not exist`)
 		}
-		const account = state.accounts[mailbox.accountId]
+		const account = this.accounts[mailbox.accountId]
 		if (account === undefined) {
 			throw new Error(`Account ${mailbox.accountId} of mailbox ${id} is unknown`)
 		}
-		Vue.delete(state.mailboxes, id)
+		Vue.delete(this.mailboxes, id)
 
 		// Travers through the account and the full mailbox tree to find any dangling pointers
 		const removeRec = (parent) => {
 			parent.mailboxes = parent.mailboxes.filter((mbId) => mbId !== id)
-			parent.mailboxes.map(mbid => removeRec(state.mailboxes[mbid]))
+			parent.mailboxes.map(mbid => removeRec(this.mailboxes[mbid]))
 		}
 		removeRec(account)
 	},
 	/**
 	 * Start a new composer session and open the modal.
 	 *
-	 * @param {object} state Vuex state
 	 * @param {object} payload Data for the new message
 	 * @param payload.type
 	 * @param payload.data
@@ -199,10 +194,10 @@ export default {
 	 * @param payload.originalSendAt
 	 * @param payload.smartReply
 	 */
-	startComposerSession(state, { type, data, forwardedMessages, originalSendAt, smartReply }) {
-		state.composerSessionId = state.nextComposerSessionId
-		state.nextComposerSessionId++
-		state.newMessage = {
+	startComposerSessionMutation({ type, data, forwardedMessages, originalSendAt, smartReply }) {
+		this.composerSessionId = this.nextComposerSessionId
+		this.nextComposerSessionId++
+		this.newMessage = {
 			type,
 			data,
 			options: {
@@ -212,81 +207,77 @@ export default {
 			},
 			indicatorDisabled: false,
 		}
-		state.composerMessageIsSaved = false
-		state.showMessageComposer = true
+		this.composerMessageIsSaved = false
+		this.showMessageComposer = true
 	},
 	/**
 	 * Stop current composer session and close the modal.
 	 * This discards all data from the current message.
 	 *
-	 * @param {object} state Vuex state
 	 */
-	stopComposerSession(state) {
-		state.composerSessionId = undefined
-		state.newMessage = undefined
-		state.showMessageComposer = false
+	stopComposerSession() {
+		this.composerSessionId = undefined
+		this.newMessage = undefined
+		this.showMessageComposer = false
 	},
 	/**
 	 * Show composer modal if there is an ongoing session.
 	 *
-	 * @param {object} state Vuex state
 	 */
-	showMessageComposer(state) {
-		if (state.composerSessionId) {
-			state.showMessageComposer = true
+	showMessageComposer() {
+		if (this.composerSessionId) {
+			this.showMessageComposer = true
 		}
 	},
 	/**
 	 * Hide composer modal without ending the current session.
 	 *
-	 * @param {object} state Vuex state
-	 */
-	hideMessageComposer(state) {
-		state.showMessageComposer = false
+	hideMessageComposer() {
+		this.showMessageComposer = false
 	},
-	setComposerMessageSaved(state, saved) {
-		state.composerMessageIsSaved = saved
+	setComposerMessageSavedMutation(saved) {
+		this.composerMessageIsSaved = saved
 	},
-	patchComposerData(state, data) {
-		state.newMessage.data = {
-			...state.newMessage.data,
+	patchComposerDataMutation(data) {
+		this.newMessage.data = {
+			...this.newMessage.data,
 			...data,
 		}
 	},
-	setComposerIndicatorDisabled(state, disabled) {
-		state.newMessage.indicatorDisabled = disabled
+	setComposerIndicatorDisabledMutation(disabled) {
+		this.newMessage.indicatorDisabled = disabled
 	},
-	convertComposerMessageToOutbox(state, { message }) {
-		if (!state.newMessage) {
+	convertComposerMessageToOutboxMutation({ message }) {
+		if (!this.newMessage) {
 			// If the message is dispatched in the background there is no newMessage data in state
 			return
 		}
-		Vue.set(state.newMessage, 'type', 'outbox')
-		Vue.set(state.newMessage.data, 'id', message.id)
+		Vue.set(this.newMessage, 'type', 'outbox')
+		Vue.set(this.newMessage.data, 'id', message.id)
 	},
-	addEnvelopes(state, { query, envelopes, addToUnifiedMailboxes = true }) {
+	addEnvelopesMutation({ query, envelopes, addToUnifiedMailboxes = true }) {
 		if (envelopes.length === 0) {
 			return
 		}
 
-		const idToDateInt = (id) => state.envelopes[id].dateInt
+		const idToDateInt = (id) => this.envelopes[id].dateInt
 
 		const listId = normalizedEnvelopeListId(query)
-		const orderByDateInt = orderBy(idToDateInt, state.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
+		const orderByDateInt = orderBy(idToDateInt, this.preferences['sort-order'] === 'newest' ? 'desc' : 'asc')
 
 		envelopes.forEach((envelope) => {
-			const mailbox = state.mailboxes[envelope.mailboxId]
+			const mailbox = this.mailboxes[envelope.mailboxId]
 			const existing = mailbox.envelopeLists[listId] || []
-			normalizeTags(state, envelope)
-			Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
+			normalizeTagsMutation(envelope)
+			Vue.set(this.envelopes, envelope.databaseId, Object.assign({}, this.envelopes[envelope.databaseId] || {}, envelope))
 			Vue.set(envelope, 'accountId', mailbox.accountId)
-			Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(appendOrReplaceEnvelopeId(state, existing, envelope))))
+			Vue.set(mailbox.envelopeLists, listId, uniq(orderByDateInt(appendOrReplaceEnvelopeIdMutation(existing, envelope))))
 			if (!addToUnifiedMailboxes) {
 				return
 			}
-			const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
+			const unifiedAccount = this.accounts[UNIFIED_ACCOUNT_ID]
 			unifiedAccount.mailboxes
-				.map((mbId) => state.mailboxes[mbId])
+				.map((mbId) => this.mailboxes[mbId])
 				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 				.forEach((mailbox) => {
 					const existing = mailbox.envelopeLists[listId] || []
@@ -298,17 +289,17 @@ export default {
 				})
 		})
 	},
-	updateEnvelope(state, { envelope }) {
-		const existing = state.envelopes[envelope.databaseId]
+	updateEnvelopeMutation({ envelope }) {
+		const existing = this.envelopes[envelope.databaseId]
 		if (!existing) {
 			return
 		}
-		normalizeTags(state, envelope)
+		normalizeTagsMutation(envelope)
 		Vue.set(existing, 'flags', envelope.flags)
 		Vue.set(existing, 'tags', envelope.tags)
 	},
-	flagEnvelope(state, { envelope, flag, value }) {
-		const mailbox = state.mailboxes[envelope.mailboxId]
+	flagEnvelopeMutation({ envelope, flag, value }) {
+		const mailbox = this.mailboxes[envelope.mailboxId]
 		if (mailbox && flag === 'seen') {
 			const unread = mailbox.unread ?? 0
 			if (envelope.flags[flag] && !value) {
@@ -319,37 +310,37 @@ export default {
 		}
 		Vue.set(envelope.flags, flag, value)
 	},
-	addTag(state, { tag }) {
-		Vue.set(state.tags, tag.id, tag)
-		state.tagList.push(tag.id)
+	addTagMutation({ tag }) {
+		Vue.set(this.tags, tag.id, tag)
+		this.tagList.push(tag.id)
 	},
-	addInternalAddress(state, address) {
-		Vue.set(state.internalAddress, address.id, address)
+	addInternalAddressMutation(address) {
+		Vue.set(this.internalAddress, address.id, address)
 	},
-	removeInternalAddress(state, { addressId }) {
-		state.internalAddress = state.internalAddress.filter((address) => address.id !== addressId)
+	removeInternalAddressMutation({ addressId }) {
+		this.internalAddress = this.internalAddress.filter((address) => address.id !== addressId)
 	},
-	deleteTag(state, { tagId }) {
-		state.tagList = state.tagList.filter((id) => id !== tagId)
-		Vue.delete(state.tags, tagId)
+	deleteTagMutation({ tagId }) {
+		this.tagList = this.tagList.filter((id) => id !== tagId)
+		Vue.delete(this.tags, tagId)
 	},
-	addEnvelopeTag(state, { envelope, tagId }) {
+	addEnvelopeTagMutation({ envelope, tagId }) {
 		Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
 	},
-	updateTag(state, { tag, displayName, color }) {
+	updateTagMutation({ tag, displayName, color }) {
 		tag.displayName = displayName
 		tag.color = color
 	},
-	removeEnvelopeTag(state, { envelope, tagId }) {
+	removeEnvelopeTagMutation({ envelope, tagId }) {
 		Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
 	},
-	removeEnvelope(state, { id }) {
-		const envelope = state.envelopes[id]
+	removeEnvelopeMutation({ id }) {
+		const envelope = this.envelopes[id]
 		if (!envelope) {
 			console.warn('envelope ' + id + ' is unknown, can\'t remove it')
 			return
 		}
-		const mailbox = state.mailboxes[envelope.mailboxId]
+		const mailbox = this.mailboxes[envelope.mailboxId]
 		for (const listId in mailbox.envelopeLists) {
 			if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
 				continue
@@ -367,8 +358,8 @@ export default {
 			Vue.set(mailbox, 'unread', mailbox.unread - 1)
 		}
 
-		state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
-			.map((mailboxId) => state.mailboxes[mailboxId])
+		this.accounts[UNIFIED_ACCOUNT_ID].mailboxes
+			.map((mailboxId) => this.mailboxes[mailboxId])
 			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 			.forEach((mailbox) => {
 				for (const listId in mailbox.envelopeLists) {
@@ -393,130 +384,130 @@ export default {
 			})
 
 		// Delete references from other threads
-		for (const [key, env] of Object.entries(state.envelopes)) {
+		for (const [key, env] of Object.entries(this.envelopes)) {
 			if (!env.thread) {
 				continue
 			}
 
 			const thread = env.thread.filter(threadId => threadId !== id)
-			Vue.set(state.envelopes[key], 'thread', thread)
+			Vue.set(this.envelopes[key], 'thread', thread)
 		}
 
-		Vue.delete(state.envelopes, id)
+		Vue.delete(this.envelopes, id)
 	},
-	removeEnvelopes(state, { id }) {
-		Vue.set(state.mailboxes[id], 'envelopeLists', [])
+	removeEnvelopesMutation({ id }) {
+		Vue.set(this.mailboxes[id], 'envelopeLists', [])
 	},
-	removeAllEnvelopes(state) {
-		Object.keys(state.mailboxes).forEach(id => {
-			Vue.set(state.mailboxes[id], 'envelopeLists', [])
-		  })
+	removeAllEnvelopes() {
+		Object.keys(this.mailboxes).forEach(id => {
+			Vue.set(this.mailboxes[id], 'envelopeLists', [])
+	  })
 	},
-	removeEnvelopeFromFollowUpMailbox(state, { id }) {
+	removeEnvelopeFromFollowUpMailboxMutation({ id }) {
 		const filteredLists = {}
-		const mailbox = state.mailboxes[FOLLOW_UP_MAILBOX_ID]
+		const mailbox = this.mailboxes[FOLLOW_UP_MAILBOX_ID]
 		for (const listId of Object.keys(mailbox.envelopeLists)) {
 			filteredLists[listId] = mailbox.envelopeLists[listId]
 				.filter((idInList) => id !== idInList)
 		}
-		Vue.set(state.mailboxes[FOLLOW_UP_MAILBOX_ID], 'envelopeLists', filteredLists)
+		Vue.set(this.mailboxes[FOLLOW_UP_MAILBOX_ID], 'envelopeLists', filteredLists)
 	},
-	addMessage(state, { message }) {
-		Vue.set(state.messages, message.databaseId, message)
+	addMessageMutation({ message }) {
+		Vue.set(this.messages, message.databaseId, message)
 	},
-	addMessageItineraries(state, { id, itineraries }) {
-		const message = state.messages[id]
+	addMessageItinerariesMutation({ id, itineraries }) {
+		const message = this.messages[id]
 		if (!message) {
 			return
 		}
 		Vue.set(message, 'itineraries', itineraries)
 	},
-	addMessageDkim(state, { id, result }) {
-		const message = state.messages[id]
+	addMessageDkimMutation({ id, result }) {
+		const message = this.messages[id]
 		if (!message) {
 			return
 		}
 		Vue.set(message, 'dkimValid', result.valid)
 	},
-	addEnvelopeThread(state, { id, thread }) {
+	addEnvelopeThreadMutation({ id, thread }) {
 		// Store the envelopes, merge into any existing object if one exists
 		thread.forEach(e => {
-			normalizeTags(state, e)
-			const mailbox = state.mailboxes[e.mailboxId]
+			normalizeTagsMutation(e)
+			const mailbox = this.mailboxes[e.mailboxId]
 			Vue.set(e, 'accountId', mailbox.accountId)
-			Vue.set(state.envelopes, e.databaseId, Object.assign({}, state.envelopes[e.databaseId] || {}, e))
+			Vue.set(this.envelopes, e.databaseId, Object.assign({}, this.envelopes[e.databaseId] || {}, e))
 		})
 
 		// Store the references
-		Vue.set(state.envelopes[id], 'thread', thread.map(e => e.databaseId))
+		Vue.set(this.envelopes[id], 'thread', thread.map(e => e.databaseId))
 	},
-	removeMessage(state, { id }) {
-		Vue.delete(state.messages, id)
+	removeMessageMutation({ id }) {
+		Vue.delete(this.messages, id)
 	},
-	createAlias(state, { account, alias }) {
+	createAliasMutation({ account, alias }) {
 		account.aliases.push(alias)
 	},
-	deleteAlias(state, { account, aliasId }) {
+	deleteAliasMutation({ account, aliasId }) {
 		const index = account.aliases.findIndex(temp => aliasId === temp.id)
 		if (index !== -1) {
 			account.aliases.splice(index, 1)
 		}
 	},
-	patchAlias(state, { account, aliasId, data }) {
+	patchAliasMutation({ account, aliasId, data }) {
 		const index = account.aliases.findIndex(temp => aliasId === temp.id)
 		if (index !== -1) {
 			account.aliases[index] = Object.assign({}, account.aliases[index], data)
 		}
 	},
-	setMailboxUnreadCount(state, { id, unread }) {
-		Vue.set(state.mailboxes[id], 'unread', unread ?? 0)
+	setMailboxUnreadCountMutation({ id, unread }) {
+		Vue.set(this.mailboxes[id], 'unread', unread ?? 0)
 	},
-	setScheduledSendingDisabled(state, value) {
-		state.isScheduledSendingDisabled = value
+	setScheduledSendingDisabledMutation(value) {
+		this.isScheduledSendingDisabled = value
 	},
-	setSnoozeDisabled(state, value) {
-		state.isSnoozeDisabled = value
+	setSnoozeDisabledMutation(value) {
+		this.isSnoozeDisabled = value
 	},
-	setActiveSieveScript(state, { accountId, scriptData }) {
-		Vue.set(state.sieveScript, accountId, scriptData)
+	setActiveSieveScriptMutation({ accountId, scriptData }) {
+		Vue.set(this.sieveScript, accountId, scriptData)
 	},
-	setCurrentUserPrincipal(state, { currentUserPrincipal }) {
-		state.currentUserPrincipal = currentUserPrincipal
+	setCurrentUserPrincipalMutation({ currentUserPrincipal }) {
+		this.currentUserPrincipal = currentUserPrincipal
 	},
-	addCalendar(state, { calendar }) {
-		state.calendars = [...state.calendars, calendar]
+	addCalendarMutation({ calendar }) {
+		this.calendars = [...this.calendars, calendar]
 	},
-	setGoogleOauthUrl(state, url) {
-		state.googleOauthUrl = url
+	setGoogleOauthUrlMutation(url) {
+		this.googleOauthUrl = url
 	},
-	setMasterPasswordEnabled(state, value) {
-		state.masterPasswordEnabled = value
+	setMasterPasswordEnabledMutation(value) {
+		this.masterPasswordEnabled = value
 	},
-	setMicrosoftOauthUrl(state, url) {
-		state.microsoftOauthUrl = url
+	setMicrosoftOauthUrlMutation(url) {
+		this.microsoftOauthUrl = url
 	},
-	setSmimeCertificates(state, certificates) {
-		state.smimeCertificates = certificates
+	setSmimeCertificatesMutation(certificates) {
+		this.smimeCertificates = certificates
 	},
-	deleteSmimeCertificate(state, { id }) {
-		state.smimeCertificates = state.smimeCertificates.filter(cert => cert.id !== id)
+	deleteSmimeCertificateMutation({ id }) {
+		this.smimeCertificates = this.smimeCertificates.filter(cert => cert.id !== id)
 	},
-	addSmimeCertificate(state, { certificate }) {
-		state.smimeCertificates = [...state.smimeCertificates, certificate]
+	addSmimeCertificateMutation({ certificate }) {
+		this.smimeCertificates = [...this.smimeCertificates, certificate]
 	},
-	setOneLineLayout(state, { list }) {
-		Vue.set(state, 'list', list)
+	setOneLineLayoutMutation({ list }) {
+		Vue.setMutation('list', list)
 	},
-	setHasFetchedInitialEnvelopes(state, hasFetchedInitialEnvelopes) {
-		state.hasFetchedInitialEnvelopes = hasFetchedInitialEnvelopes
+	setHasFetchedInitialEnvelopesMutation(hasFetchedInitialEnvelopes) {
+		this.hasFetchedInitialEnvelopes = hasFetchedInitialEnvelopes
 	},
-	setFollowUpFeatureAvailable(state, followUpFeatureAvailable) {
-		state.followUpFeatureAvailable = followUpFeatureAvailable
+	setFollowUpFeatureAvailableMutation(followUpFeatureAvailable) {
+		this.followUpFeatureAvailable = followUpFeatureAvailable
 	},
-	hasCurrentUserPrincipalAndCollections(state, hasCurrentUserPrincipalAndCollections) {
-		state.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
+	hasCurrentUserPrincipalAndCollectionsMutation(hasCurrentUserPrincipalAndCollections) {
+		this.hasCurrentUserPrincipalAndCollections = hasCurrentUserPrincipalAndCollections
 	},
-	showSettingsForAccount(state, accountId) {
-		state.showAccountSettings = accountId
+	showSettingsForAccountMutation(accountId) {
+		this.showAccountSettings = accountId
 	},
 }
