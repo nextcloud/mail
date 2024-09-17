@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
@@ -22,21 +22,20 @@ interface IMailTransmission {
 	/**
 	 * Send a new message or reply to an existing one
 	 *
-	 * @param Account $account
+	 * @param MailAccount $account
 	 * @param LocalMessage $localMessage
 	 * @throws SentMailboxNotSetException
 	 * @throws ServiceException
 	 */
-	public function sendMessage(Account $account, LocalMessage $localMessage): void;
+	public function sendMessage(MailAccount $account, LocalMessage $localMessage): void;
 
 	/**
-	 * @param Account $account
 	 * @param LocalMessage $message
 	 * @throws ClientException
 	 * @throws ServiceException
 	 * @return void
 	 */
-	public function saveLocalDraft(Account $account, LocalMessage $message): void;
+	public function saveLocalDraft(MailAccount $account, LocalMessage $message): void;
 
 	/**
 	 * Save a message draft
@@ -54,10 +53,9 @@ interface IMailTransmission {
 	/**
 	 * Send a mdn message
 	 *
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param Message $message the message to send an mdn for
 	 * @throws ServiceException
 	 */
-	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void;
+	public function sendMdn(MailAccount $account, Mailbox $mailbox, Message $message): void;
 }

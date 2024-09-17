@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
@@ -25,12 +25,11 @@ interface IMailSearch {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function findMessage(Account $account,
+	public function findMessage(MailAccount $account,
 		Mailbox $mailbox,
 		Message $message): Message;
 
 	/**
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param string $sortOrder
 	 * @param string|null $filter
@@ -42,7 +41,7 @@ interface IMailSearch {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function findMessages(Account $account,
+	public function findMessages(MailAccount $account,
 		Mailbox $mailbox,
 		string $sortOrder,
 		?string $filter,

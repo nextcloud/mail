@@ -13,7 +13,7 @@ use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Smtp_Password_Xoauth2;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -37,12 +37,10 @@ class SmtpClientFactory {
 	}
 
 	/**
-	 * @param Account $account
-	 *
 	 * @return Horde_Mail_Transport
 	 */
-	public function create(Account $account): Horde_Mail_Transport {
-		$mailAccount = $account->getMailAccount();
+	public function create(MailAccount $account): Horde_Mail_Transport {
+		$mailAccount = $account;
 		$transport = $this->config->getSystemValue('app.mail.transport', 'smtp');
 		if ($transport === 'php-mail') {
 			return new Horde_Mail_Transport_Mail();
@@ -68,8 +66,8 @@ class SmtpClientFactory {
 				],
 			],
 		];
-		if ($account->getMailAccount()->getAuthMethod() === 'xoauth2') {
-			$decryptedAccessToken = $this->crypto->decrypt($account->getMailAccount()->getOauthAccessToken());
+		if ($account->getAuthMethod() === 'xoauth2') {
+			$decryptedAccessToken = $this->crypto->decrypt($account->getOauthAccessToken());
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Smtp_Password_Xoauth2(

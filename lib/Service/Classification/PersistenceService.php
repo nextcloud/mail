@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification;
 
-use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\Classifier;
 use OCA\Mail\Db\ClassifierMapper;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCP\App\IAppManager;
@@ -140,12 +140,10 @@ class PersistenceService {
 	}
 
 	/**
-	 * @param Account $account
-	 *
 	 * @return Estimator|null
 	 * @throws ServiceException
 	 */
-	public function loadLatest(Account $account): ?Estimator {
+	public function loadLatest(MailAccount $account): ?Estimator {
 		try {
 			$latestModel = $this->mapper->findLatest($account->getId());
 		} catch (DoesNotExistException $e) {

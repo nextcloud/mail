@@ -7,9 +7,9 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Send;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\DB\Exception;
@@ -30,7 +30,7 @@ class Chain {
 	 * @throws Exception
 	 * @throws ServiceException
 	 */
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+	public function process(MailAccount $account, LocalMessage $localMessage): LocalMessage {
 		$handlers = $this->sentMailboxHandler;
 		$handlers->setNext($this->antiAbuseHandler)
 			->setNext($this->sendHandler)

@@ -66,7 +66,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $mailbox);
 	}
 
 	public function testMigrateImportantOnImapNoUids() {
@@ -83,7 +83,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $mailbox);
 	}
 
 	public function testMigrateImportantOnImapExceptionGetFlagged() {
@@ -101,7 +101,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 			->method('debug');
 		$this->expectException(ServiceException::class);
 
-		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $mailbox);
 	}
 
 	public function testMigrateImportantOnImapExceptionOnFlag() {
@@ -124,7 +124,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 			->with('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
 		$this->expectException(ServiceException::class);
 
-		$this->migration->migrateImportantOnImap($this->client, $account, $mailbox);
+		$this->migration->migrateImportantOnImap($this->client, $mailbox);
 	}
 
 	public function migrateImportantFromDb() {
@@ -143,7 +143,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
+		$this->migration->migrateImportantFromDb($this->client, $mailbox);
 	}
 
 	public function testMigrateImportantFromDbNoUids() {
@@ -161,7 +161,7 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 		$this->logger->expects($this->never())
 			->method('debug');
 
-		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
+		$this->migration->migrateImportantFromDb($this->client, $mailbox);
 	}
 
 	public function testMigrateImportantFromDbExceptionOnFlag() {
@@ -185,6 +185,6 @@ class MigrateImportantFromImapAndDbTest extends TestCase {
 			->with('Could not flag messages in mailbox <' . $mailbox->getId() . '>');
 		$this->expectException(ServiceException::class);
 
-		$this->migration->migrateImportantFromDb($this->client, $account, $mailbox);
+		$this->migration->migrateImportantFromDb($this->client, $mailbox);
 	}
 }

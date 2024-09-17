@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Search;
 
 use Horde_Imap_Client;
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -59,7 +59,7 @@ class MailSearch implements IMailSearch {
 		$this->timeFactory = $timeFactory;
 	}
 
-	public function findMessage(Account $account,
+	public function findMessage(MailAccount $account,
 		Mailbox $mailbox,
 		Message $message): Message {
 		$processed = $this->previewEnhancer->process(
@@ -74,7 +74,6 @@ class MailSearch implements IMailSearch {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param string $sortOrder
 	 * @param string|null $filter
@@ -86,7 +85,7 @@ class MailSearch implements IMailSearch {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function findMessages(Account $account,
+	public function findMessages(MailAccount $account,
 		Mailbox $mailbox,
 		string $sortOrder,
 		?string $filter,
@@ -152,7 +151,7 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
-	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
+	private function getIdsLocally(MailAccount $account, Mailbox $mailbox, SearchQuery $query, string $sortOrder, ?int $limit): array {
 		if (empty($query->getBodies())) {
 			return $this->messageMapper->findIdsByQuery($mailbox, $query, $sortOrder, $limit);
 		}

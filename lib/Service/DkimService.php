@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Contracts\IDkimValidator;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -46,7 +46,7 @@ class DkimService implements IDkimService {
 		$this->dkimValidator = $dkimValidator;
 	}
 
-	public function validate(Account $account, Mailbox $mailbox, int $id): bool {
+	public function validate(MailAccount $account, Mailbox $mailbox, int $id): bool {
 		$cached = $this->getCached($account, $mailbox, $id);
 		if (is_bool($cached)) {
 			return $cached;
@@ -77,11 +77,11 @@ class DkimService implements IDkimService {
 		return $result;
 	}
 
-	public function getCached(Account $account, Mailbox $mailbox, int $id): ?bool {
+	public function getCached(MailAccount $account, Mailbox $mailbox, int $id): ?bool {
 		return $this->cache->get($this->buildCacheKey($account, $mailbox, $id));
 	}
 
-	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
+	private function buildCacheKey(MailAccount $account, Mailbox $mailbox, int $id): string {
 		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
 	}
 }

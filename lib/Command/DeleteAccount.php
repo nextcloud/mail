@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -53,7 +53,7 @@ class DeleteAccount extends Command {
 		}
 		$output->writeLn('<info>Found account with email: ' . $account->getEmail() . '</info>');
 
-		if (!is_null($account->getMailAccount()->getProvisioningId())) {
+		if (!is_null($account->getProvisioningId())) {
 			$output->writeLn('<error>This is a provisioned account which can not be deleted from CLI. Use the Provisioning UI instead.</error>');
 			return 2;
 		}
@@ -63,7 +63,7 @@ class DeleteAccount extends Command {
 		return 0;
 	}
 
-	private function delete(Account $account, OutputInterface $output): void {
+	private function delete(MailAccount $account, OutputInterface $output): void {
 		$id = $account->getId();
 		try {
 			$this->accountService->deleteByAccountId($account->getId());

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
@@ -49,7 +49,7 @@ class PreviewEnhancer {
 	 *
 	 * @return Message[]
 	 */
-	public function process(Account $account, Mailbox $mailbox, array $messages): array {
+	public function process(MailAccount $account, Mailbox $mailbox, array $messages): array {
 		$needAnalyze = array_reduce($messages, static function (array $carry, Message $message) {
 			if ($message->getStructureAnalyzed()) {
 				// Nothing to do

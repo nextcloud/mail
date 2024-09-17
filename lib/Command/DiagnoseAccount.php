@@ -61,7 +61,7 @@ class DiagnoseAccount extends Command {
 			return 1;
 		}
 
-		if ($account->getMailAccount()->getInboundPassword() === null) {
+		if ($account->getInboundPassword() === null) {
 			$output->writeln('<error>No IMAP passwort set. The user might have to log into their account to set it.</error>');
 		}
 		$imapClient = $this->clientFactory->getClient($account);

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use Nextcloud\KItinerary\Itinerary;
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -53,11 +53,11 @@ class ItineraryService {
 		$this->logger = $logger;
 	}
 
-	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
+	private function buildCacheKey(MailAccount $account, Mailbox $mailbox, int $id): string {
 		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
 	}
 
-	public function getCached(Account $account, Mailbox $mailbox, int $id): ?Itinerary {
+	public function getCached(MailAccount $account, Mailbox $mailbox, int $id): ?Itinerary {
 		if ($cached = ($this->cache->get($this->buildCacheKey($account, $mailbox, $id)))) {
 			return Itinerary::fromJson($cached);
 		}
@@ -65,7 +65,7 @@ class ItineraryService {
 		return null;
 	}
 
-	public function extract(Account $account, Mailbox $mailbox, int $id): Itinerary {
+	public function extract(MailAccount $account, Mailbox $mailbox, int $id): Itinerary {
 		if ($cached = ($this->getCached($account, $mailbox, $id))) {
 			return $cached;
 		}

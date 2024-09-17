@@ -43,6 +43,6 @@ class OauthTokenRefreshListener implements IEventListener {
 			return;
 		}
 
-		$this->accountService->update($updated->getMailAccount());
+		$this->accountService->update($updated);
 	}
 }

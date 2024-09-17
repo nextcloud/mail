@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Message;
 use function OCA\Mail\array_flat_map;
 
@@ -32,7 +32,7 @@ class CompositeExtractor implements IExtractor {
 		];
 	}
 
-	public function prepare(Account $account,
+	public function prepare(MailAccount $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
 		array $messages): void {

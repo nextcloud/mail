@@ -12,12 +12,12 @@ namespace OCA\Mail\Service\Attachment;
 use finfo;
 use InvalidArgumentException;
 use OCA\Files_Sharing\SharedStorage;
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\IMAP\MessageMapper;
@@ -213,7 +213,7 @@ class AttachmentService implements IAttachmentService {
 	 * @param array $attachments
 	 * @return int[]
 	 */
-	public function handleAttachments(Account $account, array $attachments, \Horde_Imap_Client_Socket $client): array {
+	public function handleAttachments(MailAccount $account, array $attachments, \Horde_Imap_Client_Socket $client): array {
 		$attachmentIds = [];
 
 		if ($attachments === []) {
@@ -249,12 +249,11 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * Add a message as attachment
 	 *
-	 * @param Account $account
 	 * @param mixed[] $attachment
 	 * @param \Horde_Imap_Client_Socket $client
 	 * @return int|null
 	 */
-	private function handleForwardedMessageAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
+	private function handleForwardedMessageAttachment(MailAccount $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
 		$attachmentMessage = $this->mailManager->getMessage($account->getUserId(), (int)$attachment['id']);
 		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachmentMessage->getMailboxId());
 		$fullText = $this->messageMapper->getFullText(
@@ -286,13 +285,12 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * Adds an emails attachments
 	 *
-	 * @param Account $account
 	 * @param mixed[] $attachment
 	 * @param \Horde_Imap_Client_Socket $client
 	 * @return int
 	 * @throws DoesNotExistException
 	 */
-	private function handleForwardedAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
+	private function handleForwardedAttachment(MailAccount $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
 		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachment['mailboxId']);
 
 		$attachments = $this->messageMapper->getRawAttachments(
@@ -346,11 +344,10 @@ class AttachmentService implements IAttachmentService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param array $attachment
 	 * @return int|null
 	 */
-	private function handleCloudAttachment(Account $account, array $attachment): ?int {
+	private function handleCloudAttachment(MailAccount $account, array $attachment): ?int {
 		if (!isset($attachment['fileName'])) {
 			return null;
 		}

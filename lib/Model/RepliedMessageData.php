@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Message;
 
 /**
@@ -18,18 +18,17 @@ use OCA\Mail\Db\Message;
  * @psalm-immutable
  */
 class RepliedMessageData {
-	/** @var Account */
-	private $account;
+	private MailAccount $account;
 
 	/** @var Message */
 	private $message;
 
-	public function __construct(Account $account, Message  $message) {
+	public function __construct(MailAccount $account, Message  $message) {
 		$this->account = $account;
 		$this->message = $message;
 	}
 
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

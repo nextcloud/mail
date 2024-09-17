@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 
 interface IDkimService {
-	public function validate(Account $account, Mailbox $mailbox, int $id): bool;
-	public function getCached(Account $account, Mailbox $mailbox, int $id): ?bool;
+	public function validate(MailAccount $account, Mailbox $mailbox, int $id): bool;
+	public function getCached(MailAccount $account, Mailbox $mailbox, int $id): ?bool;
 }

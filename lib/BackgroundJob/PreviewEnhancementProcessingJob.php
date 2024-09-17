@@ -57,7 +57,7 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 			return;
 		}
 
-		if (!$account->getMailAccount()->canAuthenticateImap()) {
+		if (!$account->canAuthenticateImap()) {
 			$this->logger->info('Ignoring preprocessing job for provisioned account as athentication on IMAP not possible');
 			return;
 		}

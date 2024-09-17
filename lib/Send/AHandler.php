@@ -7,8 +7,8 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Send;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 
 abstract class AHandler {
 
@@ -18,9 +18,9 @@ abstract class AHandler {
 		return $next;
 	}
 
-	abstract public function process(Account $account, LocalMessage $localMessage): LocalMessage;
+	abstract public function process(MailAccount $account, LocalMessage $localMessage): LocalMessage;
 
-	protected function processNext(Account $account, LocalMessage $localMessage): LocalMessage {
+	protected function processNext(MailAccount $account, LocalMessage $localMessage): LocalMessage {
 		if ($this->next !== null) {
 			return $this->next->process($account, $localMessage);
 		}

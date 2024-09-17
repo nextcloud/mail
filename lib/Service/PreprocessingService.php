@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
@@ -32,7 +32,7 @@ class PreprocessingService {
 		$this->previewEnhancer = $previewEnhancer;
 	}
 
-	public function process(int $limitTimestamp, Account $account): void {
+	public function process(int $limitTimestamp, MailAccount $account): void {
 		$mailboxes = $this->mailboxMapper->findAll($account);
 		if ($mailboxes === []) {
 			$this->logger->debug('No mailboxes found.');

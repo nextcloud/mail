@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Send;
 
 use Horde_Imap_Client_Exception;
-use OCA\Mail\Account;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -23,7 +23,7 @@ class CopySentMessageHandler extends AHandler {
 		private MessageMapper $messageMapper,
 	) {
 	}
-	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
+	public function process(MailAccount $account, LocalMessage $localMessage): LocalMessage {
 		if ($localMessage->getStatus() === LocalMessage::STATUS_PROCESSED) {
 			return $this->processNext($account, $localMessage);
 		}
@@ -34,7 +34,7 @@ class CopySentMessageHandler extends AHandler {
 			return $localMessage;
 		}
 
-		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+		$sentMailboxId = $account->getSentMailboxId();
 		if ($sentMailboxId === null) {
 			// We can't write the "sent mailbox" status here bc that would trigger an additional send.
 			// Thus, we leave the "imap copy to sent mailbox" status.

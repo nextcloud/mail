@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
-use OCA\Mail\Account;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\MailAccount;
 
 /**
  * Simple data class that wraps the request data of a new message or reply
@@ -22,8 +22,7 @@ class NewMessageData {
 	private bool $smimeSign;
 	private bool $smimeEncrypt;
 
-	/** @var Account */
-	private $account;
+	private MailAccount $account;
 
 	/** @var AddressList */
 	private $to;
@@ -50,7 +49,6 @@ class NewMessageData {
 	private $isMdnRequested;
 
 	/**
-	 * @param Account $account
 	 * @param AddressList $to
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
@@ -62,7 +60,7 @@ class NewMessageData {
 	 * @param bool $smimeSign
 	 * @param bool $isMdnRequested
 	 */
-	public function __construct(Account $account,
+	public function __construct(MailAccount $account,
 		AddressList $to,
 		AddressList $cc,
 		AddressList $bcc,
@@ -89,7 +87,6 @@ class NewMessageData {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param string $subject
 	 * @param string $body
 	 * @param string|null $to
@@ -102,7 +99,7 @@ class NewMessageData {
 	 * @param bool $smimeSign
 	 * @return NewMessageData
 	 */
-	public static function fromRequest(Account $account,
+	public static function fromRequest(MailAccount $account,
 		string $subject,
 		string $body,
 		?string $to = null,
@@ -134,10 +131,7 @@ class NewMessageData {
 		);
 	}
 
-	/**
-	 * @return Account
-	 */
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

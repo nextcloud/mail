@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 
@@ -18,12 +18,11 @@ interface IExtractor {
 	 * Initialize any data that is used for all messages and return whether the
 	 * extractor is applicable for this account
 	 *
-	 * @param Account $account
 	 * @param Mailbox[] $incomingMailboxes
 	 * @param Mailbox[] $outgoingMailboxes
 	 * @param Message[] $messages
 	 */
-	public function prepare(Account $account,
+	public function prepare(MailAccount $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
 		array $messages): void;

@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Integration;
 
 use Exception;
-use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
@@ -89,13 +89,13 @@ class MicrosoftIntegration {
 		return $value;
 	}
 
-	public function isMicrosoftOauthAccount(Account $account): bool {
-		return $account->getMailAccount()->getInboundHost() === 'outlook.office365.com'
-			&& $account->getMailAccount()->getAuthMethod() === 'xoauth2';
+	public function isMicrosoftOauthAccount(MailAccount $account): bool {
+		return $account->getInboundHost() === 'outlook.office365.com'
+			&& $account->getAuthMethod() === 'xoauth2';
 	}
 
-	public function finishConnect(Account $account,
-		string $code): Account {
+	public function finishConnect(MailAccount $account,
+		string $code): MailAccount {
 		$tenantId = $this->getTenantId();
 		$clientId = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_id');
 		$encryptedClientSecret = $this->config->getAppValue(Application::APP_ID, 'microsoft_oauth_client_secret');
@@ -125,21 +125,21 @@ class MicrosoftIntegration {
 
 		$data = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 		$encryptedRefreshToken = $this->crypto->encrypt($data['refresh_token']);
-		$account->getMailAccount()->setOauthRefreshToken($encryptedRefreshToken);
+		$account->setOauthRefreshToken($encryptedRefreshToken);
 		$encryptedAccessToken = $this->crypto->encrypt($data['access_token']);
-		$account->getMailAccount()->setOauthAccessToken($encryptedAccessToken);
-		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
+		$account->setOauthAccessToken($encryptedAccessToken);
+		$account->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
 		return $account;
 	}
 
-	public function refresh(Account $account): Account {
-		if ($account->getMailAccount()->getOauthTokenTtl() === null || $account->getMailAccount()->getOauthRefreshToken() === null) {
+	public function refresh(MailAccount $account): MailAccount {
+		if ($account->getOauthTokenTtl() === null || $account->getOauthRefreshToken() === null) {
 			// Account is not authorized yet
 			return $account;
 		}
 
 		// Only refresh if the token expires in the next minute
-		if ($this->timeFactory->getTime() <= ($account->getMailAccount()->getOauthTokenTtl() - 60)) {
+		if ($this->timeFactory->getTime() <= ($account->getOauthTokenTtl() - 60)) {
 			// No need to refresh yet
 			return $account;
 		}
@@ -152,7 +152,7 @@ class MicrosoftIntegration {
 			return $account;
 		}
 
-		$refreshToken = $this->crypto->decrypt($account->getMailAccount()->getOauthRefreshToken());
+		$refreshToken = $this->crypto->decrypt($account->getOauthRefreshToken());
 		$clientSecret = $this->crypto->decrypt($encryptedClientSecret);
 		$httpClient = $this->clientService->newClient();
 		try {
@@ -174,8 +174,8 @@ class MicrosoftIntegration {
 
 		$data = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 		$encryptedAccessToken = $this->crypto->encrypt($data['access_token']);
-		$account->getMailAccount()->setOauthAccessToken($encryptedAccessToken);
-		$account->getMailAccount()->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
+		$account->setOauthAccessToken($encryptedAccessToken);
+		$account->setOauthTokenTtl($this->timeFactory->getTime() + $data['expires_in']);
 
 		return $account;
 	}

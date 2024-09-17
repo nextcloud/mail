@@ -51,7 +51,7 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 	public function handle(Event $event): void {
 		/** @var MailboxesSynchronizedEvent $event */
 		$account = $event->getAccount();
-		$mailAccount = $account->getMailAccount();
+		$mailAccount = $account;
 		$mailboxes = $this->indexMailboxes(
 			$this->mailboxMapper->findAll($account)
 		);

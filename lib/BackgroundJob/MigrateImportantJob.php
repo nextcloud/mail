@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 
@@ -65,27 +64,25 @@ class MigrateImportantJob extends QueuedJob {
 		try {
 			$mailAccount = $this->mailAccountMapper->findById($accountId);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug('Could not find account <' . $accountId . '>');
+			$this->logger->debug('Could not find mailAccount <' . $accountId . '>');
 			return;
 		}
 
-		$account = new Account($mailAccount);
-		$client = $this->imapClientFactory->getClient($account);
-
+		$client = $this->imapClientFactory->getClient($mailAccount);
 		try {
-			if ($this->mailManager->isPermflagsEnabled($client, $account, $mailbox->getName()) === false) {
+			if ($this->mailManager->isPermflagsEnabled($client, $mailAccount, $mailbox->getName()) === false) {
 				$this->logger->debug('Permflags not enabled for <' . $accountId . '>');
 				return;
 			}
 
 			try {
-				$this->migration->migrateImportantOnImap($client, $account, $mailbox);
+				$this->migration->migrateImportantOnImap($client, $mailbox);
 			} catch (ServiceException $e) {
 				$this->logger->debug('Could not flag messages on IMAP for mailbox <' . $mailboxId . '>.');
 			}
 
 			try {
-				$this->migration->migrateImportantFromDb($client, $account, $mailbox);
+				$this->migration->migrateImportantFromDb($client, $mailbox);
 			} catch (ServiceException $e) {
 				$this->logger->debug('Could not flag messages from DB on IMAP for mailbox <' . $mailboxId . '>.');
 			}

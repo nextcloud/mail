@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
@@ -77,7 +77,7 @@ class SyncAccount extends Command {
 		return 0;
 	}
 
-	private function sync(Account $account, bool $force, OutputInterface $output): void {
+	private function sync(MailAccount $account, bool $force, OutputInterface $output): void {
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
 			$output

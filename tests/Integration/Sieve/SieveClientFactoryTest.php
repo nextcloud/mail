@@ -53,10 +53,7 @@ class SieveClientFactoryTest extends TestCase {
 		$this->factory = new SieveClientFactory($this->crypto, $this->config);
 	}
 
-	/**
-	 * @return Account
-	 */
-	private function getTestAccount() {
+	private function getTestAccount(): MailAccount {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setEmail('user@domain.tld');
@@ -70,14 +67,14 @@ class SieveClientFactoryTest extends TestCase {
 		$mailAccount->setSieveSslMode('');
 		$mailAccount->setSieveUser('');
 		$mailAccount->setSievePassword('');
-		return new Account($mailAccount);
+		return $mailAccount;
 	}
 
 	public function testClientConnectivity() {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
-			->with($account->getMailAccount()->getInboundPassword())
+			->with($account->getInboundPassword())
 			->willReturn('mypassword');
 
 		$client = $this->factory->getClient($account);
@@ -88,7 +85,7 @@ class SieveClientFactoryTest extends TestCase {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
-			->with($account->getMailAccount()->getInboundPassword())
+			->with($account->getInboundPassword())
 			->willReturn('mypassword');
 
 		$client = $this->factory->getClient($account);

@@ -12,9 +12,9 @@ namespace OCA\Mail\Service;
 use Horde_Imap_Client_Exception;
 use Horde_Mime_Exception;
 use Horde_Mime_Mail;
-use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
@@ -72,13 +72,13 @@ class AntiSpamService {
 	}
 
 	/**
-	 * @param Account $account
+	 * @param MailAccount $account
 	 * @param Mailbox $mailbox
 	 * @param int $uid
 	 * @param string $flag
 	 * @throws ServiceException
 	 */
-	public function sendReportEmail(Account $account, Mailbox $mailbox, int $uid, string $flag): void {
+	public function sendReportEmail(MailAccount $account, Mailbox $mailbox, int $uid, string $flag): void {
 		$reportEmail = ($flag === '$junk') ? $this->getSpamEmail() : $this->getHamEmail();
 		if ($reportEmail === '') {
 			return;
@@ -91,13 +91,13 @@ class AntiSpamService {
 			throw new ServiceException('Could not find reported message');
 		}
 
-		if ($account->getMailAccount()->getSentMailboxId() === null) {
+		if ($account->getSentMailboxId() === null) {
 			throw new ServiceException('Could not find sent mailbox');
 		}
 
 		$message = new Message();
 		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+			Address::fromRaw($account->getName(), $account->getEmail()),
 		]);
 		$to = new AddressList([
 			Address::fromRaw($reportEmail, $reportEmail),
@@ -108,7 +108,7 @@ class AntiSpamService {
 		$message->setContent($subject);
 
 		// Gets original of other message
-		$userId = $account->getMailAccount()->getUserId();
+		$userId = $account->getUserId();
 		try {
 			$attachmentMessage = $this->mailManager->getMessage($userId, $messageId);
 		} catch (DoesNotExistException $e) {
@@ -175,7 +175,7 @@ class AntiSpamService {
 			);
 		}
 
-		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+		$sentMailboxId = $account->getSentMailboxId();
 		if ($sentMailboxId === null) {
 			$this->logger->warning("No sent mailbox exists, can't save sent message");
 			return;

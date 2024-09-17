@@ -45,6 +45,7 @@ use OCP\User\IAvailabilityCoordinator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use ReturnTypeWillChange;
 use Throwable;
 use function class_exists;
 use function http_build_query;
@@ -149,7 +150,7 @@ class PageController extends Controller {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$json = $mailAccount->jsonSerialize();
+			$json = $mailAccount->toJson();
 			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
 				$this->currentUserId);
 			try {

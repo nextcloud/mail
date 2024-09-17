@@ -9,13 +9,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCP\EventDispatcher\Event;
 use Psr\Log\LoggerInterface;
 
 class SynchronizationEvent extends Event {
-	/** @var Account */
-	private $account;
 
 	/** @var LoggerInterface */
 	private $logger;
@@ -23,17 +21,15 @@ class SynchronizationEvent extends Event {
 	/** @var bool */
 	private $rebuildThreads;
 
-	public function __construct(Account $account,
+	public function __construct(private MailAccount $account,
 		LoggerInterface $logger,
 		bool $rebuildThreads) {
 		parent::__construct();
-
-		$this->account = $account;
 		$this->logger = $logger;
 		$this->rebuildThreads = $rebuildThreads;
 	}
 
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

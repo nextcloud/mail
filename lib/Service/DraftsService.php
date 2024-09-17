@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\DraftMessageCreatedEvent;
 use OCA\Mail\Exception\ClientException;
@@ -83,7 +83,6 @@ class DraftsService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param LocalMessage $message
 	 * @param array<int, string[]> $to
 	 * @param array<int, string[]> $cc
@@ -91,7 +90,7 @@ class DraftsService {
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
-	public function saveMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
+	public function saveMessage(MailAccount $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
@@ -125,7 +124,6 @@ class DraftsService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param LocalMessage $message
 	 * @param array<int, string[]> $to
 	 * @param array<int, string[]> $cc
@@ -133,7 +131,7 @@ class DraftsService {
 	 * @param array $attachments
 	 * @return LocalMessage
 	 */
-	public function updateMessage(Account $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
+	public function updateMessage(MailAccount $account, LocalMessage $message, array $to, array $cc, array $bcc, array $attachments = []): LocalMessage {
 		$toRecipients = self::convertToRecipient($to, Recipient::TYPE_TO);
 		$ccRecipients = self::convertToRecipient($cc, Recipient::TYPE_CC);
 		$bccRecipients = self::convertToRecipient($bcc, Recipient::TYPE_BCC);
@@ -156,7 +154,7 @@ class DraftsService {
 		return $message;
 	}
 
-	public function handleDraft(Account $account, int $draftId): void {
+	public function handleDraft(MailAccount $account, int $draftId): void {
 		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
 		$this->eventDispatcher->dispatchTyped(new DraftMessageCreatedEvent($account, $message));
 	}
@@ -165,10 +163,9 @@ class DraftsService {
 	 * "Send" the message
 	 *
 	 * @param LocalMessage $message
-	 * @param Account $account
 	 * @return void
 	 */
-	public function sendMessage(LocalMessage $message, Account $account): void {
+	public function sendMessage(LocalMessage $message, MailAccount $account): void {
 		try {
 			$this->transmission->saveLocalDraft($account, $message);
 		} catch (ClientException|ServiceException $e) {

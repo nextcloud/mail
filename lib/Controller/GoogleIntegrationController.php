@@ -142,7 +142,7 @@ class GoogleIntegrationController extends Controller {
 			$account,
 			$code,
 		);
-		$this->accountService->update($updated->getMailAccount());
+		$this->accountService->update($updated);
 		try {
 			$this->mailboxSync->sync($account, $this->logger);
 		} catch (ServiceException $e) {

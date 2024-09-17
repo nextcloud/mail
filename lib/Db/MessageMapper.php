@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IMailSearch;
@@ -179,11 +178,9 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
-	 *
 	 * @return DatabaseMessage[]
 	 */
-	public function findThreadingData(Account $account): array {
+	public function findThreadingData(MailAccount $account): array {
 		$mailboxesQuery = $this->db->getQueryBuilder();
 		$messagesQuery = $this->db->getQueryBuilder();
 
@@ -256,7 +253,7 @@ class MessageMapper extends QBMapper {
 	 * @param Message ...$messages
 	 * @return void
 	 */
-	public function insertBulk(Account $account, Message ...$messages): void {
+	public function insertBulk(MailAccount $account, Message ...$messages): void {
 		$this->db->beginTransaction();
 		try {
 			$qb1 = $this->db->getQueryBuilder();
@@ -348,12 +345,11 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param bool $permflagsEnabled
 	 * @param Message[] $messages
 	 * @return Message[]
 	 */
-	public function updateBulk(Account $account, bool $permflagsEnabled, Message ...$messages): array {
+	public function updateBulk(MailAccount $account, bool $permflagsEnabled, Message ...$messages): array {
 		$this->db->beginTransaction();
 
 		$perf = $this->performanceLogger->start(
@@ -510,12 +506,11 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Message $message
 	 * @param Tag[][] $tags
 	 * @param PerformanceLoggerTask $perf
 	 */
-	private function updateTags(Account $account, Message $message, array $tags, PerformanceLoggerTask $perf): void {
+	private function updateTags(MailAccount $account, Message $message, array $tags, PerformanceLoggerTask $perf): void {
 		$imapTags = $message->getTags();
 		$dbTags = $tags[$message->getMessageId()] ?? [];
 
@@ -734,12 +729,11 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param string $threadRootId
 	 *
 	 * @return Message[]
 	 */
-	public function findThread(Account $account, string $threadRootId): array {
+	public function findThread(MailAccount $account, string $threadRootId): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('messages.*')
 			->from($this->getTableName(), 'messages')
@@ -754,12 +748,11 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param string $messageId
 	 *
 	 * @return Message[]
 	 */
-	public function findByMessageId(Account $account, string $messageId): array {
+	public function findByMessageId(MailAccount $account, string $messageId): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('messages.*')
 			->from($this->getTableName(), 'messages')
@@ -1411,7 +1404,7 @@ class MessageMapper extends QBMapper {
 	/**
 	 * Currently unused
 	 */
-	public function findChanged(Account $account, Mailbox $mailbox, int $since): array {
+	public function findChanged(MailAccount $account, Mailbox $mailbox, int $since): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb

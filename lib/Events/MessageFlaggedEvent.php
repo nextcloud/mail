@@ -9,14 +9,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Events;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
 class MessageFlaggedEvent extends Event {
-	/** @var Account */
-	private $account;
-
 	/** @var Mailbox */
 	private $mailbox;
 
@@ -29,20 +26,19 @@ class MessageFlaggedEvent extends Event {
 	/** @var bool */
 	private $set;
 
-	public function __construct(Account $account,
+	public function __construct(private MailAccount $account,
 		Mailbox $mailbox,
 		int $uid,
 		string $flag,
 		bool $set) {
 		parent::__construct();
-		$this->account = $account;
 		$this->mailbox = $mailbox;
 		$this->uid = $uid;
 		$this->flag = $flag;
 		$this->set = $set;
 	}
 
-	public function getAccount(): Account {
+	public function getAccount(): MailAccount {
 		return $this->account;
 	}
 

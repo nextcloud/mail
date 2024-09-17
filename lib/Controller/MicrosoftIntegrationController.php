@@ -140,7 +140,7 @@ class MicrosoftIntegrationController extends Controller {
 			$account,
 			$code,
 		);
-		$this->accountService->update($updated->getMailAccount());
+		$this->accountService->update($updated);
 
 		return new StandaloneTemplateResponse(
 			Application::APP_ID,

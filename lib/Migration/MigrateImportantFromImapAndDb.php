@@ -11,7 +11,6 @@ namespace OCA\Mail\Migration;
 
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
-use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Tag;
@@ -42,7 +41,7 @@ class MigrateImportantFromImapAndDb {
 		$this->logger = $logger;
 	}
 
-	public function migrateImportantOnImap(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox): void {
+	public function migrateImportantOnImap(Horde_Imap_Client_Socket $client, Mailbox $mailbox): void {
 		try {
 			$uids = $this->messageMapper->getFlagged($client, $mailbox, '$important');
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -59,7 +58,7 @@ class MigrateImportantFromImapAndDb {
 		}
 	}
 
-	public function migrateImportantFromDb(Horde_Imap_Client_Socket $client, Account $account, Mailbox $mailbox): void {
+	public function migrateImportantFromDb(Horde_Imap_Client_Socket $client, Mailbox $mailbox): void {
 		$uids = $this->mailboxMapper->findFlaggedImportantUids($mailbox->getId());
 		// store our data on imap
 		if ($uids !== []) {

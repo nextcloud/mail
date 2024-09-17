@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Sync;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -30,7 +30,7 @@ use function array_diff;
 use function array_map;
 
 class SyncService {
-	
+
 	private IMAPClientFactory $clientFactory;
 
 	/** @var ImapToDbSynchronizer */
@@ -74,19 +74,17 @@ class SyncService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 *
 	 * @throws MailboxLockedException
 	 * @throws ServiceException
 	 */
-	public function clearCache(Account $account,
+	public function clearCache(MailAccount $account,
 		Mailbox $mailbox): void {
 		$this->synchronizer->clearCache($account, $mailbox);
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param int $criteria
 	 * @param bool $partialOnly
@@ -99,7 +97,7 @@ class SyncService {
 	 * @throws MailboxNotCachedException
 	 * @throws ServiceException
 	 */
-	public function syncMailbox(Account $account,
+	public function syncMailbox(MailAccount $account,
 		Mailbox $mailbox,
 		int $criteria,
 		bool $partialOnly,
@@ -110,9 +108,9 @@ class SyncService {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}
-		
+
 		$client = $this->clientFactory->getClient($account);
-		
+
 		$this->synchronizer->sync(
 			$account,
 			$client,
@@ -139,7 +137,6 @@ class SyncService {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 * @param int[] $knownIds
 	 * @param SearchQuery $query
@@ -148,7 +145,7 @@ class SyncService {
 	 * @todo does not work with text token search queries
 	 *
 	 */
-	private function getDatabaseSyncChanges(Account $account,
+	private function getDatabaseSyncChanges(MailAccount $account,
 		Mailbox $mailbox,
 		array $knownIds,
 		?int $lastMessageTimestamp,

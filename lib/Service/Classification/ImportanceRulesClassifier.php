@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification;
 
-use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Service\Classification\FeatureExtraction\ImportantMessagesExtractor;
@@ -43,14 +43,13 @@ class ImportanceRulesClassifier {
 	}
 
 	/**
-	 * @param Account $account
 	 * @param Mailbox[] $incomingMailboxes
 	 * @param Mailbox[] $outgoingMailboxes
 	 * @param Message[] $messages
 	 *
 	 * @return bool[]
 	 */
-	public function classifyImportance(Account $account,
+	public function classifyImportance(MailAccount $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
 		array $messages): array {

@@ -61,7 +61,7 @@ class OutOfOfficeListener implements IEventListener {
 
 		$accounts = $this->accountService->findByUserId($event->getData()->getUser()->getUID());
 		foreach ($accounts as $account) {
-			if (!$account->getMailAccount()->getOutOfOfficeFollowsSystem()) {
+			if (!$account->getOutOfOfficeFollowsSystem()) {
 				continue;
 			}
 
@@ -73,7 +73,7 @@ class OutOfOfficeListener implements IEventListener {
 				$eventData->getMessage(),
 			);
 			try {
-				$this->outOfOfficeService->update($account->getMailAccount(), $state);
+				$this->outOfOfficeService->update($account, $state);
 			} catch (Exception $e) {
 				$this->logger->error('Failed to apply out-of-office sieve script: ' . $e->getMessage(), [
 					'exception' => $e,

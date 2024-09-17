@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -18,6 +17,7 @@ use OCP\BackgroundJob\TimedJob;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
 use Psr\Log\LoggerInterface;
+use function round;
 use function sprintf;
 
 class QuotaJob extends TimedJob {
@@ -54,7 +54,6 @@ class QuotaJob extends TimedJob {
 	protected function run($argument): void {
 		$accountId = (int)$argument['accountId'];
 		try {
-			/** @var Account $account */
 			$account = $this->accountService->findById($accountId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Could not find account <' . $accountId . '> removing from jobs');
@@ -62,7 +61,7 @@ class QuotaJob extends TimedJob {
 			return;
 		}
 
-		if(!$account->getMailAccount()->canAuthenticateImap()) {
+		if(!$account->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping quota job');
 			return;
 		}
@@ -82,9 +81,14 @@ class QuotaJob extends TimedJob {
 			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
 			return;
 		}
-		$previous = $account->getMailAccount()->getQuotaPercentage();
-		$account->calculateAndSetQuotaPercentage($quota);
-		$this->accountService->update($account->getMailAccount());
+		$previous = $account->getQuotaPercentage();
+		if ($quota->getLimit() === 0) {
+			$account->setQuotaPercentage(0);
+			return;
+		}
+		$percentage = (int)round($quota->getUsage() / $quota->getLimit() * 100);
+		$account->setQuotaPercentage($percentage);
+		$this->accountService->update($account);
 		$current = $account->getQuotaPercentage();
 
 		// Only notify if we've reached the rising edge

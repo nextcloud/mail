@@ -65,7 +65,8 @@ class NewMessageClassificationListener implements IEventListener {
 			return;
 		}
 
-		if (!$this->classificationSettingsService->isClassificationEnabled($event->getAccount()->getUserId())) {
+		$account3 = $event->getAccount();
+		if (!$this->classificationSettingsService->isClassificationEnabled($account3->getUserId())) {
 			return;
 		}
 
@@ -79,9 +80,10 @@ class NewMessageClassificationListener implements IEventListener {
 		$messages = $event->getMessages();
 
 		// if this is a message that's been flagged / tagged as important before, we don't want to reclassify it again.
+		$account2 = $event->getAccount();
 		$doNotReclassify = $this->tagMapper->getTaggedMessageIdsForMessages(
 			$event->getMessages(),
-			$event->getAccount()->getUserId(),
+			$account2->getUserId(),
 			Tag::LABEL_IMPORTANT
 		);
 		$messages = array_filter($messages, static function ($message) use ($doNotReclassify) {
@@ -89,10 +91,12 @@ class NewMessageClassificationListener implements IEventListener {
 		});
 
 		try {
-			$important = $this->tagMapper->getTagByImapLabel(Tag::LABEL_IMPORTANT, $event->getAccount()->getUserId());
+			$account1 = $event->getAccount();
+			$important = $this->tagMapper->getTagByImapLabel(Tag::LABEL_IMPORTANT, $account1->getUserId());
 		} catch (DoesNotExistException $e) {
 			// just in case - if we get here, the tag is missing
-			$this->logger->error('Could not find important tag for ' . $event->getAccount()->getUserId(). ' ' . $e->getMessage(), [
+			$account = $event->getAccount();
+			$this->logger->error('Could not find important tag for ' . $account->getUserId() . ' ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 			return;
