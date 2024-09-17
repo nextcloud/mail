@@ -9,7 +9,6 @@
 namespace OCA\Mail\Db;
 
 use JsonSerializable;
-use OCP\Accounts\IAccount;
 use OCP\AppFramework\Db\Entity;
 
 /**
