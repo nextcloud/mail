@@ -72,12 +72,10 @@ class SyncJobTest extends TestCase {
 	}
 
 	public function testNoAuthentication(): void {
-		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
-			'canAuthenticateImap' => false,
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user123');
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(123);
-		$account->method('getUserId')->willReturn('user123');
 		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->serviceMock->getParameter('accountService')
@@ -106,12 +104,11 @@ class SyncJobTest extends TestCase {
 	}
 
 	public function testUserDoesntExist(): void {
-		$mailAccount = $this->createConfiguredMock(MailAccount::class, [
-			'canAuthenticateImap' => true,
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(123);
+		$mailAccount->setUserId('user123');
+		$mailAccount->setInboundPassword('pass123');
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(123);
-		$account->method('getUserId')->willReturn('user123');
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->serviceMock->getParameter('accountService')
 			->expects(self::once())

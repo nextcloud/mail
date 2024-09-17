@@ -14,6 +14,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\TagMapper;
 use OCA\Mail\Service\AccountService;
@@ -164,8 +165,12 @@ class PageControllerTest extends TestCase {
 	}
 
 	public function testIndex(): void {
+		$mailAccount1 = $this->createMock(MailAccount::class);
 		$account1 = $this->createMock(Account::class);
+		$account1->method('getMailAccount')->willReturn($mailAccount1);
+		$mailAccount2 = $this->createMock(MailAccount::class);
 		$account2 = $this->createMock(Account::class);
+		$account2->method('getMailAccount')->willReturn($mailAccount2);
 		$mailbox = $this->createMock(Mailbox::class);
 		$this->preferences->expects($this->exactly(10))
 			->method('getPreference')
@@ -202,21 +207,23 @@ class PageControllerTest extends TestCase {
 				[$mailbox],
 				[]
 			);
-		$account1->expects($this->once())
+		$mailAccount1->expects($this->once())
 			->method('jsonSerialize')
 			->will($this->returnValue([
 				'accountId' => 1,
 			]));
-		$account1->expects($this->once())
-			->method('getId')
+		$mailAccount1->expects($this->once())
+			->method('__call')
+			->with('getId')
 			->will($this->returnValue(1));
-		$account2->expects($this->once())
+		$mailAccount2->expects($this->once())
 			->method('jsonSerialize')
 			->will($this->returnValue([
 				'accountId' => 2,
 			]));
-		$account2->expects($this->once())
-			->method('getId')
+		$mailAccount2->expects($this->once())
+			->method('__call')
+			->with('getId')
 			->will($this->returnValue(2));
 		$this->aliasesService->expects($this->exactly(2))
 			->method('findAll')

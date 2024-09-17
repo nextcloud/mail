@@ -57,8 +57,8 @@ class SnoozeService {
 			} catch (ServiceException|ClientException $e) {
 				$this->logger->error('Could not wake messages', [
 					'exception' => $e,
-					'userId' => $account->getUserId(),
-					'accountId' => $account->getId(),
+					'userId' => $account->getMailAccount()->getUserId(),
+					'accountId' => $account->getMailAccount()->getId(),
 					'snoozeMailboxId' => $account->getMailAccount()->getSnoozeMailboxId(),
 				]);
 			}

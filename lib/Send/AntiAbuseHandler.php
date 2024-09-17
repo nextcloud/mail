@@ -25,11 +25,11 @@ class AntiAbuseHandler extends AHandler {
 			return $this->processNext($account, $localMessage);
 		}
 
-		$user = $this->userManager->get($account->getUserId());
+		$user = $this->userManager->get($account->getMailAccount()->getUserId());
 		if ($user === null) {
 			$this->logger->error('User {user} for mail account {id} does not exist', [
-				'user' => $account->getUserId(),
-				'id' => $account->getId(),
+				'user' => $account->getMailAccount()->getUserId(),
+				'id' => $account->getMailAccount()->getId(),
 			]);
 			// What to do here?
 			return $localMessage;

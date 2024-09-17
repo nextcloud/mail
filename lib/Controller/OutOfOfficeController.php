@@ -49,7 +49,7 @@ class OutOfOfficeController extends Controller {
 		}
 
 		$account = $this->accountService->findById($accountId);
-		if ($account->getUserId() !== $user->getUID()) {
+		if ($account->getMailAccount()->getUserId() !== $user->getUID()) {
 			return JsonResponse::fail([], Http::STATUS_NOT_FOUND);
 		}
 
@@ -72,7 +72,7 @@ class OutOfOfficeController extends Controller {
 		}
 
 		$account = $this->accountService->findById($accountId);
-		if ($account->getUserId() !== $user->getUID()) {
+		if ($account->getMailAccount()->getUserId() !== $user->getUID()) {
 			return JsonResponse::fail([], Http::STATUS_NOT_FOUND);
 		}
 
@@ -104,7 +104,7 @@ class OutOfOfficeController extends Controller {
 		}
 
 		$account = $this->accountService->findById($accountId);
-		if ($account->getUserId() !== $user->getUID()) {
+		if ($account->getMailAccount()->getUserId() !== $user->getUID()) {
 			return JsonResponse::fail([], Http::STATUS_NOT_FOUND);
 		}
 

@@ -95,7 +95,7 @@ class AccountService {
 			$list = [];
 			// iterate through accounts and find accounts matching mail address
 			foreach ($this->accounts[$userId] as $account) {
-				if ($account->getEmail() === $address) {
+				if ($account->getMailAccount()->getEmail() === $address) {
 					$list[] = $account;
 				}
 			}
@@ -117,7 +117,7 @@ class AccountService {
 	public function find(string $userId, int $id): Account {
 		if (isset($this->accounts[$userId])) {
 			foreach ($this->accounts[$userId] as $account) {
-				if ($account->getId() === $id) {
+				if ($account->getMailAccount()->getId() === $id) {
 					return $account;
 				}
 			}

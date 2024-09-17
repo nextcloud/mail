@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Service\Sync;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
@@ -101,8 +102,10 @@ class SyncServiceTest extends TestCase {
 	}
 
 	public function testSyncMailboxReturnsFolderStats() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('user');
 		$account = $this->createMock(Account::class);
-		$account->method('getUserId')->willReturn('user');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$mailbox = new Mailbox();
 		$mailbox->setMessages(42);
 		$mailbox->setUnseen(10);

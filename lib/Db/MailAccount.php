@@ -8,6 +8,8 @@
 
 namespace OCA\Mail\Db;
 
+use JsonSerializable;
+use OCP\Accounts\IAccount;
 use OCP\AppFramework\Db\Entity;
 
 /**
@@ -102,7 +104,7 @@ use OCP\AppFramework\Db\Entity;
  * @method bool|null getOooFollowsSystem()
  * @method void setOooFollowsSystem(bool $oooFollowsSystem)
  */
-class MailAccount extends Entity {
+class MailAccount extends Entity implements JSONSerializable {
 	public const SIGNATURE_MODE_PLAIN = 0;
 	public const SIGNATURE_MODE_HTML = 1;
 
@@ -278,6 +280,7 @@ class MailAccount extends Entity {
 	}
 
 	/**
+	 * @deprecated
 	 * @return array
 	 */
 	public function toJson() {
@@ -327,5 +330,9 @@ class MailAccount extends Entity {
 		}
 
 		return $result;
+	}
+
+	public function jsonSerialize(): mixed {
+		return $this->toJson();
 	}
 }

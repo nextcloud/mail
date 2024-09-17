@@ -186,7 +186,7 @@ class MailManager implements IMailManager {
 				$client,
 				$mailbox->getName(),
 				$uid,
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				$loadBody
 			);
 		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
@@ -214,7 +214,7 @@ class MailManager implements IMailManager {
 				$client,
 				$mailbox->getName(),
 				$uids,
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				true
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -259,7 +259,7 @@ class MailManager implements IMailManager {
 				$client,
 				$mailbox,
 				$uid,
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				false,
 			);
 		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
@@ -282,7 +282,7 @@ class MailManager implements IMailManager {
 		int $uid,
 		Account $destinationAccount,
 		string $destFolderId): int {
-		if ($sourceAccount->getId() === $destinationAccount->getId()) {
+		if ($sourceAccount->getMailAccount()->getId() === $destinationAccount->getMailAccount()->getId()) {
 			try {
 				$sourceMailbox = $this->mailboxMapper->find($sourceAccount, $sourceFolderId);
 			} catch (DoesNotExistException $e) {
@@ -518,7 +518,7 @@ class MailManager implements IMailManager {
 
 		if ($value) {
 			foreach ($messages as $message) {
-				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+				$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getMailAccount()->getUserId());
 			}
 		} else {
 			foreach ($messages as $message) {
@@ -701,7 +701,7 @@ class MailManager implements IMailManager {
 				$client,
 				$mailbox->getName(),
 				$message->getUid(),
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 			);
 		} finally {
 			$client->logout();
@@ -732,7 +732,7 @@ class MailManager implements IMailManager {
 				$mailbox->getName(),
 				$message->getUid(),
 				$attachmentId,
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 			);
 		} finally {
 			$client->logout();

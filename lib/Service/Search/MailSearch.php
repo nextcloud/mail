@@ -115,7 +115,7 @@ class MailSearch implements IMailSearch {
 		return $this->previewEnhancer->process(
 			$account,
 			$mailbox,
-			$this->messageMapper->findByIds($account->getUserId(),
+			$this->messageMapper->findByIds($account->getMailAccount()->getUserId(),
 				$this->getIdsLocally($account, $mailbox, $query, $sortOrder, $limit),
 				$sortOrder,
 			)

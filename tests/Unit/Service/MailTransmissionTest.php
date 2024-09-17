@@ -79,11 +79,13 @@ class MailTransmissionTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setName('test');
+		$mailAccount->setEmail('test@user');
+		$account = $this->createConfiguredMock(Account::class, [
+			'getMailAccount' => $mailAccount
+		]);
 		$account->method('getMailAccount')->willReturn($mailAccount);
-		$account->method('getName')->willReturn('Test User');
-		$account->method('getEMailAddress')->willReturn('test@user');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBody('Test');
@@ -106,13 +108,12 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSendNewMessageSmimeError() {
 		$mailAccount = new MailAccount();
-		$mailAccount->setUserId('testuser');
-		$mailAccount->setSentMailboxId(123);
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$mailAccount->setName('test');
+		$mailAccount->setEmail('test@user');
+		$account = $this->createConfiguredMock(Account::class, [
+			'getMailAccount' => $mailAccount
+		]);
 		$account->method('getMailAccount')->willReturn($mailAccount);
-		$account->method('getName')->willReturn('Test User');
-		$account->method('getEMailAddress')->willReturn('test@user');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBody('Test');
@@ -134,14 +135,13 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSendMessageFromAlias() {
 		$mailAccount = new MailAccount();
+		$mailAccount->setName('test');
+		$mailAccount->setEmail('test@user');
 		$mailAccount->setUserId('testuser');
-		$mailAccount->setSentMailboxId(123);
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getMailAccount' => $mailAccount
+		]);
 		$account->method('getMailAccount')->willReturn($mailAccount);
-		$account->method('getName')->willReturn('Test User');
-		$account->method('getEMailAddress')->willReturn('test@user');
-		$account->method('getUserId')->willReturn('testuser');
 		$alias = new Alias();
 		$alias->setId(1);
 		$alias->setAlias('a@d.com');
@@ -156,9 +156,6 @@ class MailTransmissionTest extends TestCase {
 			->method('create')
 			->with($account)
 			->willReturn($transport);
-		$account->expects($this->once())
-			->method('getName')
-			->willReturn('User');
 		$this->aliasService->expects(self::once())
 			->method('find')
 			->willReturn($alias);
@@ -178,12 +175,12 @@ class MailTransmissionTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId($userId);
 		$mailAccount->setSentMailboxId(123);
+		$mailAccount->setName('Test User');
+		$mailAccount->setEmail('test@user');
+		$mailAccount->setUserId($userId);
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
-		$account->method('getName')->willReturn('Test User');
-		$account->method('getEMailAddress')->willReturn('test@user');
-		$account->method('getUserId')->willReturn($userId);
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBody('Test');
@@ -229,11 +226,11 @@ class MailTransmissionTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setSentMailboxId(123);
+		$mailAccount->setName('Test User');
+		$mailAccount->setEmail('test@user');
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
-		$account->method('getName')->willReturn('Test User');
-		$account->method('getEMailAddress')->willReturn('test@user');
 		$localMessage = new LocalMessage();
 		$localMessage->setSubject('Test');
 		$localMessage->setBody('Test');
@@ -265,11 +262,11 @@ class MailTransmissionTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
 		$mailAccount->setDraftsMailboxId(123);
+		$mailAccount->setName('Test User');
+		$mailAccount->setEmail('test@user');
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
-		$account->method('getName')->willReturn('Test User');
-		$account->method('getEMailAddress')->willReturn('test@user');
 		$messageData = NewMessageData::fromRequest($account, 'sub', 'bod', 'to@d.com', '', '');
 		$message = new Message();
 

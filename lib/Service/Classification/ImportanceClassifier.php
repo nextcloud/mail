@@ -151,7 +151,7 @@ class ImportanceClassifier {
 			return $mailbox->getId();
 		}, $incomingMailboxes);
 		$messages = array_filter(
-			$this->messageMapper->findLatestMessages($account->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
+			$this->messageMapper->findLatestMessages($account->getMailAccount()->getUserId(), $mailboxIds, self::MAX_TRAINING_SET_SIZE),
 			[$this, 'filterMessageHasSenderEmail']
 		);
 		$importantMessages = array_filter($messages, static function (Message $message) {
@@ -203,7 +203,7 @@ class ImportanceClassifier {
 		$estimator = $this->trainClassifier($dataSet);
 		$perf->step('train classifier with full data set');
 
-		$classifier->setAccountId($account->getId());
+		$classifier->setAccountId($account->getMailAccount()->getId());
 		$classifier->setDuration($perf->end());
 		$this->persistenceService->persist($classifier, $estimator);
 		$logger->debug("classifier {$classifier->getId()} persisted");

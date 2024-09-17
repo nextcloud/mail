@@ -131,9 +131,9 @@ class IMipService {
 					continue;
 				}
 
-				$principalUri = 'principals/users/' . $account->getUserId();
+				$principalUri = 'principals/users/' . $account->getMailAccount()->getUserId();
 				$sender = $imapMessage->getFrom()->first()->getEmail();
-				$recipient = $account->getEmail();
+				$recipient = $account->getMailAccount()->getEmail();
 				foreach ($imapMessage->scheduling as $schedulingInfo) { // an IMAP message could contain more than one iMIP object
 					if ($schedulingInfo['method'] === 'REPLY') {
 						$processed = $this->calendarManager->handleIMipReply($principalUri, $sender, $recipient, $schedulingInfo['contents']);

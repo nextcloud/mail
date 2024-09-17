@@ -97,7 +97,7 @@ class AntiSpamService {
 
 		$message = new Message();
 		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+			Address::fromRaw($account->getMailAccount()->getName(), $account->getMailAccount()->getEmail()),
 		]);
 		$to = new AddressList([
 			Address::fromRaw($reportEmail, $reportEmail),
@@ -184,7 +184,7 @@ class AntiSpamService {
 		// Save the message in the sent mailbox
 		try {
 			$sentMailbox = $this->mailManager->getMailbox(
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				$sentMailboxId
 			);
 		} catch (ClientException $e) {

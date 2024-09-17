@@ -99,7 +99,7 @@ class IMAPClientFactory {
 
 			$params['password'] = $decryptedAccessToken; // Not used, but Horde wants this
 			$params['xoauth2_token'] = new Horde_Imap_Client_Password_Xoauth2(
-				$account->getEmail(),
+				$account->getMailAccount()->getEmail(),
 				$decryptedAccessToken,
 			);
 		}
@@ -107,14 +107,14 @@ class IMAPClientFactory {
 			'sha512',
 			implode('-', [
 				$this->config->getSystemValueString('secret'),
-				$account->getId(),
+				$account->getMailAccount()->getId(),
 				json_encode($params)
 			]),
 		);
 		if ($useCache && $this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
 				'backend' => new Cache([
-					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
+					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getMailAccount()->getId())),
 				])];
 		} else {
 			/**

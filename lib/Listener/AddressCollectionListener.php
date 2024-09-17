@@ -45,7 +45,8 @@ class AddressCollectionListener implements IEventListener {
 		if (!($event instanceof MessageSentEvent)) {
 			return;
 		}
-		if ($this->preferences->getPreference($event->getAccount()->getUserId(), 'collect-data', 'true') !== 'true') {
+		$account1 = $event->getAccount();
+		if ($this->preferences->getPreference($account1->getMailAccount()->getUserId(), 'collect-data', 'true') !== 'true') {
 			$this->logger->debug('Not collecting email addresses because the user opted out');
 			return;
 		}
@@ -59,7 +60,8 @@ class AddressCollectionListener implements IEventListener {
 
 			$addresses = $to->merge($cc)->merge($bcc);
 
-			$this->collector->addAddresses($event->getAccount()->getUserId(), $addresses);
+			$account = $event->getAccount();
+			$this->collector->addAddresses($account->getMailAccount()->getUserId(), $addresses);
 		} catch (Throwable $e) {
 			$this->logger->warning('Error while collecting mail addresses: ' . $e, [
 				'exception' => $e,

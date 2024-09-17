@@ -38,7 +38,7 @@ class SieveClientFactory {
 	 * @throws ManageSieve\Exception
 	 */
 	public function getClient(Account $account): ManageSieve {
-		if (!isset($this->cache[$account->getId()])) {
+		if (!isset($this->cache[($account->getMailAccount()->getId())])) {
 			$user = $account->getMailAccount()->getSieveUser();
 			if (empty($user)) {
 				$user = $account->getMailAccount()->getInboundUser();
@@ -48,7 +48,7 @@ class SieveClientFactory {
 				$password = $account->getMailAccount()->getInboundPassword();
 			}
 
-			$this->cache[$account->getId()] = $this->createClient(
+			$this->cache[($account->getMailAccount()->getId())] = $this->createClient(
 				$account->getMailAccount()->getSieveHost(),
 				$account->getMailAccount()->getSievePort(),
 				$user,
@@ -57,7 +57,7 @@ class SieveClientFactory {
 			);
 		}
 
-		return $this->cache[$account->getId()];
+		return $this->cache[($account->getMailAccount()->getId())];
 	}
 
 	/**

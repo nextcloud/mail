@@ -48,7 +48,7 @@ class Chain {
 
 		$result = $handlers->process($account, $localMessage);
 		if ($result->getStatus() === LocalMessage::STATUS_PROCESSED) {
-			$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $result->getId());
+			$this->attachmentService->deleteLocalMessageAttachments($account->getMailAccount()->getUserId(), $result->getId());
 			$this->localMessageMapper->deleteWithRecipients($result);
 			return $localMessage;
 		}

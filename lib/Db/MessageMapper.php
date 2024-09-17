@@ -189,7 +189,7 @@ class MessageMapper extends QBMapper {
 
 		$mailboxesQuery->select('id')
 			->from('mail_mailboxes')
-			->where($mailboxesQuery->expr()->eq('account_id', $messagesQuery->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
+			->where($mailboxesQuery->expr()->eq('account_id', $messagesQuery->createNamedParameter($account->getMailAccount()->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
 		$messagesQuery->select('id', 'subject', 'message_id', 'in_reply_to', 'references', 'thread_root_id')
 			->from($this->getTableName())
 			->where($messagesQuery->expr()->in('mailbox_id', $messagesQuery->createFunction($mailboxesQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY))
@@ -334,7 +334,7 @@ class MessageMapper extends QBMapper {
 					}
 				}
 				foreach ($message->getTags() as $tag) {
-					$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+					$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getMailAccount()->getUserId());
 				}
 			}
 
@@ -357,7 +357,7 @@ class MessageMapper extends QBMapper {
 		$this->db->beginTransaction();
 
 		$perf = $this->performanceLogger->start(
-			'partial sync ' . $account->getId() . ':' . $account->getName()
+			'partial sync ' . $account->getMailAccount()->getId() . ':' . $account->getMailAccount()->getName()
 		);
 
 		// MailboxId is the same for all messages according to updateBulk() call
@@ -485,7 +485,7 @@ class MessageMapper extends QBMapper {
 			// get all tags before the loop and create a mapping [message_id => [tag,...]] but only if permflags are enabled
 			$tags = [];
 			if ($permflagsEnabled) {
-				$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getUserId());
+				$tags = $this->tagMapper->getAllTagsForMessages($messages, $account->getMailAccount()->getUserId());
 				$perf->step('Selected Tags for all messages');
 			}
 
@@ -528,7 +528,7 @@ class MessageMapper extends QBMapper {
 			return strcmp($a->getImapLabel(), $b->getImapLabel());
 		});
 		foreach ($toAdd as $tag) {
-			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getUserId());
+			$this->tagMapper->tagMessage($tag, $message->getMessageId(), $account->getMailAccount()->getUserId());
 		}
 		$perf->step('Tagged messages');
 
@@ -745,12 +745,12 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName(), 'messages')
 			->join('messages', 'mail_mailboxes', 'mailboxes', $qb->expr()->eq('messages.mailbox_id', 'mailboxes.id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->eq('mailboxes.account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT)),
+				$qb->expr()->eq('mailboxes.account_id', $qb->createNamedParameter($account->getMailAccount()->getId(), IQueryBuilder::PARAM_INT)),
 				$qb->expr()->eq('messages.thread_root_id', $qb->createNamedParameter($threadRootId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			)
 			->orderBy('messages.sent_at', 'desc');
 
-		return $this->findRelatedData($this->findEntities($qb), $account->getUserId());
+		return $this->findRelatedData($this->findEntities($qb), $account->getMailAccount()->getUserId());
 	}
 
 	/**
@@ -765,7 +765,7 @@ class MessageMapper extends QBMapper {
 			->from($this->getTableName(), 'messages')
 			->join('messages', 'mail_mailboxes', 'mailboxes', $qb->expr()->eq('messages.mailbox_id', 'mailboxes.id', IQueryBuilder::PARAM_INT))
 			->where(
-				$qb->expr()->eq('mailboxes.account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->eq('mailboxes.account_id', $qb->createNamedParameter($account->getMailAccount()->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('messages.message_id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
 			);
 
@@ -1421,7 +1421,7 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 				$qb->expr()->gt('updated_at', $qb->createNamedParameter($since, IQueryBuilder::PARAM_INT))
 			);
-		return $this->findRelatedData($this->findEntities($select), $account->getUserId());
+		return $this->findRelatedData($this->findEntities($select), $account->getMailAccount()->getUserId());
 	}
 
 	/**

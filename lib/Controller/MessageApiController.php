@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Account;
 use OCA\Mail\Contracts\IDkimService;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\ClientException;
@@ -126,7 +127,7 @@ class MessageApiController extends OCSController {
 			return new DataResponse('Account not found.', Http::STATUS_NOT_FOUND);
 		}
 
-		if ($fromEmail !== $mailAccount->getEmail()) {
+		if ($fromEmail !== $mailAccount->getMailAccount()->getEmail()) {
 			try {
 				$alias = $this->aliasesService->findByAliasAndUserId($fromEmail, $this->userId);
 			} catch (DoesNotExistException $e) {

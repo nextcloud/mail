@@ -76,10 +76,10 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testNoUser(): void {
-		$mailAccount = $this->createMock(MailAccount::class);
-		$mailAccount->method('canAuthenticateImap')->willReturn(true);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('user123');
+		$mailAccount->setInboundPassword('pass123');
 		$account = $this->createMock(Account::class);
-		$account->method('getUserId')->willReturn('user123');
 		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->accountService->expects(self::once())
@@ -112,10 +112,10 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 	}
 
 	public function testProcessing(): void {
-		$mailAccount = $this->createMock(MailAccount::class);
-		$mailAccount->method('canAuthenticateImap')->willReturn(true);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('user123');
+		$mailAccount->setInboundPassword('pass123');
 		$account = $this->createMock(Account::class);
-		$account->method('getUserId')->willReturn('user123');
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$time = time();
 		$user = $this->createMock(IUser::class);
@@ -127,7 +127,7 @@ class PreviewEnhancementProcessingJobTest extends TestCase {
 			->willReturn($account);
 		$this->manager->expects(self::once())
 			->method('get')
-			->with($account->getUserId())
+			->with($account->getMailAccount()->getUserId())
 			->willReturn($user);
 		$user->expects(self::once())
 			->method('isEnabled')

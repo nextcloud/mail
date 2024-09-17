@@ -167,9 +167,13 @@ class IMipServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(100);
 		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('dimitrius@stardew-science.com');
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getId' => 200,
-			'getEmail' => 'dimitrius@stardew-science.com'
+			'getMailAccount' => $mailAccount
 		]);
 		$imapMessage = $this->createConfiguredMock(IMAPMessage::class, [
 			'getUid' => 1
@@ -208,9 +212,13 @@ class IMipServiceTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setId(100);
 		$mailbox->setAccountId(200);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(200);
+		$mailAccount->setEmail('dimitrius@stardew-science.com');
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getId' => 200,
-			'getEmail' => 'dimitrius@stardew-science.com'
+			'getMailAccount' => $mailAccount
 		]);
 		$imapMessage = $this->createConfiguredMock(IMAPMessage::class, [
 			'getUid' => 1
@@ -347,7 +355,7 @@ class IMipServiceTest extends TestCase {
 			->method('handleIMipReply')
 			->with('principals/users/vincent',
 				'pam@stardew-bus-service.com',
-				$account->getEmail(),
+				$account->getMailAccount()->getEmail(),
 				$imapMessage->scheduling[0]['contents']);
 		$this->calendarManager->expects(self::never())
 			->method('handleIMipCancel');
@@ -410,7 +418,7 @@ class IMipServiceTest extends TestCase {
 			->with('principals/users/vincent',
 				'pam@stardew-bus-service.com',
 				null,
-				$account->getEmail(),
+				$account->getMailAccount()->getEmail(),
 				$imapMessage->scheduling[0]['contents']
 			);
 		$this->messageMapper->expects(self::once())

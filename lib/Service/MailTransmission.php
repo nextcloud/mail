@@ -78,11 +78,11 @@ class MailTransmission implements IMailTransmission {
 
 		$alias = null;
 		if ($localMessage->getAliasId() !== null) {
-			$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getUserId());
+			$alias = $this->aliasesService->find($localMessage->getAliasId(), $account->getMailAccount()->getUserId());
 		}
-		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
+		$fromEmail = $alias ? $alias->getAlias() : $account->getMailAccount()->getEmail();
 		$from = new AddressList([
-			Address::fromRaw($account->getName(), $fromEmail),
+			Address::fromRaw($account->getMailAccount()->getName(), $fromEmail),
 		]);
 
 		$attachmentParts = [];
@@ -177,7 +177,7 @@ class MailTransmission implements IMailTransmission {
 		$imapMessage->setTo($to);
 		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+			Address::fromRaw($account->getMailAccount()->getName(), $account->getMailAccount()->getEmail()),
 		]);
 		$imapMessage->setFrom($from);
 		$imapMessage->setCC($cc);
@@ -263,7 +263,7 @@ class MailTransmission implements IMailTransmission {
 		$imapMessage->setTo($message->getTo());
 		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
-			Address::fromRaw($account->getName(), $account->getEMailAddress()),
+			Address::fromRaw($account->getMailAccount()->getName(), $account->getMailAccount()->getEmail()),
 		]);
 		$imapMessage->setFrom($from);
 		$imapMessage->setCC($message->getCc());
@@ -387,7 +387,7 @@ class MailTransmission implements IMailTransmission {
 				$account->getMailAccount()->getOutboundHost(),
 				$smtpClient,
 				[
-					'from_addr' => $account->getEMailAddress(),
+					'from_addr' => $account->getMailAccount()->getEmail(),
 					'charset' => 'UTF-8',
 				]
 			);

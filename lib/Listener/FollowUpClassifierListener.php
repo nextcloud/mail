@@ -52,7 +52,8 @@ class FollowUpClassifierListener implements IEventListener {
 		// Do not process emails older than 14D to save some processing power
 		$notBefore = (new DateTimeImmutable('now'))
 			->sub(new DateInterval('P14D'));
-		$userId = $event->getAccount()->getUserId();
+		$account = $event->getAccount();
+		$userId = $account->getMailAccount()->getUserId();
 		foreach ($event->getMessages() as $message) {
 			if ($message->getSentAt() < $notBefore->getTimestamp()) {
 				continue;

@@ -11,6 +11,7 @@ namespace OCA\Mail\Tests\Unit\Service\Search;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
@@ -102,10 +103,10 @@ class MailSearchTest extends TestCase {
 	}
 
 	public function testNoFindMessages() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('admin');
 		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('admin');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
@@ -124,10 +125,10 @@ class MailSearchTest extends TestCase {
 	}
 
 	public function testFindFlagsLocally() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('admin');
 		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('admin');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
@@ -163,10 +164,10 @@ class MailSearchTest extends TestCase {
 	}
 
 	public function testFindText() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('admin');
 		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('admin');
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');

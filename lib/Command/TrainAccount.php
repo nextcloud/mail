@@ -62,7 +62,7 @@ class TrainAccount extends Command {
 			$output->writeln("<error>account $accountId does not exist</error>");
 			return 1;
 		}
-		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
+		if (!$this->classificationSettingsService->isClassificationEnabled($account->getMailAccount()->getUserId())) {
 			$output->writeln("<info>classification is turned off for account $accountId</info>");
 			return 2;
 		}

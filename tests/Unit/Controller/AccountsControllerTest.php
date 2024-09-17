@@ -15,6 +15,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\MailboxSync;
@@ -59,6 +60,8 @@ class AccountsControllerTest extends TestCase {
 
 	/** @var Account|MockObject */
 	private $account;
+
+	private MailAccount&MockObject $mailAccount;
 
 	/** @var AliasesService|MockObject */
 	private $aliasesService;
@@ -120,10 +123,12 @@ class AccountsControllerTest extends TestCase {
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
+		$this->mailAccount = $this->createMock(MailAccount::class);
+		$this->account->method('getMailAccount')->willReturn($this->mailAccount);
 	}
 
 	public function testIndex(): void {
-		$this->account->expects(self::once())
+		$this->mailAccount->expects(self::once())
 			->method('jsonSerialize')
 			->will(self::returnValue([
 				'accountId' => 123,

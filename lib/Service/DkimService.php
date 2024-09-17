@@ -58,7 +58,7 @@ class DkimService implements IDkimService {
 				$client,
 				$mailbox->getName(),
 				$id,
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				false,
 			);
 
@@ -82,6 +82,6 @@ class DkimService implements IDkimService {
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
-		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
+		return $account->getMailAccount()->getId() . '_' . $mailbox->getName() . '_' . $id;
 	}
 }

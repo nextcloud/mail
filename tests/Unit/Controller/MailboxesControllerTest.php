@@ -13,6 +13,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MailboxesController;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
@@ -63,7 +64,10 @@ class MailboxesControllerTest extends TestCase {
 	}
 
 	public function testIndex() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setEmail('user@example.com');
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$folder = $this->createMock(Folder::class);
 		$accountId = 28;
 		$this->accountService->expects($this->once())
@@ -76,9 +80,6 @@ class MailboxesControllerTest extends TestCase {
 			->willReturn([
 				$folder
 			]);
-		$account->expects($this->once())
-			->method('getEmail')
-			->willReturn('user@example.com');
 		$folder->expects($this->once())
 			->method('getDelimiter')
 			->willReturn('.');

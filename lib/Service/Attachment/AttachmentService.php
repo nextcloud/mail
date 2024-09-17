@@ -255,13 +255,13 @@ class AttachmentService implements IAttachmentService {
 	 * @return int|null
 	 */
 	private function handleForwardedMessageAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
-		$attachmentMessage = $this->mailManager->getMessage($account->getUserId(), (int)$attachment['id']);
-		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachmentMessage->getMailboxId());
+		$attachmentMessage = $this->mailManager->getMessage($account->getMailAccount()->getUserId(), (int)$attachment['id']);
+		$mailbox = $this->mailManager->getMailbox($account->getMailAccount()->getUserId(), $attachmentMessage->getMailboxId());
 		$fullText = $this->messageMapper->getFullText(
 			$client,
 			$mailbox->getName(),
 			$attachmentMessage->getUid(),
-			$account->getUserId()
+			$account->getMailAccount()->getUserId()
 		);
 
 		// detect mime type
@@ -275,7 +275,7 @@ class AttachmentService implements IAttachmentService {
 		}
 
 		try {
-			$localAttachment = $this->addFileFromString($account->getUserId(), $attachment['fileName'] ?? $attachmentMessage->getSubject() . '.eml', $mime, $fullText);
+			$localAttachment = $this->addFileFromString($account->getMailAccount()->getUserId(), $attachment['fileName'] ?? $attachmentMessage->getSubject() . '.eml', $mime, $fullText);
 		} catch (UploadException $e) {
 			$this->logger->error('Could not create attachment', ['exception' => $e]);
 			return null;
@@ -293,13 +293,13 @@ class AttachmentService implements IAttachmentService {
 	 * @throws DoesNotExistException
 	 */
 	private function handleForwardedAttachment(Account $account, array $attachment, \Horde_Imap_Client_Socket $client): ?int {
-		$mailbox = $this->mailManager->getMailbox($account->getUserId(), $attachment['mailboxId']);
+		$mailbox = $this->mailManager->getMailbox($account->getMailAccount()->getUserId(), $attachment['mailboxId']);
 
 		$attachments = $this->messageMapper->getRawAttachments(
 			$client,
 			$mailbox->getName(),
 			(int)$attachment['uid'],
-			$account->getUserId(),
+			$account->getMailAccount()->getUserId(),
 			[
 				$attachment['id'] ?? []
 			]
@@ -320,7 +320,7 @@ class AttachmentService implements IAttachmentService {
 		}
 
 		try {
-			$localAttachment = $this->addFileFromString($account->getUserId(), $attachment['fileName'], $mime, $attachments[0]);
+			$localAttachment = $this->addFileFromString($account->getMailAccount()->getUserId(), $attachment['fileName'], $mime, $attachments[0]);
 		} catch (UploadException $e) {
 			$this->logger->error('Could not create attachment', ['exception' => $e]);
 			return null;
@@ -369,7 +369,7 @@ class AttachmentService implements IAttachmentService {
 		}
 
 		try {
-			$localAttachment = $this->addFileFromString($account->getUserId(), $file->getName(), $file->getMimeType(), $file->getContent());
+			$localAttachment = $this->addFileFromString($account->getMailAccount()->getUserId(), $file->getName(), $file->getMimeType(), $file->getContent());
 		} catch (UploadException $e) {
 			$this->logger->error('Could not create attachment', ['exception' => $e]);
 			return null;
