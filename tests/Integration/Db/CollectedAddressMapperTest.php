@@ -104,7 +104,7 @@ class CollectedAddressMapperTest extends TestCase {
 		$this->assertCount(\count($result), $matches);
 		$i = 0;
 		foreach ($matches as $match) {
-			$this->assertInstanceOf('\OCA\Mail\Db\CollectedAddress', $match);
+			$this->assertInstanceOf(\OCA\Mail\Db\CollectedAddress::class, $match);
 			$this->assertContains($match->getEmail(), $result);
 			$this->assertEquals($this->userId, $match->getUserId());
 			$i++;

@@ -40,7 +40,7 @@ class AliasesControllerTest extends TestCase {
 		$this->request = $this->getMockBuilder('OCP\IRequest')
 			->getMock();
 
-		$this->alias = $this->getMockBuilder('\OCA\Mail\Db\Alias')
+		$this->alias = $this->getMockBuilder(\OCA\Mail\Db\Alias::class)
 			->disableOriginalConstructor()
 			->getMock();
 

@@ -55,7 +55,7 @@ class Cache {
 	 * @return void
 	 */
 	public function addValue(string $key, ?string $value): void {
-		$this->cache->set($key, $value === null ? false : $value, self::CACHE_TTL);
+		$this->cache->set($key, $value ?? false, self::CACHE_TTL);
 	}
 
 
