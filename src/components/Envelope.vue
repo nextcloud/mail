@@ -19,8 +19,9 @@
 		:name="addresses"
 		:details="formatted()"
 		:one-line="oneLineLayout"
-		@click="onClick"
-		@click.ctrl.prevent="toggleSelected"
+		@click.exact="onClick"
+		@click.ctrl.exact.prevent="toggleSelected"
+		@click.shift.exact.prevent="onSelectMultiple"
 		@update:menuOpen="closeMoreAndSnoozeOptions">
 		<template #icon>
 			<Star v-if="data.flags.flagged"
@@ -51,7 +52,7 @@
 						:checked="selected">
 					<label :for="`select-checkbox-${data.uid}`"
 						@click.exact.prevent="toggleSelected"
-						@click.shift.prevent="onSelectMultiple" />
+						@click.shift.exact.prevent="onSelectMultiple" />
 				</p>
 			</div>
 		</template>
