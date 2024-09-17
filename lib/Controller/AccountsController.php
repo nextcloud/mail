@@ -178,7 +178,7 @@ class AccountsController extends Controller {
 
 		try {
 			return MailJsonResponse::success(
-				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, $id)
+				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, $id)->getMailAccount()
 			);
 		} catch (CouldNotConnectException $e) {
 			$data = [
@@ -399,7 +399,7 @@ class AccountsController extends Controller {
 			}
 		}
 		return MailJsonResponse::success(
-			$account, Http::STATUS_CREATED
+			$account->getMailAccount(), Http::STATUS_CREATED
 		);
 	}
 
