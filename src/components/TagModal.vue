@@ -167,7 +167,7 @@ export default {
 				return
 			}
 			try {
-				await this.$store.dispatch('createTag', {
+				await this.mainStore.createTag({
 					displayName,
 					color: randomColor(displayName),
 				})
@@ -204,7 +204,7 @@ export default {
 			const displayName = event.target.querySelector('input[type=text]').value
 
 			try {
-				await this.$store.dispatch('updateTag', {
+				await this.mainStore.updateTag({
 					tag,
 					displayName,
 					color: tag.color,

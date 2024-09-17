@@ -70,7 +70,7 @@ export default {
 			}
 			this.refreshing = true
 			try {
-				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.currentMailbox.databaseId })
+				await this.mainStore.syncEnvelopes({ mailboxId: this.currentMailbox.databaseId })
 				logger.debug('Current mailbox is sync\'ing ')
 			} catch (error) {
 				logger.error('could not sync current mailbox', { error })
@@ -79,7 +79,7 @@ export default {
 			}
 		},
 		async onNewMessage() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				isBlankMessage: true,
 			})
 		},

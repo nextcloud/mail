@@ -173,7 +173,7 @@ export default {
 			if (this.message.editorBody === null) {
 				return
 			}
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				type: 'outbox',
 				data: {
 					...this.message,

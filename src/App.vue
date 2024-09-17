@@ -48,9 +48,9 @@ export default {
 		}
 
 		this.sync()
-		await this.$store.dispatch('fetchCurrentUserPrincipal')
-		await this.$store.dispatch('loadCollections')
-		this.$store.commit('hasCurrentUserPrincipalAndCollections', true)
+		await this.mainStore.fetchCurrentUserPrincipal()
+		await this.mainStore.loadCollections()
+		this.mainStore.hasCurrentUserPrincipalAndCollectionsMutation(true)
 	},
 	methods: {
 		reload() {
@@ -59,7 +59,7 @@ export default {
 		sync() {
 			setTimeout(async () => {
 				try {
-					await this.$store.dispatch('syncInboxes')
+					await this.mainStore.syncInboxes()
 
 					logger.debug("Inboxes sync'ed in background")
 				} catch (error) {

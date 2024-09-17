@@ -110,7 +110,7 @@ export default {
 			this.editColor = newColor
 			this.showSaving = false
 			try {
-				await this.$store.dispatch('updateTag', {
+				await this.mainStore.updateTag({
 					tag: this.tag,
 					displayName: this.tag.displayName,
 					color: newColor,
@@ -134,7 +134,7 @@ export default {
 			const displayName = event.target.querySelector('input[type=text]').value
 
 			try {
-				await this.$store.dispatch('updateTag', {
+				await this.mainStore.updateTag({
 					tag,
 					displayName,
 					color: tag.color,
@@ -175,13 +175,13 @@ export default {
 		addTag(imapLabel) {
 			this.isAdded = true
 			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('addEnvelopeTag', { envelope, imapLabel })
+				this.mainStore.addEnvelopeTag({ envelope, imapLabel })
 			})
 		},
 		removeTag(imapLabel) {
 			this.isAdded = false
 			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('removeEnvelopeTag', { envelope, imapLabel })
+				this.mainStore.removeEnvelopeTag({ envelope, imapLabel })
 			})
 		},
 	},

@@ -285,7 +285,7 @@ export default {
 			const threadId = this.threadId
 
 			try {
-				const thread = await this.$store.dispatch('fetchThread', threadId)
+				const thread = await this.mainStore.fetchThread(threadId)
 				logger.debug(`thread for envelope ${threadId} fetched`, { thread })
 				// TODO: add timeout so that envelope isn't flagged when only viewed
 				//       for a few seconds

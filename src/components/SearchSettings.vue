@@ -16,6 +16,8 @@
 
 <script>
 import Logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'SearchSettings',
@@ -30,15 +32,17 @@ export default {
 			searchBody: this.account.searchBody,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	watch: {
 		searchBody(val, oldVal) {
-			this.$store
-				.dispatch('patchAccount', {
-					account: this.account,
-					data: {
-						searchBody: val,
-					},
-				})
+			this.mainStore.patchAccount({
+				account: this.account,
+				data: {
+					searchBody: val,
+				},
+			})
 				.then(() => {
 					Logger.info(`Body search ${val ? 'enabled' : 'disabled'}`)
 				})

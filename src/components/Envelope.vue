@@ -713,7 +713,7 @@ export default {
 		},
 		async onClick(event) {
 			if (!event.ctrlKey && this.draft && !event.defaultPrevented) {
-				await this.$store.dispatch('startComposerSession', {
+				await this.mainStore.startComposerSession({
 					data: {
 						...this.data,
 						draftId: this.data.databaseId,
@@ -726,23 +726,23 @@ export default {
 			this.$emit('select-multiple')
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.data)
+			this.mainStore.toggleEnvelopeImportant(this.data)
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+			this.mainStore.toggleEnvelopeFlagged(this.data)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.data })
+			this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
 		},
 		async onToggleJunk() {
-			const removeEnvelope = await this.$store.dispatch('moveEnvelopeToJunk', this.data)
+			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.data)
 
 			if (this.isImportant) {
-				await this.$store.dispatch('toggleEnvelopeImportant', this.data)
+				await this.mainStore.toggleEnvelopeImportant(this.data)
 			}
 
 			if (!this.data.flags.seen) {
-				await this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.data })
+				await this.mainStore.toggleEnvelopeSeen({ envelope: this.data })
 			}
 
 			/**
@@ -762,7 +762,7 @@ export default {
 				await this.$emit('delete', this.data.databaseId)
 			}
 
-			await this.$store.dispatch('toggleEnvelopeJunk', {
+			await this.mainStore.toggleEnvelopeJunk({
 				envelope: this.data,
 				removeEnvelope,
 			})
@@ -774,7 +774,7 @@ export default {
 			this.$emit('delete', this.data.databaseId)
 
 			try {
-				await this.$store.dispatch('deleteThread', {
+				await this.mainStore.deleteThread({
 					envelope: this.data,
 				})
 			} catch (error) {
@@ -808,7 +808,7 @@ export default {
 			this.$emit('archive', this.data.databaseId)
 
 			try {
-				await this.$store.dispatch('moveThread', {
+				await this.mainStore.moveThread({
 					envelope: this.data,
 					destMailboxId: this.account.archiveMailboxId,
 				})
@@ -822,11 +822,11 @@ export default {
 			this.setSelected(false)
 
 			if (!this.account.snoozeMailboxId) {
-				await this.$store.dispatch('createAndSetSnoozeMailbox', this.account)
+				await this.mainStore.createAndSetSnoozeMailbox(this.account)
 			}
 
 			try {
-				await this.$store.dispatch('snoozeThread', {
+				await this.mainStore.snoozeThread({
 					envelope: this.data,
 					unixTimestamp: timestamp / 1000,
 					destMailboxId: this.account.snoozeMailboxId,
@@ -842,7 +842,7 @@ export default {
 			this.setSelected(false)
 
 			try {
-				await this.$store.dispatch('unSnoozeThread', {
+				await this.mainStore.unSnoozeThread({
 					envelope: this.data,
 				})
 				showSuccess(t('mail', 'Thread was unsnoozed'))
@@ -852,7 +852,7 @@ export default {
 			}
 		},
 		async onOpenEditAsNew() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				templateMessageId: this.data.databaseId,
 				data: this.data,
 			})

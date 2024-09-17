@@ -427,7 +427,7 @@ export default {
 	},
 	methods: {
 		onForward() {
-			this.$store.dispatch('startComposerSession', {
+			this.mainStore.startComposerSession({
 				reply: {
 					mode: 'forward',
 					data: this.envelope,
@@ -443,11 +443,11 @@ export default {
 			logger.info(`snoozing message ${this.envelope.databaseId}`)
 
 			if (!this.account.snoozeMailboxId) {
-				await this.$store.dispatch('createAndSetSnoozeMailbox', this.account)
+				await this.mainStore.createAndSetSnoozeMailbox(this.account)
 			}
 
 			try {
-				await this.$store.dispatch('snoozeMessage', {
+				await this.mainStore.snoozeMessage({
 					id: this.envelope.databaseId,
 					unixTimestamp: timestamp / 1000,
 					destMailboxId: this.account.snoozeMailboxId,
@@ -467,7 +467,7 @@ export default {
 			logger.info(`unSnoozing message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('unSnoozeMessage', {
+				await this.mainStore.unSnoozeMessage({
 					id: this.envelope.databaseId,
 				})
 				showSuccess(t('mail', 'Message was unsnoozed'))
@@ -477,16 +477,16 @@ export default {
 			}
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
+			this.mainStore.toggleEnvelopeFlagged(this.envelope)
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
+			this.mainStore.toggleEnvelopeImportant(this.envelope)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+			this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 		},
 		async onToggleJunk() {
-			const removeEnvelope = await this.$store.dispatch('moveEnvelopeToJunk', this.envelope)
+			const removeEnvelope = await this.mainStore.moveEnvelopeToJunk(this.envelope)
 
 			/**
 			 * moveEnvelopeToJunk returns true if the envelope should be moved to a different mailbox.
@@ -505,7 +505,7 @@ export default {
 				await this.$emit('delete', this.envelope.databaseId)
 			}
 
-			await this.$store.dispatch('toggleEnvelopeJunk', {
+			await this.mainStore.toggleEnvelopeJunk({
 				envelope: this.envelope,
 				removeEnvelope,
 			})
@@ -514,12 +514,12 @@ export default {
 			this.$emit('update:selected')
 		},
 		async forwardSelectedAsAttachment() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				forwardedMessages: [this.envelope.databaseId],
 			})
 		},
 		onReply(onlySender = false) {
-			this.$store.dispatch('startComposerSession', {
+			this.mainStore.startComposerSession({
 				reply: {
 					mode: onlySender ? 'reply' : 'replyAll',
 					data: this.envelope,
@@ -527,7 +527,7 @@ export default {
 			})
 		},
 		async onOpenEditAsNew() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				templateMessageId: this.envelope.databaseId,
 				data: this.envelope,
 			})

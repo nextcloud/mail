@@ -462,7 +462,7 @@ export default {
 			logger.info(`creating mailbox ${withPrefix} as submailbox of ${this.mailbox.databaseId}`)
 			this.menuOpen = false
 			try {
-				await this.$store.dispatch('createMailbox', {
+				await this.mainStore.createMailbox({
 					account: this.account,
 					name: withPrefix,
 				})
@@ -483,8 +483,7 @@ export default {
 		markAsRead() {
 			this.loadingMarkAsRead = true
 
-			this.$store
-				.dispatch('markMailboxRead', {
+			this.mainStore.markMailboxRead({
 					accountId: this.account.id,
 					mailboxId: this.mailbox.databaseId,
 				})
@@ -496,7 +495,7 @@ export default {
 			try {
 				this.changeSubscription = true
 
-				await this.$store.dispatch('changeMailboxSubscription', {
+				await this.mainStore.changeMailboxSubscription({
 					mailbox: this.mailbox,
 					subscribed,
 				})
@@ -511,7 +510,7 @@ export default {
 			try {
 				this.changingSyncInBackground = true
 
-				await this.$store.dispatch('patchMailbox', {
+				await this.mainStore.patchMailbox({
 					mailbox: this.mailbox,
 					attributes: {
 						syncInBackground,
@@ -553,8 +552,7 @@ export default {
 				},
 				(result) => {
 					if (result) {
-						return this.$store
-							.dispatch('clearMailbox', { mailbox: this.mailbox })
+						return this.mainStore.clearMailbox({ mailbox: this.mailbox })
 							.then(() => {
 								logger.info(`mailbox ${id} cleared`)
 							})
@@ -577,8 +575,7 @@ export default {
 				},
 				(result) => {
 					if (result) {
-						return this.$store
-							.dispatch('deleteMailbox', { mailbox: this.mailbox })
+						return this.mainStore.deleteMailbox({ mailbox: this.mailbox })
 							.then(() => {
 								logger.info(`mailbox ${id} deleted`)
 								if (parseInt(this.$route.params.mailboxId, 10) === this.mailbox.databaseId) {
@@ -604,7 +601,7 @@ export default {
 				if (this.mailbox.path) {
 					newName = this.mailbox.path + this.mailbox.delimiter + newName
 				}
-				await this.$store.dispatch('renameMailbox', {
+				await this.mainStore.renameMailbox({
 					account: this.account,
 					mailbox: this.mailbox,
 					newName,
@@ -634,7 +631,7 @@ export default {
 			if (accountId !== this.mailbox.accountId) {
 				return
 			}
-			this.$store.commit('expandAccount', accountId)
+			this.mainStore.expandAccountMutation(accountId)
 			this.showSubMailboxes = true
 		},
 		onDragEnd({ accountId }) {

@@ -131,14 +131,13 @@ import NoSentMailboxConfiguredError from '../errors/NoSentMailboxConfiguredError
 import ManyRecipientsError from '../errors/ManyRecipientsError.js'
 import AttachmentMissingError from '../errors/AttachmentMissingError.js'
 import Loading from './Loading.vue'
-import { mapGetters } from 'vuex'
 import MinimizeIcon from 'vue-material-design-icons/Minus.vue'
 import MaximizeIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import useOutboxStore from '../store/outboxStore.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores } from 'pinia'
+import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'NewMessageModal',
@@ -179,7 +178,7 @@ export default {
 	},
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
-		...mapGetters(['showMessageComposer', 'getPreference']),
+		...mapState(useMainStore, ['showMessageComposer', 'getPreference']),
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')
@@ -235,7 +234,7 @@ export default {
 		async onMaximize() {
 			this.largerModal = !this.largerModal
 			try {
-				await this.$store.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 					key: 'modalSize',
 					value: this.largerModal ? 'large' : 'normal',
 				})
@@ -271,7 +270,7 @@ export default {
 					if (!id) {
 						const { id } = await saveDraft(dataForServer)
 						dataForServer.id = id
-						await this.$store.dispatch('patchComposerData', { id, draftId: dataForServer.draftId })
+						await this.mainStore.patchComposerData({ id, draftId: dataForServer.draftId })
 						this.canSaveDraft = true
 						this.draftSaved = true
 
@@ -284,7 +283,7 @@ export default {
 						idToReturn = id
 					}
 
-					this.$store.commit('setComposerMessageSaved', true)
+					this.mainStore.setComposerMessageSavedMutation(true)
 
 					if (showToast) {
 						if (this.composerMessage.type === 'outbox') {
@@ -300,7 +299,7 @@ export default {
 				} catch (error) {
 					logger.error('Could not save draft', { error })
 					this.canSaveDraft = false
-					this.$store.commit('setComposerIndicatorDisabled', false)
+					this.mainStore.setComposerIndicatorDisabledMutation(false)
 
 					if (showToast) {
 						if (this.composerMessage.type === 'outbox') {
@@ -410,9 +409,9 @@ export default {
 				}
 				if (dataForServer.id) {
 					// Remove old draft envelope
-					this.$store.commit('removeMessage', { id: dataForServer.id })
+					this.mainStore.removeMessageMutation({ id: dataForServer.id })
 				}
-				await this.$store.dispatch('stopComposerSession')
+				await this.mainStore.stopComposerSession()
 				this.$emit('close')
 			} catch (error) {
 				this.error = await matchError(error, {
@@ -447,7 +446,7 @@ export default {
 			const account = this.mainStore.getAccount(data.accountId)
 			if (account && parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
 				setTimeout(() => {
-					this.$store.dispatch('syncEnvelopes', {
+					this.mainStore.syncEnvelopes({
 						mailboxId: account.sentMailboxId,
 						query: '',
 						init: false,
@@ -482,7 +481,7 @@ export default {
 
 			// It's safe to stop the session and ultimately destroy this component as only data
 			// local this this function is accessed afterwards
-			await this.$store.dispatch('stopComposerSession')
+			await this.mainStore.stopComposerSession()
 
 			try {
 				if (isOutbox) {
@@ -518,13 +517,13 @@ export default {
 		async patchComposerData(data) {
 			this.changed = true
 			this.updateCookedComposerData()
-			await this.$store.dispatch('patchComposerData', data)
+			await this.mainStore.patchComposerData(data)
 		},
 		onBeforeUnload(e) {
 			if (this.canSaveDraft && this.changed) {
 				e.preventDefault()
 				e.returnValue = true
-				this.$store.dispatch('showMessageComposer')
+				this.mainStore.showMessageComposer()
 			} else {
 				console.info('No unsaved changes. See you!')
 			}
@@ -532,20 +531,20 @@ export default {
 		async onMinimize() {
 			this.modalFirstOpen = false
 
-			await this.$store.dispatch('closeMessageComposer')
+			await this.mainStore.closeMessageComposer()
 			if (!this.mainStore.composerMessageIsSaved && this.changed) {
 				await this.onDraft(this.cookedComposerData, { showToast: true })
 			}
 
 		},
 		async onClose() {
-			this.$store.commit('setComposerIndicatorDisabled', true)
+			this.mainStore.setComposerIndicatorDisabledMutation(true)
 			await this.onMinimize()
 
 			// End the session only if all unsaved changes have been saved
 			if (this.canSaveDraft && ((this.changed && this.draftSaved) || !this.changed)) {
 				logger.debug('Closing composer session due to close button click')
-				await this.$store.dispatch('stopComposerSession', {
+				await this.mainStore.stopComposerSession({
 					restoreOriginalSendAt: true,
 					moveToImap: this.changed,
 					id: this.composerData.id,

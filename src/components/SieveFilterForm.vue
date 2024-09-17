@@ -77,7 +77,7 @@ export default {
 			this.errorMessage = ''
 
 			try {
-				await this.$store.dispatch('updateActiveSieveScript', {
+				await this.mainStore.updateActiveSieveScript({
 					accountId: this.account.id,
 					scriptData: {
 						...this.scriptData,

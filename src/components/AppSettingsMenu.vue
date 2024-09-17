@@ -312,7 +312,6 @@ import SmimeCertificateModal from './smime/SmimeCertificateModal.vue'
 import TrustedSenders from './TrustedSenders.vue'
 import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
-import { mapGetters } from 'vuex'
 import useMainStore from '../store/mainStore.js'
 import { mapStores, mapState } from 'pinia'
 
@@ -421,7 +420,7 @@ export default {
 			this.showAccountSettings = false
 		},
 		openAccountSettings(accountId) {
-			this.$store.commit('showSettingsForAccount', accountId)
+			this.mainStore.showSettingsForAccountMutation(accountId)
 			this.showSettings = false
 		},
 		checkMailvelope() {
@@ -429,7 +428,7 @@ export default {
 		},
 		async setLayout(layoutMode) {
 			try {
-				await this.$store.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 					key: 'layout-mode',
 					value: layoutMode,
 				})
@@ -443,8 +442,7 @@ export default {
 		onToggleButtonReplies(e) {
 			this.loadingReplySettings = true
 
-			this.$store
-				.dispatch('savePreference', {
+			this.mainStore.savePreference({
 					key: 'reply-mode',
 					value: e.target.checked ? 'bottom' : 'top',
 				})
@@ -456,8 +454,7 @@ export default {
 		onToggleExternalAvatars(e) {
 			this.loadingAvatarSettings = true
 
-			this.$store
-				.dispatch('savePreference', {
+			this.mainStore.savePreference({
 					key: 'external-avatars',
 					value: e.target.checked ? 'true' : 'false',
 				})
@@ -469,8 +466,7 @@ export default {
 		async onToggleSearchPriorityBody(e) {
 			this.loadingPrioritySettings = true
 			try {
-				await this.$store
-					.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 						key: 'search-priority-body',
 						value: e.target.checked ? 'true' : 'false',
 					})
@@ -483,8 +479,7 @@ export default {
 		onToggleCollectData(e) {
 			this.loadingOptOutSettings = true
 
-			this.$store
-				.dispatch('savePreference', {
+			this.mainStore.savePreference({
 					key: 'collect-data',
 					value: e.target.checked ? 'true' : 'false',
 				})
@@ -497,13 +492,11 @@ export default {
 			const previousValue = this.sortOrder
 			try {
 				this.sortOrder = e
-				await this.$store
-					.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 						key: 'sort-order',
 						value: e,
 					})
-				this.$store.commit('removeAllEnvelopes')
-
+				this.mainStore.removeAllEnvelopesMutation()
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 				this.sortOrder = previousValue
@@ -514,8 +507,7 @@ export default {
 			this.toggleAutoTagging = true
 
 			try {
-				await this.$store
-					.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 						key: 'tag-classified-messages',
 						value: e.target.checked ? 'true' : 'false',
 					})
@@ -529,7 +521,7 @@ export default {
 		},
 		async onToggleFollowUpReminders(e) {
 			try {
-				await this.$store.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 					key: 'follow-up-reminders',
 					value: e.target.checked ? 'true' : 'false',
 				})
@@ -540,7 +532,7 @@ export default {
 		},
 		async onToggleInternalAddress(e) {
 			try {
-				await this.$store.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 					key: 'internal-addresses',
 					value: e.target.checked ? 'true' : 'false',
 				})

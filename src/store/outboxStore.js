@@ -12,7 +12,9 @@ import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { html, plain } from '../util/text.js'
 import { UNDO_DELAY } from './constants.js'
-import store from './index.js'
+import useMainStore from './mainStore.js'
+
+const mainStore = useMainStore()
 
 export default defineStore('outbox', {
 	state: () => {
@@ -94,7 +96,7 @@ export default defineStore('outbox', {
 			this.addMessageMutation({ message })
 
 			// Future drafts/sends after an error should go through outbox logic
-			store.commit('convertComposerMessageToOutbox', { message }, {
+			mainStore.convertComposerMessageToOutboxMutation({ message }, {
 				root: true,
 			})
 
@@ -107,7 +109,7 @@ export default defineStore('outbox', {
 			this.addMessageMutation({ message })
 
 			// Future drafts/sends after an error should go through outbox logic
-			store.commit('convertComposerMessageToOutbox', { message }, {
+			mainStore.storeconvertComposerMessageToOutbox({ message }, {
 				root: true,
 			})
 
@@ -183,7 +185,7 @@ export default defineStore('outbox', {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
 						logger.info('Message ' + message.id + ' stopped', { message: stopped })
-						await store.dispatch('startComposerSession', {
+						await mainStore.startComposerSession({
 							type: 'outbox',
 							data: {
 								...message,

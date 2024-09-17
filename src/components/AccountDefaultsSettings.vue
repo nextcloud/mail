@@ -74,7 +74,7 @@ export default {
 				logger.debug('setting drafts mailbox to ' + draftsMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							draftsMailboxId,
@@ -101,7 +101,7 @@ export default {
 				logger.debug('setting sent mailbox to ' + sentMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							sentMailboxId,
@@ -128,7 +128,7 @@ export default {
 				logger.debug('setting trash mailbox to ' + trashMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							trashMailboxId,
@@ -155,7 +155,7 @@ export default {
 				logger.debug('setting archive mailbox to ' + archiveMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							archiveMailboxId,
@@ -182,7 +182,7 @@ export default {
 				logger.debug('setting junk mailbox to ' + junkMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							junkMailboxId,
@@ -209,7 +209,7 @@ export default {
 				logger.debug('setting snooze mailbox to ' + snoozeMailboxId)
 				this.saving = true
 				try {
-					await this.$store.dispatch('patchAccount', {
+					await this.mainStore.patchAccount({
 						account: this.account,
 						data: {
 							snoozeMailboxId,

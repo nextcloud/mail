@@ -108,7 +108,7 @@ export default {
 		async removeInternalAddress(sender) {
 			// Remove the item immediately
 			try {
-				await this.$store.dispatch('removeInternalAddress', { id: sender.id, address: sender.address, type: sender.type })
+				await this.mainStore.removeInternalAddress({ id: sender.id, address: sender.address, type: sender.type })
 			} catch (error) {
 				logger.error(`Could not remove internal address ${sender.email}`, {
 					error,
@@ -121,7 +121,7 @@ export default {
 		async addInternalAddress() {
 			const type = this.checkType()
 			try {
-				await this.$store.dispatch('addInternalAddress', {
+				await this.mainStore.addInternalAddress({
 					address: this.newAddress,
 					type,
 				}).then(async () => {

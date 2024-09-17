@@ -419,7 +419,7 @@ export default {
 		markSelectedSeenOrUnseen() {
 			const seen = !this.areAllSelectedRead
 			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('toggleEnvelopeSeen', {
+				this.mainStore.toggleEnvelopeSeen({
 					envelope,
 					seen,
 				})
@@ -428,7 +428,7 @@ export default {
 		},
 		markSelectionImportant() {
 			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('markEnvelopeImportantOrUnimportant', {
+				this.mainStore.markEnvelopeImportantOrUnimportant({
 					envelope,
 					addTag: true,
 				})
@@ -437,7 +437,7 @@ export default {
 		},
 		markSelectionUnimportant() {
 			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('markEnvelopeImportantOrUnimportant', {
+				this.mainStore.markEnvelopeImportantOrUnimportant({
 					envelope,
 					addTag: false,
 				})
@@ -447,9 +447,9 @@ export default {
 		async markSelectionJunk() {
 			for (const envelope of this.selectedEnvelopes) {
 				if (!envelope.flags.$junk) {
-					await this.$store.dispatch('toggleEnvelopeJunk', {
+					await this.mainStore.toggleEnvelopeJunk({
 						envelope,
-						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
+						removeEnvelope: await this.mainStore.moveEnvelopeToJunk(envelope),
 					})
 				}
 			}
@@ -458,9 +458,9 @@ export default {
 		async markSelectionNotJunk() {
 			for (const envelope of this.selectedEnvelopes) {
 				if (envelope.flags.$junk) {
-					await this.$store.dispatch('toggleEnvelopeJunk', {
+					await this.mainStore.toggleEnvelopeJunk({
 						envelope,
-						removeEnvelope: await this.$store.dispatch('moveEnvelopeToJunk', envelope),
+						removeEnvelope: await this.mainStore.moveEnvelopeToJunk(envelope),
 					})
 				}
 			}
@@ -469,7 +469,7 @@ export default {
 		favoriteOrUnfavoriteAll() {
 			const favFlag = !this.areAllSelectedFavorite
 			this.selectedEnvelopes.forEach((envelope) => {
-				this.$store.dispatch('markEnvelopeFavoriteOrUnfavorite', {
+				this.mainStore.markEnvelopeFavoriteOrUnfavorite({
 					envelope,
 					favFlag,
 				})
@@ -497,7 +497,7 @@ export default {
 
 			await Promise.all(this.selectedEnvelopes.map(async (envelope) => {
 				logger.info(`deleting thread ${envelope.threadRootId}`)
-				await this.$store.dispatch('deleteThread', {
+				await this.mainStore.deleteThread({
 					envelope,
 				})
 			})).catch(async error => {
@@ -521,7 +521,7 @@ export default {
 				})
 
 				// Get new messages
-				await this.$store.dispatch('fetchNextEnvelopes', {
+				await this.mainStore.fetchNextEnvelopes({
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 					quantity: this.selectedEnvelopes.length,
@@ -579,7 +579,7 @@ export default {
 			this.showTagModal = false
 		},
 		async forwardSelectedAsAttachment() {
-			await this.$store.dispatch('startComposerSession', {
+			await this.mainStore.startComposerSession({
 				forwardedMessages: [...this.selection],
 			})
 			this.unselectAll()

@@ -316,7 +316,7 @@ export default {
 		async onPriorityMailboxOpened() {
 			logger.debug('Priority inbox was opened')
 
-			await this.$store.dispatch('checkFollowUpReminders', { query: this.followUpQuery })
+			await this.mainStore.checkFollowUpReminders({ query: this.followUpQuery })
 		},
 		deleteMessage(id) {
 			this.bus.emit('delete', id)
@@ -351,7 +351,7 @@ export default {
 				if (this.$route.params.accountId !== 0 && this.$route.params.accountId !== '0') {
 					accountId = parseInt(this.$route.params.accountId, 10)
 				}
-				this.$store.dispatch('startComposerSession', {
+				this.mainStore.startComposerSession({
 					data: {
 						accountId,
 						to: this.stringToRecipients(this.$route.query.to),
@@ -370,8 +370,7 @@ export default {
 			logger.debug(`Saving mailbox ${this.mailbox.databaseId} as start mailbox`)
 
 			try {
-				await this.$store
-					.dispatch('savePreference', {
+				await this.mainStore.savePreference({
 						key: 'start-mailbox-id',
 						value: this.mailbox.databaseId,
 					})
