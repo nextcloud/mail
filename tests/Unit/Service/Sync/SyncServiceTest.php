@@ -82,7 +82,7 @@ class SyncServiceTest extends TestCase {
 		);
 	}
 
-	public function testPartialSyncOnUncachedMailbox() {
+	public function testPartialSyncOnUncachedMailbox(): void {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$mailbox->expects($this->once())
@@ -101,7 +101,7 @@ class SyncServiceTest extends TestCase {
 		);
 	}
 
-	public function testSyncMailboxReturnsFolderStats() {
+	public function testSyncMailboxReturnsFolderStats(): void {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('user');
 		$account = $this->createMock(Account::class);

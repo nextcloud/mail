@@ -21,7 +21,7 @@ class AutoCompleteControllerTest extends TestCase {
 		parent::setUp();
 
 		$this->request = $this->getMockBuilder('OCP\IRequest')->getMock();
-		$this->service = $this->getMockBuilder('OCA\Mail\Service\AutoCompletion\AutoCompleteService')
+		$this->service = $this->getMockBuilder(\OCA\Mail\Service\AutoCompletion\AutoCompleteService::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$this->controller = new AutoCompleteController(
