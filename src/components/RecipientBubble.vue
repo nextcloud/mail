@@ -264,7 +264,8 @@ export default {
 	flex-wrap: wrap;
 }
 .contact-popover {
-	display: inline-block;
+	display: flex;
+	padding: 2px;
 
 	&__email {
 		text-align: center;
