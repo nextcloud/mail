@@ -32,7 +32,7 @@ class OutboxController extends Controller {
 	private SmimeService $smimeService;
 
 	public function __construct(string $appName,
-		$UserId,
+		$userId,
 		IRequest $request,
 		OutboxService $service,
 		AccountService $accountService,

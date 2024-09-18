@@ -31,7 +31,7 @@ class TagsController extends Controller {
 
 
 	public function __construct(IRequest $request,
-		string $UserId,
+		string $userId,
 		IMailManager $mailManager,
 		AccountService $accountService,
 	) {

@@ -39,7 +39,7 @@ class SieveController extends Controller {
 	private LoggerInterface $logger;
 
 	public function __construct(IRequest $request,
-		string $UserId,
+		string $userId,
 		MailAccountMapper $mailAccountMapper,
 		SieveClientFactory $sieveClientFactory,
 		ICrypto $crypto,

@@ -46,7 +46,7 @@ class MailboxesController extends Controller {
 	public function __construct(string $appName,
 		IRequest $request,
 		AccountService $accountService,
-		?string $UserId,
+		?string $userId,
 		IMailManager $mailManager,
 		SyncService $syncService) {
 		parent::__construct($appName, $request);

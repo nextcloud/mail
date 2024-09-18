@@ -81,7 +81,7 @@ class PageController extends Controller {
 		IConfig $config,
 		AccountService $accountService,
 		AliasesService $aliasesService,
-		?string          $UserId,
+		?string          $userId,
 		IUserSession     $userSession,
 		IUserPreferences $preferences,
 		IMailManager     $mailManager,

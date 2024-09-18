@@ -40,7 +40,7 @@ class GoogleIntegrationController extends Controller {
 
 
 	public function __construct(IRequest $request,
-		?string $UserId,
+		?string $userId,
 		GoogleIntegration $googleIntegration,
 		AccountService $accountService,
 		LoggerInterface $logger,

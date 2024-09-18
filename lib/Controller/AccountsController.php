@@ -55,7 +55,7 @@ class AccountsController extends Controller {
 	public function __construct(string $appName,
 		IRequest $request,
 		AccountService $accountService,
-		$UserId,
+		$userId,
 		LoggerInterface $logger,
 		IL10N $l10n,
 		AliasesService $aliasesService,

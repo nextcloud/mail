@@ -34,7 +34,7 @@ class DraftsController extends Controller {
 
 
 	public function __construct(string $appName,
-		$UserId,
+		$userId,
 		IRequest $request,
 		DraftsService $service,
 		AccountService $accountService,

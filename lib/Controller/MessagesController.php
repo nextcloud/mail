@@ -82,7 +82,7 @@ class MessagesController extends Controller {
 		IMailManager $mailManager,
 		IMailSearch $mailSearch,
 		ItineraryService $itineraryService,
-		?string $UserId,
+		?string $userId,
 		$userFolder,
 		LoggerInterface $logger,
 		IL10N $l10n,

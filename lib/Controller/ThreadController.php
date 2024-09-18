@@ -37,7 +37,7 @@ class ThreadController extends Controller {
 
 	public function __construct(string $appName,
 		IRequest $request,
-		string $UserId,
+		string $userId,
 		AccountService $accountService,
 		IMailManager $mailManager,
 		SnoozeService $snoozeService,

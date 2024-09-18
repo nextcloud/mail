@@ -33,7 +33,7 @@ class MicrosoftIntegrationController extends Controller {
 	private LoggerInterface $logger;
 
 	public function __construct(IRequest $request,
-		?string $UserId,
+		?string $userId,
 		AccountService $accountService,
 		MicrosoftIntegration $microsoftIntegration,
 		LoggerInterface $logger) {

@@ -29,7 +29,7 @@ class AvatarsController extends Controller {
 	public function __construct(string $appName,
 		IRequest $request,
 		IAvatarService $avatarService,
-		string $UserId) {
+		string $userId) {
 		parent::__construct($appName, $request);
 
 		$this->avatarService = $avatarService;
