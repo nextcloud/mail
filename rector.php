@@ -26,8 +26,8 @@ return RectorConfig::configure()
 		__DIR__ . '/../../lib/composer/autoload.php',
 	])
 	->withSets([
-		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_ALL,
-		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_25,
-		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_26,
-		\ChristophWurst\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_27,
+		\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_ALL,
+		\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_25,
+		\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_26,
+		\Nextcloud\Rector\Set\NextcloudSets::NEXTCLOUD_27,
 	]);

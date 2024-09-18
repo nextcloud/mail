@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fff61abda66546bf8944236a00e50516",
+    "content-hash": "3d9c3c657ac50411a783ebafed936e26",
     "packages": [],
     "packages-dev": [
         {
-            "name": "christophwurst/nextcloud-rector",
-            "version": "v0.2.1",
+            "name": "nextcloud/rector",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ChristophWurst/nextcloud-rector.git",
-                "reference": "9bd7c3d199000bf0fc9bbc2012bcbaa4d64cd974"
+                "url": "https://github.com/nextcloud-libraries/rector.git",
+                "reference": "f88640d66dd18c900a9c08da4c6001a82abc972b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud-rector/zipball/9bd7c3d199000bf0fc9bbc2012bcbaa4d64cd974",
-                "reference": "9bd7c3d199000bf0fc9bbc2012bcbaa4d64cd974",
+                "url": "https://api.github.com/repos/nextcloud-libraries/rector/zipball/f88640d66dd18c900a9c08da4c6001a82abc972b",
+                "reference": "f88640d66dd18c900a9c08da4c6001a82abc972b",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "ChristophWurst\\Nextcloud\\Rector\\": "src/"
+                    "Nextcloud\\Rector\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -64,10 +64,10 @@
                 "refactoring"
             ],
             "support": {
-                "issues": "https://github.com/ChristophWurst/nextcloud-rector/issues",
-                "source": "https://github.com/ChristophWurst/nextcloud-rector/tree/v0.2.1"
+                "issues": "https://github.com/nextcloud-libraries/rector/issues",
+                "source": "https://github.com/nextcloud-libraries/rector/tree/v0.1.0"
             },
-            "time": "2024-09-11T08:09:51+00:00"
+            "time": "2024-09-18T12:33:43+00:00"
         },
         {
             "name": "phpstan/phpstan",
