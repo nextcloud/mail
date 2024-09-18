@@ -75,7 +75,7 @@ export default {
 				return
 			}
 
-			await this.mainStore.showMessageComposer()
+			await this.mainStore.showMessageComposerMutation()
 		},
 		onClose() {
 			if (this.disabled) {

@@ -523,7 +523,7 @@ export default {
 			if (this.canSaveDraft && this.changed) {
 				e.preventDefault()
 				e.returnValue = true
-				this.mainStore.showMessageComposer()
+				this.mainStore.showMessageComposerMutation()
 			} else {
 				console.info('No unsaved changes. See you!')
 			}
@@ -531,7 +531,7 @@ export default {
 		async onMinimize() {
 			this.modalFirstOpen = false
 
-			await this.mainStore.closeMessageComposer()
+			await this.mainStore.hideMessageComposerMutation()
 			if (!this.mainStore.composerMessageIsSaved && this.changed) {
 				await this.onDraft(this.cookedComposerData, { showToast: true })
 			}

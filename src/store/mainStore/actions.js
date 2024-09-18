@@ -76,7 +76,7 @@ import {
 	updateAccount as updateSieveAccount,
 	updateActiveScript,
 } from '../../service/SieveService.js'
-import { FOLLOW_UP_TAG_LABEL, PAGE_SIZE, UNIFIED_INBOX_ID } from './constants.js'
+import { FOLLOW_UP_TAG_LABEL, PAGE_SIZE, UNIFIED_INBOX_ID, FOLLOW_UP_MAILBOX_ID } from '../constants.js'
 import * as ThreadService from '../../service/ThreadService.js'
 import {
 	getPrioritySearchQueries,
@@ -101,7 +101,7 @@ import {
 	findAll,
 } from '../../service/caldavService.js'
 import * as SmimeCertificateService from '../../service/SmimeCertificateService.js'
-import useOutboxStore from './outboxStore.js'
+import useOutboxStore from '../outboxStore.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
 import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
 
@@ -110,7 +110,6 @@ import uniq from 'lodash/fp/uniq.js'
 import Vue from 'vue'
 
 import { sortMailboxes } from '../../imap/MailboxSorter.js'
-import { FOLLOW_UP_MAILBOX_ID, UNIFIED_ACCOUNT_ID } from '../constants.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -120,8 +119,8 @@ const findIndividualMailboxes = curry((getMailboxes, specialRole) =>
 		map(prop('id')),
 		map(getMailboxes),
 		flatten,
-		filter(propEq(specialRole, 'specialRole'))
-	)
+		filter(propEq(specialRole, 'specialRole')),
+	),
 )
 
 const combineEnvelopeLists = (sortOrder) => {
@@ -155,7 +154,7 @@ export default function mainStoreActions() {
 	return {
 		savePreference({
 			key,
-			value
+			value,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const newValue = await savePreference(key, value)
@@ -190,7 +189,7 @@ export default function mainStoreActions() {
 			this.addAccountMutation(account)
 			logger.debug('New account mailboxes fetched', {
 				account,
-				mailboxes: account.mailboxes
+				mailboxes: account.mailboxes,
 			})
 			return account
 		},
@@ -204,30 +203,30 @@ export default function mainStoreActions() {
 		},
 		async patchAccount({
 			account,
-			data
+			data,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const patchedAccount = await patchAccount(account, data)
 				logger.debug('account patched', {
 					account: patchedAccount,
-					data
+					data,
 				})
 				this.patchAccountMutation({
 					account,
-					data
+					data,
 				})
 				return account
 			})
 		},
 		async updateAccountSignature({
 			account,
-			signature
+			signature,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				await updateSignature(account, signature)
 				logger.debug('account signature updated', {
 					account,
-					signature
+					signature,
 				})
 				const updated = Object.assign({}, account, { signature })
 				this.editAccountMutation(updated)
@@ -237,13 +236,13 @@ export default function mainStoreActions() {
 		async setAccountSetting({
 			accountId,
 			key,
-			value
+			value,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				this.setAccountSettingMutation({
 					accountId,
 					key,
-					value
+					value,
 				})
 				return await savePreference('account-settings', JSON.stringify(this.getAllAccountSettings))
 			})
@@ -273,7 +272,7 @@ export default function mainStoreActions() {
 		},
 		async createMailbox({
 			account,
-			name
+			name,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const prefixed = (account.personalNamespace && !name.startsWith(account.personalNamespace))
@@ -283,7 +282,7 @@ export default function mainStoreActions() {
 				console.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
 				this.addMailboxMutation({
 					account,
-					mailbox
+					mailbox,
 				})
 				this.expandAccountMutation(account.id)
 				this.setAccountSettingMutation({
@@ -296,7 +295,7 @@ export default function mainStoreActions() {
 		},
 		async moveAccount({
 			account,
-			up
+			up,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const accounts = this.accounts
@@ -317,7 +316,7 @@ export default function mainStoreActions() {
 						}
 						this.saveAccountsOrderMutation({
 							account,
-							order: idx
+							order: idx,
 						})
 						return patchAccount(account, { order: idx })
 					}),
@@ -326,7 +325,7 @@ export default function mainStoreActions() {
 		},
 		async markMailboxRead({
 			accountId,
-			mailboxId
+			mailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const mailbox = this.getMailbox(mailboxId)
@@ -360,7 +359,7 @@ export default function mainStoreActions() {
 		},
 		async changeMailboxSubscription({
 			mailbox,
-			subscribed
+			subscribed,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				logger.debug(`toggle subscription for mailbox ${mailbox.databaseId}`, {
@@ -380,7 +379,7 @@ export default function mainStoreActions() {
 		},
 		async patchMailbox({
 			mailbox,
-			attributes
+			attributes,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				logger.debug('patching mailbox', {
@@ -576,7 +575,7 @@ export default function mainStoreActions() {
 		async stopComposerSession({
 			restoreOriginalSendAt = false,
 			moveToImap = false,
-			id
+			id,
 		} = {}) {
 			return handleHttpAuthErrors(async () => {
 
@@ -595,20 +594,13 @@ export default function mainStoreActions() {
 				this.stopComposerSession()
 			})
 		},
-		/// TODO WHY DID SOMEONE DO THISSSS, remove later
-		showMessageComposer({ commit }) {
-			commit('showMessageComposer')
-		},
-		closeMessageComposer({ commit }) {
-			this.hideMessageComposerMutation()
-		},
 		patchComposerData(data) {
 			this.patchComposerDataMutation(data)
 			this.setComposerMessageSavedMutation(false)
 		},
 		async fetchEnvelope({
 			accountId,
-			id
+			id,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const cached = this.getEnvelope(id)
@@ -632,7 +624,7 @@ export default function mainStoreActions() {
 		fetchEnvelopes({
 			mailboxId,
 			query,
-			addToUnifiedMailboxes = true
+			addToUnifiedMailboxes = true,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const mailbox = this.getMailbox(mailboxId)
@@ -683,7 +675,7 @@ export default function mainStoreActions() {
 		},
 		async fetchNextEnvelopePage({
 			mailboxId,
-			query
+			query,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const envelopes = await this.fetchNextEnvelopes({
@@ -699,7 +691,7 @@ export default function mainStoreActions() {
 			query,
 			quantity,
 			rec = true,
-			addToUnifiedMailboxes = true
+			addToUnifiedMailboxes = true,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const mailbox = this.getMailbox(mailboxId)
@@ -818,7 +810,7 @@ export default function mainStoreActions() {
 		syncEnvelopes({
 			mailboxId,
 			query,
-			init = false
+			init = false,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				logger.debug(`starting mailbox sync of ${mailboxId} (${query})`)
@@ -1052,7 +1044,7 @@ export default function mainStoreActions() {
 		},
 		async toggleEnvelopeSeen({
 			envelope,
-			seen
+			seen,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
@@ -1084,7 +1076,7 @@ export default function mainStoreActions() {
 		},
 		async toggleEnvelopeJunk({
 			envelope,
-			removeEnvelope
+			removeEnvelope,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
@@ -1134,7 +1126,7 @@ export default function mainStoreActions() {
 		},
 		async markEnvelopeFavoriteOrUnfavorite({
 			envelope,
-			favFlag
+			favFlag,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				// Change immediately and switch back on error
@@ -1165,7 +1157,7 @@ export default function mainStoreActions() {
 		},
 		async markEnvelopeImportantOrUnimportant({
 			envelope,
-			addTag
+			addTag,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const importantLabel = '$label1'
@@ -1229,7 +1221,7 @@ export default function mainStoreActions() {
 		},
 		async addInternalAddress({
 			address,
-			type
+			type,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const internalAddress = await addInternalAddress(address, type)
@@ -1240,7 +1232,7 @@ export default function mainStoreActions() {
 		async removeInternalAddress({
 			id,
 			address,
-			type
+			type,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				try {
@@ -1273,10 +1265,10 @@ export default function mainStoreActions() {
 				}
 			})
 		},
-		async createAlias ({
+		async createAlias({
 			account,
 			alias,
-			name
+			name,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.createAlias(account.id, alias, name)
@@ -1288,7 +1280,7 @@ export default function mainStoreActions() {
 		},
 		async deleteAlias({
 			account,
-			aliasId
+			aliasId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.deleteAlias(account.id, aliasId)
@@ -1303,7 +1295,7 @@ export default function mainStoreActions() {
 			aliasId,
 			alias,
 			name,
-			smimeCertificateId
+			smimeCertificateId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.updateAlias(
@@ -1328,7 +1320,7 @@ export default function mainStoreActions() {
 		async updateAliasSignature({
 			account,
 			aliasId,
-			signature
+			signature,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const entity = await AliasService.updateSignature(account.id, aliasId, signature)
@@ -1343,7 +1335,7 @@ export default function mainStoreActions() {
 		async renameMailbox({
 			account,
 			mailbox,
-			newName
+			newName,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const newMailbox = await patchMailbox(mailbox.databaseId, {
@@ -1354,13 +1346,13 @@ export default function mainStoreActions() {
 				this.removeMailboxMutation({ id: mailbox.databaseId })
 				this.addMailboxMutation({
 					account,
-					mailbox: newMailbox
+					mailbox: newMailbox,
 				})
 			})
 		},
 		async moveMessage({
 			id,
-			destMailboxId
+			destMailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				await moveMessage(id, destMailboxId)
@@ -1371,7 +1363,7 @@ export default function mainStoreActions() {
 		async snoozeMessage({
 			id,
 			unixTimestamp,
-			destMailboxId
+			destMailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				await snoozeMessage(id, unixTimestamp, destMailboxId)
@@ -1391,25 +1383,25 @@ export default function mainStoreActions() {
 				const scriptData = await getActiveScript(accountId)
 				this.setActiveSieveScriptMutation({
 					accountId,
-					scriptData
+					scriptData,
 				})
 			})
 		},
 		async updateActiveSieveScript({
 			accountId,
-			scriptData
+			scriptData,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				await updateActiveScript(accountId, scriptData)
 				this.setActiveSieveScriptMutation({
 					accountId,
-					scriptData
+					scriptData,
 				})
 			})
 		},
 		async updateSieveAccount({
 			account,
-			data
+			data,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				logger.debug(`update sieve settings for account ${account.id}`)
@@ -1417,7 +1409,7 @@ export default function mainStoreActions() {
 					await updateSieveAccount(account.id, data)
 					this.patchAccountMutation({
 						account,
-						data
+						data,
 					})
 				} catch (error) {
 					logger.error('failed to update sieve account: ', { error })
@@ -1427,7 +1419,7 @@ export default function mainStoreActions() {
 		},
 		async createTag({
 			displayName,
-			color
+			color,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				const tag = await createEnvelopeTag(displayName, color)
@@ -1437,7 +1429,7 @@ export default function mainStoreActions() {
 		},
 		async addEnvelopeTag({
 			envelope,
-			imapLabel
+			imapLabel,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				// TODO: fetch tags indepently of envelopes and only send tag id here
@@ -1464,25 +1456,25 @@ export default function mainStoreActions() {
 		async updateTag({
 			tag,
 			displayName,
-			color
+			color,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				await updateEnvelopeTag(tag.id, displayName, color)
 				this.updateTagMutation({
 					tag,
 					displayName,
-					color
+					color,
 				})
 				logger.debug('tag updated', {
 					tag,
 					displayName,
-					color
+					color,
 				})
 			})
 		},
 		async deleteTag({
 			tag,
-			accountId
+			accountId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				await deleteTag(tag.id, accountId)
@@ -1506,7 +1498,7 @@ export default function mainStoreActions() {
 		},
 		async moveThread({
 			envelope,
-			destMailboxId
+			destMailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				this.removeEnvelopeMutation({ id: envelope.databaseId })
@@ -1524,7 +1516,7 @@ export default function mainStoreActions() {
 		async snoozeThread({
 			envelope,
 			unixTimestamp,
-			destMailboxId
+			destMailboxId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				try {
@@ -1637,17 +1629,19 @@ export default function mainStoreActions() {
 		 * @param {object} data.accountId
 		 * @param {number=} data.smimeCertificateId
 		 * @param data.account
+		 * @param context.account
+		 * @param context.smimeCertificateId
 		 * @return {Promise<void>}
 		 */
 		async updateAccountSmimeCertificate({
 			account,
-			smimeCertificateId
+			smimeCertificateId,
 		}) {
 			return handleHttpAuthErrors(async () => {
 				await updateAccountSmimeCertificate(account.id, smimeCertificateId)
 				this.patchAccountMutation({
 					account,
-					data: { smimeCertificateId }
+					data: { smimeCertificateId },
 				})
 			})
 		},
@@ -1686,7 +1680,7 @@ export default function mainStoreActions() {
 			try {
 				const createMailboxResponse = await this.createMailbox({
 					account,
-					name
+					name,
 				})
 				snoozeMailboxId = createMailboxResponse.databaseId
 				logger.info(`mailbox ${name} created as ${snoozeMailboxId}`)

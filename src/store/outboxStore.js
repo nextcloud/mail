@@ -14,13 +14,12 @@ import { html, plain } from '../util/text.js'
 import { UNDO_DELAY } from './constants.js'
 import useMainStore from './mainStore.js'
 
-const mainStore = useMainStore()
-
 export default defineStore('outbox', {
 	state: () => {
 		return {
 			messageList: [],
 			messages: {},
+			mainStore: useMainStore(),
 		}
 	},
 	getters: {
@@ -96,7 +95,7 @@ export default defineStore('outbox', {
 			this.addMessageMutation({ message })
 
 			// Future drafts/sends after an error should go through outbox logic
-			mainStore.convertComposerMessageToOutboxMutation({ message }, {
+			this.mainStore.convertComposerMessageToOutboxMutation({ message }, {
 				root: true,
 			})
 
@@ -109,7 +108,7 @@ export default defineStore('outbox', {
 			this.addMessageMutation({ message })
 
 			// Future drafts/sends after an error should go through outbox logic
-			mainStore.storeconvertComposerMessageToOutbox({ message }, {
+			this.mainStore.storeconvertComposerMessageToOutbox({ message }, {
 				root: true,
 			})
 
@@ -185,7 +184,7 @@ export default defineStore('outbox', {
 						logger.info('Attempting to stop sending message ' + message.id)
 						const stopped = await this.stopMessage({ message })
 						logger.info('Message ' + message.id + ' stopped', { message: stopped })
-						await mainStore.startComposerSession({
+						await this.mainStore.startComposerSession({
 							type: 'outbox',
 							data: {
 								...message,

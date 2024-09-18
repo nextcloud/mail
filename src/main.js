@@ -6,7 +6,6 @@
 import Vue from 'vue'
 import { getRequestToken } from '@nextcloud/auth'
 import { registerDavProperty } from '@nextcloud/files'
-import { sync } from 'vuex-router-sync'
 import { generateFilePath } from '@nextcloud/router'
 import '@nextcloud/dialogs/style.css'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
@@ -16,7 +15,6 @@ import vToolTip from 'v-tooltip'
 import App from './App.vue'
 import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
-import store from './store/index.js'
 import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
 import { createPinia, PiniaVuePlugin } from 'pinia'
@@ -30,9 +28,6 @@ __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
-const mainStore = useMainStore()
-
-sync(store, router)
 
 Vue.mixin(Nextcloud)
 
@@ -48,6 +43,19 @@ const getPreferenceFromPage = (key) => {
 }
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
+
+/* eslint-disable vue/match-component-file-name */
+export default new Vue({
+	el: '#content',
+	name: 'Mail',
+	router,
+	pinia,
+	render: (h) => h(App),
+})
+
+console.log('ACTUALLY RUNNING')
+
+const mainStore = useMainStore()
 
 mainStore.savePreferenceMutation({
 	key: 'debug',
@@ -150,16 +158,6 @@ mainStore.setFollowUpFeatureAvailableMutation(followUpFeatureAvailable)
 
 const smimeCertificates = loadState('mail', 'smime-certificates', [])
 mainStore.setSmimeCertificatesMutation(smimeCertificates)
-
-/* eslint-disable vue/match-component-file-name */
-export default new Vue({
-	el: '#content',
-	name: 'Mail',
-	router,
-	store,
-	pinia,
-	render: (h) => h(App),
-})
 
 const outboxStore = useOutboxStore()
 outboxMessages.forEach(message => outboxStore.addMessageMutation({ message }))
