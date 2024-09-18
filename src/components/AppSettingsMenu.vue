@@ -367,6 +367,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		...mapState(useMainStore, ['accounts', 'isFollowUpFeatureAvailable']),
 		searchPriorityBody() {
 			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'

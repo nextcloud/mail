@@ -142,7 +142,7 @@ const addMailboxToState = curry((store, account, mailbox) => {
 	mailbox.mailboxes = []
 	Vue.set(mailbox, 'envelopeLists', {})
 
-	transformMailboxName(account, mailbox)
+	mainStoreActions().transformMailboxName(account, mailbox)
 
 	Vue.set(store.mailboxes, mailbox.databaseId, mailbox)
 	const parent = Object.values(store.mailboxes)
@@ -1823,7 +1823,7 @@ export default function mainStoreActions() {
 		},
 		savePreferenceMutation({
 			key,
-			value
+			value,
 		}) {
 			Vue.set(this.preferences, key, value)
 		},

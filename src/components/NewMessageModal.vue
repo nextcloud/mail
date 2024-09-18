@@ -137,7 +137,7 @@ import DefaultComposerIcon from 'vue-material-design-icons/ArrowCollapse.vue'
 import { deleteDraft, saveDraft, updateDraft } from '../service/DraftService.js'
 import useOutboxStore from '../store/outboxStore.js'
 import useMainStore from '../store/mainStore.js'
-import { mapStores, mapState } from 'pinia'
+import { mapStores, mapState, mapActions } from 'pinia'
 
 export default {
 	name: 'NewMessageModal',
@@ -178,7 +178,8 @@ export default {
 	},
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
-		...mapState(useMainStore, ['showMessageComposer', 'getPreference']),
+		...mapState(useMainStore, ['showMessageComposer']),
+		...mapActions(useMainStore, ['getPreference']),
 		modalTitle() {
 			if (this.composerMessage.type === 'outbox') {
 				return t('mail', 'Edit message')

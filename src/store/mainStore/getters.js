@@ -11,7 +11,7 @@ import toCalendar from '../../util/calendar.js'
 export default function mainStore() {
 	return {
 		accounts: (state) => {
-			return state.accountList.map((id) => state.accounts[id])
+			return state.accountList.map((id) => state.accountsUnmapped[id])
 		},
 		composerMessage: (state) => {
 			return state.newMessage
@@ -60,9 +60,6 @@ export default function mainStore() {
 		getAppVersion: (state) => state.preferences?.version,
 
 		isOneLineLayout: (state) => state.list,
-		hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
-		isFollowUpFeatureAvailable: (state) => state.followUpFeatureAvailable,
 		getInternalAddresses: (state) => state.internalAddress?.filter(internalAddress => internalAddress !== undefined),
-		hasCurrentUserPrincipalAndCollections: (state) => state.hasCurrentUserPrincipalAndCollections,
 	}
 }
