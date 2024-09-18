@@ -31,6 +31,7 @@
 							</template>
 							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
 								:key="participant.email"
+								:title="participant.email"
 								:email="participant.email"
 								:label="participant.label" />
 						</Popover>
@@ -500,8 +501,10 @@ export default {
 	visibility: hidden;
 }
 
-.popover__wrapper {
-	max-width: 500px;
+.v-popper--theme-dropdown.v-popper__popper .v-popper__inner {
+	height: 300px;
+	width: 250px;
+	overflow: auto;
 }
 
 .app-content-list-item-star.icon-starred {
