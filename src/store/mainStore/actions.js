@@ -21,7 +21,7 @@ import {
 	propEq,
 	slice,
 	tap,
-	where,
+	where, defaultTo, head, sortBy,
 } from 'ramda'
 
 import { savePreference } from '../../service/PreferenceService.js'
@@ -76,7 +76,13 @@ import {
 	updateAccount as updateSieveAccount,
 	updateActiveScript,
 } from '../../service/SieveService.js'
-import { FOLLOW_UP_TAG_LABEL, PAGE_SIZE, UNIFIED_INBOX_ID, FOLLOW_UP_MAILBOX_ID } from '../constants.js'
+import {
+	FOLLOW_UP_TAG_LABEL,
+	PAGE_SIZE,
+	UNIFIED_INBOX_ID,
+	FOLLOW_UP_MAILBOX_ID,
+	UNIFIED_ACCOUNT_ID,
+} from '../constants.js'
 import * as ThreadService from '../../service/ThreadService.js'
 import {
 	getPrioritySearchQueries,
@@ -1815,7 +1821,10 @@ export default function mainStoreActions() {
 			}
 			return existing
 		},
-		savePreferenceMutation({ key, value }) {
+		savePreferenceMutation({
+			key,
+			value
+		}) {
 			Vue.set(this.preferences, key, value)
 		},
 		setSessionExpiredMutation() {
@@ -1838,10 +1847,16 @@ export default function mainStoreActions() {
 		editAccountMutation(account) {
 			Vue.set(this.accounts, account.id, Object.assign({}, this.accounts[account.id], account))
 		},
-		patchAccountMutation({ account, data }) {
+		patchAccountMutation({
+			account,
+			data
+		}) {
 			Vue.set(this.accounts, account.id, Object.assign({}, this.accounts[account.id], data))
 		},
-		saveAccountsOrderMutation({ account, order }) {
+		saveAccountsOrderMutation({
+			account,
+			order
+		}) {
 			Vue.set(account, 'order', order)
 			Vue.set(
 				this.accountsList,
@@ -1854,7 +1869,11 @@ export default function mainStoreActions() {
 		expandAccountMutation(accountId) {
 			this.accounts[accountId].collapsed = false
 		},
-		setAccountSettingMutation({ accountId, key, value }) {
+		setAccountSettingMutation({
+			accountId,
+			key,
+			value
+		}) {
 			const accountSettings = this.allAccountSettings.find(settings => settings.accountId === accountId)
 			if (accountSettings) {
 				accountSettings[key] = value
@@ -1864,7 +1883,10 @@ export default function mainStoreActions() {
 				this.allAccountSettings.push(newAccountSettings)
 			}
 		},
-		addMailboxMutation({ account, mailbox }) {
+		addMailboxMutation({
+			account,
+			mailbox
+		}) {
 			addMailboxToState(this, account, mailbox)
 		},
 		updateMailboxMutation({ mailbox }) {
@@ -1900,7 +1922,13 @@ export default function mainStoreActions() {
 		 * @param payload.originalSendAt
 		 * @param payload.smartReply
 		 */
-		startComposerSessionMutation({ type, data, forwardedMessages, originalSendAt, smartReply }) {
+		startComposerSessionMutation({
+			type,
+			data,
+			forwardedMessages,
+			originalSendAt,
+			smartReply
+		}) {
 			this.composerSessionId = this.nextComposerSessionId
 			this.nextComposerSessionId++
 			this.newMessage = {
@@ -1962,7 +1990,11 @@ export default function mainStoreActions() {
 			Vue.set(this.newMessage, 'type', 'outbox')
 			Vue.set(this.newMessage.data, 'id', message.id)
 		},
-		addEnvelopesMutation({ query, envelopes, addToUnifiedMailboxes = true }) {
+		addEnvelopesMutation({
+			query,
+			envelopes,
+			addToUnifiedMailboxes = true
+		}) {
 			if (envelopes.length === 0) {
 				return
 			}
@@ -2005,7 +2037,11 @@ export default function mainStoreActions() {
 			Vue.set(existing, 'flags', envelope.flags)
 			Vue.set(existing, 'tags', envelope.tags)
 		},
-		flagEnvelopeMutation({ envelope, flag, value }) {
+		flagEnvelopeMutation({
+			envelope,
+			flag,
+			value
+		}) {
 			const mailbox = this.mailboxes[envelope.mailboxId]
 			if (mailbox && flag === 'seen') {
 				const unread = mailbox.unread ?? 0
@@ -2031,14 +2067,24 @@ export default function mainStoreActions() {
 			this.tagList = this.tagList.filter((id) => id !== tagId)
 			Vue.delete(this.tags, tagId)
 		},
-		addEnvelopeTagMutation({ envelope, tagId }) {
+		addEnvelopeTagMutation({
+			envelope,
+			tagId
+		}) {
 			Vue.set(envelope, 'tags', uniq([...envelope.tags, tagId]))
 		},
-		updateTagMutation({ tag, displayName, color }) {
+		updateTagMutation({
+			tag,
+			displayName,
+			color
+		}) {
 			tag.displayName = displayName
 			tag.color = color
 		},
-		removeEnvelopeTagMutation({ envelope, tagId }) {
+		removeEnvelopeTagMutation({
+			envelope,
+			tagId
+		}) {
 			Vue.set(envelope, 'tags', envelope.tags.filter((id) => id !== tagId))
 		},
 		removeEnvelopeMutation({ id }) {
@@ -2108,7 +2154,7 @@ export default function mainStoreActions() {
 		removeAllEnvelopes() {
 			Object.keys(this.mailboxes).forEach(id => {
 				Vue.set(this.mailboxes[id], 'envelopeLists', [])
-		  })
+			})
 		},
 		removeEnvelopeFromFollowUpMailboxMutation({ id }) {
 			const filteredLists = {}
@@ -2122,21 +2168,30 @@ export default function mainStoreActions() {
 		addMessageMutation({ message }) {
 			Vue.set(this.messages, message.databaseId, message)
 		},
-		addMessageItinerariesMutation({ id, itineraries }) {
+		addMessageItinerariesMutation({
+			id,
+			itineraries
+		}) {
 			const message = this.messages[id]
 			if (!message) {
 				return
 			}
 			Vue.set(message, 'itineraries', itineraries)
 		},
-		addMessageDkimMutation({ id, result }) {
+		addMessageDkimMutation({
+			id,
+			result
+		}) {
 			const message = this.messages[id]
 			if (!message) {
 				return
 			}
 			Vue.set(message, 'dkimValid', result.valid)
 		},
-		addEnvelopeThreadMutation({ id, thread }) {
+		addEnvelopeThreadMutation({
+			id,
+			thread
+		}) {
 			// Store the envelopes, merge into any existing object if one exists
 			thread.forEach(e => {
 				this.normalizeTags(e)
@@ -2151,22 +2206,35 @@ export default function mainStoreActions() {
 		removeMessageMutation({ id }) {
 			Vue.delete(this.messages, id)
 		},
-		createAliasMutation({ account, alias }) {
+		createAliasMutation({
+			account,
+			alias
+		}) {
 			account.aliases.push(alias)
 		},
-		deleteAliasMutation({ account, aliasId }) {
+		deleteAliasMutation({
+			account,
+			aliasId
+		}) {
 			const index = account.aliases.findIndex(temp => aliasId === temp.id)
 			if (index !== -1) {
 				account.aliases.splice(index, 1)
 			}
 		},
-		patchAliasMutation({ account, aliasId, data }) {
+		patchAliasMutation({
+			account,
+			aliasId,
+			data
+		}) {
 			const index = account.aliases.findIndex(temp => aliasId === temp.id)
 			if (index !== -1) {
 				account.aliases[index] = Object.assign({}, account.aliases[index], data)
 			}
 		},
-		setMailboxUnreadCountMutation({ id, unread }) {
+		setMailboxUnreadCountMutation({
+			id,
+			unread
+		}) {
 			Vue.set(this.mailboxes[id], 'unread', unread ?? 0)
 		},
 		setScheduledSendingDisabledMutation(value) {
@@ -2175,7 +2243,10 @@ export default function mainStoreActions() {
 		setSnoozeDisabledMutation(value) {
 			this.isSnoozeDisabled = value
 		},
-		setActiveSieveScriptMutation({ accountId, scriptData }) {
+		setActiveSieveScriptMutation({
+			accountId,
+			scriptData
+		}) {
 			Vue.set(this.sieveScript, accountId, scriptData)
 		},
 		setCurrentUserPrincipalMutation({ currentUserPrincipal }) {
@@ -2216,6 +2287,90 @@ export default function mainStoreActions() {
 		},
 		showSettingsForAccountMutation(accountId) {
 			this.showAccountSettings = accountId
+		},
+		getPreference(key, def) {
+			return defaultTo(def, this.preferences[key])
+		},
+		getAccount(id) {
+			return this.accounts[id]
+		},
+		getMailbox(id) {
+			return this.mailboxes[id]
+		},
+		getMailboxes(accountId) {
+			return this.accounts[accountId].mailboxes.map((id) => this.mailboxes[id])
+		},
+		getSubMailboxes(id) {
+			const mailbox = this.getMailbox(id)
+			return mailbox.mailboxes.map((id) => this.mailboxes[id])
+		},
+		getParentMailbox(id) {
+			for (const mailbox of this.getMailboxes(this.getMailbox(id).accountId)) {
+				if (mailbox.mailboxes.includes(id)) {
+					return mailbox
+				}
+			}
+			return undefined
+		},
+		getUnifiedMailbox(specialRole) {
+			return head(
+				this.accounts[UNIFIED_ACCOUNT_ID].mailboxes
+					.map((id) => this.mailboxes[id])
+					.filter((mailbox) => mailbox.specialRole === specialRole),
+			)
+		},
+		getEnvelope(id) {
+			return this.envelopes[id]
+		},
+		getEnvelopes(mailboxId, query) {
+			const list = this.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
+			return list.map((msgId) => this.envelopes[msgId])
+		},
+		getEnvelopesByThreadRootId(accountId, threadRootId) {
+			return sortBy(
+				prop('dateInt'),
+				Object.values(this.envelopes).filter(envelope => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
+			)
+		},
+		getMessage(id) {
+			return this.messages[id]
+		},
+		getEnvelopeThread(id) {
+			const thread = this.envelopes[id]?.thread ?? []
+			const envelopes = thread.map(id => this.envelopes[id])
+			return sortBy(prop('dateInt'), envelopes)
+		},
+		getEnvelopeTags(id) {
+			const tags = this.envelopes[id]?.tags ?? []
+			return tags.map((tagId) => this.tags[tagId])
+		},
+		getTag(id) {
+			return this.tags[id]
+		},
+		isInternalAddress(address) {
+			const domain = address.split('@')[1]
+			return this.internalAddress.some((internalAddress) => internalAddress.address === address || internalAddress.address === domain)
+		},
+		getActiveSieveScript(accountId) {
+			return this.sieveScript[accountId]
+		},
+		getSmimeCertificate(id) {
+			return this.smimeCertificates.find((cert) => cert.id === id)
+		},
+		getSmimeCertificateByEmail(email) {
+			return this.smimeCertificates.find((cert) => cert.emailAddress === email)
+		},
+		findMailboxBySpecialRole(accountId, specialRole) {
+			return this.getMailboxes(accountId).find(mailbox => mailbox.specialRole === specialRole)
+		},
+		findMailboxByName(accountId, name) {
+			return this.getMailboxes(accountId).find(mailbox => mailbox.name === name)
+		},
+		getInbox(accountId) {
+			return this.findMailboxBySpecialRole(accountId, 'inbox')
+		},
+		showSettingsForAccount(accountId) {
+			return this.showAccountSettings === accountId
 		},
 	}
 }

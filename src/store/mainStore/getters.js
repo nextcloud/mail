@@ -3,86 +3,21 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { defaultTo, head, prop, sortBy } from 'ramda'
 
-import { FOLLOW_UP_TAG_LABEL, UNIFIED_ACCOUNT_ID } from '../constants.js'
-import { normalizedEnvelopeListId } from '../../util/normalization.js'
+import { FOLLOW_UP_TAG_LABEL } from '../constants.js'
 import { getCalendarHome } from '../../service/caldavService.js'
 import toCalendar from '../../util/calendar.js'
 
-export default function mainStoreGetters() {	
+export default function mainStore() {
 	return {
-		getPreference: (state) => (key, def) => {
-			return defaultTo(def, state.preferences[key])
-		},
-		getAccount: (state) => (id) => {
-			return state.accounts[id]
-		},
 		accounts: (state) => {
 			return state.accountList.map((id) => state.accounts[id])
-		},
-		getMailbox: (state) => (id) => {
-			return state.mailboxes[id]
-		},
-		getMailboxes: (state) => (accountId) => {
-			return state.accounts[accountId].mailboxes.map((id) => state.mailboxes[id])
-		},
-		getSubMailboxes: (state, getters) => (id) => {
-			const mailbox = getters.getMailbox(id)
-			return mailbox.mailboxes.map((id) => state.mailboxes[id])
-		},
-		getParentMailbox: (state, getters) => (id) => {
-			for (const mailbox of getters.getMailboxes(getters.getMailbox(id).accountId)) {
-				if (mailbox.mailboxes.includes(id)) {
-					return mailbox
-				}
-			}
-			return undefined
-		},
-		getUnifiedMailbox: (state) => (specialRole) => {
-			return head(
-				state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
-					.map((id) => state.mailboxes[id])
-					.filter((mailbox) => mailbox.specialRole === specialRole),
-			)
 		},
 		composerMessage: (state) => {
 			return state.newMessage
 		},
 		composerMessageOptions: (state) => {
 			return state.newMessage?.options
-		},
-		getEnvelope: (state) => (id) => {
-			return state.envelopes[id]
-		},
-		getEnvelopes: (state, getters) => (mailboxId, query) => {
-			const list = getters.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
-			return list.map((msgId) => state.envelopes[msgId])
-		},
-		getEnvelopesByThreadRootId: (state) => (accountId, threadRootId) => {
-			return sortBy(
-				prop('dateInt'),
-				Object.values(state.envelopes).filter(envelope => envelope.accountId === accountId && envelope.threadRootId === threadRootId),
-			)
-		},
-		getMessage: (state) => (id) => {
-			return state.messages[id]
-		},
-		getEnvelopeThread: (state) => (id) => {
-			const thread = state.envelopes[id]?.thread ?? []
-			const envelopes = thread.map(id => state.envelopes[id])
-			return sortBy(prop('dateInt'), envelopes)
-		},
-		getEnvelopeTags: (state) => (id) => {
-			const tags = state.envelopes[id]?.tags ?? []
-			return tags.map((tagId) => state.tags[tagId])
-		},
-		getTag: (state) => (id) => {
-			return state.tags[id]
-		},
-		isInternalAddress: (state) => (address) => {
-			const domain = address.split('@')[1]
-			return state.internalAddress.some((internalAddress) => internalAddress.address === address || internalAddress.address === domain)
 		},
 		getTags: (state) => {
 			return state.tagList.map(tagId => state.tags[tagId])
@@ -97,7 +32,6 @@ export default function mainStoreGetters() {
 					.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL),
 				)
 		},
-		getActiveSieveScript: (state) => (accountId) => state.sieveScript[accountId],
 		getCurrentUserPrincipal: (state) => state.currentUserPrincipal,
 		getCurrentUserPrincipalEmail: (state) => state.currentUserPrincipal?.email,
 		getCalendars: (state) => state.calendars,
@@ -117,8 +51,6 @@ export default function mainStoreGetters() {
 			)
 		}),
 		getSmimeCertificates: (state) => state.smimeCertificates,
-		getSmimeCertificate: (state) => (id) => state.smimeCertificates.find((cert) => cert.id === id),
-		getSmimeCertificateByEmail: (state) => (email) => state.smimeCertificates.find((cert) => cert.emailAddress === email),
 		getTaskCalendarsForCurrentUser: state => {
 			return state.calendars.filter(calendar => {
 				return calendar.components.includes('VTODO') && calendar.currentUserPrivilegeSet.includes('{DAV:}write')
@@ -126,20 +58,11 @@ export default function mainStoreGetters() {
 		},
 		getNcVersion: (state) => state.preferences?.ncVersion,
 		getAppVersion: (state) => state.preferences?.version,
-		findMailboxBySpecialRole: (state, getters) => (accountId, specialRole) => {
-			return getters.getMailboxes(accountId).find(mailbox => mailbox.specialRole === specialRole)
-		},
-		findMailboxByName: (state, getters) => (accountId, name) => {
-			return getters.getMailboxes(accountId).find(mailbox => mailbox.name === name)
-		},
-		getInbox: (state, getters) => (accountId) => {
-			return getters.findMailboxBySpecialRole(accountId, 'inbox')
-		},
+
 		isOneLineLayout: (state) => state.list,
 		hasFetchedInitialEnvelopes: (state) => state.hasFetchedInitialEnvelopes,
 		isFollowUpFeatureAvailable: (state) => state.followUpFeatureAvailable,
 		getInternalAddresses: (state) => state.internalAddress?.filter(internalAddress => internalAddress !== undefined),
 		hasCurrentUserPrincipalAndCollections: (state) => state.hasCurrentUserPrincipalAndCollections,
-		showSettingsForAccount: (state) => (accountId) => state.showAccountSettings === accountId,
 	}
 }
