@@ -44,7 +44,7 @@
 			<div v-if="!isExistingEvent"
 				class="imip__more-options__row imip__more-options__row--calendar">
 				<label for="targetCalendarPickerId">{{ t('mail', 'Save to') }}</label>
-				<div class="imip__more-options__row--calendar__multiselect">
+				<div class="imip__more-options__row">
 					<NcSelect v-if="calendarsForPicker.length > 1"
 						:id="targetCalendarPickerId"
 						v-model="targetCalendar"
@@ -530,13 +530,9 @@ export default {
 				display: flex;
 				width: 100%;
 
-				&__multiselect {
-					width: 100%;
-
 					:deep(.calendar-picker-option__label) {
 						max-width: unset !important;
 					}
-				}
 			}
 
 			&--comment {
