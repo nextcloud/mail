@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use Rector\Config\RectorConfig;
+use Rector\TypeDeclaration\Rector\Class_\AddTestsVoidReturnTypeWhereNoReturnRector;
 
 return RectorConfig::configure()
 	->withPaths([
@@ -23,4 +24,7 @@ return RectorConfig::configure()
 	)
 	->withPhpSets(
 		php73: true,
-	);
+	)
+	->withRules([
+		AddTestsVoidReturnTypeWhereNoReturnRector::class,
+	]);
