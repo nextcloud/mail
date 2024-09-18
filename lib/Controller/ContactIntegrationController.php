@@ -13,6 +13,7 @@ use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\ContactIntegration\ContactIntegrationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -30,24 +31,24 @@ class ContactIntegrationController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param string $mail
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function match(string $mail): JSONResponse {
 		return (new JSONResponse($this->service->findMatches($mail)))->cacheFor(60 * 60, false, true);
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param string $uid
 	 * @param string $mail
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function addMail(?string $uid = null, ?string $mail = null): JSONResponse {
 		$res = $this->service->addEMailToContact($uid, $mail);
 		if ($res === null) {
@@ -56,10 +57,8 @@ class ContactIntegrationController extends Controller {
 		return new JSONResponse($res);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function newContact(?string $contactName = null, ?string $mail = null): JSONResponse {
 		$res = $this->service->newContact($contactName, $mail);
 		if ($res === null) {
@@ -69,12 +68,12 @@ class ContactIntegrationController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param string $term
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function autoComplete(string $term): JSONResponse {
 		$res = $this->service->autoComplete($term);
 		return (new JSONResponse($res))->cacheFor(60 * 60, false, true);

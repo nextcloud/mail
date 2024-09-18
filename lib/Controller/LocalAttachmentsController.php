@@ -15,6 +15,7 @@ use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -31,18 +32,17 @@ class LocalAttachmentsController extends Controller {
 	 * @param string $UserId
 	 */
 	public function __construct(string $appName, IRequest $request,
-		IAttachmentService $attachmentService, $UserId) {
+		IAttachmentService $attachmentService, $userId) {
 		parent::__construct($appName, $request);
 		$this->attachmentService = $attachmentService;
 		$this->userId = $UserId;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JSONResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function create(): JSONResponse {
 		$file = $this->request->getUploadedFile('attachment');
 

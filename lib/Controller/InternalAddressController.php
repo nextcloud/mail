@@ -31,13 +31,13 @@ class InternalAddressController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param string $address
 	 * @param string $type
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function setAddress(string $address, string $type): JsonResponse {
 		$address = $this->internalAddressService->add(
 			$this->uid,
@@ -49,13 +49,13 @@ class InternalAddressController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
 	 *
 	 * @param string $address
 	 * @param string $type
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function removeAddress(string $address, string $type): JsonResponse {
 		if($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
@@ -72,11 +72,10 @@ class InternalAddressController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @return JsonResponse
 	 */
 	#[TrapError]
+	#[NoAdminRequired]
 	public function list(): JsonResponse {
 		if($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
