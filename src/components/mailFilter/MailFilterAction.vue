@@ -23,6 +23,7 @@
 			<NcButton aria-label="Delete action"
 				type="tertiary-no-background"
 				@click="deleteAction">
+				{{ t('mail', 'Delete action') }}
 				<template #icon>
 					<DeleteIcon :size="20" />
 				</template>
@@ -77,12 +78,6 @@ export default {
 		},
 	},
 	methods: {
-		// changeActionType(value) {
-		// 	this.changeAction({
-		// 		id: this.action.id,
-		// 		type: value,
-		// 	})
-		// },
 		updateAction(properties) {
 			this.$emit('update-action', { ...this.action, ...properties })
 		},
@@ -98,27 +93,4 @@ export default {
 	gap: 5px;
 	align-items: baseline;
 }
-//
-//.mail-filter-column label {
-//	display: block;
-//}
-//
-//.form-group {
-//	margin: calc(var(--default-grid-baseline) * 4) 0;
-//	display: flex;
-//	flex-direction: column;
-//	align-items: flex-start;
-//}
-//
-//.external-label {
-//	display: flex;
-//	width: 100%;
-//	margin-top: 1rem;
-//}
-//
-//.external-label label {
-//	padding-top: 7px;
-//	padding-right: 14px;
-//	white-space: nowrap;
-//}
 </style>

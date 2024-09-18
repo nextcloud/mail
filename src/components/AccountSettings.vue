@@ -111,7 +111,7 @@ import CertificateSettings from './CertificateSettings.vue'
 import SearchSettings from './SearchSettings.vue'
 import TrashRetentionSettings from './TrashRetentionSettings.vue'
 import logger from '../logger.js'
-import MailFilters from './MailFilters.vue'
+import MailFilters from './mailFilter/MailFilters.vue'
 
 export default {
 	name: 'AccountSettings',

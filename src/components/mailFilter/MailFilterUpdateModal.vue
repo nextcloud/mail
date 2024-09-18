@@ -3,11 +3,11 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal size="full"
+	<NcModal size="large"
 		:close-on-click-outside="false"
-		name="Name inside modal"
+		:name="t('mail','Update mail filter')"
 		@close="closeModal">
-		<div class="modal__content">
+		<form class="modal__content">
 			<div class="filter-name">
 				<NcTextField :value.sync="clone.name"
 					:label="t('mail', 'Filter name')"
@@ -15,7 +15,7 @@
 			</div>
 
 			<div class="filter-operator">
-				<MailFilterOperator :filter="clone" />
+				<MailFilterOperator :filter="clone" @update:operator="updateOperator" />
 			</div>
 
 			<div class="filter-tests">
@@ -49,37 +49,33 @@
 				</NcButton>
 			</div>
 
-			<div class="filter-priority">
-				<NcTextField :value.sync="clone.priority"
-					type="number"
-					:label="t('mail', 'Priority')"
-					:required="true" />
-			</div>
+			<NcTextField :value.sync="clone.priority"
+				type="number"
+				:label="t('mail', 'Priority')"
+				:required="true" />
 
-			<div>
-				<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
-					{{ t('mail', 'Enable filter') }}
-				</NcCheckboxRadioSwitch>
-			</div>
+			<NcCheckboxRadioSwitch :checked.sync="clone.enable" type="switch">
+				{{ t('mail', 'Enable filter') }}
+			</NcCheckboxRadioSwitch>
 
 			<NcButton type="primary"
-				@click="updateFilter">
+				native-type="submit"
+				@click.prevent.stop="updateFilter">
 				<template #icon>
 					<NcLoadingIcon v-if="loading" :size="16" />
 					<IconCheck v-else :size="16" />
 				</template>
 				{{ t('mail', 'Save filter') }}
 			</NcButton>
-		</div>
+		</form>
 	</NcModal>
 </template>
 <script>
-import { NcButton, NcCheckboxRadioSwitch, NcModal, NcSelect, NcTextField, NcLoadingIcon } from '@nextcloud/vue'
+import { NcButton, NcCheckboxRadioSwitch, NcModal, NcTextField, NcLoadingIcon } from '@nextcloud/vue'
 import MailFilterTest from './MailFilterTest.vue'
 import MailFilterOperator from './MailFilterOperator.vue'
-import { randomId } from '../util/randomId'
+import { randomId } from '../../util/randomId.js'
 import MailFilterAction from './MailFilterAction.vue'
-import logger from '../logger'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {
@@ -93,7 +89,6 @@ export default {
 		NcCheckboxRadioSwitch,
 		NcLoadingIcon,
 		NcModal,
-		NcSelect,
 		NcTextField,
 	},
 	props: {
@@ -132,6 +127,9 @@ export default {
 		updateAction(action) {
 			const index = this.clone.actions.findIndex((item) => item.id === action.id)
 			this.$set(this.clone.actions, index, action)
+		},
+		updateOperator(operator) {
+			this.clone.operator = operator
 		},
 		deleteAction(action) {
 			this.clone.actions = this.clone.actions.filter((item) => item.id !== action.id)

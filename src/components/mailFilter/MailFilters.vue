@@ -25,7 +25,7 @@
 			</NcListItem>
 		</ul>
 		<NcButton class="app-settings-button"
-			type="secondary"
+			type="primary"
 			:aria-label="t('mail', 'New filter')"
 			@click.prevent.stop="createFilter">
 			{{ t('mail', 'New filter') }}
@@ -45,25 +45,21 @@
 </template>
 
 <script>
-import { NcButton as ButtonVue, NcLoadingIcon as IconLoading, NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
-import IconCheck from 'vue-material-design-icons/Check.vue'
-import IconLock from 'vue-material-design-icons/Lock.vue'
+import { NcLoadingIcon as IconLoading, NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
 import MailFilterUpdateModal from './MailFilterUpdateModal.vue'
-import { randomId } from '../util/randomId'
-import logger from '../logger'
+import { randomId } from '../../util/randomId.js'
+import logger from '../../logger.js'
 import { mapStores } from 'pinia'
-import useMailFilterStore from '../store/mailFilterStore'
+import useMailFilterStore from '../../store/mailFilterStore.js'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import MailFilterDeleteModal from './MailFilterDeleteModal.vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 
 export default {
 	name: 'MailFilters',
 	components: {
-		IconLock,
 		NcButton,
-		ButtonVue,
 		IconLoading,
-		IconCheck,
 		NcListItem,
 		NcActionButton,
 		MailFilterUpdateModal,
@@ -119,13 +115,14 @@ export default {
 			this.currentFilter = {
 				id: randomId(),
 				name: t('mail', 'New filter'),
-				enable: false,
+				enable: true,
 				operator: 'allof',
 				tests: [],
 				actions: [],
 				priority,
 			}
 			this.showUpdateModal = true
+			this.loading = false
 		},
 		openUpdateModal(filter) {
 			this.currentFilter = filter
@@ -138,7 +135,6 @@ export default {
 		},
 		async updateFilter(filter) {
 			this.loading = true
-
 			this.mailFilterStore.$patch((state) => {
 				const index = state.filters.findIndex((item) => item.id === filter.id)
 				logger.debug('update filter', { filter, index })
@@ -153,14 +149,16 @@ export default {
 			})
 
 			try {
-				await this.mailFilterStore.update(this.account.id)
+				await this.mailFilterStore.update(this.account.id).then(() => {
+					showSuccess(t('mail', 'Filter saved'))
+				})
+				await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
 			} catch (e) {
-				// TODO error toast
+				logger.error(e)
+				showError(t('mail', 'Could not save filter'))
 			} finally {
 				this.loading = false
 			}
-
-			await this.$store.dispatch('fetchActiveSieveScript', { accountId: this.account.id })
 		},
 		async deleteFilter(filter) {
 			this.loading = true
