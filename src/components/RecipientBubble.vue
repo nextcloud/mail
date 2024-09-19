@@ -285,8 +285,7 @@ export default {
 .contact-input-wrapper {
 	margin-top: 10px;
     margin-bottom: 10px;
-	input,
-	.multiselect {
+	input {
 		width: 100%;
 	}
 }

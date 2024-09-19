@@ -206,9 +206,6 @@ export default {
   padding: 0;
   margin-bottom: 23px;
 }
-.multiselect--single {
-  width: 100%;
-}
 .ck-balloon-panel {
 	 z-index: 10000 !important;
  }

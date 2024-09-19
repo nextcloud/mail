@@ -230,15 +230,8 @@ export default {
 input {
 	width: 100%;
 }
-:deep(input[type='text'].multiselect__input) {
+:deep(input[type='text']) {
 	padding: 0 !important;
-}
-:deep(.multiselect__single) {
-	margin-left: -8px;
-	width: 100px;
-}
-:deep(.multiselect__tags) {
-	border: none !important;
 }
 .all-day {
 	margin-left: -1px;

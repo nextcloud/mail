@@ -81,7 +81,7 @@
 							@remove-recipient="onRemoveRecipient(option, 'to')" />
 					</template>
 					<template #option="option">
-						<div class="multiselect__tag multiselect__tag-custom">
+						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
 								:subtitle="option.email"
@@ -135,7 +135,7 @@
 							@remove-recipient="onRemoveRecipient(option, 'cc')" />
 					</template>
 					<template #option="option">
-						<div class="multiselect__tag multiselect__tag-custom">
+						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
 								:subtitle="option.email"
@@ -189,7 +189,7 @@
 							@remove-recipient="onRemoveRecipient(option, 'bcc')" />
 					</template>
 					<template #option="option">
-						<div class="multiselect__tag multiselect__tag-custom">
+						<div>
 							<ListItemIcon :no-margin="true"
 								:name="option.label"
 								:subtitle="option.email"
@@ -1449,42 +1449,11 @@ export default {
 		}
 	}
 
-	:deep(.multiselect__content-wrapper) {
-		border-bottom: 1px solid var(--color-border);
-		margin-top: 0;
-
-		& li > span::before {
-			display: none
-		}
-	}
-
-	:deep(.multiselect__tags) {
-		box-sizing: border-box;
-		height: auto;
-	}
-
-	.multiselect.multiselect--multiple::after {
-		position: absolute;
-		right: 0;
-		top: auto;
-		bottom: 8px
-	}
-
-	.multiselect__tag {
-		position: relative;
-	}
-
 	&.mail-account {
 		border-top: none;
 		padding-top: 10px;
-
-		& > .multiselect {
-			max-width: none;
-			min-height: auto;
-		}
 	}
 
-	.multiselect,
 	input,
 	TextEditor {
 		flex-grow: 1;
@@ -1596,10 +1565,6 @@ export default {
 :deep([data-select="create"] .avatardiv--unknown) {
 	background: var(--color-text-maxcontrast) !important;
 }
-:deep(.multiselect.opened .multiselect__tags .multiselect__tags-wrap) {
-	flex-wrap: wrap;
-}
-
 #from{
 	width: 100%;
 	cursor: pointer;
