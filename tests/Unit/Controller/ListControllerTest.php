@@ -143,6 +143,7 @@ class ListControllerTest extends TestCase {
 			false,
 			false,
 			$this->createMock(Html::class),
+			false,
 		);
 		$this->serviceMock->getParameter('mailManager')
 			->expects(self::once())
@@ -206,6 +207,7 @@ class ListControllerTest extends TestCase {
 			false,
 			false,
 			$this->createMock(Html::class),
+			false,
 		);
 		$this->serviceMock->getParameter('mailManager')
 			->expects(self::once())
