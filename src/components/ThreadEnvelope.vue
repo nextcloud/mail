@@ -122,7 +122,7 @@
 						</NcActionButton>
 						<NcActionButton v-if="hasMultipleRecipients"
 							:close-after-click="true"
-							@click="onReply('', true)">
+							@click="onReply('', false, true)">
 							<template #icon>
 								<ReplyIcon :title="t('mail', 'Reply to sender only')"
 									:size="16" />
@@ -706,10 +706,10 @@ export default {
 			const top = this.$el.getBoundingClientRect().top - globalHeader - threadHeader
 			window.scrollTo({ top })
 		},
-		onReply(body = '', followUp = false) {
+		onReply(body = '', followUp = false, replySenderOnly = false) {
 			this.$store.dispatch('startComposerSession', {
 				reply: {
-					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
+					mode: (this.hasMultipleRecipients && !replySenderOnly) ? 'replyAll' : 'reply',
 					data: this.envelope,
 					smartReply: body,
 					followUp,
