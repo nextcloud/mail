@@ -62,6 +62,7 @@ class ImapMessageFetcher {
 	private ?string $unsubscribeUrl = null;
 	private bool $isOneClickUnsubscribe = false;
 	private ?string $unsubscribeMailto = null;
+	private bool $isPgpMimeEncrypted = false;
 
 	public function __construct(int $uid,
 		string $mailbox,
@@ -147,6 +148,13 @@ class ImapMessageFetcher {
 
 			// analyse the body part
 			$structure = $fetch->getStructure();
+
+			$this->isPgpMimeEncrypted = ($structure->getType() === 'multipart/encrypted'
+				&& $structure->getContentTypeParameter('protocol') === 'application/pgp-encrypted');
+			if ($this->isPgpMimeEncrypted) {
+				$this->plainMessage = $this->loadBodyData($structure, "2", false);
+				$this->attachmentsToIgnore[] = $structure->getPartByIndex(1)->getName();
+			}
 
 			$this->hasAnyAttachment = $this->hasAttachments($structure);
 
@@ -267,6 +275,7 @@ class ImapMessageFetcher {
 			$isSigned,
 			$signatureIsValid,
 			$this->htmlService, // TODO: drop the html service dependency
+			$this->isPgpMimeEncrypted,
 		);
 	}
 
