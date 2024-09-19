@@ -25,7 +25,8 @@
 					:email="envelope.from[0].email"
 					:display-name="envelope.from[0].label"
 					:disable-tooltip="true"
-					:size="40" />
+					:size="40"
+					class="envelope__header__avatar-avatar" />
 				<div v-if="isImportant"
 					class="app-content-list-item-star icon-important"
 					:data-starred="isImportant ? 'true' : 'false'"
@@ -989,6 +990,14 @@ export default {
 
 			&__avatar {
 				position: relative;
+
+				&-avatar {
+					/* The block makes the wrapper div cover the avatar exactly
+					 * (no extra space) and allows center aligning the avatar
+					 * with the rest of the header elements.
+					 */
+					display: block;
+				}
 
 				.app-content-list-item-star {
 					position: absolute;
