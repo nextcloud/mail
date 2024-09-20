@@ -147,7 +147,7 @@ class PersistenceService {
 	 */
 	public function loadLatest(Account $account): ?Estimator {
 		try {
-			$latestModel = $this->mapper->findLatest($account->getId());
+			$latestModel = $this->mapper->findLatest($account->getMailAccount()->getId());
 		} catch (DoesNotExistException $e) {
 			return null;
 		}

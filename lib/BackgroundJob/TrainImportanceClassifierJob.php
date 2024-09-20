@@ -63,7 +63,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 			return;
 		}
 
-		if (!$this->classificationSettingsService->isClassificationEnabled($account->getUserId())) {
+		if (!$this->classificationSettingsService->isClassificationEnabled($account->getMailAccount()->getUserId())) {
 			$this->logger->debug("classification is turned off for account $accountId");
 			return;
 		}

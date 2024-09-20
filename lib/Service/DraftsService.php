@@ -120,7 +120,7 @@ class DraftsService {
 			$client->logout();
 		}
 
-		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getUserId(), $message->getId(), $attachmentIds));
+		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getMailAccount()->getUserId(), $message->getId(), $attachmentIds));
 		return $message;
 	}
 
@@ -142,7 +142,7 @@ class DraftsService {
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
-			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));
+			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getMailAccount()->getUserId(), $message, []));
 			return $message;
 		}
 
@@ -152,12 +152,12 @@ class DraftsService {
 		} finally {
 			$client->logout();
 		}
-		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, $attachmentIds));
+		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getMailAccount()->getUserId(), $message, $attachmentIds));
 		return $message;
 	}
 
 	public function handleDraft(Account $account, int $draftId): void {
-		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
+		$message = $this->mailManager->getMessage($account->getMailAccount()->getUserId(), $draftId);
 		$this->eventDispatcher->dispatchTyped(new DraftMessageCreatedEvent($account, $message));
 	}
 
@@ -178,7 +178,7 @@ class DraftsService {
 			$this->mapper->update($message);
 			throw $e;
 		}
-		$this->attachmentService->deleteLocalMessageAttachments($account->getUserId(), $message->getId());
+		$this->attachmentService->deleteLocalMessageAttachments($account->getMailAccount()->getUserId(), $message->getId());
 		$this->mapper->deleteWithRecipients($message);
 	}
 

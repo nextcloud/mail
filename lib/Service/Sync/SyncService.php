@@ -30,7 +30,7 @@ use function array_diff;
 use function array_map;
 
 class SyncService {
-	
+
 	private IMAPClientFactory $clientFactory;
 
 	/** @var ImapToDbSynchronizer */
@@ -110,9 +110,9 @@ class SyncService {
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}
-		
+
 		$client = $this->clientFactory->getClient($account);
-		
+
 		$this->synchronizer->sync(
 			$account,
 			$client,
@@ -165,7 +165,7 @@ class SyncService {
 			$newUids = $this->messageMapper->findUidsForIds($mailbox, $newIds);
 			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, $order, null, $newUids);
 		}
-		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $newIds);
+		$new = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getMailAccount()->getUserId(), $newIds);
 
 		// TODO: $changed = $this->messageMapper->findChanged($account, $mailbox, $uids);
 		if ($query !== null) {
@@ -174,7 +174,7 @@ class SyncService {
 		} else {
 			$changedIds = $knownIds;
 		}
-		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getUserId(), $changedIds);
+		$changed = $this->messageMapper->findByMailboxAndIds($mailbox, $account->getMailAccount()->getUserId(), $changedIds);
 
 		$stillKnownIds = array_map(static function (Message $msg) {
 			return $msg->getId();

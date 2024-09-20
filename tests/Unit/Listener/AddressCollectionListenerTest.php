@@ -15,6 +15,7 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Listener\AddressCollectionListener;
@@ -69,8 +70,12 @@ class AddressCollectionListenerTest extends TestCase {
 	}
 
 	public function testHandleOptOut() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('test');
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => 'test'
+			'getMailAccount' => $mailAccount
 		]);
 		$event = $this->createConfiguredMock(MessageSentEvent::class, [
 			'getAccount' => $account
@@ -86,9 +91,12 @@ class AddressCollectionListenerTest extends TestCase {
 	}
 
 	public function testHandle() {
-		/** @var Account|MockObject $account */
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('test');
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => 'test'
+			'getMailAccount' => $mailAccount
 		]);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(LocalMessage::class);
@@ -129,7 +137,7 @@ class AddressCollectionListenerTest extends TestCase {
 		$this->addressCollector->expects($this->once())
 			->method('addAddresses')
 			->with(
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				$this->equalTo($addresses)
 			);
 		$this->logger->expects($this->never())->method($this->anything());

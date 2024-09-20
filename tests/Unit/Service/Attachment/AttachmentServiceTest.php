@@ -16,6 +16,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Db\LocalMessage;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\UploadException;
@@ -290,8 +291,12 @@ class AttachmentServiceTest extends TestCase {
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
 		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $userId
+			'getMailAccount' => $mailAccount
 		]);
 		$message = new Message();
 		$message->setUid(123);
@@ -308,11 +313,11 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mailManager->expects(self::once())
 			->method('getMessage')
-			->with($account->getUserId(), 123)
+			->with($account->getMailAccount()->getUserId(), 123)
 			->willReturn($message);
 		$this->mailManager->expects(self::once())
 			->method('getMailbox')
-			->with($account->getUserId())
+			->with($account->getMailAccount()->getUserId())
 			->willReturn($mailbox);
 		$this->messageMapper->expects(self::once())
 			->method('getFullText')
@@ -341,8 +346,12 @@ class AttachmentServiceTest extends TestCase {
 			'fileName' => 'cat.jpg',
 			'mimeType' => 'text/plain',
 		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $userId
+			'getMailAccount' => $mailAccount
 		]);
 
 		$mailbox = new Mailbox();
@@ -360,7 +369,7 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->mailManager->expects(self::once())
 			->method('getMailbox')
-			->with($account->getUserId(), $mailbox->getId())
+			->with($account->getMailAccount()->getUserId(), $mailbox->getId())
 			->willReturn($mailbox);
 		$this->messageMapper->expects(self::once())
 			->method('getRawAttachments')
@@ -396,15 +405,19 @@ class AttachmentServiceTest extends TestCase {
 		$storage->expects(self::once())
 			->method('getShare')
 			->willReturn($share);
-		
+
 		$file = $this->createConfiguredMock(File::class, [
 			'getName' => 'cat.jpg',
 			'getMimeType' => 'text/plain',
 			'getContent' => 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds',
 			'getStorage' => $storage
 		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $userId
+			'getMailAccount' => $mailAccount
 		]);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$attachments = [
@@ -435,8 +448,12 @@ class AttachmentServiceTest extends TestCase {
 			'getContent' => 'sjdhfkjsdhfkjsdhfkjdshfjhdskfjhds',
 			'getStorage' => $this->createMock(SharedStorage::class)
 		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $userId
+			'getMailAccount' => $mailAccount
 		]);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$attachment = LocalAttachment::fromParams([

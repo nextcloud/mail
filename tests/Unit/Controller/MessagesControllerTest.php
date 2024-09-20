@@ -204,9 +204,6 @@ class MessagesControllerTest extends TestCase {
 		$mailboxId = 13;
 		$folderId = 'testfolder';
 		$messageId = 4321;
-		$this->account
-			->method('getId')
-			->willReturn($accountId);
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$message = new \OCA\Mail\Db\Message();
 		$message->setMailboxId($mailboxId);
@@ -1079,9 +1076,6 @@ class MessagesControllerTest extends TestCase {
 		$mailboxId = 13;
 		$folderId = 'testfolder';
 		$messageId = 4321;
-		$this->account
-			->method('getId')
-			->willReturn($accountId);
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$message = new \OCA\Mail\Db\Message();
 		$message->setMailboxId($mailboxId);
@@ -1129,7 +1123,7 @@ class MessagesControllerTest extends TestCase {
 
 		$mailbox = new \OCA\Mail\Db\Mailbox();
 		$mailbox->setId(4);
-		$mailbox->setAccountId($account->getId());
+		$mailbox->setAccountId($account->getMailAccount()->getId());
 		$mailbox->setName('FooBar');
 
 		$message = new \OCA\Mail\Db\Message();
@@ -1149,7 +1143,7 @@ class MessagesControllerTest extends TestCase {
 			->willReturn($mailbox);
 		$this->accountService->expects($this->exactly(1))
 			->method('find')
-			->with($this->equalTo($this->userId), $this->equalTo($account->getId()))
+			->with($this->equalTo($this->userId), $this->equalTo($account->getMailAccount()->getId()))
 			->will($this->returnValue($account));
 		$this->dkimService->expects($this->exactly(1))
 			->method('validate')

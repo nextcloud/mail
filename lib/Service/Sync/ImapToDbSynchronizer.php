@@ -104,9 +104,9 @@ class ImapToDbSynchronizer {
 		$snoozeMailboxId = $account->getMailAccount()->getSnoozeMailboxId();
 		$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
 		$trashRetentionDays = $account->getMailAccount()->getTrashRetentionDays();
-		
+
 		$client = $this->clientFactory->getClient($account);
-		
+
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$syncTrash = $trashMailboxId === $mailbox->getId() && $trashRetentionDays !== null;
 			$syncSnooze = $snoozeMailboxId === $mailbox->getId();
@@ -130,7 +130,7 @@ class ImapToDbSynchronizer {
 				$rebuildThreads = true;
 			}
 		}
-		
+
 		$client->logout();
 
 		$this->dispatcher->dispatchTyped(
@@ -153,7 +153,7 @@ class ImapToDbSynchronizer {
 	 */
 	public function clearCache(Account $account,
 		Mailbox $mailbox): void {
-		$id = $account->getId() . ':' . $mailbox->getName();
+		$id = $account->getMailAccount()->getId() . ':' . $mailbox->getName();
 		try {
 			$this->mailboxMapper->lockForNewSync($mailbox);
 			$this->mailboxMapper->lockForChangeSync($mailbox);
@@ -178,7 +178,7 @@ class ImapToDbSynchronizer {
 	 * @param Mailbox $mailbox
 	 */
 	private function resetCache(Account $account, Mailbox $mailbox): void {
-		$id = $account->getId() . ':' . $mailbox->getName();
+		$id = $account->getMailAccount()->getId() . ':' . $mailbox->getName();
 		$this->dbMapper->deleteAll($mailbox);
 		$this->logger->debug("All messages of $id cleared");
 		$mailbox->setSyncNewToken(null);
@@ -264,7 +264,7 @@ class ImapToDbSynchronizer {
 			// Just rethrow, don't wrap into another exception
 			throw $e;
 		} catch (Throwable $e) {
-			throw new ServiceException('Sync failed for ' . $account->getId() . ':' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
+			throw new ServiceException('Sync failed for ' . $account->getMailAccount()->getId() . ':' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
 		} finally {
 			if ($force || ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS)) {
 				$logger->debug('Unlocking mailbox ' . $mailbox->getId() . ' from vanished messages sync');
@@ -303,7 +303,7 @@ class ImapToDbSynchronizer {
 		Mailbox $mailbox,
 		LoggerInterface  $logger): void {
 		$perf = $this->performanceLogger->startWithLogger(
-			'Initial sync ' . $account->getId() . ':' . $mailbox->getName(),
+			'Initial sync ' . $account->getMailAccount()->getId() . ':' . $mailbox->getName(),
 			$logger
 		);
 
@@ -320,7 +320,7 @@ class ImapToDbSynchronizer {
 				$highestKnownUid ?? 0,
 				$logger,
 				$perf,
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 			);
 			$perf->step(sprintf('fetch %d messages from IMAP', count($imapMessages)));
 		} catch (Horde_Imap_Client_Exception $e) {
@@ -339,7 +339,7 @@ class ImapToDbSynchronizer {
 
 		if (!$imapMessages['all']) {
 			// We might need more attempts to fill the cache
-			$loggingMailboxId = $account->getId() . ':' . $mailbox->getName();
+			$loggingMailboxId = $account->getMailAccount()->getId() . ':' . $mailbox->getName();
 			$total = $imapMessages['total'];
 			$cached = count($this->dbMapper->findAllUids($mailbox));
 			$perf->step('find number of cached UIDs');
@@ -372,7 +372,7 @@ class ImapToDbSynchronizer {
 		?array $knownUids = null): bool {
 		$newOrVanished = false;
 		$perf = $this->performanceLogger->startWithLogger(
-			'partial sync ' . $account->getId() . ':' . $mailbox->getName(),
+			'partial sync ' . $account->getMailAccount()->getId() . ':' . $mailbox->getName(),
 			$logger
 		);
 
@@ -387,7 +387,7 @@ class ImapToDbSynchronizer {
 					$mailbox->getSyncNewToken(),
 					$uids
 				),
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS
 			);
 			$perf->step('get new messages via Horde');
@@ -431,7 +431,7 @@ class ImapToDbSynchronizer {
 					$mailbox->getSyncChangedToken(),
 					$uids
 				),
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				Horde_Imap_Client::SYNC_FLAGSUIDS
 			);
 			$perf->step('get changed messages via Horde');
@@ -461,7 +461,7 @@ class ImapToDbSynchronizer {
 					$mailbox->getSyncVanishedToken(),
 					$uids
 				),
-				$account->getUserId(),
+				$account->getMailAccount()->getUserId(),
 				Horde_Imap_Client::SYNC_VANISHEDUIDS
 			);
 			$perf->step('get vanished messages via Horde');

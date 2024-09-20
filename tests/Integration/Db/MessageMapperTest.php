@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\TagMapper;
@@ -69,7 +70,9 @@ class MessageMapperTest extends TestCase {
 
 	public function testResetInReplyTo() : void {
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(13);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(13);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		array_map(function ($i) {
 			$qb = $this->db->getQueryBuilder();
 			$insert = $qb->insert($this->mapper->getTableName())

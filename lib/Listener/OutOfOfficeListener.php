@@ -77,8 +77,8 @@ class OutOfOfficeListener implements IEventListener {
 			} catch (Exception $e) {
 				$this->logger->error('Failed to apply out-of-office sieve script: ' . $e->getMessage(), [
 					'exception' => $e,
-					'userId' => $account->getUserId(),
-					'accountId' => $account->getId(),
+					'userId' => $account->getMailAccount()->getUserId(),
+					'accountId' => $account->getMailAccount()->getId(),
 				]);
 			}
 		}

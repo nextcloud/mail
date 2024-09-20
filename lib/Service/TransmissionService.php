@@ -125,7 +125,7 @@ class TransmissionService {
 			try {
 				$certificate = $this->smimeService->findCertificate(
 					$localMessage->getSmimeCertificateId(),
-					$account->getUserId(),
+					$account->getMailAccount()->getUserId(),
 				);
 				$mimePart = $this->smimeService->signMimePart($mimePart, $certificate);
 			} catch (DoesNotExistException $e) {
@@ -168,9 +168,9 @@ class TransmissionService {
 				$addressList = $to
 					->merge($cc)
 					->merge($bcc);
-				$certificates = $this->smimeService->findCertificatesByAddressList($addressList, $account->getUserId());
+				$certificates = $this->smimeService->findCertificatesByAddressList($addressList, $account->getMailAccount()->getUserId());
 
-				$senderCertificate = $this->smimeService->findCertificate($localMessage->getSmimeCertificateId(), $account->getUserId());
+				$senderCertificate = $this->smimeService->findCertificate($localMessage->getSmimeCertificateId(), $account->getMailAccount()->getUserId());
 				$certificates[] = $senderCertificate;
 
 				$mimePart = $this->smimeService->encryptMimePart($mimePart, $certificates);

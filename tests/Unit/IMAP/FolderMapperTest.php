@@ -15,6 +15,7 @@ use Horde_Imap_Client_Data_Capability;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\MailboxStats;
@@ -54,8 +55,10 @@ class FolderMapperTest extends TestCase {
 	}
 
 	public function testGetFoldersNonExistent(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(27);
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(27);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
@@ -89,8 +92,10 @@ class FolderMapperTest extends TestCase {
 	}
 
 	public function testGetFolders(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(27);
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(27);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
@@ -125,8 +130,10 @@ class FolderMapperTest extends TestCase {
 	}
 
 	public function testCreateFolder(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(42);
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(42);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('createMailbox')
@@ -239,7 +246,7 @@ class FolderMapperTest extends TestCase {
 					'unseen' => 2,
 				],
 			]);
-		
+
 		$stats = $this->mapper->getFoldersStatusAsObject($client, ['INBOX']);
 
 		self::assertArrayNotHasKey('INBOX', $stats);

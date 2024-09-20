@@ -229,7 +229,7 @@ class MessagesController extends Controller {
 				$a
 			);
 		}, $json['attachments']);
-		$json['accountId'] = $account->getId();
+		$json['accountId'] = $account->getMailAccount()->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
 		$json['isSenderTrusted'] = $this->isSenderTrusted($message);

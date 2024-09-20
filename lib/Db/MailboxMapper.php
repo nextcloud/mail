@@ -45,7 +45,7 @@ class MailboxMapper extends QBMapper {
 
 		$select = $qb->select('*')
 			->from($this->getTableName())
-			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())));
+			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getMailAccount()->getId())));
 
 		return $this->findEntities($select);
 	}
@@ -75,7 +75,7 @@ class MailboxMapper extends QBMapper {
 		$select = $qb->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())),
+				$qb->expr()->eq('account_id', $qb->createNamedParameter($account->getMailAccount()->getId())),
 				$qb->expr()->eq('name_hash', $qb->createNamedParameter(md5($name)))
 			);
 

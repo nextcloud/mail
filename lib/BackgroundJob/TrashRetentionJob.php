@@ -60,8 +60,8 @@ class TrashRetentionJob extends TimedJob {
 			} catch (ServiceException|ClientException $e) {
 				$this->logger->error('Could not clean trash mailbox', [
 					'exception' => $e,
-					'userId' => $account->getUserId(),
-					'accountId' => $account->getId(),
+					'userId' => $account->getMailAccount()->getUserId(),
+					'accountId' => $account->getMailAccount()->getId(),
 					'trashMailboxId' => $account->getMailAccount()->getTrashMailboxId(),
 				]);
 			}

@@ -54,7 +54,7 @@ class ItineraryService {
 	}
 
 	private function buildCacheKey(Account $account, Mailbox $mailbox, int $id): string {
-		return $account->getId() . '_' . $mailbox->getName() . '_' . $id;
+		return $account->getMailAccount()->getId() . '_' . $mailbox->getName() . '_' . $id;
 	}
 
 	public function getCached(Account $account, Mailbox $mailbox, int $id): ?Itinerary {
@@ -73,7 +73,7 @@ class ItineraryService {
 		$client = $this->clientFactory->getClient($account);
 		try {
 			$itinerary = new Itinerary();
-			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id, $account->getUserId());
+			$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id, $account->getMailAccount()->getUserId());
 			if ($htmlBody !== null) {
 				$itinerary = $itinerary->merge(
 					$this->extractor->extract($htmlBody)
@@ -82,7 +82,7 @@ class ItineraryService {
 			} else {
 				$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
 			}
-			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id, $account->getUserId());
+			$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id, $account->getMailAccount()->getUserId());
 		} finally {
 			$client->logout();
 		}

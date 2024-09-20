@@ -79,7 +79,7 @@ class MailProvider implements IProvider {
 		$services = [];
 		// add services to collection
 		foreach ($accounts as $entry) {
-			$services[(string)$entry->getId()] = $this->serviceFromAccount($userId, $entry);
+			$services[(string)$entry->getMailAccount()->getId()] = $this->serviceFromAccount($userId, $entry);
 		}
 		// return list of services for user
 		return $services;
@@ -157,9 +157,9 @@ class MailProvider implements IProvider {
 	 */
 	protected function serviceFromAccount(string $userId, Account $account): IService {
 		// extract values
-		$serviceId = (string)$account->getId();
-		$serviceLabel = $account->getName();
-		$serviceAddress = new MailAddress($account->getEmail(), $account->getName());
+		$serviceId = (string)$account->getMailAccount()->getId();
+		$serviceLabel = $account->getMailAccount()->getName();
+		$serviceAddress = new MailAddress($account->getMailAccount()->getEmail(), $account->getMailAccount()->getName());
 		// return mail service object
 		return new MailService($this->container, $userId, $serviceId, $serviceLabel, $serviceAddress);
 	}

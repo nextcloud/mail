@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 namespace OCA\Mail\Provider\Command;
 
+use OCA\Mail\Account;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Exception\ClientException;
@@ -73,7 +74,7 @@ class MessageSend {
 		// convert mail provider message to mail app message
 		$localMessage = new LocalMessage();
 		$localMessage->setType($localMessage::TYPE_OUTGOING);
-		$localMessage->setAccountId($account->getId());
+		$localMessage->setAccountId($account->getMailAccount()->getId());
 		$localMessage->setSubject((string)$message->getSubject());
 		$localMessage->setBody((string)$message->getBody());
 		// disabled due to issues caused by opening these messages in gui

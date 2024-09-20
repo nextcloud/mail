@@ -16,6 +16,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalMessage;
 use OCA\Mail\Db\LocalMessageMapper;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Recipient;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -214,9 +215,10 @@ class OutboxServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setId(10);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
@@ -263,9 +265,10 @@ class OutboxServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setId(10);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->mapper->expects(self::once())
 			->method('saveWithRecipients')
@@ -316,9 +319,10 @@ class OutboxServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setRecipients([$rTo]);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
 		$this->mapper->expects(self::once())
@@ -372,9 +376,10 @@ class OutboxServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setRecipients([$rTo]);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
@@ -441,9 +446,10 @@ class OutboxServiceTest extends TestCase {
 		$attachments = [$attachment];
 		$message->setRecipients($recipients);
 		$message->setAttachments($attachments);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->chain->expects(self::once())
 			->method('process')
@@ -468,9 +474,10 @@ class OutboxServiceTest extends TestCase {
 		$attachments = [$attachment];
 		$message->setRecipients($recipients);
 		$message->setAttachments($attachments);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->chain->expects(self::once())
 			->method('process')
@@ -495,9 +502,10 @@ class OutboxServiceTest extends TestCase {
 		$attachments = [$attachment];
 		$message->setRecipients($recipients);
 		$message->setAttachments($attachments);
-		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
-		]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$this->chain->expects(self::once())
 			->method('process')

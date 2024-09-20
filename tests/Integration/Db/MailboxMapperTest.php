@@ -12,6 +12,7 @@ namespace OCA\Mail\Tests\Integration\Db;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -49,7 +50,9 @@ class MailboxMapperTest extends TestCase {
 
 	public function testFindAllNoData() {
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(13);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(13);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 
 		$result = $this->mapper->findAll($account);
 
@@ -58,7 +61,9 @@ class MailboxMapperTest extends TestCase {
 
 	public function testFindAll() {
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(13);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(13);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		foreach (range(1, 10) as $i) {
 			$qb = $this->db->getQueryBuilder();
 			$insert = $qb->insert($this->mapper->getTableName())
@@ -83,18 +88,20 @@ class MailboxMapperTest extends TestCase {
 	}
 
 	public function testNoInboxFound() {
-		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(13);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(13);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->expectException(DoesNotExistException::class);
 
 		$this->mapper->find($account, 'INBOX');
 	}
 
 	public function testFindInbox() {
-		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(13);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(13);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$qb = $this->db->getQueryBuilder();
 		$insert = $qb->insert($this->mapper->getTableName())
 			->values([
@@ -117,10 +124,10 @@ class MailboxMapperTest extends TestCase {
 	}
 
 	public function testMailboxesWithTrailingSpace() {
-		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(13);
-
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(13);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$qb = $this->db->getQueryBuilder();
 		$insert = $qb->insert($this->mapper->getTableName())
 			->values([

@@ -170,8 +170,12 @@ class DraftsServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setId(10);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
+			'getMailAccount' => $mailAccount
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
@@ -220,8 +224,12 @@ class DraftsServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setId(10);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
+			'getMailAccount' => $mailAccount
 		]);
 
 		$this->mapper->expects(self::once())
@@ -274,8 +282,12 @@ class DraftsServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setRecipients([$rTo]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
+			'getMailAccount' => $mailAccount
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
@@ -332,8 +344,12 @@ class DraftsServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setRecipients([$rTo]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
+			'getMailAccount' => $mailAccount
 		]);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 
@@ -389,8 +405,12 @@ class DraftsServiceTest extends TestCase {
 		]);
 		$message2 = $message;
 		$message2->setRecipients([$rTo]);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
+			'getMailAccount' => $mailAccount
 		]);
 		$this->mapper->expects(self::once())
 			->method('updateWithRecipients')
@@ -456,8 +476,12 @@ class DraftsServiceTest extends TestCase {
 		$attachments = [$attachment];
 		$message->setRecipients($recipients);
 		$message->setAttachments($attachments);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
+			'getMailAccount' => $mailAccount
 		]);
 
 		$this->transmission->expects(self::once())
@@ -465,7 +489,7 @@ class DraftsServiceTest extends TestCase {
 			->with($account, $message);
 		$this->attachmentService->expects(self::once())
 			->method('deleteLocalMessageAttachments')
-			->with($account->getUserId(), $message->getId());
+			->with($account->getMailAccount()->getUserId(), $message->getId());
 		$this->mapper->expects(self::once())
 			->method('deleteWithRecipients')
 			->with($message);
@@ -488,8 +512,12 @@ class DraftsServiceTest extends TestCase {
 		$attachments = [$attachment];
 		$message->setRecipients($recipients);
 		$message->setAttachments($attachments);
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId($this->userId);
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$account = $this->createConfiguredMock(Account::class, [
-			'getUserId' => $this->userId
+			'getMailAccount' => $mailAccount
 		]);
 
 		$this->transmission->expects(self::once())
@@ -514,7 +542,7 @@ class DraftsServiceTest extends TestCase {
 
 		$this->mailManager->expects(self::once())
 			->method('getMessage')
-			->with($account->getUserId(), $draftId)
+			->with($account->getMailAccount()->getUserId(), $draftId)
 			->willReturn($message);
 		$this->eventDispatcher->expects(self::once())
 			->method('dispatchTyped')

@@ -72,7 +72,7 @@ class ChainTest extends TestCase {
 			->willReturn($expected);
 		$this->attachmentService->expects(self::once())
 			->method('deleteLocalMessageAttachments')
-			->with($account->getUserId(), $expected->getId());
+			->with($account->getMailAccount()->getUserId(), $expected->getId());
 		$this->localMessageMapper->expects(self::once())
 			->method('deleteWithRecipients')
 			->with($expected);

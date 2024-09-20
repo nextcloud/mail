@@ -95,7 +95,7 @@ class MailboxSync {
 					$personalNamespace
 				);
 			} catch (Horde_Imap_Client_Exception $e) {
-				$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage(), [
+				$logger->debug('Getting namespaces for account ' . $account->getMailAccount()->getId() . ' failed: ' . $e->getMessage(), [
 					'exception' => $e,
 				]);
 				$namespaces = null;
@@ -107,7 +107,7 @@ class MailboxSync {
 				$this->folderMapper->fetchFolderAcls($folders, $client);
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
-					sprintf('IMAP error synchronizing account %d: %s', $account->getId(), $e->getMessage()),
+					sprintf('IMAP error synchronizing account %d: %s', $account->getMailAccount()->getId(), $e->getMessage()),
 					$e->getCode(),
 					$e
 				);
@@ -233,7 +233,7 @@ class MailboxSync {
 	private function createMailboxFromFolder(Account $account, Folder $folder, ?Horde_Imap_Client_Namespace_List $namespaces): Mailbox {
 		$mailbox = new Mailbox();
 		$mailbox->setName($folder->getMailbox());
-		$mailbox->setAccountId($account->getId());
+		$mailbox->setAccountId($account->getMailAccount()->getId());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$status = $folder->getStatus();

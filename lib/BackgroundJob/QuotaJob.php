@@ -18,6 +18,7 @@ use OCP\BackgroundJob\TimedJob;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
 use Psr\Log\LoggerInterface;
+use function round;
 use function sprintf;
 
 class QuotaJob extends TimedJob {
@@ -67,38 +68,43 @@ class QuotaJob extends TimedJob {
 			return;
 		}
 
-		$user = $this->userManager->get($account->getUserId());
+		$user = $this->userManager->get($account->getMailAccount()->getUserId());
 		if ($user === null || !$user->isEnabled()) {
 			$this->logger->debug(sprintf(
 				'Account %d of user %s could not be found or was disabled, skipping quota query',
-				$account->getId(),
-				$account->getUserId()
+				$account->getMailAccount()->getId(),
+				$account->getMailAccount()->getUserId()
 			));
 			return;
 		}
 
 		$quota = $this->mailManager->getQuota($account);
 		if ($quota === null) {
-			$this->logger->debug('Could not get quota information for account <' . $account->getEmail() . '>', ['app' => 'mail']);
+			$this->logger->debug('Could not get quota information for account <' . $account->getMailAccount()->getEmail() . '>', ['app' => 'mail']);
 			return;
 		}
 		$previous = $account->getMailAccount()->getQuotaPercentage();
-		$account->calculateAndSetQuotaPercentage($quota);
+		if ($quota->getLimit() === 0) {
+			$account->getMailAccount()->setQuotaPercentage(0);
+		} else {
+			$percentage = (int)round($quota->getUsage() / $quota->getLimit() * 100);
+			$account->getMailAccount()->setQuotaPercentage($percentage);
+		}
 		$this->accountService->update($account->getMailAccount());
-		$current = $account->getQuotaPercentage();
+		$current = $account->getMailAccount()->getQuotaPercentage();
 
 		// Only notify if we've reached the rising edge
 		if ($previous < $current && $previous <= 90 && $current > 90) {
-			$this->logger->debug('New quota information for <' . $account->getEmail() . '> - previous: ' . $previous . ', current: ' . $current);
+			$this->logger->debug('New quota information for <' . $account->getMailAccount()->getEmail() . '> - previous: ' . $previous . ', current: ' . $current);
 			$time = $this->time->getDateTime('now');
 			$notification = $this->notificationManager->createNotification();
 			$notification
 				->setApp('mail')
-				->setUser($account->getUserId())
+				->setUser($account->getMailAccount()->getUserId())
 				->setObject('quota', (string)$accountId)
 				->setSubject('quota_depleted', [
 					'id' => $accountId,
-					'account_email' => $account->getEmail()
+					'account_email' => $account->getMailAccount()->getEmail()
 				])
 				->setDateTime($time)
 				->setMessage('percentage', [

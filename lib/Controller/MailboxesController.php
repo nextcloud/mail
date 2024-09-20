@@ -73,7 +73,7 @@ class MailboxesController extends Controller {
 		$mailboxes = $this->mailManager->getMailboxes($account);
 		return new JSONResponse([
 			'id' => $accountId,
-			'email' => $account->getEmail(),
+			'email' => $account->getMailAccount()->getEmail(),
 			'mailboxes' => $mailboxes,
 			'delimiter' => reset($mailboxes)->getDelimiter(),
 		]);

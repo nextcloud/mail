@@ -9,6 +9,7 @@ namespace OCA\Mail\Tests\Integration\Service;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\Tests\Integration\TestCase;
@@ -44,7 +45,9 @@ class FolderMapperIntegrationTest extends TestCase {
 
 	public function testGetFolders() {
 		$account = $this->createMock(Account::class);
-		$account->method('getId')->willReturn(13);
+		$mailAccount = new MailAccount();
+		$mailAccount->setId(13);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$client = $this->getTestClient();
 
 		$folders = $this->mapper->getFolders($account, $client);

@@ -149,8 +149,8 @@ class PageController extends Controller {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$json = $mailAccount->jsonSerialize();
-			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
+			$json = $mailAccount->getMailAccount()->jsonSerialize();
+			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getMailAccount()->getId(),
 				$this->currentUserId);
 			try {
 				$mailboxes = $this->mailManager->getMailboxes($mailAccount);

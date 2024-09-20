@@ -44,10 +44,10 @@ class MoveJunkListener implements IEventListener {
 
 		if ($event->isSet() && $junkMailboxId !== $mailbox->getId()) {
 			try {
-				$junkMailbox = $this->mailManager->getMailbox($account->getUserId(), $junkMailboxId);
+				$junkMailbox = $this->mailManager->getMailbox($account->getMailAccount()->getUserId(), $junkMailboxId);
 			} catch (ClientException) {
 				$this->logger->debug('junk mailbox set, but junk mailbox does not exist. account_id: {account_id}, junk_mailbox_id: {junk_mailbox_id}', [
-					'account_id' => $account->getId(),
+					'account_id' => $account->getMailAccount()->getId(),
 					'junk_mailbox_id' => $junkMailboxId,
 				]);
 				return;
@@ -64,7 +64,7 @@ class MoveJunkListener implements IEventListener {
 			} catch (ServiceException $e) {
 				$this->logger->error('move message to junk mailbox failed. account_id: {account_id}', [
 					'exception' => $e,
-					'account_id' => $account->getId(),
+					'account_id' => $account->getMailAccount()->getId(),
 				]);
 			}
 		} elseif (!$event->isSet() && $mailbox->getName() !== 'INBOX') {
@@ -79,7 +79,7 @@ class MoveJunkListener implements IEventListener {
 			} catch (ServiceException $e) {
 				$this->logger->error('move message to inbox failed. account_id: {account_id}', [
 					'exception' => $e,
-					'account_id' => $account->getId(),
+					'account_id' => $account->getMailAccount()->getId(),
 				]);
 			}
 		}

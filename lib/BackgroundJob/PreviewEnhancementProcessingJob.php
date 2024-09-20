@@ -62,12 +62,12 @@ class PreviewEnhancementProcessingJob extends TimedJob {
 			return;
 		}
 
-		$user = $this->userManager->get($account->getUserId());
+		$user = $this->userManager->get($account->getMailAccount()->getUserId());
 		if ($user === null || !$user->isEnabled()) {
 			$this->logger->debug(sprintf(
 				'Account %d of user %s could not be found or was disabled, skipping preprocessing of messages',
-				$account->getId(),
-				$account->getUserId()
+				$account->getMailAccount()->getId(),
+				$account->getMailAccount()->getUserId()
 			));
 			return;
 		}

@@ -50,7 +50,8 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 			return;
 		}
 
-		$accountId = $event->getAccount()->getId();
+		$account = $event->getAccount();
+		$accountId = $account->getMailAccount()->getId();
 		$logger->debug("Building threads for account $accountId");
 		$messages = $this->mapper->findThreadingData($event->getAccount());
 		$logger->debug("Account $accountId has " . count($messages) . ' messages with threading information');

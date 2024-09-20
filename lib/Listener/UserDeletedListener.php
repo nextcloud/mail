@@ -43,7 +43,7 @@ class UserDeletedListener implements IEventListener {
 			try {
 				$this->accountService->delete(
 					$user->getUID(),
-					$account->getId()
+					$account->getMailAccount()->getId()
 				);
 			} catch (ClientException $e) {
 				$this->logger->error('Could not delete user\'s Mail account: ' . $e->getMessage(), [

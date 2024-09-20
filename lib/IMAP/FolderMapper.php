@@ -65,7 +65,7 @@ class FolderMapper {
 		});
 		return array_map(static function (array $mailbox) use ($account) {
 			return new Folder(
-				$account->getId(),
+				$account->getMailAccount()->getId(),
 				$mailbox['mailbox'],
 				$mailbox['attributes'],
 				$mailbox['delimiter'],
@@ -92,7 +92,7 @@ class FolderMapper {
 		}
 
 		return new Folder(
-			$account->getId(),
+			$account->getMailAccount()->getId(),
 			$mb['mailbox'],
 			$mb['attributes'],
 			$mb['delimiter'],

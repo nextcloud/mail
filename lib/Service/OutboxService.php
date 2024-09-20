@@ -153,7 +153,7 @@ class OutboxService {
 			$client->logout();
 		}
 
-		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getUserId(), $message->getId(), $attachmentIds));
+		$message->setAttachments($this->attachmentService->saveLocalMessageAttachments($account->getMailAccount()->getUserId(), $message->getId(), $attachmentIds));
 		return $message;
 	}
 
@@ -174,7 +174,7 @@ class OutboxService {
 		$message = $this->mapper->updateWithRecipients($message, $toRecipients, $ccRecipients, $bccRecipients);
 
 		if ($attachments === []) {
-			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, []));
+			$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getMailAccount()->getUserId(), $message, []));
 			return $message;
 		}
 
@@ -184,7 +184,7 @@ class OutboxService {
 		} finally {
 			$client->logout();
 		}
-		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getUserId(), $message, $attachmentIds));
+		$message->setAttachments($this->attachmentService->updateLocalMessageAttachments($account->getMailAccount()->getUserId(), $message, $attachmentIds));
 		return $message;
 	}
 
@@ -194,7 +194,7 @@ class OutboxService {
 	 * @return void
 	 */
 	public function handleDraft(Account $account, int $draftId): void {
-		$message = $this->mailManager->getMessage($account->getUserId(), $draftId);
+		$message = $this->mailManager->getMessage($account->getMailAccount()->getUserId(), $draftId);
 		$this->eventDispatcher->dispatch(
 			OutboxMessageCreatedEvent::class,
 			new OutboxMessageCreatedEvent($account, $message)

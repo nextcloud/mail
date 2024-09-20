@@ -72,7 +72,7 @@ class MailManagerTest extends TestCase {
 	/** @var ThreadMapper|MockObject */
 	private $threadMapper;
 
-	
+
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -427,9 +427,13 @@ class MailManagerTest extends TestCase {
 		$this->imapMessageMapper->expects($this->once())
 			->method('addFlag')
 			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('test');
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('test');
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getMailAccount' => $mailAccount
+		]);
 		$this->manager->tagMessage($account, 'INBOX', $message, $tag, true);
 	}
 
@@ -458,9 +462,13 @@ class MailManagerTest extends TestCase {
 			->with($client, $mb, [123], Tag::LABEL_IMPORTANT);
 		$this->imapMessageMapper->expects($this->never())
 			->method('addFlag');
-		$account->expects($this->never())
-			->method('getUserId')
-			->willReturn('test');
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('test');
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getMailAccount' => $mailAccount
+		]);
 		$this->manager->tagMessage($account, 'INBOX', $message, $tag, false);
 	}
 
@@ -489,9 +497,13 @@ class MailManagerTest extends TestCase {
 			->method('removeFlag');
 		$this->imapMessageMapper->expects($this->never())
 			->method('addFlag');
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('test');
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('test');
+		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getMailAccount' => $mailAccount
+		]);
 		$this->manager->tagMessage($account, 'INBOX', $message, $tag, true);
 	}
 
@@ -507,10 +519,13 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testGetMailAttachments(): void {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('test');
 		$account = $this->createMock(Account::class);
-		$account->expects($this->once())
-			->method('getUserId')
-			->willReturn('user');
+		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account = $this->createConfiguredMock(Account::class, [
+			'getMailAccount' => $mailAccount
+		]);
 		$attachments = [
 			new Attachment(
 				null,

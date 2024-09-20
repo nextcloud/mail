@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -92,7 +93,7 @@ class AccountsController extends Controller {
 
 		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$conf = $mailAccount->jsonSerialize();
+			$conf = $mailAccount->getMailAccount()->jsonSerialize();
 			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
 			$json[] = $conf;
 		}
@@ -177,7 +178,7 @@ class AccountsController extends Controller {
 
 		try {
 			return MailJsonResponse::success(
-				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, $id)
+				$this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $authMethod, $id)->getMailAccount()
 			);
 		} catch (CouldNotConnectException $e) {
 			$data = [
@@ -398,7 +399,7 @@ class AccountsController extends Controller {
 			}
 		}
 		return MailJsonResponse::success(
-			$account, Http::STATUS_CREATED
+			$account->getMailAccount(), Http::STATUS_CREATED
 		);
 	}
 

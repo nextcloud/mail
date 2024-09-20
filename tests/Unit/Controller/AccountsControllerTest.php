@@ -15,6 +15,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\IMAP\MailboxSync;
@@ -59,6 +60,8 @@ class AccountsControllerTest extends TestCase {
 
 	/** @var Account|MockObject */
 	private $account;
+
+	private MailAccount&MockObject $mailAccount;
 
 	/** @var AliasesService|MockObject */
 	private $aliasesService;
@@ -120,10 +123,12 @@ class AccountsControllerTest extends TestCase {
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
+		$this->mailAccount = $this->createMock(MailAccount::class);
+		$this->account->method('getMailAccount')->willReturn($this->mailAccount);
 	}
 
 	public function testIndex(): void {
-		$this->account->expects(self::once())
+		$this->mailAccount->expects(self::once())
 			->method('jsonSerialize')
 			->will(self::returnValue([
 				'accountId' => 123,
@@ -233,6 +238,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($this->mailAccount);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password')
@@ -240,7 +246,7 @@ class AccountsControllerTest extends TestCase {
 
 		$response = $this->controller->create($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 
-		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account, Http::STATUS_CREATED);
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($this->mailAccount, Http::STATUS_CREATED);
 
 		self::assertEquals($expectedResponse, $response);
 	}
@@ -310,6 +316,7 @@ class AccountsControllerTest extends TestCase {
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($this->mailAccount);
 		$this->setupService->expects(self::once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, 'password', $id)
@@ -317,7 +324,7 @@ class AccountsControllerTest extends TestCase {
 
 		$response = $this->controller->update($id, $accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 
-		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($account);
+		$expectedResponse = \OCA\Mail\Http\JsonResponse::success($this->mailAccount);
 
 		self::assertEquals($expectedResponse, $response);
 	}

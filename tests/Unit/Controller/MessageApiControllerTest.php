@@ -402,9 +402,10 @@ class MessageApiControllerTest extends TestCase {
 	public function testSend($messageStatus, $expected): void {
 		$this->message->setStatus($messageStatus);
 
+		$account = $this->account;
 		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->userId, $this->account->getId())
+			->with($this->userId, $account->getMailAccount()->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
 			->method('findByAliasAndUserId');
@@ -436,9 +437,10 @@ class MessageApiControllerTest extends TestCase {
 	public function testSendNoRecipient(): void {
 		$this->message->setStatus(LocalMessage::STATUS_RAW);
 
+		$account = $this->account;
 		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->userId, $this->account->getId())
+			->with($this->userId, $account->getMailAccount()->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
 			->method('findByAliasAndUserId');
@@ -481,9 +483,10 @@ class MessageApiControllerTest extends TestCase {
 	 * @dataProvider exceptionData
 	 */
 	public function testSendException($exception, $expected): void {
+		$account = $this->account;
 		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->userId, $this->account->getId())
+			->with($this->userId, $account->getMailAccount()->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
 			->method('findByAliasAndUserId');
@@ -546,9 +549,10 @@ class MessageApiControllerTest extends TestCase {
 		$localAttachment = new LocalAttachment();
 		$localAttachment->setId(1);
 
+		$account = $this->account;
 		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->userId, $this->account->getId())
+			->with($this->userId, $account->getMailAccount()->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
 			->method('findByAliasAndUserId');
@@ -603,9 +607,10 @@ class MessageApiControllerTest extends TestCase {
 			],
 		];
 
+		$account = $this->account;
 		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->userId, $this->account->getId())
+			->with($this->userId, $account->getMailAccount()->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::never())
 			->method('findByAliasAndUserId');
@@ -653,7 +658,7 @@ class MessageApiControllerTest extends TestCase {
 
 		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->userId, $account->getId())
+			->with($this->userId, $account->getMailAccount()->getId())
 			->willReturn($account);
 		$this->aliasesService->expects(self::once())
 			->method('findByAliasAndUserId')
@@ -686,9 +691,10 @@ class MessageApiControllerTest extends TestCase {
 	public function testNoAlias(): void {
 		$aliasMail = 'john-alias@test.com';
 
+		$account = $this->account;
 		$this->accountService->expects(self::once())
 			->method('find')
-			->with($this->userId, $this->account->getId())
+			->with($this->userId, $account->getMailAccount()->getId())
 			->willReturn($this->account);
 		$this->aliasesService->expects(self::once())
 			->method('findByAliasAndUserId')
