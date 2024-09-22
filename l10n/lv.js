@@ -105,6 +105,7 @@ OC.L10N.register(
     "Date" : "Datums",
     "Tags" : "Birkas",
     "Select tags" : "Izvēlies birkas",
+    "Clear" : "Notīrīt",
     "Custom" : "Pielāgots",
     "Delete tag" : "Dzēst atzīmi",
     "Tag already exists" : "Birka jau pastāv",
