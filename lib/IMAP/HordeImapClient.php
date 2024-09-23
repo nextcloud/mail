@@ -11,14 +11,12 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
-use OCA\Mail\Cache\Cache;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IMemcache;
 use function floor;
 
 /**
- * "Decorator" around Horde's IMAP client to add auth error rate limiting and save the cache on
- * logout.
+ * "Decorator" around Horde's IMAP client to add auth error rate limiting.
  *
  * This is not a real decorator because the component to decorate doesn't have
  * an interface, making it hard to base a decorator on composition.
@@ -28,15 +26,6 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 	private ?IMemcache $rateLimiterCache = null;
 	private ?ITimeFactory $timeFactory = null;
 	private ?string $hash = null;
-	private ?Cache $cacheBackend = null;
-
-	public function __construct(array $params) {
-		if (isset($params['cache']['backend']) && $params['cache']['backend'] instanceof Cache) {
-			$this->cacheBackend = $params['cache']['backend'];
-		}
-
-		parent::__construct($params);
-	}
 
 	public function enableRateLimiter(
 		IMemcache $cache,
@@ -75,13 +64,5 @@ class HordeImapClient extends Horde_Imap_Client_Socket {
 			}
 			throw $e;
 		}
-	}
-
-	public function logout() {
-		if ($this->cacheBackend !== null) {
-			$this->cacheBackend->save();
-		}
-
-		parent::logout();
 	}
 }

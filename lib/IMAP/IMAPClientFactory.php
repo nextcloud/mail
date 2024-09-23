@@ -9,11 +9,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
-use Horde_Imap_Client_Cache_Backend_Null;
 use Horde_Imap_Client_Password_Xoauth2;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
-use OCA\Mail\Cache\Cache;
+use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Events\BeforeImapClientCreated;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -24,7 +23,6 @@ use OCP\Security\ICrypto;
 use function hash;
 use function implode;
 use function json_encode;
-use function md5;
 
 class IMAPClientFactory {
 	/** @var ICrypto */
@@ -40,17 +38,20 @@ class IMAPClientFactory {
 	private $eventDispatcher;
 
 	private ITimeFactory $timeFactory;
+	private HordeCacheFactory $hordeCacheFactory;
 
 	public function __construct(ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
 		IEventDispatcher $eventDispatcher,
-		ITimeFactory $timeFactory) {
+		ITimeFactory $timeFactory,
+		HordeCacheFactory $hordeCacheFactory) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->timeFactory = $timeFactory;
+		$this->hordeCacheFactory = $hordeCacheFactory;
 	}
 
 	/**
@@ -111,21 +112,9 @@ class IMAPClientFactory {
 				json_encode($params)
 			]),
 		);
-		if ($useCache && $this->cacheFactory->isAvailable()) {
-			$params['cache'] = [
-				'backend' => new Cache([
-					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
-				])];
-		} else {
-			/**
-			 * If we don't use a cache we use a null cache to trick Horde into
-			 * using QRESYNC/CONDSTORE if they are available
-			 * @see \Horde_Imap_Client_Socket::_loginTasks
-			 */
-			$params['cache'] = [
-				'backend' => new Horde_Imap_Client_Cache_Backend_Null(),
-			];
-		}
+		$params['cache'] = [
+			'backend' => $this->hordeCacheFactory->newCache($account),
+		];
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
 		}
