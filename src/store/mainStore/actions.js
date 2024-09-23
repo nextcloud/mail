@@ -1832,11 +1832,17 @@ export default function mainStoreActions() {
 		},
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
+			/// TODO something sketchy here
+			console.log('in add account mutation, accounts before', this.accounts, account)
 			Vue.set(this.accounts, account.id, account)
+			this.accounts[account.id] = account
+			console.log('in add account mutation, accounts intermediate', this.accounts)
+
 			Vue.set(
 				this.accountList,
 				this.sortAccounts(this.accountList.concat([account.id]).map((id) => this.accounts[id])).map((a) => a.id),
 			)
+			console.log('in add account mutation, accounts after', this.accounts)
 
 			// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)

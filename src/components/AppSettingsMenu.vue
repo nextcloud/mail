@@ -444,9 +444,9 @@ export default {
 			this.loadingReplySettings = true
 
 			this.mainStore.savePreference({
-					key: 'reply-mode',
-					value: e.target.checked ? 'bottom' : 'top',
-				})
+				key: 'reply-mode',
+				value: e.target.checked ? 'bottom' : 'top',
+			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingReplySettings = false
@@ -456,9 +456,9 @@ export default {
 			this.loadingAvatarSettings = true
 
 			this.mainStore.savePreference({
-					key: 'external-avatars',
-					value: e.target.checked ? 'true' : 'false',
-				})
+				key: 'external-avatars',
+				value: e.target.checked ? 'true' : 'false',
+			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingAvatarSettings = false
@@ -468,9 +468,9 @@ export default {
 			this.loadingPrioritySettings = true
 			try {
 				await this.mainStore.savePreference({
-						key: 'search-priority-body',
-						value: e.target.checked ? 'true' : 'false',
-					})
+					key: 'search-priority-body',
+					value: e.target.checked ? 'true' : 'false',
+				})
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 			} finally {
@@ -481,9 +481,9 @@ export default {
 			this.loadingOptOutSettings = true
 
 			this.mainStore.savePreference({
-					key: 'collect-data',
-					value: e.target.checked ? 'true' : 'false',
-				})
+				key: 'collect-data',
+				value: e.target.checked ? 'true' : 'false',
+			})
 				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingOptOutSettings = false
@@ -494,9 +494,9 @@ export default {
 			try {
 				this.sortOrder = e
 				await this.mainStore.savePreference({
-						key: 'sort-order',
-						value: e,
-					})
+					key: 'sort-order',
+					value: e,
+				})
 				this.mainStore.removeAllEnvelopesMutation()
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
@@ -509,9 +509,9 @@ export default {
 
 			try {
 				await this.mainStore.savePreference({
-						key: 'tag-classified-messages',
-						value: e.target.checked ? 'true' : 'false',
-					})
+					key: 'tag-classified-messages',
+					value: e.target.checked ? 'true' : 'false',
+				})
 			} catch (error) {
 				Logger.error('could not save preferences', { error })
 
