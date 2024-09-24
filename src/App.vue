@@ -25,7 +25,7 @@ export default {
 			'isExpiredSession',
 		]),
 		hasMailAccounts() {
-			return !!this.mainStore.accounts.find((account) => !account.isUnified)
+			return !!this.mainStore.getAccounts.find((account) => !account.isUnified)
 		},
 	},
 	watch: {

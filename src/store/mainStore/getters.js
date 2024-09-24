@@ -10,7 +10,7 @@ import toCalendar from '../../util/calendar.js'
 
 export default function mainStore() {
 	return {
-		accounts: (state) => {
+		getAccounts: (state) => {
 			return state.accountList.map((id) => state.accountsUnmapped[id])
 		},
 		composerMessage: (state) => {

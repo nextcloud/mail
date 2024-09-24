@@ -83,7 +83,7 @@ export default {
 		},
 	},
 	async beforeMount() {
-		const accounts = this.mainStore.accounts.filter((a) => !a.isUnified)
+		const accounts = this.mainStore.getAccounts.filter((a) => !a.isUnified)
 		this.accounts = await Promise.all(
 			 accounts.map(async (account) => {
 				return { ...account, connectionStatus: await testAccountConnection(account.id) }
@@ -91,7 +91,7 @@ export default {
 
 	},
 	created() {
-		const accounts = this.mainStore.accounts
+		const accounts = this.mainStore.getAccounts
 		let startMailboxId = this.mainStore.getPreference('start-mailbox-id')
 		if (startMailboxId && !this.mainStore.getMailbox(startMailboxId)) {
 			// The start ID is set but the mailbox doesn't exist anymore

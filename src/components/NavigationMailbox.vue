@@ -365,7 +365,7 @@ export default {
 			if (!this.mailbox.isUnified) {
 				return true
 			}
-			return this.mailbox.specialUse.includes('inbox') && this.mainStore.accounts.length > 2
+			return this.mailbox.specialUse.includes('inbox') && this.mainStore.getAccounts.length > 2
 		},
 		showUnreadCounter() {
 			if (this.filter === 'starred' || this.mailbox.specialRole === 'trash') {

@@ -102,7 +102,7 @@ export default {
 	computed: {
 		...mapStores(useOutboxStore, useMainStore),
 		menu() {
-			return this.mainStore.accounts
+			return this.mainStore.getAccounts
 				.filter(account => account.id !== UNIFIED_ACCOUNT_ID)
 				.map(account => {
 					const mailboxes = this.mainStore.getMailboxes(account.id)
@@ -157,11 +157,11 @@ export default {
 			return true
 		},
 		isFirst(account) {
-			const accounts = this.mainStore.accounts
+			const accounts = this.mainStore.getAccounts
 			return account === accounts[1]
 		},
 		isLast(account) {
-			const accounts = this.mainStore.accounts
+			const accounts = this.mainStore.getAccounts
 			return account === accounts[accounts.length - 1]
 		},
 		/**

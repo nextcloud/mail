@@ -58,7 +58,7 @@ export default {
 	computed: {
 		...mapStores(useMainStore),
 		hasAccounts() {
-			return this.mainStore.accounts.length > 1
+			return this.mainStore.getAccounts.length > 1
 		},
 	},
 	methods: {

@@ -174,7 +174,7 @@ export default function mainStoreActions() {
 			return handleHttpAuthErrors(async () => {
 				const accounts = await fetchAllAccounts()
 				accounts.forEach((account) => this.addAccountMutation(account))
-				return this.accounts
+				return this.getAccounts
 			})
 		},
 		async fetchAccount(id) {
@@ -304,7 +304,7 @@ export default function mainStoreActions() {
 			up,
 		}) {
 			return handleHttpAuthErrors(async () => {
-				const accounts = this.accounts
+				const accounts = this.getAccounts
 				const index = accounts.indexOf(account)
 				if (up) {
 					const previous = accounts[index - 1]
@@ -338,7 +338,7 @@ export default function mainStoreActions() {
 
 				if (mailbox.isUnified) {
 					const findIndividual = findIndividualMailboxes(this.getMailboxes, mailbox.specialRole)
-					const individualMailboxes = findIndividual(this.accounts)
+					const individualMailboxes = findIndividual(this.getAccounts)
 					return Promise.all(
 						individualMailboxes.map((mb) =>
 							this.markMailboxReadMutation({
@@ -662,7 +662,7 @@ export default function mainStoreActions() {
 						),
 					)
 
-					return fetchUnifiedEnvelopes(this.accounts)
+					return fetchUnifiedEnvelopes(this.getAccounts)
 				}
 
 				return pipe(
@@ -746,7 +746,7 @@ export default function mainStoreActions() {
 							tap(mbs => console.info('individual mailboxes', mbs)),
 							filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts))),
 						)(accounts)
-					const mbs = mailboxesToFetch(this.accounts)
+					const mbs = mailboxesToFetch(this.getAccounts)
 
 					if (rec && mbs.length) {
 						logger.debug('not enough local envelopes for the next unified page. ' + mbs.length + ' fetches required', {
@@ -774,7 +774,7 @@ export default function mainStoreActions() {
 						)(mbs)
 					}
 
-					const envelopes = nextLocalUnifiedEnvelopes(this.accounts)
+					const envelopes = nextLocalUnifiedEnvelopes(this.getAccounts)
 					logger.debug('next unified page can be built locally and consists of ' + envelopes.length + ' envelopes', { addToUnifiedMailboxes })
 					this.addEnvelopesMutation({
 						query,
@@ -829,7 +829,7 @@ export default function mainStoreActions() {
 
 				if (mailbox.isUnified) {
 					return Promise.all(
-						this.accounts
+						this.getAccounts
 							.filter((account) => !account.isUnified && !isDisabled(account))
 							.map((account) =>
 								Promise.all(
@@ -850,7 +850,7 @@ export default function mainStoreActions() {
 					return Promise.all(
 						getPrioritySearchQueries().map((query) => {
 							return Promise.all(
-								this.accounts
+								this.getAccounts
 									.filter((account) => !account.isUnified && !isDisabled(account))
 									.map((account) =>
 										Promise.all(
@@ -949,7 +949,7 @@ export default function mainStoreActions() {
 
 			return handleHttpAuthErrors(async () => {
 				const results = await Promise.all(
-					this.accounts
+					this.getAccounts
 						.filter((a) => !a.isUnified && !isDisabled(a))
 						.map((account) => {
 							return Promise.all(
@@ -1832,17 +1832,13 @@ export default function mainStoreActions() {
 		},
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
-			/// TODO something sketchy here
-			console.log('in add account mutation, accounts before', this.accounts, account)
-			Vue.set(this.accounts, account.id, account)
-			this.accounts[account.id] = account
-			console.log('in add account mutation, accounts intermediate', this.accounts)
+
+			Vue.set(this.accountsUnmapped, account.id, account)
 
 			Vue.set(
 				this.accountList,
-				this.sortAccounts(this.accountList.concat([account.id]).map((id) => this.accounts[id])).map((a) => a.id),
+				this.sortAccounts(this.accountList.concat([account.id]).map((id) => this.accountsUnmapped[id])).map((a) => a.id),
 			)
-			console.log('in add account mutation, accounts after', this.accounts)
 
 			// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
@@ -1851,13 +1847,13 @@ export default function mainStoreActions() {
 			mailboxes.map(addMailboxToState(this, account))
 		},
 		editAccountMutation(account) {
-			Vue.set(this.accounts, account.id, Object.assign({}, this.accounts[account.id], account))
+			Vue.set(this.accountsUnmapped, account.id, Object.assign({}, this.accountsUnmapped[account.id], account))
 		},
 		patchAccountMutation({
 			account,
 			data
 		}) {
-			Vue.set(this.accounts, account.id, Object.assign({}, this.accounts[account.id], data))
+			Vue.set(this.accountsUnmapped, account.id, Object.assign({}, this.accountsUnmapped[account.id], data))
 		},
 		saveAccountsOrderMutation({
 			account,
@@ -1865,15 +1861,15 @@ export default function mainStoreActions() {
 		}) {
 			Vue.set(account, 'order', order)
 			Vue.set(
-				this.accountsList,
-				this.sortAccounts(this.accountList.map((id) => this.accounts[id])).map((a) => a.id),
+				this.accountsUnmappedList,
+				this.sortAccounts(this.accountList.map((id) => this.accountsUnmapped[id])).map((a) => a.id),
 			)
 		},
 		toggleAccountCollapsedMutation(accountId) {
-			this.accounts[accountId].collapsed = !this.accounts[accountId].collapsed
+			this.accountsUnmapped[accountId].collapsed = !this.accountsUnmapped[accountId].collapsed
 		},
 		expandAccountMutation(accountId) {
-			this.accounts[accountId].collapsed = false
+			this.accountsUnmapped[accountId].collapsed = false
 		},
 		setAccountSettingMutation({
 			accountId,
@@ -1896,7 +1892,7 @@ export default function mainStoreActions() {
 			addMailboxToState(this, account, mailbox)
 		},
 		updateMailboxMutation({ mailbox }) {
-			const account = this.accounts[mailbox.accountId]
+			const account = this.accountsUnmapped[mailbox.accountId]
 			this.transformMailboxName(account, mailbox)
 			Vue.set(this.mailboxes, mailbox.databaseId, mailbox)
 		},
@@ -1905,7 +1901,7 @@ export default function mainStoreActions() {
 			if (mailbox === undefined) {
 				throw new Error(`Mailbox ${id} does not exist`)
 			}
-			const account = this.accounts[mailbox.accountId]
+			const account = this.accountsUnmapped[mailbox.accountId]
 			if (account === undefined) {
 				throw new Error(`Account ${mailbox.accountId} of mailbox ${id} is unknown`)
 			}
@@ -2020,7 +2016,7 @@ export default function mainStoreActions() {
 				if (!addToUnifiedMailboxes) {
 					return
 				}
-				const unifiedAccount = this.accounts[UNIFIED_ACCOUNT_ID]
+				const unifiedAccount = this.accountsUnmapped[UNIFIED_ACCOUNT_ID]
 				unifiedAccount.mailboxes
 					.map((mbId) => this.mailboxes[mbId])
 					.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
@@ -2117,7 +2113,7 @@ export default function mainStoreActions() {
 				Vue.set(mailbox, 'unread', mailbox.unread - 1)
 			}
 
-			this.accounts[UNIFIED_ACCOUNT_ID].mailboxes
+			this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
 				.map((mailboxId) => this.mailboxes[mailboxId])
 				.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
 				.forEach((mailbox) => {
@@ -2298,13 +2294,13 @@ export default function mainStoreActions() {
 			return defaultTo(def, this.preferences[key])
 		},
 		getAccount(id) {
-			return this.accounts[id]
+			return this.accountsUnmapped[id]
 		},
 		getMailbox(id) {
 			return this.mailboxes[id]
 		},
 		getMailboxes(accountId) {
-			return this.accounts[accountId].mailboxes.map((id) => this.mailboxes[id])
+			return this.accountsUnmapped[accountId].mailboxes.map((id) => this.mailboxes[id])
 		},
 		getSubMailboxes(id) {
 			const mailbox = this.getMailbox(id)
@@ -2320,7 +2316,7 @@ export default function mainStoreActions() {
 		},
 		getUnifiedMailbox(specialRole) {
 			return head(
-				this.accounts[UNIFIED_ACCOUNT_ID].mailboxes
+				this.accountsUnmapped[UNIFIED_ACCOUNT_ID].mailboxes
 					.map((id) => this.mailboxes[id])
 					.filter((mailbox) => mailbox.specialRole === specialRole),
 			)
