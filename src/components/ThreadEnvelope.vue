@@ -303,10 +303,11 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import useOutboxStore from '../store/outboxStore.js'
-import { mapStores } from 'pinia'
 import moment from '@nextcloud/moment'
 import { translateTagDisplayName } from '../util/tag.js'
 import { FOLLOW_UP_TAG_LABEL } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 // Ternary loading state
 const LOADING_DONE = 0
@@ -404,7 +405,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapStores(useOutboxStore),
+		...mapStores(useOutboxStore, useMainStore),
 		inlineMenuSize() {
 			// eslint-disable-next-line no-unused-expressions
 			const { envelope } = this.$refs
@@ -413,7 +414,7 @@ export default {
 			return Math.floor(spaceToFill / 44)
 		},
 		account() {
-			return this.$store.getters.getAccount(this.envelope.accountId)
+			return this.mainStore.getAccount(this.envelope.accountId)
 		},
 		from() {
 			if (!this.message || !this.message.from.length) {
@@ -450,12 +451,12 @@ export default {
 				&& isPgpText(this.envelope.previewText)
 		},
 		isImportant() {
-			return this.$store.getters
+			return this.mainStore
 				.getEnvelopeTags(this.envelope.databaseId)
 				.find((tag) => tag.imapLabel === '$label1')
 		},
 		tags() {
-			return this.$store.getters.getEnvelopeTags(this.envelope.databaseId).filter(
+			return this.mainStore.getEnvelopeTags(this.envelope.databaseId).filter(
 				(tag) => tag.imapLabel !== '$label1' && !(tag.displayName.toLowerCase() in hiddenTags),
 			)
 		},
@@ -508,10 +509,10 @@ export default {
 			return mailboxHasRights(this.mailbox, 'w')
 		},
 		mailbox() {
-			return this.$store.getters.getMailbox(this.mailboxId)
+			return this.mainStore.getMailbox(this.mailboxId)
 		},
 		archiveMailbox() {
-			return this.$store.getters.getMailbox(this.account.archiveMailboxId)
+			return this.mainStore.getMailbox(this.account.archiveMailboxId)
 		},
 		/**
 		 * @return {{isSigned: (boolean|undefined), signatureIsValid: (boolean|undefined)}}
@@ -559,7 +560,7 @@ export default {
 				return false
 			}
 
-			const tags = this.$store.getters.getEnvelopeTags(this.envelope.databaseId)
+			const tags = this.mainStore.getEnvelopeTags(this.envelope.databaseId)
 			return tags.some((tag) => tag.imapLabel === FOLLOW_UP_TAG_LABEL)
 		},
 		/**
@@ -598,8 +599,8 @@ export default {
 			// assume that this is the relevant envelope to be scrolled to.
 			this.$nextTick(() => this.scrollToCurrentEnvelope())
 		}
-		if (this.$store.getters.getPreference('internal-addresses', 'false') === 'true') {
-			this.isInternal = this.$store.getters.isInternalAddress(this.envelope.from[0].email)
+		if (this.mainStore.getPreference('internal-addresses', 'false') === 'true') {
+			this.isInternal = this.mainStore.isInternalAddress(this.envelope.from[0].email)
 		}
 		this.$checkInterval = setInterval(() => {
 			const { envelope } = this.$refs
@@ -634,13 +635,13 @@ export default {
 			logger.debug(`fetching thread message ${this.envelope.databaseId}`)
 
 			try {
-				this.message = await this.$store.dispatch('fetchMessage', this.envelope.databaseId)
+				this.message = await this.mainStore.fetchMessage(this.envelope.databaseId)
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message: this.message })
 
 				if (!this.envelope.flags.seen && this.hasSeenAcl) {
 					logger.info('Starting timer to mark message as seen/read')
 					this.seenTimer = setTimeout(() => {
-						this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+						this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 						this.seenTimer = undefined
 					}, 2000)
 				}
@@ -679,7 +680,7 @@ export default {
 			logger.debug(`Fetching itineraries for message ${this.envelope.databaseId}`)
 
 			try {
-				const itineraries = await this.$store.dispatch('fetchItineraries', this.envelope.databaseId)
+				const itineraries = await this.mainStore.fetchItineraries(this.envelope.databaseId)
 				logger.debug(`Itineraries of message ${this.envelope.databaseId} fetched`, { itineraries })
 			} catch (error) {
 				logger.error(`Could not fetch itineraries of message ${this.envelope.databaseId}`, { error })
@@ -693,7 +694,7 @@ export default {
 			logger.debug(`Fetching DKIM for message ${this.envelope.databaseId}`)
 
 			try {
-				const dkim = await this.$store.dispatch('fetchDkim', this.envelope.databaseId)
+				const dkim = await this.mainStore.fetchDkim(this.envelope.databaseId)
 				logger.debug(`DKIM of message ${this.envelope.databaseId} fetched`, { dkim })
 			} catch (error) {
 				logger.error(`Could not fetch DKIM of message ${this.envelope.databaseId}`, { error })
@@ -707,7 +708,7 @@ export default {
 			window.scrollTo({ top })
 		},
 		onReply(body = '', followUp = false) {
-			this.$store.dispatch('startComposerSession', {
+			this.mainStore.startComposerSession({
 				reply: {
 					mode: this.hasMultipleRecipients ? 'replyAll' : 'reply',
 					data: this.envelope,
@@ -717,16 +718,16 @@ export default {
 			})
 		},
 		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
+			this.mainStore.toggleEnvelopeImportant(this.envelope)
 		},
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
+			this.mainStore.toggleEnvelopeFlagged(this.envelope)
 		},
 		onToggleJunk() {
-			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
+			this.mainStore.toggleEnvelopeJunk(this.envelope)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+			this.mainStore.toggleEnvelopeSeen({ envelope: this.envelope })
 		},
 		async onDelete() {
 			// Remove from selection first
@@ -740,7 +741,7 @@ export default {
 			logger.info(`deleting message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('deleteMessage', {
+				await this.mainStore.deleteMessage({
 					id: this.envelope.databaseId,
 				})
 			} catch (error) {
@@ -767,7 +768,7 @@ export default {
 			logger.info(`archiving message ${this.envelope.databaseId}`)
 
 			try {
-				await this.$store.dispatch('moveMessage', {
+				await this.mainStore.moveMessage({
 					id: this.envelope.databaseId,
 					destMailboxId: this.account.archiveMailboxId,
 				})
@@ -777,7 +778,7 @@ export default {
 			}
 		},
 		async onDisableFollowUpReminder() {
-			await this.$store.dispatch('clearFollowUpReminder', {
+			await this.mainStore.clearFollowUpReminder({
 				envelope: this.envelope,
 			})
 		},

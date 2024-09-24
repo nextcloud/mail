@@ -75,6 +75,8 @@ import Error from './Error.vue'
 import RecipientBubble from './RecipientBubble.vue'
 import ThreadEnvelope from './ThreadEnvelope.vue'
 import ThreadSummary from './ThreadSummary.vue'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'Thread',
@@ -105,6 +107,7 @@ export default {
 	},
 
 	computed: {
+		...mapStores(useMainStore),
 		moreParticipantsString() {
 			// Returns a number showing the number of thread participants that are not shown in the avatar-header
 			return `+${this.threadParticipants.length - this.participantsToDisplay}`
@@ -113,19 +116,19 @@ export default {
 			return parseInt(this.$route.params.threadId, 10)
 		},
 		thread() {
-			const envelope = this.$store.getters.getEnvelope(this.threadId)
+			const envelope = this.mainStore.getEnvelope(this.threadId)
 			if (envelope === undefined) {
 				return []
 			}
 
-			const envelopes = this.$store.getters.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
+			const envelopes = this.mainStore.getEnvelopesByThreadRootId(envelope.accountId, envelope.threadRootId)
 			if (envelopes.length === 0) {
 				return []
 			}
 
-			const currentMailbox = this.$store.getters.getMailbox(envelope.mailboxId)
-			const trashMailbox = this.$store.getters.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
-			const junkMailbox = this.$store.getters.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
+			const currentMailbox = this.mainStore.getMailbox(envelope.mailboxId)
+			const trashMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'trash')
+			const junkMailbox = this.mainStore.getMailboxes(envelope.accountId).find(mailbox => mailbox.specialRole === 'junk')
 
 			let limitEnvelopesToCurrentMailbox = false
 			const mailboxesToIgnore = []
@@ -283,7 +286,7 @@ export default {
 			const threadId = this.threadId
 
 			try {
-				const thread = await this.$store.dispatch('fetchThread', threadId)
+				const thread = await this.mainStore.fetchThread(threadId)
 				logger.debug(`thread for envelope ${threadId} fetched`, { thread })
 				// TODO: add timeout so that envelope isn't flagged when only viewed
 				//       for a few seconds

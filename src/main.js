@@ -6,7 +6,6 @@
 import Vue from 'vue'
 import { getRequestToken } from '@nextcloud/auth'
 import { registerDavProperty } from '@nextcloud/files'
-import { sync } from 'vuex-router-sync'
 import { generateFilePath } from '@nextcloud/router'
 import '@nextcloud/dialogs/style.css'
 import './directives/drag-and-drop/styles/drag-and-drop.scss'
@@ -16,11 +15,11 @@ import vToolTip from 'v-tooltip'
 import App from './App.vue'
 import Nextcloud from './mixins/Nextcloud.js'
 import router from './router.js'
-import store from './store/index.js'
 import { fixAccountId } from './service/AccountService.js'
 import { loadState } from '@nextcloud/initial-state'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import useOutboxStore from './store/outboxStore.js'
+import useMainStore from './store/mainStore.js'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
@@ -29,8 +28,6 @@ __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
-
-sync(store, router)
 
 Vue.mixin(Nextcloud)
 
@@ -47,66 +44,79 @@ const getPreferenceFromPage = (key) => {
 
 registerDavProperty('nc:share-attributes', { nc: 'http://nextcloud.org/ns' })
 
-store.commit('savePreference', {
+/* eslint-disable vue/match-component-file-name */
+export default new Vue({
+	el: '#content',
+	name: 'Mail',
+	router,
+	pinia,
+	render: (h) => h(App),
+})
+
+console.log('ACTUALLY RUNNING')
+
+const mainStore = useMainStore()
+
+mainStore.savePreferenceMutation({
 	key: 'debug',
 	value: loadState('mail', 'debug', false),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'ncVersion',
 	value: loadState('mail', 'ncVersion'),
 })
 
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'sort-order',
 	value: loadState('mail', 'sort-order', 'newest'),
 })
 
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'attachment-size-limit',
 	value: Number.parseInt(getPreferenceFromPage('attachment-size-limit'), 10),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'version',
 	value: getPreferenceFromPage('config-installed-version'),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'external-avatars',
 	value: getPreferenceFromPage('external-avatars'),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'collect-data',
 	value: getPreferenceFromPage('collect-data'),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'search-priority-body',
 	value: getPreferenceFromPage('search-priority-body'),
 })
 const startMailboxId = getPreferenceFromPage('start-mailbox-id')
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'start-mailbox-id',
 	value: startMailboxId ? parseInt(startMailboxId, 10) : null,
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'tag-classified-messages',
 	value: getPreferenceFromPage('tag-classified-messages'),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'allow-new-accounts',
 	value: loadState('mail', 'allow-new-accounts', true),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'password-is-unavailable',
 	value: loadState('mail', 'password-is-unavailable', false),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'layout-mode',
 	value: getPreferenceFromPage('layout-mode'),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'follow-up-reminders',
 	value: getPreferenceFromPage('follow-up-reminders'),
 })
-store.commit('savePreference', {
+mainStore.savePreferenceMutation({
 	key: 'internal-addresses',
 	value: loadState('mail', 'internal-addresses', false),
 })
@@ -127,37 +137,27 @@ accounts.map(fixAccountId).forEach((account) => {
 	if (settings) {
 		delete settings.accountId
 		Object.entries(settings).forEach(([key, value]) => {
-			store.commit('setAccountSetting', {
+			mainStore.setAccountSettingMutation({
 				accountId: account.id,
 				key,
 				value,
 			})
 		})
 	}
-	store.commit('addAccount', { ...account, ...settings })
+	mainStore.addAccountMutation({ ...account, ...settings })
 })
 
-tags.forEach(tag => store.commit('addTag', { tag }))
-internalAddressesList.forEach(internalAddress => store.commit('addInternalAddress', internalAddress))
+tags.forEach(tag => mainStore.addTagMutation({ tag }))
+internalAddressesList.forEach(internalAddress => mainStore.addInternalAddressMutation(internalAddress))
 
-store.commit('setScheduledSendingDisabled', disableScheduledSend)
-store.commit('setSnoozeDisabled', disableSnooze)
-store.commit('setGoogleOauthUrl', googleOauthUrl)
-store.commit('setMicrosoftOauthUrl', microsoftOauthUrl)
-store.commit('setFollowUpFeatureAvailable', followUpFeatureAvailable)
+mainStore.setScheduledSendingDisabledMutation(disableScheduledSend)
+mainStore.setSnoozeDisabledMutation(disableSnooze)
+mainStore.setGoogleOauthUrlMutation(googleOauthUrl)
+mainStore.setMicrosoftOauthUrlMutation(microsoftOauthUrl)
+mainStore.setFollowUpFeatureAvailableMutation(followUpFeatureAvailable)
 
 const smimeCertificates = loadState('mail', 'smime-certificates', [])
-store.commit('setSmimeCertificates', smimeCertificates)
-
-/* eslint-disable vue/match-component-file-name */
-export default new Vue({
-	el: '#content',
-	name: 'Mail',
-	router,
-	store,
-	pinia,
-	render: (h) => h(App),
-})
+mainStore.setSmimeCertificatesMutation(smimeCertificates)
 
 const outboxStore = useOutboxStore()
 outboxMessages.forEach(message => outboxStore.addMessageMutation({ message }))

@@ -495,9 +495,10 @@ import { NcReferencePickerModal } from '@nextcloud/vue/dist/Components/NcRichTex
 import Send from 'vue-material-design-icons/Send.vue'
 import SendClock from 'vue-material-design-icons/SendClock.vue'
 import moment from '@nextcloud/moment'
-import { mapGetters } from 'vuex'
 import { TRIGGER_CHANGE_ALIAS, TRIGGER_EDITOR_READY } from '../ckeditor/signature/InsertSignatureCommand.js'
 import { EDITOR_MODE_HTML, EDITOR_MODE_TEXT } from '../store/constants.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -693,11 +694,10 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters([
-			'isScheduledSendingDisabled',
-		]),
+		...mapStores(useMainStore),
+		...mapState(useMainStore, ['isScheduledSendingDisabled']),
 		isPickerAvailable() {
-			return parseInt(this.$store.getters.getNcVersion) >= 26
+			return parseInt(this.mainStore.getNcVersion) >= 26
 		},
 		aliases() {
 			let cnt = 0
@@ -739,7 +739,7 @@ export default {
 			return new Date(new Date().setDate(new Date().getDate()))
 		},
 		attachmentSizeLimit() {
-			return this.$store.getters.getPreference('attachment-size-limit')
+			return this.mainStore.getPreference('attachment-size-limit')
 		},
 		selectableRecipients() {
 			return uniqBy('email')(this.newRecipients
@@ -880,7 +880,7 @@ export default {
 			const missingCertificates = []
 
 			this.allRecipients.forEach((recipient) => {
-				const recipientCertificate = this.$store.getters.getSmimeCertificateByEmail(recipient.email)
+				const recipientCertificate = this.mainStore.getSmimeCertificateByEmail(recipient.email)
 				if (!recipientCertificate) {
 					missingCertificates.push(recipient.email)
 				}
@@ -967,7 +967,7 @@ export default {
 
 		// Add messages forwarded as attachments
 		for (const id of this.forwardedMessages) {
-			const env = this.$store.getters.getEnvelope(id)
+			const env = this.mainStore.getEnvelope(id)
 			if (!env) {
 				// TODO: also happens when the composer page is reloaded
 				showError(t('mail', 'Message {id} could not be found', {
@@ -1031,7 +1031,7 @@ export default {
 					return alias.id === this.fromAccount && !alias.aliasId
 				})
 			} else {
-				const currentAccountId = this.$store.getters.getMailbox(this.$route.params.mailboxId)?.accountId
+				const currentAccountId = this.mainStore.getMailbox(this.$route.params.mailboxId)?.accountId
 				if (currentAccountId) {
 					this.selectedAlias = this.aliases.find((alias) => {
 						return alias.id === currentAccountId
@@ -1063,14 +1063,14 @@ export default {
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.replyTo.from[0],
 					this.replyTo.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top',
+					this.mainStore.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else if (this.forwardFrom && this.isFirstOpen) {
 				body = buildReplyBody(
 					this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 					this.forwardFrom.from[0],
 					this.forwardFrom.dateInt,
-					this.$store.getters.getPreference('reply-mode', 'top') === 'top',
+					this.mainStore.getPreference('reply-mode', 'top') === 'top',
 				).value
 			} else {
 				body = this.bodyVal
@@ -1405,7 +1405,7 @@ export default {
 			if (!certificateId) {
 				return undefined
 			}
-			return this.$store.getters.getSmimeCertificate(certificateId)
+			return this.mainStore.getSmimeCertificate(certificateId)
 		},
 
 		/**

@@ -61,6 +61,8 @@ import { showInfo } from '@nextcloud/dialogs'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import IconEdit from 'vue-material-design-icons/Pencil.vue'
 import { translateTagDisplayName } from '../util/tag.js'
+import { mapStores } from 'pinia'
+import useMainStore from '../store/mainStore.js'
 
 export default {
 	name: 'TagItem',
@@ -96,6 +98,9 @@ export default {
 			renameTagInput: false,
 		}
 	},
+	computed: {
+		...mapStores(useMainStore),
+	},
 	methods: {
 		translateTagDisplayName,
 		deleteTag() {
@@ -105,7 +110,7 @@ export default {
 			this.editColor = newColor
 			this.showSaving = false
 			try {
-				await this.$store.dispatch('updateTag', {
+				await this.mainStore.updateTag({
 					tag: this.tag,
 					displayName: this.tag.displayName,
 					color: newColor,
@@ -129,7 +134,7 @@ export default {
 			const displayName = event.target.querySelector('input[type=text]').value
 
 			try {
-				await this.$store.dispatch('updateTag', {
+				await this.mainStore.updateTag({
 					tag,
 					displayName,
 					color: tag.color,
@@ -161,7 +166,7 @@ export default {
 		isSet(imapLabel) {
 			return this.envelopes.some(
 				(envelope) => (
-					this.$store.getters.getEnvelopeTags(envelope.databaseId).some(
+					this.mainStore.getEnvelopeTags(envelope.databaseId).some(
 						tag => tag.imapLabel === imapLabel,
 					)
 				),
@@ -170,13 +175,13 @@ export default {
 		addTag(imapLabel) {
 			this.isAdded = true
 			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('addEnvelopeTag', { envelope, imapLabel })
+				this.mainStore.addEnvelopeTag({ envelope, imapLabel })
 			})
 		},
 		removeTag(imapLabel) {
 			this.isAdded = false
 			this.envelopes.forEach((envelope) => {
-				this.$store.dispatch('removeEnvelopeTag', { envelope, imapLabel })
+				this.mainStore.removeEnvelopeTag({ envelope, imapLabel })
 			})
 		},
 	},

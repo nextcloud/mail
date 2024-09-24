@@ -8,22 +8,24 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { showError } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import logger from './logger.js'
 import { matchError } from './errors/match.js'
 import MailboxLockedError from './errors/MailboxLockedError.js'
+import { mapStores, mapState } from 'pinia'
+import useMainStore from './store/mainStore.js'
 
 export default {
 	name: 'App',
 	computed: {
-		...mapGetters([
+		...mapStores(useMainStore),
+		...mapState(useMainStore, [
 			'isExpiredSession',
 		]),
 		hasMailAccounts() {
-			return !!this.$store.getters.accounts.find((account) => !account.isUnified)
+			return !!this.mainStore.getAccounts.find((account) => !account.isUnified)
 		},
 	},
 	watch: {
@@ -46,9 +48,9 @@ export default {
 		}
 
 		this.sync()
-		await this.$store.dispatch('fetchCurrentUserPrincipal')
-		await this.$store.dispatch('loadCollections')
-		this.$store.commit('hasCurrentUserPrincipalAndCollections', true)
+		await this.mainStore.fetchCurrentUserPrincipal()
+		await this.mainStore.loadCollections()
+		this.mainStore.hasCurrentUserPrincipalAndCollectionsMutation(true)
 	},
 	methods: {
 		reload() {
@@ -57,7 +59,7 @@ export default {
 		sync() {
 			setTimeout(async () => {
 				try {
-					await this.$store.dispatch('syncInboxes')
+					await this.mainStore.syncInboxes()
 
 					logger.debug("Inboxes sync'ed in background")
 				} catch (error) {

@@ -38,11 +38,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { NcActions, NcActionButton } from '@nextcloud/vue'
 import PencilIcon from 'vue-material-design-icons/Pencil.vue'
 import ArrowExpandIcon from 'vue-material-design-icons/ArrowExpand.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
+import useMainStore from '../store/mainStore.js'
+import { mapStores, mapState } from 'pinia'
 
 export default {
 	name: 'ComposerSessionIndicator',
@@ -59,7 +60,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['composerMessage']),
+		...mapStores(useMainStore),
+		...mapState(useMainStore, ['composerMessage']),
 		title() {
 			return this.composerMessage?.data.subject || t('mail', 'Untitled message')
 		},
@@ -73,7 +75,7 @@ export default {
 				return
 			}
 
-			await this.$store.dispatch('showMessageComposer')
+			await this.mainStore.showMessageComposerMutation()
 		},
 		onClose() {
 			if (this.disabled) {

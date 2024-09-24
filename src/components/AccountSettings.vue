@@ -104,6 +104,8 @@ import CertificateSettings from './CertificateSettings.vue'
 import SearchSettings from './SearchSettings.vue'
 import TrashRetentionSettings from './TrashRetentionSettings.vue'
 import logger from '../logger.js'
+import useMainStore from '../store/mainStore.js'
+import { mapStores } from 'pinia'
 
 export default {
 	name: 'AccountSettings',
@@ -139,6 +141,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapStores(useMainStore),
 		displayName() {
 			return this.account.name
 		},
@@ -151,7 +154,7 @@ export default {
 			if (newState === true && this.fetchActiveSieveScript === true) {
 				logger.debug(`Load active sieve script for account ${this.account.accountId}`)
 				this.fetchActiveSieveScript = false
-				this.$store.dispatch('fetchActiveSieveScript', {
+				this.mainStore.fetchActiveSieveScript({
 					accountId: this.account.id,
 				})
 			}
