@@ -18,6 +18,7 @@ use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Tests\Integration\Framework\Caching;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ICacheFactory;
@@ -110,13 +111,21 @@ class IMAPClientFactoryTest extends TestCase {
 		if (ltrim($cacheClass, '\\') !== Redis::class) {
 			$this->markTestSkipped('Redis not available. Found ' . $cacheClass);
 		}
+
+		[$imapClientFactory, $cacheFactory] = Caching::getImapClientFactoryAndConfiguredCacheFactory($this->crypto);
+		$this->assertInstanceOf(
+			Redis::class,
+			$cacheFactory->createDistributed(),
+			'Distributed cache is not Redis',
+		);
+
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')
 			->with('encrypted')
 			->willReturn('notmypassword');
 
-		$client = $this->factory->getClient($account);
+		$client = $imapClientFactory->getClient($account);
 		self::assertInstanceOf(HordeImapClient::class, $client);
 		foreach ([1, 2, 3] as $attempts) {
 			try {
