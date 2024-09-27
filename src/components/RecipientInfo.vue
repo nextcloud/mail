@@ -1,6 +1,6 @@
 <template>
 	<div class="recipient-info">
-		<!-- <div v-if="recipient.length === 1" class="recipient-single">
+		<div v-if="recipient.length === 1" class="recipient-single">
 			<Avatar :user="recipient.uid"
 				:display-name="recipient.displayName"
 				:email="recipient.email"
@@ -13,16 +13,14 @@
 					{{ recipient.email }}
 				</p>
 			</div>
-		</div> -->
+		</div>
 		<div class="recipient-multiple">
 			<div class="recipient-list">
 				<div v-for="(vCard, index) in recipientsVCards"
 					:key="index"
 					class="recipient-item">
 					<RecipientDetails :contact="vCard" :reload-bus="reloadBus" />
-
-
-					<!--					<Avatar :user="recipient.uid"
+<!--					<Avatar :user="recipient.uid"
 						:display-name="recipient.displayName"
 						:email="recipient.email"
 						:size="64"
@@ -56,10 +54,16 @@ import { mapGetters } from 'vuex'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import mitt from 'mitt'
 import Contact from '../nextcloud-contacts/contact.js'
+import Avatar from './Avatar.vue'
+import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
+import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 
 export default {
 	components: {
+		Avatar,
 		RecipientDetails,
+		IconArrowDown,
+		IconArrowUp,
 	},
 	props: {
 		recipient: {
