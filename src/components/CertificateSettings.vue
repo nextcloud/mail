@@ -63,7 +63,7 @@ export default {
 	},
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainState, {
+		...mapState(useMainStore, {
 			smimeCertificates: 'getSmimeCertificates',
 		}),
 		savedCertificate: {

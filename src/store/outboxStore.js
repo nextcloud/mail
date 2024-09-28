@@ -108,7 +108,7 @@ export default defineStore('outbox', {
 			this.addMessageMutation({ message })
 
 			// Future drafts/sends after an error should go through outbox logic
-			this.mainStore.storeconvertComposerMessageToOutbox({ message }, {
+			this.mainStore.convertComposerMessageToOutboxMutation({ message }, {
 				root: true,
 			})
 

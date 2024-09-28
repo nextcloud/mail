@@ -53,8 +53,6 @@ export default new Vue({
 	render: (h) => h(App),
 })
 
-console.log('ACTUALLY RUNNING')
-
 const mainStore = useMainStore()
 
 mainStore.savePreferenceMutation({
