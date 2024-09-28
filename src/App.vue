@@ -16,6 +16,7 @@ import { matchError } from './errors/match.js'
 import MailboxLockedError from './errors/MailboxLockedError.js'
 import { mapStores, mapState } from 'pinia'
 import useMainStore from './store/mainStore.js'
+import initAfterAppCreation from './init.js'
 
 export default {
 	name: 'App',
@@ -40,6 +41,7 @@ export default {
 		},
 	},
 	async mounted() {
+		initAfterAppCreation()
 		// Redirect to setup page if no accounts are configured
 		if (!this.hasMailAccounts) {
 			this.$router.replace({
