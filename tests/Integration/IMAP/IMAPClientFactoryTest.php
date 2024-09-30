@@ -14,6 +14,7 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OC\Memcache\Redis;
 use OCA\Mail\Account;
+use OCA\Mail\Cache\HordeCacheFactory;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\HordeImapClient;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -40,6 +41,7 @@ class IMAPClientFactoryTest extends TestCase {
 	private $factory;
 	private IEventDispatcher|MockObject $eventDispatcher;
 	private ITimeFactory|MockObject $timeFactory;
+	private HordeCacheFactory|MockObject $hordeCacheFactory;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -49,6 +51,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->cacheFactory = Server::get(ICacheFactory::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->hordeCacheFactory = $this->createMock(HordeCacheFactory::class);
 
 		$this->factory = new IMAPClientFactory(
 			$this->crypto,
@@ -56,6 +59,7 @@ class IMAPClientFactoryTest extends TestCase {
 			$this->cacheFactory,
 			$this->eventDispatcher,
 			$this->timeFactory,
+			$this->hordeCacheFactory,
 		);
 	}
 
