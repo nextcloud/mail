@@ -6,6 +6,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 4.0.1 – 2024-10-01
+### Fixed
+* Multiselect by holding the shift key
+* Center envelope header avatar
+* Reply to sender only
+* Single full sync with QRESYNC
+* Persist vanished messages immediately
+
 ## 4.0.0 - 2024-09-12
 ### Added
 - More compact UI
