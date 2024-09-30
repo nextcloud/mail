@@ -208,4 +208,8 @@ to {
 	}
 }
 
+.v-popper__inner {
+	height: unset !important;
+}
+
 </style>

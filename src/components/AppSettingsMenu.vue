@@ -22,7 +22,7 @@
 
 				<h6>{{ t('mail', 'Account settings') }}</h6>
 				<p>{{ t('mail', 'Settings for:') }}</p>
-				<li v-for="account in accounts" :key="account.id">
+				<li v-for="account in getAccounts" :key="account.id">
 					<NcButton v-if="account && account.emailAddress"
 						class="app-settings-button"
 						type="secondary"
@@ -235,7 +235,7 @@
 						@change="onToggleAutoTagging">
 					<label for="auto-tagging-toggle">{{ autoTaggingText }}</label>
 				</p>
-				<p v-if="isFollowUpFeatureAvailable" class="app-settings">
+				<p v-if="followUpFeatureAvailable" class="app-settings">
 					<input id="follow-up-reminder-toggle"
 						class="checkbox"
 						type="checkbox"
@@ -368,7 +368,7 @@ export default {
 	},
 	computed: {
 		...mapStores(useMainStore),
-		...mapState(useMainStore, ['accounts', 'isFollowUpFeatureAvailable']),
+		...mapState(useMainStore, ['getAccounts', 'followUpFeatureAvailable']),
 		searchPriorityBody() {
 			return this.mainStore.getPreference('search-priority-body', 'false') === 'true'
 		},
