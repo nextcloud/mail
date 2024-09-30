@@ -25,8 +25,13 @@ class RequestTest extends TestCase {
 
 		$this->mailbox = 'inbox';
 		$this->syncToken = 'ab123';
+		$this->requestId = 'abcdef';
 
-		$this->request = new Request($this->mailbox, $this->syncToken, []);
+		$this->request = new Request($this->requestId, $this->mailbox, $this->syncToken, []);
+	}
+
+	public function testGetId() {
+		$this->assertEquals($this->requestId, $this->request->getId());
 	}
 
 	public function testGetMailbox() {

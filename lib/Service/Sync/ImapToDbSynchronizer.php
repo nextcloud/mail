@@ -212,8 +212,10 @@ class ImapToDbSynchronizer {
 		// call it a day because Horde caches unrelated/unrequested changes until the next
 		// operation. However, our cache is not reliable as some instance might use APCu which
 		// isn't shared between cron and web requests.
+		$hasQresync = false;
 		if ($client->capability->isEnabled('QRESYNC')) {
 			$this->logger->debug('Forcing full sync due to QRESYNC');
+			$hasQresync = true;
 			$criteria |= Horde_Imap_Client::SYNC_NEWMSGSUIDS
 				| Horde_Imap_Client::SYNC_FLAGSUIDS
 				| Horde_Imap_Client::SYNC_VANISHEDUIDS;
@@ -243,7 +245,7 @@ class ImapToDbSynchronizer {
 				try {
 					$logger->debug('Running partial sync for ' . $mailbox->getId());
 					// Only rebuild threads if there were new or vanished messages
-					$rebuildThreads = $this->runPartialSync($client, $account, $mailbox, $logger, $criteria, $knownUids);
+					$rebuildThreads = $this->runPartialSync($client, $account, $mailbox, $logger, $hasQresync, $criteria, $knownUids);
 				} catch (UidValidityChangedException $e) {
 					$logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync for ' . $mailbox->getId());
 					$this->resetCache($account, $mailbox);
@@ -368,6 +370,7 @@ class ImapToDbSynchronizer {
 		Account $account,
 		Mailbox $mailbox,
 		LoggerInterface $logger,
+		bool $hasQresync,
 		int $criteria,
 		?array $knownUids = null): bool {
 		$newOrVanished = false;
@@ -379,15 +382,19 @@ class ImapToDbSynchronizer {
 		$uids = $knownUids ?? $this->dbMapper->findAllUids($mailbox);
 		$perf->step('get all known UIDs');
 
+		$requestId = base64_encode(random_bytes(16));
+
 		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
 			$response = $this->synchronizer->sync(
 				$client,
 				new Request(
+					$requestId,
 					$mailbox->getName(),
 					$mailbox->getSyncNewToken(),
 					$uids
 				),
 				$account->getUserId(),
+				$hasQresync,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS
 			);
 			$perf->step('get new messages via Horde');
@@ -427,11 +434,13 @@ class ImapToDbSynchronizer {
 			$response = $this->synchronizer->sync(
 				$client,
 				new Request(
+					$requestId,
 					$mailbox->getName(),
 					$mailbox->getSyncChangedToken(),
 					$uids
 				),
 				$account->getUserId(),
+				$hasQresync,
 				Horde_Imap_Client::SYNC_FLAGSUIDS
 			);
 			$perf->step('get changed messages via Horde');
@@ -457,11 +466,13 @@ class ImapToDbSynchronizer {
 			$response = $this->synchronizer->sync(
 				$client,
 				new Request(
+					$requestId,
 					$mailbox->getName(),
 					$mailbox->getSyncVanishedToken(),
 					$uids
 				),
 				$account->getUserId(),
+				$hasQresync,
 				Horde_Imap_Client::SYNC_VANISHEDUIDS
 			);
 			$perf->step('get vanished messages via Horde');
