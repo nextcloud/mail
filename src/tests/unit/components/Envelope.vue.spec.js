@@ -4,10 +4,12 @@
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
+import { setActivePinia, createPinia } from 'pinia'
 
 import Nextcloud from '../../../mixins/Nextcloud.js'
 import Envelope from '../../../components/Envelope.vue'
-import Vuex from 'vuex';
+
+import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
 const $route = {
@@ -16,31 +18,18 @@ const $route = {
 	},
 }
 
-localVue.use(Vuex)
+const pinia = createPinia()
+
+
 localVue.mixin(Nextcloud)
 
 describe('Envelope', () => {
-	let actions
-	let getters
 	let store
 
 	beforeEach(() => {
-		actions = {}
-		getters = {
-			accounts: () => [
-				{
-					id: 123,
-				},
-			],
-			getAccount: () => (id) => ({}),
-			getEnvelopeTags: () => (id) => ([]),
-			getMailbox: () => (id) => ({}),
-			getPreference: () => (key, defaultValue) => defaultValue,
-		}
-		store = new Vuex.Store({
-			actions,
-			getters,
-		})
+		setActivePinia(createPinia())
+
+		store = useMainStore()
 	})
 	it('allows toggling seen flag without ACLs', () => {
 		const view = shallowMount(Envelope, {
@@ -86,6 +75,7 @@ describe('Envelope', () => {
 				},
 			},
 			store,
+			pinia,
 			localVue,
 		})
 
