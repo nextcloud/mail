@@ -597,7 +597,7 @@ export default function mainStoreActions() {
 					await moveDraft(id)
 				}
 
-				this.stopComposerSession()
+				this.stopComposerSessionMutation()
 			})
 		},
 		patchComposerData(data) {
