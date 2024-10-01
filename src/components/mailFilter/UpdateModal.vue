@@ -15,12 +15,12 @@
 			</div>
 
 			<div class="filter-operator">
-				<MailFilterOperator :filter="clone" @update:operator="updateOperator" />
+				<Operator :filter="clone" @update:operator="updateOperator" />
 			</div>
 
 			<div class="filter-tests">
 				<p>{{ t('mail', 'Tests') }}</p>
-				<MailFilterTest v-for="test in clone.tests"
+				<Test v-for="test in clone.tests"
 					:key="test.id"
 					:test="test"
 					@update-test="updateTest"
@@ -35,7 +35,7 @@
 
 			<div class="filter-actions">
 				<p>{{ t('mail', 'Actions') }}</p>
-				<MailFilterAction v-for="action in clone.actions"
+				<Action v-for="action in clone.actions"
 					:key="action.id"
 					:action="action"
 					:account="account"
@@ -72,19 +72,19 @@
 </template>
 <script>
 import { NcButton, NcCheckboxRadioSwitch, NcModal, NcTextField, NcLoadingIcon } from '@nextcloud/vue'
-import MailFilterTest from './MailFilterTest.vue'
-import MailFilterOperator from './MailFilterOperator.vue'
+import Test from './Test.vue'
+import Operator from './Operator.vue'
 import { randomId } from '../../util/randomId.js'
-import MailFilterAction from './MailFilterAction.vue'
+import Action from './Action.vue'
 import IconCheck from 'vue-material-design-icons/Check.vue'
 
 export default {
-	name: 'MailFilterUpdateModal',
+	name: 'UpdateModal',
 	components: {
 		IconCheck,
-		MailFilterAction,
-		MailFilterOperator,
-		MailFilterTest,
+		Action,
+		Operator,
+		Test,
 		NcButton,
 		NcCheckboxRadioSwitch,
 		NcLoadingIcon,

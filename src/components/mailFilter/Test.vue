@@ -54,7 +54,7 @@ import { NcButton, NcSelect } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 
 export default {
-	name: 'MailFilterTest',
+	name: 'Test',
 	components: {
 		NcButton,
 		NcSelect,

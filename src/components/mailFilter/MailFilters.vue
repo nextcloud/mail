@@ -30,13 +30,13 @@
 			@click.prevent.stop="createFilter">
 			{{ t('mail', 'New filter') }}
 		</NcButton>
-		<MailFilterUpdateModal v-if="showUpdateModal && currentFilter"
+		<UpdateModal v-if="showUpdateModal && currentFilter"
 			:filter="currentFilter"
 			:account="account"
 			:loading="loading"
 			@update-filter="updateFilter"
 			@close="closeModal" />
-		<MailFilterDeleteModal v-if="showDeleteModal && currentFilter"
+		<DeleteModal v-if="showDeleteModal && currentFilter"
 			:filter="currentFilter"
 			:open="showDeleteModal"
 			:loading="loading"
@@ -47,13 +47,13 @@
 
 <script>
 import { NcActionButton, NcListItem, NcButton } from '@nextcloud/vue'
-import MailFilterUpdateModal from './MailFilterUpdateModal.vue'
+import UpdateModal from './UpdateModal.vue'
 import { randomId } from '../../util/randomId.js'
 import logger from '../../logger.js'
 import { mapStores } from 'pinia'
 import useMailFilterStore from '../../store/mailFilterStore.js'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
-import MailFilterDeleteModal from './MailFilterDeleteModal.vue'
+import DeleteModal from './DeleteModal.vue'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 
 export default {
@@ -62,9 +62,9 @@ export default {
 		NcButton,
 		NcListItem,
 		NcActionButton,
-		MailFilterUpdateModal,
+		UpdateModal,
 		DeleteIcon,
-		MailFilterDeleteModal,
+		DeleteModal,
 
 	},
 	props: {

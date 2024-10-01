@@ -13,7 +13,7 @@
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import { mailboxHasRights } from '../../util/acl.js'
 export default {
-	name: 'MailFilterActionFileinto',
+	name: 'ActionFileinto',
 	components: {
 		NcSelect,
 	},

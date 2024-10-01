@@ -29,7 +29,7 @@
 import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 
 export default {
-	name: 'MailFilterOperator',
+	name: 'Operator',
 	components: {
 		NcCheckboxRadioSwitch,
 	},

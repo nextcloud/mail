@@ -32,19 +32,19 @@
 	</div>
 </template>
 <script>
-import MailFilterActionFileinto from './MailFilterActionFileinto.vue'
-import MailFilterActionAddflag from './MailFilterActionAddflag.vue'
+import ActionFileinto from './ActionFileinto.vue'
+import ActionAddflag from './ActionAddflag.vue'
 import { NcButton, NcSelect, NcTextField } from '@nextcloud/vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 
 export default {
-	name: 'MailFilterAction',
+	name: 'Action',
 	components: {
 		NcSelect,
 		NcTextField,
 		NcButton,
-		MailFilterActionFileinto,
-		MailFilterActionAddflag,
+		ActionFileinto,
+		ActionAddflag,
 		DeleteIcon,
 	},
 	props: {
@@ -70,9 +70,9 @@ export default {
 	computed: {
 		componentInstance() {
 			if (this.action.type === 'fileinto') {
-				return MailFilterActionFileinto
+				return ActionFileinto
 			} else if (this.action.type === 'addflag') {
-				return MailFilterActionAddflag
+				return ActionAddflag
 			}
 			return null
 		},

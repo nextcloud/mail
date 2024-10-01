@@ -16,7 +16,7 @@ import IconCancel from '@mdi/svg/svg/cancel.svg'
 import IconCheck from '@mdi/svg/svg/check.svg'
 
 export default {
-	name: 'MailFilterDeleteModal',
+	name: 'DeleteModal',
 	components: {
 		NcDialog,
 	},

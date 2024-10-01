@@ -13,7 +13,7 @@
 import { NcTextField } from '@nextcloud/vue'
 
 export default {
-	name: 'MailFilterActionAddflag',
+	name: 'ActionAddflag',
 	components: {
 		NcTextField,
 	},
