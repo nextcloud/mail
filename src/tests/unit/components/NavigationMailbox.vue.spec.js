@@ -4,34 +4,26 @@
  */
 
 import {createLocalVue, shallowMount} from '@vue/test-utils'
-import Vuex from 'vuex'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 
 import NavigationMailbox from '../../../components/NavigationMailbox.vue'
 import Nextcloud from '../../../mixins/Nextcloud.js'
+import useMainStore from '../../../store/mainStore.js'
 
 const localVue = createLocalVue()
+localVue.use(PiniaVuePlugin)
 
-localVue.use(Vuex)
+const pinia = createPinia()
+
+
 localVue.mixin(Nextcloud)
 
 describe('NavigationMailbox', () => {
 
-	let actions
-	let getters
 	let store
-	let parentMailbox = undefined
-	let subMailboxes = []
+	const subMailboxes = []
 
 	beforeEach(() => {
-		actions = {}
-		getters = {
-			getSubMailboxes: () => () => subMailboxes,
-			getParentMailbox: () => (id) => parentMailbox,
-		}
-		store = new Vuex.Store({
-			actions,
-			getters,
-		})
 	})
 
 	it('shows no counter', () => {
@@ -44,6 +36,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(false)
@@ -63,6 +56,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(true)
@@ -88,6 +82,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.showUnreadCounter).toBe(true)
@@ -104,6 +99,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -122,6 +118,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -137,6 +134,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(true)
@@ -152,6 +150,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(false)
@@ -170,6 +169,7 @@ describe('NavigationMailbox', () => {
 			},
 			store,
 			localVue,
+			pinia,
 		})
 
 		expect(view.vm.hasRenameAcl).toBe(false)
