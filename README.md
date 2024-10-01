@@ -18,13 +18,13 @@
 
 ## Why is this so awesome?
 
-* **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
+* **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar, Files & Tasks – more to come.
 * **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.
-* **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
+* **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension or the built-in support for S/MIME encryption and signatures.
 * **📑 Message threads!** Now we have proper grouping of message threads.
 * **🗄️ Mailbox management!** You can edit, delete, add submailboxes and more.
 * **🙈 We’re not reinventing the wheel!** Based on the great [Horde](https://www.horde.org) libraries.
-* **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
+* **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email), [Stalwart](https://stalw.art) or [Dovecot](https://www.dovecot.org)!
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template chooser](https://github.com/nextcloud/mail/issues/new/choose) so we get the info needed to debug and fix the problem. Thanks!
 
