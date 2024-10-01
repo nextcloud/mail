@@ -13,6 +13,9 @@ jobs:
       matrix:
         php-versions: ['8.1', '8.2', '8.3']
         nextcloud-versions: ['master', 'stable30']
+        include:
+          - php-versions: '8.4'
+            nextcloud-versions: 'master'
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up Nextcloud env
@@ -21,7 +24,7 @@ jobs:
         nextcloud-version: ${{ matrix.nextcloud-versions }}
         php-version: ${{ matrix.php-versions }}
         php-coverage: 'xdebug'
-        patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+        patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
         node-version: 'false'
         install: true
     - name: Checkout Mail
@@ -129,7 +132,7 @@ jobs:
               nextcloud-version: ${{ matrix.nextcloud-versions }}
               php-version: ${{ matrix.php-versions }}
               php-coverage: 'xdebug'
-              patch-php-version-check: ${{ matrix.php-versions == '8.2' }}
+              patch-php-version-check: ${{ matrix.php-versions == '8.4' }}
               install: true
               database: ${{ matrix.db }}
               node-version: 'false'
@@ -146,8 +149,8 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Patch version check for nightly PHP
-            if: ${{ matrix.php-versions == '8.2' }}
-            run: sed -i 's/max-version="8.1"/max-version="8.2"/' nextcloud/apps/mail/appinfo/info.xml
+            if: ${{ matrix.php-versions == '8.3' }}
+            run: sed -i 's/max-version="8.3"/max-version="8.4"/' nextcloud/apps/mail/appinfo/info.xml
           - name: Install Mail
             run: php -f nextcloud/occ app:enable -f mail
           - name: Configure Nextcloud for testing
