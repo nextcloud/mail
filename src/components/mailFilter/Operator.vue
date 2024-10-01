@@ -4,16 +4,16 @@
 -->
 <template>
 	<div>
-		<div class="mail-filter-row">
+		<div>
 			<p>{{ t('mail', 'Operator') }}</p>
 		</div>
-		<div class="mail-filter-row">
+		<div>
 			<NcCheckboxRadioSwitch :checked="filter.operator"
 				value="allof"
 				name="sharing_permission_radio"
 				type="radio"
 				@update:checked="updateFilter('allof')">
-				{{ t('mail', 'allof') }}
+				allof ({{ t('mail', 'If all tests pass, then the actions will be executed.') }})
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch :checked="filter.operator"
 				value="anyof"
@@ -46,9 +46,3 @@ export default {
 	},
 }
 </script>
-<style lang="scss" scoped>
-.mail-filter-row {
-	display: flex;
-	gap: 5px;
-}
-</style>
