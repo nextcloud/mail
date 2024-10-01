@@ -20,7 +20,7 @@
 				name="sharing_permission_radio"
 				type="radio"
 				@update:checked="updateFilter('anyof')">
-				{{ t('mail', 'anyof') }}
+				anyof ({{ t('mail', 'If one test pass, then the actions will be executed.') }})
 			</NcCheckboxRadioSwitch>
 		</div>
 	</div>
