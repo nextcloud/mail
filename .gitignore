@@ -17,6 +17,7 @@ tests/clover*.xml
 node_modules/
 
 /js
+/css
 
 # packaged app
 build/artifacts

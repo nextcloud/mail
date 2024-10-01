@@ -3,7 +3,7 @@
 [package]
 before_cmds = [
 	"composer install --no-dev -o",
-	"npm install --deps",
+	"npm install",
 	"npm run build",
 	"composer openapi"
 ]
