@@ -42,7 +42,7 @@
     "@ckeditor/vite-plugin-ckeditor5": "^0.1.3",
     "@mdi/svg": "^7.4.47",
     "@nextcloud/auth": "^2.4.0",
-    "@nextcloud/axios": "^2.5.0",
+    "@nextcloud/axios": "^2.5.1",
     "@nextcloud/calendar-js": "^6.1.0",
     "@nextcloud/cdav-library": "^1.5.1",
     "@nextcloud/dialogs": "^5.3.7",
