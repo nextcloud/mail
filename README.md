@@ -7,9 +7,9 @@
 
 ![Downloads](https://img.shields.io/github/downloads/nextcloud/mail/total.svg)
 [![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/mail)](https://api.reuse.software/info/github.com/nextcloud/mail)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/nextcloud/mail/Test)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nextcloud/mail/test.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/nextcloud/mail)](https://codecov.io/gh/nextcloud/mail)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nextcloud/mail)](https://dependabot.com)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://github.com/nextcloud/mail/issues/7948)
 
 **💌 A mail app for [Nextcloud](https://nextcloud.com)**
 
