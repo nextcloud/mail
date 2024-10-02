@@ -181,6 +181,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'mailboxes#repair',
+			'url' => '/api/mailboxes/{id}/repair',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#downloadAttachment',
 			'url' => '/api/messages/{id}/attachment/{attachmentId}',
 			'verb' => 'GET'
