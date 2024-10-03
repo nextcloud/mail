@@ -105,6 +105,27 @@ class MailAccountMapper extends QBMapper {
 	}
 
 	/**
+	 * Finds a mail account(s) by inbound user identity
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param string $userId remote system inbound user identity
+	 *
+	 * @return MailAccount[]
+	 */
+	public function findByInboundUserId(string $value): array {
+
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('inbound_user', $qb->createNamedParameter($value)));
+
+		return $this->findEntities($query);
+
+	}
+
+	/**
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 */

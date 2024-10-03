@@ -485,6 +485,11 @@ return [
 			'url' => '/api/follow-up/check-message-ids',
 			'verb' => 'POST',
 		],
+		[
+			'name' => 'ime#index',
+			'url' => '/ime',
+			'verb' => 'POST',
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
