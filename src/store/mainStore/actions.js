@@ -137,15 +137,15 @@ const combineEnvelopeLists = (sortOrder) => {
 	return pipe(flatten, orderBy(prop('dateInt'), 'desc'))
 }
 
-const addMailboxToState = curry((store, account, mailbox) => {
+const addMailboxToState = curry((mailboxes, account, mailbox) => {
 	mailbox.accountId = account.id
 	mailbox.mailboxes = []
 	Vue.set(mailbox, 'envelopeLists', {})
 
 	mainStoreActions().transformMailboxName(account, mailbox)
 
-	Vue.set(store.mailboxes, mailbox.databaseId, mailbox)
-	const parent = Object.values(store.mailboxes)
+	Vue.set(mailboxes, mailbox.databaseId, mailbox)
+	const parent = Object.values(mailboxes)
 		.filter(mb => mb.accountId === account.id)
 		.find(mb => mb.name === mailbox.path)
 	if (mailbox.path === '' || !parent) {
@@ -153,7 +153,6 @@ const addMailboxToState = curry((store, account, mailbox) => {
 	} else {
 		parent.mailboxes.push(mailbox.databaseId)
 	}
-
 })
 
 export default function mainStoreActions() {
@@ -1845,7 +1844,7 @@ export default function mainStoreActions() {
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
 			Vue.set(account, 'mailboxes', [])
 			Vue.set(account, 'aliases', account.aliases ?? [])
-			mailboxes.map(addMailboxToState(this, account))
+			mailboxes.map(addMailboxToState(JSON.parse(JSON.stringify(this.mailboxes)), account))
 		},
 		editAccountMutation(account) {
 			Vue.set(this.accountsUnmapped, account.id, Object.assign({}, this.accountsUnmapped[account.id], account))
@@ -1890,7 +1889,7 @@ export default function mainStoreActions() {
 			account,
 			mailbox
 		}) {
-			addMailboxToState(this, account, mailbox)
+			addMailboxToState(JSON.parse(JSON.stringify(this.mailboxes)), account, mailbox)
 		},
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]

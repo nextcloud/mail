@@ -6,6 +6,9 @@ import useMainStore from '../../../store/mainStore.js'
 import logger from '../../../logger.js'
 import dragEventBus from '../util/dragEventBus.js'
 
+import { createPinia, setActivePinia } from 'pinia'
+
+setActivePinia(createPinia())
 const mainStore = useMainStore()
 
 export class DroppableMailbox {
