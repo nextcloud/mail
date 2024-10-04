@@ -7,8 +7,8 @@ import logger from '../logger.js'
 import useMainStore from '../store/mainStore.js'
 
 export async function handleHttpAuthErrors(cb) {
-	let mainStore = useMainStore()
-	
+	const mainStore = useMainStore()
+
 	try {
 		return await cb()
 	} catch (error) {

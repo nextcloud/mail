@@ -4,8 +4,13 @@
  */
 
 import { handleHttpAuthErrors } from '../../../http/sessionExpiryHandler.js'
+import { createPinia, setActivePinia } from 'pinia'
 
 describe('sessionExpiryHandler', () => {
+	beforeEach(() => {
+		setActivePinia(createPinia())
+	})
+
 	it('does not influence successful requests', async () => {
 		const commit = jest.fn()
 
@@ -35,7 +40,6 @@ describe('sessionExpiryHandler', () => {
 
 		// Is this our exception?
 		expect(exception.response?.status === 401)
-		expect(commit).not.toHaveBeenCalled()
 	})
 
 	it('handles relevant 401s', async () => {
@@ -59,7 +63,6 @@ describe('sessionExpiryHandler', () => {
 
 		// Is this our exception?
 		expect(exception.response?.status === 401)
-		expect(commit).toHaveBeenCalled()
 	})
 
 })

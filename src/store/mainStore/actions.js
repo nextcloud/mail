@@ -1844,7 +1844,8 @@ export default function mainStoreActions() {
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
 			Vue.set(account, 'mailboxes', [])
 			Vue.set(account, 'aliases', account.aliases ?? [])
-			mailboxes.map(addMailboxToState(JSON.parse(JSON.stringify(this.mailboxes)), account))
+
+			mailboxes.map(addMailboxToState(this.mailboxes, account))
 		},
 		editAccountMutation(account) {
 			Vue.set(this.accountsUnmapped, account.id, Object.assign({}, this.accountsUnmapped[account.id], account))
@@ -1889,7 +1890,7 @@ export default function mainStoreActions() {
 			account,
 			mailbox
 		}) {
-			addMailboxToState(JSON.parse(JSON.stringify(this.mailboxes)), account, mailbox)
+			addMailboxToState(this.mailboxes, account, mailbox)
 		},
 		updateMailboxMutation({ mailbox }) {
 			const account = this.accountsUnmapped[mailbox.accountId]
