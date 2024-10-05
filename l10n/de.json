@@ -382,6 +382,7 @@
     "Add submailbox" : "Unter-Postfach hinzufügen",
     "Rename" : "Umbenennen",
     "Move mailbox" : "Postfach verschieben",
+    "Repair mailbox" : "Postfach reparieren",
     "Clear cache" : "Cache löschen",
     "Clear locally cached data, in case there are issues with synchronization." : "Lösche lokal zwischengespeicherte Daten, falls es Probleme mit der Synchronisierung gibt.",
     "Subscribed" : "Abonniert",
