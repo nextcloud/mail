@@ -127,9 +127,9 @@ export default {
 			this.$set(this.loadingParticipants, email, true)
 
 			// Fetch the cards from all the address books
-			const result = await Promise.all(this.getAddressBooks.map(async addressBook => {
-
-				return await addressBook.addressbookQuery([{
+			const result = await Promise.all(this.getAddressBooks.map(async (addressBook) => [
+				addressBook,
+				await addressBook.addressbookQuery([{
 					name: [NS.IETF_CARDDAV, 'prop-filter'],
 					attributes: [['name', 'EMAIL']],
 					children: [{
@@ -137,16 +137,20 @@ export default {
 						value: email,
 					}],
 				}])
-			}))
-
-			const vcards = result.flat()
+			]))
+			const contacts = result.flatMap(
+				([addressBook, vcards]) => vcards.map(
+					(vcard) => new Contact(vcard.data, this.getAddressBooks[0])
+				)
+			)
 
 			// Let's assume we have no more than 1 card for a recipient
-			const vcard = vcards[0]
-
-			if (vcard) {
+			// TODO: What if the first one is not the best one? Aggregate attributes from all
+			//       vcards?
+			const contact = contacts.find((contact) => contact.email === email)
+			if (contact) {
 				// Save the card
-				this.$set(this.recipientsVCards, email, new Contact(vcard.data, this.getAddressBooks[0]))
+				this.$set(this.recipientsVCards, email, contact)
 			}
 
 			// Loading is finished
