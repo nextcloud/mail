@@ -26,10 +26,16 @@ export const newContact = (name, mailAddr) => {
 	return Axios.put(url, { contactName: name, mail: mailAddr }).then((resp) => resp.data)
 }
 
-export const autoCompleteByName = (term) => {
+export const autoCompleteByName = (term, forceSAB = false) => {
 	const url = generateUrl('/apps/mail/api/contactIntegration/autoComplete/{term}', {
 		term,
 	})
 
-	return Axios.get(url).then((resp) => resp.data)
+	const config = {
+		params: {
+			forceSAB,
+		},
+	}
+
+	return Axios.get(url, config).then((resp) => resp.data)
 }
