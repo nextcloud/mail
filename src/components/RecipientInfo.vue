@@ -128,12 +128,11 @@ export default {
 
 			// Fetch the cards from all the address books
 			const result = await Promise.all(this.getAddressBooks.map(async addressBook => {
+
 				return await addressBook.addressbookQuery([{
-					name: [NS.IETF_CARDDAV, 'comp-filter'],
-					attributes: [['name', 'VCARD']],
+					name: [NS.IETF_CARDDAV, 'prop-filter'],
+					attributes: [['name', 'EMAIL']],
 					children: [{
-						name: [NS.IETF_CARDDAV, 'prop-filter'],
-						attributes: [['name', 'EMAIL']],
 						children: [{
 							name: [NS.IETF_CALDAV, 'text-match'],
 							value: email,
