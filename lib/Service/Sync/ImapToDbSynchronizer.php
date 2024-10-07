@@ -29,6 +29,7 @@ namespace OCA\Mail\Service\Sync;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Ids;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
@@ -510,5 +511,50 @@ class ImapToDbSynchronizer {
 		$perf->end();
 
 		return $newOrVanished;
+	}
+
+	/**
+	 * Run a (rather costly) sync to delete cached messages which are not present on IMAP anymore.
+	 *
+	 * @throws MailboxLockedException
+	 * @throws ServiceException
+	 */
+	public function repairSync(
+		Account $account,
+		Mailbox $mailbox,
+		LoggerInterface  $logger,
+	): void {
+		$this->mailboxMapper->lockForVanishedSync($mailbox);
+
+		$perf = $this->performanceLogger->startWithLogger(
+			'Repair sync for ' . $account->getId() . ':' . $mailbox->getName(),
+			$logger,
+		);
+
+		// Need to use a client without a cache here (to disable QRESYNC entirely)
+		$client = $this->clientFactory->getClient($account, false);
+		try {
+			$knownUids = $this->dbMapper->findAllUids($mailbox);
+			$hordeMailbox = new \Horde_Imap_Client_Mailbox($mailbox->getName());
+			$phantomVanishedUids = $client->vanished($hordeMailbox, 0, [
+				'ids' => new Horde_Imap_Client_Ids($knownUids),
+			])->ids;
+			if (count($phantomVanishedUids) > 0) {
+				$this->dbMapper->deleteByUid($mailbox, ...$phantomVanishedUids);
+			}
+		} catch (Throwable $e) {
+			$message = sprintf(
+				'Repair sync failed for %d:%s: %s',
+				$account->getId(),
+				$mailbox->getName(),
+				$e->getMessage(),
+			);
+			throw new ServiceException($message, 0, $e);
+		} finally {
+			$this->mailboxMapper->unlockFromVanishedSync($mailbox);
+			$client->logout();
+		}
+
+		$perf->end();
 	}
 }

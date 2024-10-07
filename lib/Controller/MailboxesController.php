@@ -38,6 +38,8 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
@@ -298,5 +300,23 @@ class MailboxesController extends Controller {
 
 		$this->mailManager->clearMailbox($account, $mailbox);
 		return new JSONResponse();
+	}
+
+	/**
+	 * Delete all vanished mails that are still cached.
+	 */
+	#[TrapError]
+	#[NoAdminRequired]
+	#[UserRateLimit(limit: 10, period: 600)]
+	public function repair(int $id): JSONResponse {
+		if ($this->currentUserId === null) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+
+		$this->syncService->repairSync($account, $mailbox);
+		return new JsonResponse();
 	}
 }

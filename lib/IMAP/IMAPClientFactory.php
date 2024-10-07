@@ -127,9 +127,11 @@ class IMAPClientFactory {
 				json_encode($params)
 			]),
 		);
-		$params['cache'] = [
-			'backend' => $this->hordeCacheFactory->newCache($account),
-		];
+		if ($useCache) {
+			$params['cache'] = [
+				'backend' => $this->hordeCacheFactory->newCache($account),
+			];
+		}
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
 		}
