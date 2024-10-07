@@ -133,10 +133,8 @@ export default {
 					name: [NS.IETF_CARDDAV, 'prop-filter'],
 					attributes: [['name', 'EMAIL']],
 					children: [{
-						children: [{
-							name: [NS.IETF_CALDAV, 'text-match'],
-							value: email,
-						}],
+						name: [NS.IETF_CALDAV, 'text-match'],
+						value: email,
 					}],
 				}])
 			}))
