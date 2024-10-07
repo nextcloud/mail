@@ -51,7 +51,7 @@
     "SMTP Port" : "منفذ SMTP",
     "SMTP User" : "مستخدم SMTP",
     "SMTP Password" : "كلمة مرور SMTP",
-    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "لكي يعمل حساب Google مع هذا التطبيق، يلزمك تمكين التحقُّق المُثنّى من الهويّة 2FA لـ Google وإنشاء كلمة مرور للتطبيق.",
+    "For the Google account to work with this app you need to enable two-factor authentication for Google and generate an app password." : "لكي يعمل حساب Google مع هذا التطبيق، يلزمك تمكين التحقق ثنائي العوامل من الهويّة 2FA لـ Google وإنشاء كلمة مرور للتطبيق.",
     "Connecting" : "توصيل",
     "Reconnect Google account" : "إعادة توصيل حساب قوقل",
     "Sign in with Google" : "أدخُل مع قوقل",
