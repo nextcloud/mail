@@ -140,7 +140,7 @@ export default {
 			]))
 			const contacts = result.flatMap(
 				([addressBook, vcards]) => vcards.map(
-					(vcard) => new Contact(vcard.data, this.getAddressBooks[0])
+					(vcard) => new Contact(vcard.data, addressBook)
 				)
 			)
 
