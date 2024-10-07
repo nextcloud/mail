@@ -12,6 +12,7 @@ import * as NotificationService from '../../../service/NotificationService.js'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants.js'
 
 import { createPinia, setActivePinia } from 'pinia'
+import { createTestingPinia } from '@pinia/testing'
 
 import useMainStore from '../../../store/mainStore.js'
 
@@ -30,42 +31,27 @@ describe('Vuex store actions', () => {
 	let store
 
 	beforeEach(() => {
-		context = {
-			commit: jest.fn(),
-			dispatch: jest.fn(),
-			getters: {
-				accounts: [],
-				getAccount: jest.fn(),
-				getInbox: jest.fn(),
-				getMailbox: jest.fn(),
-				getMailboxes: jest.fn(),
-				getEnvelope: jest.fn(),
-				getEnvelopes: jest.fn(),
-				getPreference: jest.fn(),
-			},
-		}
-
 		setActivePinia(createPinia())
 
 		store = useMainStore()
+		store.accountsUnmapped = { 13: {} }
 	})
 
 	it('creates a mailbox', async () => {
 		const account = {
 			id: 13,
 			personalNamespace: '',
+			mailboxes: [],
 		}
 		const name = 'Important'
 		const mailbox = {
-			'name': 'Important',
+			name: 'Important',
 		}
 		MailboxService.create.mockResolvedValue(mailbox)
 
-		const result = await store.createMailbox({account, name})
+		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(context.commit).toHaveBeenCalledTimes(3)
-		expect(context.commit).toBeCalledWith('addMailbox', { account, mailbox})
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'Important')
 	})
 
@@ -73,18 +59,17 @@ describe('Vuex store actions', () => {
 		const account = {
 			id: 13,
 			personalNamespace: '',
+			mailboxes: [],
 		}
 		const name = 'Archive.2020'
 		const mailbox = {
-			'name': 'Archive.2020',
+			name: 'Archive.2020',
 		}
 		MailboxService.create.mockResolvedValue(mailbox)
 
-		const result = await actions.createMailbox(context, {account, name})
+		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(context.commit).toHaveBeenCalledTimes(3)
-		expect(context.commit).toBeCalledWith('addMailbox', { account, mailbox})
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'Archive.2020')
 	})
 
@@ -92,18 +77,17 @@ describe('Vuex store actions', () => {
 		const account = {
 			id: 13,
 			personalNamespace: 'INBOX.',
+			mailboxes: [],
 		}
 		const name = 'Important'
 		const mailbox = {
-			'name': 'INBOX.Important',
+			name: 'INBOX.Important',
 		}
 		MailboxService.create.mockResolvedValue(mailbox)
 
-		const result = await actions.createMailbox(context, {account, name})
+		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(context.commit).toHaveBeenCalledTimes(3)
-		expect(context.commit).toBeCalledWith('addMailbox', { account, mailbox})
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Important')
 	})
 
@@ -111,18 +95,17 @@ describe('Vuex store actions', () => {
 		const account = {
 			id: 13,
 			personalNamespace: 'INBOX.',
+			mailboxes: [],
 		}
 		const name = 'INBOX.Archive.2020'
 		const mailbox = {
-			'name': 'INBOX.Archive.2020',
+			name: 'INBOX.Archive.2020',
 		}
 		MailboxService.create.mockResolvedValue(mailbox)
 
-		const result = await actions.createMailbox(context, {account, name})
+		const result = await store.createMailbox({ account, name })
 
 		expect(result).toEqual(mailbox)
-		expect(context.commit).toHaveBeenCalledTimes(3)
-		expect(context.commit).toBeCalledWith('addMailbox', { account, mailbox})
 		expect(MailboxService.create).toHaveBeenCalledWith(13, 'INBOX.Archive.2020')
 	})
 
@@ -162,13 +145,13 @@ describe('Vuex store actions', () => {
 			},
 		])
 		context.dispatch.mockReturnValueOnce([
-				{
-					databaseId: 123,
-					mailboxId: 21,
-					uid: 321,
-					subject: 'msg1',
-				},
-			])
+			{
+				databaseId: 123,
+				mailboxId: 21,
+				uid: 321,
+				subject: 'msg1',
+			},
+		])
 
 		const envelopes = await actions.fetchEnvelopes(context, {
 			mailboxId: UNIFIED_INBOX_ID,
@@ -219,8 +202,8 @@ describe('Vuex store actions', () => {
 				range(1, 21).map((n) => ({
 					uid: n,
 					dateInt: n * 10000,
-				}))
-			)
+				})),
+			),
 		))
 
 		await actions.fetchNextEnvelopes(context, {
@@ -231,7 +214,7 @@ describe('Vuex store actions', () => {
 		expect(MessageService.fetchEnvelopes).toHaveBeenCalled()
 	})
 
-	it('builds the next unified page with local data', async() => {
+	it('builds the next unified page with local data', async () => {
 		const page1 = reverse(range(25, 30))
 		const page2 = reverse(range(30, 35))
 		const msgs1 = reverse(range(10, 30))
@@ -275,12 +258,12 @@ describe('Vuex store actions', () => {
 			},
 		])
 		context.getters.getEnvelopes.mockReturnValueOnce(
-				orderBy(
-					prop('dateInt'),
-					'desc',
-					page1.map(mockEnvelope(11)).concat(page2.map(mockEnvelope(21)))
-				)
-			)
+			orderBy(
+				prop('dateInt'),
+				'desc',
+				page1.map(mockEnvelope(11)).concat(page2.map(mockEnvelope(21))),
+			),
+		)
 		context.getters.getEnvelopes.mockReturnValueOnce(msgs1.map(mockEnvelope(11)))
 		context.getters.getEnvelopes.mockReturnValueOnce(msgs2.map(mockEnvelope(21)))
 
@@ -298,7 +281,7 @@ describe('Vuex store actions', () => {
 		expect(context.getters.getEnvelopes).toHaveBeenCalledWith(21, undefined)
 	})
 
-	it('builds the next unified page with partial fetch', async() => {
+	it('builds the next unified page with partial fetch', async () => {
 		const page1 = reverse(range(25, 30))
 		const page2 = reverse(range(30, 35))
 		const msgs1 = reverse(range(25, 30))
@@ -343,12 +326,12 @@ describe('Vuex store actions', () => {
 			},
 		])
 		context.getters.getEnvelopes.mockReturnValueOnce(
-				orderBy(
-					prop('dateInt'),
-					'desc',
-					page1.map(mockEnvelope(11)).concat(page2.map(mockEnvelope(12)))
-				)
-			)
+			orderBy(
+				prop('dateInt'),
+				'desc',
+				page1.map(mockEnvelope(11)).concat(page2.map(mockEnvelope(12))),
+			),
+		)
 		context.getters.getEnvelopes.mockReturnValueOnce(msgs1.map(mockEnvelope(11)))
 		context.getters.getEnvelopes.mockReturnValueOnce(msgs2.map(mockEnvelope(21)))
 
@@ -368,7 +351,7 @@ describe('Vuex store actions', () => {
 
 		})
 
-		it('fetches the inbox first', async() => {
+		it('fetches the inbox first', async () => {
 			context.getters.accounts.push({
 				id: 13,
 			})
@@ -432,7 +415,7 @@ describe('Vuex store actions', () => {
 			expect(NotificationService.showNewMessagesNotification).not.toHaveBeenCalled
 		})
 
-		it('syncs each individual mailbox', async() => {
+		it('syncs each individual mailbox', async () => {
 			context.getters.accounts.push({
 				id: 13,
 			})
@@ -496,7 +479,7 @@ describe('Vuex store actions', () => {
 			expect(context.dispatch).toHaveBeenCalledWith('syncEnvelopes', {
 				mailboxId: 11,
 			})
-			//expect(context.dispatch).have.been
+			// expect(context.dispatch).have.been
 			expect(context.dispatch).toBeCalledWith('syncEnvelopes', {
 				mailboxId: 11,
 			})
@@ -508,7 +491,7 @@ describe('Vuex store actions', () => {
 		})
 	})
 
-	it('should move message to junk, no mailbox configured', async() => {
+	it('should move message to junk, no mailbox configured', async () => {
 		context.getters.getAccount.mockReturnValueOnce({
 			junkMailboxId: null,
 		})
@@ -523,7 +506,7 @@ describe('Vuex store actions', () => {
 		expect(removeEnvelope).toBeFalsy()
 	})
 
-	it('should move message to inbox', async() => {
+	it('should move message to inbox', async () => {
 		context.getters.getAccount.mockReturnValueOnce({
 			junkMailboxId: 10,
 		})
@@ -541,7 +524,7 @@ describe('Vuex store actions', () => {
 		expect(removeEnvelope).toBeTruthy()
 	})
 
-	it('should move message to inbox, inbox not found', async() => {
+	it('should move message to inbox, inbox not found', async () => {
 		context.getters.getAccount.mockReturnValueOnce({
 			junkMailboxId: 10,
 		})
@@ -557,7 +540,7 @@ describe('Vuex store actions', () => {
 		expect(removeEnvelope).toBeFalsy()
 	})
 
-	it('should not move messages', async() => {
+	it('should not move messages', async () => {
 		context.getters.getAccount.mockReturnValueOnce({
 			junkMailboxId: null,
 		})
