@@ -1097,6 +1097,7 @@ export default {
 				smimeSign: this.shouldSmimeSign,
 				smimeEncrypt: this.shouldSmimeEncrypt,
 				smimeCertificateId: this.smimeCertificateForCurrentAlias?.id,
+				isPgpMime: this.encrypt,
 			}
 		},
 		saveDraft() {
