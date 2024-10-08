@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\Account;
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
@@ -277,7 +278,7 @@ class AccountsController extends Controller {
 			$dbAccount->setSearchBody($searchBody);
 		}
 		return new JSONResponse(
-			$this->accountService->save($dbAccount)
+			new Account($this->accountService->save($dbAccount))
 		);
 	}
 
