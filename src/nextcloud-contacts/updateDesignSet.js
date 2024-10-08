@@ -69,7 +69,7 @@ const setTypeMultiValueSeparateDQuote = () => {
 
 /**
 /**
-* Check whether the ical.js design sets need updating (and if so, do it)
+ * Check whether the ical.js design sets need updating (and if so, do it)
  *
  * @param {Array} vCard The ical.js vCard
  * @return {boolean} Whether or not the design set has been altered.

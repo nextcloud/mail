@@ -1,47 +1,46 @@
 <template>
 	<div class="recipient-info">
-		<div v-if="recipient.length === 1" class="recipient-single">
-			<Avatar :user="recipient.uid"
-				:display-name="recipient.displayName"
-				:email="recipient.email"
-				:size="128"
-				:disable-tooltip="true"
-				:url="photoUrl" />
-			<div class="recipient-details">
-				<p>{{ recipient.displayName }}</p>
+		<!-- For a single recipient -->
+		<div v-if="recipients.length === 1" class="recipient-single">
+			<div class="recipient-header">
+				<Avatar :user="recipients[0].uid"
+					:display-name="recipients[0].displayName"
+					:email="recipients[0].email"
+					:size="64"
+					:disable-tooltip="true"
+					:url="recipients[0].photoUrl" />
+				<!-- Show email only when collapsed -->
 				<p class="recipient-email">
-					{{ recipient.email }}
+					{{ recipients[0].email }}
 				</p>
+				<div class="expand-toggle" @click="toggleExpand(0)">
+					<IconArrowUp v-if="isExpanded(0)" size="16" />
+					<IconArrowDown v-else size="16" />
+				</div>
 			</div>
+			<RecipientDetails v-if="isExpanded(index)" :contact="recipientsVCards[recipients[0].email]" :reload-bus="reloadBus" />
 		</div>
-		<div class="recipient-multiple">
-			<div class="recipient-list">
-				<div v-for="(vCard, index) in recipientsVCards"
-					:key="index"
-					class="recipient-item">
-					<RecipientDetails :contact="vCard" :reload-bus="reloadBus" />
-<!--					<Avatar :user="recipient.uid"
+
+		<!-- For multiple recipients -->
+		<div v-else class="recipient-multiple">
+			<div v-for="(recipient, index) in recipients" :key="index" class="recipient-item">
+				<div class="recipient-header">
+					<Avatar :user="recipient.uid"
 						:display-name="recipient.displayName"
 						:email="recipient.email"
 						:size="64"
 						:disable-tooltip="true"
 						:disable-menu="true" />
-					<div class="recipient-item-details">
-						<p>{{ recipient.displayName }}</p>
-						<p class="recipient-email">
-							{{ recipient.email }}
-							<span class="expand-toggle" @click="toggleExpand(index)">
-								<IconArrowUp v-if="expandedIndex === index" size="16" />
-								<IconArrowDown v-else size="16" />
-							</span>
-						</p>
-						<div v-if="expandedIndex === index" class="expanded-recipient-details">
-							<p>{{ recipient.displayName }}</p>
-							<p class="recipient-email">
-								{{ recipient.email }}
-							</p>
-						</div>
-					</div>-->
+					<p class="recipient-email">
+						{{ recipient.email }}
+					</p>
+					<div class="expand-toggle" @click="toggleExpand(index)">
+						<IconArrowUp v-if="isExpanded(index)" size="16" />
+						<IconArrowDown v-else size="16" />
+					</div>
+				</div>
+				<div v-if="isExpanded(index)" class="recipient-list">
+					<RecipientDetails :contact="recipientsVCards[recipient.email]" :reload-bus="reloadBus" />
 				</div>
 			</div>
 		</div>
@@ -54,9 +53,9 @@ import { mapGetters } from 'vuex'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import mitt from 'mitt'
 import Contact from '../nextcloud-contacts/contact.js'
-import Avatar from './Avatar.vue'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
+import Avatar from './Avatar.vue'
 
 export default {
 	components: {
@@ -73,9 +72,7 @@ export default {
 	},
 	data() {
 		return {
-			expandedIndex: null,
-			localContact: undefined,
-			photoUrl: undefined,
+			expandedRecipients: [],
 			recipientsVCards: {},
 			loadingParticipants: {},
 			reloadBus: mitt(),
@@ -83,50 +80,28 @@ export default {
 	},
 	computed: {
 		...mapGetters(['getAddressBooks', 'composerMessage']),
-		/**
-		 * @return {{ label: string, email: string }[]}
-		 */
 		recipients() {
 			return this.composerMessage.data.to
 		},
-
-		recipientsVCardsList() {
-			return Object.values(this.recipientsVCards).filter(Boolean)
-		},
-		selectedContact() {
-			return this.$route.params.selectedContact
-		},
 	},
 	watch: {
-		async recipients() {
-			// New 'to' list
-			const newEmails = this.recipients.map(recipient => recipient.email)
-			// Emails we had
-			const oldEmails = Object.keys(this.recipientsVCards)
-			// Emails that were added
-			const addedEmails = newEmails.filter(email => !oldEmails.includes(email))
-			// Emails that were removed
-			const removedEmails = oldEmails.filter(email => !newEmails.includes(email))
-
-			// Delete removed recipients
-			for (const email of removedEmails) {
-				this.$delete(this.recipientsVCards, email)
-			}
-
-			await Promise.all(addedEmails.map(email => this.fetchRecipientInfo(email)))
+		recipients: {
+			immediate: true,
+			handler() {
+				this.expandedRecipients = this.recipients.map(() => false)
+				this.loadRecipientInfo()
+			},
 		},
 	},
 	methods: {
+		async loadRecipientInfo() {
+			const newEmails = this.recipients.map(r => r.email)
+			await Promise.all(newEmails.map(email => this.fetchRecipientInfo(email)))
+		},
 		async fetchRecipientInfo(email) {
-			if (this.loadingParticipants[email]) {
-				// is already loading
-				return
-			}
+			if (this.loadingParticipants[email]) return
 
-			// loading
 			this.$set(this.loadingParticipants, email, true)
-
-			// Fetch the cards from all the address books
 			const result = await Promise.all(this.getAddressBooks.map(async (addressBook) => [
 				addressBook,
 				await addressBook.addressbookQuery([{
@@ -136,30 +111,22 @@ export default {
 						name: [NS.IETF_CALDAV, 'text-match'],
 						value: email,
 					}],
-				}])
+				}]),
 			]))
-			const contacts = result.flatMap(
-				([addressBook, vcards]) => vcards.map(
-					(vcard) => new Contact(vcard.data, addressBook)
-				)
+			const contacts = result.flatMap(([addressBook, vcards]) =>
+				vcards.map((vcard) => new Contact(vcard.data, addressBook)),
 			)
-
-			// Let's assume we have no more than 1 card for a recipient
-			// TODO: What if the first one is not the best one? Aggregate attributes from all
-			//       vcards?
-			const contact = contacts.find((contact) => contact.email === email)
+			const contact = contacts.find(contact => contact.email === email)
 			if (contact) {
-				// Save the card
 				this.$set(this.recipientsVCards, email, contact)
 			}
-
-			// Loading is finished
 			this.$delete(this.loadingParticipants, email)
-
-			console.info(this.recipientsVCards)
 		},
 		toggleExpand(index) {
-			this.expandedIndex = this.expandedIndex === index ? null : index
+			this.$set(this.expandedRecipients, index, !this.expandedRecipients[index])
+		},
+		isExpanded(index) {
+			return this.expandedRecipients[index]
 		},
 	},
 }
@@ -172,34 +139,41 @@ export default {
 	padding: 10px;
 }
 
-.recipient-single {
+.recipient-single,
+.recipient-item {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	margin-bottom: 10px;
 }
 
 .recipient-multiple {
 	margin-top: 10px;
 }
 
-.recipient-list {
-	display: flex;
-	flex-direction: column;
+.recipient-item {
+	margin-bottom: 10px;
 }
 
-.recipient-item {
+.recipient-header {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	margin-right: 20px;
-	margin-bottom: 10px;
 }
 
 .recipient-item-details {
 	margin-left: 10px;
+	flex-grow: 1;
 }
 
 .expand-toggle {
 	cursor: pointer;
-	margin-top: 10px;
 }
 
+.recipient-email {
+	margin-top: 5px;
+}
+
+.recipient-list {
+	padding-top: 10px;
+}
 </style>

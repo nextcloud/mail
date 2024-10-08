@@ -17,15 +17,9 @@
 
 		<!-- TODO: add empty content while this.loadingData === true -->
 		<template v-else>
-			<!-- contact header -->
-			<DetailsHeaderRecipient>
-				<!-- fullname -->
-				<template #title>
-					<div class="contact-title">
-						{{ contact.fullName }}
-					</div>
-				</template>
-			</DetailsHeaderRecipient>
+			<div class="contact-title">
+				{{ contact.fullName }}
+			</div>
 			<div v-if="!loadingData" class="contact-details-wrapper">
 				<div v-for="(properties, name) in groupedProperties"
 					:key="name">
@@ -39,26 +33,6 @@
 						:contacts="contacts"
 						:bus="bus" />
 				</div>
-				<!-- &lt;!&ndash; addressbook change select - no last property because class is not applied here,
-					empty property because this is a required prop on regular property-select. But since
-					we are hijacking this... (this is supposed to be used with a ICAL.property, but to avoid code
-					duplication, we created a fake propModel and property with our own options here) &ndash;&gt;
-					<PropertySelect :prop-model="addressbookModel"
-						:options="addressbooksOptions"
-						:value.sync="addressbook"
-						:is-first-property="true"
-						:is-last-property="true"
-						:property="{}"
-						:hide-actions="true"
-						class="property&#45;&#45;addressbooks property&#45;&#45;last" />
-
-					&lt;!&ndash; Groups always visible &ndash;&gt;
-					<PropertyGroups :prop-model="groupsModel"
-						:value.sync="localContact.groups"
-						:contact="contact"
-						class="property&#45;&#45;groups property&#45;&#45;last"
-						@update:value="updateGroups" />
-				</div>-->
 			</div>
 		</template>
 	</div>
@@ -68,7 +42,6 @@
 import { isMobile, NcEmptyContent as EmptyContent } from '@nextcloud/vue'
 import IconContact from 'vue-material-design-icons/AccountMultiple.vue'
 import mitt from 'mitt'
-import DetailsHeaderRecipient from './DetailsHeaderRecipient.vue'
 import RecipientDetailsProperty from './RecipientDetailsProperty.vue'
 import { loadState } from '@nextcloud/initial-state'
 import Contact from './contact.js'
@@ -81,7 +54,6 @@ export default {
 
 	components: {
 		RecipientDetailsProperty,
-		DetailsHeaderRecipient,
 		EmptyContent,
 		IconContact,
 
@@ -244,12 +216,12 @@ export default {
 		},
 	},
 	watch: {
-    contact: {
-      handler(contact) {
-        this.updateLocalContact(contact)
-      },
-      immediate: true,
-    },
+		contact: {
+			handler(contact) {
+				this.updateLocalContact(contact)
+			},
+			immediate: true,
+		},
 	},
 	methods: {
 		updateGroups(value) {
