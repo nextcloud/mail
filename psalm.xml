@@ -85,6 +85,7 @@
 		</UndefinedFunction>
 	</issueHandlers>
 	<stubs>
+		<file name="tests/stubs/Psr_Log_LoggerAwareInterface.php" />
 		<file name="tests/stubs/Psr_Log_LoggerInterface.php" />
 	</stubs>
 </psalm>
