@@ -12,7 +12,6 @@
 		<h3 class="property__value">
 			{{ readableName }}
 		</h3>
-
 	</div>
 </template>
 
