@@ -1837,8 +1837,7 @@ export default function mainStoreActions() {
 			this.accountList.push(account.id)
 
 			const mappedAccounts = this.accountList.map((id) => this.accountsUnmapped[id])
-			const remapAccounts = mappedAccounts.map((a) => a.id)
-			this.accountList = this.sortAccounts(remapAccounts)
+			this.accountList = this.sortAccounts(mappedAccounts).map((a) => a.id)
 
 			// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
 			const mailboxes = sortMailboxes(account.mailboxes || [], account)
@@ -1861,10 +1860,9 @@ export default function mainStoreActions() {
 			order
 		}) {
 			Vue.set(account, 'order', order)
-			Vue.set(
-				this.accountsUnmappedList,
-				this.sortAccounts(this.accountList.map((id) => this.accountsUnmapped[id])).map((a) => a.id),
-			)
+			this.accountList = this
+				.sortAccounts(this.accountList.map((id) => this.accountsUnmapped[id]))
+				.map((a) => a.id)
 		},
 		toggleAccountCollapsedMutation(accountId) {
 			this.accountsUnmapped[accountId].collapsed = !this.accountsUnmapped[accountId].collapsed
