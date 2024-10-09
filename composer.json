@@ -38,12 +38,13 @@
 		"nextcloud/kitinerary-flatpak": "^1.0",
 		"nextcloud/kitinerary-sys": "^1.0.1",
 		"phpmailer/dkimvalidator": "^0.3.0",
-		"psr/log": "^1",
+		"psr/log": "^3.0.2",
 		"rubix/ml": "2.5.1",
 		"sabberworm/php-css-parser": "^8.6.0",
 		"youthweb/urllinker": "^2.0"
 	},
 	"require-dev": {
+		"fig/log-test": "^1.1",
 		"psalm/phar": "^5.26.1",
 		"roave/security-advisories": "dev-master"
 	},
