@@ -10,6 +10,7 @@ import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants.js'
+import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 import { createPinia, setActivePinia } from 'pinia'
 import { createTestingPinia } from '@pinia/testing'
@@ -19,11 +20,17 @@ import useMainStore from '../../../store/mainStore.js'
 jest.mock('../../../service/MailboxService.js')
 jest.mock('../../../service/MessageService.js')
 jest.mock('../../../service/NotificationService.js')
+jest.mock('../../../util/normalization.js', () => ({
+	__esModule: true,
+	normalizedEnvelopeListId: jest.fn(() => ''),
+}))
 
 const mockEnvelope = curry((mailboxId, uid) => ({
+	databaseId: mailboxId * 1000 + uid,
 	mailboxId,
 	uid,
 	dateInt: uid * 10000,
+	threadRootId: Math.random(),
 }))
 
 describe('Vuex store actions', () => {
@@ -34,8 +41,6 @@ describe('Vuex store actions', () => {
 		setActivePinia(createPinia())
 
 		store = useMainStore()
-		store.accountList = [13]
-		store.accountsUnmapped = { 13: { id: 13 } }
 	})
 
 	it('creates a mailbox', async () => {
@@ -216,279 +221,333 @@ describe('Vuex store actions', () => {
 	})
 
 	it('builds the next unified page with local data', async () => {
-		const page1 = reverse(range(25, 30))
-		const page2 = reverse(range(30, 35))
-		const msgs1 = reverse(range(10, 30))
-		const msgs2 = reverse(range(5, 35))
-		context.getters.accounts.push({
+		const msgs1 = reverse(range(20, 70))
+		const msgs2 = reverse(range(5, 10))
+		const page1 = reverse(range(50, 60))
+
+		const account13 = {
 			id: 13,
-		})
-		context.getters.accounts.push({
+		}
+		const account26 = {
 			id: 26,
-		})
-		context.getters.getMailbox.mockReturnValueOnce({
-			isUnified: true,
-			specialRole: 'inbox',
-			accountId: UNIFIED_ACCOUNT_ID,
-			databaseId: UNIFIED_INBOX_ID,
-		})
-		context.getters.getMailboxes.mockReturnValueOnce([
-			{
+		}
+
+		store.preferences['sort-order'] = 'newest'
+
+		store.addAccountMutation(account13)
+		store.addAccountMutation(account26)
+		store.addMailboxMutation({
+			account: account13,
+			mailbox: {
 				name: 'INBOX',
 				databaseId: 11,
 				specialRole: 'inbox',
 			},
-			{
+		})
+		store.addMailboxMutation({
+			account: account13,
+			mailbox: {
 				name: 'Drafts',
 				databaseId: 12,
 				specialRole: 'draft',
 			},
-		])
-		context.getters.getMailboxes.mockReturnValueOnce([
-			{
+		})
+		store.addMailboxMutation({
+			account: account26,
+			mailbox: {
 				name: 'INBOX',
 				databaseId: 21,
-				accountId: 26,
 				specialRole: 'inbox',
 			},
-			{
+		})
+		store.addMailboxMutation({
+			account: account26,
+			mailbox: {
 				name: 'Drafts',
 				databaseId: 22,
-				accountId: 26,
 				specialRole: 'draft',
 			},
-		])
-		context.getters.getEnvelopes.mockReturnValueOnce(
-			orderBy(
-				prop('dateInt'),
-				'desc',
-				page1.map(mockEnvelope(11)).concat(page2.map(mockEnvelope(21))),
-			),
-		)
-		context.getters.getEnvelopes.mockReturnValueOnce(msgs1.map(mockEnvelope(11)))
-		context.getters.getEnvelopes.mockReturnValueOnce(msgs2.map(mockEnvelope(21)))
+		})
 
-		await actions.fetchNextEnvelopes(context, {
+		// Add initial pages
+		store.addEnvelopesMutation({
+			envelopes: msgs1.map(mockEnvelope(11)),
+			addToUnifiedMailboxes: false,
+		})
+		store.addEnvelopesMutation({
+			envelopes: msgs2.map(mockEnvelope(21)),
+			addToUnifiedMailboxes: false,
+		})
+
+		// Also add some envelopes to the unified mailbox
+		store.addEnvelopesMutation({
+			envelopes: page1.map(mockEnvelope(11)),
+			addToUnifiedMailboxes: true,
+		})
+
+		// Mock fetching next pages (not called but makes failures easier to understand)
+		MessageService.fetchEnvelopes.mockImplementation(async () => {
+			throw new Error('Tried to fetch messages')
+		})
+
+		await store.fetchNextEnvelopePage({
 			mailboxId: UNIFIED_INBOX_ID,
 			quantity: PAGE_SIZE,
 		})
 
-		expect(context.getters.getMailbox).toHaveBeenCalledWith(UNIFIED_INBOX_ID)
-		expect(context.getters.getMailboxes).toHaveBeenCalledWith(13)
-		expect(context.getters.getMailboxes).toHaveBeenCalledWith(26)
-		expect(context.getters.getEnvelopes).toHaveBeenCalledTimes(3)
-		expect(context.getters.getEnvelopes).toHaveBeenCalledWith(UNIFIED_INBOX_ID, undefined)
-		expect(context.getters.getEnvelopes).toHaveBeenCalledWith(11, undefined)
-		expect(context.getters.getEnvelopes).toHaveBeenCalledWith(21, undefined)
+		expect(MessageService.fetchEnvelopes).not.toHaveBeenCalled()
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
+			[
+				// Initial envelopes
+				...page1.map(mockEnvelope(11)),
+
+				// Envelopes loaded from local state
+				...range(30, 50).map(mockEnvelope(11)),
+			].map(e => e.databaseId).sort(),
+		)
 	})
 
 	it('builds the next unified page with partial fetch', async () => {
-		const page1 = reverse(range(25, 30))
-		const page2 = reverse(range(30, 35))
-		const msgs1 = reverse(range(25, 30))
-		const msgs2 = reverse(range(5, 35))
-		context.getters.accounts.push({
+		const page1 = reverse(range(30, 35))
+		const page2 = reverse(range(25, 30))
+		const msgs2 = reverse(range(60, 70))
+
+		const account13 = {
 			id: 13,
-		})
-		context.getters.accounts.push({
+		}
+		const account26 = {
 			id: 26,
-		})
-		context.getters.getMailbox.mockReturnValueOnce({
-			isUnified: true,
-			databaseId: UNIFIED_INBOX_ID,
-			specialRole: 'inbox',
-			accountId: UNIFIED_ACCOUNT_ID,
-			id: UNIFIED_INBOX_ID,
-		})
-		context.getters.getMailboxes.mockReturnValueOnce([
-			{
+		}
+
+		store.preferences['sort-order'] = 'newest'
+
+		store.addAccountMutation(account13)
+		store.addAccountMutation(account26)
+		store.addMailboxMutation({
+			account: account13,
+			mailbox: {
 				name: 'INBOX',
 				databaseId: 11,
 				specialRole: 'inbox',
 			},
-			{
+		})
+		store.addMailboxMutation({
+			account: account13,
+			mailbox: {
 				name: 'Drafts',
 				databaseId: 12,
 				specialRole: 'draft',
 			},
-		])
-		context.getters.getMailboxes.mockReturnValueOnce([
-			{
+		})
+		store.addMailboxMutation({
+			account: account26,
+			mailbox: {
 				name: 'INBOX',
 				databaseId: 21,
-				accountId: 26,
 				specialRole: 'inbox',
 			},
-			{
+		})
+		store.addMailboxMutation({
+			account: account26,
+			mailbox: {
 				name: 'Drafts',
 				databaseId: 22,
-				accountId: 26,
 				specialRole: 'draft',
 			},
-		])
-		context.getters.getEnvelopes.mockReturnValueOnce(
-			orderBy(
-				prop('dateInt'),
-				'desc',
-				page1.map(mockEnvelope(11)).concat(page2.map(mockEnvelope(12))),
-			),
-		)
-		context.getters.getEnvelopes.mockReturnValueOnce(msgs1.map(mockEnvelope(11)))
-		context.getters.getEnvelopes.mockReturnValueOnce(msgs2.map(mockEnvelope(21)))
+		})
 
-		await actions.fetchNextEnvelopes(context, {
+		// Add initial pages
+		store.addEnvelopesMutation({
+			envelopes: page1.map(mockEnvelope(11)),
+		})
+		store.addEnvelopesMutation({
+			envelopes: msgs2.map(mockEnvelope(21)),
+		})
+
+		// Mock fetching next pages
+		MessageService.fetchEnvelopes.mockImplementation(
+			async (
+				accountId,
+				mailboxId,
+				query,
+				cursor,
+				limit,
+				sortOrder,
+			) => {
+				if (accountId !== 13 || mailboxId !== 11) {
+					return []
+				}
+
+				expect(sortOrder).toBe('newest')
+				return page2.map(mockEnvelope(11)).filter(e => e.dateInt < cursor).slice(0, limit)
+			},
+		)
+
+		await store.fetchNextEnvelopePage({
 			mailboxId: UNIFIED_INBOX_ID,
 			quantity: PAGE_SIZE,
 		})
 
-		expect(context.getters.getMailbox).toHaveBeenCalledWith(UNIFIED_INBOX_ID)
-		expect(context.getters.getEnvelopes).toHaveBeenCalledWith(UNIFIED_INBOX_ID, undefined)
-		expect(context.getters.getEnvelopes).toHaveBeenCalledWith(11, undefined)
-		expect(context.getters.getEnvelopes).toHaveBeenCalledWith(21, undefined)
+		expect(MessageService.fetchEnvelopes).toHaveBeenCalledTimes(2)
+		expect(MessageService.fetchEnvelopes)
+			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
+		expect(MessageService.fetchEnvelopes)
+			.toHaveBeenNthCalledWith(2, 26, 21, undefined, 600000, PAGE_SIZE, 'newest')
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
+			[
+				// Initial envelopes
+				...page1.map(mockEnvelope(11)),
+				...msgs2.map(mockEnvelope(21)),
+
+				// Fetched page for mailbox 11
+				...page2.map(mockEnvelope(11)),
+			].map(e => e.databaseId).sort(),
+		)
 	})
 
 	describe('inbox sync', () => {
-		beforeEach(() => {
-
-		})
-
 		it('fetches the inbox first', async () => {
-			context.getters.accounts.push({
+			const account13 = {
 				id: 13,
-			})
-			context.getters.accounts.push({
+			}
+			const account26 = {
 				id: 26,
-			})
-			context.getters.getMailbox.mockReturnValueOnce({
-				isUnified: true,
-				specialRole: 'inbox',
-				accountId: UNIFIED_ACCOUNT_ID,
-				id: UNIFIED_INBOX_ID,
-			})
-			context.getters.getMailboxes.mockReturnValueOnce([
-				{
+			}
+
+			store.addAccountMutation(account13)
+			store.addAccountMutation(account26)
+			store.addMailboxMutation({
+				account: account13,
+				mailbox: {
 					name: 'INBOX',
 					databaseId: 11,
 					specialRole: 'inbox',
-					envelopeLists: {},
 				},
-				{
+			})
+			store.addMailboxMutation({
+				account: account13,
+				mailbox: {
 					name: 'Drafts',
 					databaseId: 12,
 					specialRole: 'draft',
-					envelopeLists: {},
 				},
-			])
-			context.getters.getMailboxes.mockReturnValueOnce([
-				{
+			})
+			store.addMailboxMutation({
+				account: account26,
+				mailbox: {
 					name: 'INBOX',
 					databaseId: 21,
-					accountId: 26,
 					specialRole: 'inbox',
-					envelopeLists: {},
 				},
-				{
+			})
+			store.addMailboxMutation({
+				account: account26,
+				mailbox: {
 					name: 'Drafts',
 					databaseId: 22,
-					accountId: 26,
 					specialRole: 'draft',
-					envelopeLists: {},
 				},
-			])
+			})
 
-			await actions.syncInboxes(context)
+			store.fetchEnvelopes = jest.fn(async () => {})
+			store.syncEnvelopes = jest.fn(async () => {})
 
-			expect(context.getters.getMailboxes).toHaveBeenCalledTimes(2)
-			expect(context.dispatch).toHaveBeenCalledTimes(4) // 2 fetch + 2 sync
-			expect(context.dispatch).toBeCalledWith('fetchEnvelopes', {
+			await store.syncInboxes()
+
+			expect(store.fetchEnvelopes).toHaveBeenCalledTimes(2)
+			expect(store.fetchEnvelopes).toHaveBeenNthCalledWith(1, {
 				mailboxId: 11,
 			})
-			expect(context.dispatch).toBeCalledWith('syncEnvelopes', {
+			expect(store.fetchEnvelopes).toHaveBeenNthCalledWith(2, {
+				mailboxId: 21,
+			})
+
+			expect(store.syncEnvelopes).toHaveBeenCalledTimes(2)
+			expect(store.syncEnvelopes).toHaveBeenNthCalledWith(1, {
 				mailboxId: 11,
 			})
-			expect(context.dispatch).toBeCalledWith('fetchEnvelopes', {
+			expect(store.syncEnvelopes).toHaveBeenNthCalledWith(2, {
 				mailboxId: 21,
 			})
-			expect(context.dispatch).toBeCalledWith('syncEnvelopes', {
-				mailboxId: 21,
-			})
+
 			// We can't detect new messages here
-			expect(NotificationService.showNewMessagesNotification).not.toHaveBeenCalled
+			expect(NotificationService.showNewMessagesNotification).not.toHaveBeenCalled()
 		})
 
 		it('syncs each individual mailbox', async () => {
-			context.getters.accounts.push({
+			const account13 = {
 				id: 13,
-			})
-			context.getters.accounts.push({
+			}
+			const account26 = {
 				id: 26,
-			})
-			context.getters.getMailbox.mockReturnValue({
-				isUnified: true,
-				specialRole: 'inbox',
-				accountId: UNIFIED_ACCOUNT_ID,
-				id: UNIFIED_INBOX_ID,
-				envelopeLists: {
-					'': [],
-				},
-			})
-			context.getters.getMailboxes.mockReturnValueOnce([
-				{
+			}
+
+			store.addAccountMutation(account13)
+			store.addAccountMutation(account26)
+			store.addMailboxMutation({
+				account: account13,
+				mailbox: {
 					name: 'INBOX',
 					databaseId: 11,
 					specialRole: 'inbox',
-					envelopeLists: {
-						'': [],
-					},
 				},
-				{
+			})
+			store.addMailboxMutation({
+				account: account13,
+				mailbox: {
 					name: 'Drafts',
 					databaseId: 12,
 					specialRole: 'draft',
-					envelopeLists: {
-						'': [],
-					},
 				},
-			])
-			context.getters.getMailboxes.mockReturnValueOnce([
-				{
+			})
+			store.addMailboxMutation({
+				account: account26,
+				mailbox: {
 					name: 'INBOX',
 					databaseId: 21,
-					accountId: 26,
 					specialRole: 'inbox',
-					envelopeLists: {
-						'': [],
-					},
 				},
-				{
+			})
+			store.addMailboxMutation({
+				account: account26,
+				mailbox: {
 					name: 'Drafts',
 					databaseId: 22,
-					accountId: 26,
 					specialRole: 'draft',
-					envelopeLists: {
-						'': [],
-					},
 				},
-			])
-			context.dispatch
-				.mockReturnValueOnce(Promise.resolve([{ id: 123 }, { id: 321 }]))
+			})
 
-			await actions.syncInboxes(context)
+			// Mock a pseudo envelope list for each mailbox to simulate existing mailboxes with
+			// envelopes (and make sure that store.fetchEnvelopes() is not called).
+			const envelopeListId = Symbol()
+			normalizedEnvelopeListId.mockReturnValue(envelopeListId)
+			for (const mailbox of Object.values(store.mailboxes)) {
+				mailbox.envelopeLists[envelopeListId] = {}
+			}
 
-			expect(context.getters.getMailbox).toHaveBeenCalledWith(UNIFIED_INBOX_ID)
-			expect(context.getters.getMailboxes).toHaveBeenCalledTimes(2)
-			expect(context.dispatch).toHaveBeenCalledWith('syncEnvelopes', {
+			store.fetchEnvelopes = jest.fn(async () => {})
+			store.syncEnvelopes = jest.fn(async () => [{ id: 123 }, { id: 321 }])
+
+			await store.syncInboxes()
+
+			expect(store.fetchEnvelopes).not.toHaveBeenCalled()
+			expect(store.syncEnvelopes).toHaveBeenCalledTimes(4)
+			expect(store.syncEnvelopes).toHaveBeenNthCalledWith(1, {
 				mailboxId: 11,
 			})
-			// expect(context.dispatch).have.been
-			expect(context.dispatch).toBeCalledWith('syncEnvelopes', {
-				mailboxId: 11,
-			})
-			expect(context.dispatch).toBeCalledWith('syncEnvelopes', {
+			expect(store.syncEnvelopes).toHaveBeenNthCalledWith(2, {
 				mailboxId: 21,
 			})
+			expect(store.syncEnvelopes).toHaveBeenNthCalledWith(3, {
+				mailboxId: UNIFIED_INBOX_ID,
+				query: 'is:pi-important',
+			})
+			expect(store.syncEnvelopes).toHaveBeenNthCalledWith(4, {
+				mailboxId: UNIFIED_INBOX_ID,
+				query: 'is:pi-other',
+			})
 			// Here we expect notifications
-			expect(NotificationService.showNewMessagesNotification).toHaveBeenCalled
+			expect(NotificationService.showNewMessagesNotification).toHaveBeenCalled()
 		})
 	})
 
