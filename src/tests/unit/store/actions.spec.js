@@ -3,13 +3,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { curry, prop, range, reverse } from 'ramda'
-import orderBy from 'lodash/fp/orderBy.js'
+import { curry, range, reverse } from 'ramda'
 
 import * as MailboxService from '../../../service/MailboxService.js'
 import * as MessageService from '../../../service/MessageService.js'
 import * as NotificationService from '../../../service/NotificationService.js'
-import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants.js'
+import { UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 import { createPinia, setActivePinia } from 'pinia'
@@ -30,7 +29,7 @@ const mockEnvelope = curry((mailboxId, uid) => ({
 	mailboxId,
 	uid,
 	dateInt: uid * 10000,
-	threadRootId: Math.random(),
+	threadRootId: Math.random().toString(),
 }))
 
 describe('Vuex store actions', () => {
@@ -43,6 +42,10 @@ describe('Vuex store actions', () => {
 		store = useMainStore()
 	})
 
+	afterEach(() => {
+		jest.clearAllMocks()
+	})
+
 	it('creates a mailbox', async () => {
 		const account = {
 			id: 13,
@@ -53,6 +56,9 @@ describe('Vuex store actions', () => {
 		const mailbox = {
 			name: 'Important',
 		}
+
+		store.addAccountMutation(account)
+
 		MailboxService.create.mockResolvedValue(mailbox)
 
 		const result = await store.createMailbox({ account, name })
@@ -71,6 +77,9 @@ describe('Vuex store actions', () => {
 		const mailbox = {
 			name: 'Archive.2020',
 		}
+
+		store.addAccountMutation(account)
+
 		MailboxService.create.mockResolvedValue(mailbox)
 
 		const result = await store.createMailbox({ account, name })
@@ -89,6 +98,9 @@ describe('Vuex store actions', () => {
 		const mailbox = {
 			name: 'INBOX.Important',
 		}
+
+		store.addAccountMutation(account)
+
 		MailboxService.create.mockResolvedValue(mailbox)
 
 		const result = await store.createMailbox({ account, name })
@@ -107,6 +119,9 @@ describe('Vuex store actions', () => {
 		const mailbox = {
 			name: 'INBOX.Archive.2020',
 		}
+
+		store.addAccountMutation(account)
+
 		MailboxService.create.mockResolvedValue(mailbox)
 
 		const result = await store.createMailbox({ account, name })
@@ -116,11 +131,7 @@ describe('Vuex store actions', () => {
 	})
 
 	it('combines unified inbox even if no inboxes are present', async() => {
-		context.getters.getMailbox.mockReturnValueOnce({
-			isUnified: true,
-		})
-
-		const envelopes = await actions.fetchEnvelopes(context, {
+		const envelopes = await store.fetchEnvelopes({
 			mailboxId: UNIFIED_INBOX_ID,
 		})
 
@@ -128,43 +139,47 @@ describe('Vuex store actions', () => {
 	})
 
 	it('creates a unified page from one mailbox', async() => {
-		context.getters.accounts.push({
+		const account = {
 			id: 13,
-		})
-		context.getters.getMailbox.mockReturnValueOnce({
-			isUnified: true,
-			specialRole: 'inbox',
-			databaseId: UNIFIED_INBOX_ID,
-		})
-		context.getters.getMailboxes.mockReturnValueOnce([
-			{
+			personalNamespace: 'INBOX.',
+			mailboxes: [],
+		}
+
+		store.addAccountMutation(account)
+		store.addMailboxMutation({
+			account,
+			mailbox: {
 				id: 'INBOX',
+				name: 'INBOX',
 				databaseId: 21,
 				accountId: 13,
 				specialRole: 'inbox',
 			},
-			{
+		})
+		store.addMailboxMutation({
+			account,
+			mailbox: {
 				id: 'Drafts',
+				name: 'Drafts',
 				databaseId: 22,
 				accountId: 13,
 				specialRole: 'draft',
 			},
-		])
-		context.dispatch.mockReturnValueOnce([
-			{
-				databaseId: 123,
-				mailboxId: 21,
-				uid: 321,
-				subject: 'msg1',
-			},
-		])
+		})
 
-		const envelopes = await actions.fetchEnvelopes(context, {
+		store.addEnvelopesMutation = jest.fn()
+
+		MessageService.fetchEnvelopes.mockReturnValueOnce(Promise.resolve([{
+			databaseId: 123,
+			mailboxId: 21,
+			uid: 321,
+			subject: 'msg1',
+		}]))
+
+		const envelopes = await store.fetchEnvelopes({
 			mailboxId: UNIFIED_INBOX_ID,
 		})
 
-		expect(context.getters.getMailbox).toHaveBeenCalledWith(UNIFIED_INBOX_ID)
-		expect(context.getters.getMailboxes).toHaveBeenCalledWith(13)
 		expect(envelopes).toEqual([
 			{
 				databaseId: 123,
@@ -173,12 +188,7 @@ describe('Vuex store actions', () => {
 				subject: 'msg1',
 			},
 		])
-		expect(context.dispatch).toBeCalledWith('fetchEnvelopes', {
-			mailboxId: 21,
-			query: undefined,
-			addToUnifiedMailboxes: false,
-		})
-		expect(context.commit).toBeCalledWith('addEnvelopes', {
+		expect(store.addEnvelopesMutation).toBeCalledWith({
 			envelopes: [{
 				databaseId: 123,
 				mailboxId: 21,
