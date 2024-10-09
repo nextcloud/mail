@@ -68,6 +68,8 @@ use function json_encode;
  * @method void setImipError(bool $imipError)
  * @method bool|null isEncrypted()
  * @method void setEncrypted(bool|null $encrypted)
+ * @method bool getMentionsMe()
+ * @method void setMentionsMe(bool $isMentionned)
  */
 class Message extends Entity implements JsonSerializable {
 	private const MUTABLE_FLAGS = [
@@ -109,6 +111,7 @@ class Message extends Entity implements JsonSerializable {
 	protected $imipMessage = false;
 	protected $imipProcessed = false;
 	protected $imipError = false;
+	protected $mentionsMe = false;
 
 	/**
 	 * @var bool|null
@@ -323,6 +326,7 @@ class Message extends Entity implements JsonSerializable {
 			'imipMessage' => $this->isImipMessage(),
 			'previewText' => $this->getPreviewText(),
 			'encrypted' => ($this->isEncrypted() === true),
+			'mentionsMe' => $this->getMentionsMe(),
 		];
 	}
 }

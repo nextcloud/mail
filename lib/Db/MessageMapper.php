@@ -563,6 +563,7 @@ class MessageMapper extends QBMapper {
 				->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
 				->set('imip_message', $query->createParameter('imip_message'))
 				->set('encrypted', $query->createParameter('encrypted'))
+				->set('mentions_me', $query->createParameter('mentions_me'))
 				->where($query->expr()->andX(
 					$query->expr()->eq('uid', $query->createParameter('uid')),
 					$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
@@ -593,6 +594,7 @@ class MessageMapper extends QBMapper {
 				);
 				$query->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
 				$query->setParameter('encrypted', $message->isEncrypted(), IQueryBuilder::PARAM_BOOL);
+				$query->setParameter('mentions_me', $message->getMentionsMe(), IQueryBuilder::PARAM_BOOL);
 
 				$query->executeStatement();
 			}
@@ -952,6 +954,12 @@ class MessageMapper extends QBMapper {
 		if ($query->getHasAttachments()) {
 			$select->andWhere(
 				$qb->expr()->eq('m.flag_attachments', $qb->createNamedParameter($query->getHasAttachments(), IQueryBuilder::PARAM_INT))
+			);
+		}
+
+		if ($query->getMentionsMe()) {
+			$select->andWhere(
+				$qb->expr()->eq('m.mentions_me', $qb->createNamedParameter($query->getMentionsMe(), IQueryBuilder::PARAM_BOOL))
 			);
 		}
 
