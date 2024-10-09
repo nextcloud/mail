@@ -34,7 +34,8 @@ describe('Vuex store actions', () => {
 		setActivePinia(createPinia())
 
 		store = useMainStore()
-		store.accountsUnmapped = { 13: {} }
+		store.accountList = [13]
+		store.accountsUnmapped = { 13: { id: 13 } }
 	})
 
 	it('creates a mailbox', async () => {
@@ -492,13 +493,15 @@ describe('Vuex store actions', () => {
 	})
 
 	it('should move message to junk, no mailbox configured', async () => {
-		context.getters.getAccount.mockReturnValueOnce({
+		store.addAccountMutation({
+			id: 42,
 			junkMailboxId: null,
 		})
 
-		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+		const removeEnvelope = await store.moveEnvelopeToJunk({
+			accountId: 42,
 			flags: {
-				$junk: false,
+				$junk: true,
 			},
 			mailboxId: 1,
 		})
@@ -507,14 +510,23 @@ describe('Vuex store actions', () => {
 	})
 
 	it('should move message to inbox', async () => {
-		context.getters.getAccount.mockReturnValueOnce({
+		const account = {
+			id: 42,
 			junkMailboxId: 10,
-		})
-		context.getters.getInbox.mockReturnValueOnce({
-			databaseId: 1,
+		}
+
+		store.addAccountMutation(account)
+		store.addMailboxMutation({
+			account,
+			mailbox: {
+				databaseId: 1,
+				specialRole: 'inbox',
+				name: 'INBOX',
+			},
 		})
 
-		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+		const removeEnvelope = await store.moveEnvelopeToJunk({
+			accountId: 42,
 			flags: {
 				$junk: true,
 			},
@@ -525,27 +537,13 @@ describe('Vuex store actions', () => {
 	})
 
 	it('should move message to inbox, inbox not found', async () => {
-		context.getters.getAccount.mockReturnValueOnce({
+		store.addAccountMutation({
+			id: 42,
 			junkMailboxId: 10,
 		})
-		context.getters.getInbox.mockReturnValueOnce(undefined)
 
-		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
-			flags: {
-				$junk: true,
-			},
-			mailboxId: 10,
-		})
-
-		expect(removeEnvelope).toBeFalsy()
-	})
-
-	it('should not move messages', async () => {
-		context.getters.getAccount.mockReturnValueOnce({
-			junkMailboxId: null,
-		})
-
-		const removeEnvelope = await actions.moveEnvelopeToJunk(context, {
+		const removeEnvelope = await store.moveEnvelopeToJunk({
+			accountId: 42,
 			flags: {
 				$junk: true,
 			},

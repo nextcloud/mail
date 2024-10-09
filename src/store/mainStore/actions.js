@@ -1827,7 +1827,7 @@ export default function mainStoreActions() {
 			Vue.set(this.preferences, key, value)
 		},
 		setSessionExpiredMutation() {
-			Vue.set(this.isExpiredSession, true)
+			this.isExpiredSession = true
 		},
 		addAccountMutation(account) {
 			account.collapsed = account.collapsed ?? true
