@@ -9,7 +9,7 @@
 		<EmptyContent v-if="!contact"
 			class="empty-content"
 			:name="t('mail', 'No contact selected')"
-			:description="t('mail', 'Select a contact on the list to begin')">
+			:description="t('mail', 'Select a contact on the list to begin or the contact you selected has not data')">
 			<template #icon>
 				<IconContact :size="20" />
 			</template>
@@ -17,9 +17,9 @@
 
 		<!-- TODO: add empty content while this.loadingData === true -->
 		<template v-else>
-			<div class="contact-title">
+			<h6 class="contact-title">
 				{{ contact.fullName }}
-			</div>
+			</h6>
 			<div v-if="!loadingData" class="contact-details-wrapper">
 				<div v-for="(properties, name) in groupedProperties"
 					:key="name">
@@ -31,6 +31,7 @@
 						:contact="contact"
 						:local-contact="localContact"
 						:contacts="contacts"
+						:is-read-only="isReadOnly"
 						:bus="bus" />
 				</div>
 			</div>
@@ -104,6 +105,7 @@ export default {
 			showMenuPopover: false,
 			profileEnabled,
 			localContact: undefined,
+			editMode: false,
 
 		}
 	},
@@ -153,6 +155,17 @@ export default {
 				list[property.name].push(property)
 				return list
 			}, {})
+		},
+		/**
+		 * The address book is read-only (e.g. shared with me).
+		 *
+		 * @return {boolean}
+		 */
+		addressbookIsReadOnly() {
+			return this.contact.addressbook?.readOnly
+		},
+		isReadOnly() {
+			return this.addressbookIsReadOnly || !this.editMode
 		},
 
 		/* /!**

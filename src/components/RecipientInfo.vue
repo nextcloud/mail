@@ -9,16 +9,15 @@
 					:size="64"
 					:disable-tooltip="true"
 					:url="recipients[0].photoUrl" />
-				<!-- Show email only when collapsed -->
 				<p class="recipient-email">
 					{{ recipients[0].email }}
 				</p>
+				<RecipientDetails :contact="recipientsVCards[recipients[0].email]" :reload-bus="reloadBus" />
 				<div class="expand-toggle" @click="toggleExpand(0)">
-					<IconArrowUp v-if="isExpanded(0)" size="16" />
-					<IconArrowDown v-else size="16" />
+					<IconArrowUp v-if="isExpanded(0)" :size="16" />
+					<IconArrowDown v-else :size="16" />
 				</div>
 			</div>
-			<RecipientDetails v-if="isExpanded(index)" :contact="recipientsVCards[recipients[0].email]" :reload-bus="reloadBus" />
 		</div>
 
 		<!-- For multiple recipients -->
@@ -39,8 +38,8 @@
 						<IconArrowDown v-else size="16" />
 					</div>
 				</div>
-				<div v-if="isExpanded(index)" class="recipient-list">
-					<RecipientDetails :contact="recipientsVCards[recipient.email]" :reload-bus="reloadBus" />
+				<div class="recipient-list">
+					<RecipientDetails v-if="isExpanded(index)" :contact="recipientsVCards[recipient.email]" :reload-bus="reloadBus" />
 				</div>
 			</div>
 		</div>
