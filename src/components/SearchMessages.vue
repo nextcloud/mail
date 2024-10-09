@@ -252,6 +252,14 @@
 									{{ t('mail', 'Has attachments') }}
 								</NcCheckboxRadioSwitch>
 							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="searchFlags"
+									value="mentions"
+									name="flags[]"
+									type="checkbox">
+									{{ t('mail', 'Mentions me') }}
+								</NcCheckboxRadioSwitch>
+							</div>
 						</div>
 					</div>
 				</div>

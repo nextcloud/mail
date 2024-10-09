@@ -234,9 +234,11 @@ class ImapMessageFetcher {
 			}
 		}
 
+
 		$this->parseHeaders($fetch);
 
 		$envelope = $fetch->getEnvelope();
+		$isMentionned = $this->checkMention(AddressList::fromHorde($envelope->to)->first()->getEmail());
 		return new IMAPMessage(
 			$this->uid,
 			$envelope->message_id,
@@ -266,6 +268,7 @@ class ImapMessageFetcher {
 			$isEncrypted,
 			$isSigned,
 			$signatureIsValid,
+			$isMentionned,
 			$this->htmlService, // TODO: drop the html service dependency
 		);
 	}
@@ -495,6 +498,20 @@ class ImapMessageFetcher {
 			return $utf8;
 		}
 		return iconv('UTF-8', 'UTF-8//IGNORE', $subject);
+	}
+
+	private function checkMention(string $useraddress) : bool{
+		if (!$this->hasHtmlMessage){
+			return false ;
+		}
+		$result = false ;
+		$links = $this->htmlService->extractLinks($this->htmlMessage);
+		$userMailToAddress = "mailto:" . $useraddress;
+		foreach ($links as $link) {
+			$result = $result || $userMailToAddress === $link['href'];
+		}
+		return $result;
+
 	}
 
 	private function parseHeaders(Horde_Imap_Client_Data_Fetch $fetch): void {

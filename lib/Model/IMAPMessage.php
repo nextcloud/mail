@@ -69,6 +69,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private bool $isEncrypted;
 	private bool $isSigned;
 	private bool $signatureIsValid;
+	private bool $mentionsMe;
 
 	public function __construct(int $uid,
 		string $messageId,
@@ -98,7 +99,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		bool $isEncrypted,
 		bool $isSigned,
 		bool $signatureIsValid,
-		Html $htmlService) {
+		bool $mentionsMe,
+		Html $htmlService,) {
 		$this->messageId = $uid;
 		$this->realMessageId = $messageId;
 		$this->flags = $flags;
@@ -128,6 +130,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$this->isSigned = $isSigned;
 		$this->signatureIsValid = $signatureIsValid;
 		$this->htmlService = $htmlService;
+		$this->mentionsMe = $mentionsMe;
 	}
 
 	public static function generateMessageId(): string {
@@ -459,6 +462,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->isOneClickUnsubscribe;
 	}
 
+	public function getMentionsMe(): bool {
+		return $this->mentionsMe;
+	}
+
+	public function setMentionsMe(bool $isMentionned) {
+		$this->mentionsMe = $isMentionned;
+	}
+
 	/**
 	 * Cast all values from an IMAP message into the correct DB format
 	 *
@@ -509,6 +520,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		if ($this->scheduling !== []) {
 			$msg->setImipMessage(true);
 		}
+		$msg->setMentionsMe($this->mentionsMe);
 
 		$allowed = [
 			Horde_Imap_Client::FLAG_ANSWERED,
