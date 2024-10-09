@@ -61,7 +61,7 @@
 import { NcTextArea, NcTextField } from '@nextcloud/vue'
 import debounce from 'debounce'
 import RecipientPropertyTitle from './RecipientPropertyTitle.vue'
-import PropertyMixingRecipient from './PropertyMixingRecipient'
+import PropertyMixingRecipient from './PropertyMixingRecipient.js'
 
 export default {
 	name: 'RecipientPropertyText',

@@ -22,7 +22,7 @@
 		:prop-type="propType"
 		:options="sortedModelOptions"
 		:bus="bus"
-		@delete="onDelete" />
+		:is-read-only="isReadOnly" />
 </template>
 
 <script>
@@ -70,6 +70,10 @@ export default {
 		},
 		bus: {
 			type: Object,
+			required: true,
+		},
+		isReadOnly: {
+			type: Boolean,
 			required: true,
 		},
 	},
@@ -326,13 +330,6 @@ export default {
 					}
 				})
 			}
-		},
-
-		/**
-		 * Delete this property
-		 */
-		onDelete() {
-			this.localContact.vCard.removeProperty(this.property)
 		},
 	},
 }
