@@ -333,6 +333,7 @@
     "To add a mail account, please contact your administrator." : "Norėdami pridėti pašto paskyrą, susisiekite su savo administratoriumi.",
     "Next week – {timeLocale}" : "Kitą savaitę – {timeLocale}",
     "This weekend – {timeLocale}" : "Šį savaitgalį – {timeLocale}",
+    "Tomorrow – {timeLocale}" : "Rytoj – {timeLocale}",
     "Later today – {timeLocale}" : "Šiandien vėliau – {timeLocale}",
     "All" : "Visos",
     "Drafts" : "Juodraščiai",
