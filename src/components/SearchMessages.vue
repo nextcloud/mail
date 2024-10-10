@@ -252,6 +252,11 @@
 									{{ t('mail', 'Has attachments') }}
 								</NcCheckboxRadioSwitch>
 							</div>
+							<div class="modal-inner-inline">
+								<NcCheckboxRadioSwitch :checked.sync="mentionsMe">
+									{{ t('mail', 'Mentions me') }}
+								</NcCheckboxRadioSwitch>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -346,6 +351,7 @@ export default {
 			searchInSubject: null,
 			searchInMessageBody: null,
 			searchFlags: [],
+			mentionsMe: false,
 			hasAttachmentActive: false,
 			hasLast7daysActive: false,
 			hasFromMeActive: false,
@@ -406,6 +412,7 @@ export default {
 				body: this.searchInMessageBody !== null && this.searchInMessageBody.length > 1 ? this.searchInMessageBody : '',
 				tags: this.selectedTags.length > 0 ? this.selectedTags.map(item => item.id) : '',
 				flags: this.searchFlags.length > 0 ? this.searchFlags.map(item => item) : '',
+				mentions: this.mentionsMe,
 				start: this.prepareStart(),
 				end: this.prepareEnd(),
 			}
@@ -537,6 +544,7 @@ export default {
 			this.searchFlags = []
 			this.startDate = null
 			this.endDate = null
+			this.mentionsMe = false
 			// Need if there is only tag filter or recipients filter
 			if (prevQuery === '') {
 				this.sendQueryEvent()
@@ -661,9 +669,6 @@ export default {
 			display: inline-block;
 			width: 32%;
 
-			&:last-child {
-				width: 100%;
-			}
 		}
 		.range {
 			display: flex;

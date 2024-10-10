@@ -69,7 +69,8 @@ class PreviewEnhancer {
 			$data = $this->imapMapper->getBodyStructureData(
 				$client,
 				$mailbox->getName(),
-				$needAnalyze
+				$needAnalyze,
+				$account->getEMailAddress()
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
 			// Ignore for now, but log
@@ -94,6 +95,7 @@ class PreviewEnhancer {
 			$message->setStructureAnalyzed(true);
 			$message->setImipMessage($structureData->isImipMessage());
 			$message->setEncrypted($structureData->isEncrypted());
+			$message->setMentionsMe($structureData->getMentionsMe());
 
 			return $message;
 		}, $messages));
