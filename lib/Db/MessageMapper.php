@@ -957,7 +957,7 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-		if($query->getMentionsMe()){
+		if($query->getMentionsMe()) {
 			$select->andWhere(
 				$qb->expr()->eq('m.mentions_me', $qb->createNamedParameter($query->getMentionsMe(), IQueryBuilder::PARAM_BOOL))
 			);

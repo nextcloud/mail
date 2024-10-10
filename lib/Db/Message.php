@@ -326,7 +326,7 @@ class Message extends Entity implements JsonSerializable {
 			'imipMessage' => $this->isImipMessage(),
 			'previewText' => $this->getPreviewText(),
 			'encrypted' => ($this->isEncrypted() === true),
-			'mentionsMe'=> $this->getMentionsMe(),
+			'mentionsMe' => $this->getMentionsMe(),
 		];
 	}
 }

@@ -52,7 +52,7 @@ class MessageMapper {
 
 	public function __construct(LoggerInterface           $logger,
 		SmimeService              $smimeService,
-		ImapMessageFetcherFactory $imapMessageFactory,) {
+		ImapMessageFetcherFactory $imapMessageFactory, ) {
 		$this->logger = $logger;
 		$this->smimeService = $smimeService;
 		$this->imapMessageFactory = $imapMessageFactory;
@@ -871,7 +871,7 @@ class MessageMapper {
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client,$emailAddress ) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client, $emailAddress) {
 			$hasAttachments = false;
 			$text = '';
 			$isImipMessage = false;
@@ -939,7 +939,7 @@ class MessageMapper {
 					$structure->setContents($htmlBody);
 					$htmlBody = $structure->getContents();
 				}
-				$mentionsUser = $this->checkLinks($htmlBody,$emailAddress);
+				$mentionsUser = $this->checkLinks($htmlBody, $emailAddress);
 				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
 				return new MessageStructureData(
 					$hasAttachments,
@@ -976,7 +976,7 @@ class MessageMapper {
 		$anchors = $dom->getElementsByTagName('a');
 		foreach ($anchors as $anchor) {
 			$href = $anchor->getAttribute('href');
-			if($href === 'mailto:'.$mailAddress){
+			if($href === 'mailto:'.$mailAddress) {
 				return true;
 			}
 		}
