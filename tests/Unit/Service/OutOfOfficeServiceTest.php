@@ -19,40 +19,16 @@ use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 use OCA\Mail\Service\OutOfOfficeService;
 use OCA\Mail\Sieve\NamedSieveScript;
 use OCP\IUser;
-use OCP\User\IAvailabilityCoordinator;
 use OCP\User\IOutOfOfficeData;
-use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Container\ContainerInterface;
 
 class OutOfOfficeServiceTest extends TestCase {
 	private ServiceMockObject $serviceMock;
 	private OutOfOfficeService $outOfOfficeService;
 
-	/** @var ContainerInterface|MockObject */
-	private $container;
-
-	/** @var IAvailabilityCoordinator|MockObject */
-	private $availabilityCoordinator;
-
 	protected function setUp(): void {
 		parent::setUp();
 
-		if (!interface_exists(IAvailabilityCoordinator::class)
-			|| !interface_exists(IOutOfOfficeData::class)) {
-			$this->markTestSkipped('Out-of-office feature is not available');
-		}
-
-		$this->container = $this->createMock(ContainerInterface::class);
-		$this->availabilityCoordinator = $this->createMock(IAvailabilityCoordinator::class);
-
-		$this->container->expects(self::once())
-			->method('get')
-			->with(IAvailabilityCoordinator::class)
-			->willReturn($this->availabilityCoordinator);
-
-		$this->serviceMock = $this->createServiceMock(OutOfOfficeService::class, [
-			'container' => $this->container,
-		]);
+		$this->serviceMock = $this->createServiceMock(OutOfOfficeService::class);
 		$this->outOfOfficeService = $this->serviceMock->getService();
 	}
 
@@ -64,10 +40,6 @@ class OutOfOfficeServiceTest extends TestCase {
 		string $subject,
 		string $message,
 	): ?IOutOfOfficeData {
-		if (!interface_exists(IOutOfOfficeData::class)) {
-			return null;
-		}
-
 		$data = $this->createMock(IOutOfOfficeData::class);
 		$data->method('getId')->willReturn($id);
 		$data->method('getUser')->willReturn($user);
@@ -119,7 +91,8 @@ class OutOfOfficeServiceTest extends TestCase {
 		$timeFactory->expects(self::once())
 			->method('getTime')
 			->willReturn(1500);
-		$this->availabilityCoordinator->expects(self::once())
+		$availabilityCoordinator = $this->serviceMock->getParameter('availabilityCoordinator');
+		$availabilityCoordinator->expects(self::once())
 			->method('getCurrentOutOfOfficeData')
 			->with($user)
 			->willReturn($data);
@@ -196,7 +169,8 @@ class OutOfOfficeServiceTest extends TestCase {
 		$timeFactory->expects(self::once())
 			->method('getTime')
 			->willReturn(1500);
-		$this->availabilityCoordinator->expects(self::once())
+		$availabilityCoordinator = $this->serviceMock->getParameter('availabilityCoordinator');
+		$availabilityCoordinator->expects(self::once())
 			->method('getCurrentOutOfOfficeData')
 			->with($user)
 			->willReturn($data);

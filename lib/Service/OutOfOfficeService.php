@@ -25,12 +25,9 @@ use OCA\Mail\Service\OutOfOffice\OutOfOfficeState;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IUser;
 use OCP\User\IAvailabilityCoordinator;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class OutOfOfficeService {
-	private ?IAvailabilityCoordinator $availabilityCoordinator;
 
 	public function __construct(
 		private OutOfOfficeParser $outOfOfficeParser,
@@ -38,14 +35,8 @@ class OutOfOfficeService {
 		private LoggerInterface $logger,
 		private AliasesService $aliasesService,
 		private ITimeFactory $timeFactory,
-		ContainerInterface $container,
+		private IAvailabilityCoordinator $availabilityCoordinator,
 	) {
-		// TODO: inject directly if we only support Nextcloud >= 28
-		try {
-			$this->availabilityCoordinator = $container->get(IAvailabilityCoordinator::class);
-		} catch (ContainerExceptionInterface $e) {
-			$this->availabilityCoordinator = null;
-		}
 	}
 
 	/**
@@ -102,10 +93,6 @@ class OutOfOfficeService {
 	 * @throws InvalidArgumentException If the given mail account doesn't follow out-of-office settings
 	 */
 	public function updateFromSystem(MailAccount $mailAccount, IUser $user): ?OutOfOfficeState {
-		if ($this->availabilityCoordinator === null) {
-			throw new ServiceException('System out-of-office data is only available in Nextcloud >= 28');
-		}
-
 		if (!$mailAccount->getOutOfOfficeFollowsSystem()) {
 			throw new InvalidArgumentException('The mail account does not follow system out-of-office settings');
 		}
