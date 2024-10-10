@@ -1,5 +1,5 @@
 /**
- * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2020-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -12,7 +12,6 @@ import { UNIFIED_INBOX_ID, PAGE_SIZE } from '../../../store/constants.js'
 import { normalizedEnvelopeListId } from '../../../util/normalization.js'
 
 import { createPinia, setActivePinia } from 'pinia'
-import { createTestingPinia } from '@pinia/testing'
 
 import useMainStore from '../../../store/mainStore.js'
 
@@ -21,6 +20,7 @@ jest.mock('../../../service/MessageService.js')
 jest.mock('../../../service/NotificationService.js')
 jest.mock('../../../util/normalization.js', () => ({
 	__esModule: true,
+	// Supply a default list id ('') to prevent annoying errors
 	normalizedEnvelopeListId: jest.fn(() => ''),
 }))
 
@@ -33,7 +33,6 @@ const mockEnvelope = curry((mailboxId, uid) => ({
 }))
 
 describe('Vuex store actions', () => {
-	let context
 	let store
 
 	beforeEach(() => {
@@ -200,52 +199,16 @@ describe('Vuex store actions', () => {
 	})
 
 	it('fetches the next individual page', async() => {
-		context.getters.accounts.push({
-			accountId: 13,
-		})
-		context.getters.getMailbox.mockReturnValueOnce({
-			name: 'INBOX',
-			databaseId: 11,
-			accountId: 13,
-			specialRole: 'inbox',
-			envelopeLists: {
-				'': reverse(range(21, 40)),
-			},
-		})
-		context.getters.getEnvelope.mockReturnValueOnce(mockEnvelope(11, 1))
-		MessageService.fetchEnvelopes.mockResolvedValue(Promise.resolve(
-			reverse(
-				range(1, 21).map((n) => ({
-					uid: n,
-					dateInt: n * 10000,
-				})),
-			),
-		))
-
-		await actions.fetchNextEnvelopes(context, {
-			mailboxId: 13,
-			quantity: PAGE_SIZE,
-		})
-
-		expect(MessageService.fetchEnvelopes).toHaveBeenCalled()
-	})
-
-	it('builds the next unified page with local data', async () => {
-		const msgs1 = reverse(range(20, 70))
-		const msgs2 = reverse(range(5, 10))
-		const page1 = reverse(range(50, 60))
+		const msgs1 = reverse(range(30, 40))
+		const page1 = reverse(range(10, 30))
 
 		const account13 = {
 			id: 13,
-		}
-		const account26 = {
-			id: 26,
 		}
 
 		store.preferences['sort-order'] = 'newest'
 
 		store.addAccountMutation(account13)
-		store.addAccountMutation(account26)
 		store.addMailboxMutation({
 			account: account13,
 			mailbox: {
@@ -262,30 +225,81 @@ describe('Vuex store actions', () => {
 				specialRole: 'draft',
 			},
 		})
+
+		// Add initial envelopes
+		store.addEnvelopesMutation({
+			envelopes: msgs1.map(mockEnvelope(11)),
+			addToUnifiedMailboxes: true,
+		})
+
+		// Mock fetching next pages
+		MessageService.fetchEnvelopes.mockImplementation(async (accountId, mailboxId) => {
+			if (accountId !== 13 || mailboxId !== 11) {
+				return []
+			}
+
+			return page1.map(mockEnvelope(11))
+		})
+
+		await store.fetchNextEnvelopePage({
+			mailboxId: UNIFIED_INBOX_ID,
+			quantity: PAGE_SIZE,
+		})
+
+		expect(MessageService.fetchEnvelopes).toHaveBeenCalledTimes(1)
+		expect(MessageService.fetchEnvelopes)
+			.toHaveBeenNthCalledWith(1, 13, 11, undefined, 300000, PAGE_SIZE, 'newest')
+		expect(store.mailboxes[UNIFIED_INBOX_ID].envelopeLists[''].toSorted()).toEqual(
+			[
+				// Initial envelopes
+				...msgs1.map(mockEnvelope(11)),
+
+				// Fetched page for mailbox 11
+				...page1.map(mockEnvelope(11)),
+			].map(e => e.databaseId).sort(),
+		)
+		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual(
+			[
+				// Initial envelopes
+				...msgs1.map(mockEnvelope(11)),
+
+				// Fetched page for mailbox 11
+				...page1.map(mockEnvelope(11)),
+			].map(e => e.databaseId).sort(),
+		)
+	})
+
+	it('builds the next unified page with local data', async () => {
+		const msgs1 = reverse(range(20, 70))
+		const page1 = reverse(range(50, 60))
+
+		const account13 = {
+			id: 13,
+		}
+
+		store.preferences['sort-order'] = 'newest'
+
+		store.addAccountMutation(account13)
 		store.addMailboxMutation({
-			account: account26,
+			account: account13,
 			mailbox: {
 				name: 'INBOX',
-				databaseId: 21,
+				databaseId: 11,
 				specialRole: 'inbox',
 			},
 		})
 		store.addMailboxMutation({
-			account: account26,
+			account: account13,
 			mailbox: {
 				name: 'Drafts',
-				databaseId: 22,
+				databaseId: 12,
 				specialRole: 'draft',
 			},
 		})
 
-		// Add initial pages
+		// Add initial envelopes
 		store.addEnvelopesMutation({
 			envelopes: msgs1.map(mockEnvelope(11)),
-			addToUnifiedMailboxes: false,
-		})
-		store.addEnvelopesMutation({
-			envelopes: msgs2.map(mockEnvelope(21)),
 			addToUnifiedMailboxes: false,
 		})
 
@@ -413,6 +427,17 @@ describe('Vuex store actions', () => {
 				...page2.map(mockEnvelope(11)),
 			].map(e => e.databaseId).sort(),
 		)
+		expect(store.mailboxes[11].envelopeLists[''].toSorted()).toEqual(
+			[
+				// Initial envelopes
+				...page1.map(mockEnvelope(11)),
+
+				// Fetched page for mailbox 11
+				...page2.map(mockEnvelope(11)),
+			].map(e => e.databaseId).sort(),
+		)
+		expect(store.mailboxes[21].envelopeLists[''].toSorted())
+			.toEqual(msgs2.map(mockEnvelope(21)).map(e => e.databaseId).toSorted())
 	})
 
 	describe('inbox sync', () => {
