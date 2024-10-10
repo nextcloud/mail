@@ -31,7 +31,7 @@ class FilterController extends OCSController {
 		$this->currentUserId = $userId;
 	}
 
-	#[Route(Route::TYPE_FRONTPAGE, verb: 'GET', url: '/api/mailfilter/{accountId}', requirements: ['accountId' => '[\d]+'])]
+	#[Route(Route::TYPE_FRONTPAGE, verb: 'GET', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	public function getFilters(int $accountId) {
 		$account = $this->accountService->findById($accountId);
 
@@ -44,7 +44,7 @@ class FilterController extends OCSController {
 		return new JSONResponse($result->getFilters());
 	}
 
-	#[Route(Route::TYPE_FRONTPAGE, verb: 'PUT', url: '/api/mailfilter/{accountId}', requirements: ['accountId' => '[\d]+'])]
+	#[Route(Route::TYPE_FRONTPAGE, verb: 'PUT', url: '/api/filter/{accountId}', requirements: ['accountId' => '[\d]+'])]
 	public function updateFilters(int $accountId, array $filters) {
 		$account = $this->accountService->findById($accountId);
 
