@@ -97,7 +97,7 @@ class FilterBuilder {
 			}
 
 			$actions = array_map(
-				static fn($action) => "\t" . $action,
+				static fn ($action) => "\t" . $action,
 				$actions
 			);
 

@@ -11,20 +11,20 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\MailFilterService;
+use OCA\Mail\Service\FilterService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\Route;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
-class MailfilterController extends OCSController {
+class FilterController extends OCSController {
 	private string $currentUserId;
 
 	public function __construct(
 		IRequest $request,
 		string $userId,
-		private MailFilterService $mailFilterService,
+		private FilterService $mailFilterService,
 		private AccountService $accountService,
 	) {
 		parent::__construct(Application::APP_ID, $request);
