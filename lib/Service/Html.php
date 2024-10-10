@@ -191,20 +191,4 @@ class Html {
 			'</style>',
 		]);
 	}
-
-	public function extractLinks(string $body) : array {
-		$results = [];
-		$dom = new \DOMDocument();
-		libxml_use_internal_errors(true);
-		$dom->loadHTML($body);
-		libxml_use_internal_errors();
-		$anchors = $dom->getElementsByTagName('a');
-		foreach ($anchors as $anchor) {
-			$href = $anchor->getAttribute('href');
-			$results[] = [
-				'href' => $href,
-			];
-		}
-		return $results;
-	}
 }

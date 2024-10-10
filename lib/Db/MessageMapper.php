@@ -957,6 +957,12 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
+		if($query->getMentionsMe()){
+			$select->andWhere(
+				$qb->expr()->eq('m.mentions_me', $qb->createNamedParameter($query->getMentionsMe(), IQueryBuilder::PARAM_BOOL))
+			);
+		}
+
 		if ($query->getCursor() !== null && $sortOrder === IMailSearch::ORDER_NEWEST_FIRST) {
 			$select->andWhere(
 				$qb->expr()->lt('m.sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))

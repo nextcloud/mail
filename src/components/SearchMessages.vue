@@ -669,9 +669,6 @@ export default {
 			display: inline-block;
 			width: 32%;
 
-			&:last-child {
-				width: 100%;
-			}
 		}
 		.range {
 			display: flex;
