@@ -1,0 +1,27 @@
+[
+	{
+		"actions": [
+			{
+				"flag": "Report",
+				"type": "addflag"
+			},
+			{
+				"flag": "To read",
+				"type": "addflag"
+			}
+		],
+		"enable": true,
+		"name": "Test 5",
+		"operator": "allof",
+		"priority": 10,
+		"tests": [
+			{
+				"field": "subject",
+				"operator": "matches",
+				"values": [
+					"work*report"
+				]
+			}
+		]
+	}
+]

@@ -94,7 +94,8 @@ class MailManager implements IMailManager {
 	/** @var ThreadMapper */
 	private $threadMapper;
 
-	public function __construct(IMAPClientFactory $imapClientFactory,
+	public function __construct(
+		IMAPClientFactory $imapClientFactory,
 		MailboxMapper $mailboxMapper,
 		MailboxSync $mailboxSync,
 		FolderMapper $folderMapper,
@@ -105,7 +106,8 @@ class MailManager implements IMailManager {
 		TagMapper $tagMapper,
 		MessageTagsMapper $messageTagsMapper,
 		ThreadMapper $threadMapper,
-		private ImapFlag $imapFlag) {
+		private ImapFlag $imapFlag,
+	) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
