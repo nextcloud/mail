@@ -9,9 +9,6 @@
 					:size="64"
 					:disable-tooltip="true"
 					:url="recipients[0].photoUrl" />
-				<p class="recipient-email">
-					{{ recipients[0].email }}
-				</p>
 				<RecipientDetails :contact="recipientsVCards[recipients[0].email]" :reload-bus="reloadBus" />
 				<div class="expand-toggle" @click="toggleExpand(0)">
 					<IconArrowUp v-if="isExpanded(0)" :size="16" />
