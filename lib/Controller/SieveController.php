@@ -37,7 +37,8 @@ class SieveController extends Controller {
 	private IRemoteHostValidator $hostValidator;
 	private LoggerInterface $logger;
 
-	public function __construct(IRequest $request,
+	public function __construct(
+		IRequest $request,
 		string $UserId,
 		MailAccountMapper $mailAccountMapper,
 		SieveClientFactory $sieveClientFactory,
@@ -121,7 +122,7 @@ class SieveController extends Controller {
 		int $sievePort,
 		string $sieveUser,
 		string $sievePassword,
-		string $sieveSslMode
+		string $sieveSslMode,
 	): JSONResponse {
 		if (!$this->hostValidator->isValid($sieveHost)) {
 			return MailJsonResponse::fail(

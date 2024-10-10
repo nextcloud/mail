@@ -23,7 +23,8 @@ use Psr\Log\LoggerInterface;
 
 class TransmissionService {
 
-	public function __construct(private GroupsIntegration $groupsIntegration,
+	public function __construct(
+		private GroupsIntegration $groupsIntegration,
 		private AttachmentService $attachmentService,
 		private LoggerInterface $logger,
 		private SmimeService $smimeService,
@@ -55,7 +56,7 @@ class TransmissionService {
 	 * @return array|array[]
 	 */
 	public function getAttachments(LocalMessage $message): array {
-		if(empty($message->getAttachments())) {
+		if (empty($message->getAttachments())) {
 			return [];
 		}
 		return array_map(static function (LocalAttachment $attachment) {
@@ -97,7 +98,7 @@ class TransmissionService {
 			$contentTypeHeader->decode($localAttachment->getMimeType());
 
 			$part->setType($contentTypeHeader->value);
-			foreach($contentTypeHeader->params as $label => $data) {
+			foreach ($contentTypeHeader->params as $label => $data) {
 				$part->setContentTypeParameter($label, $data);
 			}
 

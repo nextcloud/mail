@@ -71,18 +71,18 @@ PROMPT;
 	 *
 	 * @throws ServiceException
 	 */
-	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): null|string {
+	public function summarizeThread(Account $account, string $threadId, array $messages, string $currentUserId): ?string {
 		try {
 			$manager = $this->container->get(IManager::class);
 		} catch (\Throwable $e) {
 			throw new ServiceException('Text processing is not available in your current Nextcloud version', 0, $e);
 		}
-		if(in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)) {
+		if (in_array(SummaryTaskType::class, $manager->getAvailableTaskTypes(), true)) {
 			$messageIds = array_map(function ($message) {
 				return $message->getMessageId();
 			}, $messages);
 			$cachedSummary = $this->cache->getValue($this->cache->buildUrlKey($messageIds));
-			if($cachedSummary) {
+			if ($cachedSummary) {
 				return $cachedSummary;
 			}
 			$client = $this->clientFactory->getClient($account);
@@ -171,7 +171,7 @@ PROMPT;
 			throw new ServiceException('Text processing is not available in your current Nextcloud version', 0, $e);
 		}
 		if (in_array(FreePromptTaskType::class, $manager->getAvailableTaskTypes(), true)) {
-			$cachedReplies = $this->cache->getValue('smartReplies_'.$message->getId());
+			$cachedReplies = $this->cache->getValue('smartReplies_' . $message->getId());
 			if ($cachedReplies) {
 				return json_decode($cachedReplies, true, 512);
 			}
@@ -199,7 +199,7 @@ PROMPT;
 
 			Here is the ***E-MAIL*** for which you must suggest the replies to:
 
-			***START_OF_E-MAIL***".$messageBody."
+			***START_OF_E-MAIL***" . $messageBody . "
 
 			***END_OF_E-MAIL***
 
@@ -210,7 +210,7 @@ PROMPT;
 			$replies = $task->getOutput();
 			try {
 				$decoded = json_decode($replies, true, 512, JSON_THROW_ON_ERROR);
-				$this->cache->addValue('smartReplies_'.$message->getId(), $replies);
+				$this->cache->addValue('smartReplies_' . $message->getId(), $replies);
 				return $decoded;
 			} catch (JsonException $e) {
 				throw new ServiceException('Failed to decode smart replies JSON output', $e);
@@ -318,7 +318,7 @@ Never return null or undefined.";
 
 		$senderAddress = $imapMessage->getFrom()->first()?->getEmail();
 
-		if($senderAddress !== null) {
+		if ($senderAddress !== null) {
 			foreach ($commonPatterns as $pattern) {
 				if (stripos($senderAddress, $pattern) !== false) {
 					return false;

@@ -21,9 +21,11 @@ use OCP\IRequest;
 class InternalAddressController extends Controller {
 	private ?string $uid;
 
-	public function __construct(IRequest        $request,
+	public function __construct(
+		IRequest        $request,
 		?string                                 $userId,
-		private InternalAddressService $internalAddressService) {
+		private InternalAddressService $internalAddressService,
+	) {
 		parent::__construct(Application::APP_ID, $request);
 
 		$this->internalAddressService = $internalAddressService;
@@ -57,7 +59,7 @@ class InternalAddressController extends Controller {
 	 */
 	#[TrapError]
 	public function removeAddress(string $address, string $type): JsonResponse {
-		if($this->uid === null) {
+		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 
@@ -78,7 +80,7 @@ class InternalAddressController extends Controller {
 	 */
 	#[TrapError]
 	public function list(): JsonResponse {
-		if($this->uid === null) {
+		if ($this->uid === null) {
 			return JsonResponse::error('User not found', Http::STATUS_UNAUTHORIZED);
 		}
 		$list = $this->internalAddressService->getInternalAddresses(

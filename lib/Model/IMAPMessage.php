@@ -276,7 +276,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$mailBody = $this->plainMessage;
 		$data = $this->jsonSerialize();
 
-		if($this->hasHtmlMessage && $loadBody) {
+		if ($this->hasHtmlMessage && $loadBody) {
 			$data['body'] = $this->getHtmlBody($id);
 		}
 
@@ -290,7 +290,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		[$mailBody, $signature] = $this->htmlService->parseMailBody($mailBody);
 		$data['signature'] = $signature;
 		$data['attachments'] = array_merge($this->attachments, $this->inlineAttachments);
-		if($loadBody) {
+		if ($loadBody) {
 			$data['body'] = $mailBody;
 		}
 		return $data;

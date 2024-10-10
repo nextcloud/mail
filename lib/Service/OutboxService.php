@@ -56,7 +56,8 @@ class OutboxService {
 	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(IMailTransmission  $transmission,
+	public function __construct(
+		IMailTransmission  $transmission,
 		LocalMessageMapper $mapper,
 		AttachmentService  $attachmentService,
 		IEventDispatcher    $eventDispatcher,

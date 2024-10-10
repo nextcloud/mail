@@ -236,7 +236,7 @@ class OutboxController extends Controller {
 
 		$message = $this->service->sendMessage($message, $account);
 
-		if($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
+		if ($message->getStatus() !== LocalMessage::STATUS_PROCESSED) {
 			return JsonResponse::error('Could not send message', Http::STATUS_INTERNAL_SERVER_ERROR, [$message]);
 		}
 		return JsonResponse::success(

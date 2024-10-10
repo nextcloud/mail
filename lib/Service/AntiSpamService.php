@@ -32,7 +32,8 @@ class AntiSpamService {
 	private const NAME = 'antispam_reporting';
 	private const MESSAGE_TYPE = 'message/rfc822';
 
-	public function __construct(private IConfig $config,
+	public function __construct(
+		private IConfig $config,
 		private MessageMapper $dbMessageMapper,
 		private MailManager $mailManager,
 		private IMAPClientFactory $imapClientFactory,
@@ -47,7 +48,7 @@ class AntiSpamService {
 	}
 
 	public function getHamEmail(): string {
-		return $this->config->getAppValue('mail', self::NAME. '_ham');
+		return $this->config->getAppValue('mail', self::NAME . '_ham');
 	}
 
 	public function getSpamSubject(): string {
@@ -63,7 +64,7 @@ class AntiSpamService {
 	}
 
 	public function setHamEmail(string $email): void {
-		$this->config->setAppValue('mail', self::NAME. '_ham', $email);
+		$this->config->setAppValue('mail', self::NAME . '_ham', $email);
 	}
 
 	public function deleteConfig(): void {

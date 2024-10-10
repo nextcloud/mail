@@ -63,7 +63,8 @@ class ImapMessageFetcher {
 	private bool $isOneClickUnsubscribe = false;
 	private ?string $unsubscribeMailto = null;
 
-	public function __construct(int $uid,
+	public function __construct(
+		int $uid,
 		string $mailbox,
 		Horde_Imap_Client_Base $client,
 		string $userId,

@@ -168,7 +168,7 @@ class MessageApiController extends OCSController {
 		}
 
 		$recipients = array_merge($to, $cc, $bcc);
-		foreach($recipients	as $recipient) {
+		foreach ($recipients as $recipient) {
 			if (!is_array($recipient)) {
 				return new DataResponse('Recipient address must be an array.', Http::STATUS_BAD_REQUEST);
 			}
@@ -292,7 +292,7 @@ class MessageApiController extends OCSController {
 
 		$json['rawUrl'] = $this->urlGenerator->linkToOCSRouteAbsolute('mail.messageApi.getRaw', ['id' => $id]);
 
-		if(!$loadBody) {
+		if (!$loadBody) {
 			return new DataResponse($json, Http::STATUS_PARTIAL_CONTENT);
 		}
 
@@ -427,7 +427,7 @@ class MessageApiController extends OCSController {
 	private function handleAttachments(): array {
 		$fileAttachments = $this->request->getUploadedFile('attachments');
 		$hasAttachments = isset($fileAttachments['name']);
-		if(!$hasAttachments) {
+		if (!$hasAttachments) {
 			return [];
 		}
 

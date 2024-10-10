@@ -14,7 +14,10 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCP\IL10N;
 
 class ContactCheck {
-	public function __construct(private ContactsIntegration $contactIntegration, private IL10N $l10n) {
+	public function __construct(
+		private ContactsIntegration $contactIntegration,
+		private IL10N $l10n,
+	) {
 		$this->l10n = $l10n;
 		$this->contactIntegration = $contactIntegration;
 	}
@@ -23,7 +26,7 @@ class ContactCheck {
 		$emails = [];
 		$contacts = $this->contactIntegration->getContactsWithName($fn, true);
 		foreach ($contacts as $contact) {
-			if(!isset($contact['email'])) {
+			if (!isset($contact['email'])) {
 				continue;
 			}
 			foreach ($contact['email'] as $contactEmail) {

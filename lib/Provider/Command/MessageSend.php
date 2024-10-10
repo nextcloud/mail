@@ -26,7 +26,7 @@ class MessageSend {
 		protected ITimeFactory $time,
 		protected AccountService $accountService,
 		protected OutboxService $outboxService,
-		protected AttachmentService $attachmentService
+		protected AttachmentService $attachmentService,
 	) {
 	}
 
