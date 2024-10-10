@@ -56,8 +56,15 @@
 			</p>
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && account.sieveEnabled"
+			id="mail-filters"
+			:name="t('mail', 'Filters')">
+			<div id="mail-filters">
+				<MailFilters :key="account.accountId" ref="mailFilters" :account="account" />
+			</div>
+		</AppSettingsSection>
+		<AppSettingsSection v-if="account && account.sieveEnabled"
 			id="sieve-filter"
-			:name="t('mail', 'Sieve filter rules')">
+			:name="t('mail', 'Sieve script editor')">
 			<div id="sieve-filter">
 				<SieveFilterForm :key="account.accountId"
 					ref="sieveFilterForm"
@@ -77,7 +84,7 @@
 		</AppSettingsSection>
 		<AppSettingsSection v-if="account && !account.provisioningId"
 			id="sieve-settings"
-			:name="t('mail', 'Sieve filter server')">
+			:name="t('mail', 'Sieve server')">
 			<div id="sieve-settings">
 				<SieveAccountForm :key="account.accountId"
 					ref="sieveAccountForm"
@@ -104,6 +111,7 @@ import CertificateSettings from './CertificateSettings.vue'
 import SearchSettings from './SearchSettings.vue'
 import TrashRetentionSettings from './TrashRetentionSettings.vue'
 import logger from '../logger.js'
+import MailFilters from './mailFilter/MailFilters.vue'
 
 export default {
 	name: 'AccountSettings',
@@ -121,6 +129,7 @@ export default {
 		CertificateSettings,
 		TrashRetentionSettings,
 		SearchSettings,
+		MailFilters,
 	},
 	props: {
 		account: {

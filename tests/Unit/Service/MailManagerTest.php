@@ -27,6 +27,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\ImapFlag;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Service\MailManager;
@@ -72,7 +73,7 @@ class MailManagerTest extends TestCase {
 	/** @var ThreadMapper|MockObject */
 	private $threadMapper;
 
-	
+
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -100,7 +101,8 @@ class MailManagerTest extends TestCase {
 			$this->logger,
 			$this->tagMapper,
 			$this->messageTagsMapper,
-			$this->threadMapper
+			$this->threadMapper,
+			new ImapFlag(),
 		);
 	}
 
