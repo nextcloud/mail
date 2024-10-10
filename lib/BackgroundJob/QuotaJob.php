@@ -62,7 +62,7 @@ class QuotaJob extends TimedJob {
 			return;
 		}
 
-		if(!$account->getMailAccount()->canAuthenticateImap()) {
+		if (!$account->getMailAccount()->canAuthenticateImap()) {
 			$this->logger->debug('No authentication on IMAP possible, skipping quota job');
 			return;
 		}

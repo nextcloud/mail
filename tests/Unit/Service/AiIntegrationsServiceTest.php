@@ -80,7 +80,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	public function testSummarizeThreadNoBackend() {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
-		if($this->manager !== null) {
+		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')
@@ -101,7 +101,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$account = new Account(new MailAccount());
 		$mailbox = new Mailbox();
 		$message = new Message();
-		if($this->manager !== null) {
+		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')
@@ -126,7 +126,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$addessList = $this->createMock(AddressList::class);
 		$addessList->method('first')->willreturn('normal@email.com');
 		$this->mailManager->method('getImapMessage')->willReturn($imapMessage);
-		if($this->manager !== null) {
+		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')
@@ -152,7 +152,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 	public function testLlmAvailable() {
-		if($this->manager !== null) {
+		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')
@@ -168,7 +168,7 @@ class AiIntegrationsServiceTest extends TestCase {
 	}
 
 	public function testLlmUnavailable() {
-		if($this->manager !== null) {
+		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')
@@ -222,7 +222,7 @@ class AiIntegrationsServiceTest extends TestCase {
 		$message3->setThreadRootId('some-thread-root-id-1');
 
 		$messages = [ $message1,$message2,$message3];
-		if($this->manager !== null) {
+		if ($this->manager !== null) {
 			$this->container->method('get')->willReturn($this->manager);
 			$this->manager
 				->method('getAvailableTaskTypes')

@@ -83,7 +83,7 @@ class SnoozeService {
 		Account $srcAccount,
 		Mailbox $srcMailbox,
 		Account $dstAccount,
-		Mailbox $dstMailbox
+		Mailbox $dstMailbox,
 	): void {
 		$newUid = $this->mailManager->moveMessage(
 			$srcAccount,
@@ -161,7 +161,7 @@ class SnoozeService {
 		Account $srcAccount,
 		Mailbox $srcMailbox,
 		Account $dstAccount,
-		Mailbox $dstMailbox
+		Mailbox $dstMailbox,
 	): void {
 		$newUids = $this->mailManager->moveThread(
 			$srcAccount,

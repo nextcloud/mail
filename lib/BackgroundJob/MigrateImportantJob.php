@@ -36,7 +36,7 @@ class MigrateImportantJob extends QueuedJob {
 		MigrateImportantFromImapAndDb $migration,
 		LoggerInterface $logger,
 		ITimeFactory $timeFactory,
-		IMAPClientFactory $imapClientFactory
+		IMAPClientFactory $imapClientFactory,
 	) {
 		parent::__construct($timeFactory);
 		$this->mailboxMapper = $mailboxMapper;

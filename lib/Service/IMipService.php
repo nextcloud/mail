@@ -34,7 +34,7 @@ class IMipService {
 		LoggerInterface $logger,
 		MailboxMapper $mailboxMapper,
 		MailManager $mailManager,
-		MessageMapper $messageMapper
+		MessageMapper $messageMapper,
 	) {
 		$this->accountService = $accountService;
 		$this->calendarManager = $manager;

@@ -378,8 +378,8 @@ class MessageMapper extends QBMapper {
 
 		$updateData = [];
 		foreach ($flags as $flag) {
-			$updateData[$flag.'_true'] = [];
-			$updateData[$flag.'_false'] = [];
+			$updateData[$flag . '_true'] = [];
+			$updateData[$flag . '_false'] = [];
 		}
 
 		foreach ($messages as $message) {
@@ -460,7 +460,7 @@ class MessageMapper extends QBMapper {
 						$queryTrue->expr()->eq('mailbox_id', $queryTrue->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
 						$queryTrue->expr()->eq($flag, $queryTrue->createNamedParameter(0, IQueryBuilder::PARAM_INT))
 					));
-				foreach (array_chunk($updateData[$flag.'_true'], 1000) as $chunk) {
+				foreach (array_chunk($updateData[$flag . '_true'], 1000) as $chunk) {
 					$queryTrue->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 					$queryTrue->executeStatement();
 				}
@@ -474,7 +474,7 @@ class MessageMapper extends QBMapper {
 						$queryFalse->expr()->eq('mailbox_id', $queryFalse->createNamedParameter($mailboxId, IQueryBuilder::PARAM_INT)),
 						$queryFalse->expr()->eq($flag, $queryFalse->createNamedParameter(1, IQueryBuilder::PARAM_INT))
 					));
-				foreach (array_chunk($updateData[$flag.'_false'], 1000) as $chunk) {
+				foreach (array_chunk($updateData[$flag . '_false'], 1000) as $chunk) {
 					$queryFalse->setParameter('uids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
 					$queryFalse->executeStatement();
 				}
@@ -924,7 +924,7 @@ class MessageMapper extends QBMapper {
 		if ($uids !== null) {
 			// In the case of body+subject search we need a combination of both results,
 			// thus the orWhere in every other case andWhere should do the job.
-			if(!empty($query->getSubjects())) {
+			if (!empty($query->getSubjects())) {
 				$textOrs[] = $qb->expr()->in('m.uid', $qb->createParameter('uids'));
 			} else {
 				$select->andWhere(

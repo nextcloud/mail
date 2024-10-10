@@ -15,9 +15,11 @@ use Psr\Log\LoggerInterface;
 
 class AntiAbuseHandler extends AHandler {
 
-	public function __construct(private IUserManager $userManager,
+	public function __construct(
+		private IUserManager $userManager,
 		private AntiAbuseService $service,
-		private LoggerInterface $logger) {
+		private LoggerInterface $logger,
+	) {
 	}
 	public function process(Account $account, LocalMessage $localMessage): LocalMessage {
 		if ($localMessage->getStatus() === LocalMessage::STATUS_IMAP_SENT_MAILBOX_FAIL

@@ -65,7 +65,7 @@ class AccountsController extends Controller {
 		SyncService $syncService,
 		IConfig $config,
 		IRemoteHostValidator $hostValidator,
-		MailboxSync $mailboxSync
+		MailboxSync $mailboxSync,
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -274,7 +274,7 @@ class AccountsController extends Controller {
 			$this->mailManager->getMailbox($this->currentUserId, $junkMailboxId);
 			$dbAccount->setJunkMailboxId($junkMailboxId);
 		}
-		if($searchBody !== null) {
+		if ($searchBody !== null) {
 			$dbAccount->setSearchBody($searchBody);
 		}
 		return new JSONResponse(

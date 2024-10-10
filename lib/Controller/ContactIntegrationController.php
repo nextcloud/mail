@@ -85,15 +85,15 @@ class ContactIntegrationController extends Controller {
 	 */
 	#[TrapError]
 	public function autoComplete(string $term, bool $forceSAB = false): JSONResponse {
-		$cached = $this->cache->get($this->uid.$term);
-		if($cached !== null) {
+		$cached = $this->cache->get($this->uid . $term);
+		if ($cached !== null) {
 			$decoded = json_decode($cached, true);
-			if($decoded !== null) {
+			if ($decoded !== null) {
 				return new JSONResponse($decoded);
 			}
 		}
 		$res = $this->service->autoComplete($term, $forceSAB);
-		$this->cache->set($this->uid.$term, json_encode($res), 24 * 3600);
+		$this->cache->set($this->uid . $term, json_encode($res), 24 * 3600);
 		return new JSONResponse($res);
 	}
 }

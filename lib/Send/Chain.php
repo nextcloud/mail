@@ -15,7 +15,8 @@ use OCA\Mail\Service\Attachment\AttachmentService;
 use OCP\DB\Exception;
 
 class Chain {
-	public function __construct(private SentMailboxHandler $sentMailboxHandler,
+	public function __construct(
+		private SentMailboxHandler $sentMailboxHandler,
 		private AntiAbuseHandler $antiAbuseHandler,
 		private SendHandler $sendHandler,
 		private CopySentMessageHandler $copySentMessageHandler,

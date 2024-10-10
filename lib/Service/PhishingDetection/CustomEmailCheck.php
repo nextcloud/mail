@@ -20,10 +20,10 @@ class CustomEmailCheck {
 	}
 
 	public function run(string $fromEmail, ?string $customEmail): PhishingDetectionResult {
-		if(!(isset($customEmail))) {
+		if (!(isset($customEmail))) {
 			return new PhishingDetectionResult(PhishingDetectionResult::CUSTOM_EMAIL_CHECK, false);
 		}
-		if($fromEmail === $customEmail) {
+		if ($fromEmail === $customEmail) {
 			return new PhishingDetectionResult(PhishingDetectionResult::CUSTOM_EMAIL_CHECK, false);
 		}
 		return new PhishingDetectionResult(PhishingDetectionResult::CUSTOM_EMAIL_CHECK, true, $this->l10n->t('Sender is using a custom email: %1$s instead of the sender email: %2$s', [$customEmail, $fromEmail]));

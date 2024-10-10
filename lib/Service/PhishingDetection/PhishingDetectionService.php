@@ -14,7 +14,13 @@ use OCA\Mail\AddressList;
 use OCA\Mail\PhishingDetectionList;
 
 class PhishingDetectionService {
-	public function __construct(private ContactCheck $contactCheck, private CustomEmailCheck $customEmailCheck, private DateCheck $dateCheck, private ReplyToCheck $replyToCheck, private LinkCheck $linkCheck) {
+	public function __construct(
+		private ContactCheck $contactCheck,
+		private CustomEmailCheck $customEmailCheck,
+		private DateCheck $dateCheck,
+		private ReplyToCheck $replyToCheck,
+		private LinkCheck $linkCheck,
+	) {
 		$this->contactCheck = $contactCheck;
 		$this->customEmailCheck = $customEmailCheck;
 		$this->dateCheck = $dateCheck;

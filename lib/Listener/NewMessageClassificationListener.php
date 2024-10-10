@@ -92,7 +92,7 @@ class NewMessageClassificationListener implements IEventListener {
 			$important = $this->tagMapper->getTagByImapLabel(Tag::LABEL_IMPORTANT, $event->getAccount()->getUserId());
 		} catch (DoesNotExistException $e) {
 			// just in case - if we get here, the tag is missing
-			$this->logger->error('Could not find important tag for ' . $event->getAccount()->getUserId(). ' ' . $e->getMessage(), [
+			$this->logger->error('Could not find important tag for ' . $event->getAccount()->getUserId() . ' ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 			return;
