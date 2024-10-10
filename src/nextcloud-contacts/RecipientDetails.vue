@@ -17,6 +17,9 @@
 
 		<!-- TODO: add empty content while this.loadingData === true -->
 		<template v-else>
+			<template v-if="isReadOnly">
+				<span v-html="formattedSubtitle" />
+			</template>
 			<h6 class="contact-title">
 				{{ contact.fullName }}
 			</h6>
@@ -111,6 +114,28 @@ export default {
 	},
 
 	computed: {
+		/**
+		 * Read-only representation of the contact title and organization.
+		 *
+		 * @return {string}
+		 */
+		formattedSubtitle() {
+			const title = this.contact.title
+			const organization = this.contact.org
+
+			if (title && organization) {
+				return t('contacts', '{title} at {organization}', {
+					title,
+					organization,
+				})
+			} else if (title) {
+				return title
+			} else if (organization) {
+				return organization
+			}
+
+			return ''
+		},
 		/* 		// store getter
 		addressbooks() {
 			return this.$store.getters.getAddressbooks
