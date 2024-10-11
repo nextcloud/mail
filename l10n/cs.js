@@ -439,7 +439,7 @@ OC.L10N.register(
     "Sieve security" : "Zabezpečení sieve",
     "Sieve Port" : "Port sieve",
     "Sieve credentials" : "Přihlašovací údaje do sieve",
-    "IMAP credentials" : "Údaje IMAP",
+    "IMAP credentials" : "Přihlašovací údaje k IMAP",
     "Custom" : "Uživatelsky určené",
     "Sieve User" : "Uživatel v sieve",
     "Sieve Password" : "Heslo do sieve",
