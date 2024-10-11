@@ -3,16 +3,17 @@
 		<!-- For a single recipient -->
 		<div v-if="recipients.length === 1" class="recipient-single">
 			<div class="recipient-header">
-				<Avatar :user="recipients[0].uid"
-					:display-name="recipients[0].displayName"
-					:email="recipients[0].email"
-					:size="64"
-					:disable-tooltip="true"
-					:url="recipients[0].photoUrl" />
-				<RecipientDetails :contact="recipientsVCards[recipients[0].email]" :reload-bus="reloadBus" />
-				<div class="expand-toggle" @click="toggleExpand(0)">
-					<IconArrowUp v-if="isExpanded(0)" :size="16" />
-					<IconArrowDown v-else :size="16" />
+				<div class="recipient-avatar">
+					<Avatar :user="recipients[0].uid"
+						:display-name="recipients[0].displayName"
+						:email="recipients[0].email"
+						:size="64"
+						:disable-tooltip="true"
+						:url="recipients[0].photoUrl" />
+				</div>
+				<div class="recipient-details">
+					<h6>{{ recipients[0].displayName }}</h6>
+					<RecipientDetails :contact="recipientsVCards[recipients[0].email]" :reload-bus="reloadBus" />
 				</div>
 			</div>
 		</div>
@@ -27,9 +28,6 @@
 						:size="64"
 						:disable-tooltip="true"
 						:disable-menu="true" />
-					<p class="recipient-email">
-						{{ recipient.email }}
-					</p>
 					<div class="expand-toggle" @click="toggleExpand(index)">
 						<IconArrowUp v-if="isExpanded(index)" size="16" />
 						<IconArrowDown v-else size="16" />
@@ -49,6 +47,7 @@ import { mapGetters } from 'vuex'
 import { namespaces as NS } from '@nextcloud/cdav-library'
 import mitt from 'mitt'
 import Contact from '../nextcloud-contacts/contact.js'
+import '../css/RecipientProperties.scss'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 import Avatar from './Avatar.vue'
@@ -152,8 +151,9 @@ export default {
 
 .recipient-header {
 	display: flex;
-	flex-direction: column;
 	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1rem;
 }
 
 .recipient-item-details {
@@ -171,5 +171,34 @@ export default {
 
 .recipient-list {
 	padding-top: 10px;
+	margin-top: 1rem;
+}
+.recipient-header {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.recipient-avatar {
+	flex-shrink: 0;
+}
+
+.recipient-details {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+span {
+	color: #666;
+	font-size: 0.9rem;
+	margin-bottom: 1rem;
+	display: block;
+}
+
+.expand-toggle {
+	margin-left: auto;
+	cursor: pointer;
 }
 </style>

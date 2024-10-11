@@ -50,6 +50,7 @@
 					:inputmode="inputmode"
 					:class="{'property__value--with-ext': haveExtHandler}"
 					type="text"
+					:readonly="isReadOnly"
 					:placeholder="placeholder"
 					@update:value="updateValue" />
 			</div>

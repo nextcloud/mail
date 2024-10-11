@@ -6,24 +6,29 @@
 <template>
 	<div class="property property--title">
 		<div class="property__label">
-			<PropertyTitleIcon :icon="icon" />
+			<RecipientPropertyTitleIcon :icon="icon" />
 		</div>
 
-		<h3 class="property__value">
+		<h6 class="property__value">
 			{{ readableName }}
-		</h3>
+		</h6>
 	</div>
 </template>
 
 <script>
-import PropertyTitleIcon from 'vue-material-design-icons/OpenInNew.vue'
+import RecipientPropertyTitleIcon from './RecipientPropertyTitleIcon.vue'
 
 export default {
 	name: 'RecipientPropertyTitle',
 	components: {
-		PropertyTitleIcon,
+		RecipientPropertyTitleIcon,
 	},
 	props: {
+		icon: {
+			type: String,
+			default: '',
+			required: true,
+		},
 		readableName: {
 			type: String,
 			default: '',

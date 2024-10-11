@@ -28,6 +28,7 @@
 <script>
 import ICAL from 'ical.js'
 import Contact from './contact.js'
+import '../css/RecipientProperties.scss'
 import rfcProps from './rfcPropsRecipient.js'
 
 import RecipientPropertyText from './RecipientPropertyText.vue'
