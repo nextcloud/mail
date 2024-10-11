@@ -200,6 +200,7 @@ export default {
 		mailbox() {
 			clearTimeout(this.startMailboxTimer)
 			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+			this.fetchEnvelopes()
 		},
 	},
 	created() {
@@ -207,6 +208,9 @@ export default {
 	},
 	mounted() {
 		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+		if (this.isThreadShown) {
+			await this.fetchEnvelopes()
+		}
 	},
 	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
