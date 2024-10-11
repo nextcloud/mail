@@ -8,21 +8,24 @@
 		<!-- nothing selected or contact not found -->
 		<EmptyContent v-if="!contact"
 			class="empty-content"
-			:name="t('mail', 'No contact selected')"
-			:description="t('mail', 'Select a contact on the list to begin or the contact you selected has not data')">
+			:name="t('mail', 'No data for this contact')"
+			:description="t('mail', 'User has no data on their profile')">
 			<template #icon>
 				<IconContact :size="20" />
 			</template>
 		</EmptyContent>
 
 		<!-- TODO: add empty content while this.loadingData === true -->
-		<template v-else>
-			<template v-if="isReadOnly">
-				<span v-html="formattedSubtitle" />
-			</template>
-			<h6 class="contact-title">
-				{{ contact.fullName }}
-			</h6>
+		<div class="recipient-details-content">
+			<div class="contact-title">
+				<h6>
+					{{ contact.fullName }}
+				</h6>
+				<template v-if="isReadOnly">
+					<!-- Subtitle here -->
+					<span v-html="formattedSubtitle" />
+				</template>
+			</div>
 			<div v-if="!loadingData" class="contact-details-wrapper">
 				<div v-for="(properties, name) in groupedProperties"
 					:key="name">
@@ -38,7 +41,7 @@
 						:bus="bus" />
 				</div>
 			</div>
-		</template>
+		</div>
 	</div>
 </template>
 
@@ -435,5 +438,6 @@ section.contact-details {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	margin-top: -10px;
 }
 </style>
