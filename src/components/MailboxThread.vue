@@ -286,6 +286,8 @@ export default {
 			this.handleMailto()
 			if (to.name === 'mailbox' && to.params.mailboxId === PRIORITY_INBOX_ID) {
 				await this.onPriorityMailboxOpened()
+			} else if (this.isThreadShown) {
+				await this.fetchEnvelopes()
 			}
 		},
 		async hasFollowUpEnvelopes(value) {
@@ -298,6 +300,7 @@ export default {
 		mailbox() {
 			clearTimeout(this.startMailboxTimer)
 			setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+			this.fetchEnvelopes()
 		},
 	},
 	created() {
@@ -305,11 +308,23 @@ export default {
 	},
 	async mounted() {
 		setTimeout(this.saveStartMailbox, START_MAILBOX_DEBOUNCE)
+		if (this.isThreadShown) {
+			await this.fetchEnvelopes()
+		}
 	},
 	beforeUnmount() {
 		clearTimeout(this.startMailboxTimer)
 	},
 	methods: {
+		async fetchEnvelopes() {
+			const existingEnvelopes = this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery || '')
+			if (!existingEnvelopes.length) {
+				await this.$store.dispatch('fetchEnvelopes', {
+					mailboxId: this.mailbox.databaseId,
+					query: this.searchQuery || '',
+				})
+			}
+		},
 		async onPriorityMailboxOpened() {
 			logger.debug('Priority inbox was opened')
 
