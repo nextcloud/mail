@@ -21,7 +21,7 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        ocp-version: [ 'dev-master' ]
+        ocp-version: [ 'dev-stable30' ]
 
     name: static-psalm-analysis ${{ matrix.ocp-version }}
     steps:
