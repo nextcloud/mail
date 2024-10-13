@@ -247,7 +247,7 @@ OC.L10N.register(
     "Description" : "Опис",
     "Create" : "Створити",
     "Event created" : "Подію створено",
-    "Could not create event" : "Неможливо створити подію",
+    "Could not create event" : "Не вдалося створити подію",
     "You accepted this invitation" : "Ви прийняли це запрошення",
     "You tentatively accepted this invitation" : "Ви тимчасово прийняли це запрошення",
     "You declined this invitation" : "Ви відхилили це запрошення",
