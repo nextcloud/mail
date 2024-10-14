@@ -65,16 +65,16 @@
 						</label>
 						<div class="modal-inner--container range">
 							<div class="modal-inner-inline">
-								<NcDateTimePicker v-model="startDate"
+								<NcDateTimePickerNative v-model="startDate"
 									type="date"
-									:placeholder="t('mail', 'Pick a start date')"
+									:label="t('mail', 'Pick a start date')"
 									confirm />
 							</div>
 							<div class="modal-inner-inline">
-								<NcDateTimePicker v-model="endDate"
+								<NcDateTimePickerNative v-model="endDate"
 									type="date"
 									:disabled="startDate === null"
-									:placeholder="t('mail', 'Pick an end date')"
+									:label="t('mail', 'Pick an end date')"
 									confirm />
 							</div>
 						</div>
@@ -292,7 +292,7 @@ import moment from '@nextcloud/moment'
 
 import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js'
+import NcDateTimePickerNative from '@nextcloud/vue/dist/Components/NcDateTimePickerNative.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch
 	from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
@@ -314,7 +314,7 @@ export default {
 	components: {
 		NcDialog,
 		NcSelect,
-		NcDateTimePicker,
+		NcDateTimePickerNative,
 		NcButton,
 		NcCheckboxRadioSwitch,
 		FilterVariantIcon,
@@ -744,8 +744,8 @@ export default {
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 7px; /* same spacing to the input border as top/bottom */
-	left: auto;
+	inset-inline-end: 7px; /* same spacing to the input border as top/bottom */
+	inset-inline-start: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
@@ -756,8 +756,8 @@ export default {
 	width: auto;
 	height: auto;
 	z-index: 5;
-	right: 35px;
-	left: auto;
+	inset-inline-end: 35px;
+	inset-inline-start: auto;
 	box-shadow: none !important;
 	background: transparent !important;
 	border: none !important;
@@ -774,7 +774,7 @@ export default {
 	background: var(--color-error);
 	position: absolute;
 	z-index: 10;
-	right: 12px;
+	inset-inline-end: 12px;
 	border-radius: 50%;
 	top: 12px;
 }
