@@ -279,8 +279,9 @@ class MessageMapper extends QBMapper {
 			$qb1->setValue('flag_notjunk', $qb1->createParameter('flag_notjunk'));
 			$qb1->setValue('flag_important', $qb1->createParameter('flag_important'));
 			$qb1->setValue('flag_mdnsent', $qb1->createParameter('flag_mdnsent'));
-			$qb2 = $this->db->getQueryBuilder();
+			$qb1->setValue('imip_message', $qb1->createParameter('imip_message'));
 
+			$qb2 = $this->db->getQueryBuilder();
 			$qb2->insert('mail_recipients')
 				->setValue('message_id', $qb2->createParameter('message_id'))
 				->setValue('type', $qb2->createParameter('type'))
@@ -309,6 +310,7 @@ class MessageMapper extends QBMapper {
 				$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
 				$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
+				$qb1->setParameter('imip_message', $message->isImipMessage(), IQueryBuilder::PARAM_BOOL);
 				$qb1->executeStatement();
 
 				$message->setId($qb1->getLastInsertId());
