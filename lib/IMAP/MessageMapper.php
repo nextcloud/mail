@@ -52,7 +52,7 @@ class MessageMapper {
 
 	public function __construct(LoggerInterface           $logger,
 		SmimeService              $smimeService,
-		ImapMessageFetcherFactory $imapMessageFactory) {
+		ImapMessageFetcherFactory $imapMessageFactory, ) {
 		$this->logger = $logger;
 		$this->smimeService = $smimeService;
 		$this->imapMessageFactory = $imapMessageFactory;
@@ -858,7 +858,8 @@ class MessageMapper {
 	 */
 	public function getBodyStructureData(Horde_Imap_Client_Socket $client,
 		string $mailbox,
-		array $uids): array {
+		array $uids,
+		string $emailAddress): array {
 		$structureQuery = new Horde_Imap_Client_Fetch_Query();
 		$structureQuery->structure();
 		$structureQuery->headerText([
@@ -870,8 +871,7 @@ class MessageMapper {
 		$structures = $client->fetch($mailbox, $structureQuery, [
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
-
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client, $emailAddress) {
 			$hasAttachments = false;
 			$text = '';
 			$isImipMessage = false;
@@ -901,7 +901,7 @@ class MessageMapper {
 			$textBodyId = $structure->findBody() ?? $structure->findBody('text');
 			$htmlBodyId = $structure->findBody('html');
 			if ($textBodyId === null && $htmlBodyId === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 			}
 			$partsQuery = new Horde_Imap_Client_Fetch_Query();
 			if ($htmlBodyId !== null) {
@@ -927,7 +927,7 @@ class MessageMapper {
 			$part = $parts[$fetchData->getUid()];
 			// This is sus - why does this even happen? A delete / move in the middle of this processing?
 			if ($part === null) {
-				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+				return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 			}
 
 
@@ -939,12 +939,14 @@ class MessageMapper {
 					$structure->setContents($htmlBody);
 					$htmlBody = $structure->getContents();
 				}
+				$mentionsUser = $this->checkLinks($htmlBody, $emailAddress);
 				$html = new Html2Text($htmlBody, ['do_links' => 'none','alt_image' => 'hide']);
 				return new MessageStructureData(
 					$hasAttachments,
 					trim($html->getText()),
 					$isImipMessage,
 					$isEncrypted,
+					$mentionsUser,
 				);
 			}
 			$textBody = $part->getBodyPart($textBodyId);
@@ -961,9 +963,27 @@ class MessageMapper {
 					$textBody,
 					$isImipMessage,
 					$isEncrypted,
+					false,
 				);
 			}
-			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted);
+			return new MessageStructureData($hasAttachments, $text, $isImipMessage, $isEncrypted, false);
 		}, iterator_to_array($structures->getIterator()));
+	}
+	private function checkLinks(string $body, string $mailAddress) : bool {
+		if (empty($body)) {
+			return false;
+		}
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors(true);
+		$dom->loadHTML($body);
+		libxml_use_internal_errors();
+		$anchors = $dom->getElementsByTagName('a');
+		foreach ($anchors as $anchor) {
+			$href = $anchor->getAttribute('href');
+			if ($href === 'mailto:' . $mailAddress) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
