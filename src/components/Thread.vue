@@ -318,7 +318,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #mail-message {
 	margin-bottom: 30vh;
 
