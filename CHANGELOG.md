@@ -1,3 +1,30 @@
+# [3.8.0](https://github.com/nextcloud/mail/compare/v3.7.8...v3.8.0) (2024-10-16)
+
+
+### Bug Fixes
+
+* **deps:** Apply npm audit fix ([cb38954](https://github.com/nextcloud/mail/commit/cb38954db6833a52321d0bddff48d99c85d89f4e))
+* **deps:** Apply npm audit fix ([d8fc40a](https://github.com/nextcloud/mail/commit/d8fc40a5041c747bd2f966784e849457319920bc))
+* fetch attendance status when calendars are loaded ([b1d6c90](https://github.com/nextcloud/mail/commit/b1d6c90dc5ab5b5b664cb98896745ab83d64c6b9)), closes [/github.com/nextcloud/mail/blob/6fc45eb0630b9065f9ccb4c1da5cc9557f7df834/src/App.vue#L49-L50](https://github.com//github.com/nextcloud/mail/blob/6fc45eb0630b9065f9ccb4c1da5cc9557f7df834/src/App.vue/issues/L49-L50)
+* fix renaming mailbox hierarchy ([11d582b](https://github.com/nextcloud/mail/commit/11d582b294d51d71c389a2ecdac2cefa145ca894))
+* **iframe:** scroll horizontally in case of overflow ([72d3775](https://github.com/nextcloud/mail/commit/72d3775c47866a2fdd676a20d5d1c8c5f6f46567))
+* **imap:** do a single full sync when QRESYNC is enabled ([cdf550c](https://github.com/nextcloud/mail/commit/cdf550c81d4e31909a75ec1e6b9d4b3ad720d8d0))
+* **imap:** persist vanished messages immediately on EXAMINE commands ([a2c9e8c](https://github.com/nextcloud/mail/commit/a2c9e8cdf6abfe3648e17decaa82407878ffd178))
+* select multiple envelopes by holding shift directly ([5aec041](https://github.com/nextcloud/mail/commit/5aec0416f37bd1a7f7e906bb41cc707acd2c6d15))
+
+
+### Features
+
+* implement periodic full sync job to repair cache inconsistencies ([e267da1](https://github.com/nextcloud/mail/commit/e267da1633e8205fca69721e9d9dad4bbe6bfc6e))
+
+
+### Performance Improvements
+
+* don't loop the users without any provisioning configurations ([3b1f46b](https://github.com/nextcloud/mail/commit/3b1f46b269d816256ea5d50c6f6e0a7c906e283e))
+* skip non-writable calendars ([d5f6a1e](https://github.com/nextcloud/mail/commit/d5f6a1ee5b130da581db206aa38e784d4ff36c0b))
+
+
+
 ## [3.7.8](https://github.com/nextcloud/mail/compare/v3.7.7...v3.7.8) (2024-08-28)
 
 
