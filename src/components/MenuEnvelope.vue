@@ -15,7 +15,7 @@
 			</ActionButton>
 			<ActionButton v-if="withReply"
 				:close-after-click="true"
-				@click="onReply">
+				@click="onReply(!hasMultipleRecipients)">
 				<template #icon>
 					<ReplyAllIcon v-if="hasMultipleRecipients"
 						:title="t('mail', 'Reply all')"
