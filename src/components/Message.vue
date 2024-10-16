@@ -30,7 +30,7 @@
 			:message="message"
 			:full-height="fullHeight"
 			@load="$emit('load', $event)" />
-		<MessageEncryptedBody v-else-if="isEncrypted"
+		<MessageEncryptedBody v-else-if="isEncrypted || isPgpMimeEncrypted"
 			:body="message.body"
 			:from="from"
 			:message="message" />
@@ -127,6 +127,9 @@ export default {
 		},
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
+		},
+		isPgpMimeEncrypted() {
+			return this.message.isPgpMimeEncrypted
 		},
 		itineraries() {
 			return this.message.itineraries ?? []
