@@ -6,6 +6,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 4.0.2 - 2024-10-16
+### Fixes
+* **l10n**: Update translations from Transifex
+* **iframe**: scroll horizontally in case of overflow
+* **psrlog**: Make the logger compatible with the upcoming bump to psr/log 3 in server
+* implement periodic full sync job to repair cache inconsistencies
+
 ## 4.0.1 – 2024-10-01
 ### Fixed
 * Multiselect by holding the shift key
