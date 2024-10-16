@@ -1,0 +1,31 @@
+[
+	{
+		"name": "Test 2",
+		"enable": true,
+		"operator": "anyof",
+		"tests": [
+			{
+				"operator": "contains",
+				"values": [
+					"Project-A",
+					"Project-B"
+				],
+				"field": "subject"
+			},
+			{
+				"operator": "is",
+				"values": [
+					"john@example.org"
+				],
+				"field": "from"
+			}
+		],
+		"actions": [
+			{
+				"type": "fileinto",
+				"mailbox": "Test Data"
+			}
+		],
+		"priority": "20"
+	}
+]
