@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56dafbd6bcd682d23d4b647c4aad6dfc",
+    "content-hash": "c94e9266b064a071836ca2a000cce652",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1542,22 +1542,22 @@
         },
         {
             "name": "bytestream/horde-util",
-            "version": "v2.7.0",
+            "version": "v2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bytestream/Util.git",
-                "reference": "131e873b5e0f2acff913d16d47c3f9467f2b9f5a"
+                "reference": "352b5aee46e2df0b85961c1bde47c03a6b440224"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bytestream/Util/zipball/131e873b5e0f2acff913d16d47c3f9467f2b9f5a",
-                "reference": "131e873b5e0f2acff913d16d47c3f9467f2b9f5a",
+                "url": "https://api.github.com/repos/bytestream/Util/zipball/352b5aee46e2df0b85961c1bde47c03a6b440224",
+                "reference": "352b5aee46e2df0b85961c1bde47c03a6b440224",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
-                "php": "^7.4 || ^8.0",
-                "symfony/polyfill-php72": "^1.27"
+                "ext-mbstring": "*",
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
@@ -1592,9 +1592,9 @@
             "description": "Horde utility library",
             "homepage": "https://www.horde.org/libraries/Horde_Util",
             "support": {
-                "source": "https://github.com/bytestream/Util/tree/v2.7.0"
+                "source": "https://github.com/bytestream/Util/tree/v2.8.0"
             },
-            "time": "2022-12-12T10:10:21+00:00"
+            "time": "2024-09-13T10:21:29+00:00"
         },
         {
             "name": "cerdic/css-tidy",
