@@ -1,4 +1,4 @@
-# [3.8.0](https://github.com/nextcloud/mail/compare/v3.7.8...v3.8.0) (2024-10-16)
+# [3.7.9](https://github.com/nextcloud/mail/compare/v3.7.8...v3.7.9) (2024-10-16)
 
 
 ### Bug Fixes
@@ -11,12 +11,7 @@
 * **imap:** do a single full sync when QRESYNC is enabled ([cdf550c](https://github.com/nextcloud/mail/commit/cdf550c81d4e31909a75ec1e6b9d4b3ad720d8d0))
 * **imap:** persist vanished messages immediately on EXAMINE commands ([a2c9e8c](https://github.com/nextcloud/mail/commit/a2c9e8cdf6abfe3648e17decaa82407878ffd178))
 * select multiple envelopes by holding shift directly ([5aec041](https://github.com/nextcloud/mail/commit/5aec0416f37bd1a7f7e906bb41cc707acd2c6d15))
-
-
-### Features
-
-* implement periodic full sync job to repair cache inconsistencies ([e267da1](https://github.com/nextcloud/mail/commit/e267da1633e8205fca69721e9d9dad4bbe6bfc6e))
-
+* * implement periodic full sync job to repair cache inconsistencies ([e267da1](https://github.com/nextcloud/mail/commit/e267da1633e8205fca69721e9d9dad4bbe6bfc6e))
 
 ### Performance Improvements
 
