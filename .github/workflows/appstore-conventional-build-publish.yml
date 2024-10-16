@@ -61,7 +61,7 @@ jobs:
         # Continue if no package.json
         continue-on-error: true
         with:
-          path: ${{ env.APP_NAME }}
+          path: ./
           fallbackNode: '^20'
           fallbackNpm: '^9'
 
