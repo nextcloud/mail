@@ -20,6 +20,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Db\Tag;
 use OCA\Mail\Db\TagMapper;
+use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
@@ -30,7 +31,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
-use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
@@ -76,7 +76,6 @@ class ImapToDbSynchronizer {
 	/** @var IMailManager */
 	private $mailManager;
 
-	private PreviewEnhancer $previewEnhancer;
 	private TagMapper $tagMapper;
 	private NewMessagesClassifier $newMessagesClassifier;
 
@@ -90,7 +89,6 @@ class ImapToDbSynchronizer {
 		PerformanceLogger $performanceLogger,
 		LoggerInterface $logger,
 		IMailManager $mailManager,
-		PreviewEnhancer $previewEnhancer,
 		TagMapper $tagMapper,
 		NewMessagesClassifier $newMessagesClassifier) {
 		$this->dbMapper = $dbMapper;
@@ -102,7 +100,6 @@ class ImapToDbSynchronizer {
 		$this->performanceLogger = $performanceLogger;
 		$this->logger = $logger;
 		$this->mailManager = $mailManager;
-		$this->previewEnhancer = $previewEnhancer;
 		$this->tagMapper = $tagMapper;
 		$this->newMessagesClassifier = $newMessagesClassifier;
 	}
