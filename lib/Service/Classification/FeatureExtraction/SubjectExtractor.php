@@ -116,8 +116,13 @@ class SubjectExtractor implements IExtractor {
 	 * Limit feature vector length to actual vocabulary size.
 	 */
 	private function limitFeatureSize(): void {
-		$vocab = $this->wordCountVectorizer->vocabularies()[0];
-		$this->max = count($vocab);
+		$vocabularies = $this->wordCountVectorizer->vocabularies();
+		if (!isset($vocabularies[0])) {
+			// Should not happen but better safe than sorry
+			return;
+		}
+
+		$this->max = count($vocabularies[0]);
 		echo("WCF vocab size: {$this->max}\n");
 	}
 }
