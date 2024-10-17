@@ -106,8 +106,8 @@ class PersistenceService {
 	 * @throws ServiceException
 	 */
 	public function persist(Classifier $classifier,
-							Learner $estimator,
-							array $transformers): void {
+		Learner $estimator,
+		array $transformers): void {
 		/*
 		 * First we have to insert the row to get the unique ID, but disable
 		 * it until the model is persisted as well. Otherwise another process
@@ -147,7 +147,7 @@ class PersistenceService {
 			$file = $folder->newFile((string)$classifier->getId());
 			$file->putContent($serializedClassifier);
 			$this->logger->debug('Serialized classifier written to app data');
-		} catch (NotPermittedException | NotFoundException $e) {
+		} catch (NotPermittedException|NotFoundException $e) {
 			throw new ServiceException('Could not create classifiers directory: ' . $e->getMessage(), 0, $e);
 		}
 
@@ -171,14 +171,14 @@ class PersistenceService {
 				$serializedTransformer = file_get_contents($tmpPath);
 				$this->logger->debug('Serialized transformer written to tmp file (' . strlen($serializedTransformer) . 'B');
 			} catch (RuntimeException $e) {
-				throw new ServiceException("Could not serialize transformer: " . $e->getMessage(), 0, $e);
+				throw new ServiceException('Could not serialize transformer: ' . $e->getMessage(), 0, $e);
 			}
 
 			try {
 				$file = $folder->newFile("{$classifier->getId()}_t$transformerIndex");
 				$file->putContent($serializedTransformer);
 				$this->logger->debug("Serialized transformer $transformerIndex written to app data");
-			} catch (NotPermittedException | NotFoundException $e) {
+			} catch (NotPermittedException|NotFoundException $e) {
 				throw new ServiceException(
 					"Failed to persist transformer $transformerIndex: " . $e->getMessage(),
 					0,
@@ -275,7 +275,7 @@ class PersistenceService {
 
 				try {
 					$serializedTransformer = $transformerFile->getContent();
-				} catch (NotFoundException | NotPermittedException $e) {
+				} catch (NotFoundException|NotPermittedException $e) {
 					$this->logger->debug("Could not load content for transformer file $i with classifier id $id: " . $e->getMessage());
 					throw new ServiceException("Could not load content for transformer file $i with classifier id $id: " . $e->getMessage(), 0, $e);
 				}
@@ -350,6 +350,7 @@ class PersistenceService {
 				'exception' => $e,
 			]);
 		}
+	}
 
 	/**
 	 * Load and instantiate extractor based on a classifier's app version.
@@ -362,7 +363,7 @@ class PersistenceService {
 	 * @throws ServiceException
 	 */
 	private function loadExtractor(Classifier         $classifier,
-								   ClassifierPipeline $pipeline): IExtractor {
+		ClassifierPipeline $pipeline): IExtractor {
 		$appVersion = $this->parseAppVersion($classifier->getAppVersion());
 		if ($appVersion[0] >= 3 && $appVersion[1] >= 2) {
 			return $this->loadExtractorV2($pipeline->getTransformers());
@@ -390,11 +391,11 @@ class PersistenceService {
 	private function loadExtractorV2(array $transformers): NewCompositeExtractor {
 		$wordCountVectorizer = $transformers[0];
 		if (!($wordCountVectorizer instanceof WordCountVectorizer)) {
-			throw new ServiceException("Failed to load persisted transformer: Expected " . WordCountVectorizer::class . ", got" . $wordCountVectorizer::class);
+			throw new ServiceException('Failed to load persisted transformer: Expected ' . WordCountVectorizer::class . ', got' . $wordCountVectorizer::class);
 		}
 		$tfidfTransformer = $transformers[1];
 		if (!($tfidfTransformer instanceof TfIdfTransformer)) {
-			throw new ServiceException("Failed to load persisted transformer: Expected " . TfIdfTransformer::class . ", got" . $tfidfTransformer::class);
+			throw new ServiceException('Failed to load persisted transformer: Expected ' . TfIdfTransformer::class . ', got' . $tfidfTransformer::class);
 		}
 
 		$subjectExtractor = new SubjectExtractor();

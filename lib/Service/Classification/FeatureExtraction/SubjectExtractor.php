@@ -14,10 +14,9 @@ use OCA\Mail\Db\Message;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Transformers\MinMaxNormalizer;
+use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\PrincipalComponentAnalysis;
 use Rubix\ML\Transformers\TfIdfTransformer;
-use Rubix\ML\Transformers\TSNE;
-use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
@@ -78,7 +77,7 @@ class SubjectExtractor implements IExtractor {
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
 			->apply($this->tfidf)
-			;//->apply($this->dimensionalReductionTransformer);
+		;//->apply($this->dimensionalReductionTransformer);
 
 		$this->limitFeatureSize();
 	}
@@ -89,7 +88,7 @@ class SubjectExtractor implements IExtractor {
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {
-			throw new RuntimeException("This should not happen");
+			throw new RuntimeException('This should not happen');
 		}
 
 		// Build training data set
@@ -99,7 +98,7 @@ class SubjectExtractor implements IExtractor {
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
 			->apply($this->tfidf)
-			;//->apply($this->dimensionalReductionTransformer);
+		;//->apply($this->dimensionalReductionTransformer);
 
 		// Use zeroed vector if no features could be extracted
 		if ($trainDataSet->numFeatures() === 0) {
