@@ -48,9 +48,7 @@
     "Writing mode" : "Modo de escritura",
     "Preferred writing mode for new messages and replies." : "Modo preferido de escritura para nuevos mensajes y respuestas.",
     "Default folders" : "Carpetas predeterminadas",
-    "Sieve filter rules" : "Reglas del filtro de Sieve",
     "Mail server" : "Servidor de correo",
-    "Sieve filter server" : "Servidor de filtros Sieve",
     "Update alias" : "Actualizar alias",
     "Show update alias form" : "Mostrar formulario de actualización de alias",
     "Delete alias" : "Borrar alias",
@@ -159,6 +157,7 @@
     "Clear" : "Limpiar",
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
+    "Actions" : "Acciones",
     "Reset" : "Restablecer",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",
@@ -190,6 +189,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Haz click aqui si no eres redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "Continue to %s" : "Continuar a %s"
+    "Continue to %s" : "Continuar a %s",
+    "Sieve filter rules" : "Reglas del filtro de Sieve",
+    "Sieve filter server" : "Servidor de filtros Sieve"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

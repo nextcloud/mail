@@ -83,6 +83,8 @@ OC.L10N.register(
     "Clear" : "Tühjenda",
     "Custom" : "Kohandatud",
     "Tag already exists" : "Silt on juba olemas",
+    "Actions" : "Tegevused",
+    "Priority" : "Prioriteet",
     "Reset" : "Lähtesta",
     "Client ID" : "Kliendi ID",
     "Client secret" : "Kliendi salasõna",

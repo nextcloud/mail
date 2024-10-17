@@ -81,6 +81,8 @@ OC.L10N.register(
     "Mark as read" : "Marcar coma legit",
     "Untitled event" : "Eveniment sens títol",
     "Train" : "Tren",
+    "Flag" : "Drapèu",
+    "Actions" : "Accions",
     "Reset" : "Reïnicializar",
     "Client ID" : "ID client",
     "User" : "User",

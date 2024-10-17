@@ -85,9 +85,7 @@ OC.L10N.register(
     "Autoresponder" : "Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.",
     "Please connect to a sieve server first." : "Please connect to a sieve server first.",
-    "Sieve filter rules" : "Sieve filter rules",
     "Mail server" : "Mail server",
-    "Sieve filter server" : "Sieve filter server",
     "Mailbox search" : "Mailbox search",
     "Update alias" : "Update alias",
     "Rename alias" : "Rename alias",
@@ -490,6 +488,9 @@ OC.L10N.register(
     "Train" : "Train",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} from {depStation} to {arrStation}",
     "Train from {depStation} to {arrStation}" : "Train from {depStation} to {arrStation}",
+    "Operator" : "ოპერატორი",
+    "Actions" : "Actions",
+    "Priority" : "Priority",
     "Mail app" : "Mail app",
     "The mail app allows users to read mails on their IMAP accounts." : "The mail app allows users to read mails on their IMAP accounts.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner).",
@@ -634,6 +635,8 @@ OC.L10N.register(
     "The link leads to %s" : "The link leads to %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s",
+    "Sieve filter rules" : "Sieve filter rules",
+    "Sieve filter server" : "Sieve filter server",
     "Account creation" : "Account creation"
 },
 "nplurals=2; plural=(n!=1);");

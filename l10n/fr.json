@@ -93,9 +93,8 @@
     "Autoresponder" : "Répondeur automatique",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Réponse automatisée aux messages entrants. Si quelqu'un vous envoie plusieurs messages, cette réponse automatique sera envoyée au maximum une fois tous les 4 jours.",
     "Please connect to a sieve server first." : "Merci de vous connecter d'abord à un serveur Sieve.",
-    "Sieve filter rules" : "Règles de filtrage Sieve",
+    "Filters" : "Filtres",
     "Mail server" : "Serveur de messagerie",
-    "Sieve filter server" : "Serveur de filtre Sieve",
     "Mailbox search" : "Rechercher dans la boite aux lettres",
     "Update alias" : "Mettre à jour l'alias",
     "Rename alias" : "Renommer l'alias",
@@ -546,6 +545,12 @@
     "Train" : "Train",
     "{trainNr} from {depStation} to {arrStation}" : "Train {trainNr} de {depStation} pour {arrStation}",
     "Train from {depStation} to {arrStation}" : "Train de {depStation} pour {arrStation}",
+    "Flag" : "Drapeau",
+    "Delete filter" : "Supprimer le filtre",
+    "Operator" : "Opérateur ",
+    "Actions" : "Actions",
+    "New action" : "Nouvelle action",
+    "Priority" : "Priorité",
     "Mail app" : "Application de messagerie",
     "The mail app allows users to read mails on their IMAP accounts." : "L'application de messagerie permet aux utilisateurs de lire leurs e-mails depuis leurs comptes IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Ici vous pouvez trouver les paramètres à l'échelle de l'instance. Les paramètres spécifiques à l'utilisateur se trouvent dans l'application elle-même (coin inférieur gauche).",
@@ -699,6 +704,8 @@
     "The link leads to %s" : "Le lien dirige vers %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner à l'application <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continuer vers %s",
+    "Sieve filter rules" : "Règles de filtrage Sieve",
+    "Sieve filter server" : "Serveur de filtre Sieve",
     "Account creation" : "Création de compte"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

@@ -85,9 +85,8 @@ OC.L10N.register(
     "Autoresponder" : "Automatikus válaszoló",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatikus válasz a beérkező üzenetekre. Ha valaki több üzenetet is küld, akkor az automatikus válasz legfeljebb 4 naponta lesz elküldve.",
     "Please connect to a sieve server first." : "Először kapcsolódjon a Sieve-kiszolgálóhoz.",
-    "Sieve filter rules" : "Levélszűrő szabályok",
+    "Filters" : "Szűrők",
     "Mail server" : "Levelezőkiszolgáló",
-    "Sieve filter server" : "Levélszűrő-kiszolgáló",
     "Update alias" : "Álnév frissítése",
     "Rename alias" : "Álnév átnevezése",
     "Show update alias form" : "Álnév frissítési űrlap megjelenítése",
@@ -466,6 +465,12 @@ OC.L10N.register(
     "Train" : "Vonat",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} vonat {depStation} és {arrStation} között",
     "Train from {depStation} to {arrStation}" : "Vonat {depStation} és {arrStation} között",
+    "Flag" : "Zászló",
+    "Delete filter" : "Szűrő törlése",
+    "Operator" : "Állapot",
+    "Actions" : "Műveletek",
+    "New action" : "Új művelet",
+    "Priority" : "Prioritás",
     "Mail app" : "Levelező alkalmazás",
     "The mail app allows users to read mails on their IMAP accounts." : "A levelezőalkalmazás lehetővé teszi a felhasználók számára, hogy az IMAP-fiókokon olvassák a leveleket.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Itt találhatók a példányszintű beállítások. A felhasználóspecifikus beállításokat magában az alkalmazásban találja (a bal alsó sarokban).",
@@ -609,6 +614,8 @@ OC.L10N.register(
     "Redirect" : "Átirányítás",
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarja megnyitni azt az oldalt, akkor térjen vissza a <a href=\"%s\">Levelezéshez</a>.",
-    "Continue to %s" : "Folytatás ide: %s"
+    "Continue to %s" : "Folytatás ide: %s",
+    "Sieve filter rules" : "Levélszűrő szabályok",
+    "Sieve filter server" : "Levélszűrő-kiszolgáló"
 },
 "nplurals=2; plural=(n != 1);");

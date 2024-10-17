@@ -94,9 +94,8 @@
     "Autoresponder" : "Аутоматско слање одговора",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Аутоматско одговарање на долазне поруке. Ако вам неко пошаље неколико порука, овај аутоматизовани одговор ће се слати највише једном у свака 4 дана.",
     "Please connect to a sieve server first." : "Молимо вас да се најпре повежете са сервером сита.",
-    "Sieve filter rules" : "Правила сито филтера",
+    "Filters" : "Филтери",
     "Mail server" : "Сервер е-поште",
-    "Sieve filter server" : "Сервер сито филтера",
     "Mailbox search" : "Претрага садучета",
     "Update alias" : "Ажурирај алијас",
     "Rename alias" : "Промени име алијаса",
@@ -473,7 +472,6 @@
     "From me" : "Од мене",
     "Clear" : "Очисти",
     "Enable mail body search" : "Укључи претрагу тела поруке",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve је моћан језик којим се пишу филтери за поштанско сандуче. Ако ваш сервис за електронску пошту то подржава, sieve скриптама можете да управљате унутар програма Пошта.",
     "Enable sieve filter" : "Укључи sieve филтер",
     "Sieve host" : "Хост сита",
     "Sieve security" : "Безбедносно сито",
@@ -552,6 +550,13 @@
     "Train" : "Воз",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} са станице {depStation} до станице {arrStation}",
     "Train from {depStation} to {arrStation}" : "Воз са станице {depStation} до станице {arrStation}",
+    "Flag" : "Застава",
+    "Delete filter" : "Обриши филтер",
+    "Operator" : "Оператор",
+    "Filter name" : "Име филтера",
+    "Actions" : "Радње",
+    "New action" : "Нова акција",
+    "Priority" : "Приоритет",
     "Mail app" : "Апликације е-поште",
     "The mail app allows users to read mails on their IMAP accounts." : "Апликације е-поште дозвољава корисницима да читају пошту на њиховим IMAP налозима.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Овде можете наћи подешавања на нивоу целе инстанце. Конкретна подешавања корисника се налазе баш у апликацији (доњи леви угао).",
@@ -705,6 +710,9 @@
     "The link leads to %s" : "Веза води на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">Пошту</a>.",
     "Continue to %s" : "Настави на %s",
-    "Account creation" : "Креирање налога"
+    "Sieve filter rules" : "Правила сито филтера",
+    "Sieve filter server" : "Сервер сито филтера",
+    "Account creation" : "Креирање налога",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve је моћан језик којим се пишу филтери за поштанско сандуче. Ако ваш сервис за електронску пошту то подржава, sieve скриптама можете да управљате унутар програма Пошта."
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

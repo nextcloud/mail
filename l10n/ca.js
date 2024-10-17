@@ -85,9 +85,7 @@ OC.L10N.register(
     "Autoresponder" : "Contestador automàtic",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Resposta automàtica als missatges entrants. Si algú t'envia diversos missatges, aquesta resposta automàtica s'enviarà com a màxim un cop cada 4 dies.",
     "Please connect to a sieve server first." : "Connecteu-vos primer a un servidor de filtrat de missatges.",
-    "Sieve filter rules" : "Regles de filtre de missatges",
     "Mail server" : "Servidor de correu electrònic",
-    "Sieve filter server" : "Servidor de filtre de missatges",
     "Mailbox search" : "Cerca a bústia",
     "Update alias" : "Actualitza l'àlies",
     "Rename alias" : "Canvia el nom de l'àlies",
@@ -491,6 +489,7 @@ OC.L10N.register(
     "Train" : "Tren",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} des de {depStation} fins a {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tren de {depStation} a {arrStation}",
+    "Operator" : "Operador",
     "Mail app" : "Aplicació de correu",
     "The mail app allows users to read mails on their IMAP accounts." : "L'aplicació de correu permet als usuaris llegir correus en els seus comptes IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Aquí podeu trobar la configuració de tota la instància. Les paràmetres específiques de l'usuari es troben a la mateixa aplicació (cantonada inferior esquerra).",
@@ -635,6 +634,8 @@ OC.L10N.register(
     "The link leads to %s" : "L'enllaç porta a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no voleu visitar aquesta pàgina, podeu tornar a <a href=\"%s\">Correu</a>.",
     "Continue to %s" : "Continua a %s",
+    "Sieve filter rules" : "Regles de filtre de missatges",
+    "Sieve filter server" : "Servidor de filtre de missatges",
     "Account creation" : "Creació de comptes"
 },
 "nplurals=2; plural=(n != 1);");

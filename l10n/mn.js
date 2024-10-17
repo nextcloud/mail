@@ -66,6 +66,7 @@ OC.L10N.register(
     "Date" : "Он сар өдөр",
     "Tags" : "Tag-үүд",
     "Custom" : "Дурын",
+    "Actions" : "Үйл ажиллагаа",
     "Reset" : "тохируулах",
     "Client ID" : "Хэрэглэгчийн ID",
     "User" : "Хэрэглэгч",

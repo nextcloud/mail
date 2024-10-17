@@ -95,9 +95,7 @@ OC.L10N.register(
     "Autoresponder" : "Automatická odpověď",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatická odpověď na příchozí zprávy. Pokud vám někdo pošle vícero zpráv, tato automatická odpověď bude odeslána nanejvýš co 4 dny.",
     "Please connect to a sieve server first." : "Nejprve se prosím připojte k sieve serveru.",
-    "Sieve filter rules" : "Pravidla sieve filtru",
     "Mail server" : "E-mailový server",
-    "Sieve filter server" : "Filtrovací server sieve",
     "Mailbox search" : "Hledání ve schránce",
     "Update alias" : "Aktualizovat alternativní název",
     "Rename alias" : "Přejmenovat alternativní název",
@@ -474,7 +472,6 @@ OC.L10N.register(
     "From me" : "Ode mne",
     "Clear" : "Vyčistit",
     "Enable mail body search" : "Zapnout hledání v těle zprávy",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve je mocný jazyk pro psaní filtrovacích pravidel pro e-mailovou schránku. Pokud je vámi využívaná e-mailová služba podporuje, je možné zpravovat sieve skripty v aplikaci E-mail.",
     "Enable sieve filter" : "Zapnout sieve filtr",
     "Sieve host" : "Stroj se sieve",
     "Sieve security" : "Zabezpečení sieve",
@@ -553,6 +550,7 @@ OC.L10N.register(
     "Train" : "Vlak",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} z {depStation} do {arrStation}",
     "Train from {depStation} to {arrStation}" : "Vlak z {depStation} do {arrStation}",
+    "Operator" : "Operátor",
     "Mail app" : "E-mailová aplikace",
     "The mail app allows users to read mails on their IMAP accounts." : "E-mailová aplikace která uživatelům umožňuje číst e-maily ve svých IMAP účtech.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Zde naleznete nastavení pro celou instanci. Nastavení pro jednotlivé uživatele se nachází v aplikaci samotné (levý dolní roh).",
@@ -706,6 +704,9 @@ OC.L10N.register(
     "The link leads to %s" : "Odkaz vede na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">e-mailu</a>.",
     "Continue to %s" : "Pokračovat na %s",
-    "Account creation" : "Vytváření účtů"
+    "Sieve filter rules" : "Pravidla sieve filtru",
+    "Sieve filter server" : "Filtrovací server sieve",
+    "Account creation" : "Vytváření účtů",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve je mocný jazyk pro psaní filtrovacích pravidel pro e-mailovou schránku. Pokud je vámi využívaná e-mailová služba podporuje, je možné zpravovat sieve skripty v aplikaci E-mail."
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

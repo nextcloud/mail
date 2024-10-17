@@ -214,6 +214,8 @@ OC.L10N.register(
     "Train" : "רכבת",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} מ־{depStation} אל {arrStation}",
     "Train from {depStation} to {arrStation}" : "רכבת מ־{depStation} אל {arrStation}",
+    "Actions" : "פעולות",
+    "Priority" : "עדיפות",
     "Mail app" : "יישומון דוא״ל",
     "The mail app allows users to read mails on their IMAP accounts." : "יישומון הדוא״ל מאפשר למשתמשים לקרוא הודעות דוא״ל בחשבונות ה־IMAP שלהם.",
     "Reset" : "איפוס",

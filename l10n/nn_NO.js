@@ -37,6 +37,7 @@ OC.L10N.register(
     "Close" : "Lat att",
     "Date" : "Dato",
     "Tags" : "Emneord",
+    "Actions" : "Handlingar",
     "Client ID" : "Klient-ID",
     "User" : "Bruker",
     "Host" : "Tenar",

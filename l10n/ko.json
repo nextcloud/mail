@@ -81,9 +81,8 @@
     "Autoresponder" : "자동 응답",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "수신 메시지에 대한 자동 응답입니다. 메시지를 수신한 경우, 이 자동 응답이 최대 4일에 한 번 해당 발신자에게 발송됩니다.",
     "Please connect to a sieve server first." : "우선 Sieve 서버에 연결하십시오",
-    "Sieve filter rules" : "Sieve 필터 규칙",
+    "Filters" : "필터",
     "Mail server" : "메일 서버",
-    "Sieve filter server" : "Sieve 필터 서버",
     "Mailbox search" : "편지함 검색",
     "Update alias" : "별칭 갱신",
     "Rename alias" : "별칭 변경",
@@ -476,6 +475,12 @@
     "Train" : "열차",
     "{trainNr} from {depStation} to {arrStation}" : "{depStation}에서 {arrStation}(으)로 향하는 {trainNr}번 열차",
     "Train from {depStation} to {arrStation}" : "{depStation}에서 {arrStation}(으)로 향하는 열차",
+    "Flag" : "깃발",
+    "Delete filter" : "필터 삭제",
+    "Operator" : "운영자",
+    "Filter name" : "필터 이름",
+    "Actions" : "동작",
+    "Priority" : "우선 순위",
     "Mail app" : "Mail 앱",
     "The mail app allows users to read mails on their IMAP accounts." : "Mail 앱은 사용자가 자신의 IMAP 계정에서 이메일을 읽을 수 있도록 합니다.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "이곳에서 인스턴스 전체에 적용되는 설정을 확인할 수 있습니다. 특정 사용자를 대상으로 하는 설정은 앱 자체에서 확인할 수 있습니다. (좌하단 구석)",
@@ -618,6 +623,8 @@
     "The link leads to %s" : "이 링크가 %s을(를) 향함",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "해당 페이지를 방문하지 않으려면 <a href=\"%s\">메일</a>로 돌아갈 수 있습니다.",
     "Continue to %s" : "%s(으)로 이동",
+    "Sieve filter rules" : "Sieve 필터 규칙",
+    "Sieve filter server" : "Sieve 필터 서버",
     "Account creation" : "계정 생성"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

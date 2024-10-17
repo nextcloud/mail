@@ -48,9 +48,7 @@ OC.L10N.register(
     "Writing mode" : "Način pisanja",
     "Preferred writing mode for new messages and replies." : "Željeni način pisanja za nove poruke i odgovore.",
     "Default folders" : "Zadane mape",
-    "Sieve filter rules" : "Pravila filtra Sieve",
     "Mail server" : "Poslužitelj e-pošte",
-    "Sieve filter server" : "Poslužitelj filtra Sieve",
     "Update alias" : "Ažuriraj pseudonim",
     "Show update alias form" : "Prikaži obrazac za ažuriranje pseudonima",
     "Delete alias" : "Izbriši pseudonim",
@@ -272,6 +270,8 @@ OC.L10N.register(
     "Train" : "Vlak",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} iz {depStation} do {arrStation}",
     "Train from {depStation} to {arrStation}" : "Vlak iz {depStation} do {arrStation}",
+    "Actions" : "Radnje",
+    "Priority" : "Prioritet",
     "Mail app" : "Aplikacija za upravljanje e-poštom",
     "The mail app allows users to read mails on their IMAP accounts." : "Aplikacija za upravljanje e-poštom omogućuje korisnicima da čitaju svoje poruke s IMAP računa.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Ovdje možete pronaći postavke za čitavu instancu. Postavke za pojedinog korisnika nalaze se u samoj aplikaciji (donji lijevi kut).",
@@ -366,6 +366,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknite ovdje ako niste preusmjereni automatski unutar sljedećih nekoliko sekundi.",
     "Redirect" : "Preusmjeri",
     "The link leads to %s" : "Ova poveznica vodi do %s",
-    "Continue to %s" : "Idi do %s"
+    "Continue to %s" : "Idi do %s",
+    "Sieve filter rules" : "Pravila filtra Sieve",
+    "Sieve filter server" : "Poslužitelj filtra Sieve"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

@@ -69,9 +69,8 @@ OC.L10N.register(
     "Preferred writing mode for new messages and replies." : "Ensisijainen kirjoitustila uusissa viesteissä ja vastauksissa.",
     "Default folders" : "Oletuskansiot",
     "Autoresponder" : "Automaattivastaukset",
-    "Sieve filter rules" : "Sieve-filtterin säännöt",
+    "Filters" : "Suodattimet",
     "Mail server" : "Sähköpostipalvelin",
-    "Sieve filter server" : "Sieve-filtteripalvelin",
     "Update alias" : "Päivitä alias",
     "Delete alias" : "Poista alias",
     "Go back" : "Takaisin",
@@ -389,6 +388,11 @@ OC.L10N.register(
     "Train" : "Juna",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} asemalta {depStation} asemalle {arrStation}",
     "Train from {depStation} to {arrStation}" : "Juna asemalta {depStation} asemalle {arrStation}",
+    "Flag" : "Lippu",
+    "Operator" : "Operaattori",
+    "Actions" : "Toiminnot",
+    "New action" : "Uusi toiminto",
+    "Priority" : "Tärkeys",
     "Mail app" : "Sähköpostisovellus",
     "The mail app allows users to read mails on their IMAP accounts." : "Tämä sähköpostisovellus mahdollistaa käyttäjien lukea sähköpostiviestejä IMAP-tileiltä.",
     "Account provisioning" : "Käyttäjän provisiointi",
@@ -476,6 +480,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klikkaa jos sinua ei uudelleenohjata automaattisesti muutamaan sekuntiin.",
     "Redirect" : "Uudelleenohjaus",
     "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
-    "Continue to %s" : "Jatka sivulle %s"
+    "Continue to %s" : "Jatka sivulle %s",
+    "Sieve filter rules" : "Sieve-filtterin säännöt",
+    "Sieve filter server" : "Sieve-filtteripalvelin"
 },
 "nplurals=2; plural=(n != 1);");

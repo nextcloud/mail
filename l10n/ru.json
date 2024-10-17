@@ -94,9 +94,8 @@
     "Autoresponder" : "Автоответчик",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Автоматический ответ на входящие сообщения. Если кто-то отправит вам несколько сообщений, этот автоматический ответ будет отправляться не чаще одного раза в 4 дня.",
     "Please connect to a sieve server first." : "Сначала подключитесь к Sieve-серверу.",
-    "Sieve filter rules" : "Правила sieve фильтра",
+    "Filters" : "Фильтры",
     "Mail server" : "Почтовый сервер",
-    "Sieve filter server" : "Сервер sieve фильтра",
     "Mailbox search" : "Поиск по почтовому ящику",
     "Update alias" : "Обновить псевдоним",
     "Rename alias" : "Переименовать псевдоним",
@@ -451,7 +450,6 @@
     "Last 7 days" : "Последние 7 дней",
     "From me" : "От меня",
     "Clear" : "Очистить",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve - это мощный язык для создания фильтров для вашего почтового ящика. Вы можете управлять скриптами sieve в Mail, если ваш почтовый сервис поддерживает это.",
     "Sieve Port" : "Sieve порт",
     "Custom" : "Свои параметры",
     "Sieve User" : "Sieve пользователь",
@@ -524,6 +522,12 @@
     "Train" : "Поезд",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} из {depStation} в {arrStation}",
     "Train from {depStation} to {arrStation}" : "Поезд из {depStation} в {arrStation}",
+    "Flag" : "Флаг",
+    "Delete filter" : "Удалить фильтр",
+    "Operator" : "Оператор",
+    "Actions" : "Действия",
+    "New action" : "Создать действие",
+    "Priority" : "Приоритет",
     "Mail app" : "Приложение Почта",
     "The mail app allows users to read mails on their IMAP accounts." : "Приложение Почта позволяет пользователям подключать свои почтовые ящики по протоколу IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Здесь могут быть заданы параметры, используемые глобально на сервере. Диалог настройки параметров пользователя открывается непосредственно в приложении из значка, расположенного в левом нижнем углу.",
@@ -676,6 +680,9 @@
     "The link leads to %s" : "Эта ссылка ведёт на %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Если вы не хотите посещать эту страницу, вы можете вернуться в <a href=\"%s\">Почту</a>",
     "Continue to %s" : "Продолжать %s",
-    "Account creation" : "Создание учетной записи"
+    "Sieve filter rules" : "Правила sieve фильтра",
+    "Sieve filter server" : "Сервер sieve фильтра",
+    "Account creation" : "Создание учетной записи",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve - это мощный язык для создания фильтров для вашего почтового ящика. Вы можете управлять скриптами sieve в Mail, если ваш почтовый сервис поддерживает это."
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }

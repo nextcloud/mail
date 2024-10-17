@@ -83,9 +83,8 @@
     "Autoresponder" : "Autorespondedor",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Respuesta automatizada a los mensajes entrantes. Si alguien le envía múltiples mensajes, esta respuesta automática se enviará al menos una vez cada 4 días.",
     "Please connect to a sieve server first." : "Por favor conéctese a un servidor sieve primero.",
-    "Sieve filter rules" : "Reglas del filtro de Sieve",
+    "Filters" : "Filtros",
     "Mail server" : "Servidor de correo",
-    "Sieve filter server" : "Servidor de filtros Sieve",
     "Mailbox search" : "Busca en el buzón de correo",
     "Update alias" : "Actualizar alias",
     "Rename alias" : "Renombrar alias",
@@ -504,6 +503,8 @@
     "Train" : "Tren",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} desde {depStation} hacia {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tren desde {depStation} hacia {arrStation}",
+    "Operator" : "Operador",
+    "New action" : "Nueva acción",
     "Mail app" : "App correo electrónico",
     "The mail app allows users to read mails on their IMAP accounts." : "La aplicación de correo electrónico permite a los usuarios leer mails de sus cuentas IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Aquí se encuentran las configuraciones para toda la instancia. La configuración específica de cada usuario se encuentran en la propia app (esquina inferior izquierda).",
@@ -657,6 +658,8 @@
     "The link leads to %s" : "El enlace conduce a %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quieres visitar esta página puedes volver a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
+    "Sieve filter rules" : "Reglas del filtro de Sieve",
+    "Sieve filter server" : "Servidor de filtros Sieve",
     "Account creation" : "Creación de cuentas"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

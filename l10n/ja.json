@@ -93,9 +93,8 @@
     "Autoresponder" : "自動返信",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "受信メッセージへの自動返信。複数のメッセージが送信された場合、この自動返信は最大で4日に1回送信されます。",
     "Please connect to a sieve server first." : "はじめにsieveサーバーに接続してください。",
-    "Sieve filter rules" : "sieveフィルターのルール",
+    "Filters" : "フィルター",
     "Mail server" : "メールサーバー",
-    "Sieve filter server" : "sieve フィルターサーバー",
     "Mailbox search" : "メールボックスの検索",
     "Update alias" : "エイリアスを更新する",
     "Rename alias" : "エイリアスの名前を変更する",
@@ -546,6 +545,10 @@
     "Train" : "列車",
     "{trainNr} from {depStation} to {arrStation}" : "{depStation} から {arrStation} 行きの列車番号 {trainNr}",
     "Train from {depStation} to {arrStation}" : "{depStation} から {arrStation} 行きの列車",
+    "Delete filter" : "フィルターを削除",
+    "Operator" : "条件",
+    "Actions" : "アクション",
+    "Priority" : "優先度",
     "Mail app" : "メールアプリ",
     "The mail app allows users to read mails on their IMAP accounts." : "メールアプリで、ユーザーはIMAPアカウントでメールを読むことができます。",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "ここでは、インスタンス全体の設定を確認できます。ユーザー固有の設定は、アプリ自体 (左下隅) にあります。",
@@ -699,6 +702,8 @@
     "The link leads to %s" : "リンクが %s につながります",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページにアクセスしたくない場合は、<a href=\"%s\">メール</a>に戻ることができます",
     "Continue to %s" : "%s にリダイレクトする",
+    "Sieve filter rules" : "sieveフィルターのルール",
+    "Sieve filter server" : "sieve フィルターサーバー",
     "Account creation" : "アカウント作成"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
