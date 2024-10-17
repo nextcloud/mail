@@ -28,11 +28,11 @@ class SnippetShareMapper extends QBMapper {
 	/**
 	 * @param int $id
 	 * @param string $owner
-	 * @return Snippet
+	 * @return SnippetShare
 	 *
 	 * @throws DoesNotExistException
 	 */
-	public function find(int $id, string $owner): Snippet {
+	public function find(int $id, string $owner): SnippetShare {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from($this->getTableName())
@@ -40,6 +40,24 @@ class SnippetShareMapper extends QBMapper {
 			->andWhere($qb->expr()->eq('owner', $qb->createNamedParameter($owner)));
 
 		return $this->findEntity($qb);
+	}
+
+	public function shareExists(string $snippetId, string $shareWith): bool {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('snippet_id', $qb->createNamedParameter($snippetId)))
+			->andWhere($qb->expr()->eq('share_with', $qb->createNamedParameter($shareWith)));
+
+		try {
+			$share = $this->findEntity($qb);
+			if ($share !== null) {
+				return true;
+			}
+		} catch (DoesNotExistException $e) {
+			return false;
+		}
+		return false;
 	}
 
 	/**
