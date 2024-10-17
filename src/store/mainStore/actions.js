@@ -110,6 +110,7 @@ import * as SmimeCertificateService from '../../service/SmimeCertificateService.
 import useOutboxStore from '../outboxStore.js'
 import * as FollowUpService from '../../service/FollowUpService.js'
 import { addInternalAddress, removeInternalAddress } from '../../service/InternalAddressService.js'
+import { createSnippet, fetchMySnippets, fetchSharedSnippets, deleteSnippet, updateSnippet } from '../../service/SnippetService.js'
 
 import escapeRegExp from 'lodash/fp/escapeRegExp.js'
 import uniq from 'lodash/fp/uniq.js'
@@ -1754,6 +1755,36 @@ export default function mainStoreActions() {
 				await this.clearFollowUpReminder({ envelope })
 			}
 		},
+		async fetchMySnippets() {
+			return handleHttpAuthErrors(async () => {
+				const snippets = await fetchMySnippets()
+				this.setMySnippets(snippets)
+			})
+		},
+		async fetchSharedSnippets() {
+			return handleHttpAuthErrors(async () => {
+				const snippets = await fetchSharedSnippets()
+				this.setSharedSnippets(snippets)
+			})
+		},
+		async createSnippet({ title, content }) {
+			return handleHttpAuthErrors(async () => {
+				const snippet = await createSnippet(title, content)
+				this.addSnippet(snippet)
+			})
+		},
+		async deleteSnippet({ id }) {
+			return handleHttpAuthErrors(async () => {
+				await deleteSnippet(id)
+				this.deleteSnippetLocally(id)
+			})
+		},
+		async patchSnippet(snippet) {
+			return handleHttpAuthErrors(async () => {
+				await updateSnippet(snippet)
+				this.patchSnippetLocally(snippet)
+			})
+		},
 		transformMailboxName(account, mailbox) {
 			// Add all mailboxes (including submailboxes to state, but only toplevel to account
 			const nameWithoutPrefix = account.personalNamespace
@@ -2298,6 +2329,27 @@ export default function mainStoreActions() {
 		showSettingsForAccountMutation(accountId) {
 			this.showAccountSettings = accountId
 		},
+		setMySnippets(snippets) {
+			this.mySnippets = snippets
+			this.snippetsFetched = true
+		},
+		setSharedSnippets(snippets) {
+			this.sharedSnippets = snippets
+			this.snippetsFetched = true
+		},
+		addSnippet(snippet) {
+			this.mySnippets.push(snippet)
+		},
+		deleteSnippetLocally(id) {
+			const index = this.mySnippets.findIndex(snippet => snippet.id === id)
+			this.mySnippets.splice(index, 1)
+		},
+		patchSnippetLocally(snippet) {
+			const index = this.mySnippets.findIndex(s => s.id === snippet.id)
+			if (index !== -1) {
+				this.mySnippets.splice(index, 1, snippet)
+			}
+		},
 		getPreference(key, def) {
 			return defaultTo(def, this.preferences[key])
 		},
@@ -2381,6 +2433,15 @@ export default function mainStoreActions() {
 		},
 		showSettingsForAccount(accountId) {
 			return this.showAccountSettings === accountId
+		},
+		getMySnippets() {
+			return this.mySnippets
+		},
+		getSharedSnippets() {
+			return this.sharedSnippets
+		},
+		areSnippetsFetched() {
+			return this.snippetsFetched
 		},
 	}
 }
