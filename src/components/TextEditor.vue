@@ -48,7 +48,7 @@ import logger from '../logger.js'
 import PickerPlugin from '../ckeditor/smartpicker/PickerPlugin.js'
 import { autoCompleteByName } from '../service/ContactIntegrationService.js'
 import { emojiSearch, emojiAddRecent } from '@nextcloud/vue'
-
+import { toPlain, Text } from '../util/text.js'
 export default {
 	name: 'TextEditor',
 	components: {
@@ -78,6 +78,10 @@ export default {
 		disabled: {
 			type: Boolean,
 			default: false,
+		},
+		snippets: {
+			type: Array,
+			default: () => [],
 		},
 	},
 	data() {
@@ -158,7 +162,12 @@ export default {
 						{
 							marker: '@',
 							feed: this.getContact,
-							itemRenderer: this.customContactRenderer,
+							itemRenderer: this.customRenderer,
+						},
+						{
+							marker: '!',
+							feed: this.getSnippet,
+							itemRenderer: this.customRenderer,
 						},
 					],
 				},
@@ -192,6 +201,12 @@ export default {
 			contactResults = contactResults.filter(result => result.email.length > 0)
 			return contactResults
 		},
+		getSnippet(text) {
+			if (text.length === 0) {
+				return []
+			}
+			return this.snippets.filter(snippet => snippet.title.toLowerCase().includes(text.toLowerCase()))
+		},
 		 customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
 
@@ -224,15 +239,15 @@ export default {
 
 			return itemElement
 		},
-		customContactRenderer(item) {
+		customRenderer(item, type) {
 			const itemElement = document.createElement('span')
 
 			itemElement.classList.add('custom-item')
 			itemElement.id = `mention-list-item-id-${item.id}`
 			const usernameElement = document.createElement('p')
-
+			const label = type === 'contact' ? item.label : item.title
 			usernameElement.classList.add('custom-item-username')
-			usernameElement.textContent = item.label
+			usernameElement.textContent = label
 
 			itemElement.appendChild(usernameElement)
 
@@ -346,6 +361,14 @@ export default {
 				if (eventData.marker === '@') {
 					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@')
 					this.$emit('mention', { email: item.email[0], label: item.label })
+				}
+				if (eventData.marker === '!') {
+					let content = item.content
+					if (!this.html) {
+						const text = new Text('html', content)
+						content = toPlain(text).value
+					}
+					this.editorInstance.execute('insertItem', { content, isHtml: this.html }, '!')
 				}
 			}, { priority: 'high' })
 			this.editorInstance = editor
