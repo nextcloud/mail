@@ -21,7 +21,6 @@ use OCA\Mail\Exception\ClassifierTrainingException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
 use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\SubjectExtractor;
 use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
@@ -34,13 +33,10 @@ use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
-use Rubix\ML\Kernels\Distance\Manhattan;
 use Rubix\ML\Kernels\Distance\Jaccard;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
-use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
-use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -333,7 +329,7 @@ class ImportanceClassifier {
 			/** @var Learner&Estimator&Persistable $persistedEstimator */
 			$persistedEstimator = $estimator();
 			$this->trainClassifier($persistedEstimator, $dataSet);
-			$perf->step("train classifier with full data set");
+			$perf->step('train classifier with full data set');
 
 			// Extract persisted transformers of the subject extractor.
 			// Is a bit hacky but a full abstraction would be overkill.
@@ -437,8 +433,8 @@ class ImportanceClassifier {
 	 * @throws ServiceException
 	 */
 	public function classifyImportance(Account $account,
-									   array $messages,
-									   LoggerInterface $logger): array {
+		array $messages,
+		LoggerInterface $logger): array {
 		$pipeline = null;
 		try {
 			$pipeline = $this->persistenceService->loadLatest($account);

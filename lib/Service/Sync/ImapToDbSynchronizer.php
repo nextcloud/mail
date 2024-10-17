@@ -432,7 +432,7 @@ class ImapToDbSynchronizer {
 			try {
 				$importantTag = $this->tagMapper->getTagByImapLabel(Tag::LABEL_IMPORTANT, $account->getUserId());
 			} catch (DoesNotExistException $e) {
-				$this->logger->error('Could not find important tag for ' . $account->getUserId(). ' ' . $e->getMessage(), [
+				$this->logger->error('Could not find important tag for ' . $account->getUserId() . ' ' . $e->getMessage(), [
 					'exception' => $e,
 				]);
 			}

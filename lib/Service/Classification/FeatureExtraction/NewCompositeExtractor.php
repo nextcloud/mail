@@ -13,7 +13,7 @@ class NewCompositeExtractor extends CompositeExtractor {
 	private SubjectExtractor $subjectExtractor;
 
 	public function __construct(VanillaCompositeExtractor $ex1,
-								SubjectExtractor $ex2) {
+		SubjectExtractor $ex2) {
 		parent::__construct([$ex1, $ex2]);
 		$this->subjectExtractor = $ex2;
 	}

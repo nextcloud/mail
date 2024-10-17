@@ -11,9 +11,9 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 class VanillaCompositeExtractor extends CompositeExtractor {
 	public function __construct(ImportantMessagesExtractor $ex1,
-								ReadMessagesExtractor $ex2,
-								RepliedMessagesExtractor $ex3,
-								SentMessagesExtractor $ex4) {
+		ReadMessagesExtractor $ex2,
+		RepliedMessagesExtractor $ex3,
+		SentMessagesExtractor $ex4) {
 		parent::__construct([
 			$ex1,
 			$ex2,
