@@ -40,7 +40,7 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 ```
 #### SMTP timeout
 ```php
-'app.mail.smtp.timeout' => 2
+'app.mail.smtp.timeout' => 20
 ```
 #### Sieve timeout
 ```php

@@ -70,7 +70,7 @@ class SmtpClientFactoryTest extends TestCase {
 			->willReturnMap([
 				['app.mail.transport', 'smtp', 'smtp'],
 				['debug', false, false],
-				['app.mail.smtp.timeout', 5, 2],
+				['app.mail.smtp.timeout', 20, 2],
 			]);
 		$this->config->expects($this->any())
 			->method('getSystemValueBool')
