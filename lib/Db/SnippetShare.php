@@ -17,19 +17,22 @@ use ReturnTypeWillChange;
  * @method string getType()
  * @method void setType(string $type)
  * @method string getShareWith()
- * @method void setShareWith((string $shareWith)
+ * @method void setShareWith(string $shareWith)
  * @method string getSnippetId()
- * @method void setSnippetId(string $snippetId)
+ * @method void setSnippetId(int $snippetId)
  */
 class SnippetShare extends Entity implements JsonSerializable {
 	protected $owner;
 	protected $title;
 	protected $content;
 
+	public const TYPE_USER = 'user';
+	public const TYPE_GROUP = 'group';
+
 	public function __construct() {
 		$this->addType('type', 'string');
 		$this->addType('shareWith', 'string');
-		$this->addType('snippetId', 'string');
+		$this->addType('snippetId', 'int');
 	}
 
 	#[ReturnTypeWillChange]
