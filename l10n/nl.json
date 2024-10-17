@@ -48,9 +48,8 @@
     "Writing mode" : "Schrijfmodus",
     "Preferred writing mode for new messages and replies." : "Gewenste schrijfmodus voor nieuwe berichten en antwoorden.",
     "Default folders" : "Standaardmappen",
-    "Sieve filter rules" : "Sieve filterregels",
+    "Filters" : "Filters",
     "Mail server" : "Mailserver",
-    "Sieve filter server" : "Sieve filterserver",
     "Update alias" : "Bijwerken alias",
     "Show update alias form" : "Toon formulier Bijwerken alias",
     "Delete alias" : "Verwijderen alias",
@@ -280,6 +279,11 @@
     "Train" : "Trein",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} van {depStation} naar {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trein van {depStation} naar {arrStation}",
+    "Flag" : "lag",
+    "Operator" : "Operator",
+    "Actions" : "Acties",
+    "New action" : "Nieuwe actie",
+    "Priority" : "Prioriteit",
     "Mail app" : "Mail toepassing",
     "The mail app allows users to read mails on their IMAP accounts." : "Met de mail-app kunnen gebruikers e-mails lezen op hun IMAP-accounts.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Hier vind je de instellingen voor de instantie. Gebruikersspecifieke instellingen zijn te vinden in de app zelf (linksonder).",
@@ -378,6 +382,8 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier als je binnen enkele seconden niet automatisch wordt doorgestuurd.",
     "Redirect" : "Omleiden",
     "The link leads to %s" : "De link verwijst naar %s",
-    "Continue to %s" : "Verder naar %s"
+    "Continue to %s" : "Verder naar %s",
+    "Sieve filter rules" : "Sieve filterregels",
+    "Sieve filter server" : "Sieve filterserver"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

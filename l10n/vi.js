@@ -41,9 +41,7 @@ OC.L10N.register(
     "Writing mode" : "Chế độ soạn thảo",
     "Preferred writing mode for new messages and replies." : "Chế độ soạn thảo ưu tiên cho các tin nhắn và trả lời mới.",
     "Default folders" : "Thư mục mặc định",
-    "Sieve filter rules" : "Quy tắc lọc Sieve",
     "Mail server" : "Máy chủ thư",
-    "Sieve filter server" : "Máy chủ lọc Sieve",
     "Go back" : "Quay lại",
     "Change name" : "Đổi tên",
     "Email address" : "Địa chỉ thư điện tử",
@@ -232,6 +230,8 @@ OC.L10N.register(
     "Train" : "Tàu hỏa",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} từ {depStation} đến {arrStation}",
     "Train from {depStation} to {arrStation}" : "Đi tàu từ {depStation} đến {arrStation}",
+    "Delete filter" : "Xóa bộ lọc ",
+    "Actions" : "Hành động",
     "Mail app" : "Ứng dụng thư",
     "The mail app allows users to read mails on their IMAP accounts." : "Ứng dụng thư cho phép người dùng đọc thư trên tài khoản IMAP của họ.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Tại đây bạn có thể tìm thấy các cài đặt cho toàn phiên bản. Cài đặt người dùng cụ thể được tìm thấy trong chính ứng dụng (góc dưới bên trái).",
@@ -280,6 +280,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Nhấp vào đây nếu bạn không được chuyển hướng tự động trong vòng vài giây tới",
     "Redirect" : "Chuyển hướng",
     "The link leads to %s" : "Liên kết dẫn đến %s",
-    "Continue to %s" : "Tiếp tục %s"
+    "Continue to %s" : "Tiếp tục %s",
+    "Sieve filter rules" : "Quy tắc lọc Sieve",
+    "Sieve filter server" : "Máy chủ lọc Sieve"
 },
 "nplurals=1; plural=0;");

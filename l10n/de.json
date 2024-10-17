@@ -94,9 +94,7 @@
     "Autoresponder" : "Automatische Antworten",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisierte Antwort auf eingehende Nachrichten. Wenn dir jemand mehrere Nachrichten schickt, wird diese automatische Antwort höchstens einmal alle 4 Tage gesendet.",
     "Please connect to a sieve server first." : "Bitte stelle zunächst eine Verbindung zu einem Sieve-Server her.",
-    "Sieve filter rules" : "Sieve-Filterregeln",
     "Mail server" : "Mail-Server",
-    "Sieve filter server" : "Sieve-Filterserver",
     "Mailbox search" : "Postfach durchsuchen",
     "Update alias" : "Alias aktualisieren",
     "Rename alias" : "Alias umbenennen",
@@ -472,7 +470,6 @@
     "From me" : "Von mir",
     "Clear" : "Löschen",
     "Enable mail body search" : "Durchsuchen des Nachrichtentextes aktivieren",
-    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve ist eine leistungsstarke Sprache zum Schreiben von Filtern für Ihr Postfach. Du kannst die Sieve-Skripte in Mail verwalten, wenn dein E-Mail-Dienst dies unterstützt.",
     "Enable sieve filter" : "Sieve-Filter aktivieren",
     "Sieve host" : "Sieve-Host",
     "Sieve security" : "Sieve-Sicherheit",
@@ -551,6 +548,8 @@
     "Train" : "Zug",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} von {depStation} nach {arrStation}",
     "Train from {depStation} to {arrStation}" : "Zug von {depStation} nach {arrStation}",
+    "Operator" : "Bedingung",
+    "New action" : "Neue Aktion",
     "Mail app" : "Mail App",
     "The mail app allows users to read mails on their IMAP accounts." : "Die Mail-App ermöglicht Benutzern E-Mails von ihren IMAP-Konten zu lesen.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Hier findest du instanzweite Einstellungen. Benutzerspezifische Einstellungen finden sich in der App selbst (linke untere Ecke).",
@@ -704,6 +703,9 @@
     "The link leads to %s" : "Der Link führt nach %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn du diese Seite nicht besuchen möchtest, kannst du zu <a href=\"%s\">Mail</a> zurückkehren",
     "Continue to %s" : "Weiter nach %s",
-    "Account creation" : "Kontoerstellung"
+    "Sieve filter rules" : "Sieve-Filterregeln",
+    "Sieve filter server" : "Sieve-Filterserver",
+    "Account creation" : "Kontoerstellung",
+    "Sieve is a powerful language for writing filters for your mailbox. You can manage the sieve scripts in Mail if your email service supports it." : "Sieve ist eine leistungsstarke Sprache zum Schreiben von Filtern für Ihr Postfach. Du kannst die Sieve-Skripte in Mail verwalten, wenn dein E-Mail-Dienst dies unterstützt."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

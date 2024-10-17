@@ -83,9 +83,8 @@
     "Autoresponder" : "Automatická odpoveď",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatická odpoveď na prichádzajúce správy. Ak vám niekto pošle niekoľko správ, táto automatická odpoveď bude odoslaná maximálne raz za 4 dni.",
     "Please connect to a sieve server first." : "Najprv sa pripojte k sieve serveru.",
-    "Sieve filter rules" : "Pravidlá sieve filtra",
+    "Filters" : "Filtre",
     "Mail server" : "Poštový server",
-    "Sieve filter server" : "Filtrovací server sieve",
     "Mailbox search" : "Prehľadávanie pošty",
     "Update alias" : "Aktualizovať alternatívny názov",
     "Rename alias" : "Premenovať alias",
@@ -501,6 +500,12 @@
     "Train" : "Vlak",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} z {depStation} do {arrStation}",
     "Train from {depStation} to {arrStation}" : "Vlak z {depStation} do {arrStation}",
+    "Flag" : "Vlajka",
+    "Operator" : "Operátor",
+    "Filter name" : "Názov filtru",
+    "Actions" : "Akcie",
+    "New action" : "Nová akcia",
+    "Priority" : "Priorita",
     "Mail app" : "E-mailová aplikácia",
     "The mail app allows users to read mails on their IMAP accounts." : "E-mailová aplikácia umožňuje používateľom čítať e-maily na svojich účtoch IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Tu nájdete nastavenia pre celú inštanciu. Nastavenia špecifické pre užívateľa sa nachádzajú v samotnej aplikácii (v ľavom dolnom rohu).",
@@ -654,6 +659,8 @@
     "The link leads to %s" : "Odkaz smeruje na %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ak si neprajete navštíviť stránku, možete sa vátiť na <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Pokračovať na %s",
+    "Sieve filter rules" : "Pravidlá sieve filtra",
+    "Sieve filter server" : "Filtrovací server sieve",
     "Account creation" : "Vytvoriť účet"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

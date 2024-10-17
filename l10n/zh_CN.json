@@ -83,9 +83,8 @@
     "Autoresponder" : "自动回复",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "自动回复来件信息。如果有人向您发送多条消息，此自动回复最多每 4 天发送一次。",
     "Please connect to a sieve server first." : "请先连接到 sieve 服务器。",
-    "Sieve filter rules" : "Sieve 过滤器规则",
+    "Filters" : "过滤器",
     "Mail server" : "邮件服务器",
-    "Sieve filter server" : "Sieve 过滤器服务器",
     "Mailbox search" : "邮箱搜索",
     "Update alias" : "更新别名",
     "Rename alias" : "重新命名别名",
@@ -483,6 +482,10 @@
     "Train" : "火车",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} 从 {depStation} 到 {arrStation}",
     "Train from {depStation} to {arrStation}" : "火车从 {depStation} 到 {arrStation}",
+    "Flag" : "旗帜",
+    "Operator" : "运算符号",
+    "Actions" : "操作",
+    "Priority" : "优先级",
     "Mail app" : "邮件应用",
     "The mail app allows users to read mails on their IMAP accounts." : "邮件应用允许用户阅读其IMAP账户中的邮件。",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "您可以在这里找到全站范围的设置。用户指定的设置在应用程序内部（左下角）。",
@@ -629,6 +632,8 @@
     "The link leads to %s" : "链接指向 %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "如果不想访问此页面，您可以返回<a href=\"%s\">邮件</a>。",
     "Continue to %s" : "继续 %s",
+    "Sieve filter rules" : "Sieve 过滤器规则",
+    "Sieve filter server" : "Sieve 过滤器服务器",
     "Account creation" : "账户创建"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

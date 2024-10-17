@@ -93,9 +93,8 @@
     "Autoresponder" : "Automatisk svartjeneste",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på innkommende meldinger. Hvis noen sender deg flere meldinger, vil dette automatiserte svaret bli sendt maksimalt en gang hver 4. dag.",
     "Please connect to a sieve server first." : "Vennligst koble til en sieve-server først.",
-    "Sieve filter rules" : "Sieve filter regler",
+    "Filters" : "Filtere",
     "Mail server" : "E-postserver",
-    "Sieve filter server" : "Sieve filter server",
     "Mailbox search" : "Søk i postboks",
     "Update alias" : "Oppdater alias",
     "Rename alias" : "Gi alias nytt navn",
@@ -546,6 +545,13 @@
     "Train" : "Tog",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} fra {depStation} til {arrStation}\n ",
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}\n ",
+    "Flag" : "Flagg",
+    "Delete filter" : "Slett filter",
+    "Operator" : "Operator",
+    "Filter name" : "Filternavn",
+    "Actions" : "Handlinger",
+    "New action" : "Ny handling",
+    "Priority" : "Prioritet",
     "Mail app" : "E-post app",
     "The mail app allows users to read mails on their IMAP accounts." : "E-post appen lar brukere lese e-poster på IMAP-kontoene sine.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Her kan du finne innstillinger for hele instansen. Bruker spesifikke innstillinger finner du i selve appen (nederst til venstre).",
@@ -699,6 +705,8 @@
     "The link leads to %s" : "Denne lenken leder til %s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke vil besøke den siden, kan du gå tilbake til <a href=\"%s\">E-post</a>",
     "Continue to %s" : "Fortsett til %s",
+    "Sieve filter rules" : "Sieve filter regler",
+    "Sieve filter server" : "Sieve filter server",
     "Account creation" : "Opprettelse av konto"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

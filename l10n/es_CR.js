@@ -93,6 +93,7 @@ OC.L10N.register(
     "Clear" : "Limpiar",
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
+    "Actions" : "Acciones",
     "Reset" : "Restablecer",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",

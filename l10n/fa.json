@@ -81,9 +81,8 @@
     "Autoresponder" : "Autoresponder",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days.",
     "Please connect to a sieve server first." : "Please connect to a sieve server first.",
-    "Sieve filter rules" : "Sieve filter rules",
+    "Filters" : "Filters",
     "Mail server" : "سرور پست الکترونیکی",
-    "Sieve filter server" : "Sieve filter server",
     "Update alias" : "Update alias",
     "Rename alias" : "Rename alias",
     "Show update alias form" : "Show update alias form",
@@ -454,6 +453,12 @@
     "Train" : "رشته",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} از {depStation} تا {arrStation}",
     "Train from {depStation} to {arrStation}" : "آموزش از {depStation} تا {arrStation} Train",
+    "Flag" : "Flag",
+    "Delete filter" : "Delete filter",
+    "Operator" : "Operator",
+    "Actions" : "کنش‌ها",
+    "New action" : "New action",
+    "Priority" : "اولویت",
     "Mail app" : "برنامه پست الکترونیکی",
     "The mail app allows users to read mails on their IMAP accounts." : "برنامه نامه الکترونیکی به کاربران این امکان را می دهد تا نامه ها را در حساب های IMAP خود بخوانند.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner).",
@@ -585,6 +590,8 @@
     "Redirect" : "تغییر مسیر",
     "The link leads to %s" : "پیوند منجر به%s",
     "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
-    "Continue to %s" : "ادامه دهید%s"
+    "Continue to %s" : "ادامه دهید%s",
+    "Sieve filter rules" : "Sieve filter rules",
+    "Sieve filter server" : "Sieve filter server"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

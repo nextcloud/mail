@@ -318,6 +318,7 @@ OC.L10N.register(
     "Train" : "Τρένο",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} από {depStation} προς {arrStation}",
     "Train from {depStation} to {arrStation}" : "Τρένο από {depStation} προς {arrStation}",
+    "Operator" : "Διαχειριστής",
     "Mail app" : "Εφαρμογή αλληλογραφίας",
     "The mail app allows users to read mails on their IMAP accounts." : "Η εφαρμογή ταχυδρομείου επιτρέπει στους χρήστες να διαβάζουν μηνύματα από τους λογαριασμούς τους IMAP.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Εδώ μπορείτε να βρείτε ρυθμίσεις για το περιστατικό. Οι συγκεκριμένες ρυθμίσεις χρήστη βρίσκονται στην ίδια την εφαρμογή (κάτω αριστερή γωνία).",

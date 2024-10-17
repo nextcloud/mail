@@ -98,6 +98,8 @@ OC.L10N.register(
     "Tag already exists" : "Etiketa ekziston",
     "Mark as unread" : "Shënoje si të palexuar",
     "Mark as read" : "Shënoje si të lexuar",
+    "Actions" : "Veprimet",
+    "Priority" : "Përparësi",
     "Reset" : "Rivendos",
     "Client ID" : "ID klienti",
     "Client secret" : "E fshehtë klienti",

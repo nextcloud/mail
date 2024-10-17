@@ -44,9 +44,7 @@ OC.L10N.register(
     "Writing mode" : "Modalidade de iscritura",
     "Preferred writing mode for new messages and replies." : "Modalidade de iscritura preferida pro is messàgios noos e de is respostas.",
     "Default folders" : "Cartellas predefinidas",
-    "Sieve filter rules" : "Règulas de filtru Sieve",
     "Mail server" : "Serbidore de posta",
-    "Sieve filter server" : "Serbidore de filtru Sieve",
     "Update alias" : "Agiorna identidade",
     "Show update alias form" : "Mustra s'agiornamentu de sa forma de su identidade",
     "Delete alias" : "Cantzella identidade",
@@ -266,6 +264,8 @@ OC.L10N.register(
     "Train" : "Trenu",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} dae {depStation} a {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trenu dae {depStation} a {arrStation}",
+    "Actions" : "Atziones",
+    "Priority" : "Prioridade",
     "Mail app" : "Aplicatzione de posta",
     "The mail app allows users to read mails on their IMAP accounts." : "S'aplicatzione de posta permitit a is utentes de lèghere is messàgios de is contos IMAP issoro.",
     "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)." : "Inoghe podes agatare sa cunfiguratzione pro totu s'istàntzia. Is cunfiguratziones ispetzìficas de s'utente sunt in s'aplicatzione etotu (in bàsciu a manca).",
@@ -342,6 +342,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Incarca inoghe chi no ses torradu a deretare in manera automàtica intro de pagu segundos.",
     "Redirect" : "Torra a deretare",
     "The link leads to %s" : "Su ligòngiu deretat a %s",
-    "Continue to %s" : "Sighi in %s"
+    "Continue to %s" : "Sighi in %s",
+    "Sieve filter rules" : "Règulas de filtru Sieve",
+    "Sieve filter server" : "Serbidore de filtru Sieve"
 },
 "nplurals=2; plural=(n != 1);");

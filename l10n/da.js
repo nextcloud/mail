@@ -79,9 +79,7 @@ OC.L10N.register(
     "Autoresponder" : "Autosvar",
     "Automated reply to incoming messages. If someone sends you several messages, this automated reply will be sent at most once every 4 days." : "Automatisk svar på indgående beskeder. Hvis nogen sender dig flere beskeder, sendes dette automatiske svar højst én gang hver 4. dag.",
     "Please connect to a sieve server first." : "Opret forbindelse til en sieve server først.",
-    "Sieve filter rules" : "Sieve filter regler",
     "Mail server" : "Mail server",
-    "Sieve filter server" : "Sigt filter server",
     "Update alias" : "Opdater alias",
     "Show update alias form" : "Vis formular til opdateringsalias",
     "Delete alias" : "Slet alias",
@@ -316,6 +314,7 @@ OC.L10N.register(
     "Train" : "Tog",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} fra {depStation} til {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}",
+    "Operator" : "Operatør",
     "Reset" : "Nulstil",
     "Client ID" : "Klient-ID",
     "Client secret" : "Klient hemmelighed",
@@ -368,6 +367,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Klik her hvis du ikke automatisk bliver videre sendt i løbet af et par sekunder.",
     "Redirect" : "Omdiriger",
     "The link leads to %s" : "Linket fører til %s",
-    "Continue to %s" : "Videre til %s"
+    "Continue to %s" : "Videre til %s",
+    "Sieve filter rules" : "Sieve filter regler",
+    "Sieve filter server" : "Sigt filter server"
 },
 "nplurals=2; plural=(n != 1);");
