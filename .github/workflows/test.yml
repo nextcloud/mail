@@ -31,6 +31,7 @@ jobs:
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       with:
         path: nextcloud/apps/mail
+        fetch-depth: 2
     - name: Install dependencies
       working-directory: nextcloud/apps/mail
       run: composer install
@@ -47,13 +48,15 @@ jobs:
       env:
         XDEBUG_MODE: off
     - name: Report coverage
-      uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
+      uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
       if: ${{ always() && matrix.php-versions == '8.3' }}
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./nextcloud/apps/mail/tests/clover.unit.xml
+        working-directory: nextcloud/apps/mail
+        file: tests/clover.unit.xml
         flags: unittests
         fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
+        verbose: true
 
   integration-tests:
       runs-on: ubuntu-latest
@@ -145,6 +148,7 @@ jobs:
             uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
             with:
                 path: nextcloud/apps/mail
+                fetch-depth: 2
           - name: Install dependencies
             working-directory: nextcloud/apps/mail
             run: composer install
@@ -182,13 +186,15 @@ jobs:
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log
           - name: Report coverage
-            uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
+            uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
               token: ${{ secrets.CODECOV_TOKEN }}
-              file: ./nextcloud/apps/mail/tests/clover.integration.xml
+              working-directory: nextcloud/apps/mail
+              file: tests/clover.integration.xml
               flags: integrationtests
               fail_ci_if_error: ${{ !github.event.pull_request.head.repo.fork }}
+              verbose: true
   frontend-unit-test:
       runs-on: ubuntu-latest
       name: Front-end unit tests
