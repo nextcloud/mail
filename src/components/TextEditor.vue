@@ -79,6 +79,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		snippets: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	data() {
 		const plugins = [
@@ -157,7 +161,12 @@ export default {
 						{
 							marker: '@',
 							feed: this.getContact,
-							itemRenderer: this.customContactRenderer,
+							itemRenderer: this.customRenderer,
+						},
+						{
+							marker: '!',
+							feed: this.getSnippet,
+							itemRenderer: this.customRenderer,
 						},
 					],
 				},
@@ -191,6 +200,12 @@ export default {
 			contactResults = contactResults.filter(result => result.email.length > 0)
 			return contactResults
 		},
+		getSnippet(text) {
+			if (text.length === 0) {
+				return []
+			}
+			return this.snippets.filter(snippet => snippet.title.toLowerCase().includes(text.toLowerCase()))
+		},
 		 customEmojiRenderer(item) {
 			const itemElement = document.createElement('span')
 
@@ -223,15 +238,15 @@ export default {
 
 			return itemElement
 		},
-		customContactRenderer(item) {
+		customRenderer(item, type) {
 			const itemElement = document.createElement('span')
 
 			itemElement.classList.add('custom-item')
 			itemElement.id = `mention-list-item-id-${item.id}`
 			const usernameElement = document.createElement('p')
-
+			const label = type === 'contact' ? item.label : item.title
 			usernameElement.classList.add('custom-item-username')
-			usernameElement.textContent = item.label
+			usernameElement.textContent = label
 
 			itemElement.appendChild(usernameElement)
 
@@ -345,6 +360,9 @@ export default {
 				if (eventData.marker === '@') {
 					this.editorInstance.execute('insertItem', { email: item.email[0], label: item.label }, '@')
 					this.$emit('mention', { email: item.email[0], label: item.label })
+				}
+				if (eventData.marker === '!') {
+					this.editorInstance.execute('insertItem', item.content, '!')
 				}
 			}, { priority: 'high' })
 			this.editorInstance = editor

@@ -179,6 +179,7 @@
 							type="search"
 							class="vs__search"
 							v-bind="attributes"
+							dir="auto"
 							v-on="events">
 					</template>
 					<template #selected-option-container="{option}">
@@ -240,6 +241,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
+				:snippets="snippets"
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
@@ -886,6 +888,11 @@ export default {
 
 			return missingCertificates
 		},
+
+		snippets() {
+			return this.mainStore.getSharedSnippets()?.map(snippet => ({ title: snippet.title, content: snippet.content }))
+				.concat(this.mainStore.getMySnippets().map(snippet => ({ title: snippet.title, content: snippet.content })))
+		},
 	},
 	watch: {
 		'$route.params.threadId'() {
@@ -983,6 +990,10 @@ export default {
 		// Set custom date and time picker value if initialized with custom send at value
 		if (this.sendAt && this.isSendAtCustom) {
 			this.selectedDate = new Date(this.sendAt)
+		}
+		if (!this.mainStore.areSnippetsFetched) {
+			this.mainStore.fetchSharedSnippets()
+			this.mainStore.fetchMySnippets()
 		}
 	},
 	beforeDestroy() {

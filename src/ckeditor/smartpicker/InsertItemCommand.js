@@ -40,6 +40,12 @@ export default class InsertItemCommand extends Command {
 					const anchorText = `@${item.label}`
 					const textElement = writer.createText(anchorText, { linkHref: mailtoHref })
 					editor.model.insertContent(textElement)
+				} else if (trigger === '!') {
+					const itemElement = writer.createElement('paragraph')
+					const viewFragment = editor.data.processor.toView(item)
+					const modelFragment = editor.data.toModel(viewFragment)
+					writer.insert(modelFragment, itemElement)
+					editor.model.insertContent(itemElement)
 				} else {
 					const itemElement = writer.createElement('paragraph')
 					writer.insertText(item, itemElement)
