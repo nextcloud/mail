@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification;
 
+use Closure;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Classifier;
@@ -18,15 +19,24 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClassifierTrainingException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
 use OCA\Mail\Support\PerformanceLogger;
+use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Rubix\ML\Classifiers\GaussianNB;
+use Rubix\ML\Classifiers\KNearestNeighbors;
 use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
+use Rubix\ML\Kernels\Distance\Jaccard;
+use Rubix\ML\Learner;
+use Rubix\ML\Persistable;
+use Rubix\ML\Transformers\Transformer;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -81,16 +91,13 @@ class ImportanceClassifier {
 	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
-	private const MAX_TRAINING_SET_SIZE = 1000;
+	private const MAX_TRAINING_SET_SIZE = 300;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
 	/** @var MessageMapper */
 	private $messageMapper;
-
-	/** @var CompositeExtractor */
-	private $extractor;
 
 	/** @var PersistenceService */
 	private $persistenceService;
@@ -101,22 +108,30 @@ class ImportanceClassifier {
 	/** @var ImportanceRulesClassifier */
 	private $rulesClassifier;
 
-	private LoggerInterface $logger;
+	private VanillaCompositeExtractor $vanillaExtractor;
+	private ContainerInterface $container;
 
 	public function __construct(MailboxMapper $mailboxMapper,
 		MessageMapper $messageMapper,
-		CompositeExtractor $extractor,
 		PersistenceService $persistenceService,
 		PerformanceLogger $performanceLogger,
 		ImportanceRulesClassifier $rulesClassifier,
-		LoggerInterface $logger) {
+		VanillaCompositeExtractor $vanillaExtractor,
+		ContainerInterface $container) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
-		$this->extractor = $extractor;
 		$this->persistenceService = $persistenceService;
 		$this->performanceLogger = $performanceLogger;
 		$this->rulesClassifier = $rulesClassifier;
-		$this->logger = $logger;
+		$this->vanillaExtractor = $vanillaExtractor;
+		$this->container = $container;
+	}
+
+	private static function createDefaultEstimator(): KNearestNeighbors {
+		// A meta estimator was trained on the same data multiple times to average out the
+		// variance of the trained model.
+		// Parameters were chosen from the best configuration across 20 runs.
+		return new KNearestNeighbors(35, true, new Jaccard());
 	}
 
 	private function filterMessageHasSenderEmail(Message $message): bool {
@@ -124,22 +139,24 @@ class ImportanceClassifier {
 	}
 
 	/**
-	 * Train an account's classifier of important messages
-	 *
-	 * Train a classifier based on a user's existing messages to be able to derive
-	 * importance markers for new incoming messages.
-	 *
-	 * To factor in (server-side) filtering into multiple mailboxes, the algorithm
-	 * will not only look for messages in the inbox but also other non-special
-	 * mailboxes.
-	 *
-	 * To prevent memory exhaustion, the process will only load a fixed maximum
-	 * number of messages per account.
+	 * Build a data set for training an importance classifier.
 	 *
 	 * @param Account $account
+	 * @param IExtractor $extractor
+	 * @param LoggerInterface $logger
+	 * @param PerformanceLoggerTask|null $perf
+	 * @param bool $shuffle
+	 * @return array|null Returns null if there are not enough messages to train
 	 */
-	public function train(Account $account, LoggerInterface $logger): void {
-		$perf = $this->performanceLogger->start('importance classifier training');
+	public function buildDataSet(
+		Account $account,
+		IExtractor $extractor,
+		LoggerInterface $logger,
+		?PerformanceLoggerTask $perf = null,
+		bool $shuffle = false,
+	): ?array {
+		$perf ??= $this->performanceLogger->start('build data set for importance classifier training');
+
 		$incomingMailboxes = $this->getIncomingMailboxes($account);
 		$logger->debug('found ' . count($incomingMailboxes) . ' incoming mailbox(es)');
 		$perf->step('find incoming mailboxes');
@@ -160,30 +177,138 @@ class ImportanceClassifier {
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
 			$logger->info('not enough messages to train a classifier');
-			$perf->end();
-			return;
+			return null;
 		}
 		$perf->step('find latest ' . self::MAX_TRAINING_SET_SIZE . ' messages');
 
-		$dataSet = $this->getFeaturesAndImportance($account, $incomingMailboxes, $outgoingMailboxes, $messages);
-		$perf->step('extract features from messages');
+		$dataSet = $this->getFeaturesAndImportance($account, $incomingMailboxes, $outgoingMailboxes, $messages, $extractor);
+		if ($shuffle) {
+			shuffle($dataSet);
+		}
+
+		return $dataSet;
+	}
+
+	/**
+	 * Train an account's classifier of important messages
+	 *
+	 * Train a classifier based on a user's existing messages to be able to derive
+	 * importance markers for new incoming messages.
+	 *
+	 * To factor in (server-side) filtering into multiple mailboxes, the algorithm
+	 * will not only look for messages in the inbox but also other non-special
+	 * mailboxes.
+	 *
+	 * To prevent memory exhaustion, the process will only load a fixed maximum
+	 * number of messages per account.
+	 *
+	 * @param Account $account
+	 * @param LoggerInterface $logger
+	 * @param ?IExtractor $extractor The extractor to use for feature extraction. If null, the default extractor will be used.
+	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
+	 * @param bool $shuffleDataSet Shuffle the data set before training
+	 * @param bool $persist Persist the trained classifier to use it for message classification
+	 *
+	 * @throws ServiceException
+	 */
+	public function train(
+		Account $account,
+		LoggerInterface $logger,
+		?IExtractor $extractor = null,
+		?Closure $estimator = null,
+		bool $shuffleDataSet = false,
+		bool $persist = true,
+	): void {
+		$perf = $this->performanceLogger->start('importance classifier training');
+
+		if ($extractor === null) {
+			try {
+				$extractor = $this->container->get(NewCompositeExtractor::class);
+			} catch (ContainerExceptionInterface $e) {
+				throw new ServiceException('Default extractor is not available', 0, $e);
+			}
+		}
+
+		$dataSet = $this->buildDataSet($account, $extractor, $logger, $perf, $shuffleDataSet);
+		if ($dataSet === null) {
+			return;
+		}
+
+		$this->trainWithCustomDataSet(
+			$account,
+			$logger,
+			$dataSet,
+			$extractor,
+			$estimator,
+			$perf,
+			$persist,
+		);
+	}
+
+	/**
+	 * Train a classifier using a custom data set.
+	 *
+	 * @param Account $account
+	 * @param LoggerInterface $logger
+	 * @param array $dataSet Training data set built by buildDataSet()
+	 * @param IExtractor $extractor Extractor used to extract the given data set
+	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
+	 * @param PerformanceLoggerTask|null $perf Optionally reuse a performance logger task
+	 * @param bool $persist Persist the trained classifier to use it for message classification
+	 *
+	 * @throws ServiceException
+	 */
+	public function trainWithCustomDataSet(
+		Account $account,
+		LoggerInterface $logger,
+		array $dataSet,
+		IExtractor $extractor,
+		?Closure $estimator,
+		?PerformanceLoggerTask $perf = null,
+		bool $persist = true,
+	): void {
+		$perf ??= $this->performanceLogger->start('importance classifier training');
+
+		if ($estimator === null) {
+			$estimator = static function () {
+				return self::createDefaultEstimator();
+			};
+		}
 
 		/**
 		 * How many of the most recent messages are excluded from training?
 		 */
 		$validationThreshold = max(
 			5,
-			(int)(count($dataSet) * 0.1)
+			(int)(count($dataSet) * 0.2)
 		);
 		$validationSet = array_slice($dataSet, 0, $validationThreshold);
 		$trainingSet = array_slice($dataSet, $validationThreshold);
-		$logger->debug('data set split into ' . count($trainingSet) . ' training and ' . count($validationSet) . ' validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
+
+		$validationSetImportantCount = 0;
+		$trainingSetImportantCount = 0;
+		foreach ($validationSet as $data) {
+			if ($data['label'] === self::LABEL_IMPORTANT) {
+				$validationSetImportantCount++;
+			}
+		}
+		foreach ($trainingSet as $data) {
+			if ($data['label'] === self::LABEL_IMPORTANT) {
+				$trainingSetImportantCount++;
+			}
+		}
+
+		$logger->debug('data set split into ' . count($trainingSet) . ' (' . self::LABEL_IMPORTANT . ': ' . $trainingSetImportantCount . ') training and ' . count($validationSet) . ' (' . self::LABEL_IMPORTANT . ': ' . $validationSetImportantCount . ') validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
+
 		if ($validationSet === [] || $trainingSet === []) {
 			$logger->info('not enough messages to train a classifier');
 			$perf->end();
 			return;
 		}
-		$validationEstimator = $this->trainClassifier($trainingSet);
+
+		/** @var Learner&Estimator&Persistable $validationEstimator */
+		$validationEstimator = $estimator();
+		$this->trainClassifier($validationEstimator, $validationSet);
 		try {
 			$classifier = $this->validateClassifier(
 				$validationEstimator,
@@ -200,14 +325,28 @@ class ImportanceClassifier {
 		}
 		$perf->step('train and validate classifier with training and validation sets');
 
-		$estimator = $this->trainClassifier($dataSet);
-		$perf->step('train classifier with full data set');
+		if ($persist) {
+			/** @var Learner&Estimator&Persistable $persistedEstimator */
+			$persistedEstimator = $estimator();
+			$this->trainClassifier($persistedEstimator, $dataSet);
+			$perf->step('train classifier with full data set');
 
-		$classifier->setAccountId($account->getId());
-		$classifier->setDuration($perf->end());
-		$this->persistenceService->persist($classifier, $estimator);
-		$logger->debug("classifier {$classifier->getId()} persisted");
+			// Extract persisted transformers of the subject extractor.
+			// Is a bit hacky but a full abstraction would be overkill.
+			/** @var (Transformer&Persistable)[] $transformers */
+			$transformers = [];
+			if ($extractor instanceof NewCompositeExtractor) {
+				$transformers[] = $extractor->getSubjectExtractor()->getWordCountVectorizer();
+				$transformers[] = $extractor->getSubjectExtractor()->getTfidf();
+			}
+
+			$classifier->setAccountId($account->getId());
+			$classifier->setDuration($perf->end());
+			$this->persistenceService->persist($classifier, $persistedEstimator, $transformers);
+			$logger->debug("classifier {$classifier->getId()} persisted");
+		}
 	}
+
 
 	/**
 	 * @param Account $account
@@ -216,12 +355,16 @@ class ImportanceClassifier {
 	 */
 	private function getIncomingMailboxes(Account $account): array {
 		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
+			return $mailbox->isInbox();
+
+			/*
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
 					return false;
 				}
 			}
 			return true;
+			*/
 		});
 	}
 
@@ -259,17 +402,21 @@ class ImportanceClassifier {
 	private function getFeaturesAndImportance(Account $account,
 		array $incomingMailboxes,
 		array $outgoingMailboxes,
-		array $messages): array {
-		$this->extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
+		array $messages,
+		IExtractor $extractor): array {
+		$extractor->prepare($account, $incomingMailboxes, $outgoingMailboxes, $messages);
 
-		return array_map(function (Message $message) {
+		return array_map(static function (Message $message) use ($extractor) {
 			$sender = $message->getFrom()->first();
 			if ($sender === null) {
 				throw new RuntimeException('This should not happen');
 			}
 
+			$features = $extractor->extract($message);
+			//var_dump($features);
+
 			return [
-				'features' => $this->extractor->extract($message),
+				'features' => $features,
 				'label' => $message->getFlagImportant() ? self::LABEL_IMPORTANT : self::LABEL_NOT_IMPORTANT,
 				'sender' => $sender->getEmail(),
 			];
@@ -279,21 +426,25 @@ class ImportanceClassifier {
 	/**
 	 * @param Account $account
 	 * @param Message[] $messages
+	 * @param LoggerInterface $logger
 	 *
 	 * @return bool[]
+	 *
 	 * @throws ServiceException
 	 */
-	public function classifyImportance(Account $account, array $messages): array {
-		$estimator = null;
+	public function classifyImportance(Account $account,
+		array $messages,
+		LoggerInterface $logger): array {
+		$pipeline = null;
 		try {
-			$estimator = $this->persistenceService->loadLatest($account);
+			$pipeline = $this->persistenceService->loadLatest($account);
 		} catch (ServiceException $e) {
-			$this->logger->warning('Failed to load importance classifier: ' . $e->getMessage(), [
+			$logger->warning('Failed to load persisted estimator and extractor: ' . $e->getMessage(), [
 				'exception' => $e,
 			]);
 		}
 
-		if ($estimator === null) {
+		if ($pipeline === null) {
 			$predictions = $this->rulesClassifier->classifyImportance(
 				$account,
 				$this->getIncomingMailboxes($account),
@@ -309,13 +460,15 @@ class ImportanceClassifier {
 				}, $messages)
 			);
 		}
-		$messagesWithSender = array_filter($messages, [$this, 'filterMessageHasSenderEmail']);
 
+		[$estimator, $extractor] = $pipeline;
+		$messagesWithSender = array_filter($messages, [$this, 'filterMessageHasSenderEmail']);
 		$features = $this->getFeaturesAndImportance(
 			$account,
 			$this->getIncomingMailboxes($account),
 			$this->getOutgoingMailboxes($account),
-			$messagesWithSender
+			$messagesWithSender,
+			$extractor,
 		);
 		$predictions = $estimator->predict(
 			Unlabeled::build(array_column($features, 'features'))
@@ -330,22 +483,20 @@ class ImportanceClassifier {
 		);
 	}
 
-	private function trainClassifier(array $trainingSet): GaussianNB {
-		$classifier = new GaussianNB();
+	private function trainClassifier(Learner $classifier, array $trainingSet): void {
 		$classifier->train(Labeled::build(
 			array_column($trainingSet, 'features'),
 			array_column($trainingSet, 'label')
 		));
-		return $classifier;
 	}
 
 	/**
 	 * @param Estimator $estimator
 	 * @param array $trainingSet
 	 * @param array $validationSet
+	 * @param LoggerInterface $logger
 	 *
 	 * @return Classifier
-	 * @throws ClassifierTrainingException
 	 */
 	private function validateClassifier(Estimator $estimator,
 		array $trainingSet,
