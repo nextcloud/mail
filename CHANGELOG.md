@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.12.10 – 2024-10-18
+### Fixed
+* Auto config DNS query
+
 ## 1.12.9 – 2022-12-06
 ### Fixed
 - Mailbox cache sync scope of current mailbox
