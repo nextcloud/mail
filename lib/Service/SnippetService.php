@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
- * SPDX-FileCopyrightText: 2016 ownCloud, Inc.
- * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service;
@@ -52,8 +51,8 @@ class SnippetService {
 	 * @param string
 	 */
 	public function findAllSharedWithMe(string $userId): array {
-		// TODO: add groupshares
-		return $this->snippetShareMapper->findAllSharedWith($userId);
+		$groups = $this->groupManager->getUserGroupIds($userId);
+		return $this->snippetShareMapper->findSharedWithMe($userId, $groups);
 	}
 	/**
 	 * @param int $snippetId
@@ -103,16 +102,13 @@ class SnippetService {
 		$snippet = $this->snippetMapper->find($snippetId, $userId);
 		$this->snippetMapper->delete($snippet);
 	}
+
 	//TODO: run owner check on controller level
-	public function share(int $snippetId, string $userId, string $shareWith): void {
+	public function share(int $snippetId, string $shareWith): void {
 
 		$sharee = $this->userManager->get($shareWith);
 		if ($sharee === null) {
 			throw new DoesNotExistException('Sharee does not exist');
-		}
-		$snippet = $this->snippetMapper->find($snippetId, $userId);
-		if ($snippet === null) {
-			throw new DoesNotExistException('Snippet does not exist');
 		}
 		if ($this->snippetShareMapper->shareExists($snippetId, $shareWith)) {
 			throw new NotPermittedException('Share already exists');
@@ -124,21 +120,12 @@ class SnippetService {
 		$this->snippetShareMapper->insert($share);
 	}
 
-	//TODO: run owner check on controller level
-
-	public function unshare(int $snippetId, string $shareWith): void {
-		$share = $this->snippetShareMapper->find($snippetId, $shareWith);
-		$this->snippetShareMapper->delete($share);
-	}
-
-	//TODO: run owner check on controller level
-	public function shareWithGroup(int $snippetId, string $userId, string $groupId): void {
-		$snippet = $this->snippetMapper->find($snippetId, $userId);
-		if ($snippet === null) {
-			throw new DoesNotExistException('Snippet does not exist');
-		}
+	public function shareWithGroup(int $snippetId, string $groupId): void {
 		if (!$this->groupManager->groupExists($groupId)) {
 			throw new DoesNotExistException('Group does not exist');
+		}
+		if ($this->snippetShareMapper->shareExists($snippetId, $groupId)) {
+			throw new NotPermittedException('Share already exists');
 		}
 		$share = new SnippetShare();
 		$share->setShareWith($groupId);
@@ -147,6 +134,10 @@ class SnippetService {
 		$this->snippetShareMapper->insert($share);
 	}
 
+	public function unshare(int $snippetId, string $shareWith): void {
+		$share = $this->snippetShareMapper->find($snippetId, $shareWith);
+		$this->snippetShareMapper->delete($share);
+	}
 
 
 }
