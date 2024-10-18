@@ -78,6 +78,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		snippets: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	data() {
 		const plugins = [

@@ -243,6 +243,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply || !isFirstOpen"
 				:bus="bus"
+				:snippets="snippets"
 				@input="onEditorInput"
 				@ready="onEditorReady"
 				@mention="handleMention"
@@ -889,6 +890,11 @@ export default {
 
 			return missingCertificates
 		},
+
+		snippets() {
+			return this.$store.getters.getSharedSnippets.map(snippet => ({ title: snippet.title, content: snippet.content }))
+				.concat(this.$store.getters.getMySnippets.map(snippet => ({ title: snippet.title, content: snippet.content })))
+		},
 	},
 	watch: {
 		'$route.params.threadId'() {
@@ -986,6 +992,10 @@ export default {
 		// Set custom date and time picker value if initialized with custom send at value
 		if (this.sendAt && this.isSendAtCustom) {
 			this.selectedDate = new Date(this.sendAt)
+		}
+		if (this.snippets.length === 0) {
+			this.$store.dispatch('fetchSharedSnippets')
+			this.$store.dispatch('fetchMySnippets')
 		}
 	},
 	beforeDestroy() {

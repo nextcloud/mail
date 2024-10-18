@@ -82,7 +82,7 @@ class SnippetShareMapper extends QBMapper {
 	 *
 	 * @return SnippetShare[]
 	 */
-	public function findSnippetShares(string $owner, string $snippetId): array {
+	public function findSnippetShares(string $owner, int $snippetId): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('sshare.*')
 			->from($this->getTableName(), 'sshare')
@@ -90,7 +90,7 @@ class SnippetShareMapper extends QBMapper {
 				$qb->expr()->eq('s.owner', $qb->createNamedParameter($owner, IQueryBuilder::PARAM_STR))
 			)
 			->andWhere(
-				$qb->expr()->eq('sshare.snippet_id', $qb->createNamedParameter($snippetId, IQueryBuilder::PARAM_STR))
+				$qb->expr()->eq('sshare.snippet_id', $qb->createNamedParameter($snippetId, IQueryBuilder::PARAM_INT))
 			);
 
 		return $this->findEntities($qb);

@@ -11,7 +11,7 @@
 			{{ snippet.preview }}
 		</p>
 
-		<NcSelect v-model="snippet.sharedWith"
+		<NcSelect v-if="!shared"
 			class="snippet-list-item__shares"
 			:options="['hamzamahjoubi', 'user1', 'user2']"
 			@change="shareSnippet(snippet.id, snippet.sharedWith)" />
@@ -37,6 +37,7 @@
 
 <script>
 import { NcActions, NcActionButton, NcSelect, NcDialog, NcTextArea, NcInputField } from '@nextcloud/vue'
+import { getShares } from '../../service/SnippetService.js'
 import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
 import IconCheck from '@mdi/svg/svg/check.svg?raw'
 
@@ -51,16 +52,19 @@ export default {
 		NcInputField,
 	},
 	props: {
+		snippet: {
+			type: Object,
+			required: true,
+		},
+		shared: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
-			snippet: { // snippet is not defined
-				id: 1,
-				title: 'This is a title',
-				preview: 'This is a preview',
-				shared: false,
-				sharedWith: 'hamzamahjoubi',
-			},
+			shares: null,
+			localSnippet: Object.assign({}, this.snippet),
 			editModalOpen: false,
 			buttons: [
 				{
@@ -72,12 +76,15 @@ export default {
 					label: 'Ok',
 					type: 'primary',
 					icon: IconCheck,
-					callback: () => { console.log('Pressed "Ok"') },
+					callback: () => { this.$store.dispatch('patchSnippet', this.localSnippet) },
 				},
 			],
 		}
 	},
-	mounted() {
+	async mounted() {
+		if (!this.shared) {
+			this.shares = await getShares()
+		}
 	},
 	updated() {
 	},
