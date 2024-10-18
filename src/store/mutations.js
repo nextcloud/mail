@@ -519,4 +519,24 @@ export default {
 	showSettingsForAccount(state, accountId) {
 		state.showAccountSettings = accountId
 	},
+	setMySnippets(state, snippets) {
+		state.snippets = snippets
+	},
+	setSharedSnippets(state, snippets) {
+		state.sharedSnippets = snippets
+	},
+	addSnippet(state, snippet) {
+		state.snippets.push(snippet)
+	},
+	deleteSnippet(state, snippetId) {
+		const index = state.snippets.findIndex(snippet => snippet.id === snippetId)
+		state.snippets.splice(index, 1)
+	},
+	patchSnippet(state, snippet) {
+		const index = state.snippets.findIndex(s => s.id === snippet.id)
+		if (index !== -1) {
+			state.snippets.splice(index, 1, snippet)
+		}
+	},
+
 }
