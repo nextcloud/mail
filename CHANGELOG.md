@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.11.9 – 2024-10-18
+### Fixed
+* Disable buggy MX autoconfig
+
 ## 1.11.8 – 2022-12-06
 ### Fixed
 - Missing aliases for new accounts
