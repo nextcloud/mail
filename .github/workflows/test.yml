@@ -13,12 +13,12 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'stable21', 'stable22']
+        nextcloud-versions: ['stable20', 'stable21', 'stable22', 'stable23']
         include:
             - php-versions: 7.4
-              nextcloud-versions: master
+              nextcloud-versions: stable24
             - php-versions: 8.0
-              nextcloud-versions: master
+              nextcloud-versions: stable24
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
@@ -52,6 +52,7 @@ jobs:
       uses: codecov/codecov-action@v2.1.0
       if: ${{ always() && matrix.nextcloud-versions == 'master' }}
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
         flags: unittests
         fail_ci_if_error: true
@@ -61,7 +62,7 @@ jobs:
       strategy:
           matrix:
               php-versions: [7.4, 8.0]
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['stable24']
               db: ['sqlite', 'mysql', 'pgsql']
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
@@ -91,7 +92,7 @@ jobs:
                   --health-timeout=5s
                   --health-retries=3
           postgres-service:
-              image: postgres
+              image: postgres:14
               env:
                   POSTGRES_USER: nextcloud
                   POSTGRES_DB: nextcloud
@@ -143,6 +144,7 @@ jobs:
             uses: codecov/codecov-action@v2.1.0
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
+              token: ${{ secrets.CODECOV_TOKEN }}
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
               flags: integrationtests
               fail_ci_if_error: true
