@@ -19,10 +19,6 @@ jobs:
               nextcloud-versions: stable24
             - php-versions: 8.0
               nextcloud-versions: stable24
-            - php-versions: 7.4
-              nextcloud-versions: master
-            - php-versions: 8.0
-              nextcloud-versions: master
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
@@ -56,6 +52,7 @@ jobs:
       uses: codecov/codecov-action@v3.0.0
       if: ${{ always() && matrix.nextcloud-versions == 'master' }}
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: ./nextcloud/apps/mail/tests/clover.unit.xml
         flags: unittests
         fail_ci_if_error: true
@@ -95,7 +92,7 @@ jobs:
                   --health-timeout=5s
                   --health-retries=3
           postgres-service:
-              image: postgres
+              image: postgres:14
               env:
                   POSTGRES_USER: nextcloud
                   POSTGRES_DB: nextcloud
@@ -156,6 +153,7 @@ jobs:
             uses: codecov/codecov-action@v3.0.0
             if: ${{ always() && matrix.db == 'mysql' }}
             with:
+              token: ${{ secrets.CODECOV_TOKEN }}
               file: ./nextcloud/apps/mail/tests/clover.integration.xml
               flags: integrationtests
               fail_ci_if_error: true
