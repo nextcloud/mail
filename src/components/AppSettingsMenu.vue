@@ -291,6 +291,12 @@
 					</div>
 				</dl>
 			</NcAppSettingsSection>
+			<NcAppSettingsSection id="snippets" :name="t('mail', 'Snippets')">
+				<h6>{{ t('mail','My snippets') }}</h6>
+				<ListItem />
+				<h6>{{ t('mail','Shared with me') }}</h6>
+				<ListItem />
+			</NcAppSettingsSection>
 		</NcAppSettingsDialog>
 	</div>
 </template>
@@ -313,6 +319,7 @@ import TrustedSenders from './TrustedSenders.vue'
 import InternalAddress from './InternalAddress.vue'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile.js'
 import { mapGetters } from 'vuex'
+import ListItem from './snippets/ListItem.vue'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -331,6 +338,7 @@ export default {
 		CompactMode,
 		VerticalSplit,
 		HorizontalSplit,
+		ListItem,
 	},
 	mixins: [isMobile],
 	props: {
