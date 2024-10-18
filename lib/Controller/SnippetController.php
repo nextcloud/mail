@@ -15,6 +15,7 @@ use OCA\Mail\Http\JsonResponse;
 use OCA\Mail\Http\TrapError;
 use OCA\Mail\Service\SnippetService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IRequest;
@@ -96,7 +97,24 @@ class SnippetController extends Controller {
 		return JsonResponse::success($snippet, Http::STATUS_OK);
 	}
 
+	public function delete($snippetId): JsonResponse {
+		try {
+			$this->snippetService->delete($snippetId, $this->uid);
+			return JsonResponse::success();
+		} catch (DoesNotExistException $e) {
+			return JsonResponse::fail('Snippet not found', Http::STATUS_NOT_FOUND);
+		}
+	}
 
+	/**
+	 * @NoAdminRequired
+	 * @param int $snippetId
+	 * @param string $shareWith
+	 * @param string $type
+	 *
+	 * @return JsonResponse
+	 */
+	#[TrapError]
 	public function share(int $snippetId, string $shareWith, string $type): JsonResponse {
 		$snippet = $this->snippetService->find($snippetId, $this->uid);
 
@@ -115,6 +133,26 @@ class SnippetController extends Controller {
 				return JsonResponse::fail('Invalid share type', Http::STATUS_BAD_REQUEST);
 		}
 
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @param int $snippetId
+	 * @param string $shareWith
+	 *
+	 * @return JsonResponse
+	 */
+	#[TrapError]
+	public function deleteShare(int $snippetId, string $shareWith): JsonResponse {
+		$snippet = $this->snippetService->find($snippetId, $this->uid);
+
+		if ($snippet === null) {
+			return JsonResponse::error('Snippet not found', Http::STATUS_NOT_FOUND);
+		}
+
+		$this->snippetService->unshare($snippetId, $shareWith);
+
+		return JsonResponse::success();
 	}
 
 }

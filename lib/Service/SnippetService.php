@@ -49,10 +49,11 @@ class SnippetService {
 
 	/**
 	 * @param string
+	 * @return Snippet[]
 	 */
 	public function findAllSharedWithMe(string $userId): array {
 		$groups = $this->groupManager->getUserGroupIds($userId);
-		return $this->snippetShareMapper->findSharedWithMe($userId, $groups);
+		return $this->snippetMapper->findSharedWithMe($userId, $groups);
 	}
 	/**
 	 * @param int $snippetId
@@ -103,7 +104,13 @@ class SnippetService {
 		$this->snippetMapper->delete($snippet);
 	}
 
-	//TODO: run owner check on controller level
+
+	/**
+	 * @param int $snippetId
+	 * @param string $shareWith
+	 * @throws DoesNotExistException
+	 * @throws NotPermittedException
+	 */
 	public function share(int $snippetId, string $shareWith): void {
 
 		$sharee = $this->userManager->get($shareWith);
@@ -120,6 +127,12 @@ class SnippetService {
 		$this->snippetShareMapper->insert($share);
 	}
 
+	/**
+	 * @param int $snippetId
+	 * @param string $groupId
+	 * @throws DoesNotExistException
+	 * @throws NotPermittedException
+	 */
 	public function shareWithGroup(int $snippetId, string $groupId): void {
 		if (!$this->groupManager->groupExists($groupId)) {
 			throw new DoesNotExistException('Group does not exist');
@@ -134,6 +147,11 @@ class SnippetService {
 		$this->snippetShareMapper->insert($share);
 	}
 
+	/**
+	 * @param int $snippetId
+	 * @param string $shareWith
+	 * @throws DoesNotExistException
+	 */
 	public function unshare(int $snippetId, string $shareWith): void {
 		$share = $this->snippetShareMapper->find($snippetId, $shareWith);
 		$this->snippetShareMapper->delete($share);
