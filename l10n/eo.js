@@ -151,6 +151,8 @@ OC.L10N.register(
     "Train" : "Trajno",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} de {depStation} al {arrStation}",
     "Train from {depStation} to {arrStation}" : "Trajno de {depStation} al {arrStation}",
+    "Actions" : "Agoj",
+    "Priority" : "Prioritato",
     "Mail app" : "Retpoŝtprogrameto",
     "Reset" : "Restarigi",
     "Client ID" : "Klientidentigilo",

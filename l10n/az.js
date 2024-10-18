@@ -51,6 +51,8 @@ OC.L10N.register(
     "Date" : "Date",
     "Tags" : "Işarələr",
     "Not found" : "Tapılmadı",
+    "Actions" : "İşlər",
+    "Priority" : "Prioritet",
     "Reset" : "Sıfırla",
     "Client ID" : "Müştəri İD-s",
     "Client secret" : "Müxtəri sirri",

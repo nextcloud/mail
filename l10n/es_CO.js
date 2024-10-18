@@ -95,6 +95,7 @@ OC.L10N.register(
     "Custom" : "Personalizado",
     "Add tag" : "Agregar etiqueta",
     "Actions" : "Acciones",
+    "Priority" : "Prioridad",
     "Reset" : "Reiniciar",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",

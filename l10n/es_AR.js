@@ -93,6 +93,8 @@ OC.L10N.register(
     "Tag already exists" : "La etiqueta ya existe",
     "Not found" : "No encontrado",
     "Operator" : "Operador",
+    "Actions" : "Acciones",
+    "Priority" : "Prioridad",
     "Reset" : "Restablecer",
     "Client ID" : "ID del cliente",
     "Client secret" : "Secreto del cliente",
