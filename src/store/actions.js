@@ -104,6 +104,7 @@ import * as SmimeCertificateService from '../service/SmimeCertificateService.js'
 import useOutboxStore from './outboxStore.js'
 import * as FollowUpService from '../service/FollowUpService.js'
 import { addInternalAddress, removeInternalAddress } from '../service/InternalAddressService.js'
+import { createSnippet, fetchMySnippets, fetchSharedSnippets, deleteSnippet, updateSnippet } from '../service/SnippetService.js'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -1542,4 +1543,39 @@ export default {
 			await dispatch('clearFollowUpReminder', { envelope })
 		}
 	},
+
+	async fetchMySnippets({ commit }) {
+		return handleHttpAuthErrors(commit, async () => {
+			const snippets = await fetchMySnippets()
+			commit('setMySnippets', snippets)
+		})
+	},
+
+	async fetchSharedSnippets({ commit }) {
+		return handleHttpAuthErrors(commit, async () => {
+			const snippets = await fetchSharedSnippets()
+			commit('setSharedSnippets', snippets)
+		})
+	},
+
+	async createSnippet({ commit }, { name, content }) {
+		return handleHttpAuthErrors(commit, async () => {
+			const snippet = await createSnippet(name, content)
+			commit('addSnippet', snippet)
+		})
+	},
+	async deleteSnippet({ commit }, snippet) {
+		return handleHttpAuthErrors(commit, async () => {
+			await deleteSnippet(snippet.id)
+			commit('deleteSnippet', snippet)
+		})
+	},
+
+	async patchSnippet({ commit }, snippet) {
+		return handleHttpAuthErrors(commit, async () => {
+			await updateSnippet(snippet)
+			commit('patchSnippet', snippet)
+		})
+	},
+
 }
