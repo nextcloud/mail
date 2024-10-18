@@ -315,6 +315,8 @@ OC.L10N.register(
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} fra {depStation} til {arrStation}",
     "Train from {depStation} to {arrStation}" : "Tog fra {depStation} til {arrStation}",
     "Operator" : "Operatør",
+    "Actions" : "Handlinger",
+    "Priority" : "Prioritet",
     "Reset" : "Nulstil",
     "Client ID" : "Klient-ID",
     "Client secret" : "Klient hemmelighed",

@@ -42,6 +42,7 @@ OC.L10N.register(
     "Close" : "বন্ধ",
     "Date" : "Date",
     "Tags" : "ট্যাগ",
+    "Actions" : "পদক্ষেপসমূহ",
     "Reset" : "পূণঃনির্ধানণ",
     "Client ID" : "ক্লায়েন্ট পরিচিতি",
     "User" : "User",

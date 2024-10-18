@@ -94,6 +94,7 @@ OC.L10N.register(
     "Not found" : "Heb ei ganfod",
     "(organizer)" : "(trefnydd)",
     "Untitled event" : "Digwyddiad di-deitl",
+    "Actions" : "Gweithredoedd",
     "User" : "User",
     "Certificate" : "Tystysgrif",
     "Connect your mail account" : "Cysylltu â'r cyfrif e-bost",
