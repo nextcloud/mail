@@ -3,162 +3,78 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2020-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\Mail\Service\Classification;
 
-use OCA\DAV\Connector\Sabre\File;
 use OCA\Mail\Account;
-use OCA\Mail\AppInfo\Application;
-use OCA\Mail\Db\Classifier;
-use OCA\Mail\Db\ClassifierMapper;
-use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\ClassifierPipeline;
+use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\SubjectExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
-use OCP\App\IAppManager;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\Files;
-use OCP\Files\IAppData;
-use OCP\Files\NotFoundException;
-use OCP\Files\NotPermittedException;
+use OCP\ICache;
 use OCP\ICacheFactory;
-use OCP\ITempManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
 use Rubix\ML\PersistentModel;
-use Rubix\ML\Persisters\Filesystem;
 use Rubix\ML\Serializers\RBX;
 use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
-use function file_get_contents;
-use function file_put_contents;
 use function get_class;
-use function strlen;
 
 class PersistenceService {
-	private const ADD_DATA_FOLDER = 'classifiers';
+	// Increment the version when changing the classifier or transformer pipeline
+	public const VERSION = 1;
 
-	/** @var ClassifierMapper */
-	private $mapper;
-
-	/** @var IAppData */
-	private $appData;
-
-	/** @var ITempManager */
-	private $tempManager;
-
-	/** @var ITimeFactory */
-	private $timeFactory;
-
-	/** @var IAppManager */
-	private $appManager;
-
-	/** @var ICacheFactory */
-	private $cacheFactory;
-
-	/** @var LoggerInterface */
-	private $logger;
-
-	/** @var MailAccountMapper */
-	private $accountMapper;
-
-	private ContainerInterface $container;
-
-	public function __construct(ClassifierMapper $mapper,
-		IAppData $appData,
-		ITempManager $tempManager,
-		ITimeFactory $timeFactory,
-		IAppManager $appManager,
-		ICacheFactory $cacheFactory,
-		LoggerInterface $logger,
-		MailAccountMapper $accountMapper,
-		ContainerInterface $container) {
-		$this->mapper = $mapper;
-		$this->appData = $appData;
-		$this->tempManager = $tempManager;
-		$this->timeFactory = $timeFactory;
-		$this->appManager = $appManager;
-		$this->cacheFactory = $cacheFactory;
-		$this->logger = $logger;
-		$this->accountMapper = $accountMapper;
-		$this->container = $container;
+	public function __construct(
+		private readonly ICacheFactory $cacheFactory,
+		private readonly ContainerInterface $container,
+	) {
 	}
 
 	/**
-	 * Persist the classifier data to the database, the estimator and its transformers to storage
+	 * Persist classifier, estimator and its transformers to the memory cache.
 	 *
-	 * @param Classifier $classifier
 	 * @param Learner&Persistable $estimator
-	 * @param (Transformer&Persistable)[] $transformers
 	 *
-	 * @throws ServiceException
+	 * @throws ServiceException If any serialization fails
 	 */
-	public function persist(Classifier $classifier,
+	public function persist(
+		Account $account,
 		Learner $estimator,
-		array $transformers): void {
-		/*
-		 * First we have to insert the row to get the unique ID, but disable
-		 * it until the model is persisted as well. Otherwise another process
-		 * might try to load the model in the meantime and run into an error
-		 * due to the missing data in app data.
-		 */
-		$classifier->setAppVersion($this->appManager->getAppVersion(Application::APP_ID));
-		$classifier->setEstimator(get_class($estimator));
-		$classifier->setActive(false);
-		$classifier->setCreatedAt($this->timeFactory->getTime());
-		$this->mapper->insert($classifier);
+		CompositeExtractor $extractor,
+	): void {
+		$serializedData = [];
 
 		/*
-		 * Then we serialize the estimator into a temporary file
+		 * First we serialize the estimator
 		 */
-		$tmpPath = $this->tempManager->getTemporaryFile();
 		try {
-			$model = new PersistentModel($estimator, new Filesystem($tmpPath));
+			$persister = new RubixMemoryPersister();
+			$model = new PersistentModel($estimator, $persister);
 			$model->save();
-			$serializedClassifier = file_get_contents($tmpPath);
-			$this->logger->debug('Serialized classifier written to tmp file (' . strlen($serializedClassifier) . 'B');
+			$serializedData[] = $persister->getData();
 		} catch (RuntimeException $e) {
 			throw new ServiceException('Could not serialize classifier: ' . $e->getMessage(), 0, $e);
 		}
 
 		/*
-		 * Then we store the serialized model to app data
+		 * Then we serialize the transformer pipeline
 		 */
-		try {
-			try {
-				$folder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
-				$this->logger->debug('Using existing folder for the serialized classifier');
-			} catch (NotFoundException $e) {
-				$folder = $this->appData->newFolder(self::ADD_DATA_FOLDER);
-				$this->logger->debug('New folder created for serialized classifiers');
-			}
-			$file = $folder->newFile((string)$classifier->getId());
-			$file->putContent($serializedClassifier);
-			$this->logger->debug('Serialized classifier written to app data');
-		} catch (NotPermittedException|NotFoundException $e) {
-			throw new ServiceException('Could not create classifiers directory: ' . $e->getMessage(), 0, $e);
-		}
-
-		/*
-		 * Then we serialize the transformer pipeline to temporary files
-		 */
-		$transformerIndex = 0;
+		$transfomers = [
+			$extractor->getSubjectExtractor()->getWordCountVectorizer(),
+			$extractor->getSubjectExtractor()->getTfIdf(),
+		];
 		$serializer = new RBX();
-		foreach ($transformers as $transformer) {
-			$tmpPath = $this->tempManager->getTemporaryFile();
+		foreach ($transfomers as $transformer) {
 			try {
+				$persister = new RubixMemoryPersister();
 				/**
 				 * This is how to serialize a transformer according to the official docs.
 				 * PersistentModel can only be used on Learners which transformers don't implement.
@@ -167,316 +83,145 @@ class PersistenceService {
 				 *
 				 * @psalm-suppress InternalMethod
 				 */
-				$serializer->serialize($transformer)->saveTo(new Filesystem($tmpPath));
-				$serializedTransformer = file_get_contents($tmpPath);
-				$this->logger->debug('Serialized transformer written to tmp file (' . strlen($serializedTransformer) . 'B');
+				$serializer->serialize($transformer)->saveTo($persister);
+				$serializedData[] = $persister->getData();
 			} catch (RuntimeException $e) {
 				throw new ServiceException('Could not serialize transformer: ' . $e->getMessage(), 0, $e);
 			}
-
-			try {
-				$file = $folder->newFile("{$classifier->getId()}_t$transformerIndex");
-				$file->putContent($serializedTransformer);
-				$this->logger->debug("Serialized transformer $transformerIndex written to app data");
-			} catch (NotPermittedException|NotFoundException $e) {
-				throw new ServiceException(
-					"Failed to persist transformer $transformerIndex: " . $e->getMessage(),
-					0,
-					$e
-				);
-			}
-
-			$transformerIndex++;
 		}
 
-		/*
-		 * Now we set the model active so it can be used by the next request
-		 */
-		$classifier->setActive(true);
-		$this->mapper->update($classifier);
+		$this->setCached((string)$account->getId(), $serializedData);
 	}
 
 	/**
-	 * @param Account $account
+	 * Load the latest estimator and its transformers.
 	 *
-	 * @return ?array [Estimator, IExtractor]
-	 *
-	 * @throws ServiceException
+	 * @throws ServiceException If any deserialization fails
 	 */
-	public function loadLatest(Account $account): ?array {
-		try {
-			$latestModel = $this->mapper->findLatest($account->getId());
-		} catch (DoesNotExistException $e) {
+	public function loadLatest(Account $account): ?ClassifierPipeline {
+		$cached = $this->getCached((string)$account->getId());
+		if ($cached == null) {
 			return null;
 		}
 
-		$pipeline = $this->load($latestModel);
+		$serializedModel = $cached[0];
+		$serializedTransformers = array_slice($cached, 1);
 		try {
-			$extractor = $this->loadExtractor($latestModel, $pipeline);
-		} catch (ContainerExceptionInterface $e) {
+			$estimator = PersistentModel::load(new RubixMemoryPersister($serializedModel));
+		} catch (RuntimeException $e) {
 			throw new ServiceException(
-				"Failed to load extractor: {$e->getMessage()}",
+				'Could not deserialize persisted classifier: ' . $e->getMessage(),
 				0,
 				$e,
 			);
 		}
 
-		return [$pipeline->getEstimator(), $extractor];
-	}
-
-	/**
-	 * Load an estimator and its transformers of a classifier from storage
-	 *
-	 * @param Classifier $classifier
-	 * @return ClassifierPipeline
-	 *
-	 * @throws ServiceException
-	 */
-	public function load(Classifier $classifier): ClassifierPipeline {
-		$transformerCount = 0;
-		$appVersion = $this->parseAppVersion($classifier->getAppVersion());
-		if ($appVersion[0] >= 3 && $appVersion[1] >= 2) {
-			$transformerCount = 2;
-		}
-
-		$id = $classifier->getId();
-		$cached = $this->getCached($classifier->getId(), $transformerCount);
-		if ($cached !== null) {
-			$this->logger->debug("Using cached serialized classifier $id");
-			$serialized = $cached[0];
-			$serializedTransformers = array_slice($cached, 1);
-		} else {
-			$this->logger->debug('Loading serialized classifier from app data');
+		$serializer = new RBX();
+		$transformers = array_map(function (string $serializedTransformer) use ($serializer) {
 			try {
-				$modelsFolder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
-				$modelFile = $modelsFolder->getFile((string)$id);
-			} catch (NotFoundException $e) {
-				$this->logger->debug("Could not load classifier $id: " . $e->getMessage());
-				throw new ServiceException("Could not load classifier $id: " . $e->getMessage(), 0, $e);
-			}
-
-			try {
-				$serialized = $modelFile->getContent();
-			} catch (NotFoundException|NotPermittedException $e) {
-				$this->logger->debug("Could not load content for model file with classifier id $id: " . $e->getMessage());
-				throw new ServiceException("Could not load content for model file with classifier id $id: " . $e->getMessage(), 0, $e);
-			}
-			$size = strlen($serialized);
-			$this->logger->debug("Serialized classifier loaded (size=$size)");
-
-			$serializedTransformers = [];
-			for ($i = 0; $i < $transformerCount; $i++) {
-				try {
-					$transformerFile = $modelsFolder->getFile("{$id}_t$i");
-				} catch (NotFoundException $e) {
-					$this->logger->debug("Could not load transformer $i of classifier $id: " . $e->getMessage());
-					throw new ServiceException("Could not load transformer $i of classifier $id: " . $e->getMessage(), 0, $e);
-				}
-
-				try {
-					$serializedTransformer = $transformerFile->getContent();
-				} catch (NotFoundException|NotPermittedException $e) {
-					$this->logger->debug("Could not load content for transformer file $i with classifier id $id: " . $e->getMessage());
-					throw new ServiceException("Could not load content for transformer file $i with classifier id $id: " . $e->getMessage(), 0, $e);
-				}
-				$size = strlen($serializedTransformer);
-				$this->logger->debug("Serialized transformer $i loaded (size=$size)");
-				$serializedTransformers[] = $serializedTransformer;
-			}
-
-			$this->cache($id, $serialized, $serializedTransformers);
-		}
-
-		$tmpPath = $this->tempManager->getTemporaryFile();
-		file_put_contents($tmpPath, $serialized);
-		try {
-			$estimator = PersistentModel::load(new Filesystem($tmpPath));
-		} catch (RuntimeException $e) {
-			throw new ServiceException("Could not deserialize persisted classifier $id: " . $e->getMessage(), 0, $e);
-		}
-
-		$transformers = array_map(function (string $serializedTransformer) use ($id) {
-			$serializer = new RBX();
-			$tmpPath = $this->tempManager->getTemporaryFile();
-			file_put_contents($tmpPath, $serializedTransformer);
-			try {
-				$persister = new Filesystem($tmpPath);
+				$persister = new RubixMemoryPersister($serializedTransformer);
 				$transformer = $persister->load()->deserializeWith($serializer);
 			} catch (RuntimeException $e) {
-				throw new ServiceException("Could not deserialize persisted transformer of classifier $id: " . $e->getMessage(), 0, $e);
+				throw new ServiceException(
+					'Could not deserialize persisted transformer of classifier: ' . $e->getMessage(),
+					0,
+					$e,
+				);
 			}
 
 			if (!($transformer instanceof Transformer)) {
-				throw new ServiceException("Transformer of classifier $id is not a transformer: Got " . $transformer::class);
+				throw new ServiceException(sprintf(
+					'Transformer is not an instance of %s: Got %s',
+					Transformer::class,
+					get_class($transformer),
+				));
 			}
 
 			return $transformer;
 		}, $serializedTransformers);
 
-		return new ClassifierPipeline($estimator, $transformers);
-	}
+		$extractor = $this->loadExtractor($transformers);
 
-	public function cleanUp(): void {
-		$threshold = $this->timeFactory->getTime() - 30 * 24 * 60 * 60;
-		$totalAccounts = $this->accountMapper->getTotal();
-		$classifiers = $this->mapper->findHistoric($threshold, $totalAccounts * 10);
-		foreach ($classifiers as $classifier) {
-			try {
-				$this->deleteModel($classifier->getId());
-				$this->mapper->delete($classifier);
-			} catch (NotPermittedException $e) {
-				// Log and continue. This is not critical
-				$this->logger->warning('Could not clean-up old classifier', [
-					'id' => $classifier->getId(),
-					'exception' => $e,
-				]);
-			}
-		}
+		return new ClassifierPipeline($estimator, $extractor, $transformers);
 	}
 
 	/**
-	 * @throws NotPermittedException
-	 */
-	private function deleteModel(int $id): void {
-		$this->logger->debug('Deleting serialized classifier from app data', [
-			'id' => $id,
-		]);
-		try {
-			$modelsFolder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
-			$modelFile = $modelsFolder->getFile((string)$id);
-			$modelFile->delete();
-		} catch (NotFoundException $e) {
-			$this->logger->debug("Classifier model $id does not exist", [
-				'exception' => $e,
-			]);
-		}
-	}
-
-	/**
-	 * Load and instantiate extractor based on a classifier's app version.
+	 * Load and instantiate extractor based on the given transformers.
 	 *
-	 * @param Classifier $classifier
-	 * @param ClassifierPipeline $pipeline
-	 * @return IExtractor
-	 *
-	 * @throws ContainerExceptionInterface
-	 * @throws ServiceException
+	 * @throws ServiceException If the transformers array contains unexpected instances or the composite extractor can't be instantiated
 	 */
-	private function loadExtractor(Classifier         $classifier,
-		ClassifierPipeline $pipeline): IExtractor {
-		$appVersion = $this->parseAppVersion($classifier->getAppVersion());
-		if ($appVersion[0] >= 3 && $appVersion[1] >= 2) {
-			return $this->loadExtractorV2($pipeline->getTransformers());
-		}
-
-		return $this->loadExtractorV1($pipeline->getTransformers());
-	}
-
-	/**
-	 * @return VanillaCompositeExtractor
-	 *
-	 * @throws ContainerExceptionInterface
-	 */
-	private function loadExtractorV1(): VanillaCompositeExtractor {
-		return $this->container->get(VanillaCompositeExtractor::class);
-	}
-
-	/**
-	 * @param Transformer[] $transformers
-	 * @return NewCompositeExtractor
-	 *
-	 * @throws ContainerExceptionInterface
-	 * @throws ServiceException
-	 */
-	private function loadExtractorV2(array $transformers): NewCompositeExtractor {
+	private function loadExtractor(array $transformers): IExtractor {
 		$wordCountVectorizer = $transformers[0];
 		if (!($wordCountVectorizer instanceof WordCountVectorizer)) {
-			throw new ServiceException('Failed to load persisted transformer: Expected ' . WordCountVectorizer::class . ', got' . $wordCountVectorizer::class);
+			throw new ServiceException(sprintf(
+				'Failed to load persisted transformer: Expected %s, got %s',
+				WordCountVectorizer::class,
+				get_class($wordCountVectorizer),
+			));
 		}
+
 		$tfidfTransformer = $transformers[1];
 		if (!($tfidfTransformer instanceof TfIdfTransformer)) {
-			throw new ServiceException('Failed to load persisted transformer: Expected ' . TfIdfTransformer::class . ', got' . $tfidfTransformer::class);
+			throw new ServiceException(sprintf(
+				'Failed to load persisted transformer: Expected %s, got %s',
+				TfIdfTransformer::class,
+				get_class($tfidfTransformer),
+			));
 		}
 
-		$subjectExtractor = new SubjectExtractor();
-		$subjectExtractor->setWordCountVectorizer($wordCountVectorizer);
-		$subjectExtractor->setTfidf($tfidfTransformer);
-		return new NewCompositeExtractor(
-			$this->container->get(VanillaCompositeExtractor::class),
-			$subjectExtractor,
-		);
+		try {
+			/** @var CompositeExtractor $extractor */
+			$extractor = $this->container->get(CompositeExtractor::class);
+		} catch (ContainerExceptionInterface $e) {
+			throw new ServiceException('Failed to instantiate the composite extractor', 0, $e);
+		}
+
+		$extractor->getSubjectExtractor()->setWordCountVectorizer($wordCountVectorizer);
+		$extractor->getSubjectExtractor()->setTfidf($tfidfTransformer);
+		return $extractor;
 	}
 
-	private function getCacheKey(int $id): string {
-		return "mail_classifier_$id";
-	}
+	private function getCacheInstance(): ?ICache {
+		if (!$this->cacheFactory->isAvailable()) {
+			return null;
+		}
 
-	private function getTransformerCacheKey(int $id, int $index): string {
-		return $this->getCacheKey($id) . "_transformer_$index";
+		$version = self::VERSION;
+		return $this->cacheFactory->createDistributed("mail-classifier/v$version/");
 	}
 
 	/**
-	 * @param int $id
-	 * @param int $transformerCount
-	 *
-	 * @return (?string)[]|null Array of serialized classifier and transformers
+	 * @return string[]|null Array of serialized classifier and transformers
 	 */
-	private function getCached(int $id, int $transformerCount): ?array {
-		// FIXME: Will always return null as the cached, serialized data is always an empty string.
-		//        See my note in self::cache() for further elaboration.
-
-		if (!$this->cacheFactory->isLocalCacheAvailable()) {
-			return null;
-		}
-		$cache = $this->cacheFactory->createLocal();
-
-		$values = [];
-		$values[] = $cache->get($this->getCacheKey($id));
-		for ($i = 0; $i < $transformerCount; $i++) {
-			$values[] = $cache->get($this->getTransformerCacheKey($id, $i));
-		}
-
-		// Only return cached values if estimator and all transformers are available
-		if (in_array(null, $values, true)) {
+	private function getCached(string $id): ?array {
+		$cache = $this->getCacheInstance();
+		if ($cache === null) {
 			return null;
 		}
 
-		return $values;
+		$json = $cache->get($id);
+		if (!is_string($json)) {
+			return null;
+		}
+
+		$serializedData = json_decode($json);
+		return array_map(base64_decode(...), $serializedData);
 	}
 
-	private function cache(int $id, string $serialized, array $serializedTransformers): void {
-		// FIXME: This is broken as some cache implementations will run the provided value through
-		//        json_encode which drops non-utf8 strings. The serialized string contains binary
-		//        data so an empty string will be saved instead (tested on Redis).
-		//        Note: JSON requires strings to be valid utf8 (as per its spec).
-
-		// IDEA: Implement a method ICache::setRaw() that forwards a raw/binary string as is to the
-		//       underlying cache backend.
-
-		if (!$this->cacheFactory->isLocalCacheAvailable()) {
+	/**
+	 * @param string[] $serializedData Array of serialized classifier and transformers
+	 */
+	private function setCached(string $id, array $serializedData): void {
+		$cache = $this->getCacheInstance();
+		if ($cache === null) {
 			return;
 		}
-		$cache = $this->cacheFactory->createLocal();
-		$cache->set($this->getCacheKey($id), $serialized);
 
-		$transformerIndex = 0;
-		foreach ($serializedTransformers as $transformer) {
-			$cache->set($this->getTransformerCacheKey($id, $transformerIndex), $transformer);
-			$transformerIndex++;
-		}
-	}
+		// Serialized data contains binary, non-utf8 data so we encode it as base64 first
+		$encodedData = array_map(base64_encode(...), $serializedData);
+		$json = json_encode($encodedData, JSON_THROW_ON_ERROR);
 
-	/**
-	 * Parse minor and major part of the given semver string.
-	 *
-	 * @return int[]
-	 */
-	private function parseAppVersion(string $version): array {
-		$parts = explode('.', $version);
-		if (count($parts) < 2) {
-			return [0, 0];
-		}
-
-		return [(int)$parts[0], (int)$parts[1]];
+		// Set a ttl of a week because a new model will be generated daily
+		$cache->set($id, $json, 3600 * 24 * 7);
 	}
 }

@@ -49,7 +49,7 @@ class SubjectExtractor implements IExtractor {
 		$this->limitFeatureSize();
 	}
 
-	public function getTfidf(): Transformer {
+	public function getTfidf(): TfIdfTransformer {
 		return $this->tfidf;
 	}
 
