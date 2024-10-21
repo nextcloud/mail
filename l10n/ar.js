@@ -89,7 +89,7 @@ OC.L10N.register(
     "A signature is added to the text of new messages and replies." : "تم إضافة توقيع إلى نص الرسائل والردود الجديدة.",
     "Writing mode" : "وضع الكتابة",
     "Preferred writing mode for new messages and replies." : "وضع الكتابة المفضل للرسائل والردود الجديدة.",
-    "Default folders" : "المُجلّدات التلقائية",
+    "Default folders" : "المجلدات التلقائية",
     "The folders to use for drafts, sent messages, deleted messages, archived messages and junk messages." : "المجلدات المستخدمة لحفظ المسودات، و الرسائل الصادرة، و الرسائل المحذوفة، و الرسائل المؤرشفة، و الرسائل العشوائية.",
     "Automatic trash deletion" : "الحذف التلقائي للمهملات",
     "Days after which messages in Trash will automatically be deleted:" : "عدد الأيام التي سيتم بعدها حذف الرسائل من سلة المهلات تلقائيّاً\"",
