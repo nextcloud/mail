@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2019-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -11,15 +11,13 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
+use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Rubix\ML\Classifiers\GaussianNB;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -110,9 +108,6 @@ class TrainAccount extends Command {
 		$shuffle = (bool)$input->getOption(self::ARGUMENT_SHUFFLE);
 		$dryRun = (bool)$input->getOption(self::ARGUMENT_DRY_RUN);
 		$force = (bool)$input->getOption(self::ARGUMENT_FORCE);
-		$old = (bool)$input->getOption(self::ARGUMENT_OLD);
-		$oldEstimator = $old || $input->getOption(self::ARGUMENT_OLD_ESTIMATOR);
-		$oldExtractor = $old || $input->getOption(self::ARGUMENT_OLD_EXTRACTOR);
 
 		try {
 			$account = $this->accountService->findById($accountId);
@@ -127,18 +122,7 @@ class TrainAccount extends Command {
 		}
 
 		/** @var IExtractor $extractor */
-		if ($oldExtractor) {
-			$extractor = $this->container->get(VanillaCompositeExtractor::class);
-		} else {
-			$extractor = $this->container->get(NewCompositeExtractor::class);
-		}
-
-		$estimator = null;
-		if ($oldEstimator) {
-			$estimator = static function () {
-				return new GaussianNB();
-			};
-		}
+		$extractor = $this->container->get(CompositeExtractor::class);
 
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
@@ -167,7 +151,7 @@ class TrainAccount extends Command {
 				$consoleLogger,
 				$dataSet,
 				$extractor,
-				$estimator,
+				null,
 				null,
 				!$dryRun
 			);
@@ -176,7 +160,7 @@ class TrainAccount extends Command {
 				$account,
 				$consoleLogger,
 				$extractor,
-				$estimator,
+				null,
 				$shuffle,
 				!$dryRun
 			);

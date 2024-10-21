@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2020-2024 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -12,16 +12,15 @@ namespace OCA\Mail\Service\Classification;
 use Closure;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
-use OCA\Mail\Db\Classifier;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClassifierTrainingException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Model\Classifier;
+use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\VanillaCompositeExtractor;
 use OCA\Mail\Support\PerformanceLogger;
 use OCA\Mail\Support\PerformanceLoggerTask;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -36,7 +35,6 @@ use Rubix\ML\Estimator;
 use Rubix\ML\Kernels\Distance\Jaccard;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
-use Rubix\ML\Transformers\Transformer;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -108,7 +106,6 @@ class ImportanceClassifier {
 	/** @var ImportanceRulesClassifier */
 	private $rulesClassifier;
 
-	private VanillaCompositeExtractor $vanillaExtractor;
 	private ContainerInterface $container;
 
 	public function __construct(MailboxMapper $mailboxMapper,
@@ -116,14 +113,12 @@ class ImportanceClassifier {
 		PersistenceService $persistenceService,
 		PerformanceLogger $performanceLogger,
 		ImportanceRulesClassifier $rulesClassifier,
-		VanillaCompositeExtractor $vanillaExtractor,
 		ContainerInterface $container) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->persistenceService = $persistenceService;
 		$this->performanceLogger = $performanceLogger;
 		$this->rulesClassifier = $rulesClassifier;
-		$this->vanillaExtractor = $vanillaExtractor;
 		$this->container = $container;
 	}
 
@@ -209,6 +204,8 @@ class ImportanceClassifier {
 	 * @param bool $shuffleDataSet Shuffle the data set before training
 	 * @param bool $persist Persist the trained classifier to use it for message classification
 	 *
+	 * @return Estimator|null The validation estimator, persisted estimator (if `$persist` === true) or null in case none was trained
+	 *
 	 * @throws ServiceException
 	 */
 	public function train(
@@ -218,12 +215,12 @@ class ImportanceClassifier {
 		?Closure $estimator = null,
 		bool $shuffleDataSet = false,
 		bool $persist = true,
-	): void {
+	): ?Estimator {
 		$perf = $this->performanceLogger->start('importance classifier training');
 
 		if ($extractor === null) {
 			try {
-				$extractor = $this->container->get(NewCompositeExtractor::class);
+				$extractor = $this->container->get(CompositeExtractor::class);
 			} catch (ContainerExceptionInterface $e) {
 				throw new ServiceException('Default extractor is not available', 0, $e);
 			}
@@ -231,10 +228,10 @@ class ImportanceClassifier {
 
 		$dataSet = $this->buildDataSet($account, $extractor, $logger, $perf, $shuffleDataSet);
 		if ($dataSet === null) {
-			return;
+			return null;
 		}
 
-		$this->trainWithCustomDataSet(
+		return $this->trainWithCustomDataSet(
 			$account,
 			$logger,
 			$dataSet,
@@ -256,24 +253,21 @@ class ImportanceClassifier {
 	 * @param PerformanceLoggerTask|null $perf Optionally reuse a performance logger task
 	 * @param bool $persist Persist the trained classifier to use it for message classification
 	 *
+	 * @return Estimator|null The validation estimator, persisted estimator (if `$persist` === true) or null in case none was trained
+	 *
 	 * @throws ServiceException
 	 */
 	public function trainWithCustomDataSet(
 		Account $account,
 		LoggerInterface $logger,
 		array $dataSet,
-		IExtractor $extractor,
+		CompositeExtractor $extractor,
 		?Closure $estimator,
 		?PerformanceLoggerTask $perf = null,
 		bool $persist = true,
-	): void {
+	): ?Estimator {
 		$perf ??= $this->performanceLogger->start('importance classifier training');
-
-		if ($estimator === null) {
-			$estimator = static function () {
-				return self::createDefaultEstimator();
-			};
-		}
+		$estimator ??= self::createDefaultEstimator(...);
 
 		/**
 		 * How many of the most recent messages are excluded from training?
@@ -303,7 +297,7 @@ class ImportanceClassifier {
 		if ($validationSet === [] || $trainingSet === []) {
 			$logger->info('not enough messages to train a classifier');
 			$perf->end();
-			return;
+			return null;
 		}
 
 		/** @var Learner&Estimator&Persistable $validationEstimator */
@@ -321,30 +315,28 @@ class ImportanceClassifier {
 				'exception' => $e,
 			]);
 			$perf->end();
-			return;
+			return null;
 		}
 		$perf->step('train and validate classifier with training and validation sets');
 
-		if ($persist) {
-			/** @var Learner&Estimator&Persistable $persistedEstimator */
-			$persistedEstimator = $estimator();
-			$this->trainClassifier($persistedEstimator, $dataSet);
-			$perf->step('train classifier with full data set');
-
-			// Extract persisted transformers of the subject extractor.
-			// Is a bit hacky but a full abstraction would be overkill.
-			/** @var (Transformer&Persistable)[] $transformers */
-			$transformers = [];
-			if ($extractor instanceof NewCompositeExtractor) {
-				$transformers[] = $extractor->getSubjectExtractor()->getWordCountVectorizer();
-				$transformers[] = $extractor->getSubjectExtractor()->getTfidf();
-			}
-
-			$classifier->setAccountId($account->getId());
-			$classifier->setDuration($perf->end());
-			$this->persistenceService->persist($classifier, $persistedEstimator, $transformers);
-			$logger->debug("classifier {$classifier->getId()} persisted");
+		if (!$persist) {
+			return $validationEstimator;
 		}
+
+		/** @var Learner&Estimator&Persistable $persistedEstimator */
+		$persistedEstimator = $estimator();
+		$this->trainClassifier($persistedEstimator, $dataSet);
+		$perf->step('train classifier with full data set');
+		$classifier->setDuration($perf->end());
+		$classifier->setAccountId($account->getId());
+		$classifier->setEstimator(get_class($persistedEstimator));
+		$classifier->setPersistenceVersion(PersistenceService::VERSION);
+
+		$this->persistenceService->persist($account, $persistedEstimator, $extractor);
+		$logger->debug("Classifier for account {$account->getId()} persisted", [
+			'classifier' => $classifier,
+		]);
+		return $persistedEstimator;
 	}
 
 

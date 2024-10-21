@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Classification\FeatureExtraction\NewCompositeExtractor;
+use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -86,8 +86,8 @@ class RunMetaEstimator extends Command {
 			return 1;
 		}
 
-		/** @var NewCompositeExtractor $extractor */
-		$extractor = $this->container->get(NewCompositeExtractor::class);
+		/** @var CompositeExtractor $extractor */
+		$extractor = $this->container->get(CompositeExtractor::class);
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
 			$output
@@ -124,8 +124,9 @@ class RunMetaEstimator extends Command {
 			return $estimator;
 		};
 
+		/** @var GridSearch $metaEstimator */
 		if ($dataSet) {
-			$this->classifier->trainWithCustomDataSet(
+			$metaEstimator = $this->classifier->trainWithCustomDataSet(
 				$account,
 				$consoleLogger,
 				$dataSet,
@@ -135,7 +136,7 @@ class RunMetaEstimator extends Command {
 				false,
 			);
 		} else {
-			$this->classifier->train(
+			$metaEstimator = $this->classifier->train(
 				$account,
 				$consoleLogger,
 				$extractor,
@@ -143,6 +144,10 @@ class RunMetaEstimator extends Command {
 				$shuffle,
 				false,
 			);
+		}
+
+		if ($metaEstimator) {
+			$output->writeln("<info>Best estimator: {$metaEstimator->base()}</info>");
 		}
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
