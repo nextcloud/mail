@@ -11,7 +11,7 @@
 		"autoloader-suffix": "Mail"
 	},
 	"require": {
-		"php": ">=8.0 <=8.3",
+		"php": ">=8.1 <=8.3",
 		"ext-openssl": "*",
 		"arthurhoaro/favicon": "^2.0.0",
 		"bamarni/composer-bin-plugin": "^1.8.2",
