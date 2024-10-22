@@ -32,7 +32,7 @@ use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Estimator;
-use Rubix\ML\Kernels\Distance\Jaccard;
+use Rubix\ML\Kernels\Distance\Manhattan;
 use Rubix\ML\Learner;
 use Rubix\ML\Persistable;
 use RuntimeException;
@@ -125,8 +125,10 @@ class ImportanceClassifier {
 	private static function createDefaultEstimator(): KNearestNeighbors {
 		// A meta estimator was trained on the same data multiple times to average out the
 		// variance of the trained model.
-		// Parameters were chosen from the best configuration across 20 runs.
-		return new KNearestNeighbors(35, true, new Jaccard());
+		// Parameters were chosen from the best configuration across 100 runs.
+		// Both variance (spread) and f1 score were considered.
+		// Note: Lower k values yield slightly higher f1 scores but show higher variances.
+		return new KNearestNeighbors(15, true, new Manhattan());
 	}
 
 	private function filterMessageHasSenderEmail(Message $message): bool {
