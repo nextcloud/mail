@@ -67,12 +67,12 @@ class PersistenceService {
 		/*
 		 * Then we serialize the transformer pipeline
 		 */
-		$transfomers = [
+		$transformers = [
 			$extractor->getSubjectExtractor()->getWordCountVectorizer(),
 			$extractor->getSubjectExtractor()->getTfIdf(),
 		];
 		$serializer = new RBX();
-		foreach ($transfomers as $transformer) {
+		foreach ($transformers as $transformer) {
 			try {
 				$persister = new RubixMemoryPersister();
 				/**

@@ -11,16 +11,11 @@ namespace OCA\Mail\Model;
 
 use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
 use Rubix\ML\Estimator;
-use Rubix\ML\Transformers\Transformer;
 
 class ClassifierPipeline {
-	/**
-	 * @param Transformer[] $transformers
-	 */
 	public function __construct(
-		private Estimator $estimator,
-		private IExtractor $extractor,
-		private array $transformers,
+		private readonly Estimator $estimator,
+		private readonly IExtractor $extractor,
 	) {
 	}
 
@@ -30,12 +25,5 @@ class ClassifierPipeline {
 
 	public function getExtractor(): IExtractor {
 		return $this->extractor;
-	}
-
-	/**
-	 * @return Transformer[]
-	 */
-	public function getTransformers(): array {
-		return $this->transformers;
 	}
 }

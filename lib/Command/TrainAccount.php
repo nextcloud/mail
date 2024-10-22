@@ -63,19 +63,6 @@ class TrainAccount extends Command {
 		$this->setName('mail:account:train');
 		$this->setDescription('Train the classifier of new messages');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
-		$this->addOption(
-			self::ARGUMENT_OLD,
-			null,
-			null,
-			'Use old vanilla composite extractor and GaussianNB estimator (implies --old-extractor and --old-estimator)'
-		);
-		$this->addOption(
-			self::ARGUMENT_OLD_EXTRACTOR,
-			null,
-			null,
-			'Use old vanilla composite extractor without text based features'
-		);
-		$this->addOption(self::ARGUMENT_OLD_ESTIMATOR, null, null, 'Use old GaussianNB estimator');
 		$this->addOption(self::ARGUMENT_SHUFFLE, null, null, 'Shuffle data set before training');
 		$this->addOption(
 			self::ARGUMENT_DRY_RUN,

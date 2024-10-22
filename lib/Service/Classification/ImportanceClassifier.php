@@ -349,16 +349,12 @@ class ImportanceClassifier {
 	 */
 	private function getIncomingMailboxes(Account $account): array {
 		return array_filter($this->mailboxMapper->findAll($account), static function (Mailbox $mailbox) {
-			return $mailbox->isInbox();
-
-			/*
 			foreach (self::EXEMPT_FROM_TRAINING as $excluded) {
 				if ($mailbox->isSpecialUse($excluded)) {
 					return false;
 				}
 			}
 			return true;
-			*/
 		});
 	}
 
@@ -407,7 +403,6 @@ class ImportanceClassifier {
 			}
 
 			$features = $extractor->extract($message);
-			//var_dump($features);
 
 			return [
 				'features' => $features,
@@ -455,16 +450,15 @@ class ImportanceClassifier {
 			);
 		}
 
-		[$estimator, $extractor] = $pipeline;
 		$messagesWithSender = array_filter($messages, [$this, 'filterMessageHasSenderEmail']);
 		$features = $this->getFeaturesAndImportance(
 			$account,
 			$this->getIncomingMailboxes($account),
 			$this->getOutgoingMailboxes($account),
 			$messagesWithSender,
-			$extractor,
+			$pipeline->getExtractor(),
 		);
-		$predictions = $estimator->predict(
+		$predictions = $pipeline->getEstimator()->predict(
 			Unlabeled::build(array_column($features, 'features'))
 		);
 		return array_combine(
