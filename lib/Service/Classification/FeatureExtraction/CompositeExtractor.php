@@ -11,8 +11,6 @@ namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
-use Rubix\ML\Transformers\TfIdfTransformer;
-use Rubix\ML\Transformers\WordCountVectorizer;
 use function OCA\Mail\array_flat_map;
 
 /**
@@ -60,4 +58,3 @@ class CompositeExtractor implements IExtractor {
 		return $this->subjectExtractor;
 	}
 }
-
