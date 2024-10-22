@@ -304,7 +304,7 @@ class ImapToDbSynchronizer {
 		Horde_Imap_Client_Base $client,
 		Account $account,
 		Mailbox $mailbox,
-		LoggerInterface  $logger): void {
+		LoggerInterface $logger): void {
 		$perf = $this->performanceLogger->startWithLogger(
 			'Initial sync ' . $account->getId() . ':' . $mailbox->getName(),
 			$logger
@@ -507,7 +507,7 @@ class ImapToDbSynchronizer {
 	public function repairSync(
 		Account $account,
 		Mailbox $mailbox,
-		LoggerInterface  $logger,
+		LoggerInterface $logger,
 	): void {
 		$this->mailboxMapper->lockForVanishedSync($mailbox);
 
