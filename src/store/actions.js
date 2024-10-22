@@ -912,7 +912,7 @@ export default {
 			})
 
 			try {
-				await setEnvelopeFlags(envelope.databaseId, {
+				await setEnvelopeFlags([envelope.databaseId], {
 					flagged: !oldState,
 				})
 			} catch (error) {
@@ -960,8 +960,8 @@ export default {
 			})
 
 			try {
-				await setEnvelopeFlags(envelope.databaseId, {
-					seen: newState,
+				await setEnvelopeFlags([envelope.databaseId], {
+					seen: newState
 				})
 			} catch (error) {
 				console.error('could not toggle message seen state', error)
@@ -997,7 +997,7 @@ export default {
 			}
 
 			try {
-				await setEnvelopeFlags(envelope.databaseId, {
+				await setEnvelopeFlags([envelope.databaseId], {
 					$junk: !oldState,
 					$notjunk: oldState,
 				})
@@ -1024,32 +1024,72 @@ export default {
 			}
 		})
 	},
-	async markEnvelopeFavoriteOrUnfavorite({ commit, getters }, { envelope, favFlag }) {
+	async markEnvelopesSeenOrUnseen({ commit, getters }, { envelopes, state }) {
 		return handleHttpAuthErrors(commit, async () => {
-			// Change immediately and switch back on error
-			const oldState = envelope.flags.flagged
-			commit('flagEnvelope', {
-				envelope,
-				flag: 'flagged',
-				value: favFlag,
-			})
-
 			try {
-				await setEnvelopeFlags(envelope.databaseId, {
-					flagged: favFlag,
+				const identifiers = []
+				envelopes.forEach((envelope) => {
+					identifiers.push(envelope.databaseId)
 				})
+				await setEnvelopeFlags(identifiers, { seen: state })
 			} catch (error) {
-				console.error('could not favorite/unfavorite message ' + envelope.uid, error)
-
-				// Revert change
+				console.error('could not mark messages seen or unseen', error)
+				throw error
+			}
+			envelopes.forEach((envelope) => {
+				commit('flagEnvelope', {
+					envelope,
+					flag: 'seen',
+					value: state,
+				})
+			})
+		})
+	},
+	async markEnvelopesJunkOrNotJunk({ commit, getters }, { envelopes, state }) {
+		return handleHttpAuthErrors(commit, async () => {
+			try {
+				const identifiers = []
+				envelopes.forEach((envelope) => {
+					identifiers.push(envelope.databaseId)
+				})
+				await setEnvelopeFlags(identifiers, { junk: state, notjunk: !state })
+			} catch (error) {
+				console.error('could not mark messages junk or not junk', error)
+				throw error
+			}
+			envelopes.forEach((envelope) => {
+				commit('flagEnvelope', {
+					envelope,
+					flag: '$junk',
+					value: state,
+				})
+				commit('flagEnvelope', {
+					envelope,
+					flag: '$notjunk',
+					value: !state,
+				})
+			})
+		})
+	},
+	async markEnvelopesFavoriteOrUnfavorite({ commit, getters }, { envelopes, state }) {
+		return handleHttpAuthErrors(commit, async () => {
+			try {
+				const identifiers = []
+				envelopes.forEach((envelope) => {
+					identifiers.push(envelope.databaseId)
+				})
+				await setEnvelopeFlags(identifiers, { flagged: state })
+			} catch (error) {
+				console.error('could not mark messages favorite or unfavorite', error)
+				throw error
+			}
+			envelopes.forEach((envelope) => {
 				commit('flagEnvelope', {
 					envelope,
 					flag: 'flagged',
-					value: oldState,
+					value: state,
 				})
-
-				throw error
-			}
+			})
 		})
 	},
 	async markEnvelopeImportantOrUnimportant({ commit, dispatch, getters }, { envelope, addTag }) {
