@@ -142,7 +142,7 @@ class PersistenceService {
 
 		$extractor = $this->loadExtractor($transformers);
 
-		return new ClassifierPipeline($estimator, $extractor, $transformers);
+		return new ClassifierPipeline($estimator, $extractor);
 	}
 
 	/**

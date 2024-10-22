@@ -131,6 +131,17 @@ class ImportanceClassifier {
 		return new KNearestNeighbors(15, true, new Manhattan());
 	}
 
+	/**
+	 * @throws ServiceException If the extractor is not available
+	 */
+	private function createExtractor(): CompositeExtractor {
+		try {
+			return $this->container->get(CompositeExtractor::class);
+		} catch (ContainerExceptionInterface $e) {
+			throw new ServiceException('Default extractor is not available', 0, $e);
+		}
+	}
+
 	private function filterMessageHasSenderEmail(Message $message): bool {
 		return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
 	}
@@ -201,7 +212,6 @@ class ImportanceClassifier {
 	 *
 	 * @param Account $account
 	 * @param LoggerInterface $logger
-	 * @param ?IExtractor $extractor The extractor to use for feature extraction. If null, the default extractor will be used.
 	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
 	 * @param bool $shuffleDataSet Shuffle the data set before training
 	 * @param bool $persist Persist the trained classifier to use it for message classification
@@ -213,21 +223,13 @@ class ImportanceClassifier {
 	public function train(
 		Account $account,
 		LoggerInterface $logger,
-		?IExtractor $extractor = null,
 		?Closure $estimator = null,
 		bool $shuffleDataSet = false,
 		bool $persist = true,
 	): ?Estimator {
 		$perf = $this->performanceLogger->start('importance classifier training');
 
-		if ($extractor === null) {
-			try {
-				$extractor = $this->container->get(CompositeExtractor::class);
-			} catch (ContainerExceptionInterface $e) {
-				throw new ServiceException('Default extractor is not available', 0, $e);
-			}
-		}
-
+		$extractor = $this->createExtractor();
 		$dataSet = $this->buildDataSet($account, $extractor, $logger, $perf, $shuffleDataSet);
 		if ($dataSet === null) {
 			return null;
@@ -250,7 +252,7 @@ class ImportanceClassifier {
 	 * @param Account $account
 	 * @param LoggerInterface $logger
 	 * @param array $dataSet Training data set built by buildDataSet()
-	 * @param IExtractor $extractor Extractor used to extract the given data set
+	 * @param CompositeExtractor $extractor Extractor used to extract the given data set
 	 * @param ?Closure $estimator Returned instance should at least implement Learner, Estimator and Persistable. If null, the default estimator will be used.
 	 * @param PerformanceLoggerTask|null $perf Optionally reuse a performance logger task
 	 * @param bool $persist Persist the trained classifier to use it for message classification
@@ -259,7 +261,7 @@ class ImportanceClassifier {
 	 *
 	 * @throws ServiceException
 	 */
-	public function trainWithCustomDataSet(
+	private function trainWithCustomDataSet(
 		Account $account,
 		LoggerInterface $logger,
 		array $dataSet,

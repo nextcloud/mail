@@ -10,12 +10,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Rubix\ML\Backends\Amp;
 use Rubix\ML\Classifiers\KNearestNeighbors;
@@ -28,25 +26,21 @@ use Rubix\ML\Kernels\Distance\Manhattan;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RunMetaEstimator extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
 	public const ARGUMENT_SHUFFLE = 'shuffle';
-	public const ARGUMENT_LOAD_DATA = 'load-data';
 
 	private AccountService $accountService;
 	private LoggerInterface $logger;
 	private ImportanceClassifier $classifier;
-	private ContainerInterface $container;
 	private IConfig $config;
 
 	public function __construct(
 		AccountService $accountService,
 		LoggerInterface $logger,
 		ImportanceClassifier $classifier,
-		ContainerInterface $container,
 		IConfig $config,
 	) {
 		parent::__construct();
@@ -54,7 +48,6 @@ class RunMetaEstimator extends Command {
 		$this->accountService = $accountService;
 		$this->logger = $logger;
 		$this->classifier = $classifier;
-		$this->container = $container;
 		$this->config = $config;
 	}
 
@@ -63,12 +56,6 @@ class RunMetaEstimator extends Command {
 		$this->setDescription('Run the meta estimator for an account');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 		$this->addOption(self::ARGUMENT_SHUFFLE, null, null, 'Shuffle data set before training');
-		$this->addOption(
-			self::ARGUMENT_LOAD_DATA,
-			null,
-			InputOption::VALUE_REQUIRED,
-			'Load training data set from a JSON file'
-		);
 	}
 
 	public function isEnabled(): bool {
@@ -86,25 +73,10 @@ class RunMetaEstimator extends Command {
 			return 1;
 		}
 
-		/** @var CompositeExtractor $extractor */
-		$extractor = $this->container->get(CompositeExtractor::class);
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
 			$output
 		);
-
-		if ($loadDataPath = $input->getOption(self::ARGUMENT_LOAD_DATA)) {
-			$json = file_get_contents($loadDataPath);
-			$dataSet = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-		} else {
-			$dataSet = $this->classifier->buildDataSet(
-				$account,
-				$extractor,
-				$consoleLogger,
-				null,
-				$shuffle,
-			);
-		}
 
 		$estimator = static function () use ($consoleLogger) {
 			$params = [
@@ -125,28 +97,15 @@ class RunMetaEstimator extends Command {
 		};
 
 		/** @var GridSearch $metaEstimator */
-		if ($dataSet) {
-			$metaEstimator = $this->classifier->trainWithCustomDataSet(
-				$account,
-				$consoleLogger,
-				$dataSet,
-				$extractor,
-				$estimator,
-				null,
-				false,
-			);
-		} else {
-			$metaEstimator = $this->classifier->train(
-				$account,
-				$consoleLogger,
-				$extractor,
-				$estimator,
-				$shuffle,
-				false,
-			);
-		}
+		$metaEstimator = $this->classifier->train(
+			$account,
+			$consoleLogger,
+			$estimator,
+			$shuffle,
+			false,
+		);
 
-		if ($metaEstimator) {
+		if ($metaEstimator !== null) {
 			$output->writeln("<info>Best estimator: {$metaEstimator->base()}</info>");
 		}
 
