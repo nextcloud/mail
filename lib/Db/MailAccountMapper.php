@@ -67,6 +67,29 @@ class MailAccountMapper extends QBMapper {
 	}
 
 	/**
+	 * Finds all mail accounts by account ids
+	 *
+	 * @param string $userId
+	 * @param array<int,int> $identifiers
+	 *
+	 * @return array<int,MailAccount>
+	 */
+	public function findByIds(string $userId, array $identifiers): array {
+		
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR)
+			)
+			->andWhere(
+				$qb->expr()->in('id', $qb->createNamedParameter($identifiers, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY)
+			);
+
+		return $this->findEntities($qb);
+	}
+
+	/**
 	 * Finds all Mail Accounts by user id existing for this user
 	 *
 	 * @param string $userId the id of the user that we want to find

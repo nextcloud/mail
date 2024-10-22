@@ -113,7 +113,9 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @return Mailbox[]
+	 * @param array<int> $ids
+	 *
+	 * @return array<Mailbox>
 	 *
 	 * @throws Exception
 	 */

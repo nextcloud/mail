@@ -30,11 +30,14 @@ use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
+use OCA\Mail\Service\MessageOperationService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\FrontpageRoute;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
@@ -74,7 +77,8 @@ class MessagesController extends Controller {
 	private SnoozeService $snoozeService;
 	private AiIntegrationsService $aiIntegrationService;
 
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
 		AccountService $accountService,
 		IMailManager $mailManager,
@@ -94,7 +98,9 @@ class MessagesController extends Controller {
 		IDkimService $dkimService,
 		IUserPreferences $preferences,
 		SnoozeService $snoozeService,
-		AiIntegrationsService $aiIntegrationService) {
+		AiIntegrationsService $aiIntegrationService,
+		private MessageOperationService $messageOperationService,
+	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -780,6 +786,24 @@ class MessagesController extends Controller {
 			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), $flag, $value);
 		}
 		return new JSONResponse();
+	}
+
+	/**
+	 *
+	 * @NoAdminRequired
+	 *
+	 * @param array<int,int> $identifiers
+	 * @param array<string,bool> $flags
+	 *
+	 * @return JSONResponse
+	 */
+	#[FrontpageRoute(verb: 'PUT', url: '/api/messages/flags')]
+	#[NoAdminRequired]
+	#[TrapError]
+	public function changeFlags(array $identifiers, array $flags): JSONResponse {
+		return new JSONResponse(
+			$this->messageOperationService->changeFlags($this->currentUserId, $identifiers, $flags)
+		);
 	}
 
 	/**
