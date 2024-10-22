@@ -13,9 +13,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
-use Rubix\ML\Transformers\MinMaxNormalizer;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
-use Rubix\ML\Transformers\PrincipalComponentAnalysis;
 use Rubix\ML\Transformers\TfIdfTransformer;
 use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
@@ -25,19 +23,13 @@ use function array_map;
 
 class SubjectExtractor implements IExtractor {
 	private WordCountVectorizer $wordCountVectorizer;
-	private Transformer $dimensionalReductionTransformer;
-	private Transformer $normalizer;
 	private Transformer $tfidf;
 	private int $max = -1;
 
 	public function __construct() {
 		// Limit vocabulary to limit memory usage
-		$vocabSize = 500;
-		$this->wordCountVectorizer = new WordCountVectorizer($vocabSize);
-
+		$this->wordCountVectorizer = new WordCountVectorizer(500);
 		$this->tfidf = new TfIdfTransformer();
-		//$this->dimensionalReductionTransformer = new PrincipalComponentAnalysis((int)($vocabSize * 0.1));
-		//$this->normalizer = new MinMaxNormalizer();
 	}
 
 	public function getWordCountVectorizer(): WordCountVectorizer {
@@ -49,7 +41,7 @@ class SubjectExtractor implements IExtractor {
 		$this->limitFeatureSize();
 	}
 
-	public function getTfidf(): TfIdfTransformer {
+	public function getTfIdf(): TfIdfTransformer {
 		return $this->tfidf;
 	}
 
@@ -57,9 +49,6 @@ class SubjectExtractor implements IExtractor {
 		$this->tfidf = $tfidf;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public function prepare(Account $account, array $incomingMailboxes, array $outgoingMailboxes, array $messages): void {
 		/** @var array<array-key, array<string, string>> $data */
 		$data = array_map(static function (Message $message) {
@@ -76,15 +65,11 @@ class SubjectExtractor implements IExtractor {
 		)
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->tfidf)
-		;//->apply($this->dimensionalReductionTransformer);
+			->apply($this->tfidf);
 
 		$this->limitFeatureSize();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public function extract(Message $message): array {
 		$sender = $message->getFrom()->first();
 		if ($sender === null) {
@@ -97,8 +82,7 @@ class SubjectExtractor implements IExtractor {
 		$trainDataSet = Unlabeled::build([[$trainText]])
 			->apply(new MultibyteTextNormalizer())
 			->apply($this->wordCountVectorizer)
-			->apply($this->tfidf)
-		;//->apply($this->dimensionalReductionTransformer);
+			->apply($this->tfidf);
 
 		// Use zeroed vector if no features could be extracted
 		if ($trainDataSet->numFeatures() === 0) {
@@ -107,13 +91,11 @@ class SubjectExtractor implements IExtractor {
 			$textFeatures = $trainDataSet->sample(0);
 		}
 
-		//var_dump($textFeatures);
-
 		return $textFeatures;
 	}
 
 	/**
-	 * Limit feature vector length to actual vocabulary size.
+	 * Limit feature vector length to actual size of vocabulary.
 	 */
 	private function limitFeatureSize(): void {
 		$vocabularies = $this->wordCountVectorizer->vocabularies();
