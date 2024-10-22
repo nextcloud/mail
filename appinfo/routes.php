@@ -241,6 +241,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'messages#changeFlags',
+			'url' => '/api/messages/flags',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'messages#setTag',
 			'url' => '/api/messages/{id}/tags/{imapLabel}',
 			'verb' => 'PUT'

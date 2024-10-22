@@ -422,6 +422,24 @@ class MessageMapper {
 	/**
 	 * @throws Horde_Imap_Client_Exception
 	 */
+	public function addFlags(
+		Horde_Imap_Client_Socket $client,
+		Mailbox $mailbox,
+		array $uids,
+		array $flags
+	): void {
+		$client->store(
+			$mailbox->getName(),
+			[
+				'ids' => new Horde_Imap_Client_Ids($uids),
+				'add' => $flags,
+			]
+		);
+	}
+
+	/**
+	 * @throws Horde_Imap_Client_Exception
+	 */
 	public function removeFlag(Horde_Imap_Client_Socket $client,
 		Mailbox $mailbox,
 		array $uids,
@@ -431,6 +449,24 @@ class MessageMapper {
 			[
 				'ids' => new Horde_Imap_Client_Ids($uids),
 				'remove' => [$flag],
+			]
+		);
+	}
+
+	/**
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function removeFlags(
+		Horde_Imap_Client_Socket $client, 
+		Mailbox $mailbox,
+		array $uids,
+		array $flags
+	): void {
+		$client->store(
+			$mailbox->getName(),
+			[
+				'ids' => new Horde_Imap_Client_Ids($uids),
+				'remove' => $flags,
 			]
 		);
 	}
