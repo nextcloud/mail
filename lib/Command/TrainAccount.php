@@ -11,12 +11,9 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ClassificationSettingsService;
-use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
-use OCA\Mail\Service\Classification\FeatureExtraction\IExtractor;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,39 +24,28 @@ use function memory_get_peak_usage;
 
 class TrainAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
-	public const ARGUMENT_OLD = 'old';
-	public const ARGUMENT_OLD_ESTIMATOR = 'old-estimator';
-	public const ARGUMENT_OLD_EXTRACTOR = 'old-extractor';
 	public const ARGUMENT_SHUFFLE = 'shuffle';
-	public const ARGUMENT_SAVE_DATA = 'save-data';
-	public const ARGUMENT_LOAD_DATA = 'load-data';
 	public const ARGUMENT_DRY_RUN = 'dry-run';
 	public const ARGUMENT_FORCE = 'force';
 
 	private AccountService $accountService;
 	private ImportanceClassifier $classifier;
 	private LoggerInterface $logger;
-	private ContainerInterface $container;
 	private ClassificationSettingsService $classificationSettingsService;
 
 	public function __construct(AccountService $service,
 		ImportanceClassifier $classifier,
 		ClassificationSettingsService $classificationSettingsService,
-		LoggerInterface $logger,
-		ContainerInterface $container) {
+		LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
 		$this->classifier = $classifier;
 		$this->logger = $logger;
-		$this->container = $container;
 		$this->classificationSettingsService = $classificationSettingsService;
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('mail:account:train');
 		$this->setDescription('Train the classifier of new messages');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
@@ -75,18 +61,6 @@ class TrainAccount extends Command {
 			null,
 			null,
 			'Train an estimator even if the classification is disabled by the user'
-		);
-		$this->addOption(
-			self::ARGUMENT_SAVE_DATA,
-			null,
-			InputOption::VALUE_REQUIRED,
-			'Save training data set to a JSON file'
-		);
-		$this->addOption(
-			self::ARGUMENT_LOAD_DATA,
-			null,
-			InputOption::VALUE_REQUIRED,
-			'Load training data set from a JSON file'
 		);
 	}
 
@@ -108,50 +82,18 @@ class TrainAccount extends Command {
 			return 2;
 		}
 
-		/** @var IExtractor $extractor */
-		$extractor = $this->container->get(CompositeExtractor::class);
-
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
 			$output
 		);
 
-		$dataSet = null;
-		if ($saveDataPath = $input->getOption(self::ARGUMENT_SAVE_DATA)) {
-			$dataSet = $this->classifier->buildDataSet(
-				$account,
-				$extractor,
-				$consoleLogger,
-				null,
-				$shuffle,
-			);
-			$json = json_encode($dataSet, JSON_THROW_ON_ERROR);
-			file_put_contents($saveDataPath, $json);
-		} elseif ($loadDataPath = $input->getOption(self::ARGUMENT_LOAD_DATA)) {
-			$json = file_get_contents($loadDataPath);
-			$dataSet = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-		}
-
-		if ($dataSet) {
-			$this->classifier->trainWithCustomDataSet(
-				$account,
-				$consoleLogger,
-				$dataSet,
-				$extractor,
-				null,
-				null,
-				!$dryRun
-			);
-		} else {
-			$this->classifier->train(
-				$account,
-				$consoleLogger,
-				$extractor,
-				null,
-				$shuffle,
-				!$dryRun
-			);
-		}
+		$this->classifier->train(
+			$account,
+			$consoleLogger,
+			null,
+			$shuffle,
+			!$dryRun
+		);
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
 		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');

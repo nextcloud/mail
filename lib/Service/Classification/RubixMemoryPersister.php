@@ -11,15 +11,14 @@ namespace OCA\Mail\Service\Classification;
 
 use Rubix\ML\Encoding;
 use Rubix\ML\Persisters\Persister;
-use ValueError;
 
 class RubixMemoryPersister implements Persister {
 	public function __construct(
-		private ?string $data = null,
+		private string $data = '',
 	) {
 	}
 
-	public function getData(): ?string {
+	public function getData(): string {
 		return $this->data;
 	}
 
@@ -28,14 +27,10 @@ class RubixMemoryPersister implements Persister {
 	}
 
 	public function load(): Encoding {
-		if ($this->data === null) {
-			throw new ValueError('Trying to load encoding when no data is available');
-		}
-
 		return new Encoding($this->data);
 	}
 
 	public function __toString() {
-		return (string)self::class;
+		return self::class;
 	}
 }

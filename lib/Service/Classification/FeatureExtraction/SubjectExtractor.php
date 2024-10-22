@@ -15,7 +15,6 @@ use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Transformers\MultibyteTextNormalizer;
 use Rubix\ML\Transformers\TfIdfTransformer;
-use Rubix\ML\Transformers\Transformer;
 use Rubix\ML\Transformers\WordCountVectorizer;
 use RuntimeException;
 use function array_column;
@@ -23,7 +22,7 @@ use function array_map;
 
 class SubjectExtractor implements IExtractor {
 	private WordCountVectorizer $wordCountVectorizer;
-	private Transformer $tfidf;
+	private TfIdfTransformer $tfidf;
 	private int $max = -1;
 
 	public function __construct() {
