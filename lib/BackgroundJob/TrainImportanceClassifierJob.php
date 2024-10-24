@@ -69,10 +69,7 @@ class TrainImportanceClassifierJob extends TimedJob {
 		}
 
 		try {
-			$this->classifier->train(
-				$account,
-				$this->logger
-			);
+			$this->classifier->train($account, $this->logger);
 		} catch (Throwable $e) {
 			$this->logger->error('Cron importance classifier training failed: ' . $e->getMessage(), [
 				'exception' => $e,
