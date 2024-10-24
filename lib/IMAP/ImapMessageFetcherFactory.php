@@ -21,7 +21,7 @@ class ImapMessageFetcherFactory {
 	private Converter $charsetConverter;
 	private PhishingDetectionService $phishingDetectionService;
 
-	public function __construct(Html         $htmlService,
+	public function __construct(Html $htmlService,
 		SmimeService $smimeService,
 		Converter $charsetConverter,
 		PhishingDetectionService $phishingDetectionService) {

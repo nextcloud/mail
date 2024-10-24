@@ -50,8 +50,8 @@ class MessageMapper {
 	private SMimeService $smimeService;
 	private ImapMessageFetcherFactory $imapMessageFactory;
 
-	public function __construct(LoggerInterface           $logger,
-		SmimeService              $smimeService,
+	public function __construct(LoggerInterface $logger,
+		SmimeService $smimeService,
 		ImapMessageFetcherFactory $imapMessageFactory, ) {
 		$this->logger = $logger;
 		$this->smimeService = $smimeService;
@@ -512,9 +512,9 @@ class MessageMapper {
 	 * @throws ServiceException
 	 */
 	public function getHtmlBody(Horde_Imap_Client_Socket $client,
-		string                   $mailbox,
-		int                      $uid,
-		string                   $userId): ?string {
+		string $mailbox,
+		int $uid,
+		string $userId): ?string {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->envelope();
 		$messageQuery->structure();
