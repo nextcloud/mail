@@ -30,6 +30,7 @@ use OCA\Mail\Model\SmimeData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AiIntegrations\AiIntegrationsService;
 use OCA\Mail\Service\ItineraryService;
+use OCA\Mail\Service\MessageOperationService;
 use OCA\Mail\Service\SmimeService;
 use OCA\Mail\Service\SnoozeService;
 use OCP\AppFramework\Controller;
@@ -94,7 +95,8 @@ class MessagesController extends Controller {
 		IDkimService $dkimService,
 		IUserPreferences $preferences,
 		SnoozeService $snoozeService,
-		AiIntegrationsService $aiIntegrationService) {
+		AiIntegrationsService $aiIntegrationService,
+		private MessageOperationService $messageOperationService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->mailManager = $mailManager;
@@ -779,6 +781,23 @@ class MessagesController extends Controller {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
 			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), $flag, $value);
 		}
+		return new JSONResponse();
+	}
+
+	/**
+	 * 
+	 * @NoAdminRequired
+	 *
+	 * @param array<int,int> $identifiers
+	 * @param array<int,string> $flags
+	 *
+	 * @return JSONResponse
+	 */
+	#[TrapError]
+	public function changeFlags(array $identifiers, array $flags): JSONResponse {
+		
+		$this->messageOperationService->changeFlags($this->currentUserId, $identifiers, $flags);
+		// TODO: add proper responses
 		return new JSONResponse();
 	}
 
