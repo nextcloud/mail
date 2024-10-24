@@ -65,6 +65,8 @@ OC.L10N.register(
     "General" : "Allmänt",
     "Layout" : "Layout",
     "Sorting" : "Sortering",
+    "Newest" : "Nyast",
+    "Oldest" : "Äldst",
     "Use Gravatar and favicon avatars" : "Använd Gravatar och favicon som profilbild",
     "Register as application for mail links" : "Registrera som app för e-postlänkar",
     "Register" : "Registrera",

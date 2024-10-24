@@ -702,7 +702,7 @@
     "Account connected" : "الحساب متصل",
     "You can close this window" : "يُمكنك إغلاق هذه النافذة",
     "Connect your mail account" : "ربط حساب بريدك الإلكتروني",
-    "To add a mail account, please contact your administrator." : "لإضافة حساب بريد الكتروني، يرجى الاتصال بالمُشرف",
+    "To add a mail account, please contact your administrator." : "لإضافة حساب بريد الكتروني، يرجى الاتصال بمسؤول النظام.",
     "Next week – {timeLocale}" : "الأسبوع القادم – {timeLocale}",
     "This weekend – {timeLocale}" : "نهاية هذا الأسبوع – {timeLocale}",
     "Tomorrow – {timeLocale}" : "غداً – {timeLocale}",
