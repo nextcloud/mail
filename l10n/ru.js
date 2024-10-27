@@ -58,7 +58,7 @@ OC.L10N.register(
     "Reconnect Google account" : "Переподключите аккаунт Google",
     "Sign in with Google" : "Войти через Google",
     "Reconnect Microsoft account" : "Переподключите учетную запись Microsoft",
-    "Sign in with Microsoft" : "Войдите в систему с помощью Microsoft",
+    "Sign in with Microsoft" : "Войти через Microsoft",
     "Save" : "Сохранить",
     "Connect" : "Подключиться",
     "Looking up configuration" : "Поиск конфигурации",
