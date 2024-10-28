@@ -60,6 +60,9 @@ class LinkCheck {
 		foreach ($anchors as $anchor) {
 			$href = $anchor->getAttribute('href');
 			$linkText = $this->getInnerText($anchor);
+			if ($href === '') {
+				continue;
+			}
 			$zippedArray[] = [
 				'href' => $href,
 				'linkText' => $linkText
