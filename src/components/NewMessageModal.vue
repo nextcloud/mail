@@ -577,14 +577,14 @@ export default {
 	float: right;
 	position: absolute !important;
 	top: 4px;
-	right: 63px;
+	inset-inline-end: 63px;
 }
 
 .maximize-button {
 	float: right;
 	position: absolute !important;
 	top: 4px;
-	right: 33px;
+	inset-inline-end: 33px;
 
 }
 .empty-content{

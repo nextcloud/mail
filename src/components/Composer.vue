@@ -1579,6 +1579,10 @@ export default {
 	display: none;
 }
 
+:deep(.v-select.select){
+	left: 0 !important;
+}
+
 :deep(.vs__dropdown-menu){
 	padding: 0 !important;
 }
