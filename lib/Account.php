@@ -62,6 +62,13 @@ class Account implements JsonSerializable {
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getDebug(): int {
+		return $this->account->getDebug();
+	}
+
+	/**
 	 * Set the quota percentage
 	 * @param Quota $quota
 	 * @return void

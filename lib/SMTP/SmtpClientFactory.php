@@ -28,6 +28,8 @@ class SmtpClientFactory {
 	/** @var HostNameFactory */
 	private $hostNameFactory;
 
+	private int $debugDefault = 1 << 4;   // 16 (0001 0000)
+
 	public function __construct(IConfig $config,
 		ICrypto $crypto,
 		HostNameFactory $hostNameFactory) {
@@ -77,8 +79,9 @@ class SmtpClientFactory {
 				$decryptedAccessToken,
 			);
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
+		if ($account->getDebug() & $this->debugDefault) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-smtp.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
 		}
 		return new Horde_Mail_Transport_Smtphorde($params);
 	}

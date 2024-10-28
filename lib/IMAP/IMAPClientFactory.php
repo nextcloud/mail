@@ -40,6 +40,9 @@ class IMAPClientFactory {
 	private ITimeFactory $timeFactory;
 	private HordeCacheFactory $hordeCacheFactory;
 
+	private int $debugDefault = 1 << 0;   // 1 (0000 0001)
+	private int $debugFull = 1 << 1;     // 2 (0000 0010)
+
 	public function __construct(ICrypto $crypto,
 		IConfig $config,
 		ICacheFactory $cacheFactory,
@@ -117,8 +120,13 @@ class IMAPClientFactory {
 				'backend' => $this->hordeCacheFactory->newCache($account),
 			];
 		}
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+		$debug = $account->getDebug();
+		if ($debug & $this->debugDefault || $debug & $this->debugFull) {
+			$fn = 'mail-' . $account->getUserId() . '-' . $account->getId() . '-imap.log';
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/' . $fn;
+			if ($debug & $this->debugFull) {
+				$params['debug_literal'] = true;
+			}
 		}
 
 		$client = new HordeImapClient($params);
