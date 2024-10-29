@@ -794,7 +794,13 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 
 		$select->from($this->getTableName(), 'm')
@@ -1024,7 +1030,13 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 
 		$select->from($this->getTableName(), 'm')
@@ -1381,9 +1393,15 @@ class MessageMapper extends QBMapper {
 		$selfJoin = $select->expr()->andX(
 			$select->expr()->eq('m.mailbox_id', 'm2.mailbox_id', IQueryBuilder::PARAM_INT),
 			$select->expr()->eq('m.thread_root_id', 'm2.thread_root_id', IQueryBuilder::PARAM_INT),
-			$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
-				$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
-				$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT)
+			$select->expr()->orX(
+				$sortOrder === IMailSearch::ORDER_NEWEST_FIRST ?
+					$select->expr()->lt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT) :
+					$select->expr()->gt('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+				$select->expr()->andX(
+					$select->expr()->eq('m.sent_at', 'm2.sent_at', IQueryBuilder::PARAM_INT),
+					$select->expr()->lt('m.message_id', 'm2.message_id', IQueryBuilder::PARAM_STR),
+				),
+			),
 		);
 		$wheres = [$select->expr()->eq('m.mailbox_id', $select->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 			$select->expr()->andX($subSelect->expr()->notIn('m.id', $select->createParameter('ids'), IQueryBuilder::PARAM_INT_ARRAY)),
