@@ -472,7 +472,7 @@ OC.L10N.register(
     "Select tags" : "Schlagworte auswählen",
     "Marked as" : "Markiert als",
     "Has attachments" : "Hat Anhänge",
-    "Mentions me" : "Mich erwähnen",
+    "Mentions me" : "Erwähnt mich",
     "Has attachment" : "Hat einen Anhang",
     "Last 7 days" : "Die letzten 7 Tage",
     "From me" : "Von mir",
