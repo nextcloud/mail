@@ -42,12 +42,7 @@
 </template>
 
 <script>
-import RecipientDetails from '../nextcloud-contacts/RecipientDetails.vue'
 import { mapGetters } from 'vuex'
-import { namespaces as NS } from '@nextcloud/cdav-library'
-// import mitt from 'mitt'
-import Contact from '../nextcloud-contacts/contact.js'
-import '../css/RecipientProperties.scss'
 import IconArrowDown from 'vue-material-design-icons/ArrowDown.vue'
 import IconArrowUp from 'vue-material-design-icons/ArrowUp.vue'
 import Avatar from './Avatar.vue'
@@ -56,7 +51,6 @@ import logger from '../logger.js'
 export default {
 	components: {
 		Avatar,
-		RecipientDetails,
 		IconArrowDown,
 		IconArrowUp,
 	},
@@ -69,11 +63,11 @@ export default {
 	data() {
 		return {
 			expandedRecipients: [],
-			// reloadBus: mitt(),
 			contactDetailsVms: [],
 		}
 	},
 	computed: {
+		...mapGetters(['composerMessage']),
 		recipients() {
 			return this.composerMessage.data.to
 		},
